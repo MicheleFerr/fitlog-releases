@@ -17,19 +17,19 @@ class FAQData {
 
   /// All FAQ categories - comprehensive coverage of ALL app features
   static List<FAQCategory> get categories => [
-        gettingStartedCategory,
-        workoutsCategory,
-        exerciseTrackingCategory,
-        advancedTechniquesCategory,
-        timerCategory,
-        analyticsCategory,
-        premiumCategory,
-        accountCategory,
-        profileCategory,
-        settingsCategory,
-        healthSyncCategory,
-        troubleshootingCategory,
-      ];
+    gettingStartedCategory,
+    workoutsCategory,
+    exerciseTrackingCategory,
+    advancedTechniquesCategory,
+    timerCategory,
+    analyticsCategory,
+    premiumCategory,
+    accountCategory,
+    profileCategory,
+    settingsCategory,
+    healthSyncCategory,
+    troubleshootingCategory,
+  ];
 
   // ============================================================
   // 1. GETTING STARTED

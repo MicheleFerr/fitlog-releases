@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: data
 /// 🎯 Feature: workout_templates
 /// 🔧 Type: repository
 /// 🌍 Localization: N/A
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - Riverpod: Provider
 /// - Firebase: Firestore
@@ -19,29 +19,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
 
 class TemplateRepository {
-  
-  TemplateRepository({
-    FirebaseFirestore? firestore,
-    FirebaseAuth? auth,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance,
-       _auth = auth ?? FirebaseAuth.instance;
+  TemplateRepository({FirebaseFirestore? firestore, FirebaseAuth? auth})
+    : _firestore = firestore ?? FirebaseFirestore.instance,
+      _auth = auth ?? FirebaseAuth.instance;
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
-  
+
   // Collections
   // FIXED: Use same collection as FirebaseWorkoutTemplateRepository ('workoutTemplates')
   // to ensure Single Source of Truth for templates
   CollectionReference get _templatesCollection =>
       _firestore.collection('workoutTemplates');
-  
-  CollectionReference get _reviewsCollection => 
+
+  CollectionReference get _reviewsCollection =>
       _firestore.collection('template_reviews');
-  
-  CollectionReference get _commentsCollection => 
+
+  CollectionReference get _commentsCollection =>
       _firestore.collection('template_comments');
-  
+
   // CRUD Operations
-  
+
   /// Crea un nuovo template
   ///
   /// [maxPrivateTemplates] - Max private templates (from tierEntitlementsProvider)
@@ -70,26 +67,28 @@ class TemplateRepository {
       authorName: _auth.currentUser?.displayName,
       authorPhotoUrl: _auth.currentUser?.photoURL,
     );
-    
+
     await doc.set(newTemplate.toJson());
     return doc.id;
   }
-  
+
   /// Ottieni i template dell'utente corrente
   Future<List<WorkoutTemplate>> getUserTemplates() async {
     final userId = _auth.currentUser?.uid;
     if (userId == null) return [];
-    
+
     final snapshot = await _templatesCollection
         .where('userId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .get();
-    
+
     return snapshot.docs
-        .map((doc) => WorkoutTemplate.fromJson(doc.data() as Map<String, dynamic>))
+        .map(
+          (doc) => WorkoutTemplate.fromJson(doc.data() as Map<String, dynamic>),
+        )
         .toList();
   }
-  
+
   /// Ottieni template pubblici (con filtri)
   Future<List<WorkoutTemplate>> getPublicTemplates({
     TemplateCategory? category,
@@ -98,42 +97,49 @@ class TemplateRepository {
     String? difficultyLevel,
     int limit = 20,
   }) async {
-    Query query = _templatesCollection
-        .where('visibility', isEqualTo: TemplateVisibility.public.name);
-    
+    Query query = _templatesCollection.where(
+      'visibility',
+      isEqualTo: TemplateVisibility.public.name,
+    );
+
     if (category != null) {
       query = query.where('category', isEqualTo: category.name);
     }
-    
+
     if (difficultyLevel != null) {
       query = query.where('difficultyLevel', isEqualTo: difficultyLevel);
     }
-    
+
     if (tags != null && tags.isNotEmpty) {
       query = query.where('tags', arrayContainsAny: tags);
     }
-    
+
     query = query.orderBy('downloadCount', descending: true).limit(limit);
-    
+
     final snapshot = await query.get();
-    
+
     var templates = snapshot.docs
-        .map((doc) => WorkoutTemplate.fromJson(doc.data() as Map<String, dynamic>))
+        .map(
+          (doc) => WorkoutTemplate.fromJson(doc.data() as Map<String, dynamic>),
+        )
         .toList();
-    
+
     // Filtra per searchQuery se presente (client-side)
     if (searchQuery != null && searchQuery.isNotEmpty) {
       final lowerQuery = searchQuery.toLowerCase();
-      templates = templates.where((t) => 
-        t.name.toLowerCase().contains(lowerQuery) ||
-        (t.description?.toLowerCase().contains(lowerQuery) ?? false) ||
-        t.tags.any((tag) => tag.toLowerCase().contains(lowerQuery))
-      ).toList();
+      templates = templates
+          .where(
+            (t) =>
+                t.name.toLowerCase().contains(lowerQuery) ||
+                (t.description?.toLowerCase().contains(lowerQuery) ?? false) ||
+                t.tags.any((tag) => tag.toLowerCase().contains(lowerQuery)),
+          )
+          .toList();
     }
-    
+
     return templates;
   }
-  
+
   /// Download/Copia template pubblico
   ///
   /// [maxPrivateTemplates] - Max private templates (from tierEntitlementsProvider)
@@ -150,7 +156,9 @@ class TemplateRepository {
     final templateDoc = await _templatesCollection.doc(templateId).get();
     if (!templateDoc.exists) throw Exception('Template not found');
 
-    final template = WorkoutTemplate.fromJson(templateDoc.data() as Map<String, dynamic>);
+    final template = WorkoutTemplate.fromJson(
+      templateDoc.data() as Map<String, dynamic>,
+    );
 
     // Crea una copia privata per l'utente
     final userCopy = template.copyWith(
@@ -176,22 +184,22 @@ class TemplateRepository {
       'downloadCount': FieldValue.increment(1),
     });
   }
-  
+
   /// Aggiungi review
   Future<void> addReview(TemplateReview review) async {
     final userId = _auth.currentUser?.uid;
     if (userId == null) throw Exception('User not authenticated');
-    
+
     // Controlla se l'utente ha già recensito
     final existing = await _reviewsCollection
         .where('templateId', isEqualTo: review.templateId)
         .where('userId', isEqualTo: userId)
         .get();
-    
+
     if (existing.docs.isNotEmpty) {
       throw Exception('You have already reviewed this template');
     }
-    
+
     final doc = _reviewsCollection.doc();
     final newReview = review.copyWith(
       id: doc.id,
@@ -200,18 +208,18 @@ class TemplateRepository {
       userPhotoUrl: _auth.currentUser?.photoURL,
       createdAt: DateTime.now(),
     );
-    
+
     await doc.set(newReview.toJson());
-    
+
     // Aggiorna statistiche template
     await _updateTemplateRating(review.templateId);
   }
-  
+
   /// Aggiungi commento
   Future<void> addComment(TemplateComment comment) async {
     final userId = _auth.currentUser?.uid;
     if (userId == null) throw Exception('User not authenticated');
-    
+
     final doc = _commentsCollection.doc();
     final newComment = comment.copyWith(
       id: doc.id,
@@ -220,24 +228,24 @@ class TemplateRepository {
       userPhotoUrl: _auth.currentUser?.photoURL,
       createdAt: DateTime.now(),
     );
-    
+
     await doc.set(newComment.toJson());
   }
-  
+
   /// Like/Unlike template
   Future<void> toggleTemplateLike(String templateId) async {
     final userId = _auth.currentUser?.uid;
     if (userId == null) throw Exception('User not authenticated');
-    
+
     final templateRef = _templatesCollection.doc(templateId);
-    
+
     await _firestore.runTransaction((transaction) async {
       final templateDoc = await transaction.get(templateRef);
       if (!templateDoc.exists) throw Exception('Template not found');
-      
+
       final data = templateDoc.data() as Map<String, dynamic>;
       final likedBy = List<String>.from(data['likedBy'] ?? []);
-      
+
       if (likedBy.contains(userId)) {
         likedBy.remove(userId);
         transaction.update(templateRef, {
@@ -253,9 +261,9 @@ class TemplateRepository {
       }
     });
   }
-  
+
   // Helper methods
-  
+
   /// Check user template quota
   ///
   /// Uses consolidated limits from tierEntitlementsProvider (passed by caller)
@@ -286,7 +294,7 @@ class TemplateRepository {
       );
     }
   }
-  
+
   Future<void> _updateTemplateRating(String templateId) async {
     final reviews = await _reviewsCollection
         .where('templateId', isEqualTo: templateId)
@@ -296,7 +304,9 @@ class TemplateRepository {
 
     double totalRating = 0;
     for (var doc in reviews.docs) {
-      final review = TemplateReview.fromJson(doc.data() as Map<String, dynamic>);
+      final review = TemplateReview.fromJson(
+        doc.data() as Map<String, dynamic>,
+      );
       totalRating += review.rating;
     }
 
@@ -328,7 +338,9 @@ class TemplateRepository {
       final templateDoc = await _templatesCollection.doc(templateId).get();
       if (!templateDoc.exists) continue;
 
-      final template = WorkoutTemplate.fromJson(templateDoc.data() as Map<String, dynamic>);
+      final template = WorkoutTemplate.fromJson(
+        templateDoc.data() as Map<String, dynamic>,
+      );
 
       // Verify user owns this template
       if (template.userId != userId) {
@@ -344,15 +356,15 @@ class TemplateRepository {
           // Handle weight based on option
           if (weightOption == 'reset') {
             // Reset all sets to have no weight
-            final resetSets = newExercise.sets.map((set) =>
-              set.copyWith(weight: 0.0)
-            ).toList();
+            final resetSets = newExercise.sets
+                .map((set) => set.copyWith(weight: 0.0))
+                .toList();
             newExercise = newExercise.copyWith(sets: resetSets);
           } else if (weightOption == 'manual') {
             // Clear weight for manual input later
-            final manualSets = newExercise.sets.map((set) =>
-              set.copyWith(weight: null)
-            ).toList();
+            final manualSets = newExercise.sets
+                .map((set) => set.copyWith(weight: null))
+                .toList();
             newExercise = newExercise.copyWith(sets: manualSets);
           }
           // 'keep' option: keep current weights as-is
@@ -369,7 +381,10 @@ class TemplateRepository {
       );
 
       // Add to batch
-      batch.update(_templatesCollection.doc(templateId), updatedTemplate.toJson());
+      batch.update(
+        _templatesCollection.doc(templateId),
+        updatedTemplate.toJson(),
+      );
       updatedCount++;
     }
 

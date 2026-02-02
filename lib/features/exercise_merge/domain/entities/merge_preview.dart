@@ -84,18 +84,17 @@ class MergeResult {
   factory MergeResult.success({
     required int sessionsUpdated,
     required int templatesUpdated,
-  }) =>
-      MergeResult(
-        success: true,
-        sessionsUpdated: sessionsUpdated,
-        templatesUpdated: templatesUpdated,
-      );
+  }) => MergeResult(
+    success: true,
+    sessionsUpdated: sessionsUpdated,
+    templatesUpdated: templatesUpdated,
+  );
 
   /// Factory per errore
   factory MergeResult.failure(String message) => MergeResult(
-        success: false,
-        sessionsUpdated: 0,
-        templatesUpdated: 0,
-        errorMessage: message,
-      );
+    success: false,
+    sessionsUpdated: 0,
+    templatesUpdated: 0,
+    errorMessage: message,
+  );
 }

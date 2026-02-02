@@ -17,7 +17,9 @@ import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// Provider for workout context (null = not gathered yet)
 final workoutContextProvider =
-    NotifierProvider<WorkoutContextNotifier, WorkoutContext?>(WorkoutContextNotifier.new);
+    NotifierProvider<WorkoutContextNotifier, WorkoutContext?>(
+      WorkoutContextNotifier.new,
+    );
 
 /// Notifier for managing workout context state
 ///
@@ -43,7 +45,9 @@ class WorkoutContextNotifier extends Notifier<WorkoutContext?> {
       final levelKey = userCacheKeys.userScopedKey('context_level');
       final genderKey = userCacheKeys.userScopedKey('context_gender');
       final timestampKey = userCacheKeys.userScopedKey('context_timestamp');
-      final completionKey = userCacheKeys.userScopedKey('context_completion_time_ms');
+      final completionKey = userCacheKeys.userScopedKey(
+        'context_completion_time_ms',
+      );
 
       // Check if there's a saved context
       final timeAvailable = prefs.getInt(timeKey);
@@ -58,11 +62,12 @@ class WorkoutContextNotifier extends Notifier<WorkoutContext?> {
         timeAvailable: timeAvailable,
         experienceLevel:
             experienceLevelStr != null && experienceLevelStr.isNotEmpty
-                ? ExperienceLevel.fromString(experienceLevelStr)
-                : null,
+            ? ExperienceLevel.fromString(experienceLevelStr)
+            : null,
         gender: gender,
-        timestamp:
-            timestampStr != null ? DateTime.parse(timestampStr) : DateTime.now(),
+        timestamp: timestampStr != null
+            ? DateTime.parse(timestampStr)
+            : DateTime.now(),
         completionTimeMs: completionTimeMs,
       );
     } catch (e) {
@@ -81,7 +86,9 @@ class WorkoutContextNotifier extends Notifier<WorkoutContext?> {
       final levelKey = userCacheKeys.userScopedKey('context_level');
       final genderKey = userCacheKeys.userScopedKey('context_gender');
       final timestampKey = userCacheKeys.userScopedKey('context_timestamp');
-      final completionKey = userCacheKeys.userScopedKey('context_completion_time_ms');
+      final completionKey = userCacheKeys.userScopedKey(
+        'context_completion_time_ms',
+      );
 
       await prefs.setInt(timeKey, context.timeAvailable);
       await prefs.setString(levelKey, context.experienceLevel?.name ?? '');
@@ -105,7 +112,9 @@ class WorkoutContextNotifier extends Notifier<WorkoutContext?> {
       final levelKey = userCacheKeys.userScopedKey('context_level');
       final genderKey = userCacheKeys.userScopedKey('context_gender');
       final timestampKey = userCacheKeys.userScopedKey('context_timestamp');
-      final completionKey = userCacheKeys.userScopedKey('context_completion_time_ms');
+      final completionKey = userCacheKeys.userScopedKey(
+        'context_completion_time_ms',
+      );
 
       await prefs.remove(timeKey);
       await prefs.remove(levelKey);

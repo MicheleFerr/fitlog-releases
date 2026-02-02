@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: domain
 /// 🎯 Feature: analytics
 /// 🔧 Type: entity
 /// 🌍 Localization: ✅ AppLocalizations used
 /// 🎨 Theme: ✅ ColorScheme responsive
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - workout/domain/entities: Workout, Exercise, ExerciseSet
 library;
@@ -17,7 +17,6 @@ import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 
 /// Real-time workout metrics calculated during active workout
 class WorkoutMetrics {
-
   const WorkoutMetrics({
     required this.workoutId,
     required this.calculatedAt,
@@ -77,30 +76,32 @@ class WorkoutMetrics {
     final allSets = workout.exercises
         .expand((exercise) => exercise.sets)
         .toList();
-    
+
     final completedSets = allSets.where((set) => set.isCompleted).toList();
     final workingSets = completedSets.where((set) => !set.isWarmup).toList();
     final warmupSets = completedSets.where((set) => set.isWarmup).toList();
-    
+
     // Calculate volume metrics
     final totalVolume = _calculateTotalVolume(completedSets);
     final workingSetsVolume = _calculateTotalVolume(workingSets);
     final warmupVolume = _calculateTotalVolume(warmupSets);
-    final volumeByMuscleGroup = _calculateVolumeByMuscleGroup(workout.exercises);
-    
+    final volumeByMuscleGroup = _calculateVolumeByMuscleGroup(
+      workout.exercises,
+    );
+
     // Calculate intensity metrics
     final averageWeight = _calculateAverageWeight(workingSets);
     final averageRPE = _calculateAverageRPE(completedSets);
     final peakIntensity = _calculatePeakIntensity(workingSets);
-    
+
     // Calculate duration metrics
     final totalDuration = workout.duration ?? Duration.zero;
     final workingTime = _calculateWorkingTime(completedSets);
     final restTime = totalDuration - workingTime;
-    final trainingDensity = totalDuration.inMinutes > 0 
-        ? totalVolume / totalDuration.inMinutes 
+    final trainingDensity = totalDuration.inMinutes > 0
+        ? totalVolume / totalDuration.inMinutes
         : 0;
-    
+
     return WorkoutMetrics(
       workoutId: workout.id,
       calculatedAt: now,
@@ -127,51 +128,51 @@ class WorkoutMetrics {
   }
   final String workoutId;
   final DateTime calculatedAt;
-  
+
   // Volume Metrics
   final double totalVolume;
   final double workingSetsVolume;
   final double warmupVolume;
   final Map<ExerciseCategory, double> volumeByMuscleGroup;
-  
+
   // Set Metrics
   final int totalSets;
   final int completedSets;
   final int workingSets;
   final int warmupSets;
-  
+
   // Intensity Metrics
   final double averageWeight;
   final double averageRPE;
   final double averageIntensity; // % of estimated 1RM
   final double peakIntensity;
-  
+
   // Performance Metrics
   final Duration totalDuration;
   final Duration workingTime;
   final Duration restTime;
   final double trainingDensity; // volume per minute
-  
+
   // Progress Metrics
   final double completionPercentage;
   final int exercisesCompleted;
   final int totalExercises;
-  
+
   // Comparison Data
   final WorkoutComparison? comparison;
   final List<PersonalRecordAchieved> personalRecords;
 
   /// Get formatted volume string
   String get formattedVolume => '${totalVolume.toStringAsFixed(0)} kg';
-  
+
   /// Get formatted training density
   String get formattedDensity => '${trainingDensity.toStringAsFixed(1)} kg/min';
-  
+
   /// Get formatted duration
   String get formattedDuration {
     final hours = totalDuration.inHours;
     final minutes = totalDuration.inMinutes % 60;
-    
+
     if (hours > 0) {
       return '${hours}h ${minutes}m';
     } else {
@@ -182,33 +183,33 @@ class WorkoutMetrics {
   /// Check if this is a strong workout (above average metrics)
   bool get isStrongWorkout {
     return totalVolume > 1000 && // Arbitrary threshold
-           averageRPE >= 7.5 &&
-           trainingDensity > 15;
+        averageRPE >= 7.5 &&
+        trainingDensity > 15;
   }
 
   /// Get workout quality score (0-100)
   double get qualityScore {
     double score = 0;
-    
+
     // Volume contribution (40%)
     if (totalVolume > 0) {
       score += (totalVolume / 2000) * 40; // Normalize to ~2000kg max
     }
-    
+
     // Intensity contribution (30%)
     if (averageRPE > 0) {
       score += ((averageRPE - 5) / 5) * 30; // RPE 5-10 normalized
     }
-    
+
     // Completion contribution (20%)
     score += completionPercentage * 20;
-    
+
     // Consistency contribution (10%)
     if (workingSets > 0) {
       final completionRate = completedSets / totalSets;
       score += completionRate * 10;
     }
-    
+
     return score.clamp(0, 100);
   }
 
@@ -264,43 +265,49 @@ class WorkoutMetrics {
   }
 
   // Static helper methods
-  
+
   static double _calculateTotalVolume(List<ExerciseSet> sets) {
     return sets.fold(0.0, (total, set) => total + set.volume);
   }
-  
+
   static Map<ExerciseCategory, double> _calculateVolumeByMuscleGroup(
     List<Exercise> exercises,
   ) {
     final volumeByGroup = <ExerciseCategory, double>{};
-    
+
     for (final exercise in exercises) {
       final exerciseVolume = _calculateTotalVolume(
         exercise.sets.where((set) => set.isCompleted).toList(),
       );
-      
-      volumeByGroup[exercise.category] = 
+
+      volumeByGroup[exercise.category] =
           (volumeByGroup[exercise.category] ?? 0) + exerciseVolume;
     }
-    
+
     return volumeByGroup;
   }
-  
+
   static double _calculateAverageWeight(List<ExerciseSet> sets) {
     if (sets.isEmpty) return 0;
 
-    final totalWeight = sets.fold(0.0, (total, set) => total + (set.weight ?? 0.0));
+    final totalWeight = sets.fold(
+      0.0,
+      (total, set) => total + (set.weight ?? 0.0),
+    );
     return totalWeight / sets.length;
   }
-  
+
   static double _calculateAverageRPE(List<ExerciseSet> sets) {
     final setsWithRPE = sets.where((set) => set.rpe != null).toList();
     if (setsWithRPE.isEmpty) return 0;
-    
-    final totalRPE = setsWithRPE.fold(0, (total, set) => total + (set.rpe ?? 0));
+
+    final totalRPE = setsWithRPE.fold(
+      0,
+      (total, set) => total + (set.rpe ?? 0),
+    );
     return totalRPE / setsWithRPE.length;
   }
-  
+
   static double _calculatePeakIntensity(List<ExerciseSet> sets) {
     if (sets.isEmpty) return 0;
 
@@ -311,7 +318,7 @@ class WorkoutMetrics {
       return intensity > peak ? intensity : peak;
     });
   }
-  
+
   static Duration _calculateWorkingTime(List<ExerciseSet> sets) {
     // Estimate working time based on completed sets
     // Rough estimate: 30 seconds per set
@@ -372,15 +379,15 @@ class WorkoutMetrics {
       averageRPE: (json['averageRPE'] ?? 0).toDouble(),
       averageIntensity: (json['averageIntensity'] ?? 0).toDouble(),
       peakIntensity: (json['peakIntensity'] ?? 0).toDouble(),
-      totalDuration: json['totalDuration'] != null 
-        ? Duration(seconds: json['totalDuration']) 
-        : Duration.zero,
-      workingTime: json['workingTime'] != null 
-        ? Duration(seconds: json['workingTime']) 
-        : Duration.zero,
-      restTime: json['restTime'] != null 
-        ? Duration(seconds: json['restTime']) 
-        : Duration.zero,
+      totalDuration: json['totalDuration'] != null
+          ? Duration(seconds: json['totalDuration'])
+          : Duration.zero,
+      workingTime: json['workingTime'] != null
+          ? Duration(seconds: json['workingTime'])
+          : Duration.zero,
+      restTime: json['restTime'] != null
+          ? Duration(seconds: json['restTime'])
+          : Duration.zero,
       trainingDensity: (json['trainingDensity'] ?? 0).toDouble(),
       completionPercentage: (json['completionPercentage'] ?? 0).toDouble(),
       exercisesCompleted: json['exercisesCompleted'] ?? 0,
@@ -390,7 +397,8 @@ class WorkoutMetrics {
 }
 
 /// Comparison with previous similar workouts
-class WorkoutComparison { // -100 to +100
+class WorkoutComparison {
+  // -100 to +100
 
   const WorkoutComparison({
     required this.comparisonId,
@@ -407,28 +415,28 @@ class WorkoutComparison { // -100 to +100
   final String comparisonId;
   final DateTime comparisonDate;
   final String comparisonName;
-  
+
   // Volume comparison
   final double volumeChange;
   final double volumeChangePercentage;
-  
+
   // Intensity comparison
   final double intensityChange;
   final double intensityChangePercentage;
-  
+
   // Performance comparison
   final Duration durationChange;
   final double densityChange;
-  
+
   // Overall improvement score
   final double improvementScore;
 
   /// Check if this represents an improvement
   bool get isImprovement => improvementScore > 5;
-  
+
   /// Check if performance was similar (within 5%)
   bool get isSimilar => improvementScore.abs() <= 5;
-  
+
   /// Check if performance decreased
   bool get isRegression => improvementScore < -5;
 
@@ -454,7 +462,6 @@ class WorkoutComparison { // -100 to +100
 
 /// Personal record achieved during workout
 class PersonalRecordAchieved {
-
   const PersonalRecordAchieved({
     required this.exerciseId,
     required this.exerciseName,

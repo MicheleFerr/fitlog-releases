@@ -40,7 +40,8 @@ abstract class WorkoutStreak with _$WorkoutStreak {
     DateTime checkDate = today;
 
     for (final date in sortedDates) {
-      if (_isSameDay(date, checkDate) || _isSameDay(date, checkDate.subtract(const Duration(days: 1)))) {
+      if (_isSameDay(date, checkDate) ||
+          _isSameDay(date, checkDate.subtract(const Duration(days: 1)))) {
         currentStreak++;
         checkDate = date.subtract(const Duration(days: 1));
       } else {

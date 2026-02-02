@@ -7,7 +7,6 @@ import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/s
 /// Implements caching strategy to avoid reloading JSON on every access.
 /// Data is loaded once on first access and cached in memory.
 class StrengthStandardsRepositoryImpl implements StrengthStandardsRepository {
-
   StrengthStandardsRepositoryImpl(this._localDataSource);
   final StrengthStandardsLocalDataSource _localDataSource;
 
@@ -16,7 +15,8 @@ class StrengthStandardsRepositoryImpl implements StrengthStandardsRepository {
   List<ExerciseMapping>? _cachedMappings;
   Map<String, StrengthStandard>? _standardsById;
   Map<String, ExerciseMapping>? _mappingsByExerciseId;
-  Map<String, ExerciseMapping>? _mappingsByExerciseName; // Index by name for UI lookups
+  Map<String, ExerciseMapping>?
+  _mappingsByExerciseName; // Index by name for UI lookups
 
   @override
   Future<List<StrengthStandard>> getStrengthStandards({
@@ -59,8 +59,8 @@ class StrengthStandardsRepositoryImpl implements StrengthStandardsRepository {
     }
     // Try lookup by gymbroId first, then by normalized name
     // This allows both ID-based and name-based lookups from UI
-    return _mappingsByExerciseId?[exerciseKey]
-        ?? _mappingsByExerciseName?[_normalizeForLookup(exerciseKey)];
+    return _mappingsByExerciseId?[exerciseKey] ??
+        _mappingsByExerciseName?[_normalizeForLookup(exerciseKey)];
   }
 
   /// Normalize string for name-based lookup (lowercase, trim)
@@ -100,18 +100,20 @@ class StrengthStandardsRepositoryImpl implements StrengthStandardsRepository {
   ) async {
     final standards = await getStrengthStandards();
     return standards
-        .where((s) => s.muscleGroups.any(
-              (mg) => mg.toLowerCase().contains(muscleGroup.toLowerCase()),
-            ))
+        .where(
+          (s) => s.muscleGroups.any(
+            (mg) => mg.toLowerCase().contains(muscleGroup.toLowerCase()),
+          ),
+        )
         .toList();
   }
 
   @override
   Future<Map<String, dynamic>> getMetadata() async {
-    final standardsMetadata =
-        await _localDataSource.loadStrengthStandardsMetadata();
-    final mappingsMetadata =
-        await _localDataSource.loadExerciseMappingsMetadata();
+    final standardsMetadata = await _localDataSource
+        .loadStrengthStandardsMetadata();
+    final mappingsMetadata = await _localDataSource
+        .loadExerciseMappingsMetadata();
 
     return {
       'strengthStandards': standardsMetadata,
@@ -132,7 +134,7 @@ class StrengthStandardsRepositoryImpl implements StrengthStandardsRepository {
   void _buildStandardsIndex() {
     if (_cachedStandards == null) return;
     _standardsById = {
-      for (final standard in _cachedStandards!) standard.id: standard
+      for (final standard in _cachedStandards!) standard.id: standard,
     };
   }
 
@@ -143,14 +145,14 @@ class StrengthStandardsRepositoryImpl implements StrengthStandardsRepository {
 
     // Primary index: by gymbroId (e.g., "barbell_bench_press")
     _mappingsByExerciseId = {
-      for (final mapping in _cachedMappings!) mapping.gymbroId: mapping
+      for (final mapping in _cachedMappings!) mapping.gymbroId: mapping,
     };
 
     // Secondary index: by gymbroName normalized (e.g., "barbell bench press")
     // Allows UI to lookup by exercise display name
     _mappingsByExerciseName = {
       for (final mapping in _cachedMappings!)
-        mapping.gymbroName.toLowerCase().trim(): mapping
+        mapping.gymbroName.toLowerCase().trim(): mapping,
     };
   }
 }

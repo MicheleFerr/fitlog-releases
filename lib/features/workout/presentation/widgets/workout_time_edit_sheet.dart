@@ -52,7 +52,9 @@ class WorkoutTimeEditSheet extends ConsumerStatefulWidget {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => WorkoutTimeEditSheet(
         workout: workout,
         showSuspiciousWarning: showSuspiciousWarning,
@@ -283,10 +285,7 @@ class _WorkoutTimeEditSheetState extends ConsumerState<WorkoutTimeEditSheet> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                ':',
-                style: context.textTheme.headlineLarge,
-              ),
+              child: Text(':', style: context.textTheme.headlineLarge),
             ),
             // Minutes
             _TimePickerWheel(
@@ -431,8 +430,9 @@ class _TimePickerWheel extends StatelessWidget {
                   child: Text(
                     index.toString().padLeft(2, '0'),
                     style: context.textTheme.titleLarge?.copyWith(
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                       color: isSelected
                           ? context.colors.primary
                           : context.colors.onSurfaceVariant,

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
-
   const UserModel({
     required this.uid,
     required this.email,
@@ -19,7 +18,7 @@ class UserModel {
     if (data == null) {
       throw Exception('Document data is null for user: ${doc.id}');
     }
-    
+
     return UserModel(
       uid: doc.id,
       email: data['email'] as String? ?? '',
@@ -29,10 +28,10 @@ class UserModel {
       lastLoginAt: (data['lastLoginAt'] as Timestamp?)?.toDate(),
       isGuest: data['isGuest'] as bool? ?? false,
       preferences: UserPreferences.fromMap(
-        (data['preferences'] as Map<String, dynamic>?) ?? <String, dynamic>{}
+        (data['preferences'] as Map<String, dynamic>?) ?? <String, dynamic>{},
       ),
       stats: UserStats.fromMap(
-        (data['stats'] as Map<String, dynamic>?) ?? <String, dynamic>{}
+        (data['stats'] as Map<String, dynamic>?) ?? <String, dynamic>{},
       ),
     );
   }
@@ -43,7 +42,7 @@ class UserModel {
     if (data == null) {
       throw Exception('Document data is null for user: ${doc.id}');
     }
-    
+
     return UserModel(
       uid: doc.id,
       email: data['email'] as String? ?? '',
@@ -53,10 +52,10 @@ class UserModel {
       lastLoginAt: (data['lastLoginAt'] as Timestamp?)?.toDate(),
       isGuest: data['isGuest'] as bool? ?? false,
       preferences: UserPreferences.fromMap(
-        (data['preferences'] as Map<String, dynamic>?) ?? <String, dynamic>{}
+        (data['preferences'] as Map<String, dynamic>?) ?? <String, dynamic>{},
       ),
       stats: UserStats.fromMap(
-        (data['stats'] as Map<String, dynamic>?) ?? <String, dynamic>{}
+        (data['stats'] as Map<String, dynamic>?) ?? <String, dynamic>{},
       ),
     );
   }
@@ -125,9 +124,7 @@ class UserModel {
 
   /// Validates the user model data
   bool get isValid {
-    return uid.isNotEmpty &&
-           email.isNotEmpty &&
-           displayName.isNotEmpty;
+    return uid.isNotEmpty && email.isNotEmpty && displayName.isNotEmpty;
   }
 
   /// Account tier for premium features (defaults to 'free')
@@ -139,7 +136,7 @@ class UserModel {
   @override
   String toString() {
     return 'UserModel(uid: $uid, email: $email, displayName: $displayName, '
-           'isGuest: $isGuest, createdAt: $createdAt)';
+        'isGuest: $isGuest, createdAt: $createdAt)';
   }
 
   /// Equality operator for comparing UserModel instances
@@ -147,34 +144,33 @@ class UserModel {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     return other is UserModel &&
-           other.uid == uid &&
-           other.email == email &&
-           other.displayName == displayName &&
-           other.photoURL == photoURL &&
-           other.createdAt == createdAt &&
-           other.lastLoginAt == lastLoginAt &&
-           other.isGuest == isGuest &&
-           other.preferences == preferences &&
-           other.stats == stats;
+        other.uid == uid &&
+        other.email == email &&
+        other.displayName == displayName &&
+        other.photoURL == photoURL &&
+        other.createdAt == createdAt &&
+        other.lastLoginAt == lastLoginAt &&
+        other.isGuest == isGuest &&
+        other.preferences == preferences &&
+        other.stats == stats;
   }
 
   /// Hash code for the UserModel
   @override
   int get hashCode {
     return uid.hashCode ^
-           email.hashCode ^
-           displayName.hashCode ^
-           (photoURL?.hashCode ?? 0) ^
-           (createdAt?.hashCode ?? 0) ^
-           (lastLoginAt?.hashCode ?? 0) ^
-           isGuest.hashCode ^
-           preferences.hashCode ^
-           stats.hashCode;
+        email.hashCode ^
+        displayName.hashCode ^
+        (photoURL?.hashCode ?? 0) ^
+        (createdAt?.hashCode ?? 0) ^
+        (lastLoginAt?.hashCode ?? 0) ^
+        isGuest.hashCode ^
+        preferences.hashCode ^
+        stats.hashCode;
   }
 }
 
 class UserPreferences {
-
   const UserPreferences({
     this.units = 'kg',
     this.restTimerSound = true,
@@ -222,9 +218,9 @@ class UserPreferences {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     return other is UserPreferences &&
-           other.units == units &&
-           other.restTimerSound == restTimerSound &&
-           other.notifications == notifications;
+        other.units == units &&
+        other.restTimerSound == restTimerSound &&
+        other.notifications == notifications;
   }
 
   @override
@@ -239,7 +235,6 @@ class UserPreferences {
 }
 
 class UserStats {
-
   const UserStats({
     this.totalWorkouts = 0,
     this.totalExercises = 0,
@@ -281,14 +276,16 @@ class UserStats {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     return other is UserStats &&
-           other.totalWorkouts == totalWorkouts &&
-           other.totalExercises == totalExercises &&
-           other.totalVolume == totalVolume;
+        other.totalWorkouts == totalWorkouts &&
+        other.totalExercises == totalExercises &&
+        other.totalVolume == totalVolume;
   }
 
   @override
   int get hashCode {
-    return totalWorkouts.hashCode ^ totalExercises.hashCode ^ totalVolume.hashCode;
+    return totalWorkouts.hashCode ^
+        totalExercises.hashCode ^
+        totalVolume.hashCode;
   }
 
   @override

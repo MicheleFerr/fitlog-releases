@@ -14,11 +14,7 @@ library;
 ///
 /// Immutable value object rappresenta un singolo punto dati per chart
 class ChartDataPoint {
-
-  const ChartDataPoint({
-    required this.date,
-    required this.value,
-  });
+  const ChartDataPoint({required this.date, required this.value});
   final DateTime date;
   final double value;
 

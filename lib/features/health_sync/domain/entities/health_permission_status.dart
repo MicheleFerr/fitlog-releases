@@ -57,10 +57,12 @@ extension HealthPermissionStatusExtension on HealthPermissionStatus {
   ///
   /// Example: User approved workout sync but denied weight sync
   bool get hasPartialPermissions {
-    final hasAuthorized =
-        permissions.values.any((p) => p == PermissionState.authorized);
-    final hasNonAuthorized =
-        permissions.values.any((p) => p != PermissionState.authorized);
+    final hasAuthorized = permissions.values.any(
+      (p) => p == PermissionState.authorized,
+    );
+    final hasNonAuthorized = permissions.values.any(
+      (p) => p != PermissionState.authorized,
+    );
     return hasAuthorized && hasNonAuthorized;
   }
 

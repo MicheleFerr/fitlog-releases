@@ -84,7 +84,8 @@ class StrongCsvParser {
         final parsedRow = _parseRow(row, columnMap, i);
         if (parsedRow != null) {
           // Group by workout (date + name)
-          final workoutKey = '${parsedRow.date.toIso8601String()}_${parsedRow.workoutName}';
+          final workoutKey =
+              '${parsedRow.date.toIso8601String()}_${parsedRow.workoutName}';
 
           workoutBuilders.putIfAbsent(
             workoutKey,
@@ -120,20 +121,24 @@ class StrongCsvParser {
     }
 
     // Convert builders to ParsedWorkout
-    final workouts = workoutBuilders.values
-        .map((builder) => builder.build())
-        .toList()
-      ..sort((a, b) => b.date.compareTo(a.date)); // Newest first
+    final workouts =
+        workoutBuilders.values.map((builder) => builder.build()).toList()
+          ..sort((a, b) => b.date.compareTo(a.date)); // Newest first
 
     // Create unmapped exercises list (all exercises need mapping initially)
-    final unmappedExercises = exerciseOccurrences.entries
-        .map((e) => UnmappedExercise(
-              originalName: e.key,
-              occurrences: e.value,
-              suggestions: [], // Will be filled by mapper
-            ))
-        .toList()
-      ..sort((a, b) => b.occurrences.compareTo(a.occurrences)); // Most common first
+    final unmappedExercises =
+        exerciseOccurrences.entries
+            .map(
+              (e) => UnmappedExercise(
+                originalName: e.key,
+                occurrences: e.value,
+                suggestions: [], // Will be filled by mapper
+              ),
+            )
+            .toList()
+          ..sort(
+            (a, b) => b.occurrences.compareTo(a.occurrences),
+          ); // Most common first
 
     return ImportParseResult(
       sourceApp: 'strong',
@@ -149,9 +154,17 @@ class StrongCsvParser {
   /// Validate CSV headers match Strong format
   String? _validateHeaders(List<String> headers) {
     // Check for required columns
-    final requiredColumns = ['Date', 'Workout Name', 'Exercise Name', 'Weight', 'Reps'];
+    final requiredColumns = [
+      'Date',
+      'Workout Name',
+      'Exercise Name',
+      'Weight',
+      'Reps',
+    ];
     final missingColumns = requiredColumns
-        .where((col) => !headers.any((h) => h.toLowerCase() == col.toLowerCase()))
+        .where(
+          (col) => !headers.any((h) => h.toLowerCase() == col.toLowerCase()),
+        )
         .toList();
 
     if (missingColumns.isNotEmpty) {
@@ -171,7 +184,11 @@ class StrongCsvParser {
   }
 
   /// Parse a single CSV row
-  _ParsedRow? _parseRow(List<dynamic> row, Map<String, int> columnMap, int rowIndex) {
+  _ParsedRow? _parseRow(
+    List<dynamic> row,
+    Map<String, int> columnMap,
+    int rowIndex,
+  ) {
     String getValue(String column) {
       final index = columnMap[column.toLowerCase()];
       if (index == null || index >= row.length) return '';
@@ -266,7 +283,10 @@ class StrongCsvParser {
   int? _parseDuration(String durationStr) {
     if (durationStr.isEmpty) return null;
 
-    final parts = durationStr.split(':').map((p) => int.tryParse(p) ?? 0).toList();
+    final parts = durationStr
+        .split(':')
+        .map((p) => int.tryParse(p) ?? 0)
+        .toList();
 
     if (parts.length == 2) {
       // MM:SS
@@ -302,10 +322,12 @@ class _WorkoutBuilder {
 
   ParsedWorkout build() {
     final exercises = _exerciseSets.entries
-        .map((e) => ParsedExercise(
-              originalName: e.key,
-              sets: e.value..sort((a, b) => a.setNumber.compareTo(b.setNumber)),
-            ))
+        .map(
+          (e) => ParsedExercise(
+            originalName: e.key,
+            sets: e.value..sort((a, b) => a.setNumber.compareTo(b.setNumber)),
+          ),
+        )
         .toList();
 
     return ParsedWorkout(

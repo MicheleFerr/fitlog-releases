@@ -1,4 +1,3 @@
-
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
 ///
 /// 📁 Layer: domain/entities
@@ -9,11 +8,4 @@
 library;
 
 /// Sync status enum
-enum SyncStatus {
-  notSynced,
-  initialSyncing,
-  syncing,
-  synced,
-  needsSync,
-  error,
-}
+enum SyncStatus { notSynced, initialSyncing, syncing, synced, needsSync, error }

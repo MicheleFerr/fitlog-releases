@@ -15,7 +15,6 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 
 /// Messaggio per comunicazione con isolate
 class _SearchMessage {
-
   _SearchMessage({
     required this.query,
     required this.exercises,
@@ -38,7 +37,6 @@ class _SearchMessage {
 
 /// Risultato serializzabile per invio da isolate
 class _SearchResult {
-
   _SearchResult({
     required this.exerciseId,
     required this.score,
@@ -94,10 +92,10 @@ const Map<String, List<String>> _synonymMap = {
 /// - Ottimizzato per 1500+ esercizi
 /// - Supporta synonym matching per equipaggiamento (bilanciere ↔ barra, etc.)
 class ExerciseFuzzySearchIsolate {
-
   factory ExerciseFuzzySearchIsolate() => _instance;
 
   ExerciseFuzzySearchIsolate._internal();
+
   /// Singleton instance
   static final ExerciseFuzzySearchIsolate _instance =
       ExerciseFuzzySearchIsolate._internal();
@@ -165,15 +163,17 @@ class ExerciseFuzzySearchIsolate {
       final message = data as _SearchMessage;
 
       // Perform search and handle results (don't await in listen callback)
-      _performSearch(message).then((results) {
-        message.replyPort.send(results);
-      }).catchError((e) {
-        // Send error back
-        message.replyPort.send(<_SearchResult>[]);
-        if (kDebugMode) {
-          debugPrint('❌ Isolate search error: $e');
-        }
-      });
+      _performSearch(message)
+          .then((results) {
+            message.replyPort.send(results);
+          })
+          .catchError((e) {
+            // Send error back
+            message.replyPort.send(<_SearchResult>[]);
+            if (kDebugMode) {
+              debugPrint('❌ Isolate search error: $e');
+            }
+          });
     });
   }
 
@@ -200,7 +200,8 @@ class ExerciseFuzzySearchIsolate {
 
   /// Esegui fuzzy search nell'isolate
   static Future<List<_SearchResult>> _performSearch(
-      _SearchMessage message) async {
+    _SearchMessage message,
+  ) async {
     // Normalizza query
     final normalizedQuery = _normalizeQuery(message.query);
 
@@ -240,23 +241,27 @@ class ExerciseFuzzySearchIsolate {
     // cerca esercizi che contengono TUTTI i token (order-agnostic)
     // Cerca sia nel nome che negli aliases
     if (results.isEmpty && queryTokens.length >= 2) {
-      final fallbackMatches = message.exercises.where((e) {
-        // Tokenizza nome
-        final nameTokens = _normalizeString(e.nome).split(RegExp(r'\s+'));
+      final fallbackMatches = message.exercises
+          .where((e) {
+            // Tokenizza nome
+            final nameTokens = _normalizeString(e.nome).split(RegExp(r'\s+'));
 
-        // Tokenizza aliases (tutti gli alias concatenati)
-        final aliasTokens = e.aliases
-            .map((a) => _normalizeString(a))
-            .expand((a) => a.split(RegExp(r'\s+')))
-            .toList();
+            // Tokenizza aliases (tutti gli alias concatenati)
+            final aliasTokens = e.aliases
+                .map((a) => _normalizeString(a))
+                .expand((a) => a.split(RegExp(r'\s+')))
+                .toList();
 
-        // Combina tutti i token (nome + aliases)
-        final allTokens = [...nameTokens, ...aliasTokens];
+            // Combina tutti i token (nome + aliases)
+            final allTokens = [...nameTokens, ...aliasTokens];
 
-        // Verifica che TUTTI i token della query siano presenti
-        return queryTokens.every((qt) =>
-            allTokens.any((nt) => nt.contains(qt) || qt.contains(nt)));
-      }).take(message.maxResults).toList();
+            // Verifica che TUTTI i token della query siano presenti
+            return queryTokens.every(
+              (qt) => allTokens.any((nt) => nt.contains(qt) || qt.contains(nt)),
+            );
+          })
+          .take(message.maxResults)
+          .toList();
 
       // Esegui fuzzy search sugli esercizi trovati per avere score
       if (fallbackMatches.isNotEmpty) {
@@ -284,8 +289,11 @@ class ExerciseFuzzySearchIsolate {
       // ORDER-AGNOSTIC MATCHING: controlla se TUTTI i token query
       // appaiono nel nome (in qualsiasi ordine)
       final nameTokens = normalizedNome.split(RegExp(r'\s+'));
-      final allTokensMatch = queryTokens.isNotEmpty && queryTokens.every((qt) =>
-          nameTokens.any((nt) => nt.contains(qt) || qt.contains(nt)));
+      final allTokensMatch =
+          queryTokens.isNotEmpty &&
+          queryTokens.every(
+            (qt) => nameTokens.any((nt) => nt.contains(qt) || qt.contains(nt)),
+          );
 
       // 1. Fuzzy score con name match boost
       double fuzzyScore = r.score;
@@ -308,14 +316,16 @@ class ExerciseFuzzySearchIsolate {
       double categoryBoost = 0.0;
       if (message.currentCategory != null) {
         final exerciseCategories = r.item.focus.map((f) => f.toLowerCase());
-        final normalizedCurrentCategory =
-            message.currentCategory!.toLowerCase();
+        final normalizedCurrentCategory = message.currentCategory!
+            .toLowerCase();
 
         if (exerciseCategories.contains(normalizedCurrentCategory)) {
           categoryBoost = 1.0;
-        } else if (exerciseCategories.any((cat) =>
-            cat.contains(normalizedCurrentCategory) ||
-            normalizedCurrentCategory.contains(cat))) {
+        } else if (exerciseCategories.any(
+          (cat) =>
+              cat.contains(normalizedCurrentCategory) ||
+              normalizedCurrentCategory.contains(cat),
+        )) {
           categoryBoost = 0.5;
         }
       }
@@ -368,21 +378,24 @@ class ExerciseFuzzySearchIsolate {
     final replyPort = ReceivePort();
 
     // Invia messaggio all'isolate
-    _sendPort!.send(_SearchMessage(
-      query: query,
-      exercises: exercises,
-      userBoosts: userBoosts,
-      currentCategory: currentCategory,
-      strictThreshold: strictThreshold,
-      typeThreshold: typeThreshold,
-      maxResults: maxResults,
-      replyPort: replyPort.sendPort,
-    ));
+    _sendPort!.send(
+      _SearchMessage(
+        query: query,
+        exercises: exercises,
+        userBoosts: userBoosts,
+        currentCategory: currentCategory,
+        strictThreshold: strictThreshold,
+        typeThreshold: typeThreshold,
+        maxResults: maxResults,
+        replyPort: replyPort.sendPort,
+      ),
+    );
 
     // Aspetta risultati (con timeout)
     try {
-      final results = await replyPort.first
-          .timeout(const Duration(seconds: 5)) as List<_SearchResult>;
+      final results =
+          await replyPort.first.timeout(const Duration(seconds: 5))
+              as List<_SearchResult>;
 
       // Converti back in ExerciseFuzzySearchResult con Exercise completo
       final exerciseMap = {for (var e in exercises) e.id: e};
@@ -459,7 +472,6 @@ class ExerciseFuzzySearchIsolate {
 
 /// Risultato search (versione public API)
 class ExerciseFuzzySearchResult {
-
   ExerciseFuzzySearchResult({
     required this.exercise,
     required this.score,

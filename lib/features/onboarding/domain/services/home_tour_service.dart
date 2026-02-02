@@ -65,11 +65,13 @@ class HomeTourState {
 /// Notifier for managing home tour state
 class HomeTourNotifier extends StateNotifier<HomeTourState> {
   HomeTourNotifier()
-      : super(const HomeTourState(
+    : super(
+        const HomeTourState(
           isActive: false,
           currentStep: HomeTourStep.xpProgress,
           hasCompletedTour: false,
-        )) {
+        ),
+      ) {
     _loadState();
   }
 
@@ -363,8 +365,7 @@ class _StepConfig {
 }
 
 /// Provider for home tour state
-final homeTourProvider =
-    StateNotifierProvider<HomeTourNotifier, HomeTourState>(
+final homeTourProvider = StateNotifierProvider<HomeTourNotifier, HomeTourState>(
   (ref) => HomeTourNotifier(),
 );
 

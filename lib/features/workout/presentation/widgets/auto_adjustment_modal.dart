@@ -9,9 +9,9 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+
 /// Modal for configuring RPE-based auto adjustment for exercises.
 class AutoAdjustmentModal extends ConsumerStatefulWidget {
-
   const AutoAdjustmentModal({
     super.key,
     required this.exercise,
@@ -21,7 +21,8 @@ class AutoAdjustmentModal extends ConsumerStatefulWidget {
   final Function(Exercise) onSave;
 
   @override
-  ConsumerState<AutoAdjustmentModal> createState() => _AutoAdjustmentModalState();
+  ConsumerState<AutoAdjustmentModal> createState() =>
+      _AutoAdjustmentModalState();
 }
 
 class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
@@ -39,8 +40,10 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
     _isEnabled = widget.exercise.autoAdjustmentType == AutoAdjustmentType.rpe;
 
     // RPE settings
-    _targetRPEMinController.text = widget.exercise.targetRPEMin?.toString() ?? '7';
-    _targetRPEMaxController.text = widget.exercise.targetRPEMax?.toString() ?? '9';
+    _targetRPEMinController.text =
+        widget.exercise.targetRPEMin?.toString() ?? '7';
+    _targetRPEMaxController.text =
+        widget.exercise.targetRPEMax?.toString() ?? '9';
     _targetRIRController.text = widget.exercise.targetRIR?.toString() ?? '2';
   }
 
@@ -204,7 +207,9 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                 ),
               ),
               const SizedBox(width: 16),
@@ -219,7 +224,9 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                 ),
               ),
             ],
@@ -323,7 +330,11 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
         final minRPE = double.tryParse(_targetRPEMinController.text.trim());
         final maxRPE = double.tryParse(_targetRPEMaxController.text.trim());
 
-        if (minRPE == null || maxRPE == null || minRPE < 1 || maxRPE > 10 || minRPE >= maxRPE) {
+        if (minRPE == null ||
+            maxRPE == null ||
+            minRPE < 1 ||
+            maxRPE > 10 ||
+            minRPE >= maxRPE) {
           SnackBarService.showError(context, context.l10n.invalidRpeRange);
           return;
         }
@@ -354,6 +365,11 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
     widget.onSave(updatedExercise);
     Navigator.pop(context);
 
-    SnackBarService.showSuccess(context, _isEnabled ? context.l10n.autoAdjustmentConfigured : context.l10n.autoAdjustmentCleared);
+    SnackBarService.showSuccess(
+      context,
+      _isEnabled
+          ? context.l10n.autoAdjustmentConfigured
+          : context.l10n.autoAdjustmentCleared,
+    );
   }
 }

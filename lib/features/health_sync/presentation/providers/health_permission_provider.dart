@@ -51,8 +51,9 @@ final healthRepositoryProvider = Provider<IHealthRepository>((ref) {
 ///   error: (err, stack) => Text('Error: $err'),
 /// );
 /// ```
-final healthPermissionStatusProvider =
-    FutureProvider<HealthPermissionStatus>((ref) async {
+final healthPermissionStatusProvider = FutureProvider<HealthPermissionStatus>((
+  ref,
+) async {
   final repository = ref.watch(healthRepositoryProvider);
 
   final result = await repository.checkPermissionStatus();
@@ -82,9 +83,10 @@ final healthPermissionStatusProvider =
 /// );
 /// ```
 final healthPermissionControllerProvider =
-    NotifierProvider<HealthPermissionController, AsyncValue<HealthPermissionStatus>>(
-  HealthPermissionController.new,
-);
+    NotifierProvider<
+      HealthPermissionController,
+      AsyncValue<HealthPermissionStatus>
+    >(HealthPermissionController.new);
 
 class HealthPermissionController
     extends Notifier<AsyncValue<HealthPermissionStatus>> {
@@ -113,10 +115,8 @@ class HealthPermissionController
     final result = await _repository.checkPermissionStatus();
 
     state = result.fold(
-      (failure) => AsyncValue.error(
-        Exception(failure.toString()),
-        StackTrace.current,
-      ),
+      (failure) =>
+          AsyncValue.error(Exception(failure.toString()), StackTrace.current),
       (status) => AsyncValue.data(status),
     );
   }
@@ -140,15 +140,11 @@ class HealthPermissionController
   }) async {
     state = const AsyncValue.loading();
 
-    final result = await _repository.requestPermissions(
-      dataTypes: dataTypes,
-    );
+    final result = await _repository.requestPermissions(dataTypes: dataTypes);
 
     state = result.fold(
-      (failure) => AsyncValue.error(
-        Exception(failure.toString()),
-        StackTrace.current,
-      ),
+      (failure) =>
+          AsyncValue.error(Exception(failure.toString()), StackTrace.current),
       (status) => AsyncValue.data(status),
     );
   }

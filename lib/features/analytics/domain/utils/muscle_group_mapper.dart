@@ -86,8 +86,12 @@ class MuscleGroupMapper {
       'lats' || 'trapezius' || 'lower_back' || 'upper_back' => MuscleGroup.back,
       'shoulders' => MuscleGroup.shoulders,
       'biceps' || 'triceps' || 'forearms' => MuscleGroup.arms,
-      'quadriceps' || 'hamstrings' || 'glutes' || 'calves' || 'adductors' || 'abductors' =>
-        MuscleGroup.legs,
+      'quadriceps' ||
+      'hamstrings' ||
+      'glutes' ||
+      'calves' ||
+      'adductors' ||
+      'abductors' => MuscleGroup.legs,
       'abs' || 'obliques' => MuscleGroup.core,
       _ => null,
     };

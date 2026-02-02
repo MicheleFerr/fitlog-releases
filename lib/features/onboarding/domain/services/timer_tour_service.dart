@@ -66,12 +66,14 @@ class TimerTourState {
 /// Notifier for managing timer tour state
 class TimerTourNotifier extends StateNotifier<TimerTourState> {
   TimerTourNotifier()
-      : super(const TimerTourState(
+    : super(
+        const TimerTourState(
           isActive: false,
           currentStep: TimerTourStep.timerDisplay,
           hasCompletedTour: false,
           hasSeenTimerOnce: false,
-        )) {
+        ),
+      ) {
     _loadState();
   }
 
@@ -234,11 +236,7 @@ class TimerTourNotifier extends StateNotifier<TimerTourState> {
                       // Title with icon
                       Row(
                         children: [
-                          Icon(
-                            config.icon,
-                            size: 20,
-                            color: colors.primary,
-                          ),
+                          Icon(config.icon, size: 20, color: colors.primary),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
@@ -370,8 +368,8 @@ class _StepConfig {
 /// Provider for timer tour state
 final timerTourProvider =
     StateNotifierProvider<TimerTourNotifier, TimerTourState>(
-  (ref) => TimerTourNotifier(),
-);
+      (ref) => TimerTourNotifier(),
+    );
 
 /// Provider to check if timer tour is completed
 final timerTourCompletedProvider = Provider<bool>((ref) {

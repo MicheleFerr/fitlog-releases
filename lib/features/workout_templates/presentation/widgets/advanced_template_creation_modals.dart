@@ -422,7 +422,8 @@ class _SupersetTemplateCreationModalState
 
     // Stima: 45s per esercizio + rest
     final workTime = rounds * exerciseCount * 45;
-    final restTime = rounds * restAfterRound + (exerciseCount - 1) * restBetween;
+    final restTime =
+        rounds * restAfterRound + (exerciseCount - 1) * restBetween;
     return ((workTime + restTime) / 60).ceil();
   }
 
@@ -473,9 +474,7 @@ class _SupersetTemplateCreationModalState
       decoration: InputDecoration(
         labelText: label,
         suffixText: suffix,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -491,9 +490,7 @@ class _SupersetTemplateCreationModalState
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -941,9 +938,7 @@ class _DropsetTemplateCreationModalState
       decoration: InputDecoration(
         labelText: label,
         suffixText: suffix,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -959,9 +954,7 @@ class _DropsetTemplateCreationModalState
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -1355,7 +1348,8 @@ class _RestPauseTemplateCreationModalState
     final clusters = int.tryParse(_clustersController.text) ?? 3;
     final totalSets = int.tryParse(_totalSetsController.text) ?? 3;
     final pauseDuration = int.tryParse(_pauseDurationController.text) ?? 15;
-    final restBetweenSets = int.tryParse(_restBetweenSetsController.text) ?? 180;
+    final restBetweenSets =
+        int.tryParse(_restBetweenSetsController.text) ?? 180;
 
     // Stima: 30s initial + (clusters * 15s) + rest tra set
     final workTime = totalSets * (30 + clusters * (10 + pauseDuration));
@@ -1410,9 +1404,7 @@ class _RestPauseTemplateCreationModalState
       decoration: InputDecoration(
         labelText: label,
         suffixText: suffix,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -1428,9 +1420,7 @@ class _RestPauseTemplateCreationModalState
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }

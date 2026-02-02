@@ -12,7 +12,9 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// Provider for the WorkoutSessionLAService singleton
-final workoutSessionLAServiceProvider = Provider<WorkoutSessionLAService>((ref) {
+final workoutSessionLAServiceProvider = Provider<WorkoutSessionLAService>((
+  ref,
+) {
   final service = WorkoutSessionLAService();
   // Initialize service and handle errors
   service.initialize().catchError((e, stack) {
@@ -28,8 +30,8 @@ final workoutSessionLAServiceProvider = Provider<WorkoutSessionLAService>((ref) 
 /// the WorkoutProvider and the native iOS Live Activity.
 final workoutSessionLAProvider =
     NotifierProvider<WorkoutSessionLANotifier, WorkoutSessionLAState>(
-  WorkoutSessionLANotifier.new,
-);
+      WorkoutSessionLANotifier.new,
+    );
 
 /// State class for the Live Activity
 class WorkoutSessionLAState {
@@ -101,7 +103,9 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
 
     // Cleanup on dispose
     ref.onDispose(() {
-      debugPrint('[WorkoutSessionLA] 🗑️ Provider being disposed - cleaning up');
+      debugPrint(
+        '[WorkoutSessionLA] 🗑️ Provider being disposed - cleaning up',
+      );
       _eventSubscription?.cancel();
       _transitionDebounceTimer?.cancel();
     });
@@ -110,20 +114,27 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
   }
 
   /// Handle timer state changes to transition LA between rest and exercise modes
-  void _handleTimerStateChange(UnifiedTimerState? previous, UnifiedTimerState? next) {
+  void _handleTimerStateChange(
+    UnifiedTimerState? previous,
+    UnifiedTimerState? next,
+  ) {
     // Check if timer just completed (was active, now completed or null)
     final wasActive = previous?.isActive == true;
     final isNowInactive = next == null || next.isCompleted;
 
     // Only log when there's an actual transition (not every tick)
     if (wasActive && isNowInactive) {
-      debugPrint('[WorkoutSessionLA] 🔄 Timer TRANSITION detected: wasActive=$wasActive, isNowInactive=$isNowInactive, mode=${state.mode}, isTransitioning=$_isTransitioningToExercise');
+      debugPrint(
+        '[WorkoutSessionLA] 🔄 Timer TRANSITION detected: wasActive=$wasActive, isNowInactive=$isNowInactive, mode=${state.mode}, isTransitioning=$_isTransitioningToExercise',
+      );
     }
 
     if (wasActive && isNowInactive && state.mode == WorkoutSessionMode.rest) {
       // GUARD: Prevent double transition due to rapid state changes
       if (_isTransitioningToExercise) {
-        debugPrint('[WorkoutSessionLA] ⚠️ Already transitioning - skipping duplicate');
+        debugPrint(
+          '[WorkoutSessionLA] ⚠️ Already transitioning - skipping duplicate',
+        );
         return;
       }
       _isTransitioningToExercise = true;
@@ -134,13 +145,16 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
       // ✅ FIX: Add 500ms delay to let iOS complete the transitionToRest first
       // This prevents "MODE STILL rest - UPDATE FAILED!" error caused by
       // transitionToExercise being called before iOS has processed transitionToRest
-      debugPrint('[WorkoutSessionLA] ⏰ Timer completed - scheduling EXERCISE transition with 500ms delay');
+      debugPrint(
+        '[WorkoutSessionLA] ⏰ Timer completed - scheduling EXERCISE transition with 500ms delay',
+      );
       _transitionDebounceTimer = Timer(const Duration(milliseconds: 500), () {
-        debugPrint('[WorkoutSessionLA] ⏰ Debounce complete - now transitioning LA to EXERCISE mode');
+        debugPrint(
+          '[WorkoutSessionLA] ⏰ Debounce complete - now transitioning LA to EXERCISE mode',
+        );
         _transitionToExerciseAfterRest();
       });
     }
-
   }
 
   /// Transition Live Activity back to exercise mode after rest timer ends
@@ -153,18 +167,24 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
       return;
     }
 
-    debugPrint('[WorkoutSessionLA] 📋 Looking for next incomplete set in ${workout.exercises.length} exercises');
+    debugPrint(
+      '[WorkoutSessionLA] 📋 Looking for next incomplete set in ${workout.exercises.length} exercises',
+    );
 
     // Find the current exercise and set
     for (final exercise in workout.exercises) {
-      final incompleteSetIndex = exercise.sets.indexWhere((set) => !set.isCompleted);
+      final incompleteSetIndex = exercise.sets.indexWhere(
+        (set) => !set.isCompleted,
+      );
 
       if (incompleteSetIndex != -1) {
         final completedExercises = workout.exercises
             .where((e) => e.sets.every((s) => s.isCompleted))
             .length;
 
-        debugPrint('[WorkoutSessionLA] ✅ Found next set: ${exercise.name} set #${incompleteSetIndex + 1}');
+        debugPrint(
+          '[WorkoutSessionLA] ✅ Found next set: ${exercise.name} set #${incompleteSetIndex + 1}',
+        );
 
         transitionToExercise(
           exercise: exercise,
@@ -176,16 +196,21 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
       }
     }
 
-    debugPrint('[WorkoutSessionLA] ⚠️ No incomplete sets found - workout may be complete');
+    debugPrint(
+      '[WorkoutSessionLA] ⚠️ No incomplete sets found - workout may be complete',
+    );
   }
 
-  WorkoutSessionLAService get _service => ref.read(workoutSessionLAServiceProvider);
+  WorkoutSessionLAService get _service =>
+      ref.read(workoutSessionLAServiceProvider);
 
   /// Start the Live Activity when a workout begins
   Future<void> startLiveActivity(Workout workout) async {
     if (!Platform.isIOS) return;
 
-    debugPrint('[WorkoutSessionLA] 🚀 Starting Live Activity for workout: ${workout.name}');
+    debugPrint(
+      '[WorkoutSessionLA] 🚀 Starting Live Activity for workout: ${workout.name}',
+    );
 
     final firstExercise = workout.exercises.isNotEmpty
         ? workout.exercises.first
@@ -201,14 +226,17 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
     final rpeEnabled = appConfig.rpeTracking ?? false;
 
     // Find first incomplete set
-    final firstIncompleteSetIndex = firstExercise.sets
-        .indexWhere((set) => !set.isCompleted);
+    final firstIncompleteSetIndex = firstExercise.sets.indexWhere(
+      (set) => !set.isCompleted,
+    );
     final currentSetIndex = firstIncompleteSetIndex == -1
         ? firstExercise.sets.length
         : firstIncompleteSetIndex + 1;
 
     final firstSet = firstExercise.sets.isNotEmpty
-        ? firstExercise.sets[firstIncompleteSetIndex == -1 ? 0 : firstIncompleteSetIndex]
+        ? firstExercise.sets[firstIncompleteSetIndex == -1
+              ? 0
+              : firstIncompleteSetIndex]
         : null;
 
     // Count completed exercises
@@ -230,7 +258,9 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
     );
 
     if (activityId != null) {
-      debugPrint('[WorkoutSessionLA] ✅ Live Activity started with ID: $activityId');
+      debugPrint(
+        '[WorkoutSessionLA] ✅ Live Activity started with ID: $activityId',
+      );
       state = state.copyWith(
         isActive: true,
         activityId: activityId,
@@ -247,17 +277,24 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
       // Store RPE tracking setting so AppIntent knows whether to show RPE mode
       await _service.setRpeTrackingEnabled(rpeEnabled);
     } else {
-      debugPrint('[WorkoutSessionLA] ❌ Failed to start Live Activity (null activityId)');
+      debugPrint(
+        '[WorkoutSessionLA] ❌ Failed to start Live Activity (null activityId)',
+      );
     }
   }
 
   /// Update the Live Activity with new exercise info
-  Future<void> updateExercise(Exercise exercise, int completedExercises, int totalExercises) async {
+  Future<void> updateExercise(
+    Exercise exercise,
+    int completedExercises,
+    int totalExercises,
+  ) async {
     if (!state.isActive) return;
 
     // Find first incomplete set
-    final firstIncompleteSetIndex = exercise.sets
-        .indexWhere((set) => !set.isCompleted);
+    final firstIncompleteSetIndex = exercise.sets.indexWhere(
+      (set) => !set.isCompleted,
+    );
     final currentSetIndex = firstIncompleteSetIndex == -1
         ? exercise.sets.length
         : firstIncompleteSetIndex + 1;
@@ -297,18 +334,23 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
     required Exercise nextExercise,
     required int nextSetIndex,
   }) async {
-    debugPrint('[WorkoutSessionLA] 🔄 transitionToRest called - isActive: ${state.isActive}, activityId: ${state.activityId}');
+    debugPrint(
+      '[WorkoutSessionLA] 🔄 transitionToRest called - isActive: ${state.isActive}, activityId: ${state.activityId}',
+    );
 
     // Reset transition guard flag when entering REST mode
     // This allows the next timer completion to trigger a new transition
     _isTransitioningToExercise = false;
 
     if (!state.isActive) {
-      debugPrint('[WorkoutSessionLA] ⚠️ LA not active, cannot transition to rest');
+      debugPrint(
+        '[WorkoutSessionLA] ⚠️ LA not active, cannot transition to rest',
+      );
       return;
     }
 
-    final nextSet = nextExercise.sets.isNotEmpty && nextSetIndex <= nextExercise.sets.length
+    final nextSet =
+        nextExercise.sets.isNotEmpty && nextSetIndex <= nextExercise.sets.length
         ? nextExercise.sets[nextSetIndex - 1]
         : (nextExercise.sets.isNotEmpty ? nextExercise.sets.first : null);
 
@@ -346,7 +388,9 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
     required int totalExercises,
   }) async {
     if (!state.isActive) {
-      debugPrint('[WorkoutSessionLA] ⚠️ LA not active, cannot transition to exercise');
+      debugPrint(
+        '[WorkoutSessionLA] ⚠️ LA not active, cannot transition to exercise',
+      );
       _isTransitioningToExercise = false;
       return;
     }
@@ -355,7 +399,9 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
         ? exercise.sets[setIndex - 1]
         : (exercise.sets.isNotEmpty ? exercise.sets.first : null);
 
-    debugPrint('[WorkoutSessionLA] 📤 Calling iOS transitionToExercise: ${exercise.name} set $setIndex');
+    debugPrint(
+      '[WorkoutSessionLA] 📤 Calling iOS transitionToExercise: ${exercise.name} set $setIndex',
+    );
     await _service.transitionToExercise(
       exerciseName: exercise.name,
       currentSet: setIndex,
@@ -376,7 +422,9 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
     // Update the rest duration for this exercise in UserDefaults
     final restDuration = exercise.restTime ?? 90;
     await _service.setCurrentRestDuration(restDuration);
-    debugPrint('[WorkoutSessionLA] ✅ Transition to EXERCISE complete, rest duration set to ${restDuration}s');
+    debugPrint(
+      '[WorkoutSessionLA] ✅ Transition to EXERCISE complete, rest duration set to ${restDuration}s',
+    );
 
     // Reset transition guard flag
     _isTransitioningToExercise = false;
@@ -398,7 +446,9 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
   Future<void> checkPendingEventsOnResume() async {
     if (!Platform.isIOS) return;
 
-    debugPrint('[WorkoutSessionLA] 🔍 Checking for pending events on app resume...');
+    debugPrint(
+      '[WorkoutSessionLA] 🔍 Checking for pending events on app resume...',
+    );
 
     // The service's checkPendingEvents will:
     // 1. Read UserDefaults for any pending event
@@ -427,17 +477,25 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
     } else if (event.isAddTime) {
       // User tapped "+30s" - extend rest timer
       final addedSeconds = event.addedSeconds ?? 30;
-      debugPrint('[WorkoutSessionLA] 📨 Received add_time event: +$addedSeconds seconds');
+      debugPrint(
+        '[WorkoutSessionLA] 📨 Received add_time event: +$addedSeconds seconds',
+      );
       debugPrint('[WorkoutSessionLA] 📨 Event data: ${event.data}');
-      debugPrint('[WorkoutSessionLA] 📤 Calling extendRestTimerFromLiveActivity($addedSeconds)...');
+      debugPrint(
+        '[WorkoutSessionLA] 📤 Calling extendRestTimerFromLiveActivity($addedSeconds)...',
+      );
       workoutNotifier.extendRestTimerFromLiveActivity(addedSeconds);
-      debugPrint('[WorkoutSessionLA] ✅ extendRestTimerFromLiveActivity completed');
+      debugPrint(
+        '[WorkoutSessionLA] ✅ extendRestTimerFromLiveActivity completed',
+      );
     } else if (event.isSelectRPE) {
       // User selected an RPE value - update Live Activity UI to show selection
       final selectedRPE = event.selectedRPE;
       if (selectedRPE != null) {
         if (kDebugMode) {
-          debugPrint('[WorkoutSessionLA] 🎯 RPE selected: $selectedRPE - updating Live Activity');
+          debugPrint(
+            '[WorkoutSessionLA] 🎯 RPE selected: $selectedRPE - updating Live Activity',
+          );
         }
         // Update the Live Activity to show the selected RPE (highlights the button)
         _service.updateSelectedRPE(selectedRPE);
@@ -459,7 +517,9 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
   /// If RPE tracking is enabled, transitions to RPE mode first.
   /// Otherwise, directly completes the set and starts rest timer.
   void completeCurrentSetFromLiveActivity({int? selectedRPE}) {
-    debugPrint('[WorkoutSessionLA] 🚀 completeCurrentSetFromLiveActivity called, selectedRPE: $selectedRPE');
+    debugPrint(
+      '[WorkoutSessionLA] 🚀 completeCurrentSetFromLiveActivity called, selectedRPE: $selectedRPE',
+    );
 
     final workout = state;
     if (workout == null) {
@@ -467,7 +527,9 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
       return;
     }
 
-    debugPrint('[WorkoutSessionLA] 📋 Workout: ${workout.name}, exercises: ${workout.exercises.length}');
+    debugPrint(
+      '[WorkoutSessionLA] 📋 Workout: ${workout.name}, exercises: ${workout.exercises.length}',
+    );
 
     // Find the first exercise with incomplete sets
     Exercise? targetExercise;
@@ -475,7 +537,9 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
 
     for (final exercise in workout.exercises) {
       final incompleteSets = exercise.sets.where((set) => !set.isCompleted);
-      debugPrint('[WorkoutSessionLA] 📊 Exercise ${exercise.name}: ${incompleteSets.length} incomplete sets');
+      debugPrint(
+        '[WorkoutSessionLA] 📊 Exercise ${exercise.name}: ${incompleteSets.length} incomplete sets',
+      );
       if (incompleteSets.isNotEmpty) {
         targetExercise = exercise;
         targetSet = incompleteSets.first;
@@ -484,11 +548,15 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
     }
 
     if (targetExercise == null || targetSet == null) {
-      debugPrint('[WorkoutSessionLA] ⚠️ No incomplete sets found in any exercise');
+      debugPrint(
+        '[WorkoutSessionLA] ⚠️ No incomplete sets found in any exercise',
+      );
       return;
     }
 
-    debugPrint('[WorkoutSessionLA] 🎯 Target: ${targetExercise.name} set #${targetSet.setNumber}');
+    debugPrint(
+      '[WorkoutSessionLA] 🎯 Target: ${targetExercise.name} set #${targetSet.setNumber}',
+    );
 
     // Check if RPE tracking is enabled
     final appConfig = ref.read(appConfigProvider);
@@ -497,12 +565,16 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
 
     if (rpeEnabled && selectedRPE == null) {
       // RPE is enabled and no RPE provided yet - show RPE selection screen
-      debugPrint('[WorkoutSessionLA] 🎯 RPE enabled but no RPE provided - transitioning to RPE mode');
+      debugPrint(
+        '[WorkoutSessionLA] 🎯 RPE enabled but no RPE provided - transitioning to RPE mode',
+      );
       ref.read(workoutSessionLAProvider.notifier).transitionToRPE();
       return;
     }
 
-    debugPrint('[WorkoutSessionLA] ✅ Completing set ${targetSet.setNumber} of ${targetExercise.name}');
+    debugPrint(
+      '[WorkoutSessionLA] ✅ Completing set ${targetSet.setNumber} of ${targetExercise.name}',
+    );
 
     // If RPE was provided, update the set first
     if (selectedRPE != null) {
@@ -511,7 +583,9 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
     }
 
     // Complete the set (this will start rest timer automatically)
-    debugPrint('[WorkoutSessionLA] 📤 Calling completeSet(${targetExercise.id}, ${targetSet.id})');
+    debugPrint(
+      '[WorkoutSessionLA] 📤 Calling completeSet(${targetExercise.id}, ${targetSet.id})',
+    );
     completeSet(targetExercise.id, targetSet.id);
     debugPrint('[WorkoutSessionLA] ✅ completeSet called successfully');
   }
@@ -521,7 +595,9 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
   /// Cancels the current rest timer immediately without playing audio.
   void skipRestTimerFromLiveActivity() {
     if (kDebugMode) {
-      debugPrint('[WorkoutSessionLA] ⏭️ Skipping rest timer from Live Activity');
+      debugPrint(
+        '[WorkoutSessionLA] ⏭️ Skipping rest timer from Live Activity',
+      );
     }
 
     // Skip the unified timer
@@ -538,27 +614,36 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
   /// for immediate UI feedback. We pass fromLiveActivity: true to addTime() so it
   /// skips the LA update but still notifies the Watch.
   Future<void> extendRestTimerFromLiveActivity(int additionalSeconds) async {
-    debugPrint('[WorkoutSessionLA] ⏰ extendRestTimerFromLiveActivity called: +$additionalSeconds seconds');
+    debugPrint(
+      '[WorkoutSessionLA] ⏰ extendRestTimerFromLiveActivity called: +$additionalSeconds seconds',
+    );
 
     // Check current timer state before
     final timerStateBefore = ref.read(unifiedTimerProvider);
-    debugPrint('[WorkoutSessionLA] 📊 Timer state BEFORE: isActive=${timerStateBefore?.isActive}, remaining=${timerStateBefore?.remainingSeconds}s');
+    debugPrint(
+      '[WorkoutSessionLA] 📊 Timer state BEFORE: isActive=${timerStateBefore?.isActive}, remaining=${timerStateBefore?.remainingSeconds}s',
+    );
 
     // Update Flutter timer state and notify Watch
     // fromLiveActivity: true tells addTime() to skip LA update (already done by AppIntent)
     // but still notify the Watch
-    debugPrint('[WorkoutSessionLA] 📤 Calling addTime($additionalSeconds, fromLiveActivity: true)...');
-    await ref.read(unifiedTimerProvider.notifier).addTime(
-      additionalSeconds,
-      fromLiveActivity: true,
+    debugPrint(
+      '[WorkoutSessionLA] 📤 Calling addTime($additionalSeconds, fromLiveActivity: true)...',
     );
+    await ref
+        .read(unifiedTimerProvider.notifier)
+        .addTime(additionalSeconds, fromLiveActivity: true);
 
     // Check timer state after
     final timerStateAfter = ref.read(unifiedTimerProvider);
     final newDuration = timerStateAfter?.totalDurationSeconds ?? 0;
     final newRemaining = timerStateAfter?.remainingSeconds ?? 0;
-    debugPrint('[WorkoutSessionLA] ✅ Timer state AFTER: remaining=${newRemaining}s, total=${newDuration}s');
-    debugPrint('[WorkoutSessionLA] ✅ +${additionalSeconds}s synced: Flutter ✓ Watch ✓ (LA already updated by AppIntent)');
+    debugPrint(
+      '[WorkoutSessionLA] ✅ Timer state AFTER: remaining=${newRemaining}s, total=${newDuration}s',
+    );
+    debugPrint(
+      '[WorkoutSessionLA] ✅ +${additionalSeconds}s synced: Flutter ✓ Watch ✓ (LA already updated by AppIntent)',
+    );
   }
 
   /// Confirm RPE from Live Activity
@@ -569,7 +654,9 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
     final workout = state;
     if (workout == null) {
       if (kDebugMode) {
-        debugPrint('[WorkoutSessionLA] ❌ No active workout for RPE confirmation');
+        debugPrint(
+          '[WorkoutSessionLA] ❌ No active workout for RPE confirmation',
+        );
       }
       return;
     }
@@ -593,13 +680,17 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
 
     if (targetExercise == null || targetSet == null) {
       if (kDebugMode) {
-        debugPrint('[WorkoutSessionLA] ⚠️ No incomplete set found for RPE confirmation');
+        debugPrint(
+          '[WorkoutSessionLA] ⚠️ No incomplete set found for RPE confirmation',
+        );
       }
       return;
     }
 
     if (kDebugMode) {
-      debugPrint('[WorkoutSessionLA] ✅ Completing set ${targetSet.setNumber} of ${targetExercise.name} with RPE $rpe');
+      debugPrint(
+        '[WorkoutSessionLA] ✅ Completing set ${targetSet.setNumber} of ${targetExercise.name} with RPE $rpe',
+      );
     }
 
     // Update the set with RPE value
@@ -621,19 +712,23 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
     // Find current exercise and set
     for (var i = 0; i < workout.exercises.length; i++) {
       final exercise = workout.exercises[i];
-      final incompleteSetIndex = exercise.sets.indexWhere((set) => !set.isCompleted);
+      final incompleteSetIndex = exercise.sets.indexWhere(
+        (set) => !set.isCompleted,
+      );
 
       if (incompleteSetIndex != -1) {
         final completedExercises = workout.exercises
             .where((e) => e.sets.every((s) => s.isCompleted))
             .length;
 
-        ref.read(workoutSessionLAProvider.notifier).transitionToExercise(
-          exercise: exercise,
-          setIndex: incompleteSetIndex + 1,
-          completedExercises: completedExercises,
-          totalExercises: workout.exercises.length,
-        );
+        ref
+            .read(workoutSessionLAProvider.notifier)
+            .transitionToExercise(
+              exercise: exercise,
+              setIndex: incompleteSetIndex + 1,
+              completedExercises: completedExercises,
+              totalExercises: workout.exercises.length,
+            );
         break;
       }
     }

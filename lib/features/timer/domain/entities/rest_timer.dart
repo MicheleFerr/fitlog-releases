@@ -8,14 +8,10 @@ enum TimerStatus {
   awaitingRPE, // ✅ Nuovo stato per RPE
 }
 
-enum TimerType {
-  rest,
-  workout,
-  warmup,
-  cooldown,
-}
+enum TimerType { rest, workout, warmup, cooldown }
 
-class RestTimer {  // When the timer completed
+class RestTimer {
+  // When the timer completed
 
   RestTimer({
     String? id,
@@ -31,9 +27,8 @@ class RestTimer {  // When the timer completed
     this.workoutId,
     this.audioAlreadyPlayed = false,
     this.completionTime,
-  }) : 
-    id = id ?? const Uuid().v4(),
-    remainingSeconds = remainingSeconds ?? totalDurationSeconds;
+  }) : id = id ?? const Uuid().v4(),
+       remainingSeconds = remainingSeconds ?? totalDurationSeconds;
 
   factory RestTimer.fromJson(Map<String, dynamic> json) {
     return RestTimer(
@@ -48,12 +43,10 @@ class RestTimer {  // When the timer completed
         (e) => e.name == json['status'],
         orElse: () => TimerStatus.idle,
       ),
-      startTime: json['startTime'] != null 
-          ? DateTime.parse(json['startTime']) 
+      startTime: json['startTime'] != null
+          ? DateTime.parse(json['startTime'])
           : null,
-      endTime: json['endTime'] != null 
-          ? DateTime.parse(json['endTime']) 
-          : null,
+      endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : null,
       exerciseName: json['exerciseName'],
       currentSet: json['currentSet'],
       totalSets: json['totalSets'],
@@ -75,7 +68,7 @@ class RestTimer {  // When the timer completed
   final int? currentSet;
   final int? totalSets;
   final String? workoutId;
-  final bool audioAlreadyPlayed;  // Flag to track if audio was already played
+  final bool audioAlreadyPlayed; // Flag to track if audio was already played
   final DateTime? completionTime;
 
   /// Progress from 0.0 to 1.0
@@ -101,10 +94,12 @@ class RestTimer {  // When the timer completed
   }
 
   /// Check if timer is active (running or paused)
-  bool get isActive => status == TimerStatus.running || status == TimerStatus.paused;
+  bool get isActive =>
+      status == TimerStatus.running || status == TimerStatus.paused;
 
   /// Check if timer is complete
-  bool get isCompleted => status == TimerStatus.completed || remainingSeconds <= 0;
+  bool get isCompleted =>
+      status == TimerStatus.completed || remainingSeconds <= 0;
 
   /// Check if timer is running
   bool get isRunning => status == TimerStatus.running;
@@ -148,24 +143,17 @@ class RestTimer {  // When the timer completed
 
   /// Start the timer
   RestTimer start() {
-    return copyWith(
-      status: TimerStatus.running,
-      startTime: DateTime.now(),
-    );
+    return copyWith(status: TimerStatus.running, startTime: DateTime.now());
   }
 
   /// Pause the timer
   RestTimer pause() {
-    return copyWith(
-      status: TimerStatus.paused,
-    );
+    return copyWith(status: TimerStatus.paused);
   }
 
   /// Resume the timer
   RestTimer resume() {
-    return copyWith(
-      status: TimerStatus.running,
-    );
+    return copyWith(status: TimerStatus.running);
   }
 
   /// Complete the timer
@@ -175,8 +163,8 @@ class RestTimer {  // When the timer completed
       status: TimerStatus.completed,
       remainingSeconds: 0,
       endTime: now,
-      completionTime: now,  // Track when timer completed
-      audioAlreadyPlayed: false,  // Will be set to true after audio plays
+      completionTime: now, // Track when timer completed
+      audioAlreadyPlayed: false, // Will be set to true after audio plays
     );
   }
 

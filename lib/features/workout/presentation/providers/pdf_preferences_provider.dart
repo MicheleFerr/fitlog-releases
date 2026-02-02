@@ -20,7 +20,10 @@ import 'package:flutter/foundation.dart';
 const String _kPdfDetailLevelKey = 'pdf_detail_level_preference';
 
 /// Provider per le preferenze di esportazione PDF
-final pdfPreferencesProvider = NotifierProvider<PdfPreferencesNotifier, PdfDetailLevel?>(PdfPreferencesNotifier.new);
+final pdfPreferencesProvider =
+    NotifierProvider<PdfPreferencesNotifier, PdfDetailLevel?>(
+      PdfPreferencesNotifier.new,
+    );
 
 /// Notifier per gestire le preferenze PDF
 class PdfPreferencesNotifier extends Notifier<PdfDetailLevel?> {

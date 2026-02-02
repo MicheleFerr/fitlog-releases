@@ -52,9 +52,9 @@ class VolumeAnalyzer {
     final now = DateTime.now();
     final weekAgo = now.subtract(const Duration(days: 7));
 
-    final recentWorkouts = workouts.where((w) =>
-      w.createdAt.isAfter(weekAgo)
-    ).toList();
+    final recentWorkouts = workouts
+        .where((w) => w.createdAt.isAfter(weekAgo))
+        .toList();
 
     final setsPerMuscle = <MuscleGroup, int>{
       MuscleGroup.chest: 0,
@@ -67,13 +67,16 @@ class VolumeAnalyzer {
 
     for (final workout in recentWorkouts) {
       for (final exercise in workout.exercises) {
-        final muscleGroup = MuscleGroupMapper.fromExerciseCategory(exercise.category);
+        final muscleGroup = MuscleGroupMapper.fromExerciseCategory(
+          exercise.category,
+        );
 
         // Skip cardio/other exercises
         if (muscleGroup == null) continue;
 
         final setsCount = exercise.sets.length;
-        setsPerMuscle[muscleGroup] = (setsPerMuscle[muscleGroup] ?? 0) + setsCount;
+        setsPerMuscle[muscleGroup] =
+            (setsPerMuscle[muscleGroup] ?? 0) + setsCount;
       }
     }
 
@@ -100,9 +103,9 @@ class VolumeAnalyzer {
     final now = DateTime.now();
     final weekAgo = now.subtract(const Duration(days: 7));
 
-    final recentWorkouts = workouts.where((w) =>
-      w.createdAt.isAfter(weekAgo)
-    ).toList();
+    final recentWorkouts = workouts
+        .where((w) => w.createdAt.isAfter(weekAgo))
+        .toList();
 
     final setsPerMuscle = <MuscleGroup, double>{
       MuscleGroup.chest: 0.0,
@@ -120,7 +123,8 @@ class VolumeAnalyzer {
 
         // Try to get muscle data from the map
         // Use case-insensitive lookup: try exact match, then lowercase
-        final muscleData = exerciseMuscleMap?[exercise.name] ??
+        final muscleData =
+            exerciseMuscleMap?[exercise.name] ??
             exerciseMuscleMap?[exercise.name.toLowerCase()];
 
         if (muscleData != null && muscleData.hasData) {
@@ -133,9 +137,12 @@ class VolumeAnalyzer {
           );
         } else {
           // Fallback to category-based assignment (100% to primary group)
-          final muscleGroup = MuscleGroupMapper.fromExerciseCategory(exercise.category);
+          final muscleGroup = MuscleGroupMapper.fromExerciseCategory(
+            exercise.category,
+          );
           if (muscleGroup != null) {
-            setsPerMuscle[muscleGroup] = (setsPerMuscle[muscleGroup] ?? 0) + setsCount;
+            setsPerMuscle[muscleGroup] =
+                (setsPerMuscle[muscleGroup] ?? 0) + setsCount;
           }
         }
       }
@@ -155,8 +162,12 @@ class VolumeAnalyzer {
     required double setsCount,
     String exerciseName = '',
   }) {
-    final primaryGroups = MuscleGroupMapper.fromMuscleAbbreviations(muscleData.primary);
-    final secondaryGroups = MuscleGroupMapper.fromMuscleAbbreviations(muscleData.secondary);
+    final primaryGroups = MuscleGroupMapper.fromMuscleAbbreviations(
+      muscleData.primary,
+    );
+    final secondaryGroups = MuscleGroupMapper.fromMuscleAbbreviations(
+      muscleData.secondary,
+    );
 
     // If no muscles found, skip
     if (primaryGroups.isEmpty && secondaryGroups.isEmpty) return;
@@ -236,25 +247,27 @@ class VolumeAnalyzer {
     Map<MuscleGroup, List<ExerciseContributionWeighted>> categorized,
     List<ExerciseContributionWeighted> uncategorized,
     Map<MuscleGroup, double> totalWeightedSets,
-  }) calculateWeeklySetsWithExercisesWeighted(
+  })
+  calculateWeeklySetsWithExercisesWeighted(
     List<Workout> workouts, {
     Map<String, ExerciseMuscleData>? exerciseMuscleMap,
   }) {
     final now = DateTime.now();
     final weekAgo = now.subtract(const Duration(days: 7));
 
-    final recentWorkouts = workouts.where((w) =>
-      w.createdAt.isAfter(weekAgo)
-    ).toList();
+    final recentWorkouts = workouts
+        .where((w) => w.createdAt.isAfter(weekAgo))
+        .toList();
 
-    final exercisesPerMuscle = <MuscleGroup, List<ExerciseContributionWeighted>>{
-      MuscleGroup.chest: [],
-      MuscleGroup.back: [],
-      MuscleGroup.shoulders: [],
-      MuscleGroup.arms: [],
-      MuscleGroup.legs: [],
-      MuscleGroup.core: [],
-    };
+    final exercisesPerMuscle =
+        <MuscleGroup, List<ExerciseContributionWeighted>>{
+          MuscleGroup.chest: [],
+          MuscleGroup.back: [],
+          MuscleGroup.shoulders: [],
+          MuscleGroup.arms: [],
+          MuscleGroup.legs: [],
+          MuscleGroup.core: [],
+        };
 
     final totalWeightedSets = <MuscleGroup, double>{
       MuscleGroup.chest: 0.0,
@@ -274,7 +287,8 @@ class VolumeAnalyzer {
 
         // Try to get muscle data from the map
         // Use case-insensitive lookup: try exact match, then lowercase
-        final muscleData = exerciseMuscleMap?[exercise.name] ??
+        final muscleData =
+            exerciseMuscleMap?[exercise.name] ??
             exerciseMuscleMap?[exercise.name.toLowerCase()];
 
         if (muscleData != null && muscleData.hasData) {
@@ -290,22 +304,29 @@ class VolumeAnalyzer {
             final weightedSets = entry.value.weightedSets;
             final isPrimary = entry.value.isPrimary;
 
-            totalWeightedSets[group] = (totalWeightedSets[group] ?? 0) + weightedSets;
+            totalWeightedSets[group] =
+                (totalWeightedSets[group] ?? 0) + weightedSets;
 
             // Find or create contribution
             final existingIndex = exercisesPerMuscle[group]!.indexWhere(
-              (e) => e.exerciseName.toLowerCase() == exercise.name.toLowerCase(),
+              (e) =>
+                  e.exerciseName.toLowerCase() == exercise.name.toLowerCase(),
             );
 
             if (existingIndex != -1) {
-              exercisesPerMuscle[group]![existingIndex] = ExerciseContributionWeighted(
-                exerciseName: exercise.name,
-                rawSets: exercisesPerMuscle[group]![existingIndex].rawSets + rawSetsCount,
-                weightedSets: exercisesPerMuscle[group]![existingIndex].weightedSets + weightedSets,
-                workoutDate: workout.createdAt,
-                category: exercise.category,
-                isPrimary: isPrimary,
-              );
+              exercisesPerMuscle[group]![existingIndex] =
+                  ExerciseContributionWeighted(
+                    exerciseName: exercise.name,
+                    rawSets:
+                        exercisesPerMuscle[group]![existingIndex].rawSets +
+                        rawSetsCount,
+                    weightedSets:
+                        exercisesPerMuscle[group]![existingIndex].weightedSets +
+                        weightedSets,
+                    workoutDate: workout.createdAt,
+                    category: exercise.category,
+                    isPrimary: isPrimary,
+                  );
             } else {
               exercisesPerMuscle[group]!.add(
                 ExerciseContributionWeighted(
@@ -321,25 +342,36 @@ class VolumeAnalyzer {
           }
         } else {
           // Fallback to category-based assignment
-          final muscleGroup = MuscleGroupMapper.fromExerciseCategory(exercise.category);
+          final muscleGroup = MuscleGroupMapper.fromExerciseCategory(
+            exercise.category,
+          );
 
           if (muscleGroup != null) {
             final weightedSets = rawSetsCount.toDouble();
-            totalWeightedSets[muscleGroup] = (totalWeightedSets[muscleGroup] ?? 0) + weightedSets;
+            totalWeightedSets[muscleGroup] =
+                (totalWeightedSets[muscleGroup] ?? 0) + weightedSets;
 
             final existingIndex = exercisesPerMuscle[muscleGroup]!.indexWhere(
-              (e) => e.exerciseName.toLowerCase() == exercise.name.toLowerCase(),
+              (e) =>
+                  e.exerciseName.toLowerCase() == exercise.name.toLowerCase(),
             );
 
             if (existingIndex != -1) {
-              exercisesPerMuscle[muscleGroup]![existingIndex] = ExerciseContributionWeighted(
-                exerciseName: exercise.name,
-                rawSets: exercisesPerMuscle[muscleGroup]![existingIndex].rawSets + rawSetsCount,
-                weightedSets: exercisesPerMuscle[muscleGroup]![existingIndex].weightedSets + weightedSets,
-                workoutDate: workout.createdAt,
-                category: exercise.category,
-                isPrimary: true,
-              );
+              exercisesPerMuscle[muscleGroup]![existingIndex] =
+                  ExerciseContributionWeighted(
+                    exerciseName: exercise.name,
+                    rawSets:
+                        exercisesPerMuscle[muscleGroup]![existingIndex]
+                            .rawSets +
+                        rawSetsCount,
+                    weightedSets:
+                        exercisesPerMuscle[muscleGroup]![existingIndex]
+                            .weightedSets +
+                        weightedSets,
+                    workoutDate: workout.createdAt,
+                    category: exercise.category,
+                    isPrimary: true,
+                  );
             } else {
               exercisesPerMuscle[muscleGroup]!.add(
                 ExerciseContributionWeighted(
@@ -355,18 +387,24 @@ class VolumeAnalyzer {
           } else {
             // Track uncategorized exercises
             final existingIndex = uncategorizedExercises.indexWhere(
-              (e) => e.exerciseName.toLowerCase() == exercise.name.toLowerCase(),
+              (e) =>
+                  e.exerciseName.toLowerCase() == exercise.name.toLowerCase(),
             );
 
             if (existingIndex != -1) {
-              uncategorizedExercises[existingIndex] = ExerciseContributionWeighted(
-                exerciseName: exercise.name,
-                rawSets: uncategorizedExercises[existingIndex].rawSets + rawSetsCount,
-                weightedSets: uncategorizedExercises[existingIndex].weightedSets + rawSetsCount.toDouble(),
-                workoutDate: workout.createdAt,
-                category: exercise.category,
-                isPrimary: true,
-              );
+              uncategorizedExercises[existingIndex] =
+                  ExerciseContributionWeighted(
+                    exerciseName: exercise.name,
+                    rawSets:
+                        uncategorizedExercises[existingIndex].rawSets +
+                        rawSetsCount,
+                    weightedSets:
+                        uncategorizedExercises[existingIndex].weightedSets +
+                        rawSetsCount.toDouble(),
+                    workoutDate: workout.createdAt,
+                    category: exercise.category,
+                    isPrimary: true,
+                  );
             } else {
               uncategorizedExercises.add(
                 ExerciseContributionWeighted(
@@ -386,9 +424,13 @@ class VolumeAnalyzer {
 
     // Sort by weighted sets descending
     for (final muscle in MuscleGroup.values) {
-      exercisesPerMuscle[muscle]!.sort((a, b) => b.weightedSets.compareTo(a.weightedSets));
+      exercisesPerMuscle[muscle]!.sort(
+        (a, b) => b.weightedSets.compareTo(a.weightedSets),
+      );
     }
-    uncategorizedExercises.sort((a, b) => b.weightedSets.compareTo(a.weightedSets));
+    uncategorizedExercises.sort(
+      (a, b) => b.weightedSets.compareTo(a.weightedSets),
+    );
 
     return (
       categorized: exercisesPerMuscle,
@@ -402,16 +444,22 @@ class VolumeAnalyzer {
   /// Uses EMG-based tiered synergist distribution:
   /// - First synergist gets highSynergistRatio
   /// - Remaining synergists split moderateSynergistRatio
-  static Map<MuscleGroup, ({double weightedSets, bool isPrimary})> _calculateExerciseDistribution({
+  static Map<MuscleGroup, ({double weightedSets, bool isPrimary})>
+  _calculateExerciseDistribution({
     required ExerciseMuscleData muscleData,
     required int rawSets,
     String exerciseName = '',
   }) {
-    final distribution = <MuscleGroup, ({double weightedSets, bool isPrimary})>{};
+    final distribution =
+        <MuscleGroup, ({double weightedSets, bool isPrimary})>{};
     final setsCount = rawSets.toDouble();
 
-    final primaryGroups = MuscleGroupMapper.fromMuscleAbbreviations(muscleData.primary);
-    final secondaryGroups = MuscleGroupMapper.fromMuscleAbbreviations(muscleData.secondary);
+    final primaryGroups = MuscleGroupMapper.fromMuscleAbbreviations(
+      muscleData.primary,
+    );
+    final secondaryGroups = MuscleGroupMapper.fromMuscleAbbreviations(
+      muscleData.secondary,
+    );
 
     // If no muscles found, return empty
     if (primaryGroups.isEmpty && secondaryGroups.isEmpty) return distribution;
@@ -442,7 +490,10 @@ class VolumeAnalyzer {
     if (primaryGroups.isEmpty && secondaryGroups.isNotEmpty) {
       final setsPerSecondary = setsCount / secondaryGroups.length;
       for (final group in secondaryGroups) {
-        distribution[group] = (weightedSets: setsPerSecondary, isPrimary: false);
+        distribution[group] = (
+          weightedSets: setsPerSecondary,
+          isPrimary: false,
+        );
       }
       return distribution;
     }
@@ -472,7 +523,10 @@ class VolumeAnalyzer {
           isPrimary: existing.isPrimary,
         );
       } else {
-        distribution[firstGroup] = (weightedSets: firstSynergistSets, isPrimary: false);
+        distribution[firstGroup] = (
+          weightedSets: firstSynergistSets,
+          isPrimary: false,
+        );
       }
 
       // Remaining synergists split moderateSynergistRatio
@@ -488,7 +542,10 @@ class VolumeAnalyzer {
               isPrimary: existing.isPrimary,
             );
           } else {
-            distribution[group] = (weightedSets: setsPerModerate, isPrimary: false);
+            distribution[group] = (
+              weightedSets: setsPerModerate,
+              isPrimary: false,
+            );
           }
         }
       }
@@ -502,15 +559,14 @@ class VolumeAnalyzer {
   static ({
     Map<MuscleGroup, List<ExerciseContribution>> categorized,
     List<ExerciseContribution> uncategorized,
-  }) calculateWeeklySetsWithExercises(
-    List<Workout> workouts,
-  ) {
+  })
+  calculateWeeklySetsWithExercises(List<Workout> workouts) {
     final now = DateTime.now();
     final weekAgo = now.subtract(const Duration(days: 7));
 
-    final recentWorkouts = workouts.where((w) =>
-      w.createdAt.isAfter(weekAgo)
-    ).toList();
+    final recentWorkouts = workouts
+        .where((w) => w.createdAt.isAfter(weekAgo))
+        .toList();
 
     final exercisesPerMuscle = <MuscleGroup, List<ExerciseContribution>>{
       MuscleGroup.chest: [],
@@ -525,7 +581,9 @@ class VolumeAnalyzer {
 
     for (final workout in recentWorkouts) {
       for (final exercise in workout.exercises) {
-        final muscleGroup = MuscleGroupMapper.fromExerciseCategory(exercise.category);
+        final muscleGroup = MuscleGroupMapper.fromExerciseCategory(
+          exercise.category,
+        );
         final setsCount = exercise.sets.length;
 
         if (muscleGroup == null) {
@@ -561,12 +619,15 @@ class VolumeAnalyzer {
 
         if (existingIndex != -1) {
           // Update existing exercise
-          exercisesPerMuscle[muscleGroup]![existingIndex] = ExerciseContribution(
-            exerciseName: exercise.name,
-            sets: exercisesPerMuscle[muscleGroup]![existingIndex].sets + setsCount,
-            workoutDate: workout.createdAt,
-            category: exercise.category,
-          );
+          exercisesPerMuscle[muscleGroup]![existingIndex] =
+              ExerciseContribution(
+                exerciseName: exercise.name,
+                sets:
+                    exercisesPerMuscle[muscleGroup]![existingIndex].sets +
+                    setsCount,
+                workoutDate: workout.createdAt,
+                category: exercise.category,
+              );
         } else {
           // Add new exercise
           exercisesPerMuscle[muscleGroup]!.add(
@@ -587,7 +648,10 @@ class VolumeAnalyzer {
     }
     uncategorizedExercises.sort((a, b) => b.sets.compareTo(a.sets));
 
-    return (categorized: exercisesPerMuscle, uncategorized: uncategorizedExercises);
+    return (
+      categorized: exercisesPerMuscle,
+      uncategorized: uncategorizedExercises,
+    );
   }
 
   /// Classify rep range distribution
@@ -606,7 +670,8 @@ class VolumeAnalyzer {
 
           if (set.reps! <= strengthMaxReps) {
             strengthSets++;
-          } else if (set.reps! >= hypertrophyMinReps && set.reps! <= hypertrophyMaxReps) {
+          } else if (set.reps! >= hypertrophyMinReps &&
+              set.reps! <= hypertrophyMaxReps) {
             hypertrophySets++;
           } else if (set.reps! >= enduranceMinReps) {
             enduranceSets++;
@@ -615,9 +680,15 @@ class VolumeAnalyzer {
       }
     }
 
-    final strengthPercentage = totalSets > 0 ? (strengthSets / totalSets * 100) : 0.0;
-    final hypertrophyPercentage = totalSets > 0 ? (hypertrophySets / totalSets * 100) : 0.0;
-    final endurancePercentage = totalSets > 0 ? (enduranceSets / totalSets * 100) : 0.0;
+    final strengthPercentage = totalSets > 0
+        ? (strengthSets / totalSets * 100)
+        : 0.0;
+    final hypertrophyPercentage = totalSets > 0
+        ? (hypertrophySets / totalSets * 100)
+        : 0.0;
+    final endurancePercentage = totalSets > 0
+        ? (enduranceSets / totalSets * 100)
+        : 0.0;
 
     return RepContinuumData(
       strengthPercentage: strengthPercentage,
@@ -649,7 +720,8 @@ class VolumeAnalyzer {
 }
 
 /// Volume Landmarks data structure
-class VolumeLandmarks { // Maximum Recoverable Volume
+class VolumeLandmarks {
+  // Maximum Recoverable Volume
 
   const VolumeLandmarks({
     required this.mv,
@@ -657,7 +729,7 @@ class VolumeLandmarks { // Maximum Recoverable Volume
     required this.mav,
     required this.mrv,
   });
-  final int mv;  // Maintenance Volume
+  final int mv; // Maintenance Volume
   final int mev; // Minimum Effective Volume
   final int mav; // Maximum Adaptive Volume
   final int mrv;
@@ -665,7 +737,6 @@ class VolumeLandmarks { // Maximum Recoverable Volume
 
 /// Rep Continuum analysis result
 class RepContinuumData {
-
   RepContinuumData({
     required this.strengthPercentage,
     required this.hypertrophyPercentage,
@@ -687,15 +758,14 @@ class RepContinuumData {
 /// Volume zones based on landmarks
 enum VolumeZone {
   belowMaintenance, // < MV
-  maintenance,      // MV to MEV
-  effective,        // MEV to MAV
-  optimal,          // MAV to MRV
-  excessive,        // > MRV
+  maintenance, // MV to MEV
+  effective, // MEV to MAV
+  optimal, // MAV to MRV
+  excessive, // > MRV
 }
 
 /// Exercise contribution to muscle group volume
 class ExerciseContribution {
-
   ExerciseContribution({
     required this.exerciseName,
     required this.sets,
@@ -714,7 +784,6 @@ class ExerciseContribution {
 /// - Primary muscles: 70% weight
 /// - Secondary muscles: 30% weight (split among them)
 class ExerciseContributionWeighted {
-
   ExerciseContributionWeighted({
     required this.exerciseName,
     required this.rawSets,

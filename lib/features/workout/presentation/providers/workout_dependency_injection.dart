@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: presentation/providers
 /// 🎯 Feature: workout
 /// 🔧 Type: dependency_injection
 /// 🌍 Localization: N/A
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - Riverpod for DI
 /// - Firebase services
@@ -21,7 +21,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/firebase_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/workout_repository_impl.dart';
 
-// Domain layer providers  
+// Domain layer providers
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/usecases/save_workout_usecase.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/usecases/update_exercise_set_usecase.dart';
@@ -47,7 +47,9 @@ final firebaseAuthProvider = Provider<FirebaseAuth>((ref) {
 });
 
 /// Data Source Layer
-final firebaseWorkoutDataSourceProvider = Provider<FirebaseWorkoutDataSource>((ref) {
+final firebaseWorkoutDataSourceProvider = Provider<FirebaseWorkoutDataSource>((
+  ref,
+) {
   final firestore = ref.read(firebaseFirestoreProvider);
   return FirebaseWorkoutDataSource(firestore);
 });
@@ -56,11 +58,8 @@ final firebaseWorkoutDataSourceProvider = Provider<FirebaseWorkoutDataSource>((r
 final workoutRepositoryProvider = Provider<WorkoutRepository>((ref) {
   final dataSource = ref.read(firebaseWorkoutDataSourceProvider);
   final auth = ref.read(firebaseAuthProvider);
-  
-  return WorkoutRepositoryImpl(
-    dataSource: dataSource,
-    auth: auth,
-  );
+
+  return WorkoutRepositoryImpl(dataSource: dataSource, auth: auth);
 });
 
 /// Use Cases Layer
@@ -69,7 +68,9 @@ final saveWorkoutUseCaseProvider = Provider<SaveWorkoutUseCase>((ref) {
   return SaveWorkoutUseCase(repository);
 });
 
-final updateExerciseSetUseCaseProvider = Provider<UpdateExerciseSetUseCase>((ref) {
+final updateExerciseSetUseCaseProvider = Provider<UpdateExerciseSetUseCase>((
+  ref,
+) {
   final repository = ref.read(workoutRepositoryProvider);
   return UpdateExerciseSetUseCase(repository);
 });
@@ -103,57 +104,50 @@ final activeWorkoutStreamProvider = StreamProvider((ref) {
 
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final workoutStatsProvider = FutureProvider.autoDispose.family<WorkoutStats?, WorkoutStatsParams>((ref, params) async {
-  final repository = ref.read(workoutRepositoryProvider);
+final workoutStatsProvider = FutureProvider.autoDispose
+    .family<WorkoutStats?, WorkoutStatsParams>((ref, params) async {
+      final repository = ref.read(workoutRepositoryProvider);
 
-  final result = await repository.getWorkoutStats(
-    startDate: params.startDate,
-    endDate: params.endDate,
-  );
+      final result = await repository.getWorkoutStats(
+        startDate: params.startDate,
+        endDate: params.endDate,
+      );
 
-  return result.fold(
-    (failure) => null, // Could handle error differently
-    (stats) => stats,
-  );
-});
+      return result.fold(
+        (failure) => null, // Could handle error differently
+        (stats) => stats,
+      );
+    });
 
 /// Parameter classes for family providers
 class WorkoutStatsParams {
-  
-  const WorkoutStatsParams({
-    this.startDate,
-    this.endDate,
-  });
+  const WorkoutStatsParams({this.startDate, this.endDate});
   final DateTime? startDate;
   final DateTime? endDate;
-  
+
   @override
   bool operator ==(Object other) =>
-    identical(this, other) ||
-    other is WorkoutStatsParams &&
-    startDate == other.startDate &&
-    endDate == other.endDate;
-  
+      identical(this, other) ||
+      other is WorkoutStatsParams &&
+          startDate == other.startDate &&
+          endDate == other.endDate;
+
   @override
   int get hashCode => startDate.hashCode ^ endDate.hashCode;
 }
 
 class WorkoutHistoryParams {
-  
-  const WorkoutHistoryParams({
-    this.page = 1,
-    this.limit = 10,
-  });
+  const WorkoutHistoryParams({this.page = 1, this.limit = 10});
   final int page;
   final int limit;
-  
+
   @override
   bool operator ==(Object other) =>
-    identical(this, other) ||
-    other is WorkoutHistoryParams &&
-    page == other.page &&
-    limit == other.limit;
-  
+      identical(this, other) ||
+      other is WorkoutHistoryParams &&
+          page == other.page &&
+          limit == other.limit;
+
   @override
   int get hashCode => page.hashCode ^ limit.hashCode;
 }

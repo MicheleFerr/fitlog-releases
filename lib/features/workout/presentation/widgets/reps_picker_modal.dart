@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
@@ -9,14 +8,15 @@ class RepsPickerModal {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => _RepsPicker(initialReps: initialReps),
     );
   }
 }
 
 class _RepsPicker extends StatefulWidget {
-
   const _RepsPicker({required this.initialReps});
   final int initialReps;
 
@@ -118,7 +118,9 @@ class _RepsPickerState extends State<_RepsPicker> {
                       child: Text(
                         reps.toString(),
                         style: context.textTheme.headlineSmall?.copyWith(
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                           color: isSelected
                               ? context.colors.primary
                               : context.colors.onSurface,

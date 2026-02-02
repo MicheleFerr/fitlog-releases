@@ -31,10 +31,10 @@ abstract class StressIndexState with _$StressIndexState {
 
   /// Create empty initial state
   factory StressIndexState.empty() => const StressIndexState(
-        latestResult: null,
-        muscleRecovery: {},
-        history: [],
-      );
+    latestResult: null,
+    muscleRecovery: {},
+    history: [],
+  );
 
   /// Check if there's any data
   bool get hasData => latestResult != null || history.isNotEmpty;
@@ -46,9 +46,11 @@ abstract class StressIndexState with _$StressIndexState {
 
   /// Get muscles that need more rest
   List<MuscleRecoveryStatus> get fatiguedMuscles => muscleRecovery.values
-      .where((m) =>
-          m.state == RecoveryState.fatigued ||
-          m.state == RecoveryState.exhausted)
+      .where(
+        (m) =>
+            m.state == RecoveryState.fatigued ||
+            m.state == RecoveryState.exhausted,
+      )
       .toList();
 
   /// Get muscles that are almost ready
@@ -59,8 +61,10 @@ abstract class StressIndexState with _$StressIndexState {
   /// Get average recovery percentage across all muscles
   double get averageRecoveryPercentage {
     if (muscleRecovery.isEmpty) return 100.0;
-    final total = muscleRecovery.values
-        .fold<double>(0, (sum, m) => sum + m.recoveryPercentage);
+    final total = muscleRecovery.values.fold<double>(
+      0,
+      (sum, m) => sum + m.recoveryPercentage,
+    );
     return total / muscleRecovery.length;
   }
 }

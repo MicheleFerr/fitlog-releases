@@ -6,7 +6,10 @@ import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 
-final onboardingStateProvider = NotifierProvider<OnboardingStateNotifier, OnboardingState>(OnboardingStateNotifier.new);
+final onboardingStateProvider =
+    NotifierProvider<OnboardingStateNotifier, OnboardingState>(
+      OnboardingStateNotifier.new,
+    );
 
 // Alias for convenience (used in quick_start_screen.dart)
 final onboardingProvider = onboardingStateProvider;
@@ -28,7 +31,9 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
     // ✅ FIX: Return cached state if available (prevents onboarding restart)
     if (_cachedState != null) {
       if (kDebugMode) {
-        debugPrint('✅ [Onboarding] Returning cached state (hasSeenGlobalOnboarding: ${_cachedState!.hasSeenGlobalOnboarding})');
+        debugPrint(
+          '✅ [Onboarding] Returning cached state (hasSeenGlobalOnboarding: ${_cachedState!.hasSeenGlobalOnboarding})',
+        );
       }
       // Still trigger async init to ensure Hive box is ready
       _initializeOnboarding();
@@ -55,7 +60,9 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
         // ✅ FIX: Update cache with loaded state
         _cachedState = savedState;
         if (kDebugMode) {
-          debugPrint('📋 Onboarding state loaded: step ${savedState.currentStep}/${OnboardingState.totalSteps}, hasSeenGlobal: ${savedState.hasSeenGlobalOnboarding}');
+          debugPrint(
+            '📋 Onboarding state loaded: step ${savedState.currentStep}/${OnboardingState.totalSteps}, hasSeenGlobal: ${savedState.hasSeenGlobalOnboarding}',
+          );
         }
         // Validate and fix any inconsistencies
         await validateOnboardingState();
@@ -63,7 +70,9 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
         // ✅ FIX: Cache default state too
         _cachedState = state;
         if (kDebugMode) {
-          debugPrint('📋 No saved onboarding state, checking for legacy migration');
+          debugPrint(
+            '📋 No saved onboarding state, checking for legacy migration',
+          );
         }
         await _migrateFromLegacyAppConfig();
       }
@@ -88,7 +97,8 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
         final legacyConfig = appConfigBox.get('config');
 
         // Check if legacy has seen onboarding
-        if (legacyConfig != null && legacyConfig.hasSeenWorkoutOnboarding == true) {
+        if (legacyConfig != null &&
+            legacyConfig.hasSeenWorkoutOnboarding == true) {
           // Migrate to new system - mark as completed
           state = state.copyWith(
             hasSeenGlobalOnboarding: true,
@@ -126,7 +136,9 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
         // ✅ FIX: Update cache after successful save
         _cachedState = state;
         if (kDebugMode) {
-          debugPrint('💾 Onboarding state saved successfully: step ${state.currentStep}, hasSeenGlobal: ${state.hasSeenGlobalOnboarding}');
+          debugPrint(
+            '💾 Onboarding state saved successfully: step ${state.currentStep}, hasSeenGlobal: ${state.hasSeenGlobalOnboarding}',
+          );
         }
         return; // Success, exit retry loop
       } catch (e, stackTrace) {
@@ -214,7 +226,10 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
 
   // Complete entire onboarding
   Future<void> completeOnboarding() async {
-    final allSteps = List.generate(OnboardingState.totalSteps, (index) => index);
+    final allSteps = List.generate(
+      OnboardingState.totalSteps,
+      (index) => index,
+    );
 
     state = state.copyWith(
       hasSeenGlobalOnboarding: true,
@@ -262,7 +277,9 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
     );
     await _saveState();
     if (kDebugMode) {
-      debugPrint('✅ Quick Start completed: $experienceLevel (hasSeenGlobal: ${!isBeginner})');
+      debugPrint(
+        '✅ Quick Start completed: $experienceLevel (hasSeenGlobal: ${!isBeginner})',
+      );
     }
   }
 
@@ -278,7 +295,9 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
     );
     await _saveState();
     if (kDebugMode) {
-      debugPrint('🎯 P4 Goal selected: $goalType, target: $weeklyTarget workouts/week');
+      debugPrint(
+        '🎯 P4 Goal selected: $goalType, target: $weeklyTarget workouts/week',
+      );
     }
   }
 
@@ -286,7 +305,8 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
   /// @param overlayId: identifier for the overlay (e.g., 'createWorkoutCTA')
   Future<void> markOverlaySeen(String overlayId) async {
     if (!state.hasSeenOverlay(overlayId)) {
-      final newSeenOverlays = List<String>.from(state.seenOverlays)..add(overlayId);
+      final newSeenOverlays = List<String>.from(state.seenOverlays)
+        ..add(overlayId);
       state = state.copyWith(
         seenOverlays: newSeenOverlays,
         lastInteraction: DateTime.now(),
@@ -367,7 +387,9 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
       );
       await _saveState();
       if (kDebugMode) {
-        debugPrint('⚖️ Legal disclaimer accepted at ${state.legalDisclaimerAcceptedAt}');
+        debugPrint(
+          '⚖️ Legal disclaimer accepted at ${state.legalDisclaimerAcceptedAt}',
+        );
       }
     }
   }
@@ -454,7 +476,9 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
     // Fix invalid current step
     if (state.currentStep >= OnboardingState.totalSteps) {
       if (kDebugMode) {
-        debugPrint('🔧 Auto-fixing: currentStep ${state.currentStep} >= totalSteps ${OnboardingState.totalSteps}');
+        debugPrint(
+          '🔧 Auto-fixing: currentStep ${state.currentStep} >= totalSteps ${OnboardingState.totalSteps}',
+        );
       }
       state = state.copyWith(currentStep: OnboardingState.totalSteps - 1);
       needsSave = true;
@@ -479,7 +503,9 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
     }
     debugPrint('canResume: ${state.canResume}');
     if (kDebugMode) {
-      debugPrint('currentStep: ${state.currentStep}/${OnboardingState.totalSteps}');
+      debugPrint(
+        'currentStep: ${state.currentStep}/${OnboardingState.totalSteps}',
+      );
     }
     debugPrint('completedSteps: ${state.completedSteps}');
     if (kDebugMode) {
@@ -499,7 +525,8 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
   bool _isStateValid() {
     // Check consistency rules
     if (state.isCompleted && !state.hasSeenGlobalOnboarding) return false;
-    if (state.hasSeenGlobalOnboarding && state.completedSteps.isEmpty) return false;
+    if (state.hasSeenGlobalOnboarding && state.completedSteps.isEmpty)
+      return false;
     if (state.currentStep >= OnboardingState.totalSteps) return false;
     if (state.currentStep < 0) return false;
     return true;

@@ -117,17 +117,19 @@ class _WorkoutCompletionCelebrationState
 
   void _generateConfetti() {
     for (int i = 0; i < 50; i++) {
-      _particles.add(_ConfettiParticle(
-        x: _random.nextDouble(),
-        y: -_random.nextDouble() * 0.5 - 0.1,
-        vx: (_random.nextDouble() - 0.5) * 0.02,
-        vy: _random.nextDouble() * 0.01 + 0.005,
-        rotation: _random.nextDouble() * math.pi * 2,
-        rotationSpeed: (_random.nextDouble() - 0.5) * 0.2,
-        size: _random.nextDouble() * 8 + 4,
-        colorIndex: _random.nextInt(6),
-        shape: _random.nextInt(3),
-      ));
+      _particles.add(
+        _ConfettiParticle(
+          x: _random.nextDouble(),
+          y: -_random.nextDouble() * 0.5 - 0.1,
+          vx: (_random.nextDouble() - 0.5) * 0.02,
+          vy: _random.nextDouble() * 0.01 + 0.005,
+          rotation: _random.nextDouble() * math.pi * 2,
+          rotationSpeed: (_random.nextDouble() - 0.5) * 0.2,
+          size: _random.nextDouble() * 8 + 4,
+          colorIndex: _random.nextInt(6),
+          shape: _random.nextInt(3),
+        ),
+      );
     }
   }
 
@@ -251,12 +253,11 @@ class _WorkoutCompletionCelebrationState
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  colorScheme.primary,
-                  colorScheme.secondary,
-                ],
+                colors: [colorScheme.primary, colorScheme.secondary],
               ),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(22),
+              ),
             ),
             child: Column(
               children: [
@@ -310,8 +311,9 @@ class _WorkoutCompletionCelebrationState
                   const SizedBox(height: 8),
 
                   // Exercise list with details
-                  ...widget.workout.exercises.map((exercise) =>
-                      _buildExerciseDetail(context, exercise)),
+                  ...widget.workout.exercises.map(
+                    (exercise) => _buildExerciseDetail(context, exercise),
+                  ),
                 ],
               ),
             ),
@@ -322,7 +324,9 @@ class _WorkoutCompletionCelebrationState
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(22)),
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(22),
+              ),
             ),
             child: Column(
               children: [
@@ -396,10 +400,7 @@ class _WorkoutCompletionCelebrationState
           transitionBuilder: (child, animation) {
             return ScaleTransition(
               scale: animation,
-              child: FadeTransition(
-                opacity: animation,
-                child: child,
-              ),
+              child: FadeTransition(opacity: animation, child: child),
             );
           },
           child: Container(
@@ -429,7 +430,8 @@ class _WorkoutCompletionCelebrationState
     return AnimatedBuilder(
       animation: _mainController,
       builder: (context, child) {
-        final pulse = (math.sin(_mainController.value * math.pi * 4) * 0.1) + 1.0;
+        final pulse =
+            (math.sin(_mainController.value * math.pi * 4) * 0.1) + 1.0;
         final onPrimaryColor = context.colors.onPrimary;
         return Transform.scale(
           scale: pulse,
@@ -471,9 +473,7 @@ class _WorkoutCompletionCelebrationState
       decoration: BoxDecoration(
         color: colorScheme.primaryContainer.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: colorScheme.primary.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: colorScheme.primary.withValues(alpha: 0.2)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -514,11 +514,7 @@ class _WorkoutCompletionCelebrationState
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          icon,
-          color: colorScheme.primary,
-          size: AppIconSize.small,
-        ),
+        Icon(icon, color: colorScheme.primary, size: AppIconSize.small),
         const SizedBox(height: 4),
         Text(
           value,
@@ -648,15 +644,16 @@ class _WorkoutCompletionCelebrationState
                   // RPE/RIR (if available)
                   if (set.rpe != null) ...[
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: _getRpeColor(set.rpe!).withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        useRir
-                            ? 'RIR ${10 - set.rpe!}'
-                            : 'RPE ${set.rpe}',
+                        useRir ? 'RIR ${10 - set.rpe!}' : 'RPE ${set.rpe}',
                         style: context.textTheme.labelSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: _getRpeColor(set.rpe!),
@@ -795,6 +792,7 @@ class _ConfettiPainter extends CustomPainter {
 enum CelebrationResult {
   /// User confirmed - save workout and go home
   confirmed,
+
   /// User cancelled - go back to modify workout
   cancelled,
 }

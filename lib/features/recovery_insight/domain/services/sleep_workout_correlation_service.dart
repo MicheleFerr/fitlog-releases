@@ -10,7 +10,6 @@
 /// - Skein et al. 2011: Cumulative decline with consecutive sleep restriction
 library;
 
-
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/recovery_insight.dart';
 import 'package:gymbro_flutter_new/features/recovery_insight/domain/entities/sleep_record.dart';
@@ -82,10 +81,12 @@ class SleepWorkoutCorrelationService {
     );
 
     if (kDebugMode) {
-      debugPrint('[RecoveryInsight] Base: $baseScore, '
-          'SleepMod: $sleepModifier, '
-          'ConsecPenalty: $consecutivePenalty, '
-          'Final: $finalScore');
+      debugPrint(
+        '[RecoveryInsight] Base: $baseScore, '
+        'SleepMod: $sleepModifier, '
+        'ConsecPenalty: $consecutivePenalty, '
+        'Final: $finalScore',
+      );
     }
 
     return RecoveryInsight(
@@ -134,7 +135,8 @@ class SleepWorkoutCorrelationService {
 
       // Find previous night's sleep
       final workoutDate = workout.completedAt;
-      if (workoutDate == null) continue; // Skip workouts without completion date
+      if (workoutDate == null)
+        continue; // Skip workouts without completion date
       final previousNight = _findPreviousNightSleep(sleepHistory, workoutDate);
 
       if (previousNight != null) {
@@ -143,13 +145,15 @@ class SleepWorkoutCorrelationService {
           userBodyWeightKg: userBodyWeightKg,
         );
 
-        dataPoints.add(SleepWorkoutDataPoint(
-          workoutDate: workoutDate,
-          sleepHours: previousNight.asleepHours,
-          workoutVolume: volume,
-          workoutDurationMinutes: workout.duration?.inMinutes ?? 0,
-          exerciseCount: workout.exercises.length,
-        ));
+        dataPoints.add(
+          SleepWorkoutDataPoint(
+            workoutDate: workoutDate,
+            sleepHours: previousNight.asleepHours,
+            workoutVolume: volume,
+            workoutDurationMinutes: workout.duration?.inMinutes ?? 0,
+            exerciseCount: workout.exercises.length,
+          ),
+        );
       }
     }
 
@@ -158,10 +162,12 @@ class SleepWorkoutCorrelationService {
     }
 
     // Separate into good sleep (>7h) and poor sleep (<6h) groups
-    final goodSleepWorkouts =
-        dataPoints.where((dp) => dp.sleepHours >= 7).toList();
-    final poorSleepWorkouts =
-        dataPoints.where((dp) => dp.sleepHours < 6).toList();
+    final goodSleepWorkouts = dataPoints
+        .where((dp) => dp.sleepHours >= 7)
+        .toList();
+    final poorSleepWorkouts = dataPoints
+        .where((dp) => dp.sleepHours < 6)
+        .toList();
     final allWorkouts = dataPoints;
 
     // Calculate average volumes
@@ -195,15 +201,19 @@ class SleepWorkoutCorrelationService {
     // Calculate overall averages
     final avgSleepHours = dataPoints.isNotEmpty
         ? dataPoints.fold<double>(0, (sum, dp) => sum + dp.sleepHours) /
-            dataPoints.length
+              dataPoints.length
         : 0.0;
 
     if (kDebugMode) {
-      debugPrint('[Correlation] Good sleep workouts: ${goodSleepWorkouts.length}, '
-          'Poor sleep workouts: ${poorSleepWorkouts.length}, '
-          'Pattern: ${sleepPattern.name}');
-      debugPrint('[Correlation] Volume change >7h: ${volumeChangeAbove7h.toStringAsFixed(1)}%, '
-          '<6h: ${volumeChangeBelow6h.toStringAsFixed(1)}%');
+      debugPrint(
+        '[Correlation] Good sleep workouts: ${goodSleepWorkouts.length}, '
+        'Poor sleep workouts: ${poorSleepWorkouts.length}, '
+        'Pattern: ${sleepPattern.name}',
+      );
+      debugPrint(
+        '[Correlation] Volume change >7h: ${volumeChangeAbove7h.toStringAsFixed(1)}%, '
+        '<6h: ${volumeChangeBelow6h.toStringAsFixed(1)}%',
+      );
     }
 
     return SleepWorkoutCorrelation(
@@ -282,8 +292,9 @@ class SleepWorkoutCorrelationService {
 
     // Days since last workout (optimal: 1-3 days)
     final lastWorkout = sorted.first;
-    final daysSinceLastWorkout =
-        DateTime.now().difference(lastWorkout.completedAt!).inDays;
+    final daysSinceLastWorkout = DateTime.now()
+        .difference(lastWorkout.completedAt!)
+        .inDays;
 
     double daysScore;
     if (daysSinceLastWorkout <= 1) {
@@ -298,8 +309,9 @@ class SleepWorkoutCorrelationService {
 
     // Weekly frequency (last 7 days)
     final weekAgo = DateTime.now().subtract(const Duration(days: 7));
-    final workoutsThisWeek =
-        sorted.where((w) => w.completedAt!.isAfter(weekAgo)).length;
+    final workoutsThisWeek = sorted
+        .where((w) => w.completedAt!.isAfter(weekAgo))
+        .length;
 
     double frequencyScore;
     if (workoutsThisWeek >= 4) {
@@ -314,8 +326,9 @@ class SleepWorkoutCorrelationService {
 
     // Consistency (workouts in last 14 days)
     final twoWeeksAgo = DateTime.now().subtract(const Duration(days: 14));
-    final workoutsLastTwoWeeks =
-        sorted.where((w) => w.completedAt!.isAfter(twoWeeksAgo)).length;
+    final workoutsLastTwoWeeks = sorted
+        .where((w) => w.completedAt!.isAfter(twoWeeksAgo))
+        .length;
 
     double consistencyScore;
     if (workoutsLastTwoWeeks >= 6) {
@@ -329,7 +342,9 @@ class SleepWorkoutCorrelationService {
     }
 
     // Weighted average
-    return (daysScore * 0.4) + (frequencyScore * 0.3) + (consistencyScore * 0.3);
+    return (daysScore * 0.4) +
+        (frequencyScore * 0.3) +
+        (consistencyScore * 0.3);
   }
 
   /// Get sleep modifier based on average hours
@@ -362,13 +377,16 @@ class SleepWorkoutCorrelationService {
 
     // Only consider last 7 days
     final weekAgo = DateTime.now().subtract(const Duration(days: 7));
-    final recentSleep =
-        sleepHistory.where((s) => s.date.isAfter(weekAgo)).toList();
+    final recentSleep = sleepHistory
+        .where((s) => s.date.isAfter(weekAgo))
+        .toList();
 
     if (recentSleep.isEmpty) return 0;
 
-    final totalHours =
-        recentSleep.fold<double>(0, (sum, s) => sum + s.asleepHours);
+    final totalHours = recentSleep.fold<double>(
+      0,
+      (sum, s) => sum + s.asleepHours,
+    );
     return totalHours / recentSleep.length;
   }
 

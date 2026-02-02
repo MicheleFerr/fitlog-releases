@@ -52,9 +52,12 @@ class HealthKitStep extends ConsumerWidget {
                   icon: AppIcons.workout,
                   title: context.l10n.initialOnboardingHealthKitWorkouts,
                   subtitle: context.l10n.initialOnboardingHealthKitWorkoutsDesc,
-                  isSelected: state.selectedHealthTypes.contains(HealthDataType.workout),
+                  isSelected: state.selectedHealthTypes.contains(
+                    HealthDataType.workout,
+                  ),
                   isPro: false,
-                  onToggle: () => notifier.toggleHealthType(HealthDataType.workout),
+                  onToggle: () =>
+                      notifier.toggleHealthType(HealthDataType.workout),
                 ),
 
                 const SizedBox(height: 12),
@@ -65,9 +68,12 @@ class HealthKitStep extends ConsumerWidget {
                   icon: AppIcons.weight,
                   title: context.l10n.initialOnboardingHealthKitWeight,
                   subtitle: context.l10n.initialOnboardingHealthKitWeightDesc,
-                  isSelected: state.selectedHealthTypes.contains(HealthDataType.bodyWeight),
+                  isSelected: state.selectedHealthTypes.contains(
+                    HealthDataType.bodyWeight,
+                  ),
                   isPro: false,
-                  onToggle: () => notifier.toggleHealthType(HealthDataType.bodyWeight),
+                  onToggle: () =>
+                      notifier.toggleHealthType(HealthDataType.bodyWeight),
                 ),
 
                 const SizedBox(height: 12),
@@ -78,9 +84,12 @@ class HealthKitStep extends ConsumerWidget {
                   icon: AppIcons.bedtime,
                   title: context.l10n.initialOnboardingHealthKitSleep,
                   subtitle: context.l10n.initialOnboardingHealthKitSleepDesc,
-                  isSelected: state.selectedHealthTypes.contains(HealthDataType.sleep),
+                  isSelected: state.selectedHealthTypes.contains(
+                    HealthDataType.sleep,
+                  ),
                   isPro: true,
-                  onToggle: () => notifier.toggleHealthType(HealthDataType.sleep),
+                  onToggle: () =>
+                      notifier.toggleHealthType(HealthDataType.sleep),
                 ),
 
                 const SizedBox(height: 12),
@@ -91,9 +100,12 @@ class HealthKitStep extends ConsumerWidget {
                   icon: AppIcons.favorite,
                   title: context.l10n.initialOnboardingHealthKitHrv,
                   subtitle: context.l10n.initialOnboardingHealthKitHrvDesc,
-                  isSelected: state.selectedHealthTypes.contains(HealthDataType.heartRate),
+                  isSelected: state.selectedHealthTypes.contains(
+                    HealthDataType.heartRate,
+                  ),
                   isPro: true,
-                  onToggle: () => notifier.toggleHealthType(HealthDataType.heartRate),
+                  onToggle: () =>
+                      notifier.toggleHealthType(HealthDataType.heartRate),
                 ),
               ],
             ),
@@ -227,11 +239,7 @@ class _HealthToggle extends StatelessWidget {
               color: context.colors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
-              icon,
-              color: context.colors.primary,
-              size: 24,
-            ),
+            child: Icon(icon, color: context.colors.primary, size: 24),
           ),
 
           const SizedBox(width: 16),

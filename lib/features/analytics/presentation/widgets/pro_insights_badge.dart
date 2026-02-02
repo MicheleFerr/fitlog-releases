@@ -26,10 +26,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 /// - Free: Lock icon + upgrade CTA
 /// - Premium: Quick stats preview + "View Details"
 class ProInsightsBadge extends ConsumerWidget {
-  const ProInsightsBadge({
-    super.key,
-    required this.exerciseHistories,
-  });
+  const ProInsightsBadge({super.key, required this.exerciseHistories});
 
   final List<ExerciseHistory> exerciseHistories;
 
@@ -195,12 +192,15 @@ class ProInsightsBadge extends ConsumerWidget {
     }
 
     return _QuickStats(
-      strengthPercent:
-          totalSets > 0 ? (strengthSets / totalSets * 100).round() : 33,
-      hypertrophyPercent:
-          totalSets > 0 ? (hypertrophySets / totalSets * 100).round() : 34,
-      endurancePercent:
-          totalSets > 0 ? (enduranceSets / totalSets * 100).round() : 33,
+      strengthPercent: totalSets > 0
+          ? (strengthSets / totalSets * 100).round()
+          : 33,
+      hypertrophyPercent: totalSets > 0
+          ? (hypertrophySets / totalSets * 100).round()
+          : 34,
+      endurancePercent: totalSets > 0
+          ? (enduranceSets / totalSets * 100).round()
+          : 33,
     );
   }
 }
@@ -214,10 +214,10 @@ class _QuickStats {
   });
 
   factory _QuickStats.empty() => const _QuickStats(
-        strengthPercent: 33,
-        hypertrophyPercent: 34,
-        endurancePercent: 33,
-      );
+    strengthPercent: 33,
+    hypertrophyPercent: 34,
+    endurancePercent: 33,
+  );
 
   final int strengthPercent;
   final int hypertrophyPercent;

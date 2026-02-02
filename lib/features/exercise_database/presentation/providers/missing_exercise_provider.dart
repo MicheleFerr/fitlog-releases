@@ -8,22 +8,25 @@ final missingExerciseServiceProvider = Provider<MissingExerciseService>((ref) {
 });
 
 /// Provider for pending requests (admin)
-final pendingRequestsProvider =
-    StreamProvider<List<MissingExerciseRequest>>((ref) {
+final pendingRequestsProvider = StreamProvider<List<MissingExerciseRequest>>((
+  ref,
+) {
   final service = ref.watch(missingExerciseServiceProvider);
   return service.getPendingRequests();
 });
 
 /// Provider for all requests (admin)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
-final allRequestsProvider = StreamProvider.autoDispose<List<MissingExerciseRequest>>((ref) {
-  final service = ref.watch(missingExerciseServiceProvider);
-  return service.getAllRequests();
-});
+final allRequestsProvider =
+    StreamProvider.autoDispose<List<MissingExerciseRequest>>((ref) {
+      final service = ref.watch(missingExerciseServiceProvider);
+      return service.getAllRequests();
+    });
 
 /// Provider for user's requests
-final userRequestsProvider =
-    StreamProvider<List<MissingExerciseRequest>>((ref) {
+final userRequestsProvider = StreamProvider<List<MissingExerciseRequest>>((
+  ref,
+) {
   final service = ref.watch(missingExerciseServiceProvider);
   return service.getUserRequests();
 });
@@ -33,14 +36,14 @@ final userRequestsProvider =
 /// Automatically disposes provider instances when widget is disposed
 final requestCountsProvider =
     FutureProvider.autoDispose<Map<RequestStatus, int>>((ref) async {
-  final service = ref.watch(missingExerciseServiceProvider);
-  return service.getRequestCounts();
-});
+      final service = ref.watch(missingExerciseServiceProvider);
+      return service.getRequestCounts();
+    });
 
 /// Provider for requests filtered by status (admin)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
-final requestsByStatusProvider = StreamProvider.autoDispose.family<
-    List<MissingExerciseRequest>, RequestStatus>((ref, status) {
-  final service = ref.watch(missingExerciseServiceProvider);
-  return service.getRequestsByStatus(status);
-});
+final requestsByStatusProvider = StreamProvider.autoDispose
+    .family<List<MissingExerciseRequest>, RequestStatus>((ref, status) {
+      final service = ref.watch(missingExerciseServiceProvider);
+      return service.getRequestsByStatus(status);
+    });

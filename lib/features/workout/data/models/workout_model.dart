@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: data/models
 /// 🎯 Feature: workout
 /// 🔧 Type: model
 /// 🌍 Localization: N/A
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - Domain entities
 /// - JSON serialization
@@ -20,15 +20,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// Helper function to parse DateTime from various formats
 DateTime? _parseDateTime(dynamic value) {
   if (value == null) return null;
-  
+
   if (value is DateTime) {
     return value;
   }
-  
+
   if (value is Timestamp) {
     return value.toDate();
   }
-  
+
   if (value is String) {
     try {
       return DateTime.parse(value);
@@ -36,7 +36,7 @@ DateTime? _parseDateTime(dynamic value) {
       return null;
     }
   }
-  
+
   // Try to call toDate() method if it exists (for Firestore Timestamp)
   try {
     return (value as dynamic).toDate() as DateTime;
@@ -47,7 +47,6 @@ DateTime? _parseDateTime(dynamic value) {
 
 /// Data model for Workout with JSON serialization
 class WorkoutModel {
-
   const WorkoutModel({
     required this.id,
     required this.name,
@@ -84,8 +83,9 @@ class WorkoutModel {
     final Map<String, dynamic> data = Map<String, dynamic>.from(json);
 
     // CRITICAL: Handle null values robustly - Firebase data may have nulls
-    final id = (data['id'] as String?) ??
-               'workout-${DateTime.now().millisecondsSinceEpoch}';
+    final id =
+        (data['id'] as String?) ??
+        'workout-${DateTime.now().millisecondsSinceEpoch}';
     final name = (data['name'] as String?) ?? 'Unnamed Workout';
     // Many Firebase workouts have status=null, treat as 'completed' for analytics
     final status = (data['status'] as String?) ?? 'completed';
@@ -97,12 +97,15 @@ class WorkoutModel {
       for (final exerciseJson in exercisesList) {
         try {
           final exercise = ExerciseModel.fromJson(
-              Map<String, dynamic>.from(exerciseJson as Map));
+            Map<String, dynamic>.from(exerciseJson as Map),
+          );
           exercises.add(exercise);
         } catch (e) {
           // Log only in debug mode
           assert(() {
-            debugPrint('⚠️ [WorkoutModel] Failed to parse exercise in workout $id: $e');
+            debugPrint(
+              '⚠️ [WorkoutModel] Failed to parse exercise in workout $id: $e',
+            );
             debugPrint('📍 [WorkoutModel] Exercise data: $exerciseJson');
             return true;
           }());
@@ -196,7 +199,6 @@ class WorkoutModel {
 
 /// Data model for Exercise with full polymorphic support
 class ExerciseModel {
-
   const ExerciseModel({
     required this.id,
     required this.name,
@@ -252,13 +254,9 @@ class ExerciseModel {
       supersetExercises = exercise.exercises
           .map((e) => ExerciseModel.fromDomain(e))
           .toList();
-      supersetSetsData = exercise.supersetSets
-          .map((s) => s.toJson())
-          .toList();
+      supersetSetsData = exercise.supersetSets.map((s) => s.toJson()).toList();
     } else if (exercise is DropSetExercise) {
-      dropSetStages = exercise.stages
-          .map((s) => s.toJson())
-          .toList();
+      dropSetStages = exercise.stages.map((s) => s.toJson()).toList();
     } else if (exercise is RestPauseExercise) {
       restPauseWeight = exercise.weight;
       restPauseTargetReps = exercise.targetReps;
@@ -315,16 +313,19 @@ class ExerciseModel {
 
     if (exerciseData != null) {
       // Use null-aware operators and provide fallbacks for required fields
-      id = (exerciseData['id'] as String?) ??
-           (data['id'] as String?) ??
-           'unknown-${DateTime.now().millisecondsSinceEpoch}';
-      name = (exerciseData['name'] as String?) ??
-             (data['name'] as String?) ??
-             'Unknown Exercise';
+      id =
+          (exerciseData['id'] as String?) ??
+          (data['id'] as String?) ??
+          'unknown-${DateTime.now().millisecondsSinceEpoch}';
+      name =
+          (exerciseData['name'] as String?) ??
+          (data['name'] as String?) ??
+          'Unknown Exercise';
       notes = exerciseData['notes'] as String?;
     } else {
-      id = (data['id'] as String?) ??
-           'unknown-${DateTime.now().millisecondsSinceEpoch}';
+      id =
+          (data['id'] as String?) ??
+          'unknown-${DateTime.now().millisecondsSinceEpoch}';
       name = (data['name'] as String?) ?? 'Unknown Exercise';
       notes = data['notes'] as String?;
     }
@@ -342,12 +343,15 @@ class ExerciseModel {
       for (final setJson in setsList) {
         try {
           final set = ExerciseSetModel.fromJson(
-              Map<String, dynamic>.from(setJson as Map));
+            Map<String, dynamic>.from(setJson as Map),
+          );
           sets.add(set);
         } catch (e) {
           // Log only in debug mode
           assert(() {
-            debugPrint('⚠️ [ExerciseModel] Failed to parse set in exercise $id: $e');
+            debugPrint(
+              '⚠️ [ExerciseModel] Failed to parse set in exercise $id: $e',
+            );
             debugPrint('📍 [ExerciseModel] Set data: $setJson');
             return true;
           }());
@@ -368,7 +372,10 @@ class ExerciseModel {
       final exercisesList = data['exercises'] as List<dynamic>?;
       if (exercisesList != null) {
         supersetExercises = exercisesList
-            .map((e) => ExerciseModel.fromJson(Map<String, dynamic>.from(e as Map)))
+            .map(
+              (e) =>
+                  ExerciseModel.fromJson(Map<String, dynamic>.from(e as Map)),
+            )
             .toList();
       }
       final setsList = data['supersetSets'] as List<dynamic>?;
@@ -441,7 +448,7 @@ class ExerciseModel {
   final String? notes;
   final DateTime createdAt;
   final DateTime? updatedAt;
-  
+
   // RM Calculations
   final double? calculated1RM;
   final double? calculated3RM;
@@ -449,19 +456,19 @@ class ExerciseModel {
   final double? calculated10RM;
   final DateTime? lastCalculationDate;
   final String? calculationMetadata;
-  
+
   // RPE/RIR Autoregulation
   final double? targetRPEMin;
   final double? targetRPEMax;
   final int? targetRIR;
   final String? autoAdjustmentType;
-  
+
   // Smart Workout Suggestion
   final String? movementType;
-  
+
   // Counting Mode
   final String? countingMode;
-  
+
   // Polymorphic data
   final List<ExerciseModel>? supersetExercises;
   final List<Map<String, dynamic>>? supersetSetsData;
@@ -487,7 +494,7 @@ class ExerciseModel {
       (e) => e.name == category,
       orElse: () => ExerciseCategory.other,
     );
-    
+
     // Parse nullable enums
     final autoAdjType = autoAdjustmentType != null
         ? AutoAdjustmentType.values.firstWhere(
@@ -506,7 +513,9 @@ class ExerciseModel {
         : ExerciseCountingMode.weighted;
 
     // Handle polymorphic conversion
-    if (type == 'superset' && supersetExercises != null && supersetSetsData != null) {
+    if (type == 'superset' &&
+        supersetExercises != null &&
+        supersetSetsData != null) {
       return SupersetExercise(
         id: id,
         name: name,
@@ -536,9 +545,7 @@ class ExerciseModel {
         id: id,
         name: name,
         category: exerciseCategory,
-        stages: dropSetStages!
-            .map((s) => DropSetStage.fromJson(s))
-            .toList(),
+        stages: dropSetStages!.map((s) => DropSetStage.fromJson(s)).toList(),
         notes: notes,
         restTime: restTime,
         tut: tut,
@@ -764,15 +771,17 @@ class ExerciseSetModel {
 
     // Firebase structure: setNumber, weight, reps, restSeconds, rpe, isWarmup, isDropSet, isFailure
     // NO id, NO volume, NO isCompleted in Firebase
-    final id = (data['id'] as String?) ??
-               'set-${DateTime.now().millisecondsSinceEpoch}';
+    final id =
+        (data['id'] as String?) ??
+        'set-${DateTime.now().millisecondsSinceEpoch}';
     final setNumber = (data['setNumber'] as int?) ?? 0;
 
     final weight = (data['weight'] as num?)?.toDouble();
     final reps = data['reps'] as int?;
 
     // Firebase has 'restSeconds' not 'restTimeSeconds'
-    final restTime = (data['restSeconds'] as int?) ?? (data['restTimeSeconds'] as int?);
+    final restTime =
+        (data['restSeconds'] as int?) ?? (data['restTimeSeconds'] as int?);
 
     // isCompleted doesn't exist in Firebase
     // For historical workouts (from Firebase), ALL sets should be considered completed
@@ -784,7 +793,11 @@ class ExerciseSetModel {
     if (completedAt == null && isCompletedFromJson) {
       // Legacy data: set was marked completed but has no timestamp
       // Use a default old timestamp to indicate completion without exact time
-      completedAt = DateTime(2000, 1, 1); // Sentinel value for legacy completed sets
+      completedAt = DateTime(
+        2000,
+        1,
+        1,
+      ); // Sentinel value for legacy completed sets
     }
 
     return ExerciseSetModel(
@@ -795,7 +808,8 @@ class ExerciseSetModel {
       restTime: restTime,
       rpe: data['rpe'] as int?,
       notes: data['notes'] as String?,
-      completedAt: completedAt, // ✅ FIX: Now uses isCompleted as fallback for legacy data
+      completedAt:
+          completedAt, // ✅ FIX: Now uses isCompleted as fallback for legacy data
       // ✅ TUT & Advanced Tracking Fields
       setDurationMillis: (data['setDurationMillis'] as num?)?.toDouble(),
       setStartedAt: _parseDateTime(data['setStartedAt']),
@@ -833,7 +847,9 @@ class ExerciseSetModel {
       setNumber: setNumber,
       weight: weight,
       reps: reps,
-      isCompleted: completedAt != null, // ✅ Calculated from presence of completion timestamp
+      isCompleted:
+          completedAt !=
+          null, // ✅ Calculated from presence of completion timestamp
       rpe: rpe,
       notes: notes,
       completedAt: completedAt,

@@ -52,9 +52,9 @@ class StressIndexRepository
     HiveBoxManagerEnhanced? boxManager,
     FirebaseFirestore? firestore,
     FirebaseAuth? auth,
-  })  : _boxManager = boxManager ?? HiveBoxManagerEnhanced(),
-        _firestore = firestore ?? FirebaseFirestore.instance,
-        _auth = auth ?? FirebaseAuth.instance {
+  }) : _boxManager = boxManager ?? HiveBoxManagerEnhanced(),
+       _firestore = firestore ?? FirebaseFirestore.instance,
+       _auth = auth ?? FirebaseAuth.instance {
     _initialize();
   }
 
@@ -130,7 +130,9 @@ class StressIndexRepository
       await _syncToCloud(result);
 
       if (kDebugMode) {
-        debugPrint('[StressIndexRepository] Saved stress index for workout: ${result.workoutId}');
+        debugPrint(
+          '[StressIndexRepository] Saved stress index for workout: ${result.workoutId}',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -220,7 +222,9 @@ class StressIndexRepository
       await _deleteFromCloud(workoutId);
 
       if (kDebugMode) {
-        debugPrint('[StressIndexRepository] Deleted stress index for workout: $workoutId');
+        debugPrint(
+          '[StressIndexRepository] Deleted stress index for workout: $workoutId',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -247,7 +251,9 @@ class StressIndexRepository
       _emitRecentUpdate();
 
       if (kDebugMode) {
-        debugPrint('[StressIndexRepository] Cleared all stress index data ($count entries)');
+        debugPrint(
+          '[StressIndexRepository] Cleared all stress index data ($count entries)',
+        );
       }
 
       return count;
@@ -266,34 +272,35 @@ class StressIndexRepository
     final userId = _auth.currentUser?.uid;
     if (userId == null) return;
 
-    final clearResult = await handleFirebaseVoidOperation(
-      () async {
-        final collection = _firestore
-            .collection('users')
-            .doc(userId)
-            .collection(_collectionName);
+    final clearResult = await handleFirebaseVoidOperation(() async {
+      final collection = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection(_collectionName);
 
-        // Get all documents and delete them
-        final snapshot = await collection.get();
-        final batch = _firestore.batch();
+      // Get all documents and delete them
+      final snapshot = await collection.get();
+      final batch = _firestore.batch();
 
-        for (final doc in snapshot.docs) {
-          batch.delete(doc.reference);
-        }
+      for (final doc in snapshot.docs) {
+        batch.delete(doc.reference);
+      }
 
-        await batch.commit();
+      await batch.commit();
 
-        if (kDebugMode) {
-          debugPrint('[StressIndexRepository] Cleared ${snapshot.docs.length} entries from cloud');
-        }
-      },
-      operationName: 'clearCloudData',
-    );
+      if (kDebugMode) {
+        debugPrint(
+          '[StressIndexRepository] Cleared ${snapshot.docs.length} entries from cloud',
+        );
+      }
+    }, operationName: 'clearCloudData');
 
     // Log failure but don't throw (local clear succeeded)
     clearResult.mapLeft((failure) {
       if (kDebugMode) {
-        debugPrint('[StressIndexRepository] Cloud clear failed: ${failure.message}');
+        debugPrint(
+          '[StressIndexRepository] Cloud clear failed: ${failure.message}',
+        );
       }
     });
   }
@@ -315,17 +322,14 @@ class StressIndexRepository
     final userId = _auth.currentUser?.uid;
     if (userId == null) return;
 
-    final syncResult = await handleFirebaseVoidOperation(
-      () async {
-        await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection(_collectionName)
-            .doc(result.workoutId)
-            .set(result.toJson());
-      },
-      operationName: 'syncToCloud',
-    );
+    final syncResult = await handleFirebaseVoidOperation(() async {
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection(_collectionName)
+          .doc(result.workoutId)
+          .set(result.toJson());
+    }, operationName: 'syncToCloud');
 
     syncResult.fold(
       (failure) {
@@ -336,7 +340,9 @@ class StressIndexRepository
       },
       (_) {
         if (kDebugMode) {
-          debugPrint('[StressIndexRepository] Synced to cloud: ${result.workoutId}');
+          debugPrint(
+            '[StressIndexRepository] Synced to cloud: ${result.workoutId}',
+          );
         }
       },
     );
@@ -349,22 +355,21 @@ class StressIndexRepository
     final userId = _auth.currentUser?.uid;
     if (userId == null) return;
 
-    final deleteResult = await handleFirebaseVoidOperation(
-      () async {
-        await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection(_collectionName)
-            .doc(workoutId)
-            .delete();
-      },
-      operationName: 'deleteFromCloud',
-    );
+    final deleteResult = await handleFirebaseVoidOperation(() async {
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection(_collectionName)
+          .doc(workoutId)
+          .delete();
+    }, operationName: 'deleteFromCloud');
 
     // Log failure but don't throw (local delete succeeded)
     deleteResult.mapLeft((failure) {
       if (kDebugMode) {
-        debugPrint('[StressIndexRepository] Cloud delete failed: ${failure.message}');
+        debugPrint(
+          '[StressIndexRepository] Cloud delete failed: ${failure.message}',
+        );
       }
     });
   }

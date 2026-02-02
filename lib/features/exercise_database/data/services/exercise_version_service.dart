@@ -48,6 +48,7 @@ class ExerciseVersionService {
 
   late Box<Map> _cacheBox;
   bool _initialized = false;
+
   /// ⚡ PERFORMANCE: Completer to prevent parallel init race condition (was causing 4x init)
   static Completer<void>? _initCompleter;
 
@@ -103,15 +104,18 @@ class ExerciseVersionService {
       // 3. Confronta versioni
       final hasUpdates = _isNewerVersion(remoteVersion.version, localVersion);
 
-      debugPrint('🔍 Version check: Local=$localVersion, Remote=${remoteVersion.version}, HasUpdates=$hasUpdates');
+      debugPrint(
+        '🔍 Version check: Local=$localVersion, Remote=${remoteVersion.version}, HasUpdates=$hasUpdates',
+      );
 
       return VersionCheckResult(
         hasUpdates: hasUpdates,
         localVersion: localVersion,
         remoteVersion: remoteVersion,
-        status: hasUpdates ? VersionStatus.updateAvailable : VersionStatus.upToDate,
+        status: hasUpdates
+            ? VersionStatus.updateAvailable
+            : VersionStatus.upToDate,
       );
-
     } catch (e) {
       debugPrint('❌ Failed to check for updates: $e');
       return VersionCheckResult(
@@ -141,7 +145,6 @@ class ExerciseVersionService {
       // Salva la versione di fallback
       await setLocalVersion(fallbackVersion);
       return fallbackVersion;
-
     } catch (e) {
       debugPrint('❌ Failed to get local version: $e');
       return '1.0.0-local';
@@ -178,7 +181,6 @@ class ExerciseVersionService {
 
       final data = doc.data()!;
       return ExerciseVersionInfo.fromFirestore(data);
-
     } catch (e) {
       debugPrint('❌ Failed to get remote version: $e');
       return null;
@@ -194,26 +196,33 @@ class ExerciseVersionService {
         .doc(_versionDocId)
         .snapshots()
         .asyncMap((snapshot) async {
-      if (!snapshot.exists || snapshot.data() == null) {
-        return VersionCheckResult(
-          hasUpdates: false,
-          localVersion: await getLocalVersion(),
-          remoteVersion: null,
-          status: VersionStatus.noRemoteVersion,
-        );
-      }
+          if (!snapshot.exists || snapshot.data() == null) {
+            return VersionCheckResult(
+              hasUpdates: false,
+              localVersion: await getLocalVersion(),
+              remoteVersion: null,
+              status: VersionStatus.noRemoteVersion,
+            );
+          }
 
-      final remoteVersion = ExerciseVersionInfo.fromFirestore(snapshot.data()!);
-      final localVersion = await getLocalVersion();
-      final hasUpdates = _isNewerVersion(remoteVersion.version, localVersion);
+          final remoteVersion = ExerciseVersionInfo.fromFirestore(
+            snapshot.data()!,
+          );
+          final localVersion = await getLocalVersion();
+          final hasUpdates = _isNewerVersion(
+            remoteVersion.version,
+            localVersion,
+          );
 
-      return VersionCheckResult(
-        hasUpdates: hasUpdates,
-        localVersion: localVersion,
-        remoteVersion: remoteVersion,
-        status: hasUpdates ? VersionStatus.updateAvailable : VersionStatus.upToDate,
-      );
-    });
+          return VersionCheckResult(
+            hasUpdates: hasUpdates,
+            localVersion: localVersion,
+            remoteVersion: remoteVersion,
+            status: hasUpdates
+                ? VersionStatus.updateAvailable
+                : VersionStatus.upToDate,
+          );
+        });
   }
 
   /// Salva metadata dopo un aggiornamento completato
@@ -252,7 +261,11 @@ class ExerciseVersionService {
   bool _isNewerVersion(String remoteVersion, String localVersion) {
     try {
       final remoteParts = remoteVersion.split('.').map(int.parse).toList();
-      final localParts = localVersion.split('-')[0].split('.').map(int.parse).toList();
+      final localParts = localVersion
+          .split('-')[0]
+          .split('.')
+          .map(int.parse)
+          .toList();
 
       // Assicura che entrambe abbiano 3 parti
       while (remoteParts.length < 3) {
@@ -292,7 +305,6 @@ class ExerciseVersionService {
 
 /// Informazioni sulla versione degli esercizi
 class ExerciseVersionInfo {
-
   const ExerciseVersionInfo({
     required this.version,
     required this.lastUpdated,
@@ -318,7 +330,9 @@ class ExerciseVersionInfo {
       // Fallback if format is unexpected
       version = '1.0.0';
       if (kDebugMode && versionField != null) {
-        debugPrint('⚠️ Unexpected version format in Firestore: $versionField (type: ${versionField.runtimeType})');
+        debugPrint(
+          '⚠️ Unexpected version format in Firestore: $versionField (type: ${versionField.runtimeType})',
+        );
       }
     }
 
@@ -326,11 +340,14 @@ class ExerciseVersionInfo {
     List<String> changelog = [];
     final changelogRaw = data['changelog'];
     if (changelogRaw is List) {
-      changelog = changelogRaw.map((item) {
-        if (item is String) return item;
-        if (item is Map) return item.toString();
-        return item?.toString() ?? '';
-      }).where((s) => s.isNotEmpty).toList();
+      changelog = changelogRaw
+          .map((item) {
+            if (item is String) return item;
+            if (item is Map) return item.toString();
+            return item?.toString() ?? '';
+          })
+          .where((s) => s.isNotEmpty)
+          .toList();
     }
 
     // Parse total exercises - supports both old format and new locale-specific format
@@ -344,7 +361,8 @@ class ExerciseVersionInfo {
 
     return ExerciseVersionInfo(
       version: version,
-      lastUpdated: (data['last_updated'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      lastUpdated:
+          (data['last_updated'] as Timestamp?)?.toDate() ?? DateTime.now(),
       totalExercises: totalExercises,
       changelog: changelog,
     );
@@ -366,7 +384,6 @@ class ExerciseVersionInfo {
 
 /// Risultato del controllo versione
 class VersionCheckResult {
-
   const VersionCheckResult({
     required this.hasUpdates,
     required this.localVersion,
@@ -382,9 +399,4 @@ class VersionCheckResult {
 }
 
 /// Stato del controllo versione
-enum VersionStatus {
-  upToDate,
-  updateAvailable,
-  noRemoteVersion,
-  error,
-}
+enum VersionStatus { upToDate, updateAvailable, noRemoteVersion, error }

@@ -94,9 +94,7 @@ class AthleteCard extends StatelessWidget {
               const SizedBox(width: AppSpacing.sm),
 
               // Name and status info
-              Expanded(
-                child: _buildContent(context),
-              ),
+              Expanded(child: _buildContent(context)),
 
               // Navigation arrow
               Icon(
@@ -140,10 +138,7 @@ class AthleteCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: statusColor,
               shape: BoxShape.circle,
-              border: Border.all(
-                color: context.colors.surface,
-                width: 2,
-              ),
+              border: Border.all(color: context.colors.surface, width: 2),
             ),
           ),
         ),

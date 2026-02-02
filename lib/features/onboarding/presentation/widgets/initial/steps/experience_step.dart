@@ -49,7 +49,8 @@ class ExperienceStep extends ConsumerWidget {
                   level: ExperienceLevelUI.beginner,
                   emoji: ExperienceLevelUI.beginner.icon,
                   title: context.l10n.initialOnboardingExperienceBeginner,
-                  subtitle: context.l10n.initialOnboardingExperienceBeginnerDesc,
+                  subtitle:
+                      context.l10n.initialOnboardingExperienceBeginnerDesc,
                   isSelected: state.experience == ExperienceLevelUI.beginner,
                   onTap: () => ref
                       .read(initialOnboardingNotifierProvider.notifier)
@@ -61,7 +62,8 @@ class ExperienceStep extends ConsumerWidget {
                   emoji: ExperienceLevelUI.someExperience.icon,
                   title: context.l10n.initialOnboardingExperienceSome,
                   subtitle: context.l10n.initialOnboardingExperienceSomeDesc,
-                  isSelected: state.experience == ExperienceLevelUI.someExperience,
+                  isSelected:
+                      state.experience == ExperienceLevelUI.someExperience,
                   onTap: () => ref
                       .read(initialOnboardingNotifierProvider.notifier)
                       .setExperience(ExperienceLevelUI.someExperience),
@@ -71,7 +73,8 @@ class ExperienceStep extends ConsumerWidget {
                   level: ExperienceLevelUI.experienced,
                   emoji: ExperienceLevelUI.experienced.icon,
                   title: context.l10n.initialOnboardingExperienceExperienced,
-                  subtitle: context.l10n.initialOnboardingExperienceExperiencedDesc,
+                  subtitle:
+                      context.l10n.initialOnboardingExperienceExperiencedDesc,
                   isSelected: state.experience == ExperienceLevelUI.experienced,
                   onTap: () => ref
                       .read(initialOnboardingNotifierProvider.notifier)
@@ -149,14 +152,13 @@ class _ExperienceCard extends StatelessWidget {
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: context.colors.surfaceContainerHighest.withValues(alpha: 0.7),
+                color: context.colors.surfaceContainerHighest.withValues(
+                  alpha: 0.7,
+                ),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Center(
-                child: Text(
-                  emoji,
-                  style: const TextStyle(fontSize: 32),
-                ),
+                child: Text(emoji, style: const TextStyle(fontSize: 32)),
               ),
             ),
 

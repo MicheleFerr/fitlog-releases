@@ -37,9 +37,7 @@ class WeightRecoveryService {
       );
     }).toList();
 
-    return currentWorkout.copyWith(
-      exercises: updatedExercises,
-    );
+    return currentWorkout.copyWith(exercises: updatedExercises);
   }
 
   static Exercise _applyWeightsToExercise({
@@ -128,9 +126,11 @@ class WeightRecoveryService {
           final previousData = previousSet.exerciseData[exerciseName];
 
           if (previousData != null) {
-            final targetWeight = previousData.targetWeight ?? previousData.actualWeight ?? 0.0;
+            final targetWeight =
+                previousData.targetWeight ?? previousData.actualWeight ?? 0.0;
             final newWeight = _smartRound(targetWeight * multiplier);
-            final targetReps = previousData.targetReps ?? previousData.actualReps ?? 0;
+            final targetReps =
+                previousData.targetReps ?? previousData.actualReps ?? 0;
 
             updatedExerciseData[exerciseName] = currentData.copyWith(
               targetWeight: newWeight,
@@ -141,9 +141,9 @@ class WeightRecoveryService {
           }
         });
 
-        updatedSupersetSets.add(currentSet.copyWith(
-          exerciseData: updatedExerciseData,
-        ));
+        updatedSupersetSets.add(
+          currentSet.copyWith(exerciseData: updatedExerciseData),
+        );
       } else {
         updatedSupersetSets.add(currentSet);
       }
@@ -194,7 +194,9 @@ class WeightRecoveryService {
     for (final currentEx in currentWorkout.exercises) {
       final previousEx = previousMap[currentEx.name];
 
-      if (previousEx == null || previousEx.sets.isEmpty || currentEx.sets.isEmpty) {
+      if (previousEx == null ||
+          previousEx.sets.isEmpty ||
+          currentEx.sets.isEmpty) {
         continue;
       }
 
@@ -230,7 +232,6 @@ class WeightRecoveryService {
 
 /// Rappresenta la differenza di peso tra due workout
 class WeightDifference {
-
   WeightDifference({
     required this.exerciseName,
     required this.previousWeight,

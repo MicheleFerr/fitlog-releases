@@ -71,12 +71,16 @@ class ExampleCloudSyncStatusWidget extends ConsumerWidget {
             if (syncState.errors.isNotEmpty) ...[
               const SizedBox(height: 12),
               // ✅ CORRECT: Use extension method for localized errors
-              ...syncState.getLocalizedErrors(context).map((error) => Text(
-                    error,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                  )),
+              ...syncState
+                  .getLocalizedErrors(context)
+                  .map(
+                    (error) => Text(
+                      error,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                  ),
             ],
 
             // Show last sync summary if available

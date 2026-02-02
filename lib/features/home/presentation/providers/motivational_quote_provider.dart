@@ -13,10 +13,10 @@ import 'package:gymbro_flutter_new/shared/domain/services/motivational_quote_ser
 /// Provider for the motivational quote service initialization
 final motivationalQuoteServiceProvider =
     FutureProvider<MotivationalQuoteService>((ref) async {
-  final service = MotivationalQuoteService.instance;
-  await service.loadQuotes();
-  return service;
-});
+      final service = MotivationalQuoteService.instance;
+      await service.loadQuotes();
+      return service;
+    });
 
 /// Provider for the current quote based on time of day
 ///
@@ -24,7 +24,10 @@ final motivationalQuoteServiceProvider =
 /// but remains consistent within each period.
 ///
 /// Usage: ref.watch(currentQuoteProvider('en')) or ref.watch(currentQuoteProvider('it'))
-final currentQuoteProvider = Provider.family<String, String>((ref, languageCode) {
+final currentQuoteProvider = Provider.family<String, String>((
+  ref,
+  languageCode,
+) {
   final serviceAsync = ref.watch(motivationalQuoteServiceProvider);
 
   return serviceAsync.when(

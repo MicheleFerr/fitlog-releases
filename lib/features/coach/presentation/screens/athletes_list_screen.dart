@@ -24,11 +24,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:share_plus/share_plus.dart' as share_plus;
 
 /// Filter type for athletes list
-enum AthleteFilter {
-  all,
-  active,
-  paused,
-}
+enum AthleteFilter { all, active, paused }
 
 /// Athletes list screen for coaches
 class AthletesListScreen extends ConsumerStatefulWidget {
@@ -68,9 +64,7 @@ class _AthletesListScreenState extends ConsumerState<AthletesListScreen> {
       body: athletesAsync.when(
         data: (athletes) => _buildContent(context, athletes),
         loading: () => const Center(child: LoadingIndicator()),
-        error: (error, _) => Center(
-          child: Text('Error: $error'),
-        ),
+        error: (error, _) => Center(child: Text('Error: $error')),
       ),
     );
   }
@@ -101,17 +95,13 @@ class _AthletesListScreenState extends ConsumerState<AthletesListScreen> {
           ),
         ),
 
-        const SliverToBoxAdapter(
-          child: SizedBox(height: AppSpacing.md),
-        ),
+        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
 
         // Athletes sections
         ..._buildAthleteSections(context, filteredAthletes),
 
         // Bottom padding
-        const SliverToBoxAdapter(
-          child: SizedBox(height: 100),
-        ),
+        const SliverToBoxAdapter(child: SizedBox(height: 100)),
       ],
     );
   }
@@ -191,17 +181,20 @@ class _AthletesListScreenState extends ConsumerState<AthletesListScreen> {
       case AthleteFilter.active:
         filtered = filtered.where((a) => a.isActive).toList();
       case AthleteFilter.paused:
-        filtered =
-            filtered.where((a) => a.status == RelationshipStatus.paused).toList();
+        filtered = filtered
+            .where((a) => a.status == RelationshipStatus.paused)
+            .toList();
     }
 
     // Apply search filter
     if (_searchQuery.isNotEmpty) {
       final query = _searchQuery.toLowerCase();
       filtered = filtered
-          .where((a) =>
-              (a.athleteName?.toLowerCase().contains(query) ?? false) ||
-              (a.athleteEmail?.toLowerCase().contains(query) ?? false))
+          .where(
+            (a) =>
+                (a.athleteName?.toLowerCase().contains(query) ?? false) ||
+                (a.athleteEmail?.toLowerCase().contains(query) ?? false),
+          )
           .toList();
     }
 
@@ -298,7 +291,9 @@ class _AddAthleteSheet extends ConsumerWidget {
                   width: 32,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
+                    color: context.colors.onSurfaceVariant.withValues(
+                      alpha: 0.4,
+                    ),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -323,7 +318,9 @@ class _AddAthleteSheet extends ConsumerWidget {
                 children: [
                   const Expanded(child: Divider()),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                    ),
                     child: Text(
                       context.l10n.orDivider,
                       style: context.textTheme.bodySmall?.copyWith(
@@ -412,10 +409,7 @@ class _AddAthleteSheet extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Icon(
-                AppIcons.personAdd,
-                color: context.colors.onSurfaceVariant,
-              ),
+              Icon(AppIcons.personAdd, color: context.colors.onSurfaceVariant),
               const SizedBox(width: AppSpacing.xs),
               Text(
                 context.l10n.createManualProfile,

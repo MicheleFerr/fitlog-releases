@@ -68,9 +68,8 @@ extension HealthDataPointNumericValue on HealthDataPoint {
 /// - Logs errors with `debugPrint` in debug mode
 /// - Never throws exceptions (safe for UI layer)
 class HealthKitDatasource {
-  HealthKitDatasource({
-    Health? healthFactory,
-  }) : _health = healthFactory ?? Health();
+  HealthKitDatasource({Health? healthFactory})
+    : _health = healthFactory ?? Health();
 
   final Health _health;
 
@@ -142,7 +141,9 @@ class HealthKitDatasource {
   Future<bool> initialize() async {
     if (!isAvailable) {
       if (kDebugMode) {
-        debugPrint('⚠️ [HealthKitDatasource] HealthKit not available (iOS only)');
+        debugPrint(
+          '⚠️ [HealthKitDatasource] HealthKit not available (iOS only)',
+        );
       }
       throw const HealthKitNotAvailableError();
     }
@@ -360,10 +361,7 @@ class HealthKitDatasource {
     final hrvData = await getHrvThisWeek();
 
     if (hrvData.isEmpty) {
-      return {
-        'available': false,
-        'message': 'No HRV data available',
-      };
+      return {'available': false, 'message': 'No HRV data available'};
     }
 
     // Calculate statistics
@@ -374,8 +372,9 @@ class HealthKitDatasource {
     final maxHrv = values.reduce((a, b) => a > b ? a : b);
 
     // Calculate coefficient of variation (CV)
-    final variance = values.map((v) => (v - avgHrv) * (v - avgHrv))
-        .reduce((a, b) => a + b) / values.length;
+    final variance =
+        values.map((v) => (v - avgHrv) * (v - avgHrv)).reduce((a, b) => a + b) /
+        values.length;
     final stdDev = variance > 0 && values.length > 1 ? sqrt(variance) : 0.0;
     final cv = avgHrv > 0 ? (stdDev / avgHrv) * 100 : 0.0;
 
@@ -552,19 +551,26 @@ class HealthKitDatasource {
     required DateTime endTime,
   }) async {
     // FIX: Check cache first to avoid duplicate HealthKit queries
-    final cacheKey = '${startTime.millisecondsSinceEpoch}_${endTime.millisecondsSinceEpoch}';
+    final cacheKey =
+        '${startTime.millisecondsSinceEpoch}_${endTime.millisecondsSinceEpoch}';
     final cached = _sleepCache[cacheKey];
     if (cached != null && !cached.isExpired) {
       if (kDebugMode) {
-        debugPrint('⚡ [_getAllSleepData] CACHE HIT - returning ${cached.data.length} cached points');
+        debugPrint(
+          '⚡ [_getAllSleepData] CACHE HIT - returning ${cached.data.length} cached points',
+        );
       }
       return cached.data;
     }
 
     if (kDebugMode) {
       debugPrint('🔍 [_getAllSleepData] START');
-      debugPrint('   📅 Range: ${startTime.toIso8601String()} → ${endTime.toIso8601String()}');
-      debugPrint('   📋 Sleep types to fetch: ${_sleepTypes.map((t) => t.name).join(", ")}');
+      debugPrint(
+        '   📅 Range: ${startTime.toIso8601String()} → ${endTime.toIso8601String()}',
+      );
+      debugPrint(
+        '   📋 Sleep types to fetch: ${_sleepTypes.map((t) => t.name).join(", ")}',
+      );
     }
 
     if (!isAvailable) {
@@ -594,7 +600,9 @@ class HealthKitDatasource {
             // Show first record details for debugging
             final first = data.first;
             debugPrint('      → First: ${first.dateFrom} to ${first.dateTo}');
-            debugPrint('      → Value: ${first.value} (${first.value.runtimeType})');
+            debugPrint(
+              '      → Value: ${first.value} (${first.value.runtimeType})',
+            );
             debugPrint('      → Unit: ${first.unit}');
           }
         }
@@ -617,7 +625,9 @@ class HealthKitDatasource {
     // FIX: Store in cache to avoid duplicate HealthKit queries
     _sleepCache[cacheKey] = _CachedData(allSleepData, _sleepCacheTtl);
     if (kDebugMode) {
-      debugPrint('💾 [_getAllSleepData] Cached ${allSleepData.length} points (TTL: ${_sleepCacheTtl.inMinutes}min)');
+      debugPrint(
+        '💾 [_getAllSleepData] Cached ${allSleepData.length} points (TTL: ${_sleepCacheTtl.inMinutes}min)',
+      );
     }
 
     return allSleepData;
@@ -693,13 +703,12 @@ class HealthKitDatasource {
     final now = DateTime.now();
     final weekAgo = now.subtract(const Duration(days: 7));
 
-    final result = await _getAllSleepData(
-      startTime: weekAgo,
-      endTime: now,
-    );
+    final result = await _getAllSleepData(startTime: weekAgo, endTime: now);
 
     if (kDebugMode) {
-      debugPrint('🌙 [getSleepThisWeek] Returning ${result.length} data points');
+      debugPrint(
+        '🌙 [getSleepThisWeek] Returning ${result.length} data points',
+      );
     }
     return result;
   }
@@ -751,10 +760,7 @@ class HealthKitDatasource {
 
     // Calculate statistics
     if (sleepData.isEmpty) {
-      return {
-        'available': false,
-        'message': 'No sleep data available',
-      };
+      return {'available': false, 'message': 'No sleep data available'};
     }
 
     // Group by night (using END time - when you wake up)
@@ -774,13 +780,11 @@ class HealthKitDatasource {
     // Convert to hours
     final sleepHours = nightlySleep.values.map((m) => m / 60).toList();
     if (sleepHours.isEmpty) {
-      return {
-        'available': false,
-        'message': 'No valid sleep data',
-      };
+      return {'available': false, 'message': 'No valid sleep data'};
     }
 
-    final avgSleepHours = sleepHours.reduce((a, b) => a + b) / sleepHours.length;
+    final avgSleepHours =
+        sleepHours.reduce((a, b) => a + b) / sleepHours.length;
     final minSleepHours = sleepHours.reduce((a, b) => a < b ? a : b);
     final maxSleepHours = sleepHours.reduce((a, b) => a > b ? a : b);
 
@@ -880,7 +884,9 @@ class HealthKitDatasource {
       // Actual deletion would require clearing any local Hive/SharedPreferences cache
 
       if (kDebugMode) {
-        debugPrint('🗑️ [HealthKitDatasource] Local cache cleared (GDPR Article 17)');
+        debugPrint(
+          '🗑️ [HealthKitDatasource] Local cache cleared (GDPR Article 17)',
+        );
       }
 
       return true;

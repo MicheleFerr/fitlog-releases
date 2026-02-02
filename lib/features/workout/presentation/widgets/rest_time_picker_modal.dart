@@ -27,7 +27,8 @@ class RestTimePickerModal extends ConsumerStatefulWidget {
   final String? exerciseId;
 
   @override
-  ConsumerState<RestTimePickerModal> createState() => _RestTimePickerModalState();
+  ConsumerState<RestTimePickerModal> createState() =>
+      _RestTimePickerModalState();
 }
 
 class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
@@ -54,8 +55,12 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
     }
 
     // Initialize scroll controllers
-    _minutesController = FixedExtentScrollController(initialItem: _selectedMinutes);
-    _secondsController = FixedExtentScrollController(initialItem: _selectedSeconds ~/ 15);
+    _minutesController = FixedExtentScrollController(
+      initialItem: _selectedMinutes,
+    );
+    _secondsController = FixedExtentScrollController(
+      initialItem: _selectedSeconds ~/ 15,
+    );
 
     // Load presets
     _loadPresets();
@@ -168,9 +173,13 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: _presets!.where((p) => p.seconds != null).map((preset) {
-                  final isSelected = _hasRestTime &&
-                      preset.seconds == (_selectedMinutes * 60 + _selectedSeconds);
+                children: _presets!.where((p) => p.seconds != null).map((
+                  preset,
+                ) {
+                  final isSelected =
+                      _hasRestTime &&
+                      preset.seconds ==
+                          (_selectedMinutes * 60 + _selectedSeconds);
 
                   return FilterChip(
                     label: Row(
@@ -209,7 +218,9 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                         _secondsController.jumpToItem(newSeconds ~/ 15);
                       }
                     },
-                    selectedColor: context.colors.primary.withValues(alpha: 0.3),
+                    selectedColor: context.colors.primary.withValues(
+                      alpha: 0.3,
+                    ),
                     checkmarkColor: context.colors.primary,
                   );
                 }).toList(),
@@ -315,11 +326,7 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    AppIcons.timer,
-                    size: 18,
-                    color: context.colors.primary,
-                  ),
+                  Icon(AppIcons.timer, size: 18, color: context.colors.primary),
                   const SizedBox(width: 6),
                   Text(
                     context.l10n.timerSet,
@@ -372,9 +379,8 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                       );
                     } else {
                       // Check if custom timer (not matching any preset)
-                      final matchesPreset = _presets?.any(
-                        (p) => p.seconds == restTime,
-                      ) ?? false;
+                      final matchesPreset =
+                          _presets?.any((p) => p.seconds == restTime) ?? false;
 
                       if (!matchesPreset) {
                         // Custom timer

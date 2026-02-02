@@ -31,7 +31,8 @@ class DatabaseManagerScreen extends ConsumerStatefulWidget {
   const DatabaseManagerScreen({super.key});
 
   @override
-  ConsumerState<DatabaseManagerScreen> createState() => _DatabaseManagerScreenState();
+  ConsumerState<DatabaseManagerScreen> createState() =>
+      _DatabaseManagerScreenState();
 }
 
 class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
@@ -79,9 +80,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
             _buildSelectionBar(context, l10n, state),
 
           // Exercise list
-          Expanded(
-            child: _buildExerciseList(context, l10n, state),
-          ),
+          Expanded(child: _buildExerciseList(context, l10n, state)),
         ],
       ),
       floatingActionButton: _buildFAB(context, l10n),
@@ -96,10 +95,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
     return AppBar(
       title: Row(
         children: [
-          Icon(
-            AppIcons.storage,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+          Icon(AppIcons.storage, color: Theme.of(context).colorScheme.primary),
           const SizedBox(width: 8),
           Text(l10n.databaseManager),
         ],
@@ -114,7 +110,9 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
             }
           },
           icon: Icon(
-            _isMultiSelectMode ? AppIcons.checkBox : AppIcons.checkBoxOutlineBlank,
+            _isMultiSelectMode
+                ? AppIcons.checkBox
+                : AppIcons.checkBoxOutlineBlank,
           ),
           tooltip: l10n.multiSelectMode,
         ),
@@ -191,7 +189,9 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
   ) {
     return Container(
       padding: const EdgeInsets.all(12),
-      color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+      color: Theme.of(
+        context,
+      ).colorScheme.primaryContainer.withValues(alpha: 0.3),
       child: stats.when(
         data: (data) => Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -310,7 +310,9 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                       avatar: const Icon(AppIcons.clearAll, size: 18),
                       onPressed: () {
                         _searchController.clear();
-                        ref.read(databaseManagerProvider.notifier).resetFilters();
+                        ref
+                            .read(databaseManagerProvider.notifier)
+                            .resetFilters();
                       },
                     ),
                 ],
@@ -351,7 +353,12 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
           TextButton.icon(
             onPressed: () => _confirmBulkDelete(context, l10n),
             icon: Icon(AppIcons.delete, size: 18, color: context.colors.error),
-            label: Text(l10n.delete, style: context.textTheme.bodyMedium?.copyWith(color: context.colors.error)),
+            label: Text(
+              l10n.delete,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.error,
+              ),
+            ),
           ),
         ],
       ),
@@ -381,7 +388,8 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
             Text(state.error!),
             const SizedBox(height: 16),
             ElevatedButton.icon(
-              onPressed: () => ref.read(databaseManagerProvider.notifier).loadExercises(),
+              onPressed: () =>
+                  ref.read(databaseManagerProvider.notifier).loadExercises(),
               icon: const Icon(AppIcons.refresh),
               label: Text(l10n.retry),
             ),
@@ -415,7 +423,9 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        await ref.read(databaseManagerProvider.notifier).loadExercises(forceRefresh: true);
+        await ref
+            .read(databaseManagerProvider.notifier)
+            .loadExercises(forceRefresh: true);
       },
       child: ListView.builder(
         controller: _scrollController,
@@ -432,8 +442,8 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
               isSelected: isSelected,
               onSelectionChanged: _isMultiSelectMode
                   ? (_) => ref
-                      .read(databaseManagerProvider.notifier)
-                      .toggleExerciseSelection(exercise.id)
+                        .read(databaseManagerProvider.notifier)
+                        .toggleExerciseSelection(exercise.id)
                   : null,
               onTap: () {
                 if (_isMultiSelectMode) {
@@ -460,9 +470,13 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
   }
 
   void _applySearch() {
-    ref.read(databaseManagerProvider.notifier).applyFilters(
-      searchQuery: _searchController.text.isEmpty ? null : _searchController.text,
-    );
+    ref
+        .read(databaseManagerProvider.notifier)
+        .applyFilters(
+          searchQuery: _searchController.text.isEmpty
+              ? null
+              : _searchController.text,
+        );
   }
 
   void _applyFilter(String filterType, String? value) {
@@ -481,7 +495,11 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
     }
   }
 
-  void _handleMenuAction(String action, BuildContext context, AppLocalizations l10n) {
+  void _handleMenuAction(
+    String action,
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
     switch (action) {
       case 'export_all':
         _exportExercises(context, l10n, false);
@@ -493,7 +511,9 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
         _showImportDialog(context, l10n);
         break;
       case 'refresh':
-        ref.read(databaseManagerProvider.notifier).loadExercises(forceRefresh: true);
+        ref
+            .read(databaseManagerProvider.notifier)
+            .loadExercises(forceRefresh: true);
         break;
       case 'migrate_analytics':
         _showMigrationDialog(context, l10n);
@@ -515,10 +535,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
       await Clipboard.setData(ClipboardData(text: json));
 
       if (context.mounted) {
-        SnackBarService.showSuccess(
-          context,
-          'JSON copiato negli appunti',
-        );
+        SnackBarService.showSuccess(context, 'JSON copiato negli appunti');
       }
     }
   }
@@ -567,7 +584,10 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
   /// 2. Execute migration via AnalyticsMigrationService
   /// 3. Show loading dialog during migration
   /// 4. Display results (success/error)
-  Future<void> _showMigrationDialog(BuildContext context, AppLocalizations l10n) async {
+  Future<void> _showMigrationDialog(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) async {
     // Get current user ID
     final userId = ref.read(currentUserIdProvider);
     if (userId == null) {
@@ -610,7 +630,9 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                 children: [
                   Text(
                     '📊 What this does:',
-                    style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   const Text('• Reads all completed workouts'),
@@ -619,7 +641,9 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                   const SizedBox(height: 12),
                   Text(
                     '✅ Safe: Can be run multiple times',
-                    style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -689,9 +713,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                     const Text('Migration Failed'),
                   ],
                 ),
-                content: Text(
-                  'Error: ${failure.message}',
-                ),
+                content: Text('Error: ${failure.message}'),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
@@ -721,7 +743,9 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                   children: [
                     Text(
                       'Successfully migrated workouts to analytics collection!',
-                      style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Container(
@@ -739,7 +763,9 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                           Text('💪 Total sets: ${stats.totalSets}'),
                           if (stats.skippedExercises.isNotEmpty) ...[
                             const SizedBox(height: 8),
-                            Text('⚠️ Skipped: ${stats.skippedExercises.length} exercises'),
+                            Text(
+                              '⚠️ Skipped: ${stats.skippedExercises.length} exercises',
+                            ),
                           ],
                         ],
                       ),
@@ -775,9 +801,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                 const Text('Migration Error'),
               ],
             ),
-            content: Text(
-              'Unexpected error: $e',
-            ),
+            content: Text('Unexpected error: $e'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
@@ -813,10 +837,22 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                   border: const OutlineInputBorder(),
                 ),
                 items: [
-                  DropdownMenuItem(value: 'difficolta', child: Text(l10n.difficulty)),
-                  DropdownMenuItem(value: 'attrezzatura', child: Text(l10n.equipment)),
-                  DropdownMenuItem(value: 'tipoEsercizio', child: Text(l10n.exerciseType)),
-                  DropdownMenuItem(value: 'rangeRipetizioni', child: Text(l10n.repRange)),
+                  DropdownMenuItem(
+                    value: 'difficolta',
+                    child: Text(l10n.difficulty),
+                  ),
+                  DropdownMenuItem(
+                    value: 'attrezzatura',
+                    child: Text(l10n.equipment),
+                  ),
+                  DropdownMenuItem(
+                    value: 'tipoEsercizio',
+                    child: Text(l10n.exerciseType),
+                  ),
+                  DropdownMenuItem(
+                    value: 'rangeRipetizioni',
+                    child: Text(l10n.repRange),
+                  ),
                 ],
                 onChanged: (value) => setState(() {
                   selectedField = value;
@@ -835,10 +871,10 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                     border: const OutlineInputBorder(),
                   ),
                   items: _getBulkEditValues(selectedField!, dropdownValues)
-                      .map((value) => DropdownMenuItem(
-                            value: value,
-                            child: Text(value),
-                          ))
+                      .map(
+                        (value) =>
+                            DropdownMenuItem(value: value, child: Text(value)),
+                      )
                       .toList(),
                   onChanged: (value) => setState(() => selectedValue = value),
                 ),
@@ -854,10 +890,9 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
               onPressed: selectedField != null && selectedValue != null
                   ? () {
                       Navigator.of(context).pop();
-                      ref.read(databaseManagerProvider.notifier).bulkUpdateField(
-                            selectedField!,
-                            selectedValue!,
-                          );
+                      ref
+                          .read(databaseManagerProvider.notifier)
+                          .bulkUpdateField(selectedField!, selectedValue!);
                     }
                   : null,
               child: Text(l10n.apply),
@@ -888,9 +923,11 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.confirmDelete),
-        content: Text(l10n.confirmDeleteMultiple(
-          ref.read(databaseManagerProvider).selectionCount,
-        )),
+        content: Text(
+          l10n.confirmDeleteMultiple(
+            ref.read(databaseManagerProvider).selectionCount,
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -899,7 +936,9 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
-              ref.read(databaseManagerProvider.notifier).deleteSelectedExercises();
+              ref
+                  .read(databaseManagerProvider.notifier)
+                  .deleteSelectedExercises();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
@@ -913,14 +952,16 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
   }
 
   void _openExerciseEditor(BuildContext context, Exercise? exercise) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => ExerciseEditorScreen(exercise: exercise),
-      ),
-    ).then((_) {
-      // Refresh list after editing
-      ref.read(databaseManagerProvider.notifier).loadExercises();
-    });
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute(
+            builder: (context) => ExerciseEditorScreen(exercise: exercise),
+          ),
+        )
+        .then((_) {
+          // Refresh list after editing
+          ref.read(databaseManagerProvider.notifier).loadExercises();
+        });
   }
 
   /// Build Version Management Card
@@ -933,7 +974,8 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
 
     return versionMetadataAsync.when(
       data: (metadata) {
-        final currentVersion = metadata?['current_version'] as String? ?? '1.0.0';
+        final currentVersion =
+            metadata?['current_version'] as String? ?? '1.0.0';
         final lastUpdated = metadata?['last_updated'] as Timestamp?;
         final totalExercises = metadata?['total_exercises'] as int? ?? 0;
         final changelog = metadata?['changelog'] as List<dynamic>? ?? [];
@@ -989,7 +1031,12 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                       ],
                     ),
                     FilledButton.icon(
-                      onPressed: () => _showPublishDialog(context, l10n, currentVersion, ref),
+                      onPressed: () => _showPublishDialog(
+                        context,
+                        l10n,
+                        currentVersion,
+                        ref,
+                      ),
                       icon: const Icon(AppIcons.publish),
                       label: Text(l10n.publishNewVersion),
                     ),
@@ -1042,7 +1089,10 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  _buildChangelogEntry(context, changelog.first as Map<String, dynamic>),
+                  _buildChangelogEntry(
+                    context,
+                    changelog.first as Map<String, dynamic>,
+                  ),
                 ],
               ],
             ),
@@ -1100,7 +1150,10 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
     );
   }
 
-  Widget _buildChangelogEntry(BuildContext context, Map<String, dynamic> entry) {
+  Widget _buildChangelogEntry(
+    BuildContext context,
+    Map<String, dynamic> entry,
+  ) {
     final changes = entry['changes'] as List<dynamic>? ?? [];
     return Container(
       padding: const EdgeInsets.all(12),
@@ -1172,7 +1225,11 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                   ),
                   child: Row(
                     children: [
-                      Icon(AppIcons.tag, size: 20, color: context.colors.primary),
+                      Icon(
+                        AppIcons.tag,
+                        size: 20,
+                        color: context.colors.primary,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         newVersion,
@@ -1287,7 +1344,6 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
 
 /// Stat chip widget
 class _StatChip extends StatelessWidget {
-
   const _StatChip({
     required this.label,
     required this.value,
@@ -1311,14 +1367,11 @@ class _StatChip extends StatelessWidget {
             Text(
               value,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                  ),
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
             ),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+            Text(label, style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
       ],
@@ -1328,7 +1381,6 @@ class _StatChip extends StatelessWidget {
 
 /// Filter chip dropdown
 class _FilterChip extends StatelessWidget {
-
   const _FilterChip({
     required this.label,
     required this.value,
@@ -1360,14 +1412,13 @@ class _FilterChip extends StatelessWidget {
               value: value,
               hint: Text(label, style: context.textTheme.labelSmall),
               items: [
-                DropdownMenuItem(
-                  value: null,
-                  child: Text(label),
+                DropdownMenuItem(value: null, child: Text(label)),
+                ...items.map(
+                  (item) => DropdownMenuItem(
+                    value: item,
+                    child: Text(item, style: context.textTheme.labelSmall),
+                  ),
                 ),
-                ...items.map((item) => DropdownMenuItem(
-                      value: item,
-                      child: Text(item, style: context.textTheme.labelSmall),
-                    )),
               ],
               onChanged: onChanged,
               isDense: true,
@@ -1385,7 +1436,9 @@ class _FilterChip extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.1),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onPrimaryContainer.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -1400,5 +1453,4 @@ class _FilterChip extends StatelessWidget {
       ),
     );
   }
-
 }

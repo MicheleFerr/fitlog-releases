@@ -55,7 +55,9 @@ class _TutSelectorState extends State<TutSelector> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+          color: theme.colorScheme.surfaceContainerHighest.withValues(
+            alpha: 0.3,
+          ),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: theme.colorScheme.primary.withValues(alpha: 0.3),
@@ -65,11 +67,11 @@ class _TutSelectorState extends State<TutSelector> {
           mainAxisSize: MainAxisSize.min,
           children: [
             SemanticIcon(
-  icon: AppIcons.timer,
-  semanticLabel: 'Timer',
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.primary,
-),
+              icon: AppIcons.timer,
+              semanticLabel: 'Timer',
+              size: AppIconSize.tiny,
+              color: theme.colorScheme.primary,
+            ),
             const SizedBox(width: 4),
             Text(
               _formatTutValue(_phases),
@@ -81,11 +83,10 @@ class _TutSelectorState extends State<TutSelector> {
             ),
             const SizedBox(width: 4),
             SemanticIcon(
-  icon: AppIcons.expandMore,
-  semanticLabel: 'Expand',
-  size: AppIconSize.medium,
-  color: theme.colorScheme.primary.withValues(alpha: 0.7,
-),
+              icon: AppIcons.expandMore,
+              semanticLabel: 'Expand',
+              size: AppIconSize.medium,
+              color: theme.colorScheme.primary.withValues(alpha: 0.7),
             ),
           ],
         ),
@@ -118,11 +119,11 @@ class _TutSelectorState extends State<TutSelector> {
           Row(
             children: [
               SemanticIcon(
-  icon: AppIcons.timer,
-  semanticLabel: 'Timer',
-  size: AppIconSize.small,
-  color: theme.colorScheme.primary,
-),
+                icon: AppIcons.timer,
+                semanticLabel: 'Timer',
+                size: AppIconSize.small,
+                color: theme.colorScheme.primary,
+              ),
               const SizedBox(width: 8),
               Text(
                 l10n.tutTitle,
@@ -140,11 +141,11 @@ class _TutSelectorState extends State<TutSelector> {
                     });
                   },
                   icon: SemanticIcon(
-  icon: AppIcons.close,
-  semanticLabel: 'Close',
-  size: AppIconSize.small,
-  color: theme.colorScheme.onSurfaceVariant,
-),
+                    icon: AppIcons.close,
+                    semanticLabel: 'Close',
+                    size: AppIconSize.small,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(
                     minWidth: 24,
@@ -271,10 +272,7 @@ class _TutSelectorState extends State<TutSelector> {
             Container(
               width: 12,
               height: 12,
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             ),
             const SizedBox(width: 8),
             Text(
@@ -318,7 +316,9 @@ class _TutSelectorState extends State<TutSelector> {
                             : context.colors.surface.withValues(alpha: 0),
                         borderRadius: BorderRadius.horizontal(
                           left: i == 0 ? const Radius.circular(7) : Radius.zero,
-                          right: i == _tutOptions.length - 1 ? const Radius.circular(7) : Radius.zero,
+                          right: i == _tutOptions.length - 1
+                              ? const Radius.circular(7)
+                              : Radius.zero,
                         ),
                       ),
                       child: Text(
@@ -383,7 +383,10 @@ class _TutSelectorState extends State<TutSelector> {
                 });
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? theme.colorScheme.primaryContainer
@@ -401,7 +404,9 @@ class _TutSelectorState extends State<TutSelector> {
                     color: isSelected
                         ? theme.colorScheme.onPrimaryContainer
                         : theme.colorScheme.onSurface,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.w600
+                        : FontWeight.normal,
                   ),
                 ),
               ),

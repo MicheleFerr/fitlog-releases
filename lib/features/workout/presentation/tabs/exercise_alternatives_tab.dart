@@ -11,54 +11,58 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_widget.dart';
 
 /// Provider per filtrare esercizi alternativi basati sulla categoria
-final alternativeExercisesProvider = FutureProvider.autoDispose.family<List<Exercise>, String>((ref, currentExerciseName) async {
-  // Get all exercises from hybrid repository
-  final allExercises = await ref.read(allExercisesProvider.future);
+final alternativeExercisesProvider = FutureProvider.autoDispose
+    .family<List<Exercise>, String>((ref, currentExerciseName) async {
+      // Get all exercises from hybrid repository
+      final allExercises = await ref.read(allExercisesProvider.future);
 
-  // Find the current exercise to get its category
-  final currentExercise = allExercises.where((ex) => ex.nome == currentExerciseName).firstOrNull;
+      // Find the current exercise to get its category
+      final currentExercise = allExercises
+          .where((ex) => ex.nome == currentExerciseName)
+          .firstOrNull;
 
-  if (currentExercise == null || currentExercise.focus.isEmpty) {
-    // If current exercise not found or no focus, return empty list
-    return [];
-  }
+      if (currentExercise == null || currentExercise.focus.isEmpty) {
+        // If current exercise not found or no focus, return empty list
+        return [];
+      }
 
-  // Get category from focus using the converter
-  final category = ExerciseConverter.mapFocusToCategory(currentExercise.focus);
+      // Get category from focus using the converter
+      final category = ExerciseConverter.mapFocusToCategory(
+        currentExercise.focus,
+      );
 
-  // Filter exercises by same category, excluding current exercise
-  final alternatives = allExercises.where((ex) {
-    if (ex.nome == currentExerciseName) return false; // Exclude current exercise
-    if (ex.focus.isEmpty) return false; // Skip exercises without focus
+      // Filter exercises by same category, excluding current exercise
+      final alternatives = allExercises.where((ex) {
+        if (ex.nome == currentExerciseName)
+          return false; // Exclude current exercise
+        if (ex.focus.isEmpty) return false; // Skip exercises without focus
 
-    final exCategory = ExerciseConverter.mapFocusToCategory(ex.focus);
-    return exCategory == category;
-  }).toList();
+        final exCategory = ExerciseConverter.mapFocusToCategory(ex.focus);
+        return exCategory == category;
+      }).toList();
 
-  // Sort by difficulty and limit to top 8 alternatives
-  alternatives.sort((a, b) {
-    final diffOrder = ['Principiante', 'Intermedio', 'Avanzato'];
-    final aIndex = diffOrder.indexOf(a.difficolta);
-    final bIndex = diffOrder.indexOf(b.difficolta);
-    if (aIndex != bIndex) return aIndex.compareTo(bIndex);
-    return a.nome.compareTo(b.nome);
-  });
+      // Sort by difficulty and limit to top 8 alternatives
+      alternatives.sort((a, b) {
+        final diffOrder = ['Principiante', 'Intermedio', 'Avanzato'];
+        final aIndex = diffOrder.indexOf(a.difficolta);
+        final bIndex = diffOrder.indexOf(b.difficolta);
+        if (aIndex != bIndex) return aIndex.compareTo(bIndex);
+        return a.nome.compareTo(b.nome);
+      });
 
-  return alternatives.take(8).toList();
-});
+      return alternatives.take(8).toList();
+    });
 
 /// Tab Esercizi Alternativi: mostra esercizi simili nella stessa categoria
 class ExerciseAlternativesTab extends ConsumerWidget {
-
-  const ExerciseAlternativesTab({
-    super.key,
-    required this.exerciseName,
-  });
+  const ExerciseAlternativesTab({super.key, required this.exerciseName});
   final String exerciseName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final alternativesAsync = ref.watch(alternativeExercisesProvider(exerciseName));
+    final alternativesAsync = ref.watch(
+      alternativeExercisesProvider(exerciseName),
+    );
 
     return alternativesAsync.when(
       data: (alternatives) {
@@ -92,7 +96,9 @@ class ExerciseAlternativesTab extends ConsumerWidget {
                           ),
                         ),
                         Text(
-                          context.l10n.alternativeExercisesCount(alternatives.length),
+                          context.l10n.alternativeExercisesCount(
+                            alternatives.length,
+                          ),
                           style: context.textTheme.bodySmall?.copyWith(
                             color: context.colors.outline,
                           ),
@@ -106,7 +112,9 @@ class ExerciseAlternativesTab extends ConsumerWidget {
               const SizedBox(height: 24),
 
               // Alternative exercises list
-              ...alternatives.map((exercise) => _buildAlternativeCard(context, exercise)),
+              ...alternatives.map(
+                (exercise) => _buildAlternativeCard(context, exercise),
+              ),
 
               const SizedBox(height: 16),
             ],
@@ -190,7 +198,12 @@ class ExerciseAlternativesTab extends ConsumerWidget {
   }
 
   /// Build metadata chip
-  Widget _buildMetadataChip(BuildContext context, IconData icon, String label, Color color) {
+  Widget _buildMetadataChip(
+    BuildContext context,
+    IconData icon,
+    String label,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(

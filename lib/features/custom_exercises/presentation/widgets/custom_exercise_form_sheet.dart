@@ -167,30 +167,22 @@ class _CustomExerciseFormSheetState
   /// Validate and save the form
   void _handleSave() {
     if (!_formKey.currentState!.validate()) {
-      SnackBarService.showError(
-        context,
-        context.l10n.pleaseEnterValidData,
-      );
+      SnackBarService.showError(context, context.l10n.pleaseEnterValidData);
       return;
     }
 
     if (_focus.isEmpty) {
-      SnackBarService.showError(
-        context,
-        context.l10n.primaryMuscles,
-      );
+      SnackBarService.showError(context, context.l10n.primaryMuscles);
       return;
     }
 
     if (_pattern == null) {
-      SnackBarService.showError(
-        context,
-        context.l10n.movementPattern,
-      );
+      SnackBarService.showError(context, context.l10n.movementPattern);
       return;
     }
 
-    final customExercise = widget.existingCustom?.copyWith(
+    final customExercise =
+        widget.existingCustom?.copyWith(
           nome: _nameController.text.trim(),
           focus: _focus,
           muscoliSecondari: _muscoliSecondari,
@@ -313,8 +305,8 @@ class _CustomExerciseFormSheetState
                 isEditing
                     ? context.l10n.editCustomExercise
                     : (isVariant
-                        ? context.l10n.createVariant
-                        : context.l10n.createCustomExercise),
+                          ? context.l10n.createVariant
+                          : context.l10n.createCustomExercise),
                 style: context.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -534,19 +526,14 @@ class _CustomExerciseFormSheetState
                   ),
                 ),
                 SemanticIcon(
-                  icon: isExpanded
-                      ? AppIcons.expandLess
-                      : AppIcons.expandMore,
+                  icon: isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
                   semanticLabel: isExpanded ? 'Collapse' : 'Expand',
                 ),
               ],
             ),
           ),
         ),
-        if (isExpanded) ...[
-          const SizedBox(height: AppSpacing.xs),
-          child,
-        ],
+        if (isExpanded) ...[const SizedBox(height: AppSpacing.xs), child],
       ],
     );
   }
@@ -593,10 +580,7 @@ class _CustomExerciseFormSheetState
       decoration: BoxDecoration(
         color: context.colors.surface,
         border: Border(
-          top: BorderSide(
-            color: context.colors.outlineVariant,
-            width: 1,
-          ),
+          top: BorderSide(color: context.colors.outlineVariant, width: 1),
         ),
         boxShadow: [
           BoxShadow(
@@ -624,9 +608,7 @@ class _CustomExerciseFormSheetState
           ),
           label: Text(context.l10n.save),
           style: FilledButton.styleFrom(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           ),
         ),
       ),

@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: domain
 /// 🎯 Feature: analytics
 /// 🔧 Type: usecase
 /// 🌍 Localization: ✅ AppLocalizations used
 /// 🎨 Theme: ✅ ColorScheme responsive
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - workout/domain/entities: Workout
 /// - analytics/domain/entities: WorkoutMetrics
@@ -17,7 +17,6 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_me
 
 /// Use case for calculating real-time workout metrics
 class CalculateWorkoutMetricsUseCase {
-  
   /// Calculate current workout metrics in real-time
   WorkoutMetrics execute(Workout workout) {
     try {
@@ -34,15 +33,15 @@ class CalculateWorkoutMetricsUseCase {
     List<Workout> historicalWorkouts,
   ) {
     final baseMetrics = execute(currentWorkout);
-    
+
     // Find best comparison workout
     final comparison = _findBestComparison(currentWorkout, historicalWorkouts);
-    
+
     if (comparison != null) {
       final comparisonData = _calculateComparison(baseMetrics, comparison);
       return baseMetrics.copyWith(comparison: comparisonData);
     }
-    
+
     return baseMetrics;
   }
 
@@ -91,12 +90,12 @@ class CalculateWorkoutMetricsUseCase {
   double _calculateWorkoutSimilarity(Workout workout1, Workout workout2) {
     final exercises1 = workout1.exercises.map((e) => e.name).toSet();
     final exercises2 = workout2.exercises.map((e) => e.name).toSet();
-    
+
     final intersection = exercises1.intersection(exercises2);
     final union = exercises1.union(exercises2);
-    
+
     if (union.isEmpty) return 0;
-    
+
     return intersection.length / union.length;
   }
 
@@ -135,7 +134,7 @@ class CalculateWorkoutMetricsUseCase {
         .expand((e) => e.sets)
         .where((s) => s.isCompleted)
         .length;
-    
+
     if ((currentCompletedSets - previousMetrics.completedSets).abs() > 2) {
       return true;
     }
@@ -149,7 +148,7 @@ class CalculateWorkoutMetricsUseCase {
   ) {
     // Quick update of key metrics without full recalculation
     final currentMetrics = WorkoutMetrics.fromWorkout(workout);
-    
+
     return previousMetrics.copyWith(
       calculatedAt: DateTime.now(),
       totalVolume: currentMetrics.totalVolume,

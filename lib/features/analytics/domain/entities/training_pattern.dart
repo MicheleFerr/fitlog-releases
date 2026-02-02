@@ -171,12 +171,12 @@ abstract class TrainingPatternResults with _$TrainingPatternResults {
 
   /// Factory for empty/insufficient data
   factory TrainingPatternResults.empty() => TrainingPatternResults(
-        patterns: const [],
-        primaryPattern: null,
-        overallStatus: TrainingStatus.insufficientData,
-        analyzedAt: DateTime.now(),
-        dataPointsUsed: 0,
-      );
+    patterns: const [],
+    primaryPattern: null,
+    overallStatus: TrainingStatus.insufficientData,
+    analyzedAt: DateTime.now(),
+    dataPointsUsed: 0,
+  );
 
   /// Check if any patterns were detected
   bool get hasPatterns => patterns.isNotEmpty;
@@ -185,7 +185,8 @@ abstract class TrainingPatternResults with _$TrainingPatternResults {
   bool get hasWarnings => patterns.any((p) => p.isWarning);
 
   /// Get only warning patterns
-  List<TrainingPattern> get warnings => patterns.where((p) => p.isWarning).toList();
+  List<TrainingPattern> get warnings =>
+      patterns.where((p) => p.isWarning).toList();
 
   /// Get only positive patterns
   List<TrainingPattern> get positivePatterns =>

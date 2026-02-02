@@ -25,16 +25,20 @@ class LegalDocumentsConfig {
   /// Local asset paths (fallback when offline)
   static const String privacyPolicyItLocal = 'docs/legal/PRIVACY_POLICY_IT.md';
   static const String privacyPolicyEnLocal = 'docs/legal/PRIVACY_POLICY_EN.md';
-  static const String termsOfServiceItLocal = 'docs/legal/TERMS_OF_SERVICE_IT.md';
-  static const String termsOfServiceEnLocal = 'docs/legal/TERMS_OF_SERVICE_EN.md';
+  static const String termsOfServiceItLocal =
+      'docs/legal/TERMS_OF_SERVICE_IT.md';
+  static const String termsOfServiceEnLocal =
+      'docs/legal/TERMS_OF_SERVICE_EN.md';
 
   /// Coach Agreement URLs
   static const String coachAgreementIt = '$baseUrl/coach-agreement-it.html';
   static const String coachAgreementEn = '$baseUrl/coach-agreement-en.html';
 
   /// Coach Agreement local paths
-  static const String coachAgreementItLocal = 'docs/legal/COACH_AGREEMENT_IT.md';
-  static const String coachAgreementEnLocal = 'docs/legal/COACH_AGREEMENT_EN.md';
+  static const String coachAgreementItLocal =
+      'docs/legal/COACH_AGREEMENT_IT.md';
+  static const String coachAgreementEnLocal =
+      'docs/legal/COACH_AGREEMENT_EN.md';
 }
 
 /// Screen to display legal documents (Privacy Policy, Terms of Service)
@@ -240,11 +244,7 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                AppIcons.cloudOff,
-                size: 48,
-                color: context.colors.error,
-              ),
+              Icon(AppIcons.cloudOff, size: 48, color: context.colors.error),
               const SizedBox(height: 16),
               Text(
                 _errorMessage!,
@@ -304,9 +304,7 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
               padding: const EdgeInsets.all(16.0),
               child: SelectableText(
                 _localContent!,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  height: 1.6,
-                ),
+                style: context.textTheme.bodyMedium?.copyWith(height: 1.6),
               ),
             ),
           ),

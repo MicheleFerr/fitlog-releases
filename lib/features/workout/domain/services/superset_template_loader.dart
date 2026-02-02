@@ -101,9 +101,11 @@ class SupersetTemplateLoader {
   }) async {
     final all = await loadPredefinedTemplates(lookupExercise: lookupExercise);
     return all
-        .where((t) =>
-            t.estimatedTimeMinutes >= minMinutes &&
-            t.estimatedTimeMinutes <= maxMinutes)
+        .where(
+          (t) =>
+              t.estimatedTimeMinutes >= minMinutes &&
+              t.estimatedTimeMinutes <= maxMinutes,
+        )
         .toList();
   }
 

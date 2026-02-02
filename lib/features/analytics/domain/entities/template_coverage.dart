@@ -111,10 +111,8 @@ class TemplateCoverageResult {
   });
 
   /// Empty coverage result (no templates)
-  factory TemplateCoverageResult.empty() => const TemplateCoverageResult(
-        muscleScores: {},
-        exerciseToTemplates: {},
-      );
+  factory TemplateCoverageResult.empty() =>
+      const TemplateCoverageResult(muscleScores: {}, exerciseToTemplates: {});
 
   /// Coverage scores per muscle (lowercase muscle name → score)
   final Map<String, TemplateMuscleScore> muscleScores;
@@ -186,9 +184,9 @@ class AdjustedNeglectedMuscle {
   AdjustedNeglectedMuscle({
     required this.original,
     TemplateMuscleScore? coverage,
-  })  : _coverage = coverage,
-        coveringTemplates = coverage?.templateNames ?? [],
-        plannedExerciseCount = coverage?.totalExercises ?? 0;
+  }) : _coverage = coverage,
+       coveringTemplates = coverage?.templateNames ?? [],
+       plannedExerciseCount = coverage?.totalExercises ?? 0;
 
   /// Original neglected muscle data
   final NeglectedMuscle original;
@@ -232,8 +230,10 @@ class AdjustedNeglectedMuscle {
 
     // Apply reduction
     final currentIndex = NeglectSeverity.values.indexOf(original.severity);
-    final newIndex = (currentIndex + reduction)
-        .clamp(0, NeglectSeverity.values.length - 1);
+    final newIndex = (currentIndex + reduction).clamp(
+      0,
+      NeglectSeverity.values.length - 1,
+    );
 
     return NeglectSeverity.values[newIndex];
   }

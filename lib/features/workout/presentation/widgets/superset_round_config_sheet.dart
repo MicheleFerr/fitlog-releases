@@ -44,7 +44,9 @@ class SupersetRoundConfigSheet extends ConsumerStatefulWidget {
     return showModalBottomSheet<SupersetConfiguration>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       isDismissible: false,
       enableDrag: false,
       builder: (context) => DraggableScrollableSheet(
@@ -55,7 +57,8 @@ class SupersetRoundConfigSheet extends ConsumerStatefulWidget {
           exercises: exercises,
           initialConfiguration: initialConfiguration,
           initialRounds: initialConfiguration?.rounds.length ?? initialRounds,
-          restAfterRound: initialConfiguration?.restAfterRound ?? restAfterRound,
+          restAfterRound:
+              initialConfiguration?.restAfterRound ?? restAfterRound,
           scrollController: scrollController,
         ),
       ),
@@ -110,7 +113,7 @@ class _SupersetRoundConfigSheetState
           if (i == roundIndex)
             _rounds[i].copyWithExercise(exerciseId, config)
           else
-            _rounds[i]
+            _rounds[i],
       ];
       _hasUnsavedChanges = true;
     });
@@ -119,7 +122,7 @@ class _SupersetRoundConfigSheetState
   void _applyExerciseToAllRounds(String exerciseId, _CellConfig config) {
     setState(() {
       _rounds = [
-        for (final round in _rounds) round.copyWithExercise(exerciseId, config)
+        for (final round in _rounds) round.copyWithExercise(exerciseId, config),
       ];
       _hasUnsavedChanges = true;
     });
@@ -135,7 +138,7 @@ class _SupersetRoundConfigSheetState
           _RoundConfig(
             roundNumber: i + 1,
             exercises: Map.from(sourceRound.exercises),
-          )
+          ),
       ];
       _hasUnsavedChanges = true;
     });
@@ -180,27 +183,30 @@ class _SupersetRoundConfigSheetState
   }
 
   bool get _isConfigurationValid {
-    return _rounds
-        .every((round) => round.exercises.values.every((cfg) => cfg.isValid));
+    return _rounds.every(
+      (round) => round.exercises.values.every((cfg) => cfg.isValid),
+    );
   }
 
   SupersetConfiguration _buildConfiguration() {
     return SupersetConfiguration(
       exercises: widget.exercises,
       rounds: _rounds
-          .map((r) => SupersetRound(
-                roundNumber: r.roundNumber,
-                exerciseConfigs: r.exercises.map(
-                  (id, cfg) => MapEntry(
-                    id,
-                    SupersetExerciseConfig(
-                      exerciseId: id,
-                      targetReps: cfg.reps,
-                      targetWeight: cfg.weight,
-                    ),
+          .map(
+            (r) => SupersetRound(
+              roundNumber: r.roundNumber,
+              exerciseConfigs: r.exercises.map(
+                (id, cfg) => MapEntry(
+                  id,
+                  SupersetExerciseConfig(
+                    exerciseId: id,
+                    targetReps: cfg.reps,
+                    targetWeight: cfg.weight,
                   ),
                 ),
-              ))
+              ),
+            ),
+          )
           .toList(),
       restBetweenExercises: 0,
       restAfterRound: widget.restAfterRound,
@@ -488,7 +494,8 @@ class _RoundPage extends StatelessWidget {
       itemCount: exercises.length,
       itemBuilder: (context, index) {
         final exercise = exercises[index];
-        final config = roundConfig.exercises[exercise.id] ??
+        final config =
+            roundConfig.exercises[exercise.id] ??
             const _CellConfig(weight: 20, reps: 12);
 
         return _ExerciseCard(
@@ -580,8 +587,10 @@ class _ExerciseCard extends StatelessWidget {
               ),
               // Weight × Reps badge
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: showWarning
                       ? context.colors.errorContainer
@@ -619,10 +628,7 @@ class _RoundConfig {
   final int roundNumber;
   final Map<String, _CellConfig> exercises;
 
-  const _RoundConfig({
-    required this.roundNumber,
-    required this.exercises,
-  });
+  const _RoundConfig({required this.roundNumber, required this.exercises});
 
   _RoundConfig copyWithExercise(String exerciseId, _CellConfig config) {
     return _RoundConfig(
@@ -643,14 +649,13 @@ class _RoundConfig {
         reps: existingConfig?.targetReps ?? 12,
       );
     }
-    return _RoundConfig(
-      roundNumber: round.roundNumber,
-      exercises: configs,
-    );
+    return _RoundConfig(roundNumber: round.roundNumber, exercises: configs);
   }
 
   factory _RoundConfig.defaultFor(
-      List<ExerciseDefinition> exercises, int roundNumber) {
+    List<ExerciseDefinition> exercises,
+    int roundNumber,
+  ) {
     return _RoundConfig(
       roundNumber: roundNumber,
       exercises: {

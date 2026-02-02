@@ -27,13 +27,15 @@ part 'workout_template.g.dart';
 /// with workout internal WorkoutTemplate entity.
 ///
 /// This typedef exists for backward compatibility during migration.
-@Deprecated('Use CommunityWorkoutTemplate instead - avoids naming conflict with workout WorkoutTemplate')
+@Deprecated(
+  'Use CommunityWorkoutTemplate instead - avoids naming conflict with workout WorkoutTemplate',
+)
 typedef WorkoutTemplate = CommunityWorkoutTemplate;
 
 enum TemplateVisibility {
-  private,   // Solo visibile al creatore
-  public,    // Visibile a tutti
-  friends,   // Visibile agli amici (futuro)
+  private, // Solo visibile al creatore
+  public, // Visibile a tutti
+  friends, // Visibile agli amici (futuro)
 }
 
 enum TemplateCategory {
@@ -61,36 +63,35 @@ abstract class CommunityWorkoutTemplate with _$CommunityWorkoutTemplate {
     @Default(TemplateCategory.custom) TemplateCategory category,
     // Default to 'private' for templates created before visibility was added
     @Default(TemplateVisibility.private) TemplateVisibility visibility,
-    
+
     // Metadata
     required DateTime createdAt,
     DateTime? updatedAt,
-    
+
     // Stats pubbliche
     @Default(0) int downloadCount,
     @Default(0) int likeCount,
     @Default(0) int reviewCount,
     @Default(0.0) double averageRating,
-    
+
     // Info autore
     String? authorName,
     String? authorPhotoUrl,
-    
+
     // Tags per ricerca
     @Default([]) List<String> tags,
 
     // Folder organization (P2-3)
     String? folderId,
-    
+
     // Durata stimata in minuti
     int? estimatedDurationMinutes,
-    
+
     // Livello difficoltà
     String? difficultyLevel, // beginner, intermediate, advanced, expert
-    
     // Equipment necessario
     @Default([]) List<String> requiredEquipment,
-    
+
     // Muscoli target
     @Default([]) List<String> targetMuscles,
   }) = _CommunityWorkoutTemplate;

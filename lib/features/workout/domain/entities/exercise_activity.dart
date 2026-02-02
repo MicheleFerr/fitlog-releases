@@ -4,7 +4,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 /// Modello per salvare le attività degli esercizi completati in Firestore
 /// Corrisponde alla struttura /exerciseActivities della vecchia app
 class ExerciseActivity {
-
   ExerciseActivity({
     required this.id,
     required this.email,
@@ -36,14 +35,14 @@ class ExerciseActivity {
     final activitySets = completedSets.asMap().entries.map((entry) {
       final index = entry.key;
       final set = entry.value;
-      
+
       // Calculate RIR from RPE if available
       int? rir;
       if (set.rpe != null && set.actualReps != null && set.reps != null) {
         // Approximation: RIR = (10 - RPE) for standard sets
         rir = 10 - set.rpe!;
       }
-      
+
       return ExerciseActivitySet(
         set: index + 1, // Numerazione da 1
         weight: set.weight?.toString() ?? '0',
@@ -52,7 +51,9 @@ class ExerciseActivity {
         rpe: set.rpe,
         rir: rir,
         done: set.isCompleted,
-        effort: set.rpe != null ? _calculateEffortFromRPE(set.rpe!) : _calculateEffort(set),
+        effort: set.rpe != null
+            ? _calculateEffortFromRPE(set.rpe!)
+            : _calculateEffort(set),
         setDurationMillis: set.setDurationMillis, // Include duration if tracked
         isWarmup: set.isWarmup, // Include warmup flag
       );
@@ -60,13 +61,14 @@ class ExerciseActivity {
 
     final now = DateTime.now();
     final activityDate = workoutDate ?? now;
-    
+
     return ExerciseActivity(
       id: '${exercise.id}-${activityDate.millisecondsSinceEpoch}',
       email: userEmail,
       exerciseId: exercise.id,
       exerciseName: exercise.name,
-      exerciseImage: exerciseImageUrl ?? _getDefaultExerciseImage(exercise.category),
+      exerciseImage:
+          exerciseImageUrl ?? _getDefaultExerciseImage(exercise.category),
       schedaName: workoutName,
       sets: activitySets,
       createdAt: activityDate,
@@ -77,11 +79,9 @@ class ExerciseActivity {
   }
 
   /// Crea da documento Firestore
-  factory ExerciseActivity.fromFirestore(
-    DocumentSnapshot doc,
-  ) {
+  factory ExerciseActivity.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return ExerciseActivity(
       id: doc.id,
       email: data['email'] ?? '',
@@ -89,16 +89,21 @@ class ExerciseActivity {
       exerciseName: data['exerciseName'] ?? '',
       exerciseImage: data['exerciseImage'],
       schedaName: data['schedaName'] ?? '',
-      sets: (data['sets'] as List?)
-          ?.map((setData) => ExerciseActivitySet.fromFirestore(setData))
-          .toList() ?? [],
+      sets:
+          (data['sets'] as List?)
+              ?.map((setData) => ExerciseActivitySet.fromFirestore(setData))
+              .toList() ??
+          [],
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      lastModified: (data['lastModified'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      lastModified:
+          (data['lastModified'] as Timestamp?)?.toDate() ?? DateTime.now(),
       category: ExerciseCategory.values.firstWhere(
-          (e) => e.name == data['category'],
-          orElse: () => ExerciseCategory.other,
+        (e) => e.name == data['category'],
+        orElse: () => ExerciseCategory.other,
       ),
-      sessionNotes: data['sessionNotes'] as String?, // NEW: read session notes from Firestore
+      sessionNotes:
+          data['sessionNotes']
+              as String?, // NEW: read session notes from Firestore
     );
   }
   final String id;
@@ -111,18 +116,19 @@ class ExerciseActivity {
   final DateTime createdAt;
   final DateTime lastModified;
   final ExerciseCategory category; // Added category here
-  final String? sessionNotes; // NEW: session-specific notes (copied from Exercise.notes)
+  final String?
+  sessionNotes; // NEW: session-specific notes (copied from Exercise.notes)
 
   /// Calcola l'effort basato su reps e peso (1-5 scale)
   static int _calculateEffort(ExerciseSet set) {
     final reps = set.reps ?? 0;
     final weight = set.weight ?? 0;
-    
+
     // Logica semplificata per calcolare effort
     if (reps >= 15 || weight >= 20) return 5; // Molto intenso
     if (reps >= 12 || weight >= 15) return 4; // Intenso
-    if (reps >= 8 || weight >= 10) return 3;  // Moderato
-    if (reps >= 5 || weight >= 5) return 2;   // Leggero
+    if (reps >= 8 || weight >= 10) return 3; // Moderato
+    if (reps >= 5 || weight >= 5) return 2; // Leggero
     return 1; // Molto leggero
   }
 
@@ -206,7 +212,8 @@ class ExerciseActivity {
 }
 
 /// Singolo set dell'attività esercizio per Firestore
-class ExerciseActivitySet { // Indicates if this is a warmup set
+class ExerciseActivitySet {
+  // Indicates if this is a warmup set
 
   ExerciseActivitySet({
     required this.set,
@@ -224,8 +231,8 @@ class ExerciseActivitySet { // Indicates if this is a warmup set
   factory ExerciseActivitySet.fromFirestore(Map<String, dynamic> data) {
     return ExerciseActivitySet(
       set: _parseInt(data['set']) ?? 0,
-      weight: (data['weight'] ?? 0).toString(),  // Convert any type to String
-      reps: (data['reps'] ?? 0).toString(),      // Convert any type to String
+      weight: (data['weight'] ?? 0).toString(), // Convert any type to String
+      reps: (data['reps'] ?? 0).toString(), // Convert any type to String
       actualReps: data['actualReps']?.toString(),
       rpe: _parseInt(data['rpe']),
       rir: _parseInt(data['rir']),
@@ -243,7 +250,8 @@ class ExerciseActivitySet { // Indicates if this is a warmup set
   final int? rir; // Reps in Reserve
   final bool done;
   final int effort; // 1-5 scale di intensità
-  final double? setDurationMillis; // Duration in milliseconds from rest end to set completion
+  final double?
+  setDurationMillis; // Duration in milliseconds from rest end to set completion
   final bool isWarmup;
 
   Map<String, dynamic> toFirestore() {
@@ -260,7 +268,7 @@ class ExerciseActivitySet { // Indicates if this is a warmup set
       'isWarmup': isWarmup,
     };
   }
-  
+
   // Helper method to safely parse int from any type
   static int? _parseInt(dynamic value) {
     if (value == null) return null;
@@ -269,7 +277,7 @@ class ExerciseActivitySet { // Indicates if this is a warmup set
     if (value is double) return value.toInt();
     return null;
   }
-  
+
   // Helper method to safely parse double from any type
   static double? _parseDouble(dynamic value) {
     if (value == null) return null;

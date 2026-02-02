@@ -152,7 +152,8 @@ abstract class CoachRelationship with _$CoachRelationship {
     return CoachRelationship(
       id: doc.id,
       // Try new field first, fallback to legacy field
-      athleteId: data['athleteId'] as String? ?? data['userId'] as String? ?? '',
+      athleteId:
+          data['athleteId'] as String? ?? data['userId'] as String? ?? '',
       athleteEmail: data['athleteEmail'] as String?,
       athleteName: data['athleteName'] as String?,
       coachId: data['coachId'] as String?,

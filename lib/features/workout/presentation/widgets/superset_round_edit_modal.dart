@@ -6,10 +6,10 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+
 /// Modal per modificare un singolo round di superset
 /// Permette di inserire peso, ripetizioni e RPE per ogni esercizio del round
 class SupersetRoundEditModal extends ConsumerStatefulWidget {
-
   const SupersetRoundEditModal({
     super.key,
     required this.superset,
@@ -23,10 +23,12 @@ class SupersetRoundEditModal extends ConsumerStatefulWidget {
   final Function(SupersetSet) onSetUpdate;
 
   @override
-  ConsumerState<SupersetRoundEditModal> createState() => _SupersetRoundEditModalState();
+  ConsumerState<SupersetRoundEditModal> createState() =>
+      _SupersetRoundEditModalState();
 }
 
-class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal> {
+class _SupersetRoundEditModalState
+    extends ConsumerState<SupersetRoundEditModal> {
   late Map<String, SupersetExerciseData> _editingData;
   late Map<String, TextEditingController> _weightControllers;
   late Map<String, TextEditingController> _repsControllers;
@@ -48,15 +50,15 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
 
     for (final exercise in widget.superset.exercises) {
       final exerciseData = _editingData[exercise.id];
-      
+
       _weightControllers[exercise.id] = TextEditingController(
         text: exerciseData?.actualWeight?.toString() ?? '',
       );
-      
+
       _repsControllers[exercise.id] = TextEditingController(
         text: exerciseData?.actualReps?.toString() ?? '',
       );
-      
+
       _rpeControllers[exercise.id] = TextEditingController(
         text: exerciseData?.rpe?.toString() ?? '',
       );
@@ -97,7 +99,7 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
@@ -112,11 +114,13 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
             height: 4,
             margin: const EdgeInsets.only(top: 12, bottom: 8),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          
+
           // Header
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -128,9 +132,8 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
                     children: [
                       Text(
                         '${widget.superset.name} - ${l10n.roundNumber(widget.roundNumber)}',
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -149,9 +152,9 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
               ],
             ),
           ),
-          
+
           const Divider(height: 1),
-          
+
           // Exercise list
           Flexible(
             child: SingleChildScrollView(
@@ -166,7 +169,7 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
               ),
             ),
           ),
-          
+
           // Action buttons
           Padding(
             padding: const EdgeInsets.all(20),
@@ -193,10 +196,14 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
     );
   }
 
-  Widget _buildExerciseEditCard(BuildContext context, AppLocalizations l10n, Exercise exercise) {
+  Widget _buildExerciseEditCard(
+    BuildContext context,
+    AppLocalizations l10n,
+    Exercise exercise,
+  ) {
     final exerciseData = _editingData[exercise.id]!;
     final isCompleted = _completedStates[exercise.id] ?? false;
-    
+
     return Card(
       elevation: 2,
       child: Padding(
@@ -213,9 +220,8 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
                     children: [
                       Text(
                         exercise.name,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -228,7 +234,7 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
                     ],
                   ),
                 ),
-                
+
                 // Completed checkbox
                 Checkbox(
                   value: isCompleted,
@@ -241,9 +247,9 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Input fields
             Row(
               children: [
@@ -253,16 +259,18 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
                     context: context,
                     label: l10n.weightKg,
                     controller: _weightControllers[exercise.id]!,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                     ],
                     suffixText: 'kg',
                   ),
                 ),
-                
+
                 const SizedBox(width: 12),
-                
+
                 // Reps input
                 Expanded(
                   child: _buildInputField(
@@ -270,14 +278,12 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
                     label: l10n.reps,
                     controller: _repsControllers[exercise.id]!,
                     keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   ),
                 ),
-                
+
                 const SizedBox(width: 12),
-                
+
                 // RPE input
                 Expanded(
                   child: _buildInputField(
@@ -294,14 +300,17 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
                 ),
               ],
             ),
-            
+
             // Target info (if available)
-            if (exerciseData.targetWeight != null || exerciseData.targetReps != null) ...[
+            if (exerciseData.targetWeight != null ||
+                exerciseData.targetReps != null) ...[
               const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.primaryContainer.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -336,9 +345,7 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
         labelText: label,
         suffixText: suffixText,
         helperText: helperText,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       ),
       onTap: () => controller.selection = TextSelection(
@@ -351,46 +358,50 @@ class _SupersetRoundEditModalState extends ConsumerState<SupersetRoundEditModal>
   void _saveChanges() {
     // Update exercise data with current input values
     final updatedExerciseData = <String, SupersetExerciseData>{};
-    
+
     for (final exercise in widget.superset.exercises) {
       final originalData = _editingData[exercise.id]!;
       final weightText = _weightControllers[exercise.id]!.text.trim();
       final repsText = _repsControllers[exercise.id]!.text.trim();
       final rpeText = _rpeControllers[exercise.id]!.text.trim();
       final isCompleted = _completedStates[exercise.id] ?? false;
-      
+
       updatedExerciseData[exercise.id] = SupersetExerciseData(
         exerciseId: originalData.exerciseId,
         exerciseName: originalData.exerciseName,
         targetWeight: originalData.targetWeight,
         targetReps: originalData.targetReps,
-        actualWeight: weightText.isNotEmpty ? double.tryParse(weightText) : null,
+        actualWeight: weightText.isNotEmpty
+            ? double.tryParse(weightText)
+            : null,
         actualReps: repsText.isNotEmpty ? int.tryParse(repsText) : null,
         rpe: rpeText.isNotEmpty ? int.tryParse(rpeText) : null,
         isCompleted: isCompleted,
         notes: originalData.notes,
       );
     }
-    
+
     // Create updated superset set
     final updatedSet = SupersetSet(
       id: widget.supersetSet.id,
       setNumber: widget.supersetSet.setNumber,
       exerciseData: updatedExerciseData,
       isCompleted: updatedExerciseData.values.every((data) => data.isCompleted),
-      completedAt: updatedExerciseData.values.every((data) => data.isCompleted) ? DateTime.now() : null,
+      completedAt: updatedExerciseData.values.every((data) => data.isCompleted)
+          ? DateTime.now()
+          : null,
       setDurationMillis: widget.supersetSet.setDurationMillis,
       setStartedAt: widget.supersetSet.setStartedAt,
       isWarmup: widget.supersetSet.isWarmup,
       notes: widget.supersetSet.notes,
     );
-    
+
     // Call the update callback
     widget.onSetUpdate(updatedSet);
-    
+
     // Close modal
     Navigator.of(context).pop();
-    
+
     // Show success feedback
     SnackBarService.showInfo(context, context.l10n.setUpdated);
   }
@@ -406,17 +417,17 @@ class _RPETextInputFormatter extends TextInputFormatter {
     if (newValue.text.isEmpty) {
       return newValue;
     }
-    
+
     final value = int.tryParse(newValue.text);
     if (value == null) {
       return oldValue;
     }
-    
+
     // Limit to 1-10 range
     if (value < 1 || value > 10) {
       return oldValue;
     }
-    
+
     return newValue;
   }
 }

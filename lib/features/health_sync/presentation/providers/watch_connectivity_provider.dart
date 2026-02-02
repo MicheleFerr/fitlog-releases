@@ -60,25 +60,25 @@ class WatchConnectivityData {
 
   /// Create initial checking state
   const WatchConnectivityData.checking()
-      : state = WatchConnectionState.checking,
-        errorMessage = null,
-        lastSyncTime = null,
-        templatesCount = 0,
-        currentHeartRate = 0,
-        currentCalories = 0,
-        currentElapsedTime = 0,
-        lastHealthMetricsUpdate = null;
+    : state = WatchConnectionState.checking,
+      errorMessage = null,
+      lastSyncTime = null,
+      templatesCount = 0,
+      currentHeartRate = 0,
+      currentCalories = 0,
+      currentElapsedTime = 0,
+      lastHealthMetricsUpdate = null;
 
   /// Create unavailable state (Android)
   const WatchConnectivityData.unavailable()
-      : state = WatchConnectionState.unavailable,
-        errorMessage = 'Apple Watch not supported on this platform',
-        lastSyncTime = null,
-        templatesCount = 0,
-        currentHeartRate = 0,
-        currentCalories = 0,
-        currentElapsedTime = 0,
-        lastHealthMetricsUpdate = null;
+    : state = WatchConnectionState.unavailable,
+      errorMessage = 'Apple Watch not supported on this platform',
+      lastSyncTime = null,
+      templatesCount = 0,
+      currentHeartRate = 0,
+      currentCalories = 0,
+      currentElapsedTime = 0,
+      lastHealthMetricsUpdate = null;
 
   final WatchConnectionState state;
   final String? errorMessage;
@@ -121,27 +121,32 @@ class WatchConnectivityData {
       currentHeartRate: currentHeartRate ?? this.currentHeartRate,
       currentCalories: currentCalories ?? this.currentCalories,
       currentElapsedTime: currentElapsedTime ?? this.currentElapsedTime,
-      lastHealthMetricsUpdate: lastHealthMetricsUpdate ?? this.lastHealthMetricsUpdate,
+      lastHealthMetricsUpdate:
+          lastHealthMetricsUpdate ?? this.lastHealthMetricsUpdate,
     );
   }
 }
 
 /// Provider for Watch connectivity state
 final watchConnectivityProvider =
-    StateNotifierProvider<WatchConnectivityNotifier, WatchConnectivityData>((ref) {
-  return WatchConnectivityNotifier();
-});
+    StateNotifierProvider<WatchConnectivityNotifier, WatchConnectivityData>((
+      ref,
+    ) {
+      return WatchConnectivityNotifier();
+    });
 
 /// Callback for when Watch completes a set
 /// - effort: Optional effort value (RPE 6-10 or RIR 0-4)
 /// - effortScale: "rpe" or "rir"
-typedef OnSetCompletedFromWatch = void Function({int? effort, String? effortScale});
+typedef OnSetCompletedFromWatch =
+    void Function({int? effort, String? effortScale});
 
 /// Callback for when Watch skips rest
 typedef OnSkipRestFromWatch = void Function();
 
 /// Callback for when Watch sends health metrics (HR, calories)
-typedef OnHealthMetricsFromWatch = void Function(double heartRate, double calories, double elapsedTime);
+typedef OnHealthMetricsFromWatch =
+    void Function(double heartRate, double calories, double elapsedTime);
 
 /// Callback for when Watch requests to end the workout
 /// - [save]: true to save the workout, false to discard
@@ -153,13 +158,14 @@ typedef OnPauseWorkoutFromWatch = void Function();
 /// Callback for when Watch modifies a set (weight/reps)
 /// [setNumber] is 1-indexed set number being modified
 /// [exerciseIndexInSuperset] is 0-indexed, only provided for superset exercises
-typedef OnSetModificationFromWatch = void Function(
-  double weight,
-  int reps, {
-  required int setNumber,
-  bool isSuperset,
-  int? exerciseIndexInSuperset,
-});
+typedef OnSetModificationFromWatch =
+    void Function(
+      double weight,
+      int reps, {
+      required int setNumber,
+      bool isSuperset,
+      int? exerciseIndexInSuperset,
+    });
 
 /// Callback for when Watch extends the rest timer
 typedef OnExtendTimerFromWatch = void Function(int seconds);
@@ -203,13 +209,14 @@ typedef OnStartNewTimerFromWatch = void Function(int duration);
 /// - exercises: List of exercise names in the round
 /// - effort: Optional effort value (RPE 6-10 or RIR 0-4) for the entire round
 /// - effortScale: "rpe" or "rir"
-typedef OnSupersetRoundCompletedFromWatch = void Function({
-  required int roundNumber,
-  required int totalRounds,
-  required List<String> exercises,
-  int? effort,
-  String? effortScale,
-});
+typedef OnSupersetRoundCompletedFromWatch =
+    void Function({
+      required int roundNumber,
+      required int totalRounds,
+      required List<String> exercises,
+      int? effort,
+      String? effortScale,
+    });
 
 /// 🔥 DROPSET: Callback for when Watch completes a single dropset stage
 /// - stageIndex: 0-indexed stage number
@@ -217,23 +224,21 @@ typedef OnSupersetRoundCompletedFromWatch = void Function({
 /// - actualReps: Actual reps performed
 /// - effort: Optional effort value (RPE 6-10 or RIR 0-4)
 /// - effortScale: "rpe" or "rir"
-typedef OnDropsetStageCompletedFromWatch = void Function({
-  required int stageIndex,
-  required int totalStages,
-  required int actualReps,
-  int? effort,
-  String? effortScale,
-});
+typedef OnDropsetStageCompletedFromWatch =
+    void Function({
+      required int stageIndex,
+      required int totalStages,
+      required int actualReps,
+      int? effort,
+      String? effortScale,
+    });
 
 /// 🔥 DROPSET: Callback for when Watch completes entire dropset (all stages)
 /// - totalStages: Total stages completed
 /// - effort: Optional effort value for entire dropset
 /// - effortScale: "rpe" or "rir"
-typedef OnDropsetCompletedFromWatch = void Function({
-  required int totalStages,
-  int? effort,
-  String? effortScale,
-});
+typedef OnDropsetCompletedFromWatch =
+    void Function({required int totalStages, int? effort, String? effortScale});
 
 /// 🔥 REST-PAUSE: Callback for when Watch completes a single rest-pause mini-set
 /// - setIndex: 0-indexed set number
@@ -242,26 +247,28 @@ typedef OnDropsetCompletedFromWatch = void Function({
 /// - weight: Weight used
 /// - effort: Optional effort value (RPE 6-10 or RIR 0-4)
 /// - effortScale: "rpe" or "rir"
-typedef OnRestPauseSetCompletedFromWatch = void Function({
-  required int setIndex,
-  required int totalSets,
-  required int actualReps,
-  required double weight,
-  int? effort,
-  String? effortScale,
-});
+typedef OnRestPauseSetCompletedFromWatch =
+    void Function({
+      required int setIndex,
+      required int totalSets,
+      required int actualReps,
+      required double weight,
+      int? effort,
+      String? effortScale,
+    });
 
 /// 🔥 REST-PAUSE: Callback for when Watch completes entire rest-pause (all mini-sets)
 /// - totalSets: Total mini-sets completed
 /// - weight: Weight used
 /// - effort: Optional effort value for entire rest-pause
 /// - effortScale: "rpe" or "rir"
-typedef OnRestPauseCompletedFromWatch = void Function({
-  required int totalSets,
-  required double weight,
-  int? effort,
-  String? effortScale,
-});
+typedef OnRestPauseCompletedFromWatch =
+    void Function({
+      required int totalSets,
+      required double weight,
+      int? effort,
+      String? effortScale,
+    });
 
 /// Notifier that manages Apple Watch connectivity
 class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
@@ -339,7 +346,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         final effort = args?['effort'] as int?;
         final effortScale = args?['effortScale'] as String?;
         if (effort != null) {
-          debugPrint('⌚ [FLUTTER] ✅ Set completed from Watch with ${effortScale?.toUpperCase() ?? "RPE"}: $effort');
+          debugPrint(
+            '⌚ [FLUTTER] ✅ Set completed from Watch with ${effortScale?.toUpperCase() ?? "RPE"}: $effort',
+          );
         } else {
           debugPrint('⌚ [FLUTTER] ✅ Set completed from Watch (no effort)');
         }
@@ -357,7 +366,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
           final heartRate = (args['heartRate'] as num?)?.toDouble() ?? 0;
           final calories = (args['calories'] as num?)?.toDouble() ?? 0;
           final elapsedTime = (args['elapsedTime'] as num?)?.toDouble() ?? 0;
-          debugPrint('⌚ [FLUTTER] ❤️ Health metrics received: HR=${heartRate.toInt()} BPM, Cal=${calories.toInt()} kcal, Time=${elapsedTime.toInt()}s');
+          debugPrint(
+            '⌚ [FLUTTER] ❤️ Health metrics received: HR=${heartRate.toInt()} BPM, Cal=${calories.toInt()} kcal, Time=${elapsedTime.toInt()}s',
+          );
 
           // Update state with latest health metrics
           state = state.copyWith(
@@ -399,7 +410,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
       case 'onEndWorkoutFromWatch':
         final args = call.arguments as Map<dynamic, dynamic>?;
         final save = args?['save'] as bool? ?? true;
-        debugPrint('⌚ [FLUTTER] 🏁 End workout requested from Watch (save: $save)');
+        debugPrint(
+          '⌚ [FLUTTER] 🏁 End workout requested from Watch (save: $save)',
+        );
         onEndWorkoutFromWatch?.call(save: save);
         return true;
 
@@ -417,8 +430,11 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
           final setNumber = (args['setNumber'] as num?)?.toInt() ?? 1;
           // 🔥 SUPERSET: Extract superset context if present
           final isSuperset = args['isSuperset'] as bool? ?? false;
-          final exerciseIndexInSuperset = args['exerciseIndexInSuperset'] as int?;
-          debugPrint('⌚ [FLUTTER] ✏️ Set modification from Watch: Set #$setNumber → ${weight}kg × $reps reps (superset: $isSuperset, exerciseIndex: $exerciseIndexInSuperset)');
+          final exerciseIndexInSuperset =
+              args['exerciseIndexInSuperset'] as int?;
+          debugPrint(
+            '⌚ [FLUTTER] ✏️ Set modification from Watch: Set #$setNumber → ${weight}kg × $reps reps (superset: $isSuperset, exerciseIndex: $exerciseIndexInSuperset)',
+          );
           onSetModificationFromWatch?.call(
             weight,
             reps,
@@ -441,9 +457,12 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
       case 'onEditCompletedSetRepsFromWatch':
         final args = call.arguments as Map<dynamic, dynamic>?;
         if (args != null) {
-          final setIndex = (args['setIndex'] as num?)?.toInt() ?? 0;  // 0-indexed
+          final setIndex =
+              (args['setIndex'] as num?)?.toInt() ?? 0; // 0-indexed
           final reps = (args['reps'] as num?)?.toInt() ?? 0;
-          debugPrint('⌚ [FLUTTER] ✏️ Edit completed set ${setIndex + 1} from Watch: $reps reps');
+          debugPrint(
+            '⌚ [FLUTTER] ✏️ Edit completed set ${setIndex + 1} from Watch: $reps reps',
+          );
           onEditCompletedSetRepsFromWatch?.call(setIndex, reps);
         }
         return true;
@@ -451,8 +470,11 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
       case 'onUncompleteSetFromWatch':
         final args = call.arguments as Map<dynamic, dynamic>?;
         if (args != null) {
-          final setIndex = (args['setIndex'] as num?)?.toInt() ?? 0;  // 0-indexed
-          debugPrint('⌚ [FLUTTER] ↩️ Uncomplete set ${setIndex + 1} from Watch');
+          final setIndex =
+              (args['setIndex'] as num?)?.toInt() ?? 0; // 0-indexed
+          debugPrint(
+            '⌚ [FLUTTER] ↩️ Uncomplete set ${setIndex + 1} from Watch',
+          );
           onUncompleteSetFromWatch?.call(setIndex);
         }
         return true;
@@ -460,7 +482,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
       case 'onWorkoutStateRequested':
         // Watch requested current workout state (e.g., on reconnect)
         // iOS native layer already responded with cached state
-        debugPrint('⌚ [FLUTTER] 🔄 Watch requested workout state (iOS responded)');
+        debugPrint(
+          '⌚ [FLUTTER] 🔄 Watch requested workout state (iOS responded)',
+        );
         onWorkoutStateRequested?.call();
         return true;
 
@@ -470,16 +494,22 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         if (args != null) {
           final roundNumber = (args['roundNumber'] as num?)?.toInt() ?? 1;
           final totalRounds = (args['totalRounds'] as num?)?.toInt() ?? 1;
-          final exercises = (args['exercises'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ?? [];
+          final exercises =
+              (args['exercises'] as List<dynamic>?)
+                  ?.map((e) => e.toString())
+                  .toList() ??
+              [];
           final effort = args['effort'] as int?;
           final effortScale = args['effortScale'] as String?;
 
           if (effort != null) {
-            debugPrint('⌚ [FLUTTER] 🔥 Superset round $roundNumber/$totalRounds completed from Watch with ${effortScale?.toUpperCase() ?? "RPE"}: $effort');
+            debugPrint(
+              '⌚ [FLUTTER] 🔥 Superset round $roundNumber/$totalRounds completed from Watch with ${effortScale?.toUpperCase() ?? "RPE"}: $effort',
+            );
           } else {
-            debugPrint('⌚ [FLUTTER] 🔥 Superset round $roundNumber/$totalRounds completed from Watch (no effort)');
+            debugPrint(
+              '⌚ [FLUTTER] 🔥 Superset round $roundNumber/$totalRounds completed from Watch (no effort)',
+            );
           }
 
           onSupersetRoundCompletedFromWatch?.call(
@@ -503,9 +533,13 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
           final effortScale = args['effortScale'] as String?;
 
           if (effort != null) {
-            debugPrint('⌚ [FLUTTER] 🔥 Dropset stage ${stageIndex + 1}/$totalStages completed: $actualReps reps, ${effortScale?.toUpperCase() ?? "RPE"}: $effort');
+            debugPrint(
+              '⌚ [FLUTTER] 🔥 Dropset stage ${stageIndex + 1}/$totalStages completed: $actualReps reps, ${effortScale?.toUpperCase() ?? "RPE"}: $effort',
+            );
           } else {
-            debugPrint('⌚ [FLUTTER] 🔥 Dropset stage ${stageIndex + 1}/$totalStages completed: $actualReps reps');
+            debugPrint(
+              '⌚ [FLUTTER] 🔥 Dropset stage ${stageIndex + 1}/$totalStages completed: $actualReps reps',
+            );
           }
 
           onDropsetStageCompletedFromWatch?.call(
@@ -526,9 +560,13 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
           final effortScale = args['effortScale'] as String?;
 
           if (effort != null) {
-            debugPrint('⌚ [FLUTTER] 🔥 Dropset completed ($totalStages stages) with ${effortScale?.toUpperCase() ?? "RPE"}: $effort');
+            debugPrint(
+              '⌚ [FLUTTER] 🔥 Dropset completed ($totalStages stages) with ${effortScale?.toUpperCase() ?? "RPE"}: $effort',
+            );
           } else {
-            debugPrint('⌚ [FLUTTER] 🔥 Dropset completed ($totalStages stages)');
+            debugPrint(
+              '⌚ [FLUTTER] 🔥 Dropset completed ($totalStages stages)',
+            );
           }
 
           onDropsetCompletedFromWatch?.call(
@@ -551,9 +589,13 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
           final effortScale = args['effortScale'] as String?;
 
           if (effort != null) {
-            debugPrint('⌚ [FLUTTER] 🔥 Rest-Pause set ${setIndex + 1}/$totalSets completed: ${weight}kg × $actualReps, ${effortScale?.toUpperCase() ?? "RPE"}: $effort');
+            debugPrint(
+              '⌚ [FLUTTER] 🔥 Rest-Pause set ${setIndex + 1}/$totalSets completed: ${weight}kg × $actualReps, ${effortScale?.toUpperCase() ?? "RPE"}: $effort',
+            );
           } else {
-            debugPrint('⌚ [FLUTTER] 🔥 Rest-Pause set ${setIndex + 1}/$totalSets completed: ${weight}kg × $actualReps');
+            debugPrint(
+              '⌚ [FLUTTER] 🔥 Rest-Pause set ${setIndex + 1}/$totalSets completed: ${weight}kg × $actualReps',
+            );
           }
 
           onRestPauseSetCompletedFromWatch?.call(
@@ -576,9 +618,13 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
           final effortScale = args['effortScale'] as String?;
 
           if (effort != null) {
-            debugPrint('⌚ [FLUTTER] 🔥 Rest-Pause completed ($totalSets sets, ${weight}kg) with ${effortScale?.toUpperCase() ?? "RPE"}: $effort');
+            debugPrint(
+              '⌚ [FLUTTER] 🔥 Rest-Pause completed ($totalSets sets, ${weight}kg) with ${effortScale?.toUpperCase() ?? "RPE"}: $effort',
+            );
           } else {
-            debugPrint('⌚ [FLUTTER] 🔥 Rest-Pause completed ($totalSets sets, ${weight}kg)');
+            debugPrint(
+              '⌚ [FLUTTER] 🔥 Rest-Pause completed ($totalSets sets, ${weight}kg)',
+            );
           }
 
           onRestPauseCompletedFromWatch?.call(
@@ -595,7 +641,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         final args = call.arguments as Map<dynamic, dynamic>?;
         if (args != null) {
           final exerciseIndex = (args['exerciseIndex'] as num?)?.toInt() ?? 0;
-          debugPrint('⌚ [FLUTTER] ↔️ Jump to exercise $exerciseIndex from Watch');
+          debugPrint(
+            '⌚ [FLUTTER] ↔️ Jump to exercise $exerciseIndex from Watch',
+          );
           onJumpToExerciseFromWatch?.call(exerciseIndex);
         }
         return true;
@@ -614,7 +662,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         if (args != null) {
           final weight = (args['weight'] as num?)?.toDouble() ?? 0;
           final reps = (args['reps'] as num?)?.toInt() ?? 0;
-          debugPrint('⌚ [FLUTTER] 📄 Copy to all sets from Watch: ${weight}kg × $reps');
+          debugPrint(
+            '⌚ [FLUTTER] 📄 Copy to all sets from Watch: ${weight}kg × $reps',
+          );
           onCopyToAllSetsFromWatch?.call(weight, reps);
         }
         return true;
@@ -647,7 +697,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
     }
 
     try {
-      final result = await _channel.invokeMethod<Map<Object?, Object?>>('checkWatchStatus');
+      final result = await _channel.invokeMethod<Map<Object?, Object?>>(
+        'checkWatchStatus',
+      );
 
       if (result == null) {
         state = state.copyWith(
@@ -701,7 +753,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
   }
 
   /// Send workout templates to Watch
-  Future<bool> sendTemplatesToWatch(List<CommunityWorkoutTemplate> templates) async {
+  Future<bool> sendTemplatesToWatch(
+    List<CommunityWorkoutTemplate> templates,
+  ) async {
     if (!Platform.isIOS) {
       if (kDebugMode) {
         debugPrint('Cannot send templates: Platform not supported');
@@ -718,24 +772,33 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
 
     try {
       // Convert templates to JSON format for native side
-      final templatesJson = templates.map((t) => {
-        'id': t.id,
-        'name': t.name,
-        'description': t.description ?? '',
-        'exercises': t.exercises.map((e) => {
-          'id': e.id,
-          'name': e.name,
-          'sets': e.sets.length,
-          'category': e.category.toString(),
-        }).toList(),
-        'category': t.category.toString(),
-        'estimatedDurationMinutes': t.estimatedDurationMinutes ?? 0,
-      }).toList();
+      final templatesJson = templates
+          .map(
+            (t) => {
+              'id': t.id,
+              'name': t.name,
+              'description': t.description ?? '',
+              'exercises': t.exercises
+                  .map(
+                    (e) => {
+                      'id': e.id,
+                      'name': e.name,
+                      'sets': e.sets.length,
+                      'category': e.category.toString(),
+                    },
+                  )
+                  .toList(),
+              'category': t.category.toString(),
+              'estimatedDurationMinutes': t.estimatedDurationMinutes ?? 0,
+            },
+          )
+          .toList();
 
-      final success = await _channel.invokeMethod<bool>(
-        'sendTemplatesToWatch',
-        {'templates': templatesJson},
-      ) ?? false;
+      final success =
+          await _channel.invokeMethod<bool>('sendTemplatesToWatch', {
+            'templates': templatesJson,
+          }) ??
+          false;
 
       if (success) {
         state = state.copyWith(
@@ -744,7 +807,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         );
 
         if (kDebugMode) {
-          debugPrint('Successfully sent ${templates.length} templates to watch');
+          debugPrint(
+            'Successfully sent ${templates.length} templates to watch',
+          );
         }
       }
 
@@ -761,9 +826,7 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
       if (kDebugMode) {
         debugPrint('Error sending templates to watch: $e');
       }
-      state = state.copyWith(
-        errorMessage: 'Error sending templates: $e',
-      );
+      state = state.copyWith(errorMessage: 'Error sending templates: $e');
       return false;
     }
   }
@@ -808,8 +871,8 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
     double? targetWeight,
     int? targetReps,
     int setsCompleted = 0,
-    int setsCompletedInExercise = 0,  // ✅ NEW
-    int? lastCompletedReps,            // ✅ NEW
+    int setsCompletedInExercise = 0, // ✅ NEW
+    int? lastCompletedReps, // ✅ NEW
     bool rpeTrackingEnabled = false,
     String effortScale = 'rpe',
     String locale = 'en',
@@ -833,7 +896,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
     debugPrint('⌚ [PROVIDER DEBUG] Platform.isIOS: ${Platform.isIOS}');
     debugPrint('⌚ [PROVIDER DEBUG] state.isConnected: ${state.isConnected}');
     debugPrint('⌚ [PROVIDER DEBUG] state.state: ${state.state}');
-    debugPrint('⌚ [PROVIDER DEBUG] rpeTrackingEnabled: $rpeTrackingEnabled, effortScale: $effortScale, locale: $locale');
+    debugPrint(
+      '⌚ [PROVIDER DEBUG] rpeTrackingEnabled: $rpeTrackingEnabled, effortScale: $effortScale, locale: $locale',
+    );
 
     if (!Platform.isIOS) {
       debugPrint('⌚ [PROVIDER DEBUG] ❌ Not iOS, returning');
@@ -841,12 +906,16 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
     }
 
     if (!state.isConnected) {
-      debugPrint('⌚ [PROVIDER DEBUG] ⚠️ Watch not connected, but attempting anyway...');
+      debugPrint(
+        '⌚ [PROVIDER DEBUG] ⚠️ Watch not connected, but attempting anyway...',
+      );
       // DON'T return - try anyway, native side has fallback
     }
 
     try {
-      debugPrint('⌚ [PROVIDER DEBUG] Calling _channel.invokeMethod(notifyWorkoutStarted)');
+      debugPrint(
+        '⌚ [PROVIDER DEBUG] Calling _channel.invokeMethod(notifyWorkoutStarted)',
+      );
       await _channel.invokeMethod('notifyWorkoutStarted', {
         'exerciseName': exerciseName,
         'currentSet': currentSet,
@@ -854,8 +923,8 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         'targetWeight': targetWeight ?? 0.0,
         'targetReps': targetReps ?? 0,
         'setsCompleted': setsCompleted,
-        'setsCompletedInExercise': setsCompletedInExercise,  // ✅ NEW
-        'lastCompletedReps': lastCompletedReps ?? 0,          // ✅ NEW
+        'setsCompletedInExercise': setsCompletedInExercise, // ✅ NEW
+        'lastCompletedReps': lastCompletedReps ?? 0, // ✅ NEW
         'rpeTrackingEnabled': rpeTrackingEnabled,
         'effortScale': effortScale,
         'locale': locale,
@@ -877,9 +946,13 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
 
       debugPrint('⌚ [PROVIDER DEBUG] ✅ invokeMethod completed successfully');
       if (isSuperset) {
-        debugPrint('🏋️ Notified Watch: SUPERSET started - $supersetName (Ex $currentExerciseInSuperset/$totalExercisesInSuperset, Round $supersetRound/$totalSupersetRounds)');
+        debugPrint(
+          '🏋️ Notified Watch: SUPERSET started - $supersetName (Ex $currentExerciseInSuperset/$totalExercisesInSuperset, Round $supersetRound/$totalSupersetRounds)',
+        );
       } else {
-        debugPrint('🏋️ Notified Watch: workout started - $exerciseName (RPE: $rpeTrackingEnabled, locale: $locale, TUT: ${tut ?? "none"}, allSets: ${allSets?.length ?? 0})');
+        debugPrint(
+          '🏋️ Notified Watch: workout started - $exerciseName (RPE: $rpeTrackingEnabled, locale: $locale, TUT: ${tut ?? "none"}, allSets: ${allSets?.length ?? 0})',
+        );
       }
     } on PlatformException catch (e) {
       debugPrint('⌚ [PROVIDER DEBUG] ❌ PlatformException: $e');
@@ -927,8 +1000,8 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
     double? targetWeight,
     int? targetReps,
     int setsCompleted = 0,
-    int setsCompletedInExercise = 0,  // ✅ NEW
-    int? lastCompletedReps,            // ✅ NEW
+    int setsCompletedInExercise = 0, // ✅ NEW
+    int? lastCompletedReps, // ✅ NEW
     bool rpeTrackingEnabled = false,
     String effortScale = 'rpe',
     String locale = 'en',
@@ -961,8 +1034,8 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         'targetWeight': targetWeight ?? 0.0,
         'targetReps': targetReps ?? 0,
         'setsCompleted': setsCompleted,
-        'setsCompletedInExercise': setsCompletedInExercise,  // ✅ NEW
-        'lastCompletedReps': lastCompletedReps ?? 0,          // ✅ NEW
+        'setsCompletedInExercise': setsCompletedInExercise, // ✅ NEW
+        'lastCompletedReps': lastCompletedReps ?? 0, // ✅ NEW
         'rpeTrackingEnabled': rpeTrackingEnabled,
         'effortScale': effortScale,
         'locale': locale,
@@ -984,9 +1057,13 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         'totalSupersetRounds': totalSupersetRounds,
       });
       if (isSuperset) {
-        debugPrint('⌚ Sent SUPERSET update: $supersetName - $exerciseName (Ex $currentExerciseInSuperset/$totalExercisesInSuperset, Round $supersetRound/$totalSupersetRounds)');
+        debugPrint(
+          '⌚ Sent SUPERSET update: $supersetName - $exerciseName (Ex $currentExerciseInSuperset/$totalExercisesInSuperset, Round $supersetRound/$totalSupersetRounds)',
+        );
       } else {
-        debugPrint('⌚ Sent workout update: $exerciseName Set $currentSet/$totalSets (TUT: ${tut ?? "none"}, allSets: ${allSets?.length ?? 0}, exercises: ${exerciseNames?.length ?? 0})');
+        debugPrint(
+          '⌚ Sent workout update: $exerciseName Set $currentSet/$totalSets (TUT: ${tut ?? "none"}, allSets: ${allSets?.length ?? 0}, exercises: ${exerciseNames?.length ?? 0})',
+        );
       }
     } on PlatformException catch (e) {
       if (kDebugMode) {
@@ -1042,7 +1119,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
       });
 
       if (kDebugMode) {
-        debugPrint('⏸️ Notified Watch: rest paused (${remainingSeconds}s remaining)');
+        debugPrint(
+          '⏸️ Notified Watch: rest paused (${remainingSeconds}s remaining)',
+        );
       }
     } on PlatformException catch (e) {
       if (kDebugMode) {
@@ -1061,7 +1140,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
       });
 
       if (kDebugMode) {
-        debugPrint('▶️ Notified Watch: rest resumed (${remainingSeconds}s remaining)');
+        debugPrint(
+          '▶️ Notified Watch: rest resumed (${remainingSeconds}s remaining)',
+        );
       }
     } on PlatformException catch (e) {
       if (kDebugMode) {
@@ -1080,7 +1161,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         'newDuration': newDuration,
       });
 
-      debugPrint('⏱️ Notified Watch: rest timer extended +${addedSeconds}s (total: ${newDuration}s)');
+      debugPrint(
+        '⏱️ Notified Watch: rest timer extended +${addedSeconds}s (total: ${newDuration}s)',
+      );
     } on PlatformException catch (e) {
       if (kDebugMode) {
         debugPrint('Failed to notify Watch of rest timer extension: $e');
@@ -1106,7 +1189,9 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
           .toList();
 
       if (pending.isNotEmpty) {
-        debugPrint('⌚ [FLUTTER] 📥 Found ${pending.length} pending Watch commands');
+        debugPrint(
+          '⌚ [FLUTTER] 📥 Found ${pending.length} pending Watch commands',
+        );
       }
 
       return pending;

@@ -101,7 +101,8 @@ class _MeasurementInputScreenState
     }
 
     // Pre-create controller for focused metric (single-metric mode)
-    if (widget.focusedMetric != null && !_controllers.containsKey(widget.focusedMetric)) {
+    if (widget.focusedMetric != null &&
+        !_controllers.containsKey(widget.focusedMetric)) {
       _controllers[widget.focusedMetric!] = TextEditingController();
     }
   }
@@ -221,7 +222,8 @@ class _MeasurementInputScreenState
     final isMale = profile.sex == BiologicalSex.male;
 
     // Mifflin-St Jeor formula
-    final bmr = (10 * weight) + (6.25 * heightCm) - (5 * age) + (isMale ? 5 : -161);
+    final bmr =
+        (10 * weight) + (6.25 * heightCm) - (5 * age) + (isMale ? 5 : -161);
 
     if (_controllers.containsKey(MetricType.bmr)) {
       _controllers[MetricType.bmr]?.text = bmr.toStringAsFixed(0);
@@ -372,7 +374,9 @@ class _MeasurementInputScreenState
       // Extract min/max from error message if it's a range error
       // Example: "Weight must be between 20.0 and 300.0 kg (got: 15.0)"
       final errorMsg = validationResult.errorMessage ?? '';
-      final rangeMatch = RegExp(r'between ([\d.]+) and ([\d.]+)').firstMatch(errorMsg);
+      final rangeMatch = RegExp(
+        r'between ([\d.]+) and ([\d.]+)',
+      ).firstMatch(errorMsg);
 
       if (rangeMatch != null) {
         final min = rangeMatch.group(1)!;
@@ -383,7 +387,8 @@ class _MeasurementInputScreenState
         );
       }
 
-      return validationResult.errorMessage ?? context.l10n.bodyMeasurementsValidationInvalid;
+      return validationResult.errorMessage ??
+          context.l10n.bodyMeasurementsValidationInvalid;
     }
 
     return null; // Valid
@@ -399,10 +404,7 @@ class _MeasurementInputScreenState
     // This would store partial measurements that haven't been submitted yet
 
     if (!mounted) return;
-    SnackBarService.showInfo(
-      context,
-      context.l10n.bodyMeasurementsDraftSaved,
-    );
+    SnackBarService.showInfo(context, context.l10n.bodyMeasurementsDraftSaved);
   }
 
   /// Submit measurements
@@ -452,7 +454,9 @@ class _MeasurementInputScreenState
 
         result.fold(
           (failure) {
-            throw Exception('Failed to save ${metric.name}: ${_getMeasurementFailureMessage(failure)}');
+            throw Exception(
+              'Failed to save ${metric.name}: ${_getMeasurementFailureMessage(failure)}',
+            );
           },
           (_) {
             // Success
@@ -468,10 +472,7 @@ class _MeasurementInputScreenState
       Navigator.of(context).pop(true);
     } catch (e) {
       if (!mounted) return;
-      SnackBarService.showError(
-        context,
-        'Failed to save measurements: $e',
-      );
+      SnackBarService.showError(context, 'Failed to save measurements: $e');
       setState(() {
         _isLoading = false;
       });
@@ -606,118 +607,119 @@ class _MeasurementInputScreenState
           isEditing
               ? context.l10n.bodyMeasurementsInputEditTitle
               : _isSingleMetricMode
-                  ? _getMetricLabel(widget.focusedMetric!)
-                  : context.l10n.bodyMeasurementsInputTitle,
+              ? _getMetricLabel(widget.focusedMetric!)
+              : context.l10n.bodyMeasurementsInputTitle,
         ),
         actions: [
-          if (_isDraft)
-            Icon(AppIcons.cloudDone, color: context.colors.success),
+          if (_isDraft) Icon(AppIcons.cloudDone, color: context.colors.success),
           const SizedBox(width: 16),
         ],
       ),
       body: _consentedMetrics.isEmpty
           ? const Center(child: LoadingIndicator())
           : _isLoading
-              ? const Center(child: LoadingIndicator())
-              : Form(
-                  key: _formKey,
-                  onChanged: () {
-                    Future.delayed(const Duration(seconds: 2), () {
-                      if (mounted) _saveDraft();
-                    });
-                  },
-                  child: ListView(
-                    padding: const EdgeInsets.all(16),
-                    children: [
-                      // Single-metric mode: show only the focused field
-                      if (_isSingleMetricMode) ...[
-                        // Info hint
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: context.colors.primaryContainer.withValues(alpha: 0.3),
-                            borderRadius: BorderRadius.circular(12),
+          ? const Center(child: LoadingIndicator())
+          : Form(
+              key: _formKey,
+              onChanged: () {
+                Future.delayed(const Duration(seconds: 2), () {
+                  if (mounted) _saveDraft();
+                });
+              },
+              child: ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  // Single-metric mode: show only the focused field
+                  if (_isSingleMetricMode) ...[
+                    // Info hint
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: context.colors.primaryContainer.withValues(
+                          alpha: 0.3,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            AppIcons.info,
+                            size: 20,
+                            color: context.colors.primary,
                           ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                AppIcons.info,
-                                size: 20,
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              context.l10n.bodyMeasurementsInputDescription,
+                              style: context.textTheme.bodySmall?.copyWith(
+                                color: context.colors.onSurface,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    _buildMetricField(widget.focusedMetric!),
+                  ] else ...[
+                    // Full form mode: info card + all grouped fields
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: context.colors.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            AppIcons.info,
+                            size: 20,
+                            color: context.colors.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              context.l10n.bodyMeasurementsInputDescription,
+                              style: context.textTheme.bodySmall,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Group by MetricGroup
+                    ...MetricGroup.values.map((group) {
+                      final groupMetrics = _consentedMetrics
+                          .where((metric) => metric.group == group)
+                          .toList();
+
+                      if (groupMetrics.isEmpty) {
+                        return const SizedBox.shrink();
+                      }
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Text(
+                              _getGroupLabel(group),
+                              style: context.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
                                 color: context.colors.primary,
                               ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  context.l10n.bodyMeasurementsInputDescription,
-                                  style: context.textTheme.bodySmall?.copyWith(
-                                    color: context.colors.onSurface,
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 24),
-                        _buildMetricField(widget.focusedMetric!),
-                      ] else ...[
-                        // Full form mode: info card + all grouped fields
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: context.colors.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                AppIcons.info,
-                                size: 20,
-                                color: context.colors.onSurfaceVariant,
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  context.l10n.bodyMeasurementsInputDescription,
-                                  style: context.textTheme.bodySmall,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Group by MetricGroup
-                        ...MetricGroup.values.map((group) {
-                          final groupMetrics = _consentedMetrics
-                              .where((metric) => metric.group == group)
-                              .toList();
-
-                          if (groupMetrics.isEmpty) {
-                            return const SizedBox.shrink();
-                          }
-
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: Text(
-                                  _getGroupLabel(group),
-                                  style: context.textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: context.colors.primary,
-                                  ),
-                                ),
-                              ),
-                              ...groupMetrics.map(_buildMetricField),
-                              const SizedBox(height: 16),
-                            ],
-                          );
-                        }),
-                      ],
-                    ],
-                  ),
-                ),
+                          ...groupMetrics.map(_buildMetricField),
+                          const SizedBox(height: 16),
+                        ],
+                      );
+                    }),
+                  ],
+                ],
+              ),
+            ),
       bottomNavigationBar: _isLoading
           ? null
           : SafeArea(

@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: presentation/providers
 /// 🎯 Feature: workout
 /// 🔧 Type: provider
 /// 🌍 Localization: N/A
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - Riverpod
 /// - Repository implementations
@@ -32,7 +32,9 @@ final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
 });
 
 /// Provider for Firebase workout data source
-final firebaseWorkoutDataSourceProvider = Provider<FirebaseWorkoutDataSource>((ref) {
+final firebaseWorkoutDataSourceProvider = Provider<FirebaseWorkoutDataSource>((
+  ref,
+) {
   return FirebaseWorkoutDataSource(FirebaseFirestore.instance);
 });
 
@@ -56,32 +58,32 @@ final workoutSyncServiceProvider = Provider<WorkoutSyncService>((ref) {
   final localDataSource = ref.watch(hiveWorkoutDataSourceProvider);
   final remoteDataSource = ref.watch(firebaseWorkoutDataSourceProvider);
   final auth = FirebaseAuth.instance;
-  
+
   final service = WorkoutSyncService(
     localDataSource: localDataSource,
     remoteDataSource: remoteDataSource,
     auth: auth,
   );
-  
+
   // Initialize the service
   service.initialize();
-  
+
   // Dispose when provider is disposed
   ref.onDispose(() {
     service.dispose();
   });
-  
+
   return service;
 });
 
 /// Provider for sync status
-final syncStatusProvider = NotifierProvider<SyncStatusNotifier, SyncStatusState>(
-  SyncStatusNotifier.new,
-);
+final syncStatusProvider =
+    NotifierProvider<SyncStatusNotifier, SyncStatusState>(
+      SyncStatusNotifier.new,
+    );
 
 /// State for sync status
 class SyncStatusState {
-
   const SyncStatusState({
     this.isSyncing = false,
     this.lastSyncTime,
@@ -110,18 +112,17 @@ class SyncStatusState {
 
 /// Notifier for sync status
 class SyncStatusNotifier extends Notifier<SyncStatusState> {
-
   @override
   SyncStatusState build() => const SyncStatusState();
 
   WorkoutSyncService get _syncService => ref.watch(workoutSyncServiceProvider);
-  
+
   /// Trigger manual sync
   Future<void> syncNow() async {
     if (state.isSyncing) return;
-    
+
     state = state.copyWith(isSyncing: true);
-    
+
     try {
       final result = await _syncService.syncNow();
       state = state.copyWith(
@@ -138,27 +139,27 @@ class SyncStatusNotifier extends Notifier<SyncStatusState> {
       );
     }
   }
-  
+
   /// Update premium status
   void updatePremiumStatus(bool isPremium) {
     state = state.copyWith(isPremiumUser: isPremium);
   }
-  
+
   /// Export all data
   Future<Map<String, dynamic>> exportData() async {
     return await _syncService.exportAllData();
   }
-  
+
   /// Import data from backup
   Future<void> importData(Map<String, dynamic> data) async {
     await _syncService.importData(data);
-    
+
     // Trigger sync if premium
     if (state.isPremiumUser) {
       await syncNow();
     }
   }
-  
+
   /// Clear all local data
   Future<void> clearAllData() async {
     await _syncService.clearAllData();

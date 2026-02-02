@@ -75,7 +75,13 @@ class WorkoutAnalyticsRepositoryImpl
     final normalized = Map<String, dynamic>.from(data);
 
     // Date fields that Workout.fromJson expects as String
-    for (final key in ['createdAt', 'updatedAt', 'startTime', 'endTime', 'preloadExpiry']) {
+    for (final key in [
+      'createdAt',
+      'updatedAt',
+      'startTime',
+      'endTime',
+      'preloadExpiry',
+    ]) {
       final value = normalized[key];
       if (value is DateTime) {
         normalized[key] = value.toIso8601String();
@@ -543,16 +549,12 @@ class WorkoutAnalyticsRepositoryImpl
       }
 
       if (kDebugMode) {
-        debugPrint(
-          '✅ [Analytics] Returning ${workouts.length} local workouts',
-        );
+        debugPrint('✅ [Analytics] Returning ${workouts.length} local workouts');
       }
       return workouts;
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint(
-          '❌ [Analytics] Error fetching local workouts: $e',
-        );
+        debugPrint('❌ [Analytics] Error fetching local workouts: $e');
         debugPrint('📍 [Analytics] Stack trace: $stackTrace');
       }
       return [];

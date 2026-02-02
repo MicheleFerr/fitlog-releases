@@ -61,20 +61,10 @@ abstract class ExerciseSetData with _$ExerciseSetData {
 }
 
 /// Trend direction for metrics
-enum TrendDirection {
-  improving,
-  declining,
-  stable,
-}
+enum TrendDirection { improving, declining, stable }
 
 /// Time period for filtering data
-enum TimePeriod {
-  week,
-  month,
-  threeMonths,
-  year,
-  all,
-}
+enum TimePeriod { week, month, threeMonths, year, all }
 
 /// Extension to calculate trend
 extension TrendCalculation on List<ExerciseSetData> {
@@ -86,8 +76,12 @@ extension TrendCalculation on List<ExerciseSetData> {
     final firstHalf = sublist(0, midPoint);
     final secondHalf = sublist(midPoint);
 
-    final firstAvg = firstHalf.fold<double>(0, (sum, set) => sum + set.weight) / firstHalf.length;
-    final secondAvg = secondHalf.fold<double>(0, (sum, set) => sum + set.weight) / secondHalf.length;
+    final firstAvg =
+        firstHalf.fold<double>(0, (sum, set) => sum + set.weight) /
+        firstHalf.length;
+    final secondAvg =
+        secondHalf.fold<double>(0, (sum, set) => sum + set.weight) /
+        secondHalf.length;
 
     final difference = secondAvg - firstAvg;
     final percentChange = (difference / firstAvg) * 100;
@@ -104,8 +98,12 @@ extension TrendCalculation on List<ExerciseSetData> {
     final firstHalf = sublist(0, midPoint);
     final secondHalf = sublist(midPoint);
 
-    final firstAvg = firstHalf.fold<double>(0, (sum, set) => sum + set.volume) / firstHalf.length;
-    final secondAvg = secondHalf.fold<double>(0, (sum, set) => sum + set.volume) / secondHalf.length;
+    final firstAvg =
+        firstHalf.fold<double>(0, (sum, set) => sum + set.volume) /
+        firstHalf.length;
+    final secondAvg =
+        secondHalf.fold<double>(0, (sum, set) => sum + set.volume) /
+        secondHalf.length;
 
     final difference = secondAvg - firstAvg;
     final percentChange = (difference / firstAvg) * 100;

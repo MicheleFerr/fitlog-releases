@@ -21,8 +21,8 @@ class NotificationRepositoryImpl implements NotificationRepository {
   NotificationRepositoryImpl({
     required LocalNotificationDatasource localNotificationDatasource,
     required NotificationStorageDatasource storageDatasource,
-  })  : _localDatasource = localNotificationDatasource,
-        _storageDatasource = storageDatasource;
+  }) : _localDatasource = localNotificationDatasource,
+       _storageDatasource = storageDatasource;
 
   final LocalNotificationDatasource _localDatasource;
   final NotificationStorageDatasource _storageDatasource;

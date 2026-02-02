@@ -45,8 +45,10 @@ class WeightUpdateNudgeCard extends ConsumerWidget {
           ref.read(weightUpdateNudgeProvider.notifier).dismissNudge();
         },
         background: _buildDismissBackground(context, Alignment.centerLeft),
-        secondaryBackground:
-            _buildDismissBackground(context, Alignment.centerRight),
+        secondaryBackground: _buildDismissBackground(
+          context,
+          Alignment.centerRight,
+        ),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
@@ -146,10 +148,7 @@ class WeightUpdateNudgeCard extends ConsumerWidget {
         color: colorScheme.surfaceContainerHighest,
       ),
       alignment: alignment,
-      padding: EdgeInsets.only(
-        left: isLeft ? 20 : 0,
-        right: isLeft ? 0 : 20,
-      ),
+      padding: EdgeInsets.only(left: isLeft ? 20 : 0, right: isLeft ? 0 : 20),
       child: Icon(
         AppIcons.close,
         color: colorScheme.onSurfaceVariant,

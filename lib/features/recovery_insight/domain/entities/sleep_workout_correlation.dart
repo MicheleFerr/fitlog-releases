@@ -96,10 +96,12 @@ abstract class SleepWorkoutCorrelation with _$SleepWorkoutCorrelation {
   }
 
   /// Formatted volume change for >7h sleep
-  String get formattedGoodSleepChange => formatVolumeChange(volumeChangeAbove7h);
+  String get formattedGoodSleepChange =>
+      formatVolumeChange(volumeChangeAbove7h);
 
   /// Formatted volume change for <6h sleep
-  String get formattedPoorSleepChange => formatVolumeChange(volumeChangeBelow6h);
+  String get formattedPoorSleepChange =>
+      formatVolumeChange(volumeChangeBelow6h);
 
   /// Whether there's enough data to show correlation
   bool get hasEnoughData => workoutSampleSize >= 5 && sleepSampleSize >= 7;
@@ -110,7 +112,8 @@ abstract class SleepWorkoutCorrelation with _$SleepWorkoutCorrelation {
       sleepPattern == SleepPattern.consistentlyPoor;
 
   /// Formatted average sleep hours
-  String get formattedAverageSleep => '${averageSleepHours.toStringAsFixed(1)}h';
+  String get formattedAverageSleep =>
+      '${averageSleepHours.toStringAsFixed(1)}h';
 
   /// Formatted average volume (in kg)
   String get formattedAverageVolume => '${averageVolume.toStringAsFixed(0)}kg';
@@ -146,8 +149,12 @@ abstract class SleepWorkoutCorrelation with _$SleepWorkoutCorrelation {
     // Return key with params for significant variable pattern
     final goodEffect = volumeChangeAbove7h > 0 ? 'increase' : 'decrease';
     final poorEffect = volumeChangeBelow6h < 0 ? 'decrease' : 'increase';
-    final goodChange = formattedGoodSleepChange.replaceAll('+', '').replaceAll('-', '');
-    final poorChange = formattedPoorSleepChange.replaceAll('+', '').replaceAll('-', '');
+    final goodChange = formattedGoodSleepChange
+        .replaceAll('+', '')
+        .replaceAll('-', '');
+    final poorChange = formattedPoorSleepChange
+        .replaceAll('+', '')
+        .replaceAll('-', '');
 
     return 'significant:$goodEffect:$poorEffect:$goodChange:$poorChange';
   }

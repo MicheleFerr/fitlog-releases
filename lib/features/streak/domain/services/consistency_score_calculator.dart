@@ -42,7 +42,9 @@ class ConsistencyScoreCalculator {
     final weeklyStats = _calculateWeeklyStats(workouts);
 
     // Calculate detailed scores (keep existing logic for breakdown view)
-    final frequencyScore = _calculateFrequencyScore(weeklyStats.avgWorkoutsPerWeek);
+    final frequencyScore = _calculateFrequencyScore(
+      weeklyStats.avgWorkoutsPerWeek,
+    );
     final restScore = _calculateRestScore(weeklyStats.avgRestDaysPerWeek);
     final progressionScore = _calculateProgressionScore(workouts);
 
@@ -95,8 +97,10 @@ class ConsistencyScoreCalculator {
         return aDate.compareTo(bDate);
       });
 
-    final oldestDate = sortedWorkouts.first.endTime ?? sortedWorkouts.first.createdAt;
-    final newestDate = sortedWorkouts.last.endTime ?? sortedWorkouts.last.createdAt;
+    final oldestDate =
+        sortedWorkouts.first.endTime ?? sortedWorkouts.first.createdAt;
+    final newestDate =
+        sortedWorkouts.last.endTime ?? sortedWorkouts.last.createdAt;
     final daysSpan = newestDate.difference(oldestDate).inDays + 1;
     final weeksSpan = daysSpan / 7.0;
 
@@ -149,7 +153,8 @@ class ConsistencyScoreCalculator {
     }
 
     // Too many workouts (overtraining risk)
-    final excessRatio = (avgWorkoutsPerWeek - _optimalFrequencyMax) / _optimalFrequencyMax;
+    final excessRatio =
+        (avgWorkoutsPerWeek - _optimalFrequencyMax) / _optimalFrequencyMax;
     final penalty = (excessRatio * 50).round(); // 50% penalty for 2x excess
     return (100 - penalty).clamp(0, 100);
   }
@@ -176,7 +181,6 @@ class ConsistencyScoreCalculator {
     return (100 - penalty).clamp(0, 100);
   }
 
-
   /// Calculate progression score (0-100)
   ///
   /// Based on weight/rep improvements over time
@@ -189,10 +193,12 @@ class ConsistencyScoreCalculator {
     final avgWeights = workouts.map((workout) {
       final totalWeight = workout.exercises.fold<double>(
         0.0,
-        (sum, exercise) => sum + exercise.sets.fold<double>(
-          0.0,
-          (setSum, set) => setSum + ((set.weight ?? 0.0) * (set.reps ?? 0)),
-        ),
+        (sum, exercise) =>
+            sum +
+            exercise.sets.fold<double>(
+              0.0,
+              (setSum, set) => setSum + ((set.weight ?? 0.0) * (set.reps ?? 0)),
+            ),
       );
       final totalSets = workout.exercises.fold<int>(
         0,
@@ -229,7 +235,6 @@ class ConsistencyScoreCalculator {
       return 50; // Regressing
     }
   }
-
 
   /// Check if frequency is in optimal range (3-5 workouts/week)
   ///
@@ -278,10 +283,12 @@ class ConsistencyScoreCalculator {
     final avgWeights = workouts.map((workout) {
       final totalWeight = workout.exercises.fold<double>(
         0.0,
-        (sum, exercise) => sum + exercise.sets.fold<double>(
-          0.0,
-          (setSum, set) => setSum + ((set.weight ?? 0.0) * (set.reps ?? 0)),
-        ),
+        (sum, exercise) =>
+            sum +
+            exercise.sets.fold<double>(
+              0.0,
+              (setSum, set) => setSum + ((set.weight ?? 0.0) * (set.reps ?? 0)),
+            ),
       );
       final totalSets = workout.exercises.fold<int>(
         0,
@@ -302,5 +309,4 @@ class ConsistencyScoreCalculator {
 
     return (recentAvg - olderAvg) / olderAvg; // Return ratio of change
   }
-
 }

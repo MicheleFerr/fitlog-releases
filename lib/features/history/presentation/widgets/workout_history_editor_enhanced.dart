@@ -25,12 +25,9 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-class WorkoutHistoryEditorEnhanced extends ConsumerStatefulWidget {
 
-  const WorkoutHistoryEditorEnhanced({
-    super.key,
-    required this.historyWorkout,
-  });
+class WorkoutHistoryEditorEnhanced extends ConsumerStatefulWidget {
+  const WorkoutHistoryEditorEnhanced({super.key, required this.historyWorkout});
   final WorkoutHistoryDetail historyWorkout;
 
   @override
@@ -58,8 +55,7 @@ class _WorkoutHistoryEditorEnhancedState
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    _nameController =
-        TextEditingController(text: widget.historyWorkout.name);
+    _nameController = TextEditingController(text: widget.historyWorkout.name);
     _selectedDate = widget.historyWorkout.completedAt;
 
     _exercises = widget.historyWorkout.exercises
@@ -140,7 +136,9 @@ class _WorkoutHistoryEditorEnhancedState
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.4,
+                  ),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -158,11 +156,12 @@ class _WorkoutHistoryEditorEnhancedState
                     IconButton(
                       onPressed: _onClosePressed,
                       icon: const SemanticIcon(
-  icon: AppIcons.close,
-  semanticLabel: 'Close',
-),
+                        icon: AppIcons.close,
+                        semanticLabel: 'Close',
+                      ),
                       style: IconButton.styleFrom(
-                        backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                        backgroundColor:
+                            theme.colorScheme.surfaceContainerHighest,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -187,18 +186,19 @@ class _WorkoutHistoryEditorEnhancedState
                       ),
                     ),
                     FilledButton.icon(
-                      onPressed:
-                          _hasUnsavedChanges && !_isSaving ? _saveWorkout : null,
+                      onPressed: _hasUnsavedChanges && !_isSaving
+                          ? _saveWorkout
+                          : null,
                       icon: _isSaving
                           ? LoadingIndicator(
                               size: 16,
                               color: theme.colorScheme.onPrimary,
                             )
                           : const SemanticIcon(
-  icon: AppIcons.save,
-  semanticLabel: 'Save',
-  size: AppIconSize.small,
-),
+                              icon: AppIcons.save,
+                              semanticLabel: 'Save',
+                              size: AppIconSize.small,
+                            ),
                       label: Text(l10n.save),
                     ),
                   ],
@@ -215,11 +215,17 @@ class _WorkoutHistoryEditorEnhancedState
                     const SizedBox(height: 24),
                     _buildExercisesHeader(theme, l10n),
                     const SizedBox(height: 16),
-                    ..._exercises.asMap().entries.map((entry) => Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: _buildExerciseCard(
-                              entry.key, entry.value, theme, l10n),
-                        )),
+                    ..._exercises.asMap().entries.map(
+                      (entry) => Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: _buildExerciseCard(
+                          entry.key,
+                          entry.value,
+                          theme,
+                          l10n,
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 60),
                   ],
                 ),
@@ -246,13 +252,11 @@ class _WorkoutHistoryEditorEnhancedState
           controller: _nameController,
           decoration: InputDecoration(
             hintText: l10n.enterWorkoutName,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             prefixIcon: const SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: 'Workout',
-),
+              icon: AppIcons.workout,
+              semanticLabel: 'Workout',
+            ),
           ),
           textCapitalization: TextCapitalization.sentences,
         ),
@@ -283,10 +287,7 @@ class _WorkoutHistoryEditorEnhancedState
             ),
             child: Row(
               children: [
-                Icon(
-                  AppIcons.calendar,
-                  color: theme.colorScheme.primary,
-                ),
+                Icon(AppIcons.calendar, color: theme.colorScheme.primary),
                 const SizedBox(width: 12),
                 Text(
                   DateFormat('dd MMMM yyyy', 'it_IT').format(_selectedDate),
@@ -294,11 +295,11 @@ class _WorkoutHistoryEditorEnhancedState
                 ),
                 const Spacer(),
                 SemanticIcon(
-  icon: AppIcons.forwardIos,
-  semanticLabel: 'Forward ios',
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.onSurfaceVariant,
-),
+                  icon: AppIcons.forwardIos,
+                  semanticLabel: 'Forward ios',
+                  size: AppIconSize.tiny,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ],
             ),
           ),
@@ -310,10 +311,7 @@ class _WorkoutHistoryEditorEnhancedState
   Widget _buildExercisesHeader(ThemeData theme, AppLocalizations l10n) {
     return Row(
       children: [
-        Icon(
-          AppIcons.workout,
-          color: theme.colorScheme.primary,
-        ),
+        Icon(AppIcons.workout, color: theme.colorScheme.primary),
         const SizedBox(width: 8),
         Text(
           l10n.exercises,
@@ -341,7 +339,11 @@ class _WorkoutHistoryEditorEnhancedState
   }
 
   Widget _buildExerciseCard(
-      int index, Exercise exercise, ThemeData theme, AppLocalizations l10n) {
+    int index,
+    Exercise exercise,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
     return Card(
       elevation: 2,
       child: Padding(
@@ -376,24 +378,31 @@ class _WorkoutHistoryEditorEnhancedState
               ],
             ),
             const SizedBox(height: 12),
-            ...exercise.sets.asMap().entries.map((setEntry) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: _buildSetRow(
-                    index,
-                    setEntry.key,
-                    setEntry.value,
-                    theme,
-                    l10n,
-                  ),
-                )),
+            ...exercise.sets.asMap().entries.map(
+              (setEntry) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: _buildSetRow(
+                  index,
+                  setEntry.key,
+                  setEntry.value,
+                  theme,
+                  l10n,
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSetRow(int exerciseIndex, int setIndex, ExerciseSet set,
-      ThemeData theme, AppLocalizations l10n) {
+  Widget _buildSetRow(
+    int exerciseIndex,
+    int setIndex,
+    ExerciseSet set,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -402,10 +411,7 @@ class _WorkoutHistoryEditorEnhancedState
             : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
         border: set.isWarmup
-            ? Border.all(
-                color: theme.colorScheme.tertiary,
-                width: 2,
-              )
+            ? Border.all(color: theme.colorScheme.tertiary, width: 2)
             : null,
       ),
       child: Row(
@@ -478,13 +484,18 @@ class _WorkoutHistoryEditorEnhancedState
           ),
           const SizedBox(width: 8),
           InkWell(
-            onTap: () => _updateSet(exerciseIndex, setIndex,
-                isCompleted: !set.isCompleted),
+            onTap: () => _updateSet(
+              exerciseIndex,
+              setIndex,
+              isCompleted: !set.isCompleted,
+            ),
             borderRadius: BorderRadius.circular(8),
             child: Container(
               padding: const EdgeInsets.all(4),
               child: Icon(
-                set.isCompleted ? AppIcons.checkBox : AppIcons.checkBoxOutlineBlank,
+                set.isCompleted
+                    ? AppIcons.checkBox
+                    : AppIcons.checkBoxOutlineBlank,
                 color: set.isCompleted
                     ? theme.colorScheme.primary
                     : theme.colorScheme.onSurfaceVariant,
@@ -550,8 +561,14 @@ class _WorkoutHistoryEditorEnhancedState
     );
   }
 
-  void _updateSet(int exerciseIndex, int setIndex,
-      {String? weight, String? reps, int? rpe, bool? isCompleted}) {
+  void _updateSet(
+    int exerciseIndex,
+    int setIndex, {
+    String? weight,
+    String? reps,
+    int? rpe,
+    bool? isCompleted,
+  }) {
     setState(() {
       final exercise = _exercises[exerciseIndex];
       final set = exercise.sets[setIndex];
@@ -593,19 +610,13 @@ class _WorkoutHistoryEditorEnhancedState
   }
 
   void _replaceExercise(int exerciseIndex, Exercise currentExercise) {
-    ExerciseReplacementModal.show(
-      context,
-      currentExercise,
-      (newExercise) {
-        setState(() {
-          final oldSets = _exercises[exerciseIndex].sets;
-          _exercises[exerciseIndex] = newExercise.copyWith(
-            sets: oldSets,
-          );
-          _hasUnsavedChanges = true;
-        });
-      },
-    );
+    ExerciseReplacementModal.show(context, currentExercise, (newExercise) {
+      setState(() {
+        final oldSets = _exercises[exerciseIndex].sets;
+        _exercises[exerciseIndex] = newExercise.copyWith(sets: oldSets);
+        _hasUnsavedChanges = true;
+      });
+    });
   }
 
   Future<void> _saveWorkout() async {
@@ -665,7 +676,9 @@ class _WorkoutHistoryEditorEnhancedState
 
   void _onClosePressed() {
     final l10n = AppLocalizations.of(context);
-    final parentNavigator = Navigator.of(context); // Capture parent navigator before dialog
+    final parentNavigator = Navigator.of(
+      context,
+    ); // Capture parent navigator before dialog
 
     if (_hasUnsavedChanges) {
       showDialog(
@@ -681,7 +694,8 @@ class _WorkoutHistoryEditorEnhancedState
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop(); // Close dialog
-                parentNavigator.pop(); // Close modal using captured parent navigator
+                parentNavigator
+                    .pop(); // Close modal using captured parent navigator
               },
               child: Text(l10n.discard),
             ),

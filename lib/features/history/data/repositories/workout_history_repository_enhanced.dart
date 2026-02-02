@@ -23,7 +23,6 @@ import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 /// Enhanced repository for workout history with Firebase integration
 class WorkoutHistoryRepositoryEnhanced {
-
   WorkoutHistoryRepositoryEnhanced({
     required HiveBoxManagerEnhanced boxManager,
     FirebaseFirestore? firestore,
@@ -55,7 +54,8 @@ class WorkoutHistoryRepositoryEnhanced {
       StreamController<SyncStatus>.broadcast();
 
   // Getters for streams
-  Stream<List<WorkoutHistoryDetail>> get workoutsStream => _workoutsController.stream;
+  Stream<List<WorkoutHistoryDetail>> get workoutsStream =>
+      _workoutsController.stream;
   Stream<SyncStatus> get syncStatusStream => _syncStatusController.stream;
 
   /// 🔧 FIX: Notify stream listeners that a workout was added directly to Hive
@@ -67,7 +67,9 @@ class WorkoutHistoryRepositoryEnhanced {
       _workoutsController.add(workouts);
 
       if (kDebugMode) {
-        debugPrint('📢 [WorkoutHistoryRepo] Notified listeners of new local workout (${workouts.length} total)');
+        debugPrint(
+          '📢 [WorkoutHistoryRepo] Notified listeners of new local workout (${workouts.length} total)',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -90,7 +92,6 @@ class WorkoutHistoryRepositoryEnhanced {
 
       // Trigger initial sync if needed
       await _performInitialSyncIfNeeded();
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Error initializing WorkoutHistoryRepositoryEnhanced: $e');
@@ -168,7 +169,6 @@ class WorkoutHistoryRepositoryEnhanced {
 
           // Save to local storage
           await _saveWorkoutLocally(workout);
-
         } catch (e) {
           if (kDebugMode) {
             debugPrint('⚠️ Error converting workout ${doc.id}: $e');
@@ -178,21 +178,27 @@ class WorkoutHistoryRepositoryEnhanced {
 
       // Mark initial sync as complete
       await _metadataBox!.put('initial_sync_done', true);
-      await _metadataBox!.put('last_sync_timestamp', DateTime.now().toIso8601String());
+      await _metadataBox!.put(
+        'last_sync_timestamp',
+        DateTime.now().toIso8601String(),
+      );
 
       if (kDebugMode) {
-        debugPrint('✅ Initial sync completed: ${workouts.length} workouts downloaded from Firebase');
+        debugPrint(
+          '✅ Initial sync completed: ${workouts.length} workouts downloaded from Firebase',
+        );
       }
 
       // 🔧 FIX: Emit ALL local workouts (including pre-existing ones not on Firebase)
       // Previous bug: emitted only downloaded workouts, hiding locally-saved ones
       final allLocalWorkouts = await _getLocalWorkouts();
       if (kDebugMode) {
-        debugPrint('📋 Total local workouts after sync: ${allLocalWorkouts.length}');
+        debugPrint(
+          '📋 Total local workouts after sync: ${allLocalWorkouts.length}',
+        );
       }
       _workoutsController.add(allLocalWorkouts);
       _syncStatusController.add(SyncStatus.synced);
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Initial sync failed: $e');
@@ -210,7 +216,9 @@ class WorkoutHistoryRepositoryEnhanced {
     if (_auth.currentUser == null) return;
 
     try {
-      final lastSync = _lastSyncTimestamp ?? DateTime.now().subtract(const Duration(hours: 24));
+      final lastSync =
+          _lastSyncTimestamp ??
+          DateTime.now().subtract(const Duration(hours: 24));
       final userId = _auth.currentUser!.uid;
 
       // Query for updates since last sync
@@ -231,7 +239,9 @@ class WorkoutHistoryRepositoryEnhanced {
 
       if (querySnapshot.docs.isNotEmpty) {
         if (kDebugMode) {
-          debugPrint('🔄 Incremental sync: ${querySnapshot.docs.length} updates found');
+          debugPrint(
+            '🔄 Incremental sync: ${querySnapshot.docs.length} updates found',
+          );
         }
 
         for (var doc in querySnapshot.docs) {
@@ -246,13 +256,15 @@ class WorkoutHistoryRepositoryEnhanced {
         }
 
         // Update sync timestamp
-        await _metadataBox!.put('last_sync_timestamp', DateTime.now().toIso8601String());
+        await _metadataBox!.put(
+          'last_sync_timestamp',
+          DateTime.now().toIso8601String(),
+        );
 
         // Emit updated workouts
         final updatedWorkouts = await _getLocalWorkouts();
         _workoutsController.add(updatedWorkouts);
       }
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('⚠️ Incremental sync failed: $e');
@@ -329,8 +341,10 @@ class WorkoutHistoryRepositoryEnhanced {
     workouts.sort((a, b) => b.completedAt.compareTo(a.completedAt));
 
     if (kDebugMode) {
-      debugPrint('📦 [WorkoutHistoryRepo] Loaded ${workouts.length} workouts for user $userId'
-          '${legacyKeysToMigrate.isNotEmpty ? ' (migrating ${legacyKeysToMigrate.length} legacy keys)' : ''}');
+      debugPrint(
+        '📦 [WorkoutHistoryRepo] Loaded ${workouts.length} workouts for user $userId'
+        '${legacyKeysToMigrate.isNotEmpty ? ' (migrating ${legacyKeysToMigrate.length} legacy keys)' : ''}',
+      );
     }
 
     return workouts;
@@ -338,7 +352,10 @@ class WorkoutHistoryRepositoryEnhanced {
 
   /// Migrate legacy keys to new format with userId
   /// Runs in background to avoid blocking the main read operation
-  Future<void> _migrateLegacyKeys(Map<String, WorkoutHistoryDetail> legacyWorkouts, String userId) async {
+  Future<void> _migrateLegacyKeys(
+    Map<String, WorkoutHistoryDetail> legacyWorkouts,
+    String userId,
+  ) async {
     for (final entry in legacyWorkouts.entries) {
       try {
         final oldKey = entry.key;
@@ -355,7 +372,9 @@ class WorkoutHistoryRepositoryEnhanced {
         }
       } catch (e) {
         if (kDebugMode) {
-          debugPrint('⚠️ [WorkoutHistoryRepo] Failed to migrate key ${entry.key}: $e');
+          debugPrint(
+            '⚠️ [WorkoutHistoryRepo] Failed to migrate key ${entry.key}: $e',
+          );
         }
       }
     }
@@ -375,14 +394,14 @@ class WorkoutHistoryRepositoryEnhanced {
       }
 
       return Right(localWorkouts);
-
     } catch (e) {
       return Left(DatabaseFailure('Failed to load workouts: $e'));
     }
   }
 
   /// Get workouts with real-time updates
-  Stream<Either<Failure, List<WorkoutHistoryDetail>>> getWorkoutsStream() async* {
+  Stream<Either<Failure, List<WorkoutHistoryDetail>>>
+  getWorkoutsStream() async* {
     try {
       await _ensureInitialized();
 
@@ -394,14 +413,15 @@ class WorkoutHistoryRepositoryEnhanced {
       await for (final workouts in _workoutsController.stream) {
         yield Right(workouts);
       }
-
     } catch (e) {
       yield Left(DatabaseFailure('Stream error: $e'));
     }
   }
 
   /// Update workout
-  Future<Either<Failure, void>> updateWorkout(WorkoutHistoryDetail workout) async {
+  Future<Either<Failure, void>> updateWorkout(
+    WorkoutHistoryDetail workout,
+  ) async {
     try {
       await _ensureInitialized();
 
@@ -419,7 +439,6 @@ class WorkoutHistoryRepositoryEnhanced {
       _workoutsController.add(updatedWorkouts);
 
       return const Right(null);
-
     } catch (e) {
       return Left(DatabaseFailure('Failed to update workout: $e'));
     }
@@ -440,7 +459,10 @@ class WorkoutHistoryRepositoryEnhanced {
       await _historyBox!.delete('workout_$workoutId'); // Legacy cleanup
 
       // Add to sync queue for cloud deletion
-      await _addToSyncQueue('delete', WorkoutHistoryDetail.empty(id: workoutId));
+      await _addToSyncQueue(
+        'delete',
+        WorkoutHistoryDetail.empty(id: workoutId),
+      );
 
       // Process sync queue if online
       unawaited(_processSyncQueue());
@@ -450,14 +472,16 @@ class WorkoutHistoryRepositoryEnhanced {
       _workoutsController.add(updatedWorkouts);
 
       return const Right(null);
-
     } catch (e) {
       return Left(DatabaseFailure('Failed to delete workout: $e'));
     }
   }
 
   /// Add operation to sync queue
-  Future<void> _addToSyncQueue(String operation, WorkoutHistoryDetail workout) async {
+  Future<void> _addToSyncQueue(
+    String operation,
+    WorkoutHistoryDetail workout,
+  ) async {
     final queueItem = {
       'operation': operation,
       'workout': workout.toMap(),
@@ -465,7 +489,8 @@ class WorkoutHistoryRepositoryEnhanced {
       'attempts': 0,
     };
 
-    final key = '${operation}_${workout.id}_${DateTime.now().millisecondsSinceEpoch}';
+    final key =
+        '${operation}_${workout.id}_${DateTime.now().millisecondsSinceEpoch}';
     await _syncQueueBox!.put(key, queueItem);
   }
 
@@ -490,20 +515,23 @@ class WorkoutHistoryRepositoryEnhanced {
 
         try {
           if (operation == 'update') {
-            await _updateWorkoutInFirestore(WorkoutHistoryDetail.fromMap(workoutData));
+            await _updateWorkoutInFirestore(
+              WorkoutHistoryDetail.fromMap(workoutData),
+            );
           } else if (operation == 'delete') {
             await _deleteWorkoutFromFirestore(workoutData['id'] as String);
           }
 
           // Remove from queue on success
           await _syncQueueBox!.delete(key);
-
         } catch (e) {
           // Increment attempts
           queueItem['attempts'] = attempts + 1;
           await _syncQueueBox!.put(key, queueItem);
           if (kDebugMode) {
-            debugPrint('⚠️ Sync queue item failed (attempt ${attempts + 1}): $e');
+            debugPrint(
+              '⚠️ Sync queue item failed (attempt ${attempts + 1}): $e',
+            );
           }
         }
       }
@@ -592,8 +620,6 @@ class WorkoutHistoryRepositoryEnhanced {
     _syncStatusController.close();
   }
 }
-
-
 
 /// Database failure class
 class DatabaseFailure extends Failure {

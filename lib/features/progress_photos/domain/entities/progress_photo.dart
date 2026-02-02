@@ -178,7 +178,7 @@ enum SyncStatus {
   synced,
 
   /// Sync failed (network error, permission denied, etc.)
-  failed;
+  failed,
 }
 
 /// PhotoUploadProgress - Tracks upload progress
@@ -226,7 +226,7 @@ enum UploadStatus {
   failed,
 
   /// Upload cancelled by user
-  cancelled;
+  cancelled,
 }
 
 /// PhotoComparisonPair - Two photos for comparison

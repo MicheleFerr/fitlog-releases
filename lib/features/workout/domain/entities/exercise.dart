@@ -20,26 +20,12 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 /// - Exercise: "Panca Piana" with 3 sets of 80kg×10, 85kg×8, 90kg×6 (runtime data)
 
 enum AutoAdjustmentType {
-  rpe,      // RPE/RIR based
+  rpe, // RPE/RIR based
 }
 
-enum ExerciseType {
-  single,
-  superset,
-  dropset,
-  restPause,
-}
+enum ExerciseType { single, superset, dropset, restPause }
 
-enum ExerciseCategory {
-  chest,
-  back,
-  shoulders,
-  arms,
-  legs,
-  abs,
-  cardio,
-  other,
-}
+enum ExerciseCategory { chest, back, shoulders, arms, legs, abs, cardio, other }
 
 /// Tipo di movimento per calcolo recovery e CNS stress
 ///
@@ -66,10 +52,10 @@ enum MovementType {
 extension MovementTypeExtension on MovementType {
   /// Ore di recupero ottimali per questo tipo di movimento
   int get recoveryHours => switch (this) {
-    MovementType.compoundHeavy => 96,   // 4 giorni
-    MovementType.compoundMedium => 72,  // 3 giorni
-    MovementType.isolationHeavy => 72,  // 3 giorni
-    MovementType.isolationLight => 48,  // 2 giorni
+    MovementType.compoundHeavy => 96, // 4 giorni
+    MovementType.compoundMedium => 72, // 3 giorni
+    MovementType.isolationHeavy => 72, // 3 giorni
+    MovementType.isolationLight => 48, // 2 giorni
   };
 
   /// Giorni di recupero ottimali
@@ -78,10 +64,10 @@ extension MovementTypeExtension on MovementType {
   /// Fattore di stress CNS (moltiplicatore per readiness score)
   /// Più basso = più stress CNS = più penalità
   double get cnsStressFactor => switch (this) {
-    MovementType.compoundHeavy => 0.7,   // 30% penalty
+    MovementType.compoundHeavy => 0.7, // 30% penalty
     MovementType.compoundMedium => 0.85, // 15% penalty
-    MovementType.isolationHeavy => 1.0,  // No penalty
-    MovementType.isolationLight => 1.0,  // No penalty
+    MovementType.isolationHeavy => 1.0, // No penalty
+    MovementType.isolationLight => 1.0, // No penalty
   };
 
   /// Moltiplicatore stress per template matching
@@ -103,13 +89,24 @@ extension MovementTypeExtension on MovementType {
   /// Esempi di esercizi per questo tipo
   List<String> get examples => switch (this) {
     MovementType.compoundHeavy => ['Squat', 'Deadlift', 'Front Squat'],
-    MovementType.compoundMedium => ['Bench Press', 'Barbell Row', 'Overhead Press', 'Pull-up'],
+    MovementType.compoundMedium => [
+      'Bench Press',
+      'Barbell Row',
+      'Overhead Press',
+      'Pull-up',
+    ],
     MovementType.isolationHeavy => ['Leg Press', 'Cable Row', 'Hack Squat'],
-    MovementType.isolationLight => ['Bicep Curl', 'Leg Extension', 'Fly', 'Lateral Raise'],
+    MovementType.isolationLight => [
+      'Bicep Curl',
+      'Leg Extension',
+      'Fly',
+      'Lateral Raise',
+    ],
   };
 }
 
-class Exercise {         // Target RIR if using RIR-based
+class Exercise {
+  // Target RIR if using RIR-based
 
   Exercise({
     String? id,
@@ -134,11 +131,10 @@ class Exercise {         // Target RIR if using RIR-based
     this.targetRIR,
     this.countingMode = ExerciseCountingMode.weighted,
     this.movementType, // ✅ Smart Workout Suggestion - nullable per backward compat
-  }) :
-    id = id ?? const Uuid().v4(),
-    sets = sets ?? [],
-    createdAt = createdAt ?? DateTime.now(),
-    updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? const Uuid().v4(),
+       sets = sets ?? [],
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   /// Polymorphic factory that creates the appropriate Exercise subclass
   /// based on the 'type' field in the JSON.
@@ -177,12 +173,19 @@ class Exercise {         // Target RIR if using RIR-based
         (e) => e.name == json['category'],
         orElse: () => ExerciseCategory.other, // Safe default
       ),
-      sets: (json['sets'] as List?)
-          ?.map((setJson) => ExerciseSet.fromJson(setJson as Map<String, dynamic>))
-          .toList() ?? [],
+      sets:
+          (json['sets'] as List?)
+              ?.map(
+                (setJson) =>
+                    ExerciseSet.fromJson(setJson as Map<String, dynamic>),
+              )
+              .toList() ??
+          [],
       notes: json['notes'] as String?,
       // FIX: Firebase may return restTime as double, use num to handle both int and double
-      restTime: json['restTime'] is num ? (json['restTime'] as num).toInt() : null,
+      restTime: json['restTime'] is num
+          ? (json['restTime'] as num).toInt()
+          : null,
       tut: json['tut'] as String?,
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'] as String)
@@ -207,7 +210,9 @@ class Exercise {         // Target RIR if using RIR-based
       targetRPEMin: json['targetRPEMin']?.toDouble(),
       targetRPEMax: json['targetRPEMax']?.toDouble(),
       targetRIR: json['targetRIR'] as int?,
-      countingMode: ExerciseCountingMode.fromString(json['countingMode'] as String?),
+      countingMode: ExerciseCountingMode.fromString(
+        json['countingMode'] as String?,
+      ),
       movementType: json['movementType'] != null
           ? MovementType.values.firstWhere(
               (e) => e.name == json['movementType'],
@@ -228,26 +233,30 @@ class Exercise {         // Target RIR if using RIR-based
   final DateTime updatedAt;
 
   // Auto Adjustment fields
-  final AutoAdjustmentType? autoAdjustmentType; // Type of auto adjustment (RPE-based)
+  final AutoAdjustmentType?
+  autoAdjustmentType; // Type of auto adjustment (RPE-based)
 
   // Cached RM Calculations (for performance)
-  final double? calculated1RM;  // Cached 1RM calculation
-  final double? calculated3RM;  // Cached 3RM calculation
-  final double? calculated6RM;  // Cached 6RM calculation
+  final double? calculated1RM; // Cached 1RM calculation
+  final double? calculated3RM; // Cached 3RM calculation
+  final double? calculated6RM; // Cached 6RM calculation
   final double? calculated10RM; // Cached 10RM calculation
   final DateTime? lastCalculationDate; // When calculations were last updated
-  final String? calculationMetadata; // Info about calculation (e.g., "Based on 10 sets, High confidence")
+  final String?
+  calculationMetadata; // Info about calculation (e.g., "Based on 10 sets, High confidence")
 
   // RPE/RIR Autoregulation fields
-  final double? targetRPEMin;   // Minimum target RPE (e.g., 7)
-  final double? targetRPEMax;   // Maximum target RPE (e.g., 9)
+  final double? targetRPEMin; // Minimum target RPE (e.g., 7)
+  final double? targetRPEMax; // Maximum target RPE (e.g., 9)
   final int? targetRIR;
 
   // ✅ Exercise Counting Mode
-  final ExerciseCountingMode countingMode; // How this exercise is counted (weighted/reps/time)
+  final ExerciseCountingMode
+  countingMode; // How this exercise is counted (weighted/reps/time)
 
   // ✅ Smart Workout Suggestion - Movement Type for recovery calculation
-  final MovementType? movementType; // null = not classified yet (backward compat)
+  final MovementType?
+  movementType; // null = not classified yet (backward compat)
 
   /// Creates a copy of this exercise with the given fields replaced.
   ///
@@ -300,7 +309,8 @@ class Exercise {         // Target RIR if using RIR-based
       targetRPEMax: targetRPEMax ?? this.targetRPEMax,
       targetRIR: targetRIR ?? this.targetRIR,
       countingMode: countingMode ?? this.countingMode,
-      movementType: movementType ?? this.movementType, // ✅ Smart Workout Suggestion
+      movementType:
+          movementType ?? this.movementType, // ✅ Smart Workout Suggestion
     );
   }
 
@@ -332,40 +342,44 @@ class Exercise {         // Target RIR if using RIR-based
   }
 
   /// Indica se l'esercizio è completato (tutti i set sono completati)
-  bool get isCompleted => sets.isNotEmpty && sets.every((set) => set.isCompleted);
+  bool get isCompleted =>
+      sets.isNotEmpty && sets.every((set) => set.isCompleted);
 
   /// Volume totale dell'esercizio (somma dei volumi di tutti i set)
   double get totalVolume => sets.fold(0.0, (sum, set) => sum + set.volume);
 
   /// Data di completamento dell'esercizio (ultima data di completamento dei set)
   DateTime? get completedAt {
-    final completedSets = sets.where((set) => set.isCompleted && set.completedAt != null);
+    final completedSets = sets.where(
+      (set) => set.isCompleted && set.completedAt != null,
+    );
     if (completedSets.isEmpty) return null;
-    
+
     return completedSets
         .map((set) => set.completedAt!)
         .reduce((a, b) => a.isAfter(b) ? a : b);
   }
 }
 
-class ExerciseSet { // Rest time in seconds after this set
+class ExerciseSet {
+  // Rest time in seconds after this set
 
   ExerciseSet({
     String? id,
     required this.setNumber,
     this.weight,
     this.reps,
-    this.actualReps,        // ✅ Nuovo
-    this.rpe,              // ✅ Nuovo
+    this.actualReps, // ✅ Nuovo
+    this.rpe, // ✅ Nuovo
     this.seconds,
-    this.distance,         // ✅ Added for cardio support
+    this.distance, // ✅ Added for cardio support
     this.isCompleted = false,
     this.notes,
-    this.completedAt,      // ✅ Nuovo
+    this.completedAt, // ✅ Nuovo
     this.setDurationMillis, // ✅ Nuovo
-    this.setStartedAt,     // ✅ Nuovo
+    this.setStartedAt, // ✅ Nuovo
     this.isWarmup = false, // ✅ Nuovo (default false)
-    this.restTime,         // ✅ Rest time for this set
+    this.restTime, // ✅ Rest time for this set
   }) : id = id ?? const Uuid().v4();
 
   factory ExerciseSet.fromJson(Map<String, dynamic> json) {
@@ -374,17 +388,21 @@ class ExerciseSet { // Rest time in seconds after this set
       setNumber: json['setNumber'],
       weight: json['weight']?.toDouble(),
       reps: json['reps'],
-      actualReps: json['actualReps'],                        // ✅ Nuovo
-      rpe: json['rpe'],                                     // ✅ Nuovo
+      actualReps: json['actualReps'], // ✅ Nuovo
+      rpe: json['rpe'], // ✅ Nuovo
       seconds: json['seconds'],
-      distance: json['distance']?.toDouble(),               // ✅ Added
+      distance: json['distance']?.toDouble(), // ✅ Added
       isCompleted: json['isCompleted'] ?? false,
       notes: json['notes'],
-      completedAt: json['completedAt'] != null              // ✅ Nuovo
+      completedAt:
+          json['completedAt'] !=
+              null // ✅ Nuovo
           ? DateTime.parse(json['completedAt'])
           : null,
       setDurationMillis: json['setDurationMillis']?.toDouble(), // ✅ Nuovo
-      setStartedAt: json['setStartedAt'] != null              // ✅ Nuovo
+      setStartedAt:
+          json['setStartedAt'] !=
+              null // ✅ Nuovo
           ? DateTime.parse(json['setStartedAt'])
           : null,
       isWarmup: json['isWarmup'] ?? false, // ✅ Nuovo
@@ -394,16 +412,18 @@ class ExerciseSet { // Rest time in seconds after this set
   final String id;
   final int setNumber;
   final double? weight;
-  final int? reps;             // Target reps
-  final int? actualReps;       // ✅ Reps effettive completate
-  final int? rpe;             // ✅ RPE (Rate of Perceived Exertion) 5-10
-  final int? seconds;         // For time-based exercises
-  final double? distance;     // ✅ For cardio (meters/km)
+  final int? reps; // Target reps
+  final int? actualReps; // ✅ Reps effettive completate
+  final int? rpe; // ✅ RPE (Rate of Perceived Exertion) 5-10
+  final int? seconds; // For time-based exercises
+  final double? distance; // ✅ For cardio (meters/km)
   final bool isCompleted;
   final String? notes;
   final DateTime? completedAt; // ✅ Timestamp completamento
-  final double? setDurationMillis; // ✅ Duration in milliseconds (from rest end to set completion)
-  final DateTime? setStartedAt; // ✅ Timestamp when set started (after rest timer)
+  final double?
+  setDurationMillis; // ✅ Duration in milliseconds (from rest end to set completion)
+  final DateTime?
+  setStartedAt; // ✅ Timestamp when set started (after rest timer)
   final bool isWarmup; // ✅ Indica se è un set di riscaldamento
   final int? restTime;
 
@@ -412,28 +432,28 @@ class ExerciseSet { // Rest time in seconds after this set
     int? setNumber,
     double? weight,
     int? reps,
-    int? actualReps,      // ✅ Nuovo
-    int? rpe,            // ✅ Nuovo
+    int? actualReps, // ✅ Nuovo
+    int? rpe, // ✅ Nuovo
     int? seconds,
-    double? distance,    // ✅ Added
+    double? distance, // ✅ Added
     bool? isCompleted,
     String? notes,
     DateTime? completedAt, // ✅ Nuovo
     double? setDurationMillis, // ✅ Nuovo
     DateTime? setStartedAt, // ✅ Nuovo
     bool? isWarmup, // ✅ Nuovo
-    int? restTime,   // ✅ Rest time
+    int? restTime, // ✅ Rest time
   }) {
     return ExerciseSet(
       id: id ?? this.id, // ✅ FIX: Preserve id
       setNumber: setNumber ?? this.setNumber,
       weight: weight ?? this.weight,
       reps: reps ?? this.reps,
-      actualReps: actualReps ?? this.actualReps,     // ✅ Nuovo
-      rpe: rpe ?? this.rpe,                         // ✅ Nuovo
-      restTime: restTime ?? this.restTime,           // ✅ Rest time
+      actualReps: actualReps ?? this.actualReps, // ✅ Nuovo
+      rpe: rpe ?? this.rpe, // ✅ Nuovo
+      restTime: restTime ?? this.restTime, // ✅ Rest time
       seconds: seconds ?? this.seconds,
-      distance: distance ?? this.distance,           // ✅ Added
+      distance: distance ?? this.distance, // ✅ Added
       isCompleted: isCompleted ?? this.isCompleted,
       notes: notes ?? this.notes,
       completedAt: completedAt ?? this.completedAt, // ✅ Nuovo
@@ -449,10 +469,10 @@ class ExerciseSet { // Rest time in seconds after this set
       'setNumber': setNumber,
       'weight': weight,
       'reps': reps,
-      'actualReps': actualReps,           // ✅ Nuovo
-      'rpe': rpe,                        // ✅ Nuovo
+      'actualReps': actualReps, // ✅ Nuovo
+      'rpe': rpe, // ✅ Nuovo
       'seconds': seconds,
-      'distance': distance,              // ✅ Added
+      'distance': distance, // ✅ Added
       'isCompleted': isCompleted,
       'notes': notes,
       'completedAt': completedAt?.toIso8601String(), // ✅ Nuovo
@@ -464,7 +484,7 @@ class ExerciseSet { // Rest time in seconds after this set
   }
 
   // ✅ Helper methods per RPE workflow
-  
+
   /// Completa il set con RPE e reps effettive
   /// Duration is now calculated externally (set-to-set tracking)
   ExerciseSet completeWithRPE({
@@ -500,18 +520,12 @@ class ExerciseSet { // Rest time in seconds after this set
   }
 
   /// Indica se il set è stato completato con successo (tutte le target reps)
-  bool get isFullyCompleted => 
-      isCompleted && 
-      actualReps != null && 
-      reps != null && 
-      actualReps! >= reps!;
+  bool get isFullyCompleted =>
+      isCompleted && actualReps != null && reps != null && actualReps! >= reps!;
 
   /// Indica se sono state completate meno reps del target
-  bool get isPartiallyCompleted => 
-      isCompleted && 
-      actualReps != null && 
-      reps != null && 
-      actualReps! < reps!;
+  bool get isPartiallyCompleted =>
+      isCompleted && actualReps != null && reps != null && actualReps! < reps!;
 
   /// Volume del set (peso × reps effettive o target)
   double get volume {
@@ -589,7 +603,6 @@ class ExerciseSet { // Rest time in seconds after this set
 
 /// Dati per un singolo esercizio all'interno di un set di superset
 class SupersetExerciseData {
-
   const SupersetExerciseData({
     required this.exerciseId,
     required this.exerciseName,
@@ -666,7 +679,6 @@ class SupersetExerciseData {
 
 /// Set di un superset - contiene dati per tutti gli esercizi del round
 class SupersetSet {
-
   SupersetSet({
     String? id,
     required this.setNumber,
@@ -683,16 +695,18 @@ class SupersetSet {
     return SupersetSet(
       id: json['id'],
       setNumber: json['setNumber'],
-      exerciseData: (json['exerciseData'] as Map<String, dynamic>?)
-          ?.map((key, value) => MapEntry(key, SupersetExerciseData.fromJson(value)))
-          ?? {},
+      exerciseData:
+          (json['exerciseData'] as Map<String, dynamic>?)?.map(
+            (key, value) => MapEntry(key, SupersetExerciseData.fromJson(value)),
+          ) ??
+          {},
       isCompleted: json['isCompleted'] ?? false,
-      completedAt: json['completedAt'] != null 
-          ? DateTime.parse(json['completedAt']) 
+      completedAt: json['completedAt'] != null
+          ? DateTime.parse(json['completedAt'])
           : null,
       setDurationMillis: json['setDurationMillis']?.toDouble(),
-      setStartedAt: json['setStartedAt'] != null 
-          ? DateTime.parse(json['setStartedAt']) 
+      setStartedAt: json['setStartedAt'] != null
+          ? DateTime.parse(json['setStartedAt'])
           : null,
       isWarmup: json['isWarmup'] ?? false,
       notes: json['notes'],
@@ -709,11 +723,11 @@ class SupersetSet {
   final String? notes;
 
   /// Verifica se tutti gli esercizi del set sono completati
-  bool get isFullyCompleted => 
+  bool get isFullyCompleted =>
       exerciseData.values.every((data) => data.isCompleted);
 
   /// Conta quanti esercizi sono completati
-  int get completedExercisesCount => 
+  int get completedExercisesCount =>
       exerciseData.values.where((data) => data.isCompleted).length;
 
   SupersetSet copyWith({
@@ -744,7 +758,9 @@ class SupersetSet {
     return {
       'id': id,
       'setNumber': setNumber,
-      'exerciseData': exerciseData.map((key, value) => MapEntry(key, value.toJson())),
+      'exerciseData': exerciseData.map(
+        (key, value) => MapEntry(key, value.toJson()),
+      ),
       'isCompleted': isCompleted,
       'completedAt': completedAt?.toIso8601String(),
       'setDurationMillis': setDurationMillis,
@@ -755,7 +771,8 @@ class SupersetSet {
   }
 }
 
-class SupersetExercise extends Exercise { // I set del superset
+class SupersetExercise extends Exercise {
+  // I set del superset
 
   SupersetExercise({
     super.id,
@@ -778,14 +795,15 @@ class SupersetExercise extends Exercise { // I set del superset
     super.targetRIR,
     super.countingMode,
     super.movementType,
-  }) :
-    exercises = exercises,
-    supersetSets = supersetSets ?? [],
-    super(
-      type: ExerciseType.superset,
-      category: exercises.isNotEmpty ? exercises.first.category : ExerciseCategory.other,
-      sets: [],
-    );
+  }) : exercises = exercises,
+       supersetSets = supersetSets ?? [],
+       super(
+         type: ExerciseType.superset,
+         category: exercises.isNotEmpty
+             ? exercises.first.category
+             : ExerciseCategory.other,
+         sets: [],
+       );
 
   /// Factory to deserialize SupersetExercise from JSON
   /// Preserves the full superset structure including exercises and supersetSets
@@ -808,7 +826,9 @@ class SupersetExercise extends Exercise { // I set del superset
       exercises: exercises,
       supersetSets: supersetSets,
       notes: json['notes'] as String?,
-      restTime: json['restTime'] is num ? (json['restTime'] as num).toInt() : null,
+      restTime: json['restTime'] is num
+          ? (json['restTime'] as num).toInt()
+          : null,
       // Advanced fields
       autoAdjustmentType: json['autoAdjustmentType'] != null
           ? AutoAdjustmentType.values.firstWhere(
@@ -827,7 +847,9 @@ class SupersetExercise extends Exercise { // I set del superset
       targetRPEMin: json['targetRPEMin']?.toDouble(),
       targetRPEMax: json['targetRPEMax']?.toDouble(),
       targetRIR: json['targetRIR'] as int?,
-      countingMode: ExerciseCountingMode.fromString(json['countingMode'] as String?),
+      countingMode: ExerciseCountingMode.fromString(
+        json['countingMode'] as String?,
+      ),
       movementType: json['movementType'] != null
           ? MovementType.values.firstWhere(
               (e) => e.name == json['movementType'],
@@ -837,7 +859,8 @@ class SupersetExercise extends Exercise { // I set del superset
     );
   }
 
-  final List<Exercise> exercises; // Gli esercizi del superset (senza set propri)
+  final List<Exercise>
+  exercises; // Gli esercizi del superset (senza set propri)
   final List<SupersetSet> supersetSets;
 
   /// Crea una copia del superset con modifiche
@@ -895,15 +918,17 @@ class SupersetExercise extends Exercise { // I set del superset
 
   /// Override per il completamento - usa supersetSets invece di sets
   @override
-  bool get isCompleted => 
+  bool get isCompleted =>
       supersetSets.isNotEmpty && supersetSets.every((set) => set.isCompleted);
 
   /// Override per la data di completamento
   @override
   DateTime? get completedAt {
-    final completedSets = supersetSets.where((set) => set.isCompleted && set.completedAt != null);
+    final completedSets = supersetSets.where(
+      (set) => set.isCompleted && set.completedAt != null,
+    );
     if (completedSets.isEmpty) return null;
-    
+
     return completedSets
         .map((set) => set.completedAt!)
         .reduce((a, b) => a.isAfter(b) ? a : b);
@@ -915,7 +940,8 @@ class SupersetExercise extends Exercise { // I set del superset
     double total = 0.0;
     for (final supersetSet in supersetSets) {
       for (final exerciseData in supersetSet.exerciseData.values) {
-        final weight = exerciseData.actualWeight ?? exerciseData.targetWeight ?? 0.0;
+        final weight =
+            exerciseData.actualWeight ?? exerciseData.targetWeight ?? 0.0;
         final reps = exerciseData.actualReps ?? exerciseData.targetReps ?? 0;
         total += weight * reps;
       }
@@ -966,8 +992,9 @@ class SupersetExercise extends Exercise { // I set del superset
       return set.copyWith(
         exerciseData: updatedExerciseData,
         // Se erano tutti completati e abbiamo aggiunto esercizi, non è più completato
-        isCompleted: set.isCompleted &&
-                     updatedExerciseData.length == set.exerciseData.length,
+        isCompleted:
+            set.isCompleted &&
+            updatedExerciseData.length == set.exerciseData.length,
       );
     }).toList();
 
@@ -1019,7 +1046,6 @@ class SupersetExercise extends Exercise { // I set del superset
 
 // DropSet specific data
 class DropSetExercise extends Exercise {
-
   DropSetExercise({
     super.id,
     required super.name,
@@ -1041,11 +1067,8 @@ class DropSetExercise extends Exercise {
     super.targetRIR,
     super.countingMode,
     super.movementType,
-  }) :
-    stages = stages,
-    super(
-      type: ExerciseType.dropset,
-    );
+  }) : stages = stages,
+       super(type: ExerciseType.dropset);
 
   /// Factory to deserialize DropSetExercise from JSON
   factory DropSetExercise.fromJson(Map<String, dynamic> json) {
@@ -1063,7 +1086,9 @@ class DropSetExercise extends Exercise {
       ),
       stages: stages,
       notes: json['notes'] as String?,
-      restTime: json['restTime'] is num ? (json['restTime'] as num).toInt() : null,
+      restTime: json['restTime'] is num
+          ? (json['restTime'] as num).toInt()
+          : null,
       tut: json['tut'] as String?,
       // Advanced fields
       autoAdjustmentType: json['autoAdjustmentType'] != null
@@ -1083,7 +1108,9 @@ class DropSetExercise extends Exercise {
       targetRPEMin: json['targetRPEMin']?.toDouble(),
       targetRPEMax: json['targetRPEMax']?.toDouble(),
       targetRIR: json['targetRIR'] as int?,
-      countingMode: ExerciseCountingMode.fromString(json['countingMode'] as String?),
+      countingMode: ExerciseCountingMode.fromString(
+        json['countingMode'] as String?,
+      ),
       movementType: json['movementType'] != null
           ? MovementType.values.firstWhere(
               (e) => e.name == json['movementType'],
@@ -1146,18 +1173,26 @@ class DropSetExercise extends Exercise {
   }
 
   @override
-  bool get isCompleted => stages.isNotEmpty && stages.every((stage) => stage.isCompleted);
+  bool get isCompleted =>
+      stages.isNotEmpty && stages.every((stage) => stage.isCompleted);
 
   @override
   double get totalVolume {
-    return stages.fold(0.0, (sum, stage) => sum + (stage.weight * stage.effectiveReps));
+    return stages.fold(
+      0.0,
+      (sum, stage) => sum + (stage.weight * stage.effectiveReps),
+    );
   }
 
   @override
   DateTime? get completedAt {
-    final completedStages = stages.where((s) => s.isCompleted && s.completedAt != null);
+    final completedStages = stages.where(
+      (s) => s.isCompleted && s.completedAt != null,
+    );
     if (completedStages.isEmpty) return null;
-    return completedStages.map((s) => s.completedAt!).reduce((a, b) => a.isAfter(b) ? a : b);
+    return completedStages
+        .map((s) => s.completedAt!)
+        .reduce((a, b) => a.isAfter(b) ? a : b);
   }
 
   /// Serialize DropSetExercise to JSON
@@ -1193,7 +1228,6 @@ class DropSetExercise extends Exercise {
 }
 
 class DropSetStage {
-
   DropSetStage({
     required this.weight,
     required this.reps,
@@ -1269,7 +1303,6 @@ class DropSetStage {
 
 // RestPause specific data
 class RestPauseExercise extends Exercise {
-
   RestPauseExercise({
     super.id,
     required super.name,
@@ -1293,9 +1326,7 @@ class RestPauseExercise extends Exercise {
     super.targetRIR,
     super.countingMode,
     super.movementType,
-  }) : super(
-      type: ExerciseType.restPause,
-    );
+  }) : super(type: ExerciseType.restPause);
 
   /// Factory to deserialize RestPauseExercise from JSON
   factory RestPauseExercise.fromJson(Map<String, dynamic> json) {
@@ -1315,7 +1346,9 @@ class RestPauseExercise extends Exercise {
       targetReps: json['targetReps'] as int? ?? 0,
       restPauseSets: restPauseSets,
       notes: json['notes'] as String?,
-      restTime: json['restTime'] is num ? (json['restTime'] as num).toInt() : null,
+      restTime: json['restTime'] is num
+          ? (json['restTime'] as num).toInt()
+          : null,
       tut: json['tut'] as String?,
       // Advanced fields
       autoAdjustmentType: json['autoAdjustmentType'] != null
@@ -1335,7 +1368,9 @@ class RestPauseExercise extends Exercise {
       targetRPEMin: json['targetRPEMin']?.toDouble(),
       targetRPEMax: json['targetRPEMax']?.toDouble(),
       targetRIR: json['targetRIR'] as int?,
-      countingMode: ExerciseCountingMode.fromString(json['countingMode'] as String?),
+      countingMode: ExerciseCountingMode.fromString(
+        json['countingMode'] as String?,
+      ),
       movementType: json['movementType'] != null
           ? MovementType.values.firstWhere(
               (e) => e.name == json['movementType'],
@@ -1404,18 +1439,26 @@ class RestPauseExercise extends Exercise {
   }
 
   @override
-  bool get isCompleted => restPauseSets.isNotEmpty && restPauseSets.every((set) => set.isCompleted);
+  bool get isCompleted =>
+      restPauseSets.isNotEmpty && restPauseSets.every((set) => set.isCompleted);
 
   @override
   double get totalVolume {
-    return restPauseSets.fold(0.0, (sum, set) => sum + (weight * set.effectiveReps));
+    return restPauseSets.fold(
+      0.0,
+      (sum, set) => sum + (weight * set.effectiveReps),
+    );
   }
 
   @override
   DateTime? get completedAt {
-    final completedSets = restPauseSets.where((s) => s.isCompleted && s.completedAt != null);
+    final completedSets = restPauseSets.where(
+      (s) => s.isCompleted && s.completedAt != null,
+    );
     if (completedSets.isEmpty) return null;
-    return completedSets.map((s) => s.completedAt!).reduce((a, b) => a.isAfter(b) ? a : b);
+    return completedSets
+        .map((s) => s.completedAt!)
+        .reduce((a, b) => a.isAfter(b) ? a : b);
   }
 
   /// Serialize RestPauseExercise to JSON
@@ -1453,7 +1496,6 @@ class RestPauseExercise extends Exercise {
 }
 
 class RestPauseSet {
-
   RestPauseSet({
     required this.reps,
     required this.restSeconds,

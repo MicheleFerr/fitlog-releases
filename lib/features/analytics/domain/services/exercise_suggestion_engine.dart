@@ -152,30 +152,38 @@ class ExerciseSuggestionEngine {
       // Filter out excluded exercises
       final filteredExercises = matchingExercises.where((exercise) {
         return !_isExerciseExcluded(exercise.nome, excludeSet) &&
-               !_isExerciseExcluded(exercise.id, excludeSet);
+            !_isExerciseExcluded(exercise.id, excludeSet);
       }).toList();
 
       // Sort by: 1) countingMode (weighted first), 2) type (Compound first), 3) difficulty
       filteredExercises.sort((a, b) {
         // 1. Prefer weighted exercises (more effective for muscle building)
-        final countingCompare = _countingModeOrder(a.countingMode).compareTo(_countingModeOrder(b.countingMode));
+        final countingCompare = _countingModeOrder(
+          a.countingMode,
+        ).compareTo(_countingModeOrder(b.countingMode));
         if (countingCompare != 0) return countingCompare;
 
         // 2. Prefer Compound over Isolamento
-        final typeCompare = _typeOrder(a.tipoEsercizio).compareTo(_typeOrder(b.tipoEsercizio));
+        final typeCompare = _typeOrder(
+          a.tipoEsercizio,
+        ).compareTo(_typeOrder(b.tipoEsercizio));
         if (typeCompare != 0) return typeCompare;
 
         // 3. Then by difficulty (beginner first for accessibility)
-        return _difficultyOrder(a.difficolta).compareTo(_difficultyOrder(b.difficolta));
+        return _difficultyOrder(
+          a.difficolta,
+        ).compareTo(_difficultyOrder(b.difficolta));
       });
 
       // Take max per muscle and convert to suggestions
       for (final exercise in filteredExercises.take(maxPerMuscle)) {
-        suggestions.add(_exerciseToSuggestion(
-          exercise: exercise,
-          targetMuscle: neglectedMuscle.muscleName,
-          priority: neglectedMuscle.priority,
-        ));
+        suggestions.add(
+          _exerciseToSuggestion(
+            exercise: exercise,
+            targetMuscle: neglectedMuscle.muscleName,
+            priority: neglectedMuscle.priority,
+          ),
+        );
       }
     }
 
@@ -207,25 +215,33 @@ class ExerciseSuggestionEngine {
       // Filter out excluded exercises
       final filteredExercises = matchingExercises.where((exercise) {
         return !_isExerciseExcluded(exercise.nome, excludeSet) &&
-               !_isExerciseExcluded(exercise.id, excludeSet);
+            !_isExerciseExcluded(exercise.id, excludeSet);
       }).toList();
 
       // Sort by: 1) countingMode (weighted first), 2) type (Compound first), 3) difficulty
       filteredExercises.sort((a, b) {
         // 1. Prefer weighted exercises (more effective for muscle building)
-        final countingCompare = _countingModeOrder(a.countingMode).compareTo(_countingModeOrder(b.countingMode));
+        final countingCompare = _countingModeOrder(
+          a.countingMode,
+        ).compareTo(_countingModeOrder(b.countingMode));
         if (countingCompare != 0) return countingCompare;
 
         // 2. Prefer Compound over Isolamento
-        final typeCompare = _typeOrder(a.tipoEsercizio).compareTo(_typeOrder(b.tipoEsercizio));
+        final typeCompare = _typeOrder(
+          a.tipoEsercizio,
+        ).compareTo(_typeOrder(b.tipoEsercizio));
         if (typeCompare != 0) return typeCompare;
 
         // 3. Then by difficulty
-        return _difficultyOrder(a.difficolta).compareTo(_difficultyOrder(b.difficolta));
+        return _difficultyOrder(
+          a.difficolta,
+        ).compareTo(_difficultyOrder(b.difficolta));
       });
 
       // Take max per muscle and convert to suggestions
-      final muscleSuggestions = filteredExercises.take(maxPerMuscle).map((exercise) {
+      final muscleSuggestions = filteredExercises.take(maxPerMuscle).map((
+        exercise,
+      ) {
         return _exerciseToSuggestion(
           exercise: exercise,
           targetMuscle: neglectedMuscle.muscleName,
@@ -306,10 +322,12 @@ class ExerciseSuggestionEngine {
     if (excludeSet.isEmpty) return false;
 
     final lowerName = exerciseName.toLowerCase();
-    return excludeSet.any((excluded) =>
-        excluded.toLowerCase() == lowerName ||
-        lowerName.contains(excluded.toLowerCase()) ||
-        excluded.toLowerCase().contains(lowerName));
+    return excludeSet.any(
+      (excluded) =>
+          excluded.toLowerCase() == lowerName ||
+          lowerName.contains(excluded.toLowerCase()) ||
+          excluded.toLowerCase().contains(lowerName),
+    );
   }
 
   // ========== LEGACY SYNC METHODS (for backward compatibility) ==========
@@ -570,7 +588,8 @@ class ExerciseSuggestionEngine {
 
   /// Legacy sync method grouped by muscle
   /// @deprecated Use generateSuggestionsGroupedByMuscle with real exercises instead
-  Map<String, List<ExerciseSuggestion>> generateSuggestionsGroupedByMuscleLegacy({
+  Map<String, List<ExerciseSuggestion>>
+  generateSuggestionsGroupedByMuscleLegacy({
     required List<NeglectedMuscle> neglectedMuscles,
     ExerciseDifficulty? maxDifficulty,
     Set<String>? excludeExercises,

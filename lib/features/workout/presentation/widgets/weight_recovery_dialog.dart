@@ -7,14 +7,13 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 enum WeightRecoveryOption {
-  exact,        // Si (esatti)
-  increase,     // Si +2.5%
-  decrease,     // Si -2.5%
-  none,         // No (vuoto)
+  exact, // Si (esatti)
+  increase, // Si +2.5%
+  decrease, // Si -2.5%
+  none, // No (vuoto)
 }
 
 class WeightRecoveryDialog extends ConsumerStatefulWidget {
-
   const WeightRecoveryDialog({
     super.key,
     required this.previousWorkout,
@@ -26,7 +25,8 @@ class WeightRecoveryDialog extends ConsumerStatefulWidget {
   final int daysSinceLastSession;
 
   @override
-  ConsumerState<WeightRecoveryDialog> createState() => _WeightRecoveryDialogState();
+  ConsumerState<WeightRecoveryDialog> createState() =>
+      _WeightRecoveryDialogState();
 
   /// Mostra il dialog e ritorna l'opzione selezionata
   static Future<WeightRecoveryOption?> show(
@@ -57,9 +57,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
     final l10n = AppLocalizations.of(context);
 
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         constraints: const BoxConstraints(maxWidth: 400),
         child: _showPreview && _selectedOption != null
@@ -69,7 +67,11 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
     );
   }
 
-  Widget _buildOptions(BuildContext context, ThemeData theme, AppLocalizations l10n) {
+  Widget _buildOptions(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -120,7 +122,9 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+              color: theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.5,
+              ),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: theme.colorScheme.outline.withValues(alpha: 0.2),
@@ -287,7 +291,11 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
     );
   }
 
-  Widget _buildPreview(BuildContext context, ThemeData theme, AppLocalizations l10n) {
+  Widget _buildPreview(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
     final multiplier = _getMultiplier(_selectedOption!);
     final previewExercises = _generatePreview(multiplier);
 
@@ -298,7 +306,10 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: _getOptionColor(theme, _selectedOption!).withValues(alpha: 0.1),
+            color: _getOptionColor(
+              theme,
+              _selectedOption!,
+            ).withValues(alpha: 0.1),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Row(
@@ -402,7 +413,9 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                color: theme.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.5,
+                ),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -424,9 +437,15 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
               const SizedBox(width: 8),
               // New weight
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
-                  color: _getOptionColor(theme, _selectedOption!).withValues(alpha: 0.1),
+                  color: _getOptionColor(
+                    theme,
+                    _selectedOption!,
+                  ).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: _getOptionColor(theme, _selectedOption!),
@@ -502,13 +521,15 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
       // Applica il moltiplicatore
       final newWeight = _smartRound(oldWeight * multiplier);
 
-      previews.add(_PreviewItem(
-        exerciseName: exercise.name,
-        oldWeight: oldWeight,
-        newWeight: newWeight,
-        setsCount: exercise.sets.length,
-        reps: reps,
-      ));
+      previews.add(
+        _PreviewItem(
+          exerciseName: exercise.name,
+          oldWeight: oldWeight,
+          newWeight: newWeight,
+          setsCount: exercise.sets.length,
+          reps: reps,
+        ),
+      );
     }
 
     return previews;
@@ -570,7 +591,6 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
 }
 
 class _PreviewItem {
-
   _PreviewItem({
     required this.exerciseName,
     required this.oldWeight,

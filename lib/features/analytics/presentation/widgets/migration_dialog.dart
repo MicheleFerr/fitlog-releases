@@ -49,7 +49,6 @@ void showMigrationDialog(BuildContext context, WidgetRef ref) {
 
 /// Migration dialog widget
 class _MigrationDialog extends StatefulWidget {
-
   const _MigrationDialog({required this.ref});
   final WidgetRef ref;
 
@@ -122,10 +121,7 @@ class _MigrationDialogState extends State<_MigrationDialog> {
         children: [
           const LoadingIndicator(),
           const SizedBox(height: 16),
-          Text(
-            context.l10n.pleaseWait,
-            style: context.textTheme.bodyMedium,
-          ),
+          Text(context.l10n.pleaseWait, style: context.textTheme.bodyMedium),
         ],
       ),
     );
@@ -165,11 +161,7 @@ class _MigrationDialogState extends State<_MigrationDialog> {
             context.l10n.totalSessions,
             '${stats.totalSessions}',
           ),
-          _buildStatRow(
-            context,
-            context.l10n.totalSets,
-            '${stats.totalSets}',
-          ),
+          _buildStatRow(context, context.l10n.totalSets, '${stats.totalSets}'),
           if (stats.skippedExercises.isNotEmpty) ...[
             const SizedBox(height: 12),
             Text(
@@ -212,12 +204,7 @@ class _MigrationDialogState extends State<_MigrationDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            error,
-            style: context.textTheme.bodyMedium,
-          ),
-        ],
+        children: [Text(error, style: context.textTheme.bodyMedium)],
       ),
       actions: [
         TextButton(
@@ -244,10 +231,7 @@ class _MigrationDialogState extends State<_MigrationDialog> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: context.textTheme.bodyMedium,
-          ),
+          Text(label, style: context.textTheme.bodyMedium),
           Text(
             value,
             style: context.textTheme.bodyLarge?.copyWith(
@@ -274,8 +258,9 @@ class _MigrationDialogState extends State<_MigrationDialog> {
         throw Exception('User not authenticated');
       }
 
-      final migrationService =
-          widget.ref.read(analyticsMigrationServiceProvider);
+      final migrationService = widget.ref.read(
+        analyticsMigrationServiceProvider,
+      );
 
       final result = await migrationService.migrateUserWorkouts(userId: userId);
 

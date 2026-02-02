@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: domain
 /// 🎯 Feature: auth
 /// 🔧 Type: entity
 /// 🌍 Localization: N/A - Entity class
 /// 🎨 Theme: N/A - Entity class
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - Riverpod: None
 /// - Firebase: None
@@ -17,14 +17,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
 
 /// Account tier levels (subscription-based)
-enum AccountTier {
-  free,
-  premium,
-}
+enum AccountTier { free, premium }
 
 /// Template quota information
 class TemplateQuota {
-
   const TemplateQuota({
     required this.maxPrivateTemplates,
     required this.maxPublicTemplates,
@@ -33,7 +29,8 @@ class TemplateQuota {
   });
 
   /// Get quota based on XP tier (primary source of truth)
-  factory TemplateQuota.forUserTier(UserTier tier, {
+  factory TemplateQuota.forUserTier(
+    UserTier tier, {
     int usedPrivate = 0,
     int usedPublic = 0,
   }) {
@@ -47,7 +44,8 @@ class TemplateQuota {
 
   /// Get quota based on account tier (for premium subscribers)
   /// Premium/Pro subscribers get bonus slots on top of their XP tier
-  factory TemplateQuota.forTier(AccountTier tier, {
+  factory TemplateQuota.forTier(
+    AccountTier tier, {
     int usedPrivate = 0,
     int usedPublic = 0,
   }) {
@@ -62,7 +60,7 @@ class TemplateQuota {
       case AccountTier.premium:
         return TemplateQuota(
           maxPrivateTemplates: 999, // Unlimited for premium
-          maxPublicTemplates: 999,  // Unlimited for premium
+          maxPublicTemplates: 999, // Unlimited for premium
           usedPrivateTemplates: usedPrivate,
           usedPublicTemplates: usedPublic,
         );
@@ -82,17 +80,19 @@ class TemplateQuota {
     final accountQuota = TemplateQuota.forTier(accountTier);
 
     return TemplateQuota(
-      maxPrivateTemplates: xpQuota.maxPrivateTemplates > accountQuota.maxPrivateTemplates
+      maxPrivateTemplates:
+          xpQuota.maxPrivateTemplates > accountQuota.maxPrivateTemplates
           ? xpQuota.maxPrivateTemplates
           : accountQuota.maxPrivateTemplates,
-      maxPublicTemplates: xpQuota.maxPublicTemplates > accountQuota.maxPublicTemplates
+      maxPublicTemplates:
+          xpQuota.maxPublicTemplates > accountQuota.maxPublicTemplates
           ? xpQuota.maxPublicTemplates
           : accountQuota.maxPublicTemplates,
       usedPrivateTemplates: usedPrivate,
       usedPublicTemplates: usedPublic,
     );
   }
-  
+
   factory TemplateQuota.fromJson(Map<String, dynamic> json) {
     return TemplateQuota(
       maxPrivateTemplates: json['maxPrivateTemplates'] ?? 4,
@@ -105,19 +105,19 @@ class TemplateQuota {
   final int maxPublicTemplates;
   final int usedPrivateTemplates;
   final int usedPublicTemplates;
-  
+
   /// Check if user can save a new private template
   bool get canSavePrivate => usedPrivateTemplates < maxPrivateTemplates;
-  
+
   /// Check if user can save a new public template
   bool get canSavePublic => usedPublicTemplates < maxPublicTemplates;
-  
+
   /// Get remaining private templates
   int get remainingPrivate => maxPrivateTemplates - usedPrivateTemplates;
-  
-  /// Get remaining public templates  
+
+  /// Get remaining public templates
   int get remainingPublic => maxPublicTemplates - usedPublicTemplates;
-  
+
   Map<String, dynamic> toJson() => {
     'maxPrivateTemplates': maxPrivateTemplates,
     'maxPublicTemplates': maxPublicTemplates,
@@ -128,7 +128,6 @@ class TemplateQuota {
 
 /// User profile entity with tier and quota information
 class UserProfile {
-  
   const UserProfile({
     required this.uid,
     required this.email,
@@ -146,7 +145,7 @@ class UserProfile {
     this.debugAccountOverride,
     this.debugXPOverride,
   });
-  
+
   /// Create from JSON data (for caching)
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     // Parse account tier
@@ -155,7 +154,7 @@ class UserProfile {
       (t) => t.name == tierString,
       orElse: () => AccountTier.free,
     );
-    
+
     // Parse template quota
     TemplateQuota quota;
     if (json['templateQuota'] != null) {
@@ -164,12 +163,13 @@ class UserProfile {
       // Calculate used templates for backward compatibility
       final usedPrivate = json['stats']?['privateTemplateCount'] ?? 0;
       final usedPublic = json['stats']?['publicTemplateCount'] ?? 0;
-      quota = TemplateQuota.forTier(tier, 
+      quota = TemplateQuota.forTier(
+        tier,
         usedPrivate: usedPrivate,
         usedPublic: usedPublic,
       );
     }
-    
+
     // Parse debug overrides (admin only)
     UserTier? debugTier;
     if (json['debugTierOverride'] != null) {
@@ -196,8 +196,12 @@ class UserProfile {
       photoURL: json['photoURL'],
       accountTier: tier,
       templateQuota: quota,
-      createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
-      lastLoginAt: DateTime.parse(json['lastLoginAt'] ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(
+        json['createdAt'] ?? DateTime.now().toIso8601String(),
+      ),
+      lastLoginAt: DateTime.parse(
+        json['lastLoginAt'] ?? DateTime.now().toIso8601String(),
+      ),
       preferences: Map<String, dynamic>.from(json['preferences'] ?? {}),
       stats: Map<String, dynamic>.from(json['stats'] ?? {}),
       isGuest: json['isGuest'] ?? false,
@@ -211,14 +215,14 @@ class UserProfile {
   /// Create from Firestore document
   factory UserProfile.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     // Parse account tier
     final tierString = data['accountTier'] as String? ?? 'free';
     final tier = AccountTier.values.firstWhere(
       (t) => t.name == tierString,
       orElse: () => AccountTier.free,
     );
-    
+
     // Parse template quota
     TemplateQuota quota;
     if (data['templateQuota'] != null) {
@@ -227,12 +231,13 @@ class UserProfile {
       // Calculate used templates for backward compatibility
       final usedPrivate = data['stats']?['privateTemplateCount'] ?? 0;
       final usedPublic = data['stats']?['publicTemplateCount'] ?? 0;
-      quota = TemplateQuota.forTier(tier, 
+      quota = TemplateQuota.forTier(
+        tier,
         usedPrivate: usedPrivate,
         usedPublic: usedPublic,
       );
     }
-    
+
     // Parse debug overrides (admin only)
     UserTier? debugTier;
     if (data['debugTierOverride'] != null) {
@@ -260,7 +265,8 @@ class UserProfile {
       accountTier: tier,
       templateQuota: quota,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      lastLoginAt: (data['lastLoginAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      lastLoginAt:
+          (data['lastLoginAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       preferences: data['preferences'] ?? {},
       stats: data['stats'] ?? {},
       isGuest: data['isGuest'] ?? false,
@@ -287,7 +293,7 @@ class UserProfile {
   final UserTier? debugTierOverride;
   final AccountTier? debugAccountOverride;
   final int? debugXPOverride;
-  
+
   /// Convert to JSON (for caching)
   Map<String, dynamic> toJson() {
     final json = {
@@ -349,7 +355,7 @@ class UserProfile {
 
     return data;
   }
-  
+
   /// Copy with updated values
   UserProfile copyWith({
     String? uid,
@@ -386,23 +392,23 @@ class UserProfile {
       debugXPOverride: debugXPOverride ?? this.debugXPOverride,
     );
   }
-  
+
   /// Increment template usage
   UserProfile incrementTemplateUsage({required bool isPublic}) {
     final updatedQuota = TemplateQuota(
       maxPrivateTemplates: templateQuota.maxPrivateTemplates,
       maxPublicTemplates: templateQuota.maxPublicTemplates,
-      usedPrivateTemplates: isPublic 
-          ? templateQuota.usedPrivateTemplates 
+      usedPrivateTemplates: isPublic
+          ? templateQuota.usedPrivateTemplates
           : templateQuota.usedPrivateTemplates + 1,
-      usedPublicTemplates: isPublic 
-          ? templateQuota.usedPublicTemplates + 1 
+      usedPublicTemplates: isPublic
+          ? templateQuota.usedPublicTemplates + 1
           : templateQuota.usedPublicTemplates,
     );
-    
+
     return copyWith(templateQuota: updatedQuota);
   }
-  
+
   /// Decrement template usage
   UserProfile decrementTemplateUsage({required bool isPublic}) {
     final updatedQuota = TemplateQuota(

@@ -10,8 +10,7 @@ import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/s
 /// - assets/data/strength_standards.json (25 standards)
 /// - assets/data/exercise_mappings.json (1501 exercise mappings)
 class StrengthStandardsLocalDataSource {
-  static const _strengthStandardsPath =
-      'assets/data/strength_standards.json';
+  static const _strengthStandardsPath = 'assets/data/strength_standards.json';
   static const _exerciseMappingsPath = 'assets/data/exercise_mappings.json';
 
   /// Load all strength standards from assets
@@ -60,9 +59,7 @@ class StrengthStandardsLocalDataSource {
         'totalStandards': (jsonData['standards'] as List).length,
       };
     } catch (e) {
-      throw StrengthStandardsLoadException(
-        'Failed to load metadata: $e',
-      );
+      throw StrengthStandardsLoadException('Failed to load metadata: $e');
     }
   }
 
@@ -79,9 +76,7 @@ class StrengthStandardsLocalDataSource {
         'statistics': jsonData['statistics'] as Map<String, dynamic>?,
       };
     } catch (e) {
-      throw ExerciseMappingsLoadException(
-        'Failed to load metadata: $e',
-      );
+      throw ExerciseMappingsLoadException('Failed to load metadata: $e');
     }
   }
 }

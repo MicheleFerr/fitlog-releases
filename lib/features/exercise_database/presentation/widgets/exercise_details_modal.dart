@@ -13,7 +13,6 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/wa
 /// Enhanced modal for displaying exercise details with improved aesthetics
 /// following Apple HIG and Material Design 3 principles
 class ExerciseDetailsModal extends StatefulWidget {
-
   const ExerciseDetailsModal({
     super.key,
     required this.exercise,
@@ -23,7 +22,8 @@ class ExerciseDetailsModal extends StatefulWidget {
 
   final Exercise exercise;
   final int? currentExerciseIndex;
-  final void Function(WarmupSuggestion suggestion, int beforeIndex)? onWarmupExerciseAdded;
+  final void Function(WarmupSuggestion suggestion, int beforeIndex)?
+  onWarmupExerciseAdded;
 
   /// Show the modal as a bottom sheet
   static Future<void> show(
@@ -35,7 +35,9 @@ class ExerciseDetailsModal extends StatefulWidget {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => ExerciseDetailsModal(
         exercise: exercise,
         currentExerciseIndex: currentExerciseIndex,
@@ -87,9 +89,7 @@ class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
                     ],
 
                     // Warmup Protocol Section
-                    if (_hasWarmupProtocol()) ...[
-                      _buildWarmupSection(context),
-                    ],
+                    if (_hasWarmupProtocol()) ...[_buildWarmupSection(context)],
                   ],
                 ),
               ),
@@ -132,7 +132,9 @@ class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+            color: context.colors.surfaceContainerHighest.withValues(
+              alpha: 0.3,
+            ),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
@@ -189,11 +191,7 @@ class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
               color: context.colors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
-              icon,
-              size: 18,
-              color: context.colors.primary,
-            ),
+            child: Icon(icon, size: 18, color: context.colors.primary),
           ),
           const SizedBox(width: 12),
 
@@ -265,11 +263,11 @@ class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: SemanticIcon(
-  icon: AppIcons.tip,
-  semanticLabel: 'Tip',
-  size: AppIconSize.small,
-  color: context.colors.onPrimaryContainer,
-),
+                  icon: AppIcons.tip,
+                  semanticLabel: 'Tip',
+                  size: AppIconSize.small,
+                  color: context.colors.onPrimaryContainer,
+                ),
               ),
               const SizedBox(width: 12),
               Text(
@@ -314,11 +312,11 @@ class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: SemanticIcon(
-  icon: AppIcons.wbSunnyOutlined,
-  semanticLabel: 'Wb sunny outlined',
-  size: AppIconSize.small,
-  color: context.colors.onSecondaryContainer,
-),
+                  icon: AppIcons.wbSunnyOutlined,
+                  semanticLabel: 'Wb sunny outlined',
+                  size: AppIconSize.small,
+                  color: context.colors.onSecondaryContainer,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -374,7 +372,6 @@ class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
             ),
             const SizedBox(height: 12),
           ],
-
         ],
       ),
     );
@@ -402,10 +399,7 @@ class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
         children: [
           Row(
             children: [
-              Text(
-                icon,
-                style: context.textTheme.bodyLarge,
-              ),
+              Text(icon, style: context.textTheme.bodyLarge),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -456,9 +450,7 @@ class _ExerciseDetailsModalState extends State<ExerciseDetailsModal> {
       final step = entry.value;
 
       return Padding(
-        padding: EdgeInsets.only(
-          bottom: index < steps.length - 1 ? 12 : 0,
-        ),
+        padding: EdgeInsets.only(bottom: index < steps.length - 1 ? 12 : 0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

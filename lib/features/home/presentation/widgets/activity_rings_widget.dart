@@ -79,14 +79,13 @@ class _ActivityRingsWidgetState extends ConsumerState<ActivityRingsWidget> {
     final data = ref.watch(activityRingsProvider);
 
     return GestureDetector(
-      onTap: widget.onTap ??
+      onTap:
+          widget.onTap ??
           () => ref.read(activityRingsProvider.notifier).fetchActivityData(),
       child: Card(
         elevation: 0,
         color: context.colors.surfaceContainerLow,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -128,7 +127,9 @@ class _ActivityRingsWidgetState extends ConsumerState<ActivityRingsWidget> {
               else if (data.hasError || _timedOut)
                 _buildErrorState(
                   context,
-                  _timedOut ? 'No activity data' : (data.errorMessage ?? 'Error'),
+                  _timedOut
+                      ? 'No activity data'
+                      : (data.errorMessage ?? 'Error'),
                 )
               else
                 Row(
@@ -146,8 +147,9 @@ class _ActivityRingsWidgetState extends ConsumerState<ActivityRingsWidget> {
                           moveColor: _moveColor,
                           exerciseColor: _exerciseColor,
                           standColor: _standColor,
-                          backgroundColor:
-                              context.colors.onSurface.withValues(alpha: 0.1),
+                          backgroundColor: context.colors.onSurface.withValues(
+                            alpha: 0.1,
+                          ),
                         ),
                       ),
                     ),
@@ -209,10 +211,7 @@ class _ActivityRingsWidgetState extends ConsumerState<ActivityRingsWidget> {
         Container(
           width: 8,
           height: 8,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 8),
         Text(
@@ -256,9 +255,7 @@ class _ActivityRingsWidgetState extends ConsumerState<ActivityRingsWidget> {
               ),
               const SizedBox(height: 8),
               Text(
-                isNoData
-                    ? context.l10n.openFitnessApp
-                    : 'Connect Health',
+                isNoData ? context.l10n.openFitnessApp : 'Connect Health',
                 style: context.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
@@ -344,33 +341,15 @@ class _ActivityRingsPainter extends CustomPainter {
 
     // Outer ring (Move - red)
     final moveRadius = (size.width / 2) - (strokeWidth / 2);
-    _drawRing(
-      canvas,
-      center,
-      moveRadius,
-      moveProgress,
-      moveColor,
-    );
+    _drawRing(canvas, center, moveRadius, moveProgress, moveColor);
 
     // Middle ring (Exercise - green)
     final exerciseRadius = moveRadius - gap;
-    _drawRing(
-      canvas,
-      center,
-      exerciseRadius,
-      exerciseProgress,
-      exerciseColor,
-    );
+    _drawRing(canvas, center, exerciseRadius, exerciseProgress, exerciseColor);
 
     // Inner ring (Stand - blue)
     final standRadius = exerciseRadius - gap;
-    _drawRing(
-      canvas,
-      center,
-      standRadius,
-      standProgress,
-      standColor,
-    );
+    _drawRing(canvas, center, standRadius, standProgress, standColor);
   }
 
   void _drawRing(

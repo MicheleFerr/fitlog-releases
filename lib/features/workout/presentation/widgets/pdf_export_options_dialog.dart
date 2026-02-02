@@ -33,10 +33,12 @@ class PdfExportOptionsDialog extends ConsumerStatefulWidget {
   const PdfExportOptionsDialog({super.key});
 
   @override
-  ConsumerState<PdfExportOptionsDialog> createState() => _PdfExportOptionsDialogState();
+  ConsumerState<PdfExportOptionsDialog> createState() =>
+      _PdfExportOptionsDialogState();
 }
 
-class _PdfExportOptionsDialogState extends ConsumerState<PdfExportOptionsDialog> {
+class _PdfExportOptionsDialogState
+    extends ConsumerState<PdfExportOptionsDialog> {
   late PdfDetailLevel _selectedLevel;
   bool _rememberChoice = false;
 
@@ -134,7 +136,9 @@ class _PdfExportOptionsDialogState extends ConsumerState<PdfExportOptionsDialog>
           onPressed: () async {
             // Salva la preferenza se richiesto
             if (_rememberChoice) {
-              await ref.read(pdfPreferencesProvider.notifier).savePreference(_selectedLevel);
+              await ref
+                  .read(pdfPreferencesProvider.notifier)
+                  .savePreference(_selectedLevel);
             } else {
               // Rimuovi eventuali preferenze salvate in precedenza
               await ref.read(pdfPreferencesProvider.notifier).clearPreference();
@@ -186,9 +190,7 @@ class _PdfExportOptionsDialogState extends ConsumerState<PdfExportOptionsDialog>
         child: Row(
           children: [
             // Radio button
-            Radio<PdfDetailLevel>(
-              value: value,
-            ),
+            Radio<PdfDetailLevel>(value: value),
             const SizedBox(width: 8),
 
             // Titolo e descrizione
@@ -199,7 +201,9 @@ class _PdfExportOptionsDialogState extends ConsumerState<PdfExportOptionsDialog>
                   Text(
                     title,
                     style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                       color: isSelected ? colorScheme.primary : null,
                     ),
                   ),

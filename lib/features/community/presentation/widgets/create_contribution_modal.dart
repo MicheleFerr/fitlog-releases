@@ -22,7 +22,6 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 
 /// Modal per creare un nuovo contributo community
 class CreateContributionModal extends ConsumerStatefulWidget {
-
   const CreateContributionModal({
     super.key,
     this.preselectedExerciseId,
@@ -32,10 +31,12 @@ class CreateContributionModal extends ConsumerStatefulWidget {
   final String? preselectedExerciseName;
 
   @override
-  ConsumerState<CreateContributionModal> createState() => _CreateContributionModalState();
+  ConsumerState<CreateContributionModal> createState() =>
+      _CreateContributionModalState();
 }
 
-class _CreateContributionModalState extends ConsumerState<CreateContributionModal> {
+class _CreateContributionModalState
+    extends ConsumerState<CreateContributionModal> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -111,9 +112,9 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                     IconButton(
                       onPressed: () => Navigator.pop(context),
                       icon: const SemanticIcon(
-  icon: AppIcons.close,
-  semanticLabel: 'Close',
-),
+                        icon: AppIcons.close,
+                        semanticLabel: 'Close',
+                      ),
                     ),
                   ],
                 ),
@@ -147,9 +148,9 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                             borderRadius: BorderRadius.circular(12),
                           ),
                           prefixIcon: const SemanticIcon(
-  icon: AppIcons.titleIcon,
-  semanticLabel: 'Title icon',
-),
+                            icon: AppIcons.titleIcon,
+                            semanticLabel: 'Title icon',
+                          ),
                         ),
                         textCapitalization: TextCapitalization.sentences,
                         validator: (value) {
@@ -174,9 +175,9 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                             borderRadius: BorderRadius.circular(12),
                           ),
                           prefixIcon: const SemanticIcon(
-  icon: AppIcons.template,
-  semanticLabel: 'Template',
-),
+                            icon: AppIcons.template,
+                            semanticLabel: 'Template',
+                          ),
                           alignLabelWithHint: true,
                         ),
                         maxLines: 5,
@@ -204,11 +205,12 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                               borderRadius: BorderRadius.circular(12),
                             ),
                             prefixIcon: const SemanticIcon(
-  icon: AppIcons.error,
-  semanticLabel: 'Error',
-),
+                              icon: AppIcons.error,
+                              semanticLabel: 'Error',
+                            ),
                           ),
-                          validator: _selectedType == ContributionType.correction
+                          validator:
+                              _selectedType == ContributionType.correction
                               ? (value) {
                                   if (value == null || value.trim().isEmpty) {
                                     return context.l10n.currentValueRequired;
@@ -227,11 +229,12 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                               borderRadius: BorderRadius.circular(12),
                             ),
                             prefixIcon: const SemanticIcon(
-  icon: AppIcons.completeOutline,
-  semanticLabel: 'Complete outline',
-),
+                              icon: AppIcons.completeOutline,
+                              semanticLabel: 'Complete outline',
+                            ),
                           ),
-                          validator: _selectedType == ContributionType.correction
+                          validator:
+                              _selectedType == ContributionType.correction
                               ? (value) {
                                   if (value == null || value.trim().isEmpty) {
                                     return context.l10n.correctedValueRequired;
@@ -248,10 +251,14 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                          color: theme.colorScheme.primaryContainer.withValues(
+                            alpha: 0.3,
+                          ),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                            color: theme.colorScheme.primary.withValues(
+                              alpha: 0.3,
+                            ),
                           ),
                         ),
                         child: Row(
@@ -285,10 +292,14 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                                 child: LoadingIndicator(),
                               )
                             : const SemanticIcon(
-  icon: AppIcons.send,
-  semanticLabel: 'Send',
-),
-                        label: Text(_isSubmitting ? context.l10n.sending : context.l10n.submitContribution),
+                                icon: AppIcons.send,
+                                semanticLabel: 'Send',
+                              ),
+                        label: Text(
+                          _isSubmitting
+                              ? context.l10n.sending
+                              : context.l10n.submitContribution,
+                        ),
                         style: FilledButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
@@ -322,10 +333,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
         ),
         child: Row(
           children: [
-            Icon(
-              AppIcons.workout,
-              color: theme.colorScheme.primary,
-            ),
+            Icon(AppIcons.workout, color: theme.colorScheme.primary),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -354,9 +362,9 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                 });
               },
               icon: const SemanticIcon(
-  icon: AppIcons.edit,
-  semanticLabel: 'Edit',
-),
+                icon: AppIcons.edit,
+                semanticLabel: 'Edit',
+              ),
             ),
           ],
         ),
@@ -384,10 +392,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
             ),
             child: Row(
               children: [
-                Icon(
-                  AppIcons.workout,
-                  color: theme.colorScheme.primary,
-                ),
+                Icon(AppIcons.workout, color: theme.colorScheme.primary),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -398,11 +403,11 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                   ),
                 ),
                 SemanticIcon(
-  icon: AppIcons.forwardIos,
-  semanticLabel: 'Forward ios',
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.outline,
-),
+                  icon: AppIcons.forwardIos,
+                  semanticLabel: 'Forward ios',
+                  size: AppIconSize.tiny,
+                  color: theme.colorScheme.outline,
+                ),
               ],
             ),
           ),
@@ -494,7 +499,9 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
     setState(() => _isSubmitting = true);
 
     try {
-      await ref.read(contributionSubmissionProvider.notifier).submitContribution(
+      await ref
+          .read(contributionSubmissionProvider.notifier)
+          .submitContribution(
             exerciseId: _selectedExerciseId!,
             exerciseName: _selectedExerciseName!,
             type: _selectedType,
@@ -512,11 +519,17 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
 
       Navigator.pop(context);
 
-      SnackBarService.showSuccess(context, context.l10n.contributionSubmittedSuccess);
+      SnackBarService.showSuccess(
+        context,
+        context.l10n.contributionSubmittedSuccess,
+      );
     } catch (e) {
       if (!mounted) return;
 
-      SnackBarService.showError(context, context.l10n.errorWithMessage(e.toString()));
+      SnackBarService.showError(
+        context,
+        context.l10n.errorWithMessage(e.toString()),
+      );
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);

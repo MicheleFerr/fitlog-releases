@@ -78,7 +78,9 @@ class _ExerciseCorrelationsSheetState
 
   @override
   Widget build(BuildContext context) {
-    final analyticsAsync = ref.watch(exerciseAnalyticsProvider(widget.exerciseId));
+    final analyticsAsync = ref.watch(
+      exerciseAnalyticsProvider(widget.exerciseId),
+    );
 
     final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.95);
     return DraggableScrollableSheet(
@@ -193,7 +195,8 @@ class _ExerciseCorrelationsSheetState
           title: context.l10n.analyticsCorrelationsTitle,
           icon: AppIcons.insights,
           isExpanded: _correlationsExpanded,
-          onToggle: () => setState(() => _correlationsExpanded = !_correlationsExpanded),
+          onToggle: () =>
+              setState(() => _correlationsExpanded = !_correlationsExpanded),
           child: Column(
             children: [
               // Weight vs RPE Correlation
@@ -262,7 +265,9 @@ class _ExerciseCorrelationsSheetState
       quickIcon = AppIcons.trendDown;
       quickColor = context.colors.error;
     } else if (weightRpe.isSignificant || volumeRpe.isSignificant) {
-      final strongestR = weightRpe.r.abs() > volumeRpe.r.abs() ? weightRpe : volumeRpe;
+      final strongestR = weightRpe.r.abs() > volumeRpe.r.abs()
+          ? weightRpe
+          : volumeRpe;
       quickInsight = strongestR.interpretation.isNotEmpty
           ? strongestR.interpretation
           : context.l10n.analyticsCorrelationsTitle;
@@ -351,7 +356,11 @@ class _ExerciseCorrelationsSheetState
             ),
             child: Row(
               children: [
-                Icon(icon, color: context.colors.primary, size: AppIconSize.medium),
+                Icon(
+                  icon,
+                  color: context.colors.primary,
+                  size: AppIconSize.medium,
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -478,7 +487,9 @@ class _ExerciseCorrelationsSheetState
         children: [
           Icon(
             hasEnoughData ? AppIcons.checkCircle : AppIcons.warning,
-            color: hasEnoughData ? context.colors.primary : context.colors.error,
+            color: hasEnoughData
+                ? context.colors.primary
+                : context.colors.error,
             size: AppIconSize.large,
           ),
           const SizedBox(width: 16),
@@ -688,10 +699,7 @@ class _ExerciseCorrelationsSheetState
     );
 
     if (tooltip != null) {
-      return Tooltip(
-        message: tooltip,
-        child: content,
-      );
+      return Tooltip(message: tooltip, child: content);
     }
     return content;
   }
@@ -751,27 +759,26 @@ class _ExerciseCorrelationsSheetState
             ],
           ),
           const SizedBox(height: 12),
-          ...insights.map((insight) => Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '• ',
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: context.colors.tertiary,
-                        fontWeight: FontWeight.bold,
-                      ),
+          ...insights.map(
+            (insight) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '• ',
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colors.tertiary,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Expanded(
-                      child: Text(
-                        insight,
-                        style: context.textTheme.bodyMedium,
-                      ),
-                    ),
-                  ],
-                ),
-              )),
+                  ),
+                  Expanded(
+                    child: Text(insight, style: context.textTheme.bodyMedium),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -829,9 +836,7 @@ class _ExerciseCorrelationsSheetState
       label: Text(context.l10n.analyticsViewFullAnalytics),
       style: FilledButton.styleFrom(
         minimumSize: const Size(double.infinity, 56),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
   }

@@ -24,16 +24,15 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
     final allFeedbackAsync = ref.watch(allFeedbackProvider);
     final l10n = context.l10n;
 
-    debugPrint('🔧 ExerciseFeedbackScreen: Building with stats: ${stats.totalFeedback} total feedback');
+    debugPrint(
+      '🔧 ExerciseFeedbackScreen: Building with stats: ${stats.totalFeedback} total feedback',
+    );
 
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
-            Icon(
-              AppIcons.flagCircle,
-              color: context.colors.primary,
-            ),
+            Icon(AppIcons.flagCircle, color: context.colors.primary),
             const SizedBox(width: 8),
             Text(l10n.exerciseFeedback),
           ],
@@ -275,10 +274,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
     }).toList();
   }
 
-  Widget _buildCriticalFeedbackSection(
-    BuildContext context,
-    WidgetRef ref,
-  ) {
+  Widget _buildCriticalFeedbackSection(BuildContext context, WidgetRef ref) {
     final critical = ref.watch(criticalFeedbackProvider);
     final l10n = context.l10n;
 
@@ -318,10 +314,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildRecentFeedbackSection(
-    BuildContext context,
-    WidgetRef ref,
-  ) {
+  Widget _buildRecentFeedbackSection(BuildContext context, WidgetRef ref) {
     final open = ref.watch(feedbackByStatusProvider('OPEN'));
     final l10n = context.l10n;
 
@@ -393,85 +386,85 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(
-                  typeEmojis[feedback.feedbackType] ?? '•',
-                  style: context.textTheme.titleMedium,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    typeEmojis[feedback.feedbackType] ?? '•',
+                    style: context.textTheme.titleMedium,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          feedback.exerciseName,
+                          style: context.textTheme.labelLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          feedback.feedbackType,
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: context.colors.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: severityColor,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                feedback.message,
+                style: context.textTheme.bodySmall,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      l10n.feedbackByUser(feedback.userEmail),
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Row(
                     children: [
                       Text(
-                        feedback.exerciseName,
-                        style: context.textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        feedback.feedbackType,
+                        _formatDate(feedback.createdAt, l10n),
                         style: context.textTheme.labelSmall?.copyWith(
                           color: context.colors.onSurfaceVariant,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    color: severityColor,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              feedback.message,
-              style: context.textTheme.bodySmall,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    l10n.feedbackByUser(feedback.userEmail),
-                    style: context.textTheme.labelSmall?.copyWith(
-                      color: context.colors.onSurfaceVariant,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      _formatDate(feedback.createdAt, l10n),
-                      style: context.textTheme.labelSmall?.copyWith(
+                      const SizedBox(width: 8),
+                      Icon(
+                        AppIcons.forwardIos,
+                        size: 12,
                         color: context.colors.onSurfaceVariant,
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Icon(
-                      AppIcons.forwardIos,
-                      size: 12,
-                      color: context.colors.onSurfaceVariant,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -494,16 +487,9 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.error,
-            size: 64,
-            color: context.colors.error,
-          ),
+          Icon(AppIcons.error, size: 64, color: context.colors.error),
           const SizedBox(height: 16),
-          Text(
-            l10n.feedbackErrorLoading,
-            style: context.textTheme.titleMedium,
-          ),
+          Text(l10n.feedbackErrorLoading, style: context.textTheme.titleMedium),
           const SizedBox(height: 8),
           Text(
             error,

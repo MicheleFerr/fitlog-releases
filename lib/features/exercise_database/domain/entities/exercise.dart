@@ -19,7 +19,9 @@ part 'exercise.g.dart';
 /// with workout Exercise entity.
 ///
 /// This typedef exists for backward compatibility during migration.
-@Deprecated('Use ExerciseDefinition instead - avoids naming conflict with workout Exercise')
+@Deprecated(
+  'Use ExerciseDefinition instead - avoids naming conflict with workout Exercise',
+)
 typedef Exercise = ExerciseDefinition;
 
 /// Exercise definition from the database catalog
@@ -32,7 +34,6 @@ typedef Exercise = ExerciseDefinition;
 /// This is stored in Hive and loaded from JSON exercise database.
 @HiveType(typeId: 2)
 class ExerciseDefinition extends Equatable {
-
   ExerciseDefinition({
     required this.id,
     required this.nome,
@@ -56,8 +57,9 @@ class ExerciseDefinition extends Equatable {
     this.countingMode = ExerciseCountingMode.weighted,
     // TUT (Time Under Tension) - es: "2-1-2-0"
     this.tempoEsecuzione,
-  })  : normalizedNome = normalizedNome ?? _normalize(nome),
-        searchableFields = searchableFields ?? _buildSearchableFields(nome, aliases);
+  }) : normalizedNome = normalizedNome ?? _normalize(nome),
+       searchableFields =
+           searchableFields ?? _buildSearchableFields(nome, aliases);
 
   // Factory constructor per creare da JSON
   factory ExerciseDefinition.fromJson(Map<String, dynamic> json) {
@@ -81,9 +83,15 @@ class ExerciseDefinition extends Equatable {
       attrezzatura: attrezzatura,
       patternMovimento: json['patternMovimento'] ?? '',
       rangeRipetizioni: json['rangeRipetizioni'] ?? '',
-      noteTecniche: json['noteTecniche']?.isEmpty == true ? null : json['noteTecniche'],
-      mobilitaPre: json['mobilitaPre']?.isEmpty == true ? null : json['mobilitaPre'],
-      attivazionePre: json['attivazionePre']?.isEmpty == true ? null : json['attivazionePre'],
+      noteTecniche: json['noteTecniche']?.isEmpty == true
+          ? null
+          : json['noteTecniche'],
+      mobilitaPre: json['mobilitaPre']?.isEmpty == true
+          ? null
+          : json['mobilitaPre'],
+      attivazionePre: json['attivazionePre']?.isEmpty == true
+          ? null
+          : json['attivazionePre'],
       // Fuzzy matching fields
       aliases: (json['aliases'] as List<dynamic>?)?.cast<String>() ?? [],
       warmupSuggestions: (json['warmupSuggestions'] as List<dynamic>?)
@@ -92,7 +100,9 @@ class ExerciseDefinition extends Equatable {
       // Counting mode (auto-detected if not present)
       countingMode: countingMode,
       // TUT (Time Under Tension)
-      tempoEsecuzione: json['tempoEsecuzione']?.isEmpty == true ? null : json['tempoEsecuzione'] as String?,
+      tempoEsecuzione: json['tempoEsecuzione']?.isEmpty == true
+          ? null
+          : json['tempoEsecuzione'] as String?,
     );
   }
 
@@ -147,45 +157,45 @@ class ExerciseDefinition extends Equatable {
     // 4. Default to weighted for exercises with equipment
     return ExerciseCountingMode.weighted;
   }
+
   @HiveField(0)
   final String id;
-  
+
   @HiveField(1)
   final String nome;
-  
+
   @HiveField(2)
   final List<String> focus; // Es: ["QUAD", "GLUT"]
-  
+
   @HiveField(3)
   final String? imageUrl;
-  
+
   @HiveField(4)
   final List<String> muscoliSecondari; // Es: ["CORE", "POLP"]
-  
+
   @HiveField(5)
   final String difficolta; // Principiante, Intermedio, Avanzato
-  
+
   @HiveField(6)
   final String tipoEsercizio; // Compound, Isolamento
-  
+
   @HiveField(7)
   final String attrezzatura; // Bilanciere, Manubri, Cavi, etc.
-  
+
   @HiveField(8)
   final String patternMovimento; // Lunge Pattern, Squat Pattern, etc.
-  
+
   @HiveField(9)
   final String rangeRipetizioni; // 8-15, 1-5 (forza), etc.
-  
+
   @HiveField(10)
   final String? noteTecniche;
-  
+
   @HiveField(11)
   final String? mobilitaPre;
-  
+
   @HiveField(12)
   final String? attivazionePre;
-  
 
   // Fuzzy matching fields
   @HiveField(21)
@@ -223,7 +233,11 @@ class ExerciseDefinition extends Equatable {
     // Se è una stringa, split per virgola
     if (value is String) {
       if (value.isEmpty) return [];
-      return value.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+      return value
+          .split(',')
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toList();
     }
     return [];
   }
@@ -248,7 +262,10 @@ class ExerciseDefinition extends Equatable {
   }
 
   // Pre-calcola tutti i campi searchabili
-  static List<String> _buildSearchableFields(String nome, List<String> aliases) {
+  static List<String> _buildSearchableFields(
+    String nome,
+    List<String> aliases,
+  ) {
     final fields = <String>{
       _normalize(nome),
       ...aliases.map((a) => _normalize(a)),
@@ -259,7 +276,7 @@ class ExerciseDefinition extends Equatable {
   // Getters utili per UI
   String get focusDisplayName => focus.join(', ');
   String get muscoliSecondariDisplayName => muscoliSecondari.join(', ');
-  
+
   // Getter per determinare il colore della difficoltà
   int get difficoltaLevel {
     switch (difficolta.toLowerCase()) {
@@ -320,27 +337,27 @@ class ExerciseDefinition extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        nome,
-        focus,
-        imageUrl,
-        muscoliSecondari,
-        difficolta,
-        tipoEsercizio,
-        attrezzatura,
-        patternMovimento,
-        rangeRipetizioni,
-        noteTecniche,
-        mobilitaPre,
-        attivazionePre,
-        // Fuzzy matching fields
-        aliases,
-        normalizedNome,
-        searchableFields,
-        warmupSuggestions,
-        // Counting mode
-        countingMode,
-        // TUT
-        tempoEsecuzione,
-      ];
+    id,
+    nome,
+    focus,
+    imageUrl,
+    muscoliSecondari,
+    difficolta,
+    tipoEsercizio,
+    attrezzatura,
+    patternMovimento,
+    rangeRipetizioni,
+    noteTecniche,
+    mobilitaPre,
+    attivazionePre,
+    // Fuzzy matching fields
+    aliases,
+    normalizedNome,
+    searchableFields,
+    warmupSuggestions,
+    // Counting mode
+    countingMode,
+    // TUT
+    tempoEsecuzione,
+  ];
 }

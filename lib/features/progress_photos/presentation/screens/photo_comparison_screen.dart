@@ -101,9 +101,7 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
         _buildStatsBar(),
 
         // Comparison slider
-        Expanded(
-          child: _buildSliderComparison(),
-        ),
+        Expanded(child: _buildSliderComparison()),
 
         // Slider control
         _buildSliderControl(),
@@ -205,9 +203,7 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
             child: FilledButton.icon(
               onPressed: () => _startSelection(isSelectingBefore: needsBefore),
               icon: const Icon(AppIcons.add),
-              label: Text(
-                'Select ${needsBefore ? "Before" : "After"} Photo',
-              ),
+              label: Text('Select ${needsBefore ? "Before" : "After"} Photo'),
               style: FilledButton.styleFrom(
                 minimumSize: const Size.fromHeight(56),
               ),
@@ -219,8 +215,9 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
   }
 
   Widget _buildStatsBar() {
-    final daysBetween =
-        _afterPhoto!.takenAt.difference(_beforePhoto!.takenAt).inDays;
+    final daysBetween = _afterPhoto!.takenAt
+        .difference(_beforePhoto!.takenAt)
+        .inDays;
 
     double? weightChange;
     if (_beforePhoto!.weightKg != null && _afterPhoto!.weightKg != null) {
@@ -253,9 +250,12 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
           if (weightChange != null)
             _buildStatItem(
               label: 'WEIGHT',
-              value: '${weightChange >= 0 ? '+' : ''}${weightChange.toStringAsFixed(1)} kg',
+              value:
+                  '${weightChange >= 0 ? '+' : ''}${weightChange.toStringAsFixed(1)} kg',
               icon: AppIcons.scale,
-              color: weightChange < 0 ? context.colors.success : context.colors.error,
+              color: weightChange < 0
+                  ? context.colors.success
+                  : context.colors.error,
             ),
 
           // After date
@@ -318,7 +318,8 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
                 child: CachedNetworkImage(
                   imageUrl: _beforePhoto!.photoUrl,
                   fit: BoxFit.contain,
-                  placeholder: (_, __) => const Center(child: LoadingIndicator()),
+                  placeholder: (_, __) =>
+                      const Center(child: LoadingIndicator()),
                 ),
               ),
             ),
@@ -404,15 +405,19 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
                 onHorizontalDragUpdate: (details) {
                   setState(() {
                     _sliderPosition =
-                        (details.localPosition.dx / constraints.maxWidth)
-                            .clamp(0.0, 1.0);
+                        (details.localPosition.dx / constraints.maxWidth).clamp(
+                          0.0,
+                          1.0,
+                        );
                   });
                 },
                 onTapDown: (details) {
                   setState(() {
                     _sliderPosition =
-                        (details.localPosition.dx / constraints.maxWidth)
-                            .clamp(0.0, 1.0);
+                        (details.localPosition.dx / constraints.maxWidth).clamp(
+                          0.0,
+                          1.0,
+                        );
                   });
                 },
               ),
@@ -500,9 +505,7 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
 
     return photosAsync.when(
       loading: () => const Center(child: LoadingIndicator()),
-      error: (error, _) => Center(
-        child: Text('Error: $error'),
-      ),
+      error: (error, _) => Center(child: Text('Error: $error')),
       data: (photos) {
         // Filter by pose if selected
         final filteredPhotos = _filterPose == null
@@ -520,10 +523,7 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
                   color: context.colors.onSurfaceVariant,
                 ),
                 const SizedBox(height: 16),
-                Text(
-                  'No photos available',
-                  style: context.textTheme.bodyLarge,
-                ),
+                Text('No photos available', style: context.textTheme.bodyLarge),
                 if (_filterPose != null) ...[
                   const SizedBox(height: 8),
                   TextButton(
@@ -558,7 +558,9 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _isSelectingBefore ? context.l10n.selectBeforePhoto : context.l10n.selectAfterPhoto,
+                          _isSelectingBefore
+                              ? context.l10n.selectBeforePhoto
+                              : context.l10n.selectAfterPhoto,
                           style: context.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: _isSelectingBefore
@@ -569,10 +571,11 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
                         Text(
                           context.l10n.tapToSelectPhoto,
                           style: context.textTheme.bodySmall?.copyWith(
-                            color: (_isSelectingBefore
-                                    ? context.colors.onPrimaryContainer
-                                    : context.colors.onTertiaryContainer)
-                                .withValues(alpha: 0.7),
+                            color:
+                                (_isSelectingBefore
+                                        ? context.colors.onPrimaryContainer
+                                        : context.colors.onTertiaryContainer)
+                                    .withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -599,7 +602,8 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
                 itemBuilder: (context, index) {
                   final photo = filteredPhotos[index];
                   final isSelected =
-                      photo.id == _beforePhoto?.id || photo.id == _afterPhoto?.id;
+                      photo.id == _beforePhoto?.id ||
+                      photo.id == _afterPhoto?.id;
 
                   return GestureDetector(
                     onTap: () => _selectPhoto(photo),
@@ -711,5 +715,6 @@ class _SliderClipper extends CustomClipper<Rect> {
   }
 
   @override
-  bool shouldReclip(_SliderClipper oldClipper) => position != oldClipper.position;
+  bool shouldReclip(_SliderClipper oldClipper) =>
+      position != oldClipper.position;
 }

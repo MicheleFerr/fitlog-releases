@@ -20,10 +20,7 @@ import 'package:gymbro_flutter_new/features/history/presentation/providers/worko
 /// Shows Mon-Sun with indicators for workout days.
 /// Tapping opens a detail sheet with weekly stats.
 class WeeklyWorkoutCalendar extends ConsumerWidget {
-  const WeeklyWorkoutCalendar({
-    this.onTap,
-    super.key,
-  });
+  const WeeklyWorkoutCalendar({this.onTap, super.key});
 
   final VoidCallback? onTap;
 
@@ -37,12 +34,15 @@ class WeeklyWorkoutCalendar extends ConsumerWidget {
     final weekDates = List.generate(7, (i) => monday.add(Duration(days: i)));
 
     // Get workout dates from history
-    final workoutDates = workoutsAsync.valueOrNull
-            ?.map((w) => DateTime(
-                  w.completedAt.year,
-                  w.completedAt.month,
-                  w.completedAt.day,
-                ))
+    final workoutDates =
+        workoutsAsync.valueOrNull
+            ?.map(
+              (w) => DateTime(
+                w.completedAt.year,
+                w.completedAt.month,
+                w.completedAt.day,
+              ),
+            )
             .toSet() ??
         {};
 
@@ -76,16 +76,12 @@ class WeeklyWorkoutCalendar extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: weekDates.map((date) {
                 final isToday = _isSameDay(date, now);
-                final hasWorkout = workoutDates.contains(DateTime(
-                  date.year,
-                  date.month,
-                  date.day,
-                ));
-                final isPast = date.isBefore(DateTime(
-                  now.year,
-                  now.month,
-                  now.day,
-                ));
+                final hasWorkout = workoutDates.contains(
+                  DateTime(date.year, date.month, date.day),
+                );
+                final isPast = date.isBefore(
+                  DateTime(now.year, now.month, now.day),
+                );
 
                 return _DayIndicator(
                   dayLabel: _getDayLabel(context, date.weekday),
@@ -102,9 +98,11 @@ class WeeklyWorkoutCalendar extends ConsumerWidget {
             // Weekly progress
             _WeeklyProgressBar(
               completed: workoutDates
-                  .where((d) =>
-                      d.isAfter(monday.subtract(const Duration(days: 1))) &&
-                      d.isBefore(monday.add(const Duration(days: 7))))
+                  .where(
+                    (d) =>
+                        d.isAfter(monday.subtract(const Duration(days: 1))) &&
+                        d.isBefore(monday.add(const Duration(days: 7))),
+                  )
                   .length,
               total: 7,
             ),
@@ -173,13 +171,10 @@ class _DayIndicator extends StatelessWidget {
             color: hasWorkout
                 ? context.colors.success
                 : isToday
-                    ? context.colors.primaryContainer
-                    : context.colors.surfaceContainerLow,
+                ? context.colors.primaryContainer
+                : context.colors.surfaceContainerLow,
             border: isToday && !hasWorkout
-                ? Border.all(
-                    color: context.colors.primary,
-                    width: 2,
-                  )
+                ? Border.all(color: context.colors.primary, width: 2)
                 : null,
           ),
           child: Center(
@@ -195,10 +190,9 @@ class _DayIndicator extends StatelessWidget {
                       color: isToday
                           ? context.colors.primary
                           : isPast
-                              ? context.colors.onSurfaceVariant
-                              : context.colors.onSurface,
-                      fontWeight:
-                          isToday ? FontWeight.bold : FontWeight.normal,
+                          ? context.colors.onSurfaceVariant
+                          : context.colors.onSurface,
+                      fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
           ),
@@ -210,10 +204,7 @@ class _DayIndicator extends StatelessWidget {
 
 /// Weekly progress bar
 class _WeeklyProgressBar extends StatelessWidget {
-  const _WeeklyProgressBar({
-    required this.completed,
-    required this.total,
-  });
+  const _WeeklyProgressBar({required this.completed, required this.total});
 
   final int completed;
   final int total;
@@ -231,9 +222,7 @@ class _WeeklyProgressBar extends StatelessWidget {
               value: percentage,
               minHeight: 4,
               backgroundColor: context.colors.surfaceContainerLow,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                context.colors.success,
-              ),
+              valueColor: AlwaysStoppedAnimation<Color>(context.colors.success),
             ),
           ),
         ),

@@ -40,9 +40,4 @@ class FAQItem {
 }
 
 /// Predefined FAQ categories
-enum FAQCategoryType {
-  appUsage,
-  workouts,
-  progress,
-  settings,
-}
+enum FAQCategoryType { appUsage, workouts, progress, settings }

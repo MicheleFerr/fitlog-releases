@@ -80,8 +80,8 @@ class HealthKitService {
   HealthKitService({
     HealthKitDatasource? healthKitDatasource,
     Health? healthFactory,
-  })  : _healthKitDatasource = healthKitDatasource ?? HealthKitDatasource(),
-        _health = healthFactory ?? Health();
+  }) : _healthKitDatasource = healthKitDatasource ?? HealthKitDatasource(),
+       _health = healthFactory ?? Health();
 
   final HealthKitDatasource _healthKitDatasource;
   final Health _health;
@@ -112,7 +112,9 @@ class HealthKitService {
         // Check if Health Connect is actually installed/available
         final status = await _health.getHealthConnectSdkStatus();
         if (kDebugMode) {
-          debugPrint('📱 [HealthKitService] Health Connect SDK status: $status');
+          debugPrint(
+            '📱 [HealthKitService] Health Connect SDK status: $status',
+          );
         }
         // HealthConnectSdkStatus values:
         // - unavailable: Not installed
@@ -146,7 +148,9 @@ class HealthKitService {
       return await _health.getHealthConnectSdkStatus();
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('❌ [HealthKitService] Failed to get Health Connect status: $e');
+        debugPrint(
+          '❌ [HealthKitService] Failed to get Health Connect status: $e',
+        );
       }
       return null;
     }
@@ -195,16 +199,19 @@ class HealthKitService {
         if (kDebugMode) {
           debugPrint('❌ [HealthKitService] Unsupported platform');
         }
-        return left(const HealthPlatformFailure(
-          message: 'Health platform only available on iOS and Android',
-        ));
+        return left(
+          const HealthPlatformFailure(
+            message: 'Health platform only available on iOS and Android',
+          ),
+        );
       }
 
       await _ensureConfigured();
 
       if (kDebugMode) {
         debugPrint(
-            '🔧 [HealthKitService] Requesting permissions for ${metricTypes.length} metrics');
+          '🔧 [HealthKitService] Requesting permissions for ${metricTypes.length} metrics',
+        );
         debugPrint('   Metrics: ${metricTypes.map((m) => m.name).join(', ')}');
       }
 
@@ -217,7 +224,8 @@ class HealthKitService {
         } catch (e) {
           if (kDebugMode) {
             debugPrint(
-                '⚠️ [HealthKitService] Unsupported metric: ${metricType.name}');
+              '⚠️ [HealthKitService] Unsupported metric: ${metricType.name}',
+            );
           }
           // Skip unsupported metrics (don't fail entire request)
         }
@@ -226,16 +234,20 @@ class HealthKitService {
       if (healthDataTypes.isEmpty) {
         if (kDebugMode) {
           debugPrint(
-              '❌ [HealthKitService] No supported HealthKit metrics found');
+            '❌ [HealthKitService] No supported HealthKit metrics found',
+          );
         }
-        return left(const HealthPlatformFailure(
-          message: 'No supported HealthKit metrics in request',
-        ));
+        return left(
+          const HealthPlatformFailure(
+            message: 'No supported HealthKit metrics in request',
+          ),
+        );
       }
 
       if (kDebugMode) {
         debugPrint(
-            '📱 [HealthKitService] Calling HealthKit with ${healthDataTypes.length} types');
+          '📱 [HealthKitService] Calling HealthKit with ${healthDataTypes.length} types',
+        );
       }
 
       // Delegate to ai_coach/HealthKitDatasource for actual permission request
@@ -263,10 +275,12 @@ class HealthKitService {
       if (kDebugMode) {
         debugPrint('❌ [HealthKitService] Permission request failed: $e');
       }
-      return left(HealthPlatformFailure(
-        message: 'Failed to request HealthKit permissions: $e',
-        error: e,
-      ));
+      return left(
+        HealthPlatformFailure(
+          message: 'Failed to request HealthKit permissions: $e',
+          error: e,
+        ),
+      );
     }
   }
 
@@ -282,9 +296,11 @@ class HealthKitService {
   }) async {
     try {
       if (!Platform.isIOS && !Platform.isAndroid) {
-        return left(const HealthPlatformFailure(
-          message: 'Health platform only available on iOS and Android',
-        ));
+        return left(
+          const HealthPlatformFailure(
+            message: 'Health platform only available on iOS and Android',
+          ),
+        );
       }
 
       await _ensureConfigured();
@@ -298,7 +314,8 @@ class HealthKitService {
         if (!_isHealthKitSupported(metricType)) {
           if (kDebugMode) {
             debugPrint(
-                '⚠️ [HealthKitService] Skipping unsupported metric: ${metricType.name}');
+              '⚠️ [HealthKitService] Skipping unsupported metric: ${metricType.name}',
+            );
           }
           continue;
         }
@@ -309,7 +326,8 @@ class HealthKitService {
           // Read from HealthKit
           if (kDebugMode) {
             debugPrint(
-                '📱 [HealthKitService] Querying $healthType from $startDate to $endDateTime');
+              '📱 [HealthKitService] Querying $healthType from $startDate to $endDateTime',
+            );
           }
 
           final healthData = await _health.getHealthDataFromTypes(
@@ -320,7 +338,8 @@ class HealthKitService {
 
           if (kDebugMode) {
             debugPrint(
-                '📱 [HealthKitService] Got ${healthData.length} data points for $healthType');
+              '📱 [HealthKitService] Got ${healthData.length} data points for $healthType',
+            );
             for (final dp in healthData.take(3)) {
               debugPrint('   - ${dp.dateFrom}: ${dp.value}');
             }
@@ -338,13 +357,15 @@ class HealthKitService {
               measurements.add(measurement);
             } else if (kDebugMode) {
               debugPrint(
-                  '⚠️ [HealthKitService] Skipped invalid value: ${metricType.name} = ${measurement.value}');
+                '⚠️ [HealthKitService] Skipped invalid value: ${metricType.name} = ${measurement.value}',
+              );
             }
           }
         } catch (e) {
           if (kDebugMode) {
             debugPrint(
-                '⚠️ [HealthKitService] Failed to read ${metricType.name}: $e');
+              '⚠️ [HealthKitService] Failed to read ${metricType.name}: $e',
+            );
           }
           // Continue with other metrics
         }
@@ -352,7 +373,8 @@ class HealthKitService {
 
       if (kDebugMode) {
         debugPrint(
-            '✅ [HealthKitService] Read ${measurements.length} measurements from HealthKit');
+          '✅ [HealthKitService] Read ${measurements.length} measurements from HealthKit',
+        );
       }
 
       return right(measurements);
@@ -360,10 +382,12 @@ class HealthKitService {
       if (kDebugMode) {
         debugPrint('❌ [HealthKitService] Read failed: $e');
       }
-      return left(HealthPlatformFailure(
-        message: 'Failed to read from HealthKit: $e',
-        error: e,
-      ));
+      return left(
+        HealthPlatformFailure(
+          message: 'Failed to read from HealthKit: $e',
+          error: e,
+        ),
+      );
     }
   }
 
@@ -375,17 +399,21 @@ class HealthKitService {
   ) async {
     try {
       if (!Platform.isIOS && !Platform.isAndroid) {
-        return left(const HealthPlatformFailure(
-          message: 'Health platform only available on iOS and Android',
-        ));
+        return left(
+          const HealthPlatformFailure(
+            message: 'Health platform only available on iOS and Android',
+          ),
+        );
       }
 
       // Check if metric is supported on this platform
       if (!_isHealthKitSupported(measurement.metricType)) {
-        return left(HealthPlatformFailure(
-          message:
-              '${measurement.metricType.name} not supported on this platform',
-        ));
+        return left(
+          HealthPlatformFailure(
+            message:
+                '${measurement.metricType.name} not supported on this platform',
+          ),
+        );
       }
 
       await _ensureConfigured();
@@ -406,14 +434,17 @@ class HealthKitService {
       );
 
       if (!success) {
-        return left(const HealthPlatformFailure(
-          message: 'HealthKit write returned false',
-        ));
+        return left(
+          const HealthPlatformFailure(
+            message: 'HealthKit write returned false',
+          ),
+        );
       }
 
       if (kDebugMode) {
         debugPrint(
-            '✅ [HealthKitService] Wrote ${measurement.metricType.name} to HealthKit');
+          '✅ [HealthKitService] Wrote ${measurement.metricType.name} to HealthKit',
+        );
       }
 
       return right(null);
@@ -421,10 +452,12 @@ class HealthKitService {
       if (kDebugMode) {
         debugPrint('❌ [HealthKitService] Write failed: $e');
       }
-      return left(HealthPlatformFailure(
-        message: 'Failed to write to HealthKit: $e',
-        error: e,
-      ));
+      return left(
+        HealthPlatformFailure(
+          message: 'Failed to write to HealthKit: $e',
+          error: e,
+        ),
+      );
     }
   }
 
@@ -445,12 +478,15 @@ class HealthKitService {
   }) async {
     try {
       if (!Platform.isIOS && !Platform.isAndroid) {
-        return left(const HealthPlatformFailure(
-          message: 'Health platform only available on iOS and Android',
-        ));
+        return left(
+          const HealthPlatformFailure(
+            message: 'Health platform only available on iOS and Android',
+          ),
+        );
       }
 
-      final syncStart = startDate ?? DateTime.now().subtract(const Duration(days: 30));
+      final syncStart =
+          startDate ?? DateTime.now().subtract(const Duration(days: 30));
       int readCount = 0;
       int writeCount = 0;
       List<Measurement> readMeasurementsData = [];
@@ -466,7 +502,9 @@ class HealthKitService {
         result.fold(
           (failure) {
             if (kDebugMode) {
-              debugPrint('⚠️ [HealthKitService] Sync read failed: ${failure.message}');
+              debugPrint(
+                '⚠️ [HealthKitService] Sync read failed: ${failure.message}',
+              );
             }
           },
           (readData) {
@@ -490,7 +528,8 @@ class HealthKitService {
               (failure) {
                 if (kDebugMode) {
                   debugPrint(
-                      '⚠️ [HealthKitService] Write failed for ${measurement.metricType.name}: ${failure.message}');
+                    '⚠️ [HealthKitService] Write failed for ${measurement.metricType.name}: ${failure.message}',
+                  );
                 }
               },
               (_) {
@@ -503,24 +542,29 @@ class HealthKitService {
 
       if (kDebugMode) {
         debugPrint(
-            '✅ [HealthKitService] Sync completed: $readCount read, $writeCount written');
+          '✅ [HealthKitService] Sync completed: $readCount read, $writeCount written',
+        );
       }
 
-      return right(SyncResult(
-        readCount: readCount,
-        writeCount: writeCount,
-        conflictCount: 0,
-        syncedAt: DateTime.now(),
-        importedMeasurements: readMeasurementsData,
-      ));
+      return right(
+        SyncResult(
+          readCount: readCount,
+          writeCount: writeCount,
+          conflictCount: 0,
+          syncedAt: DateTime.now(),
+          importedMeasurements: readMeasurementsData,
+        ),
+      );
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ [HealthKitService] Sync failed: $e');
       }
-      return left(HealthPlatformFailure(
-        message: 'Failed to sync with HealthKit: $e',
-        error: e,
-      ));
+      return left(
+        HealthPlatformFailure(
+          message: 'Failed to sync with HealthKit: $e',
+          error: e,
+        ),
+      );
     }
   }
 
@@ -592,7 +636,8 @@ class HealthKitService {
       case MetricType.waistCircumference:
         if (!Platform.isIOS) {
           throw UnsupportedError(
-              'Waist circumference only supported on iOS HealthKit');
+            'Waist circumference only supported on iOS HealthKit',
+          );
         }
         return HealthDataType.WAIST_CIRCUMFERENCE;
 
@@ -600,7 +645,8 @@ class HealthKitService {
       case MetricType.waterMass:
         if (!Platform.isAndroid) {
           throw UnsupportedError(
-              'Body water mass only supported on Android Health Connect');
+            'Body water mass only supported on Android Health Connect',
+          );
         }
         return HealthDataType.BODY_WATER_MASS;
 
@@ -621,7 +667,8 @@ class HealthKitService {
       case MetricType.calfRightCircumference:
       case MetricType.boneMass:
         throw UnsupportedError(
-            'Metric type $metricType not supported by health platforms. Use manual entry.');
+          'Metric type $metricType not supported by health platforms. Use manual entry.',
+        );
     }
   }
 
@@ -692,7 +739,8 @@ class HealthKitService {
         } else {
           // Invalid range - return as-is but flag for validation
           debugPrint(
-              '[HealthKit] Unexpected height value: $rawValue (abs: $absValue)');
+            '[HealthKit] Unexpected height value: $rawValue (abs: $absValue)',
+          );
           return absValue * 100; // Assume meters
         }
 

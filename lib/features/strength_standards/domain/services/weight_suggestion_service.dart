@@ -138,10 +138,7 @@ class WeightSuggestionService {
       confidence: 0.85,
       confidenceTier: ConfidenceTier.good,
       calculationMethod: CalculationMethod.bodyweightReps,
-      notes: [
-        'Esercizio a corpo libero',
-        'Reps suggerite: $suggestedReps',
-      ],
+      notes: ['Esercizio a corpo libero', 'Reps suggerite: $suggestedReps'],
     );
   }
 
@@ -296,9 +293,7 @@ class WeightSuggestionService {
     double? squatMax,
     double? deadliftMax,
   }) {
-    if (benchPressMax == null &&
-        squatMax == null &&
-        deadliftMax == null) {
+    if (benchPressMax == null && squatMax == null && deadliftMax == null) {
       return null;
     }
 
@@ -306,17 +301,17 @@ class WeightSuggestionService {
     final benchRatio = benchPressMax != null
         ? benchPressMax / bodyweightKg
         : null;
-    final squatRatio = squatMax != null
-        ? squatMax / bodyweightKg
-        : null;
+    final squatRatio = squatMax != null ? squatMax / bodyweightKg : null;
     final deadliftRatio = deadliftMax != null
         ? deadliftMax / bodyweightKg
         : null;
 
     // Average available ratios
-    final ratios = [benchRatio, squatRatio, deadliftRatio]
-        .whereType<double>()
-        .toList();
+    final ratios = [
+      benchRatio,
+      squatRatio,
+      deadliftRatio,
+    ].whereType<double>().toList();
     if (ratios.isEmpty) return null;
 
     final avgRatio = ratios.reduce((a, b) => a + b) / ratios.length;
@@ -342,7 +337,6 @@ class WeightSuggestionService {
 
 /// Result of a weight suggestion calculation
 class WeightSuggestion {
-
   const WeightSuggestion({
     required this.exerciseId,
     required this.suggestedWeightKg,

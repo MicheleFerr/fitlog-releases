@@ -9,7 +9,9 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 /// This provider is DEPRECATED - use workout-based providers instead
 /// Kept for backward compatibility during migration
 @Deprecated('Use workout-based progress providers instead')
-final progressDataProvider = FutureProvider.autoDispose<ProgressData?>((ref) async {
+final progressDataProvider = FutureProvider.autoDispose<ProgressData?>((
+  ref,
+) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
 
@@ -32,7 +34,9 @@ final quickStatsProvider = FutureProvider.autoDispose<QuickStats?>((ref) async {
 
 /// ✅ MIGRATED: Query workouts collection for most recent activity
 /// Uses completedAt field to get last completed workout date
-final recentActivityProvider = FutureProvider.autoDispose<DateTime?>((ref) async {
+final recentActivityProvider = FutureProvider.autoDispose<DateTime?>((
+  ref,
+) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
 
@@ -52,7 +56,9 @@ final recentActivityProvider = FutureProvider.autoDispose<DateTime?>((ref) async
 
     if (query.docs.isEmpty) {
       if (kDebugMode) {
-        debugPrint('⚠️ [RecentActivity] No workouts found for userId: ${currentUser.uid}');
+        debugPrint(
+          '⚠️ [RecentActivity] No workouts found for userId: ${currentUser.uid}',
+        );
       }
       return null;
     }
@@ -77,7 +83,9 @@ final recentActivityProvider = FutureProvider.autoDispose<DateTime?>((ref) async
 
 /// ⚡ OPTIMIZED: Count completed workouts from LOCAL Hive instead of Firestore
 /// Each workout = 1 completed workout (much simpler than counting exercise activities)
-final completedWorkoutsCountProvider = FutureProvider.autoDispose<int>((ref) async {
+final completedWorkoutsCountProvider = FutureProvider.autoDispose<int>((
+  ref,
+) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
 
@@ -97,7 +105,9 @@ final completedWorkoutsCountProvider = FutureProvider.autoDispose<int>((ref) asy
     );
 
     if (kDebugMode) {
-      debugPrint('✅ [CompletedWorkouts-HIVE] Found ${workouts.length} workouts in last year (LOCAL)');
+      debugPrint(
+        '✅ [CompletedWorkouts-HIVE] Found ${workouts.length} workouts in last year (LOCAL)',
+      );
     }
 
     return workouts.length;
@@ -127,7 +137,9 @@ final currentStreakProvider = FutureProvider.autoDispose<int>((ref) async {
   final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
 
   if (kDebugMode) {
-    debugPrint('⚡ [STREAK-HIVE] Reading from LOCAL storage (no Firestore query)');
+    debugPrint(
+      '⚡ [STREAK-HIVE] Reading from LOCAL storage (no Firestore query)',
+    );
   }
 
   final workouts = await hiveDataSource.getWorkouts(
@@ -149,7 +161,8 @@ final currentStreakProvider = FutureProvider.autoDispose<int>((ref) async {
     // Use endTime if available, otherwise startTime
     final date = workout.endTime ?? workout.startTime;
     if (date != null) {
-      final dayKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+      final dayKey =
+          '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
       workoutDays[dayKey] = true;
     }
   }
@@ -161,7 +174,8 @@ final currentStreakProvider = FutureProvider.autoDispose<int>((ref) async {
   // Check if there's a workout today or in recent days
   for (int i = 0; i < 30; i++) {
     final checkDate = today.subtract(Duration(days: i));
-    final dayKey = '${checkDate.year}-${checkDate.month.toString().padLeft(2, '0')}-${checkDate.day.toString().padLeft(2, '0')}';
+    final dayKey =
+        '${checkDate.year}-${checkDate.month.toString().padLeft(2, '0')}-${checkDate.day.toString().padLeft(2, '0')}';
 
     if (workoutDays.containsKey(dayKey)) {
       streak++;
@@ -177,7 +191,9 @@ final currentStreakProvider = FutureProvider.autoDispose<int>((ref) async {
   }
 
   if (kDebugMode) {
-    debugPrint('✅ [STREAK-HIVE] Streak: $streak days (from ${workouts.length} local workouts)');
+    debugPrint(
+      '✅ [STREAK-HIVE] Streak: $streak days (from ${workouts.length} local workouts)',
+    );
   }
   return streak;
 });
@@ -225,7 +241,8 @@ final weeklyFrequencyProvider = FutureProvider.autoDispose<double>((ref) async {
       // Determine which week this workout falls into
       final int weekNumber = daysDifference ~/ 7;
 
-      if (weekNumber < 5) { // Max 4.x weeks in 30 days
+      if (weekNumber < 5) {
+        // Max 4.x weeks in 30 days
         workoutDaysByWeek.putIfAbsent(weekNumber, () => <String>{});
         // Use date (year-month-day) to identify unique days
         final dayKey = '${date.year}-${date.month}-${date.day}';
@@ -235,14 +252,19 @@ final weeklyFrequencyProvider = FutureProvider.autoDispose<double>((ref) async {
   }
 
   // Count total workout days in last 30 days
-  final totalWorkoutDays = workoutDaysByWeek.values.fold(0, (sum, days) => sum + days.length);
+  final totalWorkoutDays = workoutDaysByWeek.values.fold(
+    0,
+    (sum, days) => sum + days.length,
+  );
 
   // Calculate weekly average based on 30 days (~4.3 weeks)
   const weeksIn30Days = 30.0 / 7.0; // ~4.3 weeks
   final average = totalWorkoutDays / weeksIn30Days;
 
   if (kDebugMode) {
-    debugPrint('✅ [WeeklyFrequency-HIVE] Total workout days: $totalWorkoutDays, Average: ${average.toStringAsFixed(1)}/week (LOCAL)');
+    debugPrint(
+      '✅ [WeeklyFrequency-HIVE] Total workout days: $totalWorkoutDays, Average: ${average.toStringAsFixed(1)}/week (LOCAL)',
+    );
   }
 
   return average;

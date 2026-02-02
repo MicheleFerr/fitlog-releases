@@ -49,7 +49,8 @@ abstract class CoachTemplate with _$CoachTemplate {
 
     /// List of exercises in this template
     @ExerciseTemplateListConverter()
-    @Default([]) List<ExerciseTemplate> exercises,
+    @Default([])
+    List<ExerciseTemplate> exercises,
 
     /// Estimated workout duration in minutes
     @Default(45) int estimatedDuration,

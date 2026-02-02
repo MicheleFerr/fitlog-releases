@@ -32,7 +32,9 @@ class ScheduleBottomSheet extends ConsumerStatefulWidget {
     return showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => ScheduleBottomSheet(
         templateId: templateId,
         templateName: templateName,
@@ -87,7 +89,9 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
     HapticFeedback.mediumImpact();
 
     try {
-      await ref.read(schedulingProvider.notifier).scheduleWorkouts(
+      await ref
+          .read(schedulingProvider.notifier)
+          .scheduleWorkouts(
             templateId: widget.templateId,
             templateName: widget.templateName,
             selectedDates: _state.selectedDates,
@@ -108,10 +112,7 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        SnackBarService.showError(
-          context,
-          e.toString(),
-        );
+        SnackBarService.showError(context, e.toString());
       }
     }
   }
@@ -126,9 +127,7 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
       ),
       decoration: BoxDecoration(
         color: context.colors.surface,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -188,10 +187,7 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
           ),
 
           // Divider
-          Divider(
-            height: 1,
-            color: context.colors.outlineVariant,
-          ),
+          Divider(height: 1, color: context.colors.outlineVariant),
 
           // Content
           Flexible(
@@ -271,10 +267,7 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
                   const SizedBox(height: AppSpacing.sm),
 
                   // Divider
-                  Divider(
-                    height: 1,
-                    color: context.colors.outlineVariant,
-                  ),
+                  Divider(height: 1, color: context.colors.outlineVariant),
 
                   // Reminder time picker
                   ReminderTimePicker(
@@ -299,18 +292,20 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
             decoration: BoxDecoration(
               color: context.colors.surface,
               border: Border(
-                top: BorderSide(
-                  color: context.colors.outlineVariant,
-                ),
+                top: BorderSide(color: context.colors.outlineVariant),
               ),
             ),
             child: Row(
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
+                    onPressed: _isLoading
+                        ? null
+                        : () => Navigator.of(context).pop(),
                     style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.sm,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -326,7 +321,9 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
                         ? null
                         : _onConfirm,
                     style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.sm,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

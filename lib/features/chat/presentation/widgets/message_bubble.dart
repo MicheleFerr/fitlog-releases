@@ -40,10 +40,13 @@ class MessageBubble extends StatelessWidget {
       child: Align(
         alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
         child: GestureDetector(
-          onLongPress: onDelete != null ? () => _showDeleteDialog(context) : null,
+          onLongPress: onDelete != null
+              ? () => _showDeleteDialog(context)
+              : null,
           child: Column(
-            crossAxisAlignment:
-                isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            crossAxisAlignment: isMe
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
             children: [
               _buildBubble(context),
               const SizedBox(height: 2),
@@ -75,16 +78,16 @@ class MessageBubble extends StatelessWidget {
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width * 0.75,
       ),
-      decoration: BoxDecoration(
-        color: bubbleColor,
-        borderRadius: borderRadius,
-      ),
+      decoration: BoxDecoration(color: bubbleColor, borderRadius: borderRadius),
       child: ClipRRect(
         borderRadius: borderRadius,
         child: switch (message.type) {
           MessageType.text => _buildTextContent(context, textColor),
           MessageType.image => _buildImageContent(context, textColor),
-          MessageType.workoutLink => _buildWorkoutLinkContent(context, textColor),
+          MessageType.workoutLink => _buildWorkoutLinkContent(
+            context,
+            textColor,
+          ),
         },
       ),
     );
@@ -98,9 +101,7 @@ class MessageBubble extends StatelessWidget {
       ),
       child: Text(
         message.text,
-        style: context.textTheme.bodyMedium?.copyWith(
-          color: textColor,
-        ),
+        style: context.textTheme.bodyMedium?.copyWith(color: textColor),
       ),
     );
   }
@@ -150,9 +151,7 @@ class MessageBubble extends StatelessWidget {
             ),
             child: Text(
               message.text,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: textColor,
-              ),
+              style: context.textTheme.bodyMedium?.copyWith(color: textColor),
             ),
           ),
       ],
@@ -259,9 +258,7 @@ class MessageBubble extends StatelessWidget {
             ),
             child: Text(
               message.text,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: textColor,
-              ),
+              style: context.textTheme.bodyMedium?.copyWith(color: textColor),
             ),
           ),
       ],
@@ -277,11 +274,7 @@ class MessageBubble extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          icon,
-          size: 14,
-          color: textColor.withValues(alpha: 0.7),
-        ),
+        Icon(icon, size: 14, color: textColor.withValues(alpha: 0.7)),
         const SizedBox(width: 4),
         Text(
           value,
@@ -340,9 +333,7 @@ class MessageBubble extends StatelessWidget {
               Navigator.pop(context);
               onDelete?.call();
             },
-            style: TextButton.styleFrom(
-              foregroundColor: context.colors.error,
-            ),
+            style: TextButton.styleFrom(foregroundColor: context.colors.error),
             child: Text(context.l10n.delete),
           ),
         ],

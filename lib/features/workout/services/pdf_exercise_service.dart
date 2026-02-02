@@ -88,7 +88,8 @@ class PdfExerciseService {
               _buildHistorySection(data, primaryColor, accentColor, lightGray),
           ];
         },
-        footer: (pw.Context context) => _buildFooter(primaryColor, lightGray, context),
+        footer: (pw.Context context) =>
+            _buildFooter(primaryColor, lightGray, context),
       ),
     );
 
@@ -232,7 +233,8 @@ class PdfExerciseService {
               _buildRecordCard(
                 'Best Volume',
                 '${data.bestSetVolume.toStringAsFixed(0)} kg',
-                data.bestSetVolumeDate != null && data.bestSetVolumeWeight != null
+                data.bestSetVolumeDate != null &&
+                        data.bestSetVolumeWeight != null
                     ? '${data.bestSetVolumeWeight!.toStringAsFixed(1)}kg x ${data.bestSetVolumeReps} - ${_dateFormatter.format(data.bestSetVolumeDate!)}'
                     : null,
                 PdfColor.fromHex('#9C27B0'),
@@ -410,16 +412,23 @@ class PdfExerciseService {
                 }
 
                 return pw.TableRow(
-                  decoration: isEven ? null : const pw.BoxDecoration(color: PdfColors.grey100),
+                  decoration: isEven
+                      ? null
+                      : const pw.BoxDecoration(color: PdfColors.grey100),
                   children: [
                     _buildTableCell(_dateFormatter.format(date), null),
                     _buildTableCell('${sets.length}', lightGray),
                     _buildTableCell(
-                      bestWeight > 0 ? '${bestWeight.toStringAsFixed(1)}kg x $bestReps' : '-',
+                      bestWeight > 0
+                          ? '${bestWeight.toStringAsFixed(1)}kg x $bestReps'
+                          : '-',
                       primaryColor,
                       bold: true,
                     ),
-                    _buildTableCell('${totalVolume.toStringAsFixed(0)} kg', lightGray),
+                    _buildTableCell(
+                      '${totalVolume.toStringAsFixed(0)} kg',
+                      lightGray,
+                    ),
                   ],
                 );
               }),
@@ -432,7 +441,11 @@ class PdfExerciseService {
             padding: const pw.EdgeInsets.only(top: 8),
             child: pw.Text(
               '+ ${sortedDates.length - 10} sessioni precedenti',
-              style: pw.TextStyle(fontSize: 10, color: lightGray, fontStyle: pw.FontStyle.italic),
+              style: pw.TextStyle(
+                fontSize: 10,
+                color: lightGray,
+                fontStyle: pw.FontStyle.italic,
+              ),
             ),
           ),
       ],
@@ -444,15 +457,16 @@ class PdfExerciseService {
       padding: const pw.EdgeInsets.all(12),
       child: pw.Text(
         text,
-        style: pw.TextStyle(
-          fontSize: 11,
-          fontWeight: pw.FontWeight.bold,
-        ),
+        style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
       ),
     );
   }
 
-  static pw.Widget _buildTableCell(String text, PdfColor? color, {bool bold = false}) {
+  static pw.Widget _buildTableCell(
+    String text,
+    PdfColor? color, {
+    bool bold = false,
+  }) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(12),
       child: pw.Text(
@@ -467,7 +481,11 @@ class PdfExerciseService {
   }
 
   /// Footer con branding
-  static pw.Widget _buildFooter(PdfColor primaryColor, PdfColor lightGray, pw.Context context) {
+  static pw.Widget _buildFooter(
+    PdfColor primaryColor,
+    PdfColor lightGray,
+    pw.Context context,
+  ) {
     return pw.Container(
       margin: const pw.EdgeInsets.only(top: 20),
       padding: const pw.EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -480,7 +498,10 @@ class PdfExerciseService {
           pw.Row(
             children: [
               pw.Container(
-                padding: const pw.EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const pw.EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 4,
+                ),
                 decoration: pw.BoxDecoration(
                   color: primaryColor,
                   borderRadius: pw.BorderRadius.circular(8),
@@ -512,7 +533,9 @@ class PdfExerciseService {
 
   /// Condividi il PDF dell'esercizio
   /// Returns ShareResultStatus to handle dismiss/success
-  static Future<ShareResultStatus> shareExercisePdf(ExerciseRecordsData data) async {
+  static Future<ShareResultStatus> shareExercisePdf(
+    ExerciseRecordsData data,
+  ) async {
     File? tempFile;
     try {
       final pdfData = await generateExercisePdf(data);
@@ -525,10 +548,7 @@ class PdfExerciseService {
 
       // Share with share_plus
       final result = await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(tempFile.path)],
-          subject: data.exerciseName,
-        ),
+        ShareParams(files: [XFile(tempFile.path)], subject: data.exerciseName),
       );
 
       return result.status;

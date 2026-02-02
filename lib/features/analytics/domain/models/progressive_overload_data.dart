@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Model for Progressive Overload tracking and cloud sync
 class ProgressiveOverloadData {
-
   ProgressiveOverloadData({
     required this.userId,
     required this.weekStart,
@@ -26,7 +25,7 @@ class ProgressiveOverloadData {
   /// Create from Firestore document
   factory ProgressiveOverloadData.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return ProgressiveOverloadData(
       userId: data['userId'] as String,
       weekStart: (data['weekStart'] as Timestamp).toDate(),
@@ -35,11 +34,12 @@ class ProgressiveOverloadData {
       year: data['year'] as int,
       totalVolume: (data['totalVolume'] as num).toDouble(),
       avgIntensity: (data['avgIntensity'] as num).toDouble(),
-      progressiveOverloadScore: (data['progressiveOverloadScore'] as num).toDouble(),
+      progressiveOverloadScore: (data['progressiveOverloadScore'] as num)
+          .toDouble(),
       previousWeekScore: (data['previousWeekScore'] as num).toDouble(),
       e1RMProgression: Map<String, double>.from(data['e1RMProgression'] as Map),
       effectiveVolume: (data['effectiveVolume'] as num).toDouble(),
-      bestSet: data['bestSet'] != null 
+      bestSet: data['bestSet'] != null
           ? BestSetPerformance.fromMap(data['bestSet'] as Map<String, dynamic>)
           : null,
       fatigueRatings: (data['fatigueRatings'] as List)
@@ -47,7 +47,7 @@ class ProgressiveOverloadData {
           .toList(),
       avgMuscleEfficiency: (data['avgMuscleEfficiency'] as num).toDouble(),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      syncedAt: data['syncedAt'] != null 
+      syncedAt: data['syncedAt'] != null
           ? (data['syncedAt'] as Timestamp).toDate()
           : null,
       isPremiumData: data['isPremiumData'] as bool? ?? false,
@@ -64,11 +64,12 @@ class ProgressiveOverloadData {
       year: json['year'] as int,
       totalVolume: (json['totalVolume'] as num).toDouble(),
       avgIntensity: (json['avgIntensity'] as num).toDouble(),
-      progressiveOverloadScore: (json['progressiveOverloadScore'] as num).toDouble(),
+      progressiveOverloadScore: (json['progressiveOverloadScore'] as num)
+          .toDouble(),
       previousWeekScore: (json['previousWeekScore'] as num).toDouble(),
       e1RMProgression: Map<String, double>.from(json['e1RMProgression'] as Map),
       effectiveVolume: (json['effectiveVolume'] as num).toDouble(),
-      bestSet: json['bestSet'] != null 
+      bestSet: json['bestSet'] != null
           ? BestSetPerformance.fromMap(json['bestSet'] as Map<String, dynamic>)
           : null,
       fatigueRatings: (json['fatigueRatings'] as List)
@@ -76,7 +77,7 @@ class ProgressiveOverloadData {
           .toList(),
       avgMuscleEfficiency: (json['avgMuscleEfficiency'] as num).toDouble(),
       createdAt: DateTime.parse(json['createdAt'] as String),
-      syncedAt: json['syncedAt'] != null 
+      syncedAt: json['syncedAt'] != null
           ? DateTime.parse(json['syncedAt'] as String)
           : null,
       isPremiumData: json['isPremiumData'] as bool? ?? false,
@@ -87,22 +88,22 @@ class ProgressiveOverloadData {
   final DateTime weekEnd;
   final int weekNumber;
   final int year;
-  
+
   // Core metrics
   final double totalVolume;
   final double avgIntensity; // 1-10 scale based on RPE/effort
   final double progressiveOverloadScore;
   final double previousWeekScore;
-  
+
   // Weekly dashboard metrics
   final Map<String, double> e1RMProgression; // Exercise -> estimated 1RM
   final double effectiveVolume; // Volume that actually counts for growth
   final BestSetPerformance? bestSet;
-  
+
   // Fatigue and efficiency data
   final List<FatigueEntry> fatigueRatings;
   final double avgMuscleEfficiency;
-  
+
   // Metadata
   final DateTime createdAt;
   final DateTime? syncedAt;
@@ -116,7 +117,7 @@ class ProgressiveOverloadData {
     required double previousScore,
   }) {
     if (previousScore == 0) return 1.0; // First week baseline
-    
+
     final currentScore = currentVolume * currentIntensity;
     return currentScore / previousScore;
   }
@@ -188,7 +189,6 @@ class ProgressiveOverloadData {
 
 /// Best set performance of the week
 class BestSetPerformance {
-
   BestSetPerformance({
     required this.exerciseName,
     required this.weight,
@@ -219,7 +219,7 @@ class BestSetPerformance {
   static double calculateE1RM(double weight, int reps) {
     if (reps == 1) return weight;
     if (reps >= 30) return weight * 1.5; // Cap for high reps
-    
+
     // Epley Formula: 1RM = weight × (1 + reps/30)
     return weight * (1 + reps / 30.0);
   }
@@ -236,7 +236,6 @@ class BestSetPerformance {
 
 /// Fatigue entry for a specific day
 class FatigueEntry {
-
   FatigueEntry({
     required this.date,
     required this.fatigueLevel,
@@ -275,12 +274,12 @@ class EffectiveVolume {
   /// Excludes warm-up sets and very light sets
   static double calculate(List<SetData> sets) {
     double effectiveVolume = 0.0;
-    
+
     for (final set in sets) {
       final weight = set.weight;
       final reps = set.reps;
       final rpe = set.rpe ?? 5; // Default RPE if not provided
-      
+
       // Only count sets with RPE >= 6 (close to failure)
       if (rpe >= 6) {
         // Apply effectiveness multiplier based on RPE
@@ -292,18 +291,17 @@ class EffectiveVolume {
         } else {
           effectiveness = 0.7; // Moderate effectiveness
         }
-        
+
         effectiveVolume += weight * reps * effectiveness;
       }
     }
-    
+
     return effectiveVolume;
   }
 }
 
 /// Placeholder for set data
 class SetData {
-
   SetData({required this.weight, required this.reps, this.rpe});
   final double weight;
   final int reps;

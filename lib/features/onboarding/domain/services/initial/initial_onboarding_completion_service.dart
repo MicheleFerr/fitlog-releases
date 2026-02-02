@@ -96,7 +96,9 @@ class InitialOnboardingCompletionService {
       await appConfigNotifier.applyBeginnerDefaults();
       debugPrint('🌱 Applied beginner defaults for experience level');
     } else {
-      debugPrint('📊 Experience level: ${data.experience.name} - using standard defaults');
+      debugPrint(
+        '📊 Experience level: ${data.experience.name} - using standard defaults',
+      );
     }
   }
 
@@ -129,5 +131,5 @@ class InitialOnboardingCompletionService {
 /// Provider for InitialOnboardingCompletionService
 final initialOnboardingCompletionServiceProvider =
     Provider<InitialOnboardingCompletionService>((ref) {
-  return InitialOnboardingCompletionService(ref);
-});
+      return InitialOnboardingCompletionService(ref);
+    });

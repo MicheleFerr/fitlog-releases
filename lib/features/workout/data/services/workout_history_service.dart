@@ -51,9 +51,9 @@ class WorkoutHistoryService {
           final workoutData = WorkoutHistoryDetail.fromFirestore(doc);
 
           // Trova l'esercizio nel workout
-          final exercise = workoutData.exercises.where((ex) =>
-            _isExerciseMatch(ex.name, exerciseName)
-          ).firstOrNull;
+          final exercise = workoutData.exercises
+              .where((ex) => _isExerciseMatch(ex.name, exerciseName))
+              .firstOrNull;
 
           if (exercise != null && exercise.sets.isNotEmpty) {
             // Converti in ExerciseActivity per compatibilità
@@ -101,9 +101,9 @@ class WorkoutHistoryService {
           final workoutData = WorkoutHistoryDetail.fromFirestore(doc);
 
           // Trova l'esercizio nel workout
-          final exercise = workoutData.exercises.where((ex) =>
-            _isExerciseMatch(ex.name, exerciseName)
-          ).firstOrNull;
+          final exercise = workoutData.exercises
+              .where((ex) => _isExerciseMatch(ex.name, exerciseName))
+              .firstOrNull;
 
           if (exercise != null && exercise.sets.isNotEmpty) {
             // Converti in ExerciseActivity per compatibilità
@@ -150,21 +150,23 @@ class WorkoutHistoryService {
           final workoutData = WorkoutHistoryDetail.fromFirestore(doc);
 
           // Trova l'esercizio nel workout
-          final exercise = workoutData.exercises.where((ex) =>
-            _isExerciseMatch(ex.name, exerciseName)
-          ).firstOrNull;
+          final exercise = workoutData.exercises
+              .where((ex) => _isExerciseMatch(ex.name, exerciseName))
+              .firstOrNull;
 
           if (exercise != null && exercise.sets.isNotEmpty) {
             // Aggiungi ogni serie come history data
             for (final set in exercise.sets) {
               if (set.weight > 0 || set.reps > 0) {
-                history.add(ExerciseHistoryData(
-                  weight: set.weight > 0 ? set.weight : null,
-                  reps: set.reps > 0 ? set.reps : null,
-                  rpe: set.rpe,  // ✅ FIX: Include RPE from set
-                  date: workoutData.completedAt,
-                  workoutName: workoutData.name,
-                ));
+                history.add(
+                  ExerciseHistoryData(
+                    weight: set.weight > 0 ? set.weight : null,
+                    reps: set.reps > 0 ? set.reps : null,
+                    rpe: set.rpe, // ✅ FIX: Include RPE from set
+                    date: workoutData.completedAt,
+                    workoutName: workoutData.name,
+                  ),
+                );
               }
             }
 
@@ -209,20 +211,25 @@ class WorkoutHistoryService {
           final workoutData = WorkoutHistoryDetail.fromFirestore(doc);
 
           // Trova l'esercizio nel workout
-          final exercise = workoutData.exercises.where((ex) =>
-            _isExerciseMatch(ex.name, exerciseName)
-          ).firstOrNull;
+          final exercise = workoutData.exercises
+              .where((ex) => _isExerciseMatch(ex.name, exerciseName))
+              .firstOrNull;
 
           if (exercise != null && exercise.sets.isNotEmpty) {
             // Converti i set in Map per accesso flessibile
-            final setsList = exercise.sets.map((set) => {
-              'setNumber': set.setNumber,
-              'weight': set.weight,
-              'reps': set.reps,
-              'actualReps': set.reps, // Nel nuovo formato, reps è già il valore effettivo
-              'rpe': set.rpe,
-              'isWarmup': set.isWarmup,
-            }).toList();
+            final setsList = exercise.sets
+                .map(
+                  (set) => {
+                    'setNumber': set.setNumber,
+                    'weight': set.weight,
+                    'reps': set.reps,
+                    'actualReps': set
+                        .reps, // Nel nuovo formato, reps è già il valore effettivo
+                    'rpe': set.rpe,
+                    'isWarmup': set.isWarmup,
+                  },
+                )
+                .toList();
 
             historyWithSets.add({
               'workoutId': workoutData.id,
@@ -289,7 +296,9 @@ class WorkoutHistoryService {
     // Variazioni comuni
     final variations = _getExerciseVariations(name2);
     for (final variation in variations) {
-      if (name1 == variation || name1.contains(variation) || variation.contains(name1)) {
+      if (name1 == variation ||
+          name1.contains(variation) ||
+          variation.contains(name1)) {
         return true;
       }
     }
@@ -304,7 +313,12 @@ class WorkoutHistoryService {
 
     // Traduzioni comuni Italiano <-> Inglese
     final translations = {
-      'panca piana': ['bench press', 'flat bench', 'panca', 'distensioni su panca'],
+      'panca piana': [
+        'bench press',
+        'flat bench',
+        'panca',
+        'distensioni su panca',
+      ],
       'bench press': ['panca piana', 'panca', 'distensioni su panca'],
       'squat': ['squat', 'accosciata', 'squats'],
       'stacco': ['deadlift', 'stacco da terra', 'stacchi'],

@@ -41,8 +41,9 @@ class UserGoals {
   }) {
     return UserGoals(
       workoutsPerWeek: workoutsPerWeek ?? this.workoutsPerWeek,
-      weeklyVolumeTargetKg:
-          clearVolumeTarget ? null : (weeklyVolumeTargetKg ?? this.weeklyVolumeTargetKg),
+      weeklyVolumeTargetKg: clearVolumeTarget
+          ? null
+          : (weeklyVolumeTargetKg ?? this.weeklyVolumeTargetKg),
       streakWeeksGoal: streakWeeksGoal ?? this.streakWeeksGoal,
     );
   }
@@ -94,15 +95,19 @@ class StreakWeeksProgress {
 }
 
 /// Provider for user goals with persistence
-final userGoalsProvider =
-    AsyncNotifierProvider<UserGoalsNotifier, UserGoals>(UserGoalsNotifier.new);
+final userGoalsProvider = AsyncNotifierProvider<UserGoalsNotifier, UserGoals>(
+  UserGoalsNotifier.new,
+);
 
 /// Notifier for managing user fitness goals
 class UserGoalsNotifier extends AsyncNotifier<UserGoals> {
   // 🔐 User-scoped cache keys
-  String get _keyWorkoutsPerWeek => userCacheKeys.userScopedKey('user_goals_workouts_per_week');
-  String get _keyWeeklyVolumeTarget => userCacheKeys.userScopedKey('user_goals_weekly_volume_target');
-  String get _keyStreakWeeksGoal => userCacheKeys.userScopedKey('user_goals_streak_weeks_goal');
+  String get _keyWorkoutsPerWeek =>
+      userCacheKeys.userScopedKey('user_goals_workouts_per_week');
+  String get _keyWeeklyVolumeTarget =>
+      userCacheKeys.userScopedKey('user_goals_weekly_volume_target');
+  String get _keyStreakWeeksGoal =>
+      userCacheKeys.userScopedKey('user_goals_streak_weeks_goal');
 
   @override
   Future<UserGoals> build() async {
@@ -130,7 +135,10 @@ class UserGoalsNotifier extends AsyncNotifier<UserGoals> {
 
     await prefs.setInt(_keyWorkoutsPerWeek, goals.workoutsPerWeek);
     if (goals.weeklyVolumeTargetKg != null) {
-      await prefs.setDouble(_keyWeeklyVolumeTarget, goals.weeklyVolumeTargetKg!);
+      await prefs.setDouble(
+        _keyWeeklyVolumeTarget,
+        goals.weeklyVolumeTargetKg!,
+      );
     } else {
       await prefs.remove(_keyWeeklyVolumeTarget);
     }
@@ -188,147 +196,165 @@ class UserGoalsNotifier extends AsyncNotifier<UserGoals> {
 /// Provider for weekly workout progress
 ///
 /// Calculates how many workouts completed this week vs goal
-final weeklyWorkoutProgressProvider = FutureProvider.autoDispose<WeeklyWorkoutProgress>((ref) async {
-  final goalsAsync = ref.watch(userGoalsProvider);
-  final workoutsAsync = ref.watch(workoutHistoryProvider);
+final weeklyWorkoutProgressProvider =
+    FutureProvider.autoDispose<WeeklyWorkoutProgress>((ref) async {
+      final goalsAsync = ref.watch(userGoalsProvider);
+      final workoutsAsync = ref.watch(workoutHistoryProvider);
 
-  final goals = goalsAsync.valueOrNull ?? UserGoals.empty;
-  final workouts = workoutsAsync.valueOrNull ?? [];
+      final goals = goalsAsync.valueOrNull ?? UserGoals.empty;
+      final workouts = workoutsAsync.valueOrNull ?? [];
 
-  // Calculate current week boundaries (Monday to Sunday)
-  final now = DateTime.now();
-  final currentWeekday = now.weekday;
-  final startOfWeek = DateTime(now.year, now.month, now.day)
-      .subtract(Duration(days: currentWeekday - 1));
-  final endOfWeek = startOfWeek.add(const Duration(days: 7));
+      // Calculate current week boundaries (Monday to Sunday)
+      final now = DateTime.now();
+      final currentWeekday = now.weekday;
+      final startOfWeek = DateTime(
+        now.year,
+        now.month,
+        now.day,
+      ).subtract(Duration(days: currentWeekday - 1));
+      final endOfWeek = startOfWeek.add(const Duration(days: 7));
 
-  // Count workouts this week
-  final workoutsThisWeek = workouts.where((w) {
-    return w.completedAt.isAfter(startOfWeek) &&
-        w.completedAt.isBefore(endOfWeek);
-  }).length;
+      // Count workouts this week
+      final workoutsThisWeek = workouts.where((w) {
+        return w.completedAt.isAfter(startOfWeek) &&
+            w.completedAt.isBefore(endOfWeek);
+      }).length;
 
-  final goal = goals.workoutsPerWeek;
-  final percentage = goal > 0 ? (workoutsThisWeek / goal).clamp(0.0, 1.0) : 0.0;
+      final goal = goals.workoutsPerWeek;
+      final percentage = goal > 0
+          ? (workoutsThisWeek / goal).clamp(0.0, 1.0)
+          : 0.0;
 
-  return WeeklyWorkoutProgress(
-    current: workoutsThisWeek,
-    goal: goal,
-    percentage: percentage,
-    isComplete: workoutsThisWeek >= goal,
-  );
-});
+      return WeeklyWorkoutProgress(
+        current: workoutsThisWeek,
+        goal: goal,
+        percentage: percentage,
+        isComplete: workoutsThisWeek >= goal,
+      );
+    });
 
 /// Provider for weekly volume progress
 ///
 /// Calculates total volume lifted this week vs target
-final weeklyVolumeProgressProvider = FutureProvider.autoDispose<WeeklyVolumeProgress>((ref) async {
-  final goalsAsync = ref.watch(userGoalsProvider);
-  final workoutsAsync = ref.watch(workoutHistoryProvider);
+final weeklyVolumeProgressProvider =
+    FutureProvider.autoDispose<WeeklyVolumeProgress>((ref) async {
+      final goalsAsync = ref.watch(userGoalsProvider);
+      final workoutsAsync = ref.watch(workoutHistoryProvider);
 
-  final goals = goalsAsync.valueOrNull ?? UserGoals.empty;
-  final workouts = workoutsAsync.valueOrNull ?? [];
+      final goals = goalsAsync.valueOrNull ?? UserGoals.empty;
+      final workouts = workoutsAsync.valueOrNull ?? [];
 
-  // Calculate current week boundaries (Monday to Sunday)
-  final now = DateTime.now();
-  final currentWeekday = now.weekday;
-  final startOfWeek = DateTime(now.year, now.month, now.day)
-      .subtract(Duration(days: currentWeekday - 1));
-  final endOfWeek = startOfWeek.add(const Duration(days: 7));
+      // Calculate current week boundaries (Monday to Sunday)
+      final now = DateTime.now();
+      final currentWeekday = now.weekday;
+      final startOfWeek = DateTime(
+        now.year,
+        now.month,
+        now.day,
+      ).subtract(Duration(days: currentWeekday - 1));
+      final endOfWeek = startOfWeek.add(const Duration(days: 7));
 
-  // Calculate total volume this week
-  double totalVolumeKg = 0;
-  for (final workout in workouts) {
-    if (workout.completedAt.isAfter(startOfWeek) &&
-        workout.completedAt.isBefore(endOfWeek)) {
-      // Sum volume from all exercises
-      for (final exercise in workout.exercises) {
-        for (final set in exercise.sets) {
-          totalVolumeKg += set.weight * set.reps;
+      // Calculate total volume this week
+      double totalVolumeKg = 0;
+      for (final workout in workouts) {
+        if (workout.completedAt.isAfter(startOfWeek) &&
+            workout.completedAt.isBefore(endOfWeek)) {
+          // Sum volume from all exercises
+          for (final exercise in workout.exercises) {
+            for (final set in exercise.sets) {
+              totalVolumeKg += set.weight * set.reps;
+            }
+          }
         }
       }
-    }
-  }
 
-  final goalKg = goals.weeklyVolumeTargetKg;
-  final percentage = (goalKg != null && goalKg > 0)
-      ? (totalVolumeKg / goalKg).clamp(0.0, 1.0)
-      : 0.0;
+      final goalKg = goals.weeklyVolumeTargetKg;
+      final percentage = (goalKg != null && goalKg > 0)
+          ? (totalVolumeKg / goalKg).clamp(0.0, 1.0)
+          : 0.0;
 
-  return WeeklyVolumeProgress(
-    currentKg: totalVolumeKg,
-    goalKg: goalKg,
-    percentage: percentage,
-    isComplete: goalKg != null && totalVolumeKg >= goalKg,
-  );
-});
+      return WeeklyVolumeProgress(
+        currentKg: totalVolumeKg,
+        goalKg: goalKg,
+        percentage: percentage,
+        isComplete: goalKg != null && totalVolumeKg >= goalKg,
+      );
+    });
 
 /// Provider for streak weeks progress
 ///
 /// Counts consecutive weeks where workout goal was met
-final streakWeeksProgressProvider = FutureProvider.autoDispose<StreakWeeksProgress>((ref) async {
-  final goalsAsync = ref.watch(userGoalsProvider);
-  final workoutsAsync = ref.watch(workoutHistoryProvider);
+final streakWeeksProgressProvider =
+    FutureProvider.autoDispose<StreakWeeksProgress>((ref) async {
+      final goalsAsync = ref.watch(userGoalsProvider);
+      final workoutsAsync = ref.watch(workoutHistoryProvider);
 
-  final goals = goalsAsync.valueOrNull ?? UserGoals.empty;
-  final workouts = workoutsAsync.valueOrNull ?? [];
+      final goals = goalsAsync.valueOrNull ?? UserGoals.empty;
+      final workouts = workoutsAsync.valueOrNull ?? [];
 
-  if (workouts.isEmpty) {
-    return StreakWeeksProgress(
-      current: 0,
-      goal: goals.streakWeeksGoal,
-      percentage: 0.0,
-      isComplete: false,
-    );
-  }
+      if (workouts.isEmpty) {
+        return StreakWeeksProgress(
+          current: 0,
+          goal: goals.streakWeeksGoal,
+          percentage: 0.0,
+          isComplete: false,
+        );
+      }
 
-  // Calculate streak weeks (consecutive weeks meeting workout goal)
-  int streakWeeks = 0;
-  final now = DateTime.now();
-  final currentWeekday = now.weekday;
+      // Calculate streak weeks (consecutive weeks meeting workout goal)
+      int streakWeeks = 0;
+      final now = DateTime.now();
+      final currentWeekday = now.weekday;
 
-  // Start from current week and go backwards
-  DateTime weekStart = DateTime(now.year, now.month, now.day)
-      .subtract(Duration(days: currentWeekday - 1));
+      // Start from current week and go backwards
+      DateTime weekStart = DateTime(
+        now.year,
+        now.month,
+        now.day,
+      ).subtract(Duration(days: currentWeekday - 1));
 
-  // Check up to 52 weeks back
-  for (int i = 0; i < 52; i++) {
-    final weekEnd = weekStart.add(const Duration(days: 7));
+      // Check up to 52 weeks back
+      for (int i = 0; i < 52; i++) {
+        final weekEnd = weekStart.add(const Duration(days: 7));
 
-    // Count workouts in this week
-    final workoutsInWeek = workouts.where((w) {
-      return w.completedAt.isAfter(weekStart.subtract(const Duration(seconds: 1))) &&
-          w.completedAt.isBefore(weekEnd);
-    }).length;
+        // Count workouts in this week
+        final workoutsInWeek = workouts.where((w) {
+          return w.completedAt.isAfter(
+                weekStart.subtract(const Duration(seconds: 1)),
+              ) &&
+              w.completedAt.isBefore(weekEnd);
+        }).length;
 
-    if (workoutsInWeek >= goals.workoutsPerWeek) {
-      streakWeeks++;
-    } else {
-      // If not current week and goal not met, streak ends
-      if (i > 0) break;
-      // For current week, continue checking past weeks
-    }
+        if (workoutsInWeek >= goals.workoutsPerWeek) {
+          streakWeeks++;
+        } else {
+          // If not current week and goal not met, streak ends
+          if (i > 0) break;
+          // For current week, continue checking past weeks
+        }
 
-    // Move to previous week
-    weekStart = weekStart.subtract(const Duration(days: 7));
-  }
+        // Move to previous week
+        weekStart = weekStart.subtract(const Duration(days: 7));
+      }
 
-  final goal = goals.streakWeeksGoal;
-  final percentage = goal > 0 ? (streakWeeks / goal).clamp(0.0, 1.0) : 0.0;
+      final goal = goals.streakWeeksGoal;
+      final percentage = goal > 0 ? (streakWeeks / goal).clamp(0.0, 1.0) : 0.0;
 
-  return StreakWeeksProgress(
-    current: streakWeeks,
-    goal: goal,
-    percentage: percentage,
-    isComplete: streakWeeks >= goal,
-  );
-});
+      return StreakWeeksProgress(
+        current: streakWeeks,
+        goal: goal,
+        percentage: percentage,
+        isComplete: streakWeeks >= goal,
+      );
+    });
 
 /// Quick access provider for current workouts per week goal
 /// 🔧 PERF FIX: Use .select() to only rebuild when workoutsPerWeek changes
 final workoutsPerWeekGoalProvider = Provider<int>((ref) {
   final workoutsPerWeek = ref.watch(
-    userGoalsProvider.select((asyncValue) => asyncValue.valueOrNull?.workoutsPerWeek),
+    userGoalsProvider.select(
+      (asyncValue) => asyncValue.valueOrNull?.workoutsPerWeek,
+    ),
   );
   return workoutsPerWeek ?? 2;
 });
@@ -337,6 +363,8 @@ final workoutsPerWeekGoalProvider = Provider<int>((ref) {
 /// 🔧 PERF FIX: Use .select() to only rebuild when weeklyVolumeTargetKg changes
 final weeklyVolumeTargetProvider = Provider<double?>((ref) {
   return ref.watch(
-    userGoalsProvider.select((asyncValue) => asyncValue.valueOrNull?.weeklyVolumeTargetKg),
+    userGoalsProvider.select(
+      (asyncValue) => asyncValue.valueOrNull?.weeklyVolumeTargetKg,
+    ),
   );
 });

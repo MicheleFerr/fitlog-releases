@@ -130,12 +130,14 @@ class BalanceRecommendationResult {
   final String? nextWorkoutFocus;
 
   /// Get critical recommendations only
-  List<BalanceRecommendation> get criticalRecommendations =>
-      recommendations.where((r) => r.priority == RecommendationPriority.critical).toList();
+  List<BalanceRecommendation> get criticalRecommendations => recommendations
+      .where((r) => r.priority == RecommendationPriority.critical)
+      .toList();
 
   /// Get high priority recommendations
-  List<BalanceRecommendation> get highPriorityRecommendations =>
-      recommendations.where((r) => r.priority == RecommendationPriority.high).toList();
+  List<BalanceRecommendation> get highPriorityRecommendations => recommendations
+      .where((r) => r.priority == RecommendationPriority.high)
+      .toList();
 
   /// Check if any critical issues
   bool get hasCriticalIssues => criticalRecommendations.isNotEmpty;
@@ -176,7 +178,9 @@ class BalanceRecommendationService {
 
     // 4. Check neglected muscles
     for (final muscle in metrics.neglectedMuscles) {
-      recommendations.add(_generateNeglectedMuscleRecommendation(muscle, metrics));
+      recommendations.add(
+        _generateNeglectedMuscleRecommendation(muscle, metrics),
+      );
     }
 
     // 5. Check overtraining (from FFM if available)
@@ -190,17 +194,21 @@ class BalanceRecommendationService {
 
     // 6. If no issues, add balanced recommendation
     if (recommendations.isEmpty) {
-      recommendations.add(const BalanceRecommendation(
-        type: RecommendationType.balanced,
-        priority: RecommendationPriority.info,
-        title: 'Well Balanced',
-        description:
-            'Your training volume is well distributed. Keep up the good work!',
-      ));
+      recommendations.add(
+        const BalanceRecommendation(
+          type: RecommendationType.balanced,
+          priority: RecommendationPriority.info,
+          title: 'Well Balanced',
+          description:
+              'Your training volume is well distributed. Keep up the good work!',
+        ),
+      );
     }
 
     // Sort by priority
-    recommendations.sort((a, b) => a.priority.index.compareTo(b.priority.index));
+    recommendations.sort(
+      (a, b) => a.priority.index.compareTo(b.priority.index),
+    );
 
     // Determine next workout focus
     final nextFocus = _determineNextWorkoutFocus(recommendations, metrics);
@@ -228,8 +236,8 @@ class BalanceRecommendationService {
       final priority = ratio > 2.0
           ? RecommendationPriority.critical
           : ratio > 1.5
-              ? RecommendationPriority.high
-              : RecommendationPriority.medium;
+          ? RecommendationPriority.high
+          : RecommendationPriority.medium;
 
       return BalanceRecommendation(
         type: RecommendationType.increasePull,
@@ -255,8 +263,8 @@ class BalanceRecommendationService {
       final priority = ratio < 0.5
           ? RecommendationPriority.critical
           : ratio < 0.7
-              ? RecommendationPriority.high
-              : RecommendationPriority.medium;
+          ? RecommendationPriority.high
+          : RecommendationPriority.medium;
 
       return BalanceRecommendation(
         type: RecommendationType.increasePush,
@@ -292,8 +300,8 @@ class BalanceRecommendationService {
       final priority = ratio > 2.0
           ? RecommendationPriority.critical
           : ratio > 1.5
-              ? RecommendationPriority.high
-              : RecommendationPriority.medium;
+          ? RecommendationPriority.high
+          : RecommendationPriority.medium;
 
       return BalanceRecommendation(
         type: RecommendationType.increasePull,
@@ -319,8 +327,8 @@ class BalanceRecommendationService {
       final priority = ratio < 0.5
           ? RecommendationPriority.critical
           : ratio < 0.7
-              ? RecommendationPriority.high
-              : RecommendationPriority.medium;
+          ? RecommendationPriority.high
+          : RecommendationPriority.medium;
 
       return BalanceRecommendation(
         type: RecommendationType.increasePush,
@@ -355,8 +363,8 @@ class BalanceRecommendationService {
       final priority = ratio > 2.0
           ? RecommendationPriority.critical
           : ratio > 1.5
-              ? RecommendationPriority.high
-              : RecommendationPriority.medium;
+          ? RecommendationPriority.high
+          : RecommendationPriority.medium;
 
       return BalanceRecommendation(
         type: RecommendationType.increaseLower,
@@ -381,8 +389,8 @@ class BalanceRecommendationService {
       final priority = ratio < 0.5
           ? RecommendationPriority.critical
           : ratio < 0.7
-              ? RecommendationPriority.high
-              : RecommendationPriority.medium;
+          ? RecommendationPriority.high
+          : RecommendationPriority.medium;
 
       return BalanceRecommendation(
         type: RecommendationType.increaseUpper,
@@ -463,7 +471,8 @@ class BalanceRecommendationService {
 
     return switch (top.type) {
       RecommendationType.increasePull => 'Pull Day (Back, Biceps, Rear Delts)',
-      RecommendationType.increasePush => 'Push Day (Chest, Triceps, Front Delts)',
+      RecommendationType.increasePush =>
+        'Push Day (Chest, Triceps, Front Delts)',
       RecommendationType.increaseLower => 'Leg Day (Quads, Hamstrings, Glutes)',
       RecommendationType.increaseUpper => 'Upper Body Day',
       RecommendationType.trainNeglected => '${top.targetMuscles.first} Focus',
@@ -477,10 +486,12 @@ class BalanceRecommendationService {
     double score,
     List<BalanceRecommendation> recommendations,
   ) {
-    final hasCritical =
-        recommendations.any((r) => r.priority == RecommendationPriority.critical);
-    final hasHigh =
-        recommendations.any((r) => r.priority == RecommendationPriority.high);
+    final hasCritical = recommendations.any(
+      (r) => r.priority == RecommendationPriority.critical,
+    );
+    final hasHigh = recommendations.any(
+      (r) => r.priority == RecommendationPriority.high,
+    );
 
     if (hasCritical) {
       return 'Critical imbalances detected - action recommended';
@@ -509,7 +520,10 @@ class BalanceRecommendationService {
   ) {
     // Get display name from centralized mapper (SSOT)
     final canonicalId = MuscleAbbreviationMapper.normalizeToCanonicalId(muscle);
-    final displayName = MuscleAbbreviationMapper.codeToDisplayName(canonicalId, italian: false);
+    final displayName = MuscleAbbreviationMapper.codeToDisplayName(
+      canonicalId,
+      italian: false,
+    );
 
     // Exercise suggestions are domain-specific business logic
     final exercises = _getExerciseSuggestions(canonicalId);
@@ -531,12 +545,18 @@ class BalanceRecommendationService {
       'DELT_POST' => ['Face Pulls', 'Rear Delt Flyes', 'Reverse Pec Deck'],
       'DELT' => ['Overhead Press', 'Lateral Raises', 'Face Pulls'],
       'BICI' => ['Barbell Curl', 'Hammer Curl', 'Preacher Curl'],
-      'TRIC' => ['Tricep Pushdown', 'Skull Crushers', 'Dips', 'Close Grip Press'],
+      'TRIC' => [
+        'Tricep Pushdown',
+        'Skull Crushers',
+        'Dips',
+        'Close Grip Press',
+      ],
       'QUAD' => ['Squats', 'Leg Press', 'Leg Extension', 'Lunges'],
       'FEMOR' => ['Romanian Deadlift', 'Leg Curl', 'Good Mornings'],
       'GLUT' => ['Hip Thrust', 'Glute Bridge', 'Lunges', 'Squats'],
       'POLP' => ['Standing Calf Raise', 'Seated Calf Raise', 'Leg Press Calf'],
-      'CORE' || 'ADD' => ['Planks', 'Ab Wheel', 'Cable Crunches', 'Hanging Leg Raises'],
+      'CORE' ||
+      'ADD' => ['Planks', 'Ab Wheel', 'Cable Crunches', 'Hanging Leg Raises'],
       'LOMBAR' => ['Hyperextensions', 'Good Mornings', 'Deadlifts'],
       'AVA' => ['Wrist Curls', 'Reverse Curls', 'Farmer Walks'],
       _ => ['Targeted exercises for $canonicalId'],

@@ -24,9 +24,13 @@ enum ScheduleStatus {
 
 /// Extension to get display properties for ScheduleStatus
 extension ScheduleStatusExtension on ScheduleStatus {
-  bool get isActionable => this == ScheduleStatus.pending || this == ScheduleStatus.due;
+  bool get isActionable =>
+      this == ScheduleStatus.pending || this == ScheduleStatus.due;
   bool get isCompleted => this == ScheduleStatus.completed;
-  bool get isPast => this == ScheduleStatus.completed || this == ScheduleStatus.skipped || this == ScheduleStatus.missed;
+  bool get isPast =>
+      this == ScheduleStatus.completed ||
+      this == ScheduleStatus.skipped ||
+      this == ScheduleStatus.missed;
 }
 
 /// Represents a workout scheduled for a specific date
@@ -70,7 +74,8 @@ abstract class ScheduledWorkout with _$ScheduledWorkout {
       _$ScheduledWorkoutFromJson(json);
 
   /// Get reminder time as TimeOfDay
-  TimeOfDay get reminderTime => TimeOfDay(hour: reminderHour, minute: reminderMinute);
+  TimeOfDay get reminderTime =>
+      TimeOfDay(hour: reminderHour, minute: reminderMinute);
 
   /// Check if this workout is scheduled for today
   bool get isToday {
@@ -92,18 +97,22 @@ abstract class ScheduledWorkout with _$ScheduledWorkout {
   bool get isPastDue {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final scheduled = DateTime(scheduledDate.year, scheduledDate.month, scheduledDate.day);
+    final scheduled = DateTime(
+      scheduledDate.year,
+      scheduledDate.month,
+      scheduledDate.day,
+    );
     return scheduled.isBefore(today);
   }
 
   /// Get the full DateTime for the reminder (scheduled date + reminder time)
   DateTime get reminderDateTime => DateTime(
-        scheduledDate.year,
-        scheduledDate.month,
-        scheduledDate.day,
-        reminderHour,
-        reminderMinute,
-      );
+    scheduledDate.year,
+    scheduledDate.month,
+    scheduledDate.day,
+    reminderHour,
+    reminderMinute,
+  );
 
   /// Formatted reminder time string (HH:MM)
   String get formattedReminderTime {

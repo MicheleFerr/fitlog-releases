@@ -103,7 +103,9 @@ abstract class MeasurementRepository {
   /// );
   /// final result = await measurementRepo.updateMeasurement(updated);
   /// ```
-  Future<Either<MeasurementFailure, void>> updateMeasurement(Measurement measurement);
+  Future<Either<MeasurementFailure, void>> updateMeasurement(
+    Measurement measurement,
+  );
 
   /// Delete a measurement (soft-delete with 30-day retention)
   ///
@@ -193,9 +195,8 @@ abstract class MeasurementRepository {
   /// Returns:
   /// - Right(Map<MetricType, Measurement>): Latest measurement per metric type
   /// - Left(StorageFailure): Error fetching data
-  Future<Either<MeasurementFailure, Map<MetricType, Measurement>>> getLatestMeasurementsByType(
-    String userId,
-  );
+  Future<Either<MeasurementFailure, Map<MetricType, Measurement>>>
+  getLatestMeasurementsByType(String userId);
 
   /// Get sync conflicts (measurements with different values on device vs cloud)
   ///
@@ -223,7 +224,9 @@ abstract class MeasurementRepository {
   ///   },
   /// );
   /// ```
-  Future<Either<MeasurementFailure, List<SyncConflict>>> getSyncConflicts(String userId);
+  Future<Either<MeasurementFailure, List<SyncConflict>>> getSyncConflicts(
+    String userId,
+  );
 
   /// Resolve a sync conflict by choosing device or cloud version
   ///
@@ -254,7 +257,9 @@ abstract class MeasurementRepository {
   /// Returns:
   /// - Right(DateTime?): Last successful sync time (null if never synced)
   /// - Left(StorageFailure): Error reading sync metadata
-  Future<Either<MeasurementFailure, DateTime?>> getLastSyncTimestamp(String userId);
+  Future<Either<MeasurementFailure, DateTime?>> getLastSyncTimestamp(
+    String userId,
+  );
 }
 
 /// SyncResult - Result of health platform synchronization
@@ -292,7 +297,7 @@ enum SyncDirection {
   write,
 
   /// Bi-directional sync (read + write)
-  both;
+  both,
 }
 
 /// SyncConflict - Represents a conflict between device and cloud data
@@ -326,7 +331,7 @@ enum ConflictResolution {
   keepCloud,
 
   /// Keep both versions (save as separate measurements)
-  keepBoth;
+  keepBoth,
 }
 
 /// MeasurementFailure - Error types for measurement operations

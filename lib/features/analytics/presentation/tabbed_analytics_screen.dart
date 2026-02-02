@@ -31,10 +31,7 @@ class TabbedAnalyticsScreen extends ConsumerWidget {
         surfaceTintColor: theme.colorScheme.surface.withValues(alpha: 0),
         elevation: 0,
         leading: IconButton(
-          icon: const SemanticIcon(
-            icon: AppIcons.back,
-            semanticLabel: 'Back',
-          ),
+          icon: const SemanticIcon(icon: AppIcons.back, semanticLabel: 'Back'),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -97,7 +94,7 @@ class TabbedAnalyticsScreen extends ConsumerWidget {
           : _buildContent(context, ref),
     );
   }
-  
+
   Widget _buildContent(BuildContext context, WidgetRef ref) {
     final workoutsAsync = ref.watch(historicalWorkoutsProvider);
     final syncStatus = ref.watch(workoutSyncStatusProvider);
@@ -119,7 +116,7 @@ class TabbedAnalyticsScreen extends ConsumerWidget {
       error: (error, _) => _buildErrorView(context, ref, error.toString()),
     );
   }
-  
+
   Widget _buildNotAuthenticatedView(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
@@ -204,7 +201,7 @@ class TabbedAnalyticsScreen extends ConsumerWidget {
       ),
     );
   }
-  
+
   Widget _buildLoadingSkeleton() {
     return ListView(
       padding: const EdgeInsets.all(16),

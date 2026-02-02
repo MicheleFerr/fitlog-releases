@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: domain
 /// 🎯 Feature: analytics
 /// 🔧 Type: usecase
 /// 🌍 Localization: ✅ AppLocalizations used
 /// 🎨 Theme: ✅ ColorScheme responsive
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - workout/domain/entities: Workout, Exercise, ExerciseSet
 /// - analytics/domain/entities: PersonalRecordAchieved
@@ -22,7 +22,6 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_cal
 
 /// Use case for detecting personal records in real-time during workout
 class DetectPersonalRecordsUseCase {
-
   DetectPersonalRecordsUseCase(this._prTracker);
   final PRTracker _prTracker;
 
@@ -52,7 +51,7 @@ class DetectPersonalRecordsUseCase {
 
     // Get existing PRs for this exercise
     final existingPRs = await _prTracker.getExercisePRs(userId, exercise.id);
-    
+
     // Check weight PR
     final weightPR = _checkWeightPR(exercise, completedSet, existingPRs);
     if (weightPR != null) potentialPRs.add(weightPR);
@@ -75,7 +74,7 @@ class DetectPersonalRecordsUseCase {
   ) async {
     final predictions = <PRPrediction>[];
     final existingPRs = await _prTracker.getExercisePRs(userId, exercise.id);
-    
+
     // Analyze current sets to predict potential PRs
     for (final set in exercise.sets.where((s) => !s.isCompleted)) {
       final weight = set.weight ?? 0;
@@ -84,26 +83,30 @@ class DetectPersonalRecordsUseCase {
         // Predict if this set could be a PR
         final weightPR = existingPRs[PRType.weight];
         if (weightPR == null || weight > weightPR.value) {
-          predictions.add(PRPrediction(
-            type: PRType.weight,
-            predictedValue: weight,
-            currentRecord: weightPR?.value,
-            confidence: _calculatePRConfidence(set, weightPR?.value),
-            setIndex: exercise.sets.indexOf(set),
-          ));
+          predictions.add(
+            PRPrediction(
+              type: PRType.weight,
+              predictedValue: weight,
+              currentRecord: weightPR?.value,
+              confidence: _calculatePRConfidence(set, weightPR?.value),
+              setIndex: exercise.sets.indexOf(set),
+            ),
+          );
         }
 
         // Predict 1RM PR
         final estimated1RM = OneRMCalculator.calculateAverage(weight, reps);
         final oneRMPR = existingPRs[PRType.oneRM];
         if (oneRMPR == null || estimated1RM > oneRMPR.value) {
-          predictions.add(PRPrediction(
-            type: PRType.oneRM,
-            predictedValue: estimated1RM,
-            currentRecord: oneRMPR?.value,
-            confidence: _calculate1RMConfidence(weight, reps),
-            setIndex: exercise.sets.indexOf(set),
-          ));
+          predictions.add(
+            PRPrediction(
+              type: PRType.oneRM,
+              predictedValue: estimated1RM,
+              currentRecord: oneRMPR?.value,
+              confidence: _calculate1RMConfidence(weight, reps),
+              setIndex: exercise.sets.indexOf(set),
+            ),
+          );
         }
       }
     }
@@ -119,7 +122,7 @@ class DetectPersonalRecordsUseCase {
   ) async {
     final prs = <PersonalRecordAchieved>[];
     final existingPRs = await _prTracker.getExercisePRs(userId, exercise.id);
-    
+
     final completedSets = exercise.sets.where((s) => s.isCompleted).toList();
     if (completedSets.isEmpty) return prs;
 
@@ -198,11 +201,7 @@ class DetectPersonalRecordsUseCase {
       newValue: actualReps.toDouble(),
       previousValue: currentRecord?.value,
       achievedAt: DateTime.now(),
-      context: {
-        'weight': weight,
-        'rpe': set.rpe,
-        'setNumber': set.setNumber,
-      },
+      context: {'weight': weight, 'rpe': set.rpe, 'setNumber': set.setNumber},
     );
   }
 
@@ -220,7 +219,8 @@ class DetectPersonalRecordsUseCase {
     final estimated1RM = OneRMCalculator.calculateAverage(weight, actualReps);
     final currentRecord = existingPRs[PRType.oneRM];
 
-    if (currentRecord != null && estimated1RM <= currentRecord.value) return null;
+    if (currentRecord != null && estimated1RM <= currentRecord.value)
+      return null;
 
     return PersonalRecordAchieved(
       exerciseId: exercise.id,
@@ -243,13 +243,16 @@ class DetectPersonalRecordsUseCase {
     Exercise exercise,
     Map<PRType, PersonalRecord> existingPRs,
   ) {
-    final completedSets = exercise.sets.where((s) => s.isCompleted && !s.isWarmup).toList();
+    final completedSets = exercise.sets
+        .where((s) => s.isCompleted && !s.isWarmup)
+        .toList();
     if (completedSets.isEmpty) return null;
 
     final totalVolume = completedSets.fold(0.0, (sum, set) => sum + set.volume);
     final currentRecord = existingPRs[PRType.volume];
-    
-    if (currentRecord != null && totalVolume <= currentRecord.value) return null;
+
+    if (currentRecord != null && totalVolume <= currentRecord.value)
+      return null;
 
     return PersonalRecordAchieved(
       exerciseId: exercise.id,
@@ -260,8 +263,13 @@ class DetectPersonalRecordsUseCase {
       achievedAt: DateTime.now(),
       context: {
         'sets': completedSets.length,
-        'averageWeight': completedSets.fold(0.0, (sum, s) => sum + (s.weight ?? 0)) / completedSets.length,
-        'totalReps': completedSets.fold(0, (sum, s) => sum + (s.actualReps ?? s.reps ?? 0)),
+        'averageWeight':
+            completedSets.fold(0.0, (sum, s) => sum + (s.weight ?? 0)) /
+            completedSets.length,
+        'totalReps': completedSets.fold(
+          0,
+          (sum, s) => sum + (s.actualReps ?? s.reps ?? 0),
+        ),
       },
     );
   }
@@ -270,11 +278,14 @@ class DetectPersonalRecordsUseCase {
     Exercise exercise,
     Map<PRType, PersonalRecord> existingPRs,
   ) {
-    final completedSets = exercise.sets.where((s) => s.isCompleted && !s.isWarmup).length;
+    final completedSets = exercise.sets
+        .where((s) => s.isCompleted && !s.isWarmup)
+        .length;
     if (completedSets <= 0) return null;
 
     final currentRecord = existingPRs[PRType.totalSets];
-    if (currentRecord != null && completedSets <= currentRecord.value) return null;
+    if (currentRecord != null && completedSets <= currentRecord.value)
+      return null;
 
     return PersonalRecordAchieved(
       exerciseId: exercise.id,
@@ -284,7 +295,9 @@ class DetectPersonalRecordsUseCase {
       previousValue: currentRecord?.value,
       achievedAt: DateTime.now(),
       context: {
-        'totalVolume': exercise.sets.where((s) => s.isCompleted).fold(0.0, (sum, s) => sum + s.volume),
+        'totalVolume': exercise.sets
+            .where((s) => s.isCompleted)
+            .fold(0.0, (sum, s) => sum + s.volume),
       },
     );
   }
@@ -294,12 +307,12 @@ class DetectPersonalRecordsUseCase {
 
     final weight = set.weight ?? 0;
     final improvement = (weight - currentRecord) / currentRecord;
-    
+
     // Lower confidence for very large improvements (might be input error)
     if (improvement > 0.2) return 0.3;
     if (improvement > 0.1) return 0.6;
     if (improvement > 0.05) return 0.8;
-    
+
     return 0.9;
   }
 
@@ -309,14 +322,13 @@ class DetectPersonalRecordsUseCase {
     if (reps <= 6) return 0.8;
     if (reps <= 10) return 0.6;
     if (reps <= 15) return 0.4;
-    
+
     return 0.2; // Low confidence for high rep estimates
   }
 }
 
 /// Prediction for potential personal record
 class PRPrediction {
-
   const PRPrediction({
     required this.type,
     required this.predictedValue,

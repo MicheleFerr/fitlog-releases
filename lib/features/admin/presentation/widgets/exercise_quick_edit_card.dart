@@ -18,7 +18,6 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class ExerciseQuickEditCard extends ConsumerStatefulWidget {
-
   const ExerciseQuickEditCard({
     super.key,
     required this.exercise,
@@ -32,7 +31,8 @@ class ExerciseQuickEditCard extends ConsumerStatefulWidget {
   final VoidCallback? onTap;
 
   @override
-  ConsumerState<ExerciseQuickEditCard> createState() => _ExerciseQuickEditCardState();
+  ConsumerState<ExerciseQuickEditCard> createState() =>
+      _ExerciseQuickEditCardState();
 }
 
 class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
@@ -42,7 +42,9 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
   @override
   Widget build(BuildContext context) {
     final dropdownValues = ref.watch(exerciseDropdownValuesProvider);
-    final requiresWeight = ref.watch(requiresWeightProvider(widget.exercise.attrezzatura));
+    final requiresWeight = ref.watch(
+      requiresWeightProvider(widget.exercise.attrezzatura),
+    );
 
     return Card(
       elevation: widget.isSelected ? 4 : 1,
@@ -115,7 +117,10 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                   if (!requiresWeight)
                     Container(
                       margin: const EdgeInsets.only(left: 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: context.colors.secondary,
                         borderRadius: BorderRadius.circular(12),
@@ -166,7 +171,10 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
               GestureDetector(
                 onTap: () => setState(() => _isExpanded = !_isExpanded),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: context.colors.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(16),
@@ -204,13 +212,23 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
               // Focus muscles chips
               if (widget.exercise.focus.isNotEmpty) ...[
                 const SizedBox(height: 8),
-                _buildMuscleChips(context, 'Focus:', widget.exercise.focus, context.colors.primary),
+                _buildMuscleChips(
+                  context,
+                  'Focus:',
+                  widget.exercise.focus,
+                  context.colors.primary,
+                ),
               ],
 
               // Secondary muscles chips
               if (widget.exercise.muscoliSecondari.isNotEmpty) ...[
                 const SizedBox(height: 8),
-                _buildMuscleChips(context, 'Secondari:', widget.exercise.muscoliSecondari, context.colors.secondary),
+                _buildMuscleChips(
+                  context,
+                  'Secondari:',
+                  widget.exercise.muscoliSecondari,
+                  context.colors.secondary,
+                ),
               ],
             ],
           ),
@@ -219,7 +237,10 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
     );
   }
 
-  Widget _buildBasicFields(BuildContext context, ExerciseDropdownValues values) {
+  Widget _buildBasicFields(
+    BuildContext context,
+    ExerciseDropdownValues values,
+  ) {
     final l10n = context.l10n;
 
     return Wrap(
@@ -273,7 +294,10 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
     );
   }
 
-  Widget _buildExpandedFields(BuildContext context, ExerciseDropdownValues values) {
+  Widget _buildExpandedFields(
+    BuildContext context,
+    ExerciseDropdownValues values,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -332,7 +356,12 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
     );
   }
 
-  Widget _buildMuscleChips(BuildContext context, String label, List<String> muscles, Color color) {
+  Widget _buildMuscleChips(
+    BuildContext context,
+    String label,
+    List<String> muscles,
+    Color color,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -346,25 +375,29 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
         const SizedBox(height: 4),
         Wrap(
           spacing: 4,
-          children: muscles.map((muscle) =>
-            Chip(
-              label: Text(
-                muscle,
-                style: context.textTheme.labelSmall,
-              ),
-              backgroundColor: color.withValues(alpha: 0.1),
-              side: BorderSide(color: color.withValues(alpha: 0.3)),
-              padding: EdgeInsets.zero,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              visualDensity: VisualDensity.compact,
-            ),
-          ).toList(),
+          children: muscles
+              .map(
+                (muscle) => Chip(
+                  label: Text(muscle, style: context.textTheme.labelSmall),
+                  backgroundColor: color.withValues(alpha: 0.1),
+                  side: BorderSide(color: color.withValues(alpha: 0.3)),
+                  padding: EdgeInsets.zero,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: VisualDensity.compact,
+                ),
+              )
+              .toList(),
         ),
       ],
     );
   }
 
-  Widget _buildExpandedField(BuildContext context, String label, String value, IconData icon) {
+  Widget _buildExpandedField(
+    BuildContext context,
+    String label,
+    String value,
+    IconData icon,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -377,11 +410,7 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            size: 16,
-            color: context.colors.onSurfaceVariant,
-          ),
+          Icon(icon, size: 16, color: context.colors.onSurfaceVariant),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -458,17 +487,15 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                   Text(
                     'Tieni premuto per anteprima',
                     style: context.textTheme.labelSmall?.copyWith(
-                      color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
+                      color: context.colors.onSurfaceVariant.withValues(
+                        alpha: 0.7,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            Icon(
-              AppIcons.touchApp,
-              size: 16,
-              color: context.colors.primary,
-            ),
+            Icon(AppIcons.touchApp, size: 16, color: context.colors.primary),
           ],
         ),
       ),
@@ -481,16 +508,17 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
     setState(() => _isSaving = true);
 
     try {
-      await ref.read(databaseManagerProvider.notifier).quickUpdateField(
-        widget.exercise.id,
-        field,
-        value,
-      );
+      await ref
+          .read(databaseManagerProvider.notifier)
+          .quickUpdateField(widget.exercise.id, field, value);
 
       // Mostra feedback se è stato cambiato a corpo libero
       if (field == 'attrezzatura' && value == 'Corpo Libero') {
         if (mounted) {
-          SnackBarService.showSuccess(context, '✓ Pesi disabilitati per ${widget.exercise.nome}');
+          SnackBarService.showSuccess(
+            context,
+            '✓ Pesi disabilitati per ${widget.exercise.nome}',
+          );
         }
       }
     } finally {
@@ -608,7 +636,6 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
 
 /// Dropdown compatto per quick edit
 class _QuickDropdown extends StatelessWidget {
-
   const _QuickDropdown({
     required this.icon,
     required this.value,
@@ -650,36 +677,34 @@ class _QuickDropdown extends StatelessWidget {
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
             value: value,
-            items: items.map((item) =>
-              DropdownMenuItem(
-                value: item,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(icon, size: 16, color: color),
-                    const SizedBox(width: 4),
-                    Flexible(
-                      child: Text(
-                        item,
-                        style: context.textTheme.labelMedium?.copyWith(
-                          color: color,
+            items: items
+                .map(
+                  (item) => DropdownMenuItem(
+                    value: item,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(icon, size: 16, color: color),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: Text(
+                            item,
+                            style: context.textTheme.labelMedium?.copyWith(
+                              color: color,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            ).toList(),
+                  ),
+                )
+                .toList(),
             onChanged: onChanged,
             isDense: true,
             isExpanded: true,
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            icon: Icon(
-              AppIcons.arrowDropDown,
-              size: 18,
-              color: color,
-            ),
+            icon: Icon(AppIcons.arrowDropDown, size: 18, color: color),
           ),
         ),
       ),

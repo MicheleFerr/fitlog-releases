@@ -11,7 +11,7 @@ class OneRMCalculator {
     if (reps <= 0) return 0;
     if (reps == 1) return weight;
     if (reps > 36) return 0; // Formula breaks down above 36 reps
-    
+
     return weight * (36 / (37 - reps));
   }
 
@@ -22,7 +22,7 @@ class OneRMCalculator {
     if (weight <= 0) return 0;
     if (reps <= 0) return 0;
     if (reps == 1) return weight;
-    
+
     return weight * (1 + reps / 30);
   }
 
@@ -33,7 +33,7 @@ class OneRMCalculator {
     if (weight <= 0) return 0;
     if (reps <= 0) return 0;
     if (reps == 1) return weight;
-    
+
     return weight * pow(reps, 0.10);
   }
 
@@ -44,7 +44,7 @@ class OneRMCalculator {
     if (weight <= 0) return 0;
     if (reps <= 0) return 0;
     if (reps == 1) return weight;
-    
+
     return weight * (1 + reps / 40);
   }
 
@@ -55,7 +55,7 @@ class OneRMCalculator {
     if (weight <= 0) return 0;
     if (reps <= 0) return 0;
     if (reps == 1) return weight;
-    
+
     return (100 * weight) / (48.8 + 53.8 * exp(-0.075 * reps));
   }
 
@@ -65,35 +65,35 @@ class OneRMCalculator {
     if (weight <= 0) return 0;
     if (reps <= 0) return 0;
     if (reps == 1) return weight;
-    
+
     final brzycki = calculateBrzycki(weight, reps);
     final epley = calculateEpley(weight, reps);
     final lombardi = calculateLombardi(weight, reps);
     final oconner = calculateOConner(weight, reps);
     final wathan = calculateWathan(weight, reps);
-    
+
     // Adjust weights based on rep range
     if (reps <= 5) {
       // Low reps: Brzycki and Epley are most accurate
-      return (brzycki * 0.35 + 
-              epley * 0.35 + 
-              lombardi * 0.10 + 
-              oconner * 0.10 + 
-              wathan * 0.10);
+      return (brzycki * 0.35 +
+          epley * 0.35 +
+          lombardi * 0.10 +
+          oconner * 0.10 +
+          wathan * 0.10);
     } else if (reps <= 10) {
       // Medium reps: Balanced weights
-      return (brzycki * 0.25 + 
-              epley * 0.25 + 
-              lombardi * 0.20 + 
-              oconner * 0.15 + 
-              wathan * 0.15);
+      return (brzycki * 0.25 +
+          epley * 0.25 +
+          lombardi * 0.20 +
+          oconner * 0.15 +
+          wathan * 0.15);
     } else {
       // High reps: Lombardi and Wathan are more reliable
-      return (brzycki * 0.15 + 
-              epley * 0.15 + 
-              lombardi * 0.30 + 
-              oconner * 0.10 + 
-              wathan * 0.30);
+      return (brzycki * 0.15 +
+          epley * 0.15 +
+          lombardi * 0.30 +
+          oconner * 0.10 +
+          wathan * 0.30);
     }
   }
 
@@ -103,7 +103,7 @@ class OneRMCalculator {
     if (oneRM <= 0) return 0;
     if (targetReps <= 0) return 0;
     if (targetReps == 1) return oneRM;
-    
+
     // Using inverse Brzycki formula for consistency
     return oneRM * (37 - targetReps) / 36;
   }
@@ -119,13 +119,13 @@ class OneRMCalculator {
         'warmup': 0,
       };
     }
-    
+
     return {
       'max_strength': oneRM * 0.90, // 90% - Max strength training
-      'strength': oneRM * 0.85,     // 85% - Strength building
-      'hypertrophy': oneRM * 0.75,  // 75% - Muscle building
-      'endurance': oneRM * 0.60,    // 60% - Muscular endurance
-      'warmup': oneRM * 0.50,       // 50% - Warm-up weight
+      'strength': oneRM * 0.85, // 85% - Strength building
+      'hypertrophy': oneRM * 0.75, // 75% - Muscle building
+      'endurance': oneRM * 0.60, // 60% - Muscular endurance
+      'warmup': oneRM * 0.50, // 50% - Warm-up weight
     };
   }
 
@@ -133,24 +133,27 @@ class OneRMCalculator {
   /// Uses RPE scale (6-10) to adjust 1RM calculation
   static double calculateWithRPE(double weight, int reps, int rpe) {
     if (weight <= 0 || reps <= 0 || rpe < 6 || rpe > 10) return 0;
-    
+
     // Estimate reps in reserve based on RPE
     final repsInReserve = 10 - rpe;
-    
+
     // Adjust total reps capability
     final totalRepsCapability = reps + repsInReserve;
-    
+
     // Calculate 1RM based on total capability
     return calculateAverage(weight, totalRepsCapability);
   }
 
   /// Calculate confidence interval for 1RM estimation
   /// Returns lower and upper bounds based on formula variance
-  static Map<String, double> calculateConfidenceInterval(double weight, int reps) {
+  static Map<String, double> calculateConfidenceInterval(
+    double weight,
+    int reps,
+  ) {
     if (weight <= 0 || reps <= 0) {
       return {'lower': 0, 'average': 0, 'upper': 0};
     }
-    
+
     final results = [
       calculateBrzycki(weight, reps),
       calculateEpley(weight, reps),
@@ -158,9 +161,9 @@ class OneRMCalculator {
       calculateOConner(weight, reps),
       calculateWathan(weight, reps),
     ];
-    
+
     results.sort();
-    
+
     return {
       'lower': results.first,
       'average': calculateAverage(weight, reps),
@@ -209,7 +212,7 @@ extension OneRMExtensions on double {
   /// Convert weight to different unit
   double toKg() => this * 0.453592; // From lbs
   double toLbs() => this * 2.20462; // From kg
-  
+
   /// Round to nearest 2.5 (for kg plates)
   double roundToPlate({double increment = 2.5}) {
     return (this / increment).round() * increment;

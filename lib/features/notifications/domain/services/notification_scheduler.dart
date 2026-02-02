@@ -24,8 +24,8 @@ class NotificationScheduler {
   NotificationScheduler({
     required NotificationRepository repository,
     required NotificationMessagePool messagePool,
-  })  : _repository = repository,
-        _messagePool = messagePool;
+  }) : _repository = repository,
+       _messagePool = messagePool;
 
   final NotificationRepository _repository;
   final NotificationMessagePool _messagePool;
@@ -54,7 +54,9 @@ class NotificationScheduler {
     await cancelWorkoutForgotten();
 
     // Check if we can send (anti-spam)
-    if (!await _repository.canSendNotification(NotificationType.workoutForgotten)) {
+    if (!await _repository.canSendNotification(
+      NotificationType.workoutForgotten,
+    )) {
       if (kDebugMode) {
         debugPrint('📵 Workout forgotten notification blocked by anti-spam');
       }
@@ -62,7 +64,9 @@ class NotificationScheduler {
     }
 
     // Get message with rotation
-    final lastKey = await _repository.getLastMessageKey(NotificationType.workoutForgotten);
+    final lastKey = await _repository.getLastMessageKey(
+      NotificationType.workoutForgotten,
+    );
     final message = _messagePool.getMessage(
       type: NotificationType.workoutForgotten,
       l10n: l10n,
@@ -70,7 +74,9 @@ class NotificationScheduler {
     );
 
     // Schedule notification
-    final scheduledTime = DateTime.now().add(NotificationConfig.workoutForgottenDelay);
+    final scheduledTime = DateTime.now().add(
+      NotificationConfig.workoutForgottenDelay,
+    );
     final recordId = await _repository.scheduleNotification(
       type: NotificationType.workoutForgotten,
       message: message,
@@ -80,7 +86,9 @@ class NotificationScheduler {
     _activeWorkoutForgottenRecordId = recordId;
 
     if (kDebugMode) {
-      debugPrint('📅 Workout forgotten notification scheduled for $scheduledTime');
+      debugPrint(
+        '📅 Workout forgotten notification scheduled for $scheduledTime',
+      );
     }
   }
 
@@ -115,7 +123,9 @@ class NotificationScheduler {
       return;
     }
 
-    final daysSinceLastWorkout = DateTime.now().difference(lastWorkoutDate).inDays;
+    final daysSinceLastWorkout = DateTime.now()
+        .difference(lastWorkoutDate)
+        .inDays;
 
     // Determine which inactivity day to use
     int? targetDay;
@@ -144,7 +154,9 @@ class NotificationScheduler {
     }
 
     // Get message with rotation
-    final lastKey = await _repository.getLastMessageKey(NotificationType.inactivity);
+    final lastKey = await _repository.getLastMessageKey(
+      NotificationType.inactivity,
+    );
     final message = _messagePool.getMessage(
       type: NotificationType.inactivity,
       l10n: l10n,
@@ -173,7 +185,9 @@ class NotificationScheduler {
     }
 
     if (kDebugMode) {
-      debugPrint('📅 Inactivity ($targetDay days) notification scheduled for $scheduledTime');
+      debugPrint(
+        '📅 Inactivity ($targetDay days) notification scheduled for $scheduledTime',
+      );
     }
   }
 
@@ -209,7 +223,9 @@ class NotificationScheduler {
     }
 
     // Get message with rotation and exercise name
-    final lastKey = await _repository.getLastMessageKey(NotificationType.insightPr);
+    final lastKey = await _repository.getLastMessageKey(
+      NotificationType.insightPr,
+    );
     final message = _messagePool.getMessage(
       type: NotificationType.insightPr,
       l10n: l10n,
@@ -218,7 +234,9 @@ class NotificationScheduler {
     );
 
     // Schedule with short delay (high value notification)
-    final scheduledTime = DateTime.now().add(NotificationConfig.prNotificationDelay);
+    final scheduledTime = DateTime.now().add(
+      NotificationConfig.prNotificationDelay,
+    );
     await _repository.scheduleNotification(
       type: NotificationType.insightPr,
       message: message,
@@ -227,7 +245,9 @@ class NotificationScheduler {
     );
 
     if (kDebugMode) {
-      debugPrint('📅 PR notification for "$exerciseName" scheduled for $scheduledTime');
+      debugPrint(
+        '📅 PR notification for "$exerciseName" scheduled for $scheduledTime',
+      );
     }
   }
 
@@ -245,7 +265,9 @@ class NotificationScheduler {
     }
 
     // Check if we can send (anti-spam)
-    if (!await _repository.canSendNotification(NotificationType.insightStreak)) {
+    if (!await _repository.canSendNotification(
+      NotificationType.insightStreak,
+    )) {
       if (kDebugMode) {
         debugPrint('📵 Streak notification blocked by anti-spam');
       }
@@ -253,7 +275,9 @@ class NotificationScheduler {
     }
 
     // Get message with rotation and streak count
-    final lastKey = await _repository.getLastMessageKey(NotificationType.insightStreak);
+    final lastKey = await _repository.getLastMessageKey(
+      NotificationType.insightStreak,
+    );
     final message = _messagePool.getMessage(
       type: NotificationType.insightStreak,
       l10n: l10n,
@@ -279,7 +303,9 @@ class NotificationScheduler {
     );
 
     if (kDebugMode) {
-      debugPrint('📅 Streak ($streakDays days) notification scheduled for $scheduledTime');
+      debugPrint(
+        '📅 Streak ($streakDays days) notification scheduled for $scheduledTime',
+      );
     }
   }
 
@@ -292,12 +318,15 @@ class NotificationScheduler {
     required AppLocalizations l10n,
   }) async {
     // Only notify if increase is significant
-    if (volumePercentIncrease < (NotificationConfig.volumeIncreaseThreshold * 100).round()) {
+    if (volumePercentIncrease <
+        (NotificationConfig.volumeIncreaseThreshold * 100).round()) {
       return;
     }
 
     // Check if we can send (anti-spam)
-    if (!await _repository.canSendNotification(NotificationType.insightVolume)) {
+    if (!await _repository.canSendNotification(
+      NotificationType.insightVolume,
+    )) {
       if (kDebugMode) {
         debugPrint('📵 Volume notification blocked by anti-spam');
       }
@@ -305,7 +334,9 @@ class NotificationScheduler {
     }
 
     // Get message with rotation and volume percent
-    final lastKey = await _repository.getLastMessageKey(NotificationType.insightVolume);
+    final lastKey = await _repository.getLastMessageKey(
+      NotificationType.insightVolume,
+    );
     final message = _messagePool.getMessage(
       type: NotificationType.insightVolume,
       l10n: l10n,
@@ -331,7 +362,9 @@ class NotificationScheduler {
     );
 
     if (kDebugMode) {
-      debugPrint('📅 Volume (+$volumePercentIncrease%) notification scheduled for $scheduledTime');
+      debugPrint(
+        '📅 Volume (+$volumePercentIncrease%) notification scheduled for $scheduledTime',
+      );
     }
   }
 

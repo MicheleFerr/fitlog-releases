@@ -14,7 +14,10 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 
 /// Helper class for template saving functionality
 class SaveTemplateHelper {
-  static void showSaveAsTemplateDialog(BuildContext context, WidgetRef ref) async {
+  static void showSaveAsTemplateDialog(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     final currentWorkout = ref.read(currentWorkoutProvider);
     if (currentWorkout == null) return;
 
@@ -47,11 +50,11 @@ class SaveTemplateHelper {
             mainAxisSize: MainAxisSize.min,
             children: [
               SemanticIcon(
-  icon: AppIcons.package,
-  semanticLabel: 'Package',
-  size: AppIconSize.xxlarge,
-  color: context.colors.error,
-),
+                icon: AppIcons.package,
+                semanticLabel: 'Package',
+                size: AppIconSize.xxlarge,
+                color: context.colors.error,
+              ),
               const SizedBox(height: 16),
               Text(context.l10n.templateQuotaExceededMessage(maxTemplates)),
               const SizedBox(height: 8),
@@ -118,7 +121,8 @@ class SaveTemplateHelper {
             mainAxisSize: MainAxisSize.min,
             children: [
               // Show warning if close to limit
-              if (maxTemplates - usedTemplates <= 2 && maxTemplates - usedTemplates > 0)
+              if (maxTemplates - usedTemplates <= 2 &&
+                  maxTemplates - usedTemplates > 0)
                 Container(
                   padding: const EdgeInsets.all(12),
                   margin: const EdgeInsets.only(bottom: 16),
@@ -139,7 +143,10 @@ class SaveTemplateHelper {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          context.l10n.templateQuotaWarning(usedTemplates, maxTemplates),
+                          context.l10n.templateQuotaWarning(
+                            usedTemplates,
+                            maxTemplates,
+                          ),
                           style: context.textTheme.labelSmall?.copyWith(
                             fontSize: 12,
                             color: context.warningColor,
@@ -156,9 +163,9 @@ class SaveTemplateHelper {
                   hintText: context.l10n.templateNameHint,
                   border: const OutlineInputBorder(),
                   prefixIcon: const SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: 'Workout',
-),
+                    icon: AppIcons.workout,
+                    semanticLabel: 'Workout',
+                  ),
                 ),
                 textCapitalization: TextCapitalization.words,
               ),
@@ -170,9 +177,9 @@ class SaveTemplateHelper {
                   hintText: context.l10n.descriptionHint,
                   border: const OutlineInputBorder(),
                   prefixIcon: const SemanticIcon(
-  icon: AppIcons.template,
-  semanticLabel: 'Template',
-),
+                    icon: AppIcons.template,
+                    semanticLabel: 'Template',
+                  ),
                 ),
                 maxLines: 3,
                 textCapitalization: TextCapitalization.sentences,
@@ -189,10 +196,7 @@ class SaveTemplateHelper {
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      AppIcons.cloudUpload,
-                      color: context.colors.primary,
-                    ),
+                    Icon(AppIcons.cloudUpload, color: context.colors.primary),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
@@ -231,13 +235,19 @@ class SaveTemplateHelper {
 
               try {
                 // Mostra loading indicator
-                SnackBarService.showInfo(context, context.l10n.savingToFirebase);
+                SnackBarService.showInfo(
+                  context,
+                  context.l10n.savingToFirebase,
+                );
 
                 // Crea e salva il template
-                await ref.read(workoutTemplateNotifierProvider.notifier)
+                await ref
+                    .read(workoutTemplateNotifierProvider.notifier)
                     .createTemplateFromWorkout(
                       name: name,
-                      description: description.isEmpty ? 'Template personalizzato' : description,
+                      description: description.isEmpty
+                          ? 'Template personalizzato'
+                          : description,
                       exercises: currentWorkout.exercises,
                       tags: [], // Potremmo aggiungere tags in futuro
                     );
@@ -266,11 +276,11 @@ class SaveTemplateHelper {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SemanticIcon(
-  icon: AppIcons.inventory2,
-  semanticLabel: 'Inventory2',
-  size: AppIconSize.xxlarge,
-  color: context.warningColor,
-),
+                            icon: AppIcons.inventory2,
+                            semanticLabel: 'Inventory2',
+                            size: AppIconSize.xxlarge,
+                            color: context.warningColor,
+                          ),
                           const SizedBox(height: 16),
                           Text(errorMessage.replaceAll('Exception: ', '')),
                           const SizedBox(height: 8),
@@ -298,15 +308,17 @@ class SaveTemplateHelper {
                 } else {
                   SnackBarService.showError(
                     context,
-                    context.l10n.savingErrorMessage(errorMessage.replaceAll('Exception: ', '')),
+                    context.l10n.savingErrorMessage(
+                      errorMessage.replaceAll('Exception: ', ''),
+                    ),
                   );
                 }
               }
             },
             icon: const SemanticIcon(
-  icon: AppIcons.cloudUpload,
-  semanticLabel: 'Cloud upload',
-),
+              icon: AppIcons.cloudUpload,
+              semanticLabel: 'Cloud upload',
+            ),
             label: Text(context.l10n.saveToFirebase),
           ),
         ],

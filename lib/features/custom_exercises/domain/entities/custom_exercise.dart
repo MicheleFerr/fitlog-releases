@@ -97,7 +97,8 @@ class CustomExercise extends Equatable {
       nome: json['nome'] as String,
       baseExerciseId: json['baseExerciseId'] as String?,
       focus: (json['focus'] as List<dynamic>).cast<String>(),
-      muscoliSecondari: (json['muscoliSecondari'] as List<dynamic>).cast<String>(),
+      muscoliSecondari: (json['muscoliSecondari'] as List<dynamic>)
+          .cast<String>(),
       tipoEsercizio: json['tipoEsercizio'] as String,
       patternMovimento: json['patternMovimento'] as String,
       attrezzatura: json['attrezzatura'] as String,
@@ -182,10 +183,12 @@ class CustomExercise extends Equatable {
   // ========== Computed Properties ==========
 
   /// True if this custom exercise is currently active (not expired)
-  bool get isActive => unlockedUntil == null || DateTime.now().isBefore(unlockedUntil!);
+  bool get isActive =>
+      unlockedUntil == null || DateTime.now().isBefore(unlockedUntil!);
 
   /// True if this custom exercise has expired (temporary unlock)
-  bool get isExpired => unlockedUntil != null && DateTime.now().isAfter(unlockedUntil!);
+  bool get isExpired =>
+      unlockedUntil != null && DateTime.now().isAfter(unlockedUntil!);
 
   /// True if this is a permanent custom exercise (free slot or Premium)
   bool get isPermanent => unlockedUntil == null;
@@ -266,17 +269,17 @@ class CustomExercise extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        nome,
-        baseExerciseId,
-        focus,
-        muscoliSecondari,
-        tipoEsercizio,
-        patternMovimento,
-        attrezzatura,
-        createdAt,
-        unlockedUntil,
-        isModifiedFromBase,
-        userId,
-      ];
+    id,
+    nome,
+    baseExerciseId,
+    focus,
+    muscoliSecondari,
+    tipoEsercizio,
+    patternMovimento,
+    attrezzatura,
+    createdAt,
+    unlockedUntil,
+    isModifiedFromBase,
+    userId,
+  ];
 }

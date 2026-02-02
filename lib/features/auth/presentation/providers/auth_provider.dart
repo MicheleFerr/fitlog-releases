@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
-import 'package:gymbro_flutter_new/core/services/rate_limiter.dart' show CooldownLimiter;
+import 'package:gymbro_flutter_new/core/services/rate_limiter.dart'
+    show CooldownLimiter;
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/achievement_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_records_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
@@ -51,7 +52,9 @@ final currentUserProvider = StreamProvider<UserModel?>((ref) async* {
             yield UserModel(
               uid: user.uid,
               email: user.email ?? '',
-              displayName: user.displayName ?? (user.isAnonymous ? 'Guest User' : 'GymBro User'),
+              displayName:
+                  user.displayName ??
+                  (user.isAnonymous ? 'Guest User' : 'GymBro User'),
               photoURL: user.photoURL,
               isGuest: user.isAnonymous,
               preferences: const UserPreferences(),
@@ -64,7 +67,9 @@ final currentUserProvider = StreamProvider<UserModel?>((ref) async* {
         yield UserModel(
           uid: user.uid,
           email: user.email ?? '',
-          displayName: user.displayName ?? (user.isAnonymous ? 'Guest User' : 'GymBro User'),
+          displayName:
+              user.displayName ??
+              (user.isAnonymous ? 'Guest User' : 'GymBro User'),
           photoURL: user.photoURL,
           isGuest: user.isAnonymous,
           preferences: const UserPreferences(),
@@ -230,7 +235,9 @@ class AuthController extends Notifier<AsyncValue<void>> {
       CooldownLimiter.resetAll();
 
       if (kDebugMode) {
-        debugPrint('[Auth] ✅ Cleared in-memory caches (profile, exercise modal, rate limiter)');
+        debugPrint(
+          '[Auth] ✅ Cleared in-memory caches (profile, exercise modal, rate limiter)',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -250,7 +257,9 @@ class AuthController extends Notifier<AsyncValue<void>> {
       await WorkoutSessionLAService().resetOnLogout();
 
       if (kDebugMode) {
-        debugPrint('[Auth] ✅ Cleared singleton services (usage tracker, progress cache, LA service)');
+        debugPrint(
+          '[Auth] ✅ Cleared singleton services (usage tracker, progress cache, LA service)',
+        );
       }
     } catch (e) {
       if (kDebugMode) {

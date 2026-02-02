@@ -106,19 +106,19 @@ abstract class ChatConversation with _$ChatConversation {
       lastMessageAt: data['lastMessageAt'] is Timestamp
           ? (data['lastMessageAt'] as Timestamp).toDate()
           : data['lastMessageAt'] != null
-              ? DateTime.tryParse(data['lastMessageAt'] as String? ?? '')
-              : null,
+          ? DateTime.tryParse(data['lastMessageAt'] as String? ?? '')
+          : null,
       lastMessageSenderId: data['lastMessageSenderId'] as String?,
       coachUnreadCount: data['coachUnreadCount'] as int? ?? 0,
       athleteUnreadCount: data['athleteUnreadCount'] as int? ?? 0,
       createdAt: data['createdAt'] is Timestamp
           ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.tryParse(data['createdAt'] as String? ?? '') ??
-              DateTime.now(),
+                DateTime.now(),
       updatedAt: data['updatedAt'] is Timestamp
           ? (data['updatedAt'] as Timestamp).toDate()
           : DateTime.tryParse(data['updatedAt'] as String? ?? '') ??
-              DateTime.now(),
+                DateTime.now(),
     );
   }
 
@@ -132,7 +132,8 @@ abstract class ChatConversation with _$ChatConversation {
       if (lastMessage != null) 'lastMessage': lastMessage,
       if (lastMessageAt != null)
         'lastMessageAt': Timestamp.fromDate(lastMessageAt!),
-      if (lastMessageSenderId != null) 'lastMessageSenderId': lastMessageSenderId,
+      if (lastMessageSenderId != null)
+        'lastMessageSenderId': lastMessageSenderId,
       'coachUnreadCount': coachUnreadCount,
       'athleteUnreadCount': athleteUnreadCount,
       'createdAt': Timestamp.fromDate(createdAt),

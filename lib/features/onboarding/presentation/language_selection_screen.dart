@@ -10,10 +10,12 @@ class LanguageSelectionScreen extends ConsumerStatefulWidget {
   const LanguageSelectionScreen({super.key});
 
   @override
-  ConsumerState<LanguageSelectionScreen> createState() => _LanguageSelectionScreenState();
+  ConsumerState<LanguageSelectionScreen> createState() =>
+      _LanguageSelectionScreenState();
 }
 
-class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScreen>
+class _LanguageSelectionScreenState
+    extends ConsumerState<LanguageSelectionScreen>
     with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late AnimationController _scaleController;
@@ -42,18 +44,11 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeOut));
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _scaleController,
-      curve: Curves.elasticOut,
-    ));
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
+    );
 
     // Auto-detect device language
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -106,7 +101,9 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
     final languageCode = _selectedLanguage;
     final countryCode = _selectedLanguage == 'it' ? 'IT' : 'US';
 
-    await ref.read(appConfigProvider.notifier).setLanguage(languageCode, countryCode);
+    await ref
+        .read(appConfigProvider.notifier)
+        .setLanguage(languageCode, countryCode);
 
     // Navigate to initial onboarding (6-step profile setup)
     if (mounted) {
@@ -127,7 +124,10 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
           child: ScaleTransition(
             scale: _scaleAnimation,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 24.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 32.0,
+                vertical: 24.0,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -139,10 +139,7 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
-                        colors: [
-                          colorScheme.primary,
-                          colorScheme.secondary,
-                        ],
+                        colors: [colorScheme.primary, colorScheme.secondary],
                       ),
                       shape: BoxShape.circle,
                       boxShadow: [
@@ -154,11 +151,11 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
                       ],
                     ),
                     child: SemanticIcon(
-  icon: AppIcons.language,
-  semanticLabel: 'Language',
-  size: AppIconSize.medium,
-  color: colorScheme.onPrimary,
-),
+                      icon: AppIcons.language,
+                      semanticLabel: 'Language',
+                      size: AppIconSize.medium,
+                      color: colorScheme.onPrimary,
+                    ),
                   ),
 
                   const SizedBox(height: 48),
@@ -264,24 +261,24 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: isSelected
-            ? colorScheme.primaryContainer.withValues(alpha: 0.3)
-            : colorScheme.surface,
+              ? colorScheme.primaryContainer.withValues(alpha: 0.3)
+              : colorScheme.surface,
           border: Border.all(
             color: isSelected
-              ? colorScheme.primary
-              : colorScheme.outline.withValues(alpha: 0.3),
+                ? colorScheme.primary
+                : colorScheme.outline.withValues(alpha: 0.3),
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(16),
           boxShadow: isSelected
-            ? [
-                BoxShadow(
-                  color: colorScheme.primary.withValues(alpha: 0.2),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                )
-              ]
-            : null,
+              ? [
+                  BoxShadow(
+                    color: colorScheme.primary.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
         ),
         child: Row(
           children: [
@@ -299,8 +296,8 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
                 language,
                 style: theme.textTheme.titleLarge?.copyWith(
                   color: isSelected
-                    ? colorScheme.primary
-                    : colorScheme.onSurface,
+                      ? colorScheme.primary
+                      : colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -308,11 +305,7 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
 
             // Selection indicator
             if (isSelected)
-              Icon(
-                AppIcons.complete,
-                color: colorScheme.primary,
-                size: 28,
-              ),
+              Icon(AppIcons.complete, color: colorScheme.primary, size: 28),
           ],
         ),
       ),

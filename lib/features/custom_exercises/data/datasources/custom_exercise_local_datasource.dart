@@ -27,7 +27,7 @@ import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 class CustomExerciseLocalDatasource {
   /// Constructor with dependency injection
   CustomExerciseLocalDatasource([HiveBoxManagerEnhanced? boxManager])
-      : _boxManager = boxManager ?? HiveBoxManagerEnhanced();
+    : _boxManager = boxManager ?? HiveBoxManagerEnhanced();
 
   static const String _boxName = 'custom_exercises';
 
@@ -42,7 +42,9 @@ class CustomExerciseLocalDatasource {
     // Skip if init already failed to prevent repeated errors
     if (_initFailed) {
       if (kDebugMode) {
-        debugPrint('⚠️ [CustomExerciseLocalDatasource] Skipping init - previous attempt failed');
+        debugPrint(
+          '⚠️ [CustomExerciseLocalDatasource] Skipping init - previous attempt failed',
+        );
       }
       return;
     }
@@ -55,12 +57,16 @@ class CustomExerciseLocalDatasource {
       }
 
       if (kDebugMode) {
-        debugPrint('✅ [CustomExerciseLocalDatasource] Initialized successfully');
+        debugPrint(
+          '✅ [CustomExerciseLocalDatasource] Initialized successfully',
+        );
       }
     } on BoxCorruptedException catch (e) {
       // HiveBoxManagerEnhanced already deleted corrupted box, box is recreated empty
       if (kDebugMode) {
-        debugPrint('⚠️ [CustomExerciseLocalDatasource] Box was corrupted and recovered: $e');
+        debugPrint(
+          '⚠️ [CustomExerciseLocalDatasource] Box was corrupted and recovered: $e',
+        );
       }
       // Try again - box should be recreated
       try {
@@ -68,7 +74,9 @@ class CustomExerciseLocalDatasource {
       } catch (retryError) {
         _initFailed = true;
         if (kDebugMode) {
-          debugPrint('❌ [CustomExerciseLocalDatasource] Init failed after corruption recovery: $retryError');
+          debugPrint(
+            '❌ [CustomExerciseLocalDatasource] Init failed after corruption recovery: $retryError',
+          );
         }
       }
     } on BoxOpenException catch (e) {
@@ -79,7 +87,9 @@ class CustomExerciseLocalDatasource {
     } catch (e) {
       _initFailed = true;
       if (kDebugMode) {
-        debugPrint('❌ [CustomExerciseLocalDatasource] Unexpected init error: $e');
+        debugPrint(
+          '❌ [CustomExerciseLocalDatasource] Unexpected init error: $e',
+        );
       }
     }
   }
@@ -238,14 +248,17 @@ class CustomExerciseLocalDatasource {
     // Calculate new expiration date
     final now = DateTime.now();
     final currentExpiry = exercise.unlockedUntil ?? now;
-    final newExpiry = (currentExpiry.isAfter(now) ? currentExpiry : now)
-        .add(Duration(days: days));
+    final newExpiry = (currentExpiry.isAfter(now) ? currentExpiry : now).add(
+      Duration(days: days),
+    );
 
     final updated = exercise.copyWith(unlockedUntil: newExpiry);
     await save(updated);
 
     if (kDebugMode) {
-      debugPrint('⏱️ Extended unlock for "${exercise.nome}" by $days days (expires: $newExpiry)');
+      debugPrint(
+        '⏱️ Extended unlock for "${exercise.nome}" by $days days (expires: $newExpiry)',
+      );
     }
   }
 

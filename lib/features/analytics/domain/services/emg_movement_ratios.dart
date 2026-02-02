@@ -94,7 +94,10 @@ class EmgRatioConfig {
 
   /// Total should equal 1.0
   double get total =>
-      primaryRatio + highSynergistRatio + moderateSynergistRatio + lowSynergistRatio;
+      primaryRatio +
+      highSynergistRatio +
+      moderateSynergistRatio +
+      lowSynergistRatio;
 
   /// Validate ratios sum to 1.0
   bool get isValid => (total - 1.0).abs() < 0.001;
@@ -201,10 +204,14 @@ class EmgMovementRatios {
   /// Get simple two-way ratio (primary vs all synergists combined)
   ///
   /// For backwards compatibility with 70/30 style distribution
-  static (double primary, double secondary) getSimpleRatios(MovementPattern pattern) {
+  static (double primary, double secondary) getSimpleRatios(
+    MovementPattern pattern,
+  ) {
     final config = getRatios(pattern);
     final secondaryTotal =
-        config.highSynergistRatio + config.moderateSynergistRatio + config.lowSynergistRatio;
+        config.highSynergistRatio +
+        config.moderateSynergistRatio +
+        config.lowSynergistRatio;
     return (config.primaryRatio, secondaryTotal);
   }
 
@@ -219,9 +226,8 @@ class EmgMovementRatios {
   ///
   /// Returns: (primaryRatio, highSynergistRatio, moderateSynergistRatio)
   /// where highSynergist applies to secondary[0] and moderate to secondary[1+]
-  static (double primary, double highSynergist, double moderateSynergist) getTieredRatios(
-    MovementPattern pattern,
-  ) {
+  static (double primary, double highSynergist, double moderateSynergist)
+  getTieredRatios(MovementPattern pattern) {
     final config = getRatios(pattern);
     return (
       config.primaryRatio,
@@ -264,7 +270,8 @@ class EmgMovementRatios {
       // Remaining synergists split modRatio
       if (secondary.length > 1) {
         final remainingSynergists = secondary.sublist(1);
-        final volumePerMod = (totalVolume * modRatio) / remainingSynergists.length;
+        final volumePerMod =
+            (totalVolume * modRatio) / remainingSynergists.length;
         for (final muscle in remainingSynergists) {
           result[muscle.toLowerCase()] = volumePerMod;
         }
@@ -495,10 +502,7 @@ class EmgMovementRatios {
         lower.contains('powerlifting') ||
         lower.contains('olympic')) {
       // These need name-based inference
-      return inferPattern(
-        fileCategory: '',
-        exerciseName: exerciseName,
-      );
+      return inferPattern(fileCategory: '', exerciseName: exerciseName);
     }
 
     // Flexibility/Plyometrics/Other → minimal muscle distribution

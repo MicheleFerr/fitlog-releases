@@ -41,10 +41,7 @@ import 'package:url_launcher/url_launcher.dart';
 /// When variety is low (>80% in one zone), shows an "Optimize Training"
 /// button that opens a modal with actionable suggestions.
 class RepZoneTab extends ConsumerStatefulWidget {
-  const RepZoneTab({
-    super.key,
-    required this.exerciseHistories,
-  });
+  const RepZoneTab({super.key, required this.exerciseHistories});
 
   final List<ExerciseHistory> exerciseHistories;
 
@@ -70,8 +67,11 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
     }
 
     // Check if optimization is needed using RepZoneSuggestionEngine
-    final analysis = ref.watch(repZoneAnalysisProvider(widget.exerciseHistories));
-    final needsOptimization = analysis.needsSuggestions &&
+    final analysis = ref.watch(
+      repZoneAnalysisProvider(widget.exerciseHistories),
+    );
+    final needsOptimization =
+        analysis.needsSuggestions &&
         analysis.totalSets >= RepZoneSuggestionEngine.minimumSetsForAnalysis;
 
     return SingleChildScrollView(
@@ -223,7 +223,9 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
                 Text(
                   l10n.optimizeTrainingHint,
                   style: context.textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
+                    color: colorScheme.onPrimaryContainer.withValues(
+                      alpha: 0.8,
+                    ),
                   ),
                 ),
               ],
@@ -247,7 +249,9 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
   /// Open optimization sheet
   void _openOptimizationSheet(RepZoneAnalysis analysis) async {
     debugPrint('🔍 [REP_ZONE_TAB] _openOptimizationSheet called');
-    debugPrint('🔍 [REP_ZONE_TAB] exerciseHistories: ${widget.exerciseHistories.length}');
+    debugPrint(
+      '🔍 [REP_ZONE_TAB] exerciseHistories: ${widget.exerciseHistories.length}',
+    );
     HapticFeedback.mediumImpact();
 
     // Show loading dialog
@@ -306,14 +310,13 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
       if (suggestions.isEmpty) {
         debugPrint('🔍 [REP_ZONE_TAB] No suggestions - showing snackbar');
         // No suggestions available
-        SnackBarService.showInfo(
-          context,
-          context.l10n.noSuggestionsAvailable,
-        );
+        SnackBarService.showInfo(context, context.l10n.noSuggestionsAvailable);
         return;
       }
 
-      debugPrint('🔍 [REP_ZONE_TAB] Opening bottom sheet with ${suggestions.length} suggestions...');
+      debugPrint(
+        '🔍 [REP_ZONE_TAB] Opening bottom sheet with ${suggestions.length} suggestions...',
+      );
       await showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
@@ -337,10 +340,7 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
       if (!mounted) return;
       Navigator.of(context, rootNavigator: true).pop();
 
-      SnackBarService.showError(
-        context,
-        context.l10n.errorLoadingExercises,
-      );
+      SnackBarService.showError(context, context.l10n.errorLoadingExercises);
     }
   }
 
@@ -366,12 +366,15 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
     }
 
     return RepContinuumData(
-      strengthPercentage:
-          totalSets > 0 ? (strengthSets / totalSets * 100) : 0.0,
-      hypertrophyPercentage:
-          totalSets > 0 ? (hypertrophySets / totalSets * 100) : 0.0,
-      endurancePercentage:
-          totalSets > 0 ? (enduranceSets / totalSets * 100) : 0.0,
+      strengthPercentage: totalSets > 0
+          ? (strengthSets / totalSets * 100)
+          : 0.0,
+      hypertrophyPercentage: totalSets > 0
+          ? (hypertrophySets / totalSets * 100)
+          : 0.0,
+      endurancePercentage: totalSets > 0
+          ? (enduranceSets / totalSets * 100)
+          : 0.0,
       strengthSets: strengthSets,
       hypertrophySets: hypertrophySets,
       enduranceSets: enduranceSets,
@@ -510,8 +513,10 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
               ),
             if (data.hypertrophyPercentage > 0)
               Expanded(
-                flex:
-                    (data.hypertrophyPercentage * 100).toInt().clamp(1, 10000),
+                flex: (data.hypertrophyPercentage * 100).toInt().clamp(
+                  1,
+                  10000,
+                ),
                 child: Container(
                   color: colorScheme.primary,
                   alignment: Alignment.center,
@@ -566,13 +571,14 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
               ? '${l10n.strengthZone}\n${data.strengthPercentage.toStringAsFixed(1)}%'
               : '${data.strengthPercentage.toStringAsFixed(0)}%',
           radius: isTouched ? 75 : 65,
-          titleStyle: (isTouched
-                  ? context.textTheme.labelMedium
-                  : context.textTheme.labelSmall)!
-              .copyWith(
-            fontWeight: FontWeight.bold,
-            color: colorScheme.onError,
-          ),
+          titleStyle:
+              (isTouched
+                      ? context.textTheme.labelMedium
+                      : context.textTheme.labelSmall)!
+                  .copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onError,
+                  ),
           titlePositionPercentageOffset: 0.55,
         ),
       );
@@ -589,13 +595,14 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
               ? '${l10n.hypertrophyZone}\n${data.hypertrophyPercentage.toStringAsFixed(1)}%'
               : '${data.hypertrophyPercentage.toStringAsFixed(0)}%',
           radius: isTouched ? 75 : 65,
-          titleStyle: (isTouched
-                  ? context.textTheme.labelMedium
-                  : context.textTheme.labelSmall)!
-              .copyWith(
-            fontWeight: FontWeight.bold,
-            color: colorScheme.onPrimary,
-          ),
+          titleStyle:
+              (isTouched
+                      ? context.textTheme.labelMedium
+                      : context.textTheme.labelSmall)!
+                  .copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onPrimary,
+                  ),
           titlePositionPercentageOffset: 0.55,
         ),
       );
@@ -615,13 +622,14 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
               ? '${l10n.enduranceZone}\n${data.endurancePercentage.toStringAsFixed(1)}%'
               : '${data.endurancePercentage.toStringAsFixed(0)}%',
           radius: isTouched ? 75 : 65,
-          titleStyle: (isTouched
-                  ? context.textTheme.labelMedium
-                  : context.textTheme.labelSmall)!
-              .copyWith(
-            fontWeight: FontWeight.bold,
-            color: colorScheme.onTertiary,
-          ),
+          titleStyle:
+              (isTouched
+                      ? context.textTheme.labelMedium
+                      : context.textTheme.labelSmall)!
+                  .copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onTertiary,
+                  ),
           titlePositionPercentageOffset: 0.55,
         ),
       );
@@ -688,19 +696,14 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
       decoration: BoxDecoration(
         color: iconColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: iconColor.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: iconColor.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
           Icon(icon, color: iconColor, size: AppIconSize.medium),
           const SizedBox(width: 16),
           Expanded(
-            child: Text(
-              recommendation,
-              style: context.textTheme.bodyMedium,
-            ),
+            child: Text(recommendation, style: context.textTheme.bodyMedium),
           ),
         ],
       ),
@@ -797,9 +800,7 @@ class _ZoneCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: color.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
             color: colorScheme.shadow.withValues(alpha: 0.05),
@@ -837,7 +838,9 @@ class _ZoneCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: color.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),

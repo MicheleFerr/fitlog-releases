@@ -30,7 +30,6 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 /// - Empty state quando nessun dato
 /// - Responsive a dark/light theme
 class ExerciseMetricChart extends StatelessWidget {
-
   const ExerciseMetricChart({
     super.key,
     required this.dataPoints,
@@ -100,8 +99,12 @@ class ExerciseMetricChart extends StatelessWidget {
                   },
                 ),
               ),
-              rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              rightTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              topTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
             ),
             borderData: FlBorderData(show: false),
             lineBarsData: [
@@ -116,12 +119,13 @@ class ExerciseMetricChart extends StatelessWidget {
                 barWidth: 3,
                 dotData: FlDotData(
                   show: true,
-                  getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
-                    radius: 4,
-                    color: context.colors.primary,
-                    strokeWidth: 2,
-                    strokeColor: context.colors.surface,
-                  ),
+                  getDotPainter: (spot, percent, barData, index) =>
+                      FlDotCirclePainter(
+                        radius: 4,
+                        color: context.colors.primary,
+                        strokeWidth: 2,
+                        strokeColor: context.colors.surface,
+                      ),
                 ),
                 belowBarData: BarAreaData(
                   show: true,
@@ -211,11 +215,10 @@ class ExerciseMetricChart extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SemanticIcon(
-  icon: AppIcons.showChart,
-  semanticLabel: 'Show chart',
-  size: AppIconSize.xxlarge,
-  color: context.colors.onSurface.withValues(alpha: 0.3,
-),
+              icon: AppIcons.showChart,
+              semanticLabel: 'Show chart',
+              size: AppIconSize.xxlarge,
+              color: context.colors.onSurface.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 8),
             Text(

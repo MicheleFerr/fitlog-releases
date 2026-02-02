@@ -49,7 +49,8 @@ class ScheduleLiveActivityService {
     if (!Platform.isIOS) {
       if (kDebugMode) {
         debugPrint(
-            '[ScheduleLiveActivity] Not on iOS, skipping Live Activity start');
+          '[ScheduleLiveActivity] Not on iOS, skipping Live Activity start',
+        );
       }
       return null;
     }
@@ -81,7 +82,8 @@ class ScheduleLiveActivityService {
         _currentActivityId = result;
         if (kDebugMode) {
           debugPrint(
-              '[ScheduleLiveActivity] ✅ Live Activity started: $_currentActivityId');
+            '[ScheduleLiveActivity] ✅ Live Activity started: $_currentActivityId',
+          );
         }
         return result;
       }
@@ -156,7 +158,8 @@ class ScheduleLiveActivityService {
 
       if (kDebugMode) {
         debugPrint(
-            '[ScheduleLiveActivity] ✅ Live Activity ended: $_currentActivityId');
+          '[ScheduleLiveActivity] ✅ Live Activity ended: $_currentActivityId',
+        );
       }
       _currentActivityId = null;
       return true;
@@ -193,7 +196,8 @@ class ScheduleLiveActivityService {
     } catch (e) {
       if (kDebugMode) {
         debugPrint(
-            '[ScheduleLiveActivity] ❌ Error ending all Live Activities: $e');
+          '[ScheduleLiveActivity] ❌ Error ending all Live Activities: $e',
+        );
       }
       return false;
     }
@@ -206,8 +210,9 @@ class ScheduleLiveActivityService {
     }
 
     try {
-      final result =
-          await _channel.invokeMethod('getActiveScheduleLiveActivities');
+      final result = await _channel.invokeMethod(
+        'getActiveScheduleLiveActivities',
+      );
       if (result is List) {
         return result.cast<String>();
       }
@@ -215,7 +220,8 @@ class ScheduleLiveActivityService {
     } catch (e) {
       if (kDebugMode) {
         debugPrint(
-            '[ScheduleLiveActivity] ❌ Error getting active activities: $e');
+          '[ScheduleLiveActivity] ❌ Error getting active activities: $e',
+        );
       }
       return [];
     }

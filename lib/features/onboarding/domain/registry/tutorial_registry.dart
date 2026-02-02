@@ -216,7 +216,8 @@ class TutorialRegistry {
   }
 
   /// Get all registered tutorials.
-  static List<TutorialDefinition> get allTutorials => _tutorials.values.toList();
+  static List<TutorialDefinition> get allTutorials =>
+      _tutorials.values.toList();
 
   /// Get all tutorial IDs.
   static List<String> get allTutorialIds =>

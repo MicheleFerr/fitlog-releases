@@ -38,15 +38,15 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 ///   error: (e, st) => ...,
 /// );
 /// ```
-final weeklyPatternProvider = FutureProvider.autoDispose<WeeklyPattern?>((ref) async {
+final weeklyPatternProvider = FutureProvider.autoDispose<WeeklyPattern?>((
+  ref,
+) async {
   try {
     // Get workout history
     final historyAsync = await ref.watch(workoutHistoryProvider.future);
 
     // Convert to Workout entities
-    final history = historyAsync
-        .map((detail) => detail.toWorkout())
-        .toList();
+    final history = historyAsync.map((detail) => detail.toWorkout()).toList();
 
     // Get muscle map
     final muscleMap = await ref.watch(exerciseMuscleMapProvider.future);
@@ -62,8 +62,12 @@ final weeklyPatternProvider = FutureProvider.autoDispose<WeeklyPattern?>((ref) a
     );
 
     if (kDebugMode && pattern != null) {
-      debugPrint('📊 [PredictiveBalance] Pattern detected: ${pattern.description}');
-      debugPrint('   Confidence: ${(pattern.confidence * 100).toStringAsFixed(0)}%');
+      debugPrint(
+        '📊 [PredictiveBalance] Pattern detected: ${pattern.description}',
+      );
+      debugPrint(
+        '   Confidence: ${(pattern.confidence * 100).toStringAsFixed(0)}%',
+      );
     }
 
     return pattern;
@@ -83,14 +87,19 @@ final weeklyPatternProvider = FutureProvider.autoDispose<WeeklyPattern?>((ref) a
 /// Provider for workouts completed this week (Monday-Sunday)
 ///
 /// Filters workout history to only include workouts from the current ISO week.
-final thisWeekWorkoutsProvider = FutureProvider.autoDispose<List<Workout>>((ref) async {
+final thisWeekWorkoutsProvider = FutureProvider.autoDispose<List<Workout>>((
+  ref,
+) async {
   final historyAsync = await ref.watch(workoutHistoryProvider.future);
 
   // Get start of current week (Monday)
   final now = DateTime.now();
   final daysFromMonday = now.weekday - 1;
-  final weekStart = DateTime(now.year, now.month, now.day)
-      .subtract(Duration(days: daysFromMonday));
+  final weekStart = DateTime(
+    now.year,
+    now.month,
+    now.day,
+  ).subtract(Duration(days: daysFromMonday));
 
   // Filter to this week's completed workouts
   return historyAsync
@@ -122,7 +131,9 @@ final thisWeekWorkoutsProvider = FutureProvider.autoDispose<List<Workout>>((ref)
 ///   // Show "Complete ${prediction.displayName} to balance"
 /// }
 /// ```
-final missingWorkoutProvider = FutureProvider.autoDispose<PatternPrediction?>((ref) async {
+final missingWorkoutProvider = FutureProvider.autoDispose<PatternPrediction?>((
+  ref,
+) async {
   try {
     // Get pattern
     final pattern = await ref.watch(weeklyPatternProvider.future);
@@ -172,40 +183,41 @@ final missingWorkoutProvider = FutureProvider.autoDispose<PatternPrediction?>((r
 /// Provider for all missing workouts this week
 ///
 /// Returns a list of all predicted missing workouts (not just the first one).
-final allMissingWorkoutsProvider = FutureProvider.autoDispose<List<PatternPrediction>>((ref) async {
-  try {
-    // Get pattern
-    final pattern = await ref.watch(weeklyPatternProvider.future);
-    if (pattern == null || !pattern.isValid) return [];
+final allMissingWorkoutsProvider =
+    FutureProvider.autoDispose<List<PatternPrediction>>((ref) async {
+      try {
+        // Get pattern
+        final pattern = await ref.watch(weeklyPatternProvider.future);
+        if (pattern == null || !pattern.isValid) return [];
 
-    // Get this week's workouts
-    final thisWeek = await ref.watch(thisWeekWorkoutsProvider.future);
+        // Get this week's workouts
+        final thisWeek = await ref.watch(thisWeekWorkoutsProvider.future);
 
-    // Get muscle map
-    final muscleMap = await ref.watch(exerciseMuscleMapProvider.future);
+        // Get muscle map
+        final muscleMap = await ref.watch(exerciseMuscleMapProvider.future);
 
-    // Get templates for suggestions
-    List<dynamic>? templates;
-    try {
-      templates = await ref.watch(customWorkoutTemplatesProvider.future);
-    } catch (_) {
-      // Templates are optional
-    }
+        // Get templates for suggestions
+        List<dynamic>? templates;
+        try {
+          templates = await ref.watch(customWorkoutTemplatesProvider.future);
+        } catch (_) {
+          // Templates are optional
+        }
 
-    // Predict all missing workouts
-    return PredictionEngineService.predictAll(
-      pattern: pattern,
-      thisWeekWorkouts: thisWeek,
-      muscleMap: muscleMap,
-      templates: templates?.cast(),
-    );
-  } catch (e) {
-    if (kDebugMode) {
-      debugPrint('❌ [PredictiveBalance] Prediction error: $e');
-    }
-    return [];
-  }
-});
+        // Predict all missing workouts
+        return PredictionEngineService.predictAll(
+          pattern: pattern,
+          thisWeekWorkouts: thisWeek,
+          muscleMap: muscleMap,
+          templates: templates?.cast(),
+        );
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('❌ [PredictiveBalance] Prediction error: $e');
+        }
+        return [];
+      }
+    });
 
 // ====================
 // MUSCLE RESOLUTION PROVIDER
@@ -221,29 +233,29 @@ final allMissingWorkoutsProvider = FutureProvider.autoDispose<List<PatternPredic
 ///   // Show "Complete Leg Day to resolve ✓"
 /// }
 /// ```
-final muscleWouldBeResolvedProvider =
-    FutureProvider.autoDispose.family<bool, String>((ref, muscleName) async {
-  try {
-    // Get pattern
-    final pattern = await ref.watch(weeklyPatternProvider.future);
-    if (pattern == null || !pattern.isValid) return false;
+final muscleWouldBeResolvedProvider = FutureProvider.autoDispose
+    .family<bool, String>((ref, muscleName) async {
+      try {
+        // Get pattern
+        final pattern = await ref.watch(weeklyPatternProvider.future);
+        if (pattern == null || !pattern.isValid) return false;
 
-    // Get this week's workouts
-    final thisWeek = await ref.watch(thisWeekWorkoutsProvider.future);
+        // Get this week's workouts
+        final thisWeek = await ref.watch(thisWeekWorkoutsProvider.future);
 
-    // Get muscle map
-    final muscleMap = await ref.watch(exerciseMuscleMapProvider.future);
+        // Get muscle map
+        final muscleMap = await ref.watch(exerciseMuscleMapProvider.future);
 
-    return PredictionEngineService.wouldResolveMuscle(
-      pattern: pattern,
-      thisWeekWorkouts: thisWeek,
-      muscleMap: muscleMap,
-      muscleName: muscleName,
-    );
-  } catch (_) {
-    return false;
-  }
-});
+        return PredictionEngineService.wouldResolveMuscle(
+          pattern: pattern,
+          thisWeekWorkouts: thisWeek,
+          muscleMap: muscleMap,
+          muscleName: muscleName,
+        );
+      } catch (_) {
+        return false;
+      }
+    });
 
 // ====================
 // PATTERN SUMMARY PROVIDER
@@ -267,31 +279,32 @@ final patternSummaryProvider = Provider.autoDispose<String?>((ref) {
 /// Provider for week completion status
 ///
 /// Returns a tuple-like class with completion info.
-final weekCompletionStatusProvider = FutureProvider.autoDispose<WeekCompletionStatus>((ref) async {
-  final pattern = await ref.watch(weeklyPatternProvider.future);
-  final thisWeek = await ref.watch(thisWeekWorkoutsProvider.future);
-  final missing = await ref.watch(allMissingWorkoutsProvider.future);
+final weekCompletionStatusProvider =
+    FutureProvider.autoDispose<WeekCompletionStatus>((ref) async {
+      final pattern = await ref.watch(weeklyPatternProvider.future);
+      final thisWeek = await ref.watch(thisWeekWorkoutsProvider.future);
+      final missing = await ref.watch(allMissingWorkoutsProvider.future);
 
-  if (pattern == null || !pattern.isValid) {
-    return WeekCompletionStatus(
-      hasPattern: false,
-      expectedWorkouts: 0,
-      completedWorkouts: thisWeek.length,
-      missingWorkouts: 0,
-      isComplete: false,
-    );
-  }
+      if (pattern == null || !pattern.isValid) {
+        return WeekCompletionStatus(
+          hasPattern: false,
+          expectedWorkouts: 0,
+          completedWorkouts: thisWeek.length,
+          missingWorkouts: 0,
+          isComplete: false,
+        );
+      }
 
-  final completed = pattern.cycle.length - missing.length;
+      final completed = pattern.cycle.length - missing.length;
 
-  return WeekCompletionStatus(
-    hasPattern: true,
-    expectedWorkouts: pattern.cycle.length,
-    completedWorkouts: completed,
-    missingWorkouts: missing.length,
-    isComplete: missing.isEmpty,
-  );
-});
+      return WeekCompletionStatus(
+        hasPattern: true,
+        expectedWorkouts: pattern.cycle.length,
+        completedWorkouts: completed,
+        missingWorkouts: missing.length,
+        isComplete: missing.isEmpty,
+      );
+    });
 
 /// Week completion status data class
 class WeekCompletionStatus {

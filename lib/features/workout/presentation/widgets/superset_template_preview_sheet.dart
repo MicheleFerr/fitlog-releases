@@ -47,16 +47,14 @@ class SupersetTemplatePreviewSheet extends ConsumerWidget {
     // Track template viewed
     final analytics = ref.read(analyticsServiceProvider);
     final tracker = SupersetTemplateEventTracker(analytics);
-    tracker.trackTemplateViewed(
-      template: template,
-      source: source,
-    );
+    tracker.trackTemplateViewed(template: template, source: source);
 
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor:
-          Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => SupersetTemplatePreviewSheet(
         template: template,
         onUseTemplate: onUseTemplate,
@@ -95,7 +93,8 @@ class SupersetTemplatePreviewSheet extends ConsumerWidget {
     final l10n = context.l10n;
     final hasScientificBasis = template.scientificBasis.isNotEmpty;
     final hasNotes = template.notes != null && template.notes!.isNotEmpty;
-    final hasEquipment = template.equipmentRequired != null &&
+    final hasEquipment =
+        template.equipmentRequired != null &&
         template.equipmentRequired!.isNotEmpty;
 
     final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.9);
@@ -161,8 +160,9 @@ class SupersetTemplatePreviewSheet extends ConsumerWidget {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: _getDifficultyColor(context)
-                                      .withValues(alpha: 0.15),
+                                  color: _getDifficultyColor(
+                                    context,
+                                  ).withValues(alpha: 0.15),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
@@ -277,10 +277,7 @@ class SupersetTemplatePreviewSheet extends ConsumerWidget {
                       value: '${template.restAfterRound}s',
                     ),
                     if (template.tut != null)
-                      _ConfigRow(
-                        label: 'TUT',
-                        value: template.tut!,
-                      ),
+                      _ConfigRow(label: 'TUT', value: template.tut!),
 
                     // Scientific evidence
                     if (hasScientificBasis) ...[
@@ -293,12 +290,14 @@ class SupersetTemplatePreviewSheet extends ConsumerWidget {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: context.colors.primaryContainer
-                              .withValues(alpha: 0.3),
+                          color: context.colors.primaryContainer.withValues(
+                            alpha: 0.3,
+                          ),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: context.colors.primary
-                                .withValues(alpha: 0.2),
+                            color: context.colors.primary.withValues(
+                              alpha: 0.2,
+                            ),
                           ),
                         ),
                         child: Text(
@@ -339,16 +338,19 @@ class SupersetTemplatePreviewSheet extends ConsumerWidget {
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
-                        children: template.equipmentRequired!.map(
-                          (equipment) => Chip(
-                            label: Text(
-                              equipment,
-                              style: context.textTheme.bodySmall,
-                            ),
-                            backgroundColor: context.colors.surfaceContainer,
-                            side: BorderSide.none,
-                          ),
-                        ).toList(),
+                        children: template.equipmentRequired!
+                            .map(
+                              (equipment) => Chip(
+                                label: Text(
+                                  equipment,
+                                  style: context.textTheme.bodySmall,
+                                ),
+                                backgroundColor:
+                                    context.colors.surfaceContainer,
+                                side: BorderSide.none,
+                              ),
+                            )
+                            .toList(),
                       ),
                     ],
 
@@ -373,8 +375,12 @@ class SupersetTemplatePreviewSheet extends ConsumerWidget {
                               HapticFeedback.mediumImpact();
 
                               // Track template used
-                              final analytics = ref.read(analyticsServiceProvider);
-                              final tracker = SupersetTemplateEventTracker(analytics);
+                              final analytics = ref.read(
+                                analyticsServiceProvider,
+                              );
+                              final tracker = SupersetTemplateEventTracker(
+                                analytics,
+                              );
                               tracker.trackTemplateUsed(
                                 template: template,
                                 source: 'preview_sheet',
@@ -397,11 +403,16 @@ class SupersetTemplatePreviewSheet extends ConsumerWidget {
                               HapticFeedback.lightImpact();
 
                               // Track custom copy saved
-                              final analytics = ref.read(analyticsServiceProvider);
-                              final tracker = SupersetTemplateEventTracker(analytics);
+                              final analytics = ref.read(
+                                analyticsServiceProvider,
+                              );
+                              final tracker = SupersetTemplateEventTracker(
+                                analytics,
+                              );
                               tracker.trackCustomTemplateSaved(
                                 template: template,
-                                customTemplateName: template.name, // Will be customized later
+                                customTemplateName:
+                                    template.name, // Will be customized later
                               );
 
                               Navigator.of(context).pop();
@@ -425,10 +436,7 @@ class SupersetTemplatePreviewSheet extends ConsumerWidget {
 
 /// Section header widget
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({
-    required this.icon,
-    required this.title,
-  });
+  const _SectionHeader({required this.icon, required this.title});
 
   final IconData icon;
   final String title;
@@ -456,10 +464,7 @@ class _SectionHeader extends StatelessWidget {
 
 /// Configuration row widget
 class _ConfigRow extends StatelessWidget {
-  const _ConfigRow({
-    required this.label,
-    required this.value,
-  });
+  const _ConfigRow({required this.label, required this.value});
 
   final String label;
   final String value;
@@ -491,10 +496,7 @@ class _ConfigRow extends StatelessWidget {
 
 /// Stat chip widget
 class _StatChip extends StatelessWidget {
-  const _StatChip({
-    required this.icon,
-    required this.label,
-  });
+  const _StatChip({required this.icon, required this.label});
 
   final IconData icon;
   final String label;

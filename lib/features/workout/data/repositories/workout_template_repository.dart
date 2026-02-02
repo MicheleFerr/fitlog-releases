@@ -19,37 +19,37 @@ class WorkoutTemplateRepository {
   Future<List<WorkoutTemplate>> getAllTemplates() async {
     final customTemplates = await getCustomTemplates();
     final predefinedTemplates = await getPredefinedTemplates();
-    
+
     // Combina e ordina per utilizzo e data
     final allTemplates = [...predefinedTemplates, ...customTemplates];
     allTemplates.sort((a, b) {
       // Prima ordina per utilizzo (più usati prima)
       final usageCompare = b.usageCount.compareTo(a.usageCount);
       if (usageCompare != 0) return usageCompare;
-      
+
       // Poi per data di aggiornamento (più recenti prima)
       return b.updatedAt.compareTo(a.updatedAt);
     });
-    
+
     return allTemplates;
   }
 
-  /// Ottiene solo i template personalizzati dell'utente  
+  /// Ottiene solo i template personalizzati dell'utente
   Future<List<WorkoutTemplate>> getCustomTemplates() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final templatesJson = prefs.getString(_templatesKey);
-      
+
       if (templatesJson == null) {
         return [];
       }
-      
+
       final List<dynamic> templatesList = json.decode(templatesJson);
       final customTemplates = templatesList
           .map((json) => WorkoutTemplate.fromJson(json))
           .where((template) => template.isCustom)
           .toList();
-      
+
       return customTemplates;
     } catch (e) {
       return [];
@@ -60,18 +60,18 @@ class WorkoutTemplateRepository {
   Future<List<WorkoutTemplate>> getPredefinedTemplates() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       // Controlla se i template predefiniti sono già stati inizializzati
       final isInitialized = prefs.getBool(_predefinedTemplatesKey) ?? false;
-      
+
       if (!isInitialized) {
         await _initializePredefinedTemplates();
         await prefs.setBool(_predefinedTemplatesKey, true);
       }
-      
+
       final templatesJson = prefs.getString(_templatesKey);
       if (templatesJson == null) return [];
-      
+
       final List<dynamic> templatesList = json.decode(templatesJson);
       return templatesList
           .map((json) => WorkoutTemplate.fromJson(json))
@@ -85,7 +85,9 @@ class WorkoutTemplateRepository {
   /// Salva un template personalizzato
   Future<void> saveTemplate(WorkoutTemplate template) async {
     if (kDebugMode) {
-      debugPrint('💾 LOCAL: Salvando template "${template.name}" con ${template.exercises.length} esercizi');
+      debugPrint(
+        '💾 LOCAL: Salvando template "${template.name}" con ${template.exercises.length} esercizi',
+      );
     }
 
     try {
@@ -100,9 +102,13 @@ class WorkoutTemplateRepository {
       customTemplates.add(customTemplate);
 
       if (kDebugMode) {
-        debugPrint('💾 LOCAL: Template aggiunto, totale custom templates: ${customTemplates.length}');
+        debugPrint(
+          '💾 LOCAL: Template aggiunto, totale custom templates: ${customTemplates.length}',
+        );
       }
-      debugPrint('💾 LOCAL: Template appena aggiunto ha ${customTemplate.exercises.length} esercizi');
+      debugPrint(
+        '💾 LOCAL: Template appena aggiunto ha ${customTemplate.exercises.length} esercizi',
+      );
 
       // Save only custom templates
       await _saveCustomTemplates(customTemplates);
@@ -155,16 +161,21 @@ class WorkoutTemplateRepository {
 
       if (customIndex != -1) {
         // It's a custom template, update and save
-        customTemplates[customIndex] = customTemplates[customIndex].incrementUsage();
+        customTemplates[customIndex] = customTemplates[customIndex]
+            .incrementUsage();
         await _saveCustomTemplates(customTemplates);
         if (kDebugMode) {
-          debugPrint('✅ LOCAL REPO: Incremented usage for custom template $templateId');
+          debugPrint(
+            '✅ LOCAL REPO: Incremented usage for custom template $templateId',
+          );
         }
       } else {
         // It might be a predefined template - we don't persist usage for those
         // Or we could track usage separately for predefined templates
         if (kDebugMode) {
-          debugPrint('ℹ️ LOCAL REPO: Template $templateId is not a custom template, usage not tracked');
+          debugPrint(
+            'ℹ️ LOCAL REPO: Template $templateId is not a custom template, usage not tracked',
+          );
         }
       }
     } catch (e) {
@@ -178,7 +189,7 @@ class WorkoutTemplateRepository {
   Future<List<WorkoutTemplate>> searchTemplates(String query) async {
     final templates = await getAllTemplates();
     final lowerQuery = query.toLowerCase();
-    
+
     return templates.where((template) {
       return template.name.toLowerCase().contains(lowerQuery) ||
           template.description.toLowerCase().contains(lowerQuery) ||
@@ -189,7 +200,7 @@ class WorkoutTemplateRepository {
   /// Filtra template per tag
   Future<List<WorkoutTemplate>> getTemplatesByTags(List<String> tags) async {
     final templates = await getAllTemplates();
-    
+
     return templates.where((template) {
       return tags.any((tag) => template.tags.contains(tag));
     }).toList();
@@ -226,7 +237,8 @@ class WorkoutTemplateRepository {
     final predefinedTemplates = [
       WorkoutTemplate(
         name: 'Upper Body Strength',
-        description: 'Allenamento completo parte superiore: petto, schiena, spalle e braccia',
+        description:
+            'Allenamento completo parte superiore: petto, schiena, spalle e braccia',
         exercises: [
           const ExerciseTemplate(
             exerciseId: 'panca_piana',
@@ -264,7 +276,7 @@ class WorkoutTemplateRepository {
         estimatedDuration: 60,
         isCustom: false,
       ),
-      
+
       WorkoutTemplate(
         name: 'Lower Body Power',
         description: 'Allenamento gambe e glutei: squat, stacchi e affondi',
@@ -385,7 +397,9 @@ class WorkoutTemplateRepository {
   }
 
   /// Salva solo i template personalizzati nel storage
-  Future<void> _saveCustomTemplates(List<WorkoutTemplate> customTemplates) async {
+  Future<void> _saveCustomTemplates(
+    List<WorkoutTemplate> customTemplates,
+  ) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       // Filter to ensure only custom templates are saved
@@ -407,9 +421,15 @@ class WorkoutTemplateRepository {
 
   /// Stima la durata del workout basata sugli esercizi
   int _estimateDuration(List<Exercise> exercises) {
-    final int totalSets = exercises.fold(0, (sum, exercise) => sum + exercise.sets.length);
-    final int restTime = exercises.fold(0, (sum, exercise) => sum + (exercise.restTime ?? 90));
-    
+    final int totalSets = exercises.fold(
+      0,
+      (sum, exercise) => sum + exercise.sets.length,
+    );
+    final int restTime = exercises.fold(
+      0,
+      (sum, exercise) => sum + (exercise.restTime ?? 90),
+    );
+
     // Stima: 2 minuti per set + tempo di riposo
     return (totalSets * 2) + (restTime ~/ 60);
   }

@@ -78,46 +78,41 @@ List<SessionDataPoint> aggregateSetsBySession(List<ExerciseSetData> sets) {
       (max, s) => s.weight > max ? s.weight : max,
     );
 
-    final avgWeight = daySets.fold<double>(
-      0,
-      (sum, s) => sum + s.weight,
-    ) / daySets.length;
+    final avgWeight =
+        daySets.fold<double>(0, (sum, s) => sum + s.weight) / daySets.length;
 
-    final totalVolume = daySets.fold<double>(
-      0,
-      (sum, s) => sum + s.volume,
-    );
+    final totalVolume = daySets.fold<double>(0, (sum, s) => sum + s.volume);
 
     final maxReps = daySets.fold<int>(
       0,
       (max, s) => s.reps > max ? s.reps : max,
     );
 
-    final avgReps = daySets.fold<double>(
-      0,
-      (sum, s) => sum + s.reps,
-    ) / daySets.length;
+    final avgReps =
+        daySets.fold<double>(0, (sum, s) => sum + s.reps) / daySets.length;
 
     // Calculate average RPE (only for sets with RPE data)
     final setsWithRpe = daySets.where((s) => s.rpe != null).toList();
     final avgRpe = setsWithRpe.isNotEmpty
         ? setsWithRpe.fold<double>(0, (sum, s) => sum + (s.rpe ?? 0)) /
-            setsWithRpe.length
+              setsWithRpe.length
         : null;
 
     // Use the first set's date (with time stripped to midnight)
     final sessionDate = _dateOnly(daySets.first.date);
 
-    sessions.add(SessionDataPoint(
-      date: sessionDate,
-      maxWeight: maxWeight,
-      avgWeight: avgWeight,
-      totalVolume: totalVolume,
-      maxReps: maxReps,
-      avgReps: avgReps,
-      avgRpe: avgRpe,
-      setCount: daySets.length,
-    ));
+    sessions.add(
+      SessionDataPoint(
+        date: sessionDate,
+        maxWeight: maxWeight,
+        avgWeight: avgWeight,
+        totalVolume: totalVolume,
+        maxReps: maxReps,
+        avgReps: avgReps,
+        avgRpe: avgRpe,
+        setCount: daySets.length,
+      ),
+    );
   }
 
   // Sort by date (oldest first)

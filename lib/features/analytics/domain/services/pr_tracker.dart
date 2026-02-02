@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 
 /// Personal Record entity
 class PersonalRecord {
-
   PersonalRecord({
     required this.id,
     required this.userId,
@@ -22,7 +21,7 @@ class PersonalRecord {
 
   factory PersonalRecord.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return PersonalRecord(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -97,9 +96,8 @@ class PersonalRecord {
 
 /// Service for tracking and managing personal records
 class PRTracker {
-  
   PRTracker({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
   final FirebaseFirestore _firestore;
 
   /// Check and update PRs for a completed exercise
@@ -113,11 +111,8 @@ class PRTracker {
     final newPRs = <PersonalRecord>[];
 
     // Get existing PRs for this exercise (use userId, not email)
-    final existingPRs = await getExercisePRs(
-      userId,
-      activity.exerciseId,
-    );
-    
+    final existingPRs = await getExercisePRs(userId, activity.exerciseId);
+
     // Check weight PR (pass userId for correct Firestore permissions)
     final weightPR = await _checkWeightPR(activity, existingPRs, userId);
     if (weightPR != null) newPRs.add(weightPR);
@@ -137,12 +132,12 @@ class PRTracker {
     // Check total sets PR
     final setsPR = await _checkSetsPR(activity, existingPRs, userId);
     if (setsPR != null) newPRs.add(setsPR);
-    
+
     // Save all new PRs
     for (final pr in newPRs) {
       await savePR(pr);
     }
-    
+
     return newPRs;
   }
 
@@ -154,8 +149,10 @@ class PRTracker {
           .where('userId', isEqualTo: userId)
           .orderBy('achievedAt', descending: true)
           .get();
-      
-      return snapshot.docs.map((doc) => PersonalRecord.fromFirestore(doc)).toList();
+
+      return snapshot.docs
+          .map((doc) => PersonalRecord.fromFirestore(doc))
+          .toList();
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Error fetching user PRs: $e');
@@ -175,19 +172,19 @@ class PRTracker {
           .where('userId', isEqualTo: userId)
           .where('exerciseId', isEqualTo: exerciseId)
           .get();
-      
+
       final prs = <PRType, PersonalRecord>{};
-      
+
       for (final doc in snapshot.docs) {
         final pr = PersonalRecord.fromFirestore(doc);
         final existing = prs[pr.type];
-        
+
         // Keep only the highest value for each type
         if (existing == null || pr.value > existing.value) {
           prs[pr.type] = pr;
         }
       }
-      
+
       return prs;
     } catch (e) {
       if (kDebugMode) {
@@ -200,7 +197,7 @@ class PRTracker {
   /// Get recent PRs (last 30 days)
   Future<List<PersonalRecord>> getRecentPRs(String userId) async {
     final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
-    
+
     try {
       final snapshot = await _firestore
           .collection('personalRecords')
@@ -208,8 +205,10 @@ class PRTracker {
           .where('achievedAt', isGreaterThan: Timestamp.fromDate(thirtyDaysAgo))
           .orderBy('achievedAt', descending: true)
           .get();
-      
-      return snapshot.docs.map((doc) => PersonalRecord.fromFirestore(doc)).toList();
+
+      return snapshot.docs
+          .map((doc) => PersonalRecord.fromFirestore(doc))
+          .toList();
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Error fetching recent PRs: $e');
@@ -254,8 +253,10 @@ class PRTracker {
           .where('type', isEqualTo: type.name)
           .orderBy('achievedAt')
           .get();
-      
-      return snapshot.docs.map((doc) => PersonalRecord.fromFirestore(doc)).toList();
+
+      return snapshot.docs
+          .map((doc) => PersonalRecord.fromFirestore(doc))
+          .toList();
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Error fetching PR timeline: $e');
@@ -268,17 +269,18 @@ class PRTracker {
   Future<PRStats> getPRStats(String userId) async {
     final allPRs = await getUserPRs(userId);
     final recentPRs = await getRecentPRs(userId);
-    
+
     final prsByType = <PRType, int>{};
     for (final pr in allPRs) {
       prsByType[pr.type] = (prsByType[pr.type] ?? 0) + 1;
     }
-    
+
     final prsByExercise = <String, int>{};
     for (final pr in allPRs) {
-      prsByExercise[pr.exerciseName] = (prsByExercise[pr.exerciseName] ?? 0) + 1;
+      prsByExercise[pr.exerciseName] =
+          (prsByExercise[pr.exerciseName] ?? 0) + 1;
     }
-    
+
     return PRStats(
       totalPRs: allPRs.length,
       recentPRs: recentPRs.length,
@@ -289,18 +291,19 @@ class PRTracker {
   }
 
   // Private helper methods
-  
+
   Future<PersonalRecord?> _checkWeightPR(
     ExerciseActivity activity,
     Map<PRType, PersonalRecord> existingPRs,
     String userId,
   ) async {
-    final maxWeight = activity.sets
-        .where((s) => s.done && !s.isWarmup)
-        .fold(0.0, (max, set) {
-      final weight = double.tryParse(set.weight) ?? 0;
-      return weight > max ? weight : max;
-    });
+    final maxWeight = activity.sets.where((s) => s.done && !s.isWarmup).fold(
+      0.0,
+      (max, set) {
+        final weight = double.tryParse(set.weight) ?? 0;
+        return weight > max ? weight : max;
+      },
+    );
 
     if (maxWeight <= 0) return null;
 
@@ -357,7 +360,8 @@ class PRTracker {
       final existingReps = existing.value;
 
       // Only PR if more reps at same or higher weight
-      if (weight < existingWeight || (weight == existingWeight && reps <= existingReps)) {
+      if (weight < existingWeight ||
+          (weight == existingWeight && reps <= existingReps)) {
         return null;
       }
     }
@@ -371,10 +375,7 @@ class PRTracker {
       value: reps.toDouble(),
       previousValue: existing?.value,
       achievedAt: activity.createdAt,
-      metadata: {
-        'workoutName': activity.schedaName,
-        'weight': weight,
-      },
+      metadata: {'workoutName': activity.schedaName, 'weight': weight},
     );
   }
 
@@ -423,10 +424,7 @@ class PRTracker {
 
         if (estimated1RM > maxEstimated1RM) {
           maxEstimated1RM = estimated1RM;
-          bestSetData = {
-            'weight': weight,
-            'reps': reps,
-          };
+          bestSetData = {'weight': weight, 'reps': reps};
         }
       }
     }
@@ -445,10 +443,7 @@ class PRTracker {
       value: maxEstimated1RM,
       previousValue: existing?.value,
       achievedAt: activity.createdAt,
-      metadata: {
-        'workoutName': activity.schedaName,
-        ...?bestSetData,
-      },
+      metadata: {'workoutName': activity.schedaName, ...?bestSetData},
     );
   }
 
@@ -457,7 +452,9 @@ class PRTracker {
     Map<PRType, PersonalRecord> existingPRs,
     String userId,
   ) async {
-    final completedSets = activity.sets.where((s) => s.done && !s.isWarmup).length;
+    final completedSets = activity.sets
+        .where((s) => s.done && !s.isWarmup)
+        .length;
 
     if (completedSets <= 0) return null;
 
@@ -483,7 +480,6 @@ class PRTracker {
 
 /// PR Statistics
 class PRStats {
-
   PRStats({
     required this.totalPRs,
     required this.recentPRs,
@@ -500,16 +496,14 @@ class PRStats {
   /// Get most common PR type
   PRType? get mostCommonType {
     if (prsByType.isEmpty) return null;
-    
-    return prsByType.entries
-        .reduce((a, b) => a.value > b.value ? a : b)
-        .key;
+
+    return prsByType.entries.reduce((a, b) => a.value > b.value ? a : b).key;
   }
 
   /// Get exercise with most PRs
   String? get bestExercise {
     if (prsByExercise.isEmpty) return null;
-    
+
     return prsByExercise.entries
         .reduce((a, b) => a.value > b.value ? a : b)
         .key;

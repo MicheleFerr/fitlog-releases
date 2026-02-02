@@ -2,7 +2,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 
 /// Entità che rappresenta i dati di progresso dell'utente
 class ProgressData {
-
   const ProgressData({
     required this.totalVolume,
     required this.volumeIncrease,
@@ -44,11 +43,18 @@ class ProgressData {
 
     // Calcola incremento volume ultimo mese
     final oneMonthAgo = DateTime.now().subtract(const Duration(days: 30));
-    final recentActivities = activities.where((a) => a.createdAt.isAfter(oneMonthAgo)).toList();
-    final previousActivities = activities.where((a) => 
-        a.createdAt.isBefore(oneMonthAgo) && 
-        a.createdAt.isAfter(DateTime.now().subtract(const Duration(days: 60)))
-    ).toList();
+    final recentActivities = activities
+        .where((a) => a.createdAt.isAfter(oneMonthAgo))
+        .toList();
+    final previousActivities = activities
+        .where(
+          (a) =>
+              a.createdAt.isBefore(oneMonthAgo) &&
+              a.createdAt.isAfter(
+                DateTime.now().subtract(const Duration(days: 60)),
+              ),
+        )
+        .toList();
 
     double recentVolume = 0;
     for (final activity in recentActivities) {
@@ -80,12 +86,14 @@ class ProgressData {
     // Calcola PR per esercizio (solo ultimi 30 giorni)
     final Map<String, double> personalRecords = {};
     final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
-    final recentActivitiesForPR = activities.where((a) => a.createdAt.isAfter(thirtyDaysAgo)).toList();
-    
+    final recentActivitiesForPR = activities
+        .where((a) => a.createdAt.isAfter(thirtyDaysAgo))
+        .toList();
+
     for (final activity in recentActivitiesForPR) {
       final exerciseName = activity.exerciseName;
       double maxWeight = 0;
-      
+
       for (final set in activity.sets) {
         // Assicurati che il set sia completato
         if (set.done) {
@@ -95,9 +103,10 @@ class ProgressData {
           }
         }
       }
-      
+
       if (maxWeight > 0) {
-        if (!personalRecords.containsKey(exerciseName) || maxWeight > personalRecords[exerciseName]!) {
+        if (!personalRecords.containsKey(exerciseName) ||
+            maxWeight > personalRecords[exerciseName]!) {
           personalRecords[exerciseName] = maxWeight;
         }
       }
@@ -106,19 +115,19 @@ class ProgressData {
     // Trova l'esercizio con il PR più alto
     String prExerciseName = 'N/A';
     double maxPRValue = 0;
-    
+
     personalRecords.forEach((exercise, weight) {
       if (weight > maxPRValue) {
         maxPRValue = weight;
         prExerciseName = exercise;
       }
     });
-    
 
     // Conta workout unici (per giornata)
     final uniqueWorkoutDays = <String>{};
     for (final activity in activities) {
-      final dayKey = '${activity.createdAt.year}-${activity.createdAt.month}-${activity.createdAt.day}';
+      final dayKey =
+          '${activity.createdAt.year}-${activity.createdAt.month}-${activity.createdAt.day}';
       uniqueWorkoutDays.add(dayKey);
     }
 
@@ -169,7 +178,6 @@ class ProgressData {
 
 /// Statistiche rapide per la home screen
 class QuickStats {
-
   const QuickStats({
     required this.totalVolume,
     required this.volumeIncrease,

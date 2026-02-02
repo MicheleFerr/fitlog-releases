@@ -64,14 +64,14 @@ class WorkoutView extends ConsumerStatefulWidget {
 
   /// Callback when user updates a set
   final void Function(String exerciseId, ExerciseSet updatedSet)
-      onUpdateExerciseSet;
+  onUpdateExerciseSet;
 
   /// Callback when user updates an exercise
   final void Function(Exercise updatedExercise) onUpdateExercise;
 
   /// Callback when user updates a superset set
   final void Function(String supersetId, SupersetSet supersetSet)
-      onUpdateSupersetSet;
+  onUpdateSupersetSet;
 
   /// Callback when user reorders exercises
   final void Function(int oldIndex, int newIndex) onReorderExercises;
@@ -107,7 +107,8 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
     // Debug logging in development mode
     if (kDebugMode) {
       debugPrint(
-          '🏗️ [WorkoutView] Building view with ${widget.workout.exercises.length} exercises');
+        '🏗️ [WorkoutView] Building view with ${widget.workout.exercises.length} exercises',
+      );
     }
 
     return SafeArea(
@@ -153,8 +154,8 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
             child: widget.workout.exercises.isEmpty
                 ? const EmptyExerciseList()
                 : widget.isReorderMode
-                    ? _buildReorderableList(context, ref)
-                    : _buildNormalList(context, ref),
+                ? _buildReorderableList(context, ref)
+                : _buildNormalList(context, ref),
           ),
 
           // Banner Ad at bottom
@@ -196,7 +197,8 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
           // RepaintBoundary isolates each exercise card from repaints
           // in other parts of the list (e.g., timer tick updates)
           child: RepaintBoundary(
-            child: exercise.type == ExerciseType.superset &&
+            child:
+                exercise.type == ExerciseType.superset &&
                     exercise is SupersetExercise
                 ? SupersetCard(
                     superset: exercise,
@@ -227,10 +229,12 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
                         widget.onUpdateExerciseSet(exercise.id, updatedSet),
                     onExerciseUpdate: widget.onUpdateExercise,
                     // Pass tutorial keys only to the first exercise
-                    tutorialFirstSetKey:
-                        index == 0 ? widget.tutorialFirstSetKey : null,
-                    tutorialExerciseMenuKey:
-                        index == 0 ? widget.tutorialExerciseMenuKey : null,
+                    tutorialFirstSetKey: index == 0
+                        ? widget.tutorialFirstSetKey
+                        : null,
+                    tutorialExerciseMenuKey: index == 0
+                        ? widget.tutorialExerciseMenuKey
+                        : null,
                   ),
           ),
         );
@@ -261,8 +265,9 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
           return AnimatedBuilder(
             animation: animation,
             builder: (context, child) {
-              final double animValue =
-                  Curves.easeInOut.transform(animation.value);
+              final double animValue = Curves.easeInOut.transform(
+                animation.value,
+              );
               final double scale = 1 + (animValue * 0.05);
               final double elevation = 4 + (animValue * 12);
 
@@ -305,7 +310,8 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
                 ),
                 // Exercise item (disabled interactions in reorder mode)
                 Expanded(
-                  child: exercise.type == ExerciseType.superset &&
+                  child:
+                      exercise.type == ExerciseType.superset &&
                           exercise is SupersetExercise
                       ? SupersetCard(
                           superset: exercise,

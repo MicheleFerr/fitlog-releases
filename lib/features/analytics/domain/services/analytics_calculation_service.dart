@@ -62,7 +62,10 @@ class AnalyticsCalculationService {
           final weekStart = _getWeekStart(activity.createdAt);
           periodKey = weekStart;
         case AnalysisPeriod.month:
-          periodKey = DateTime(activity.createdAt.year, activity.createdAt.month);
+          periodKey = DateTime(
+            activity.createdAt.year,
+            activity.createdAt.month,
+          );
         case AnalysisPeriod.quarter:
           final quarter = ((activity.createdAt.month - 1) ~/ 3) + 1;
           periodKey = DateTime(activity.createdAt.year, (quarter - 1) * 3 + 1);
@@ -98,10 +101,9 @@ class AnalyticsCalculationService {
   ) {
     final progression = <DateTime, double>{};
 
-    final exerciseActivities = activities
-        .where((a) => a.exerciseId == exerciseId)
-        .toList()
-      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    final exerciseActivities =
+        activities.where((a) => a.exerciseId == exerciseId).toList()
+          ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     for (final activity in exerciseActivities) {
       double max1RM = 0;
@@ -150,7 +152,9 @@ class AnalyticsCalculationService {
 
     // Unique workout days
     final workoutDays = recentActivities
-        .map((a) => DateTime(a.createdAt.year, a.createdAt.month, a.createdAt.day))
+        .map(
+          (a) => DateTime(a.createdAt.year, a.createdAt.month, a.createdAt.day),
+        )
         .toSet();
 
     stats['daysInLast30'] = workoutDays.length;
@@ -262,8 +266,7 @@ class AnalyticsCalculationService {
           (exerciseCounts[activity.exerciseId] ?? 0) + 1;
     }
 
-    final topExercises = exerciseCounts.entries
-        .toList()
+    final topExercises = exerciseCounts.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
     for (final exercise in topExercises.take(limit)) {
@@ -290,11 +293,18 @@ class AnalyticsCalculationService {
     final sortedActivities = activities.toList()
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
-    final uniqueDates = sortedActivities
-        .map((a) => DateTime(a.createdAt.year, a.createdAt.month, a.createdAt.day))
-        .toSet()
-        .toList()
-      ..sort((a, b) => b.compareTo(a));
+    final uniqueDates =
+        sortedActivities
+            .map(
+              (a) => DateTime(
+                a.createdAt.year,
+                a.createdAt.month,
+                a.createdAt.day,
+              ),
+            )
+            .toSet()
+            .toList()
+          ..sort((a, b) => b.compareTo(a));
 
     if (uniqueDates.isEmpty) return 0;
 

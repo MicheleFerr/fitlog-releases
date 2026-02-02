@@ -152,12 +152,12 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                 children: [
                   // "FitLog" - main brand name
                   Text(
-                    'FitLog',
-                    style: context.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: context.colors.onSurface,
-                    ),
-                  )
+                        'FitLog',
+                        style: context.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: context.colors.onSurface,
+                        ),
+                      )
                       .animate()
                       .fadeIn(duration: 600.ms, curve: Curves.easeOut)
                       .slideX(begin: -0.2, end: 0, duration: 600.ms),
@@ -214,9 +214,7 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                 const SizedBox(height: 16),
 
                 // 0.85 Pro Insights Preview (CTA for Pro Analytics)
-                const RepaintBoundary(
-                  child: ProInsightsPreviewSection(),
-                ),
+                const RepaintBoundary(child: ProInsightsPreviewSection()),
                 const SizedBox(height: 16),
 
                 // 0.9 Recovery Insight (Sleep-based recovery analysis)
@@ -229,9 +227,7 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                 const SizedBox(height: 16),
 
                 // 0.92 Stress Prediction (Banister FFM predictions)
-                const RepaintBoundary(
-                  child: StressPredictionCard(),
-                ),
+                const RepaintBoundary(child: StressPredictionCard()),
                 const SizedBox(height: 20),
 
                 // 0.95 Template Suggestion (AI-powered workout recommendation)
@@ -261,9 +257,7 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
 
                 // 3. Exercise Wiki Card (Hidden in Ghost Mode - Community)
                 if (!ref.watch(shouldHideCommunityProvider)) ...[
-                  const RepaintBoundary(
-                    child: ExerciseWikiCardCompact(),
-                  ),
+                  const RepaintBoundary(child: ExerciseWikiCardCompact()),
                   const SizedBox(height: 24),
                 ],
 
@@ -539,7 +533,9 @@ class _DeveloperToolsSheet extends ConsumerWidget {
                       subtitle: 'Reset and start workout tutorial',
                       onTap: () {
                         Navigator.pop(context);
-                        ref.read(workoutTutorialProvider.notifier).resetTutorial();
+                        ref
+                            .read(workoutTutorialProvider.notifier)
+                            .resetTutorial();
                         SnackBarService.showSuccess(
                           context,
                           'Tutorial reset! Go to Workout screen (with empty workout) to start.',
@@ -554,7 +550,9 @@ class _DeveloperToolsSheet extends ConsumerWidget {
                       onTap: () {
                         Navigator.pop(context);
                         // Reset and start tour
-                        ref.read(homeTourProvider.notifier).resetTour().then((_) {
+                        ref.read(homeTourProvider.notifier).resetTour().then((
+                          _,
+                        ) {
                           ref.read(homeTourProvider.notifier).startTour();
                           SnackBarService.showSuccess(
                             context,
@@ -574,15 +572,23 @@ class _DeveloperToolsSheet extends ConsumerWidget {
                         // Reset all tour/tutorial completion keys
                         await prefs.remove('home_tour_completed');
                         await prefs.remove('workout_tutorial_completed');
-                        await prefs.remove('exercise_search_tutorial_completed');
+                        await prefs.remove(
+                          'exercise_search_tutorial_completed',
+                        );
                         await prefs.remove('timer_tour_completed');
                         await prefs.remove('template_tutorial_completed');
                         await prefs.remove('analytics_tour_completed');
-                        await prefs.remove('advanced_techniques_tutorial_completed');
+                        await prefs.remove(
+                          'advanced_techniques_tutorial_completed',
+                        );
                         await prefs.remove('health_integration_tour_completed');
-                        await prefs.remove('custom_exercise_tutorial_completed');
+                        await prefs.remove(
+                          'custom_exercise_tutorial_completed',
+                        );
                         // Reset providers
-                        await ref.read(workoutTutorialProvider.notifier).resetTutorial();
+                        await ref
+                            .read(workoutTutorialProvider.notifier)
+                            .resetTutorial();
                         await ref.read(homeTourProvider.notifier).resetTour();
                         if (context.mounted) {
                           SnackBarService.showSuccess(
@@ -785,9 +791,7 @@ class _AdminFeedbackCard extends StatelessWidget {
         child: InkWell(
           onTap: () {
             Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => const ExerciseFeedbackScreen(),
-              ),
+              MaterialPageRoute(builder: (_) => const ExerciseFeedbackScreen()),
             );
           },
           borderRadius: BorderRadius.circular(16),

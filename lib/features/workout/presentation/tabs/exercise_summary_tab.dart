@@ -20,13 +20,13 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 
 /// Tab Sommario: mostra stats, grafico, record personali e livello di forza
 class ExerciseSummaryTab extends ConsumerStatefulWidget {
-
   const ExerciseSummaryTab({
     super.key,
     required this.exerciseName,
     this.exerciseId,
   });
   final String exerciseName;
+
   /// Optional exercise database ID for strength standards lookup.
   /// If provided, enables accurate mapping to strength standards.
   final String? exerciseId;
@@ -44,12 +44,15 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
 
   @override
   Widget build(BuildContext context) {
-    final statsAsync =
-        ref.watch(exerciseStatsFromActivitiesProvider(widget.exerciseName));
+    final statsAsync = ref.watch(
+      exerciseStatsFromActivitiesProvider(widget.exerciseName),
+    );
 
     return RefreshIndicator(
       onRefresh: () async {
-        ref.invalidate(exerciseStatsFromActivitiesProvider(widget.exerciseName));
+        ref.invalidate(
+          exerciseStatsFromActivitiesProvider(widget.exerciseName),
+        );
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -154,7 +157,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           Icon(
             icon,
             size: 16,
-            color: isSelected ? context.colors.onPrimary : context.colors.onSurface,
+            color: isSelected
+                ? context.colors.onPrimary
+                : context.colors.onSurface,
           ),
           const SizedBox(width: 4),
           Text(label),
@@ -208,9 +213,15 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     }
 
     // Check if all data is loaded
-    final allLoaded = metricDataMap.values.every((asyncValue) => asyncValue.hasValue);
-    final anyError = metricDataMap.values.any((asyncValue) => asyncValue.hasError);
-    final anyLoading = metricDataMap.values.any((asyncValue) => asyncValue.isLoading);
+    final allLoaded = metricDataMap.values.every(
+      (asyncValue) => asyncValue.hasValue,
+    );
+    final anyError = metricDataMap.values.any(
+      (asyncValue) => asyncValue.hasError,
+    );
+    final anyLoading = metricDataMap.values.any(
+      (asyncValue) => asyncValue.isLoading,
+    );
 
     if (anyLoading) {
       return Container(
@@ -238,11 +249,10 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SemanticIcon(
-  icon: AppIcons.errorOutline,
-  semanticLabel: 'Error outline',
-  size: AppIconSize.xxlarge,
-  color: context.colors.error.withValues(alpha: 0.5,
-),
+                icon: AppIcons.errorOutline,
+                semanticLabel: 'Error outline',
+                size: AppIconSize.xxlarge,
+                color: context.colors.error.withValues(alpha: 0.5),
               ),
               const SizedBox(height: 8),
               Text(
@@ -318,11 +328,10 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SemanticIcon(
-  icon: AppIcons.errorOutline,
-  semanticLabel: 'Error outline',
-  size: AppIconSize.xxlarge,
-  color: context.colors.error.withValues(alpha: 0.5,
-),
+                  icon: AppIcons.errorOutline,
+                  semanticLabel: 'Error outline',
+                  size: AppIconSize.xxlarge,
+                  color: context.colors.error.withValues(alpha: 0.5),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -340,7 +349,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
   }
 
   Widget _buildPersonalRecordsSection(AsyncValue<dynamic> statsAsync) {
-    final historyAsync = ref.watch(exerciseHistoryDataGroupedProvider(widget.exerciseName));
+    final historyAsync = ref.watch(
+      exerciseHistoryDataGroupedProvider(widget.exerciseName),
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -431,7 +442,12 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
   }
 
   Widget _buildInteractiveRecordCard(
-      String label, String value, IconData icon, Color color, _RecordData recordData) {
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+    _RecordData recordData,
+  ) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -474,11 +490,10 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               ),
               const SizedBox(height: 4),
               SemanticIcon(
-  icon: AppIcons.infoOutline,
-  semanticLabel: 'Info outline',
-  size: AppIconSize.tiny,
-  color: context.colors.onSurface.withValues(alpha: 0.4,
-),
+                icon: AppIcons.infoOutline,
+                semanticLabel: 'Info outline',
+                size: AppIconSize.tiny,
+                color: context.colors.onSurface.withValues(alpha: 0.4),
               ),
             ],
           ),
@@ -497,7 +512,8 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
   Widget _buildStrengthLevelSection() {
     // Ottieni mapping esercizio → strength standard
     // If exerciseId looks like a UUID (from old workouts), lookup database ID by name
-    final hasValidDatabaseId = widget.exerciseId != null && !_looksLikeUuid(widget.exerciseId);
+    final hasValidDatabaseId =
+        widget.exerciseId != null && !_looksLikeUuid(widget.exerciseId);
 
     // If we have a valid database ID, use it directly
     // Otherwise, lookup the database ID from the exercise name
@@ -506,7 +522,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     }
 
     // Fallback: lookup database ID by exercise name
-    final databaseIdAsync = ref.watch(exerciseIdByNameProvider(widget.exerciseName));
+    final databaseIdAsync = ref.watch(
+      exerciseIdByNameProvider(widget.exerciseName),
+    );
 
     return databaseIdAsync.when(
       data: (databaseId) {
@@ -518,7 +536,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
 
         if (databaseId == null) {
           // No database ID found, show placeholder
-          return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
+          return _buildStrengthLevelCardWrapper(
+            _buildStrengthLevelPlaceholder(),
+          );
         }
 
         return _buildStrengthLevelWithKey(databaseId);
@@ -567,7 +587,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     final mappingAsync = ref.watch(exerciseMappingByIdProvider(lookupKey));
 
     // Ottieni cronologia per calcolare 1RM (always uses exerciseName)
-    final historyAsync = ref.watch(exerciseHistoryDataGroupedProvider(widget.exerciseName));
+    final historyAsync = ref.watch(
+      exerciseHistoryDataGroupedProvider(widget.exerciseName),
+    );
 
     // Usa un bodyweight di riferimento standard (80kg) per i benchmark
     const standardBodyweight = 80.0;
@@ -575,100 +597,117 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     return _buildStrengthLevelCardWrapper(
       // Calcola e mostra livello di forza
       mappingAsync.when(
-              data: (mapping) {
-                if (kDebugMode) {
-                  debugPrint('🏋️ [STRENGTH LEVEL DEBUG] Step 1 - Mapping received: $mapping');
-                  debugPrint('   Exercise: ${widget.exerciseName}');
-                  debugPrint('   ExerciseId: ${widget.exerciseId}');
-                  debugPrint('   LookupKey: $lookupKey');
-                  debugPrint('   Mapping standardId: ${mapping?.standardId}');
-                }
+        data: (mapping) {
+          if (kDebugMode) {
+            debugPrint(
+              '🏋️ [STRENGTH LEVEL DEBUG] Step 1 - Mapping received: $mapping',
+            );
+            debugPrint('   Exercise: ${widget.exerciseName}');
+            debugPrint('   ExerciseId: ${widget.exerciseId}');
+            debugPrint('   LookupKey: $lookupKey');
+            debugPrint('   Mapping standardId: ${mapping?.standardId}');
+          }
 
-                if (mapping == null) {
-                  if (kDebugMode) debugPrint('   ❌ Mapping is null');
-                  return _buildStrengthLevelPlaceholder();
-                }
+          if (mapping == null) {
+            if (kDebugMode) debugPrint('   ❌ Mapping is null');
+            return _buildStrengthLevelPlaceholder();
+          }
 
-                // Check if standardId is null (happens with fallback mappings)
-                if (mapping.standardId == null) {
-                  if (kDebugMode) debugPrint('   ❌ StandardId is null in mapping');
-                  return _buildStrengthLevelPlaceholder();
-                }
+          // Check if standardId is null (happens with fallback mappings)
+          if (mapping.standardId == null) {
+            if (kDebugMode) debugPrint('   ❌ StandardId is null in mapping');
+            return _buildStrengthLevelPlaceholder();
+          }
 
-                // Ottieni lo strength standard usando il mapping
-                final standardAsync = ref.watch(strengthStandardByIdProvider(mapping.standardId!));
+          // Ottieni lo strength standard usando il mapping
+          final standardAsync = ref.watch(
+            strengthStandardByIdProvider(mapping.standardId!),
+          );
 
-                return standardAsync.when(
-                  data: (standard) {
-                    if (kDebugMode) {
-                      debugPrint('🏋️ [STRENGTH LEVEL DEBUG] Step 2 - Standard received: $standard');
-                      debugPrint('   StandardId: ${mapping.standardId}');
-                      debugPrint('   Standard name: ${standard?.name}');
-                    }
-
-                    if (standard == null) {
-                      if (kDebugMode) debugPrint('   ❌ Standard is null');
-                      return _buildStrengthLevelPlaceholder();
-                    }
-
-                    // Calcola 1RM dall'history
-                    return historyAsync.when(
-                      data: (historyMap) {
-                        final allSets = <ExerciseHistoryData>[];
-                        historyMap.forEach((date, sets) => allSets.addAll(sets));
-
-                        if (kDebugMode) {
-                          debugPrint('🏋️ [STRENGTH LEVEL DEBUG] Step 3 - History received');
-                          debugPrint('   Total sets: ${allSets.length}');
-                        }
-
-                        if (allSets.isEmpty) {
-                          if (kDebugMode) debugPrint('   ❌ No sets in history');
-                          return _buildStrengthLevelPlaceholder();
-                        }
-
-                        // Calcola miglior 1RM
-                        double best1RM = 0.0;
-                        for (final set in allSets) {
-                          if (set.weight != null && set.reps != null && set.reps! > 0) {
-                            final calculated1RM = _calculate1RM(set.weight!, set.reps!);
-                            if (calculated1RM > best1RM) {
-                              best1RM = calculated1RM;
-                            }
-                          }
-                        }
-
-                        if (kDebugMode) {
-                          debugPrint('🏋️ [STRENGTH LEVEL DEBUG] Calculated 1RM: ${best1RM.toStringAsFixed(1)} kg');
-                          debugPrint('   User bodyweight: ${standardBodyweight.toStringAsFixed(1)} kg');
-                        }
-
-                        return _buildStrengthLevelContent(
-                          standard: standard,
-                          userBodyweight: standardBodyweight,
-                          user1RM: best1RM,
-                        );
-                      },
-                      loading: () => const LoadingIndicator(),
-                      error: (error, stack) {
-                        if (kDebugMode) debugPrint('   ❌ History error: $error');
-                        return _buildStrengthLevelPlaceholder();
-                      },
-                    );
-                  },
-                  loading: () => const LoadingIndicator(),
-                  error: (error, stack) {
-                    if (kDebugMode) debugPrint('   ❌ Standard error: $error');
-                    return _buildStrengthLevelPlaceholder();
-                  },
+          return standardAsync.when(
+            data: (standard) {
+              if (kDebugMode) {
+                debugPrint(
+                  '🏋️ [STRENGTH LEVEL DEBUG] Step 2 - Standard received: $standard',
                 );
-              },
-              loading: () => const LoadingIndicator(),
-              error: (error, stack) {
-                if (kDebugMode) debugPrint('   ❌ Mapping error: $error');
+                debugPrint('   StandardId: ${mapping.standardId}');
+                debugPrint('   Standard name: ${standard?.name}');
+              }
+
+              if (standard == null) {
+                if (kDebugMode) debugPrint('   ❌ Standard is null');
                 return _buildStrengthLevelPlaceholder();
-              },
-            ),
+              }
+
+              // Calcola 1RM dall'history
+              return historyAsync.when(
+                data: (historyMap) {
+                  final allSets = <ExerciseHistoryData>[];
+                  historyMap.forEach((date, sets) => allSets.addAll(sets));
+
+                  if (kDebugMode) {
+                    debugPrint(
+                      '🏋️ [STRENGTH LEVEL DEBUG] Step 3 - History received',
+                    );
+                    debugPrint('   Total sets: ${allSets.length}');
+                  }
+
+                  if (allSets.isEmpty) {
+                    if (kDebugMode) debugPrint('   ❌ No sets in history');
+                    return _buildStrengthLevelPlaceholder();
+                  }
+
+                  // Calcola miglior 1RM
+                  double best1RM = 0.0;
+                  for (final set in allSets) {
+                    if (set.weight != null &&
+                        set.reps != null &&
+                        set.reps! > 0) {
+                      final calculated1RM = _calculate1RM(
+                        set.weight!,
+                        set.reps!,
+                      );
+                      if (calculated1RM > best1RM) {
+                        best1RM = calculated1RM;
+                      }
+                    }
+                  }
+
+                  if (kDebugMode) {
+                    debugPrint(
+                      '🏋️ [STRENGTH LEVEL DEBUG] Calculated 1RM: ${best1RM.toStringAsFixed(1)} kg',
+                    );
+                    debugPrint(
+                      '   User bodyweight: ${standardBodyweight.toStringAsFixed(1)} kg',
+                    );
+                  }
+
+                  return _buildStrengthLevelContent(
+                    standard: standard,
+                    userBodyweight: standardBodyweight,
+                    user1RM: best1RM,
+                  );
+                },
+                loading: () => const LoadingIndicator(),
+                error: (error, stack) {
+                  if (kDebugMode) debugPrint('   ❌ History error: $error');
+                  return _buildStrengthLevelPlaceholder();
+                },
+              );
+            },
+            loading: () => const LoadingIndicator(),
+            error: (error, stack) {
+              if (kDebugMode) debugPrint('   ❌ Standard error: $error');
+              return _buildStrengthLevelPlaceholder();
+            },
+          );
+        },
+        loading: () => const LoadingIndicator(),
+        error: (error, stack) {
+          if (kDebugMode) debugPrint('   ❌ Mapping error: $error');
+          return _buildStrengthLevelPlaceholder();
+        },
+      ),
     );
   }
 
@@ -676,11 +715,10 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     return Column(
       children: [
         SemanticIcon(
-  icon: AppIcons.infoOutline,
-  semanticLabel: 'Info outline',
-  size: AppIconSize.xxlarge,
-  color: context.colors.onSurface.withValues(alpha: 0.3,
-),
+          icon: AppIcons.infoOutline,
+          semanticLabel: 'Info outline',
+          size: AppIconSize.xxlarge,
+          color: context.colors.onSurface.withValues(alpha: 0.3),
         ),
         const SizedBox(height: 12),
         Text(
@@ -740,7 +778,8 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           final nextValue = levelValues[nextLevel];
 
           if (nextValue != null && nextValue > levelValue) {
-            progressToNext = ((user1RM - levelValue) / (nextValue - levelValue)).clamp(0.0, 1.0);
+            progressToNext = ((user1RM - levelValue) / (nextValue - levelValue))
+                .clamp(0.0, 1.0);
           }
         }
       } else {
@@ -833,7 +872,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+            color: context.colors.surfaceContainerHighest.withValues(
+              alpha: 0.5,
+            ),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -853,7 +894,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                         width: 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: isCurrentLevel ? color : color.withValues(alpha: 0.3),
+                          color: isCurrentLevel
+                              ? color
+                              : color.withValues(alpha: 0.3),
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -862,7 +905,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                         child: Text(
                           level.getLabel(locale),
                           style: context.textTheme.bodyMedium?.copyWith(
-                            fontWeight: isCurrentLevel ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isCurrentLevel
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                             color: context.colors.onSurface,
                           ),
                         ),
@@ -870,8 +915,12 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                       Text(
                         '${value.toStringAsFixed(1)} kg',
                         style: context.textTheme.bodyMedium?.copyWith(
-                          fontWeight: isCurrentLevel ? FontWeight.bold : FontWeight.normal,
-                          color: isCurrentLevel ? color : context.colors.onSurface.withValues(alpha: 0.6),
+                          fontWeight: isCurrentLevel
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: isCurrentLevel
+                              ? color
+                              : context.colors.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -962,9 +1011,11 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
 
     for (final set in allSets) {
       if (set.weight != null && set.reps != null) {
-        final sessionKey = '${set.workoutName}_${set.date.toIso8601String().split('T')[0]}';
+        final sessionKey =
+            '${set.workoutName}_${set.date.toIso8601String().split('T')[0]}';
         final volume = set.weight! * set.reps!;
-        sessionVolumes[sessionKey] = (sessionVolumes[sessionKey] ?? 0.0) + volume;
+        sessionVolumes[sessionKey] =
+            (sessionVolumes[sessionKey] ?? 0.0) + volume;
         sessionDates[sessionKey] = set.date;
         sessionSets[sessionKey] = [...(sessionSets[sessionKey] ?? []), set];
       }
@@ -1006,7 +1057,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
         value: bestSessionVolume,
         date: bestSessionKey != null ? sessionDates[bestSessionKey] : null,
         workoutName: bestSessionKey?.split('_')[0],
-        sessionSets: bestSessionKey != null ? sessionSets[bestSessionKey] : null,
+        sessionSets: bestSessionKey != null
+            ? sessionSets[bestSessionKey]
+            : null,
       ),
     );
   }
@@ -1026,7 +1079,11 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             // Header
             Row(
               children: [
-                Icon(AppIcons.emojiEvents, color: context.colors.primary, size: 32),
+                Icon(
+                  AppIcons.emojiEvents,
+                  color: context.colors.primary,
+                  size: 32,
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -1113,7 +1170,8 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             ],
 
             // Dettagli sessione (se è un volume di sessione)
-            if (recordData.sessionSets != null && recordData.sessionSets!.isNotEmpty) ...[
+            if (recordData.sessionSets != null &&
+                recordData.sessionSets!.isNotEmpty) ...[
               const Divider(),
               const SizedBox(height: 8),
               Text(
@@ -1136,7 +1194,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                         width: 28,
                         height: 28,
                         decoration: BoxDecoration(
-                          color: context.colors.secondary.withValues(alpha: 0.1),
+                          color: context.colors.secondary.withValues(
+                            alpha: 0.1,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Center(
@@ -1221,7 +1281,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
 
 // Data class per i record
 class _RecordData {
-
   _RecordData({
     required this.value,
     this.date,
@@ -1242,7 +1301,6 @@ class _RecordData {
 
 // Container per tutti i record
 class _Records {
-
   _Records({
     required this.maxWeight,
     required this.best1RM,

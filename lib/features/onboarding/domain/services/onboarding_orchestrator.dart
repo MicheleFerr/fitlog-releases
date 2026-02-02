@@ -99,7 +99,8 @@ class TourConfig {
       priority: TourPriority.important,
       prefsKey: 'home_tour_completed',
       phase: LearningPhase.core,
-      stepCount: 2, // UX 2025: Only XP bar + template suggestions (others are intuitive)
+      stepCount:
+          2, // UX 2025: Only XP bar + template suggestions (others are intuitive)
       cooldownMinutes: 0, // Show immediately
     ),
     TourType.workoutTutorial: TourConfig(
@@ -158,9 +159,9 @@ class TourConfig {
       priority: TourPriority.important,
       prefsKey: 'health_integration_tour_completed',
       phase: LearningPhase.core,
-      minWorkoutsRequired: 1,  // Shows after first workout
-      stepCount: 1,  // Single prompt dialog
-      cooldownMinutes: 0,  // No cooldown - show immediately
+      minWorkoutsRequired: 1, // Shows after first workout
+      stepCount: 1, // Single prompt dialog
+      cooldownMinutes: 0, // No cooldown - show immediately
     ),
     TourType.customExerciseTutorial: TourConfig(
       type: TourType.customExerciseTutorial,
@@ -228,8 +229,9 @@ class OnboardingOrchestratorState {
   LearningPhase calculateCurrentPhase() {
     if (firstLaunchDate == null) return LearningPhase.core;
 
-    final daysSinceFirstLaunch =
-        DateTime.now().difference(firstLaunchDate!).inDays;
+    final daysSinceFirstLaunch = DateTime.now()
+        .difference(firstLaunchDate!)
+        .inDays;
 
     if (daysSinceFirstLaunch == 0) return LearningPhase.core;
     if (daysSinceFirstLaunch <= 3) return LearningPhase.discovery;
@@ -264,8 +266,9 @@ class OnboardingOrchestratorState {
 
     // P0-4: Check cooldown (except for core tours)
     if (config.cooldownMinutes > 0 && lastTourCompletionTime != null) {
-      final minutesSinceLastTour =
-          DateTime.now().difference(lastTourCompletionTime!).inMinutes;
+      final minutesSinceLastTour = DateTime.now()
+          .difference(lastTourCompletionTime!)
+          .inMinutes;
       if (minutesSinceLastTour < config.cooldownMinutes) {
         return false;
       }
@@ -307,13 +310,15 @@ class OnboardingOrchestratorState {
 class OnboardingOrchestrator
     extends StateNotifier<OnboardingOrchestratorState> {
   OnboardingOrchestrator()
-      : super(const OnboardingOrchestratorState(
+    : super(
+        const OnboardingOrchestratorState(
           completedTours: {},
           activeTour: null,
           queuedTours: [],
           isFirstLaunch: true,
           totalWorkouts: 0,
-        )) {
+        ),
+      ) {
     _loadState();
   }
 
@@ -362,7 +367,9 @@ class OnboardingOrchestrator
         state = state.copyWith(firstLaunchDate: now);
       }
 
-      debugPrint('📊 [OnboardingOrchestrator] Current phase: ${state.calculateCurrentPhase()}');
+      debugPrint(
+        '📊 [OnboardingOrchestrator] Current phase: ${state.calculateCurrentPhase()}',
+      );
     } catch (e) {
       debugPrint('⚠️ [OnboardingOrchestrator] Failed to load state: $e');
     }
@@ -377,7 +384,9 @@ class OnboardingOrchestrator
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt(_workoutCountKey, newCount);
     } catch (e) {
-      debugPrint('⚠️ [OnboardingOrchestrator] Failed to save workout count: $e');
+      debugPrint(
+        '⚠️ [OnboardingOrchestrator] Failed to save workout count: $e',
+      );
     }
   }
 
@@ -420,8 +429,9 @@ class OnboardingOrchestrator
       newQueue.sort((a, b) {
         final configA = TourConfig.configs[a];
         final configB = TourConfig.configs[b];
-        return (configA?.priority.index ?? 99)
-            .compareTo(configB?.priority.index ?? 99);
+        return (configA?.priority.index ?? 99).compareTo(
+          configB?.priority.index ?? 99,
+        );
       });
       state = state.copyWith(queuedTours: newQueue);
     }
@@ -453,8 +463,10 @@ class OnboardingOrchestrator
       debugPrint('⚠️ [OnboardingOrchestrator] Failed to save completion: $e');
     }
 
-    debugPrint('✅ [OnboardingOrchestrator] Tour completed: $type '
-        '(session steps: $newSessionSteps/${OnboardingOrchestratorState.maxStepsPerSession})');
+    debugPrint(
+      '✅ [OnboardingOrchestrator] Tour completed: $type '
+      '(session steps: $newSessionSteps/${OnboardingOrchestratorState.maxStepsPerSession})',
+    );
 
     // Process queue
     _processQueue();
@@ -469,7 +481,9 @@ class OnboardingOrchestrator
   /// Cancel active tour without completing
   void cancelTour() {
     if (state.activeTour != null) {
-      debugPrint('❌ [OnboardingOrchestrator] Tour cancelled: ${state.activeTour}');
+      debugPrint(
+        '❌ [OnboardingOrchestrator] Tour cancelled: ${state.activeTour}',
+      );
       state = state.copyWith(clearActiveTour: true);
     }
   }
@@ -480,10 +494,7 @@ class OnboardingOrchestrator
     final nextTour = state.queuedTours.first;
     if (state.canShowTour(nextTour)) {
       final newQueue = state.queuedTours.sublist(1);
-      state = state.copyWith(
-        activeTour: nextTour,
-        queuedTours: newQueue,
-      );
+      state = state.copyWith(activeTour: nextTour, queuedTours: newQueue);
       debugPrint('📋 [OnboardingOrchestrator] Processing queue: $nextTour');
     }
   }
@@ -536,12 +547,11 @@ class OnboardingOrchestrator
 /// Provider for the onboarding orchestrator
 final onboardingOrchestratorProvider =
     StateNotifierProvider<OnboardingOrchestrator, OnboardingOrchestratorState>(
-  (ref) => OnboardingOrchestrator(),
-);
+      (ref) => OnboardingOrchestrator(),
+    );
 
 /// Provider to check if a specific tour should be shown
-final shouldShowTourProvider =
-    Provider.family<bool, TourType>((ref, tourType) {
+final shouldShowTourProvider = Provider.family<bool, TourType>((ref, tourType) {
   final orchestrator = ref.watch(onboardingOrchestratorProvider);
   return orchestrator.canShowTour(tourType);
 });

@@ -23,14 +23,7 @@ import 'package:gymbro_flutter_new/features/stress_index/domain/constants/stress
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 /// Represents muscle group categories for grouping in UI
-enum MuscleCategory {
-  chest,
-  back,
-  shoulders,
-  arms,
-  legs,
-  core,
-}
+enum MuscleCategory { chest, back, shoulders, arms, legs, core }
 
 /// Information about a specific muscle
 class MuscleInfo {
@@ -706,16 +699,27 @@ class MuscleAbbreviationMapper {
       'chest' || 'petto' || 'pettorali' || 'pecs' => MuscleCategory.chest,
 
       // Back variations
-      'back' || 'schiena' || 'dorsali' || 'dorso' || 'lats' => MuscleCategory.back,
+      'back' ||
+      'schiena' ||
+      'dorsali' ||
+      'dorso' ||
+      'lats' => MuscleCategory.back,
 
       // Shoulders variations
-      'shoulders' || 'spalle' || 'delts' || 'deltoids' => MuscleCategory.shoulders,
+      'shoulders' ||
+      'spalle' ||
+      'delts' ||
+      'deltoids' => MuscleCategory.shoulders,
 
       // Arms variations
       'arms' || 'braccia' || 'biceps' || 'triceps' => MuscleCategory.arms,
 
       // Legs variations
-      'legs' || 'gambe' || 'lower body' || 'quads' || 'hamstrings' => MuscleCategory.legs,
+      'legs' ||
+      'gambe' ||
+      'lower body' ||
+      'quads' ||
+      'hamstrings' => MuscleCategory.legs,
 
       // Core variations
       'core' || 'abs' || 'addominali' || 'abdominals' => MuscleCategory.core,
@@ -745,7 +749,16 @@ class MuscleAbbreviationMapper {
       // Body regions
       'upper body': ['PETT', 'LAT', 'DELT', 'BICI', 'TRIC', 'TRAP'],
       'lower body': ['QUAD', 'GLUT', 'FEMO', 'POLP', 'ADD'],
-      'full body': ['PETT', 'LAT', 'DELT', 'BICI', 'TRIC', 'QUAD', 'GLUT', 'FEMO'],
+      'full body': [
+        'PETT',
+        'LAT',
+        'DELT',
+        'BICI',
+        'TRIC',
+        'QUAD',
+        'GLUT',
+        'FEMO',
+      ],
       'core': ['CORE'],
       // Italian patterns
       'braccia': ['BICI', 'TRIC', 'AVA'],

@@ -177,7 +177,9 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         decoration: BoxDecoration(
-          color: isSelected ? colorScheme.primary : colorScheme.surface.withValues(alpha: 0),
+          color: isSelected
+              ? colorScheme.primary
+              : colorScheme.surface.withValues(alpha: 0),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -186,13 +188,17 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
             Icon(
               icon,
               size: AppIconSize.small,
-              color: isSelected ? colorScheme.onPrimary : colorScheme.onSurfaceVariant,
+              color: isSelected
+                  ? colorScheme.onPrimary
+                  : colorScheme.onSurfaceVariant,
             ),
             const SizedBox(width: 8),
             Text(
               label,
               style: context.textTheme.labelLarge?.copyWith(
-                color: isSelected ? colorScheme.onPrimary : colorScheme.onSurfaceVariant,
+                color: isSelected
+                    ? colorScheme.onPrimary
+                    : colorScheme.onSurfaceVariant,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -292,7 +298,9 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
                               Icon(
                                 AppIcons.checkCircle,
                                 size: 12,
-                                color: colorScheme.primary.withValues(alpha: 0.7),
+                                color: colorScheme.primary.withValues(
+                                  alpha: 0.7,
+                                ),
                               ),
                               const SizedBox(width: 6),
                               Expanded(
@@ -396,7 +404,8 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 final size = constraints.biggest;
-                final chartSize = size.shortestSide * 0.85; // Match radar padding
+                final chartSize =
+                    size.shortestSide * 0.85; // Match radar padding
                 return Stack(
                   alignment: Alignment.center,
                   children: [
@@ -428,15 +437,21 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
                         getTitle: (index, angle) {
                           final muscle = muscles[index];
                           final sets = data.muscleVolumes[muscle] ?? 0;
-                          final zone = VolumeAnalyzer.getVolumeZone(sets, muscle);
+                          final zone = VolumeAnalyzer.getVolumeZone(
+                            sets,
+                            muscle,
+                          );
                           final icon = _getZoneIcon(zone);
                           return RadarChartTitle(
-                            text: '$icon ${_getMuscleShortName(context, muscle)}\n$sets',
+                            text:
+                                '$icon ${_getMuscleShortName(context, muscle)}\n$sets',
                           );
                         },
                         tickCount: 4,
                         ticksTextStyle: context.textTheme.labelSmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                          color: colorScheme.onSurfaceVariant.withValues(
+                            alpha: 0.5,
+                          ),
                           fontSize: 8,
                         ),
                         tickBorderData: BorderSide(
@@ -449,13 +464,20 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
                         radarTouchData: RadarTouchData(
                           enabled: true,
                           touchCallback: (event, response) {
-                            if (response != null && response.touchedSpot != null) {
+                            if (response != null &&
+                                response.touchedSpot != null) {
                               setState(() {
-                                _touchedRadarIndex = response.touchedSpot!.touchedRadarEntryIndex;
+                                _touchedRadarIndex = response
+                                    .touchedSpot!
+                                    .touchedRadarEntryIndex;
                               });
                               // Show tooltip
                               if (event is FlTapUpEvent) {
-                                _showMuscleTooltip(context, data, _touchedRadarIndex);
+                                _showMuscleTooltip(
+                                  context,
+                                  data,
+                                  _touchedRadarIndex,
+                                );
                               }
                             }
                           },
@@ -504,7 +526,11 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildTooltipRow(l10n.weeklySets, '$sets', colorScheme.primary),
-            _buildTooltipRow(l10n.currentZone, _getZoneName(context, zone), _getZoneColor(zone, colorScheme)),
+            _buildTooltipRow(
+              l10n.currentZone,
+              _getZoneName(context, zone),
+              _getZoneColor(zone, colorScheme),
+            ),
             const Divider(),
             Text(l10n.volumeLandmarks, style: context.textTheme.labelMedium),
             const SizedBox(height: 8),
@@ -691,8 +717,12 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
                       },
                     ),
                   ),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                 ),
                 borderData: FlBorderData(show: false),
                 lineTouchData: LineTouchData(
@@ -725,7 +755,10 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
     );
   }
 
-  Widget _buildMuscleLegend(BuildContext context, Map<MuscleGroup, Color> colors) {
+  Widget _buildMuscleLegend(
+    BuildContext context,
+    Map<MuscleGroup, Color> colors,
+  ) {
     return Wrap(
       spacing: 12,
       runSpacing: 8,
@@ -792,10 +825,8 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (ctx) => _LandscapeVolumeChart(
-          data: data,
-          viewMode: _viewMode,
-        ),
+        builder: (ctx) =>
+            _LandscapeVolumeChart(data: data, viewMode: _viewMode),
       ),
     );
   }
@@ -819,7 +850,8 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
     for (final history in widget.exerciseHistories) {
       // Try to get muscle data for weighted distribution
       // Use case-insensitive lookup: try exact match, then lowercase
-      final muscleData = widget.exerciseMuscleMap?[history.exerciseName] ??
+      final muscleData =
+          widget.exerciseMuscleMap?[history.exerciseName] ??
           widget.exerciseMuscleMap?[history.exerciseName.toLowerCase()];
 
       for (final session in history.sessions) {
@@ -879,7 +911,7 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
                     // Track exercise contribution
                     exercisesPerMuscle[muscleGroup]![exerciseName] =
                         (exercisesPerMuscle[muscleGroup]![exerciseName] ?? 0) +
-                            perPrimary;
+                        perPrimary;
                   }
                 }
               }
@@ -890,7 +922,9 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
               // First synergist gets highSynergistRatio
               final firstSynergist = muscleData.secondary.first;
               final highSets = setCount * highSynergistRatio;
-              final firstGroup = _getMuscleGroupFromAbbreviation(firstSynergist);
+              final firstGroup = _getMuscleGroupFromAbbreviation(
+                firstSynergist,
+              );
               if (firstGroup != null) {
                 weeklyMuscleVolumes[firstGroup]![weekIndex] += highSets;
                 if (isThisWeek) {
@@ -899,7 +933,7 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
                   // Track exercise contribution
                   exercisesPerMuscle[firstGroup]![exerciseName] =
                       (exercisesPerMuscle[firstGroup]![exerciseName] ?? 0) +
-                          highSets;
+                      highSets;
                 }
               }
 
@@ -917,8 +951,9 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
                           (muscleVolumes[muscleGroup] ?? 0) + perMod;
                       // Track exercise contribution
                       exercisesPerMuscle[muscleGroup]![exerciseName] =
-                          (exercisesPerMuscle[muscleGroup]![exerciseName] ?? 0) +
-                              perMod;
+                          (exercisesPerMuscle[muscleGroup]![exerciseName] ??
+                              0) +
+                          perMod;
                     }
                   }
                 }
@@ -927,13 +962,16 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
           } else {
             // Fallback to single muscle group - try multiple strategies
             // 1. First try history.muscleGroup (may be set on custom exercises)
-            MuscleGroup? muscleGroup = _getMuscleGroupFromString(history.muscleGroup);
+            MuscleGroup? muscleGroup = _getMuscleGroupFromString(
+              history.muscleGroup,
+            );
 
             // 2. If not found, use pattern matching on exercise name (SSOT)
             if (muscleGroup == null) {
-              final abbr = MuscleAbbreviationMapper.categorizeExerciseToAbbreviation(
-                history.exerciseName,
-              );
+              final abbr =
+                  MuscleAbbreviationMapper.categorizeExerciseToAbbreviation(
+                    history.exerciseName,
+                  );
               muscleGroup = _getMuscleGroupFromAbbreviation(abbr);
             }
 
@@ -946,7 +984,7 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
                 // Track exercise contribution
                 exercisesPerMuscle[muscleGroup]![exerciseName] =
                     (exercisesPerMuscle[muscleGroup]![exerciseName] ?? 0) +
-                        setCount;
+                    setCount;
               }
             }
           }
@@ -956,8 +994,9 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
 
     final thisWeek = weeklyVolumes[0] ?? 0;
     final lastWeek = weeklyVolumes[1] ?? 0;
-    final weeklyChange =
-        lastWeek > 0 ? ((thisWeek - lastWeek) / lastWeek * 100).round() : 0;
+    final weeklyChange = lastWeek > 0
+        ? ((thisWeek - lastWeek) / lastWeek * 100).round()
+        : 0;
 
     // Convert double volumes to int for compatibility with existing UI
     final muscleVolumesInt = muscleVolumes.map(
@@ -1130,9 +1169,7 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
           ],
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: changeColor.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: changeColor.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -1252,17 +1289,41 @@ class _VolumeProgressionTabState extends State<VolumeProgressionTab> {
             ],
           ),
           const SizedBox(height: 12),
-          _buildLandmarkRow(context, 'MV', l10n.maintenanceVolume, colorScheme.error),
-          _buildLandmarkRow(context, 'MEV', l10n.minimumEffectiveVolume, colorScheme.tertiary),
-          _buildLandmarkRow(context, 'MAV', l10n.maxAdaptiveVolume, colorScheme.primary),
-          _buildLandmarkRow(context, 'MRV', l10n.maxRecoverableVolume, colorScheme.error),
+          _buildLandmarkRow(
+            context,
+            'MV',
+            l10n.maintenanceVolume,
+            colorScheme.error,
+          ),
+          _buildLandmarkRow(
+            context,
+            'MEV',
+            l10n.minimumEffectiveVolume,
+            colorScheme.tertiary,
+          ),
+          _buildLandmarkRow(
+            context,
+            'MAV',
+            l10n.maxAdaptiveVolume,
+            colorScheme.primary,
+          ),
+          _buildLandmarkRow(
+            context,
+            'MRV',
+            l10n.maxRecoverableVolume,
+            colorScheme.error,
+          ),
         ],
       ),
     );
   }
 
   Widget _buildLandmarkRow(
-      BuildContext context, String abbr, String description, Color color) {
+    BuildContext context,
+    String abbr,
+    String description,
+    Color color,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -1323,16 +1384,14 @@ class _VolumeData {
   final double previousWeekVolume;
   final Map<MuscleGroup, int> muscleVolumes;
   final Map<MuscleGroup, List<int>> weeklyMuscleVolumes;
+
   /// Exercises contributing to each muscle group this week with their set contribution
   final Map<MuscleGroup, Map<String, double>> exercisesPerMuscle;
 }
 
 /// Landscape full-screen volume chart
 class _LandscapeVolumeChart extends StatefulWidget {
-  const _LandscapeVolumeChart({
-    required this.data,
-    required this.viewMode,
-  });
+  const _LandscapeVolumeChart({required this.data, required this.viewMode});
 
   final _VolumeData data;
   final _VolumeViewMode viewMode;
@@ -1384,8 +1443,9 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
     setState(() => _isSharing = true);
 
     try {
-      final boundary = _chartKey.currentContext?.findRenderObject()
-          as RenderRepaintBoundary?;
+      final boundary =
+          _chartKey.currentContext?.findRenderObject()
+              as RenderRepaintBoundary?;
       if (boundary == null) return;
 
       final image = await boundary.toImage(pixelRatio: 3.0);
@@ -1398,10 +1458,7 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
       await file.writeAsBytes(bytes);
 
       await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(file.path)],
-          text: shareText,
-        ),
+        ShareParams(files: [XFile(file.path)], text: shareText),
       );
     } catch (e) {
       debugPrint('Error sharing chart: $e');
@@ -1500,10 +1557,7 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
       key: const ValueKey('landscape_radar'),
       children: [
         // Legend on left
-        SizedBox(
-          width: 150,
-          child: _buildVerticalLegend(context),
-        ),
+        SizedBox(width: 150, child: _buildVerticalLegend(context)),
         // Chart in center
         Expanded(
           child: RadarChart(
@@ -1542,10 +1596,7 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
           ),
         ),
         // Volume info on right
-        SizedBox(
-          width: 150,
-          child: _buildMuscleInfoList(context),
-        ),
+        SizedBox(width: 150, child: _buildMuscleInfoList(context)),
       ],
     );
   }
@@ -1557,7 +1608,8 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
     final lineBars = <LineChartBarData>[];
 
     for (final muscle in MuscleGroup.values) {
-      final weeklyData = widget.data.weeklyMuscleVolumes[muscle] ?? [0, 0, 0, 0];
+      final weeklyData =
+          widget.data.weeklyMuscleVolumes[muscle] ?? [0, 0, 0, 0];
       final spots = <FlSpot>[];
 
       for (var i = 0; i < 4; i++) {
@@ -1653,8 +1705,12 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
                     },
                   ),
                 ),
-                rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                topTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
               ),
               borderData: FlBorderData(show: false),
               lineTouchData: LineTouchData(
@@ -1709,30 +1765,32 @@ class _LandscapeVolumeChartState extends State<_LandscapeVolumeChart> {
           ),
         ),
         const SizedBox(height: 16),
-        ...zones.map((zone) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4),
-          child: Row(
-            children: [
-              Container(
-                width: 16,
-                height: 16,
-                decoration: BoxDecoration(
-                  color: zone.$2,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  zone.$1,
-                  style: context.textTheme.labelSmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
+        ...zones.map(
+          (zone) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              children: [
+                Container(
+                  width: 16,
+                  height: 16,
+                  decoration: BoxDecoration(
+                    color: zone.$2,
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    zone.$1,
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        )),
+        ),
       ],
     );
   }

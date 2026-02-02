@@ -4,12 +4,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 part 'workout.freezed.dart';
 part 'workout.g.dart';
 
-enum WorkoutStatus {
-  planned,
-  inProgress,
-  completed,
-  paused,
-}
+enum WorkoutStatus { planned, inProgress, completed, paused }
 
 @freezed
 abstract class Workout with _$Workout {
@@ -36,7 +31,8 @@ abstract class Workout with _$Workout {
 
   const Workout._();
 
-  factory Workout.fromJson(Map<String, dynamic> json) => _$WorkoutFromJson(json);
+  factory Workout.fromJson(Map<String, dynamic> json) =>
+      _$WorkoutFromJson(json);
 
   // Computed properties
   Duration? get duration {
@@ -46,10 +42,13 @@ abstract class Workout with _$Workout {
   }
 
   int get completedExercises {
-    return exercises.where((exercise) =>
-      exercise.sets.isNotEmpty &&
-      exercise.sets.every((set) => set.isCompleted)
-    ).length;
+    return exercises
+        .where(
+          (exercise) =>
+              exercise.sets.isNotEmpty &&
+              exercise.sets.every((set) => set.isCompleted),
+        )
+        .length;
   }
 
   int get totalSets {
@@ -57,8 +56,10 @@ abstract class Workout with _$Workout {
   }
 
   int get completedSets {
-    return exercises.fold(0, (total, exercise) =>
-      total + exercise.sets.where((set) => set.isCompleted).length
+    return exercises.fold(
+      0,
+      (total, exercise) =>
+          total + exercise.sets.where((set) => set.isCompleted).length,
     );
   }
 
@@ -87,10 +88,7 @@ abstract class Workout with _$Workout {
     // Clamp index to valid range
     final safeIndex = index.clamp(0, newExercises.length);
     newExercises.insert(safeIndex, exercise);
-    return copyWith(
-      exercises: newExercises,
-      updatedAt: DateTime.now(),
-    );
+    return copyWith(exercises: newExercises, updatedAt: DateTime.now());
   }
 
   Workout removeExercise(String exerciseId) {
@@ -102,9 +100,9 @@ abstract class Workout with _$Workout {
 
   Workout updateExercise(String exerciseId, Exercise updatedExercise) {
     return copyWith(
-      exercises: exercises.map((e) =>
-        e.id == exerciseId ? updatedExercise : e
-      ).toList(),
+      exercises: exercises
+          .map((e) => e.id == exerciseId ? updatedExercise : e)
+          .toList(),
       updatedAt: DateTime.now(),
     );
   }
@@ -130,10 +128,7 @@ abstract class Workout with _$Workout {
   }
 
   Workout pauseWorkout() {
-    return copyWith(
-      status: WorkoutStatus.paused,
-      updatedAt: DateTime.now(),
-    );
+    return copyWith(status: WorkoutStatus.paused, updatedAt: DateTime.now());
   }
 
   Workout resumeWorkout() {
@@ -232,8 +227,9 @@ class ExerciseSuggestions {
         .toList();
 
     return allExercises
-        .where((exercise) =>
-            exercise.toLowerCase().contains(query.toLowerCase()))
+        .where(
+          (exercise) => exercise.toLowerCase().contains(query.toLowerCase()),
+        )
         .toList();
   }
 }

@@ -200,9 +200,7 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
             SizedBox(
               height: 480,
               child: ProfessionalBodyHeatmap(
-                heatValues: MuscleHeatValues(
-                  balance.muscleVolumePercentages,
-                ),
+                heatValues: MuscleHeatValues(balance.muscleVolumePercentages),
               ),
             ),
           ],
@@ -323,7 +321,9 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
   }
 
   Widget _buildBalanceScoreCard(
-      BuildContext context, MuscleBalanceMetrics balance) {
+    BuildContext context,
+    MuscleBalanceMetrics balance,
+  ) {
     final colorScheme = context.colors;
     final l10n = context.l10n;
 
@@ -349,9 +349,7 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
           ],
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: scoreColor.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: scoreColor.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -431,7 +429,9 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
   }
 
   Widget _buildWarningsSection(
-      BuildContext context, MuscleBalanceMetrics balance) {
+    BuildContext context,
+    MuscleBalanceMetrics balance,
+  ) {
     final l10n = context.l10n;
     final colorScheme = context.colors;
 
@@ -458,9 +458,7 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
       decoration: BoxDecoration(
         color: colorScheme.errorContainer.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: colorScheme.error.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: colorScheme.error.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -483,28 +481,30 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
             ],
           ),
           const SizedBox(height: 12),
-          ...warnings.map((warning) => Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '• ',
+          ...warnings.map(
+            (warning) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '• ',
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.error,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      warning,
                       style: context.textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.error,
+                        color: colorScheme.onErrorContainer,
                       ),
                     ),
-                    Expanded(
-                      child: Text(
-                        warning,
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onErrorContainer,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -552,11 +552,7 @@ class _TrendIndicator extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
-            trendIcon,
-            size: AppIconSize.medium,
-            color: trendColor,
-          ),
+          Icon(trendIcon, size: AppIconSize.medium, color: trendColor),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

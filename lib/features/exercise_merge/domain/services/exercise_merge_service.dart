@@ -74,11 +74,13 @@ class ExerciseMergeService {
       // Converti risultati fuzzy in ExerciseMatch
       final matches = fuzzyResults
           .where((r) => r.score >= _minMatchThreshold)
-          .map((r) => ExerciseMatch(
-                exercise: r.exercise,
-                score: r.score,
-                matchedOn: r.matchedText,
-              ))
+          .map(
+            (r) => ExerciseMatch(
+              exercise: r.exercise,
+              score: r.score,
+              matchedOn: r.matchedText,
+            ),
+          )
           .toList();
 
       // Calcola statistiche dalla history
@@ -87,13 +89,15 @@ class ExerciseMergeService {
           ? sessions.map((s) => s.date).reduce((a, b) => a.isAfter(b) ? a : b)
           : DateTime.now();
 
-      candidates.add(MergeCandidate(
-        customExerciseName: exerciseName,
-        sessionCount: sessions.length,
-        lastUsed: lastUsed,
-        matchingExercises: matches,
-        personalRecord: history.personalRecord,
-      ));
+      candidates.add(
+        MergeCandidate(
+          customExerciseName: exerciseName,
+          sessionCount: sessions.length,
+          lastUsed: lastUsed,
+          matchingExercises: matches,
+          personalRecord: history.personalRecord,
+        ),
+      );
     }
 
     // Ordina per: 1) qualità match, 2) numero sessioni
@@ -129,7 +133,8 @@ class ExerciseMergeService {
     final sourceHistory = exerciseHistories.firstWhere(
       (h) => h.exerciseName.toLowerCase() == sourceExerciseName.toLowerCase(),
       orElse: () => ExerciseHistory(
-        exerciseId: sourceExerciseName, // Fallback: use name as ID when not found
+        exerciseId:
+            sourceExerciseName, // Fallback: use name as ID when not found
         exerciseName: sourceExerciseName,
         muscleGroup: '',
         sessions: [],
@@ -151,8 +156,9 @@ class ExerciseMergeService {
 
     // Conta template affected
     final templatesAffected = templates.where((t) {
-      return t.exercises.any((e) =>
-          e.exerciseName.toLowerCase() == sourceExerciseName.toLowerCase());
+      return t.exercises.any(
+        (e) => e.exerciseName.toLowerCase() == sourceExerciseName.toLowerCase(),
+      );
     }).length;
 
     return MergePreview(

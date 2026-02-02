@@ -39,7 +39,9 @@ final isAdminProvider = StreamProvider<bool>((ref) {
 
   return FirebaseAuth.instance.authStateChanges().asyncMap((user) async {
     if (kDebugMode) {
-      debugPrint('🔄 Auth state change detected: user=${user?.email ?? "null"}');
+      debugPrint(
+        '🔄 Auth state change detected: user=${user?.email ?? "null"}',
+      );
     }
 
     if (user == null) return false;
@@ -48,7 +50,9 @@ final isAdminProvider = StreamProvider<bool>((ref) {
     // Anonymous users don't have JWT tokens with custom claims
     if (user.isAnonymous) {
       if (kDebugMode) {
-        debugPrint('🔐 Anonymous user detected - not admin (skipping token check)');
+        debugPrint(
+          '🔐 Anonymous user detected - not admin (skipping token check)',
+        );
       }
       return false;
     }
@@ -129,7 +133,10 @@ final showDebugSectionsProvider = Provider<bool>((ref) {
 final debugSectionCollapsedProvider = StateProvider<bool>((ref) => true);
 
 /// Provider for individual debug sections collapsed state
-final debugSectionStatesProvider = NotifierProvider<DebugSectionStates, Map<String, bool>>(DebugSectionStates.new);
+final debugSectionStatesProvider =
+    NotifierProvider<DebugSectionStates, Map<String, bool>>(
+      DebugSectionStates.new,
+    );
 
 /// Developer email for debug features in production
 ///
@@ -148,7 +155,8 @@ final isDeveloperProvider = Provider<bool>((ref) {
   final user = FirebaseAuth.instance.currentUser;
   if (user == null || user.email == null) return false;
 
-  final isDeveloper = user.email!.toLowerCase() == _developerEmail.toLowerCase();
+  final isDeveloper =
+      user.email!.toLowerCase() == _developerEmail.toLowerCase();
 
   if (kDebugMode && isDeveloper) {
     debugPrint('🔧 Developer access: ${user.email}');
@@ -166,24 +174,15 @@ class DebugSectionStates extends Notifier<Map<String, bool>> {
   }
 
   void toggle(String sectionId) {
-    state = {
-      ...state,
-      sectionId: !(state[sectionId] ?? true),
-    };
+    state = {...state, sectionId: !(state[sectionId] ?? true)};
   }
 
   void expand(String sectionId) {
-    state = {
-      ...state,
-      sectionId: false,
-    };
+    state = {...state, sectionId: false};
   }
 
   void collapse(String sectionId) {
-    state = {
-      ...state,
-      sectionId: true,
-    };
+    state = {...state, sectionId: true};
   }
 
   void collapseAll() {

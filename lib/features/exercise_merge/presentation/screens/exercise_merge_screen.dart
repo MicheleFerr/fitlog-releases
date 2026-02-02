@@ -55,7 +55,8 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
     final mergeState = ref.watch(mergeExecutionProvider);
 
     // During merge operation, keep old list visible to avoid flashing loader
-    final isMerging = mergeState.state == MergeState.loading ||
+    final isMerging =
+        mergeState.state == MergeState.loading ||
         mergeState.state == MergeState.success;
 
     return Scaffold(
@@ -78,7 +79,9 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
           if (isMerging)
             // During merge, show last known data (or empty state)
             _buildMainContent(
-                context, candidatesAsync.valueOrNull ?? _lastCandidates)
+              context,
+              candidatesAsync.valueOrNull ?? _lastCandidates,
+            )
           else
             candidatesAsync.when(
               data: (candidates) {
@@ -99,7 +102,9 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
   }
 
   Widget _buildMainContent(
-      BuildContext context, List<MergeCandidate> candidates) {
+    BuildContext context,
+    List<MergeCandidate> candidates,
+  ) {
     if (candidates.isEmpty) {
       return _buildEmptyState(context);
     }
@@ -107,7 +112,9 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
   }
 
   Widget _buildMergeProgressOverlay(
-      BuildContext context, MergeProgress progress) {
+    BuildContext context,
+    MergeProgress progress,
+  ) {
     return ColoredBox(
       color: context.colors.surface.withValues(alpha: 0.9),
       child: Center(
@@ -128,8 +135,9 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
                         progress: progress.progress,
                         strokeWidth: 6,
                         size: 80,
-                        backgroundColor:
-                            context.colors.primary.withValues(alpha: 0.2),
+                        backgroundColor: context.colors.primary.withValues(
+                          alpha: 0.2,
+                        ),
                       ),
                       Text(
                         '${progress.progressPercent}%',
@@ -292,7 +300,9 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => MergeConfirmationBottomSheet(
         sourceExerciseName: candidate.customExerciseName,
         targetExercise: _selectedMatch!.exercise,
@@ -304,7 +314,9 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
   }
 
   Future<void> _executeMerge(
-      BuildContext context, MergeCandidate candidate) async {
+    BuildContext context,
+    MergeCandidate candidate,
+  ) async {
     if (_selectedMatch == null) return;
 
     final notifier = ref.read(mergeExecutionProvider.notifier);
@@ -331,10 +343,7 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
           _selectedMatch = null;
         });
 
-        SnackBarService.showSuccess(
-          context,
-          context.l10n.mergeSuccessful,
-        );
+        SnackBarService.showSuccess(context, context.l10n.mergeSuccessful);
       } else {
         // Reset on error too
         notifier.reset();
@@ -421,7 +430,11 @@ class _CandidateExpansionTile extends StatelessWidget {
       ),
       child: Theme(
         // Remove default ExpansionTile dividers
-        data: Theme.of(context).copyWith(dividerColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0)),
+        data: Theme.of(context).copyWith(
+          dividerColor: Theme.of(
+            context,
+          ).colorScheme.surface.withValues(alpha: 0),
+        ),
         child: ExpansionTile(
           initiallyExpanded: isExpanded,
           onExpansionChanged: onExpansionChanged,
@@ -447,9 +460,7 @@ class _CandidateExpansionTile extends StatelessWidget {
           ),
           title: Text(
             candidate.customExerciseName,
-            style: textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+            style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
           ),
           subtitle: Row(
             children: [
@@ -588,8 +599,9 @@ class _MatchListTile extends StatelessWidget {
               height: 20,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color:
-                    isSelected ? colorScheme.secondary : colorScheme.surface.withValues(alpha: 0),
+                color: isSelected
+                    ? colorScheme.secondary
+                    : colorScheme.surface.withValues(alpha: 0),
                 border: Border.all(
                   color: isSelected
                       ? colorScheme.secondary
@@ -617,8 +629,9 @@ class _MatchListTile extends StatelessWidget {
               gifUrl: match.exercise.imageUrl,
               exerciseName: match.exercise.nome,
               size: 48,
-              backgroundColor:
-                  colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+              backgroundColor: colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.5,
+              ),
             ),
             const SizedBox(width: AppSpacing.sm),
 

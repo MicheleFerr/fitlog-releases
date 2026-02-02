@@ -335,9 +335,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
         // Divider
         Row(
           children: [
-            Expanded(
-              child: Divider(color: colorScheme.outlineVariant),
-            ),
+            Expanded(child: Divider(color: colorScheme.outlineVariant)),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
               child: Text(
@@ -347,9 +345,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                 ),
               ),
             ),
-            Expanded(
-              child: Divider(color: colorScheme.outlineVariant),
-            ),
+            Expanded(child: Divider(color: colorScheme.outlineVariant)),
           ],
         ),
 
@@ -430,7 +426,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
               if (value == null || value.trim().isEmpty) {
                 return context.l10n.emailRequired;
               }
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+              if (!RegExp(
+                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+              ).hasMatch(value)) {
                 return context.l10n.emailInvalid;
               }
               return null;
@@ -450,7 +448,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
               ),
               suffixIcon: IconButton(
                 icon: Icon(
-                  _obscurePassword ? AppIcons.visibility : AppIcons.visibilityOff,
+                  _obscurePassword
+                      ? AppIcons.visibility
+                      : AppIcons.visibilityOff,
                 ),
                 onPressed: () =>
                     setState(() => _obscurePassword = !_obscurePassword),
@@ -487,7 +487,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                       : AppIcons.visibilityOff,
                 ),
                 onPressed: () => setState(
-                    () => _obscureConfirmPassword = !_obscureConfirmPassword),
+                  () => _obscureConfirmPassword = !_obscureConfirmPassword,
+                ),
               ),
             ),
             obscureText: _obscureConfirmPassword,
@@ -628,7 +629,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
 
   void _handleRegister() async {
     if (_formKey.currentState?.validate() ?? false) {
-      await ref.read(authControllerProvider.notifier).registerWithEmailAndPassword(
+      await ref
+          .read(authControllerProvider.notifier)
+          .registerWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _passwordController.text,
             displayName: _nameController.text.trim(),
@@ -692,10 +695,6 @@ class _StatDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      width: 1,
-      color: color.withValues(alpha: 0.3),
-    );
+    return Container(height: 40, width: 1, color: color.withValues(alpha: 0.3));
   }
 }

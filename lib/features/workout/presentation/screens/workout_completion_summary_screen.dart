@@ -42,10 +42,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 
 /// Screen di riepilogo workout completato
 class WorkoutCompletionSummaryScreen extends ConsumerStatefulWidget {
-  const WorkoutCompletionSummaryScreen({
-    super.key,
-    required this.workout,
-  });
+  const WorkoutCompletionSummaryScreen({super.key, required this.workout});
 
   /// Workout completato da mostrare
   final Workout workout;
@@ -139,10 +136,7 @@ class _WorkoutCompletionSummaryScreenState
     if (result == true && mounted) {
       // TODO: Navigate to health settings or request permissions
       // For now, just show success snackbar
-      SnackBarService.showInfo(
-        context,
-        context.l10n.healthKitConnectLater,
-      );
+      SnackBarService.showInfo(context, context.l10n.healthKitConnectLater);
     }
   }
 
@@ -158,14 +152,13 @@ class _WorkoutCompletionSummaryScreenState
     );
     final totalVolume = workout.exercises.fold<double>(
       0.0,
-      (sum, exercise) => sum + exercise.sets.fold<double>(
-        0.0,
-        (exerciseSum, set) {
-          final weight = double.tryParse(set.weight.toString()) ?? 0.0;
-          final reps = int.tryParse(set.reps.toString()) ?? 0;
-          return exerciseSum + (weight * reps);
-        },
-      ),
+      (sum, exercise) =>
+          sum +
+          exercise.sets.fold<double>(0.0, (exerciseSum, set) {
+            final weight = double.tryParse(set.weight.toString()) ?? 0.0;
+            final reps = int.tryParse(set.reps.toString()) ?? 0;
+            return exerciseSum + (weight * reps);
+          }),
     );
 
     // Calcola RPE medio (solo set non warmup con RPE > 0)
@@ -175,9 +168,10 @@ class _WorkoutCompletionSummaryScreenState
         .toList();
     final averageRpe = setsWithRpe.isNotEmpty
         ? setsWithRpe.fold<double>(
-              0.0,
-              (sum, set) => sum + (set.rpe ?? 0).toDouble(),
-            ) / setsWithRpe.length
+                0.0,
+                (sum, set) => sum + (set.rpe ?? 0).toDouble(),
+              ) /
+              setsWithRpe.length
         : 0.0;
 
     // Formatta durata
@@ -188,8 +182,8 @@ class _WorkoutCompletionSummaryScreenState
     final durationText = hours > 0
         ? '${hours}h ${minutes}m'
         : minutes > 0
-            ? '${minutes}m ${seconds}s'
-            : '${seconds}s';
+        ? '${minutes}m ${seconds}s'
+        : '${seconds}s';
 
     return Scaffold(
       appBar: AppBar(
@@ -204,11 +198,11 @@ class _WorkoutCompletionSummaryScreenState
             children: [
               // 🎉 Success Icon
               SemanticIcon(
-  icon: AppIcons.complete,
-  semanticLabel: 'Complete',
-  size: AppIconSize.medium,
-  color: context.colors.primary,
-),
+                icon: AppIcons.complete,
+                semanticLabel: 'Complete',
+                size: AppIconSize.medium,
+                color: context.colors.primary,
+              ),
               const SizedBox(height: 24),
 
               // 💪 Workout Name
@@ -224,7 +218,10 @@ class _WorkoutCompletionSummaryScreenState
 
               // ✅ Completion Timestamp
               Text(
-                _formatCompletionTime(context, workout.endTime ?? DateTime.now()),
+                _formatCompletionTime(
+                  context,
+                  workout.endTime ?? DateTime.now(),
+                ),
                 style: context.textTheme.bodyMedium?.copyWith(
                   color: context.colors.onSurfaceVariant,
                 ),
@@ -304,9 +301,9 @@ class _WorkoutCompletionSummaryScreenState
                       context.pop();
                     },
                     icon: const SemanticIcon(
-  icon: AppIcons.analytics,
-  semanticLabel: 'Analytics',
-),
+                      icon: AppIcons.analytics,
+                      semanticLabel: 'Analytics',
+                    ),
                     label: Text(context.l10n.viewDetails),
                   ),
                   const SizedBox(height: 12),
@@ -350,7 +347,6 @@ class _WorkoutCompletionSummaryScreenState
 
 /// Card statistica singola
 class _StatCard extends StatelessWidget {
-
   const _StatCard({
     required this.icon,
     required this.label,
@@ -370,11 +366,7 @@ class _StatCard extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            Icon(
-              icon,
-              size: 32,
-              color: color,
-            ),
+            Icon(icon, size: 32, color: color),
             const SizedBox(height: 12),
             Text(
               value,
@@ -399,10 +391,7 @@ class _StatCard extends StatelessWidget {
 
 /// Benefit item for HealthKit prompt dialog (P1-2)
 class _HealthKitBenefit extends StatelessWidget {
-  const _HealthKitBenefit({
-    required this.icon,
-    required this.text,
-  });
+  const _HealthKitBenefit({required this.icon, required this.text});
 
   final IconData icon;
   final String text;
@@ -413,11 +402,7 @@ class _HealthKitBenefit extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          Icon(
-            icon,
-            size: 20,
-            color: context.colors.primary,
-          ),
+          Icon(icon, size: 20, color: context.colors.primary),
           const SizedBox(width: 12),
           Expanded(
             child: Text(

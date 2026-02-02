@@ -157,10 +157,7 @@ class CorrelationCalculator {
       metricBName: 'RPE',
     );
 
-    return CorrelationResults(
-      weightRpe: weightRpe,
-      volumeRpe: volumeRpe,
-    );
+    return CorrelationResults(weightRpe: weightRpe, volumeRpe: volumeRpe);
   }
 
   /// Determine correlation strength from r²

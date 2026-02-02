@@ -65,9 +65,7 @@ class ConversationTile extends StatelessWidget {
       ),
       subtitle: Row(
         children: [
-          Expanded(
-            child: _buildSubtitle(context, hasUnread),
-          ),
+          Expanded(child: _buildSubtitle(context, hasUnread)),
           if (hasUnread) ...[
             const SizedBox(width: AppSpacing.xs),
             _buildUnreadBadge(context, unreadCount),

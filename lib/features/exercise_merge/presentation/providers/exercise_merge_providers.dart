@@ -24,10 +24,10 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 // ====================
 
 /// Provider per repository merge esercizi
-final exerciseMergeRepositoryProvider = Provider<IExerciseMergeRepository>((ref) {
-  return ExerciseMergeRepositoryImpl(
-    firestore: FirebaseFirestore.instance,
-  );
+final exerciseMergeRepositoryProvider = Provider<IExerciseMergeRepository>((
+  ref,
+) {
+  return ExerciseMergeRepositoryImpl(firestore: FirebaseFirestore.instance);
 });
 
 // ====================
@@ -40,34 +40,34 @@ final exerciseMergeRepositoryProvider = Provider<IExerciseMergeRepository>((ref)
 /// con esercizi del database ufficiale.
 final mergeCandidatesProvider =
     FutureProvider.autoDispose<List<MergeCandidate>>((ref) async {
-  // Get current user ID
-  final userId = ref.watch(currentUserIdProvider);
-  if (userId == null) {
-    return [];
-  }
+      // Get current user ID
+      final userId = ref.watch(currentUserIdProvider);
+      if (userId == null) {
+        return [];
+      }
 
-  // Get exercise history
-  final historyAsync = ref.watch(exerciseHistoryStreamProvider(userId));
-  final exerciseHistories = historyAsync.valueOrNull ?? [];
+      // Get exercise history
+      final historyAsync = ref.watch(exerciseHistoryStreamProvider(userId));
+      final exerciseHistories = historyAsync.valueOrNull ?? [];
 
-  if (exerciseHistories.isEmpty) {
-    return [];
-  }
+      if (exerciseHistories.isEmpty) {
+        return [];
+      }
 
-  // Get database exercises
-  final databaseExercisesAsync = ref.watch(allExercisesProvider);
-  final databaseExercises = databaseExercisesAsync.valueOrNull ?? [];
+      // Get database exercises
+      final databaseExercisesAsync = ref.watch(allExercisesProvider);
+      final databaseExercises = databaseExercisesAsync.valueOrNull ?? [];
 
-  if (databaseExercises.isEmpty) {
-    return [];
-  }
+      if (databaseExercises.isEmpty) {
+        return [];
+      }
 
-  // Find merge candidates
-  return ExerciseMergeService.findMergeCandidates(
-    exerciseHistories: exerciseHistories,
-    databaseExercises: databaseExercises,
-  );
-});
+      // Find merge candidates
+      return ExerciseMergeService.findMergeCandidates(
+        exerciseHistories: exerciseHistories,
+        databaseExercises: databaseExercises,
+      );
+    });
 
 /// Provider per conteggio candidati (per widget home)
 final mergeCandidatesCountProvider = Provider.autoDispose<int>((ref) {
@@ -78,10 +78,10 @@ final mergeCandidatesCountProvider = Provider.autoDispose<int>((ref) {
 /// Provider per solo candidati high quality (>75% match)
 final highQualityMergeCandidatesProvider =
     Provider.autoDispose<List<MergeCandidate>>((ref) {
-  final candidatesAsync = ref.watch(mergeCandidatesProvider);
-  final candidates = candidatesAsync.valueOrNull ?? [];
-  return ExerciseMergeService.filterHighQualityCandidates(candidates);
-});
+      final candidatesAsync = ref.watch(mergeCandidatesProvider);
+      final candidates = candidatesAsync.valueOrNull ?? [];
+      return ExerciseMergeService.filterHighQualityCandidates(candidates);
+    });
 
 // ====================
 // MERGE PREVIEW PROVIDER
@@ -96,47 +96,42 @@ typedef MergePreviewParams = ({
 /// Provider per generare preview del merge
 final mergePreviewProvider = FutureProvider.autoDispose
     .family<MergePreview?, MergePreviewParams>((ref, params) async {
-  // Get user ID
-  final userId = ref.watch(currentUserIdProvider);
-  if (userId == null) return null;
+      // Get user ID
+      final userId = ref.watch(currentUserIdProvider);
+      if (userId == null) return null;
 
-  // Get exercise histories
-  final historyAsync = ref.watch(exerciseHistoryStreamProvider(userId));
-  final exerciseHistories = historyAsync.valueOrNull ?? [];
+      // Get exercise histories
+      final historyAsync = ref.watch(exerciseHistoryStreamProvider(userId));
+      final exerciseHistories = historyAsync.valueOrNull ?? [];
 
-  // Get database exercises
-  final databaseExercisesAsync = ref.watch(allExercisesProvider);
-  final databaseExercises = databaseExercisesAsync.valueOrNull ?? [];
+      // Get database exercises
+      final databaseExercisesAsync = ref.watch(allExercisesProvider);
+      final databaseExercises = databaseExercisesAsync.valueOrNull ?? [];
 
-  // Find target exercise
-  final targetExercise = databaseExercises.firstWhere(
-    (e) => e.id == params.targetExerciseId,
-    orElse: () => throw Exception('Target exercise not found'),
-  );
+      // Find target exercise
+      final targetExercise = databaseExercises.firstWhere(
+        (e) => e.id == params.targetExerciseId,
+        orElse: () => throw Exception('Target exercise not found'),
+      );
 
-  // Get templates
-  final templatesAsync = ref.watch(allWorkoutTemplatesProvider);
-  final templates = templatesAsync.valueOrNull ?? [];
+      // Get templates
+      final templatesAsync = ref.watch(allWorkoutTemplatesProvider);
+      final templates = templatesAsync.valueOrNull ?? [];
 
-  return ExerciseMergeService.generateMergePreview(
-    sourceExerciseName: params.sourceExerciseName,
-    targetExercise: targetExercise,
-    exerciseHistories: exerciseHistories,
-    templates: templates,
-  );
-});
+      return ExerciseMergeService.generateMergePreview(
+        sourceExerciseName: params.sourceExerciseName,
+        targetExercise: targetExercise,
+        exerciseHistories: exerciseHistories,
+        templates: templates,
+      );
+    });
 
 // ====================
 // MERGE EXECUTION PROVIDER
 // ====================
 
 /// State per esecuzione merge
-enum MergeState {
-  idle,
-  loading,
-  success,
-  error,
-}
+enum MergeState { idle, loading, success, error }
 
 /// Progresso del merge con percentuale
 class MergeProgress {
@@ -206,10 +201,7 @@ class MergeExecutionNotifier extends StateNotifier<MergeProgress> {
 
       // Callback per aggiornare il progresso
       void onProgress(double progress, String step) {
-        state = state.copyWith(
-          progress: progress,
-          currentStep: step,
-        );
+        state = state.copyWith(progress: progress, currentStep: step);
       }
 
       final result = await repository.executeMergeWithProgress(
@@ -263,15 +255,14 @@ class MergeExecutionNotifier extends StateNotifier<MergeProgress> {
 
             // Aggiorna progresso durante l'attesa (90% -> 99%)
             final progressDelta = 0.09 * (attempts / maxAttempts);
-            state = state.copyWith(
-              progress: 0.90 + progressDelta,
-            );
+            state = state.copyWith(progress: 0.90 + progressDelta);
 
             // Controlla che ENTRAMBI siano pronti:
             // 1. Lo stream deve aver emesso dati (non loading)
             // 2. I candidates devono avere un valore
-            final historyState =
-                _ref.read(exerciseHistoryStreamProvider(userId));
+            final historyState = _ref.read(
+              exerciseHistoryStreamProvider(userId),
+            );
             final candidatesState = _ref.read(mergeCandidatesProvider);
 
             // Stream pronto E candidates pronto
@@ -295,10 +286,7 @@ class MergeExecutionNotifier extends StateNotifier<MergeProgress> {
         },
       );
     } catch (e) {
-      state = MergeProgress(
-        state: MergeState.error,
-        error: e.toString(),
-      );
+      state = MergeProgress(state: MergeState.error, error: e.toString());
       return false;
     }
   }
@@ -311,7 +299,8 @@ class MergeExecutionNotifier extends StateNotifier<MergeProgress> {
 
 /// Provider per notifier esecuzione merge
 final mergeExecutionProvider =
-    StateNotifierProvider.autoDispose<MergeExecutionNotifier, MergeProgress>(
-        (ref) {
-  return MergeExecutionNotifier(ref);
-});
+    StateNotifierProvider.autoDispose<MergeExecutionNotifier, MergeProgress>((
+      ref,
+    ) {
+      return MergeExecutionNotifier(ref);
+    });

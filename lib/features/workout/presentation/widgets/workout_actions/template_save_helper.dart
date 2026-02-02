@@ -1,5 +1,5 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: presentation
 /// 🎯 Feature: workout
 /// 🔧 Type: helper
@@ -17,14 +17,18 @@ import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dar
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart'
+    as wt;
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class TemplateSaveHelper {
-  static void showSaveAsTemplateDialog(BuildContext context, WidgetRef ref) async {
+  static void showSaveAsTemplateDialog(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     final currentWorkout = ref.read(currentWorkoutProvider);
     if (currentWorkout == null) return;
 
@@ -66,23 +70,33 @@ class TemplateSaveHelper {
     );
   }
 
-  static void _showQuotaExceededDialog(BuildContext context, _QuotaInfo quotaInfo) {
+  static void _showQuotaExceededDialog(
+    BuildContext context,
+    _QuotaInfo quotaInfo,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context).templateLimitReached(quotaInfo.maxTemplates)),
+        title: Text(
+          AppLocalizations.of(
+            context,
+          ).templateLimitReached(quotaInfo.maxTemplates),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             SemanticIcon(
-  icon: AppIcons.package,
-  semanticLabel: 'Package',
-  size: AppIconSize.xxlarge,
-  color: Theme.of(context,
-).colorScheme.error,
+              icon: AppIcons.package,
+              semanticLabel: 'Package',
+              size: AppIconSize.xxlarge,
+              color: Theme.of(context).colorScheme.error,
             ),
             const SizedBox(height: 16),
-            Text(AppLocalizations.of(context).templateLimitMessage(quotaInfo.maxTemplates)),
+            Text(
+              AppLocalizations.of(
+                context,
+              ).templateLimitMessage(quotaInfo.maxTemplates),
+            ),
             const SizedBox(height: 8),
             Text(
               AppLocalizations.of(context).templateLimitSuggestion,
@@ -108,14 +122,14 @@ class TemplateSaveHelper {
   }
 
   static void _showSaveDialog(
-    BuildContext context, 
-    WidgetRef ref, 
-    dynamic currentWorkout, 
+    BuildContext context,
+    WidgetRef ref,
+    dynamic currentWorkout,
     _QuotaInfo quotaInfo,
   ) {
     final nameController = TextEditingController(text: currentWorkout.name);
     final descriptionController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -130,7 +144,8 @@ class TemplateSaveHelper {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (quotaInfo.isNearLimit) _buildWarningBanner(context, quotaInfo),
+              if (quotaInfo.isNearLimit)
+                _buildWarningBanner(context, quotaInfo),
               _buildNameField(nameController, context),
               const SizedBox(height: 16),
               _buildDescriptionField(descriptionController, context),
@@ -146,16 +161,16 @@ class TemplateSaveHelper {
           ),
           FilledButton.icon(
             onPressed: () => _saveTemplate(
-              context, 
-              ref, 
+              context,
+              ref,
               nameController.text.trim(),
               descriptionController.text.trim(),
               currentWorkout,
             ),
             icon: const SemanticIcon(
-  icon: AppIcons.cloudUpload,
-  semanticLabel: 'Cloud upload',
-),
+              icon: AppIcons.cloudUpload,
+              semanticLabel: 'Cloud upload',
+            ),
             label: Text(AppLocalizations.of(context).saveToFirebase),
           ),
         ],
@@ -163,13 +178,18 @@ class TemplateSaveHelper {
     );
   }
 
-  static Widget _buildQuotaIndicator(BuildContext context, _QuotaInfo quotaInfo) {
+  static Widget _buildQuotaIndicator(
+    BuildContext context,
+    _QuotaInfo quotaInfo,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: quotaInfo.isNearLimit
             ? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2)
-            : Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.5),
+            : Theme.of(
+                context,
+              ).colorScheme.primaryContainer.withValues(alpha: 0.5),
         borderRadius: const BorderRadius.all(Radius.circular(8)),
       ),
       child: Text(
@@ -185,7 +205,10 @@ class TemplateSaveHelper {
     );
   }
 
-  static Widget _buildWarningBanner(BuildContext context, _QuotaInfo quotaInfo) {
+  static Widget _buildWarningBanner(
+    BuildContext context,
+    _QuotaInfo quotaInfo,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.only(bottom: 16),
@@ -206,7 +229,9 @@ class TemplateSaveHelper {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              AppLocalizations.of(context).templatesRemaining(quotaInfo.remaining),
+              AppLocalizations.of(
+                context,
+              ).templatesRemaining(quotaInfo.remaining),
               style: TextStyle(
                 fontSize: 13,
                 color: Theme.of(context).colorScheme.secondary,
@@ -218,7 +243,10 @@ class TemplateSaveHelper {
     );
   }
 
-  static Widget _buildNameField(TextEditingController controller, BuildContext context) {
+  static Widget _buildNameField(
+    TextEditingController controller,
+    BuildContext context,
+  ) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -226,15 +254,18 @@ class TemplateSaveHelper {
         hintText: AppLocalizations.of(context).templateNameHint,
         border: const OutlineInputBorder(),
         prefixIcon: const SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: 'Workout',
-),
+          icon: AppIcons.workout,
+          semanticLabel: 'Workout',
+        ),
       ),
       textCapitalization: TextCapitalization.words,
     );
   }
 
-  static Widget _buildDescriptionField(TextEditingController controller, BuildContext context) {
+  static Widget _buildDescriptionField(
+    TextEditingController controller,
+    BuildContext context,
+  ) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -242,9 +273,9 @@ class TemplateSaveHelper {
         hintText: AppLocalizations.of(context).descriptionHint,
         border: const OutlineInputBorder(),
         prefixIcon: const SemanticIcon(
-  icon: AppIcons.template,
-  semanticLabel: 'Template',
-),
+          icon: AppIcons.template,
+          semanticLabel: 'Template',
+        ),
       ),
       maxLines: 3,
       textCapitalization: TextCapitalization.sentences,
@@ -255,7 +286,9 @@ class TemplateSaveHelper {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+        color: Theme.of(
+          context,
+        ).colorScheme.primaryContainer.withValues(alpha: 0.3),
         borderRadius: const BorderRadius.all(Radius.circular(8)),
         border: Border.all(
           color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
@@ -290,12 +323,15 @@ class TemplateSaveHelper {
     dynamic currentWorkout,
   ) async {
     if (name.isEmpty) {
-      _showErrorSnackBar(context, AppLocalizations.of(context).enterTemplateName);
+      _showErrorSnackBar(
+        context,
+        AppLocalizations.of(context).enterTemplateName,
+      );
       return;
     }
-    
+
     Navigator.of(context).pop();
-    
+
     try {
       // Show loading
       SnackBarService.showCustom(
@@ -303,22 +339,24 @@ class TemplateSaveHelper {
         message: AppLocalizations.of(context).savingToFirebase,
         duration: const Duration(seconds: 30),
       );
-      
+
       // Save template
-      await ref.read(workoutTemplateNotifierProvider.notifier)
+      await ref
+          .read(workoutTemplateNotifierProvider.notifier)
           .createTemplateFromWorkout(
             name: name,
-            description: description.isEmpty 
-                ? AppLocalizations.of(context).customTemplate 
+            description: description.isEmpty
+                ? AppLocalizations.of(context).customTemplate
                 : description,
             exercises: currentWorkout.exercises,
             tags: [],
           );
-      
+
       // Show success
       SnackBarService.showCustom(
         context,
-        message: '✅ ${AppLocalizations.of(context).templateSavedSuccessfully(name)}',
+        message:
+            '✅ ${AppLocalizations.of(context).templateSavedSuccessfully(name)}',
         actionLabel: AppLocalizations.of(context).view,
         onAction: () => context.push('/templates'),
       );
@@ -330,7 +368,7 @@ class TemplateSaveHelper {
   static void _handleSaveError(BuildContext context, dynamic error) {
     final errorMessage = error.toString();
     final isQuotaError = errorMessage.contains('quota exceeded');
-    
+
     if (isQuotaError) {
       showDialog(
         context: context,
@@ -340,11 +378,10 @@ class TemplateSaveHelper {
             mainAxisSize: MainAxisSize.min,
             children: [
               SemanticIcon(
-  icon: AppIcons.package,
-  semanticLabel: 'Package',
-  size: AppIconSize.xxlarge,
-  color: Theme.of(context,
-).colorScheme.secondary,
+                icon: AppIcons.package,
+                semanticLabel: 'Package',
+                size: AppIconSize.xxlarge,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               const SizedBox(height: 16),
               Text(errorMessage.replaceAll('Exception: ', '')),
@@ -372,8 +409,10 @@ class TemplateSaveHelper {
       );
     } else {
       _showErrorSnackBar(
-        context, 
-        AppLocalizations.of(context).saveError(errorMessage.replaceAll('Exception: ', '')),
+        context,
+        AppLocalizations.of(
+          context,
+        ).saveError(errorMessage.replaceAll('Exception: ', '')),
       );
     }
   }
@@ -384,12 +423,18 @@ class TemplateSaveHelper {
 
   /// Show dialog to update an existing template with current workout exercises.
   /// This allows users to update a template without ending the workout.
-  static void showUpdateTemplateDialog(BuildContext context, WidgetRef ref, String templateId) async {
+  static void showUpdateTemplateDialog(
+    BuildContext context,
+    WidgetRef ref,
+    String templateId,
+  ) async {
     final currentWorkout = ref.read(currentWorkoutProvider);
     if (currentWorkout == null) return;
 
     // Get the existing template
-    final existingTemplate = await ref.read(templateByIdProvider(templateId).future);
+    final existingTemplate = await ref.read(
+      templateByIdProvider(templateId).future,
+    );
     if (existingTemplate == null) {
       if (context.mounted) {
         _showErrorSnackBar(context, AppLocalizations.of(context).errorOccurred);
@@ -421,7 +466,9 @@ class TemplateSaveHelper {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primaryContainer.withValues(alpha: 0.3),
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
               ),
               child: Row(
@@ -437,15 +484,17 @@ class TemplateSaveHelper {
                       children: [
                         Text(
                           existingTemplate.name,
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         Text(
                           '${currentWorkout.exercises.length} ${AppLocalizations.of(context).exercises.toLowerCase()}',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
                         ),
                       ],
                     ),
@@ -461,7 +510,8 @@ class TemplateSaveHelper {
             child: Text(AppLocalizations.of(context).cancel),
           ),
           FilledButton.icon(
-            onPressed: () => _updateTemplate(context, ref, existingTemplate, currentWorkout),
+            onPressed: () =>
+                _updateTemplate(context, ref, existingTemplate, currentWorkout),
             icon: const SemanticIcon(
               icon: AppIcons.save,
               semanticLabel: 'Save',
@@ -490,9 +540,11 @@ class TemplateSaveHelper {
       );
 
       // Convert current workout exercises to ExerciseTemplates
-      final exerciseTemplates = currentWorkout.exercises.map<wt.ExerciseTemplate>((exercise) {
-        return wt.ExerciseTemplate.fromExercise(exercise);
-      }).toList();
+      final exerciseTemplates = currentWorkout.exercises
+          .map<wt.ExerciseTemplate>((exercise) {
+            return wt.ExerciseTemplate.fromExercise(exercise);
+          })
+          .toList();
 
       // Create updated template preserving existing metadata
       final updatedTemplate = existingTemplate.copyWith(
@@ -501,13 +553,16 @@ class TemplateSaveHelper {
       );
 
       // Save the updated template
-      await ref.read(workoutTemplateNotifierProvider.notifier).saveTemplate(updatedTemplate);
+      await ref
+          .read(workoutTemplateNotifierProvider.notifier)
+          .saveTemplate(updatedTemplate);
 
       // Show success
       if (context.mounted) {
         SnackBarService.showCustom(
           context,
-          message: '✅ ${AppLocalizations.of(context).templateSavedSuccessfully(existingTemplate.name)}',
+          message:
+              '✅ ${AppLocalizations.of(context).templateSavedSuccessfully(existingTemplate.name)}',
           actionLabel: AppLocalizations.of(context).view,
           onAction: () => context.push('/templates'),
         );
@@ -516,7 +571,9 @@ class TemplateSaveHelper {
       if (context.mounted) {
         _showErrorSnackBar(
           context,
-          AppLocalizations.of(context).saveError(e.toString().replaceAll('Exception: ', '')),
+          AppLocalizations.of(
+            context,
+          ).saveError(e.toString().replaceAll('Exception: ', '')),
         );
       }
     }
@@ -524,15 +581,12 @@ class TemplateSaveHelper {
 }
 
 class _QuotaInfo {
-
-  const _QuotaInfo({
-    required this.usedTemplates,
-    required this.maxTemplates,
-  });
+  const _QuotaInfo({required this.usedTemplates, required this.maxTemplates});
   final int usedTemplates;
   final int maxTemplates;
 
   bool get isExceeded => usedTemplates >= maxTemplates;
-  bool get isNearLimit => maxTemplates - usedTemplates <= 2 && maxTemplates - usedTemplates > 0;
+  bool get isNearLimit =>
+      maxTemplates - usedTemplates <= 2 && maxTemplates - usedTemplates > 0;
   int get remaining => maxTemplates - usedTemplates;
 }

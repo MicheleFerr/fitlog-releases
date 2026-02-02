@@ -24,7 +24,9 @@ class WorkoutCustomizationModalV3 extends ConsumerStatefulWidget {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => const WorkoutCustomizationModalV3(),
     );
   }
@@ -90,11 +92,13 @@ class _WorkoutCustomizationModalV3State
     // Aspetto
     _showExerciseNotes = config.showExerciseNotes ?? false;
     _showExerciseInsights = config.showExerciseInsights ?? false;
-    _showQuickIcons = (config.showQuickInfoIcon ?? false) ||
+    _showQuickIcons =
+        (config.showQuickInfoIcon ?? false) ||
         (config.showWarmupIcon ?? false) ||
         (config.showPreventionIcon ?? false);
     _plateCalculator = config.plateCalculator ?? true;
-    _interfaceSize = config.interfaceSize ?? InterfaceSize.fromFontSize(config.fontSize);
+    _interfaceSize =
+        config.interfaceSize ?? InterfaceSize.fromFontSize(config.fontSize);
 
     // Sync set display mode with interface size on init
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -166,291 +170,295 @@ class _WorkoutCustomizationModalV3State
         minChildSize: 0.4,
         maxChildSize: 0.9,
         builder: (context, scrollController) => DecoratedBox(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            // Handle bar
-            Container(
-              margin: const EdgeInsets.only(top: 12, bottom: 8),
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(2),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              // Handle bar
+              Container(
+                margin: const EdgeInsets.only(top: 12, bottom: 8),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
-            ),
 
-            // Header
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              child: Row(
-                children: [
-                  Icon(
-                    AppIcons.tune,
-                    color: theme.colorScheme.primary,
-                    size: 28,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      context.l10n.customizeWorkout,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
+              // Header
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      AppIcons.tune,
+                      color: theme.colorScheme.primary,
+                      size: 28,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        context.l10n.customizeWorkout,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
 
-            // Content
-            Expanded(
-              child: ListView(
-                controller: scrollController,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                children: [
-                  const SizedBox(height: 8),
+              // Content
+              Expanded(
+                child: ListView(
+                  controller: scrollController,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  children: [
+                    const SizedBox(height: 8),
 
-                  // === COMPORTAMENTO ===
-                  _buildSectionCard(
-                    context,
-                    icon: AppIcons.playCircle,
-                    title: context.l10n.behaviorSection,
-                    color: context.colors.primary,
-                    children: [
-                      _buildToggleRow(
-                        context,
-                        icon: AppIcons.timer,
-                        title: context.l10n.autoRestTimerTitle,
-                        subtitle: context.l10n.autoRestTimerSubtitle,
-                        value: _autoRestTimer,
-                        onChanged: (v) {
-                          setState(() => _autoRestTimer = v);
-                          _saveAll();
-                        },
-                      ),
-                      _buildDivider(),
-                      _buildToggleRow(
-                        context,
-                        icon: AppIcons.unfoldLess,
-                        title: context.l10n.autoCollapseTitle,
-                        subtitle: context.l10n.autoCollapseSubtitle,
-                        value: _autoCollapseCompleted,
-                        onChanged: (v) {
-                          setState(() => _autoCollapseCompleted = v);
-                          _saveAll();
-                        },
-                      ),
-                      _buildDivider(),
-                      _buildToggleRow(
-                        context,
-                        icon: _soundEnabled
-                            ? AppIcons.volumeUp
-                            : AppIcons.volumeOff,
-                        title: context.l10n.soundVibrationTitle,
-                        subtitle: context.l10n.soundVibrationSubtitle,
-                        value: _soundEnabled,
-                        onChanged: (v) {
-                          setState(() => _soundEnabled = v);
-                          _saveAll();
-                        },
-                      ),
-                      _buildDivider(),
-                      _buildToggleRow(
-                        context,
-                        icon: AppIcons.hourglassEmpty,
-                        title: context.l10n.restTimeOnCardTitle,
-                        subtitle: context.l10n.restTimeOnCardSubtitle,
-                        value: _showCustomTimers,
-                        onChanged: (v) {
-                          setState(() => _showCustomTimers = v);
-                          _saveAll();
-                        },
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // === TRACCIAMENTO AVANZATO ===
-                  _buildExpandableSection(
-                    context,
-                    icon: AppIcons.speed,
-                    title: context.l10n.advancedTrackingTitle,
-                    subtitle: context.l10n.advancedTrackingSubtitle,
-                    color: context.colors.tertiary,
-                    initiallyExpanded: _rpeTracking,
-                    children: [
-                      _buildToggleRow(
-                        context,
-                        icon: AppIcons.speed,
-                        title: context.l10n.rpeTitle,
-                        subtitle: context.l10n.rpeSubtitle,
-                        value: _rpeTracking,
-                        onChanged: (v) {
-                          setState(() {
-                            _rpeTracking = v;
-                            if (!v) {
-                              _autoAdjustWeightFromRpe = false;
-                              _autoAdjustRestFromRpe = false;
-                            }
-                          });
-                          _saveAll();
-                        },
-                      ),
-                      // Sub-options (only visible when RPE is ON)
-                      if (_rpeTracking) ...[
-                        _buildDivider(),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 24),
-                          child: _buildToggleRow(
-                            context,
-                            icon: AppIcons.workout,
-                            title: context.l10n.suggestWeightTitle,
-                            subtitle: context.l10n.suggestWeightSubtitle,
-                            value: _autoAdjustWeightFromRpe,
-                            onChanged: (v) {
-                              setState(() => _autoAdjustWeightFromRpe = v);
-                              _saveAll();
-                            },
-                            compact: true,
-                          ),
-                        ),
-                        _buildDivider(),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 24),
-                          child: _buildToggleRow(
-                            context,
-                            icon: AppIcons.timer,
-                            title: context.l10n.adjustRestTitle,
-                            subtitle: context.l10n.adjustRestSubtitle,
-                            value: _autoAdjustRestFromRpe,
-                            onChanged: (v) {
-                              setState(() => _autoAdjustRestFromRpe = v);
-                              _saveAll();
-                            },
-                            compact: true,
-                          ),
-                        ),
-                      ],
-                      _buildDivider(),
-                      _buildToggleRow(
-                        context,
-                        icon: AppIcons.schedule,
-                        title: context.l10n.setDurationTitle,
-                        subtitle: context.l10n.setDurationSubtitle,
-                        value: _setDurationTracking,
-                        onChanged: (v) {
-                          setState(() => _setDurationTracking = v);
-                          _saveAll();
-                        },
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // === ASPETTO ===
-                  _buildExpandableSection(
-                    context,
-                    icon: AppIcons.colorLens,
-                    title: context.l10n.appearanceSection,
-                    subtitle: context.l10n.appearanceSubtitle,
-                    color: context.colors.secondary,
-                    initiallyExpanded: false,
-                    children: [
-                      _buildToggleRow(
-                        context,
-                        icon: AppIcons.noteAlt,
-                        title: context.l10n.exerciseNotesTitle,
-                        subtitle: context.l10n.exerciseNotesSubtitle,
-                        value: _showExerciseNotes,
-                        onChanged: (v) {
-                          setState(() => _showExerciseNotes = v);
-                          _saveAll();
-                        },
-                      ),
-                      _buildDivider(),
-                      _buildToggleRow(
-                        context,
-                        icon: AppIcons.insights,
-                        title: context.l10n.progressChartsTitle,
-                        subtitle: context.l10n.progressChartsSubtitle,
-                        value: _showExerciseInsights,
-                        onChanged: (v) {
-                          setState(() => _showExerciseInsights = v);
-                          _saveAll();
-                        },
-                      ),
-                      _buildDivider(),
-                      _buildToggleRow(
-                        context,
-                        icon: AppIcons.touchApp,
-                        title: context.l10n.quickIconsTitle,
-                        subtitle: context.l10n.quickIconsSubtitle,
-                        value: _showQuickIcons,
-                        onChanged: (v) {
-                          setState(() => _showQuickIcons = v);
-                          _saveAll();
-                        },
-                      ),
-                      _buildDivider(),
-                      _buildToggleRow(
-                        context,
-                        icon: AppIcons.weight,
-                        title: context.l10n.plateCalculatorTitle,
-                        subtitle: context.l10n.plateCalculatorSubtitle,
-                        value: _plateCalculator,
-                        onChanged: (v) {
-                          setState(() => _plateCalculator = v);
-                          _saveAll();
-                        },
-                      ),
-                      _buildDivider(),
-                      _buildInterfaceSizeSelector(context),
-                    ],
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Info footer
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer
-                          .withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
+                    // === COMPORTAMENTO ===
+                    _buildSectionCard(
+                      context,
+                      icon: AppIcons.playCircle,
+                      title: context.l10n.behaviorSection,
+                      color: context.colors.primary,
                       children: [
-                        Icon(
-                          AppIcons.check,
-                          size: 18,
-                          color: theme.colorScheme.primary,
+                        _buildToggleRow(
+                          context,
+                          icon: AppIcons.timer,
+                          title: context.l10n.autoRestTimerTitle,
+                          subtitle: context.l10n.autoRestTimerSubtitle,
+                          value: _autoRestTimer,
+                          onChanged: (v) {
+                            setState(() => _autoRestTimer = v);
+                            _saveAll();
+                          },
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          context.l10n.changesAutoSaved,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
+                        _buildDivider(),
+                        _buildToggleRow(
+                          context,
+                          icon: AppIcons.unfoldLess,
+                          title: context.l10n.autoCollapseTitle,
+                          subtitle: context.l10n.autoCollapseSubtitle,
+                          value: _autoCollapseCompleted,
+                          onChanged: (v) {
+                            setState(() => _autoCollapseCompleted = v);
+                            _saveAll();
+                          },
+                        ),
+                        _buildDivider(),
+                        _buildToggleRow(
+                          context,
+                          icon: _soundEnabled
+                              ? AppIcons.volumeUp
+                              : AppIcons.volumeOff,
+                          title: context.l10n.soundVibrationTitle,
+                          subtitle: context.l10n.soundVibrationSubtitle,
+                          value: _soundEnabled,
+                          onChanged: (v) {
+                            setState(() => _soundEnabled = v);
+                            _saveAll();
+                          },
+                        ),
+                        _buildDivider(),
+                        _buildToggleRow(
+                          context,
+                          icon: AppIcons.hourglassEmpty,
+                          title: context.l10n.restTimeOnCardTitle,
+                          subtitle: context.l10n.restTimeOnCardSubtitle,
+                          value: _showCustomTimers,
+                          onChanged: (v) {
+                            setState(() => _showCustomTimers = v);
+                            _saveAll();
+                          },
                         ),
                       ],
                     ),
-                  ),
 
-                  const SizedBox(height: 40),
-                ],
+                    const SizedBox(height: 12),
+
+                    // === TRACCIAMENTO AVANZATO ===
+                    _buildExpandableSection(
+                      context,
+                      icon: AppIcons.speed,
+                      title: context.l10n.advancedTrackingTitle,
+                      subtitle: context.l10n.advancedTrackingSubtitle,
+                      color: context.colors.tertiary,
+                      initiallyExpanded: _rpeTracking,
+                      children: [
+                        _buildToggleRow(
+                          context,
+                          icon: AppIcons.speed,
+                          title: context.l10n.rpeTitle,
+                          subtitle: context.l10n.rpeSubtitle,
+                          value: _rpeTracking,
+                          onChanged: (v) {
+                            setState(() {
+                              _rpeTracking = v;
+                              if (!v) {
+                                _autoAdjustWeightFromRpe = false;
+                                _autoAdjustRestFromRpe = false;
+                              }
+                            });
+                            _saveAll();
+                          },
+                        ),
+                        // Sub-options (only visible when RPE is ON)
+                        if (_rpeTracking) ...[
+                          _buildDivider(),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 24),
+                            child: _buildToggleRow(
+                              context,
+                              icon: AppIcons.workout,
+                              title: context.l10n.suggestWeightTitle,
+                              subtitle: context.l10n.suggestWeightSubtitle,
+                              value: _autoAdjustWeightFromRpe,
+                              onChanged: (v) {
+                                setState(() => _autoAdjustWeightFromRpe = v);
+                                _saveAll();
+                              },
+                              compact: true,
+                            ),
+                          ),
+                          _buildDivider(),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 24),
+                            child: _buildToggleRow(
+                              context,
+                              icon: AppIcons.timer,
+                              title: context.l10n.adjustRestTitle,
+                              subtitle: context.l10n.adjustRestSubtitle,
+                              value: _autoAdjustRestFromRpe,
+                              onChanged: (v) {
+                                setState(() => _autoAdjustRestFromRpe = v);
+                                _saveAll();
+                              },
+                              compact: true,
+                            ),
+                          ),
+                        ],
+                        _buildDivider(),
+                        _buildToggleRow(
+                          context,
+                          icon: AppIcons.schedule,
+                          title: context.l10n.setDurationTitle,
+                          subtitle: context.l10n.setDurationSubtitle,
+                          value: _setDurationTracking,
+                          onChanged: (v) {
+                            setState(() => _setDurationTracking = v);
+                            _saveAll();
+                          },
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // === ASPETTO ===
+                    _buildExpandableSection(
+                      context,
+                      icon: AppIcons.colorLens,
+                      title: context.l10n.appearanceSection,
+                      subtitle: context.l10n.appearanceSubtitle,
+                      color: context.colors.secondary,
+                      initiallyExpanded: false,
+                      children: [
+                        _buildToggleRow(
+                          context,
+                          icon: AppIcons.noteAlt,
+                          title: context.l10n.exerciseNotesTitle,
+                          subtitle: context.l10n.exerciseNotesSubtitle,
+                          value: _showExerciseNotes,
+                          onChanged: (v) {
+                            setState(() => _showExerciseNotes = v);
+                            _saveAll();
+                          },
+                        ),
+                        _buildDivider(),
+                        _buildToggleRow(
+                          context,
+                          icon: AppIcons.insights,
+                          title: context.l10n.progressChartsTitle,
+                          subtitle: context.l10n.progressChartsSubtitle,
+                          value: _showExerciseInsights,
+                          onChanged: (v) {
+                            setState(() => _showExerciseInsights = v);
+                            _saveAll();
+                          },
+                        ),
+                        _buildDivider(),
+                        _buildToggleRow(
+                          context,
+                          icon: AppIcons.touchApp,
+                          title: context.l10n.quickIconsTitle,
+                          subtitle: context.l10n.quickIconsSubtitle,
+                          value: _showQuickIcons,
+                          onChanged: (v) {
+                            setState(() => _showQuickIcons = v);
+                            _saveAll();
+                          },
+                        ),
+                        _buildDivider(),
+                        _buildToggleRow(
+                          context,
+                          icon: AppIcons.weight,
+                          title: context.l10n.plateCalculatorTitle,
+                          subtitle: context.l10n.plateCalculatorSubtitle,
+                          value: _plateCalculator,
+                          onChanged: (v) {
+                            setState(() => _plateCalculator = v);
+                            _saveAll();
+                          },
+                        ),
+                        _buildDivider(),
+                        _buildInterfaceSizeSelector(context),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Info footer
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primaryContainer.withValues(
+                          alpha: 0.2,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            AppIcons.check,
+                            size: 18,
+                            color: theme.colorScheme.primary,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            context.l10n.changesAutoSaved,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 40),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
   }
 
   // === BUILDERS ===
@@ -528,7 +536,9 @@ class _WorkoutCustomizationModalV3State
         ),
       ),
       child: Theme(
-        data: theme.copyWith(dividerColor: theme.colorScheme.surface.withValues(alpha: 0)),
+        data: theme.copyWith(
+          dividerColor: theme.colorScheme.surface.withValues(alpha: 0),
+        ),
         child: ExpansionTile(
           initiallyExpanded: initiallyExpanded,
           tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -588,12 +598,11 @@ class _WorkoutCustomizationModalV3State
               children: [
                 Text(
                   title,
-                  style: (compact
-                          ? theme.textTheme.bodyMedium
-                          : theme.textTheme.bodyLarge)
-                      ?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style:
+                      (compact
+                              ? theme.textTheme.bodyMedium
+                              : theme.textTheme.bodyLarge)
+                          ?.copyWith(fontWeight: FontWeight.w500),
                 ),
                 Text(
                   subtitle,
@@ -606,10 +615,7 @@ class _WorkoutCustomizationModalV3State
             ),
           ),
           const SizedBox(width: 8),
-          Switch(
-            value: value,
-            onChanged: onChanged,
-          ),
+          Switch(value: value, onChanged: onChanged),
         ],
       ),
     );
@@ -624,11 +630,7 @@ class _WorkoutCustomizationModalV3State
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: [
-          Icon(
-            AppIcons.formatSize,
-            size: 22,
-            color: theme.colorScheme.primary,
-          ),
+          Icon(AppIcons.formatSize, size: 22, color: theme.colorScheme.primary),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -669,7 +671,9 @@ class _WorkoutCustomizationModalV3State
                     setState(() => _interfaceSize = newSize);
 
                     // Save interface size
-                    ref.read(appConfigProvider.notifier).setInterfaceSize(newSize);
+                    ref
+                        .read(appConfigProvider.notifier)
+                        .setInterfaceSize(newSize);
 
                     // Sync set display mode with interface size
                     final displayMode = newSize.setRowMode == 'compact'
@@ -693,7 +697,9 @@ class _WorkoutCustomizationModalV3State
   Widget _buildDivider() {
     return Divider(
       height: 1,
-      color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3),
+      color: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.3),
     );
   }
 
@@ -701,7 +707,9 @@ class _WorkoutCustomizationModalV3State
 
   void _saveAll() {
     // Save workout settings
-    ref.read(appConfigProvider.notifier).updateWorkoutSettings(
+    ref
+        .read(appConfigProvider.notifier)
+        .updateWorkoutSettings(
           autoRestTimer: _autoRestTimer,
           autoCollapseCompleted: _autoCollapseCompleted,
           rpeTracking: _rpeTracking,
@@ -712,7 +720,9 @@ class _WorkoutCustomizationModalV3State
         );
 
     // Save display settings
-    ref.read(appConfigProvider.notifier).updateDisplaySettings(
+    ref
+        .read(appConfigProvider.notifier)
+        .updateDisplaySettings(
           showExerciseNotes: _showExerciseNotes,
           showExerciseInsights: _showExerciseInsights,
           showCustomTimers: _showCustomTimers,

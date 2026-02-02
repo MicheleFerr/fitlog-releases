@@ -81,8 +81,7 @@ class _AddExerciseToTemplateSheetState
         return DecoratedBox(
           decoration: BoxDecoration(
             color: colorScheme.surface,
-            borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
             boxShadow: [
               BoxShadow(
                 color: colorScheme.shadow.withValues(alpha: 0.2),
@@ -104,7 +103,9 @@ class _AddExerciseToTemplateSheetState
                   error: (error, _) => Center(
                     child: Text(
                       l10n.errorLoadingTemplates,
-                      style: context.textTheme.bodyMedium?.copyWith(color: colorScheme.error),
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.error,
+                      ),
                     ),
                   ),
                   data: (templates) {
@@ -120,8 +121,7 @@ class _AddExerciseToTemplateSheetState
                 ),
               ),
               // Add button
-              if (_selectedTemplateId != null)
-                _buildAddButton(context),
+              if (_selectedTemplateId != null) _buildAddButton(context),
             ],
           ),
         );
@@ -158,10 +158,7 @@ class _AddExerciseToTemplateSheetState
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: colorScheme.outlineVariant,
-            width: 1,
-          ),
+          bottom: BorderSide(color: colorScheme.outlineVariant, width: 1),
         ),
       ),
       child: Column(
@@ -368,10 +365,7 @@ class _AddExerciseToTemplateSheetState
       decoration: BoxDecoration(
         color: colorScheme.surface,
         border: Border(
-          top: BorderSide(
-            color: colorScheme.outlineVariant,
-            width: 1,
-          ),
+          top: BorderSide(color: colorScheme.outlineVariant, width: 1),
         ),
       ),
       child: SafeArea(
@@ -386,9 +380,7 @@ class _AddExerciseToTemplateSheetState
                     child: LoadingIndicator(),
                   )
                 : const Icon(AppIcons.add),
-            label: Text(
-              _isAdding ? l10n.adding : l10n.addExerciseToTemplate,
-            ),
+            label: Text(_isAdding ? l10n.adding : l10n.addExerciseToTemplate),
           ),
         ),
       ),
@@ -427,10 +419,7 @@ class _AddExerciseToTemplateSheetState
       // Create sets based on calculated volume
       final sets = List.generate(
         volume.sets,
-        (index) => SetTemplate(
-          setNumber: index + 1,
-          targetReps: volume.reps,
-        ),
+        (index) => SetTemplate(setNumber: index + 1, targetReps: volume.reps),
       );
 
       // Create ExerciseTemplate from suggestion with personalized volume
@@ -478,10 +467,7 @@ class _AddExerciseToTemplateSheetState
       }
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(
-          context,
-          context.l10n.errorAddingExercise,
-        );
+        SnackBarService.showError(context, context.l10n.errorAddingExercise);
       }
     } finally {
       if (mounted) {

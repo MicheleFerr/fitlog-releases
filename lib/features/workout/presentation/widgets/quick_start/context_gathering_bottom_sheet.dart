@@ -254,7 +254,9 @@ class _ContextGatheringBottomSheetState
                   : context.colors.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected ? color : context.colors.surface.withValues(alpha: 0),
+                color: isSelected
+                    ? color
+                    : context.colors.surface.withValues(alpha: 0),
                 width: 2,
               ),
             ),
@@ -284,7 +286,9 @@ class _ContextGatheringBottomSheetState
     });
 
     // Log step 1 completion time
-    final step1Time = DateTime.now().difference(_step1StartTime!).inMilliseconds;
+    final step1Time = DateTime.now()
+        .difference(_step1StartTime!)
+        .inMilliseconds;
     if (kDebugMode) {
       debugPrint('Step 1 completed in ${step1Time}ms');
     }
@@ -379,7 +383,9 @@ class _ContextGatheringBottomSheetState
                   : context.colors.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected ? levelColor : context.colors.surface.withValues(alpha: 0),
+                color: isSelected
+                    ? levelColor
+                    : context.colors.surface.withValues(alpha: 0),
                 width: 2,
               ),
             ),
@@ -395,7 +401,9 @@ class _ContextGatheringBottomSheetState
                         level.localizedName(context),
                         style: context.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: isSelected ? levelColor : context.colors.onSurface,
+                          color: isSelected
+                              ? levelColor
+                              : context.colors.onSurface,
                         ),
                       ),
                       if (showDescription) ...[
@@ -430,7 +438,9 @@ class _ContextGatheringBottomSheetState
     });
 
     // Log step 2 completion time
-    final step2Time = DateTime.now().difference(_step2StartTime!).inMilliseconds;
+    final step2Time = DateTime.now()
+        .difference(_step2StartTime!)
+        .inMilliseconds;
     if (kDebugMode) {
       debugPrint('Step 2 completed in ${step2Time}ms');
     }
@@ -539,7 +549,9 @@ class _ContextGatheringBottomSheetState
                   : context.colors.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected ? context.colors.primary : context.colors.surface.withValues(alpha: 0),
+                color: isSelected
+                    ? context.colors.primary
+                    : context.colors.surface.withValues(alpha: 0),
                 width: 2,
               ),
             ),
@@ -552,7 +564,9 @@ class _ContextGatheringBottomSheetState
                   label,
                   style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: isSelected ? context.colors.primary : context.colors.onSurface,
+                    color: isSelected
+                        ? context.colors.primary
+                        : context.colors.onSurface,
                   ),
                 ),
                 if (isSelected) ...[
@@ -652,7 +666,9 @@ class _ContextGatheringBottomSheetState
     }
     debugPrint('  Gender: ${context.gender ?? 'none'}');
     if (kDebugMode) {
-      debugPrint('  Total time: ${totalTime}ms (${context.completionSpeedCategory})');
+      debugPrint(
+        '  Total time: ${totalTime}ms (${context.completionSpeedCategory})',
+      );
     }
     debugPrint('  Suggested exercises: ${context.suggestedExerciseCount}');
 

@@ -30,9 +30,7 @@ class CoachSettingsScreen extends ConsumerWidget {
     final brandingAsync = ref.watch(coachBrandingProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.coachSettings),
-      ),
+      appBar: AppBar(title: Text(context.l10n.coachSettings)),
       body: brandingAsync.when(
         data: (branding) => _buildContent(context, ref, branding),
         loading: () => const Center(child: LoadingIndicator()),
@@ -99,11 +97,7 @@ class CoachSettingsScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.errorOutline,
-              size: 64,
-              color: context.colors.error,
-            ),
+            Icon(AppIcons.errorOutline, size: 64, color: context.colors.error),
             const SizedBox(height: AppSpacing.md),
             Text(
               context.l10n.errorGeneric,
@@ -147,10 +141,7 @@ class _SectionHeader extends StatelessWidget {
             color: context.colors.primaryContainer,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(
-            icon,
-            color: context.colors.onPrimaryContainer,
-          ),
+          child: Icon(icon, color: context.colors.onPrimaryContainer),
         ),
         const SizedBox(width: AppSpacing.md),
         Expanded(

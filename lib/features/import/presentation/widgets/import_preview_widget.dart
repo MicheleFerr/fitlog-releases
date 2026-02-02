@@ -25,10 +25,7 @@ class ImportPreviewWidget extends StatelessWidget {
         const SizedBox(height: 16),
 
         // Workout list preview
-        Text(
-          context.l10n.recentWorkouts,
-          style: context.textTheme.titleSmall,
-        ),
+        Text(context.l10n.recentWorkouts, style: context.textTheme.titleSmall),
         const SizedBox(height: 8),
         ...result.workouts.take(5).map((w) => _buildWorkoutTile(context, w)),
 

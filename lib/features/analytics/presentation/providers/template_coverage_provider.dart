@@ -40,25 +40,23 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 /// ```
 final templateCoverageProvider =
     FutureProvider.autoDispose<TemplateCoverageResult>((ref) async {
-  // Get user templates
-  final templates = await ref.watch(customWorkoutTemplatesProvider.future);
+      // Get user templates
+      final templates = await ref.watch(customWorkoutTemplatesProvider.future);
 
-  // Get exercise muscle map
-  final muscleMap = await ref.watch(exerciseMuscleMapProvider.future);
+      // Get exercise muscle map
+      final muscleMap = await ref.watch(exerciseMuscleMapProvider.future);
 
-  // Analyze coverage
-  final service = TemplateAwareBalanceService();
-  return service.analyzeTemplateCoverage(
-    templates: templates,
-    exerciseMuscleMap: muscleMap,
-  );
-});
+      // Analyze coverage
+      final service = TemplateAwareBalanceService();
+      return service.analyzeTemplateCoverage(
+        templates: templates,
+        exerciseMuscleMap: muscleMap,
+      );
+    });
 
 /// Parameters for adjusted neglected muscles
 class AdjustedNeglectedParams {
-  const AdjustedNeglectedParams({
-    required this.neglectedMuscles,
-  });
+  const AdjustedNeglectedParams({required this.neglectedMuscles});
 
   final List<NeglectedMuscle> neglectedMuscles;
 
@@ -69,7 +67,8 @@ class AdjustedNeglectedParams {
     if (neglectedMuscles.length != other.neglectedMuscles.length) return false;
 
     for (var i = 0; i < neglectedMuscles.length; i++) {
-      if (neglectedMuscles[i].muscleName != other.neglectedMuscles[i].muscleName) {
+      if (neglectedMuscles[i].muscleName !=
+          other.neglectedMuscles[i].muscleName) {
         return false;
       }
     }
@@ -99,19 +98,20 @@ class AdjustedNeglectedParams {
 /// );
 /// ```
 final adjustedNeglectedMusclesProvider = FutureProvider.autoDispose
-    .family<List<AdjustedNeglectedMuscle>, AdjustedNeglectedParams>(
-  (ref, params) async {
-    // Get template coverage
-    final coverage = await ref.watch(templateCoverageProvider.future);
+    .family<List<AdjustedNeglectedMuscle>, AdjustedNeglectedParams>((
+      ref,
+      params,
+    ) async {
+      // Get template coverage
+      final coverage = await ref.watch(templateCoverageProvider.future);
 
-    // Adjust neglected muscles
-    final service = TemplateAwareBalanceService();
-    return service.adjustNeglectedMuscles(
-      neglected: params.neglectedMuscles,
-      coverage: coverage,
-    );
-  },
-);
+      // Adjust neglected muscles
+      final service = TemplateAwareBalanceService();
+      return service.adjustNeglectedMuscles(
+        neglected: params.neglectedMuscles,
+        coverage: coverage,
+      );
+    });
 
 /// Provider for coverage summary text
 ///
@@ -126,14 +126,14 @@ final adjustedNeglectedMusclesProvider = FutureProvider.autoDispose
 /// ```
 final coverageSummaryProvider = FutureProvider.autoDispose
     .family<String, List<NeglectedMuscle>>((ref, neglected) async {
-  final coverage = await ref.watch(templateCoverageProvider.future);
+      final coverage = await ref.watch(templateCoverageProvider.future);
 
-  final service = TemplateAwareBalanceService();
-  return service.getCoverageSummary(
-    neglected: neglected,
-    coverage: coverage,
-  );
-});
+      final service = TemplateAwareBalanceService();
+      return service.getCoverageSummary(
+        neglected: neglected,
+        coverage: coverage,
+      );
+    });
 
 /// Provider to check if a specific exercise is in templates
 ///
@@ -141,11 +141,11 @@ final coverageSummaryProvider = FutureProvider.autoDispose
 /// ```dart
 /// final isPlanned = ref.watch(isExercisePlannedProvider('Lat Pulldown'));
 /// ```
-final isExercisePlannedProvider =
-    FutureProvider.autoDispose.family<bool, String>((ref, exerciseName) async {
-  final coverage = await ref.watch(templateCoverageProvider.future);
-  return coverage.isExercisePlanned(exerciseName);
-});
+final isExercisePlannedProvider = FutureProvider.autoDispose
+    .family<bool, String>((ref, exerciseName) async {
+      final coverage = await ref.watch(templateCoverageProvider.future);
+      return coverage.isExercisePlanned(exerciseName);
+    });
 
 /// Provider to get templates containing a specific exercise
 ///
@@ -154,10 +154,8 @@ final isExercisePlannedProvider =
 /// final templates = ref.watch(templatesForExerciseProvider('Lat Pulldown'));
 /// // Returns: ['Pull Day', 'Full Body A']
 /// ```
-final templatesForExerciseProvider =
-    FutureProvider.autoDispose.family<List<String>, String>(
-  (ref, exerciseName) async {
-    final coverage = await ref.watch(templateCoverageProvider.future);
-    return coverage.getTemplatesForExercise(exerciseName);
-  },
-);
+final templatesForExerciseProvider = FutureProvider.autoDispose
+    .family<List<String>, String>((ref, exerciseName) async {
+      final coverage = await ref.watch(templateCoverageProvider.future);
+      return coverage.getTemplatesForExercise(exerciseName);
+    });

@@ -13,26 +13,26 @@ class ExerciseSetNotifier extends Notifier<List<ExerciseSet>> {
   void addSet() {
     final newSetNumber = state.length + 1;
     final lastSet = state.isNotEmpty ? state.last : null;
-    
+
     final newSet = ExerciseSet(
       setNumber: newSetNumber,
       weight: lastSet?.weight ?? 0,
       reps: lastSet?.reps ?? 10,
     );
-    
+
     state = [...state, newSet];
   }
 
   void removeSet(String setId) {
     if (state.length <= 1) return; // Keep at least one set
-    
+
     final updatedSets = state.where((set) => set.id != setId).toList();
-    
+
     // Renumber sets
     for (int i = 0; i < updatedSets.length; i++) {
       updatedSets[i] = updatedSets[i].copyWith(setNumber: i + 1);
     }
-    
+
     state = updatedSets;
   }
 
@@ -55,7 +55,10 @@ class ExerciseSetNotifier extends Notifier<List<ExerciseSet>> {
 }
 
 // Provider for exercise sets in the modal
-final exerciseSetsProvider = NotifierProvider<ExerciseSetNotifier, List<ExerciseSet>>(ExerciseSetNotifier.new);
+final exerciseSetsProvider =
+    NotifierProvider<ExerciseSetNotifier, List<ExerciseSet>>(
+      ExerciseSetNotifier.new,
+    );
 
 // Superset exercises management
 class SupersetExercisesNotifier extends Notifier<List<Exercise>> {
@@ -76,4 +79,7 @@ class SupersetExercisesNotifier extends Notifier<List<Exercise>> {
 }
 
 // Provider for superset exercises
-final supersetExercisesProvider = NotifierProvider<SupersetExercisesNotifier, List<Exercise>>(SupersetExercisesNotifier.new);
+final supersetExercisesProvider =
+    NotifierProvider<SupersetExercisesNotifier, List<Exercise>>(
+      SupersetExercisesNotifier.new,
+    );

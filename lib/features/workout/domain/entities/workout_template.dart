@@ -4,7 +4,8 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 /// Template per workout riutilizzabili
-class WorkoutTemplate { // 3, 6, o 10
+class WorkoutTemplate {
+  // 3, 6, o 10
 
   WorkoutTemplate({
     String? id,
@@ -28,11 +29,11 @@ class WorkoutTemplate { // 3, 6, o 10
     this.category,
     this.defaultAutoAdjustmentType,
     this.defaultApreProtocol,
-  })  : id = id ?? const Uuid().v4(),
-        exercises = exercises ?? [],
-        tags = tags ?? [],
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? const Uuid().v4(),
+       exercises = exercises ?? [],
+       tags = tags ?? [],
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory WorkoutTemplate.fromJson(Map<String, dynamic> json) {
     // Parse exercises with enhanced error handling
@@ -40,7 +41,7 @@ class WorkoutTemplate { // 3, 6, o 10
     if (json['exercises'] != null) {
       if (json['exercises'] is List) {
         final exercisesList = json['exercises'] as List;
-        
+
         for (int i = 0; i < exercisesList.length; i++) {
           try {
             final exerciseJson = exercisesList[i];
@@ -54,7 +55,6 @@ class WorkoutTemplate { // 3, 6, o 10
         }
       }
     }
-    
 
     // Parse auto-adjustment type
     AutoAdjustmentType? defaultAutoAdjustmentType;
@@ -74,22 +74,34 @@ class WorkoutTemplate { // 3, 6, o 10
       description: json['description']?.toString() ?? '',
       imageUrl: json['imageUrl']?.toString(),
       exercises: exercises,
-      estimatedDuration: json['estimatedDuration'] is int ? json['estimatedDuration'] : 45,
-      tags: json['tags'] is List ? List<String>.from(json['tags'].map((t) => t.toString())) : [],
-      createdAt: json['createdAt'] is String ? DateTime.parse(json['createdAt']) : DateTime.now(),
-      updatedAt: json['updatedAt'] is String ? DateTime.parse(json['updatedAt']) : DateTime.now(),
+      estimatedDuration: json['estimatedDuration'] is int
+          ? json['estimatedDuration']
+          : 45,
+      tags: json['tags'] is List
+          ? List<String>.from(json['tags'].map((t) => t.toString()))
+          : [],
+      createdAt: json['createdAt'] is String
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] is String
+          ? DateTime.parse(json['updatedAt'])
+          : DateTime.now(),
       isCustom: json['isCustom'] is bool ? json['isCustom'] : true,
       usageCount: json['usageCount'] is int ? json['usageCount'] : 0,
       isPublic: json['isPublic'] is bool ? json['isPublic'] : false,
       userId: json['userId']?.toString(),
       authorName: json['authorName']?.toString(),
       downloadCount: json['downloadCount'] is int ? json['downloadCount'] : 0,
-      averageRating: json['averageRating'] is num ? json['averageRating'].toDouble() : 0.0,
+      averageRating: json['averageRating'] is num
+          ? json['averageRating'].toDouble()
+          : 0.0,
       reviewCount: json['reviewCount'] is int ? json['reviewCount'] : 0,
       difficulty: json['difficulty']?.toString(),
       category: json['category']?.toString(),
       defaultAutoAdjustmentType: defaultAutoAdjustmentType,
-      defaultApreProtocol: json['defaultApreProtocol'] is int ? json['defaultApreProtocol'] : null,
+      defaultApreProtocol: json['defaultApreProtocol'] is int
+          ? json['defaultApreProtocol']
+          : null,
     );
   }
   final String id;
@@ -103,7 +115,7 @@ class WorkoutTemplate { // 3, 6, o 10
   final DateTime updatedAt;
   final bool isCustom; // true se creato dall'utente, false se predefinito
   final int usageCount; // quante volte è stato utilizzato
-  
+
   // Campi per condivisione pubblica
   final bool isPublic; // true se condiviso pubblicamente
   final String? userId; // ID dell'utente creatore
@@ -112,7 +124,8 @@ class WorkoutTemplate { // 3, 6, o 10
   final double averageRating; // Rating medio (1-5)
   final int reviewCount; // Numero di recensioni
   final String? difficulty; // beginner, intermediate, advanced, expert
-  final String? category; // beginner, intermediate, advanced, home, dumbbell, express, specialty
+  final String?
+  category; // beginner, intermediate, advanced, home, dumbbell, express, specialty
 
   // Auto-regolazione predefinita
   final AutoAdjustmentType? defaultAutoAdjustmentType; // APRE o RPE
@@ -160,17 +173,15 @@ class WorkoutTemplate { // 3, 6, o 10
       reviewCount: reviewCount ?? this.reviewCount,
       difficulty: difficulty ?? this.difficulty,
       category: category ?? this.category,
-      defaultAutoAdjustmentType: defaultAutoAdjustmentType ?? this.defaultAutoAdjustmentType,
+      defaultAutoAdjustmentType:
+          defaultAutoAdjustmentType ?? this.defaultAutoAdjustmentType,
       defaultApreProtocol: defaultApreProtocol ?? this.defaultApreProtocol,
     );
   }
 
   /// Incrementa il contatore di utilizzo
   WorkoutTemplate incrementUsage() {
-    return copyWith(
-      usageCount: usageCount + 1,
-      updatedAt: DateTime.now(),
-    );
+    return copyWith(usageCount: usageCount + 1, updatedAt: DateTime.now());
   }
 
   Map<String, dynamic> toJson() {
@@ -206,7 +217,8 @@ class WorkoutTemplate { // 3, 6, o 10
 }
 
 /// Template per esercizio all'interno di un workout template
-class ExerciseTemplate { // For superset, dropset, etc.
+class ExerciseTemplate {
+  // For superset, dropset, etc.
 
   const ExerciseTemplate({
     required this.exerciseId,
@@ -224,8 +236,10 @@ class ExerciseTemplate { // For superset, dropset, etc.
   factory ExerciseTemplate.fromJson(Map<String, dynamic> json) {
     // FIX: Support both old format ('id', 'name') and new format ('exerciseId', 'exerciseName')
     // for backward compatibility with templates saved via Cloud Function
-    final exerciseId = json['exerciseId']?.toString() ?? json['id']?.toString() ?? '';
-    final exerciseName = json['exerciseName']?.toString() ?? json['name']?.toString() ?? '';
+    final exerciseId =
+        json['exerciseId']?.toString() ?? json['id']?.toString() ?? '';
+    final exerciseName =
+        json['exerciseName']?.toString() ?? json['name']?.toString() ?? '';
 
     // Validate required fields (after fallback)
     if (exerciseId.isEmpty) {
@@ -234,7 +248,7 @@ class ExerciseTemplate { // For superset, dropset, etc.
     if (exerciseName.isEmpty) {
       // Silent - will use empty string
     }
-    
+
     // Parse category with better error handling
     ExerciseCategory category;
     try {
@@ -244,17 +258,15 @@ class ExerciseTemplate { // For superset, dropset, etc.
     } catch (e) {
       category = ExerciseCategory.other;
     }
-    
+
     // Parse type with better error handling
     ExerciseType type;
     try {
-      type = ExerciseType.values.firstWhere(
-        (e) => e.name == json['type'],
-      );
+      type = ExerciseType.values.firstWhere((e) => e.name == json['type']);
     } catch (e) {
       type = ExerciseType.single;
     }
-    
+
     // Parse sets with validation
     List<SetTemplate> sets = [];
     if (json['sets'] != null) {
@@ -269,7 +281,9 @@ class ExerciseTemplate { // For superset, dropset, etc.
 
     // ✅ FIX: For supersets, also check supersetSets to determine round count
     // If sets is empty but supersetSets exists, create sets from supersetSets
-    if (sets.isEmpty && type == ExerciseType.superset && json['supersetSets'] != null) {
+    if (sets.isEmpty &&
+        type == ExerciseType.superset &&
+        json['supersetSets'] != null) {
       try {
         final supersetSetsJson = json['supersetSets'] as List;
         sets = supersetSetsJson.asMap().entries.map((entry) {
@@ -285,7 +299,8 @@ class ExerciseTemplate { // For superset, dropset, etc.
             if (exerciseDataMap.isNotEmpty) {
               final firstExerciseData = exerciseDataMap.values.first;
               if (firstExerciseData is Map) {
-                targetWeight = (firstExerciseData['targetWeight'] as num?)?.toDouble();
+                targetWeight = (firstExerciseData['targetWeight'] as num?)
+                    ?.toDouble();
                 targetReps = firstExerciseData['targetReps'] as int?;
               }
             }
@@ -318,11 +333,13 @@ class ExerciseTemplate { // For superset, dropset, etc.
         subExercises = null;
       }
     }
-    
+
     // Parse countingMode if present
     ExerciseCountingMode? countingMode;
     if (json['countingMode'] != null) {
-      countingMode = ExerciseCountingMode.fromString(json['countingMode'] as String?);
+      countingMode = ExerciseCountingMode.fromString(
+        json['countingMode'] as String?,
+      );
     }
 
     final exerciseTemplate = ExerciseTemplate(
@@ -333,7 +350,9 @@ class ExerciseTemplate { // For superset, dropset, etc.
       sets: sets,
       notes: json['notes']?.toString(),
       // FIX: Firebase may return restTime as double, use num to handle both int and double
-      restTime: json['restTime'] is num ? (json['restTime'] as num).toInt() : null,
+      restTime: json['restTime'] is num
+          ? (json['restTime'] as num).toInt()
+          : null,
       tut: json['tut']?.toString(), // ⌚ Time Under Tension
       subExercises: subExercises,
       countingMode: countingMode,
@@ -469,7 +488,8 @@ class ExerciseTemplate { // For superset, dropset, etc.
   final int? restTime;
   final String? tut; // ⌚ Time Under Tension (e.g., "3-1-2-0")
   final List<ExerciseTemplate>? subExercises;
-  final ExerciseCountingMode? countingMode; // How this exercise is counted (weighted/reps/time)
+  final ExerciseCountingMode?
+  countingMode; // How this exercise is counted (weighted/reps/time)
 
   Map<String, dynamic> toJson() {
     return {
@@ -517,20 +537,26 @@ class ExerciseTemplate { // For superset, dropset, etc.
   /// Converte il template in un esercizio per il workout
   Exercise toWorkoutExercise() {
     // If it's a superset and has sub-exercises, create a SupersetExercise
-    if (type == ExerciseType.superset && subExercises != null && subExercises!.isNotEmpty) {
-      final exercises = subExercises!.map((subTemplate) =>
-        Exercise(
-          id: subTemplate.exerciseId, // ✅ Preserve database ID for strength standards lookup
-          name: subTemplate.exerciseName,
-          type: ExerciseType.single, // Sub-exercises are singles
-          category: subTemplate.category,
-          sets: subTemplate.sets.map((s) => s.toExerciseSet()).toList(),
-          notes: subTemplate.notes,
-          restTime: subTemplate.restTime,
-          tut: subTemplate.tut, // ⌚ Time Under Tension
-          countingMode: subTemplate.countingMode ?? ExerciseCountingMode.weighted,
-        )
-      ).toList();
+    if (type == ExerciseType.superset &&
+        subExercises != null &&
+        subExercises!.isNotEmpty) {
+      final exercises = subExercises!
+          .map(
+            (subTemplate) => Exercise(
+              id: subTemplate
+                  .exerciseId, // ✅ Preserve database ID for strength standards lookup
+              name: subTemplate.exerciseName,
+              type: ExerciseType.single, // Sub-exercises are singles
+              category: subTemplate.category,
+              sets: subTemplate.sets.map((s) => s.toExerciseSet()).toList(),
+              notes: subTemplate.notes,
+              restTime: subTemplate.restTime,
+              tut: subTemplate.tut, // ⌚ Time Under Tension
+              countingMode:
+                  subTemplate.countingMode ?? ExerciseCountingMode.weighted,
+            ),
+          )
+          .toList();
 
       // Create SupersetSets with shared data for all exercises
       final supersetSets = <SupersetSet>[];
@@ -555,12 +581,14 @@ class ExerciseTemplate { // For superset, dropset, etc.
         }
 
         // ✅ FIX: Aggiungi timestamp per ID univoco
-        supersetSets.add(SupersetSet(
-          id: 'superset_set_${DateTime.now().millisecondsSinceEpoch}_$setIndex',
-          setNumber: setIndex + 1,
-          exerciseData: exerciseData,
-          isCompleted: false,
-        ));
+        supersetSets.add(
+          SupersetSet(
+            id: 'superset_set_${DateTime.now().millisecondsSinceEpoch}_$setIndex',
+            setNumber: setIndex + 1,
+            exerciseData: exerciseData,
+            isCompleted: false,
+          ),
+        );
       }
 
       return SupersetExercise(
@@ -603,7 +631,8 @@ class ExerciseTemplate { // For superset, dropset, etc.
       final restPauseSets = sets.map((setTemplate) {
         return RestPauseSet(
           reps: setTemplate.targetReps ?? 0,
-          restSeconds: setTemplate.restSeconds ?? 15, // Use saved value or default 15s
+          restSeconds:
+              setTemplate.restSeconds ?? 15, // Use saved value or default 15s
           isCompleted: false,
         );
       }).toList();
@@ -639,7 +668,6 @@ class ExerciseTemplate { // For superset, dropset, etc.
 
 /// Template per set all'interno di un esercizio template
 class SetTemplate {
-
   const SetTemplate({
     required this.setNumber,
     this.targetWeight,
@@ -653,25 +681,37 @@ class SetTemplate {
     // Enhanced validation for SetTemplate deserialization
     // FIX: Support both old format ('weight', 'reps', 'rpe') and new format ('targetWeight', 'targetReps', 'targetRpe')
     // for backward compatibility with templates saved via Cloud Function
-    final setNumber = json['setNumber'] is int ? json['setNumber'] : (json['setNumber'] is String ? int.tryParse(json['setNumber']) ?? 1 : 1);
+    final setNumber = json['setNumber'] is int
+        ? json['setNumber']
+        : (json['setNumber'] is String
+              ? int.tryParse(json['setNumber']) ?? 1
+              : 1);
 
     // Fallback: targetWeight ?? weight
     final weightRaw = json['targetWeight'] ?? json['weight'];
     final targetWeight = weightRaw != null
-        ? (weightRaw is num ? weightRaw.toDouble() : double.tryParse(weightRaw.toString()))
+        ? (weightRaw is num
+              ? weightRaw.toDouble()
+              : double.tryParse(weightRaw.toString()))
         : null;
 
     // Fallback: targetReps ?? reps
     final repsRaw = json['targetReps'] ?? json['reps'];
-    final targetReps = repsRaw is int ? repsRaw : (repsRaw is String ? int.tryParse(repsRaw) : null);
+    final targetReps = repsRaw is int
+        ? repsRaw
+        : (repsRaw is String ? int.tryParse(repsRaw) : null);
 
     // Fallback: targetRpe ?? rpe
     final rpeRaw = json['targetRpe'] ?? json['rpe'];
-    final targetRpe = rpeRaw is int ? rpeRaw : (rpeRaw is String ? int.tryParse(rpeRaw) : null);
+    final targetRpe = rpeRaw is int
+        ? rpeRaw
+        : (rpeRaw is String ? int.tryParse(rpeRaw) : null);
 
     // Parse restSeconds for RestPause sets
     final restSecondsRaw = json['restSeconds'];
-    final restSeconds = restSecondsRaw is int ? restSecondsRaw : (restSecondsRaw is String ? int.tryParse(restSecondsRaw) : null);
+    final restSeconds = restSecondsRaw is int
+        ? restSecondsRaw
+        : (restSecondsRaw is String ? int.tryParse(restSecondsRaw) : null);
 
     return SetTemplate(
       setNumber: setNumber,

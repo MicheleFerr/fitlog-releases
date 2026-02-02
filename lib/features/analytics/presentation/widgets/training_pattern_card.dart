@@ -76,21 +76,20 @@ class _TrainingPatternCardState extends State<TrainingPatternCard>
       vsync: this,
     );
 
-    _rotationAnimation = Tween<double>(
-      begin: 0,
-      end: 0.5, // 180 degrees
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _rotationAnimation =
+        Tween<double>(
+          begin: 0,
+          end: 0.5, // 180 degrees
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeInOut,
+          ),
+        );
 
-    _fadeAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
 
     if (_isExpanded) {
       _animationController.value = 1.0;
@@ -126,10 +125,7 @@ class _TrainingPatternCardState extends State<TrainingPatternCard>
       decoration: BoxDecoration(
         color: severityConfig.backgroundColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: severityConfig.borderColor,
-          width: 1.5,
-        ),
+        border: Border.all(color: severityConfig.borderColor, width: 1.5),
         boxShadow: [
           BoxShadow(
             color: severityConfig.shadowColor,
@@ -324,7 +320,9 @@ class _TrainingPatternCardState extends State<TrainingPatternCard>
   }
 
   Widget _buildConfidenceIndicator(
-      BuildContext context, _SeverityConfig config) {
+    BuildContext context,
+    _SeverityConfig config,
+  ) {
     final confidence = widget.pattern.confidence;
     final confidencePercent = (confidence * 100).round();
 
@@ -551,9 +549,11 @@ class _TrainingPatternCardState extends State<TrainingPatternCard>
     // Convert snake_case to Title Case
     return key
         .split('_')
-        .map((word) => word.isNotEmpty
-            ? '${word[0].toUpperCase()}${word.substring(1)}'
-            : '')
+        .map(
+          (word) => word.isNotEmpty
+              ? '${word[0].toUpperCase()}${word.substring(1)}'
+              : '',
+        )
         .join(' ');
   }
 
@@ -625,11 +625,13 @@ class TrainingPatternsList extends StatelessWidget {
 
     return Column(
       children: patternsToShow
-          .map((pattern) => TrainingPatternCard(
-                pattern: pattern,
-                // Always start collapsed - user can tap to expand
-                initiallyExpanded: false,
-              ))
+          .map(
+            (pattern) => TrainingPatternCard(
+              pattern: pattern,
+              // Always start collapsed - user can tap to expand
+              initiallyExpanded: false,
+            ),
+          )
           .toList(),
     );
   }

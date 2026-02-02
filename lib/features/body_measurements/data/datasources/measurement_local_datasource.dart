@@ -71,7 +71,7 @@ abstract class MeasurementLocalDatasource {
   ///
   /// **Note**: Returns empty list if no measurements found (not an error)
   Future<Either<LocalStorageFailure, List<EncryptedMeasurement>>>
-      getAllMeasurements(String userId);
+  getAllMeasurements(String userId);
 
   /// Get measurements filtered by metric type
   ///
@@ -85,7 +85,7 @@ abstract class MeasurementLocalDatasource {
   /// - Right(List<EncryptedMeasurement>): Filtered measurements
   /// - Left(LocalStorageFailure): Hive read error
   Future<Either<LocalStorageFailure, List<EncryptedMeasurement>>>
-      getMeasurementsByMetric({
+  getMeasurementsByMetric({
     required String userId,
     required MetricType metricType,
   });
@@ -103,7 +103,7 @@ abstract class MeasurementLocalDatasource {
   /// - Right(List<EncryptedMeasurement>): Measurements in date range
   /// - Left(LocalStorageFailure): Hive read error
   Future<Either<LocalStorageFailure, List<EncryptedMeasurement>>>
-      getMeasurementsByDateRange({
+  getMeasurementsByDateRange({
     required String userId,
     required DateTime startDate,
     required DateTime endDate,
@@ -153,9 +153,7 @@ abstract class MeasurementLocalDatasource {
   /// Returns:
   /// - Right(int): Number of measurements deleted
   /// - Left(LocalStorageFailure): Hive delete error
-  Future<Either<LocalStorageFailure, int>> deleteAllMeasurements(
-    String userId,
-  );
+  Future<Either<LocalStorageFailure, int>> deleteAllMeasurements(String userId);
 
   /// Delete measurements for a specific metric type
   ///
@@ -233,10 +231,7 @@ class HiveFailure extends LocalStorageFailure {
   final String message;
   final Object? error;
 
-  const HiveFailure({
-    required this.message,
-    this.error,
-  });
+  const HiveFailure({required this.message, this.error});
 }
 
 /// Hive box not initialized (call initialize() first)

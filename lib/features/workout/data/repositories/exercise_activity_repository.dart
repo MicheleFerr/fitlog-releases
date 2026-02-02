@@ -34,8 +34,10 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
     required Workout workout,
     required String userId, // ⚠️ CHANGED: userEmail → userId (2025-01-18)
   }) async {
-    debugPrint('⚠️ DEPRECATED: ExerciseActivityRepository.saveCompletedWorkout() is deprecated. Use WorkoutHistoryRepositoryEnhanced instead.');
-    
+    debugPrint(
+      '⚠️ DEPRECATED: ExerciseActivityRepository.saveCompletedWorkout() is deprecated. Use WorkoutHistoryRepositoryEnhanced instead.',
+    );
+
     if (!workout.isCompleted) {
       throw Exception('Il workout deve essere completato per essere salvato');
     }
@@ -43,26 +45,28 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
     final List<String> savedActivityIds = [];
 
     try {
-      
       // Itera attraverso tutti gli esercizi con set completati
       for (int i = 0; i < workout.exercises.length; i++) {
         final exercise = workout.exercises[i];
-        final completedSets = exercise.sets.where((set) => set.isCompleted).toList();
-        
+        final completedSets = exercise.sets
+            .where((set) => set.isCompleted)
+            .toList();
+
         debugPrint('💾 Exercise: ${exercise.name}');
         debugPrint('💾 Total sets: ${exercise.sets.length}');
         debugPrint('💾 Completed sets: ${completedSets.length}');
-        debugPrint('💾 Warmup sets: ${completedSets.where((s) => s.isWarmup).length}');
-        
+        debugPrint(
+          '💾 Warmup sets: ${completedSets.where((s) => s.isWarmup).length}',
+        );
+
         // Salva solo esercizi che hanno almeno un set completato
         if (completedSets.isNotEmpty) {
-          
           final activityId = await saveExerciseActivity(
             exercise: exercise,
             userId: userId, // ⚠️ CHANGED: userEmail → userId (2025-01-18)
             workoutName: workout.name,
           );
-          
+
           if (activityId != null) {
             savedActivityIds.add(activityId);
             debugPrint('✅ Saved exercise activity: $activityId');
@@ -88,7 +92,9 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
     required String workoutName,
     String? exerciseImageUrl,
   }) async {
-    debugPrint('⚠️ DEPRECATED: ExerciseActivityRepository.saveExerciseActivity() is deprecated. Use WorkoutHistoryRepositoryEnhanced instead.');
+    debugPrint(
+      '⚠️ DEPRECATED: ExerciseActivityRepository.saveExerciseActivity() is deprecated. Use WorkoutHistoryRepositoryEnhanced instead.',
+    );
     try {
       // ⚠️ NOTE: This saves to 'workouts' collection but structure is wrong
       // Should use workout_history_repository_enhanced.dart for proper nested structure
@@ -96,7 +102,8 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
       // Crea ExerciseActivity dal Exercise
       final exerciseActivity = ExerciseActivity.fromExercise(
         exercise: exercise,
-        userEmail: userId, // ⚠️ Parameter name is userEmail (expects email string)
+        userEmail:
+            userId, // ⚠️ Parameter name is userEmail (expects email string)
         workoutName: workoutName,
         exerciseImageUrl: exerciseImageUrl,
       );
@@ -119,29 +126,45 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
   /// ⚠️ DEPRECATED: Use workout_history_repository_enhanced.dart instead
   /// ⚠️ WARNING: This queries 'workouts' but expects flat ExerciseActivity structure.
   /// Will fail to parse nested workout.exercises[] correctly.
-  @Deprecated('Use WorkoutHistoryRepositoryEnhanced.getWorkoutHistory() instead')
+  @Deprecated(
+    'Use WorkoutHistoryRepositoryEnhanced.getWorkoutHistory() instead',
+  )
   Future<List<ExerciseActivity>> getUserActivities({
     required String userId, // ⚠️ CHANGED: userEmail → userId (2025-01-18)
     int? limit,
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    debugPrint('⚠️ DEPRECATED: ExerciseActivityRepository.getUserActivities() is deprecated');
+    debugPrint(
+      '⚠️ DEPRECATED: ExerciseActivityRepository.getUserActivities() is deprecated',
+    );
 
     try {
       return await rateLimitedQuery(() async {
         Query query = _firestore
             .collection(_collectionName)
-            .where('userId', isEqualTo: userId) // ⚠️ CHANGED: email → userId (2025-01-18)
-            .orderBy('completedAt', descending: true); // ⚠️ CHANGED: createdAt → completedAt (2025-01-18)
+            .where(
+              'userId',
+              isEqualTo: userId,
+            ) // ⚠️ CHANGED: email → userId (2025-01-18)
+            .orderBy(
+              'completedAt',
+              descending: true,
+            ); // ⚠️ CHANGED: createdAt → completedAt (2025-01-18)
 
         // Applica filtri opzionali
         if (startDate != null) {
-          query = query.where('completedAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate)); // ⚠️ CHANGED
+          query = query.where(
+            'completedAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+          ); // ⚠️ CHANGED
         }
 
         if (endDate != null) {
-          query = query.where('completedAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate)); // ⚠️ CHANGED
+          query = query.where(
+            'completedAt',
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+          ); // ⚠️ CHANGED
         }
 
         if (limit != null) {
@@ -150,8 +173,7 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
 
         final querySnapshot = await query.get();
 
-        if (querySnapshot.docs.isEmpty) {
-        }
+        if (querySnapshot.docs.isEmpty) {}
 
         final activities = querySnapshot.docs
             .map((doc) => ExerciseActivity.fromFirestore(doc))
@@ -159,7 +181,6 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
 
         return activities;
       });
-      
     } catch (e) {
       return [];
     }
@@ -170,20 +191,30 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
   /// ⚠️ DEPRECATED: Use workout_history_repository_enhanced.dart instead
   /// ⚠️ WARNING: This queries 'workouts' but expects flat ExerciseActivity structure.
   /// Will fail to parse nested workout.exercises[] correctly.
-  @Deprecated('Use WorkoutHistoryRepositoryEnhanced.getWorkoutHistory() instead')
+  @Deprecated(
+    'Use WorkoutHistoryRepositoryEnhanced.getWorkoutHistory() instead',
+  )
   Future<List<ExerciseActivity>> getActivitiesByExercise({
     required String userId, // ⚠️ CHANGED: userEmail → userId (2025-01-18)
     required String exerciseName,
     int? limit,
   }) async {
-    debugPrint('⚠️ DEPRECATED: ExerciseActivityRepository.getActivitiesByExercise() is deprecated');
+    debugPrint(
+      '⚠️ DEPRECATED: ExerciseActivityRepository.getActivitiesByExercise() is deprecated',
+    );
     try {
       return await rateLimitedQuery(() async {
         Query query = _firestore
             .collection(_collectionName)
-            .where('userId', isEqualTo: userId) // ⚠️ CHANGED: email → userId (2025-01-18)
+            .where(
+              'userId',
+              isEqualTo: userId,
+            ) // ⚠️ CHANGED: email → userId (2025-01-18)
             .where('exerciseName', isEqualTo: exerciseName)
-            .orderBy('completedAt', descending: true); // ⚠️ CHANGED: createdAt → completedAt (2025-01-18)
+            .orderBy(
+              'completedAt',
+              descending: true,
+            ); // ⚠️ CHANGED: createdAt → completedAt (2025-01-18)
 
         if (limit != null) {
           query = query.limit(limit);
@@ -213,7 +244,9 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    debugPrint('⚠️ DEPRECATED: ExerciseActivityRepository.getExerciseStats() is deprecated');
+    debugPrint(
+      '⚠️ DEPRECATED: ExerciseActivityRepository.getExerciseStats() is deprecated',
+    );
     try {
       final activities = await getActivitiesByExercise(
         userId: userId, // ⚠️ CHANGED: userEmail → userId (2025-01-18)
@@ -227,13 +260,13 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
       int totalVolume = 0;
       int totalSets = 0;
       int totalReps = 0;
-      
+
       for (final activity in activities) {
         for (final set in activity.sets) {
           if (set.done) {
             final weight = double.tryParse(set.weight) ?? 0;
             final reps = int.tryParse(set.reps) ?? 0;
-            
+
             maxWeight = maxWeight > weight ? maxWeight : weight;
             totalVolume += (weight * reps).round();
             totalSets++;
@@ -263,10 +296,7 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
   Future<bool> deleteActivity(String activityId) async {
     try {
       await rateLimitedDelete(() async {
-        await _firestore
-            .collection(_collectionName)
-            .doc(activityId)
-            .delete();
+        await _firestore.collection(_collectionName).doc(activityId).delete();
       });
       return true;
     } catch (e) {
@@ -287,24 +317,29 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
   }) {
     Query query = _firestore
         .collection(_collectionName)
-        .where('userId', isEqualTo: userId) // ⚠️ CHANGED: email → userId (2025-01-18)
-        .orderBy('completedAt', descending: true); // ⚠️ CHANGED: createdAt → completedAt (2025-01-18)
-    
+        .where(
+          'userId',
+          isEqualTo: userId,
+        ) // ⚠️ CHANGED: email → userId (2025-01-18)
+        .orderBy(
+          'completedAt',
+          descending: true,
+        ); // ⚠️ CHANGED: createdAt → completedAt (2025-01-18)
+
     if (limit != null) {
       query = query.limit(limit);
     }
 
-    return query.snapshots().map((snapshot) =>
-        snapshot.docs
-            .map((doc) => ExerciseActivity.fromFirestore(doc))
-            .toList()
+    return query.snapshots().map(
+      (snapshot) => snapshot.docs
+          .map((doc) => ExerciseActivity.fromFirestore(doc))
+          .toList(),
     );
   }
 }
 
 /// Statistiche di un esercizio
 class ExerciseStats {
-
   ExerciseStats({
     required this.exerciseName,
     required this.maxWeight,

@@ -19,13 +19,13 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 /// - Cronologia: Storico esecuzioni raggruppate per data
 /// - Istruzioni: Form cues, warmup protocol, tips
 class WorkoutExerciseDetailScreen extends ConsumerStatefulWidget {
-
   const WorkoutExerciseDetailScreen({
     super.key,
     required this.exerciseName,
     this.exerciseId,
   });
   final String exerciseName;
+
   /// Optional exercise database ID for strength standards lookup.
   /// If provided, enables accurate mapping to strength standards.
   final String? exerciseId;
@@ -62,7 +62,9 @@ class _WorkoutExerciseDetailScreenState
     await HapticFeedback.lightImpact();
 
     // Get exercise history data
-    final historyAsync = ref.read(exerciseHistoryDataGroupedProvider(widget.exerciseName));
+    final historyAsync = ref.read(
+      exerciseHistoryDataGroupedProvider(widget.exerciseName),
+    );
 
     await historyAsync.when(
       data: (historyMap) async {
@@ -75,10 +77,7 @@ class _WorkoutExerciseDetailScreenState
         if (allSets.isEmpty) {
           // No data to share
           if (mounted) {
-            SnackBarService.showWarning(
-              context,
-              context.l10n.noDataToShare,
-            );
+            SnackBarService.showWarning(context, context.l10n.noDataToShare);
           }
           return;
         }
@@ -109,10 +108,7 @@ class _WorkoutExerciseDetailScreenState
           await PdfExerciseService.shareExercisePdf(pdfData);
         } catch (e) {
           if (mounted) {
-            SnackBarService.showError(
-              context,
-              context.l10n.errorSharingPdf,
-            );
+            SnackBarService.showError(context, context.l10n.errorSharingPdf);
           }
         }
       },
@@ -122,10 +118,7 @@ class _WorkoutExerciseDetailScreenState
       error: (error, stack) {
         // Error loading data
         if (mounted) {
-          SnackBarService.showError(
-            context,
-            context.l10n.errorLoadingData,
-          );
+          SnackBarService.showError(context, context.l10n.errorLoadingData);
         }
       },
     );
@@ -247,23 +240,23 @@ class _WorkoutExerciseDetailScreenState
             Tab(
               text: context.l10n.exerciseDetailSummary,
               icon: const SemanticIcon(
-  icon: AppIcons.analytics,
-  semanticLabel: 'Analytics',
-),
+                icon: AppIcons.analytics,
+                semanticLabel: 'Analytics',
+              ),
             ),
             Tab(
               text: context.l10n.exerciseDetailHistory,
               icon: const SemanticIcon(
-  icon: AppIcons.history,
-  semanticLabel: 'History',
-),
+                icon: AppIcons.history,
+                semanticLabel: 'History',
+              ),
             ),
             Tab(
               text: context.l10n.alternativeExercises,
               icon: const SemanticIcon(
-  icon: AppIcons.swapHoriz,
-  semanticLabel: 'Swap horiz',
-),
+                icon: AppIcons.swapHoriz,
+                semanticLabel: 'Swap horiz',
+              ),
             ),
           ],
         ),

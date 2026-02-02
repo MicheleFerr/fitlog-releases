@@ -36,19 +36,19 @@ enum PhotoReminderFrequency {
 extension PhotoReminderFrequencyExtension on PhotoReminderFrequency {
   /// Days between reminders for each frequency
   int get days => switch (this) {
-        PhotoReminderFrequency.biweekly => 14,
-        PhotoReminderFrequency.monthly => 28, // 4 weeks (Hevy recommendation)
-        PhotoReminderFrequency.sixWeeks => 42,
-        PhotoReminderFrequency.custom => 28, // Default for custom
-      };
+    PhotoReminderFrequency.biweekly => 14,
+    PhotoReminderFrequency.monthly => 28, // 4 weeks (Hevy recommendation)
+    PhotoReminderFrequency.sixWeeks => 42,
+    PhotoReminderFrequency.custom => 28, // Default for custom
+  };
 
   /// Localization key suffix
   String get labelKey => switch (this) {
-        PhotoReminderFrequency.biweekly => 'everyTwoWeeks',
-        PhotoReminderFrequency.monthly => 'everyFourWeeks',
-        PhotoReminderFrequency.sixWeeks => 'everySixWeeks',
-        PhotoReminderFrequency.custom => 'customInterval',
-      };
+    PhotoReminderFrequency.biweekly => 'everyTwoWeeks',
+    PhotoReminderFrequency.monthly => 'everyFourWeeks',
+    PhotoReminderFrequency.sixWeeks => 'everySixWeeks',
+    PhotoReminderFrequency.custom => 'customInterval',
+  };
 
   /// Whether this is the recommended frequency
   bool get isRecommended => this == PhotoReminderFrequency.monthly;
@@ -137,10 +137,7 @@ abstract class PhotoReminderSettings with _$PhotoReminderSettings {
   factory PhotoReminderSettings.defaults() => const PhotoReminderSettings();
 
   /// Create enabled settings with recommended frequency
-  factory PhotoReminderSettings.recommended({
-    int hour = 9,
-    int minute = 0,
-  }) =>
+  factory PhotoReminderSettings.recommended({int hour = 9, int minute = 0}) =>
       PhotoReminderSettings(
         isEnabled: true,
         frequency: PhotoReminderFrequency.monthly,

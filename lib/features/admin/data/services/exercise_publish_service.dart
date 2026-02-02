@@ -12,9 +12,8 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 
 class ExercisePublishService {
-  ExercisePublishService({
-    FirebaseFirestore? firestore,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance;
+  ExercisePublishService({FirebaseFirestore? firestore})
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
   static const String _exercisesEnCollection = 'exercises_en';
@@ -37,7 +36,9 @@ class ExercisePublishService {
       final exercisesEn = await ExerciseJsonLoader.loadExercises('en');
       final exercisesIt = await ExerciseJsonLoader.loadExercises('it');
       if (kDebugMode) {
-        debugPrint('📋 Loaded ${exercisesEn.length} EN exercises, ${exercisesIt.length} IT exercises');
+        debugPrint(
+          '📋 Loaded ${exercisesEn.length} EN exercises, ${exercisesIt.length} IT exercises',
+        );
       }
 
       // 2. Upload esercizi in batch paralleli per ENTRAMBE le lingue
@@ -62,7 +63,9 @@ class ExercisePublishService {
       }
 
       if (kDebugMode) {
-        debugPrint('🎉 Successfully published version $version (EN: ${exercisesEn.length}, IT: ${exercisesIt.length})');
+        debugPrint(
+          '🎉 Successfully published version $version (EN: ${exercisesEn.length}, IT: ${exercisesIt.length})',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -84,16 +87,21 @@ class ExercisePublishService {
       // Crea batch da 100 documenti ciascuno
       for (int i = 0; i < exercises.length; i += batchSize) {
         final batch = _firestore.batch();
-        final end = (i + batchSize < exercises.length) ? i + batchSize : exercises.length;
+        final end = (i + batchSize < exercises.length)
+            ? i + batchSize
+            : exercises.length;
 
         for (int j = i; j < end; j++) {
           final exercise = exercises[j];
-          final docId = exercise['id'] as String? ?? 'ex_${j.toString().padLeft(4, '0')}';
+          final docId =
+              exercise['id'] as String? ?? 'ex_${j.toString().padLeft(4, '0')}';
 
           batch.set(
             _firestore.collection(collectionName).doc(docId),
             exercise,
-            SetOptions(merge: true), // Merge per non sovrascrivere custom fields
+            SetOptions(
+              merge: true,
+            ), // Merge per non sovrascrivere custom fields
           );
         }
 
@@ -101,13 +109,13 @@ class ExercisePublishService {
       }
 
       if (kDebugMode) {
-        debugPrint('📦 Created ${batches.length} batches for ${exercises.length} exercises ($collectionName)');
+        debugPrint(
+          '📦 Created ${batches.length} batches for ${exercises.length} exercises ($collectionName)',
+        );
       }
 
       // Commit tutti i batch IN PARALLELO (13x più veloce che sequenziale)
-      await Future.wait(
-        batches.map((batch) => batch.commit()),
-      );
+      await Future.wait(batches.map((batch) => batch.commit()));
 
       if (kDebugMode) {
         debugPrint('✅ Committed ${batches.length} batches to $collectionName');
@@ -129,7 +137,9 @@ class ExercisePublishService {
     required bool isRequired,
   }) async {
     try {
-      final docRef = _firestore.collection(_metadataCollection).doc(_versionDocId);
+      final docRef = _firestore
+          .collection(_metadataCollection)
+          .doc(_versionDocId);
 
       // Ottieni documento esistente per preservare changelog precedente
       final existingDoc = await docRef.get();
@@ -155,22 +165,21 @@ class ExercisePublishService {
       final bundleSizeMbIt = (totalExercisesIt * 2) / 1000;
 
       // Update metadata document (con info per entrambe le lingue)
-      await docRef.set(
-        {
-          'current_version': version,
-          'last_updated': FieldValue.serverTimestamp(),
-          'total_exercises_en': totalExercisesEn,
-          'total_exercises_it': totalExercisesIt,
-          'bundle_size_mb_en': bundleSizeMbEn,
-          'bundle_size_mb_it': bundleSizeMbIt,
-          'changelog': updatedChangelog,
-          'status': 'published',
-        },
-        SetOptions(merge: true),
-      );
+      await docRef.set({
+        'current_version': version,
+        'last_updated': FieldValue.serverTimestamp(),
+        'total_exercises_en': totalExercisesEn,
+        'total_exercises_it': totalExercisesIt,
+        'bundle_size_mb_en': bundleSizeMbEn,
+        'bundle_size_mb_it': bundleSizeMbIt,
+        'changelog': updatedChangelog,
+        'status': 'published',
+      }, SetOptions(merge: true));
 
       if (kDebugMode) {
-        debugPrint('✅ Version metadata updated to $version (EN: $totalExercisesEn, IT: $totalExercisesIt)');
+        debugPrint(
+          '✅ Version metadata updated to $version (EN: $totalExercisesEn, IT: $totalExercisesIt)',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -232,7 +241,8 @@ class ExercisePublishService {
   String incrementVersion(String currentVersion) {
     try {
       final parts = currentVersion.split('.').map(int.parse).toList();
-      if (parts.length != 3) throw const FormatException('Invalid version format');
+      if (parts.length != 3)
+        throw const FormatException('Invalid version format');
 
       // Increment patch version
       parts[2] += 1;

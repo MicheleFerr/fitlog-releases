@@ -22,7 +22,9 @@ class ExerciseCacheManager {
   static bool _staticInitialized = false;
 
   factory ExerciseCacheManager([HiveBoxManagerEnhanced? boxManager]) {
-    _instance ??= ExerciseCacheManager._internal(boxManager ?? HiveBoxManagerEnhanced());
+    _instance ??= ExerciseCacheManager._internal(
+      boxManager ?? HiveBoxManagerEnhanced(),
+    );
     return _instance!;
   }
 
@@ -53,6 +55,7 @@ class ExerciseCacheManager {
   late Box<Map> _syncQueueBox;
 
   bool _initialized = false;
+
   /// ⚡ PERFORMANCE: Completer to prevent parallel init race condition (was causing 4x init)
   static Completer<void>? _initCompleter;
 
@@ -103,7 +106,9 @@ class ExerciseCacheManager {
       final storedVersion = metadata?['schemaVersion'] as int? ?? 1;
 
       if (storedVersion < _cacheSchemaVersion) {
-        debugPrint('🔄 Cache schema outdated (v$storedVersion → v$_cacheSchemaVersion), clearing cache...');
+        debugPrint(
+          '🔄 Cache schema outdated (v$storedVersion → v$_cacheSchemaVersion), clearing cache...',
+        );
         await _exercisesBox.clear();
         await _metadataBox.clear();
         await _syncQueueBox.clear();
@@ -112,7 +117,9 @@ class ExerciseCacheManager {
           'schemaVersion': _cacheSchemaVersion,
           'updatedAt': DateTime.now().toIso8601String(),
         });
-        debugPrint('✅ Cache cleared and schema updated to v$_cacheSchemaVersion');
+        debugPrint(
+          '✅ Cache cleared and schema updated to v$_cacheSchemaVersion',
+        );
       }
     } catch (e) {
       debugPrint('⚠️ Error checking schema version: $e');
@@ -124,11 +131,17 @@ class ExerciseCacheManager {
 
   /// Salva esercizi nella cache
   /// [locale] is the language code (e.g., 'it', 'en') of the cached exercises
-  Future<void> cacheExercises(List<Exercise> exercises, String version, {required String locale}) async {
+  Future<void> cacheExercises(
+    List<Exercise> exercises,
+    String version, {
+    required String locale,
+  }) async {
     await _ensureInitialized();
 
     try {
-      debugPrint('💾 Caching ${exercises.length} exercises (v$version, locale: $locale)...');
+      debugPrint(
+        '💾 Caching ${exercises.length} exercises (v$version, locale: $locale)...',
+      );
 
       // Inizia una transazione
       final batch = <String, Map<String, dynamic>>{};
@@ -144,8 +157,9 @@ class ExerciseCacheManager {
       // Aggiorna metadata con locale
       await _updateCacheMetadata(version, exercises.length, locale: locale);
 
-      debugPrint('✅ Successfully cached ${exercises.length} exercises (locale: $locale)');
-
+      debugPrint(
+        '✅ Successfully cached ${exercises.length} exercises (locale: $locale)',
+      );
     } catch (e) {
       debugPrint('❌ Failed to cache exercises: $e');
       rethrow;
@@ -188,7 +202,6 @@ class ExerciseCacheManager {
 
       debugPrint('📖 Loaded ${exercises.length} exercises from cache');
       return exercises;
-
     } catch (e) {
       debugPrint('❌ Failed to get cached exercises: $e');
       return [];
@@ -203,9 +216,10 @@ class ExerciseCacheManager {
       final exerciseData = _exercisesBox.get(exerciseId);
       if (exerciseData == null) return null;
 
-      final exercise = ExerciseModel.fromJson(Map<String, dynamic>.from(exerciseData)).toEntity();
+      final exercise = ExerciseModel.fromJson(
+        Map<String, dynamic>.from(exerciseData),
+      ).toEntity();
       return exercise;
-
     } catch (e) {
       debugPrint('❌ Failed to get cached exercise $exerciseId: $e');
       return null;
@@ -221,7 +235,6 @@ class ExerciseCacheManager {
       await _exercisesBox.put(exercise.id, exerciseModel.toJson());
 
       debugPrint('✏️ Updated exercise ${exercise.id} in cache');
-
     } catch (e) {
       debugPrint('❌ Failed to update cached exercise: $e');
       rethrow;
@@ -235,7 +248,6 @@ class ExerciseCacheManager {
     try {
       await _exercisesBox.delete(exerciseId);
       debugPrint('🗑️ Removed exercise $exerciseId from cache');
-
     } catch (e) {
       debugPrint('❌ Failed to remove cached exercise: $e');
       rethrow;
@@ -251,7 +263,6 @@ class ExerciseCacheManager {
       if (data == null) return null;
 
       return CacheMetadata.fromMap(Map<String, dynamic>.from(data));
-
     } catch (e) {
       debugPrint('❌ Failed to get cache metadata: $e');
       return null;
@@ -259,7 +270,11 @@ class ExerciseCacheManager {
   }
 
   /// Aggiorna metadata della cache
-  Future<void> _updateCacheMetadata(String version, int exerciseCount, {required String locale}) async {
+  Future<void> _updateCacheMetadata(
+    String version,
+    int exerciseCount, {
+    required String locale,
+  }) async {
     final metadata = CacheMetadata(
       version: version,
       exerciseCount: exerciseCount,
@@ -284,11 +299,12 @@ class ExerciseCacheManager {
 
       return allExercises.where((exercise) {
         return exercise.nome.toLowerCase().contains(lowerQuery) ||
-               exercise.focusDisplayName.toLowerCase().contains(lowerQuery) ||
-               exercise.attrezzatura.toLowerCase().contains(lowerQuery) ||
-               exercise.muscoliSecondariDisplayName.toLowerCase().contains(lowerQuery);
+            exercise.focusDisplayName.toLowerCase().contains(lowerQuery) ||
+            exercise.attrezzatura.toLowerCase().contains(lowerQuery) ||
+            exercise.muscoliSecondariDisplayName.toLowerCase().contains(
+              lowerQuery,
+            );
       }).toList();
-
     } catch (e) {
       debugPrint('❌ Failed to search cached exercises: $e');
       return [];
@@ -296,7 +312,9 @@ class ExerciseCacheManager {
   }
 
   /// Filtra esercizi per focus
-  Future<List<Exercise>> getCachedExercisesByFocus(List<String> focusGroups) async {
+  Future<List<Exercise>> getCachedExercisesByFocus(
+    List<String> focusGroups,
+  ) async {
     await _ensureInitialized();
 
     try {
@@ -305,7 +323,6 @@ class ExerciseCacheManager {
       return allExercises.where((exercise) {
         return exercise.focus.any((focus) => focusGroups.contains(focus));
       }).toList();
-
     } catch (e) {
       debugPrint('❌ Failed to get exercises by focus: $e');
       return [];
@@ -313,7 +330,11 @@ class ExerciseCacheManager {
   }
 
   /// Aggiunge modifiche alla queue di sincronizzazione
-  Future<void> addToSyncQueue(String exerciseId, Map<String, dynamic> changes, SyncOperation operation) async {
+  Future<void> addToSyncQueue(
+    String exerciseId,
+    Map<String, dynamic> changes,
+    SyncOperation operation,
+  ) async {
     await _ensureInitialized();
 
     try {
@@ -327,7 +348,6 @@ class ExerciseCacheManager {
 
       await _syncQueueBox.put(syncItem.id, syncItem.toMap());
       debugPrint('📋 Added to sync queue: ${operation.name} for $exerciseId');
-
     } catch (e) {
       debugPrint('❌ Failed to add to sync queue: $e');
     }
@@ -350,7 +370,6 @@ class ExerciseCacheManager {
       }
 
       return items..sort((a, b) => a.timestamp.compareTo(b.timestamp));
-
     } catch (e) {
       debugPrint('❌ Failed to get sync queue: $e');
       return [];
@@ -364,7 +383,6 @@ class ExerciseCacheManager {
     try {
       await _syncQueueBox.delete(itemId);
       debugPrint('✅ Removed sync queue item: $itemId');
-
     } catch (e) {
       debugPrint('❌ Failed to remove sync queue item: $e');
     }
@@ -380,7 +398,6 @@ class ExerciseCacheManager {
       await _syncQueueBox.clear();
 
       debugPrint('🧹 Cache cleared completely');
-
     } catch (e) {
       debugPrint('❌ Failed to clear cache: $e');
       rethrow;
@@ -398,9 +415,10 @@ class ExerciseCacheManager {
       final now = DateTime.now();
       if (now.difference(metadata.lastUpdated) > maxAge) {
         await clearCache();
-        debugPrint('🧹 Cleaned up old cache (age: ${now.difference(metadata.lastUpdated).inHours}h)');
+        debugPrint(
+          '🧹 Cleaned up old cache (age: ${now.difference(metadata.lastUpdated).inHours}h)',
+        );
       }
-
     } catch (e) {
       debugPrint('❌ Failed to cleanup old cache: $e');
     }
@@ -430,7 +448,9 @@ class ExerciseCacheManager {
     try {
       final metadata = await getCacheMetadata();
       if (metadata != null) {
-        debugPrint('📊 Cache: ${metadata.exerciseCount} exercises (v${metadata.version})');
+        debugPrint(
+          '📊 Cache: ${metadata.exerciseCount} exercises (v${metadata.version})',
+        );
       }
     } catch (e) {
       // Silent fail in release
@@ -457,7 +477,6 @@ class ExerciseCacheManager {
 
 /// Metadata della cache
 class CacheMetadata {
-
   const CacheMetadata({
     required this.version,
     required this.exerciseCount,
@@ -473,8 +492,10 @@ class CacheMetadata {
       exerciseCount: map['exercise_count'] as int,
       lastUpdated: DateTime.parse(map['last_updated'] as String),
       cacheSize: map['cache_size'] as int,
-      locale: map['locale'] as String? ?? 'en', // Default to 'en' for old caches
-      schemaVersion: map['schemaVersion'] as int? ?? 1, // Default to 1 for old caches
+      locale:
+          map['locale'] as String? ?? 'en', // Default to 'en' for old caches
+      schemaVersion:
+          map['schemaVersion'] as int? ?? 1, // Default to 1 for old caches
     );
   }
   final String version;
@@ -498,7 +519,6 @@ class CacheMetadata {
 
 /// Elemento della queue di sincronizzazione
 class SyncQueueItem {
-
   const SyncQueueItem({
     required this.id,
     required this.exerciseId,
@@ -537,8 +557,4 @@ class SyncQueueItem {
 }
 
 /// Tipi di operazioni di sincronizzazione
-enum SyncOperation {
-  create,
-  update,
-  delete,
-}
+enum SyncOperation { create, update, delete }

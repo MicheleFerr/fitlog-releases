@@ -18,11 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 ///
 /// Research: Adaptive tone achieves 75% comprehension + 85% satisfaction.
 class TourBottomSheet extends ConsumerWidget {
-  const TourBottomSheet({
-    required this.step,
-    this.manager,
-    super.key,
-  });
+  const TourBottomSheet({required this.step, this.manager, super.key});
 
   final OnboardingTourStep step;
   final OnboardingTourManager? manager;
@@ -120,7 +116,9 @@ class TourBottomSheet extends ConsumerWidget {
                 // Auto-advance indicator (for SIMPLE steps)
                 if (step.isSimple && step.autoAdvanceDuration != null) ...[
                   _AutoAdvanceIndicator(
-                    key: ValueKey('auto_advance_${step.id}'), // Force rebuild on step change
+                    key: ValueKey(
+                      'auto_advance_${step.id}',
+                    ), // Force rebuild on step change
                     duration: step.autoAdvanceDuration!,
                   ),
                   const SizedBox(height: 16),
@@ -134,13 +132,13 @@ class TourBottomSheet extends ConsumerWidget {
                       child: OutlinedButton.icon(
                         onPressed: usesManager
                             ? (!manager!.isFirstStep
-                                ? () => manager!.previousStep()
-                                : null)
+                                  ? () => manager!.previousStep()
+                                  : null)
                             : (tourState!.canGoBack
-                                ? () => ref
-                                    .read(onboardingTourProvider.notifier)
-                                    .previousStep()
-                                : null),
+                                  ? () => ref
+                                        .read(onboardingTourProvider.notifier)
+                                        .previousStep()
+                                  : null),
                         icon: SemanticIcon(
                           icon: AppIcons.back,
                           semanticLabel: context.l10n.back,
@@ -155,14 +153,16 @@ class TourBottomSheet extends ConsumerWidget {
                     const SizedBox(width: 12),
 
                     // Skip tour button (hidden on last step)
-                    if (!(usesManager ? manager!.isLastStep : tourState!.isLastStep))
+                    if (!(usesManager
+                        ? manager!.isLastStep
+                        : tourState!.isLastStep))
                       Expanded(
                         child: OutlinedButton(
                           onPressed: usesManager
                               ? () => manager!.endTour()
                               : () => ref
-                                  .read(onboardingTourProvider.notifier)
-                                  .skipTour(),
+                                    .read(onboardingTourProvider.notifier)
+                                    .skipTour(),
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
@@ -170,22 +170,33 @@ class TourBottomSheet extends ConsumerWidget {
                         ),
                       ),
 
-                    if (!(usesManager ? manager!.isLastStep : tourState!.isLastStep))
+                    if (!(usesManager
+                        ? manager!.isLastStep
+                        : tourState!.isLastStep))
                       const SizedBox(width: 12),
 
                     // Next/Done/Start Workout button
                     Expanded(
-                      flex: (usesManager ? manager!.isLastStep : tourState!.isLastStep) ? 3 : 2,
+                      flex:
+                          (usesManager
+                              ? manager!.isLastStep
+                              : tourState!.isLastStep)
+                          ? 3
+                          : 2,
                       child: FilledButton.icon(
                         onPressed: () {
-                          final isLast = usesManager ? manager!.isLastStep : tourState!.isLastStep;
+                          final isLast = usesManager
+                              ? manager!.isLastStep
+                              : tourState!.isLastStep;
 
                           if (isLast) {
                             // Last step: Navigate to workout screen and end tour
                             if (usesManager) {
                               manager!.endTour();
                             } else {
-                              ref.read(onboardingTourProvider.notifier).skipTour();
+                              ref
+                                  .read(onboardingTourProvider.notifier)
+                                  .skipTour();
                             }
 
                             // Navigate to workout screen to start first workout
@@ -195,21 +206,32 @@ class TourBottomSheet extends ConsumerWidget {
                             if (usesManager) {
                               manager!.nextStep();
                             } else {
-                              ref.read(onboardingTourProvider.notifier).nextStep();
+                              ref
+                                  .read(onboardingTourProvider.notifier)
+                                  .nextStep();
                             }
                           }
                         },
                         icon: SemanticIcon(
-                          icon: (usesManager ? manager!.isLastStep : tourState!.isLastStep)
-                              ? AppIcons.workout // Changed from check to workout icon
+                          icon:
+                              (usesManager
+                                  ? manager!.isLastStep
+                                  : tourState!.isLastStep)
+                              ? AppIcons
+                                    .workout // Changed from check to workout icon
                               : AppIcons.forward,
-                          semanticLabel: (usesManager ? manager!.isLastStep : tourState!.isLastStep)
+                          semanticLabel:
+                              (usesManager
+                                  ? manager!.isLastStep
+                                  : tourState!.isLastStep)
                               ? context.l10n.startFirstWorkout
                               : context.l10n.next,
                           size: AppIconSize.buttonPrimary,
                         ),
                         label: Text(
-                          (usesManager ? manager!.isLastStep : tourState!.isLastStep)
+                          (usesManager
+                                  ? manager!.isLastStep
+                                  : tourState!.isLastStep)
                               ? context.l10n.startFirstWorkout
                               : context.l10n.next,
                         ),
@@ -231,10 +253,7 @@ class TourBottomSheet extends ConsumerWidget {
 
 /// Progress indicator showing current step
 class _ProgressIndicator extends StatelessWidget {
-  const _ProgressIndicator({
-    required this.current,
-    required this.total,
-  });
+  const _ProgressIndicator({required this.current, required this.total});
 
   final int current;
   final int total;
@@ -272,10 +291,7 @@ class _ProgressIndicator extends StatelessWidget {
 
 /// Auto-advance countdown indicator
 class _AutoAdvanceIndicator extends StatefulWidget {
-  const _AutoAdvanceIndicator({
-    required this.duration,
-    super.key,
-  });
+  const _AutoAdvanceIndicator({required this.duration, super.key});
 
   final Duration duration;
 
@@ -290,10 +306,8 @@ class _AutoAdvanceIndicatorState extends State<_AutoAdvanceIndicator>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    )..forward();
+    _controller = AnimationController(vsync: this, duration: widget.duration)
+      ..forward();
   }
 
   @override
@@ -307,8 +321,8 @@ class _AutoAdvanceIndicatorState extends State<_AutoAdvanceIndicator>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
-        final remaining =
-            (widget.duration.inSeconds * (1 - _controller.value)).ceil();
+        final remaining = (widget.duration.inSeconds * (1 - _controller.value))
+            .ceil();
         return Row(
           children: [
             SemanticIcon(

@@ -19,16 +19,15 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
-class ExerciseEditorScreen extends ConsumerStatefulWidget { // null = new exercise
+class ExerciseEditorScreen extends ConsumerStatefulWidget {
+  // null = new exercise
 
-  const ExerciseEditorScreen({
-    super.key,
-    this.exercise,
-  });
+  const ExerciseEditorScreen({super.key, this.exercise});
   final Exercise? exercise;
 
   @override
-  ConsumerState<ExerciseEditorScreen> createState() => _ExerciseEditorScreenState();
+  ConsumerState<ExerciseEditorScreen> createState() =>
+      _ExerciseEditorScreenState();
 }
 
 class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
@@ -105,7 +104,9 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
     if (_dropdownValues == null) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(isEditing ? context.l10n.editExercise : context.l10n.addExercise),
+          title: Text(
+            isEditing ? context.l10n.editExercise : context.l10n.addExercise,
+          ),
         ),
         body: const Center(child: LoadingIndicator()),
       );
@@ -113,24 +114,22 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEditing ? context.l10n.editExercise : context.l10n.addExercise),
+        title: Text(
+          isEditing ? context.l10n.editExercise : context.l10n.addExercise,
+        ),
         actions: [
           if (_isLoading)
             const Padding(
               padding: EdgeInsets.all(16),
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: LoadingIndicator(),
-              ),
+              child: SizedBox(width: 20, height: 20, child: LoadingIndicator()),
             )
           else
             TextButton.icon(
               onPressed: _saveExercise,
               icon: const SemanticIcon(
-  icon: AppIcons.save,
-  semanticLabel: 'Save',
-),
+                icon: AppIcons.save,
+                semanticLabel: 'Save',
+              ),
               label: Text(context.l10n.save),
             ),
         ],
@@ -191,7 +190,8 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
                 label: 'Difficulty',
                 value: _selectedDifficulty,
                 items: _dropdownValues!.difficulties,
-                onChanged: (value) => setState(() => _selectedDifficulty = value),
+                onChanged: (value) =>
+                    setState(() => _selectedDifficulty = value),
               ),
               const SizedBox(height: 16),
 
@@ -200,7 +200,8 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
                 label: 'Equipment',
                 value: _selectedEquipment,
                 items: _dropdownValues!.equipments,
-                onChanged: (value) => setState(() => _selectedEquipment = value),
+                onChanged: (value) =>
+                    setState(() => _selectedEquipment = value),
               ),
               const SizedBox(height: 16),
 
@@ -209,7 +210,8 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
                 label: 'Exercise Type',
                 value: _selectedExerciseType,
                 items: _dropdownValues!.exerciseTypes,
-                onChanged: (value) => setState(() => _selectedExerciseType = value),
+                onChanged: (value) =>
+                    setState(() => _selectedExerciseType = value),
               ),
               const SizedBox(height: 16),
 
@@ -218,7 +220,8 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
                 label: 'Movement Pattern',
                 value: _selectedMovementPattern,
                 items: _dropdownValues!.movementPatterns,
-                onChanged: (value) => setState(() => _selectedMovementPattern = value),
+                onChanged: (value) =>
+                    setState(() => _selectedMovementPattern = value),
               ),
               const SizedBox(height: 16),
 
@@ -243,7 +246,8 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
                 title: 'Primary Muscles',
                 selectedMuscles: _selectedFocusMuscles,
                 availableMuscles: _dropdownValues!.muscles,
-                onChanged: (muscles) => setState(() => _selectedFocusMuscles = muscles),
+                onChanged: (muscles) =>
+                    setState(() => _selectedFocusMuscles = muscles),
               ),
               const SizedBox(height: 16),
 
@@ -252,7 +256,8 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
                 title: 'Secondary Muscles',
                 selectedMuscles: _selectedSecondaryMuscles,
                 availableMuscles: _dropdownValues!.muscles,
-                onChanged: (muscles) => setState(() => _selectedSecondaryMuscles = muscles),
+                onChanged: (muscles) =>
+                    setState(() => _selectedSecondaryMuscles = muscles),
               ),
               const SizedBox(height: 24),
 
@@ -289,10 +294,14 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
                 child: ElevatedButton.icon(
                   onPressed: _isLoading ? null : _saveExercise,
                   icon: const SemanticIcon(
-  icon: AppIcons.save,
-  semanticLabel: 'Save',
-),
-                  label: Text(isEditing ? context.l10n.updateExercise : context.l10n.createExercise),
+                    icon: AppIcons.save,
+                    semanticLabel: 'Save',
+                  ),
+                  label: Text(
+                    isEditing
+                        ? context.l10n.updateExercise
+                        : context.l10n.createExercise,
+                  ),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
@@ -332,10 +341,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
         border: const OutlineInputBorder(),
       ),
       items: items.map((item) {
-        return DropdownMenuItem<String>(
-          value: item,
-          child: Text(item),
-        );
+        return DropdownMenuItem<String>(value: item, child: Text(item));
       }).toList(),
       onChanged: onChanged,
     );
@@ -352,18 +358,16 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            border: Border.all(
-              color: Theme.of(context).colorScheme.outline,
-            ),
+            border: Border.all(color: Theme.of(context).colorScheme.outline),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Wrap(
@@ -411,10 +415,16 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
         patternMovimento: _selectedMovementPattern ?? 'Push',
         rangeRipetizioni: _selectedRepRange ?? '8-12',
         imageUrl: _imageUrlController.text.trim().isNotEmpty
-            ? _imageUrlController.text.trim() : null,
+            ? _imageUrlController.text.trim()
+            : null,
         noteTecniche: _techNoteController.text.trim().isNotEmpty
-            ? _techNoteController.text.trim() : null,
-        tempoEsecuzione: _selectedTUT ?? (_tempoNoteController.text.trim().isNotEmpty ? _tempoNoteController.text.trim() : null),
+            ? _techNoteController.text.trim()
+            : null,
+        tempoEsecuzione:
+            _selectedTUT ??
+            (_tempoNoteController.text.trim().isNotEmpty
+                ? _tempoNoteController.text.trim()
+                : null),
       );
 
       DatabaseOperationResult result;
@@ -463,5 +473,4 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
       ],
     );
   }
-
 }

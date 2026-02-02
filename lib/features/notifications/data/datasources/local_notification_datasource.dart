@@ -21,7 +21,8 @@ typedef NotificationTapCallback = void Function(String? payload);
 
 /// DataSource for scheduling and managing local notifications.
 class LocalNotificationDatasource {
-  final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _plugin =
+      FlutterLocalNotificationsPlugin();
 
   NotificationTapCallback? _onNotificationTap;
 
@@ -33,7 +34,9 @@ class LocalNotificationDatasource {
     tz_data.initializeTimeZones();
 
     // Android settings
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
 
     // iOS settings
     const iosSettings = DarwinInitializationSettings(
@@ -61,26 +64,28 @@ class LocalNotificationDatasource {
   /// Request notification permissions on iOS
   Future<bool> _requestIOSPermissions() async {
     final result = await _plugin
-        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
+        .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin
+        >()
+        ?.requestPermissions(alert: true, badge: true, sound: true);
     return result ?? false;
   }
 
   /// Check if notifications are permitted
   Future<bool> areNotificationsEnabled() async {
     if (Platform.isIOS) {
-      final iosPlugin = _plugin.resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin>();
+      final iosPlugin = _plugin
+          .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin
+          >();
       // iOS doesn't have a direct "are notifications enabled" check via this plugin
       // We assume yes if we've requested permissions
       return iosPlugin != null;
     } else if (Platform.isAndroid) {
-      final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
+      final androidPlugin = _plugin
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
       return await androidPlugin?.areNotificationsEnabled() ?? false;
     }
     return false;
@@ -99,14 +104,18 @@ class LocalNotificationDatasource {
     final pendingCount = await getPendingNotificationCount();
     if (pendingCount >= NotificationConfig.maxScheduledNotifications) {
       if (kDebugMode) {
-        debugPrint('⚠️ Cannot schedule notification: limit reached ($pendingCount/${NotificationConfig.maxScheduledNotifications})');
+        debugPrint(
+          '⚠️ Cannot schedule notification: limit reached ($pendingCount/${NotificationConfig.maxScheduledNotifications})',
+        );
       }
       // Cancel oldest notification to make room
       await _cancelOldestPendingNotification();
     }
 
     // Respect quiet hours - reschedule if necessary
-    final effectiveTime = NotificationConfig.getNextAvailableTime(scheduledTime);
+    final effectiveTime = NotificationConfig.getNextAvailableTime(
+      scheduledTime,
+    );
 
     final androidDetails = AndroidNotificationDetails(
       type.channelId,
@@ -139,7 +148,9 @@ class LocalNotificationDatasource {
     );
 
     if (kDebugMode) {
-      debugPrint('📅 Scheduled notification #$id for $effectiveTime (${type.name})');
+      debugPrint(
+        '📅 Scheduled notification #$id for $effectiveTime (${type.name})',
+      );
     }
   }
 
@@ -250,7 +261,9 @@ class LocalNotificationDatasource {
       // Cancel the first one (oldest)
       await _plugin.cancel(pending.first.id);
       if (kDebugMode) {
-        debugPrint('🗑️ Canceled oldest notification #${pending.first.id} to make room');
+        debugPrint(
+          '🗑️ Canceled oldest notification #${pending.first.id} to make room',
+        );
       }
     }
   }

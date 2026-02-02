@@ -49,18 +49,12 @@ class _ContextualOverlayState extends State<ContextualOverlay>
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _scaleAnimation = Tween<double>(
       begin: 0.8,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutBack,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
 
     // Get target widget rect
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -120,7 +114,8 @@ class _ContextualOverlayState extends State<ContextualOverlay>
     // Determine tooltip position (above or below target)
     final showAbove = _targetRect!.bottom > screenSize.height * 0.6;
     final tooltipTop = showAbove
-        ? _targetRect!.top - 120 // Above target
+        ? _targetRect!.top -
+              120 // Above target
         : _targetRect!.bottom + 20; // Below target
 
     return FadeTransition(
@@ -137,7 +132,9 @@ class _ContextualOverlayState extends State<ContextualOverlay>
               child: CustomPaint(
                 painter: _SpotlightPainter(
                   spotlightRect: _targetRect!,
-                  backgroundColor: context.colors.onSurface.withValues(alpha: 0.4),
+                  backgroundColor: context.colors.onSurface.withValues(
+                    alpha: 0.4,
+                  ),
                 ),
               ),
             ),
@@ -149,9 +146,7 @@ class _ContextualOverlayState extends State<ContextualOverlay>
             top: _targetRect!.top,
             width: _targetRect!.width,
             height: _targetRect!.height,
-            child: _PulsingRing(
-              color: colors.primary,
-            ),
+            child: _PulsingRing(color: colors.primary),
           ),
 
           // Tooltip card
@@ -210,9 +205,7 @@ class _SpotlightPainter extends CustomPainter {
 
 /// Pulsing ring animation around target widget
 class _PulsingRing extends StatefulWidget {
-  const _PulsingRing({
-    required this.color,
-  });
+  const _PulsingRing({required this.color});
 
   final Color color;
 
@@ -247,7 +240,9 @@ class _PulsingRingState extends State<_PulsingRing>
         return Container(
           decoration: BoxDecoration(
             border: Border.all(
-              color: widget.color.withValues(alpha: 0.3 + (_controller.value * 0.4)),
+              color: widget.color.withValues(
+                alpha: 0.3 + (_controller.value * 0.4),
+              ),
               width: 2,
             ),
             borderRadius: BorderRadius.circular(12),
@@ -372,10 +367,7 @@ class _TooltipCard extends StatelessWidget {
 
 /// Painter for arrow pointing to target
 class _ArrowPainter extends CustomPainter {
-  const _ArrowPainter({
-    required this.color,
-    required this.pointUp,
-  });
+  const _ArrowPainter({required this.color, required this.pointUp});
 
   final Color color;
   final bool pointUp;

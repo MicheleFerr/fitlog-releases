@@ -5,45 +5,46 @@ import 'package:gymbro_flutter_new/features/workout/data/repositories/rest_pause
 import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 
 // Repository provider
-final restPauseTemplateRepositoryProvider = Provider<RestPauseTemplateRepository>((ref) {
-  return RestPauseTemplateRepository();
-});
+final restPauseTemplateRepositoryProvider =
+    Provider<RestPauseTemplateRepository>((ref) {
+      return RestPauseTemplateRepository();
+    });
 
 // All templates (predefined + custom)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final allRestPauseTemplatesProvider =
     FutureProvider.autoDispose<List<RestPauseTemplate>>((ref) async {
-  if (kDebugMode) {
-    debugPrint('🔗 [ALL_RESTPAUSE_TEMPLATES] Provider called');
-  }
+      if (kDebugMode) {
+        debugPrint('🔗 [ALL_RESTPAUSE_TEMPLATES] Provider called');
+      }
 
-  final repository = ref.watch(restPauseTemplateRepositoryProvider);
-  final templates = await repository.getAllTemplates();
+      final repository = ref.watch(restPauseTemplateRepositoryProvider);
+      final templates = await repository.getAllTemplates();
 
-  if (kDebugMode) {
-    debugPrint(
-      '🔗 [ALL_RESTPAUSE_TEMPLATES] Got ${templates.length} templates',
-    );
-  }
+      if (kDebugMode) {
+        debugPrint(
+          '🔗 [ALL_RESTPAUSE_TEMPLATES] Got ${templates.length} templates',
+        );
+      }
 
-  return templates;
-});
+      return templates;
+    });
 
 // Predefined templates only
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final predefinedRestPauseTemplatesProvider =
     FutureProvider.autoDispose<List<RestPauseTemplate>>((ref) async {
-  final repository = ref.watch(restPauseTemplateRepositoryProvider);
-  return repository.getPredefinedTemplates();
-});
+      final repository = ref.watch(restPauseTemplateRepositoryProvider);
+      return repository.getPredefinedTemplates();
+    });
 
 // Custom templates only
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final customRestPauseTemplatesProvider =
     FutureProvider.autoDispose<List<RestPauseTemplate>>((ref) async {
-  final repository = ref.watch(restPauseTemplateRepositoryProvider);
-  return repository.getCustomTemplates();
-});
+      final repository = ref.watch(restPauseTemplateRepositoryProvider);
+      return repository.getCustomTemplates();
+    });
 
 // Search query state
 final restPauseTemplateSearchQueryProvider = StateProvider<String>((ref) => '');
@@ -52,15 +53,15 @@ final restPauseTemplateSearchQueryProvider = StateProvider<String>((ref) => '');
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final restPauseTemplateSearchResultsProvider =
     FutureProvider.autoDispose<List<RestPauseTemplate>>((ref) async {
-  final repository = ref.watch(restPauseTemplateRepositoryProvider);
-  final query = ref.watch(restPauseTemplateSearchQueryProvider);
+      final repository = ref.watch(restPauseTemplateRepositoryProvider);
+      final query = ref.watch(restPauseTemplateSearchQueryProvider);
 
-  if (query.isEmpty) {
-    return repository.getAllTemplates();
-  }
+      if (query.isEmpty) {
+        return repository.getAllTemplates();
+      }
 
-  return repository.searchTemplates(query);
-});
+      return repository.searchTemplates(query);
+    });
 
 // Filter by difficulty
 final restPauseTemplateDifficultyFilterProvider =
@@ -69,21 +70,21 @@ final restPauseTemplateDifficultyFilterProvider =
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final filteredRestPauseTemplatesByDifficultyProvider =
     FutureProvider.autoDispose<List<RestPauseTemplate>>((ref) async {
-  final repository = ref.watch(restPauseTemplateRepositoryProvider);
-  final difficulty = ref.watch(restPauseTemplateDifficultyFilterProvider);
+      final repository = ref.watch(restPauseTemplateRepositoryProvider);
+      final difficulty = ref.watch(restPauseTemplateDifficultyFilterProvider);
 
-  if (difficulty == null) {
-    return repository.getAllTemplates();
-  }
+      if (difficulty == null) {
+        return repository.getAllTemplates();
+      }
 
-  return repository.getTemplatesByDifficulty(difficulty);
-});
+      return repository.getTemplatesByDifficulty(difficulty);
+    });
 
 // Notifier for template management
 final restPauseTemplateNotifierProvider =
     NotifierProvider<RestPauseTemplateNotifier, RestPauseTemplateState>(
-  RestPauseTemplateNotifier.new,
-);
+      RestPauseTemplateNotifier.new,
+    );
 
 class RestPauseTemplateState {
   const RestPauseTemplateState({
@@ -246,16 +247,16 @@ class RestPauseTemplateNotifier extends Notifier<RestPauseTemplateState> {
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final restPauseTemplateByIdProvider = FutureProvider.autoDispose
     .family<RestPauseTemplate?, String>((ref, templateId) async {
-  final templates = await ref.watch(allRestPauseTemplatesProvider.future);
+      final templates = await ref.watch(allRestPauseTemplatesProvider.future);
 
-  try {
-    return templates.firstWhere((template) => template.id == templateId);
-  } catch (e) {
-    if (kDebugMode) {
-      debugPrint(
-        '⚠️ RestPause template with ID $templateId not found in ${templates.length} templates',
-      );
-    }
-    return null;
-  }
-});
+      try {
+        return templates.firstWhere((template) => template.id == templateId);
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint(
+            '⚠️ RestPause template with ID $templateId not found in ${templates.length} templates',
+          );
+        }
+        return null;
+      }
+    });

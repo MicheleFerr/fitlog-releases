@@ -27,8 +27,8 @@ class CustomExerciseLimitService {
   CustomExerciseLimitService({
     required CustomExerciseRepository repository,
     required int maxCustomSingleExercises,
-  })  : _repository = repository,
-        _maxCustomSingleExercises = maxCustomSingleExercises;
+  }) : _repository = repository,
+       _maxCustomSingleExercises = maxCustomSingleExercises;
 
   final CustomExerciseRepository _repository;
   final int _maxCustomSingleExercises;
@@ -103,7 +103,8 @@ class CustomExerciseLimitService {
     final result = await _repository.getAll();
     return result.fold(
       (failure) => 0, // On error, return 0 (fail-safe)
-      (allExercises) => allExercises.where((e) => e.unlockedUntil != null).length,
+      (allExercises) =>
+          allExercises.where((e) => e.unlockedUntil != null).length,
     );
   }
 
@@ -309,9 +310,7 @@ class CustomExerciseLimitService {
   /// Useful for cleanup - removes exercises that:
   /// - Have been expired for > X days
   /// - User hasn't renewed
-  Future<void> cleanupExpiredExercises({
-    int daysAfterExpiration = 30,
-  }) async {
+  Future<void> cleanupExpiredExercises({int daysAfterExpiration = 30}) async {
     final expired = await getExpiredExercises();
     final cutoffDate = DateTime.now().subtract(
       Duration(days: daysAfterExpiration),

@@ -37,7 +37,8 @@ class ExerciseSuggestionParams {
     if (maxPerMuscle != other.maxPerMuscle) return false;
 
     for (var i = 0; i < neglectedMuscles.length; i++) {
-      if (neglectedMuscles[i].muscleName != other.neglectedMuscles[i].muscleName) {
+      if (neglectedMuscles[i].muscleName !=
+          other.neglectedMuscles[i].muscleName) {
         return false;
       }
     }
@@ -46,9 +47,9 @@ class ExerciseSuggestionParams {
 
   @override
   int get hashCode => Object.hash(
-        Object.hashAll(neglectedMuscles.map((m) => m.muscleName)),
-        maxPerMuscle,
-      );
+    Object.hashAll(neglectedMuscles.map((m) => m.muscleName)),
+    maxPerMuscle,
+  );
 }
 
 /// Provider for exercise suggestions from real database
@@ -68,39 +69,40 @@ class ExerciseSuggestionParams {
 /// );
 /// ```
 final exerciseSuggestionsProvider = FutureProvider.autoDispose
-    .family<List<ExerciseSuggestion>, ExerciseSuggestionParams>(
-  (ref, params) async {
-    // 🔧 PERF FIX: Keep provider alive to prevent expensive recalculation
-    // This caches suggestions (1500+ exercises filtering) between screen visits
-    ref.keepAlive();
+    .family<List<ExerciseSuggestion>, ExerciseSuggestionParams>((
+      ref,
+      params,
+    ) async {
+      // 🔧 PERF FIX: Keep provider alive to prevent expensive recalculation
+      // This caches suggestions (1500+ exercises filtering) between screen visits
+      ref.keepAlive();
 
-    // Get all exercises from real database
-    final allExercises = await ref.watch(allExercisesProvider.future);
+      // Get all exercises from real database
+      final allExercises = await ref.watch(allExercisesProvider.future);
 
-    // Get user templates to exclude exercises already in templates
-    final templates = await ref.watch(customWorkoutTemplatesProvider.future);
+      // Get user templates to exclude exercises already in templates
+      final templates = await ref.watch(customWorkoutTemplatesProvider.future);
 
-    // Extract exercise names from templates
-    final exercisesInTemplates = <String>{};
-    for (final template in templates) {
-      for (final exercise in template.exercises) {
-        exercisesInTemplates.add(exercise.exerciseName);
-        exercisesInTemplates.add(exercise.exerciseId);
+      // Extract exercise names from templates
+      final exercisesInTemplates = <String>{};
+      for (final template in templates) {
+        for (final exercise in template.exercises) {
+          exercisesInTemplates.add(exercise.exerciseName);
+          exercisesInTemplates.add(exercise.exerciseId);
+        }
       }
-    }
 
-    // Generate suggestions from real database
-    final engine = ExerciseSuggestionEngine();
-    final suggestions = engine.generateSuggestionsFromDatabase(
-      neglectedMuscles: params.neglectedMuscles,
-      allExercises: allExercises,
-      maxPerMuscle: params.maxPerMuscle,
-      excludeExercises: exercisesInTemplates,
-    );
+      // Generate suggestions from real database
+      final engine = ExerciseSuggestionEngine();
+      final suggestions = engine.generateSuggestionsFromDatabase(
+        neglectedMuscles: params.neglectedMuscles,
+        allExercises: allExercises,
+        maxPerMuscle: params.maxPerMuscle,
+        excludeExercises: exercisesInTemplates,
+      );
 
-    return suggestions;
-  },
-);
+      return suggestions;
+    });
 
 /// Provider for exercise suggestions grouped by muscle
 ///
@@ -115,35 +117,36 @@ final exerciseSuggestionsProvider = FutureProvider.autoDispose
 /// );
 /// ```
 final exerciseSuggestionsGroupedProvider = FutureProvider.autoDispose
-    .family<Map<String, List<ExerciseSuggestion>>, ExerciseSuggestionParams>(
-  (ref, params) async {
-    // 🔧 PERF FIX: Keep provider alive to prevent expensive recalculation
-    ref.keepAlive();
+    .family<Map<String, List<ExerciseSuggestion>>, ExerciseSuggestionParams>((
+      ref,
+      params,
+    ) async {
+      // 🔧 PERF FIX: Keep provider alive to prevent expensive recalculation
+      ref.keepAlive();
 
-    // Get all exercises from real database
-    final allExercises = await ref.watch(allExercisesProvider.future);
+      // Get all exercises from real database
+      final allExercises = await ref.watch(allExercisesProvider.future);
 
-    // Get user templates to exclude exercises already in templates
-    final templates = await ref.watch(customWorkoutTemplatesProvider.future);
+      // Get user templates to exclude exercises already in templates
+      final templates = await ref.watch(customWorkoutTemplatesProvider.future);
 
-    // Extract exercise names from templates
-    final exercisesInTemplates = <String>{};
-    for (final template in templates) {
-      for (final exercise in template.exercises) {
-        exercisesInTemplates.add(exercise.exerciseName);
-        exercisesInTemplates.add(exercise.exerciseId);
+      // Extract exercise names from templates
+      final exercisesInTemplates = <String>{};
+      for (final template in templates) {
+        for (final exercise in template.exercises) {
+          exercisesInTemplates.add(exercise.exerciseName);
+          exercisesInTemplates.add(exercise.exerciseId);
+        }
       }
-    }
 
-    // Generate suggestions grouped by muscle from real database
-    final engine = ExerciseSuggestionEngine();
-    final suggestions = engine.generateSuggestionsGroupedByMuscle(
-      neglectedMuscles: params.neglectedMuscles,
-      allExercises: allExercises,
-      maxPerMuscle: params.maxPerMuscle,
-      excludeExercises: exercisesInTemplates,
-    );
+      // Generate suggestions grouped by muscle from real database
+      final engine = ExerciseSuggestionEngine();
+      final suggestions = engine.generateSuggestionsGroupedByMuscle(
+        neglectedMuscles: params.neglectedMuscles,
+        allExercises: allExercises,
+        maxPerMuscle: params.maxPerMuscle,
+        excludeExercises: exercisesInTemplates,
+      );
 
-    return suggestions;
-  },
-);
+      return suggestions;
+    });

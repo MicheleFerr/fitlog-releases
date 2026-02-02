@@ -36,8 +36,9 @@ class PlateauData {
 }
 
 /// Provider for plateau detection analysis
-final plateauDetectionProvider =
-    FutureProvider.autoDispose<List<PlateauData>>((ref) async {
+final plateauDetectionProvider = FutureProvider.autoDispose<List<PlateauData>>((
+  ref,
+) async {
   final userAsync = ref.watch(currentUserProvider);
   final currentUser = userAsync.value;
 
@@ -47,8 +48,9 @@ final plateauDetectionProvider =
 
   try {
     final repository = ref.watch(hybridExerciseActivityRepositoryProvider);
-    final activities =
-        await repository.getUserActivities(userEmail: currentUser!.email!);
+    final activities = await repository.getUserActivities(
+      userEmail: currentUser!.email!,
+    );
 
     return _detectPlateaus(activities);
   } catch (e) {
@@ -79,8 +81,11 @@ List<PlateauData> _detectPlateaus(List<ExerciseActivity> activities) {
 
     // Get recent activities (last 30 days)
     final recentActivities = exerciseActivities
-        .where((a) =>
-            a.createdAt.isAfter(DateTime.now().subtract(const Duration(days: 30))))
+        .where(
+          (a) => a.createdAt.isAfter(
+            DateTime.now().subtract(const Duration(days: 30)),
+          ),
+        )
         .toList();
 
     if (recentActivities.length < 3) continue;
@@ -92,13 +97,15 @@ List<PlateauData> _detectPlateaus(List<ExerciseActivity> activities) {
         ? 0.0
         : volumes.reduce((a, b) => a + b) / volumes.length;
 
-    plateaus.add(PlateauData(
-      exerciseName: exerciseName,
-      trendPercent: trend * 100,
-      sessionsAnalyzed: recentActivities.length,
-      avgVolume: avgVolume,
-      lastSessionDate: recentActivities.last.createdAt,
-    ));
+    plateaus.add(
+      PlateauData(
+        exerciseName: exerciseName,
+        trendPercent: trend * 100,
+        sessionsAnalyzed: recentActivities.length,
+        avgVolume: avgVolume,
+        lastSessionDate: recentActivities.last.createdAt,
+      ),
+    );
   }
 
   // Sort by trend (plateaus first, then declining)

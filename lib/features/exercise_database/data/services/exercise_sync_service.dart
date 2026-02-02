@@ -15,7 +15,6 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_version_service.dart';
 
 class ExerciseSyncService {
-
   ExerciseSyncService({
     required HybridExerciseRepository repository,
     required ExerciseVersionService versionService,
@@ -36,7 +35,8 @@ class ExerciseSyncService {
   Timer? _retryTimer;
   StreamSubscription? _connectivitySubscription;
 
-  final StreamController<SyncEvent> _syncEventController = StreamController.broadcast();
+  final StreamController<SyncEvent> _syncEventController =
+      StreamController.broadcast();
   Stream<SyncEvent> get syncEvents => _syncEventController.stream;
 
   bool _isInitialized = false;
@@ -66,7 +66,6 @@ class ExerciseSyncService {
 
       // Sincronizzazione iniziale se necessario
       await _performInitialSyncIfNeeded();
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to initialize ExerciseSyncService: $e');
@@ -144,7 +143,8 @@ class ExerciseSyncService {
   /// Ottiene frequenza di sincronizzazione
   Future<Duration> getSyncFrequency() async {
     final prefs = await SharedPreferences.getInstance();
-    final hours = prefs.getInt(_syncFrequencyKey) ?? _defaultSyncInterval.inHours;
+    final hours =
+        prefs.getInt(_syncFrequencyKey) ?? _defaultSyncInterval.inHours;
     return Duration(hours: hours);
   }
 
@@ -185,14 +185,18 @@ class ExerciseSyncService {
     final startTime = DateTime.now();
 
     try {
-      _syncEventController.add(SyncEvent(
-        type: SyncEventType.started,
-        timestamp: startTime,
-        isManual: isManual,
-      ));
+      _syncEventController.add(
+        SyncEvent(
+          type: SyncEventType.started,
+          timestamp: startTime,
+          isManual: isManual,
+        ),
+      );
 
       if (kDebugMode) {
-        debugPrint('🔄 Starting exercise sync${isManual ? " (manual)" : ""}...');
+        debugPrint(
+          '🔄 Starting exercise sync${isManual ? " (manual)" : ""}...',
+        );
       }
 
       // 1. Controlla aggiornamenti disponibili
@@ -218,12 +222,14 @@ class ExerciseSyncService {
           hasUpdates: false,
         );
 
-        _syncEventController.add(SyncEvent(
-          type: SyncEventType.completed,
-          timestamp: DateTime.now(),
-          isManual: isManual,
-          result: result,
-        ));
+        _syncEventController.add(
+          SyncEvent(
+            type: SyncEventType.completed,
+            timestamp: DateTime.now(),
+            isManual: isManual,
+            result: result,
+          ),
+        );
 
         return result;
       }
@@ -236,7 +242,9 @@ class ExerciseSyncService {
       }
       final updateSuccess = await _repository.checkAndApplyUpdates();
       // ignore: avoid_print
-      print('📥 [SYNC] repository.checkAndApplyUpdates() returned: $updateSuccess');
+      print(
+        '📥 [SYNC] repository.checkAndApplyUpdates() returned: $updateSuccess',
+      );
 
       if (!updateSuccess) {
         throw Exception('Failed to apply updates');
@@ -259,20 +267,25 @@ class ExerciseSyncService {
         exerciseCount: finalVersionCheck.remoteVersion?.totalExercises,
       );
 
-      _syncEventController.add(SyncEvent(
-        type: SyncEventType.completed,
-        timestamp: DateTime.now(),
-        isManual: isManual,
-        result: result,
-      ));
+      _syncEventController.add(
+        SyncEvent(
+          type: SyncEventType.completed,
+          timestamp: DateTime.now(),
+          isManual: isManual,
+          result: result,
+        ),
+      );
 
       if (kDebugMode) {
-        debugPrint('✅ Sync completed successfully in ${DateTime.now().difference(startTime).inSeconds}s');
+        debugPrint(
+          '✅ Sync completed successfully in ${DateTime.now().difference(startTime).inSeconds}s',
+        );
       }
       // ignore: avoid_print
-      print('✅ [SYNC] Sync completed in ${DateTime.now().difference(startTime).inSeconds}s');
+      print(
+        '✅ [SYNC] Sync completed in ${DateTime.now().difference(startTime).inSeconds}s',
+      );
       return result;
-
     } catch (e, stack) {
       // ignore: avoid_print
       print('❌ [SYNC] _performSync FAILED: $e');
@@ -288,13 +301,15 @@ class ExerciseSyncService {
         timestamp: DateTime.now(),
       );
 
-      _syncEventController.add(SyncEvent(
-        type: SyncEventType.failed,
-        timestamp: DateTime.now(),
-        isManual: isManual,
-        result: result,
-        error: e.toString(),
-      ));
+      _syncEventController.add(
+        SyncEvent(
+          type: SyncEventType.failed,
+          timestamp: DateTime.now(),
+          isManual: isManual,
+          result: result,
+          error: e.toString(),
+        ),
+      );
 
       // Programma retry automatico se non è sync manuale
       if (!isManual) {
@@ -302,7 +317,6 @@ class ExerciseSyncService {
       }
 
       return result;
-
     } finally {
       _isSyncing = false;
     }
@@ -368,7 +382,9 @@ class ExerciseSyncService {
     }
 
     _retryCount++;
-    final delay = Duration(milliseconds: _retryDelay.inMilliseconds * _retryCount);
+    final delay = Duration(
+      milliseconds: _retryDelay.inMilliseconds * _retryCount,
+    );
 
     if (kDebugMode) {
       debugPrint('🔄 Scheduling retry #$_retryCount in ${delay.inMinutes}m');
@@ -382,8 +398,9 @@ class ExerciseSyncService {
   /// Setup listener per cambiamenti di connettività
   void _setupConnectivityListener() {
     // connectivity_plus 7.x: onConnectivityChanged emits List<ConnectivityResult>
-    _connectivitySubscription =
-        Connectivity().onConnectivityChanged.listen((results) {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      results,
+    ) {
       if (!results.contains(ConnectivityResult.none) && results.isNotEmpty) {
         if (kDebugMode) {
           debugPrint('📶 Connection restored, checking for sync');
@@ -413,7 +430,6 @@ class ExerciseSyncService {
 
 /// Risultato di sincronizzazione
 class SyncResult {
-
   const SyncResult({
     required this.success,
     this.error,
@@ -439,7 +455,6 @@ class SyncResult {
 
 /// Evento di sincronizzazione
 class SyncEvent {
-
   const SyncEvent({
     required this.type,
     required this.timestamp,
@@ -455,8 +470,4 @@ class SyncEvent {
 }
 
 /// Tipo di evento di sincronizzazione
-enum SyncEventType {
-  started,
-  completed,
-  failed,
-}
+enum SyncEventType { started, completed, failed }

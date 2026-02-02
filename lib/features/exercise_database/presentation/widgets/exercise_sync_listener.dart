@@ -42,21 +42,22 @@ class ExerciseSyncListener extends ConsumerStatefulWidget {
   final bool showOnError;
 
   @override
-  ConsumerState<ExerciseSyncListener> createState() => _ExerciseSyncListenerState();
+  ConsumerState<ExerciseSyncListener> createState() =>
+      _ExerciseSyncListenerState();
 }
 
 class _ExerciseSyncListenerState extends ConsumerState<ExerciseSyncListener> {
   @override
   Widget build(BuildContext context) {
     // Ascolta gli eventi di sincronizzazione
-    ref.listen<AsyncValue<SyncEvent>>(
-      exerciseSyncEventsProvider,
-      (previous, next) {
-        next.whenData((event) {
-          _handleSyncEvent(context, event);
-        });
-      },
-    );
+    ref.listen<AsyncValue<SyncEvent>>(exerciseSyncEventsProvider, (
+      previous,
+      next,
+    ) {
+      next.whenData((event) {
+        _handleSyncEvent(context, event);
+      });
+    });
 
     return widget.child;
   }
@@ -94,9 +95,6 @@ class _ExerciseSyncListenerState extends ConsumerState<ExerciseSyncListener> {
   }
 
   void _showErrorNotification(BuildContext context, SyncEvent event) {
-    SnackBarService.showError(
-      context,
-      context.l10n.exerciseSyncFailed,
-    );
+    SnackBarService.showError(context, context.l10n.exerciseSyncFailed);
   }
 }

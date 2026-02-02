@@ -7,9 +7,8 @@ import 'package:gymbro_flutter_new/features/scheduling/domain/repositories/sched
 class SchedulingRepositoryImpl implements SchedulingRepository {
   final HiveSchedulingDatasource _datasource;
 
-  SchedulingRepositoryImpl({
-    HiveSchedulingDatasource? datasource,
-  }) : _datasource = datasource ?? HiveSchedulingDatasource();
+  SchedulingRepositoryImpl({HiveSchedulingDatasource? datasource})
+    : _datasource = datasource ?? HiveSchedulingDatasource();
 
   @override
   Future<List<ScheduledWorkout>> getScheduledWorkouts() async {
@@ -19,7 +18,9 @@ class SchedulingRepositoryImpl implements SchedulingRepository {
   }
 
   @override
-  Future<List<ScheduledWorkout>> getScheduledWorkoutsForDate(DateTime date) async {
+  Future<List<ScheduledWorkout>> getScheduledWorkoutsForDate(
+    DateTime date,
+  ) async {
     final models = await _datasource.getScheduledWorkoutsForDate(date);
     return models.map((m) => m.toEntity()).toList();
   }
@@ -41,7 +42,9 @@ class SchedulingRepositoryImpl implements SchedulingRepository {
   Future<List<ScheduledWorkout>> getScheduledWorkoutsForTemplate(
     String templateId,
   ) async {
-    final models = await _datasource.getScheduledWorkoutsForTemplate(templateId);
+    final models = await _datasource.getScheduledWorkoutsForTemplate(
+      templateId,
+    );
     return models.map((m) => m.toEntity()).toList()
       ..sort((a, b) => a.scheduledDate.compareTo(b.scheduledDate));
   }
@@ -67,7 +70,9 @@ class SchedulingRepositoryImpl implements SchedulingRepository {
 
   @override
   Future<void> scheduleMultipleWorkouts(List<ScheduledWorkout> workouts) async {
-    final models = workouts.map((w) => ScheduledWorkoutModel.fromEntity(w)).toList();
+    final models = workouts
+        .map((w) => ScheduledWorkoutModel.fromEntity(w))
+        .toList();
     await _datasource.saveScheduledWorkouts(models);
   }
 
@@ -104,9 +109,7 @@ class SchedulingRepositoryImpl implements SchedulingRepository {
     final existing = await _datasource.getScheduledWorkout(id);
     if (existing == null) return;
 
-    final updated = existing.copyWith(
-      status: ScheduleStatusModel.skipped,
-    );
+    final updated = existing.copyWith(status: ScheduleStatusModel.skipped);
     await _datasource.updateScheduledWorkout(updated);
   }
 
@@ -115,9 +118,7 @@ class SchedulingRepositoryImpl implements SchedulingRepository {
     final existing = await _datasource.getScheduledWorkout(id);
     if (existing == null) return;
 
-    final updated = existing.copyWith(
-      status: ScheduleStatusModel.missed,
-    );
+    final updated = existing.copyWith(status: ScheduleStatusModel.missed);
     await _datasource.updateScheduledWorkout(updated);
   }
 
@@ -151,10 +152,7 @@ class SchedulingRepositoryImpl implements SchedulingRepository {
     required String templateId,
     required DateTime date,
   }) async {
-    return _datasource.hasScheduleForDate(
-      templateId: templateId,
-      date: date,
-    );
+    return _datasource.hasScheduleForDate(templateId: templateId, date: date);
   }
 
   @override

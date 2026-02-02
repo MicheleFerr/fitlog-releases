@@ -10,7 +10,7 @@ import 'package:gymbro_flutter_new/features/workout/data/models/user_exercise_pr
 /// All keys are user-scoped for multi-user support.
 class UserExercisePreferencesRepository {
   UserExercisePreferencesRepository([HiveBoxManagerEnhanced? boxManager])
-      : _boxManager = boxManager ?? HiveBoxManagerEnhanced();
+    : _boxManager = boxManager ?? HiveBoxManagerEnhanced();
 
   static const String _boxName = 'user_exercise_preferences';
 
@@ -25,44 +25,58 @@ class UserExercisePreferencesRepository {
     // Skip if init already failed to prevent repeated errors
     if (_initFailed) {
       if (kDebugMode) {
-        debugPrint('⚠️ [UserExercisePreferencesRepository] Skipping init - previous attempt failed');
+        debugPrint(
+          '⚠️ [UserExercisePreferencesRepository] Skipping init - previous attempt failed',
+        );
       }
       return;
     }
 
     try {
       if (!Hive.isBoxOpen(_boxName)) {
-        _preferencesBox = await _boxManager.openLazyBox<UserExercisePreferences>(_boxName);
+        _preferencesBox = await _boxManager
+            .openLazyBox<UserExercisePreferences>(_boxName);
       } else {
         _preferencesBox = Hive.lazyBox<UserExercisePreferences>(_boxName);
       }
 
       if (kDebugMode) {
-        debugPrint('✅ [UserExercisePreferencesRepository] Initialized successfully');
+        debugPrint(
+          '✅ [UserExercisePreferencesRepository] Initialized successfully',
+        );
       }
     } on BoxCorruptedException catch (e) {
       // HiveBoxManagerEnhanced already deleted corrupted box, box is recreated empty
       if (kDebugMode) {
-        debugPrint('⚠️ [UserExercisePreferencesRepository] Box was corrupted and recovered: $e');
+        debugPrint(
+          '⚠️ [UserExercisePreferencesRepository] Box was corrupted and recovered: $e',
+        );
       }
       // Try again - box should be recreated
       try {
-        _preferencesBox = await _boxManager.openLazyBox<UserExercisePreferences>(_boxName);
+        _preferencesBox = await _boxManager
+            .openLazyBox<UserExercisePreferences>(_boxName);
       } catch (retryError) {
         _initFailed = true;
         if (kDebugMode) {
-          debugPrint('❌ [UserExercisePreferencesRepository] Init failed after corruption recovery: $retryError');
+          debugPrint(
+            '❌ [UserExercisePreferencesRepository] Init failed after corruption recovery: $retryError',
+          );
         }
       }
     } on BoxOpenException catch (e) {
       _initFailed = true;
       if (kDebugMode) {
-        debugPrint('❌ [UserExercisePreferencesRepository] Failed to open box: $e');
+        debugPrint(
+          '❌ [UserExercisePreferencesRepository] Failed to open box: $e',
+        );
       }
     } catch (e) {
       _initFailed = true;
       if (kDebugMode) {
-        debugPrint('❌ [UserExercisePreferencesRepository] Unexpected init error: $e');
+        debugPrint(
+          '❌ [UserExercisePreferencesRepository] Unexpected init error: $e',
+        );
       }
     }
   }
@@ -128,17 +142,19 @@ class UserExercisePreferencesRepository {
       // Get existing preferences or create new
       final existing = await _preferencesBox?.get(userKey);
 
-      final preferences = existing?.copyWith(
-        formCues: formCues,
-        updatedAt: DateTime.now(),
-        needsSync: true, // Mark for premium Firebase sync
-      ) ?? UserExercisePreferences(
-        visibleId: key,
-        exerciseName: exerciseName,
-        formCues: formCues,
-        updatedAt: DateTime.now(),
-        needsSync: true,
-      );
+      final preferences =
+          existing?.copyWith(
+            formCues: formCues,
+            updatedAt: DateTime.now(),
+            needsSync: true, // Mark for premium Firebase sync
+          ) ??
+          UserExercisePreferences(
+            visibleId: key,
+            exerciseName: exerciseName,
+            formCues: formCues,
+            updatedAt: DateTime.now(),
+            needsSync: true,
+          );
 
       await _preferencesBox?.put(userKey, preferences);
 
@@ -187,7 +203,9 @@ class UserExercisePreferencesRepository {
       // LazyBox requires iterating through keys
       for (final key in _preferencesBox!.keys) {
         final pref = await _preferencesBox?.get(key);
-        if (pref != null && pref.formCues != null && pref.formCues!.isNotEmpty) {
+        if (pref != null &&
+            pref.formCues != null &&
+            pref.formCues!.isNotEmpty) {
           allPreferences.add(pref);
         }
       }

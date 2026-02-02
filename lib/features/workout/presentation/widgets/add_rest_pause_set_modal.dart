@@ -57,7 +57,9 @@ class AddRestPauseSetModal extends StatefulWidget {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => AddRestPauseSetModal(
         exerciseName: exerciseName,
         weight: weight,
@@ -90,7 +92,8 @@ class _AddRestPauseSetModalState extends State<AddRestPauseSetModal> {
   int get totalRepsCompleted =>
       widget.completedSets.fold(0, (sum, s) => sum + s.effectiveReps);
 
-  int get repsRemaining => (widget.targetReps - totalRepsCompleted).clamp(0, widget.targetReps);
+  int get repsRemaining =>
+      (widget.targetReps - totalRepsCompleted).clamp(0, widget.targetReps);
 
   @override
   void initState() {
@@ -100,11 +103,16 @@ class _AddRestPauseSetModalState extends State<AddRestPauseSetModal> {
     final suggestedReps = repsRemaining > 0
         ? repsRemaining.clamp(1, 10)
         : (widget.completedSets.isNotEmpty
-            ? (widget.completedSets.last.effectiveReps * 0.5).round().clamp(1, 10)
-            : 5);
+              ? (widget.completedSets.last.effectiveReps * 0.5).round().clamp(
+                  1,
+                  10,
+                )
+              : 5);
 
     _repsController = TextEditingController(text: suggestedReps.toString());
-    _restController = TextEditingController(text: widget.defaultRestSeconds.toString());
+    _restController = TextEditingController(
+      text: widget.defaultRestSeconds.toString(),
+    );
   }
 
   @override
@@ -152,9 +160,7 @@ class _AddRestPauseSetModalState extends State<AddRestPauseSetModal> {
         : 0.0;
 
     return Container(
-      constraints: BoxConstraints(
-        maxHeight: context.screenHeight * 0.75,
-      ),
+      constraints: BoxConstraints(maxHeight: context.screenHeight * 0.75),
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -232,7 +238,8 @@ class _AddRestPauseSetModalState extends State<AddRestPauseSetModal> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+                        color: context.colors.surfaceContainerHighest
+                            .withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
@@ -250,9 +257,8 @@ class _AddRestPauseSetModalState extends State<AddRestPauseSetModal> {
                                   const SizedBox(width: 8),
                                   Text(
                                     '${widget.weight.toStringAsFixed(1)} kg',
-                                    style: context.textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: context.textTheme.titleMedium
+                                        ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
                                 ],
                               ),
@@ -273,9 +279,12 @@ class _AddRestPauseSetModalState extends State<AddRestPauseSetModal> {
                             child: LinearProgressIndicator(
                               value: progress,
                               minHeight: 6,
-                              backgroundColor: context.colors.outline.withValues(alpha: 0.2),
+                              backgroundColor: context.colors.outline
+                                  .withValues(alpha: 0.2),
                               valueColor: AlwaysStoppedAnimation(
-                                progress >= 1.0 ? context.colors.success : context.colors.primary,
+                                progress >= 1.0
+                                    ? context.colors.success
+                                    : context.colors.primary,
                               ),
                             ),
                           ),
@@ -317,7 +326,8 @@ class _AddRestPauseSetModalState extends State<AddRestPauseSetModal> {
                             ),
                           );
                         }),
-                        if (repsRemaining > 0 && !quickRepSuggestions.contains(repsRemaining))
+                        if (repsRemaining > 0 &&
+                            !quickRepSuggestions.contains(repsRemaining))
                           ActionChip(
                             label: Text('$repsRemaining reps'),
                             onPressed: () => _applyQuickReps(repsRemaining),
@@ -326,7 +336,8 @@ class _AddRestPauseSetModalState extends State<AddRestPauseSetModal> {
                               size: 16,
                               color: context.colors.tertiary,
                             ),
-                            backgroundColor: context.colors.tertiaryContainer.withValues(alpha: 0.3),
+                            backgroundColor: context.colors.tertiaryContainer
+                                .withValues(alpha: 0.3),
                           ),
                       ],
                     ),

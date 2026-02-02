@@ -57,7 +57,10 @@ class AccountModeSection extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header with mode indicator
-            _ModeHeader(currentMode: currentMode, coachName: myCoach?.coachName),
+            _ModeHeader(
+              currentMode: currentMode,
+              coachName: myCoach?.coachName,
+            ),
 
             // Divider
             Divider(
@@ -76,10 +79,7 @@ class AccountModeSection extends ConsumerWidget {
 
 /// Header showing current mode
 class _ModeHeader extends StatelessWidget {
-  const _ModeHeader({
-    required this.currentMode,
-    this.coachName,
-  });
+  const _ModeHeader({required this.currentMode, this.coachName});
 
   final AccountMode currentMode;
   final String? coachName;

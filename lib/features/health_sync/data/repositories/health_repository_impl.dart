@@ -20,15 +20,17 @@ import 'package:gymbro_flutter_new/core/data/mixins/firebase_error_mapper_mixin.
 /// - Platform errors → [ServerFailure]
 /// - Permission denied → [PermissionDeniedFailure]
 /// - Cache errors → [CacheFailure]
-class HealthRepositoryImpl with FirebaseErrorMapperMixin implements IHealthRepository {
+class HealthRepositoryImpl
+    with FirebaseErrorMapperMixin
+    implements IHealthRepository {
   final IHealthLocalDatasource _localDatasource;
   final IHealthRemoteDatasource _remoteDatasource;
 
   HealthRepositoryImpl({
     required IHealthLocalDatasource localDatasource,
     required IHealthRemoteDatasource remoteDatasource,
-  })  : _localDatasource = localDatasource,
-        _remoteDatasource = remoteDatasource;
+  }) : _localDatasource = localDatasource,
+       _remoteDatasource = remoteDatasource;
 
   // ============================================================
   // PERMISSION MANAGEMENT
@@ -38,26 +40,21 @@ class HealthRepositoryImpl with FirebaseErrorMapperMixin implements IHealthRepos
   Future<Either<Failure, HealthPermissionStatus>> requestPermissions({
     required List<HealthDataType> dataTypes,
   }) async {
-    return handleFirebaseOperation(
-      () async {
-        final status = await _remoteDatasource.requestPermissions(
-          dataTypes: dataTypes,
-        );
-        return status;
-      },
-      operationName: 'requestHealthPermissions',
-    );
+    return handleFirebaseOperation(() async {
+      final status = await _remoteDatasource.requestPermissions(
+        dataTypes: dataTypes,
+      );
+      return status;
+    }, operationName: 'requestHealthPermissions');
   }
 
   @override
-  Future<Either<Failure, HealthPermissionStatus>> checkPermissionStatus() async {
-    return handleFirebaseOperation(
-      () async {
-        final status = await _remoteDatasource.checkPermissionStatus();
-        return status;
-      },
-      operationName: 'checkHealthPermissionStatus',
-    );
+  Future<Either<Failure, HealthPermissionStatus>>
+  checkPermissionStatus() async {
+    return handleFirebaseOperation(() async {
+      final status = await _remoteDatasource.checkPermissionStatus();
+      return status;
+    }, operationName: 'checkHealthPermissionStatus');
   }
 
   // ============================================================
@@ -69,67 +66,64 @@ class HealthRepositoryImpl with FirebaseErrorMapperMixin implements IHealthRepos
     required DateTime startDate,
     required DateTime endDate,
   }) async {
-    return handleFirebaseVoidOperation(
-      () async {
-        // 1. Check permission (runtime verification)
-        final permissionResult = await checkPermissionStatus();
-        final permissionStatus = permissionResult.getOrElse(
-          (failure) => throw Exception('Permission check failed'),
+    return handleFirebaseVoidOperation(() async {
+      // 1. Check permission (runtime verification)
+      final permissionResult = await checkPermissionStatus();
+      final permissionStatus = permissionResult.getOrElse(
+        (failure) => throw Exception('Permission check failed'),
+      );
+
+      if (!permissionStatus.canSync(HealthDataType.workout)) {
+        throw Exception('Workout sync permission not granted');
+      }
+
+      // 2. Update sync status to "syncing"
+      await _localDatasource.saveSyncStatus(
+        HealthSyncStatus(
+          dataType: HealthDataType.workout,
+          lastSyncTime: DateTime.now(),
+          lastResult: SyncResult.syncing,
+        ),
+      );
+
+      try {
+        // 3. Fetch workouts from remote datasource
+        // ignore: unused_local_variable
+        final workouts = await _remoteDatasource.fetchWorkouts(
+          startDate: startDate,
+          endDate: endDate,
         );
 
-        if (!permissionStatus.canSync(HealthDataType.workout)) {
-          throw Exception('Workout sync permission not granted');
-        }
+        // TODO: Map workouts to FitLog domain entities and save to workout repository
+        // This will be implemented when integrating with existing workout system
 
-        // 2. Update sync status to "syncing"
+        // 4. Update sync status to "success"
         await _localDatasource.saveSyncStatus(
           HealthSyncStatus(
             dataType: HealthDataType.workout,
             lastSyncTime: DateTime.now(),
-            lastResult: SyncResult.syncing,
+            lastResult: SyncResult.success,
+            retryCount: 0, // Reset retry count on success
           ),
         );
+      } catch (e) {
+        // Update sync status to "error"
+        final currentStatus = await _localDatasource.getSyncStatus(
+          HealthDataType.workout,
+        );
 
-        try {
-          // 3. Fetch workouts from remote datasource
-          // ignore: unused_local_variable
-          final workouts = await _remoteDatasource.fetchWorkouts(
-            startDate: startDate,
-            endDate: endDate,
-          );
-
-          // TODO: Map workouts to FitLog domain entities and save to workout repository
-          // This will be implemented when integrating with existing workout system
-
-          // 4. Update sync status to "success"
-          await _localDatasource.saveSyncStatus(
-            HealthSyncStatus(
-              dataType: HealthDataType.workout,
-              lastSyncTime: DateTime.now(),
-              lastResult: SyncResult.success,
-              retryCount: 0, // Reset retry count on success
-            ),
-          );
-        } catch (e) {
-          // Update sync status to "error"
-          final currentStatus = await _localDatasource.getSyncStatus(
-            HealthDataType.workout,
-          );
-
-          await _localDatasource.saveSyncStatus(
-            HealthSyncStatus(
-              dataType: HealthDataType.workout,
-              lastSyncTime: DateTime.now(),
-              lastResult: SyncResult.error,
-              retryCount: (currentStatus?.retryCount ?? 0) + 1,
-              errorMessage: e.toString(),
-            ),
-          );
-          rethrow;
-        }
-      },
-      operationName: 'syncWorkouts',
-    );
+        await _localDatasource.saveSyncStatus(
+          HealthSyncStatus(
+            dataType: HealthDataType.workout,
+            lastSyncTime: DateTime.now(),
+            lastResult: SyncResult.error,
+            retryCount: (currentStatus?.retryCount ?? 0) + 1,
+            errorMessage: e.toString(),
+          ),
+        );
+        rethrow;
+      }
+    }, operationName: 'syncWorkouts');
   }
 
   @override
@@ -137,92 +131,86 @@ class HealthRepositoryImpl with FirebaseErrorMapperMixin implements IHealthRepos
     required DateTime startDate,
     required DateTime endDate,
   }) async {
-    return handleFirebaseVoidOperation(
-      () async {
-        // 1. Check permission (runtime verification)
-        final permissionResult = await checkPermissionStatus();
-        final permissionStatus = permissionResult.getOrElse(
-          (failure) => throw Exception('Permission check failed'),
+    return handleFirebaseVoidOperation(() async {
+      // 1. Check permission (runtime verification)
+      final permissionResult = await checkPermissionStatus();
+      final permissionStatus = permissionResult.getOrElse(
+        (failure) => throw Exception('Permission check failed'),
+      );
+
+      if (!permissionStatus.canSync(HealthDataType.bodyWeight)) {
+        throw Exception('Body weight sync permission not granted');
+      }
+
+      // 2. Update sync status to "syncing"
+      await _localDatasource.saveSyncStatus(
+        HealthSyncStatus(
+          dataType: HealthDataType.bodyWeight,
+          lastSyncTime: DateTime.now(),
+          lastResult: SyncResult.syncing,
+        ),
+      );
+
+      try {
+        // 3. Fetch weight from remote datasource (HealthKit/Health Connect)
+        final measurements = await _remoteDatasource.fetchBodyWeight(
+          startDate: startDate,
+          endDate: endDate,
         );
 
-        if (!permissionStatus.canSync(HealthDataType.bodyWeight)) {
-          throw Exception('Body weight sync permission not granted');
-        }
+        // 4. Save measurements to local cache
+        await _localDatasource.saveMeasurements(measurements);
 
-        // 2. Update sync status to "syncing"
+        // 5. Update sync status to "success"
         await _localDatasource.saveSyncStatus(
           HealthSyncStatus(
             dataType: HealthDataType.bodyWeight,
             lastSyncTime: DateTime.now(),
-            lastResult: SyncResult.syncing,
+            lastResult: SyncResult.success,
+            retryCount: 0, // Reset retry count on success
           ),
         );
+      } catch (e) {
+        // Update sync status to "error"
+        final currentStatus = await _localDatasource.getSyncStatus(
+          HealthDataType.bodyWeight,
+        );
 
-        try {
-          // 3. Fetch weight from remote datasource (HealthKit/Health Connect)
-          final measurements = await _remoteDatasource.fetchBodyWeight(
-            startDate: startDate,
-            endDate: endDate,
-          );
-
-          // 4. Save measurements to local cache
-          await _localDatasource.saveMeasurements(measurements);
-
-          // 5. Update sync status to "success"
-          await _localDatasource.saveSyncStatus(
-            HealthSyncStatus(
-              dataType: HealthDataType.bodyWeight,
-              lastSyncTime: DateTime.now(),
-              lastResult: SyncResult.success,
-              retryCount: 0, // Reset retry count on success
-            ),
-          );
-        } catch (e) {
-          // Update sync status to "error"
-          final currentStatus = await _localDatasource.getSyncStatus(
-            HealthDataType.bodyWeight,
-          );
-
-          await _localDatasource.saveSyncStatus(
-            HealthSyncStatus(
-              dataType: HealthDataType.bodyWeight,
-              lastSyncTime: DateTime.now(),
-              lastResult: SyncResult.error,
-              retryCount: (currentStatus?.retryCount ?? 0) + 1,
-              errorMessage: e.toString(),
-            ),
-          );
-          rethrow;
-        }
-      },
-      operationName: 'syncBodyWeight',
-    );
+        await _localDatasource.saveSyncStatus(
+          HealthSyncStatus(
+            dataType: HealthDataType.bodyWeight,
+            lastSyncTime: DateTime.now(),
+            lastResult: SyncResult.error,
+            retryCount: (currentStatus?.retryCount ?? 0) + 1,
+            errorMessage: e.toString(),
+          ),
+        );
+        rethrow;
+      }
+    }, operationName: 'syncBodyWeight');
   }
 
   @override
   Future<Either<Failure, void>> writeBodyWeight(
     BodyMeasurement measurement,
   ) async {
-    return handleFirebaseVoidOperation(
-      () async {
-        // 1. Check permission (runtime verification)
-        final permissionResult = await checkPermissionStatus();
-        final permissionStatus = permissionResult.getOrElse(
-          (failure) => throw Exception('Permission check failed'),
-        );
+    return handleFirebaseVoidOperation(() async {
+      // 1. Check permission (runtime verification)
+      final permissionResult = await checkPermissionStatus();
+      final permissionStatus = permissionResult.getOrElse(
+        (failure) => throw Exception('Permission check failed'),
+      );
 
-        if (!permissionStatus.canSync(HealthDataType.bodyWeight)) {
-          throw Exception('Body weight write permission not granted');
-        }
+      if (!permissionStatus.canSync(HealthDataType.bodyWeight)) {
+        throw Exception('Body weight write permission not granted');
+      }
 
-        // 2. Write to health platform (instant sync)
-        await _remoteDatasource.writeBodyWeight(measurement);
+      // 2. Write to health platform (instant sync)
+      await _remoteDatasource.writeBodyWeight(measurement);
 
-        // 3. Save to local cache
-        await _localDatasource.saveMeasurement(measurement);
-      },
-      operationName: 'writeBodyWeight',
-    );
+      // 3. Save to local cache
+      await _localDatasource.saveMeasurement(measurement);
+    }, operationName: 'writeBodyWeight');
   }
 
   // ============================================================
@@ -233,23 +221,20 @@ class HealthRepositoryImpl with FirebaseErrorMapperMixin implements IHealthRepos
   Future<Either<Failure, HealthSyncStatus>> getLastSyncStatus(
     HealthDataType dataType,
   ) async {
-    return handleFirebaseOperation(
-      () async {
-        final status = await _localDatasource.getSyncStatus(dataType);
+    return handleFirebaseOperation(() async {
+      final status = await _localDatasource.getSyncStatus(dataType);
 
-        if (status == null) {
-          // Return default "never synced" status
-          return HealthSyncStatus(
-            dataType: dataType,
-            lastSyncTime: null,
-            lastResult: SyncResult.idle,
-          );
-        }
+      if (status == null) {
+        // Return default "never synced" status
+        return HealthSyncStatus(
+          dataType: dataType,
+          lastSyncTime: null,
+          lastResult: SyncResult.idle,
+        );
+      }
 
-        return status;
-      },
-      operationName: 'getLastSyncStatus',
-    );
+      return status;
+    }, operationName: 'getLastSyncStatus');
   }
 
   @override
@@ -257,16 +242,13 @@ class HealthRepositoryImpl with FirebaseErrorMapperMixin implements IHealthRepos
     required HealthDataType dataType,
     required DateTime since,
   }) async {
-    return handleFirebaseOperation(
-      () async {
-        final history = await _localDatasource.getSyncHistory(
-          dataType: dataType,
-          since: since,
-        );
-        return history;
-      },
-      operationName: 'getSyncHistory',
-    );
+    return handleFirebaseOperation(() async {
+      final history = await _localDatasource.getSyncHistory(
+        dataType: dataType,
+        since: since,
+      );
+      return history;
+    }, operationName: 'getSyncHistory');
   }
 
   // ============================================================
@@ -275,68 +257,68 @@ class HealthRepositoryImpl with FirebaseErrorMapperMixin implements IHealthRepos
 
   @override
   Future<Either<Failure, void>> retryFailedSync(HealthDataType dataType) async {
-    return handleFirebaseVoidOperation(
-      () async {
-        // 1. Get last sync status
-        final statusResult = await getLastSyncStatus(dataType);
-        final status = statusResult.getOrElse(
-          (failure) => throw Exception('Failed to get sync status'),
+    return handleFirebaseVoidOperation(() async {
+      // 1. Get last sync status
+      final statusResult = await getLastSyncStatus(dataType);
+      final status = statusResult.getOrElse(
+        (failure) => throw Exception('Failed to get sync status'),
+      );
+
+      // 2. Check if retry is allowed
+      if (!status.shouldRetry()) {
+        throw Exception('Max retries reached or sync not in error state');
+      }
+
+      // 3. Calculate exponential backoff delay
+      const retryDelays = [
+        Duration(hours: 1), // Retry 1
+        Duration(hours: 4), // Retry 2
+        Duration(hours: 24), // Retry 3
+      ];
+
+      final delay = retryDelays[status.retryCount];
+
+      // Check if enough time has passed since last sync
+      if (status.lastSyncTime != null) {
+        final timeSinceLastSync = DateTime.now().difference(
+          status.lastSyncTime!,
         );
-
-        // 2. Check if retry is allowed
-        if (!status.shouldRetry()) {
-          throw Exception('Max retries reached or sync not in error state');
+        if (timeSinceLastSync < delay) {
+          throw Exception(
+            'Retry delay not elapsed yet (${delay.inHours}h required)',
+          );
         }
+      }
 
-        // 3. Calculate exponential backoff delay
-        const retryDelays = [
-          Duration(hours: 1),  // Retry 1
-          Duration(hours: 4),  // Retry 2
-          Duration(hours: 24), // Retry 3
-        ];
+      // 4. Trigger sync based on data type
+      final syncResult = switch (dataType) {
+        HealthDataType.workout => await syncWorkouts(
+          startDate: DateTime.now().subtract(const Duration(days: 30)),
+          endDate: DateTime.now(),
+        ),
+        HealthDataType.bodyWeight => await syncBodyWeight(
+          startDate: DateTime.now().subtract(const Duration(days: 90)),
+          endDate: DateTime.now(),
+        ),
+        _ => throw Exception(
+          'Retry not supported for data type: ${dataType.name}',
+        ),
+      };
 
-        final delay = retryDelays[status.retryCount];
-
-        // Check if enough time has passed since last sync
-        if (status.lastSyncTime != null) {
-          final timeSinceLastSync = DateTime.now().difference(status.lastSyncTime!);
-          if (timeSinceLastSync < delay) {
-            throw Exception('Retry delay not elapsed yet (${delay.inHours}h required)');
-          }
-        }
-
-        // 4. Trigger sync based on data type
-        final syncResult = switch (dataType) {
-          HealthDataType.workout => await syncWorkouts(
-              startDate: DateTime.now().subtract(const Duration(days: 30)),
-              endDate: DateTime.now(),
-            ),
-          HealthDataType.bodyWeight => await syncBodyWeight(
-              startDate: DateTime.now().subtract(const Duration(days: 90)),
-              endDate: DateTime.now(),
-            ),
-          _ => throw Exception('Retry not supported for data type: ${dataType.name}'),
-        };
-
-        // Propagate sync errors
-        syncResult.fold(
-          (failure) => throw Exception(failure.message),
-          (_) => null,
-        );
-      },
-      operationName: 'retryFailedSync',
-    );
+      // Propagate sync errors
+      syncResult.fold(
+        (failure) => throw Exception(failure.message),
+        (_) => null,
+      );
+    }, operationName: 'retryFailedSync');
   }
 
   @override
   Future<Either<Failure, void>> clearSyncCache() async {
-    return handleFirebaseVoidOperation(
-      () async {
-        await _localDatasource.clearSyncStatuses();
-        await _localDatasource.clearMeasurements();
-      },
-      operationName: 'clearSyncCache',
-    );
+    return handleFirebaseVoidOperation(() async {
+      await _localDatasource.clearSyncStatuses();
+      await _localDatasource.clearMeasurements();
+    }, operationName: 'clearSyncCache');
   }
 
   @override
@@ -345,26 +327,20 @@ class HealthRepositoryImpl with FirebaseErrorMapperMixin implements IHealthRepos
     required DateTime startDate,
     required DateTime endDate,
   }) async {
-    return handleFirebaseOperation(
-      () async {
-        final measurements = await _localDatasource.getMeasurements(
-          dataType: dataType,
-          startDate: startDate,
-          endDate: endDate,
-        );
-        return measurements;
-      },
-      operationName: 'getMeasurements',
-    );
+    return handleFirebaseOperation(() async {
+      final measurements = await _localDatasource.getMeasurements(
+        dataType: dataType,
+        startDate: startDate,
+        endDate: endDate,
+      );
+      return measurements;
+    }, operationName: 'getMeasurements');
   }
 
   @override
   Future<Either<Failure, void>> installHealthConnect() async {
-    return handleFirebaseVoidOperation(
-      () async {
-        await _remoteDatasource.installHealthConnect();
-      },
-      operationName: 'installHealthConnect',
-    );
+    return handleFirebaseVoidOperation(() async {
+      await _remoteDatasource.installHealthConnect();
+    }, operationName: 'installHealthConnect');
   }
 }

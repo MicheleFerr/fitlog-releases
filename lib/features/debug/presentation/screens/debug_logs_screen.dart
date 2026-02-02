@@ -22,7 +22,7 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
   void initState() {
     super.initState();
     _loadLogs();
-    
+
     // Auto refresh every 2 seconds
     if (_autoRefresh) {
       Future.doWhile(() async {
@@ -53,7 +53,9 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
   Future<void> _shareLogs() async {
     final file = await persistentLogger.getLogFile();
     if (file != null && await file.exists()) {
-      await Share.shareXFiles([XFile(file.path)], text: 'GymBro Timer Debug Logs');
+      await Share.shareXFiles([
+        XFile(file.path),
+      ], text: 'GymBro Timer Debug Logs');
     }
   }
 
@@ -73,23 +75,23 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
           ),
           IconButton(
             icon: const SemanticIcon(
-  icon: AppIcons.refresh,
-  semanticLabel: 'Refresh',
-),
+              icon: AppIcons.refresh,
+              semanticLabel: 'Refresh',
+            ),
             onPressed: _loadLogs,
           ),
           IconButton(
             icon: const SemanticIcon(
-  icon: AppIcons.share,
-  semanticLabel: 'Share',
-),
+              icon: AppIcons.share,
+              semanticLabel: 'Share',
+            ),
             onPressed: _shareLogs,
           ),
           IconButton(
             icon: const SemanticIcon(
-  icon: AppIcons.delete,
-  semanticLabel: 'Delete',
-),
+              icon: AppIcons.delete,
+              semanticLabel: 'Delete',
+            ),
             onPressed: _clearLogs,
           ),
         ],
@@ -113,9 +115,9 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
                 reverse: true, // Show latest logs at bottom
                 child: SelectableText(
                   _logs,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    fontFamily: 'monospace',
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(fontFamily: 'monospace'),
                 ),
               ),
             ),

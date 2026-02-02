@@ -170,19 +170,14 @@ class _MuscleGroupCard extends StatelessWidget {
   final List<ExerciseSuggestion> suggestions;
   final VoidCallback? onExerciseAdded;
 
-  void _showPriorityExplanation(
-    BuildContext context,
-    NeglectedMuscle muscle,
-  ) {
+  void _showPriorityExplanation(BuildContext context, NeglectedMuscle muscle) {
     HapticFeedback.selectionClick();
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: context.colors.surface.withValues(alpha: 0),
-      builder: (context) => PriorityExplanationSheet(
-        neglectedMuscle: muscle,
-      ),
+      builder: (context) => PriorityExplanationSheet(neglectedMuscle: muscle),
     );
   }
 
@@ -209,8 +204,10 @@ class _MuscleGroupCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: _getSeverityColor(context, neglectedMuscle.severity)
-                  .withValues(alpha: 0.1),
+              color: _getSeverityColor(
+                context,
+                neglectedMuscle.severity,
+              ).withValues(alpha: 0.1),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
@@ -229,7 +226,8 @@ class _MuscleGroupCard extends StatelessWidget {
                 _SeverityBadge(severity: neglectedMuscle.severity),
                 const SizedBox(width: 8),
                 GestureDetector(
-                  onTap: () => _showPriorityExplanation(context, neglectedMuscle),
+                  onTap: () =>
+                      _showPriorityExplanation(context, neglectedMuscle),
                   child: Chip(
                     label: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -385,9 +383,7 @@ class _ExerciseSuggestionTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
@@ -462,10 +458,7 @@ class _ExerciseSuggestionTile extends StatelessWidget {
           // Add to template button
           IconButton(
             onPressed: () => _openTemplateSelector(context),
-            icon: const Icon(
-              AppIcons.add,
-              size: AppIconSize.medium,
-            ),
+            icon: const Icon(AppIcons.add, size: AppIconSize.medium),
             style: IconButton.styleFrom(
               backgroundColor: colorScheme.primaryContainer,
               foregroundColor: colorScheme.onPrimaryContainer,
@@ -515,7 +508,10 @@ class _DifficultyChip extends StatelessWidget {
     }
   }
 
-  Color _getDifficultyColor(BuildContext context, ExerciseDifficulty difficulty) {
+  Color _getDifficultyColor(
+    BuildContext context,
+    ExerciseDifficulty difficulty,
+  ) {
     switch (difficulty) {
       case ExerciseDifficulty.beginner:
         return context.colors.success;

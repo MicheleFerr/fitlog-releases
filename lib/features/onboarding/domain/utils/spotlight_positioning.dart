@@ -40,10 +40,7 @@ class SpotlightPositioningUtil {
     final targetCenter = targetBounds.center;
 
     // Calculate center of screen
-    final screenCenter = Offset(
-      screenSize.width / 2,
-      screenSize.height / 2,
-    );
+    final screenCenter = Offset(screenSize.width / 2, screenSize.height / 2);
 
     // Calculate offset needed to center element
     final offsetX = screenCenter.dx - targetCenter.dx;
@@ -192,7 +189,8 @@ class SpotlightPositioningUtil {
     if (bounds.isEmpty) return false;
     if (bounds.width <= 0 || bounds.height <= 0) return false;
     if (bounds.left < 0 || bounds.top < 0) return false;
-    if (bounds.right > screenSize.width * 1.5) return false; // Allow slight overflow
+    if (bounds.right > screenSize.width * 1.5)
+      return false; // Allow slight overflow
     if (bounds.bottom > screenSize.height * 1.5) return false;
 
     return true;

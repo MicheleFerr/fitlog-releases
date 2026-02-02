@@ -55,11 +55,11 @@ sealed class HealthKitError implements Exception {
 /// **Recovery**: Ask user to open Settings > Privacy > Health
 class HealthKitPermissionDeniedError extends HealthKitError {
   const HealthKitPermissionDeniedError()
-      : super(
-          'Health data access denied',
-          recoverySuggestion:
-              'Grant access in Settings > Privacy & Security > Health',
-        );
+    : super(
+        'Health data access denied',
+        recoverySuggestion:
+            'Grant access in Settings > Privacy & Security > Health',
+      );
 }
 
 /// Permission restricted by device policy
@@ -70,11 +70,11 @@ class HealthKitPermissionDeniedError extends HealthKitError {
 /// **Recovery**: Contact device administrator
 class HealthKitPermissionRestrictedError extends HealthKitError {
   const HealthKitPermissionRestrictedError()
-      : super(
-          'Health data access restricted',
-          recoverySuggestion:
-              'HealthKit access is restricted by your device. Contact your device administrator.',
-        );
+    : super(
+        'Health data access restricted',
+        recoverySuggestion:
+            'HealthKit access is restricted by your device. Contact your device administrator.',
+      );
 }
 
 /// Permission not yet determined
@@ -84,10 +84,10 @@ class HealthKitPermissionRestrictedError extends HealthKitError {
 /// **Recovery**: Show consent dialog and request permissions
 class HealthKitPermissionNotDeterminedError extends HealthKitError {
   const HealthKitPermissionNotDeterminedError()
-      : super(
-          'Health data permissions not configured',
-          recoverySuggestion: 'Grant health data access to use AI Coach features',
-        );
+    : super(
+        'Health data permissions not configured',
+        recoverySuggestion: 'Grant health data access to use AI Coach features',
+      );
 }
 
 // ==========================================
@@ -101,11 +101,11 @@ class HealthKitPermissionNotDeterminedError extends HealthKitError {
 /// **Recovery**: Graceful degradation (disable HealthKit features)
 class HealthKitNotAvailableError extends HealthKitError {
   const HealthKitNotAvailableError()
-      : super(
-          'Apple Health not available',
-          recoverySuggestion:
-              'HealthKit requires iOS 14.0 or later. AI Coach will work without health data.',
-        );
+    : super(
+        'Apple Health not available',
+        recoverySuggestion:
+            'HealthKit requires iOS 14.0 or later. AI Coach will work without health data.',
+      );
 }
 
 /// HealthKit disabled in Settings
@@ -115,11 +115,11 @@ class HealthKitNotAvailableError extends HealthKitError {
 /// **Recovery**: Ask user to re-enable HealthKit in Settings
 class HealthKitDisabledError extends HealthKitError {
   const HealthKitDisabledError()
-      : super(
-          'Apple Health is disabled',
-          recoverySuggestion:
-              'Enable Apple Health in Settings > Health to use these features',
-        );
+    : super(
+        'Apple Health is disabled',
+        recoverySuggestion:
+            'Enable Apple Health in Settings > Health to use these features',
+      );
 }
 
 // ==========================================
@@ -133,11 +133,11 @@ class HealthKitDisabledError extends HealthKitError {
 /// **Recovery**: Retry when connection restored (offline queue)
 class HealthKitSyncNetworkError extends HealthKitError {
   const HealthKitSyncNetworkError()
-      : super(
-          'Sync failed: No internet connection',
-          recoverySuggestion:
-              'Health data will sync automatically when connection is restored',
-        );
+    : super(
+        'Sync failed: No internet connection',
+        recoverySuggestion:
+            'Health data will sync automatically when connection is restored',
+      );
 }
 
 /// Sync failed due to timeout
@@ -147,10 +147,10 @@ class HealthKitSyncNetworkError extends HealthKitError {
 /// **Recovery**: Retry sync later
 class HealthKitSyncTimeoutError extends HealthKitError {
   const HealthKitSyncTimeoutError()
-      : super(
-          'Sync timed out',
-          recoverySuggestion: 'Try syncing again in a few minutes',
-        );
+    : super(
+        'Sync timed out',
+        recoverySuggestion: 'Try syncing again in a few minutes',
+      );
 }
 
 /// Sync failed due to rate limit
@@ -160,10 +160,11 @@ class HealthKitSyncTimeoutError extends HealthKitError {
 /// **Recovery**: Wait and retry later
 class HealthKitSyncRateLimitError extends HealthKitError {
   const HealthKitSyncRateLimitError()
-      : super(
-          'Sync rate limit exceeded',
-          recoverySuggestion: 'Try again in a few minutes. Background sync will continue.',
-        );
+    : super(
+        'Sync rate limit exceeded',
+        recoverySuggestion:
+            'Try again in a few minutes. Background sync will continue.',
+      );
 }
 
 /// Sync failed due to server error
@@ -173,10 +174,11 @@ class HealthKitSyncRateLimitError extends HealthKitError {
 /// **Recovery**: Retry with exponential backoff
 class HealthKitSyncServerError extends HealthKitError {
   const HealthKitSyncServerError()
-      : super(
-          'Sync failed: Server error',
-          recoverySuggestion: 'We\'re working on it. Data will sync automatically later.',
-        );
+    : super(
+        'Sync failed: Server error',
+        recoverySuggestion:
+            'We\'re working on it. Data will sync automatically later.',
+      );
 }
 
 // ==========================================
@@ -190,10 +192,10 @@ class HealthKitSyncServerError extends HealthKitError {
 /// **Recovery**: Graceful message (no action needed)
 class HealthKitNoDataError extends HealthKitError {
   const HealthKitNoDataError(String dataType)
-      : super(
-          'No $dataType data available',
-          recoverySuggestion: 'Start tracking $dataType in Apple Health app',
-        );
+    : super(
+        'No $dataType data available',
+        recoverySuggestion: 'Start tracking $dataType in Apple Health app',
+      );
 }
 
 /// Health data format invalid
@@ -203,10 +205,11 @@ class HealthKitNoDataError extends HealthKitError {
 /// **Recovery**: Log error and skip invalid data
 class HealthKitInvalidDataError extends HealthKitError {
   const HealthKitInvalidDataError()
-      : super(
-          'Invalid health data format',
-          recoverySuggestion: 'Try syncing again. If issue persists, contact support.',
-        );
+    : super(
+        'Invalid health data format',
+        recoverySuggestion:
+            'Try syncing again. If issue persists, contact support.',
+      );
 }
 
 // ==========================================

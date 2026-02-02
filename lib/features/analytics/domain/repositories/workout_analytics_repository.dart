@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: domain
 /// 🎯 Feature: analytics
 /// 🔧 Type: repository interface
 /// 🌍 Localization: ✅ AppLocalizations used
 /// 🎨 Theme: ✅ ColorScheme responsive
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - workout/domain/entities: Workout
 /// - analytics/domain/entities: WorkoutMetrics, PersonalRecordAchieved
@@ -19,7 +19,6 @@ import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 
 /// Abstract repository for workout analytics data access
 abstract class WorkoutAnalyticsRepository {
-  
   /// Get historical workouts for comparison
   Future<List<Workout>> getHistoricalWorkouts(
     String userId, {
@@ -77,7 +76,6 @@ abstract class WorkoutAnalyticsRepository {
 
 /// Analytics statistics summary
 class WorkoutAnalyticsStats {
-
   const WorkoutAnalyticsStats({
     required this.totalWorkouts,
     required this.totalPRs,
@@ -96,20 +94,21 @@ class WorkoutAnalyticsStats {
       totalWorkouts: json['totalWorkouts'] as int,
       totalPRs: json['totalPRs'] as int,
       averageWorkoutVolume: (json['averageWorkoutVolume'] as num).toDouble(),
-      averageWorkoutDuration: (json['averageWorkoutDuration'] as num).toDouble(),
+      averageWorkoutDuration: (json['averageWorkoutDuration'] as num)
+          .toDouble(),
       totalVolumeLifted: (json['totalVolumeLifted'] as num).toDouble(),
-      exerciseFrequency: (json['exerciseFrequency'] as Map<String, dynamic>).map(
-        (key, value) => MapEntry(key, value as int),
-      ),
-      exerciseVolumeDistribution: (json['exerciseVolumeDistribution'] as Map<String, dynamic>).map(
-        (key, value) => MapEntry(key, (value as num).toDouble()),
-      ),
+      exerciseFrequency: (json['exerciseFrequency'] as Map<String, dynamic>)
+          .map((key, value) => MapEntry(key, value as int)),
+      exerciseVolumeDistribution:
+          (json['exerciseVolumeDistribution'] as Map<String, dynamic>).map(
+            (key, value) => MapEntry(key, (value as num).toDouble()),
+          ),
       lastWorkoutDate: json['lastWorkoutDate'] != null
-        ? DateTime.parse(json['lastWorkoutDate'] as String)
-        : null,
+          ? DateTime.parse(json['lastWorkoutDate'] as String)
+          : null,
       firstWorkoutDate: json['firstWorkoutDate'] != null
-        ? DateTime.parse(json['firstWorkoutDate'] as String)
-        : null,
+          ? DateTime.parse(json['firstWorkoutDate'] as String)
+          : null,
     );
   }
   final int totalWorkouts;
@@ -125,10 +124,10 @@ class WorkoutAnalyticsStats {
   /// Get training consistency (workouts per week average)
   double get trainingConsistency {
     if (firstWorkoutDate == null || lastWorkoutDate == null) return 0;
-    
+
     final totalDays = lastWorkoutDate!.difference(firstWorkoutDate!).inDays;
     if (totalDays <= 0) return 0;
-    
+
     final totalWeeks = totalDays / 7;
     return totalWorkouts / totalWeeks;
   }
@@ -136,7 +135,7 @@ class WorkoutAnalyticsStats {
   /// Get most frequent exercise
   String? get mostFrequentExercise {
     if (exerciseFrequency.isEmpty) return null;
-    
+
     return exerciseFrequency.entries
         .reduce((a, b) => a.value > b.value ? a : b)
         .key;
@@ -169,7 +168,6 @@ class WorkoutAnalyticsStats {
 
 /// Real-time workout analytics update
 class WorkoutAnalyticsUpdate {
-
   const WorkoutAnalyticsUpdate({
     required this.workoutId,
     required this.metrics,

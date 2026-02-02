@@ -5,12 +5,12 @@ part 'superset_template.g.dart';
 
 /// User persona types for template targeting
 enum UserPersona {
-  marco,      // Principiante intimidito
-  chiara,     // Mamma multitasking
-  luca,       // Powerlifter serio
-  sofia,      // Estetica-driven
-  roberto,    // Professionista busy
-  generic,    // Nessuna persona specifica
+  marco, // Principiante intimidito
+  chiara, // Mamma multitasking
+  luca, // Powerlifter serio
+  sofia, // Estetica-driven
+  roberto, // Professionista busy
+  generic, // Nessuna persona specifica
 }
 
 /// Template difficulty levels
@@ -29,11 +29,14 @@ abstract class SupersetTemplate with _$SupersetTemplate {
   const factory SupersetTemplate({
     required String id,
     required String name,
+
     /// Localization key for predefined templates (e.g., "templateChestBackFoundation")
     /// If present, use l10n lookup for display name. If null (custom templates), use name directly.
     String? nameKey,
+
     /// Exercise IDs for database lookup (stored in JSON)
     required List<String> exerciseIds,
+
     /// Exercise names - populated at runtime from database lookup (localized)
     /// Not stored in JSON, computed from exerciseIds
     @Default([]) List<String> exerciseNames,

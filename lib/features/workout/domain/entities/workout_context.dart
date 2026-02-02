@@ -22,7 +22,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/experience_l
 /// - Rep ranges (beginner-friendly vs advanced)
 /// - Workout naming (gender-specific tone)
 class WorkoutContext {
-
   const WorkoutContext({
     required this.timeAvailable,
     this.experienceLevel,
@@ -43,6 +42,7 @@ class WorkoutContext {
       completionTimeMs: map['completion_time_ms'] as int?,
     );
   }
+
   /// Time available in minutes (5, 15, 30, or 45)
   final int timeAvailable;
 

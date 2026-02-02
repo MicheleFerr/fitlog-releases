@@ -205,7 +205,7 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
   bool _isConfigured = false;
 
   HealthRemoteDatasourceImpl({health_pkg.Health? health})
-      : _health = health ?? health_pkg.Health();
+    : _health = health ?? health_pkg.Health();
 
   /// Ensures the health package is configured before use.
   ///
@@ -240,9 +240,7 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
   }
 
   /// Maps [HealthDataType] to `health` package's [HealthDataType].
-  health_pkg.HealthDataType _mapToHealthPackageType(
-    HealthDataType dataType,
-  ) {
+  health_pkg.HealthDataType _mapToHealthPackageType(HealthDataType dataType) {
     switch (dataType) {
       case HealthDataType.workout:
         return health_pkg.HealthDataType.WORKOUT;
@@ -251,7 +249,9 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
       case HealthDataType.bodyFat:
         return health_pkg.HealthDataType.BODY_FAT_PERCENTAGE;
       case HealthDataType.leanMass:
-        return health_pkg.HealthDataType.BODY_MASS_INDEX; // Placeholder - health package limitation
+        return health_pkg
+            .HealthDataType
+            .BODY_MASS_INDEX; // Placeholder - health package limitation
       case HealthDataType.heartRate:
         return health_pkg.HealthDataType.HEART_RATE;
       case HealthDataType.sleep:
@@ -298,7 +298,9 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
     if (kDebugMode) {
       debugPrint('🏥 [HealthKit] Requesting permissions: $permissions');
     }
-    debugPrint('🏥 [HealthKit] Platform: ${Platform.isIOS ? "iOS" : "Android"}');
+    debugPrint(
+      '🏥 [HealthKit] Platform: ${Platform.isIOS ? "iOS" : "Android"}',
+    );
 
     // Request permissions via health package
     try {
@@ -331,7 +333,9 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
       );
 
       if (kDebugMode) {
-        debugPrint('🏥 [HealthKit] hasPermissions for $dataType: $hasPermission');
+        debugPrint(
+          '🏥 [HealthKit] hasPermissions for $dataType: $hasPermission',
+        );
       }
 
       if (hasPermission == true) {
@@ -345,7 +349,9 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
         // The only reliable way to check is to try reading data.
         if (Platform.isIOS) {
           if (kDebugMode) {
-            debugPrint('🏥 [HealthKit] iOS: hasPermissions=null, assuming authorized after request');
+            debugPrint(
+              '🏥 [HealthKit] iOS: hasPermissions=null, assuming authorized after request',
+            );
           }
           permissionStates[dataType] = PermissionState.authorized;
         } else {
@@ -390,7 +396,9 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
       );
 
       if (kDebugMode) {
-        debugPrint('🏥 [HealthKit] checkPermissionStatus for $dataType: $hasPermission');
+        debugPrint(
+          '🏥 [HealthKit] checkPermissionStatus for $dataType: $hasPermission',
+        );
       }
 
       if (hasPermission == true) {
@@ -405,7 +413,9 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
         // the only reliable way to check is to try reading data.
         if (Platform.isIOS) {
           if (kDebugMode) {
-            debugPrint('🏥 [HealthKit] iOS: hasPermissions=null for $dataType, assuming authorized');
+            debugPrint(
+              '🏥 [HealthKit] iOS: hasPermissions=null for $dataType, assuming authorized',
+            );
           }
           permissionStates[dataType] = PermissionState.authorized;
         } else {
@@ -643,7 +653,8 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
       // Using TRADITIONAL_STRENGTH_TRAINING as the workout type
       // This is the appropriate type for weight training/bodybuilding
       final success = await _health.writeWorkoutData(
-        activityType: health_pkg.HealthWorkoutActivityType.TRADITIONAL_STRENGTH_TRAINING,
+        activityType:
+            health_pkg.HealthWorkoutActivityType.TRADITIONAL_STRENGTH_TRAINING,
         start: startTime,
         end: endTime,
         totalEnergyBurned: totalCalories,
@@ -653,8 +664,12 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
       if (kDebugMode) {
         if (success) {
           debugPrint('🏥 [HealthKit] ✅ Workout written successfully');
-          debugPrint('🏥 [HealthKit] Workout should now appear in Apple Fitness');
-          debugPrint('🏥 [HealthKit] Exercise ring should update with workout duration');
+          debugPrint(
+            '🏥 [HealthKit] Workout should now appear in Apple Fitness',
+          );
+          debugPrint(
+            '🏥 [HealthKit] Exercise ring should update with workout duration',
+          );
         } else {
           debugPrint('🏥 [HealthKit] ❌ Failed to write workout');
         }

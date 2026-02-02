@@ -21,7 +21,8 @@ class StartWorkoutCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentWorkout = ref.watch(currentWorkoutProvider);
-    final isWorkoutActive = currentWorkout != null &&
+    final isWorkoutActive =
+        currentWorkout != null &&
         currentWorkout.status == WorkoutStatus.inProgress;
 
     // Only show card when workout is active - templates section handles starting new workouts
@@ -80,7 +81,9 @@ class _ActiveWorkoutCard extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            workout.name.isNotEmpty ? workout.name : context.l10n.workout,
+                            workout.name.isNotEmpty
+                                ? workout.name
+                                : context.l10n.workout,
                             style: context.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
@@ -130,7 +133,9 @@ class _ActiveWorkoutCard extends ConsumerWidget {
                         },
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.colors.primary,
-                          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSpacing.xs,
+                          ),
                         ),
                         child: Text(context.l10n.finish),
                       ),
@@ -144,7 +149,9 @@ class _ActiveWorkoutCard extends ConsumerWidget {
                         },
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.colors.error,
-                          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSpacing.xs,
+                          ),
                         ),
                         child: Text(context.l10n.discard),
                       ),
@@ -173,7 +180,9 @@ class _ActiveWorkoutCard extends ConsumerWidget {
           FilledButton(
             onPressed: () {
               Navigator.pop(ctx);
-              ref.read(currentWorkoutProvider.notifier).completeWorkout(context);
+              ref
+                  .read(currentWorkoutProvider.notifier)
+                  .completeWorkout(context);
             },
             child: Text(context.l10n.finish),
           ),

@@ -183,11 +183,7 @@ class _FeatureItem extends StatelessWidget {
             color: backgroundColor.withValues(alpha: 0.15),
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            icon,
-            color: backgroundColor,
-            size: 26,
-          ),
+          child: Icon(icon, color: backgroundColor, size: 26),
         ),
         const SizedBox(width: 20),
         Expanded(

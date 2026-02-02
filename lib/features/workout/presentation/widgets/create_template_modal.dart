@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+
 /// Template type for quick selection (replaces 15 confusing tags)
 enum TemplateType {
   upper,
@@ -60,7 +61,8 @@ class CreateTemplateModal extends ConsumerStatefulWidget {
   const CreateTemplateModal({super.key});
 
   @override
-  ConsumerState<CreateTemplateModal> createState() => _CreateTemplateModalState();
+  ConsumerState<CreateTemplateModal> createState() =>
+      _CreateTemplateModalState();
 }
 
 class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
@@ -115,15 +117,15 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
     }
     // Lower body keywords
     else if (name.contains('leg') ||
-             name.contains('lower') ||
-             name.contains('squat') ||
-             name.contains('glute')) {
+        name.contains('lower') ||
+        name.contains('squat') ||
+        name.contains('glute')) {
       detected = TemplateType.lower;
     }
     // Full body keywords
     else if (name.contains('full') ||
-             name.contains('total') ||
-             name.contains('whole')) {
+        name.contains('total') ||
+        name.contains('whole')) {
       detected = TemplateType.fullBody;
     }
 
@@ -140,7 +142,8 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
   @override
   Widget build(BuildContext context) {
     final currentWorkout = ref.watch(currentWorkoutProvider);
-    final hasActiveWorkout = currentWorkout != null && currentWorkout.exercises.isNotEmpty;
+    final hasActiveWorkout =
+        currentWorkout != null && currentWorkout.exercises.isNotEmpty;
     final l10n = context.l10n;
 
     return Container(
@@ -164,7 +167,9 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+                color: context.colors.surfaceContainerHighest.withValues(
+                  alpha: 0.3,
+                ),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -174,7 +179,11 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
           // Titolo semplificato
           Row(
             children: [
-              Icon(AppIcons.flashOn, size: AppIconSize.medium, color: context.colors.primary),
+              Icon(
+                AppIcons.flashOn,
+                size: AppIconSize.medium,
+                color: context.colors.primary,
+              ),
               const SizedBox(width: 8),
               Text(
                 l10n.createTemplate,
@@ -209,9 +218,13 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                         labelText: l10n.templateNameLabel,
                         hintText: 'es. Push Day, Leg Day...',
                         border: const OutlineInputBorder(),
-                        prefixIcon: const Icon(AppIcons.edit, size: AppIconSize.small),
+                        prefixIcon: const Icon(
+                          AppIcons.edit,
+                          size: AppIconSize.small,
+                        ),
                       ),
-                      validator: (value) => TemplateValidator.validateTemplateName(value),
+                      validator: (value) =>
+                          TemplateValidator.validateTemplateName(value),
                     ),
                     const SizedBox(height: 20),
 
@@ -243,14 +256,14 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
             child: FilledButton.icon(
               onPressed: _isLoading ? null : _createTemplate,
               icon: _isLoading
-                  ? LoadingIndicator(
-                      size: 20,
-                      color: context.colors.onPrimary,
-                    )
+                  ? LoadingIndicator(size: 20, color: context.colors.onPrimary)
                   : const Icon(AppIcons.check),
               label: Text(
                 l10n.createTemplateButton,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -288,7 +301,9 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
         child: Row(
           children: [
             Icon(
-              _createFromCurrentWorkout ? AppIcons.checkCircle : AppIcons.workout,
+              _createFromCurrentWorkout
+                  ? AppIcons.checkCircle
+                  : AppIcons.workout,
               color: _createFromCurrentWorkout
                   ? context.colors.primary
                   : context.colors.onSurfaceVariant,
@@ -399,9 +414,9 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
 
   Widget _buildAdvancedOptionsSection(AppLocalizations l10n) {
     return Theme(
-      data: Theme.of(context).copyWith(
-        dividerColor: context.colors.surface.withValues(alpha: 0),
-      ),
+      data: Theme.of(
+        context,
+      ).copyWith(dividerColor: context.colors.surface.withValues(alpha: 0)),
       child: ExpansionTile(
         tilePadding: EdgeInsets.zero,
         childrenPadding: const EdgeInsets.only(top: 8),
@@ -502,7 +517,9 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
       final templateId = const Uuid().v4();
       List<ExerciseTemplate> exerciseTemplates = [];
       // Sanitize name on submission (not during typing)
-      String templateName = TemplateValidator.sanitizeTemplateName(_nameController.text);
+      String templateName = TemplateValidator.sanitizeTemplateName(
+        _nameController.text,
+      );
 
       if (_createFromCurrentWorkout) {
         final currentWorkout = ref.read(currentWorkoutProvider)!;
@@ -513,9 +530,9 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
 
         exerciseTemplates = currentWorkout.exercises.map((exercise) {
           // ✅ FIX: Use fromExercise() to properly preserve all fields including TUT
-          return ExerciseTemplate.fromExercise(exercise).copyWith(
-            restTime: _defaultRestTime,
-          );
+          return ExerciseTemplate.fromExercise(
+            exercise,
+          ).copyWith(restTime: _defaultRestTime);
         }).toList();
       }
 
@@ -539,7 +556,9 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
         userId: userId, // ✅ Required for Firestore security rules
       );
 
-      await ref.read(workoutTemplateNotifierProvider.notifier).saveTemplate(newTemplate);
+      await ref
+          .read(workoutTemplateNotifierProvider.notifier)
+          .saveTemplate(newTemplate);
 
       // Invalidate providers to refresh UI
       ref.invalidate(customWorkoutTemplatesProvider);
@@ -558,7 +577,10 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
             'Template "$templateName" creato. Modifica per aggiungere esercizi.',
           );
         } else {
-          SnackBarService.showSuccess(context, 'Template "$templateName" creato!');
+          SnackBarService.showSuccess(
+            context,
+            'Template "$templateName" creato!',
+          );
         }
       }
     } catch (e) {

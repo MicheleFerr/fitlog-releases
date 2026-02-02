@@ -41,7 +41,6 @@ part 'analytics_set_model.freezed.dart';
 
 @freezed
 abstract class AnalyticsSetModel with _$AnalyticsSetModel {
-
   const factory AnalyticsSetModel({
     /// Weight lifted in kg
     required double weight,
@@ -74,20 +73,12 @@ abstract class AnalyticsSetModel with _$AnalyticsSetModel {
 
   /// Convert to JSON for Firestore
   Map<String, dynamic> toJson() {
-    return {
-      'weight': weight,
-      'reps': reps,
-      'date': _timestampToJson(date),
-    };
+    return {'weight': weight, 'reps': reps, 'date': _timestampToJson(date)};
   }
 
   /// Convert to domain entity
   AnalyticsSet toDomain() {
-    return AnalyticsSet(
-      weight: weight,
-      reps: reps,
-      date: date,
-    );
+    return AnalyticsSet(weight: weight, reps: reps, date: date);
   }
 }
 

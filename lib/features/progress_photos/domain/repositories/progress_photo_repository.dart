@@ -65,8 +65,7 @@ abstract class ProgressPhotoRepository {
   });
 
   /// Get photos within a date range
-  Future<Either<PhotoRepositoryFailure, List<ProgressPhoto>>>
-      getPhotosInRange({
+  Future<Either<PhotoRepositoryFailure, List<ProgressPhoto>>> getPhotosInRange({
     required String userId,
     required DateTime startDate,
     required DateTime endDate,
@@ -143,10 +142,7 @@ abstract class ProgressPhotoRepository {
   ///
   /// Used by coach dashboard to view athlete photos
   Future<Either<PhotoRepositoryFailure, List<ProgressPhoto>>>
-      getSharedPhotosForCoach({
-    required String coachId,
-    required String athleteId,
-  });
+  getSharedPhotosForCoach({required String coachId, required String athleteId});
 
   /// Get storage usage for a user
   ///
@@ -235,6 +231,5 @@ class PhotoStorageStats {
   }
 
   /// Average size per photo
-  int get averagePhotoSize =>
-      totalPhotos > 0 ? totalBytes ~/ totalPhotos : 0;
+  int get averagePhotoSize => totalPhotos > 0 ? totalBytes ~/ totalPhotos : 0;
 }

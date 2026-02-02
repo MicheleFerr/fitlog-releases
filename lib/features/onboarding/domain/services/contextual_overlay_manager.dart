@@ -52,7 +52,9 @@ class ContextualOverlayManager {
       await showDialog(
         context: context,
         barrierDismissible: dismissible,
-        barrierColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+        barrierColor: Theme.of(
+          context,
+        ).colorScheme.surface.withValues(alpha: 0),
         builder: (dialogContext) => ContextualOverlay(
           targetKey: targetKey,
           message: message,
@@ -111,7 +113,8 @@ class ContextualOverlayManager {
 
     /// Step 1: Welcome to workout screen
     'firstWorkoutWelcome': OverlayConfig(
-      message: 'Welcome! Let\'s create your first workout together. I\'ll guide you step-by-step.',
+      message:
+          'Welcome! Let\'s create your first workout together. I\'ll guide you step-by-step.',
       actionLabel: 'Let\'s go!',
       duration: Duration(seconds: 12),
     ),
@@ -125,7 +128,8 @@ class ContextualOverlayManager {
 
     /// Step 3: Exercise picker tips
     'exercisePickerTips': OverlayConfig(
-      message: 'Search by name or browse by muscle group. Choose any exercise to get started!',
+      message:
+          'Search by name or browse by muscle group. Choose any exercise to get started!',
       actionLabel: 'Got it',
       duration: Duration(seconds: 10),
     ),
@@ -139,21 +143,24 @@ class ContextualOverlayManager {
 
     /// Step 5: Set input explanation
     'firstSetInput': OverlayConfig(
-      message: 'Enter the weight you lifted and how many reps you did, then tap ✓ to save.',
+      message:
+          'Enter the weight you lifted and how many reps you did, then tap ✓ to save.',
       actionLabel: 'Got it',
       duration: Duration(seconds: 12),
     ),
 
     /// Step 6: Rest timer explanation (after first set)
     'restTimerExplain': OverlayConfig(
-      message: 'Great job! 💪 The rest timer started automatically. Take a break between sets.',
+      message:
+          'Great job! 💪 The rest timer started automatically. Take a break between sets.',
       actionLabel: 'Thanks!',
       duration: Duration(seconds: 10),
     ),
 
     /// Step 7: Complete workout
     'completeFirstWorkout': OverlayConfig(
-      message: 'Amazing work! 🎉 You\'ve completed your sets. Tap here to finish your workout.',
+      message:
+          'Amazing work! 🎉 You\'ve completed your sets. Tap here to finish your workout.',
       actionLabel: 'Finish!',
       duration: Duration(seconds: 12),
     ),
@@ -161,7 +168,6 @@ class ContextualOverlayManager {
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // PHASE 3: Feature Discovery & Advanced
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
     'analyticsIntro': OverlayConfig(
       message: 'Track your progress and PRs over time',
       actionLabel: 'View',
@@ -225,7 +231,8 @@ extension OverlayTriggerExtension on OverlayTrigger {
 
     switch (this) {
       case OverlayTrigger.homeEmptyState:
-        return onboardingState.isBeginner && !onboardingState.hasCompletedFirstWorkout;
+        return onboardingState.isBeginner &&
+            !onboardingState.hasCompletedFirstWorkout;
 
       case OverlayTrigger.firstWorkoutCompleted:
         return onboardingState.hasCompletedFirstWorkout &&

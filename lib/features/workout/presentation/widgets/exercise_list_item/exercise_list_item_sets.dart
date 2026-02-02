@@ -72,7 +72,8 @@ class ExerciseListItemSets extends ConsumerStatefulWidget {
   final GlobalKey? tutorialFirstSetKey;
 
   @override
-  ConsumerState<ExerciseListItemSets> createState() => _ExerciseListItemSetsState();
+  ConsumerState<ExerciseListItemSets> createState() =>
+      _ExerciseListItemSetsState();
 }
 
 class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
@@ -84,7 +85,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   @override
   void initState() {
     super.initState();
-    _cachedCountingMode = ExerciseCountingModeService.getModeFromWorkoutExercise(widget.exercise);
+    _cachedCountingMode =
+        ExerciseCountingModeService.getModeFromWorkoutExercise(widget.exercise);
   }
 
   @override
@@ -93,7 +95,10 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     // Only recalculate counting mode if exercise changed
     if (oldWidget.exercise.countingMode != widget.exercise.countingMode ||
         oldWidget.exercise.id != widget.exercise.id) {
-      _cachedCountingMode = ExerciseCountingModeService.getModeFromWorkoutExercise(widget.exercise);
+      _cachedCountingMode =
+          ExerciseCountingModeService.getModeFromWorkoutExercise(
+            widget.exercise,
+          );
     }
   }
 
@@ -114,7 +119,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   /// Whether [set]'s weight matches the prefill suggestion (not yet edited).
   bool _isSuggestedWeight(ExerciseSet set) {
     if (set.isCompleted || set.weight == null) return false;
-    final prefill = ref.read(exerciseWeightPrefillProvider(widget.exercise.name));
+    final prefill = ref.read(
+      exerciseWeightPrefillProvider(widget.exercise.name),
+    );
     final prefillValue = prefill.valueOrNull;
     if (prefillValue == null) return false;
     return (set.weight! - prefillValue.weight).abs() < 0.01;
@@ -183,7 +190,10 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           children: [
             Text(
               context.l10n.exerciseListSetsProgress(
-                widget.exercise.sets.where((s) => s.isCompleted).length.toString(),
+                widget.exercise.sets
+                    .where((s) => s.isCompleted)
+                    .length
+                    .toString(),
                 widget.exercise.sets.length.toString(),
               ),
               style: context.textTheme.labelMedium?.copyWith(
@@ -214,140 +224,150 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             switchOutCurve: Curves.easeInCubic,
             transitionBuilder: (Widget child, Animation<double> animation) {
               return SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0.0, 0.1),
-                  end: Offset.zero,
-                ).animate(
-                  CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.easeOutCubic,
-                  ),
-                ),
+                position:
+                    Tween<Offset>(
+                      begin: const Offset(0.0, 0.1),
+                      end: Offset.zero,
+                    ).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeOutCubic,
+                      ),
+                    ),
                 child: FadeTransition(opacity: animation, child: child),
               );
             },
-          child: _areAllSetsCompleted() && isExpanded
-              ? Row(
-                  key: const ValueKey('buttons_with_collapse'),
-                  children: [
-                    // Add Set button (left)
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => _addNewSet(),
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: context.colors.primaryContainer.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: context.colors.primary.withValues(alpha: 0.3),
-                              style: BorderStyle.solid,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SemanticIcon(
-                                icon: AppIcons.addCircleOutline,
-                                semanticLabel: context.l10n.addSet,
-                                size: AppIconSize.small,
-                                color: context.colors.primary,
+            child: _areAllSetsCompleted() && isExpanded
+                ? Row(
+                    key: const ValueKey('buttons_with_collapse'),
+                    children: [
+                      // Add Set button (left)
+                      Expanded(
+                        child: InkWell(
+                          onTap: () => _addNewSet(),
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: context.colors.primaryContainer.withValues(
+                                alpha: 0.2,
                               ),
-                              const SizedBox(width: 8),
-                              Text(
-                                context.l10n.addSet,
-                                style: context.textTheme.labelLarge?.copyWith(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: context.colors.primary.withValues(
+                                  alpha: 0.3,
+                                ),
+                                style: BorderStyle.solid,
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SemanticIcon(
+                                  icon: AppIcons.addCircleOutline,
+                                  semanticLabel: context.l10n.addSet,
+                                  size: AppIconSize.small,
                                   color: context.colors.primary,
-                                  fontWeight: FontWeight.w600,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    // Collapse button (right) - no animation to prevent flash on scroll rebuild
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          widget.onCollapseExercise();
-                          HapticFeedback.lightImpact();
-                        },
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: context.colors.secondaryContainer.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: context.colors.secondary.withValues(alpha: 0.3),
-                              style: BorderStyle.solid,
-                              width: 1.5,
+                                const SizedBox(width: 8),
+                                Text(
+                                  context.l10n.addSet,
+                                  style: context.textTheme.labelLarge?.copyWith(
+                                    color: context.colors.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SemanticIcon(
-                                icon: AppIcons.unfoldLess,
-                                semanticLabel: context.l10n.collapseExercise,
-                                size: AppIconSize.small,
-                                color: context.colors.secondary,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                context.l10n.collapseExercise,
-                                style: context.textTheme.labelLarge?.copyWith(
-                                  color: context.colors.secondary,
-                                  fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Collapse button (right) - no animation to prevent flash on scroll rebuild
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            widget.onCollapseExercise();
+                            HapticFeedback.lightImpact();
+                          },
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: context.colors.secondaryContainer
+                                  .withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: context.colors.secondary.withValues(
+                                  alpha: 0.3,
                                 ),
+                                style: BorderStyle.solid,
+                                width: 1.5,
                               ),
-                            ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SemanticIcon(
+                                  icon: AppIcons.unfoldLess,
+                                  semanticLabel: context.l10n.collapseExercise,
+                                  size: AppIconSize.small,
+                                  color: context.colors.secondary,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  context.l10n.collapseExercise,
+                                  style: context.textTheme.labelLarge?.copyWith(
+                                    color: context.colors.secondary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                )
-              : InkWell(
-                  key: const ValueKey('button_add_only'),
-                  onTap: () => _addNewSet(),
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    decoration: BoxDecoration(
-                      color: context.colors.primaryContainer.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: context.colors.primary.withValues(alpha: 0.3),
-                        style: BorderStyle.solid,
-                        width: 1.5,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SemanticIcon(
-                          icon: AppIcons.addCircleOutline,
-                          semanticLabel: context.l10n.addSet,
-                          size: AppIconSize.small,
-                          color: context.colors.primary,
+                    ],
+                  )
+                : InkWell(
+                    key: const ValueKey('button_add_only'),
+                    onTap: () => _addNewSet(),
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        color: context.colors.primaryContainer.withValues(
+                          alpha: 0.2,
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          context.l10n.addSet,
-                          style: context.textTheme.labelLarge?.copyWith(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: context.colors.primary.withValues(alpha: 0.3),
+                          style: BorderStyle.solid,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SemanticIcon(
+                            icon: AppIcons.addCircleOutline,
+                            semanticLabel: context.l10n.addSet,
+                            size: AppIconSize.small,
                             color: context.colors.primary,
-                            fontWeight: FontWeight.w600,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 8),
+                          Text(
+                            context.l10n.addSet,
+                            style: context.textTheme.labelLarge?.copyWith(
+                              color: context.colors.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
           ),
         ),
       ],
@@ -364,7 +384,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     final displayMode = ref.watch(setDisplayProvider);
 
     // Use robust key that includes index as fallback in case IDs are empty
-    final exerciseId = widget.exercise.id.isNotEmpty ? widget.exercise.id : 'ex_$index';
+    final exerciseId = widget.exercise.id.isNotEmpty
+        ? widget.exercise.id
+        : 'ex_$index';
     final setId = set.id.isNotEmpty ? set.id : 'set_$index';
 
     return Slidable(
@@ -421,7 +443,12 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           closeOnCancel: true,
           confirmDismiss: () async {
             HapticFeedback.heavyImpact();
-            final confirmed = await _showDeleteConfirmation(context, set, index, isWarmup);
+            final confirmed = await _showDeleteConfirmation(
+              context,
+              set,
+              index,
+              isWarmup,
+            );
             if (confirmed) {
               _deleteSet(set, index);
             }
@@ -462,14 +489,16 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             color: isWarmup
                 ? context.warningContainer
                 : set.isCompleted
-                    ? context.colors.tertiary.withValues(alpha: 0.1)
-                    : context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+                ? context.colors.tertiary.withValues(alpha: 0.1)
+                : context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(displayMode.borderRadius),
             border: isWarmup
                 ? Border.all(color: context.warningColor.withValues(alpha: 0.3))
                 : set.isCompleted
-                    ? Border.all(color: context.colors.tertiary.withValues(alpha: 0.3))
-                    : null,
+                ? Border.all(
+                    color: context.colors.tertiary.withValues(alpha: 0.3),
+                  )
+                : null,
           ),
           child: Row(
             children: [
@@ -481,8 +510,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                   color: isWarmup
                       ? context.warningColor.withValues(alpha: 0.3)
                       : set.isCompleted
-                          ? context.colors.tertiary
-                          : context.colors.outline.withValues(alpha: 0.3),
+                      ? context.colors.tertiary
+                      : context.colors.outline.withValues(alpha: 0.3),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -657,8 +686,12 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     ExerciseSet? lastSet;
     if (widget.exercise.sets.isNotEmpty) {
       // Find the last non-warmup set
-      final workingSets = widget.exercise.sets.where((s) => !s.isWarmup).toList();
-      lastSet = workingSets.isNotEmpty ? workingSets.last : widget.exercise.sets.last;
+      final workingSets = widget.exercise.sets
+          .where((s) => !s.isWarmup)
+          .toList();
+      lastSet = workingSets.isNotEmpty
+          ? workingSets.last
+          : widget.exercise.sets.last;
     }
 
     // Create new set with default or copied values
@@ -709,7 +742,12 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   }
 
   /// Show delete confirmation dialog and return result
-  Future<bool> _showDeleteConfirmation(BuildContext context, ExerciseSet set, int index, bool isWarmup) async {
+  Future<bool> _showDeleteConfirmation(
+    BuildContext context,
+    ExerciseSet set,
+    int index,
+    bool isWarmup,
+  ) async {
     final l10n = context.l10n;
 
     final confirmed = await showGeneralDialog<bool>(
@@ -729,10 +767,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         );
 
         return ScaleTransition(
-          scale: Tween<double>(
-            begin: 0.8,
-            end: 1.0,
-          ).animate(curvedAnimation),
+          scale: Tween<double>(begin: 0.8, end: 1.0).animate(curvedAnimation),
           child: FadeTransition(
             opacity: curvedAnimation,
             child: AlertDialog(
@@ -749,7 +784,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  style: TextButton.styleFrom(foregroundColor: context.errorColor),
+                  style: TextButton.styleFrom(
+                    foregroundColor: context.errorColor,
+                  ),
                   child: Text(l10n.delete),
                 ),
               ],
@@ -763,7 +800,12 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   }
 
   /// ✅ Confirm delete with dialog (visible button action)
-  Future<void> _confirmDeleteSet(BuildContext context, ExerciseSet set, int index, bool isWarmup) async {
+  Future<void> _confirmDeleteSet(
+    BuildContext context,
+    ExerciseSet set,
+    int index,
+    bool isWarmup,
+  ) async {
     final l10n = context.l10n;
 
     final confirmed = await showGeneralDialog<bool>(
@@ -783,10 +825,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         );
 
         return ScaleTransition(
-          scale: Tween<double>(
-            begin: 0.8,
-            end: 1.0,
-          ).animate(curvedAnimation),
+          scale: Tween<double>(begin: 0.8, end: 1.0).animate(curvedAnimation),
           child: FadeTransition(
             opacity: curvedAnimation,
             child: AlertDialog(
@@ -803,7 +842,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  style: TextButton.styleFrom(foregroundColor: context.errorColor),
+                  style: TextButton.styleFrom(
+                    foregroundColor: context.errorColor,
+                  ),
                   child: Text(l10n.delete),
                 ),
               ],
@@ -857,14 +898,20 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   }
 
   void _quickEditSet(BuildContext context, ExerciseSet set) {
-    final currentSetIndex = widget.exercise.sets.indexWhere((s) => s.id == set.id);
-    final previousSet = currentSetIndex > 0 ? widget.exercise.sets[currentSetIndex - 1] : null;
+    final currentSetIndex = widget.exercise.sets.indexWhere(
+      (s) => s.id == set.id,
+    );
+    final previousSet = currentSetIndex > 0
+        ? widget.exercise.sets[currentSetIndex - 1]
+        : null;
 
     // Haptic feedback for quick edit
     HapticFeedback.selectionClick();
 
     // Suggested weight from prefill provider
-    final prefill = ref.read(exerciseWeightPrefillProvider(widget.exercise.name)).valueOrNull;
+    final prefill = ref
+        .read(exerciseWeightPrefillProvider(widget.exercise.name))
+        .valueOrNull;
     final suggestedSource = prefill != null
         ? _prefillSourceLabel(prefill.source)
         : null;
@@ -888,10 +935,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       // Apply to all sets (first set only)
       onApplyToAll: (updatedSet) {
         final updatedSets = widget.exercise.sets.map((s) {
-          return s.copyWith(
-            weight: updatedSet.weight,
-            reps: updatedSet.reps,
-          );
+          return s.copyWith(weight: updatedSet.weight, reps: updatedSet.reps);
         }).toList();
         final updatedExercise = widget.exercise.copyWith(sets: updatedSets);
         widget.onExerciseUpdate(updatedExercise);
@@ -962,7 +1006,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           // If no start time, calculate one based on previous sets
           if (existingStartTime == null) {
             if (set.setNumber == 1) {
-              existingStartTime = DateTime.now().subtract(const Duration(seconds: 30));
+              existingStartTime = DateTime.now().subtract(
+                const Duration(seconds: 30),
+              );
               durationTracker.setStartTime(
                 widget.exercise.id,
                 set.setNumber,
@@ -971,7 +1017,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             } else {
               // For subsequent sets, use previous set completion time
               final previousSetIndex = set.setNumber - 2;
-              if (previousSetIndex >= 0 && previousSetIndex < widget.exercise.sets.length) {
+              if (previousSetIndex >= 0 &&
+                  previousSetIndex < widget.exercise.sets.length) {
                 final previousSet = widget.exercise.sets[previousSetIndex];
                 if (previousSet.completedAt != null) {
                   existingStartTime = previousSet.completedAt!;
@@ -985,7 +1032,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
 
               // Fallback to 30 seconds ago
               if (existingStartTime == null) {
-                existingStartTime = DateTime.now().subtract(const Duration(seconds: 30));
+                existingStartTime = DateTime.now().subtract(
+                  const Duration(seconds: 30),
+                );
                 durationTracker.setStartTime(
                   widget.exercise.id,
                   set.setNumber,
@@ -996,7 +1045,10 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           }
 
           // Calculate duration
-          duration = DateTime.now().difference(existingStartTime).inMilliseconds.toDouble();
+          duration = DateTime.now()
+              .difference(existingStartTime)
+              .inMilliseconds
+              .toDouble();
 
           // Cap at 5 minutes max
           if (duration > 300000) {
@@ -1090,10 +1142,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       );
       widget.onSetToggleComplete(updatedSet);
 
-      SnackBarService.showInfo(
-        context,
-        '↩️ Set ${set.setNumber} uncompleted',
-      );
+      SnackBarService.showInfo(context, '↩️ Set ${set.setNumber} uncompleted');
     }
   }
 
@@ -1142,10 +1191,14 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   // ============================================================================
 
   /// Build the DropSet section showing stages and execute button
-  Widget _buildDropSetSection(BuildContext context, DropSetExercise dropsetExercise) {
+  Widget _buildDropSetSection(
+    BuildContext context,
+    DropSetExercise dropsetExercise,
+  ) {
     final stages = dropsetExercise.stages;
     final completedStages = stages.where((s) => s.isCompleted).toList();
-    final allCompleted = completedStages.length == stages.length && stages.isNotEmpty;
+    final allCompleted =
+        completedStages.length == stages.length && stages.isNotEmpty;
     final hasCompletedStages = completedStages.isNotEmpty;
 
     return Column(
@@ -1210,7 +1263,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: allCompleted
-                  ? context.colors.surfaceContainerHighest.withValues(alpha: 0.5)
+                  ? context.colors.surfaceContainerHighest.withValues(
+                      alpha: 0.5,
+                    )
                   : context.colors.tertiaryContainer.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
@@ -1223,7 +1278,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             child: Row(
               children: [
                 SemanticIcon(
-                  icon: allCompleted ? AppIcons.refresh : AppIcons.playCircleOutline,
+                  icon: allCompleted
+                      ? AppIcons.refresh
+                      : AppIcons.playCircleOutline,
                   semanticLabel: context.l10n.executeDropset,
                   size: AppIconSize.small,
                   color: allCompleted
@@ -1418,7 +1475,10 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                 if (weightDropText != null) ...[
                   const SizedBox(width: 4),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 1,
+                    ),
                     decoration: BoxDecoration(
                       color: context.colors.warning.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
@@ -1452,18 +1512,17 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
 
           // RPE indicator (if completed with RPE)
           if (isCompleted && stage.rpe != null)
-            RpeIndicator(
-              rpe: stage.rpe!,
-              showLabel: false,
-              compact: true,
-            ),
+            RpeIndicator(rpe: stage.rpe!, showLabel: false, compact: true),
         ],
       ),
     );
   }
 
   /// Build the RestPause section showing sets and execute button
-  Widget _buildRestPauseSection(BuildContext context, RestPauseExercise restPauseExercise) {
+  Widget _buildRestPauseSection(
+    BuildContext context,
+    RestPauseExercise restPauseExercise,
+  ) {
     final sets = restPauseExercise.restPauseSets;
     final completedSets = sets.where((s) => s.isCompleted).toList();
     final allCompleted = completedSets.isNotEmpty;
@@ -1535,7 +1594,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: allCompleted
-                  ? context.colors.surfaceContainerHighest.withValues(alpha: 0.5)
+                  ? context.colors.surfaceContainerHighest.withValues(
+                      alpha: 0.5,
+                    )
                   : context.colors.tertiaryContainer.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
@@ -1548,7 +1609,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             child: Row(
               children: [
                 SemanticIcon(
-                  icon: allCompleted ? AppIcons.refresh : AppIcons.playCircleOutline,
+                  icon: allCompleted
+                      ? AppIcons.refresh
+                      : AppIcons.playCircleOutline,
                   semanticLabel: context.l10n.executeRestPause,
                   size: AppIconSize.small,
                   color: allCompleted
@@ -1624,7 +1687,11 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   }
 
   /// Build a single rest-pause set row
-  Widget _buildRestPauseSetRow(BuildContext context, int index, RestPauseSet set) {
+  Widget _buildRestPauseSetRow(
+    BuildContext context,
+    int index,
+    RestPauseSet set,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -1677,11 +1744,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           // RPE indicator (if set)
           if (set.rpe != null) ...[
             const SizedBox(width: 8),
-            RpeIndicator(
-              rpe: set.rpe!,
-              showLabel: false,
-              compact: true,
-            ),
+            RpeIndicator(rpe: set.rpe!, showLabel: false, compact: true),
           ],
         ],
       ),

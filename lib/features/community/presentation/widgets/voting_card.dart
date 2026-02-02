@@ -6,7 +6,6 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/community_
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class VotingCard extends StatefulWidget {
-
   const VotingCard({
     super.key,
     required this.contribution,
@@ -34,7 +33,7 @@ class _VotingCardState extends State<VotingCard>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
-  
+
   @override
   void initState() {
     super.initState();
@@ -42,32 +41,26 @@ class _VotingCardState extends State<VotingCard>
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _scaleAnimation = Tween<double>(
       begin: 0.95,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ));
-    
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
-    
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
     _controller.forward();
   }
-  
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-  
+
   IconData _getTypeIcon() {
     switch (widget.contribution.type) {
       case ContributionType.tip:
@@ -84,7 +77,7 @@ class _VotingCardState extends State<VotingCard>
         return AppIcons.translate;
     }
   }
-  
+
   Color _getTypeColor(BuildContext context) {
     final theme = Theme.of(context);
     switch (widget.contribution.type) {
@@ -102,7 +95,7 @@ class _VotingCardState extends State<VotingCard>
         return theme.colorScheme.success;
     }
   }
-  
+
   String _getTypeLabel() {
     switch (widget.contribution.type) {
       case ContributionType.tip:
@@ -119,16 +112,18 @@ class _VotingCardState extends State<VotingCard>
         return 'Traduzione';
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final typeColor = _getTypeColor(context);
 
     // Check user vote status
-    final hasUpvoted = widget.currentUserId != null &&
+    final hasUpvoted =
+        widget.currentUserId != null &&
         widget.contribution.upvotedBy.contains(widget.currentUserId);
-    final hasDownvoted = widget.currentUserId != null &&
+    final hasDownvoted =
+        widget.currentUserId != null &&
         widget.contribution.downvotedBy.contains(widget.currentUserId);
 
     return FadeTransition(
@@ -168,283 +163,287 @@ class _VotingCardState extends State<VotingCard>
               ),
             ),
             child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header with type and user info
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        typeColor.withValues(alpha: 0.1),
-                        typeColor.withValues(alpha: 0.05),
-                      ],
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      // Type icon with animation
-                      TweenAnimationBuilder<double>(
-                        tween: Tween(begin: 0, end: 1),
-                        duration: const Duration(milliseconds: 600),
-                        builder: (context, value, child) {
-                          return Transform.rotate(
-                            angle: value * 2 * math.pi,
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: typeColor.withValues(alpha: 0.2),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                _getTypeIcon(),
-                                color: typeColor,
-                                size: 20,
-                              ),
-                            ),
-                          );
-                        },
+              borderRadius: BorderRadius.circular(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header with type and user info
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          typeColor.withValues(alpha: 0.1),
+                          typeColor.withValues(alpha: 0.05),
+                        ],
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 2,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: typeColor.withValues(alpha: 0.2),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    _getTypeLabel(),
-                                    style: TextStyle(
-                                      color: typeColor,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                    ),
+                    child: Row(
+                      children: [
+                        // Type icon with animation
+                        TweenAnimationBuilder<double>(
+                          tween: Tween(begin: 0, end: 1),
+                          duration: const Duration(milliseconds: 600),
+                          builder: (context, value, child) {
+                            return Transform.rotate(
+                              angle: value * 2 * math.pi,
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: typeColor.withValues(alpha: 0.2),
+                                  shape: BoxShape.circle,
                                 ),
-                                const SizedBox(width: 8),
-                                if (widget.contribution.isFeatured)
+                                child: Icon(
+                                  _getTypeIcon(),
+                                  color: typeColor,
+                                  size: 20,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 6,
+                                      horizontal: 8,
                                       vertical: 2,
                                     ),
                                     decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          theme.colorScheme.warning,
-                                          theme.colorScheme.tertiary,
-                                        ],
-                                      ),
+                                      color: typeColor.withValues(alpha: 0.2),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          AppIcons.star,
-                                          size: 10,
-                                          color: theme.colorScheme.onTertiary,
-                                        ),
-                                        const SizedBox(width: 2),
-                                        Text(
-                                          'Featured',
-                                          style: TextStyle(
-                                            color: theme.colorScheme.onTertiary,
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
+                                    child: Text(
+                                      _getTypeLabel(),
+                                      style: TextStyle(
+                                        color: typeColor,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                              ],
+                                  const SizedBox(width: 8),
+                                  if (widget.contribution.isFeatured)
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            theme.colorScheme.warning,
+                                            theme.colorScheme.tertiary,
+                                          ],
+                                        ),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            AppIcons.star,
+                                            size: 10,
+                                            color: theme.colorScheme.onTertiary,
+                                          ),
+                                          const SizedBox(width: 2),
+                                          Text(
+                                            'Featured',
+                                            style: TextStyle(
+                                              color:
+                                                  theme.colorScheme.onTertiary,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                widget.contribution.exerciseName,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Trust score indicator
+                        if (widget.contribution.trustScore > 0)
+                          _TrustScoreIndicator(
+                            score: widget.contribution.trustScore,
+                          ),
+                      ],
+                    ),
+                  ),
+
+                  // Content
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Title
+                        Text(
+                          widget.contribution.title,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+
+                        // Description
+                        Text(
+                          widget.contribution.description,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            height: 1.4,
+                          ),
+                        ),
+
+                        // Original vs Suggested (if correction)
+                        if (widget.contribution.originalValue != null &&
+                            widget.contribution.suggestedValue != null) ...[
+                          const SizedBox(height: 16),
+                          _DiffDisplay(
+                            original: widget.contribution.originalValue!,
+                            suggested: widget.contribution.suggestedValue!,
+                          ),
+                        ],
+
+                        const SizedBox(height: 16),
+
+                        // User info and timestamp
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 12,
+                              backgroundColor:
+                                  theme.colorScheme.primaryContainer,
+                              child: Text(
+                                widget.contribution.userName[0].toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.primary,
+                                ),
+                              ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(width: 8),
                             Text(
-                              widget.contribution.exerciseName,
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
+                              widget.contribution.userName,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              '•',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.outline,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              _formatTimeAgo(widget.contribution.createdAt),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.outline,
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      // Trust score indicator
-                      if (widget.contribution.trustScore > 0)
-                        _TrustScoreIndicator(
-                          score: widget.contribution.trustScore,
-                        ),
-                    ],
-                  ),
-                ),
-                
-                // Content
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Title
-                      Text(
-                        widget.contribution.title,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      
-                      // Description
-                      Text(
-                        widget.contribution.description,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                          height: 1.4,
-                        ),
-                      ),
-                      
-                      // Original vs Suggested (if correction)
-                      if (widget.contribution.originalValue != null &&
-                          widget.contribution.suggestedValue != null) ...[
-                        const SizedBox(height: 16),
-                        _DiffDisplay(
-                          original: widget.contribution.originalValue!,
-                          suggested: widget.contribution.suggestedValue!,
-                        ),
                       ],
-                      
-                      const SizedBox(height: 16),
-                      
-                      // User info and timestamp
-                      Row(
+                    ),
+                  ),
+
+                  // Actions
+                  if (widget.showActions) ...[
+                    const Divider(height: 1),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      child: Row(
                         children: [
-                          CircleAvatar(
-                            radius: 12,
-                            backgroundColor: theme.colorScheme.primaryContainer,
-                            child: Text(
-                              widget.contribution.userName[0].toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: theme.colorScheme.primary,
+                          // Upvote button
+                          _VoteButton(
+                            icon: AppIcons.thumbUpOutlined,
+                            activeIcon: AppIcons.thumbUp,
+                            count: widget.contribution.upvotes,
+                            color: theme.colorScheme.success,
+                            isActive: hasUpvoted,
+                            onTap: () {
+                              HapticFeedback.lightImpact();
+                              widget.onUpvote();
+                            },
+                          ),
+                          const SizedBox(width: 16),
+
+                          // Downvote button
+                          _VoteButton(
+                            icon: AppIcons.thumbDownOutlined,
+                            activeIcon: AppIcons.thumbDown,
+                            count: widget.contribution.downvotes,
+                            color: theme.colorScheme.error,
+                            isActive: hasDownvoted,
+                            onTap: () {
+                              HapticFeedback.lightImpact();
+                              widget.onDownvote();
+                            },
+                          ),
+
+                          const Spacer(),
+
+                          // Comment button
+                          if (widget.onComment != null)
+                            IconButton(
+                              onPressed: widget.onComment,
+                              icon: Badge(
+                                label: Text(
+                                  widget.contribution.comments.length
+                                      .toString(),
+                                ),
+                                isLabelVisible:
+                                    widget.contribution.comments.isNotEmpty,
+                                child: const Icon(AppIcons.commentOutlined),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            widget.contribution.userName,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '•',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.outline,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            _formatTimeAgo(widget.contribution.createdAt),
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.outline,
-                            ),
+
+                          // Share button
+                          IconButton(
+                            onPressed: () {
+                              HapticFeedback.selectionClick();
+                              // TODO: Implement share
+                            },
+                            icon: const Icon(AppIcons.shareOutlined),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-                
-                // Actions
-                if (widget.showActions) ...[
-                  const Divider(height: 1),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
                     ),
-                    child: Row(
-                      children: [
-                        // Upvote button
-                        _VoteButton(
-                          icon: AppIcons.thumbUpOutlined,
-                          activeIcon: AppIcons.thumbUp,
-                          count: widget.contribution.upvotes,
-                          color: theme.colorScheme.success,
-                          isActive: hasUpvoted,
-                          onTap: () {
-                            HapticFeedback.lightImpact();
-                            widget.onUpvote();
-                          },
-                        ),
-                        const SizedBox(width: 16),
-
-                        // Downvote button
-                        _VoteButton(
-                          icon: AppIcons.thumbDownOutlined,
-                          activeIcon: AppIcons.thumbDown,
-                          count: widget.contribution.downvotes,
-                          color: theme.colorScheme.error,
-                          isActive: hasDownvoted,
-                          onTap: () {
-                            HapticFeedback.lightImpact();
-                            widget.onDownvote();
-                          },
-                        ),
-                        
-                        const Spacer(),
-                        
-                        // Comment button
-                        if (widget.onComment != null)
-                          IconButton(
-                            onPressed: widget.onComment,
-                            icon: Badge(
-                              label: Text(
-                                widget.contribution.comments.length.toString(),
-                              ),
-                              isLabelVisible: widget.contribution.comments.isNotEmpty,
-                              child: const Icon(AppIcons.commentOutlined),
-                            ),
-                          ),
-                        
-                        // Share button
-                        IconButton(
-                          onPressed: () {
-                            HapticFeedback.selectionClick();
-                            // TODO: Implement share
-                          },
-                          icon: const Icon(AppIcons.shareOutlined),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),
       ),
-      ),
     );
   }
-  
+
   String _formatTimeAgo(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
-    
+
     if (difference.inDays > 7) {
       return '${(difference.inDays / 7).floor()} sett. fa';
     } else if (difference.inDays > 0) {
@@ -460,7 +459,6 @@ class _VotingCardState extends State<VotingCard>
 }
 
 class _VoteButton extends StatefulWidget {
-
   const _VoteButton({
     required this.icon,
     required this.activeIcon,
@@ -483,7 +481,7 @@ class _VoteButton extends StatefulWidget {
 class _VoteButtonState extends State<_VoteButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  
+
   @override
   void initState() {
     super.initState();
@@ -572,18 +570,14 @@ class _VoteButtonState extends State<_VoteButton>
 }
 
 class _DiffDisplay extends StatelessWidget {
-  
-  const _DiffDisplay({
-    required this.original,
-    required this.suggested,
-  });
+  const _DiffDisplay({required this.original, required this.suggested});
   final String original;
   final String suggested;
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -658,10 +652,9 @@ class _DiffDisplay extends StatelessWidget {
 }
 
 class _TrustScoreIndicator extends StatelessWidget {
-  
   const _TrustScoreIndicator({required this.score});
   final int score;
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -672,10 +665,7 @@ class _TrustScoreIndicator extends StatelessWidget {
       height: 48,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(
-          color: color.withValues(alpha: 0.3),
-          width: 3,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 3),
       ),
       child: Center(
         child: Column(
@@ -691,10 +681,7 @@ class _TrustScoreIndicator extends StatelessWidget {
             ),
             Text(
               'Trust',
-              style: TextStyle(
-                fontSize: 8,
-                color: theme.colorScheme.outline,
-              ),
+              style: TextStyle(fontSize: 8, color: theme.colorScheme.outline),
             ),
           ],
         ),

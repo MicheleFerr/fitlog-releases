@@ -105,8 +105,8 @@ class AccountModeNotifier extends StateNotifier<AccountMode> {
 /// Provider for AccountModeNotifier
 final accountModeNotifierProvider =
     StateNotifierProvider<AccountModeNotifier, AccountMode>((ref) {
-  return AccountModeNotifier(ref);
-});
+      return AccountModeNotifier(ref);
+    });
 
 // ============================================================
 // COACH CODE PROVIDER
@@ -138,18 +138,18 @@ final coachCodeProvider = FutureProvider.autoDispose<String?>((ref) async {
 /// Returns empty list if user is not in coach mode
 final athletesListProvider =
     StreamProvider.autoDispose<List<CoachRelationship>>((ref) {
-  final mode = ref.watch(accountModeProvider);
-  if (!mode.isCoach) return Stream.value([]);
+      final mode = ref.watch(accountModeProvider);
+      if (!mode.isCoach) return Stream.value([]);
 
-  // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
-  final user = ref.watch(
-    firebaseUserProvider.select((async) => async.valueOrNull),
-  );
-  if (user?.email == null) return Stream.value([]);
+      // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
+      final user = ref.watch(
+        firebaseUserProvider.select((async) => async.valueOrNull),
+      );
+      if (user?.email == null) return Stream.value([]);
 
-  final repository = ref.watch(coachRepositoryProvider);
-  return repository.watchAthletes(user!.email!);
-});
+      final repository = ref.watch(coachRepositoryProvider);
+      return repository.watchAthletes(user!.email!);
+    });
 
 /// Provider for active athletes count
 final activeAthletesCountProvider = Provider.autoDispose<int>((ref) {
@@ -176,8 +176,7 @@ final pendingInvitationsCountProvider = Provider.autoDispose<int>((ref) {
 /// Provider for athlete's coach relationship
 ///
 /// Returns null if user is not in coached mode or has no coach
-final myCoachProvider =
-    StreamProvider.autoDispose<CoachRelationship?>((ref) {
+final myCoachProvider = StreamProvider.autoDispose<CoachRelationship?>((ref) {
   final mode = ref.watch(accountModeProvider);
   if (!mode.isCoached) return Stream.value(null);
 
@@ -194,9 +193,7 @@ final myCoachProvider =
 /// Provider for coach name (convenience)
 final myCoachNameProvider = Provider.autoDispose<String?>((ref) {
   // 🔧 PERF FIX: Use .select() to only rebuild when coach value changes
-  final coach = ref.watch(
-    myCoachProvider.select((async) => async.valueOrNull),
-  );
+  final coach = ref.watch(myCoachProvider.select((async) => async.valueOrNull));
   return coach?.coachName;
 });
 
@@ -207,15 +204,15 @@ final myCoachNameProvider = Provider.autoDispose<String?>((ref) {
 /// Provider for single athlete relationship (for coach viewing athlete)
 final athleteRelationshipProvider = FutureProvider.autoDispose
     .family<CoachRelationship?, String>((ref, athleteId) async {
-  // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
-  final user = ref.watch(
-    firebaseUserProvider.select((async) => async.valueOrNull),
-  );
-  if (user == null) return null;
+      // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
+      final user = ref.watch(
+        firebaseUserProvider.select((async) => async.valueOrNull),
+      );
+      if (user == null) return null;
 
-  final repository = ref.watch(coachRepositoryProvider);
-  return repository.getAthleteRelationship(user.uid, athleteId);
-});
+      final repository = ref.watch(coachRepositoryProvider);
+      return repository.getAthleteRelationship(user.uid, athleteId);
+    });
 
 // ============================================================
 // COACH LOOKUP PROVIDER
@@ -224,11 +221,11 @@ final athleteRelationshipProvider = FutureProvider.autoDispose
 /// Provider for looking up coach by code
 final coachLookupProvider = FutureProvider.autoDispose
     .family<CoachInfo?, String>((ref, code) async {
-  if (code.length != 6) return null;
+      if (code.length != 6) return null;
 
-  final repository = ref.watch(coachRepositoryProvider);
-  return repository.findCoachByCode(code.toUpperCase());
-});
+      final repository = ref.watch(coachRepositoryProvider);
+      return repository.findCoachByCode(code.toUpperCase());
+    });
 
 // ============================================================
 // COACH ACTIONS PROVIDER
@@ -298,8 +295,8 @@ class CoachActionsNotifier extends StateNotifier<AsyncValue<void>> {
 /// Provider for coach actions
 final coachActionsProvider =
     StateNotifierProvider<CoachActionsNotifier, AsyncValue<void>>((ref) {
-  return CoachActionsNotifier(ref);
-});
+      return CoachActionsNotifier(ref);
+    });
 
 // ============================================================
 // ATHLETE ACTIONS PROVIDER
@@ -361,8 +358,8 @@ class AthleteActionsNotifier extends StateNotifier<AsyncValue<void>> {
 /// Provider for athlete actions
 final athleteActionsProvider =
     StateNotifierProvider<AthleteActionsNotifier, AsyncValue<void>>((ref) {
-  return AthleteActionsNotifier(ref);
-});
+      return AthleteActionsNotifier(ref);
+    });
 
 // ============================================================
 // CONVENIENCE PROVIDERS
@@ -392,9 +389,7 @@ final isActivelyCoachedProvider = Provider.autoDispose<bool>((ref) {
   if (!mode.isCoached) return false;
 
   // 🔧 PERF FIX: Use .select() to only rebuild when coach value changes
-  final coach = ref.watch(
-    myCoachProvider.select((async) => async.valueOrNull),
-  );
+  final coach = ref.watch(myCoachProvider.select((async) => async.valueOrNull));
   return coach?.isActive ?? false;
 });
 
@@ -408,19 +403,19 @@ final isActivelyCoachedProvider = Provider.autoDispose<bool>((ref) {
 /// Returns list of workout summaries ordered by date (newest first)
 final athleteWorkoutsProvider = FutureProvider.autoDispose
     .family<List<AthleteWorkoutSummary>, String>((ref, athleteId) async {
-  // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
-  final user = ref.watch(
-    firebaseUserProvider.select((async) => async.valueOrNull),
-  );
-  if (user?.email == null) return [];
+      // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
+      final user = ref.watch(
+        firebaseUserProvider.select((async) => async.valueOrNull),
+      );
+      if (user?.email == null) return [];
 
-  final repository = ref.watch(coachRepositoryProvider);
-  return repository.fetchAthleteWorkouts(
-    coachEmail: user!.email!,
-    athleteId: athleteId,
-    limit: 20,
-  );
-});
+      final repository = ref.watch(coachRepositoryProvider);
+      return repository.fetchAthleteWorkouts(
+        coachEmail: user!.email!,
+        athleteId: athleteId,
+        limit: 20,
+      );
+    });
 
 /// Provider for athlete weekly stats (for coaches)
 ///
@@ -428,33 +423,36 @@ final athleteWorkoutsProvider = FutureProvider.autoDispose
 /// Returns weekly stats including compliance %, volume, etc.
 final athleteWeeklyStatsProvider = FutureProvider.autoDispose
     .family<AthleteWeeklyStats, String>((ref, athleteId) async {
-  // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
-  final user = ref.watch(
-    firebaseUserProvider.select((async) => async.valueOrNull),
-  );
-  if (user?.email == null) return const AthleteWeeklyStats.empty();
+      // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
+      final user = ref.watch(
+        firebaseUserProvider.select((async) => async.valueOrNull),
+      );
+      if (user?.email == null) return const AthleteWeeklyStats.empty();
 
-  final repository = ref.watch(coachRepositoryProvider);
-  return repository.getAthleteWeeklyStats(
-    coachEmail: user!.email!,
-    athleteId: athleteId,
-  );
-});
+      final repository = ref.watch(coachRepositoryProvider);
+      return repository.getAthleteWeeklyStats(
+        coachEmail: user!.email!,
+        athleteId: athleteId,
+      );
+    });
 
 // ============================================================
 // COACH TEMPLATES PROVIDERS
 // ============================================================
 
 /// Provider for CoachTemplatesRepository
-final coachTemplatesRepositoryProvider = Provider<CoachTemplatesRepository>((ref) {
+final coachTemplatesRepositoryProvider = Provider<CoachTemplatesRepository>((
+  ref,
+) {
   return CoachTemplatesRepository();
 });
 
 /// Provider for all coach templates
 ///
 /// Returns stream of templates owned by the current coach
-final coachTemplatesProvider =
-    StreamProvider.autoDispose<List<CoachTemplate>>((ref) {
+final coachTemplatesProvider = StreamProvider.autoDispose<List<CoachTemplate>>((
+  ref,
+) {
   final mode = ref.watch(accountModeProvider);
   if (!mode.isCoach) return Stream.value([]);
 
@@ -471,41 +469,41 @@ final coachTemplatesProvider =
 /// Provider for templates with assignments (assigned to at least one athlete)
 final assignedCoachTemplatesProvider =
     Provider.autoDispose<List<CoachTemplate>>((ref) {
-  // 🔧 PERF FIX: Use .select() to only rebuild when templates list changes
-  final templates = ref.watch(
-    coachTemplatesProvider.select((async) => async.valueOrNull ?? []),
-  );
-  return templates.where((t) => t.hasAssignments).toList();
-});
+      // 🔧 PERF FIX: Use .select() to only rebuild when templates list changes
+      final templates = ref.watch(
+        coachTemplatesProvider.select((async) => async.valueOrNull ?? []),
+      );
+      return templates.where((t) => t.hasAssignments).toList();
+    });
 
 /// Provider for single coach template by ID
 final coachTemplateProvider = FutureProvider.autoDispose
     .family<CoachTemplate?, String>((ref, templateId) async {
-  final repository = ref.watch(coachTemplatesRepositoryProvider);
-  return repository.getTemplate(templateId);
-});
+      final repository = ref.watch(coachTemplatesRepositoryProvider);
+      return repository.getTemplate(templateId);
+    });
 
 /// Provider for assignment state of a template
 ///
 /// Returns map of athleteId -> isAssigned
 final templateAssignmentsProvider = Provider.autoDispose
     .family<Map<String, bool>, String>((ref, templateId) {
-  // 🔧 PERF FIX: Use .select() to only rebuild when data changes
-  final athletes = ref.watch(
-    athletesListProvider.select((async) => async.valueOrNull ?? []),
-  );
-  final templates = ref.watch(
-    coachTemplatesProvider.select((async) => async.valueOrNull ?? []),
-  );
+      // 🔧 PERF FIX: Use .select() to only rebuild when data changes
+      final athletes = ref.watch(
+        athletesListProvider.select((async) => async.valueOrNull ?? []),
+      );
+      final templates = ref.watch(
+        coachTemplatesProvider.select((async) => async.valueOrNull ?? []),
+      );
 
-  final template = templates.where((t) => t.id == templateId).firstOrNull;
-  if (template == null) return {};
+      final template = templates.where((t) => t.id == templateId).firstOrNull;
+      if (template == null) return {};
 
-  return {
-    for (final athlete in athletes)
-      athlete.athleteId: template.isAssignedTo(athlete.athleteId),
-  };
-});
+      return {
+        for (final athlete in athletes)
+          athlete.athleteId: template.isAssignedTo(athlete.athleteId),
+      };
+    });
 
 /// Coach template count
 final coachTemplateCountProvider = Provider.autoDispose<int>((ref) {
@@ -523,18 +521,18 @@ final coachTemplateCountProvider = Provider.autoDispose<int>((ref) {
 /// Provider for templates assigned to current athlete (from their coach)
 final assignedTemplatesProvider =
     StreamProvider.autoDispose<List<AssignedTemplate>>((ref) {
-  final mode = ref.watch(accountModeProvider);
-  if (!mode.isCoached) return Stream.value([]);
+      final mode = ref.watch(accountModeProvider);
+      if (!mode.isCoached) return Stream.value([]);
 
-  // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
-  final user = ref.watch(
-    firebaseUserProvider.select((async) => async.valueOrNull),
-  );
-  if (user == null) return Stream.value([]);
+      // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
+      final user = ref.watch(
+        firebaseUserProvider.select((async) => async.valueOrNull),
+      );
+      if (user == null) return Stream.value([]);
 
-  final repository = ref.watch(coachTemplatesRepositoryProvider);
-  return repository.watchAssignedTemplates(user.uid);
-});
+      final repository = ref.watch(coachTemplatesRepositoryProvider);
+      return repository.watchAssignedTemplates(user.uid);
+    });
 
 /// Provider for count of assigned templates
 final assignedTemplateCountProvider = Provider.autoDispose<int>((ref) {
@@ -548,9 +546,9 @@ final assignedTemplateCountProvider = Provider.autoDispose<int>((ref) {
 /// Provider for full template data of an assigned template
 final assignedTemplateDataProvider = FutureProvider.autoDispose
     .family<CoachTemplate?, String>((ref, templateId) async {
-  final repository = ref.watch(coachTemplatesRepositoryProvider);
-  return repository.getAssignedTemplateData(templateId);
-});
+      final repository = ref.watch(coachTemplatesRepositoryProvider);
+      return repository.getAssignedTemplateData(templateId);
+    });
 
 // ============================================================
 // COACH TEMPLATE ACTIONS
@@ -659,6 +657,8 @@ class CoachTemplateActionsNotifier extends StateNotifier<AsyncValue<void>> {
 
 /// Provider for coach template actions
 final coachTemplateActionsProvider =
-    StateNotifierProvider<CoachTemplateActionsNotifier, AsyncValue<void>>((ref) {
-  return CoachTemplateActionsNotifier(ref);
-});
+    StateNotifierProvider<CoachTemplateActionsNotifier, AsyncValue<void>>((
+      ref,
+    ) {
+      return CoachTemplateActionsNotifier(ref);
+    });

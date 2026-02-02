@@ -6,7 +6,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_con
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/add_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/exercise_search_screen.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as ExerciseDB;
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart'
+    as ExerciseDB;
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_builder_widget.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/dropset_weight_picker_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -16,7 +17,6 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 
 class AddExerciseModal extends ConsumerStatefulWidget {
-
   const AddExerciseModal({
     super.key,
     this.onExerciseAdded,
@@ -47,11 +47,13 @@ class AddExerciseModal extends ConsumerStatefulWidget {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.80,        // 80% initial
-        minChildSize: 0.50,            // Min 50%
-        maxChildSize: safeMaxSize,     // Max safe (avoids notch)
+        initialChildSize: 0.80, // 80% initial
+        minChildSize: 0.50, // Min 50%
+        maxChildSize: safeMaxSize, // Max safe (avoids notch)
         expand: false,
         snap: true,
         snapSizes: [0.80, safeMaxSize], // Snap to 80% or max safe
@@ -68,7 +70,8 @@ class AddExerciseModal extends ConsumerStatefulWidget {
   ConsumerState<AddExerciseModal> createState() => _AddExerciseModalState();
 }
 
-class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with TickerProviderStateMixin {
+class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
+    with TickerProviderStateMixin {
   late TabController _tabController;
   late TabController _advancedTabController;
   final _nameController = TextEditingController();
@@ -81,9 +84,18 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
 
   // DropSet state
   final List<DropSetStageData> _dropsetStages = [
-    DropSetStageData(weightController: TextEditingController(text: '100'), repsController: TextEditingController(text: '8')),
-    DropSetStageData(weightController: TextEditingController(text: '80'), repsController: TextEditingController(text: '10')),
-    DropSetStageData(weightController: TextEditingController(text: '60'), repsController: TextEditingController(text: '12')),
+    DropSetStageData(
+      weightController: TextEditingController(text: '100'),
+      repsController: TextEditingController(text: '8'),
+    ),
+    DropSetStageData(
+      weightController: TextEditingController(text: '80'),
+      repsController: TextEditingController(text: '10'),
+    ),
+    DropSetStageData(
+      weightController: TextEditingController(text: '60'),
+      repsController: TextEditingController(text: '12'),
+    ),
   ];
 
   // Rest-Pause state
@@ -107,7 +119,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     _advancedTabController = TabController(
       length: 3,
       vsync: this,
-      initialIndex: widget.initialAdvancedTab, // ✅ Use parameter for advanced tab
+      initialIndex:
+          widget.initialAdvancedTab, // ✅ Use parameter for advanced tab
     );
 
     // ✅ UX: Auto-compact main toggle after 600ms
@@ -226,8 +239,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             child: isDeepLink
                 // ✅ FIX: Show only selected tab when deep-linking
                 ? widget.initialTab == 0
-                    ? _buildSingleExerciseTab()
-                    : _buildAdvancedTab()
+                      ? _buildSingleExerciseTab()
+                      : _buildAdvancedTab()
                 // Original behavior with TabBarView
                 : TabBarView(
                     controller: _tabController,
@@ -324,13 +337,17 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
       height: _isAdvancedToggleCompacted ? 32 : 44,
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(_isAdvancedToggleCompacted ? 16 : 12),
+        borderRadius: BorderRadius.circular(
+          _isAdvancedToggleCompacted ? 16 : 12,
+        ),
       ),
       child: TabBar(
         controller: _advancedTabController,
         indicator: BoxDecoration(
           color: context.colors.secondary,
-          borderRadius: BorderRadius.circular(_isAdvancedToggleCompacted ? 14 : 8),
+          borderRadius: BorderRadius.circular(
+            _isAdvancedToggleCompacted ? 14 : 8,
+          ),
         ),
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: context.colors.surface.withValues(alpha: 0),
@@ -358,7 +375,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
 
   void _createSupersetFromConfiguration(SupersetConfiguration config) {
     // Convert SupersetConfiguration to SupersetExercise
-    final supersetExercise = SupersetConverter.configurationToSupersetExercise(config);
+    final supersetExercise = SupersetConverter.configurationToSupersetExercise(
+      config,
+    );
 
     // Add the superset to the workout
     if (widget.onExerciseAdded != null) {
@@ -378,7 +397,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
   }
 
   Widget _buildDropSetTab() {
-    final hasExercise = _selectedDropSetExercise != null || _nameController.text.trim().isNotEmpty;
+    final hasExercise =
+        _selectedDropSetExercise != null ||
+        _nameController.text.trim().isNotEmpty;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -424,9 +445,14 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             Card(
               color: context.colors.primaryContainer.withValues(alpha: 0.3),
               child: ListTile(
-                leading: Icon(AppIcons.checkCircle, color: context.colors.primary),
+                leading: Icon(
+                  AppIcons.checkCircle,
+                  color: context.colors.primary,
+                ),
                 title: Text(_selectedDropSetExercise!.nome),
-                subtitle: Text('Focus: ${_selectedDropSetExercise!.focus.join(", ")}'),
+                subtitle: Text(
+                  'Focus: ${_selectedDropSetExercise!.focus.join(", ")}',
+                ),
                 trailing: IconButton(
                   icon: const Icon(AppIcons.close),
                   onPressed: () {
@@ -466,10 +492,10 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                         final stageLabel = index == 0
                             ? context.l10n.stageHeavy
                             : index == 1
-                                ? context.l10n.stageMedium
-                                : index == 2
-                                    ? context.l10n.stageLight
-                                    : '${context.l10n.dropsetStage(index + 1)}';
+                            ? context.l10n.stageMedium
+                            : index == 2
+                            ? context.l10n.stageLight
+                            : '${context.l10n.dropsetStage(index + 1)}';
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8),
                           child: _buildDropSetStage(stageLabel, index),
@@ -482,13 +508,23 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                         onPressed: () {
                           setState(() {
                             final lastStage = _dropsetStages.last;
-                            final lastWeight = double.tryParse(lastStage.weightController.text) ?? 60;
-                            final lastReps = int.tryParse(lastStage.repsController.text) ?? 12;
+                            final lastWeight =
+                                double.tryParse(
+                                  lastStage.weightController.text,
+                                ) ??
+                                60;
+                            final lastReps =
+                                int.tryParse(lastStage.repsController.text) ??
+                                12;
 
                             _dropsetStages.add(
                               DropSetStageData(
-                                weightController: TextEditingController(text: (lastWeight * 0.8).toStringAsFixed(0)),
-                                repsController: TextEditingController(text: '${lastReps + 2}'),
+                                weightController: TextEditingController(
+                                  text: (lastWeight * 0.8).toStringAsFixed(0),
+                                ),
+                                repsController: TextEditingController(
+                                  text: '${lastReps + 2}',
+                                ),
                               ),
                             );
                           });
@@ -514,7 +550,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                       SizedBox(
                         width: double.infinity,
                         child: FilledButton.icon(
-                          onPressed: _canCreateDropSet() ? _createDropSetExercise : null,
+                          onPressed: _canCreateDropSet()
+                              ? _createDropSetExercise
+                              : null,
                           icon: const Icon(AppIcons.add),
                           label: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 12),
@@ -546,7 +584,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
 
   bool _canCreateDropSet() {
     // Must have an exercise selected OR a name entered
-    final hasExercise = _selectedDropSetExercise != null || _nameController.text.trim().isNotEmpty;
+    final hasExercise =
+        _selectedDropSetExercise != null ||
+        _nameController.text.trim().isNotEmpty;
     if (!hasExercise) return false;
 
     // Must have at least 2 stages with valid weights
@@ -567,11 +607,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
       final weight = double.tryParse(stageData.weightController.text);
       final reps = int.tryParse(stageData.repsController.text) ?? 8;
       if (weight != null && weight > 0) {
-        stages.add(DropSetStage(
-          weight: weight,
-          reps: reps,
-          isCompleted: false,
-        ));
+        stages.add(
+          DropSetStage(weight: weight, reps: reps, isCompleted: false),
+        );
       }
     }
 
@@ -581,8 +619,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     }
 
     // Get exercise name
-    final exerciseName = _selectedDropSetExercise?.nome ??
-        _nameController.text.trim();
+    final exerciseName =
+        _selectedDropSetExercise?.nome ?? _nameController.text.trim();
 
     if (exerciseName.isEmpty) {
       SnackBarService.showError(context, context.l10n.exerciseNameRequired);
@@ -592,7 +630,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     // Get category from exercise focus or selected category
     final selectedCategory = ref.read(selectedExerciseCategoryProvider);
     final category = _selectedDropSetExercise != null
-        ? MuscleAbbreviationMapper.focusListToExerciseCategory(_selectedDropSetExercise!.focus)
+        ? MuscleAbbreviationMapper.focusListToExerciseCategory(
+            _selectedDropSetExercise!.focus,
+          )
         : selectedCategory;
 
     // Create the DropSetExercise
@@ -601,7 +641,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
       name: exerciseName,
       category: category,
       stages: stages,
-      notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+      notes: _notesController.text.trim().isEmpty
+          ? null
+          : _notesController.text.trim(),
     );
 
     // Add to workout
@@ -622,7 +664,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
   }
 
   Widget _buildRestPauseTab() {
-    final hasExercise = _selectedRestPauseExercise != null || _nameController.text.trim().isNotEmpty;
+    final hasExercise =
+        _selectedRestPauseExercise != null ||
+        _nameController.text.trim().isNotEmpty;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -636,10 +680,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.info,
-                    color: context.colors.onErrorContainer,
-                  ),
+                  Icon(AppIcons.info, color: context.colors.onErrorContainer),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
@@ -668,9 +709,14 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             Card(
               color: context.colors.primaryContainer.withValues(alpha: 0.3),
               child: ListTile(
-                leading: Icon(AppIcons.checkCircle, color: context.colors.primary),
+                leading: Icon(
+                  AppIcons.checkCircle,
+                  color: context.colors.primary,
+                ),
                 title: Text(_selectedRestPauseExercise!.nome),
-                subtitle: Text('Focus: ${_selectedRestPauseExercise!.focus.join(", ")}'),
+                subtitle: Text(
+                  'Focus: ${_selectedRestPauseExercise!.focus.join(", ")}',
+                ),
                 trailing: IconButton(
                   icon: const Icon(AppIcons.close),
                   onPressed: () {
@@ -714,7 +760,10 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                                 labelText: context.l10n.weightKgLabel,
                                 prefixIcon: const Icon(AppIcons.workout),
                               ),
-                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
                             ),
                           ),
                           const SizedBox(width: 16),
@@ -778,7 +827,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                       SizedBox(
                         width: double.infinity,
                         child: FilledButton.icon(
-                          onPressed: _canCreateRestPause() ? _createRestPauseExercise : null,
+                          onPressed: _canCreateRestPause()
+                              ? _createRestPauseExercise
+                              : null,
                           icon: const Icon(AppIcons.add),
                           label: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 12),
@@ -810,7 +861,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
 
   bool _canCreateRestPause() {
     // Must have an exercise selected OR a name entered
-    final hasExercise = _selectedRestPauseExercise != null || _nameController.text.trim().isNotEmpty;
+    final hasExercise =
+        _selectedRestPauseExercise != null ||
+        _nameController.text.trim().isNotEmpty;
     if (!hasExercise) return false;
 
     // Must have valid weight and target reps
@@ -823,7 +876,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
   void _createRestPauseExercise() {
     final weight = double.tryParse(_restPauseWeightController.text.trim());
     final targetReps = int.tryParse(_restPauseTargetRepsController.text.trim());
-    final restSeconds = int.tryParse(_restPauseRestSecondsController.text.trim()) ?? 15;
+    final restSeconds =
+        int.tryParse(_restPauseRestSecondsController.text.trim()) ?? 15;
 
     if (weight == null || targetReps == null) {
       SnackBarService.showError(context, context.l10n.weightAndRepsRequired);
@@ -831,7 +885,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     }
 
     // Get exercise name
-    final exerciseName = _selectedRestPauseExercise?.nome ?? _nameController.text.trim();
+    final exerciseName =
+        _selectedRestPauseExercise?.nome ?? _nameController.text.trim();
 
     if (exerciseName.isEmpty) {
       SnackBarService.showError(context, context.l10n.exerciseNameRequired);
@@ -841,7 +896,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     // Get category from exercise focus or selected category
     final selectedCategory = ref.read(selectedExerciseCategoryProvider);
     final category = _selectedRestPauseExercise != null
-        ? MuscleAbbreviationMapper.focusListToExerciseCategory(_selectedRestPauseExercise!.focus)
+        ? MuscleAbbreviationMapper.focusListToExerciseCategory(
+            _selectedRestPauseExercise!.focus,
+          )
         : selectedCategory;
 
     // Create the RestPauseExercise with empty sets - will be filled during execution
@@ -853,7 +910,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
       targetReps: targetReps,
       restPauseSets: [], // Start with empty sets - filled during execution
       restTime: restSeconds,
-      notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+      notes: _notesController.text.trim().isEmpty
+          ? null
+          : _notesController.text.trim(),
     );
 
     // Add to workout
@@ -873,7 +932,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     );
   }
 
-  Widget _buildExerciseSearchSection({Function(ExerciseDB.Exercise)? onExerciseSelected}) {
+  Widget _buildExerciseSearchSection({
+    Function(ExerciseDB.Exercise)? onExerciseSelected,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -881,10 +942,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
         Card(
           elevation: 2,
           child: ListTile(
-            leading: Icon(
-              AppIcons.libraryBooks,
-              color: context.colors.primary,
-            ),
+            leading: Icon(AppIcons.libraryBooks, color: context.colors.primary),
             title: Text(
               context.l10n.browseExerciseDatabase,
               style: const TextStyle(fontWeight: FontWeight.w600),
@@ -897,19 +955,23 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             ),
             onTap: () async {
               if (kDebugMode) {
-                debugPrint('🔍 ADD_EXERCISE_MODAL: Opening ExerciseSearchScreen with callback: ${widget.onExerciseAdded != null}');
+                debugPrint(
+                  '🔍 ADD_EXERCISE_MODAL: Opening ExerciseSearchScreen with callback: ${widget.onExerciseAdded != null}',
+                );
               }
 
               // If we have a custom callback, open search in selection mode
               if (onExerciseSelected != null) {
-                final selectedExercise = await Navigator.of(context).push<ExerciseDB.Exercise>(
-                  MaterialPageRoute(
-                    builder: (context) => const ExerciseSearchScreen(
-                      selectionMode: true,
-                      showSupersetTemplates: false, // ✅ FIX: No templates for single selection
-                    ),
-                  ),
-                );
+                final selectedExercise = await Navigator.of(context)
+                    .push<ExerciseDB.Exercise>(
+                      MaterialPageRoute(
+                        builder: (context) => const ExerciseSearchScreen(
+                          selectionMode: true,
+                          showSupersetTemplates:
+                              false, // ✅ FIX: No templates for single selection
+                        ),
+                      ),
+                    );
 
                 if (selectedExercise != null) {
                   onExerciseSelected(selectedExercise);
@@ -920,7 +982,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                   MaterialPageRoute(
                     builder: (context) => ExerciseSearchScreen(
                       onExerciseAdded: widget.onExerciseAdded,
-                      showSupersetTemplates: false, // ✅ FIX: No templates for single exercise
+                      showSupersetTemplates:
+                          false, // ✅ FIX: No templates for single exercise
                     ),
                   ),
                 );
@@ -1007,10 +1070,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
     return Card(
       elevation: 2,
       child: ListTile(
-        leading: Icon(
-          AppIcons.libraryBooks,
-          color: context.colors.primary,
-        ),
+        leading: Icon(AppIcons.libraryBooks, color: context.colors.primary),
         title: Text(
           context.l10n.browseExerciseDatabase,
           style: const TextStyle(fontWeight: FontWeight.w600),
@@ -1022,14 +1082,16 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           color: context.colors.primary,
         ),
         onTap: () async {
-          final selectedExercise = await Navigator.of(context).push<ExerciseDB.Exercise>(
-            MaterialPageRoute(
-              builder: (context) => const ExerciseSearchScreen(
-                selectionMode: true,
-                showSupersetTemplates: false, // ✅ FIX: No templates for DropSet/RestPause
-              ),
-            ),
-          );
+          final selectedExercise = await Navigator.of(context)
+              .push<ExerciseDB.Exercise>(
+                MaterialPageRoute(
+                  builder: (context) => const ExerciseSearchScreen(
+                    selectionMode: true,
+                    showSupersetTemplates:
+                        false, // ✅ FIX: No templates for DropSet/RestPause
+                  ),
+                ),
+              );
 
           if (selectedExercise != null) {
             onExerciseSelected(selectedExercise);
@@ -1094,7 +1156,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
 
   Widget _buildCategorySelector() {
     final selectedCategory = ref.watch(selectedExerciseCategoryProvider);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1115,7 +1177,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
               selected: isSelected,
               onSelected: (selected) {
                 if (selected) {
-                  ref.read(selectedExerciseCategoryProvider.notifier).state = category;
+                  ref.read(selectedExerciseCategoryProvider.notifier).state =
+                      category;
                 }
               },
             );
@@ -1127,7 +1190,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
 
   Widget _buildSetsSection(WidgetRef ref) {
     final sets = ref.watch(exerciseSetsProvider);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1150,7 +1213,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           ],
         ),
         const SizedBox(height: 8),
-        
+
         // Dynamic sets
         ...sets.asMap().entries.map((entry) {
           final set = entry.value;
@@ -1165,7 +1228,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
 
   Widget _buildSetRow(ExerciseSet set, WidgetRef ref) {
     final sets = ref.watch(exerciseSetsProvider);
-    
+
     return Row(
       children: [
         Container(
@@ -1192,14 +1255,19 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             decoration: InputDecoration(
               hintText: context.l10n.weightHintKg,
               isDense: true,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 8,
+              ),
               border: const OutlineInputBorder(),
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (value) {
               final weight = double.tryParse(value) ?? 0;
               final updatedSet = set.copyWith(weight: weight);
-              ref.read(exerciseSetsProvider.notifier).updateSet(set.id, updatedSet);
+              ref
+                  .read(exerciseSetsProvider.notifier)
+                  .updateSet(set.id, updatedSet);
             },
           ),
         ),
@@ -1212,14 +1280,19 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
             decoration: InputDecoration(
               hintText: context.l10n.repsHintLabel,
               isDense: true,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 8,
+              ),
               border: const OutlineInputBorder(),
             ),
             keyboardType: TextInputType.number,
             onChanged: (value) {
               final reps = int.tryParse(value) ?? 10;
               final updatedSet = set.copyWith(reps: reps);
-              ref.read(exerciseSetsProvider.notifier).updateSet(set.id, updatedSet);
+              ref
+                  .read(exerciseSetsProvider.notifier)
+                  .updateSet(set.id, updatedSet);
             },
           ),
         ),
@@ -1274,7 +1347,10 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                   decoration: InputDecoration(
                     labelText: context.l10n.weightKgLabel,
                     isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     border: const OutlineInputBorder(),
                   ),
                   child: Text(
@@ -1283,7 +1359,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                         : '${stageData.weightController.text} kg',
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: stageData.weightController.text.isEmpty
-                          ? context.colors.onSurfaceVariant.withValues(alpha: 0.5)
+                          ? context.colors.onSurfaceVariant.withValues(
+                              alpha: 0.5,
+                            )
                           : context.colors.onSurface,
                     ),
                   ),
@@ -1299,7 +1377,10 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                 decoration: InputDecoration(
                   labelText: context.l10n.repsHintLabel,
                   isDense: true,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                 ),
                 keyboardType: TextInputType.number,
               ),
@@ -1324,13 +1405,18 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
   Future<void> _openWeightPicker(int stageIndex) async {
     // Get previous stage weight if not first stage
     double? previousWeight;
-    if (stageIndex > 0 && _dropsetStages[stageIndex - 1].weightController.text.isNotEmpty) {
-      previousWeight = double.tryParse(_dropsetStages[stageIndex - 1].weightController.text);
+    if (stageIndex > 0 &&
+        _dropsetStages[stageIndex - 1].weightController.text.isNotEmpty) {
+      previousWeight = double.tryParse(
+        _dropsetStages[stageIndex - 1].weightController.text,
+      );
     }
 
     // Get current weight if exists
     final currentWeightText = _dropsetStages[stageIndex].weightController.text;
-    final initialWeight = currentWeightText.isNotEmpty ? double.tryParse(currentWeightText) : null;
+    final initialWeight = currentWeightText.isNotEmpty
+        ? double.tryParse(currentWeightText)
+        : null;
 
     final selectedWeight = await DropSetWeightPickerModal.show(
       context: context,
@@ -1343,7 +1429,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
 
     if (selectedWeight != null && mounted) {
       setState(() {
-        _dropsetStages[stageIndex].weightController.text = selectedWeight.toStringAsFixed(1);
+        _dropsetStages[stageIndex].weightController.text = selectedWeight
+            .toStringAsFixed(1);
       });
     }
   }
@@ -1375,7 +1462,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
       _nameController.text = '${exercise.nome} - Drop Set';
 
       // Map exercise focus to category using single source of truth
-      final category = MuscleAbbreviationMapper.focusListToExerciseCategory(exercise.focus);
+      final category = MuscleAbbreviationMapper.focusListToExerciseCategory(
+        exercise.focus,
+      );
       ref.read(selectedExerciseCategoryProvider.notifier).state = category;
     });
   }
@@ -1386,7 +1475,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
       _nameController.text = '${exercise.nome} - Rest-Pause';
 
       // Map exercise focus to category using single source of truth
-      final category = MuscleAbbreviationMapper.focusListToExerciseCategory(exercise.focus);
+      final category = MuscleAbbreviationMapper.focusListToExerciseCategory(
+        exercise.focus,
+      );
       ref.read(selectedExerciseCategoryProvider.notifier).state = category;
     });
   }
@@ -1394,7 +1485,6 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
 
 // Helper class to manage DropSet stage controllers
 class DropSetStageData {
-
   DropSetStageData({
     required this.weightController,
     required this.repsController,

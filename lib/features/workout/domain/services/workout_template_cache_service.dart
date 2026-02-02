@@ -19,18 +19,19 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 class WorkoutTemplateCacheService {
-
   WorkoutTemplateCacheService({HiveBoxManagerEnhanced? boxManager})
-      : _boxManager = boxManager ?? HiveBoxManagerEnhanced();
+    : _boxManager = boxManager ?? HiveBoxManagerEnhanced();
 
   final HiveBoxManagerEnhanced _boxManager;
   static const String _boxName = 'template_cache';
   static const int _maxCacheDays = 30; // Giorni massimi di cache
-  static const Duration _debounceTime = Duration(seconds: 1); // Save ogni 1 secondo (ridotto per UX migliore)
+  static const Duration _debounceTime = Duration(
+    seconds: 1,
+  ); // Save ogni 1 secondo (ridotto per UX migliore)
 
   late Box<Map<dynamic, dynamic>> _cacheBox;
   bool _isInitialized = false;
-  bool _isDisposed = false;  // MEMORY LEAK FIX: Track disposal state
+  bool _isDisposed = false; // MEMORY LEAK FIX: Track disposal state
 
   // Debounce timer per evitare salvataggi continui
   Timer? _debounceTimer;
@@ -75,7 +76,9 @@ class WorkoutTemplateCacheService {
     _pendingSaveData = {templateId: workout};
 
     if (kDebugMode) {
-      debugPrint('⏱️ [TemplateCache] Scheduled save for template: $templateId (will save in 1 second)');
+      debugPrint(
+        '⏱️ [TemplateCache] Scheduled save for template: $templateId (will save in 1 second)',
+      );
     }
 
     // Start new timer
@@ -88,13 +91,17 @@ class WorkoutTemplateCacheService {
   Future<void> _executePendingSave() async {
     if (_pendingSaveData == null) {
       if (kDebugMode) {
-        debugPrint('⚠️ [TemplateCache] _executePendingSave called but NO pending data');
+        debugPrint(
+          '⚠️ [TemplateCache] _executePendingSave called but NO pending data',
+        );
       }
       return;
     }
 
     if (kDebugMode) {
-      debugPrint('💾 [TemplateCache] _executePendingSave START - Templates: ${_pendingSaveData!.keys.toList()}');
+      debugPrint(
+        '💾 [TemplateCache] _executePendingSave START - Templates: ${_pendingSaveData!.keys.toList()}',
+      );
     }
 
     for (final entry in _pendingSaveData!.entries) {
@@ -115,7 +122,9 @@ class WorkoutTemplateCacheService {
         }
       } catch (e) {
         if (kDebugMode) {
-          debugPrint('❌ [TemplateCache] Error saving template ${entry.key}: $e');
+          debugPrint(
+            '❌ [TemplateCache] Error saving template ${entry.key}: $e',
+          );
         }
       }
     }
@@ -130,7 +139,9 @@ class WorkoutTemplateCacheService {
   /// Force immediate save (useful when app goes to background)
   Future<void> forceSave() async {
     if (kDebugMode) {
-      debugPrint('🚀 [TemplateCache] forceSave() CALLED - Pending data: ${_pendingSaveData?.keys.toList()}');
+      debugPrint(
+        '🚀 [TemplateCache] forceSave() CALLED - Pending data: ${_pendingSaveData?.keys.toList()}',
+      );
     }
 
     _debounceTimer?.cancel();
@@ -138,7 +149,9 @@ class WorkoutTemplateCacheService {
     // FIX: Skip if not initialized (box not opened yet)
     if (!_isInitialized) {
       if (kDebugMode) {
-        debugPrint('⏭️ [TemplateCache] forceSave() skipped - not initialized yet');
+        debugPrint(
+          '⏭️ [TemplateCache] forceSave() skipped - not initialized yet',
+        );
       }
       return;
     }
@@ -149,7 +162,9 @@ class WorkoutTemplateCacheService {
     try {
       await _cacheBox.flush();
       if (kDebugMode) {
-        debugPrint('✅ [TemplateCache] forceSave() COMPLETED with flush to disk');
+        debugPrint(
+          '✅ [TemplateCache] forceSave() COMPLETED with flush to disk',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -179,7 +194,9 @@ class WorkoutTemplateCacheService {
 
       if (cacheData == null) {
         if (kDebugMode) {
-          debugPrint('❌ [TemplateCache] No cache found for template: $templateId');
+          debugPrint(
+            '❌ [TemplateCache] No cache found for template: $templateId',
+          );
         }
         return null;
       }
@@ -195,7 +212,9 @@ class WorkoutTemplateCacheService {
 
       if (daysDiff > _maxCacheDays) {
         if (kDebugMode) {
-          debugPrint('⏰ [TemplateCache] Cache expired for template: $templateId ($daysDiff days old)');
+          debugPrint(
+            '⏰ [TemplateCache] Cache expired for template: $templateId ($daysDiff days old)',
+          );
         }
         await _cacheBox.delete(cacheKey);
         return null;
@@ -208,7 +227,9 @@ class WorkoutTemplateCacheService {
       final workout = Workout.fromJson(workoutJson);
 
       if (kDebugMode) {
-        debugPrint('✅ [TemplateCache] Loaded cached workout for template: $templateId');
+        debugPrint(
+          '✅ [TemplateCache] Loaded cached workout for template: $templateId',
+        );
       }
 
       return workout;
@@ -253,7 +274,9 @@ class WorkoutTemplateCacheService {
       await _cacheBox.delete(cacheKey);
 
       if (kDebugMode) {
-        debugPrint('🗑️ [TemplateCache] Cleared cache for template: $templateId');
+        debugPrint(
+          '🗑️ [TemplateCache] Cleared cache for template: $templateId',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -287,7 +310,9 @@ class WorkoutTemplateCacheService {
       for (final key in _cacheBox.keys) {
         final cacheData = _cacheBox.get(key);
         if (cacheData != null) {
-          final lastModified = DateTime.parse(cacheData['lastModified'] as String);
+          final lastModified = DateTime.parse(
+            cacheData['lastModified'] as String,
+          );
           final daysDiff = DateTime.now().difference(lastModified).inDays;
 
           if (daysDiff > _maxCacheDays) {
@@ -301,7 +326,9 @@ class WorkoutTemplateCacheService {
       }
 
       if (keysToDelete.isNotEmpty && kDebugMode) {
-        debugPrint('🧹 [TemplateCache] Cleaned up ${keysToDelete.length} old cache entries');
+        debugPrint(
+          '🧹 [TemplateCache] Cleaned up ${keysToDelete.length} old cache entries',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -337,20 +364,23 @@ class WorkoutTemplateCacheService {
 }
 
 /// Provider for the template cache service
-final workoutTemplateCacheServiceProvider = Provider<WorkoutTemplateCacheService>((ref) {
-  final service = WorkoutTemplateCacheService();
+final workoutTemplateCacheServiceProvider =
+    Provider<WorkoutTemplateCacheService>((ref) {
+      final service = WorkoutTemplateCacheService();
 
-  // Initialize on creation with error handling
-  service.initialize().catchError((e, stack) {
-    if (kDebugMode) {
-      debugPrint('[WorkoutTemplateCacheService] Failed to initialize: $e\n$stack');
-    }
-  });
+      // Initialize on creation with error handling
+      service.initialize().catchError((e, stack) {
+        if (kDebugMode) {
+          debugPrint(
+            '[WorkoutTemplateCacheService] Failed to initialize: $e\n$stack',
+          );
+        }
+      });
 
-  // Clean up when provider is disposed
-  ref.onDispose(() {
-    service.dispose();
-  });
+      // Clean up when provider is disposed
+      ref.onDispose(() {
+        service.dispose();
+      });
 
-  return service;
-});
+      return service;
+    });

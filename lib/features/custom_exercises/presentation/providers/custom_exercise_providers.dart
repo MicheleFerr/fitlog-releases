@@ -50,9 +50,10 @@ import 'package:fpdart/fpdart.dart' hide State;
 /// - LazyBox for memory efficiency
 /// - User-scoped keys for multi-user support
 /// - Corruption recovery built-in
-final customExerciseLocalDatasourceProvider = Provider<CustomExerciseLocalDatasource>((ref) {
-  return CustomExerciseLocalDatasource();
-});
+final customExerciseLocalDatasourceProvider =
+    Provider<CustomExerciseLocalDatasource>((ref) {
+      return CustomExerciseLocalDatasource();
+    });
 
 /// Repository provider (singleton)
 ///
@@ -62,7 +63,9 @@ final customExerciseLocalDatasourceProvider = Provider<CustomExerciseLocalDataso
 /// - Conflict resolution (local wins)
 ///
 /// **Pattern**: Same as workoutRepositoryProvider
-final customExerciseRepositoryProvider = Provider<CustomExerciseRepository>((ref) {
+final customExerciseRepositoryProvider = Provider<CustomExerciseRepository>((
+  ref,
+) {
   final localDatasource = ref.watch(customExerciseLocalDatasourceProvider);
   return CustomExerciseRepositoryImpl(localDatasource: localDatasource);
 });
@@ -83,15 +86,17 @@ final customExerciseRepositoryProvider = Provider<CustomExerciseRepository>((ref
 /// **Dependencies**:
 /// - Repository for data access
 /// - tierEntitlementsProvider for consolidated limits
-final customExerciseLimitServiceProvider = Provider<CustomExerciseLimitService>((ref) {
-  final repository = ref.watch(customExerciseRepositoryProvider);
-  final entitlements = ref.watch(tierEntitlementsProvider);
+final customExerciseLimitServiceProvider = Provider<CustomExerciseLimitService>(
+  (ref) {
+    final repository = ref.watch(customExerciseRepositoryProvider);
+    final entitlements = ref.watch(tierEntitlementsProvider);
 
-  return CustomExerciseLimitService(
-    repository: repository,
-    maxCustomSingleExercises: entitlements.maxCustomSingleExercises,
-  );
-});
+    return CustomExerciseLimitService(
+      repository: repository,
+      maxCustomSingleExercises: entitlements.maxCustomSingleExercises,
+    );
+  },
+);
 
 // ============================================================================
 // DATA PROVIDERS (Reactive Streams)
@@ -110,21 +115,19 @@ final customExerciseLimitServiceProvider = Provider<CustomExerciseLimitService>(
 /// - Template creation
 ///
 /// **Pattern**: Similar to home_providers.dart micro-providers
-final activeCustomExercisesProvider = StreamProvider.autoDispose<List<CustomExercise>>((ref) async* {
-  final repository = ref.watch(customExerciseRepositoryProvider);
+final activeCustomExercisesProvider =
+    StreamProvider.autoDispose<List<CustomExercise>>((ref) async* {
+      final repository = ref.watch(customExerciseRepositoryProvider);
 
-  await for (final result in repository.watchActive()) {
-    final exercises = result.fold(
-      (failure) {
-        // Log failure but don't throw (keep last good state)
-        throw Exception('Failed to load custom exercises: $failure');
-      },
-      (exercises) => exercises,
-    );
+      await for (final result in repository.watchActive()) {
+        final exercises = result.fold((failure) {
+          // Log failure but don't throw (keep last good state)
+          throw Exception('Failed to load custom exercises: $failure');
+        }, (exercises) => exercises);
 
-    yield exercises;
-  }
-});
+        yield exercises;
+      }
+    });
 
 /// Stream of ALL custom exercises (including expired)
 ///
@@ -136,20 +139,18 @@ final activeCustomExercisesProvider = StreamProvider.autoDispose<List<CustomExer
 /// - Admin screen showing all exercises
 /// - Export functionality
 /// - Migration tools
-final allCustomExercisesProvider = StreamProvider.autoDispose<List<CustomExercise>>((ref) async* {
-  final repository = ref.watch(customExerciseRepositoryProvider);
+final allCustomExercisesProvider =
+    StreamProvider.autoDispose<List<CustomExercise>>((ref) async* {
+      final repository = ref.watch(customExerciseRepositoryProvider);
 
-  await for (final result in repository.watchAll()) {
-    final exercises = result.fold(
-      (failure) {
-        throw Exception('Failed to load all custom exercises: $failure');
-      },
-      (exercises) => exercises,
-    );
+      await for (final result in repository.watchAll()) {
+        final exercises = result.fold((failure) {
+          throw Exception('Failed to load all custom exercises: $failure');
+        }, (exercises) => exercises);
 
-    yield exercises;
-  }
-});
+        yield exercises;
+      }
+    });
 
 // ============================================================================
 // INDIVIDUAL FETCH PROVIDERS (Lookup by ID/Name)
@@ -171,17 +172,16 @@ final allCustomExercisesProvider = StreamProvider.autoDispose<List<CustomExercis
 /// ```dart
 /// final exercise = ref.watch(customExerciseByIdProvider('custom_123'));
 /// ```
-final customExerciseByIdProvider = FutureProvider.autoDispose.family<CustomExercise?, String>(
-  (ref, id) async {
-    final repository = ref.watch(customExerciseRepositoryProvider);
-    final result = await repository.getById(id);
+final customExerciseByIdProvider = FutureProvider.autoDispose
+    .family<CustomExercise?, String>((ref, id) async {
+      final repository = ref.watch(customExerciseRepositoryProvider);
+      final result = await repository.getById(id);
 
-    return result.fold(
-      (failure) => null, // Return null on error (fail-safe)
-      (exercise) => exercise,
-    );
-  },
-);
+      return result.fold(
+        (failure) => null, // Return null on error (fail-safe)
+        (exercise) => exercise,
+      );
+    });
 
 /// Find custom exercise by name (for analytics integration)
 ///
@@ -199,17 +199,16 @@ final customExerciseByIdProvider = FutureProvider.autoDispose.family<CustomExerc
 /// ```dart
 /// final exercise = ref.watch(customExerciseByNameProvider('My Custom Bench Press'));
 /// ```
-final customExerciseByNameProvider = FutureProvider.autoDispose.family<CustomExercise?, String>(
-  (ref, name) async {
-    final repository = ref.watch(customExerciseRepositoryProvider);
-    final result = await repository.findByName(name);
+final customExerciseByNameProvider = FutureProvider.autoDispose
+    .family<CustomExercise?, String>((ref, name) async {
+      final repository = ref.watch(customExerciseRepositoryProvider);
+      final result = await repository.findByName(name);
 
-    return result.fold(
-      (failure) => null, // Return null on error (fail-safe)
-      (exercise) => exercise,
-    );
-  },
-);
+      return result.fold(
+        (failure) => null, // Return null on error (fail-safe)
+        (exercise) => exercise,
+      );
+    });
 
 // ============================================================================
 // QUOTA & LIMIT PROVIDERS
@@ -236,10 +235,11 @@ final customExerciseByNameProvider = FutureProvider.autoDispose.family<CustomExe
 ///   error: (err, stack) => ErrorWidget(err),
 /// );
 /// ```
-final customExerciseLimitProvider = FutureProvider.autoDispose<LimitCheckResult>((ref) async {
-  final service = ref.watch(customExerciseLimitServiceProvider);
-  return service.checkLimits();
-});
+final customExerciseLimitProvider =
+    FutureProvider.autoDispose<LimitCheckResult>((ref) async {
+      final service = ref.watch(customExerciseLimitServiceProvider);
+      return service.checkLimits();
+    });
 
 /// Expired exercises needing renewal
 ///
@@ -259,10 +259,11 @@ final customExerciseLimitProvider = FutureProvider.autoDispose<LimitCheckResult>
 ///   showExpiryWarning();
 /// }
 /// ```
-final expiredExercisesProvider = FutureProvider.autoDispose<List<CustomExercise>>((ref) async {
-  final service = ref.watch(customExerciseLimitServiceProvider);
-  return service.getExpiredExercises();
-});
+final expiredExercisesProvider =
+    FutureProvider.autoDispose<List<CustomExercise>>((ref) async {
+      final service = ref.watch(customExerciseLimitServiceProvider);
+      return service.getExpiredExercises();
+    });
 
 /// Count of permanent custom exercises (for UI display)
 ///
@@ -325,7 +326,9 @@ final remainingSlotsProvider = FutureProvider.autoDispose<int>((ref) async {
 ///   showLimitReachedDialog();
 /// }
 /// ```
-final canCreatePermanentProvider = FutureProvider.autoDispose<bool>((ref) async {
+final canCreatePermanentProvider = FutureProvider.autoDispose<bool>((
+  ref,
+) async {
   final service = ref.watch(customExerciseLimitServiceProvider);
   return service.canCreatePermanent();
 });
@@ -425,10 +428,7 @@ class CustomExerciseActions {
   /// ```dart
   /// await CustomExerciseActions.delete(ref, 'custom_123');
   /// ```
-  static Future<Either<Failure, void>> delete(
-    Ref ref,
-    String id,
-  ) async {
+  static Future<Either<Failure, void>> delete(Ref ref, String id) async {
     final repository = ref.read(customExerciseRepositoryProvider);
     return repository.delete(id);
   }
@@ -501,10 +501,7 @@ class CustomExerciseActions {
   /// // After user watches ad
   /// await CustomExerciseActions.onAdWatched(ref, 'custom_123');
   /// ```
-  static Future<void> onAdWatched(
-    Ref ref,
-    String exerciseId,
-  ) async {
+  static Future<void> onAdWatched(Ref ref, String exerciseId) async {
     final service = ref.read(customExerciseLimitServiceProvider);
     return service.onAdWatched(exerciseId);
   }

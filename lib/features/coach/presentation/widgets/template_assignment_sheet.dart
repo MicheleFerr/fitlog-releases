@@ -20,10 +20,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 
 /// Bottom sheet for assigning templates to athletes
 class TemplateAssignmentSheet extends ConsumerStatefulWidget {
-  const TemplateAssignmentSheet({
-    required this.template,
-    super.key,
-  });
+  const TemplateAssignmentSheet({required this.template, super.key});
 
   final CoachTemplate template;
 
@@ -57,9 +54,7 @@ class _TemplateAssignmentSheetState
         return Container(
           decoration: BoxDecoration(
             color: context.colors.surface,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(20),
-            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
             children: [
@@ -81,7 +76,9 @@ class _TemplateAssignmentSheetState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      context.l10n.assignTemplateToAthletes(widget.template.name),
+                      context.l10n.assignTemplateToAthletes(
+                        widget.template.name,
+                      ),
                       style: context.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -111,8 +108,7 @@ class _TemplateAssignmentSheetState
 
               // Selection counter
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
                 child: Row(
                   children: [
                     Icon(
@@ -145,14 +141,11 @@ class _TemplateAssignmentSheetState
               // Athletes list
               Expanded(
                 child: athletesAsync.when(
-                  data: (athletes) => _buildAthletesList(
-                    athletes,
-                    scrollController,
-                  ),
+                  data: (athletes) =>
+                      _buildAthletesList(athletes, scrollController),
                   loading: () => const Center(child: LoadingIndicator()),
-                  error: (error, _) => Center(
-                    child: Text('${context.l10n.error}: $error'),
-                  ),
+                  error: (error, _) =>
+                      Center(child: Text('${context.l10n.error}: $error')),
                 ),
               ),
 
@@ -231,8 +224,9 @@ class _TemplateAssignmentSheetState
       itemBuilder: (context, index) {
         final athlete = athletes[index];
         final isSelected = _selectedAthleteIds.contains(athlete.athleteId);
-        final wasOriginallyAssigned =
-            widget.template.assignedTo.contains(athlete.athleteId);
+        final wasOriginallyAssigned = widget.template.assignedTo.contains(
+          athlete.athleteId,
+        );
 
         return _AthleteSelectionTile(
           athlete: athlete,
@@ -325,9 +319,7 @@ class _AthleteSelectionTile extends StatelessWidget {
           ),
         ),
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     );
   }
 

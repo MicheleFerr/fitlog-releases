@@ -4,7 +4,6 @@ part 'onboarding_state.g.dart';
 
 @HiveType(typeId: 3)
 class OnboardingState {
-
   const OnboardingState({
     this.hasSeenGlobalOnboarding = false,
     this.currentStep = 0,
@@ -132,7 +131,8 @@ class OnboardingState {
   double get progress => completedSteps.length / totalSteps;
 
   // NEW HELPER METHODS for new onboarding system
-  bool get hasCompletedQuickStart => quickStartCompletedAt != null || userExperienceLevel != null;
+  bool get hasCompletedQuickStart =>
+      quickStartCompletedAt != null || userExperienceLevel != null;
 
   bool get isBeginner => userExperienceLevel == 'beginner';
 
@@ -150,11 +150,15 @@ class OnboardingState {
 
   /// Check if should show "Add First Exercise" overlay
   bool get shouldShowAddFirstExercise =>
-      isInGuidedFirstWorkout && !hasAddedFirstExercise && !hasSeenOverlay('addFirstExercise');
+      isInGuidedFirstWorkout &&
+      !hasAddedFirstExercise &&
+      !hasSeenOverlay('addFirstExercise');
 
   /// Check if should show "Complete Workout" overlay (after 1+ set)
   bool get shouldShowCompleteWorkout =>
-      isInGuidedFirstWorkout && hasCompletedFirstSet && !hasSeenOverlay('completeFirstWorkout');
+      isInGuidedFirstWorkout &&
+      hasCompletedFirstSet &&
+      !hasSeenOverlay('completeFirstWorkout');
 
   // P4 RETENTION HELPER METHODS
   /// Check if user has completed P4 goal-based onboarding
@@ -194,7 +198,8 @@ class OnboardingState {
     DateTime? legalDisclaimerAcceptedAt,
   }) {
     return OnboardingState(
-      hasSeenGlobalOnboarding: hasSeenGlobalOnboarding ?? this.hasSeenGlobalOnboarding,
+      hasSeenGlobalOnboarding:
+          hasSeenGlobalOnboarding ?? this.hasSeenGlobalOnboarding,
       currentStep: currentStep ?? this.currentStep,
       completedSteps: completedSteps ?? this.completedSteps,
       canResume: canResume ?? this.canResume,
@@ -204,15 +209,20 @@ class OnboardingState {
       userExperienceLevel: userExperienceLevel ?? this.userExperienceLevel,
       seenOverlays: seenOverlays ?? this.seenOverlays,
       overlayVersionSeen: overlayVersionSeen ?? this.overlayVersionSeen,
-      quickStartCompletedAt: quickStartCompletedAt ?? this.quickStartCompletedAt,
-      hasCompletedFirstWorkout: hasCompletedFirstWorkout ?? this.hasCompletedFirstWorkout,
+      quickStartCompletedAt:
+          quickStartCompletedAt ?? this.quickStartCompletedAt,
+      hasCompletedFirstWorkout:
+          hasCompletedFirstWorkout ?? this.hasCompletedFirstWorkout,
       firstExerciseAddedAt: firstExerciseAddedAt ?? this.firstExerciseAddedAt,
       firstSetCompletedAt: firstSetCompletedAt ?? this.firstSetCompletedAt,
-      hasSeenRestTimerExplanation: hasSeenRestTimerExplanation ?? this.hasSeenRestTimerExplanation,
+      hasSeenRestTimerExplanation:
+          hasSeenRestTimerExplanation ?? this.hasSeenRestTimerExplanation,
       userGoal: userGoal ?? this.userGoal,
       weeklyWorkoutTarget: weeklyWorkoutTarget ?? this.weeklyWorkoutTarget,
-      hasAcceptedLegalDisclaimer: hasAcceptedLegalDisclaimer ?? this.hasAcceptedLegalDisclaimer,
-      legalDisclaimerAcceptedAt: legalDisclaimerAcceptedAt ?? this.legalDisclaimerAcceptedAt,
+      hasAcceptedLegalDisclaimer:
+          hasAcceptedLegalDisclaimer ?? this.hasAcceptedLegalDisclaimer,
+      legalDisclaimerAcceptedAt:
+          legalDisclaimerAcceptedAt ?? this.legalDisclaimerAcceptedAt,
     );
   }
 

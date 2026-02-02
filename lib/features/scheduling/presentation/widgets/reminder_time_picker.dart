@@ -249,7 +249,8 @@ class _ReminderTimePickerState extends State<ReminderTimePicker> {
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
-                    _selectedPreset == ReminderTimePreset.custom && _customTime != null
+                    _selectedPreset == ReminderTimePreset.custom &&
+                            _customTime != null
                         ? _formatTime(context, _customTime!)
                         : _formatTime(context, _selectedPreset.defaultTime),
                     style: context.textTheme.titleMedium?.copyWith(
@@ -336,7 +337,9 @@ class _PresetChip extends StatelessWidget {
                   Text(
                     label,
                     style: context.textTheme.bodyMedium?.copyWith(
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.w500,
                       color: isSelected
                           ? context.colors.onPrimaryContainer
                           : context.colors.onSurface,
@@ -346,7 +349,9 @@ class _PresetChip extends StatelessWidget {
                     subtitle,
                     style: context.textTheme.bodySmall?.copyWith(
                       color: isSelected
-                          ? context.colors.onPrimaryContainer.withValues(alpha: 0.8)
+                          ? context.colors.onPrimaryContainer.withValues(
+                              alpha: 0.8,
+                            )
                           : context.colors.onSurfaceVariant,
                     ),
                   ),

@@ -30,10 +30,7 @@ class HelpCenterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.helpCenter),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: Text(context.l10n.helpCenter), elevation: 0),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -95,19 +92,14 @@ class HelpCenterScreen extends StatelessWidget {
   void _navigateToCategory(BuildContext context, FAQCategory category) {
     HapticFeedback.lightImpact();
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => FAQListScreen(category: category),
-      ),
+      MaterialPageRoute(builder: (_) => FAQListScreen(category: category)),
     );
   }
 }
 
 /// Category tile widget (list item style)
 class _CategoryTile extends StatelessWidget {
-  const _CategoryTile({
-    required this.category,
-    required this.onTap,
-  });
+  const _CategoryTile({required this.category, required this.onTap});
 
   final FAQCategory category;
   final VoidCallback onTap;
@@ -120,9 +112,7 @@ class _CategoryTile extends StatelessWidget {
 
     return Card(
       elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         onTap: onTap,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

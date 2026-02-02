@@ -10,7 +10,6 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class PlateCalculatorWidget extends ConsumerStatefulWidget {
-  
   const PlateCalculatorWidget({
     super.key,
     required this.targetWeight,
@@ -22,7 +21,8 @@ class PlateCalculatorWidget extends ConsumerStatefulWidget {
   final String unit;
 
   @override
-  ConsumerState<PlateCalculatorWidget> createState() => _PlateCalculatorWidgetState();
+  ConsumerState<PlateCalculatorWidget> createState() =>
+      _PlateCalculatorWidgetState();
 }
 
 class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
@@ -30,23 +30,23 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
   static const List<double> allPlates = [25, 20, 15, 10, 5, 2.5, 1.25, 0.5];
   late List<double> availablePlates;
   bool _showPlateConfig = false;
-  
+
   double? _barbellWeight = 20.0; // Now nullable to support "no barbell" option
   late double _targetWeight;
   final Map<double, int> _plateCounts = {};
-  
+
   @override
   void initState() {
     super.initState();
     _targetWeight = widget.targetWeight;
-    
+
     // Load saved available plates from config or use defaults
     final config = ref.read(appConfigProvider);
     availablePlates = config.availablePlates ?? List.from(allPlates);
-    
+
     _calculatePlates();
   }
-  
+
   @override
   void didUpdateWidget(PlateCalculatorWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -55,24 +55,24 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
       _calculatePlates();
     }
   }
-  
+
   void _calculatePlates() {
     _plateCounts.clear();
-    
+
     if (_targetWeight <= 0) return;
-    
+
     double remainingWeight = _targetWeight;
-    
+
     // Subtract barbell weight if included
     if (_barbellWeight != null && _barbellWeight! > 0) {
       remainingWeight -= _barbellWeight!;
     }
-    
+
     if (remainingWeight <= 0) return;
-    
+
     // Calculate weight per side
     double weightPerSide = remainingWeight / 2;
-    
+
     // Greedy algorithm to find minimum plates
     for (double plate in availablePlates) {
       final int count = (weightPerSide / plate).floor();
@@ -81,18 +81,18 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
         weightPerSide -= count * plate;
       }
     }
-    
+
     // Handle remaining weight with smallest plate
     if (weightPerSide > 0.01) {
       final double smallestPlate = availablePlates.last;
       _plateCounts[smallestPlate] = (_plateCounts[smallestPlate] ?? 0) + 1;
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Column(
       children: [
         // Header with barbell selector
@@ -105,11 +105,11 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
           child: Row(
             children: [
               SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: 'Workout',
-  size: AppIconSize.small,
-  color: theme.colorScheme.primary,
-),
+                icon: AppIcons.workout,
+                semanticLabel: 'Workout',
+                size: AppIconSize.small,
+                color: theme.colorScheme.primary,
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -124,7 +124,9 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                     ),
                     if (_barbellWeight != null && _barbellWeight! > 0)
                       Text(
-                        AppLocalizations.of(context).barbellIncluded(_barbellWeight!),
+                        AppLocalizations.of(
+                          context,
+                        ).barbellIncluded(_barbellWeight!),
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -142,26 +144,31 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
               OutlinedButton.icon(
                 onPressed: () => _showBarbellSelector(context),
                 icon: Icon(
-                  _barbellWeight != null ? AppIcons.fitnessCenter : AppIcons.block,
+                  _barbellWeight != null
+                      ? AppIcons.fitnessCenter
+                      : AppIcons.block,
                   size: 16,
                 ),
                 label: Text(
-                  _barbellWeight != null 
-                      ? '${_barbellWeight}kg' 
+                  _barbellWeight != null
+                      ? '${_barbellWeight}kg'
                       : AppLocalizations.of(context).selectBarbellButton,
                   style: const TextStyle(fontSize: 12),
                 ),
                 style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   visualDensity: VisualDensity.compact,
                 ),
               ),
             ],
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Visual plate display
         Container(
           height: 80,
@@ -170,10 +177,8 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Left side plates
-              Expanded(
-                child: _buildPlatesSide(isLeft: true),
-              ),
-              
+              Expanded(child: _buildPlatesSide(isLeft: true)),
+
               // Barbell
               Container(
                 width: 60,
@@ -184,22 +189,22 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              
+
               // Right side plates
-              Expanded(
-                child: _buildPlatesSide(isLeft: false),
-              ),
+              Expanded(child: _buildPlatesSide(isLeft: false)),
             ],
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Plate list
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            color: theme.colorScheme.surfaceContainerHighest.withValues(
+              alpha: 0.3,
+            ),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: theme.colorScheme.outline.withValues(alpha: 0.2),
@@ -211,11 +216,11 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
               Row(
                 children: [
                   SemanticIcon(
-  icon: AppIcons.formatListNumbered,
-  semanticLabel: 'Format list numbered',
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.secondary,
-),
+                    icon: AppIcons.formatListNumbered,
+                    semanticLabel: 'Format list numbered',
+                    size: AppIconSize.tiny,
+                    color: theme.colorScheme.secondary,
+                  ),
                   const SizedBox(width: 8),
                   Text(
                     AppLocalizations.of(context).perSide,
@@ -229,7 +234,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
               const SizedBox(height: 8),
               if (_plateCounts.isEmpty)
                 Text(
-                  _barbellWeight != null && _barbellWeight! > 0 
+                  _barbellWeight != null && _barbellWeight! > 0
                       ? AppLocalizations.of(context).onlyBarbell
                       : AppLocalizations.of(context).noPlates,
                   style: theme.textTheme.bodyMedium?.copyWith(
@@ -264,9 +269,9 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
             ],
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Plate configuration toggle
         InkWell(
           onTap: () {
@@ -279,7 +284,9 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
           child: Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: theme.colorScheme.secondaryContainer.withValues(alpha: 0.2),
+              color: theme.colorScheme.secondaryContainer.withValues(
+                alpha: 0.2,
+              ),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: theme.colorScheme.secondary.withValues(alpha: 0.3),
@@ -288,11 +295,11 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
             child: Row(
               children: [
                 SemanticIcon(
-  icon: AppIcons.settings,
-  semanticLabel: 'Settings',
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.secondary,
-),
+                  icon: AppIcons.settings,
+                  semanticLabel: 'Settings',
+                  size: AppIconSize.tiny,
+                  color: theme.colorScheme.secondary,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   AppLocalizations.of(context).configureAvailablePlates,
@@ -311,14 +318,16 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
             ),
           ),
         ),
-        
+
         // Plate configuration UI
         if (_showPlateConfig) ...[
           const SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              color: theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.3,
+              ),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: theme.colorScheme.outline.withValues(alpha: 0.2),
@@ -355,16 +364,21 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                       },
                       borderRadius: BorderRadius.circular(20),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
-                          color: isAvailable 
+                          color: isAvailable
                               ? _getPlateColor(plate).withValues(alpha: 0.3)
                               : theme.colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             color: isAvailable
                                 ? _getPlateColor(plate)
-                                : theme.colorScheme.outline.withValues(alpha: 0.3),
+                                : theme.colorScheme.outline.withValues(
+                                    alpha: 0.3,
+                                  ),
                             width: isAvailable ? 2 : 1,
                           ),
                         ),
@@ -373,19 +387,19 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                           children: [
                             if (isAvailable)
                               SemanticIcon(
-  icon: AppIcons.complete,
-  semanticLabel: 'Complete',
-  size: AppIconSize.tiny,
-  color: _getPlateColor(plate,
-),
+                                icon: AppIcons.complete,
+                                semanticLabel: 'Complete',
+                                size: AppIconSize.tiny,
+                                color: _getPlateColor(plate),
                               )
                             else
                               SemanticIcon(
-  icon: AppIcons.cancel,
-  semanticLabel: 'Cancel',
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.outline.withValues(alpha: 0.5,
-),
+                                icon: AppIcons.cancel,
+                                semanticLabel: 'Cancel',
+                                size: AppIconSize.tiny,
+                                color: theme.colorScheme.outline.withValues(
+                                  alpha: 0.5,
+                                ),
                               ),
                             const SizedBox(width: 4),
                             Text(
@@ -394,8 +408,12 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                                 color: isAvailable
                                     ? _getPlateColor(plate)
                                     : theme.colorScheme.onSurfaceVariant,
-                                fontWeight: isAvailable ? FontWeight.bold : FontWeight.normal,
-                                decoration: isAvailable ? null : TextDecoration.lineThrough,
+                                fontWeight: isAvailable
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                decoration: isAvailable
+                                    ? null
+                                    : TextDecoration.lineThrough,
                               ),
                             ),
                           ],
@@ -418,11 +436,13 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                           HapticFeedback.lightImpact();
                         },
                         icon: const SemanticIcon(
-  icon: AppIcons.selectAll,
-  semanticLabel: 'Select all',
-  size: AppIconSize.tiny,
-),
-                        label: Text(AppLocalizations.of(context).plateCalculatorAll),
+                          icon: AppIcons.selectAll,
+                          semanticLabel: 'Select all',
+                          size: AppIconSize.tiny,
+                        ),
+                        label: Text(
+                          AppLocalizations.of(context).plateCalculatorAll,
+                        ),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                         ),
@@ -440,11 +460,13 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                           HapticFeedback.lightImpact();
                         },
                         icon: const SemanticIcon(
-  icon: AppIcons.star,
-  semanticLabel: 'Star',
-  size: AppIconSize.tiny,
-),
-                        label: Text(AppLocalizations.of(context).plateCalculatorStandard),
+                          icon: AppIcons.star,
+                          semanticLabel: 'Star',
+                          size: AppIconSize.tiny,
+                        ),
+                        label: Text(
+                          AppLocalizations.of(context).plateCalculatorStandard,
+                        ),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                         ),
@@ -456,9 +478,9 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
             ),
           ),
         ],
-        
+
         const SizedBox(height: 16),
-        
+
         // Quick weight buttons
         Wrap(
           spacing: 8,
@@ -476,10 +498,13 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
               },
               borderRadius: BorderRadius.circular(20),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
-                  color: isSelected 
-                      ? theme.colorScheme.primary 
+                  color: isSelected
+                      ? theme.colorScheme.primary
                       : theme.colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
@@ -504,30 +529,32 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
       ],
     );
   }
-  
+
   Widget _buildPlatesSide({required bool isLeft}) {
     if (_plateCounts.isEmpty) {
       return const SizedBox.shrink();
     }
-    
+
     final List<Widget> plates = [];
-    
+
     _plateCounts.forEach((weight, count) {
       for (int i = 0; i < count; i++) {
         plates.add(_buildPlateVisual(weight));
       }
     });
-    
+
     return Row(
-      mainAxisAlignment: isLeft ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment: isLeft
+          ? MainAxisAlignment.end
+          : MainAxisAlignment.start,
       children: isLeft ? plates.reversed.toList() : plates,
     );
   }
-  
+
   Widget _buildPlateVisual(double weight) {
     final color = _getPlateColor(weight);
     final height = _getPlateHeight(weight);
-    
+
     return Container(
       width: 6,
       height: height,
@@ -535,14 +562,11 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(2),
-        border: Border.all(
-          color: context.colors.onSurface26,
-          width: 0.5,
-        ),
+        border: Border.all(color: context.colors.onSurface26, width: 0.5),
       ),
     );
   }
-  
+
   Color _getPlateColor(double weight) {
     if (weight >= 25) return context.colors.error;
     if (weight >= 20) return context.colors.primary;
@@ -553,7 +577,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
     if (weight >= 1.25) return context.colors.tertiary;
     return context.colors.surfaceContainerHigh;
   }
-  
+
   double _getPlateHeight(double weight) {
     if (weight >= 25) return 60;
     if (weight >= 20) return 55;
@@ -564,17 +588,17 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
     if (weight >= 1.25) return 30;
     return 25;
   }
-  
+
   void _saveAvailablePlates() {
     final notifier = ref.read(appConfigProvider.notifier);
     notifier.updateConfig(
       notifier.state.copyWith(availablePlates: availablePlates),
     );
   }
-  
+
   void _showBarbellSelector(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -597,11 +621,13 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                   height: 4,
                   margin: const EdgeInsets.only(bottom: 16),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                    color: theme.colorScheme.onSurfaceVariant.withValues(
+                      alpha: 0.4,
+                    ),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                
+
                 // Title
                 Row(
                   children: [
@@ -620,16 +646,16 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                     const Spacer(),
                     IconButton(
                       icon: const SemanticIcon(
-  icon: AppIcons.close,
-  semanticLabel: 'Close',
-),
+                        icon: AppIcons.close,
+                        semanticLabel: 'Close',
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Barbell selector widget
                 Expanded(
                   child: BarbellSelectorWidget(

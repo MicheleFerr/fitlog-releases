@@ -69,7 +69,6 @@ part 'exercise_history_model.freezed.dart';
 
 @freezed
 abstract class ExerciseHistoryModel with _$ExerciseHistoryModel {
-
   const factory ExerciseHistoryModel({
     /// Unique identifier for the exercise (from database)
     required String exerciseId,
@@ -131,12 +130,16 @@ abstract class ExerciseHistoryModel with _$ExerciseHistoryModel {
   factory ExerciseHistoryModel.fromJson(Map<String, dynamic> json) {
     return ExerciseHistoryModel(
       // Support migration: use exerciseId if present, fallback to exerciseName
-      exerciseId: (json['exerciseId'] as String?) ?? json['exerciseName'] as String,
+      exerciseId:
+          (json['exerciseId'] as String?) ?? json['exerciseName'] as String,
       exerciseName: json['exerciseName'] as String,
       muscleGroup: json['muscleGroup'] as String,
       sessions: (json['sessions'] as List<dynamic>)
-          .map((sessionJson) => ExerciseSessionModel.fromJson(
-              sessionJson as Map<String, dynamic>))
+          .map(
+            (sessionJson) => ExerciseSessionModel.fromJson(
+              sessionJson as Map<String, dynamic>,
+            ),
+          )
           .toList(),
       lastUpdated: _timestampFromJson(json['lastUpdated']),
     );
@@ -159,7 +162,9 @@ abstract class ExerciseHistoryModel with _$ExerciseHistoryModel {
       exerciseId: exerciseId,
       exerciseName: exerciseName,
       muscleGroup: muscleGroup,
-      sessions: sessions.map((sessionModel) => sessionModel.toDomain()).toList(),
+      sessions: sessions
+          .map((sessionModel) => sessionModel.toDomain())
+          .toList(),
     );
   }
 

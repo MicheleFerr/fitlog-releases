@@ -68,19 +68,23 @@ class WarmupCalculatorService {
     if (targetWeight < 40) {
       if (isBarbell && targetWeight >= defaultBarbellWeight * 1.5) {
         // Empty bar only if target is significantly above bar weight
-        sets.add(const WarmupSet(
-          weight: defaultBarbellWeight,
-          reps: 10,
-          percentage: 0, // Empty bar = 0% reference
-        ));
+        sets.add(
+          const WarmupSet(
+            weight: defaultBarbellWeight,
+            reps: 10,
+            percentage: 0, // Empty bar = 0% reference
+          ),
+        );
       } else {
         // For dumbbells/cables/machines: 50% warmup
         final weight50 = targetWeight * 0.5;
-        sets.add(WarmupSet(
-          weight: roundToAvailablePlates(weight50, availablePlates: plates),
-          reps: 10,
-          percentage: 50,
-        ));
+        sets.add(
+          WarmupSet(
+            weight: roundToAvailablePlates(weight50, availablePlates: plates),
+            reps: 10,
+            percentage: 50,
+          ),
+        );
       }
       return sets;
     }
@@ -89,37 +93,45 @@ class WarmupCalculatorService {
     if (targetWeight >= 40 && targetWeight < 80) {
       // Set 1: Empty bar for barbell, or 50% for other equipment
       if (isBarbell) {
-        sets.add(const WarmupSet(
-          weight: defaultBarbellWeight,
-          reps: 10,
-          percentage: 0,
-        ));
+        sets.add(
+          const WarmupSet(
+            weight: defaultBarbellWeight,
+            reps: 10,
+            percentage: 0,
+          ),
+        );
       } else {
         final weight50 = targetWeight * 0.5;
-        sets.add(WarmupSet(
-          weight: roundToAvailablePlates(weight50, availablePlates: plates),
-          reps: 10,
-          percentage: 50,
-        ));
+        sets.add(
+          WarmupSet(
+            weight: roundToAvailablePlates(weight50, availablePlates: plates),
+            reps: 10,
+            percentage: 50,
+          ),
+        );
       }
 
       // Set 2: 50% (if not already done above)
       if (isBarbell) {
         final weight50 = targetWeight * 0.5;
-        sets.add(WarmupSet(
-          weight: roundToAvailablePlates(weight50, availablePlates: plates),
-          reps: 8,
-          percentage: 50,
-        ));
+        sets.add(
+          WarmupSet(
+            weight: roundToAvailablePlates(weight50, availablePlates: plates),
+            reps: 8,
+            percentage: 50,
+          ),
+        );
       }
 
       // Set 3: 80% (final warmup - science-based ceiling)
       final weight80 = targetWeight * 0.8;
-      sets.add(WarmupSet(
-        weight: roundToAvailablePlates(weight80, availablePlates: plates),
-        reps: 3,
-        percentage: 80,
-      ));
+      sets.add(
+        WarmupSet(
+          weight: roundToAvailablePlates(weight80, availablePlates: plates),
+          reps: 3,
+          percentage: 80,
+        ),
+      );
 
       return sets;
     }
@@ -128,36 +140,44 @@ class WarmupCalculatorService {
     if (targetWeight >= 80 && targetWeight < 120) {
       // Set 1: Empty bar for barbell
       if (isBarbell) {
-        sets.add(const WarmupSet(
-          weight: defaultBarbellWeight,
-          reps: 10,
-          percentage: 0,
-        ));
+        sets.add(
+          const WarmupSet(
+            weight: defaultBarbellWeight,
+            reps: 10,
+            percentage: 0,
+          ),
+        );
       }
 
       // Set 2: 40%
       final weight40 = targetWeight * 0.4;
-      sets.add(WarmupSet(
-        weight: roundToAvailablePlates(weight40, availablePlates: plates),
-        reps: 8,
-        percentage: 40,
-      ));
+      sets.add(
+        WarmupSet(
+          weight: roundToAvailablePlates(weight40, availablePlates: plates),
+          reps: 8,
+          percentage: 40,
+        ),
+      );
 
       // Set 3: 60%
       final weight60 = targetWeight * 0.6;
-      sets.add(WarmupSet(
-        weight: roundToAvailablePlates(weight60, availablePlates: plates),
-        reps: 5,
-        percentage: 60,
-      ));
+      sets.add(
+        WarmupSet(
+          weight: roundToAvailablePlates(weight60, availablePlates: plates),
+          reps: 5,
+          percentage: 60,
+        ),
+      );
 
       // Set 4: 80% (final warmup)
       final weight80 = targetWeight * 0.8;
-      sets.add(WarmupSet(
-        weight: roundToAvailablePlates(weight80, availablePlates: plates),
-        reps: 3,
-        percentage: 80,
-      ));
+      sets.add(
+        WarmupSet(
+          weight: roundToAvailablePlates(weight80, availablePlates: plates),
+          reps: 3,
+          percentage: 80,
+        ),
+      );
 
       return sets;
     }
@@ -166,44 +186,54 @@ class WarmupCalculatorService {
     if (targetWeight >= 120) {
       // Set 1: Empty bar for barbell
       if (isBarbell) {
-        sets.add(const WarmupSet(
-          weight: defaultBarbellWeight,
-          reps: 10,
-          percentage: 0,
-        ));
+        sets.add(
+          const WarmupSet(
+            weight: defaultBarbellWeight,
+            reps: 10,
+            percentage: 0,
+          ),
+        );
       }
 
       // Set 2: 40%
       final weight40 = targetWeight * 0.4;
-      sets.add(WarmupSet(
-        weight: roundToAvailablePlates(weight40, availablePlates: plates),
-        reps: 8,
-        percentage: 40,
-      ));
+      sets.add(
+        WarmupSet(
+          weight: roundToAvailablePlates(weight40, availablePlates: plates),
+          reps: 8,
+          percentage: 40,
+        ),
+      );
 
       // Set 3: 55%
       final weight55 = targetWeight * 0.55;
-      sets.add(WarmupSet(
-        weight: roundToAvailablePlates(weight55, availablePlates: plates),
-        reps: 6,
-        percentage: 55,
-      ));
+      sets.add(
+        WarmupSet(
+          weight: roundToAvailablePlates(weight55, availablePlates: plates),
+          reps: 6,
+          percentage: 55,
+        ),
+      );
 
       // Set 4: 70%
       final weight70 = targetWeight * 0.7;
-      sets.add(WarmupSet(
-        weight: roundToAvailablePlates(weight70, availablePlates: plates),
-        reps: 4,
-        percentage: 70,
-      ));
+      sets.add(
+        WarmupSet(
+          weight: roundToAvailablePlates(weight70, availablePlates: plates),
+          reps: 4,
+          percentage: 70,
+        ),
+      );
 
       // Set 5: 80% (final warmup - NOT 90%)
       final weight80 = targetWeight * 0.8;
-      sets.add(WarmupSet(
-        weight: roundToAvailablePlates(weight80, availablePlates: plates),
-        reps: 2,
-        percentage: 80,
-      ));
+      sets.add(
+        WarmupSet(
+          weight: roundToAvailablePlates(weight80, availablePlates: plates),
+          reps: 2,
+          percentage: 80,
+        ),
+      );
 
       return sets;
     }

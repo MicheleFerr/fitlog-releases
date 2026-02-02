@@ -20,43 +20,51 @@ import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
 /// Provider for the enhanced workout history repository
-final workoutHistoryRepositoryProvider = Provider<WorkoutHistoryRepositoryEnhanced>((ref) {
-  ref.keepAlive(); // FIX: previene ricreazione repository con stato Hive
-  final boxManager = ref.watch(hiveBoxManagerProvider);
-  return WorkoutHistoryRepositoryEnhanced(boxManager: boxManager);
-});
+final workoutHistoryRepositoryProvider =
+    Provider<WorkoutHistoryRepositoryEnhanced>((ref) {
+      ref.keepAlive(); // FIX: previene ricreazione repository con stato Hive
+      final boxManager = ref.watch(hiveBoxManagerProvider);
+      return WorkoutHistoryRepositoryEnhanced(boxManager: boxManager);
+    });
 
 /// Provider for workout history list with real-time updates
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically cancels Firestore listener when widget is disposed
-final workoutHistoryProvider = StreamProvider.autoDispose<List<WorkoutHistoryDetail>>((ref) async* {
-  final repository = ref.watch(workoutHistoryRepositoryProvider);
+final workoutHistoryProvider =
+    StreamProvider.autoDispose<List<WorkoutHistoryDetail>>((ref) async* {
+      final repository = ref.watch(workoutHistoryRepositoryProvider);
 
-  await for (final result in repository.getWorkoutsStream()) {
-    yield result.fold(
-      (failure) {
-        if (kDebugMode) {
-          debugPrint('❌ [WorkoutHistoryProvider] Stream error: ${failure.message}');
-        }
-        throw Exception(failure.message);
-      },
-      (workouts) {
-        if (kDebugMode) {
-          debugPrint('✅ [WorkoutHistoryProvider] Stream updated with ${workouts.length} workouts');
-        }
-        return workouts;
-      },
-    );
-  }
-});
+      await for (final result in repository.getWorkoutsStream()) {
+        yield result.fold(
+          (failure) {
+            if (kDebugMode) {
+              debugPrint(
+                '❌ [WorkoutHistoryProvider] Stream error: ${failure.message}',
+              );
+            }
+            throw Exception(failure.message);
+          },
+          (workouts) {
+            if (kDebugMode) {
+              debugPrint(
+                '✅ [WorkoutHistoryProvider] Stream updated with ${workouts.length} workouts',
+              );
+            }
+            return workouts;
+          },
+        );
+      }
+    });
 
 /// Provider for sync status
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically cancels stream listener when widget is disposed
-final workoutHistorySyncStatusProvider = StreamProvider.autoDispose<SyncStatus>((ref) {
-  final repository = ref.watch(workoutHistoryRepositoryProvider);
-  return repository.syncStatusStream;
-});
+final workoutHistorySyncStatusProvider = StreamProvider.autoDispose<SyncStatus>(
+  (ref) {
+    final repository = ref.watch(workoutHistoryRepositoryProvider);
+    return repository.syncStatusStream;
+  },
+);
 
 /// Provider for current sync status value
 final currentSyncStatusProvider = Provider<SyncStatus>((ref) {
@@ -65,14 +73,15 @@ final currentSyncStatusProvider = Provider<SyncStatus>((ref) {
 });
 
 /// Provider for workout history operations (update, delete, force sync)
-final workoutHistoryOperationsProvider = Provider<WorkoutHistoryOperations>((ref) {
+final workoutHistoryOperationsProvider = Provider<WorkoutHistoryOperations>((
+  ref,
+) {
   final repository = ref.watch(workoutHistoryRepositoryProvider);
   return WorkoutHistoryOperations(repository);
 });
 
 /// Class to handle workout history operations
 class WorkoutHistoryOperations {
-
   WorkoutHistoryOperations(this._repository);
   final WorkoutHistoryRepositoryEnhanced _repository;
 
@@ -98,111 +107,138 @@ class WorkoutHistoryOperations {
 }
 
 /// Utility provider for filtered workouts based on search/date
-final filteredWorkoutHistoryProvider = Provider.family<List<WorkoutHistoryDetail>, WorkoutHistoryFilter>((ref, filter) {
-  final workoutsAsync = ref.watch(workoutHistoryProvider);
+final filteredWorkoutHistoryProvider =
+    Provider.family<List<WorkoutHistoryDetail>, WorkoutHistoryFilter>((
+      ref,
+      filter,
+    ) {
+      final workoutsAsync = ref.watch(workoutHistoryProvider);
 
-  return workoutsAsync.when(
-    loading: () => [],
-    error: (error, stack) {
-      if (kDebugMode) {
-        debugPrint('❌ [FilteredWorkoutHistory] Error loading workouts: $error');
-      }
-      return [];
-    },
-    data: (workouts) {
-      try {
-        var filtered = workouts;
-
-        // Apply search filter
-        if (filter.searchQuery.isNotEmpty) {
-          filtered = filtered.where((workout) {
-            try {
-              return workout.name.toLowerCase().contains(filter.searchQuery.toLowerCase()) ||
-                workout.exercises.any((exercise) =>
-                  exercise.name.toLowerCase().contains(filter.searchQuery.toLowerCase())
-                );
-            } catch (e) {
-              if (kDebugMode) {
-                debugPrint('⚠️ [FilteredWorkoutHistory] Error filtering workout ${workout.id}: $e');
-              }
-              return false; // Exclude workouts that cause errors
-            }
-          }).toList();
-        }
-
-        // Apply date range filter
-        if (filter.startDate != null) {
-          filtered = filtered.where((workout) {
-            try {
-              return workout.completedAt.isAfter(filter.startDate!);
-            } catch (e) {
-              if (kDebugMode) {
-                debugPrint('⚠️ [FilteredWorkoutHistory] Error checking start date for workout ${workout.id}: $e');
-              }
-              return false;
-            }
-          }).toList();
-        }
-
-        if (filter.endDate != null) {
-          filtered = filtered.where((workout) {
-            try {
-              return workout.completedAt.isBefore(filter.endDate!);
-            } catch (e) {
-              if (kDebugMode) {
-                debugPrint('⚠️ [FilteredWorkoutHistory] Error checking end date for workout ${workout.id}: $e');
-              }
-              return false;
-            }
-          }).toList();
-        }
-
-        // Apply sorting with error handling
-        try {
-          switch (filter.sortBy) {
-            case WorkoutSortOption.dateDesc:
-              filtered.sort((a, b) => b.completedAt.compareTo(a.completedAt));
-              break;
-            case WorkoutSortOption.dateAsc:
-              filtered.sort((a, b) => a.completedAt.compareTo(b.completedAt));
-              break;
-            case WorkoutSortOption.name:
-              filtered.sort((a, b) => a.name.compareTo(b.name));
-              break;
-            case WorkoutSortOption.duration:
-              filtered.sort((a, b) => b.duration.compareTo(a.duration));
-              break;
-            case WorkoutSortOption.volume:
-              filtered.sort((a, b) => b.totalVolume.compareTo(a.totalVolume));
-              break;
-          }
-        } catch (e) {
+      return workoutsAsync.when(
+        loading: () => [],
+        error: (error, stack) {
           if (kDebugMode) {
-            debugPrint('⚠️ [FilteredWorkoutHistory] Error sorting workouts: $e');
+            debugPrint(
+              '❌ [FilteredWorkoutHistory] Error loading workouts: $error',
+            );
           }
-          // Continue with unsorted list if sorting fails
-        }
+          return [];
+        },
+        data: (workouts) {
+          try {
+            var filtered = workouts;
 
-        if (kDebugMode) {
-          debugPrint('✅ [FilteredWorkoutHistory] Filtered ${workouts.length} → ${filtered.length} workouts');
-        }
+            // Apply search filter
+            if (filter.searchQuery.isNotEmpty) {
+              filtered = filtered.where((workout) {
+                try {
+                  return workout.name.toLowerCase().contains(
+                        filter.searchQuery.toLowerCase(),
+                      ) ||
+                      workout.exercises.any(
+                        (exercise) => exercise.name.toLowerCase().contains(
+                          filter.searchQuery.toLowerCase(),
+                        ),
+                      );
+                } catch (e) {
+                  if (kDebugMode) {
+                    debugPrint(
+                      '⚠️ [FilteredWorkoutHistory] Error filtering workout ${workout.id}: $e',
+                    );
+                  }
+                  return false; // Exclude workouts that cause errors
+                }
+              }).toList();
+            }
 
-        return filtered;
-      } catch (e, stackTrace) {
-        if (kDebugMode) {
-          debugPrint('❌ [FilteredWorkoutHistory] Error filtering workouts: $e');
-          debugPrint('📍 Stack trace: $stackTrace');
-        }
-        // Return unfiltered list as fallback
-        return workouts;
-      }
-    },
-  );
-});
+            // Apply date range filter
+            if (filter.startDate != null) {
+              filtered = filtered.where((workout) {
+                try {
+                  return workout.completedAt.isAfter(filter.startDate!);
+                } catch (e) {
+                  if (kDebugMode) {
+                    debugPrint(
+                      '⚠️ [FilteredWorkoutHistory] Error checking start date for workout ${workout.id}: $e',
+                    );
+                  }
+                  return false;
+                }
+              }).toList();
+            }
+
+            if (filter.endDate != null) {
+              filtered = filtered.where((workout) {
+                try {
+                  return workout.completedAt.isBefore(filter.endDate!);
+                } catch (e) {
+                  if (kDebugMode) {
+                    debugPrint(
+                      '⚠️ [FilteredWorkoutHistory] Error checking end date for workout ${workout.id}: $e',
+                    );
+                  }
+                  return false;
+                }
+              }).toList();
+            }
+
+            // Apply sorting with error handling
+            try {
+              switch (filter.sortBy) {
+                case WorkoutSortOption.dateDesc:
+                  filtered.sort(
+                    (a, b) => b.completedAt.compareTo(a.completedAt),
+                  );
+                  break;
+                case WorkoutSortOption.dateAsc:
+                  filtered.sort(
+                    (a, b) => a.completedAt.compareTo(b.completedAt),
+                  );
+                  break;
+                case WorkoutSortOption.name:
+                  filtered.sort((a, b) => a.name.compareTo(b.name));
+                  break;
+                case WorkoutSortOption.duration:
+                  filtered.sort((a, b) => b.duration.compareTo(a.duration));
+                  break;
+                case WorkoutSortOption.volume:
+                  filtered.sort(
+                    (a, b) => b.totalVolume.compareTo(a.totalVolume),
+                  );
+                  break;
+              }
+            } catch (e) {
+              if (kDebugMode) {
+                debugPrint(
+                  '⚠️ [FilteredWorkoutHistory] Error sorting workouts: $e',
+                );
+              }
+              // Continue with unsorted list if sorting fails
+            }
+
+            if (kDebugMode) {
+              debugPrint(
+                '✅ [FilteredWorkoutHistory] Filtered ${workouts.length} → ${filtered.length} workouts',
+              );
+            }
+
+            return filtered;
+          } catch (e, stackTrace) {
+            if (kDebugMode) {
+              debugPrint(
+                '❌ [FilteredWorkoutHistory] Error filtering workouts: $e',
+              );
+              debugPrint('📍 Stack trace: $stackTrace');
+            }
+            // Return unfiltered list as fallback
+            return workouts;
+          }
+        },
+      );
+    });
 
 /// Filter options for workout history
 class WorkoutHistoryFilter {
-
   const WorkoutHistoryFilter({
     this.searchQuery = '',
     this.startDate,
@@ -231,11 +267,11 @@ class WorkoutHistoryFilter {
 
 /// Sort options for workouts
 enum WorkoutSortOption {
-  dateDesc,   // Most recent first
-  dateAsc,    // Oldest first
-  name,       // Alphabetical
-  duration,   // Longest first
-  volume,     // Highest volume first
+  dateDesc, // Most recent first
+  dateAsc, // Oldest first
+  name, // Alphabetical
+  duration, // Longest first
+  volume, // Highest volume first
 }
 
 /// Provider for workout statistics
@@ -266,7 +302,6 @@ final workoutStatsProvider = Provider<WorkoutStats>((ref) {
 
 /// Workout statistics calculation
 class WorkoutStats {
-
   const WorkoutStats({
     required this.totalWorkouts,
     required this.totalTime,
@@ -279,14 +314,14 @@ class WorkoutStats {
   });
 
   const WorkoutStats.empty()
-      : totalWorkouts = 0,
-        totalTime = Duration.zero,
-        totalVolume = 0.0,
-        totalSets = 0,
-        totalReps = 0,
-        averageRPE = 0.0,
-        lastWorkout = null,
-        averageWorkoutDuration = Duration.zero;
+    : totalWorkouts = 0,
+      totalTime = Duration.zero,
+      totalVolume = 0.0,
+      totalSets = 0,
+      totalReps = 0,
+      averageRPE = 0.0,
+      lastWorkout = null,
+      averageWorkoutDuration = Duration.zero;
 
   factory WorkoutStats.fromWorkouts(List<WorkoutHistoryDetail> workouts) {
     if (workouts.isEmpty) {
@@ -294,61 +329,57 @@ class WorkoutStats {
     }
 
     try {
-      final totalTime = workouts.fold<Duration>(
-        Duration.zero,
-        (sum, workout) {
-          try {
-            return sum + workout.duration;
-          } catch (e) {
-            if (kDebugMode) {
-              debugPrint('⚠️ [WorkoutStats] Error adding duration for workout ${workout.id}: $e');
-            }
-            return sum; // Skip this workout
+      final totalTime = workouts.fold<Duration>(Duration.zero, (sum, workout) {
+        try {
+          return sum + workout.duration;
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint(
+              '⚠️ [WorkoutStats] Error adding duration for workout ${workout.id}: $e',
+            );
           }
-        },
-      );
+          return sum; // Skip this workout
+        }
+      });
 
-      final totalVolume = workouts.fold<double>(
-        0.0,
-        (sum, workout) {
-          try {
-            return sum + workout.totalVolume;
-          } catch (e) {
-            if (kDebugMode) {
-              debugPrint('⚠️ [WorkoutStats] Error adding volume for workout ${workout.id}: $e');
-            }
-            return sum;
+      final totalVolume = workouts.fold<double>(0.0, (sum, workout) {
+        try {
+          return sum + workout.totalVolume;
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint(
+              '⚠️ [WorkoutStats] Error adding volume for workout ${workout.id}: $e',
+            );
           }
-        },
-      );
+          return sum;
+        }
+      });
 
-      final totalSets = workouts.fold<int>(
-        0,
-        (sum, workout) {
-          try {
-            return sum + workout.totalSets;
-          } catch (e) {
-            if (kDebugMode) {
-              debugPrint('⚠️ [WorkoutStats] Error adding sets for workout ${workout.id}: $e');
-            }
-            return sum;
+      final totalSets = workouts.fold<int>(0, (sum, workout) {
+        try {
+          return sum + workout.totalSets;
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint(
+              '⚠️ [WorkoutStats] Error adding sets for workout ${workout.id}: $e',
+            );
           }
-        },
-      );
+          return sum;
+        }
+      });
 
-      final totalReps = workouts.fold<int>(
-        0,
-        (sum, workout) {
-          try {
-            return sum + workout.totalReps;
-          } catch (e) {
-            if (kDebugMode) {
-              debugPrint('⚠️ [WorkoutStats] Error adding reps for workout ${workout.id}: $e');
-            }
-            return sum;
+      final totalReps = workouts.fold<int>(0, (sum, workout) {
+        try {
+          return sum + workout.totalReps;
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint(
+              '⚠️ [WorkoutStats] Error adding reps for workout ${workout.id}: $e',
+            );
           }
-        },
-      );
+          return sum;
+        }
+      });
 
       // Calculate average RPE with error handling
       List<double> allRPEs = [];
@@ -378,7 +409,9 @@ class WorkoutStats {
           : Duration.zero;
 
       if (kDebugMode) {
-        debugPrint('✅ [WorkoutStats] Calculated stats for ${workouts.length} workouts: $totalSets sets, $totalReps reps, ${totalVolume.toStringAsFixed(1)}kg volume');
+        debugPrint(
+          '✅ [WorkoutStats] Calculated stats for ${workouts.length} workouts: $totalSets sets, $totalReps reps, ${totalVolume.toStringAsFixed(1)}kg volume',
+        );
       }
 
       return WorkoutStats(
@@ -423,44 +456,54 @@ final filteredWorkoutsProvider = Provider<List<WorkoutHistoryDetail>>((ref) {
 
 /// 🔧 PERF FIX: Memoized provider for grouped workouts by week
 /// Caches the expensive grouping computation instead of recalculating in build()
-final groupedWorkoutsByWeekProvider = Provider.family<Map<String, List<WorkoutHistoryDetail>>, String>((ref, locale) {
-  final workouts = ref.watch(filteredWorkoutsProvider);
+final groupedWorkoutsByWeekProvider =
+    Provider.family<Map<String, List<WorkoutHistoryDetail>>, String>((
+      ref,
+      locale,
+    ) {
+      final workouts = ref.watch(filteredWorkoutsProvider);
 
-  if (workouts.isEmpty) {
-    return {};
-  }
+      if (workouts.isEmpty) {
+        return {};
+      }
 
-  final now = DateTime.now();
-  final today = DateTime(now.year, now.month, now.day);
-  final thisWeekStart = today.subtract(Duration(days: today.weekday - 1));
-  final lastWeekStart = thisWeekStart.subtract(const Duration(days: 7));
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final thisWeekStart = today.subtract(Duration(days: today.weekday - 1));
+      final lastWeekStart = thisWeekStart.subtract(const Duration(days: 7));
 
-  final groups = <String, List<WorkoutHistoryDetail>>{};
+      final groups = <String, List<WorkoutHistoryDetail>>{};
 
-  for (final workout in workouts) {
-    final workoutDay = DateTime(
-      workout.completedAt.year,
-      workout.completedAt.month,
-      workout.completedAt.day,
-    );
+      for (final workout in workouts) {
+        final workoutDay = DateTime(
+          workout.completedAt.year,
+          workout.completedAt.month,
+          workout.completedAt.day,
+        );
 
-    String groupKey;
-    if (workoutDay.isAfter(thisWeekStart.subtract(const Duration(days: 1))) ||
-        workoutDay.isAtSameMomentAs(thisWeekStart)) {
-      // Use locale-agnostic key, UI will localize
-      groupKey = '_thisWeek';
-    } else if (workoutDay.isAfter(lastWeekStart.subtract(const Duration(days: 1))) ||
-        workoutDay.isAtSameMomentAs(lastWeekStart)) {
-      groupKey = '_lastWeek';
-    } else {
-      // Use ISO date format for consistent sorting
-      final weekStart = workoutDay.subtract(Duration(days: workoutDay.weekday - 1));
-      groupKey = weekStart.toIso8601String().substring(0, 10);
-    }
+        String groupKey;
+        if (workoutDay.isAfter(
+              thisWeekStart.subtract(const Duration(days: 1)),
+            ) ||
+            workoutDay.isAtSameMomentAs(thisWeekStart)) {
+          // Use locale-agnostic key, UI will localize
+          groupKey = '_thisWeek';
+        } else if (workoutDay.isAfter(
+              lastWeekStart.subtract(const Duration(days: 1)),
+            ) ||
+            workoutDay.isAtSameMomentAs(lastWeekStart)) {
+          groupKey = '_lastWeek';
+        } else {
+          // Use ISO date format for consistent sorting
+          final weekStart = workoutDay.subtract(
+            Duration(days: workoutDay.weekday - 1),
+          );
+          groupKey = weekStart.toIso8601String().substring(0, 10);
+        }
 
-    groups.putIfAbsent(groupKey, () => []);
-    groups[groupKey]!.add(workout);
-  }
+        groups.putIfAbsent(groupKey, () => []);
+        groups[groupKey]!.add(workout);
+      }
 
-  return groups;
-});
+      return groups;
+    });

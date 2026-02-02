@@ -26,7 +26,6 @@ import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
 /// - No direct Hive.openBox() calls
 /// - Centralized box lifecycle management
 class QuestionnaireAnalyticsDataSource {
-
   /// Constructor with dependency injection
   QuestionnaireAnalyticsDataSource(this._boxManager);
   final HiveBoxManagerEnhanced _boxManager;
@@ -50,13 +49,16 @@ class QuestionnaireAnalyticsDataSource {
     QuestionnaireAnalytics analytics,
   ) async {
     final box = await _getAnalyticsBox();
-    final key = 'analytics_${analytics.userId}_${analytics.startedAt.millisecondsSinceEpoch}';
+    final key =
+        'analytics_${analytics.userId}_${analytics.startedAt.millisecondsSinceEpoch}';
 
     final data = analytics.toJson();
     await box.put(key, Map<String, dynamic>.from(data));
 
     if (kDebugMode) {
-      debugPrint('💾 Saved questionnaire analytics for user: ${analytics.userId}');
+      debugPrint(
+        '💾 Saved questionnaire analytics for user: ${analytics.userId}',
+      );
     }
   }
 
@@ -81,9 +83,7 @@ class QuestionnaireAnalyticsDataSource {
     final latest = box.get(userEntries.first);
     if (latest == null) return null;
 
-    return QuestionnaireAnalytics.fromJson(
-      Map<String, dynamic>.from(latest),
-    );
+    return QuestionnaireAnalytics.fromJson(Map<String, dynamic>.from(latest));
   }
 
   /// Get all analytics for user
@@ -151,7 +151,9 @@ class QuestionnaireAnalyticsDataSource {
     final avgCompletionTime = completionTimes.isEmpty
         ? Duration.zero
         : Duration(
-            seconds: completionTimes.reduce((a, b) => a + b) ~/ completionTimes.length,
+            seconds:
+                completionTimes.reduce((a, b) => a + b) ~/
+                completionTimes.length,
           );
 
     // Calculate average feedback by step
@@ -166,7 +168,8 @@ class QuestionnaireAnalyticsDataSource {
 
     final avgFeedbackByStep = <int, double>{};
     feedbackByStep.forEach((step, ratings) {
-      avgFeedbackByStep[step] = ratings.reduce((a, b) => a + b) / ratings.length;
+      avgFeedbackByStep[step] =
+          ratings.reduce((a, b) => a + b) / ratings.length;
     });
 
     return QuestionnaireAnalyticsAggregated(
@@ -191,7 +194,9 @@ class QuestionnaireAnalyticsDataSource {
     await box.put(key, Map<String, dynamic>.from(data));
 
     if (kDebugMode) {
-      debugPrint('💾 Saved suggestion accuracy: ${accuracy.exerciseId} (${accuracy.weightErrorPercent.toStringAsFixed(1)}% error)');
+      debugPrint(
+        '💾 Saved suggestion accuracy: ${accuracy.exerciseId} (${accuracy.weightErrorPercent.toStringAsFixed(1)}% error)',
+      );
     }
   }
 
@@ -268,9 +273,11 @@ class QuestionnaireAnalyticsDataSource {
     final avgError = errors.reduce((a, b) => a + b) / errors.length;
 
     // Calculate standard deviation
-    final variance = errors
-        .map((error) => (error - avgError) * (error - avgError))
-        .reduce((a, b) => a + b) / errors.length;
+    final variance =
+        errors
+            .map((error) => (error - avgError) * (error - avgError))
+            .reduce((a, b) => a + b) /
+        errors.length;
     final stdDev = math.sqrt(variance);
 
     // Determine trend (compare first half vs second half)
@@ -294,18 +301,20 @@ class QuestionnaireAnalyticsDataSource {
     final recentHalf = records.sublist(0, midpoint);
     final olderHalf = records.sublist(midpoint);
 
-    final recentAvg = recentHalf
-        .map((r) => r.weightErrorPercent)
-        .reduce((a, b) => a + b) / recentHalf.length;
+    final recentAvg =
+        recentHalf.map((r) => r.weightErrorPercent).reduce((a, b) => a + b) /
+        recentHalf.length;
 
-    final olderAvg = olderHalf
-        .map((r) => r.weightErrorPercent)
-        .reduce((a, b) => a + b) / olderHalf.length;
+    final olderAvg =
+        olderHalf.map((r) => r.weightErrorPercent).reduce((a, b) => a + b) /
+        olderHalf.length;
 
     final difference = recentAvg - olderAvg;
 
-    if (difference < -2.0) return AccuracyTrend.improving; // Error decreased by >2%
-    if (difference > 2.0) return AccuracyTrend.worsening; // Error increased by >2%
+    if (difference < -2.0)
+      return AccuracyTrend.improving; // Error decreased by >2%
+    if (difference > 2.0)
+      return AccuracyTrend.worsening; // Error increased by >2%
     return AccuracyTrend.stable;
   }
 

@@ -26,14 +26,16 @@ class SchedulingNotificationService {
   SchedulingNotificationService({
     FlutterLocalNotificationsPlugin? notificationsPlugin,
   }) : _notificationsPlugin =
-            notificationsPlugin ?? FlutterLocalNotificationsPlugin();
+           notificationsPlugin ?? FlutterLocalNotificationsPlugin();
 
   /// Initialize the notification channel (call on app startup)
   Future<void> initialize() async {
     // Initialize timezone data (required for zonedSchedule)
     tz_data.initializeTimeZones();
 
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -48,9 +50,10 @@ class SchedulingNotificationService {
     await _notificationsPlugin.initialize(initSettings);
 
     // Create Android notification channel
-    final androidPlugin =
-        _notificationsPlugin.resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+    final androidPlugin = _notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
 
     if (androidPlugin != null) {
       await androidPlugin.createNotificationChannel(
@@ -76,7 +79,9 @@ class SchedulingNotificationService {
   /// Request notification permissions on iOS
   Future<bool> _requestIOSPermissions() async {
     final iosPlugin = _notificationsPlugin
-        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
+        .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin
+        >();
 
     if (iosPlugin != null) {
       final result = await iosPlugin.requestPermissions(
@@ -116,16 +121,15 @@ class SchedulingNotificationService {
       return notificationId;
     }
 
-    final tzScheduledDateTime = tz.TZDateTime.from(
-      scheduledDateTime,
-      tz.local,
-    );
+    final tzScheduledDateTime = tz.TZDateTime.from(scheduledDateTime, tz.local);
 
     if (kDebugMode) {
       debugPrint('[SchedulingNotification] Scheduling notification...');
       debugPrint('[SchedulingNotification] - Title: $title');
       debugPrint('[SchedulingNotification] - Body: $body');
-      debugPrint('[SchedulingNotification] - Scheduled for: $tzScheduledDateTime');
+      debugPrint(
+        '[SchedulingNotification] - Scheduled for: $tzScheduledDateTime',
+      );
       debugPrint('[SchedulingNotification] - Notification ID: $notificationId');
     }
 
@@ -161,7 +165,9 @@ class SchedulingNotificationService {
       }
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('[SchedulingNotification] ❌ Error scheduling notification: $e');
+        debugPrint(
+          '[SchedulingNotification] ❌ Error scheduling notification: $e',
+        );
       }
       rethrow;
     }

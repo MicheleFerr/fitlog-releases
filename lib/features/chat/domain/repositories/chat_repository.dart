@@ -128,10 +128,4 @@ class ChatImageUploadProgress {
 }
 
 /// Upload status for image messages
-enum ChatUploadStatus {
-  pending,
-  compressing,
-  uploading,
-  completed,
-  failed,
-}
+enum ChatUploadStatus { pending, compressing, uploading, completed, failed }

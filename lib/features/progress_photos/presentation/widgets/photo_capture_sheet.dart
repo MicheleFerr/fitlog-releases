@@ -71,9 +71,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet>
         return Container(
           decoration: BoxDecoration(
             color: context.colors.surface,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(20),
-            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
             children: [
@@ -215,7 +213,10 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet>
         if (hasGhostPhoto) ...[
           const SizedBox(height: AppSpacing.sm),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.sm,
+              vertical: AppSpacing.xs,
+            ),
             decoration: BoxDecoration(
               color: context.colors.primaryContainer.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(8),
@@ -460,10 +461,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet>
               color: context.colors.primary,
             ),
             const SizedBox(height: AppSpacing.xs),
-            Text(
-              label,
-              style: context.textTheme.labelLarge,
-            ),
+            Text(label, style: context.textTheme.labelLarge),
           ],
         ),
       ),
@@ -562,9 +560,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet>
         hintText: context.l10n.weightHintExample,
         suffixText: 'kg',
         prefixIcon: const Icon(AppIcons.scale),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -586,9 +582,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet>
             color: context.colors.onSurfaceVariant,
           ),
         ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -599,17 +593,12 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet>
     return FilledButton.icon(
       onPressed: canSubmit ? _submit : null,
       icon: _isProcessing
-          ? LoadingIndicator(
-              size: 20,
-              color: context.colors.onPrimary,
-            )
+          ? LoadingIndicator(size: 20, color: context.colors.onPrimary)
           : const Icon(AppIcons.upload),
       label: Text(_isProcessing ? 'Processing...' : context.l10n.save),
       style: FilledButton.styleFrom(
         minimumSize: const Size.fromHeight(56),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -630,10 +619,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet>
       }
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(
-          context,
-          'Failed to pick image: $e',
-        );
+        SnackBarService.showError(context, 'Failed to pick image: $e');
       }
     }
   }

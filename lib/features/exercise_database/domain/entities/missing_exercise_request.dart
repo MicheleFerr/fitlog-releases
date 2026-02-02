@@ -1,14 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum RequestStatus {
-  pending,
-  approved,
-  rejected,
-  completed,
-}
+enum RequestStatus { pending, approved, rejected, completed }
 
 class MissingExerciseRequest {
-
   const MissingExerciseRequest({
     required this.id,
     required this.exerciseName,

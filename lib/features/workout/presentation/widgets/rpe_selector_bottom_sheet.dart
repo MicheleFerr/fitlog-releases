@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: presentation
 /// 🎯 Feature: workout
 /// 🔧 Type: widget
 /// 🌍 Localization: ✅ AppLocalizations used
 /// 🎨 Theme: ✅ ColorScheme responsive
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - Riverpod: ConsumerWidget
 /// - Firebase: None
@@ -27,6 +27,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+
 /// Helper function to convert RPE to RIR
 int rpeToRir(double rpe) => (10 - rpe).round();
 
@@ -39,7 +40,6 @@ String formatEffortValue(double rpe, bool useRir) {
 }
 
 class SupersetExerciseCompleteData {
-
   const SupersetExerciseCompleteData({
     required this.actualReps,
     required this.actualWeight,
@@ -51,7 +51,6 @@ class SupersetExerciseCompleteData {
 }
 
 class RpeSelectorBottomSheet extends ConsumerStatefulWidget {
-
   const RpeSelectorBottomSheet({
     super.key,
     required this.set,
@@ -119,17 +118,21 @@ class RpeSelectorBottomSheet extends ConsumerStatefulWidget {
   }
 
   @override
-  ConsumerState<RpeSelectorBottomSheet> createState() => _RpeSelectorBottomSheetState();
+  ConsumerState<RpeSelectorBottomSheet> createState() =>
+      _RpeSelectorBottomSheetState();
 }
 
-class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet> {
+class _RpeSelectorBottomSheetState
+    extends ConsumerState<RpeSelectorBottomSheet> {
   late int _actualReps;
   double _actualWeight = 0.0;
   int? _selectedRpe;
   int? _calculatedRir;
   bool _showWeightAndReps = true;
-  bool _isSetCompleted = true; // ✅ FIX: Default to true (user is completing set)
-  bool _originallyCompleted = false; // ✅ Track original completion state for button logic
+  bool _isSetCompleted =
+      true; // ✅ FIX: Default to true (user is completing set)
+  bool _originallyCompleted =
+      false; // ✅ Track original completion state for button logic
 
   // ✅ NEW: For time-based exercises (counting mode = time)
   int _actualMinutes = 0;
@@ -146,7 +149,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize superset navigation if needed
     if (widget.isPartOfSuperset) {
       _currentExerciseIndex = widget.currentExerciseIndex;
@@ -155,10 +158,10 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
     } else {
       _currentExerciseSet = widget.set;
     }
-    
+
     _loadExerciseData(_currentExerciseSet);
   }
-  
+
   void _loadExerciseData(ExerciseSet exerciseSet) {
     // Check if we have completion data for this exercise in our batch
     final storedData = _supersetCompleteData[_currentExerciseIndex];
@@ -178,29 +181,31 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
       // ✅ FIX: Default to completed during workout so RPE is immediately visible and set is marked as done
       // This prevents RPE from being -1 when user completes set without touching the completion toggle
       _isSetCompleted = true; // Changed from: exerciseSet.isCompleted
-      _originallyCompleted = exerciseSet.isCompleted; // ✅ Track original state (set once)
+      _originallyCompleted =
+          exerciseSet.isCompleted; // ✅ Track original state (set once)
 
       // ✅ NEW: Initialize time variables for time-based exercises
-      final totalSeconds = exerciseSet.seconds ?? 60; // Default 60 seconds if not set
+      final totalSeconds =
+          exerciseSet.seconds ?? 60; // Default 60 seconds if not set
       _actualMinutes = totalSeconds ~/ 60; // Integer division for minutes
-      _actualSeconds = totalSeconds % 60;  // Remainder for seconds
+      _actualSeconds = totalSeconds % 60; // Remainder for seconds
     }
     _updateRir();
   }
-  
+
   ExerciseSet _getExerciseSetForIndex(int index) {
-    if (!widget.isPartOfSuperset || 
-        widget.supersetExercises == null || 
+    if (!widget.isPartOfSuperset ||
+        widget.supersetExercises == null ||
         widget.supersetSet == null ||
         index >= widget.supersetExercises!.length) {
       return widget.set;
     }
-    
+
     final exercise = widget.supersetExercises![index];
     final exerciseData = widget.supersetSet!.exerciseData[exercise.id];
-    
+
     if (exerciseData == null) return widget.set;
-    
+
     // Create ExerciseSet from SupersetExerciseData
     return ExerciseSet(
       setNumber: 1,
@@ -212,22 +217,22 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
       notes: exerciseData.notes,
     );
   }
-  
+
   @override
   void dispose() {
     _pageController?.dispose();
     super.dispose();
   }
-  
+
   void _onPageChanged(int index) {
     if (!widget.isPartOfSuperset) return;
-    
+
     setState(() {
       _currentExerciseIndex = index;
       _currentExerciseSet = _getExerciseSetForIndex(index);
       _loadExerciseData(_currentExerciseSet);
     });
-    
+
     HapticFeedback.lightImpact();
   }
 
@@ -239,10 +244,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
       _calculatedRir = null;
     }
   }
-  
+
   /// ✅ NEW: Calculate data to pass to onConfirm based on counting mode
   (int, double) _getConfirmData() {
-    final countingMode = widget.exercise?.countingMode ?? ExerciseCountingMode.weighted;
+    final countingMode =
+        widget.exercise?.countingMode ?? ExerciseCountingMode.weighted;
 
     switch (countingMode) {
       case ExerciseCountingMode.time:
@@ -262,14 +268,15 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
 
   void _saveCurrentExerciseData(int rpe) {
     if (widget.isPartOfSuperset) {
-      _supersetCompleteData[_currentExerciseIndex] = SupersetExerciseCompleteData(
-        actualReps: _actualReps,
-        actualWeight: _actualWeight,
-        rpe: rpe,
-      );
+      _supersetCompleteData[_currentExerciseIndex] =
+          SupersetExerciseCompleteData(
+            actualReps: _actualReps,
+            actualWeight: _actualWeight,
+            rpe: rpe,
+          );
     }
   }
-  
+
   bool _allExercisesCompleted() {
     if (!widget.isPartOfSuperset || widget.supersetExercises == null) {
       return true;
@@ -331,7 +338,8 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
 
   /// ✅ FIX: Get verify text based on exercise counting mode
   String _getVerifyText(AppLocalizations l10n) {
-    final countingMode = widget.exercise?.countingMode ?? ExerciseCountingMode.weighted;
+    final countingMode =
+        widget.exercise?.countingMode ?? ExerciseCountingMode.weighted;
     switch (countingMode) {
       case ExerciseCountingMode.time:
         return l10n.verifyTime; // "Verify Minutes & Seconds"
@@ -343,8 +351,13 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
   }
 
   /// ✅ FIX: Build input fields dynamically based on counting mode
-  Widget _buildInputFieldsBasedOnCountingMode(BuildContext context, ThemeData theme, ColorScheme colorScheme) {
-    final countingMode = widget.exercise?.countingMode ?? ExerciseCountingMode.weighted;
+  Widget _buildInputFieldsBasedOnCountingMode(
+    BuildContext context,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
+    final countingMode =
+        widget.exercise?.countingMode ?? ExerciseCountingMode.weighted;
 
     switch (countingMode) {
       case ExerciseCountingMode.time:
@@ -361,10 +374,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
 
   List<Color> _getRpeGradient(int rpe) {
     final baseColor = _getRpeColor(rpe, Theme.of(context).colorScheme);
-    return [
-      baseColor,
-      baseColor.withValues(alpha: 0.7),
-    ];
+    return [baseColor, baseColor.withValues(alpha: 0.7)];
   }
 
   /// ✅ NEW: Auto-confirm with the selected RPE value (2-tap UX)
@@ -373,11 +383,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
 
     if (widget.isPartOfSuperset) {
       // Save data for this exercise in superset
-      _supersetCompleteData[_currentExerciseIndex] = SupersetExerciseCompleteData(
-        actualReps: _actualReps,
-        actualWeight: _actualWeight,
-        rpe: rpe,
-      );
+      _supersetCompleteData[_currentExerciseIndex] =
+          SupersetExerciseCompleteData(
+            actualReps: _actualReps,
+            actualWeight: _actualWeight,
+            rpe: rpe,
+          );
 
       if (_allExercisesCompleted() && widget.onSupersetCompleteAll != null) {
         // All exercises completed → close and callback
@@ -385,7 +396,8 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
         widget.onSupersetCompleteAll!(_supersetCompleteData);
       } else {
         // Advance to next exercise automatically
-        if (_currentExerciseIndex < (widget.supersetExercises?.length ?? 0) - 1) {
+        if (_currentExerciseIndex <
+            (widget.supersetExercises?.length ?? 0) - 1) {
           _pageController?.animateToPage(
             _currentExerciseIndex + 1,
             duration: const Duration(milliseconds: 300),
@@ -439,7 +451,9 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                         )
                       : null,
                   color: !isSelected
-                      ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
+                      ? colorScheme.surfaceContainerHighest.withValues(
+                          alpha: 0.5,
+                        )
                       : null,
                   border: Border.all(
                     color: isSelected
@@ -451,8 +465,10 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                   boxShadow: isSelected
                       ? [
                           BoxShadow(
-                            color: _getRpeColor(rpe, colorScheme)
-                                .withValues(alpha: 0.3),
+                            color: _getRpeColor(
+                              rpe,
+                              colorScheme,
+                            ).withValues(alpha: 0.3),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -462,10 +478,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      _getRpeEmoji(rpe),
-                      style: theme.textTheme.titleLarge,
-                    ),
+                    Text(_getRpeEmoji(rpe), style: theme.textTheme.titleLarge),
                     const SizedBox(height: 2),
                     Text(
                       '$displayValue',
@@ -481,7 +494,9 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       _getRpeShortLabel(rpe),
                       style: theme.textTheme.bodySmall?.copyWith(
                         fontSize: 9,
-                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.normal,
                         color: isSelected
                             ? context.colors.surface.withValues(alpha: 0.95)
                             : colorScheme.onSurfaceVariant,
@@ -498,14 +513,19 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
     );
   }
 
-  Widget _buildSupersetHeader(BuildContext context, ThemeData theme, AppLocalizations l10n, ColorScheme colorScheme) {
+  Widget _buildSupersetHeader(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+  ) {
     if (!widget.isPartOfSuperset || widget.supersetExercises == null) {
       return const SizedBox.shrink();
     }
-    
+
     final currentExercise = widget.supersetExercises![_currentExerciseIndex];
     final totalExercises = widget.supersetExercises!.length;
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
@@ -537,7 +557,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                 height: 8,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isActive 
+                  color: isActive
                       ? colorScheme.primary
                       : colorScheme.outline.withValues(alpha: 0.3),
                 ),
@@ -545,7 +565,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
             }),
           ),
           const SizedBox(height: 12),
-          
+
           // Exercise name and progress text
           Text(
             currentExercise.name,
@@ -564,7 +584,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
             ),
           ),
           const SizedBox(height: 8),
-          
+
           // Swipe hint
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -590,7 +610,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
     );
   }
 
-  Widget _buildMainContent(BuildContext context, ThemeData theme, AppLocalizations l10n, ColorScheme colorScheme) {
+  Widget _buildMainContent(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+  ) {
     // Watch the global RIR mode setting
     final useRir = ref.watch(useRirModeProvider);
 
@@ -602,8 +627,17 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
       mainAxisSize: MainAxisSize.min,
       children: [
         // RPE Suggestion Card (if applicable)
-        if (showRPESuggestion && rpeSuggestion != null && rpeSuggestion.adjustmentPercent != 0)
-          _buildRPESuggestionCard(context, theme, l10n, colorScheme, rpeSuggestion, useRir),
+        if (showRPESuggestion &&
+            rpeSuggestion != null &&
+            rpeSuggestion.adjustmentPercent != 0)
+          _buildRPESuggestionCard(
+            context,
+            theme,
+            l10n,
+            colorScheme,
+            rpeSuggestion,
+            useRir,
+          ),
 
         // Toggle for Weight & Reps (dynamic text based on counting mode)
         Padding(
@@ -633,11 +667,17 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
             ],
           ),
         ),
-        
+
         // Weight & Reps Section - Premium design (dynamic based on counting mode)
         AnimatedSize(
           duration: const Duration(milliseconds: 300),
-          child: _showWeightAndReps ? _buildInputFieldsBasedOnCountingMode(context, theme, colorScheme) : const SizedBox.shrink(),
+          child: _showWeightAndReps
+              ? _buildInputFieldsBasedOnCountingMode(
+                  context,
+                  theme,
+                  colorScheme,
+                )
+              : const SizedBox.shrink(),
         ),
 
         const SizedBox(height: 16),
@@ -664,16 +704,22 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
               Row(
                 children: [
                   Icon(
-                    _isSetCompleted ? AppIcons.checkCircle : AppIcons.radioButtonUnchecked,
+                    _isSetCompleted
+                        ? AppIcons.checkCircle
+                        : AppIcons.radioButtonUnchecked,
                     size: 20,
-                    color: _isSetCompleted ? colorScheme.tertiary : colorScheme.onSurfaceVariant,
+                    color: _isSetCompleted
+                        ? colorScheme.tertiary
+                        : colorScheme.onSurfaceVariant,
                   ),
                   const SizedBox(width: 12),
                   Text(
                     l10n.setCompleted,
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: _isSetCompleted ? colorScheme.tertiary : colorScheme.onSurface,
+                      color: _isSetCompleted
+                          ? colorScheme.tertiary
+                          : colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -732,7 +778,9 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                         context: context,
                         builder: (context) => AlertDialog(
                           title: Text(useRir ? l10n.rir : l10n.rpe),
-                          content: Text(useRir ? l10n.rirDescription : l10n.rpeDescription),
+                          content: Text(
+                            useRir ? l10n.rirDescription : l10n.rpeDescription,
+                          ),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(),
@@ -743,11 +791,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       );
                     },
                     child: SemanticIcon(
-  icon: AppIcons.info,
-  semanticLabel: 'Information',
-  size: AppIconSize.small,
-  color: colorScheme.primary,
-),
+                      icon: AppIcons.info,
+                      semanticLabel: 'Information',
+                      size: AppIconSize.small,
+                      color: colorScheme.primary,
+                    ),
                   ),
                 ],
               ),
@@ -777,8 +825,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              colorScheme.primaryContainer.withValues(alpha: 0.5),
-                              colorScheme.primaryContainer.withValues(alpha: 0.3),
+                              colorScheme.primaryContainer.withValues(
+                                alpha: 0.5,
+                              ),
+                              colorScheme.primaryContainer.withValues(
+                                alpha: 0.3,
+                              ),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -795,15 +847,17 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: colorScheme.primary.withValues(alpha: 0.1),
+                                color: colorScheme.primary.withValues(
+                                  alpha: 0.1,
+                                ),
                                 shape: BoxShape.circle,
                               ),
                               child: SemanticIcon(
-  icon: AppIcons.trendUp,
-  semanticLabel: 'Trend up',
-  size: AppIconSize.small,
-  color: colorScheme.primary,
-),
+                                icon: AppIcons.trendUp,
+                                semanticLabel: 'Trend up',
+                                size: AppIconSize.small,
+                                color: colorScheme.primary,
+                              ),
                             ),
                             const SizedBox(width: 12),
                             Column(
@@ -812,15 +866,17 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                                 Text(
                                   // Show opposite scale for reference
                                   useRir
-                                    ? '${l10n.rpe}: ${_selectedRpe ?? 0}'
-                                    : '${l10n.rir}: $_calculatedRir',
+                                      ? '${l10n.rpe}: ${_selectedRpe ?? 0}'
+                                      : '${l10n.rir}: $_calculatedRir',
                                   style: theme.textTheme.titleSmall?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: colorScheme.primary,
                                   ),
                                 ),
                                 Text(
-                                  useRir ? l10n.rpeDescription : l10n.repsInReserve,
+                                  useRir
+                                      ? l10n.rpeDescription
+                                      : l10n.repsInReserve,
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: colorScheme.onSurfaceVariant,
                                     fontSize: 11,
@@ -858,7 +914,8 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       // Set was NOT completed → "Skip RPE" button (complete with rpe=0)
                       if (widget.isPartOfSuperset) {
                         _saveCurrentExerciseData(0);
-                        if (_allExercisesCompleted() && widget.onSupersetCompleteAll != null) {
+                        if (_allExercisesCompleted() &&
+                            widget.onSupersetCompleteAll != null) {
                           Navigator.of(context).pop();
                           widget.onSupersetCompleteAll!(_supersetCompleteData);
                         }
@@ -923,13 +980,18 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                             HapticFeedback.mediumImpact();
                             if (widget.isPartOfSuperset) {
                               _saveCurrentExerciseData(_selectedRpe ?? 0);
-                              if (_allExercisesCompleted() && widget.onSupersetCompleteAll != null) {
+                              if (_allExercisesCompleted() &&
+                                  widget.onSupersetCompleteAll != null) {
                                 // Tutti gli esercizi completati → chiudi e callback
                                 Navigator.of(context).pop();
-                                widget.onSupersetCompleteAll!(_supersetCompleteData);
+                                widget.onSupersetCompleteAll!(
+                                  _supersetCompleteData,
+                                );
                               } else {
                                 // ✅ FIX: Avanza automaticamente al prossimo esercizio
-                                if (_currentExerciseIndex < (widget.supersetExercises?.length ?? 0) - 1) {
+                                if (_currentExerciseIndex <
+                                    (widget.supersetExercises?.length ?? 0) -
+                                        1) {
                                   _pageController?.animateToPage(
                                     _currentExerciseIndex + 1,
                                     duration: const Duration(milliseconds: 300),
@@ -942,18 +1004,28 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                               // ✅ Pass rpe = -1 if user toggled OFF (unmarca set)
                               // rpe = 0 if user skipped RPE but kept toggle ON
                               // rpe > 0 if user selected RPE
-                              final rpeToSend = !_isSetCompleted ? -1 : (_selectedRpe ?? 0);
+                              final rpeToSend = !_isSetCompleted
+                                  ? -1
+                                  : (_selectedRpe ?? 0);
                               // ✅ NEW: Get correct data based on counting mode
-                              final (actualReps, actualWeight) = _getConfirmData();
-                              widget.onConfirm(actualReps, actualWeight, rpeToSend);
+                              final (actualReps, actualWeight) =
+                                  _getConfirmData();
+                              widget.onConfirm(
+                                actualReps,
+                                actualWeight,
+                                rpeToSend,
+                              );
                             }
                           }
                         : null,
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
-                      backgroundColor: context.colors.surface.withValues(alpha: 0),
+                      backgroundColor: context.colors.surface.withValues(
+                        alpha: 0,
+                      ),
                       foregroundColor: context.colors.surface,
-                      disabledBackgroundColor: colorScheme.surfaceContainerHighest,
+                      disabledBackgroundColor:
+                          colorScheme.surfaceContainerHighest,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -964,17 +1036,17 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       children: [
                         if (_selectedRpe != null) ...[
                           const SemanticIcon(
-  icon: AppIcons.complete,
-  semanticLabel: 'Complete',
-  size: AppIconSize.small,
-),
+                            icon: AppIcons.complete,
+                            semanticLabel: 'Complete',
+                            size: AppIconSize.small,
+                          ),
                           const SizedBox(width: 8),
                         ],
                         Text(
                           widget.isPartOfSuperset
                               ? (_allExercisesCompleted()
-                                  ? l10n.completeSet
-                                  : '${l10n.save} (${_supersetCompleteData.length}/${widget.supersetExercises?.length ?? 0})')
+                                    ? l10n.completeSet
+                                    : '${l10n.save} (${_supersetCompleteData.length}/${widget.supersetExercises?.length ?? 0})')
                               : l10n.confirmSet,
                           style: theme.textTheme.labelLarge?.copyWith(
                             fontWeight: FontWeight.bold,
@@ -992,15 +1064,17 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
       ],
     );
   }
-  
+
   // RPE Autoregulation Helper Methods
   bool _shouldShowRPESuggestion() {
     if (widget.exercise == null) return false;
-    if (widget.exercise!.autoAdjustmentType != AutoAdjustmentType.rpe) return false;
+    if (widget.exercise!.autoAdjustmentType != AutoAdjustmentType.rpe)
+      return false;
     if (_selectedRpe == null) return false;
 
     // Check if we have valid RPE targets
-    if (widget.exercise!.targetRPEMin == null || widget.exercise!.targetRPEMax == null) {
+    if (widget.exercise!.targetRPEMin == null ||
+        widget.exercise!.targetRPEMax == null) {
       // Check for RIR mode
       if (widget.exercise!.targetRIR == null) return false;
     }
@@ -1014,7 +1088,8 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
     }
 
     // Check if using RPE range mode
-    if (widget.exercise!.targetRPEMin != null && widget.exercise!.targetRPEMax != null) {
+    if (widget.exercise!.targetRPEMin != null &&
+        widget.exercise!.targetRPEMax != null) {
       return RPEAutoregulationService.calculateRPEAdjustment(
         currentWeight: _actualWeight,
         actualRPE: _selectedRpe!.toDouble(),
@@ -1025,7 +1100,9 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
 
     // Check if using RIR mode
     if (widget.exercise!.targetRIR != null) {
-      final actualRIR = RPEAutoregulationService.rpeToRIR(_selectedRpe!.toDouble());
+      final actualRIR = RPEAutoregulationService.rpeToRIR(
+        _selectedRpe!.toDouble(),
+      );
       return RPEAutoregulationService.calculateRIRAdjustment(
         currentWeight: _actualWeight,
         actualRIR: actualRIR,
@@ -1053,8 +1130,8 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
             suggestion.shouldIncrease
                 ? context.colors.success.withValues(alpha: 0.2)
                 : suggestion.shouldDecrease
-                    ? context.colors.warning.withValues(alpha: 0.2)
-                    : colorScheme.primaryContainer.withValues(alpha: 0.5),
+                ? context.colors.warning.withValues(alpha: 0.2)
+                : colorScheme.primaryContainer.withValues(alpha: 0.5),
             colorScheme.primaryContainer.withValues(alpha: 0.3),
           ],
           begin: Alignment.topLeft,
@@ -1065,8 +1142,8 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
           color: suggestion.shouldIncrease
               ? context.colors.success.withValues(alpha: 0.3)
               : suggestion.shouldDecrease
-                  ? context.colors.warning.withValues(alpha: 0.3)
-                  : colorScheme.primary.withValues(alpha: 0.3),
+              ? context.colors.warning.withValues(alpha: 0.3)
+              : colorScheme.primary.withValues(alpha: 0.3),
           width: 1.5,
         ),
       ),
@@ -1076,15 +1153,15 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
           Row(
             children: [
               SemanticIcon(
-  icon: AppIcons.trendUp,
-  semanticLabel: 'Trend up',
-  size: AppIconSize.small,
-  color: suggestion.shouldIncrease
+                icon: AppIcons.trendUp,
+                semanticLabel: 'Trend up',
+                size: AppIconSize.small,
+                color: suggestion.shouldIncrease
                     ? context.colors.success
                     : suggestion.shouldDecrease
-                        ? context.colors.warning
-                        : colorScheme.primary,
-),
+                    ? context.colors.warning
+                    : colorScheme.primary,
+              ),
               const SizedBox(width: 8),
               Text(
                 useRir ? l10n.rirAutoregulation : l10n.rpeAutoregulation,
@@ -1100,8 +1177,8 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
           Text(
             suggestion.actualRPE != null
                 ? useRir
-                    ? '${l10n.actualRir}: ${rpeToRir(suggestion.actualRPE!)}'
-                    : '${l10n.actualRpe}: ${suggestion.actualRPE!.toStringAsFixed(0)}'
+                      ? '${l10n.actualRir}: ${rpeToRir(suggestion.actualRPE!)}'
+                      : '${l10n.actualRpe}: ${suggestion.actualRPE!.toStringAsFixed(0)}'
                 : '${l10n.actualRir}: ${suggestion.actualRIR}',
             style: theme.textTheme.bodyMedium,
           ),
@@ -1109,17 +1186,19 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
           if (suggestion.targetRPERange != null)
             Text(
               useRir
-                ? () {
-                    // Parse RPE range and convert to RIR
-                    final parts = suggestion.targetRPERange!.split('-');
-                    if (parts.length == 2) {
-                      final minRpe = double.tryParse(parts.first.trim()) ?? 6.0;
-                      final maxRpe = double.tryParse(parts.last.trim()) ?? 10.0;
-                      return '${l10n.targetRir}: ${rpeToRir(maxRpe)} - ${rpeToRir(minRpe)}';
-                    }
-                    return l10n.targetRange(suggestion.targetRPERange!);
-                  }()
-                : l10n.targetRange(suggestion.targetRPERange!),
+                  ? () {
+                      // Parse RPE range and convert to RIR
+                      final parts = suggestion.targetRPERange!.split('-');
+                      if (parts.length == 2) {
+                        final minRpe =
+                            double.tryParse(parts.first.trim()) ?? 6.0;
+                        final maxRpe =
+                            double.tryParse(parts.last.trim()) ?? 10.0;
+                        return '${l10n.targetRir}: ${rpeToRir(maxRpe)} - ${rpeToRir(minRpe)}';
+                      }
+                      return l10n.targetRange(suggestion.targetRPERange!);
+                    }()
+                  : l10n.targetRange(suggestion.targetRPERange!),
               style: theme.textTheme.bodyMedium,
             )
           else if (suggestion.targetRIR != null)
@@ -1161,8 +1240,8 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                         color: suggestion.shouldIncrease
                             ? context.colors.success
                             : suggestion.shouldDecrease
-                                ? context.colors.warning
-                                : colorScheme.onSurfaceVariant,
+                            ? context.colors.warning
+                            : colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -1205,7 +1284,10 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
   }
 
   /// Returns a localized reason message based on the adjustment suggestion
-  String _getLocalizedAdjustmentReason(AppLocalizations l10n, WeightAdjustment suggestion) {
+  String _getLocalizedAdjustmentReason(
+    AppLocalizations l10n,
+    WeightAdjustment suggestion,
+  ) {
     final percent = suggestion.adjustmentPercent.abs().toStringAsFixed(1);
 
     if (suggestion.shouldIncrease) {
@@ -1217,7 +1299,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
     }
   }
 
-  Widget _buildWeightAndRepsSection(BuildContext context, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildWeightAndRepsSection(
+    BuildContext context,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     final l10n = AppLocalizations.of(context);
     return Container(
       margin: const EdgeInsets.all(16),
@@ -1247,11 +1333,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: 'Workout',
-  size: AppIconSize.tiny,
-  color: colorScheme.primary,
-),
+                      icon: AppIcons.workout,
+                      semanticLabel: 'Workout',
+                      size: AppIconSize.tiny,
+                      color: colorScheme.primary,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       l10n.weight,
@@ -1270,22 +1356,27 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       onTap: _actualWeight > 0
                           ? () {
                               HapticFeedback.lightImpact();
-                              setState(() => _actualWeight = (_actualWeight - 2.5).clamp(0, 999));
+                              setState(
+                                () => _actualWeight = (_actualWeight - 2.5)
+                                    .clamp(0, 999),
+                              );
                             }
                           : null,
                       borderRadius: BorderRadius.circular(8),
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: colorScheme.errorContainer.withValues(alpha: 0.2),
+                          color: colorScheme.errorContainer.withValues(
+                            alpha: 0.2,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: SemanticIcon(
-  icon: AppIcons.remove,
-  semanticLabel: 'Remove',
-  size: AppIconSize.small,
-  color: colorScheme.error,
-),
+                          icon: AppIcons.remove,
+                          semanticLabel: 'Remove',
+                          size: AppIconSize.small,
+                          color: colorScheme.error,
+                        ),
                       ),
                     ),
                     // Weight display
@@ -1331,15 +1422,17 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer.withValues(alpha: 0.3),
+                          color: colorScheme.primaryContainer.withValues(
+                            alpha: 0.3,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: SemanticIcon(
-  icon: AppIcons.add,
-  semanticLabel: 'Add',
-  size: AppIconSize.small,
-  color: colorScheme.primary,
-),
+                          icon: AppIcons.add,
+                          semanticLabel: 'Add',
+                          size: AppIconSize.small,
+                          color: colorScheme.primary,
+                        ),
                       ),
                     ),
                   ],
@@ -1347,7 +1440,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
               ],
             ),
           ),
-          
+
           // Divider
           Container(
             width: 1,
@@ -1355,7 +1448,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
             margin: const EdgeInsets.symmetric(horizontal: 8),
             color: colorScheme.outline.withValues(alpha: 0.2),
           ),
-          
+
           // Reps Section
           Expanded(
             child: Column(
@@ -1364,11 +1457,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SemanticIcon(
-  icon: AppIcons.repeat,
-  semanticLabel: 'Repeat',
-  size: AppIconSize.tiny,
-  color: colorScheme.primary,
-),
+                      icon: AppIcons.repeat,
+                      semanticLabel: 'Repeat',
+                      size: AppIconSize.tiny,
+                      color: colorScheme.primary,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       l10n.reps,
@@ -1394,15 +1487,17 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: colorScheme.errorContainer.withValues(alpha: 0.2),
+                          color: colorScheme.errorContainer.withValues(
+                            alpha: 0.2,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: SemanticIcon(
-  icon: AppIcons.remove,
-  semanticLabel: 'Remove',
-  size: AppIconSize.small,
-  color: colorScheme.error,
-),
+                          icon: AppIcons.remove,
+                          semanticLabel: 'Remove',
+                          size: AppIconSize.small,
+                          color: colorScheme.error,
+                        ),
                       ),
                     ),
                     // Reps display
@@ -1448,15 +1543,17 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer.withValues(alpha: 0.3),
+                          color: colorScheme.primaryContainer.withValues(
+                            alpha: 0.3,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: SemanticIcon(
-  icon: AppIcons.add,
-  semanticLabel: 'Add',
-  size: AppIconSize.small,
-  color: colorScheme.primary,
-),
+                          icon: AppIcons.add,
+                          semanticLabel: 'Add',
+                          size: AppIconSize.small,
+                          color: colorScheme.primary,
+                        ),
                       ),
                     ),
                   ],
@@ -1470,7 +1567,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
   }
 
   /// ✅ FIX: Build reps-only section (for reps counting mode)
-  Widget _buildRepsOnlySection(BuildContext context, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildRepsOnlySection(
+    BuildContext context,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     final l10n = AppLocalizations.of(context);
     return Container(
       margin: const EdgeInsets.all(16),
@@ -1496,11 +1597,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SemanticIcon(
-  icon: AppIcons.repeat,
-  semanticLabel: 'Repeat',
-  size: AppIconSize.small,
-  color: colorScheme.primary,
-),
+                icon: AppIcons.repeat,
+                semanticLabel: 'Repeat',
+                size: AppIconSize.small,
+                color: colorScheme.primary,
+              ),
               const SizedBox(width: 8),
               Text(
                 l10n.reps,
@@ -1530,11 +1631,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: SemanticIcon(
-  icon: AppIcons.remove,
-  semanticLabel: 'Remove',
-  size: AppIconSize.medium,
-  color: colorScheme.error,
-),
+                    icon: AppIcons.remove,
+                    semanticLabel: 'Remove',
+                    size: AppIconSize.medium,
+                    color: colorScheme.error,
+                  ),
                 ),
               ),
               // Reps display
@@ -1577,11 +1678,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: SemanticIcon(
-  icon: AppIcons.add,
-  semanticLabel: 'Add',
-  size: AppIconSize.medium,
-  color: colorScheme.primary,
-),
+                    icon: AppIcons.add,
+                    semanticLabel: 'Add',
+                    size: AppIconSize.medium,
+                    color: colorScheme.primary,
+                  ),
                 ),
               ),
             ],
@@ -1592,7 +1693,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
   }
 
   /// ✅ FIX: Build time input section (for time counting mode)
-  Widget _buildTimeInputSection(BuildContext context, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildTimeInputSection(
+    BuildContext context,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     final l10n = AppLocalizations.of(context);
     return Container(
       margin: const EdgeInsets.all(16),
@@ -1622,11 +1727,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SemanticIcon(
-  icon: AppIcons.schedule,
-  semanticLabel: 'Schedule',
-  size: AppIconSize.tiny,
-  color: colorScheme.primary,
-),
+                      icon: AppIcons.schedule,
+                      semanticLabel: 'Schedule',
+                      size: AppIconSize.tiny,
+                      color: colorScheme.primary,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       l10n.exerciseListMinutes,
@@ -1652,15 +1757,17 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: colorScheme.errorContainer.withValues(alpha: 0.2),
+                          color: colorScheme.errorContainer.withValues(
+                            alpha: 0.2,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: SemanticIcon(
-  icon: AppIcons.remove,
-  semanticLabel: 'Remove',
-  size: AppIconSize.small,
-  color: colorScheme.error,
-),
+                          icon: AppIcons.remove,
+                          semanticLabel: 'Remove',
+                          size: AppIconSize.small,
+                          color: colorScheme.error,
+                        ),
                       ),
                     ),
                     // Minutes display
@@ -1706,15 +1813,17 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer.withValues(alpha: 0.3),
+                          color: colorScheme.primaryContainer.withValues(
+                            alpha: 0.3,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: SemanticIcon(
-  icon: AppIcons.add,
-  semanticLabel: 'Add',
-  size: AppIconSize.small,
-  color: colorScheme.primary,
-),
+                          icon: AppIcons.add,
+                          semanticLabel: 'Add',
+                          size: AppIconSize.small,
+                          color: colorScheme.primary,
+                        ),
                       ),
                     ),
                   ],
@@ -1739,11 +1848,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SemanticIcon(
-  icon: AppIcons.timer,
-  semanticLabel: 'Timer',
-  size: AppIconSize.tiny,
-  color: colorScheme.primary,
-),
+                      icon: AppIcons.timer,
+                      semanticLabel: 'Timer',
+                      size: AppIconSize.tiny,
+                      color: colorScheme.primary,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       l10n.exerciseListSeconds,
@@ -1762,22 +1871,27 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       onTap: _actualSeconds > 0
                           ? () {
                               HapticFeedback.lightImpact();
-                              setState(() => _actualSeconds = (_actualSeconds - 5).clamp(0, 60));
+                              setState(
+                                () => _actualSeconds = (_actualSeconds - 5)
+                                    .clamp(0, 60),
+                              );
                             }
                           : null,
                       borderRadius: BorderRadius.circular(8),
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: colorScheme.errorContainer.withValues(alpha: 0.2),
+                          color: colorScheme.errorContainer.withValues(
+                            alpha: 0.2,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: SemanticIcon(
-  icon: AppIcons.remove,
-  semanticLabel: 'Remove',
-  size: AppIconSize.small,
-  color: colorScheme.error,
-),
+                          icon: AppIcons.remove,
+                          semanticLabel: 'Remove',
+                          size: AppIconSize.small,
+                          color: colorScheme.error,
+                        ),
                       ),
                     ),
                     // Seconds display
@@ -1816,22 +1930,27 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       onTap: _actualSeconds < 60
                           ? () {
                               HapticFeedback.lightImpact();
-                              setState(() => _actualSeconds = (_actualSeconds + 5).clamp(0, 60));
+                              setState(
+                                () => _actualSeconds = (_actualSeconds + 5)
+                                    .clamp(0, 60),
+                              );
                             }
                           : null,
                       borderRadius: BorderRadius.circular(8),
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer.withValues(alpha: 0.3),
+                          color: colorScheme.primaryContainer.withValues(
+                            alpha: 0.3,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: SemanticIcon(
-  icon: AppIcons.add,
-  semanticLabel: 'Add',
-  size: AppIconSize.small,
-  color: colorScheme.primary,
-),
+                          icon: AppIcons.add,
+                          semanticLabel: 'Add',
+                          size: AppIconSize.small,
+                          color: colorScheme.primary,
+                        ),
                       ),
                     ),
                   ],
@@ -1862,26 +1981,26 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
           child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Handle bar
-            Center(
-              child: Container(
-                margin: const EdgeInsets.only(top: 12, bottom: 8),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: colorScheme.outline.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(2),
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Handle bar
+              Center(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 12, bottom: 8),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: colorScheme.outline.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-            ),
-            _buildSupersetHeader(context, theme, l10n, colorScheme),
-            _buildMainContent(context, theme, l10n, colorScheme),
-          ],
+              _buildSupersetHeader(context, theme, l10n, colorScheme),
+              _buildMainContent(context, theme, l10n, colorScheme),
+            ],
+          ),
         ),
-      ),
       ),
     );
 

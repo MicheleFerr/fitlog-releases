@@ -52,11 +52,17 @@ class ImportNotifier extends StateNotifier<ImportState> {
   ImportParseResult? get currentParseResult => _currentParseResult;
 
   /// Parse CSV content
-  Future<void> parseCSV(String csvContent, {String sourceApp = 'strong'}) async {
+  Future<void> parseCSV(
+    String csvContent, {
+    String sourceApp = 'strong',
+  }) async {
     state = const ImportParsing();
 
     try {
-      final result = await _repository.parseAndMap(csvContent, sourceApp: sourceApp);
+      final result = await _repository.parseAndMap(
+        csvContent,
+        sourceApp: sourceApp,
+      );
       _currentParseResult = result;
       state = ImportParsed(result);
     } catch (e) {
@@ -126,10 +132,11 @@ final importRepositoryProvider = Provider<ImportRepository>((ref) {
 });
 
 /// Provider for import notifier
-final importNotifierProvider = StateNotifierProvider<ImportNotifier, ImportState>((ref) {
-  final repository = ref.watch(importRepositoryProvider);
-  return ImportNotifier(repository);
-});
+final importNotifierProvider =
+    StateNotifierProvider<ImportNotifier, ImportState>((ref) {
+      final repository = ref.watch(importRepositoryProvider);
+      return ImportNotifier(repository);
+    });
 
 /// Provider for available source apps
 final importSourceAppsProvider = Provider<List<ImportSourceApp>>((ref) {

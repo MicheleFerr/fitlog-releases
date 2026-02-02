@@ -14,11 +14,7 @@ part 'consistency_score.freezed.dart';
 part 'consistency_score.g.dart';
 
 /// Overtraining risk level
-enum OvertrainingRisk {
-  low,
-  medium,
-  high,
-}
+enum OvertrainingRisk { low, medium, high }
 
 /// Consistency score entity - measures workout adherence quality
 @freezed
@@ -71,20 +67,19 @@ abstract class ConsistencyScore with _$ConsistencyScore {
 
     // DEPRECATED: Keep for backward compatibility (1 version)
     /// Overall consistency score (0-100)
-    @Deprecated('Use frequencyOptimal, restOptimal, progressionPositive instead')
+    @Deprecated(
+      'Use frequencyOptimal, restOptimal, progressionPositive instead',
+    )
     int? overallScore,
 
     /// Score rating text (Excellent, Good, Fair, Poor)
-    @Deprecated('Use binary indicators instead')
-    String? scoreRating,
+    @Deprecated('Use binary indicators instead') String? scoreRating,
 
     /// Score rating (Excellent, Good, Fair, Poor) - DEPRECATED, use scoreRating
-    @Deprecated('Use binary indicators instead')
-    String? rating,
+    @Deprecated('Use binary indicators instead') String? rating,
 
     /// Risk level (Low, Medium, High) - string version
-    @Deprecated('Use binary indicators instead')
-    String? riskLevel,
+    @Deprecated('Use binary indicators instead') String? riskLevel,
 
     /// Overtraining risk level (enum)
     @Deprecated('Insufficient indicators - requires HR monitoring')
@@ -100,18 +95,18 @@ abstract class ConsistencyScore with _$ConsistencyScore {
 
   /// Creates empty score with all indicators false
   factory ConsistencyScore.empty() => ConsistencyScore(
-        frequencyOptimal: false,
-        restOptimal: false,
-        progressionPositive: false,
-        frequencyScore: 0,
-        restScore: 0,
-        progressionScore: 0,
-        weeklyStats: WeeklyStats.empty(),
-        workoutsCompleted: 0,
-        workoutsSkipped: 0,
-        avgFrequency: 0.0,
-        longestStreak: 0,
-        currentStreak: 0,
-        calculatedAt: DateTime.now(),
-      );
+    frequencyOptimal: false,
+    restOptimal: false,
+    progressionPositive: false,
+    frequencyScore: 0,
+    restScore: 0,
+    progressionScore: 0,
+    weeklyStats: WeeklyStats.empty(),
+    workoutsCompleted: 0,
+    workoutsSkipped: 0,
+    avgFrequency: 0.0,
+    longestStreak: 0,
+    currentStreak: 0,
+    calculatedAt: DateTime.now(),
+  );
 }

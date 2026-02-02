@@ -33,7 +33,13 @@ const _muscleGroups = {
   'lats': ['lats1', 'lats2'],
   'upper_back': ['upper_back1', 'upper_back2'],
   'quadriceps': ['quads1', 'quads2', 'quads3', 'quads4'],
-  'trapezius': ['trapezius1', 'trapezius2', 'trapezius3', 'trapezius4', 'trapezius5'],
+  'trapezius': [
+    'trapezius1',
+    'trapezius2',
+    'trapezius3',
+    'trapezius4',
+    'trapezius5',
+  ],
   'triceps': ['triceps1', 'triceps2'],
   'adductors': ['adductors1', 'adductors2'],
   'lower_back': ['lower_back'],
@@ -52,7 +58,7 @@ class _MuscleData {
 /// Heat data for muscles
 class MuscleHeatValues {
   MuscleHeatValues(Map<String, double> values)
-      : _values = _normalizeKeys(values);
+    : _values = _normalizeKeys(values);
 
   final Map<String, double> _values;
 
@@ -69,10 +75,12 @@ class MuscleHeatValues {
     final normalized = <String, double>{};
     for (final entry in input.entries) {
       // Use centralized mapper for abbreviation → heatmap key conversion
-      final mappedKey = MuscleAbbreviationMapper.normalizeToHeatmapKey(entry.key);
+      final mappedKey = MuscleAbbreviationMapper.normalizeToHeatmapKey(
+        entry.key,
+      );
       // Accumulate values (multiple abbreviations may map to same group)
-      normalized[mappedKey] = (normalized[mappedKey] ?? 0) +
-          (entry.value / 100).clamp(0.0, 1.0);
+      normalized[mappedKey] =
+          (normalized[mappedKey] ?? 0) + (entry.value / 100).clamp(0.0, 1.0);
     }
     // Clamp accumulated values to 1.0 max
     return normalized.map((k, v) => MapEntry(k, v.clamp(0.0, 1.0)));
@@ -111,7 +119,8 @@ class ProfessionalBodyHeatmap extends StatefulWidget {
   final void Function(String muscleGroup, double heatValue)? onMuscleTap;
 
   @override
-  State<ProfessionalBodyHeatmap> createState() => _ProfessionalBodyHeatmapState();
+  State<ProfessionalBodyHeatmap> createState() =>
+      _ProfessionalBodyHeatmapState();
 }
 
 class _ProfessionalBodyHeatmapState extends State<ProfessionalBodyHeatmap> {
@@ -160,7 +169,9 @@ class _ProfessionalBodyHeatmapState extends State<ProfessionalBodyHeatmap> {
               bounds.left < pathBounds.left ? bounds.left : pathBounds.left,
               bounds.top < pathBounds.top ? bounds.top : pathBounds.top,
               bounds.right > pathBounds.right ? bounds.right : pathBounds.right,
-              bounds.bottom > pathBounds.bottom ? bounds.bottom : pathBounds.bottom,
+              bounds.bottom > pathBounds.bottom
+                  ? bounds.bottom
+                  : pathBounds.bottom,
             );
           }
         } catch (e) {
@@ -232,7 +243,9 @@ class _ProfessionalBodyHeatmapState extends State<ProfessionalBodyHeatmap> {
       return Center(
         child: Text(
           _error!,
-          style: context.textTheme.bodyMedium?.copyWith(color: colorScheme.error),
+          style: context.textTheme.bodyMedium?.copyWith(
+            color: colorScheme.error,
+          ),
         ),
       );
     }
@@ -259,7 +272,8 @@ class _ProfessionalBodyHeatmapState extends State<ProfessionalBodyHeatmap> {
 
               return Center(
                 child: GestureDetector(
-                  onTapUp: (details) => _handleTap(details, Size(width, height)),
+                  onTapUp: (details) =>
+                      _handleTap(details, Size(width, height)),
                   child: CustomPaint(
                     size: Size(width, height),
                     painter: _BodyHeatmapPainter(
@@ -387,10 +401,7 @@ class _BodyHeatmapPainter extends CustomPainter {
 
 /// Muscle info card
 class _MuscleInfoCard extends StatelessWidget {
-  const _MuscleInfoCard({
-    required this.muscleGroup,
-    required this.heatValue,
-  });
+  const _MuscleInfoCard({required this.muscleGroup, required this.heatValue});
 
   final String muscleGroup;
   final double heatValue;
@@ -412,10 +423,7 @@ class _MuscleInfoCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: heatColor.withValues(alpha: 0.5),
-          width: 2,
-        ),
+        border: Border.all(color: heatColor.withValues(alpha: 0.5), width: 2),
       ),
       child: Row(
         children: [
@@ -423,10 +431,7 @@ class _MuscleInfoCard extends StatelessWidget {
           Container(
             width: 48,
             height: 48,
-            decoration: BoxDecoration(
-              color: heatColor,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: heatColor, shape: BoxShape.circle),
             child: Center(
               child: Text(
                 '$percentage%',
@@ -518,10 +523,7 @@ class _HeatLegend extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _LegendItem(
-            color: const Color(0xFF2196F3),
-            label: l10n.intensityLow,
-          ),
+          _LegendItem(color: const Color(0xFF2196F3), label: l10n.intensityLow),
           const SizedBox(width: 16),
           _LegendItem(
             color: const Color(0xFFFFC107),
@@ -539,10 +541,7 @@ class _HeatLegend extends StatelessWidget {
 }
 
 class _LegendItem extends StatelessWidget {
-  const _LegendItem({
-    required this.color,
-    required this.label,
-  });
+  const _LegendItem({required this.color, required this.label});
 
   final Color color;
   final String label;
@@ -568,10 +567,7 @@ class _LegendItem extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 6),
-        Text(
-          label,
-          style: context.textTheme.labelSmall,
-        ),
+        Text(label, style: context.textTheme.labelSmall),
       ],
     );
   }

@@ -13,7 +13,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Modello per un singolo feedback su esercizio
 class ExerciseFeedback {
-
   ExerciseFeedback({
     required this.id,
     required this.userId,
@@ -29,9 +28,7 @@ class ExerciseFeedback {
     this.adminNotes,
   });
 
-  factory ExerciseFeedback.fromFirestore(
-    DocumentSnapshot doc,
-  ) {
+  factory ExerciseFeedback.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return ExerciseFeedback(
       id: doc.id,
@@ -63,7 +60,8 @@ class ExerciseFeedback {
 }
 
 /// Statistiche aggregate del feedback
-class FeedbackStats { // severity -> count
+class FeedbackStats {
+  // severity -> count
 
   FeedbackStats({
     required this.totalFeedback,
@@ -100,7 +98,9 @@ class FeedbackStats { // severity -> count
 /// ✅ All derived providers filter from this single source in-memory
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically cancels Firestore listener when widget is disposed
-final allFeedbackProvider = StreamProvider.autoDispose<List<ExerciseFeedback>>((ref) {
+final allFeedbackProvider = StreamProvider.autoDispose<List<ExerciseFeedback>>((
+  ref,
+) {
   if (kDebugMode) {
     debugPrint('🔴 allFeedbackProvider: Starting master stream listener');
   }
@@ -110,14 +110,16 @@ final allFeedbackProvider = StreamProvider.autoDispose<List<ExerciseFeedback>>((
       .orderBy('createdAt', descending: true)
       .snapshots()
       .map((snapshot) {
-    if (kDebugMode) {
-      debugPrint('🔴 allFeedbackProvider: Received snapshot with ${snapshot.docs.length} documents');
-    }
+        if (kDebugMode) {
+          debugPrint(
+            '🔴 allFeedbackProvider: Received snapshot with ${snapshot.docs.length} documents',
+          );
+        }
 
-    return snapshot.docs
-        .map((doc) => ExerciseFeedback.fromFirestore(doc))
-        .toList();
-  });
+        return snapshot.docs
+            .map((doc) => ExerciseFeedback.fromFirestore(doc))
+            .toList();
+      });
 });
 
 /// ✅ DERIVED PROVIDER: Filter all feedback in-memory (no Firestore query)
@@ -129,7 +131,9 @@ final feedbackStatsProvider = Provider<FeedbackStats>((ref) {
   return allFeedbackAsync.when(
     data: (allFeedback) {
       if (kDebugMode) {
-        debugPrint('📊 feedbackStatsProvider: Computing stats from ${allFeedback.length} feedback items');
+        debugPrint(
+          '📊 feedbackStatsProvider: Computing stats from ${allFeedback.length} feedback items',
+        );
       }
 
       int openCount = 0;
@@ -152,10 +156,12 @@ final feedbackStatsProvider = Provider<FeedbackStats>((ref) {
         }
 
         // Conta per tipo
-        byType[feedback.feedbackType] = (byType[feedback.feedbackType] ?? 0) + 1;
+        byType[feedback.feedbackType] =
+            (byType[feedback.feedbackType] ?? 0) + 1;
 
         // Conta per esercizio
-        byExercise[feedback.exerciseId] = (byExercise[feedback.exerciseId] ?? 0) + 1;
+        byExercise[feedback.exerciseId] =
+            (byExercise[feedback.exerciseId] ?? 0) + 1;
 
         // Conta per severity
         final sevKey = feedback.severity.toString();
@@ -173,7 +179,9 @@ final feedbackStatsProvider = Provider<FeedbackStats>((ref) {
       );
 
       if (kDebugMode) {
-        debugPrint('📊 feedbackStatsProvider: Stats computed - Total: ${stats.totalFeedback}, Open: ${stats.openCount}, Resolved: ${stats.resolvedCount}');
+        debugPrint(
+          '📊 feedbackStatsProvider: Stats computed - Total: ${stats.totalFeedback}, Open: ${stats.openCount}, Resolved: ${stats.resolvedCount}',
+        );
       }
 
       return stats;
@@ -191,29 +199,28 @@ final feedbackStatsProvider = Provider<FeedbackStats>((ref) {
 /// ✅ DERIVED PROVIDER: Filter by exercise (no Firestore query)
 final exerciseFeedbackProvider =
     Provider.family<List<ExerciseFeedback>, String>((ref, exerciseId) {
-  ref.keepAlive(); // FIX: previene ricreazione provider family
-  final allFeedbackAsync = ref.watch(allFeedbackProvider);
+      ref.keepAlive(); // FIX: previene ricreazione provider family
+      final allFeedbackAsync = ref.watch(allFeedbackProvider);
 
-  return allFeedbackAsync.whenData((allFeedback) {
-    return allFeedback
-        .where((f) => f.exerciseId == exerciseId)
-        .toList();
-  }).value ?? [];
-});
+      return allFeedbackAsync.whenData((allFeedback) {
+            return allFeedback
+                .where((f) => f.exerciseId == exerciseId)
+                .toList();
+          }).value ??
+          [];
+    });
 
 /// ✅ DERIVED PROVIDER: Filter by status (no Firestore query)
-final feedbackByStatusProvider = Provider.family<List<ExerciseFeedback>, String>(
-  (ref, status) {
-    ref.keepAlive(); // FIX: previene ricreazione provider family
-    final allFeedbackAsync = ref.watch(allFeedbackProvider);
+final feedbackByStatusProvider =
+    Provider.family<List<ExerciseFeedback>, String>((ref, status) {
+      ref.keepAlive(); // FIX: previene ricreazione provider family
+      final allFeedbackAsync = ref.watch(allFeedbackProvider);
 
-    return allFeedbackAsync.whenData((allFeedback) {
-      return allFeedback
-          .where((f) => f.status == status)
-          .toList();
-    }).value ?? [];
-  },
-);
+      return allFeedbackAsync.whenData((allFeedback) {
+            return allFeedback.where((f) => f.status == status).toList();
+          }).value ??
+          [];
+    });
 
 /// ✅ DERIVED PROVIDER: Filter critical feedback (severity >= 4, OPEN status)
 /// No Firestore query! Filtered and sorted in-memory
@@ -222,49 +229,42 @@ final criticalFeedbackProvider = Provider<List<ExerciseFeedback>>((ref) {
   final allFeedbackAsync = ref.watch(allFeedbackProvider);
 
   return allFeedbackAsync.whenData((allFeedback) {
-    return allFeedback
-        .where((f) => f.severity >= 4 && f.status == 'OPEN')
-        .toList()
-        ..sort((a, b) {
-          // Sort by severity descending, then by date descending
-          final sevCompare = b.severity.compareTo(a.severity);
-          if (sevCompare != 0) return sevCompare;
-          return b.createdAt.compareTo(a.createdAt);
-        });
-  }).value ?? [];
+        return allFeedback
+            .where((f) => f.severity >= 4 && f.status == 'OPEN')
+            .toList()
+          ..sort((a, b) {
+            // Sort by severity descending, then by date descending
+            final sevCompare = b.severity.compareTo(a.severity);
+            if (sevCompare != 0) return sevCompare;
+            return b.createdAt.compareTo(a.createdAt);
+          });
+      }).value ??
+      [];
 });
 
 /// Provider per aggiornare lo status di un feedback
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final updateFeedbackStatusProvider =
-    FutureProvider.autoDispose.family<void, (String feedbackId, String newStatus)>(
-  (ref, params) async {
-    final (feedbackId, newStatus) = params;
-    await FirebaseFirestore.instance
-        .collection('exercise_feedback')
-        .doc(feedbackId)
-        .update({
-      'status': newStatus,
+final updateFeedbackStatusProvider = FutureProvider.autoDispose
+    .family<void, (String feedbackId, String newStatus)>((ref, params) async {
+      final (feedbackId, newStatus) = params;
+      await FirebaseFirestore.instance
+          .collection('exercise_feedback')
+          .doc(feedbackId)
+          .update({'status': newStatus});
     });
-  },
-);
 
 /// Provider per aggiungere note admin a un feedback
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final updateFeedbackNotesProvider =
-    FutureProvider.autoDispose.family<void, (String feedbackId, String notes)>(
-  (ref, params) async {
-    final (feedbackId, notes) = params;
-    await FirebaseFirestore.instance
-        .collection('exercise_feedback')
-        .doc(feedbackId)
-        .update({
-      'adminNotes': notes,
+final updateFeedbackNotesProvider = FutureProvider.autoDispose
+    .family<void, (String feedbackId, String notes)>((ref, params) async {
+      final (feedbackId, notes) = params;
+      await FirebaseFirestore.instance
+          .collection('exercise_feedback')
+          .doc(feedbackId)
+          .update({'adminNotes': notes});
     });
-  },
-);
 
 /// ✅ DERIVED PROVIDER: Count unread feedback (no Firestore query)
 final unreadFeedbackCountProvider = Provider<int>((ref) {
@@ -272,22 +272,20 @@ final unreadFeedbackCountProvider = Provider<int>((ref) {
   final allFeedbackAsync = ref.watch(allFeedbackProvider);
 
   return allFeedbackAsync.whenData((allFeedback) {
-    return allFeedback
-        .where((f) => f.status == 'OPEN')
-        .length;
-  }).value ?? 0;
+        return allFeedback.where((f) => f.status == 'OPEN').length;
+      }).value ??
+      0;
 });
 
 /// ✅ DERIVED PROVIDER: Top exercises with most feedback
 final topFeedbackExercisesProvider =
     Provider<List<(String exerciseId, int count)>>((ref) {
-  ref.keepAlive(); // FIX: previene ricreazione provider con sorting
-  final stats = ref.watch(feedbackStatsProvider);
+      ref.keepAlive(); // FIX: previene ricreazione provider con sorting
+      final stats = ref.watch(feedbackStatsProvider);
 
-  // Sort by count descending and take top 10
-  final sorted = stats.byExercise.entries
-      .toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
+      // Sort by count descending and take top 10
+      final sorted = stats.byExercise.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
 
-  return sorted.take(10).map((e) => (e.key, e.value)).toList();
-});
+      return sorted.take(10).map((e) => (e.key, e.value)).toList();
+    });

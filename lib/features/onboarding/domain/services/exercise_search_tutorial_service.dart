@@ -64,11 +64,13 @@ class ExerciseSearchTutorialState {
 class ExerciseSearchTutorialNotifier
     extends StateNotifier<ExerciseSearchTutorialState> {
   ExerciseSearchTutorialNotifier()
-      : super(const ExerciseSearchTutorialState(
+    : super(
+        const ExerciseSearchTutorialState(
           isActive: false,
           currentStep: ExerciseSearchTutorialStep.searchBar,
           hasCompletedTutorial: false,
-        )) {
+        ),
+      ) {
     _loadState();
   }
 
@@ -164,7 +166,8 @@ class ExerciseSearchTutorialNotifier
       final key = targetKeys[step];
       if (key == null || key.currentContext == null) {
         debugPrint(
-            '⚠️ [ExerciseSearchTutorial] Skipping step $step - no valid key');
+          '⚠️ [ExerciseSearchTutorial] Skipping step $step - no valid key',
+        );
         continue;
       }
 
@@ -293,7 +296,8 @@ class ExerciseSearchTutorialNotifier
 
     if (!context.mounted) {
       debugPrint(
-          '⚠️ [ExerciseSearchTutorial] Context no longer mounted, aborting');
+        '⚠️ [ExerciseSearchTutorial] Context no longer mounted, aborting',
+      );
       return;
     }
 
@@ -312,7 +316,9 @@ class ExerciseSearchTutorialNotifier
   }
 
   _StepConfig _getStepConfig(
-      ExerciseSearchTutorialStep step, AppLocalizations l10n) {
+    ExerciseSearchTutorialStep step,
+    AppLocalizations l10n,
+  ) {
     switch (step) {
       case ExerciseSearchTutorialStep.searchBar:
         return _StepConfig(
@@ -383,10 +389,11 @@ class _StepConfig {
 }
 
 /// Provider for exercise search tutorial state
-final exerciseSearchTutorialProvider = StateNotifierProvider<
-    ExerciseSearchTutorialNotifier, ExerciseSearchTutorialState>(
-  (ref) => ExerciseSearchTutorialNotifier(),
-);
+final exerciseSearchTutorialProvider =
+    StateNotifierProvider<
+      ExerciseSearchTutorialNotifier,
+      ExerciseSearchTutorialState
+    >((ref) => ExerciseSearchTutorialNotifier());
 
 /// Provider to check if tutorial is completed
 final exerciseSearchTutorialCompletedProvider = Provider<bool>((ref) {

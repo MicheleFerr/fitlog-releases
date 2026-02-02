@@ -15,8 +15,8 @@ import 'package:uuid/uuid.dart';
 /// Provider for template folders
 final templateFoldersProvider =
     AsyncNotifierProvider<TemplateFoldersNotifier, List<TemplateFolder>>(
-  TemplateFoldersNotifier.new,
-);
+      TemplateFoldersNotifier.new,
+    );
 
 /// Notifier for managing template folders
 class TemplateFoldersNotifier extends AsyncNotifier<List<TemplateFolder>> {
@@ -43,10 +43,7 @@ class TemplateFoldersNotifier extends AsyncNotifier<List<TemplateFolder>> {
           .get();
 
       return snapshot.docs.map((doc) {
-        return TemplateFolder.fromJson({
-          'id': doc.id,
-          ...doc.data(),
-        });
+        return TemplateFolder.fromJson({'id': doc.id, ...doc.data()});
       }).toList();
     } catch (e) {
       return [];
@@ -133,11 +130,11 @@ class TemplateFoldersNotifier extends AsyncNotifier<List<TemplateFolder>> {
           .collection('template_folders')
           .doc(folderId)
           .update({
-        if (name != null) 'name': name,
-        if (icon != null) 'icon': icon.name,
-        if (color != null) 'color': color,
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
+            if (name != null) 'name': name,
+            if (icon != null) 'icon': icon.name,
+            if (color != null) 'color': color,
+            'updatedAt': FieldValue.serverTimestamp(),
+          });
 
       final newFolders = [...currentFolders];
       newFolders[folderIndex] = updatedFolder;
@@ -162,9 +159,9 @@ class TemplateFoldersNotifier extends AsyncNotifier<List<TemplateFolder>> {
           .collection('template_folders')
           .doc(folderId)
           .update({
-        'sortOrder': newOrder,
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
+            'sortOrder': newOrder,
+            'updatedAt': FieldValue.serverTimestamp(),
+          });
 
       // Reload to get correct order
       state = AsyncValue.data(await _loadFolders());

@@ -7,10 +7,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 /// Displayed in the preloaded workout view to allow users to browse
 /// other templates if the suggested one doesn't fit their needs.
 class ChangeWorkoutBanner extends StatelessWidget {
-  const ChangeWorkoutBanner({
-    required this.onBrowseTemplates,
-    super.key,
-  });
+  const ChangeWorkoutBanner({required this.onBrowseTemplates, super.key});
 
   /// Callback when the user taps to browse templates
   final VoidCallback onBrowseTemplates;

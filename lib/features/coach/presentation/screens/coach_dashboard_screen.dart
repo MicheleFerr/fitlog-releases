@@ -80,9 +80,7 @@ class CoachDashboardScreen extends ConsumerWidget {
           ),
 
           // Bottom padding
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 100),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],
       ),
     );
@@ -237,10 +235,7 @@ class _AthletesSection extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  AppIcons.peopleOutline,
-                  color: context.colors.primary,
-                ),
+                Icon(AppIcons.peopleOutline, color: context.colors.primary),
                 const SizedBox(width: AppSpacing.xs),
                 Text(
                   context.l10n.athletes,
@@ -297,14 +292,16 @@ class _AthletesSection extends ConsumerWidget {
     return Column(
       children: [
         // Athlete cards
-        ...displayAthletes.map((athlete) => Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-              child: AthleteCard(
-                relationship: athlete,
-                onTap: () => _navigateToAthlete(context, athlete),
-                workoutStatus: AthleteWorkoutStatus.restDay,
-              ),
-            )),
+        ...displayAthletes.map(
+          (athlete) => Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            child: AthleteCard(
+              relationship: athlete,
+              onTap: () => _navigateToAthlete(context, athlete),
+              workoutStatus: AthleteWorkoutStatus.restDay,
+            ),
+          ),
+        ),
 
         // View all button
         if (hasMore || athletes.isNotEmpty)
@@ -387,10 +384,7 @@ class _TodayStatsSection extends ConsumerWidget {
         // Header
         Row(
           children: [
-            Icon(
-              AppIcons.insightsOutlined,
-              color: context.colors.primary,
-            ),
+            Icon(AppIcons.insightsOutlined, color: context.colors.primary),
             const SizedBox(width: AppSpacing.xs),
             Text(
               context.l10n.todayStats,
@@ -505,10 +499,7 @@ class _CoachCodeSection extends ConsumerWidget {
         // Header
         Row(
           children: [
-            Icon(
-              AppIcons.qrCode,
-              color: context.colors.primary,
-            ),
+            Icon(AppIcons.qrCode, color: context.colors.primary),
             const SizedBox(width: AppSpacing.xs),
             Text(
               context.l10n.yourCoachCode,

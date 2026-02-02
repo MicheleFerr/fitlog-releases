@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+
 /// Widget per esecuzione SEQUENZIALE superset secondo metodologia scientifica
 ///
 /// Flow corretto:
@@ -21,7 +22,6 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 /// 5. Avvia timer riposo (90sec default)
 /// 6. Timer finisce → pronto per Round successivo
 class SupersetSequentialExecutionSheet extends ConsumerStatefulWidget {
-
   const SupersetSequentialExecutionSheet({
     super.key,
     required this.superset,
@@ -49,7 +49,9 @@ class SupersetSequentialExecutionSheet extends ConsumerStatefulWidget {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => SupersetSequentialExecutionSheet(
         superset: superset,
         roundIndex: roundIndex,
@@ -66,7 +68,6 @@ class SupersetSequentialExecutionSheet extends ConsumerStatefulWidget {
 
 class _SupersetSequentialExecutionSheetState
     extends ConsumerState<SupersetSequentialExecutionSheet> {
-
   bool get _isLastRound =>
       widget.roundIndex >= widget.superset.supersetSets.length - 1;
 
@@ -130,7 +131,9 @@ class _SupersetSequentialExecutionSheetState
   }
 
   /// Gestisce il completamento di tutti gli esercizi del round
-  void _handleRoundCompletion(Map<int, SupersetExerciseCompleteData> completeDataMap) {
+  void _handleRoundCompletion(
+    Map<int, SupersetExerciseCompleteData> completeDataMap,
+  ) {
     // Converti i dati da index-based a ID-based
     final exerciseData = <String, SupersetExerciseData>{};
 
@@ -139,7 +142,9 @@ class _SupersetSequentialExecutionSheetState
       final data = completeDataMap[i];
 
       if (data != null) {
-        final existing = widget.superset.supersetSets[widget.roundIndex]
+        final existing = widget
+            .superset
+            .supersetSets[widget.roundIndex]
             .exerciseData[exercise.id];
 
         exerciseData[exercise.id] = SupersetExerciseData(
@@ -230,7 +235,9 @@ class _SupersetSequentialExecutionSheetState
           // Dismiss on tap outside
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
-            child: Container(color: context.colors.surface.withValues(alpha: 0)),
+            child: Container(
+              color: context.colors.surface.withValues(alpha: 0),
+            ),
           ),
           // QuickEdit overlay
           QuickEditOverlayV2(
@@ -260,7 +267,7 @@ class _SupersetSequentialExecutionSheetState
       exerciseId: exerciseId,
       exerciseName: exerciseData.exerciseName,
       targetWeight: updatedSet.weight, // Update target with new value
-      targetReps: updatedSet.reps,     // Update target with new value
+      targetReps: updatedSet.reps, // Update target with new value
       actualWeight: exerciseData.actualWeight,
       actualReps: exerciseData.actualReps,
       rpe: exerciseData.rpe,
@@ -268,7 +275,9 @@ class _SupersetSequentialExecutionSheetState
     );
 
     // Create updated round with modified exercise data
-    final updatedExerciseDataMap = Map<String, SupersetExerciseData>.from(currentRound.exerciseData);
+    final updatedExerciseDataMap = Map<String, SupersetExerciseData>.from(
+      currentRound.exerciseData,
+    );
     updatedExerciseDataMap[exerciseId] = updatedExerciseData;
 
     final updatedRound = SupersetSet(
@@ -280,10 +289,9 @@ class _SupersetSequentialExecutionSheetState
     );
 
     // Update in provider
-    ref.read(currentWorkoutProvider.notifier).updateSupersetSet(
-      widget.superset.id,
-      updatedRound,
-    );
+    ref
+        .read(currentWorkoutProvider.notifier)
+        .updateSupersetSet(widget.superset.id, updatedRound);
 
     // Force rebuild to show updated values
     setState(() {});
@@ -351,9 +359,9 @@ class _SupersetSequentialExecutionSheetState
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const SemanticIcon(
-  icon: AppIcons.close,
-  semanticLabel: 'Close',
-),
+                    icon: AppIcons.close,
+                    semanticLabel: 'Close',
+                  ),
                 ),
               ],
             ),
@@ -385,7 +393,9 @@ class _SupersetSequentialExecutionSheetState
                   child: Row(
                     children: [
                       Icon(
-                        isCompleted ? AppIcons.checkCircle : AppIcons.radioButtonUnchecked,
+                        isCompleted
+                            ? AppIcons.checkCircle
+                            : AppIcons.radioButtonUnchecked,
                         color: isCompleted
                             ? context.colors.secondary
                             : context.colors.outline,
@@ -400,9 +410,8 @@ class _SupersetSequentialExecutionSheetState
                                 Expanded(
                                   child: Text(
                                     exercise.name,
-                                    style: context.textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: context.textTheme.titleMedium
+                                        ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 // ✅ Visual hint for double-tap
@@ -410,7 +419,9 @@ class _SupersetSequentialExecutionSheetState
                                   icon: AppIcons.edit,
                                   semanticLabel: 'Edit',
                                   size: AppIconSize.tiny,
-                                  color: context.colors.outline.withValues(alpha: 0.5),
+                                  color: context.colors.outline.withValues(
+                                    alpha: 0.5,
+                                  ),
                                 ),
                               ],
                             ),
@@ -442,11 +453,11 @@ class _SupersetSequentialExecutionSheetState
               child: Row(
                 children: [
                   SemanticIcon(
-  icon: AppIcons.info,
-  semanticLabel: 'Information',
-  size: AppIconSize.small,
-  color: context.colors.onPrimaryContainer,
-),
+                    icon: AppIcons.info,
+                    semanticLabel: 'Information',
+                    size: AppIconSize.small,
+                    color: context.colors.onPrimaryContainer,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -466,13 +477,15 @@ class _SupersetSequentialExecutionSheetState
             FilledButton.icon(
               onPressed: completedExercises > 0 ? null : _executeRound,
               icon: const SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: 'Workout',
-),
+                icon: AppIcons.workout,
+                semanticLabel: 'Workout',
+              ),
               label: Text(
                 completedExercises > 0
                     ? context.l10n.completed
-                    : (_isLastRound ? context.l10n.complete : '${context.l10n.execute} ${context.l10n.round}'),
+                    : (_isLastRound
+                          ? context.l10n.complete
+                          : '${context.l10n.execute} ${context.l10n.round}'),
               ),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),

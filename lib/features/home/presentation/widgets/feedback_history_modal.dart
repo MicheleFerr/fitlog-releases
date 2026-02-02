@@ -10,10 +10,7 @@ import 'package:intl/intl.dart';
 
 /// Modal showing user's feedback history on AI Coach insights
 class FeedbackHistoryModal extends ConsumerWidget {
-  const FeedbackHistoryModal({
-    super.key,
-    this.scrollController,
-  });
+  const FeedbackHistoryModal({super.key, this.scrollController});
 
   final ScrollController? scrollController;
 
@@ -49,11 +46,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
               padding: const EdgeInsets.all(24),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.history,
-                    color: colorScheme.primary,
-                    size: 28,
-                  ),
+                  Icon(AppIcons.history, color: colorScheme.primary, size: 28),
                   const SizedBox(width: 12),
                   Text(
                     l10n.myFeedback,
@@ -68,40 +61,47 @@ class FeedbackHistoryModal extends ConsumerWidget {
             // Content
             Expanded(
               child: feedbackListAsync.when(
-              data: (feedbackList) {
-                if (feedbackList.isEmpty) {
-                  return _buildEmptyState(context, l10n, theme, colorScheme);
-                }
-                return _buildFeedbackList(context, feedbackList, l10n, theme, colorScheme, scrollController);
-              },
-              loading: () => const Center(child: LoadingIndicator()),
-              error: (error, _) => Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        AppIcons.errorOutline,
-                        size: 64,
-                        color: colorScheme.error.withValues(alpha: 0.6),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Error loading feedback: $error',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.error,
+                data: (feedbackList) {
+                  if (feedbackList.isEmpty) {
+                    return _buildEmptyState(context, l10n, theme, colorScheme);
+                  }
+                  return _buildFeedbackList(
+                    context,
+                    feedbackList,
+                    l10n,
+                    theme,
+                    colorScheme,
+                    scrollController,
+                  );
+                },
+                loading: () => const Center(child: LoadingIndicator()),
+                error: (error, _) => Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          AppIcons.errorOutline,
+                          size: 64,
+                          color: colorScheme.error.withValues(alpha: 0.6),
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+                        const SizedBox(height: 16),
+                        Text(
+                          'Error loading feedback: $error',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.error,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-      ), // Column
+          ],
+        ), // Column
       ), // SafeArea
     ); // DecoratedBox
   }
@@ -204,20 +204,18 @@ class FeedbackHistoryModal extends ConsumerWidget {
   ) {
     final isHelpful = feedback.isHelpful;
     final cardColor = isHelpful ? context.colors.success : context.colors.error;
-    final formattedDate = DateFormat.yMd(Localizations.localeOf(context).toString())
-        .add_Hm()
-        .format(feedback.timestamp);
+    final formattedDate = DateFormat.yMd(
+      Localizations.localeOf(context).toString(),
+    ).add_Hm().format(feedback.timestamp);
 
     // Extract readable insight type from enum string
     // e.g., "InsightType.progressOverload" -> "Progress Overload"
     String insightTypeDisplay = feedback.insightType
         .replaceAll('InsightType.', '')
-        .replaceAllMapped(
-          RegExp(r'([A-Z])'),
-          (match) => ' ${match.group(0)}',
-        )
+        .replaceAllMapped(RegExp(r'([A-Z])'), (match) => ' ${match.group(0)}')
         .trim();
-    insightTypeDisplay = insightTypeDisplay[0].toUpperCase() + insightTypeDisplay.substring(1);
+    insightTypeDisplay =
+        insightTypeDisplay[0].toUpperCase() + insightTypeDisplay.substring(1);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -225,10 +223,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
       decoration: BoxDecoration(
         color: cardColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: cardColor.withValues(alpha: 0.3),
-          width: 1,
-        ),
+        border: Border.all(color: cardColor.withValues(alpha: 0.3), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -285,11 +280,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  AppIcons.ai,
-                  size: 14,
-                  color: colorScheme.primary,
-                ),
+                Icon(AppIcons.ai, size: 14, color: colorScheme.primary),
                 const SizedBox(width: 6),
                 Text(
                   '${l10n.feedbackOn}: $insightTypeDisplay',

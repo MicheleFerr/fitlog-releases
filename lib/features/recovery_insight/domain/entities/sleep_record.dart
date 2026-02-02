@@ -99,8 +99,9 @@ abstract class SleepRecord with _$SleepRecord {
   }) {
     final asleepDuration = Duration(minutes: asleepMinutes.round());
     final inBedDuration = Duration(minutes: inBedMinutes.round());
-    final efficiency =
-        inBedMinutes > 0 ? (asleepMinutes / inBedMinutes) * 100 : 0.0;
+    final efficiency = inBedMinutes > 0
+        ? (asleepMinutes / inBedMinutes) * 100
+        : 0.0;
     final hours = asleepMinutes / 60;
     final quality = SleepQualityExtension.fromHours(hours);
 

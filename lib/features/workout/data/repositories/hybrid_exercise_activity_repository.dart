@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: data/repositories
 /// 🎯 Feature: workout
 /// 🔧 Type: repository
 /// 🌍 Localization: N/A
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - Hive (local storage)
 /// - Firebase (cloud sync for premium)
@@ -37,7 +37,6 @@ import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.da
 /// **Status**: Temporarily fixed to query 'workouts' but this is NOT the correct
 /// architecture. This repository should be replaced with workout_history_repository_enhanced.dart
 class HybridExerciseActivityRepository {
-
   HybridExerciseActivityRepository({
     required HiveWorkoutDataSource localDataSource,
     FirebaseAuth? auth,
@@ -55,17 +54,14 @@ class HybridExerciseActivityRepository {
   // ⚠️ CHANGED: exerciseActivities → workouts (2025-01-18)
   // Old: static const String _collectionName = 'exerciseActivities';
   static const String _collectionName = 'workouts';
-  
+
   /// Load user profile to check premium status
   Future<void> _loadUserProfile() async {
     try {
       final user = _auth.currentUser;
       if (user != null) {
-        final doc = await _firestore
-            .collection('users')
-            .doc(user.uid)
-            .get();
-        
+        final doc = await _firestore.collection('users').doc(user.uid).get();
+
         if (doc.exists) {
           _userProfile = UserProfile.fromFirestore(doc);
         }
@@ -76,12 +72,12 @@ class HybridExerciseActivityRepository {
       }
     }
   }
-  
+
   /// Check if user is premium
   bool get _isPremiumUser {
     return _userProfile?.accountTier != AccountTier.free;
   }
-  
+
   /// Get user activities within a date range (optimized for lazy loading)
   Future<List<ExerciseActivity>> getUserActivitiesInDateRange({
     required String userEmail,
@@ -93,25 +89,29 @@ class HybridExerciseActivityRepository {
       if (userId == null) {
         throw Exception('User not authenticated');
       }
-      
+
       if (kDebugMode) {
-        debugPrint('📊 Loading activities from ${startDate.toIso8601String()} to ${endDate.toIso8601String()}');
+        debugPrint(
+          '📊 Loading activities from ${startDate.toIso8601String()} to ${endDate.toIso8601String()}',
+        );
       }
-      
+
       // Always load from local first (fast!)
       final workouts = await _localDataSource.getWorkouts(
         userId,
         startDate: startDate,
         endDate: endDate,
       );
-      
+
       // Convert workouts to exercise activities
       final activities = <ExerciseActivity>[];
-      
+
       for (final workout in workouts) {
         for (final exercise in workout.exercises) {
-          final completedSets = exercise.sets.where((set) => set.isCompleted).toList();
-          
+          final completedSets = exercise.sets
+              .where((set) => set.isCompleted)
+              .toList();
+
           if (completedSets.isNotEmpty) {
             final activity = ExerciseActivity.fromExercise(
               exercise: exercise.toDomain(),
@@ -124,11 +124,11 @@ class HybridExerciseActivityRepository {
           }
         }
       }
-      
+
       if (kDebugMode) {
         debugPrint('📊 Found ${activities.length} activities in date range');
       }
-      
+
       return activities;
     } catch (e) {
       if (kDebugMode) {
@@ -145,7 +145,6 @@ class HybridExerciseActivityRepository {
     required String userEmail,
     bool autoSync = false, // Disabilitato di default
   }) async {
-    
     if (!workout.isCompleted) {
       throw Exception('Il workout deve essere completato per essere salvato');
     }
@@ -162,18 +161,15 @@ class HybridExerciseActivityRepository {
         workoutModel,
         userEmail,
       );
-      
+
       if (kDebugMode) {
         debugPrint('✅ Workout saved locally: ${localIds.length} activities');
       }
-      
+
       // 2. NON sincronizzare automaticamente con Firebase
       // Solo se esplicitamente richiesto E se premium
       if (_isPremiumUser && autoSync) {
-        _syncToFirebaseInBackground(
-          workout: workout,
-          userEmail: userEmail,
-        );
+        _syncToFirebaseInBackground(workout: workout, userEmail: userEmail);
         if (kDebugMode) {
           debugPrint('☁️ Premium user - background sync initiated');
         }
@@ -182,9 +178,8 @@ class HybridExerciseActivityRepository {
           debugPrint('ℹ️ Local-only storage (sync disabled or free user)');
         }
       }
-      
+
       return localIds;
-      
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ Error saving workout: $e');
@@ -204,14 +199,16 @@ class HybridExerciseActivityRepository {
         if (kDebugMode) {
           debugPrint('☁️ Starting background sync to Firebase...');
         }
-        
+
         // Normalizza email
         final normalizedEmail = userEmail.toLowerCase().trim();
-        
+
         // Salva ogni esercizio come activity
         for (final exercise in workout.exercises) {
-          final completedSets = exercise.sets.where((set) => set.isCompleted).toList();
-          
+          final completedSets = exercise.sets
+              .where((set) => set.isCompleted)
+              .toList();
+
           if (completedSets.isNotEmpty) {
             final exerciseActivity = ExerciseActivity.fromExercise(
               exercise: exercise,
@@ -226,11 +223,10 @@ class HybridExerciseActivityRepository {
                 .add(exerciseActivity.toFirestore());
           }
         }
-        
+
         if (kDebugMode) {
           debugPrint('✅ Background sync completed successfully');
         }
-        
       } catch (e) {
         if (kDebugMode) {
           debugPrint('⚠️ Background sync failed (will retry later): $e');
@@ -248,24 +244,22 @@ class HybridExerciseActivityRepository {
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    
     final userId = _auth.currentUser?.uid;
     if (userId == null) {
       return [];
     }
-    
+
     try {
       // 1. Ottieni sempre da locale prima (veloce!)
       // Per ora usiamo i workout locali come proxy per activities
-      
+
       final localWorkouts = await _localDataSource.getWorkouts(
         userId,
         limit: limit,
         startDate: startDate,
         endDate: endDate,
       );
-      
-      
+
       // Converti workout in activities
       final localActivities = <ExerciseActivity>[];
       for (final workout in localWorkouts) {
@@ -277,14 +271,15 @@ class HybridExerciseActivityRepository {
                 userEmail: userEmail,
                 workoutName: workout.name,
                 exerciseImageUrl: null,
-                workoutDate: workout.startTime ?? workout.createdAt, // Use actual workout date
+                workoutDate:
+                    workout.startTime ??
+                    workout.createdAt, // Use actual workout date
               ),
             );
           }
         }
       }
-      
-      
+
       // 2. Se premium e online, merge con cloud
       if (_isPremiumUser) {
         try {
@@ -294,11 +289,10 @@ class HybridExerciseActivityRepository {
             startDate: startDate,
             endDate: endDate,
           );
-          
+
           // Merge e deduplica
           final merged = _mergeActivities(localActivities, cloudActivities);
           return merged;
-          
         } catch (e) {
           if (kDebugMode) {
             debugPrint('Cloud fetch failed, using local only: $e');
@@ -306,9 +300,8 @@ class HybridExerciseActivityRepository {
           // Fallback to local if cloud fails
         }
       }
-      
+
       return localActivities;
-      
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('Error getting activities: $e');
@@ -317,7 +310,7 @@ class HybridExerciseActivityRepository {
       return [];
     }
   }
-  
+
   /// Get activities from cloud
   ///
   /// ⚠️ DEPRECATED: Queries 'workouts' but expects flat ExerciseActivity structure
@@ -330,33 +323,47 @@ class HybridExerciseActivityRepository {
     DateTime? endDate,
   }) async {
     if (kDebugMode) {
-      debugPrint('⚠️ DEPRECATED: HybridExerciseActivityRepository._getCloudActivities() is deprecated');
+      debugPrint(
+        '⚠️ DEPRECATED: HybridExerciseActivityRepository._getCloudActivities() is deprecated',
+      );
     }
 
     Query query = _firestore
         .collection(_collectionName)
-        .where('userId', isEqualTo: userId) // ⚠️ CHANGED: email → userId (2025-01-18)
-        .orderBy('completedAt', descending: true); // ⚠️ CHANGED: createdAt → completedAt (2025-01-18)
+        .where(
+          'userId',
+          isEqualTo: userId,
+        ) // ⚠️ CHANGED: email → userId (2025-01-18)
+        .orderBy(
+          'completedAt',
+          descending: true,
+        ); // ⚠️ CHANGED: createdAt → completedAt (2025-01-18)
 
     if (startDate != null) {
-      query = query.where('completedAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate)); // ⚠️ CHANGED
+      query = query.where(
+        'completedAt',
+        isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+      ); // ⚠️ CHANGED
     }
 
     if (endDate != null) {
-      query = query.where('completedAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate)); // ⚠️ CHANGED
+      query = query.where(
+        'completedAt',
+        isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+      ); // ⚠️ CHANGED
     }
-    
+
     if (limit != null) {
       query = query.limit(limit);
     }
 
     final querySnapshot = await query.get();
-    
+
     return querySnapshot.docs
         .map((doc) => ExerciseActivity.fromFirestore(doc))
         .toList();
   }
-  
+
   /// Merge local and cloud activities
   List<ExerciseActivity> _mergeActivities(
     List<ExerciseActivity> local,
@@ -364,23 +371,23 @@ class HybridExerciseActivityRepository {
   ) {
     // Simple deduplication by date + exercise name
     final merged = <String, ExerciseActivity>{};
-    
+
     // Add local first
     for (final activity in local) {
       final key = '${activity.createdAt}_${activity.exerciseName}';
       merged[key] = activity;
     }
-    
+
     // Add cloud (overwrites if duplicate)
     for (final activity in cloud) {
       final key = '${activity.createdAt}_${activity.exerciseName}';
       merged[key] = activity;
     }
-    
+
     // Sort by date
     final result = merged.values.toList();
     result.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    
+
     return result;
   }
 
@@ -394,10 +401,8 @@ class HybridExerciseActivityRepository {
       userEmail: userEmail,
       limit: limit,
     );
-    
-    return activities
-        .where((a) => a.exerciseName == exerciseName)
-        .toList();
+
+    return activities.where((a) => a.exerciseName == exerciseName).toList();
   }
 
   /// Ottiene statistiche delle attività
@@ -411,31 +416,28 @@ class HybridExerciseActivityRepository {
       startDate: startDate,
       endDate: endDate,
     );
-    
+
     // Calcola statistiche
     final totalActivities = activities.length;
-    final totalVolume = activities.fold<double>(
-      0, 
-      (sum, a) {
-        // Calculate total volume from sets (weight * reps)
-        double activityVolume = 0;
-        for (final set in a.sets) {
-          if (set.done) {
-            final weight = double.tryParse(set.weight) ?? 0;
-            final reps = double.tryParse(set.reps) ?? 0;
-            activityVolume += weight * reps;
-          }
+    final totalVolume = activities.fold<double>(0, (sum, a) {
+      // Calculate total volume from sets (weight * reps)
+      double activityVolume = 0;
+      for (final set in a.sets) {
+        if (set.done) {
+          final weight = double.tryParse(set.weight) ?? 0;
+          final reps = double.tryParse(set.reps) ?? 0;
+          activityVolume += weight * reps;
         }
-        return sum + activityVolume;
-      },
-    );
-    
+      }
+      return sum + activityVolume;
+    });
+
     final exerciseCount = <String, int>{};
     for (final activity in activities) {
-      exerciseCount[activity.exerciseName] = 
+      exerciseCount[activity.exerciseName] =
           (exerciseCount[activity.exerciseName] ?? 0) + 1;
     }
-    
+
     return {
       'totalActivities': totalActivities,
       'totalVolume': totalVolume,
@@ -452,7 +454,7 @@ class HybridExerciseActivityRepository {
       await _localDataSource.clearUserData(userId);
     }
   }
-  
+
   /// Sincronizza tutti i workout non sincronizzati (per upgrade premium)
   Future<SyncResult> syncAllPendingWorkouts() async {
     // ========================================
@@ -470,7 +472,7 @@ class HybridExerciseActivityRepository {
         failedCount: 0,
       );
     }
-    
+
     final userId = _auth.currentUser?.uid;
     if (userId == null) {
       return SyncResult(
@@ -480,27 +482,29 @@ class HybridExerciseActivityRepository {
         failedCount: 0,
       );
     }
-    
+
     try {
       if (kDebugMode) {
         debugPrint('🔄 Starting retroactive sync for premium user...');
       }
-      
+
       // Ottieni tutti i workout non sincronizzati
-      final unsyncedWorkouts = await _localDataSource.getUnsyncedWorkouts(userId);
+      final unsyncedWorkouts = await _localDataSource.getUnsyncedWorkouts(
+        userId,
+      );
       if (kDebugMode) {
         debugPrint('Found ${unsyncedWorkouts.length} unsynced workouts');
       }
-      
+
       int syncedCount = 0;
       int failedCount = 0;
       final List<String> errors = [];
-      
+
       // Sync in batch per efficienza
       const batchSize = 10;
       for (int i = 0; i < unsyncedWorkouts.length; i += batchSize) {
         final batch = unsyncedWorkouts.skip(i).take(batchSize).toList();
-        
+
         try {
           // Sync batch to Firebase
           for (final workoutModel in batch) {
@@ -510,11 +514,13 @@ class HybridExerciseActivityRepository {
                 workout: workout,
                 userEmail: _auth.currentUser!.email!,
               );
-              
+
               // Marca come sincronizzato
-              await _localDataSource.markWorkoutAsSynced(workoutModel.id, userId);
+              await _localDataSource.markWorkoutAsSynced(
+                workoutModel.id,
+                userId,
+              );
               syncedCount++;
-              
             } catch (e) {
               failedCount++;
               errors.add('Failed to sync workout ${workoutModel.id}: $e');
@@ -523,11 +529,12 @@ class HybridExerciseActivityRepository {
               }
             }
           }
-          
+
           if (kDebugMode) {
-            debugPrint('✅ Synced batch ${i ~/ batchSize + 1}: $syncedCount/$unsyncedWorkouts.length');
+            debugPrint(
+              '✅ Synced batch ${i ~/ batchSize + 1}: $syncedCount/$unsyncedWorkouts.length',
+            );
           }
-          
         } catch (e) {
           if (kDebugMode) {
             debugPrint('❌ Batch sync failed: $e');
@@ -536,15 +543,15 @@ class HybridExerciseActivityRepository {
           failedCount += batch.length;
         }
       }
-      
+
       return SyncResult(
         success: failedCount == 0,
-        message: 'Synced $syncedCount workouts${failedCount > 0 ? ', $failedCount failed' : ''}',
+        message:
+            'Synced $syncedCount workouts${failedCount > 0 ? ', $failedCount failed' : ''}',
         syncedCount: syncedCount,
         failedCount: failedCount,
         errors: errors,
       );
-      
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Sync all failed: $e');
@@ -558,18 +565,20 @@ class HybridExerciseActivityRepository {
       );
     }
   }
-  
+
   /// Sync singolo workout a Firebase (sincrono)
   Future<void> _syncWorkoutToFirebase({
     required Workout workout,
     required String userEmail,
   }) async {
     final normalizedEmail = userEmail.toLowerCase().trim();
-    
+
     // Salva ogni esercizio come activity
     for (final exercise in workout.exercises) {
-      final completedSets = exercise.sets.where((set) => set.isCompleted).toList();
-      
+      final completedSets = exercise.sets
+          .where((set) => set.isCompleted)
+          .toList();
+
       if (completedSets.isNotEmpty) {
         final exerciseActivity = ExerciseActivity.fromExercise(
           exercise: exercise,
@@ -589,7 +598,6 @@ class HybridExerciseActivityRepository {
 
 /// Risultato operazione di sync
 class SyncResult {
-  
   SyncResult({
     required this.success,
     required this.message,

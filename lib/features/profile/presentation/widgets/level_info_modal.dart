@@ -40,11 +40,11 @@ class LevelInfoModal extends StatefulWidget {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
-      builder: (context) => LevelInfoModal(
-        currentXP: currentXP,
-        currentTier: currentTier,
-      ),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
+      builder: (context) =>
+          LevelInfoModal(currentXP: currentXP, currentTier: currentTier),
     );
   }
 
@@ -192,9 +192,7 @@ class _LevelInfoModalState extends State<LevelInfoModal> {
   Widget _buildCurrentStatusCard(BuildContext context) {
     final nextTier = widget.currentTier.next;
     final progress = widget.currentTier.progressToNext(widget.currentXP);
-    final xpToNext = nextTier != null
-        ? nextTier.minXP - widget.currentXP
-        : 0;
+    final xpToNext = nextTier != null ? nextTier.minXP - widget.currentXP : 0;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -323,9 +321,7 @@ class _LevelInfoModalState extends State<LevelInfoModal> {
             ? tier.color.withValues(alpha: 0.1)
             : context.colors.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
-        border: isCurrentTier
-            ? Border.all(color: tier.color, width: 2)
-            : null,
+        border: isCurrentTier ? Border.all(color: tier.color, width: 2) : null,
       ),
       child: Row(
         children: [

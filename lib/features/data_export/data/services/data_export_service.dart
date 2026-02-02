@@ -40,14 +40,14 @@ class DataExportService {
     required PRCelebrationRepository prRepository,
     required AchievementRepository achievementRepository,
     FirebaseAuth? auth,
-  })  : _workoutRepository = workoutRepository,
-        _templateRepository = templateRepository,
-        _customExerciseRepository = customExerciseRepository,
-        _measurementRepository = measurementRepository,
-        _photoRepository = photoRepository,
-        _prRepository = prRepository,
-        _achievementRepository = achievementRepository,
-        _auth = auth ?? FirebaseAuth.instance;
+  }) : _workoutRepository = workoutRepository,
+       _templateRepository = templateRepository,
+       _customExerciseRepository = customExerciseRepository,
+       _measurementRepository = measurementRepository,
+       _photoRepository = photoRepository,
+       _prRepository = prRepository,
+       _achievementRepository = achievementRepository,
+       _auth = auth ?? FirebaseAuth.instance;
 
   final WorkoutHistoryRepositoryEnhanced _workoutRepository;
   final TemplateRepository _templateRepository;
@@ -324,9 +324,13 @@ class DataExportService {
   }
 
   Future<List<Map<String, dynamic>>> _collectPersonalRecords(
-      String userId) async {
+    String userId,
+  ) async {
     try {
-      final result = await _prRepository.getRecentCelebrations(userId, limit: 10000);
+      final result = await _prRepository.getRecentCelebrations(
+        userId,
+        limit: 10000,
+      );
       return result.fold(
         (failure) => <Map<String, dynamic>>[],
         (prs) => prs.map((pr) => pr.toJson()).toList(),
@@ -356,7 +360,9 @@ class DataExportService {
 
   Future<List<Map<String, dynamic>>> _collectAchievements(String userId) async {
     try {
-      final result = await _achievementRepository.getUnlockedAchievements(userId);
+      final result = await _achievementRepository.getUnlockedAchievements(
+        userId,
+      );
       return result.fold(
         (failure) => <Map<String, dynamic>>[],
         (achievements) => achievements.map((a) => a.toJson()).toList(),
@@ -367,25 +373,26 @@ class DataExportService {
     }
   }
 
-  Future<String> _packageExport(
-    ExportedData data,
-    ExportFormat format,
-  ) async {
+  Future<String> _packageExport(ExportedData data, ExportFormat format) async {
     final directory = await getApplicationDocumentsDirectory();
     final exportDir = Directory('${directory.path}/exports');
     if (!await exportDir.exists()) {
       await exportDir.create(recursive: true);
     }
 
-    final timestamp =
-        DateTime.now().toIso8601String().replaceAll(':', '-').split('.').first;
+    final timestamp = DateTime.now()
+        .toIso8601String()
+        .replaceAll(':', '-')
+        .split('.')
+        .first;
     final fileName = 'fitlog_export_$timestamp';
 
     switch (format) {
       case ExportFormat.json:
         final jsonFile = File('${exportDir.path}/$fileName.json');
-        final jsonContent =
-            const JsonEncoder.withIndent('  ').convert(data.toJson());
+        final jsonContent = const JsonEncoder.withIndent(
+          '  ',
+        ).convert(data.toJson());
         await jsonFile.writeAsString(jsonContent);
         return jsonFile.path;
 
@@ -409,92 +416,108 @@ class DataExportService {
     final archive = Archive();
 
     // Add main data JSON
-    final mainJson =
-        const JsonEncoder.withIndent('  ').convert(data.toJson());
-    archive.addFile(ArchiveFile(
-      'data.json',
-      mainJson.length,
-      utf8.encode(mainJson),
-    ));
+    final mainJson = const JsonEncoder.withIndent('  ').convert(data.toJson());
+    archive.addFile(
+      ArchiveFile('data.json', mainJson.length, utf8.encode(mainJson)),
+    );
 
     // Add separate files for each category
     if (data.workouts.isNotEmpty) {
-      final workoutsJson =
-          const JsonEncoder.withIndent('  ').convert(data.workouts);
-      archive.addFile(ArchiveFile(
-        'workouts.json',
-        workoutsJson.length,
-        utf8.encode(workoutsJson),
-      ));
+      final workoutsJson = const JsonEncoder.withIndent(
+        '  ',
+      ).convert(data.workouts);
+      archive.addFile(
+        ArchiveFile(
+          'workouts.json',
+          workoutsJson.length,
+          utf8.encode(workoutsJson),
+        ),
+      );
     }
 
     if (data.templates.isNotEmpty) {
-      final templatesJson =
-          const JsonEncoder.withIndent('  ').convert(data.templates);
-      archive.addFile(ArchiveFile(
-        'templates.json',
-        templatesJson.length,
-        utf8.encode(templatesJson),
-      ));
+      final templatesJson = const JsonEncoder.withIndent(
+        '  ',
+      ).convert(data.templates);
+      archive.addFile(
+        ArchiveFile(
+          'templates.json',
+          templatesJson.length,
+          utf8.encode(templatesJson),
+        ),
+      );
     }
 
     if (data.customExercises.isNotEmpty) {
-      final exercisesJson =
-          const JsonEncoder.withIndent('  ').convert(data.customExercises);
-      archive.addFile(ArchiveFile(
-        'custom_exercises.json',
-        exercisesJson.length,
-        utf8.encode(exercisesJson),
-      ));
+      final exercisesJson = const JsonEncoder.withIndent(
+        '  ',
+      ).convert(data.customExercises);
+      archive.addFile(
+        ArchiveFile(
+          'custom_exercises.json',
+          exercisesJson.length,
+          utf8.encode(exercisesJson),
+        ),
+      );
     }
 
     if (data.bodyMeasurements.isNotEmpty) {
-      final measurementsJson =
-          const JsonEncoder.withIndent('  ').convert(data.bodyMeasurements);
-      archive.addFile(ArchiveFile(
-        'body_measurements.json',
-        measurementsJson.length,
-        utf8.encode(measurementsJson),
-      ));
+      final measurementsJson = const JsonEncoder.withIndent(
+        '  ',
+      ).convert(data.bodyMeasurements);
+      archive.addFile(
+        ArchiveFile(
+          'body_measurements.json',
+          measurementsJson.length,
+          utf8.encode(measurementsJson),
+        ),
+      );
     }
 
     if (data.progressPhotoUrls.isNotEmpty) {
-      final photosJson =
-          const JsonEncoder.withIndent('  ').convert(data.progressPhotoUrls);
-      archive.addFile(ArchiveFile(
-        'progress_photos.json',
-        photosJson.length,
-        utf8.encode(photosJson),
-      ));
+      final photosJson = const JsonEncoder.withIndent(
+        '  ',
+      ).convert(data.progressPhotoUrls);
+      archive.addFile(
+        ArchiveFile(
+          'progress_photos.json',
+          photosJson.length,
+          utf8.encode(photosJson),
+        ),
+      );
     }
 
     if (data.personalRecords.isNotEmpty) {
-      final prsJson =
-          const JsonEncoder.withIndent('  ').convert(data.personalRecords);
-      archive.addFile(ArchiveFile(
-        'personal_records.json',
-        prsJson.length,
-        utf8.encode(prsJson),
-      ));
+      final prsJson = const JsonEncoder.withIndent(
+        '  ',
+      ).convert(data.personalRecords);
+      archive.addFile(
+        ArchiveFile(
+          'personal_records.json',
+          prsJson.length,
+          utf8.encode(prsJson),
+        ),
+      );
     }
 
     if (data.achievements.isNotEmpty) {
-      final achievementsJson =
-          const JsonEncoder.withIndent('  ').convert(data.achievements);
-      archive.addFile(ArchiveFile(
-        'achievements.json',
-        achievementsJson.length,
-        utf8.encode(achievementsJson),
-      ));
+      final achievementsJson = const JsonEncoder.withIndent(
+        '  ',
+      ).convert(data.achievements);
+      archive.addFile(
+        ArchiveFile(
+          'achievements.json',
+          achievementsJson.length,
+          utf8.encode(achievementsJson),
+        ),
+      );
     }
 
     // Add README
     final readme = _generateReadme(data);
-    archive.addFile(ArchiveFile(
-      'README.txt',
-      readme.length,
-      utf8.encode(readme),
-    ));
+    archive.addFile(
+      ArchiveFile('README.txt', readme.length, utf8.encode(readme)),
+    );
 
     // Create ZIP file
     final zipEncoder = ZipEncoder();

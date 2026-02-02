@@ -124,14 +124,19 @@ class TemplateQuotaInfo {
 
     return TemplateQuotaInfo(
       accountTier: data['accountTier'] as String? ?? 'free',
-      privateUsed: privateData['used'] as int? ?? data['privateUsed'] as int? ?? 0,
+      privateUsed:
+          privateData['used'] as int? ?? data['privateUsed'] as int? ?? 0,
       privateMax: privateData['max'] as int? ?? data['privateMax'] as int? ?? 4,
-      privateRemaining: privateData['remaining'] as int? ??
-          ((data['privateMax'] as int? ?? 4) - (data['privateUsed'] as int? ?? 0)),
+      privateRemaining:
+          privateData['remaining'] as int? ??
+          ((data['privateMax'] as int? ?? 4) -
+              (data['privateUsed'] as int? ?? 0)),
       publicUsed: publicData['used'] as int? ?? data['publicUsed'] as int? ?? 0,
       publicMax: publicData['max'] as int? ?? data['publicMax'] as int? ?? 2,
-      publicRemaining: publicData['remaining'] as int? ??
-          ((data['publicMax'] as int? ?? 2) - (data['publicUsed'] as int? ?? 0)),
+      publicRemaining:
+          publicData['remaining'] as int? ??
+          ((data['publicMax'] as int? ?? 2) -
+              (data['publicUsed'] as int? ?? 0)),
     );
   }
 
@@ -231,30 +236,30 @@ class TemplateCloudService {
 
       // 🔐 SECURITY: Call Cloud Function with rate limit handling
       // 🔧 FIX: Add 30s timeout to prevent infinite hanging on network issues
-      final result = await _rateLimitHandler.executeWithRetry<
-          HttpsCallableResult<Map<String, dynamic>>>(
-        () => FirebaseFunctions.instance
-            .httpsCallable(
-              'createTemplate',
-              options: HttpsCallableOptions(
-                timeout: const Duration(seconds: 30),
-              ),
-            )
-            .call<Map<String, dynamic>>({
-          'name': name,
-          'description': description ?? '',
-          'exercises': exercisesJson,
-          'tags': tags,
-          'isPublic': isPublic,
-        }),
-        onRateLimited: (retryAfter) {
-          AppLogger.warning(
-            'Rate limited. Retrying createTemplate in $retryAfter seconds...',
-            tag: 'TemplateCloudService',
+      final result = await _rateLimitHandler
+          .executeWithRetry<HttpsCallableResult<Map<String, dynamic>>>(
+            () => FirebaseFunctions.instance
+                .httpsCallable(
+                  'createTemplate',
+                  options: HttpsCallableOptions(
+                    timeout: const Duration(seconds: 30),
+                  ),
+                )
+                .call<Map<String, dynamic>>({
+                  'name': name,
+                  'description': description ?? '',
+                  'exercises': exercisesJson,
+                  'tags': tags,
+                  'isPublic': isPublic,
+                }),
+            onRateLimited: (retryAfter) {
+              AppLogger.warning(
+                'Rate limited. Retrying createTemplate in $retryAfter seconds...',
+                tag: 'TemplateCloudService',
+              );
+            },
+            maxDelay: const Duration(minutes: 2),
           );
-        },
-        maxDelay: const Duration(minutes: 2),
-      );
 
       final createResult = CreateTemplateResult.fromResponse(result.data);
 
@@ -317,9 +322,7 @@ class TemplateCloudService {
       final result = await FirebaseFunctions.instance
           .httpsCallable(
             'getTemplateQuota',
-            options: HttpsCallableOptions(
-              timeout: const Duration(seconds: 15),
-            ),
+            options: HttpsCallableOptions(timeout: const Duration(seconds: 15)),
           )
           .call<Map<String, dynamic>>();
 
@@ -424,10 +427,7 @@ class TemplateCloudService {
         };
       }).toList();
 
-      return {
-        ...baseJson,
-        'stages': stages,
-      };
+      return {...baseJson, 'stages': stages};
     } else if (exercise is RestPauseExercise) {
       final restPauseSets = exercise.restPauseSets.map((s) {
         return <String, dynamic>{
@@ -447,13 +447,17 @@ class TemplateCloudService {
       // IMPORTANT: Map to SetTemplate format (targetWeight/targetReps/targetRpe)
       return {
         ...baseJson,
-        'sets': exercise.sets.map((s) => <String, dynamic>{
-          'setNumber': s.setNumber,
-          'targetWeight': s.weight,
-          'targetReps': s.reps,
-          'targetRpe': s.rpe,
-          'notes': s.notes,
-        }).toList(),
+        'sets': exercise.sets
+            .map(
+              (s) => <String, dynamic>{
+                'setNumber': s.setNumber,
+                'targetWeight': s.weight,
+                'targetReps': s.reps,
+                'targetRpe': s.rpe,
+                'notes': s.notes,
+              },
+            )
+            .toList(),
       };
     }
   }

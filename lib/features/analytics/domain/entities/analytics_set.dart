@@ -40,7 +40,6 @@ part 'analytics_set.g.dart';
 
 @freezed
 abstract class AnalyticsSet with _$AnalyticsSet {
-
   const factory AnalyticsSet({
     /// Weight lifted in kg (must be > 0)
     required double weight,

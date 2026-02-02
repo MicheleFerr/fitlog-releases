@@ -66,7 +66,11 @@ class _PRInfo {
     final now = DateTime.now();
     // Use calendar days (without time) for correct comparison
     final today = DateTime(now.year, now.month, now.day);
-    final targetDay = DateTime(achievedDate.year, achievedDate.month, achievedDate.day);
+    final targetDay = DateTime(
+      achievedDate.year,
+      achievedDate.month,
+      achievedDate.day,
+    );
     final difference = today.difference(targetDay).inDays;
 
     if (difference == 0) return context.l10n.prToday;
@@ -95,7 +99,9 @@ class PRModal extends StatelessWidget {
     final now = DateTime.now();
     // Use date-only comparison for consistent "last 7 days" calculation
     final today = DateTime(now.year, now.month, now.day);
-    final weekStart = today.subtract(const Duration(days: 6)); // 7 days = today + 6 previous
+    final weekStart = today.subtract(
+      const Duration(days: 6),
+    ); // 7 days = today + 6 previous
 
     for (final history in exerciseHistories) {
       if (history.sessions.isEmpty) continue;
@@ -118,16 +124,19 @@ class PRModal extends StatelessWidget {
 
       // Check if PR is recent (last 7 days) using date-only comparison
       final prDateOnly = DateTime(prDate.year, prDate.month, prDate.day);
-      final isRecent = !prDateOnly.isBefore(weekStart) && !prDateOnly.isAfter(today);
+      final isRecent =
+          !prDateOnly.isBefore(weekStart) && !prDateOnly.isAfter(today);
 
-      prInfoList.add(_PRInfo(
-        exerciseId: history.exerciseId,
-        exerciseName: history.exerciseName,
-        muscleGroup: history.muscleGroup,
-        personalRecord: pr,
-        achievedDate: prDate,
-        isRecent: isRecent,
-      ));
+      prInfoList.add(
+        _PRInfo(
+          exerciseId: history.exerciseId,
+          exerciseName: history.exerciseName,
+          muscleGroup: history.muscleGroup,
+          personalRecord: pr,
+          achievedDate: prDate,
+          isRecent: isRecent,
+        ),
+      );
     }
 
     // Sort by date (most recent first)
@@ -525,8 +534,10 @@ class PRModal extends StatelessWidget {
                       ),
                       if (pr.isRecent)
                         Container(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: context.colors.success,
                             borderRadius: BorderRadius.circular(12),

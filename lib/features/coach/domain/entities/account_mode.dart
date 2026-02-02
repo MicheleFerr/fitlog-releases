@@ -51,10 +51,10 @@ enum AccountMode {
 
   /// Display name for UI (use l10n in presentation layer)
   String get displayKey => switch (this) {
-        AccountMode.solo => 'accountModeSolo',
-        AccountMode.coached => 'accountModeCoached',
-        AccountMode.coach => 'accountModeCoach',
-      };
+    AccountMode.solo => 'accountModeSolo',
+    AccountMode.coached => 'accountModeCoached',
+    AccountMode.coach => 'accountModeCoach',
+  };
 }
 
 /// Extension on UserProfile preferences for account mode

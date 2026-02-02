@@ -52,10 +52,7 @@ class TemplatesCarouselCompact extends ConsumerWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeader(context),
-          child,
-        ],
+        children: [_buildHeader(context), child],
       ),
     );
   }
@@ -97,7 +94,10 @@ class TemplatesCarouselCompact extends ConsumerWidget {
               context.push('/templates');
             },
             style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.sm,
+                vertical: AppSpacing.xs,
+              ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -124,7 +124,10 @@ class TemplatesCarouselCompact extends ConsumerWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context, List<WorkoutTemplate> displayTemplates) {
+  Widget _buildContent(
+    BuildContext context,
+    List<WorkoutTemplate> displayTemplates,
+  ) {
     if (displayTemplates.isEmpty) {
       return _buildContainer(context, child: _EmptyState());
     }
@@ -149,7 +152,6 @@ class TemplatesCarouselCompact extends ConsumerWidget {
 
 /// Card singolo template with elevated design
 class _TemplateCard extends ConsumerWidget {
-
   const _TemplateCard({required this.template});
   final WorkoutTemplate template;
 

@@ -33,35 +33,41 @@ class PhotoReminderNotificationService {
   static const List<Map<String, String>> _messageVariations = [
     {
       'title': '📸 Time for a Progress Check!',
-      'body': 'Your fitness journey deserves to be documented. Take a moment to capture your progress.',
+      'body':
+          'Your fitness journey deserves to be documented. Take a moment to capture your progress.',
     },
     {
       'title': '💪 How\'s Your Transformation Going?',
-      'body': 'A quick photo can reveal changes you might not notice day-to-day.',
+      'body':
+          'A quick photo can reveal changes you might not notice day-to-day.',
     },
     {
       'title': '🎯 Progress Photo Reminder',
-      'body': 'Small changes add up! Capture today\'s you and compare with your journey.',
+      'body':
+          'Small changes add up! Capture today\'s you and compare with your journey.',
     },
     {
       'title': '✨ Document Your Journey',
-      'body': 'Future you will thank present you for these photos. Take one now!',
+      'body':
+          'Future you will thank present you for these photos. Take one now!',
     },
     {
       'title': '📊 Track Your Visual Progress',
-      'body': 'Numbers tell one story, photos tell another. Which story are you writing today?',
+      'body':
+          'Numbers tell one story, photos tell another. Which story are you writing today?',
     },
   ];
 
   PhotoReminderNotificationService({
     FlutterLocalNotificationsPlugin? notificationsPlugin,
   }) : _notificationsPlugin =
-            notificationsPlugin ?? FlutterLocalNotificationsPlugin();
+           notificationsPlugin ?? FlutterLocalNotificationsPlugin();
 
   /// Initialize the notification channel (call on app startup)
   Future<void> initialize() async {
-    const androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -76,9 +82,10 @@ class PhotoReminderNotificationService {
     await _notificationsPlugin.initialize(initSettings);
 
     // Create Android notification channel
-    final androidPlugin =
-        _notificationsPlugin.resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+    final androidPlugin = _notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
 
     if (androidPlugin != null) {
       await androidPlugin.createNotificationChannel(
@@ -105,7 +112,8 @@ class PhotoReminderNotificationService {
   Future<bool> _requestIOSPermissions() async {
     final iosPlugin = _notificationsPlugin
         .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>();
+          IOSFlutterLocalNotificationsPlugin
+        >();
 
     if (iosPlugin != null) {
       final result = await iosPlugin.requestPermissions(
@@ -138,7 +146,8 @@ class PhotoReminderNotificationService {
       return -1;
     }
 
-    final nextReminder = settings.nextReminderScheduled ??
+    final nextReminder =
+        settings.nextReminderScheduled ??
         settings.calculateNextReminder(DateTime.now());
 
     // Don't schedule if time is in the past
@@ -151,7 +160,8 @@ class PhotoReminderNotificationService {
 
     // Select message variation (rotate through messages)
     final variation =
-        messageVariation ?? DateTime.now().millisecond % _messageVariations.length;
+        messageVariation ??
+        DateTime.now().millisecond % _messageVariations.length;
     final message = _messageVariations[variation];
 
     final notificationId = _baseNotificationId + variation;

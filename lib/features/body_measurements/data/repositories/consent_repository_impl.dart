@@ -62,7 +62,9 @@ import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 ///   ipAddress: '192.168.1.100',
 /// );
 /// ```
-class ConsentRepositoryImpl with FirebaseErrorMapperMixin implements ConsentRepository {
+class ConsentRepositoryImpl
+    with FirebaseErrorMapperMixin
+    implements ConsentRepository {
   /// Collection name in Firestore
   static const String _collectionName = 'userConsents';
 
@@ -74,10 +76,8 @@ class ConsentRepositoryImpl with FirebaseErrorMapperMixin implements ConsentRepo
   final FirebaseFirestore _firestore;
   final Uuid _uuid;
 
-  ConsentRepositoryImpl(
-    this._firestore, {
-    Uuid? uuid,
-  }) : _uuid = uuid ?? const Uuid();
+  ConsentRepositoryImpl(this._firestore, {Uuid? uuid})
+    : _uuid = uuid ?? const Uuid();
 
   /// Get reference to user's consent document
   DocumentReference<Map<String, dynamic>> _getConsentDoc(String userId) {
@@ -90,10 +90,7 @@ class ConsentRepositoryImpl with FirebaseErrorMapperMixin implements ConsentRepo
     if (failure is NotFoundFailure) {
       return const ConsentNotFoundFailure();
     } else if (failure is RateLimitFailure) {
-      return const RateLimitExceededFailure(
-        limitPerDay: 10,
-        currentCount: 10,
-      );
+      return const RateLimitExceededFailure(limitPerDay: 10, currentCount: 10);
     } else {
       // Default to FirebaseConsentFailure for all other failures
       return FirebaseConsentFailure(
@@ -104,24 +101,19 @@ class ConsentRepositoryImpl with FirebaseErrorMapperMixin implements ConsentRepo
   }
 
   @override
-  Future<Either<ConsentFailure, UserConsent>> getConsent(
-    String userId,
-  ) async {
-    final result = await handleFirebaseOperation(
-      () async {
-        final doc = await _getConsentDoc(userId).get();
+  Future<Either<ConsentFailure, UserConsent>> getConsent(String userId) async {
+    final result = await handleFirebaseOperation(() async {
+      final doc = await _getConsentDoc(userId).get();
 
-        if (!doc.exists || doc.data() == null) {
-          // Return null to indicate not found - will be handled below
-          return null;
-        }
+      if (!doc.exists || doc.data() == null) {
+        // Return null to indicate not found - will be handled below
+        return null;
+      }
 
-        // Parse Firestore data to UserConsent entity
-        // Convert Firestore Timestamps back to ISO8601 strings for fromJson
-        return UserConsent.fromJson(_fromFirestoreData(doc.data()!));
-      },
-      operationName: 'getConsent',
-    );
+      // Parse Firestore data to UserConsent entity
+      // Convert Firestore Timestamps back to ISO8601 strings for fromJson
+      return UserConsent.fromJson(_fromFirestoreData(doc.data()!));
+    }, operationName: 'getConsent');
 
     return result.fold(
       (failure) => left(_mapFailureToConsentFailure(failure)),
@@ -163,24 +155,21 @@ class ConsentRepositoryImpl with FirebaseErrorMapperMixin implements ConsentRepo
       userAgent: userAgent,
     );
 
-    final result = await handleFirebaseOperation(
-      () async {
-        // Save to Firestore (uses userId as document ID for easy lookup)
-        // Convert to JSON and transform DateTime strings to Firestore Timestamps
-        await _getConsentDoc(userId).set(_toFirestoreData(consent.toJson()));
+    final result = await handleFirebaseOperation(() async {
+      // Save to Firestore (uses userId as document ID for easy lookup)
+      // Convert to JSON and transform DateTime strings to Firestore Timestamps
+      await _getConsentDoc(userId).set(_toFirestoreData(consent.toJson()));
 
-        // TODO: Create audit log entry (Task 2.9)
-        // await _auditLogger.log(
-        //   userId: userId,
-        //   action: AuditAction.privacyPolicyAccepted,
-        //   timestamp: now,
-        //   ipAddress: ipAddress,
-        // );
+      // TODO: Create audit log entry (Task 2.9)
+      // await _auditLogger.log(
+      //   userId: userId,
+      //   action: AuditAction.privacyPolicyAccepted,
+      //   timestamp: now,
+      //   ipAddress: ipAddress,
+      // );
 
-        return consent;
-      },
-      operationName: 'createInitialConsent',
-    );
+      return consent;
+    }, operationName: 'createInitialConsent');
 
     return result.fold(
       (failure) => left(_mapFailureToConsentFailure(failure)),
@@ -213,24 +202,23 @@ class ConsentRepositoryImpl with FirebaseErrorMapperMixin implements ConsentRepo
         ? updatedConsent.copyWith(userAgent: userAgent)
         : updatedConsent;
 
-    final result = await handleFirebaseOperation(
-      () async {
-        // Save to Firestore - convert DateTime strings to Timestamps
-        await _getConsentDoc(userId).update(_toFirestoreData(consentWithAgent.toJson()));
+    final result = await handleFirebaseOperation(() async {
+      // Save to Firestore - convert DateTime strings to Timestamps
+      await _getConsentDoc(
+        userId,
+      ).update(_toFirestoreData(consentWithAgent.toJson()));
 
-        // TODO: Create audit log entry (Task 2.9)
-        // await _auditLogger.log(
-        //   userId: userId,
-        //   action: AuditAction.consentChange,
-        //   timestamp: DateTime.now(),
-        //   ipAddress: ipAddress,
-        //   actionDetails: 'Granted consent for ${group.name}',
-        // );
+      // TODO: Create audit log entry (Task 2.9)
+      // await _auditLogger.log(
+      //   userId: userId,
+      //   action: AuditAction.consentChange,
+      //   timestamp: DateTime.now(),
+      //   ipAddress: ipAddress,
+      //   actionDetails: 'Granted consent for ${group.name}',
+      // );
 
-        return consentWithAgent;
-      },
-      operationName: 'grantConsent',
-    );
+      return consentWithAgent;
+    }, operationName: 'grantConsent');
 
     return result.fold(
       (failure) => left(_mapFailureToConsentFailure(failure)),
@@ -263,31 +251,30 @@ class ConsentRepositoryImpl with FirebaseErrorMapperMixin implements ConsentRepo
         ? updatedConsent.copyWith(userAgent: userAgent)
         : updatedConsent;
 
-    final result = await handleFirebaseOperation(
-      () async {
-        // Save to Firestore - convert DateTime strings to Timestamps
-        await _getConsentDoc(userId).update(_toFirestoreData(consentWithAgent.toJson()));
+    final result = await handleFirebaseOperation(() async {
+      // Save to Firestore - convert DateTime strings to Timestamps
+      await _getConsentDoc(
+        userId,
+      ).update(_toFirestoreData(consentWithAgent.toJson()));
 
-        // TODO: Create audit log entry (Task 2.9)
-        // await _auditLogger.log(
-        //   userId: userId,
-        //   action: AuditAction.consentChange,
-        //   timestamp: DateTime.now(),
-        //   ipAddress: ipAddress,
-        //   actionDetails: 'Revoked consent for ${group.name}',
-        // );
+      // TODO: Create audit log entry (Task 2.9)
+      // await _auditLogger.log(
+      //   userId: userId,
+      //   action: AuditAction.consentChange,
+      //   timestamp: DateTime.now(),
+      //   ipAddress: ipAddress,
+      //   actionDetails: 'Revoked consent for ${group.name}',
+      // );
 
-        // TODO: Schedule measurements for deletion after 30 days (Task 2.8)
-        // await _deletionService.scheduleMeasurementDeletion(
-        //   userId: userId,
-        //   metricGroup: group,
-        //   deleteAfter: Duration(days: 30),
-        // );
+      // TODO: Schedule measurements for deletion after 30 days (Task 2.8)
+      // await _deletionService.scheduleMeasurementDeletion(
+      //   userId: userId,
+      //   metricGroup: group,
+      //   deleteAfter: Duration(days: 30),
+      // );
 
-        return consentWithAgent;
-      },
-      operationName: 'revokeConsent',
-    );
+      return consentWithAgent;
+    }, operationName: 'revokeConsent');
 
     return result.fold(
       (failure) => left(_mapFailureToConsentFailure(failure)),
@@ -334,10 +321,12 @@ class ConsentRepositoryImpl with FirebaseErrorMapperMixin implements ConsentRepo
 
     // Validate version upgrade (no downgrades allowed)
     if (newVersion <= existingConsent.consentVersion) {
-      return left(InvalidVersionFailure(
-        currentVersion: existingConsent.consentVersion,
-        attemptedVersion: newVersion,
-      ));
+      return left(
+        InvalidVersionFailure(
+          currentVersion: existingConsent.consentVersion,
+          attemptedVersion: newVersion,
+        ),
+      );
     }
 
     // Update consent version and timestamp
@@ -349,24 +338,23 @@ class ConsentRepositoryImpl with FirebaseErrorMapperMixin implements ConsentRepo
       userAgent: userAgent,
     );
 
-    final result = await handleFirebaseOperation(
-      () async {
-        // Save to Firestore - convert DateTime strings to Timestamps
-        await _getConsentDoc(userId).update(_toFirestoreData(updatedConsent.toJson()));
+    final result = await handleFirebaseOperation(() async {
+      // Save to Firestore - convert DateTime strings to Timestamps
+      await _getConsentDoc(
+        userId,
+      ).update(_toFirestoreData(updatedConsent.toJson()));
 
-        // TODO: Create audit log entry (Task 2.9)
-        // await _auditLogger.log(
-        //   userId: userId,
-        //   action: AuditAction.privacyPolicyAccepted,
-        //   timestamp: now,
-        //   ipAddress: ipAddress,
-        //   actionDetails: 'Updated consent version: $newVersion',
-        // );
+      // TODO: Create audit log entry (Task 2.9)
+      // await _auditLogger.log(
+      //   userId: userId,
+      //   action: AuditAction.privacyPolicyAccepted,
+      //   timestamp: now,
+      //   ipAddress: ipAddress,
+      //   actionDetails: 'Updated consent version: $newVersion',
+      // );
 
-        return updatedConsent;
-      },
-      operationName: 'updateConsentVersion',
-    );
+      return updatedConsent;
+    }, operationName: 'updateConsentVersion');
 
     return result.fold(
       (failure) => left(_mapFailureToConsentFailure(failure)),
@@ -382,22 +370,19 @@ class ConsentRepositoryImpl with FirebaseErrorMapperMixin implements ConsentRepo
       return left(const ConsentNotFoundFailure());
     }
 
-    final result = await handleFirebaseVoidOperation(
-      () async {
-        // TODO: Create audit log entry BEFORE deletion (Task 2.9)
-        // await _auditLogger.log(
-        //   userId: userId,
-        //   action: AuditAction.dataDelete,
-        //   timestamp: DateTime.now(),
-        //   ipAddress: '0.0.0.0', // No IP (automated deletion)
-        //   actionDetails: 'Consent record deleted (account deletion)',
-        // );
+    final result = await handleFirebaseVoidOperation(() async {
+      // TODO: Create audit log entry BEFORE deletion (Task 2.9)
+      // await _auditLogger.log(
+      //   userId: userId,
+      //   action: AuditAction.dataDelete,
+      //   timestamp: DateTime.now(),
+      //   ipAddress: '0.0.0.0', // No IP (automated deletion)
+      //   actionDetails: 'Consent record deleted (account deletion)',
+      // );
 
-        // Delete consent document
-        await _getConsentDoc(userId).delete();
-      },
-      operationName: 'deleteConsent',
-    );
+      // Delete consent document
+      await _getConsentDoc(userId).delete();
+    }, operationName: 'deleteConsent');
 
     return result.fold(
       (failure) => left(_mapFailureToConsentFailure(failure)),
@@ -411,8 +396,9 @@ class ConsentRepositoryImpl with FirebaseErrorMapperMixin implements ConsentRepo
   ) async {
     final consentResult = await getConsent(userId);
     if (consentResult.isLeft()) {
-      return consentResult
-          .map((consent) => <MetricType>[]); // Return empty list
+      return consentResult.map(
+        (consent) => <MetricType>[],
+      ); // Return empty list
     }
 
     final consent = consentResult.getRight().getOrElse(() {

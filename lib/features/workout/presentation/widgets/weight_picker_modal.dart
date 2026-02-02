@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,19 +15,16 @@ class WeightPickerModal {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
-      builder: (context) => _WeightPicker(
-        initialWeight: initialWeight,
-      ),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
+      builder: (context) => _WeightPicker(initialWeight: initialWeight),
     );
   }
 }
 
 class _WeightPicker extends ConsumerStatefulWidget {
-
-  const _WeightPicker({
-    required this.initialWeight,
-  });
+  const _WeightPicker({required this.initialWeight});
   final double initialWeight;
 
   @override
@@ -111,39 +107,44 @@ class _WeightPickerState extends ConsumerState<_WeightPicker> {
               spacing: 8,
               runSpacing: 8,
               alignment: WrapAlignment.center,
-              children: WeightHelper.getQuickJumps(currentWeightInDisplayUnit, unit)
-                  .map((jump) {
-                return OutlinedButton(
-                  onPressed: () {
-                    final newWeight = WeightHelper.applyQuickJump(
-                      currentWeight: currentWeightInDisplayUnit,
-                      jump: jump,
-                      unit: unit,
+              children:
+                  WeightHelper.getQuickJumps(
+                    currentWeightInDisplayUnit,
+                    unit,
+                  ).map((jump) {
+                    return OutlinedButton(
+                      onPressed: () {
+                        final newWeight = WeightHelper.applyQuickJump(
+                          currentWeight: currentWeightInDisplayUnit,
+                          jump: jump,
+                          unit: unit,
+                        );
+                        setModalState(() => selectedWeight = newWeight);
+                        controller.animateToItem(
+                          WeightHelper.weightToIndex(newWeight, unit),
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                        HapticFeedback.mediumImpact();
+                      },
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        minimumSize: const Size(60, 36),
+                      ),
+                      child: Text(
+                        jump > 0 ? '+$jump' : '$jump',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: jump > 0
+                              ? context.colors.primary
+                              : context.colors.error,
+                        ),
+                      ),
                     );
-                    setModalState(() => selectedWeight = newWeight);
-                    controller.animateToItem(
-                      WeightHelper.weightToIndex(newWeight, unit),
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                    HapticFeedback.mediumImpact();
-                  },
-                  style: OutlinedButton.styleFrom(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    minimumSize: const Size(60, 36),
-                  ),
-                  child: Text(
-                    jump > 0 ? '+$jump' : '$jump',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: jump > 0
-                          ? context.colors.primary
-                          : context.colors.error,
-                    ),
-                  ),
-                );
-              }).toList(),
+                  }).toList(),
             ),
 
             const SizedBox(height: 16),
@@ -163,14 +164,18 @@ class _WeightPickerState extends ConsumerState<_WeightPicker> {
                     final weight = WeightHelper.indexToWeight(index, unit);
                     final isSelected =
                         (weight - currentWeightInDisplayUnit).abs() < 0.05;
-                    final displayText = WeightHelper.formatPickerWeight(weight, unit);
+                    final displayText = WeightHelper.formatPickerWeight(
+                      weight,
+                      unit,
+                    );
 
                     return Center(
                       child: Text(
                         displayText,
                         style: context.textTheme.headlineSmall?.copyWith(
-                          fontWeight:
-                              isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                           color: isSelected
                               ? context.colors.primary
                               : context.colors.onSurface,
@@ -180,8 +185,12 @@ class _WeightPickerState extends ConsumerState<_WeightPicker> {
                   },
                 ),
                 onSelectedItemChanged: (index) {
-                  setModalState(() =>
-                      selectedWeight = WeightHelper.indexToWeight(index, unit));
+                  setModalState(
+                    () => selectedWeight = WeightHelper.indexToWeight(
+                      index,
+                      unit,
+                    ),
+                  );
                   HapticFeedback.selectionClick();
                 },
               ),

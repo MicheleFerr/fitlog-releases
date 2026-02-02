@@ -45,7 +45,6 @@ part 'exercise_session.g.dart';
 
 @freezed
 abstract class ExerciseSession with _$ExerciseSession {
-
   const factory ExerciseSession({
     /// Name of the exercise (e.g., "Bench Press", "Squat")
     required String exerciseName,
@@ -104,9 +103,7 @@ abstract class ExerciseSession with _$ExerciseSession {
   /// - Set 3: 100 kg × 6 → ~116.0 kg 1RM ← Best
   double get highestEstimated1RM {
     if (sets.isEmpty) return 0;
-    return sets
-        .map((s) => s.estimatedOneRM)
-        .reduce((a, b) => a > b ? a : b);
+    return sets.map((s) => s.estimatedOneRM).reduce((a, b) => a > b ? a : b);
   }
 
   /// Validate session data

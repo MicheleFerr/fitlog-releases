@@ -27,10 +27,7 @@ class AchievementsScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(context.l10n.achievements),
         leading: IconButton(
-          icon: Icon(
-            AppIcons.arrowBack,
-            size: AppIconSize.medium,
-          ),
+          icon: Icon(AppIcons.arrowBack, size: AppIconSize.medium),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -82,9 +79,7 @@ class AchievementsScreen extends ConsumerWidget {
 
 /// Achievements Grid
 class _AchievementsGrid extends StatelessWidget {
-  const _AchievementsGrid({
-    required this.unlockedAchievements,
-  });
+  const _AchievementsGrid({required this.unlockedAchievements});
 
   final List<Achievement> unlockedAchievements;
 
@@ -100,10 +95,7 @@ class _AchievementsGrid extends StatelessWidget {
         // Badge categories
         _BadgeCategory(
           title: context.l10n.personalRecords,
-          badges: [
-            BadgeType.firstPR,
-            BadgeType.oneRepMonarch,
-          ],
+          badges: [BadgeType.firstPR, BadgeType.oneRepMonarch],
           unlockedBadges: unlockedAchievements,
         ),
         const SizedBox(height: 24),
@@ -143,10 +135,7 @@ class _AchievementsGrid extends StatelessWidget {
 
         _BadgeCategory(
           title: context.l10n.special,
-          badges: [
-            BadgeType.balancedBuilder,
-            BadgeType.consistencyChampion,
-          ],
+          badges: [BadgeType.balancedBuilder, BadgeType.consistencyChampion],
           unlockedBadges: unlockedAchievements,
         ),
       ],
@@ -177,11 +166,7 @@ class _StatsHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
-            AppIcons.achievement,
-            size: 48,
-            color: context.colors.onPrimary,
-          ),
+          Icon(AppIcons.achievement, size: 48, color: context.colors.onPrimary),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -240,10 +225,7 @@ class _BadgeCategory extends StatelessWidget {
             final isUnlocked = unlockedBadges.any(
               (a) => a.badgeType == badgeType,
             );
-            return _BadgeCard(
-              badgeType: badgeType,
-              isUnlocked: isUnlocked,
-            );
+            return _BadgeCard(badgeType: badgeType, isUnlocked: isUnlocked);
           }).toList(),
         ),
       ],
@@ -253,10 +235,7 @@ class _BadgeCategory extends StatelessWidget {
 
 /// Badge Card Widget
 class _BadgeCard extends StatelessWidget {
-  const _BadgeCard({
-    required this.badgeType,
-    required this.isUnlocked,
-  });
+  const _BadgeCard({required this.badgeType, required this.isUnlocked});
 
   final BadgeType badgeType;
   final bool isUnlocked;

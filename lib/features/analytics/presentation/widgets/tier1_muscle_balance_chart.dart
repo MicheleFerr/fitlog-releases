@@ -11,7 +11,6 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 
 /// Tier-1 Muscle Balance Radar Chart with full explanations and customization
 class Tier1MuscleBalanceChart extends ConsumerStatefulWidget {
-  
   const Tier1MuscleBalanceChart({
     super.key,
     required this.muscleData,
@@ -25,24 +24,25 @@ class Tier1MuscleBalanceChart extends ConsumerStatefulWidget {
   final bool showTutorial;
 
   @override
-  ConsumerState<Tier1MuscleBalanceChart> createState() => _Tier1MuscleBalanceChartState();
+  ConsumerState<Tier1MuscleBalanceChart> createState() =>
+      _Tier1MuscleBalanceChartState();
 }
 
-class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChart>
+class _Tier1MuscleBalanceChartState
+    extends ConsumerState<Tier1MuscleBalanceChart>
     with TickerProviderStateMixin {
-  
   late AnimationController _animationController;
   late AnimationController _pulseController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _pulseAnimation;
-  
+
   MuscleGroup? _selectedMuscle;
   MuscleGroup? _hoveredMuscle;
   bool _showComparison = false;
 
   // Touch detection regions for accurate muscle selection
   final Map<MuscleGroup, Path> _muscleRegions = {};
-  
+
   @override
   void initState() {
     super.initState();
@@ -50,30 +50,22 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
+
     _pulseController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat(reverse: true);
-    
-    _scaleAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOutBack,
-    ));
-    
-    _pulseAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.05,
-    ).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeInOut,
-    ));
-    
+
+    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack),
+    );
+
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+
     _animationController.forward();
-    
+
     // Show tutorial on first use
     if (widget.showTutorial) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -81,29 +73,29 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
       });
     }
   }
-  
+
   @override
   void dispose() {
     _animationController.dispose();
     _pulseController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    
+
     return Column(
       children: [
         // Header with help button
         _buildHeader(theme, l10n),
         const SizedBox(height: 16),
-        
+
         // Controls
         _buildControls(theme, l10n),
         const SizedBox(height: 20),
-        
+
         // Main Radar Chart
         Stack(
           alignment: Alignment.center,
@@ -122,7 +114,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                 ),
               ),
             ),
-            
+
             // Radar Chart
             SizedBox(
               height: 320,
@@ -154,39 +146,50 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                             child: RadarChart(
                               RadarChartData(
                                 radarBorderData: BorderSide.none,
-                                radarBackgroundColor: theme.colorScheme.surface.withValues(alpha: 0),
+                                radarBackgroundColor: theme.colorScheme.surface
+                                    .withValues(alpha: 0),
                                 radarShape: RadarShape.polygon,
                                 tickCount: 5,
                                 tickBorderData: BorderSide(
-                                  color: theme.colorScheme.outline.withValues(alpha: 0.1),
+                                  color: theme.colorScheme.outline.withValues(
+                                    alpha: 0.1,
+                                  ),
                                   width: 1,
                                 ),
                                 gridBorderData: BorderSide(
-                                  color: theme.colorScheme.outline.withValues(alpha: 0.15),
+                                  color: theme.colorScheme.outline.withValues(
+                                    alpha: 0.15,
+                                  ),
                                   width: 1,
                                 ),
                                 titlePositionPercentageOffset: 0.25,
-                                ticksTextStyle: theme.textTheme.labelSmall!.copyWith(fontSize: 0),
+                                ticksTextStyle: theme.textTheme.labelSmall!
+                                    .copyWith(fontSize: 0),
                                 getTitle: (index, angle) {
                                   final muscle = MuscleGroup.values[index];
                                   final isSelected = muscle == _selectedMuscle;
                                   final isHovered = muscle == _hoveredMuscle;
                                   final data = widget.muscleData[muscle];
                                   final status = data != null
-                                      ? VolumeZoneThresholds.getStatus(data.currentStrength)
+                                      ? VolumeZoneThresholds.getStatus(
+                                          data.currentStrength,
+                                        )
                                       : VolumeStatus.insufficient;
                                   final statusIcon = _getStatusIcon(status);
 
                                   return RadarChartTitle(
-                                    text: '$statusIcon ${_getMuscleLabel(muscle, l10n)}',
+                                    text:
+                                        '$statusIcon ${_getMuscleLabel(muscle, l10n)}',
                                     angle: 0,
-                                    positionPercentageOffset: isSelected || isHovered ? 0.35 : 0.25,
+                                    positionPercentageOffset:
+                                        isSelected || isHovered ? 0.35 : 0.25,
                                   );
                                 },
-                                titleTextStyle: theme.textTheme.labelMedium!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.colorScheme.onSurface,
-                                ),
+                                titleTextStyle: theme.textTheme.labelMedium!
+                                    .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: theme.colorScheme.onSurface,
+                                    ),
                                 dataSets: _buildDataSets(theme),
                               ),
                             ),
@@ -198,19 +201,17 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                 },
               ),
             ),
-            
+
             // Center info
-            if (_selectedMuscle == null)
-              _buildCenterInfo(theme, l10n),
+            if (_selectedMuscle == null) _buildCenterInfo(theme, l10n),
           ],
         ),
-        
+
         // Legend with explanations
         _buildEnhancedLegend(theme, l10n),
-        
+
         // Selected muscle details with editing
-        if (_selectedMuscle != null)
-          _buildEnhancedMuscleDetails(theme, l10n),
+        if (_selectedMuscle != null) _buildEnhancedMuscleDetails(theme, l10n),
       ],
     );
   }
@@ -218,10 +219,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
   Widget _buildHeader(ThemeData theme, AppLocalizations l10n) {
     return Row(
       children: [
-        Icon(
-          AppIcons.analytics,
-          color: theme.colorScheme.primary,
-        ),
+        Icon(AppIcons.analytics, color: theme.colorScheme.primary),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
@@ -238,10 +236,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
             builder: (context, child) {
               return Transform.scale(
                 scale: _pulseAnimation.value,
-                child: Icon(
-                  AppIcons.help,
-                  color: theme.colorScheme.primary,
-                ),
+                child: Icon(AppIcons.help, color: theme.colorScheme.primary),
               );
             },
           ),
@@ -251,7 +246,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
       ],
     );
   }
-  
+
   Widget _buildControls(ThemeData theme, AppLocalizations l10n) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -272,13 +267,13 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
           ),
         ),
         const SizedBox(width: 12),
-        
+
         // Reset animation
         IconButton(
           icon: const SemanticIcon(
-  icon: AppIcons.refresh,
-  semanticLabel: 'Refresh',
-),
+            icon: AppIcons.refresh,
+            semanticLabel: 'Refresh',
+          ),
           onPressed: () {
             _animationController.reset();
             _animationController.forward();
@@ -287,14 +282,14 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
           tooltip: l10n.refreshAnimation,
         ),
         const SizedBox(width: 12),
-        
+
         // Edit targets
         TextButton.icon(
           icon: const SemanticIcon(
-  icon: AppIcons.edit,
-  semanticLabel: 'Edit',
-  size: AppIconSize.small,
-),
+            icon: AppIcons.edit,
+            semanticLabel: 'Edit',
+            size: AppIconSize.small,
+          ),
           label: Text(l10n.editTargets),
           onPressed: _showTargetEditDialog,
         ),
@@ -305,7 +300,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
   Widget _buildCenterInfo(ThemeData theme, AppLocalizations l10n) {
     final overallBalance = _calculateOverallBalance();
     final balanceColor = _getBalanceColor(overallBalance);
-    
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -328,9 +323,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
           decoration: BoxDecoration(
             color: balanceColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: balanceColor.withValues(alpha: 0.3),
-            ),
+            border: Border.all(color: balanceColor.withValues(alpha: 0.3)),
           ),
           child: Text(
             _getBalanceRating(overallBalance, l10n),
@@ -346,7 +339,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
 
   List<RadarDataSet> _buildDataSets(ThemeData theme) {
     final dataSets = <RadarDataSet>[];
-    
+
     // Current strength (calculated from volume)
     dataSets.add(
       RadarDataSet(
@@ -361,7 +354,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
         }).toList(),
       ),
     );
-    
+
     // Previous month comparison
     if (_showComparison) {
       dataSets.add(
@@ -378,7 +371,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
         ),
       );
     }
-    
+
     // Target strength (customizable)
     dataSets.add(
       RadarDataSet(
@@ -393,7 +386,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
         }).toList(),
       ),
     );
-    
+
     return dataSets;
   }
 
@@ -521,7 +514,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
       ],
     );
   }
-  
+
   Widget _buildLegendItem({
     required Color color,
     required String label,
@@ -543,10 +536,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
               ),
             ),
             const SizedBox(width: 6),
-            Text(
-              label,
-              style: theme.textTheme.bodySmall,
-            ),
+            Text(label, style: theme.textTheme.bodySmall),
           ],
         ),
         const SizedBox(height: 2),
@@ -563,15 +553,17 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
 
   Widget _buildEnhancedMuscleDetails(ThemeData theme, AppLocalizations l10n) {
     if (_selectedMuscle == null) return const SizedBox.shrink();
-    
+
     final data = widget.muscleData[_selectedMuscle!];
     if (data == null) return const SizedBox.shrink();
-    
-    final improvement = data.currentStrength - (data.previousStrength ?? data.currentStrength);
-    final improvementPercent = data.previousStrength != null && data.previousStrength! > 0
+
+    final improvement =
+        data.currentStrength - (data.previousStrength ?? data.currentStrength);
+    final improvementPercent =
+        data.previousStrength != null && data.previousStrength! > 0
         ? (improvement / data.previousStrength! * 100)
         : 0;
-    
+
     return Container(
       margin: const EdgeInsets.only(top: 16),
       padding: const EdgeInsets.all(16),
@@ -615,7 +607,9 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                     Text(
                       l10n.tapToEditTarget,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ),
                   ],
@@ -623,10 +617,10 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
               ),
               IconButton(
                 icon: const SemanticIcon(
-  icon: AppIcons.close,
-  semanticLabel: 'Close',
-  size: AppIconSize.small,
-),
+                  icon: AppIcons.close,
+                  semanticLabel: 'Close',
+                  size: AppIconSize.small,
+                ),
                 onPressed: () {
                   setState(() {
                     _selectedMuscle = null;
@@ -636,20 +630,22 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
             ],
           ),
           const SizedBox(height: 16),
-          
+
           // Strength metrics with explanations
           _buildMetricRow(
             icon: AppIcons.workout,
             label: l10n.currentStrength,
             value: data.currentStrength,
             color: theme.colorScheme.primary,
-            explanation: l10n.strengthExplanation(data.totalVolume.toStringAsFixed(0)),
+            explanation: l10n.strengthExplanation(
+              data.totalVolume.toStringAsFixed(0),
+            ),
             theme: theme,
             l10n: l10n,
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           // Target with edit button
           _buildEditableMetricRow(
             icon: AppIcons.flag,
@@ -660,24 +656,36 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
             theme: theme,
             l10n: l10n,
           ),
-          
+
           // Progress indicator
           if (improvement != 0) ...[
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: (improvement >= 0 ? context.colors.success : context.colors.error).withValues(alpha: 0.1),
+                color:
+                    (improvement >= 0
+                            ? context.colors.success
+                            : context.colors.error)
+                        .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: (improvement >= 0 ? context.colors.success : context.colors.error).withValues(alpha: 0.3),
+                  color:
+                      (improvement >= 0
+                              ? context.colors.success
+                              : context.colors.error)
+                          .withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
                 children: [
                   Icon(
-                    improvement >= 0 ? AppIcons.trendingUp : AppIcons.trendingDown,
-                    color: improvement >= 0 ? context.colors.success : context.colors.error,
+                    improvement >= 0
+                        ? AppIcons.trendingUp
+                        : AppIcons.trendingDown,
+                    color: improvement >= 0
+                        ? context.colors.success
+                        : context.colors.error,
                     size: 20,
                   ),
                   const SizedBox(width: 8),
@@ -689,14 +697,18 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                           '${improvement >= 0 ? '+' : ''}${improvement.toStringAsFixed(1)}% '
                           '(${improvementPercent >= 0 ? '+' : ''}${improvementPercent.toStringAsFixed(1)}%)',
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: improvement >= 0 ? context.colors.success : context.colors.error,
+                            color: improvement >= 0
+                                ? context.colors.success
+                                : context.colors.error,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
                           l10n.comparedToLastMonth,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.6,
+                            ),
                           ),
                         ),
                       ],
@@ -706,8 +718,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
               ),
             ),
           ],
-          
-          
+
           // Volume breakdown
           if (data.exerciseBreakdown.isNotEmpty) ...[
             const SizedBox(height: 16),
@@ -717,11 +728,10 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                 Row(
                   children: [
                     SemanticIcon(
-  icon: AppIcons.barChart,
-  semanticLabel: 'Chart',
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.onSurface.withValues(alpha: 0.7,
-),
+                      icon: AppIcons.barChart,
+                      semanticLabel: 'Chart',
+                      size: AppIconSize.tiny,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                     const SizedBox(width: 6),
                     Text(
@@ -751,7 +761,8 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                           flex: 3,
                           child: LinearProgressIndicator(
                             value: percentage / 100,
-                            backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                            backgroundColor:
+                                theme.colorScheme.surfaceContainerHighest,
                             valueColor: AlwaysStoppedAnimation<Color>(
                               theme.colorScheme.primary.withValues(alpha: 0.8),
                             ),
@@ -852,9 +863,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: color.withValues(alpha: 0.3),
-                  ),
+                  border: Border.all(color: color.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -868,11 +877,11 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                     ),
                     const SizedBox(width: 4),
                     SemanticIcon(
-  icon: AppIcons.edit,
-  semanticLabel: 'Edit',
-  size: AppIconSize.tiny,
-  color: color,
-),
+                      icon: AppIcons.edit,
+                      semanticLabel: 'Edit',
+                      size: AppIconSize.tiny,
+                      color: color,
+                    ),
                   ],
                 ),
               ),
@@ -896,32 +905,32 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
   void _calculateMuscleRegions(Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width * 0.35;
-    
+
     // Il radar chart di fl_chart dispone i punti partendo dall'alto (12 ore)
     // e procedendo in senso orario
     // Dobbiamo mappare correttamente ogni segmento al gruppo muscolare corrispondente
-    
+
     for (int i = 0; i < MuscleGroup.values.length; i++) {
       final muscle = MuscleGroup.values[i];
-      
+
       // Calcoliamo gli angoli per ogni segmento
       // Partiamo da -π/2 (in alto) e procediamo in senso orario
       final anglePerSegment = 2 * math.pi / MuscleGroup.values.length;
       final startAngle = (i * anglePerSegment) - math.pi / 2;
-      
+
       // Creiamo il Path per il segmento del muscolo
       final path = Path();
       path.moveTo(center.dx, center.dy);
-      
+
       // Aggiungiamo un raggio maggiore per catturare i tap più facilmente
       final extendedRadius = radius * 1.2;
-      
+
       // Disegniamo il segmento
       path.lineTo(
         center.dx + extendedRadius * math.cos(startAngle),
         center.dy + extendedRadius * math.sin(startAngle),
       );
-      
+
       // Aggiungiamo l'arco
       path.arcTo(
         Rect.fromCircle(center: center, radius: extendedRadius),
@@ -929,9 +938,9 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
         anglePerSegment,
         false,
       );
-      
+
       path.close();
-      
+
       _muscleRegions[muscle] = path;
     }
   }
@@ -960,7 +969,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
         return;
       }
     }
-    
+
     if (_hoveredMuscle != null) {
       setState(() {
         _hoveredMuscle = null;
@@ -1073,17 +1082,19 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
 
   double _calculateOverallBalance() {
     if (widget.muscleData.isEmpty) return 0;
-    
+
     final strengths = widget.muscleData.values
         .map((data) => data.currentStrength)
         .toList();
-    
+
     if (strengths.isEmpty) return 0;
-    
+
     final mean = strengths.reduce((a, b) => a + b) / strengths.length;
-    final variance = strengths.map((s) => math.pow(s - mean, 2)).reduce((a, b) => a + b) / strengths.length;
+    final variance =
+        strengths.map((s) => math.pow(s - mean, 2)).reduce((a, b) => a + b) /
+        strengths.length;
     final standardDeviation = math.sqrt(variance);
-    
+
     // Balance score: 100 when perfectly balanced, decreases with imbalance
     final balanceScore = 100 * math.exp(-standardDeviation / 20);
     return balanceScore.clamp(0, 100);
@@ -1233,7 +1244,6 @@ enum VolumeStatus {
 
 // Enhanced custom painter for better visuals with zone rings
 class _EnhancedRadarPainter extends CustomPainter {
-
   _EnhancedRadarPainter({
     required this.muscleData,
     this.selectedMuscle,
@@ -1297,7 +1307,12 @@ class _EnhancedRadarPainter extends CustomPainter {
   }
 
   /// Draw colored zone rings to indicate insufficient/optimal/excessive
-  void _drawZoneRings(Canvas canvas, Offset center, double maxRadius, int numPoints) {
+  void _drawZoneRings(
+    Canvas canvas,
+    Offset center,
+    double maxRadius,
+    int numPoints,
+  ) {
     // Zone boundaries (as percentage of max radius)
     // 0-40% = Insufficient (red/orange)
     // 40-80% = Optimal (green)
@@ -1356,7 +1371,11 @@ class _EnhancedRadarPainter extends CustomPainter {
     final innerPath = _createPolygonPath(center, innerRadius, numPoints);
 
     // Create ring by subtracting inner from outer
-    final ringPath = Path.combine(PathOperation.difference, outerPath, innerPath);
+    final ringPath = Path.combine(
+      PathOperation.difference,
+      outerPath,
+      innerPath,
+    );
 
     // Fill
     canvas.drawPath(
@@ -1402,9 +1421,9 @@ class _EnhancedRadarPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _EnhancedRadarPainter oldDelegate) =>
-    oldDelegate.selectedMuscle != selectedMuscle ||
-    oldDelegate.hoveredMuscle != hoveredMuscle ||
-    oldDelegate.animation != animation;
+      oldDelegate.selectedMuscle != selectedMuscle ||
+      oldDelegate.hoveredMuscle != hoveredMuscle ||
+      oldDelegate.animation != animation;
 }
 
 /// Helper class for zone ring data
@@ -1423,16 +1442,10 @@ class _ZoneRing {
 }
 
 // Data models
-enum MuscleGroup {
-  chest,
-  back,
-  shoulders,
-  arms,
-  legs,
-  core,
-}
+enum MuscleGroup { chest, back, shoulders, arms, legs, core }
 
-class MuscleStrengthData { // Volume from secondary exercises (weighted)
+class MuscleStrengthData {
+  // Volume from secondary exercises (weighted)
 
   MuscleStrengthData({
     required this.currentStrength,

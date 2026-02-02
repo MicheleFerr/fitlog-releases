@@ -70,9 +70,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
     _initCamera();
 
     // Lock to portrait for consistent photos
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
   @override
@@ -163,10 +161,7 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
       widget.onCapture(file);
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(
-          context,
-          'Failed to capture: $e',
-        );
+        SnackBarService.showError(context, 'Failed to capture: $e');
       }
     } finally {
       safeSetState(() => _isCapturing = false);
@@ -268,10 +263,13 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
           if (widget.previousPhoto != null)
             IconButton.filled(
               onPressed: () => setState(() => _showGhost = !_showGhost),
-              icon: Icon(_showGhost ? AppIcons.visibility : AppIcons.visibilityOff),
+              icon: Icon(
+                _showGhost ? AppIcons.visibility : AppIcons.visibilityOff,
+              ),
               style: IconButton.styleFrom(
-                backgroundColor:
-                    _showGhost ? context.colors.primary : context.colors.scrim.withValues(alpha: 0.54),
+                backgroundColor: _showGhost
+                    ? context.colors.primary
+                    : context.colors.scrim.withValues(alpha: 0.54),
                 foregroundColor: context.colors.onPrimary,
               ),
               tooltip: 'Toggle ghost overlay',
@@ -305,7 +303,10 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.transparent, context.colors.scrim.withValues(alpha: 0.87)],
+            colors: [
+              Colors.transparent,
+              context.colors.scrim.withValues(alpha: 0.87),
+            ],
           ),
         ),
         child: Column(
@@ -333,9 +334,13 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
                     child: SliderTheme(
                       data: SliderTheme.of(context).copyWith(
                         activeTrackColor: context.colors.primary,
-                        inactiveTrackColor: context.colors.onPrimary.withValues(alpha: 0.24),
+                        inactiveTrackColor: context.colors.onPrimary.withValues(
+                          alpha: 0.24,
+                        ),
                         thumbColor: context.colors.onPrimary,
-                        overlayColor: context.colors.primary.withValues(alpha: 0.2),
+                        overlayColor: context.colors.primary.withValues(
+                          alpha: 0.2,
+                        ),
                       ),
                       child: Slider(
                         value: _ghostOpacity,
@@ -365,19 +370,24 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
                     height: 80,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: context.colors.onPrimary, width: 4),
-                      color: _isCapturing ? context.colors.outline : Colors.transparent,
+                      border: Border.all(
+                        color: context.colors.onPrimary,
+                        width: 4,
+                      ),
+                      color: _isCapturing
+                          ? context.colors.outline
+                          : Colors.transparent,
                     ),
                     child: Container(
                       margin: const EdgeInsets.all(AppSpacing.xs),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: _isCapturing ? context.colors.outline : context.colors.onPrimary,
+                        color: _isCapturing
+                            ? context.colors.outline
+                            : context.colors.onPrimary,
                       ),
                       child: _isCapturing
-                          ? const Center(
-                              child: LoadingIndicator(size: 24),
-                            )
+                          ? const Center(child: LoadingIndicator(size: 24))
                           : null,
                     ),
                   ),
@@ -400,7 +410,10 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
       right: 0,
       child: Center(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.xs,
+          ),
           decoration: BoxDecoration(
             color: context.colors.primaryContainer.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(20),

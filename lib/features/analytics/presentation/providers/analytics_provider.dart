@@ -21,16 +21,15 @@ import 'package:flutter/foundation.dart';
 
 /// Sync state enum
 enum SyncState {
-  idle,       // No sync in progress
-  checking,   // Checking if sync needed
-  syncing,    // Syncing workouts
-  completed,  // Sync completed successfully
-  error,      // Sync failed
+  idle, // No sync in progress
+  checking, // Checking if sync needed
+  syncing, // Syncing workouts
+  completed, // Sync completed successfully
+  error, // Sync failed
 }
 
 /// Workout sync status
 class WorkoutSyncStatus {
-
   const WorkoutSyncStatus({
     required this.state,
     this.currentCount = 0,
@@ -59,10 +58,7 @@ class WorkoutSyncStatus {
   }
 
   factory WorkoutSyncStatus.error(String message) {
-    return WorkoutSyncStatus(
-      state: SyncState.error,
-      errorMessage: message,
-    );
+    return WorkoutSyncStatus(state: SyncState.error, errorMessage: message);
   }
   final SyncState state;
   final int currentCount;
@@ -71,7 +67,8 @@ class WorkoutSyncStatus {
 
   double get progress => totalCount > 0 ? currentCount / totalCount : 0.0;
 
-  bool get isActive => state == SyncState.checking || state == SyncState.syncing;
+  bool get isActive =>
+      state == SyncState.checking || state == SyncState.syncing;
 
   WorkoutSyncStatus copyWith({
     SyncState? state,
@@ -89,9 +86,10 @@ class WorkoutSyncStatus {
 }
 
 /// Provider for workout sync status
-final workoutSyncStatusProvider = NotifierProvider<WorkoutSyncNotifier, WorkoutSyncStatus>(
-  WorkoutSyncNotifier.new,
-);
+final workoutSyncStatusProvider =
+    NotifierProvider<WorkoutSyncNotifier, WorkoutSyncStatus>(
+      WorkoutSyncNotifier.new,
+    );
 
 /// Notifier for managing sync status
 class WorkoutSyncNotifier extends Notifier<WorkoutSyncStatus> {
@@ -126,7 +124,9 @@ class WorkoutSyncNotifier extends Notifier<WorkoutSyncStatus> {
 }
 
 /// Provider for historical workouts with sync status tracking
-final historicalWorkoutsProvider = FutureProvider.autoDispose<List<Workout>>((ref) async {
+final historicalWorkoutsProvider = FutureProvider.autoDispose<List<Workout>>((
+  ref,
+) async {
   final user = ref.watch(firebaseUserProvider).value;
 
   if (user == null) {
@@ -155,7 +155,10 @@ final historicalWorkoutsProvider = FutureProvider.autoDispose<List<Workout>>((re
     }
 
     // Fetch completed workouts for analytics (this will trigger sync if needed)
-    final workouts = await analyticsRepo.getHistoricalWorkouts(user.uid, limit: 100);
+    final workouts = await analyticsRepo.getHistoricalWorkouts(
+      user.uid,
+      limit: 100,
+    );
 
     // Mark as completed (happens after async operation, so it's safe)
     syncNotifier.setCompleted();
@@ -168,10 +171,8 @@ final historicalWorkoutsProvider = FutureProvider.autoDispose<List<Workout>>((re
   }
 });
 
-
 /// State for analytics data
 class AnalyticsState {
-
   AnalyticsState({
     this.activities = const [],
     this.personalRecords = const [],
@@ -260,9 +261,11 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
     return AnalyticsState.initial();
   }
 
-  HybridExerciseActivityRepository get _activityRepository => ref.read(hybridExerciseActivityRepositoryProvider);
+  HybridExerciseActivityRepository get _activityRepository =>
+      ref.read(hybridExerciseActivityRepositoryProvider);
   PRTracker get _prTracker => PRTracker();
-  AnalyticsCalculationService get _calculationService => ref.read(analyticsCalculationServiceProvider);
+  AnalyticsCalculationService get _calculationService =>
+      ref.read(analyticsCalculationServiceProvider);
   String? get _userId => _getUserId();
 
   String? _getUserId() {
@@ -286,7 +289,9 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
 
       // DEBUG: Log activity count for troubleshooting
       if (kDebugMode) {
-        debugPrint('📊 Analytics: Loaded ${activities.length} activities for user $userId');
+        debugPrint(
+          '📊 Analytics: Loaded ${activities.length} activities for user $userId',
+        );
       }
 
       // Load personal records
@@ -294,7 +299,9 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
       final recentPRs = await _prTracker.getRecentPRs(userId);
 
       // Calculate analytics
-      final volumeProgression = VolumeCalculator.calculateProgression(activities);
+      final volumeProgression = VolumeCalculator.calculateProgression(
+        activities,
+      );
       final muscleBalance = InsightsEngine.analyzeMuscleBalance(activities);
 
       // Generate insights
@@ -305,7 +312,9 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
       );
 
       // Calculate trends for top exercises (delegated to service)
-      final exerciseTrends = await _calculationService.calculateExerciseTrends(activities);
+      final exerciseTrends = await _calculationService.calculateExerciseTrends(
+        activities,
+      );
 
       state = state.copyWith(
         activities: activities,
@@ -317,18 +326,17 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
         muscleBalance: muscleBalance,
         isLoading: false,
       );
-      
+
       if (kDebugMode) {
-        debugPrint('✅ Analytics: Updated state with ${activities.length} activities');
+        debugPrint(
+          '✅ Analytics: Updated state with ${activities.length} activities',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Analytics: Error loading data: $e');
       }
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -336,7 +344,7 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
   Future<void> refresh() async {
     await loadAnalytics(forceRefresh: true);
   }
-  
+
   /// Refresh analytics after workout completion
   /// This ensures the analytics screen shows the latest data
   Future<void> refreshAfterWorkoutCompletion() async {
@@ -353,19 +361,22 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
 
     try {
       // ✅ FIX: Pass Firebase UID for correct Firestore permissions
-      final newPRs = await _prTracker.checkAndUpdatePRs(activity, userId: userId);
+      final newPRs = await _prTracker.checkAndUpdatePRs(
+        activity,
+        userId: userId,
+      );
 
       if (newPRs.isNotEmpty) {
         // Reload PRs to update state
         final personalRecords = await _prTracker.getUserPRs(userId);
         final recentPRs = await _prTracker.getRecentPRs(userId);
-        
+
         state = state.copyWith(
           personalRecords: personalRecords,
           recentPRs: recentPRs,
         );
       }
-      
+
       return newPRs;
     } catch (e) {
       if (kDebugMode) {
@@ -400,9 +411,10 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
 }
 
 /// Calculation service provider (singleton)
-final analyticsCalculationServiceProvider = Provider<AnalyticsCalculationService>((ref) {
-  return AnalyticsCalculationService();
-});
+final analyticsCalculationServiceProvider =
+    Provider<AnalyticsCalculationService>((ref) {
+      return AnalyticsCalculationService();
+    });
 
 /// Main analytics provider (THIN PROVIDER PATTERN)
 final analyticsProvider = NotifierProvider<AnalyticsNotifier, AnalyticsState>(
@@ -411,7 +423,9 @@ final analyticsProvider = NotifierProvider<AnalyticsNotifier, AnalyticsState>(
 
 /// Provider for volume chart data
 // MEMORY FIX: Added autoDispose to free chart data when not displayed
-final volumeChartDataProvider = Provider.autoDispose<Map<DateTime, double>>((ref) {
+final volumeChartDataProvider = Provider.autoDispose<Map<DateTime, double>>((
+  ref,
+) {
   final state = ref.watch(analyticsProvider);
   return VolumeCalculator.calculateDailyVolume(state.activities);
 });
@@ -424,7 +438,7 @@ final analyticsRefreshProvider = Provider<void Function()>((ref) {
       debugPrint('🔄 Global analytics refresh triggered');
     }
     ref.read(analyticsProvider.notifier).refreshAfterWorkoutCompletion();
-    
+
     // Also invalidate exercise history providers to ensure fresh data
     ref.invalidate(recentWeightsWithDetailsProvider);
     ref.invalidate(exerciseHistoryProvider);
@@ -434,7 +448,10 @@ final analyticsRefreshProvider = Provider<void Function()>((ref) {
 });
 
 /// Provider for PR timeline
-final prTimelineProvider = Provider.family<List<PersonalRecord>, String>((ref, exerciseId) {
+final prTimelineProvider = Provider.family<List<PersonalRecord>, String>((
+  ref,
+  exerciseId,
+) {
   final state = ref.watch(analyticsProvider);
   return state.personalRecords
       .where((pr) => pr.exerciseId == exerciseId)
@@ -443,30 +460,31 @@ final prTimelineProvider = Provider.family<List<PersonalRecord>, String>((ref, e
 });
 
 /// Provider for exercise list
-final exerciseListProvider = Provider<List<({String id, String name, int count})>>((ref) {
-  final state = ref.watch(analyticsProvider);
-  
-  final exerciseMap = <String, ({String name, int count})>{};
-  
-  for (final activity in state.activities) {
-    if (!exerciseMap.containsKey(activity.exerciseId)) {
-      exerciseMap[activity.exerciseId] = (
-        name: activity.exerciseName,
-        count: 0,
-      );
-    }
-    
-    exerciseMap[activity.exerciseId] = (
-      name: exerciseMap[activity.exerciseId]!.name,
-      count: exerciseMap[activity.exerciseId]!.count + 1,
-    );
-  }
-  
-  return exerciseMap.entries
-      .map((e) => (id: e.key, name: e.value.name, count: e.value.count))
-      .toList()
-    ..sort((a, b) => b.count.compareTo(a.count));
-});
+final exerciseListProvider =
+    Provider<List<({String id, String name, int count})>>((ref) {
+      final state = ref.watch(analyticsProvider);
+
+      final exerciseMap = <String, ({String name, int count})>{};
+
+      for (final activity in state.activities) {
+        if (!exerciseMap.containsKey(activity.exerciseId)) {
+          exerciseMap[activity.exerciseId] = (
+            name: activity.exerciseName,
+            count: 0,
+          );
+        }
+
+        exerciseMap[activity.exerciseId] = (
+          name: exerciseMap[activity.exerciseId]!.name,
+          count: exerciseMap[activity.exerciseId]!.count + 1,
+        );
+      }
+
+      return exerciseMap.entries
+          .map((e) => (id: e.key, name: e.value.name, count: e.value.count))
+          .toList()
+        ..sort((a, b) => b.count.compareTo(a.count));
+    });
 
 /// Provider for workout recommendations
 final workoutRecommendationsProvider = Provider<List<String>>((ref) {
@@ -535,7 +553,9 @@ final globalAnalyticsStatsProvider = Provider<AnalyticsStats>((ref) {
   final totalVolume = VolumeCalculator.calculateTotalVolume(
     state.activities.expand((a) => a.sets).toList(),
   );
-  final currentStreak = calculationService.calculateCurrentStreak(state.activities);
+  final currentStreak = calculationService.calculateCurrentStreak(
+    state.activities,
+  );
 
   // Consistency (last 30 days)
   final now = DateTime.now();
@@ -545,7 +565,9 @@ final globalAnalyticsStatsProvider = Provider<AnalyticsStats>((ref) {
       .toList();
 
   final uniqueDays = last30DaysWorkouts
-      .map((a) => DateTime(a.createdAt.year, a.createdAt.month, a.createdAt.day))
+      .map(
+        (a) => DateTime(a.createdAt.year, a.createdAt.month, a.createdAt.day),
+      )
       .toSet();
   final consistency = (uniqueDays.length / 30 * 100).round();
 

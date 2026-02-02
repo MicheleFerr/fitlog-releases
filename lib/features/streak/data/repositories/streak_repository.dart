@@ -8,7 +8,6 @@ abstract class StreakRepository {
 }
 
 class StreakRepositoryImpl implements StreakRepository {
-
   StreakRepositoryImpl(this._workoutRepository);
   final WorkoutRepository _workoutRepository;
 

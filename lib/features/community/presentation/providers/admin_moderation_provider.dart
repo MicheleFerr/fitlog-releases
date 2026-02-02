@@ -7,14 +7,14 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/community_
 // Provider per pending contributions (solo admin)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically cancels Firestore listener when widget is disposed
-final pendingContributionsProvider = StreamProvider.autoDispose<List<CommunityContribution>>((ref) {
-  final repository = ref.watch(communityRepositoryProvider);
-  return repository.getContributions(status: ContributionStatus.pending);
-});
+final pendingContributionsProvider =
+    StreamProvider.autoDispose<List<CommunityContribution>>((ref) {
+      final repository = ref.watch(communityRepositoryProvider);
+      return repository.getContributions(status: ContributionStatus.pending);
+    });
 
 // State notifier per gestire moderazione
 class AdminModerationNotifier extends Notifier<AsyncValue<void>> {
-
   @override
   AsyncValue<void> build() => const AsyncValue.data(null);
 
@@ -75,7 +75,10 @@ class AdminModerationNotifier extends Notifier<AsyncValue<void>> {
   }
 
   /// Approva tutti i contributi di un certo tipo (batch)
-  Future<void> approveAllByType(ContributionType type, List<CommunityContribution> contributions) async {
+  Future<void> approveAllByType(
+    ContributionType type,
+    List<CommunityContribution> contributions,
+  ) async {
     state = const AsyncValue.loading();
 
     try {
@@ -93,7 +96,11 @@ class AdminModerationNotifier extends Notifier<AsyncValue<void>> {
       }
 
       final repository = _ref.read(communityRepositoryProvider);
-      final filtered = contributions.where((c) => c.type == type && c.status == ContributionStatus.pending).toList();
+      final filtered = contributions
+          .where(
+            (c) => c.type == type && c.status == ContributionStatus.pending,
+          )
+          .toList();
 
       for (final contribution in filtered) {
         await repository.approveContribution(contribution.id, user.uid);
@@ -106,7 +113,10 @@ class AdminModerationNotifier extends Notifier<AsyncValue<void>> {
   }
 }
 
-final adminModerationProvider = NotifierProvider<AdminModerationNotifier, AsyncValue<void>>(AdminModerationNotifier.new);
+final adminModerationProvider =
+    NotifierProvider<AdminModerationNotifier, AsyncValue<void>>(
+      AdminModerationNotifier.new,
+    );
 
 // ========================================
 // 🔐 SECURITY: isAdminProvider moved to global location
@@ -119,21 +129,28 @@ final adminModerationProvider = NotifierProvider<AdminModerationNotifier, AsyncV
 // Provider per statistiche moderazione (quanti pending, reviewed, etc.)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically cancels Firestore listener when widget is disposed
-final moderationStatsProvider = StreamProvider.autoDispose<ModerationStats>((ref) async* {
+final moderationStatsProvider = StreamProvider.autoDispose<ModerationStats>((
+  ref,
+) async* {
   final pending = await ref.watch(pendingContributionsProvider.future);
 
   yield ModerationStats(
     pendingCount: pending.length,
     tipCount: pending.where((c) => c.type == ContributionType.tip).length,
-    warningCount: pending.where((c) => c.type == ContributionType.warning).length,
-    correctionCount: pending.where((c) => c.type == ContributionType.correction).length,
-    techniqueCount: pending.where((c) => c.type == ContributionType.technique).length,
+    warningCount: pending
+        .where((c) => c.type == ContributionType.warning)
+        .length,
+    correctionCount: pending
+        .where((c) => c.type == ContributionType.correction)
+        .length,
+    techniqueCount: pending
+        .where((c) => c.type == ContributionType.technique)
+        .length,
   );
 });
 
 // Model per statistiche moderazione
 class ModerationStats {
-
   ModerationStats({
     required this.pendingCount,
     required this.tipCount,

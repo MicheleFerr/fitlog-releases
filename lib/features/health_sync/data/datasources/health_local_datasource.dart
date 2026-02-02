@@ -270,10 +270,7 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
     final key = measurement.dataType.name;
     final existingList = box.get(key) ?? [];
 
-    final updatedList = [
-      ...existingList,
-      measurement.toJson(),
-    ];
+    final updatedList = [...existingList, measurement.toJson()];
 
     await box.put(key, updatedList);
   }
@@ -295,10 +292,7 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
       final key = entry.key.name;
       final existingList = box.get(key) ?? [];
 
-      final updatedList = [
-        ...existingList,
-        ...entry.value,
-      ];
+      final updatedList = [...existingList, ...entry.value];
 
       await box.put(key, updatedList);
     }
@@ -316,7 +310,10 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
     final jsonList = box.get(key) ?? [];
 
     final measurements = jsonList
-        .map((json) => BodyMeasurement.fromJson(Map<String, dynamic>.from(json as Map)))
+        .map(
+          (json) =>
+              BodyMeasurement.fromJson(Map<String, dynamic>.from(json as Map)),
+        )
         .where((m) {
           final recorded = m.recordedAt;
           return recorded.isAfter(startDate) && recorded.isBefore(endDate);
@@ -339,7 +336,10 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
     if (jsonList.isEmpty) return null;
 
     final measurements = jsonList
-        .map((json) => BodyMeasurement.fromJson(Map<String, dynamic>.from(json as Map)))
+        .map(
+          (json) =>
+              BodyMeasurement.fromJson(Map<String, dynamic>.from(json as Map)),
+        )
         .toList();
 
     // Sort by recordedAt descending and return first (newest)

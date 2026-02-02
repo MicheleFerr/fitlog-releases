@@ -17,7 +17,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 class ExerciseSearchService {
   factory ExerciseSearchService() => _instance;
   ExerciseSearchService._internal();
-  static final ExerciseSearchService _instance = ExerciseSearchService._internal();
+  static final ExerciseSearchService _instance =
+      ExerciseSearchService._internal();
 
   List<Map<String, dynamic>> _exercisesData = [];
   String? _cachedLocaleCode;
@@ -62,7 +63,10 @@ class ExerciseSearchService {
     }
   }
 
-  Future<List<ExerciseTemplate>> searchExercises(String query, [Locale? locale]) async {
+  Future<List<ExerciseTemplate>> searchExercises(
+    String query, [
+    Locale? locale,
+  ]) async {
     await loadExercises(locale);
 
     final queryLower = query.toLowerCase().trim();
@@ -129,10 +133,12 @@ class ExerciseSearchService {
         }
       }
 
-      scoredResults.add(_ScoredExercise(
-        data: exerciseData,
-        score: normalizedScore.clamp(0.0, 1.0),
-      ));
+      scoredResults.add(
+        _ScoredExercise(
+          data: exerciseData,
+          score: normalizedScore.clamp(0.0, 1.0),
+        ),
+      );
     }
 
     // Ordina per score decrescente

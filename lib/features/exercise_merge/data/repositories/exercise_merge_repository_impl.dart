@@ -25,9 +25,8 @@ import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 class ExerciseMergeRepositoryImpl
     with FirebaseErrorMapperMixin
     implements IExerciseMergeRepository {
-  ExerciseMergeRepositoryImpl({
-    FirebaseFirestore? firestore,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance;
+  ExerciseMergeRepositoryImpl({FirebaseFirestore? firestore})
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
 
@@ -42,50 +41,51 @@ class ExerciseMergeRepositoryImpl
     required String targetExerciseName,
     required String targetMuscleGroup,
   }) async {
-    return handleFirebaseOperation(
-      () async {
-        if (kDebugMode) {
-          debugPrint('🔀 Starting merge: $sourceExerciseName → $targetExerciseName');
-        }
-
-        int sessionsUpdated = 0;
-        int templatesUpdated = 0;
-
-        // 1. Aggiorna workouts (exercises array inside each workout)
-        sessionsUpdated = await _updateWorkoutExercises(
-          userId: userId,
-          sourceExerciseName: sourceExerciseName,
-          targetExerciseId: targetExerciseId,
-          targetExerciseName: targetExerciseName,
+    return handleFirebaseOperation(() async {
+      if (kDebugMode) {
+        debugPrint(
+          '🔀 Starting merge: $sourceExerciseName → $targetExerciseName',
         );
+      }
 
-        // 2. Aggiorna workout_templates
-        templatesUpdated = await _updateWorkoutTemplates(
-          userId: userId,
-          sourceExerciseName: sourceExerciseName,
-          targetExerciseId: targetExerciseId,
-          targetExerciseName: targetExerciseName,
+      int sessionsUpdated = 0;
+      int templatesUpdated = 0;
+
+      // 1. Aggiorna workouts (exercises array inside each workout)
+      sessionsUpdated = await _updateWorkoutExercises(
+        userId: userId,
+        sourceExerciseName: sourceExerciseName,
+        targetExerciseId: targetExerciseId,
+        targetExerciseName: targetExerciseName,
+      );
+
+      // 2. Aggiorna workout_templates
+      templatesUpdated = await _updateWorkoutTemplates(
+        userId: userId,
+        sourceExerciseName: sourceExerciseName,
+        targetExerciseId: targetExerciseId,
+        targetExerciseName: targetExerciseName,
+      );
+
+      // 3. Aggiorna analytics collection (merge sessions + delete source)
+      await _updateAnalyticsCollection(
+        userId: userId,
+        sourceExerciseName: sourceExerciseName,
+        targetExerciseName: targetExerciseName,
+        targetMuscleGroup: targetMuscleGroup,
+      );
+
+      if (kDebugMode) {
+        debugPrint(
+          '✅ Merge completed: $sessionsUpdated sessions, $templatesUpdated templates',
         );
+      }
 
-        // 3. Aggiorna analytics collection (merge sessions + delete source)
-        await _updateAnalyticsCollection(
-          userId: userId,
-          sourceExerciseName: sourceExerciseName,
-          targetExerciseName: targetExerciseName,
-          targetMuscleGroup: targetMuscleGroup,
-        );
-
-        if (kDebugMode) {
-          debugPrint('✅ Merge completed: $sessionsUpdated sessions, $templatesUpdated templates');
-        }
-
-        return MergeResult.success(
-          sessionsUpdated: sessionsUpdated,
-          templatesUpdated: templatesUpdated,
-        );
-      },
-      operationName: 'executeMerge($sourceExerciseName → $targetExerciseName)',
-    );
+      return MergeResult.success(
+        sessionsUpdated: sessionsUpdated,
+        templatesUpdated: templatesUpdated,
+      );
+    }, operationName: 'executeMerge($sourceExerciseName → $targetExerciseName)');
   }
 
   @override
@@ -100,7 +100,9 @@ class ExerciseMergeRepositoryImpl
     return handleFirebaseOperation(
       () async {
         if (kDebugMode) {
-          debugPrint('🔀 Starting merge with progress: $sourceExerciseName → $targetExerciseName');
+          debugPrint(
+            '🔀 Starting merge with progress: $sourceExerciseName → $targetExerciseName',
+          );
         }
 
         int sessionsUpdated = 0;
@@ -154,7 +156,9 @@ class ExerciseMergeRepositoryImpl
         onProgress(0.80, 'Statistiche unite');
 
         if (kDebugMode) {
-          debugPrint('✅ Merge completed: $sessionsUpdated sessions, $templatesUpdated templates');
+          debugPrint(
+            '✅ Merge completed: $sessionsUpdated sessions, $templatesUpdated templates',
+          );
         }
 
         // Il notifier gestisce 80% - 100% (refresh cache)
@@ -164,7 +168,8 @@ class ExerciseMergeRepositoryImpl
           templatesUpdated: templatesUpdated,
         );
       },
-      operationName: 'executeMergeWithProgress($sourceExerciseName → $targetExerciseName)',
+      operationName:
+          'executeMergeWithProgress($sourceExerciseName → $targetExerciseName)',
     );
   }
 
@@ -205,7 +210,8 @@ class ExerciseMergeRepositoryImpl
       bool hasMatch = false;
       final updatedExercises = exercises.map((exercise) {
         final exerciseMap = exercise as Map<String, dynamic>;
-        final exerciseName = exerciseMap['exerciseName'] as String? ??
+        final exerciseName =
+            exerciseMap['exerciseName'] as String? ??
             exerciseMap['name'] as String? ??
             '';
 
@@ -354,7 +360,9 @@ class ExerciseMergeRepositoryImpl
     final sourceSessions = sourceData['sessions'] as List<dynamic>? ?? [];
 
     if (kDebugMode) {
-      debugPrint('📊 Found ${sourceSessions.length} sessions in source analytics');
+      debugPrint(
+        '📊 Found ${sourceSessions.length} sessions in source analytics',
+      );
     }
 
     // 2. Leggi documento target (potrebbe non esistere)
@@ -365,7 +373,9 @@ class ExerciseMergeRepositoryImpl
       final targetData = targetDoc.data()!;
       targetSessions = targetData['sessions'] as List<dynamic>? ?? [];
       if (kDebugMode) {
-        debugPrint('📊 Found ${targetSessions.length} existing sessions in target');
+        debugPrint(
+          '📊 Found ${targetSessions.length} existing sessions in target',
+        );
       }
     }
 
@@ -395,7 +405,9 @@ class ExerciseMergeRepositoryImpl
     });
 
     if (kDebugMode) {
-      debugPrint('✅ Analytics target updated with ${allSessions.length} total sessions');
+      debugPrint(
+        '✅ Analytics target updated with ${allSessions.length} total sessions',
+      );
     }
 
     // 6. Elimina documento sorgente
@@ -425,48 +437,43 @@ class ExerciseMergeRepositoryImpl
     required String userId,
     required String sourceExerciseName,
   }) async {
-    final result = await handleFirebaseOperation(
-      () async {
-        // Query workouts dell'utente
-        final workoutsRef = _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('workouts');
+    final result = await handleFirebaseOperation(() async {
+      // Query workouts dell'utente
+      final workoutsRef = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('workouts');
 
-        final snapshot = await workoutsRef.get();
+      final snapshot = await workoutsRef.get();
 
-        int count = 0;
-        for (final doc in snapshot.docs) {
-          final data = doc.data();
-          final exercises = data['exercises'] as List<dynamic>? ?? [];
+      int count = 0;
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        final exercises = data['exercises'] as List<dynamic>? ?? [];
 
-          for (final exercise in exercises) {
-            final exerciseMap = exercise as Map<String, dynamic>;
-            final exerciseName = exerciseMap['exerciseName'] as String? ??
-                exerciseMap['name'] as String? ??
-                '';
+        for (final exercise in exercises) {
+          final exerciseMap = exercise as Map<String, dynamic>;
+          final exerciseName =
+              exerciseMap['exerciseName'] as String? ??
+              exerciseMap['name'] as String? ??
+              '';
 
-            if (exerciseName.toLowerCase() == sourceExerciseName.toLowerCase()) {
-              count++;
-              break; // Conta il workout una sola volta
-            }
+          if (exerciseName.toLowerCase() == sourceExerciseName.toLowerCase()) {
+            count++;
+            break; // Conta il workout una sola volta
           }
         }
+      }
 
-        return count;
-      },
-      operationName: 'countSessionsToUpdate($sourceExerciseName)',
-    );
+      return count;
+    }, operationName: 'countSessionsToUpdate($sourceExerciseName)');
 
-    return result.fold(
-      (failure) {
-        if (kDebugMode) {
-          debugPrint('❌ Error counting sessions: ${failure.message}');
-        }
-        return 0;
-      },
-      (sessionCount) => sessionCount,
-    );
+    return result.fold((failure) {
+      if (kDebugMode) {
+        debugPrint('❌ Error counting sessions: ${failure.message}');
+      }
+      return 0;
+    }, (sessionCount) => sessionCount);
   }
 
   @override
@@ -474,44 +481,37 @@ class ExerciseMergeRepositoryImpl
     required String userId,
     required String sourceExerciseName,
   }) async {
-    final result = await handleFirebaseOperation(
-      () async {
-        final query = _firestore
-            .collection('workout_templates')
-            .where('userId', isEqualTo: userId);
+    final result = await handleFirebaseOperation(() async {
+      final query = _firestore
+          .collection('workout_templates')
+          .where('userId', isEqualTo: userId);
 
-        final snapshot = await query.get();
+      final snapshot = await query.get();
 
-        int count = 0;
-        for (final doc in snapshot.docs) {
-          final data = doc.data();
-          final exercises = data['exercises'] as List<dynamic>? ?? [];
+      int count = 0;
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        final exercises = data['exercises'] as List<dynamic>? ?? [];
 
-          for (final exercise in exercises) {
-            final exerciseMap = exercise as Map<String, dynamic>;
-            final exerciseName = exerciseMap['exerciseName'] as String? ?? '';
+        for (final exercise in exercises) {
+          final exerciseMap = exercise as Map<String, dynamic>;
+          final exerciseName = exerciseMap['exerciseName'] as String? ?? '';
 
-            if (exerciseName.toLowerCase() == sourceExerciseName.toLowerCase()) {
-              count++;
-              break; // Conta il template una sola volta
-            }
+          if (exerciseName.toLowerCase() == sourceExerciseName.toLowerCase()) {
+            count++;
+            break; // Conta il template una sola volta
           }
         }
+      }
 
-        return count;
-      },
-      operationName: 'countTemplatesToUpdate($sourceExerciseName)',
-    );
+      return count;
+    }, operationName: 'countTemplatesToUpdate($sourceExerciseName)');
 
-    return result.fold(
-      (failure) {
-        if (kDebugMode) {
-          debugPrint('❌ Error counting templates: ${failure.message}');
-        }
-        return 0;
-      },
-      (templateCount) => templateCount,
-    );
+    return result.fold((failure) {
+      if (kDebugMode) {
+        debugPrint('❌ Error counting templates: ${failure.message}');
+      }
+      return 0;
+    }, (templateCount) => templateCount);
   }
-
 }

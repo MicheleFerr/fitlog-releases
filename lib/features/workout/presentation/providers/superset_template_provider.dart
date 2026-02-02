@@ -7,88 +7,88 @@ import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dar
 
 // Repository provider
 // Injects HybridExerciseRepository for localized exercise name lookup
-final supersetTemplateRepositoryProvider = Provider<SupersetTemplateRepository>((ref) {
-  final exerciseRepository = ref.watch(hybridExerciseRepositoryProvider);
-  return SupersetTemplateRepository(
-    exerciseRepository: exerciseRepository,
-  );
-});
+final supersetTemplateRepositoryProvider = Provider<SupersetTemplateRepository>(
+  (ref) {
+    final exerciseRepository = ref.watch(hybridExerciseRepositoryProvider);
+    return SupersetTemplateRepository(exerciseRepository: exerciseRepository);
+  },
+);
 
 // All templates (predefined + custom)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final allSupersetTemplatesProvider =
     FutureProvider.autoDispose<List<SupersetTemplate>>((ref) async {
-  if (kDebugMode) {
-    debugPrint('🔗 [ALL_SUPERSET_TEMPLATES] Provider called');
-  }
+      if (kDebugMode) {
+        debugPrint('🔗 [ALL_SUPERSET_TEMPLATES] Provider called');
+      }
 
-  final repository = ref.watch(supersetTemplateRepositoryProvider);
-  final templates = await repository.getAllTemplates();
+      final repository = ref.watch(supersetTemplateRepositoryProvider);
+      final templates = await repository.getAllTemplates();
 
-  if (kDebugMode) {
-    debugPrint(
-      '🔗 [ALL_SUPERSET_TEMPLATES] Got ${templates.length} templates',
-    );
-  }
+      if (kDebugMode) {
+        debugPrint(
+          '🔗 [ALL_SUPERSET_TEMPLATES] Got ${templates.length} templates',
+        );
+      }
 
-  return templates;
-});
+      return templates;
+    });
 
 // Predefined templates only
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final predefinedSupersetTemplatesProvider =
     FutureProvider.autoDispose<List<SupersetTemplate>>((ref) async {
-  final repository = ref.watch(supersetTemplateRepositoryProvider);
-  return repository.getPredefinedTemplates();
-});
+      final repository = ref.watch(supersetTemplateRepositoryProvider);
+      return repository.getPredefinedTemplates();
+    });
 
 // Custom templates only
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final customSupersetTemplatesProvider =
     FutureProvider.autoDispose<List<SupersetTemplate>>((ref) async {
-  final repository = ref.watch(supersetTemplateRepositoryProvider);
-  return repository.getCustomTemplates();
-});
+      final repository = ref.watch(supersetTemplateRepositoryProvider);
+      return repository.getCustomTemplates();
+    });
 
 // Templates for specific persona
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final supersetTemplatesForPersonaProvider = FutureProvider.autoDispose
     .family<List<SupersetTemplate>, UserPersona>((ref, persona) async {
-  final repository = ref.watch(supersetTemplateRepositoryProvider);
-  return repository.getTemplatesForPersona(persona);
-});
+      final repository = ref.watch(supersetTemplateRepositoryProvider);
+      return repository.getTemplatesForPersona(persona);
+    });
 
 // Evidence-based templates
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final evidenceBasedSupersetTemplatesProvider =
     FutureProvider.autoDispose<List<SupersetTemplate>>((ref) async {
-  final repository = ref.watch(supersetTemplateRepositoryProvider);
-  return repository.getEvidenceBasedTemplates();
-});
+      final repository = ref.watch(supersetTemplateRepositoryProvider);
+      return repository.getEvidenceBasedTemplates();
+    });
 
 // Time-efficient templates (15-20min)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final timeEfficientSupersetTemplatesProvider =
     FutureProvider.autoDispose<List<SupersetTemplate>>((ref) async {
-  final repository = ref.watch(supersetTemplateRepositoryProvider);
-  return repository.getTimeEfficientTemplates();
-});
+      final repository = ref.watch(supersetTemplateRepositoryProvider);
+      return repository.getTimeEfficientTemplates();
+    });
 
 // Beginner-friendly templates
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final beginnerSupersetTemplatesProvider =
     FutureProvider.autoDispose<List<SupersetTemplate>>((ref) async {
-  final repository = ref.watch(supersetTemplateRepositoryProvider);
-  return repository.getBeginnerTemplates();
-});
+      final repository = ref.watch(supersetTemplateRepositoryProvider);
+      return repository.getBeginnerTemplates();
+    });
 
 // Advanced templates
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final advancedSupersetTemplatesProvider =
     FutureProvider.autoDispose<List<SupersetTemplate>>((ref) async {
-  final repository = ref.watch(supersetTemplateRepositoryProvider);
-  return repository.getAdvancedTemplates();
-});
+      final repository = ref.watch(supersetTemplateRepositoryProvider);
+      return repository.getAdvancedTemplates();
+    });
 
 // Search query state
 final supersetTemplateSearchQueryProvider = StateProvider<String>((ref) => '');
@@ -97,15 +97,15 @@ final supersetTemplateSearchQueryProvider = StateProvider<String>((ref) => '');
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final supersetTemplateSearchResultsProvider =
     FutureProvider.autoDispose<List<SupersetTemplate>>((ref) async {
-  final repository = ref.watch(supersetTemplateRepositoryProvider);
-  final query = ref.watch(supersetTemplateSearchQueryProvider);
+      final repository = ref.watch(supersetTemplateRepositoryProvider);
+      final query = ref.watch(supersetTemplateSearchQueryProvider);
 
-  if (query.isEmpty) {
-    return repository.getAllTemplates();
-  }
+      if (query.isEmpty) {
+        return repository.getAllTemplates();
+      }
 
-  return repository.searchTemplates(query);
-});
+      return repository.searchTemplates(query);
+    });
 
 // Filter by difficulty
 final supersetTemplateDifficultyFilterProvider =
@@ -114,21 +114,21 @@ final supersetTemplateDifficultyFilterProvider =
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final filteredSupersetTemplatesByDifficultyProvider =
     FutureProvider.autoDispose<List<SupersetTemplate>>((ref) async {
-  final repository = ref.watch(supersetTemplateRepositoryProvider);
-  final difficulty = ref.watch(supersetTemplateDifficultyFilterProvider);
+      final repository = ref.watch(supersetTemplateRepositoryProvider);
+      final difficulty = ref.watch(supersetTemplateDifficultyFilterProvider);
 
-  if (difficulty == null) {
-    return repository.getAllTemplates();
-  }
+      if (difficulty == null) {
+        return repository.getAllTemplates();
+      }
 
-  return repository.getTemplatesByDifficulty(difficulty);
-});
+      return repository.getTemplatesByDifficulty(difficulty);
+    });
 
 // Notifier for template management
 final supersetTemplateNotifierProvider =
     NotifierProvider<SupersetTemplateNotifier, SupersetTemplateState>(
-  SupersetTemplateNotifier.new,
-);
+      SupersetTemplateNotifier.new,
+    );
 
 class SupersetTemplateState {
   const SupersetTemplateState({
@@ -291,19 +291,19 @@ class SupersetTemplateNotifier extends Notifier<SupersetTemplateState> {
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final supersetTemplateByIdProvider = FutureProvider.autoDispose
     .family<SupersetTemplate?, String>((ref, templateId) async {
-  final templates = await ref.watch(allSupersetTemplatesProvider.future);
+      final templates = await ref.watch(allSupersetTemplatesProvider.future);
 
-  try {
-    return templates.firstWhere((template) => template.id == templateId);
-  } catch (e) {
-    if (kDebugMode) {
-      debugPrint(
-        '⚠️ Superset template with ID $templateId not found in ${templates.length} templates',
-      );
-    }
-    return null;
-  }
-});
+      try {
+        return templates.firstWhere((template) => template.id == templateId);
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint(
+            '⚠️ Superset template with ID $templateId not found in ${templates.length} templates',
+          );
+        }
+        return null;
+      }
+    });
 
 /// Provider for templates recommended for user (based on persona)
 /// This will be enhanced with actual persona detection in the future
@@ -311,19 +311,19 @@ final supersetTemplateByIdProvider = FutureProvider.autoDispose
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final recommendedSupersetTemplatesProvider =
     FutureProvider.autoDispose<List<SupersetTemplate>>((ref) async {
-  final repository = ref.watch(supersetTemplateRepositoryProvider);
+      final repository = ref.watch(supersetTemplateRepositoryProvider);
 
-  // TODO: Get user persona from profile
-  // For now, combine beginner-friendly and evidence-based
-  final beginner = await repository.getBeginnerTemplates();
-  final evidence = await repository.getEvidenceBasedTemplates();
+      // TODO: Get user persona from profile
+      // For now, combine beginner-friendly and evidence-based
+      final beginner = await repository.getBeginnerTemplates();
+      final evidence = await repository.getEvidenceBasedTemplates();
 
-  // Merge and deduplicate
-  final merged = <String, SupersetTemplate>{};
-  for (final template in [...beginner, ...evidence]) {
-    merged[template.id] = template;
-  }
+      // Merge and deduplicate
+      final merged = <String, SupersetTemplate>{};
+      for (final template in [...beginner, ...evidence]) {
+        merged[template.id] = template;
+      }
 
-  // Take top 6
-  return merged.values.take(6).toList();
-});
+      // Take top 6
+      return merged.values.take(6).toList();
+    });

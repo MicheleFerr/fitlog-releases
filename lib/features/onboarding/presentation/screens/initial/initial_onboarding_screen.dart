@@ -24,10 +24,7 @@ import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour
 /// Step 4: Experience level
 /// Step 5: Frequency + Summary
 class InitialOnboardingScreen extends ConsumerStatefulWidget {
-  const InitialOnboardingScreen({
-    super.key,
-    this.onComplete,
-  });
+  const InitialOnboardingScreen({super.key, this.onComplete});
 
   /// Callback when onboarding is completed
   final VoidCallback? onComplete;
@@ -55,8 +52,8 @@ class _InitialOnboardingScreenState
               totalSteps: state.totalSteps,
               onBack: state.currentStep > 0
                   ? () => ref
-                      .read(initialOnboardingNotifierProvider.notifier)
-                      .previousStep()
+                        .read(initialOnboardingNotifierProvider.notifier)
+                        .previousStep()
                   : null,
             ),
 
@@ -71,9 +68,7 @@ class _InitialOnboardingScreenState
                   const PersonalInfoStep(),
                   const BodyDataStep(),
                   const ExperienceStep(),
-                  FrequencySummaryStep(
-                    onComplete: _handleComplete,
-                  ),
+                  FrequencySummaryStep(onComplete: _handleComplete),
                 ],
               ),
             ),
@@ -86,8 +81,9 @@ class _InitialOnboardingScreenState
   Future<void> _handleComplete() async {
     final notifier = ref.read(initialOnboardingNotifierProvider.notifier);
     final state = ref.read(initialOnboardingNotifierProvider);
-    final completionService =
-        ref.read(initialOnboardingCompletionServiceProvider);
+    final completionService = ref.read(
+      initialOnboardingCompletionServiceProvider,
+    );
 
     // Get onboarding data
     final data = state.toOnboardingData();
@@ -134,9 +130,7 @@ class _LinearProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Progress: step 0 = 0%, step 1 = 1/total, ..., last step = 1.0
-    final progress = totalSteps > 1
-        ? currentStep / (totalSteps - 1)
-        : 1.0;
+    final progress = totalSteps > 1 ? currentStep / (totalSteps - 1) : 1.0;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

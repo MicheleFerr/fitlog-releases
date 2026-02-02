@@ -57,7 +57,9 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
     // Motor 1.0.1 fade-in animation on mount
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500), // ~500ms smooth (Motor medium2)
+      duration: const Duration(
+        milliseconds: 500,
+      ), // ~500ms smooth (Motor medium2)
     );
 
     _fadeAnimation = CurvedAnimation(
@@ -141,26 +143,34 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
                   context.colors.surfaceContainerLow.withValues(alpha: 0.95),
                 ],
               ),
-              borderRadius: BorderRadius.circular(16), // Consistent with elevated design
+              borderRadius: BorderRadius.circular(
+                16,
+              ), // Consistent with elevated design
               // Enhanced shadow system for depth
               boxShadow: [
                 // Primary shadow for depth
                 BoxShadow(
-                  color: context.colors.shadow.withValues(alpha: isDark ? 0.25 : 0.12),
+                  color: context.colors.shadow.withValues(
+                    alpha: isDark ? 0.25 : 0.12,
+                  ),
                   blurRadius: 16,
                   offset: const Offset(0, 6),
                   spreadRadius: 1,
                 ),
                 // Secondary subtle shadow
                 BoxShadow(
-                  color: context.colors.onSurface.withValues(alpha: isDark ? 0.1 : 0.06),
+                  color: context.colors.onSurface.withValues(
+                    alpha: isDark ? 0.1 : 0.06,
+                  ),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
               ],
               // Subtle border for definition
               border: Border.all(
-                color: context.colors.outlineVariant.withValues(alpha: isDark ? 0.15 : 0.1),
+                color: context.colors.outlineVariant.withValues(
+                  alpha: isDark ? 0.15 : 0.1,
+                ),
                 width: 1,
               ),
             ),
@@ -177,12 +187,12 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        _getStripColor(category).withValues(
-                          alpha: _isActiveWorkout ? 1.0 : 0.9,
-                        ),
-                        _getStripColor(category).withValues(
-                          alpha: _isActiveWorkout ? 0.9 : 0.7,
-                        ),
+                        _getStripColor(
+                          category,
+                        ).withValues(alpha: _isActiveWorkout ? 1.0 : 0.9),
+                        _getStripColor(
+                          category,
+                        ).withValues(alpha: _isActiveWorkout ? 0.9 : 0.7),
                       ],
                     ),
                     borderRadius: const BorderRadius.only(
@@ -233,10 +243,7 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
                       const Spacer(),
 
                       // Footer: Metadata (⏱️ duration + 🕐 last performed from real stats)
-                      _MetadataRow(
-                        template: widget.template,
-                        stats: stats,
-                      ),
+                      _MetadataRow(template: widget.template, stats: stats),
                     ],
                   ),
                 ),
@@ -251,9 +258,7 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
 
 /// Difficulty badge with WCAG AA compliant semantic colors
 class _DifficultyBadge extends StatelessWidget {
-  const _DifficultyBadge({
-    required this.difficulty,
-  });
+  const _DifficultyBadge({required this.difficulty});
 
   final DifficultyLevel difficulty;
 
@@ -302,14 +307,14 @@ class _DifficultyBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
       decoration: BoxDecoration(
         color: _getBackgroundColor(context),
         borderRadius: BorderRadius.circular(12), // Capsule shape
-        border: Border.all(
-          color: _getBorderColor(context),
-          width: 1,
-        ),
+        border: Border.all(color: _getBorderColor(context), width: 1),
       ),
       child: Text(
         difficulty.localizedName(context),
@@ -367,10 +372,7 @@ class _ExercisePreview extends StatelessWidget {
 /// - If we have real stats with avgDuration → show "~XX min" (average from history)
 /// - If no stats → show "XX min" (hardcoded estimatedDuration from template)
 class _MetadataRow extends StatelessWidget {
-  const _MetadataRow({
-    required this.template,
-    required this.stats,
-  });
+  const _MetadataRow({required this.template, required this.stats});
 
   final WorkoutTemplate template;
   final TemplateStats? stats;
@@ -435,13 +437,16 @@ class _MetadataRow extends StatelessWidget {
           Icon(
             AppIcons.history,
             size: AppIconSize.small,
-            color: stats!.statusColor(context) ?? context.colors.onSurfaceVariant,
+            color:
+                stats!.statusColor(context) ?? context.colors.onSurfaceVariant,
           ),
           const SizedBox(width: AppSpacing.xxs),
           Text(
             stats!.formattedLastPerformed(context),
             style: context.textTheme.bodySmall?.copyWith(
-              color: stats!.statusColor(context) ?? context.colors.onSurfaceVariant,
+              color:
+                  stats!.statusColor(context) ??
+                  context.colors.onSurfaceVariant,
               fontWeight: FontWeight.w600,
             ),
           ),

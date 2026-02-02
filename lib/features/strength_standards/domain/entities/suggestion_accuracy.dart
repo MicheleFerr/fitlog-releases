@@ -138,7 +138,10 @@ class AccuracyMetrics {
 
     // Higher confidence with lower error and more samples
     final errorFactor = 1.0 - (averageErrorPercent / 100.0).clamp(0.0, 1.0);
-    final sampleFactor = (sampleSize / 10.0).clamp(0.0, 1.0); // Max at 10 samples
+    final sampleFactor = (sampleSize / 10.0).clamp(
+      0.0,
+      1.0,
+    ); // Max at 10 samples
 
     return (errorFactor * 0.7 + sampleFactor * 0.3).clamp(0.0, 1.0);
   }

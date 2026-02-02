@@ -23,18 +23,16 @@ import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.da
 
 /// Modal per visualizzare dettagli completi di un contributo
 class ContributionDetailModal extends ConsumerStatefulWidget {
-
-  const ContributionDetailModal({
-    super.key,
-    required this.contribution,
-  });
+  const ContributionDetailModal({super.key, required this.contribution});
   final CommunityContribution contribution;
 
   @override
-  ConsumerState<ContributionDetailModal> createState() => _ContributionDetailModalState();
+  ConsumerState<ContributionDetailModal> createState() =>
+      _ContributionDetailModalState();
 }
 
-class _ContributionDetailModalState extends ConsumerState<ContributionDetailModal> {
+class _ContributionDetailModalState
+    extends ConsumerState<ContributionDetailModal> {
   final _commentController = TextEditingController();
   final _scrollController = ScrollController();
   bool _isSubmittingComment = false;
@@ -158,11 +156,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
         children: [
           Row(
             children: [
-              Icon(
-                AppIcons.admin,
-                color: theme.colorScheme.error,
-                size: 20,
-              ),
+              Icon(AppIcons.admin, color: theme.colorScheme.error, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Azioni Admin',
@@ -193,7 +187,9 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                   icon: const Icon(AppIcons.cancel),
                   label: Text(context.l10n.reject),
                   style: FilledButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.error.withValues(alpha: 0.2),
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.error.withValues(alpha: 0.2),
                     foregroundColor: Theme.of(context).colorScheme.error,
                   ),
                 ),
@@ -259,7 +255,9 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
               ),
             )
           else
-            ...widget.contribution.comments.map((comment) => _buildCommentCard(comment, theme)),
+            ...widget.contribution.comments.map(
+              (comment) => _buildCommentCard(comment, theme),
+            ),
         ],
       ),
     );
@@ -316,10 +314,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            comment.text,
-            style: theme.textTheme.bodyMedium,
-          ),
+          Text(comment.text, style: theme.textTheme.bodyMedium),
         ],
       ),
     );
@@ -385,7 +380,9 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
         label: Text(l10n.reportContribution),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.error,
-          side: BorderSide(color: theme.colorScheme.error.withValues(alpha: 0.3)),
+          side: BorderSide(
+            color: theme.colorScheme.error.withValues(alpha: 0.3),
+          ),
         ),
       ),
     );
@@ -393,10 +390,9 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
 
   Future<void> _handleVote(bool isUpvote) async {
     try {
-      await ref.read(contributionSubmissionProvider.notifier).voteOnContribution(
-            widget.contribution.id,
-            isUpvote,
-          );
+      await ref
+          .read(contributionSubmissionProvider.notifier)
+          .voteOnContribution(widget.contribution.id, isUpvote);
 
       if (!mounted) return;
 
@@ -408,10 +404,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
     } catch (e) {
       if (!mounted) return;
 
-      SnackBarService.showError(
-        context,
-        'Errore: $e',
-      );
+      SnackBarService.showError(context, 'Errore: $e');
     }
   }
 
@@ -440,10 +433,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
     } catch (e) {
       if (!mounted) return;
 
-      SnackBarService.showError(
-        context,
-        'Errore: $e',
-      );
+      SnackBarService.showError(context, 'Errore: $e');
     } finally {
       if (mounted) {
         setState(() => _isSubmittingComment = false);
@@ -453,25 +443,19 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
 
   Future<void> _handleApprove() async {
     try {
-      await ref.read(adminModerationProvider.notifier).approveContribution(
-            widget.contribution.id,
-          );
+      await ref
+          .read(adminModerationProvider.notifier)
+          .approveContribution(widget.contribution.id);
 
       if (!mounted) return;
 
       Navigator.pop(context);
 
-      SnackBarService.showSuccess(
-        context,
-        '✅ Contributo approvato!',
-      );
+      SnackBarService.showSuccess(context, '✅ Contributo approvato!');
     } catch (e) {
       if (!mounted) return;
 
-      SnackBarService.showError(
-        context,
-        'Errore: $e',
-      );
+      SnackBarService.showError(context, 'Errore: $e');
     }
   }
 
@@ -484,10 +468,9 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
     if (reason == null || reason.trim().isEmpty) return;
 
     try {
-      await ref.read(adminModerationProvider.notifier).rejectContribution(
-            widget.contribution.id,
-            reason,
-          );
+      await ref
+          .read(adminModerationProvider.notifier)
+          .rejectContribution(widget.contribution.id, reason);
 
       if (!mounted) return;
 
@@ -501,10 +484,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
     } catch (e) {
       if (!mounted) return;
 
-      SnackBarService.showError(
-        context,
-        'Errore: $e',
-      );
+      SnackBarService.showError(context, 'Errore: $e');
     }
   }
 
@@ -533,10 +513,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
     } catch (e) {
       if (!mounted) return;
 
-      SnackBarService.showError(
-        context,
-        'Errore: $e',
-      );
+      SnackBarService.showError(context, 'Errore: $e');
     }
   }
 
@@ -584,10 +561,7 @@ class _RejectDialogState extends State<_RejectDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            l10n.rejectReasonLabel,
-            style: theme.textTheme.bodyMedium,
-          ),
+          Text(l10n.rejectReasonLabel, style: theme.textTheme.bodyMedium),
           const SizedBox(height: 12),
           TextField(
             controller: _controller,
@@ -661,16 +635,18 @@ class _ReportDialogState extends State<_ReportDialog> {
             ),
           ),
           const SizedBox(height: 12),
-          ...reportReasons.map((entry) => RadioListTile<_ReportReason>(
-                title: Text(entry.$2),
-                value: entry.$1,
-                groupValue: _selectedReason,
-                onChanged: (value) {
-                  setState(() => _selectedReason = value);
-                },
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-              )),
+          ...reportReasons.map(
+            (entry) => RadioListTile<_ReportReason>(
+              title: Text(entry.$2),
+              value: entry.$1,
+              groupValue: _selectedReason,
+              onChanged: (value) {
+                setState(() => _selectedReason = value);
+              },
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+            ),
+          ),
           if (_selectedReason == _ReportReason.other) ...[
             const SizedBox(height: 12),
             TextField(
@@ -695,7 +671,9 @@ class _ReportDialogState extends State<_ReportDialog> {
               : () {
                   final reason = _selectedReason == _ReportReason.other
                       ? _controller.text
-                      : reportReasons.firstWhere((e) => e.$1 == _selectedReason).$2;
+                      : reportReasons
+                            .firstWhere((e) => e.$1 == _selectedReason)
+                            .$2;
                   Navigator.pop(context, reason);
                 },
           style: FilledButton.styleFrom(
@@ -709,10 +687,4 @@ class _ReportDialogState extends State<_ReportDialog> {
 }
 
 /// Enum for report reasons
-enum _ReportReason {
-  spam,
-  offensive,
-  wrongInfo,
-  duplicate,
-  other,
-}
+enum _ReportReason { spam, offensive, wrongInfo, duplicate, other }

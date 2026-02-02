@@ -195,11 +195,11 @@ final userProfileProvider = StreamProvider<UserProfile?>((ref) async* {
         }
 
         // ALWAYS listen for real-time updates (even if we started from cache)
-        await for (final updateSnapshot in firestore
-            .collection('users')
-            .doc(firebaseUser.uid)
-            .snapshots()) {
-
+        await for (final updateSnapshot
+            in firestore
+                .collection('users')
+                .doc(firebaseUser.uid)
+                .snapshots()) {
           if (updateSnapshot.exists) {
             final updatedProfile = UserProfile.fromFirestore(updateSnapshot);
             cache.set(firebaseUser.uid, updatedProfile);
@@ -256,7 +256,10 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
     if (currentProfile == null) return;
 
     try {
-      await _firestore.collection('users').doc(currentProfile.uid).update(updates);
+      await _firestore
+          .collection('users')
+          .doc(currentProfile.uid)
+          .update(updates);
       // Stream will auto-update
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
@@ -268,7 +271,9 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
     final currentProfile = state.valueOrNull;
     if (currentProfile == null) return;
 
-    final updatedProfile = currentProfile.incrementTemplateUsage(isPublic: isPublic);
+    final updatedProfile = currentProfile.incrementTemplateUsage(
+      isPublic: isPublic,
+    );
 
     try {
       await _firestore.collection('users').doc(currentProfile.uid).update({
@@ -286,7 +291,9 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
     final currentProfile = state.valueOrNull;
     if (currentProfile == null) return;
 
-    final updatedProfile = currentProfile.decrementTemplateUsage(isPublic: isPublic);
+    final updatedProfile = currentProfile.decrementTemplateUsage(
+      isPublic: isPublic,
+    );
 
     try {
       await _firestore.collection('users').doc(currentProfile.uid).update({
@@ -369,7 +376,9 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
         } catch (syncError) {
           // Non-blocking: log but don't fail the upgrade
           if (kDebugMode) {
-            debugPrint('⚠️ Custom exercises sync after upgrade failed: $syncError');
+            debugPrint(
+              '⚠️ Custom exercises sync after upgrade failed: $syncError',
+            );
           }
         }
       }
@@ -408,7 +417,9 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
         usedPublicTemplates: publicCount,
       );
 
-      final updatedProfile = currentProfile.copyWith(templateQuota: updatedQuota);
+      final updatedProfile = currentProfile.copyWith(
+        templateQuota: updatedQuota,
+      );
 
       await _firestore.collection('users').doc(currentProfile.uid).update({
         'templateQuota': updatedQuota.toJson(),
@@ -458,7 +469,10 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
       }
 
       // Update Firestore
-      await _firestore.collection('users').doc(currentProfile.uid).update(updates);
+      await _firestore
+          .collection('users')
+          .doc(currentProfile.uid)
+          .update(updates);
 
       // Update local state
       final updatedProfile = currentProfile.copyWith(
@@ -476,7 +490,9 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
 
 /// Provider for user profile notifier (for mutations)
 final userProfileNotifierProvider =
-    NotifierProvider<UserProfileNotifier, AsyncValue<UserProfile?>>(UserProfileNotifier.new);
+    NotifierProvider<UserProfileNotifier, AsyncValue<UserProfile?>>(
+      UserProfileNotifier.new,
+    );
 
 /// ============================================================================
 /// HELPER PROVIDERS (commonly used derived state)
@@ -487,7 +503,9 @@ final userProfileNotifierProvider =
 /// 🔧 PERF FIX: Use .select() to only rebuild when accountTier changes
 final isPremiumUserProvider = Provider<bool>((ref) {
   final accountTier = ref.watch(
-    userProfileProvider.select((asyncValue) => asyncValue.valueOrNull?.accountTier),
+    userProfileProvider.select(
+      (asyncValue) => asyncValue.valueOrNull?.accountTier,
+    ),
   );
 
   return accountTier != AccountTier.free;
@@ -498,7 +516,9 @@ final isPremiumUserProvider = Provider<bool>((ref) {
 /// 🔧 PERF FIX: Use .select() to only rebuild when displayName changes
 final userDisplayNameProvider = Provider<String>((ref) {
   final displayName = ref.watch(
-    userProfileProvider.select((asyncValue) => asyncValue.valueOrNull?.displayName),
+    userProfileProvider.select(
+      (asyncValue) => asyncValue.valueOrNull?.displayName,
+    ),
   );
 
   return displayName ?? 'GymBro User';
@@ -530,7 +550,9 @@ final accountTierProvider = Provider<AccountTier>((ref) {
 /// 🔧 PERF FIX: Use .select() to only rebuild when templateQuota changes
 final templateQuotaProvider = Provider<TemplateQuota>((ref) {
   final templateQuota = ref.watch(
-    userProfileProvider.select((asyncValue) => asyncValue.valueOrNull?.templateQuota),
+    userProfileProvider.select(
+      (asyncValue) => asyncValue.valueOrNull?.templateQuota,
+    ),
   );
 
   return templateQuota ?? TemplateQuota.forTier(AccountTier.free);
@@ -541,7 +563,9 @@ final templateQuotaProvider = Provider<TemplateQuota>((ref) {
 /// 🔧 PERF FIX: Use .select() to only rebuild when templateQuota changes
 final canSaveTemplateProvider = Provider.family<bool, bool>((ref, isPublic) {
   final templateQuota = ref.watch(
-    userProfileNotifierProvider.select((asyncValue) => asyncValue.valueOrNull?.templateQuota),
+    userProfileNotifierProvider.select(
+      (asyncValue) => asyncValue.valueOrNull?.templateQuota,
+    ),
   );
 
   if (templateQuota == null) return false;
@@ -551,13 +575,20 @@ final canSaveTemplateProvider = Provider.family<bool, bool>((ref, isPublic) {
 /// Get remaining template quota
 /// Replaces: remainingTemplateQuotaProvider
 /// 🔧 PERF FIX: Use .select() to only rebuild when templateQuota changes
-final remainingTemplateQuotaProvider = Provider.family<int, bool>((ref, isPublic) {
+final remainingTemplateQuotaProvider = Provider.family<int, bool>((
+  ref,
+  isPublic,
+) {
   final templateQuota = ref.watch(
-    userProfileNotifierProvider.select((asyncValue) => asyncValue.valueOrNull?.templateQuota),
+    userProfileNotifierProvider.select(
+      (asyncValue) => asyncValue.valueOrNull?.templateQuota,
+    ),
   );
 
   if (templateQuota == null) return 0;
-  return isPublic ? templateQuota.remainingPublic : templateQuota.remainingPrivate;
+  return isPublic
+      ? templateQuota.remainingPublic
+      : templateQuota.remainingPrivate;
 });
 
 /// ============================================================================
@@ -580,7 +611,8 @@ final isCachedPremiumUserProvider = isPremiumUserProvider;
 final cachedUserDisplayNameProvider = userDisplayNameProvider;
 
 /// Alias for v2 provider compatibility
-final userStateProvider = userProfileProvider; // Returns UserProfile? (compatible)
+final userStateProvider =
+    userProfileProvider; // Returns UserProfile? (compatible)
 final currentUserStateProvider = userProfileProvider;
 final currentUserProfileProvider = userProfileProvider;
 

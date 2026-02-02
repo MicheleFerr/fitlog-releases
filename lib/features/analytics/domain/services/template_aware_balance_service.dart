@@ -132,8 +132,8 @@ class TemplateAwareBalanceService {
     exerciseToTemplates[exerciseNameLower]!.add(templateName);
 
     // Get muscle data from map (case-insensitive lookup)
-    final muscleData = exerciseMuscleMap[exerciseName] ??
-        exerciseMuscleMap[exerciseNameLower];
+    final muscleData =
+        exerciseMuscleMap[exerciseName] ?? exerciseMuscleMap[exerciseNameLower];
 
     final setsCount = exercise.sets.length;
 
@@ -258,18 +258,22 @@ class TemplateAwareBalanceService {
 
     for (final suggestion in suggestions) {
       final isPlanned = coverage.isExercisePlanned(suggestion.exerciseName);
-      final templates = coverage.getTemplatesForExercise(suggestion.exerciseName);
+      final templates = coverage.getTemplatesForExercise(
+        suggestion.exerciseName,
+      );
 
       if (isPlanned && !includeWithBadge) {
         // Skip this suggestion
         continue;
       }
 
-      result.add(FilteredExerciseSuggestion(
-        original: suggestion,
-        isInTemplate: isPlanned,
-        templateNames: templates,
-      ));
+      result.add(
+        FilteredExerciseSuggestion(
+          original: suggestion,
+          isInTemplate: isPlanned,
+          templateNames: templates,
+        ),
+      );
     }
 
     return result;
@@ -287,8 +291,9 @@ class TemplateAwareBalanceService {
       return 'All muscles are well balanced';
     }
 
-    final coveredCount =
-        neglected.where((m) => coverage.hasCoverage(m.muscleName)).length;
+    final coveredCount = neglected
+        .where((m) => coverage.hasCoverage(m.muscleName))
+        .length;
 
     if (coveredCount == 0) {
       return '${neglected.length} neglected muscles need attention';

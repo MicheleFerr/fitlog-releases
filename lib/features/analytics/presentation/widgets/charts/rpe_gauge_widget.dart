@@ -53,7 +53,8 @@ class RpeGaugeWidget extends StatelessWidget {
     }
 
     // Calculate average RPE
-    final avgRpe = setsWithRpe.fold<double>(0, (sum, s) => sum + (s.rpe ?? 0)) /
+    final avgRpe =
+        setsWithRpe.fold<double>(0, (sum, s) => sum + (s.rpe ?? 0)) /
         setsWithRpe.length;
 
     // Get effort label based on RPE
@@ -190,7 +191,10 @@ class RpeGaugeWidget extends StatelessWidget {
   }
 
   /// Build mini sparkline showing recent RPE trend
-  Widget _buildMiniSparkline(BuildContext context, List<ExerciseSetData> setsWithRpe) {
+  Widget _buildMiniSparkline(
+    BuildContext context,
+    List<ExerciseSetData> setsWithRpe,
+  ) {
     // Take last 10 sessions max
     final recentSets = setsWithRpe.length > 10
         ? setsWithRpe.sublist(setsWithRpe.length - 10)
@@ -230,7 +234,10 @@ class RpeGaugeWidget extends StatelessWidget {
     } else if (rpe <= 7) {
       // Moderate zone
       // Moderate: blend between success and warning for theme awareness
-      return ('Moderate', Color.lerp(context.colors.success, context.colors.warning, 0.6)!);
+      return (
+        'Moderate',
+        Color.lerp(context.colors.success, context.colors.warning, 0.6)!,
+      );
     } else if (rpe <= 8) {
       // Challenging / Hard zone
       return ('Challenging', context.colors.warning);

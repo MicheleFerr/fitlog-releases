@@ -66,11 +66,13 @@ class AnalyticsTourState {
 /// Notifier for managing analytics tour state
 class AnalyticsTourNotifier extends StateNotifier<AnalyticsTourState> {
   AnalyticsTourNotifier()
-      : super(const AnalyticsTourState(
+    : super(
+        const AnalyticsTourState(
           isActive: false,
           currentStep: AnalyticsTourStep.periodSelector,
           hasCompletedTour: false,
-        )) {
+        ),
+      ) {
     _loadState();
   }
 
@@ -417,8 +419,8 @@ class _StepConfig {
 /// Provider for analytics tour state
 final analyticsTourProvider =
     StateNotifierProvider<AnalyticsTourNotifier, AnalyticsTourState>(
-  (ref) => AnalyticsTourNotifier(),
-);
+      (ref) => AnalyticsTourNotifier(),
+    );
 
 /// Provider to check if analytics tour is completed
 final analyticsTourCompletedProvider = Provider<bool>((ref) {

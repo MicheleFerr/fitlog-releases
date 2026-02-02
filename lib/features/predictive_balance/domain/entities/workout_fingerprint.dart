@@ -82,8 +82,9 @@ abstract class WorkoutFingerprint with _$WorkoutFingerprint {
     }
 
     // 2/3 dominant muscles overlap = match
-    final overlap =
-        dominantMuscles.where((m) => other.dominantMuscles.contains(m)).length;
+    final overlap = dominantMuscles
+        .where((m) => other.dominantMuscles.contains(m))
+        .length;
     return overlap >= 2;
   }
 

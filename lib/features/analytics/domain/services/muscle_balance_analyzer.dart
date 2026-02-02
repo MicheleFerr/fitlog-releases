@@ -9,7 +9,6 @@ import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abb
 /// - Boyle (2016): Push:Pull ratio recommendations for posture
 /// - Wilk et al. (2009): Shoulder rotation ratios for overhead athletes
 class MuscleBalanceAnalyzer {
-
   /// Analyze Push:Pull volume ratio
   ///
   /// Scientific Target: 1:1 to 2:3 (Pull emphasis)
@@ -22,8 +21,8 @@ class MuscleBalanceAnalyzer {
     double pushVolume = 0;
     double pullVolume = 0;
 
-    final pushGroups = {'Chest', 'Shoulders'};  // Anterior chain
-    final pullGroups = {'Back'};                 // Posterior chain
+    final pushGroups = {'Chest', 'Shoulders'}; // Anterior chain
+    final pullGroups = {'Back'}; // Posterior chain
 
     for (final activity in activities) {
       // **Uses SSOT**: MuscleAbbreviationMapper.categorizeExerciseByName
@@ -108,7 +107,9 @@ class MuscleBalanceAnalyzer {
   static MuscleDistribution analyzeDistribution(
     List<ExerciseActivity> activities,
   ) {
-    final volumeByGroup = VolumeCalculator.calculateVolumeByMuscleGroup(activities);
+    final volumeByGroup = VolumeCalculator.calculateVolumeByMuscleGroup(
+      activities,
+    );
     final totalVolume = volumeByGroup.values.fold(0.0, (sum, v) => sum + v);
 
     if (totalVolume == 0) {
@@ -155,11 +156,11 @@ class MuscleBalanceAnalyzer {
       return 'feedbackHamstringOveremphasized';
     }
   }
-
 }
 
 /// Push:Pull balance data
-class PushPullBalance { // Push:Pull ratio
+class PushPullBalance {
+  // Push:Pull ratio
 
   PushPullBalance({
     required this.pushSets,
@@ -185,7 +186,8 @@ class PushPullBalance { // Push:Pull ratio
 }
 
 /// Quad:Hamstring balance data
-class QuadHamstringBalance { // Ham:Quad ratio
+class QuadHamstringBalance {
+  // Ham:Quad ratio
 
   QuadHamstringBalance({
     required this.quadSets,
@@ -213,7 +215,6 @@ class QuadHamstringBalance { // Ham:Quad ratio
 
 /// Muscle distribution data
 class MuscleDistribution {
-
   MuscleDistribution({
     required this.volumeByGroup,
     required this.percentageDistribution,
@@ -240,7 +241,6 @@ class MuscleDistribution {
 
   double? get topPercentage {
     if (percentageDistribution.isEmpty) return null;
-    return percentageDistribution.values
-        .reduce((a, b) => a > b ? a : b);
+    return percentageDistribution.values.reduce((a, b) => a > b ? a : b);
   }
 }

@@ -9,71 +9,85 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 final exerciseSearchQueryProvider = StateProvider<String>((ref) => '');
 
 // Selected category filter provider
-final exerciseCategoryFilterProvider = StateProvider<ExerciseCategory?>((ref) => null);
+final exerciseCategoryFilterProvider = StateProvider<ExerciseCategory?>(
+  (ref) => null,
+);
 
 // Selected muscle group filter provider
 final exerciseMuscleGroupFilterProvider = StateProvider<String?>((ref) => null);
 
 // Exercise search results provider
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
-final exerciseSearchResultsProvider = StreamProvider.autoDispose<List<ExerciseTemplate>>((ref) {
-  final repository = ref.watch(exerciseRepositoryProvider);
-  final query = ref.watch(exerciseSearchQueryProvider);
-  final categoryFilter = ref.watch(exerciseCategoryFilterProvider);
-  final muscleGroupFilter = ref.watch(exerciseMuscleGroupFilterProvider);
+final exerciseSearchResultsProvider =
+    StreamProvider.autoDispose<List<ExerciseTemplate>>((ref) {
+      final repository = ref.watch(exerciseRepositoryProvider);
+      final query = ref.watch(exerciseSearchQueryProvider);
+      final categoryFilter = ref.watch(exerciseCategoryFilterProvider);
+      final muscleGroupFilter = ref.watch(exerciseMuscleGroupFilterProvider);
 
-  // If muscle group filter is set, prioritize it
-  if (muscleGroupFilter != null) {
-    return repository.getAllExercises().map((exercises) {
-      return exercises.where((exercise) {
-        final matchesMuscleGroup = exercise.muscleGroups.contains(muscleGroupFilter);
-        final matchesCategory = categoryFilter == null || exercise.category == categoryFilter;
-        final matchesQuery = query.isEmpty || 
-            exercise.name.toLowerCase().contains(query.toLowerCase()) ||
-            exercise.description.toLowerCase().contains(query.toLowerCase());
-        
-        return matchesMuscleGroup && matchesCategory && matchesQuery;
-      }).toList();
+      // If muscle group filter is set, prioritize it
+      if (muscleGroupFilter != null) {
+        return repository.getAllExercises().map((exercises) {
+          return exercises.where((exercise) {
+            final matchesMuscleGroup = exercise.muscleGroups.contains(
+              muscleGroupFilter,
+            );
+            final matchesCategory =
+                categoryFilter == null || exercise.category == categoryFilter;
+            final matchesQuery =
+                query.isEmpty ||
+                exercise.name.toLowerCase().contains(query.toLowerCase()) ||
+                exercise.description.toLowerCase().contains(
+                  query.toLowerCase(),
+                );
+
+            return matchesMuscleGroup && matchesCategory && matchesQuery;
+          }).toList();
+        });
+      }
+
+      // If category filter is set
+      if (categoryFilter != null) {
+        return repository.getExercisesByCategory(categoryFilter).map((
+          exercises,
+        ) {
+          if (query.isEmpty) return exercises;
+
+          return exercises.where((exercise) {
+            return exercise.name.toLowerCase().contains(query.toLowerCase()) ||
+                exercise.description.toLowerCase().contains(
+                  query.toLowerCase(),
+                );
+          }).toList();
+        });
+      }
+
+      // Default: search all exercises
+      return repository.searchExercises(query);
     });
-  }
-
-  // If category filter is set
-  if (categoryFilter != null) {
-    return repository.getExercisesByCategory(categoryFilter).map((exercises) {
-      if (query.isEmpty) return exercises;
-      
-      return exercises.where((exercise) {
-        return exercise.name.toLowerCase().contains(query.toLowerCase()) ||
-               exercise.description.toLowerCase().contains(query.toLowerCase());
-      }).toList();
-    });
-  }
-
-  // Default: search all exercises
-  return repository.searchExercises(query);
-});
 
 // Popular exercises provider (cached)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
-final popularExercisesProvider = StreamProvider.autoDispose<List<ExerciseTemplate>>((ref) {
-  final repository = ref.watch(exerciseRepositoryProvider);
-  
-  // Return popular exercises from each category
-  return repository.getAllExercises().map((exercises) {
-    final popularExercises = <ExerciseTemplate>[];
-    
-    // Get 3 exercises from each category
-    for (final category in ExerciseCategory.values) {
-      final categoryExercises = exercises
-          .where((ex) => ex.category == category)
-          .take(3)
-          .toList();
-      popularExercises.addAll(categoryExercises);
-    }
-    
-    return popularExercises;
-  });
-});
+final popularExercisesProvider =
+    StreamProvider.autoDispose<List<ExerciseTemplate>>((ref) {
+      final repository = ref.watch(exerciseRepositoryProvider);
+
+      // Return popular exercises from each category
+      return repository.getAllExercises().map((exercises) {
+        final popularExercises = <ExerciseTemplate>[];
+
+        // Get 3 exercises from each category
+        for (final category in ExerciseCategory.values) {
+          final categoryExercises = exercises
+              .where((ex) => ex.category == category)
+              .take(3)
+              .toList();
+          popularExercises.addAll(categoryExercises);
+        }
+
+        return popularExercises;
+      });
+    });
 
 // Muscle groups provider
 final muscleGroupsProvider = Provider<List<String>>((ref) {
@@ -106,20 +120,23 @@ final exerciseSearchServiceProvider = Provider<ExerciseSearchService>((ref) {
 // Improved search results provider using the search service
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final improvedExerciseSearchProvider = FutureProvider.autoDispose<List<ExerciseTemplate>>((ref) async {
-  final searchService = ref.watch(exerciseSearchServiceProvider);
-  final query = ref.watch(exerciseSearchQueryProvider);
-  final locale = ref.watch(localeProvider);
+final improvedExerciseSearchProvider =
+    FutureProvider.autoDispose<List<ExerciseTemplate>>((ref) async {
+      final searchService = ref.watch(exerciseSearchServiceProvider);
+      final query = ref.watch(exerciseSearchQueryProvider);
+      final locale = ref.watch(localeProvider);
 
-  // The searchExercises method now handles loading internally with correct locale
-  return await searchService.searchExercises(query, locale);
-});
+      // The searchExercises method now handles loading internally with correct locale
+      return await searchService.searchExercises(query, locale);
+    });
 
 // Exercise search state notifier for complex filtering
-final exerciseSearchStateProvider = NotifierProvider<ExerciseSearchNotifier, ExerciseSearchState>(ExerciseSearchNotifier.new);
+final exerciseSearchStateProvider =
+    NotifierProvider<ExerciseSearchNotifier, ExerciseSearchState>(
+      ExerciseSearchNotifier.new,
+    );
 
 class ExerciseSearchState {
-
   const ExerciseSearchState({
     this.query = '',
     this.categoryFilter,

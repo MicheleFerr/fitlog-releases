@@ -54,10 +54,7 @@ import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mix
 /// );
 /// ```
 class FeedbackSubmissionDialog extends ConsumerStatefulWidget {
-  const FeedbackSubmissionDialog({
-    required this.correction,
-    super.key,
-  });
+  const FeedbackSubmissionDialog({required this.correction, super.key});
 
   /// The correction to submit for admin review
   final MuscleCorrection correction;
@@ -92,10 +89,7 @@ class _FeedbackSubmissionDialogState
     result.fold(
       (failure) {
         // Show error
-        SnackBarService.showError(
-          context,
-          failure.message,
-        );
+        SnackBarService.showError(context, failure.message);
       },
       (_) {
         // Success
@@ -118,9 +112,7 @@ class _FeedbackSubmissionDialogState
 
     return AlertDialog(
       backgroundColor: colors.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: Row(
         children: [
           SemanticIcon(
@@ -313,15 +305,14 @@ class _FeedbackSubmissionDialogState
         TextButton(
           onPressed: _isSubmitting
               ? null
-              : () => Navigator.of(context).pop(false), // Return false = not submitted
+              : () => Navigator.of(
+                  context,
+                ).pop(false), // Return false = not submitted
           style: TextButton.styleFrom(
             foregroundColor: colors.onSurfaceVariant,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           ),
-          child: Text(
-            context.l10n.noKeepLocal,
-            style: textTheme.labelLarge,
-          ),
+          child: Text(context.l10n.noKeepLocal, style: textTheme.labelLarge),
         ),
 
         // Yes button
@@ -339,10 +330,7 @@ class _FeedbackSubmissionDialogState
               ? SizedBox(
                   height: 18,
                   width: 18,
-                  child: LoadingIndicator(
-                    color: colors.onPrimary,
-                    size: 18,
-                  ),
+                  child: LoadingIndicator(color: colors.onPrimary, size: 18),
                 )
               : Text(
                   context.l10n.yesReportToAdmin,

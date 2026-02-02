@@ -144,10 +144,12 @@ extension UserConsentX on UserConsent {
     return copyWith(
       groupConsents: updatedConsents,
       updatedAt: now,
-      essentialGrantedAt:
-          group == MetricGroup.essential ? now : essentialGrantedAt,
-      measurementsGrantedAt:
-          group == MetricGroup.measurements ? now : measurementsGrantedAt,
+      essentialGrantedAt: group == MetricGroup.essential
+          ? now
+          : essentialGrantedAt,
+      measurementsGrantedAt: group == MetricGroup.measurements
+          ? now
+          : measurementsGrantedAt,
       vitalsGrantedAt: group == MetricGroup.vitals ? now : vitalsGrantedAt,
     );
   }
@@ -157,10 +159,7 @@ extension UserConsentX on UserConsent {
     final updatedConsents = Map<MetricGroup, ConsentState>.from(groupConsents);
     updatedConsents[group] = ConsentState.denied;
 
-    return copyWith(
-      groupConsents: updatedConsents,
-      updatedAt: DateTime.now(),
-    );
+    return copyWith(groupConsents: updatedConsents, updatedAt: DateTime.now());
   }
 }
 
@@ -185,7 +184,7 @@ enum ConsentState {
 
   /// User explicitly granted consent
   /// (Can be revoked anytime via privacy settings)
-  granted;
+  granted,
 }
 
 /// AuditLog - Domain entity for audit trail logging
@@ -293,7 +292,7 @@ enum AuditAction {
   keyRotation,
 
   /// Privacy policy accepted (initial or updated version)
-  privacyPolicyAccepted;
+  privacyPolicyAccepted,
 }
 
 /// PermissionScope - Deprecated (kept for migration compatibility)

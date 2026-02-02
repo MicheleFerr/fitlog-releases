@@ -33,10 +33,7 @@ import 'package:health/health.dart' show NumericHealthValue;
 /// This ensures the FFM-based stress values update over time as fatigue decays.
 /// Without this, the stress values would remain cached indefinitely.
 final stressRefreshTriggerProvider = StreamProvider.autoDispose<int>((ref) {
-  return Stream.periodic(
-    const Duration(minutes: 10),
-    (count) => count,
-  );
+  return Stream.periodic(const Duration(minutes: 10), (count) => count);
 });
 
 // ============================================================================
@@ -51,8 +48,9 @@ final stressRefreshTriggerProvider = StreamProvider.autoDispose<int>((ref) {
 /// **Returns**:
 /// - HealthDataSnapshot with real data if available
 /// - HealthDataSnapshot.empty if HealthKit not available or errors
-final healthDataSnapshotProvider =
-    FutureProvider.autoDispose<HealthDataSnapshot>((ref) async {
+final healthDataSnapshotProvider = FutureProvider.autoDispose<HealthDataSnapshot>((
+  ref,
+) async {
   final datasource = ref.watch(healthKitDatasourceProvider);
 
   // Check if HealthKit is available (iOS only)
@@ -92,8 +90,8 @@ final healthDataSnapshotProvider =
 
     double? restingHr;
     if (restingHrData != null) {
-      restingHr =
-          (restingHrData.value as NumericHealthValue).numericValue.toDouble();
+      restingHr = (restingHrData.value as NumericHealthValue).numericValue
+          .toDouble();
     }
 
     if (kDebugMode) {
@@ -123,8 +121,9 @@ final healthDataSnapshotProvider =
 /// Provider for historical HRV data (last 7 days)
 ///
 /// Used for calculating personal HRV baseline
-final historicalHrvProvider =
-    FutureProvider.autoDispose<List<double>?>((ref) async {
+final historicalHrvProvider = FutureProvider.autoDispose<List<double>?>((
+  ref,
+) async {
   final datasource = ref.watch(healthKitDatasourceProvider);
 
   if (!datasource.isAvailable) return null;
@@ -157,8 +156,9 @@ final historicalHrvProvider =
 /// Provider for historical sleep data (last 7 days)
 ///
 /// Used for calculating personal sleep baseline
-final historicalSleepProvider =
-    FutureProvider.autoDispose<List<double>?>((ref) async {
+final historicalSleepProvider = FutureProvider.autoDispose<List<double>?>((
+  ref,
+) async {
   // Reuse sleep records from recovery insight
   final sleepRecords = await ref.watch(sleepRecordsProvider.future);
 
@@ -188,40 +188,40 @@ final historicalSleepProvider =
 /// - Historical workout data - for baselines
 final personalCalibrationProvider =
     FutureProvider.autoDispose<PersonalCalibration>((ref) async {
-  // Get current user ID
-  final userAsync = ref.watch(firebaseUserProvider);
-  final userId = userAsync.valueOrNull?.uid ?? 'anonymous';
+      // Get current user ID
+      final userAsync = ref.watch(firebaseUserProvider);
+      final userId = userAsync.valueOrNull?.uid ?? 'anonymous';
 
-  // Get user questionnaire if available
-  final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
+      // Get user questionnaire if available
+      final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
 
-  // Get HealthKit data (sleep, HRV, resting HR)
-  final healthData = await ref.watch(healthDataSnapshotProvider.future);
+      // Get HealthKit data (sleep, HRV, resting HR)
+      final healthData = await ref.watch(healthDataSnapshotProvider.future);
 
-  // Get historical HRV and sleep data for baselines
-  final historicalHrv = await ref.watch(historicalHrvProvider.future);
-  final historicalSleep = await ref.watch(historicalSleepProvider.future);
+      // Get historical HRV and sleep data for baselines
+      final historicalHrv = await ref.watch(historicalHrvProvider.future);
+      final historicalSleep = await ref.watch(historicalSleepProvider.future);
 
-  // Calculate calibration
-  final calibration = CalibrationService.calculateCalibration(
-    userId: userId,
-    questionnaire: questionnaire,
-    healthData: healthData,
-    historicalHrv: historicalHrv,
-    historicalSleep: historicalSleep,
-  );
+      // Calculate calibration
+      final calibration = CalibrationService.calculateCalibration(
+        userId: userId,
+        questionnaire: questionnaire,
+        healthData: healthData,
+        historicalHrv: historicalHrv,
+        historicalSleep: historicalSleep,
+      );
 
-  if (kDebugMode) {
-    debugPrint('[PersonalCalibration] Calculated for $userId:');
-    debugPrint('  - ageFactor: ${calibration.ageFactor}');
-    debugPrint('  - trainingAgeFactor: ${calibration.trainingAgeFactor}');
-    debugPrint('  - confidence: ${calibration.confidenceLevel}');
-    debugPrint('  - τ₁: ${calibration.personalTau1Hours}h');
-    debugPrint('  - τ₂: ${calibration.personalTau2Hours}h');
-  }
+      if (kDebugMode) {
+        debugPrint('[PersonalCalibration] Calculated for $userId:');
+        debugPrint('  - ageFactor: ${calibration.ageFactor}');
+        debugPrint('  - trainingAgeFactor: ${calibration.trainingAgeFactor}');
+        debugPrint('  - confidence: ${calibration.confidenceLevel}');
+        debugPrint('  - τ₁: ${calibration.personalTau1Hours}h');
+        debugPrint('  - τ₂: ${calibration.personalTau2Hours}h');
+      }
 
-  return calibration;
-});
+      return calibration;
+    });
 
 // ============================================================================
 // EXERCISE DEFINITION MAP PROVIDER
@@ -232,25 +232,25 @@ final personalCalibrationProvider =
 /// Used by template stress analyzer to look up muscles for each exercise.
 final exerciseDefinitionMapProvider =
     FutureProvider.autoDispose<Map<String, ExerciseDefinition>>((ref) async {
-  try {
-    final repository = ref.watch(hybridExerciseRepositoryProvider);
-    final exercises = await repository.getAllExercises();
+      try {
+        final repository = ref.watch(hybridExerciseRepositoryProvider);
+        final exercises = await repository.getAllExercises();
 
-    final exerciseMap = <String, ExerciseDefinition>{};
-    for (final exercise in exercises) {
-      exerciseMap[exercise.id] = exercise;
-      // Also map by name for templates that use name as ID
-      exerciseMap[exercise.nome] = exercise;
-    }
+        final exerciseMap = <String, ExerciseDefinition>{};
+        for (final exercise in exercises) {
+          exerciseMap[exercise.id] = exercise;
+          // Also map by name for templates that use name as ID
+          exerciseMap[exercise.nome] = exercise;
+        }
 
-    return exerciseMap;
-  } catch (e) {
-    if (kDebugMode) {
-      debugPrint('[ExerciseDefinitionMap] Failed to load: $e');
-    }
-    return {};
-  }
-});
+        return exerciseMap;
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('[ExerciseDefinitionMap] Failed to load: $e');
+        }
+        return {};
+      }
+    });
 
 // ============================================================================
 // MUSCLE RECOVERY HISTORY PROVIDER
@@ -261,30 +261,30 @@ final exerciseDefinitionMapProvider =
 /// Builds a map of muscle ID -> last workout info from stress index history.
 final muscleRecoveryHistoryProvider =
     FutureProvider.autoDispose<Map<String, MuscleRecoveryHistory>>((ref) async {
-  final stressState = ref.watch(stressIndexNotifierProvider);
-  final history = stressState.valueOrNull?.history ?? [];
+      final stressState = ref.watch(stressIndexNotifierProvider);
+      final history = stressState.valueOrNull?.history ?? [];
 
-  final muscleHistory = <String, MuscleRecoveryHistory>{};
+      final muscleHistory = <String, MuscleRecoveryHistory>{};
 
-  // Process history from newest to oldest
-  for (final result in history) {
-    for (final entry in result.muscleBreakdown.entries) {
-      final muscleId = entry.key;
+      // Process history from newest to oldest
+      for (final result in history) {
+        for (final entry in result.muscleBreakdown.entries) {
+          final muscleId = entry.key;
 
-      // Only keep the most recent entry for each muscle
-      if (!muscleHistory.containsKey(muscleId)) {
-        muscleHistory[muscleId] = MuscleRecoveryHistory(
-          muscleId: muscleId,
-          displayName: entry.value.displayName,
-          lastWorkedAt: result.calculatedAt,
-          lastStressScore: entry.value.stressScore,
-        );
+          // Only keep the most recent entry for each muscle
+          if (!muscleHistory.containsKey(muscleId)) {
+            muscleHistory[muscleId] = MuscleRecoveryHistory(
+              muscleId: muscleId,
+              displayName: entry.value.displayName,
+              lastWorkedAt: result.calculatedAt,
+              lastStressScore: entry.value.stressScore,
+            );
+          }
+        }
       }
-    }
-  }
 
-  return muscleHistory;
-});
+      return muscleHistory;
+    });
 
 // ============================================================================
 // TEMPLATE STRESS ANALYSIS PROVIDER
@@ -296,65 +296,70 @@ final muscleRecoveryHistoryProvider =
 /// Returns null if no templates or insufficient data.
 final templateSuggestionProvider =
     FutureProvider.autoDispose<List<TemplateStressAnalysis>?>((ref) async {
-  try {
-    // Get user templates from the template provider
-    final templateState = ref.watch(templateProvider);
-    final templates = templateState.userTemplates;
+      try {
+        // Get user templates from the template provider
+        final templateState = ref.watch(templateProvider);
+        final templates = templateState.userTemplates;
 
-    if (templates.isEmpty) {
-      if (kDebugMode) {
-        debugPrint('[TemplateSuggestion] No templates found');
-      }
-      return null;
-    }
+        if (templates.isEmpty) {
+          if (kDebugMode) {
+            debugPrint('[TemplateSuggestion] No templates found');
+          }
+          return null;
+        }
 
-    // Get exercise definition map
-    final exerciseMap = await ref.watch(exerciseDefinitionMapProvider.future);
-
-    // Get muscle recovery history
-    final muscleHistory =
-        await ref.watch(muscleRecoveryHistoryProvider.future);
-
-    // Get personal calibration
-    final calibration = await ref.watch(personalCalibrationProvider.future);
-
-    // Get current stress level
-    final stressState = ref.watch(stressIndexNotifierProvider);
-    final currentStress =
-        stressState.valueOrNull?.latestResult?.displayScore ?? 0;
-
-    // Get HealthKit data for today
-    final healthData = await ref.watch(healthDataSnapshotProvider.future);
-
-    // Analyze all templates
-    final analyses = TemplateStressAnalyzer.analyzeAllTemplates(
-      templates: templates,
-      exerciseDatabase: exerciseMap,
-      muscleHistory: muscleHistory,
-      calibration: calibration,
-      healthData: healthData,
-      currentStress: currentStress,
-    );
-
-    if (kDebugMode) {
-      debugPrint('[TemplateSuggestion] Analyzed ${analyses.length} templates:');
-      for (final analysis in analyses.take(3)) {
-        debugPrint(
-          '  - ${analysis.templateName}: '
-          '${analysis.recommendation.name} '
-          '(score: ${analysis.optimalityScore.toStringAsFixed(0)})',
+        // Get exercise definition map
+        final exerciseMap = await ref.watch(
+          exerciseDefinitionMapProvider.future,
         );
-      }
-    }
 
-    return analyses;
-  } catch (e, st) {
-    if (kDebugMode) {
-      debugPrint('[TemplateSuggestion] Failed: $e\n$st');
-    }
-    return null;
-  }
-});
+        // Get muscle recovery history
+        final muscleHistory = await ref.watch(
+          muscleRecoveryHistoryProvider.future,
+        );
+
+        // Get personal calibration
+        final calibration = await ref.watch(personalCalibrationProvider.future);
+
+        // Get current stress level
+        final stressState = ref.watch(stressIndexNotifierProvider);
+        final currentStress =
+            stressState.valueOrNull?.latestResult?.displayScore ?? 0;
+
+        // Get HealthKit data for today
+        final healthData = await ref.watch(healthDataSnapshotProvider.future);
+
+        // Analyze all templates
+        final analyses = TemplateStressAnalyzer.analyzeAllTemplates(
+          templates: templates,
+          exerciseDatabase: exerciseMap,
+          muscleHistory: muscleHistory,
+          calibration: calibration,
+          healthData: healthData,
+          currentStress: currentStress,
+        );
+
+        if (kDebugMode) {
+          debugPrint(
+            '[TemplateSuggestion] Analyzed ${analyses.length} templates:',
+          );
+          for (final analysis in analyses.take(3)) {
+            debugPrint(
+              '  - ${analysis.templateName}: '
+              '${analysis.recommendation.name} '
+              '(score: ${analysis.optimalityScore.toStringAsFixed(0)})',
+            );
+          }
+        }
+
+        return analyses;
+      } catch (e, st) {
+        if (kDebugMode) {
+          debugPrint('[TemplateSuggestion] Failed: $e\n$st');
+        }
+        return null;
+      }
+    });
 
 // ============================================================================
 // CONVENIENCE PROVIDERS
@@ -363,8 +368,9 @@ final templateSuggestionProvider =
 /// Provider for the best template recommendation
 ///
 /// Returns the template with the highest optimality score, or null if none.
-final bestTemplateProvider =
-    Provider.autoDispose<TemplateStressAnalysis?>((ref) {
+final bestTemplateProvider = Provider.autoDispose<TemplateStressAnalysis?>((
+  ref,
+) {
   // 🔧 PERF FIX: Use .select() to only rebuild when analyses change
   final analyses = ref.watch(
     templateSuggestionProvider.select((async) => async.valueOrNull),
@@ -379,28 +385,28 @@ final bestTemplateProvider =
 /// Provider for optimal templates (those marked as optimal)
 final optimalTemplatesProvider =
     Provider.autoDispose<List<TemplateStressAnalysis>>((ref) {
-  // 🔧 PERF FIX: Use .select() to only rebuild when analyses change
-  final analyses = ref.watch(
-    templateSuggestionProvider.select((async) => async.valueOrNull ?? []),
-  );
+      // 🔧 PERF FIX: Use .select() to only rebuild when analyses change
+      final analyses = ref.watch(
+        templateSuggestionProvider.select((async) => async.valueOrNull ?? []),
+      );
 
-  return analyses
-      .where((a) => a.recommendation == TemplateRecommendation.optimal)
-      .toList();
-});
+      return analyses
+          .where((a) => a.recommendation == TemplateRecommendation.optimal)
+          .toList();
+    });
 
 /// Provider for templates to avoid
 final templatesToAvoidProvider =
     Provider.autoDispose<List<TemplateStressAnalysis>>((ref) {
-  // 🔧 PERF FIX: Use .select() to only rebuild when analyses change
-  final analyses = ref.watch(
-    templateSuggestionProvider.select((async) => async.valueOrNull ?? []),
-  );
+      // 🔧 PERF FIX: Use .select() to only rebuild when analyses change
+      final analyses = ref.watch(
+        templateSuggestionProvider.select((async) => async.valueOrNull ?? []),
+      );
 
-  return analyses
-      .where((a) => a.recommendation == TemplateRecommendation.avoid)
-      .toList();
-});
+      return analyses
+          .where((a) => a.recommendation == TemplateRecommendation.avoid)
+          .toList();
+    });
 
 /// Provider for checking if template suggestion data is available
 final hasTemplateSuggestionDataProvider = Provider.autoDispose<bool>((ref) {
@@ -412,8 +418,9 @@ final hasTemplateSuggestionDataProvider = Provider.autoDispose<bool>((ref) {
 });
 
 /// Provider for calibration quality
-final calibrationQualityProvider =
-    Provider.autoDispose<CalibrationQuality>((ref) {
+final calibrationQualityProvider = Provider.autoDispose<CalibrationQuality>((
+  ref,
+) {
   // 🔧 PERF FIX: Use .select() to only rebuild when calibration changes
   final calibration = ref.watch(
     personalCalibrationProvider.select((async) => async.valueOrNull),
@@ -434,8 +441,9 @@ final calibrationQualityProvider =
 /// - **Sleep-aware stress calculation** (NEW: integrates sleep quality)
 ///
 /// **Returns**: StressInsight with predictions and recovery recommendations
-final stressInsightProvider =
-    FutureProvider.autoDispose<StressInsight>((ref) async {
+final stressInsightProvider = FutureProvider.autoDispose<StressInsight>((
+  ref,
+) async {
   try {
     // 🔧 FIX: Read ALL dependencies synchronously BEFORE any async work
     // This prevents Riverpod race condition "Cannot use ref functions after dependency changed"
@@ -463,10 +471,16 @@ final stressInsightProvider =
 
       if (kDebugMode && sleepAwareData.hasSleepImpact) {
         debugPrint('[StressInsight] Sleep impact detected:');
-        debugPrint('  - Raw FFM stress: ${(100 - sleepAwareData.rawReadiness).clamp(0.0, 100.0).toStringAsFixed(1)}');
-        debugPrint('  - Sleep hours: ${sleepAwareData.sleepHours.toStringAsFixed(1)}h (${sleepAwareData.sleepCategory.name})');
+        debugPrint(
+          '  - Raw FFM stress: ${(100 - sleepAwareData.rawReadiness).clamp(0.0, 100.0).toStringAsFixed(1)}',
+        );
+        debugPrint(
+          '  - Sleep hours: ${sleepAwareData.sleepHours.toStringAsFixed(1)}h (${sleepAwareData.sleepCategory.name})',
+        );
         debugPrint('  - Adjusted stress: ${currentStress.toStringAsFixed(1)}');
-        debugPrint('  - Sleep impact: +${sleepAwareData.sleepImpact.toStringAsFixed(1)} stress');
+        debugPrint(
+          '  - Sleep impact: +${sleepAwareData.sleepImpact.toStringAsFixed(1)} stress',
+        );
       }
     } else {
       currentStress = 0.0; // No history = no stress
@@ -476,7 +490,8 @@ final stressInsightProvider =
     double avgWorkoutStress = 40.0; // Default
     if (history.isNotEmpty) {
       final stressValues = history.map((r) => r.displayScore).toList();
-      avgWorkoutStress = stressValues.reduce((a, b) => a + b) / stressValues.length;
+      avgWorkoutStress =
+          stressValues.reduce((a, b) => a + b) / stressValues.length;
     }
 
     // Calculate insight using SINGLE SOURCE OF TRUTH (FFM)
@@ -511,15 +526,27 @@ final stressInsightProvider =
 
     if (kDebugMode) {
       final now = DateTime.now();
-      debugPrint('[StressInsight] Calculated at ${now.hour}:${now.minute}:${now.second}');
-      debugPrint('  - Raw FFM Readiness: ${sleepAwareData.rawReadiness.toStringAsFixed(1)}%');
-      debugPrint('  - Sleep Hours: ${sleepAwareData.sleepHours.toStringAsFixed(1)}h (${sleepAwareData.sleepCategory.name})');
+      debugPrint(
+        '[StressInsight] Calculated at ${now.hour}:${now.minute}:${now.second}',
+      );
+      debugPrint(
+        '  - Raw FFM Readiness: ${sleepAwareData.rawReadiness.toStringAsFixed(1)}%',
+      );
+      debugPrint(
+        '  - Sleep Hours: ${sleepAwareData.sleepHours.toStringAsFixed(1)}h (${sleepAwareData.sleepCategory.name})',
+      );
       debugPrint('  - Sleep Modifier: ${sleepAwareData.sleepModifier}x');
-      debugPrint('  - Adjusted Readiness: ${sleepAwareData.adjustedReadiness.toStringAsFixed(1)}%');
+      debugPrint(
+        '  - Adjusted Readiness: ${sleepAwareData.adjustedReadiness.toStringAsFixed(1)}%',
+      );
       debugPrint('  - Current Stress: ${insight.displayStress} (sleep-aware)');
       debugPrint('  - Tomorrow (rest): ${insight.displayPredicted}');
-      debugPrint('  - If Workout (FFM): ${insight.predictedIfWorkout.toStringAsFixed(1)} (avg stress: ${avgWorkoutStress.toStringAsFixed(1)})');
-      debugPrint('  - Recovery rate: ${insight.recoveryRatePerHour.toStringAsFixed(2)}/h');
+      debugPrint(
+        '  - If Workout (FFM): ${insight.predictedIfWorkout.toStringAsFixed(1)} (avg stress: ${avgWorkoutStress.toStringAsFixed(1)})',
+      );
+      debugPrint(
+        '  - Recovery rate: ${insight.recoveryRatePerHour.toStringAsFixed(2)}/h',
+      );
       debugPrint('  - Recommendation: ${insight.recommendation.name}');
     }
 
@@ -535,12 +562,12 @@ final stressInsightProvider =
 /// Provider for recovery recommendation only
 final recoveryRecommendationProvider =
     Provider.autoDispose<RecoveryRecommendation>((ref) {
-  // 🔧 PERF FIX: Use .select() to only rebuild when insight changes
-  final insight = ref.watch(
-    stressInsightProvider.select((async) => async.valueOrNull),
-  );
-  return insight?.recommendation ?? RecoveryRecommendation.readyHard;
-});
+      // 🔧 PERF FIX: Use .select() to only rebuild when insight changes
+      final insight = ref.watch(
+        stressInsightProvider.select((async) => async.valueOrNull),
+      );
+      return insight?.recommendation ?? RecoveryRecommendation.readyHard;
+    });
 
 /// Provider for predicted stress tomorrow (if resting)
 final predictedStressTomorrowProvider = Provider.autoDispose<int>((ref) {

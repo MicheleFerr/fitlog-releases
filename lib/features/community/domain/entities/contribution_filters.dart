@@ -21,12 +21,7 @@ abstract class ContributionFilters with _$ContributionFilters {
       _$ContributionFiltersFromJson(json);
 }
 
-enum SortOption {
-  helpful,
-  recent,
-  saved,
-  trending,
-}
+enum SortOption { helpful, recent, saved, trending }
 
 extension SortOptionExtension on SortOption {
   String get value {

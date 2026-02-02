@@ -3,12 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/missing_exercise_request.dart';
 
 class MissingExerciseService {
-
-  MissingExerciseService({
-    FirebaseFirestore? firestore,
-    FirebaseAuth? auth,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _auth = auth ?? FirebaseAuth.instance;
+  MissingExerciseService({FirebaseFirestore? firestore, FirebaseAuth? auth})
+    : _firestore = firestore ?? FirebaseFirestore.instance,
+      _auth = auth ?? FirebaseAuth.instance;
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
 
@@ -62,9 +59,11 @@ class MissingExerciseService {
         .where('status', isEqualTo: RequestStatus.pending.name)
         .orderBy('requestedAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => MissingExerciseRequest.fromJson(doc.data()))
-            .toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => MissingExerciseRequest.fromJson(doc.data()))
+              .toList(),
+        );
   }
 
   /// Get all requests (admin only)
@@ -73,22 +72,27 @@ class MissingExerciseService {
         .collection(_collectionName)
         .orderBy('requestedAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => MissingExerciseRequest.fromJson(doc.data()))
-            .toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => MissingExerciseRequest.fromJson(doc.data()))
+              .toList(),
+        );
   }
 
   /// Get requests by status (admin only)
   Stream<List<MissingExerciseRequest>> getRequestsByStatus(
-      RequestStatus status) {
+    RequestStatus status,
+  ) {
     return _firestore
         .collection(_collectionName)
         .where('status', isEqualTo: status.name)
         .orderBy('requestedAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => MissingExerciseRequest.fromJson(doc.data()))
-            .toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => MissingExerciseRequest.fromJson(doc.data()))
+              .toList(),
+        );
   }
 
   /// Get user's requests
@@ -103,9 +107,11 @@ class MissingExerciseService {
         .where('userId', isEqualTo: userId)
         .orderBy('requestedAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => MissingExerciseRequest.fromJson(doc.data()))
-            .toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => MissingExerciseRequest.fromJson(doc.data()))
+              .toList(),
+        );
   }
 
   /// Update request status (admin only)

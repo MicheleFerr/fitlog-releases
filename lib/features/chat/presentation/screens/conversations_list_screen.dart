@@ -33,15 +33,10 @@ class ConversationsListScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: context.colors.surface,
-      appBar: AppBar(
-        title: Text(context.l10n.messages),
-      ),
+      appBar: AppBar(title: Text(context.l10n.messages)),
       body: conversationsAsync.when(
-        data: (conversations) => _buildContent(
-          context,
-          conversations,
-          currentUserId,
-        ),
+        data: (conversations) =>
+            _buildContent(context, conversations, currentUserId),
         loading: () => const Center(child: LoadingIndicator()),
         error: (error, _) => Center(
           child: Padding(

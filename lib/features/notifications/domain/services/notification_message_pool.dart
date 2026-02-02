@@ -41,14 +41,12 @@ class NotificationMessagePool {
     final pool = _getMessagePool(type, l10n);
 
     // Filter out excluded key if provided
-    final availableMessages =
-        excludeKey != null
-            ? pool.where((m) => m.key != excludeKey).toList()
-            : pool;
+    final availableMessages = excludeKey != null
+        ? pool.where((m) => m.key != excludeKey).toList()
+        : pool;
 
     // If all messages excluded, use full pool
-    final messagesToUse =
-        availableMessages.isEmpty ? pool : availableMessages;
+    final messagesToUse = availableMessages.isEmpty ? pool : availableMessages;
 
     // Random selection from available messages
     final template = messagesToUse[_random.nextInt(messagesToUse.length)];
@@ -196,8 +194,10 @@ class _MessageTemplate {
     required this.title,
     this.body,
     this.bodyFactory,
-  }) : assert(body != null || bodyFactory != null,
-            'Either body or bodyFactory must be provided');
+  }) : assert(
+         body != null || bodyFactory != null,
+         'Either body or bodyFactory must be provided',
+       );
 
   final String key;
   final String title;
@@ -207,11 +207,7 @@ class _MessageTemplate {
   /// Resolve the template to a final NotificationMessage.
   NotificationMessage resolve(Map<String, dynamic> params) {
     final resolvedBody = bodyFactory != null ? bodyFactory!(params) : body!;
-    return NotificationMessage(
-      key: key,
-      title: title,
-      body: resolvedBody,
-    );
+    return NotificationMessage(key: key, title: title, body: resolvedBody);
   }
 }
 

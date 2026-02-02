@@ -100,17 +100,16 @@ class UserXPNotifier extends Notifier<UserXPState> {
 
   void _setupListeners() {
     // Listen to daily login XP changes
-    ref.listen<DailyLoginState>(
-      dailyLoginProvider,
-      (previous, next) {
-        if (state.dailyLoginXP != next.totalXpEarned) {
-          state = state.copyWith(dailyLoginXP: next.totalXpEarned);
-          if (kDebugMode) {
-            debugPrint('📊 [UserXP] Daily login XP updated: ${next.totalXpEarned}');
-          }
+    ref.listen<DailyLoginState>(dailyLoginProvider, (previous, next) {
+      if (state.dailyLoginXP != next.totalXpEarned) {
+        state = state.copyWith(dailyLoginXP: next.totalXpEarned);
+        if (kDebugMode) {
+          debugPrint(
+            '📊 [UserXP] Daily login XP updated: ${next.totalXpEarned}',
+          );
         }
-      },
-    );
+      }
+    });
   }
 
   Future<void> _initialize() async {
@@ -129,10 +128,7 @@ class UserXPNotifier extends Notifier<UserXPState> {
       int achievementXP = 0;
       int workoutXP = 0;
       try {
-        final doc = await _firestore
-            .collection('user_xp')
-            .doc(user.uid)
-            .get();
+        final doc = await _firestore.collection('user_xp').doc(user.uid).get();
 
         if (doc.exists) {
           final data = doc.data();
@@ -203,8 +199,12 @@ class UserXPNotifier extends Notifier<UserXPState> {
       state = state.copyWith(workoutXP: state.workoutXP + xpEarned);
 
       if (kDebugMode) {
-        debugPrint('🎉 [UserXP] Workout XP awarded: +$xpEarned (total workout XP: ${state.workoutXP})');
-        debugPrint('   Duration: ${durationMinutes}min, Exercises: $exerciseCount, Volume: ${totalVolume.toStringAsFixed(0)}kg');
+        debugPrint(
+          '🎉 [UserXP] Workout XP awarded: +$xpEarned (total workout XP: ${state.workoutXP})',
+        );
+        debugPrint(
+          '   Duration: ${durationMinutes}min, Exercises: $exerciseCount, Volume: ${totalVolume.toStringAsFixed(0)}kg',
+        );
         if (isPersonalRecord) debugPrint('   🏆 PR bonus included!');
         if (streakDays > 0) debugPrint('   🔥 Streak bonus: $streakDays days');
       }
@@ -231,7 +231,9 @@ class UserXPNotifier extends Notifier<UserXPState> {
       state = state.copyWith(dailyLoginXP: state.dailyLoginXP + xp);
 
       if (kDebugMode) {
-        debugPrint('🎉 [UserXP] Daily login XP: +$xp (total daily XP: ${state.dailyLoginXP})');
+        debugPrint(
+          '🎉 [UserXP] Daily login XP: +$xp (total daily XP: ${state.dailyLoginXP})',
+        );
       }
 
       return xp;
@@ -263,7 +265,9 @@ class UserXPNotifier extends Notifier<UserXPState> {
       state = state.copyWith(achievementXP: state.achievementXP + xp);
 
       if (kDebugMode) {
-        debugPrint('🏆 [UserXP] Achievement XP awarded: +$xp for "$badgeName" (total achievement XP: ${state.achievementXP})');
+        debugPrint(
+          '🏆 [UserXP] Achievement XP awarded: +$xp for "$badgeName" (total achievement XP: ${state.achievementXP})',
+        );
       }
 
       return xp;

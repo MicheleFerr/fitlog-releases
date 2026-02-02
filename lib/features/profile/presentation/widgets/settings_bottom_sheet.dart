@@ -118,7 +118,10 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(AppIcons.settingsOutlined, size: AppIconSize.small),
+                      const Icon(
+                        AppIcons.settingsOutlined,
+                        size: AppIconSize.small,
+                      ),
                       const SizedBox(width: 8),
                       Text(context.l10n.allSettings),
                     ],
@@ -155,7 +158,11 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
     }
   }
 
-  void _toggleTheme(BuildContext context, WidgetRef ref, ThemeMode currentMode) {
+  void _toggleTheme(
+    BuildContext context,
+    WidgetRef ref,
+    ThemeMode currentMode,
+  ) {
     HapticFeedback.lightImpact();
 
     // Cycle through: System -> Light -> Dark -> System
@@ -189,7 +196,6 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
       ),
     );
   }
-
 }
 
 /// Individual settings tile

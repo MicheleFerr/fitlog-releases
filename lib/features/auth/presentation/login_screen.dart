@@ -78,7 +78,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           padding: const EdgeInsets.all(AppSpacing.lg),
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              minHeight: context.screenHeight -
+              minHeight:
+                  context.screenHeight -
                   context.topPadding -
                   context.bottomPadding -
                   48,
@@ -297,9 +298,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         // Divider
         Row(
           children: [
-            Expanded(
-              child: Divider(color: colorScheme.outlineVariant),
-            ),
+            Expanded(child: Divider(color: colorScheme.outlineVariant)),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
               child: Text(
@@ -309,9 +308,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                 ),
               ),
             ),
-            Expanded(
-              child: Divider(color: colorScheme.outlineVariant),
-            ),
+            Expanded(child: Divider(color: colorScheme.outlineVariant)),
           ],
         ),
 
@@ -370,9 +367,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         // Guest Mode Divider
         Row(
           children: [
-            Expanded(
-              child: Divider(color: colorScheme.outlineVariant),
-            ),
+            Expanded(child: Divider(color: colorScheme.outlineVariant)),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
               child: Text(
@@ -382,9 +377,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                 ),
               ),
             ),
-            Expanded(
-              child: Divider(color: colorScheme.outlineVariant),
-            ),
+            Expanded(child: Divider(color: colorScheme.outlineVariant)),
           ],
         ),
 
@@ -458,7 +451,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
               if (value == null || value.trim().isEmpty) {
                 return context.l10n.pleaseEnterEmail;
               }
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+              if (!RegExp(
+                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+              ).hasMatch(value)) {
                 return context.l10n.pleaseEnterValidEmail;
               }
               return null;
@@ -478,7 +473,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
               ),
               suffixIcon: IconButton(
                 icon: Icon(
-                  _obscurePassword ? AppIcons.visibility : AppIcons.visibilityOff,
+                  _obscurePassword
+                      ? AppIcons.visibility
+                      : AppIcons.visibilityOff,
                 ),
                 onPressed: () =>
                     setState(() => _obscurePassword = !_obscurePassword),
@@ -543,7 +540,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
 
   void _handleEmailSignIn() async {
     if (_formKey.currentState?.validate() ?? false) {
-      await ref.read(authControllerProvider.notifier).signInWithEmailAndPassword(
+      await ref
+          .read(authControllerProvider.notifier)
+          .signInWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _passwordController.text,
           );
@@ -565,12 +564,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     }
 
     try {
-      await ref.read(authControllerProvider.notifier).sendPasswordResetEmail(
-            _emailController.text.trim(),
-          );
+      await ref
+          .read(authControllerProvider.notifier)
+          .sendPasswordResetEmail(_emailController.text.trim());
 
       if (mounted) {
-        SnackBarService.showSuccess(context, context.l10n.passwordResetEmailSent);
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.passwordResetEmailSent,
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -627,10 +629,6 @@ class _StatDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      width: 1,
-      color: color.withValues(alpha: 0.3),
-    );
+    return Container(height: 40, width: 1, color: color.withValues(alpha: 0.3));
   }
 }

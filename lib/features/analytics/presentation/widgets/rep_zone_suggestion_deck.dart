@@ -271,7 +271,9 @@ class _RepZoneSuggestionDeckState extends ConsumerState<RepZoneSuggestionDeck> {
       final newExercise = ExerciseTemplate(
         exerciseId: suggestion.exerciseId,
         exerciseName: suggestion.exerciseName,
-        category: MuscleAbbreviationMapper.focusListToExerciseCategory(suggestion.musclesFocus),
+        category: MuscleAbbreviationMapper.focusListToExerciseCategory(
+          suggestion.musclesFocus,
+        ),
         type: ExerciseType.single,
         sets: sets,
         restTime: suggestion.recommendedRestSeconds,
@@ -313,10 +315,7 @@ class _RepZoneSuggestionDeckState extends ConsumerState<RepZoneSuggestionDeck> {
     } catch (e) {
       if (mounted) {
         setState(() => _isProcessing = false);
-        SnackBarService.showError(
-          context,
-          context.l10n.errorAddingExercise,
-        );
+        SnackBarService.showError(context, context.l10n.errorAddingExercise);
       }
     }
   }
@@ -369,7 +368,9 @@ class _RepZoneSuggestionDeckState extends ConsumerState<RepZoneSuggestionDeck> {
       final newExercise = ExerciseTemplate(
         exerciseId: alternative.exerciseId,
         exerciseName: alternative.exerciseName,
-        category: MuscleAbbreviationMapper.focusListToExerciseCategory(mainSuggestion.musclesFocus),
+        category: MuscleAbbreviationMapper.focusListToExerciseCategory(
+          mainSuggestion.musclesFocus,
+        ),
         type: ExerciseType.single,
         sets: sets,
         restTime: mainSuggestion.recommendedRestSeconds,
@@ -414,14 +415,10 @@ class _RepZoneSuggestionDeckState extends ConsumerState<RepZoneSuggestionDeck> {
     } catch (e) {
       if (mounted) {
         setState(() => _isProcessing = false);
-        SnackBarService.showError(
-          context,
-          context.l10n.errorAddingExercise,
-        );
+        SnackBarService.showError(context, context.l10n.errorAddingExercise);
       }
     }
   }
-
 }
 
 /// Action button for skip/add

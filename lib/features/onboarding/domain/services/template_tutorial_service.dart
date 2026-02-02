@@ -66,7 +66,9 @@ class TemplateTutorialState {
       isActive: isActive ?? this.isActive,
       currentStep: currentStep ?? this.currentStep,
       hasCompletedTutorial: hasCompletedTutorial ?? this.hasCompletedTutorial,
-      triggerSource: clearTrigger ? null : (triggerSource ?? this.triggerSource),
+      triggerSource: clearTrigger
+          ? null
+          : (triggerSource ?? this.triggerSource),
     );
   }
 }
@@ -83,12 +85,14 @@ enum TemplateTriggerSource {
 /// Notifier for managing template tutorial state
 class TemplateTutorialNotifier extends StateNotifier<TemplateTutorialState> {
   TemplateTutorialNotifier()
-      : super(const TemplateTutorialState(
+    : super(
+        const TemplateTutorialState(
           isActive: false,
           currentStep: TemplateTutorialStep.templateName,
           hasCompletedTutorial: false,
           triggerSource: null,
-        )) {
+        ),
+      ) {
     _loadState();
   }
 
@@ -266,11 +270,7 @@ class TemplateTutorialNotifier extends StateNotifier<TemplateTutorialState> {
                       // Title with icon
                       Row(
                         children: [
-                          Icon(
-                            config.icon,
-                            size: 20,
-                            color: colors.primary,
-                          ),
+                          Icon(config.icon, size: 20, color: colors.primary),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
@@ -297,7 +297,9 @@ class TemplateTutorialNotifier extends StateNotifier<TemplateTutorialState> {
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: colors.primaryContainer.withValues(alpha: 0.3),
+                            color: colors.primaryContainer.withValues(
+                              alpha: 0.3,
+                            ),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -487,8 +489,8 @@ class _StepConfig {
 /// Provider for template tutorial state
 final templateTutorialProvider =
     StateNotifierProvider<TemplateTutorialNotifier, TemplateTutorialState>(
-  (ref) => TemplateTutorialNotifier(),
-);
+      (ref) => TemplateTutorialNotifier(),
+    );
 
 /// Provider to check if template tutorial is completed
 final templateTutorialCompletedProvider = Provider<bool>((ref) {

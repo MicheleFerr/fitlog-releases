@@ -67,7 +67,9 @@ class _VolumeModalState extends State<VolumeModal> {
       // Week 0 (current): today - 6 days to today (7 days)
       // Week 1: today - 13 days to today - 7 days (7 days)
       final weekEnd = today.subtract(Duration(days: 7 * i));
-      final weekStart = weekEnd.subtract(const Duration(days: 6)); // 7 day range
+      final weekStart = weekEnd.subtract(
+        const Duration(days: 6),
+      ); // 7 day range
 
       final workoutDates = <DateTime>{};
       double totalVolume = 0.0;
@@ -91,7 +93,10 @@ class _VolumeModalState extends State<VolumeModal> {
         }
       }
 
-      weeklyData.insert(0, (workouts: workoutDates.length, volume: totalVolume));
+      weeklyData.insert(0, (
+        workouts: workoutDates.length,
+        volume: totalVolume,
+      ));
     }
 
     return weeklyData;
@@ -109,7 +114,10 @@ class _VolumeModalState extends State<VolumeModal> {
   @override
   Widget build(BuildContext context) {
     final weeklyData = _calculateWeeklyData(4);
-    final insightMessage = _getInsightMessage(context, widget.volumeProgression);
+    final insightMessage = _getInsightMessage(
+      context,
+      widget.volumeProgression,
+    );
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -204,9 +212,8 @@ class _VolumeModalState extends State<VolumeModal> {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (_) => VolumeFullscreenScreen(
-          exerciseHistories: widget.exerciseHistories,
-        ),
+        builder: (_) =>
+            VolumeFullscreenScreen(exerciseHistories: widget.exerciseHistories),
       ),
     );
   }
@@ -342,10 +349,16 @@ class _VolumeModalState extends State<VolumeModal> {
   }
 
   /// Weekly comparison chart (last 4 weeks) with tap handlers
-  Widget _buildWeeklyChart(BuildContext context, List<({int workouts, double volume})> weeklyData) {
+  Widget _buildWeeklyChart(
+    BuildContext context,
+    List<({int workouts, double volume})> weeklyData,
+  ) {
     final maxWorkouts = weeklyData.isEmpty
         ? 7
-        : weeklyData.map((d) => d.workouts).reduce((a, b) => a > b ? a : b).toDouble();
+        : weeklyData
+              .map((d) => d.workouts)
+              .reduce((a, b) => a > b ? a : b)
+              .toDouble();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,7 +387,13 @@ class _VolumeModalState extends State<VolumeModal> {
             return GestureDetector(
               onTap: () {
                 HapticFeedback.lightImpact();
-                _showVolumeDetails(context, index, workouts, volume, isCurrentWeek);
+                _showVolumeDetails(
+                  context,
+                  index,
+                  workouts,
+                  volume,
+                  isCurrentWeek,
+                );
               },
               child: Column(
                 children: [
@@ -434,7 +453,13 @@ class _VolumeModalState extends State<VolumeModal> {
   }
 
   /// Show volume details dialog when tapping on a bar
-  void _showVolumeDetails(BuildContext context, int weekIndex, int workouts, double volume, bool isCurrentWeek) {
+  void _showVolumeDetails(
+    BuildContext context,
+    int weekIndex,
+    int workouts,
+    double volume,
+    bool isCurrentWeek,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -449,7 +474,9 @@ class _VolumeModalState extends State<VolumeModal> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                isCurrentWeek ? context.l10n.thisWeekDetails : context.l10n.weekNumberDetails(4 - weekIndex),
+                isCurrentWeek
+                    ? context.l10n.thisWeekDetails
+                    : context.l10n.weekNumberDetails(4 - weekIndex),
                 style: context.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -503,7 +530,12 @@ class _VolumeModalState extends State<VolumeModal> {
   }
 
   /// Helper to build detail row in dialog
-  Widget _buildDetailRow(BuildContext context, {required IconData icon, required String label, required String value}) {
+  Widget _buildDetailRow(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
     return Row(
       children: [
         SemanticIcon(

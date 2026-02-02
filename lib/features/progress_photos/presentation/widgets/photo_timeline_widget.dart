@@ -39,8 +39,9 @@ class PhotoTimelineWidget extends StatelessWidget {
       itemCount: sortedPhotos.length,
       itemBuilder: (context, index) {
         final photo = sortedPhotos[index];
-        final previousPhoto =
-            index < sortedPhotos.length - 1 ? sortedPhotos[index + 1] : null;
+        final previousPhoto = index < sortedPhotos.length - 1
+            ? sortedPhotos[index + 1]
+            : null;
 
         return _TimelineItem(
           photo: photo,
@@ -113,19 +114,13 @@ class _TimelineItem extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isFirst ? context.colors.primary : context.colors.outline,
-              border: Border.all(
-                color: context.colors.surface,
-                width: 2,
-              ),
+              border: Border.all(color: context.colors.surface, width: 2),
             ),
           ),
           // Bottom line (if not last)
           if (!isLast)
             Expanded(
-              child: Container(
-                width: 2,
-                color: context.colors.outlineVariant,
-              ),
+              child: Container(width: 2, color: context.colors.outlineVariant),
             ),
         ],
       ),
@@ -204,10 +199,7 @@ class _TimelineItem extends StatelessWidget {
                     ),
                     errorWidget: (_, __, ___) => Container(
                       color: context.colors.errorContainer,
-                      child: Icon(
-                        AppIcons.error,
-                        color: context.colors.error,
-                      ),
+                      child: Icon(AppIcons.error, color: context.colors.error),
                     ),
                   ),
                 ),
@@ -278,7 +270,9 @@ class _TimelineItem extends StatelessWidget {
   Widget _buildWeightChangeChip(BuildContext context, double change) {
     final isPositive = change > 0;
     final color = isPositive
-        ? context.colors.error // Weight gain (red)
+        ? context
+              .colors
+              .error // Weight gain (red)
         : context.colors.success; // Weight loss (green)
 
     return Container(

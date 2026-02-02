@@ -36,11 +36,11 @@ class DropSetCompletionModal extends ConsumerStatefulWidget {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
-      builder: (context) => DropSetCompletionModal(
-        exerciseName: exerciseName,
-        stages: stages,
-      ),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
+      builder: (context) =>
+          DropSetCompletionModal(exerciseName: exerciseName, stages: stages),
     );
   }
 
@@ -127,9 +127,7 @@ class _DropSetCompletionModalState
     final useRir = ref.watch(useRirModeProvider);
 
     return Container(
-      constraints: BoxConstraints(
-        maxHeight: context.screenHeight * 0.85,
-      ),
+      constraints: BoxConstraints(maxHeight: context.screenHeight * 0.85),
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -563,8 +561,9 @@ class _DropSetCompletionModalState
                               )
                             : null,
                         color: !isSelected
-                            ? context.colors.surfaceContainerHighest
-                                .withValues(alpha: 0.5)
+                            ? context.colors.surfaceContainerHighest.withValues(
+                                alpha: 0.5,
+                              )
                             : null,
                         border: Border.all(
                           color: isSelected
@@ -576,8 +575,9 @@ class _DropSetCompletionModalState
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color:
-                                      _getRpeColor(rpe).withValues(alpha: 0.3),
+                                  color: _getRpeColor(
+                                    rpe,
+                                  ).withValues(alpha: 0.3),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -606,10 +606,13 @@ class _DropSetCompletionModalState
                             _getRpeShortLabel(rpe),
                             style: context.textTheme.bodySmall?.copyWith(
                               fontSize: 9,
-                              fontWeight:
-                                  isSelected ? FontWeight.w600 : FontWeight.normal,
+                              fontWeight: isSelected
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
                               color: isSelected
-                                  ? context.colors.surface.withValues(alpha: 0.95)
+                                  ? context.colors.surface.withValues(
+                                      alpha: 0.95,
+                                    )
                                   : context.colors.onSurfaceVariant,
                             ),
                             textAlign: TextAlign.center,
@@ -658,8 +661,9 @@ class _DropSetCompletionModalState
         Expanded(
           flex: 2,
           child: FilledButton(
-            onPressed:
-                _selectedRpe != null ? () => _confirmWithRpe(_selectedRpe!) : null,
+            onPressed: _selectedRpe != null
+                ? () => _confirmWithRpe(_selectedRpe!)
+                : null,
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(

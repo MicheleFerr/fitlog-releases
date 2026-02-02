@@ -50,7 +50,12 @@ class PdfTemplateService {
             pw.SizedBox(height: 30),
 
             // Esercizi
-            _buildExercisesSection(template.exercises, primaryColor, lightGray, detailLevel),
+            _buildExercisesSection(
+              template.exercises,
+              primaryColor,
+              lightGray,
+              detailLevel,
+            ),
             pw.SizedBox(height: 40),
 
             // Note e suggerimenti
@@ -60,7 +65,8 @@ class PdfTemplateService {
         },
         footer: (pw.Context context) {
           // Use custom footer text or default
-          final footerText = effectiveBranding.footerText ??
+          final footerText =
+              effectiveBranding.footerText ??
               'Generated with ${effectiveBranding.businessName}';
 
           return pw.Container(
@@ -100,10 +106,7 @@ class PdfTemplateService {
                     ),
                     pw.Text(
                       'Page ${context.pageNumber} of ${context.pagesCount}',
-                      style: pw.TextStyle(
-                        color: lightGray,
-                        fontSize: 10,
-                      ),
+                      style: pw.TextStyle(color: lightGray, fontSize: 10),
                     ),
                   ],
                 ),
@@ -117,10 +120,7 @@ class PdfTemplateService {
                         effectiveBranding.contactLine,
                         effectiveBranding.socialLine,
                       ].whereType<String>().join(' | '),
-                      style: pw.TextStyle(
-                        color: lightGray,
-                        fontSize: 8,
-                      ),
+                      style: pw.TextStyle(color: lightGray, fontSize: 8),
                     ),
                   ),
               ],
@@ -166,10 +166,7 @@ class PdfTemplateService {
           ),
           pw.Text(
             DateTime.now().toString().substring(0, 10),
-            style: pw.TextStyle(
-              fontSize: 12,
-              color: primaryColor.shade(0.7),
-            ),
+            style: pw.TextStyle(fontSize: 12, color: primaryColor.shade(0.7)),
           ),
         ],
       ),
@@ -203,10 +200,7 @@ class PdfTemplateService {
             ),
             child: pw.Text(
               'Custom Template',
-              style: pw.TextStyle(
-                fontSize: 10,
-                color: primaryColor,
-              ),
+              style: pw.TextStyle(fontSize: 10, color: primaryColor),
             ),
           ),
       ],
@@ -220,21 +214,12 @@ class PdfTemplateService {
   ) {
     return pw.Row(
       children: [
-        _buildInfoItem(
-          '${template.exercises.length} Exercises',
-          lightGray,
-        ),
+        _buildInfoItem('${template.exercises.length} Exercises', lightGray),
         pw.SizedBox(width: 30),
-        _buildInfoItem(
-          '~${template.estimatedDuration} minutes',
-          lightGray,
-        ),
+        _buildInfoItem('~${template.estimatedDuration} minutes', lightGray),
         if (template.usageCount > 0) ...[
           pw.SizedBox(width: 30),
-          _buildInfoItem(
-            'Used ${template.usageCount} times',
-            lightGray,
-          ),
+          _buildInfoItem('Used ${template.usageCount} times', lightGray),
         ],
       ],
     );
@@ -246,19 +231,10 @@ class PdfTemplateService {
         pw.Container(
           width: 6,
           height: 6,
-          decoration: pw.BoxDecoration(
-            shape: pw.BoxShape.circle,
-            color: color,
-          ),
+          decoration: pw.BoxDecoration(shape: pw.BoxShape.circle, color: color),
         ),
         pw.SizedBox(width: 6),
-        pw.Text(
-          text,
-          style: pw.TextStyle(
-            fontSize: 12,
-            color: color,
-          ),
-        ),
+        pw.Text(text, style: pw.TextStyle(fontSize: 12, color: color)),
       ],
     );
   }
@@ -311,9 +287,7 @@ class PdfTemplateService {
             children: [
               // Header tabella
               pw.TableRow(
-                decoration: pw.BoxDecoration(
-                  color: primaryColor.shade(0.05),
-                ),
+                decoration: pw.BoxDecoration(color: primaryColor.shade(0.05)),
                 children: [
                   _buildTableHeader('#'),
                   _buildTableHeader('Exercise'),
@@ -361,10 +335,7 @@ class PdfTemplateService {
       padding: const pw.EdgeInsets.all(8),
       child: pw.Text(
         text,
-        style: pw.TextStyle(
-          fontSize: 11,
-          fontWeight: pw.FontWeight.bold,
-        ),
+        style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
       ),
     );
   }
@@ -404,28 +375,36 @@ class PdfTemplateService {
           final reps = set.targetReps ?? 10;
           repsCount[reps] = (repsCount[reps] ?? 0) + 1;
         }
-        return repsCount.entries
-            .map((e) => '${e.value} x ${e.key}')
-            .join(', ');
+        return repsCount.entries.map((e) => '${e.value} x ${e.key}').join(', ');
 
       case PdfDetailLevel.detailedWithWeight:
         // Formato dettagliato con peso: mostra ogni set con peso e reps
-        return exercise.sets.asMap().entries.map((entry) {
-          final setNum = entry.key + 1;
-          final set = entry.value;
-          final weight = set.targetWeight != null ? '${set.targetWeight}kg' : '-';
-          final reps = set.targetReps ?? 10;
-          return 'Set $setNum: $weight x $reps';
-        }).join('\n');
+        return exercise.sets
+            .asMap()
+            .entries
+            .map((entry) {
+              final setNum = entry.key + 1;
+              final set = entry.value;
+              final weight = set.targetWeight != null
+                  ? '${set.targetWeight}kg'
+                  : '-';
+              final reps = set.targetReps ?? 10;
+              return 'Set $setNum: $weight x $reps';
+            })
+            .join('\n');
 
       case PdfDetailLevel.detailedWithoutWeight:
         // Formato dettagliato senza peso: mostra solo reps
-        return exercise.sets.asMap().entries.map((entry) {
-          final setNum = entry.key + 1;
-          final set = entry.value;
-          final reps = set.targetReps ?? 10;
-          return 'Set $setNum: $reps reps';
-        }).join('\n');
+        return exercise.sets
+            .asMap()
+            .entries
+            .map((entry) {
+              final setNum = entry.key + 1;
+              final set = entry.value;
+              final reps = set.targetReps ?? 10;
+              return 'Set $setNum: $reps reps';
+            })
+            .join('\n');
     }
   }
 
@@ -479,11 +458,7 @@ class PdfTemplateService {
           pw.SizedBox(height: 12),
           pw.Text(
             description,
-            style: pw.TextStyle(
-              fontSize: 11,
-              color: lightGray,
-              lineSpacing: 4,
-            ),
+            style: pw.TextStyle(fontSize: 11, color: lightGray, lineSpacing: 4),
           ),
         ],
       ),
@@ -514,10 +489,7 @@ class PdfTemplateService {
 
       // Share with share_plus
       final result = await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(tempFile.path)],
-          subject: template.name,
-        ),
+        ShareParams(files: [XFile(tempFile.path)], subject: template.name),
       );
 
       return result.status;

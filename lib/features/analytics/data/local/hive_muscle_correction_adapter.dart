@@ -53,8 +53,9 @@ class HiveMuscleCorrectionAdapter extends TypeAdapter<Map<String, dynamic>> {
       'exerciseName': fields[0] as String,
       'oldMuscleGroup': fields[1] as String,
       'newMuscleGroup': fields[2] as String,
-      'timestamp': DateTime.fromMillisecondsSinceEpoch(fields[3] as int)
-          .toIso8601String(),
+      'timestamp': DateTime.fromMillisecondsSinceEpoch(
+        fields[3] as int,
+      ).toIso8601String(),
     };
   }
 

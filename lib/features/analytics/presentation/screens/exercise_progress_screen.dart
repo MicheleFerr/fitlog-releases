@@ -15,10 +15,12 @@ class ExerciseProgressScreen extends ConsumerStatefulWidget {
   const ExerciseProgressScreen({super.key});
 
   @override
-  ConsumerState<ExerciseProgressScreen> createState() => _ExerciseProgressScreenState();
+  ConsumerState<ExerciseProgressScreen> createState() =>
+      _ExerciseProgressScreenState();
 }
 
-class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen> {
+class _ExerciseProgressScreenState
+    extends ConsumerState<ExerciseProgressScreen> {
   final _searchController = TextEditingController();
   String _searchQuery = '';
 
@@ -33,11 +35,13 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
     final allMetrics = ref.watch(exerciseProgressMetricsProvider);
 
     // Filter exercises by search query
-    final filteredExercises = allMetrics.entries.where((entry) {
-      if (_searchQuery.isEmpty) return true;
-      return entry.key.toLowerCase().contains(_searchQuery.toLowerCase());
-    }).toList()
-      ..sort((a, b) => b.value.lastWorkoutDate.compareTo(a.value.lastWorkoutDate));
+    final filteredExercises =
+        allMetrics.entries.where((entry) {
+          if (_searchQuery.isEmpty) return true;
+          return entry.key.toLowerCase().contains(_searchQuery.toLowerCase());
+        }).toList()..sort(
+          (a, b) => b.value.lastWorkoutDate.compareTo(a.value.lastWorkoutDate),
+        );
 
     return Scaffold(
       backgroundColor: context.colors.surface,
@@ -46,10 +50,7 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
         surfaceTintColor: context.colors.surface.withValues(alpha: 0),
         elevation: 0,
         leading: IconButton(
-          icon: const SemanticIcon(
-  icon: AppIcons.back,
-  semanticLabel: 'Back',
-),
+          icon: const SemanticIcon(icon: AppIcons.back, semanticLabel: 'Back'),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -91,15 +92,15 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
               decoration: InputDecoration(
                 hintText: context.l10n.searchExercisesPlaceholder,
                 prefixIcon: const SemanticIcon(
-  icon: AppIcons.search,
-  semanticLabel: 'Search',
-),
+                  icon: AppIcons.search,
+                  semanticLabel: 'Search',
+                ),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
                         icon: const SemanticIcon(
-  icon: AppIcons.clear,
-  semanticLabel: 'Clear',
-),
+                          icon: AppIcons.clear,
+                          semanticLabel: 'Clear',
+                        ),
                         onPressed: () {
                           setState(() {
                             _searchController.clear();
@@ -118,15 +119,15 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
           ),
 
           // Exercise list
-          Expanded(
-            child: _buildExerciseList(filteredExercises),
-          ),
+          Expanded(child: _buildExerciseList(filteredExercises)),
         ],
       ),
     );
   }
 
-  Widget _buildExerciseList(List<MapEntry<String, ExerciseProgressMetrics>> exercises) {
+  Widget _buildExerciseList(
+    List<MapEntry<String, ExerciseProgressMetrics>> exercises,
+  ) {
     if (exercises.isEmpty) {
       return EnhancedEmptyState(
         type: EmptyStateType.info,
@@ -157,13 +158,19 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
     );
   }
 
-  Widget _buildExerciseCard(String exerciseName, ExerciseProgressMetrics metrics) {
+  Widget _buildExerciseCard(
+    String exerciseName,
+    ExerciseProgressMetrics metrics,
+  ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
         onTap: () {
           HapticFeedback.lightImpact();
-          context.push(AppRoutes.exerciseProgressDetailPath, extra: exerciseName);
+          context.push(
+            AppRoutes.exerciseProgressDetailPath,
+            extra: exerciseName,
+          );
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
@@ -201,11 +208,11 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
                         Row(
                           children: [
                             SemanticIcon(
-  icon: AppIcons.calendar,
-  semanticLabel: 'Calendar',
-  size: AppIconSize.tiny,
-  color: context.colors.onSurfaceVariant,
-),
+                              icon: AppIcons.calendar,
+                              semanticLabel: 'Calendar',
+                              size: AppIconSize.tiny,
+                              color: context.colors.onSurfaceVariant,
+                            ),
                             const SizedBox(width: 4),
                             Text(
                               '${metrics.totalSessions} ${context.l10n.totalSessions}',
@@ -215,11 +222,11 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
                             ),
                             const SizedBox(width: 12),
                             SemanticIcon(
-  icon: AppIcons.clock,
-  semanticLabel: 'Clock',
-  size: AppIconSize.tiny,
-  color: context.colors.onSurfaceVariant,
-),
+                              icon: AppIcons.clock,
+                              semanticLabel: 'Clock',
+                              size: AppIconSize.tiny,
+                              color: context.colors.onSurfaceVariant,
+                            ),
                             const SizedBox(width: 4),
                             Text(
                               _getRelativeTime(metrics.lastWorkoutDate),

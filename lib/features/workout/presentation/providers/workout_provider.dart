@@ -11,7 +11,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart'
+    as wt;
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/hybrid_exercise_activity_repository.dart';
@@ -72,10 +73,13 @@ import 'package:gymbro_flutter_new/shared/domain/entities/log_category.dart';
 // 💾 BUG FIX #5: Auto-save provider for draft recovery
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_auto_save_provider.dart';
 // 🏆 PR Celebration for workout completion achievements
-import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart' as service_pr show PersonalRecord;
+import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart'
+    as service_pr
+    show PersonalRecord;
 // 🔔 NOTIFICATIONS: Import for retention notification scheduling
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider.dart';
-import 'package:gymbro_flutter_new/features/analytics/domain/entities/personal_record.dart' as domain_pr;
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/personal_record.dart'
+    as domain_pr;
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebration.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 // 📝 Form Cues for Apple Watch
@@ -96,23 +100,30 @@ import 'package:gymbro_flutter_new/features/health_sync/domain/entities/body_mea
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 // 📱 iOS 17+ Workout Session Live Activity
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_session_la_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/data/services/workout_session_la_service.dart' show WorkoutSessionMode;
+import 'package:gymbro_flutter_new/features/workout/data/services/workout_session_la_service.dart'
+    show WorkoutSessionMode;
 
 // Hybrid Exercise Activity Repository provider
-final hybridExerciseActivityRepositoryProvider = Provider<HybridExerciseActivityRepository>((ref) {
-  final localDataSource = ref.watch(hiveWorkoutDataSourceProvider);
-  return HybridExerciseActivityRepository(localDataSource: localDataSource);
-});
+final hybridExerciseActivityRepositoryProvider =
+    Provider<HybridExerciseActivityRepository>((ref) {
+      final localDataSource = ref.watch(hiveWorkoutDataSourceProvider);
+      return HybridExerciseActivityRepository(localDataSource: localDataSource);
+    });
 
 // Exercise Activity Repository provider (kept for backward compatibility)
-final exerciseActivityRepositoryProvider = Provider<ExerciseActivityRepository>((ref) {
-  return ExerciseActivityRepository();
-});
+final exerciseActivityRepositoryProvider = Provider<ExerciseActivityRepository>(
+  (ref) {
+    return ExerciseActivityRepository();
+  },
+);
 
 // NOTE: WorkoutHistoryRepository removed - using unified HybridWorkoutRepository instead
 
 // Current workout state provider
-final currentWorkoutProvider = NotifierProvider<CurrentWorkoutNotifier, Workout?>(CurrentWorkoutNotifier.new);
+final currentWorkoutProvider =
+    NotifierProvider<CurrentWorkoutNotifier, Workout?>(
+      CurrentWorkoutNotifier.new,
+    );
 
 class CurrentWorkoutNotifier extends Notifier<Workout?> {
   @override
@@ -181,7 +192,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
       isPreloaded: true, // Flag to identify pre-loaded state
-      preloadExpiry: DateTime.now().add(const Duration(minutes: 15)), // 15-min timeout
+      preloadExpiry: DateTime.now().add(
+        const Duration(minutes: 15),
+      ), // 15-min timeout
       sessionId: sessionId, // Analytics tracking
       templateId: templateId, // ✅ FIX #6: Link workout to template
     );
@@ -239,7 +252,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       updatedAt: DateTime.now(),
       templateId: templateId, // ✅ FIX: Pass templateId for duration tracking
     );
-    _currentTemplateId = templateId; // Set template ID for auto-save (null for manual workouts)
+    _currentTemplateId =
+        templateId; // Set template ID for auto-save (null for manual workouts)
   }
 
   void startFromTemplate(wt.WorkoutTemplate workoutTemplate) async {
@@ -249,29 +263,35 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       // 💾 Check if there's a cached version of this template
       final cacheService = ref.read(workoutTemplateCacheServiceProvider);
-      final cachedWorkout = await cacheService.getCachedWorkout(workoutTemplate.id);
+      final cachedWorkout = await cacheService.getCachedWorkout(
+        workoutTemplate.id,
+      );
 
       Workout workout;
 
       if (cachedWorkout != null) {
         // Use cached version with modifications
         if (kDebugMode) {
-          debugLog(LogCategory.workout, '💾 [WorkoutProvider] Loading cached workout for template: ${workoutTemplate.name}');
+          debugLog(
+            LogCategory.workout,
+            '💾 [WorkoutProvider] Loading cached workout for template: ${workoutTemplate.name}',
+          );
         }
         workout = cachedWorkout;
       } else {
         // Crea un nuovo workout dal template
         // ✅ FIX: Use toWorkoutExercise() to properly handle superset/dropset types
         workout = Workout(
-        id: const Uuid().v4(),
-        name: workoutTemplate.name,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        templateId: workoutTemplate.id, // ✅ CRITICAL FIX: Pass templateId for routine auto-detection
-        exercises: workoutTemplate.exercises.map((templateExercise) {
-          return templateExercise.toWorkoutExercise();
-        }).toList(),
-      );
+          id: const Uuid().v4(),
+          name: workoutTemplate.name,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          templateId: workoutTemplate
+              .id, // ✅ CRITICAL FIX: Pass templateId for routine auto-detection
+          exercises: workoutTemplate.exercises.map((templateExercise) {
+            return templateExercise.toWorkoutExercise();
+          }).toList(),
+        );
       }
 
       // Imposta il workout e lo avvia automaticamente
@@ -297,7 +317,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       // 📱 Start iOS 17+ Workout Session Live Activity
       if (Platform.isIOS) {
-        debugPrint('[WorkoutProvider] 📱 Starting LA for template workout: ${state!.name}');
+        debugPrint(
+          '[WorkoutProvider] 📱 Starting LA for template workout: ${state!.name}',
+        );
         ref.read(workoutSessionLAProvider.notifier).startLiveActivity(state!);
       }
 
@@ -305,7 +327,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // Questo verrà gestito dal template provider
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error starting workout from template: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error starting workout from template: $e',
+        );
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Ensure we don't leave the app in a bad state
@@ -355,10 +380,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     final workout = state!;
-    final firstExercise = workout.exercises.isNotEmpty ? workout.exercises.first : null;
+    final firstExercise = workout.exercises.isNotEmpty
+        ? workout.exercises.first
+        : null;
 
     debugPrint('⌚ [FLUTTER DEBUG] Workout: ${workout.name}');
-    debugPrint('⌚ [FLUTTER DEBUG] First exercise: ${firstExercise?.name ?? "none"}');
+    debugPrint(
+      '⌚ [FLUTTER DEBUG] First exercise: ${firstExercise?.name ?? "none"}',
+    );
     debugPrint('⌚ [FLUTTER DEBUG] Exercise count: ${workout.exercises.length}');
 
     // ⌚ Setup callbacks for Watch → iPhone communication
@@ -367,21 +396,26 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     watchNotifier.onSkipRestFromWatch = _skipRestFromWatch;
     watchNotifier.onHealthMetricsFromWatch = _handleHealthMetricsFromWatch;
     watchNotifier.onEndWorkoutFromWatch = _endWorkoutFromWatch;
-    watchNotifier.onEditCompletedSetRepsFromWatch = _editCompletedSetRepsFromWatch;
+    watchNotifier.onEditCompletedSetRepsFromWatch =
+        _editCompletedSetRepsFromWatch;
     watchNotifier.onUncompleteSetFromWatch = _uncompleteSetFromWatch;
     watchNotifier.onSetModificationFromWatch = _updateCurrentSetTargetFromWatch;
-    watchNotifier.onSupersetRoundCompletedFromWatch = _completeSupersetRoundFromWatch;
+    watchNotifier.onSupersetRoundCompletedFromWatch =
+        _completeSupersetRoundFromWatch;
     // 🔥 DROPSET: Register callbacks
-    watchNotifier.onDropsetStageCompletedFromWatch = _completeDropsetStageFromWatch;
+    watchNotifier.onDropsetStageCompletedFromWatch =
+        _completeDropsetStageFromWatch;
     watchNotifier.onDropsetCompletedFromWatch = _completeDropsetFromWatch;
     // 🔥 REST-PAUSE: Register callbacks
-    watchNotifier.onRestPauseSetCompletedFromWatch = _completeRestPauseSetFromWatch;
+    watchNotifier.onRestPauseSetCompletedFromWatch =
+        _completeRestPauseSetFromWatch;
     watchNotifier.onRestPauseCompletedFromWatch = _completeRestPauseFromWatch;
     // 🔄 Navigation & Copy callbacks from Watch
     watchNotifier.onJumpToExerciseFromWatch = _jumpToExerciseFromWatch;
     watchNotifier.onJumpToSetFromWatch = _jumpToSetFromWatch;
     watchNotifier.onCopyToAllSetsFromWatch = _copyToAllSetsFromWatch;
-    watchNotifier.onCopyFromPreviousSetFromWatch = _copyFromPreviousSetFromWatch;
+    watchNotifier.onCopyFromPreviousSetFromWatch =
+        _copyFromPreviousSetFromWatch;
     watchNotifier.onStartNewTimerFromWatch = _startNewTimerFromWatch;
     debugPrint('⌚ [FLUTTER DEBUG] ✅ Watch callbacks registered');
 
@@ -391,7 +425,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     final effortScale = appConfig.effortScale;
     // Get locale for Watch UI strings
     final locale = ref.read(localeProvider).languageCode;
-    debugPrint('⌚ [FLUTTER DEBUG] RPE Settings: enabled=$rpeTrackingEnabled, scale=$effortScale, locale=$locale');
+    debugPrint(
+      '⌚ [FLUTTER DEBUG] RPE Settings: enabled=$rpeTrackingEnabled, scale=$effortScale, locale=$locale',
+    );
 
     if (firstExercise != null) {
       // 🔥 SUPERSET HANDLING at workout start
@@ -408,20 +444,29 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         final effectiveTut = firstExercise.tut ?? _getDefaultTut(firstExercise);
 
         // ✅ FIX: Build allSets list for Watch navigation (include actualReps for edit mode)
-        final allSets = firstExercise.sets.map((s) => {
-          'weight': s.weight?.toDouble() ?? 0.0,
-          'reps': s.reps ?? 0,
-          'actualReps': s.actualReps,  // ✅ Reps effettive (null se non completato)
-          'isCompleted': s.isCompleted, // ✅ Stato completamento
-        }).toList();
+        final allSets = firstExercise.sets
+            .map(
+              (s) => {
+                'weight': s.weight?.toDouble() ?? 0.0,
+                'reps': s.reps ?? 0,
+                'actualReps':
+                    s.actualReps, // ✅ Reps effettive (null se non completato)
+                'isCompleted': s.isCompleted, // ✅ Stato completamento
+              },
+            )
+            .toList();
 
         _getFormCuesAndNotifyWatch(
           exerciseName: firstExercise.name,
           exerciseId: firstExercise.id,
           currentSet: 1,
           totalSets: firstExercise.sets.length,
-          targetWeight: firstExercise.sets.isNotEmpty ? firstExercise.sets.first.weight : null,
-          targetReps: firstExercise.sets.isNotEmpty ? firstExercise.sets.first.reps : null,
+          targetWeight: firstExercise.sets.isNotEmpty
+              ? firstExercise.sets.first.weight
+              : null,
+          targetReps: firstExercise.sets.isNotEmpty
+              ? firstExercise.sets.first.reps
+              : null,
           setsCompleted: 0,
           rpeTrackingEnabled: rpeTrackingEnabled,
           effortScale: effortScale,
@@ -449,7 +494,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   String _getDefaultTut(Exercise exercise) {
     switch (exercise.type) {
       case ExerciseType.single:
-        return exercise.category == ExerciseCategory.legs ? '3-0-1-0' : '2-1-2-0';
+        return exercise.category == ExerciseCategory.legs
+            ? '3-0-1-0'
+            : '2-1-2-0';
       case ExerciseType.superset:
         return '2-0-1-0';
       case ExerciseType.dropset:
@@ -468,8 +515,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     double? targetWeight,
     int? targetReps,
     required int setsCompleted,
-    int? setsCompletedInExercise,   // ✅ Sets completed in current exercise (for edit UI)
-    int? lastCompletedReps,          // ✅ Actual reps of last completed set (for edit UI)
+    int?
+    setsCompletedInExercise, // ✅ Sets completed in current exercise (for edit UI)
+    int? lastCompletedReps, // ✅ Actual reps of last completed set (for edit UI)
     required bool rpeTrackingEnabled,
     required String effortScale,
     required String locale,
@@ -516,9 +564,13 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         // 📚 TUT from database (tempoEsecuzione)
         if (dbExercise.tempoEsecuzione != null) {
           effectiveTut = dbExercise.tempoEsecuzione as String;
-          debugPrint('⌚ [FLUTTER DEBUG] 📚 Found real TUT from database: $effectiveTut');
+          debugPrint(
+            '⌚ [FLUTTER DEBUG] 📚 Found real TUT from database: $effectiveTut',
+          );
         } else {
-          debugPrint('⌚ [FLUTTER DEBUG] 📚 No database TUT found, using fallback: $tut');
+          debugPrint(
+            '⌚ [FLUTTER DEBUG] 📚 No database TUT found, using fallback: $tut',
+          );
         }
         // 📝 Form Cues fallback from database (noteTecniche)
         if (effectiveFormCues == null && dbExercise.noteTecniche != null) {
@@ -529,27 +581,39 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           } else {
             effectiveFormCues = noteTecniche;
           }
-          debugPrint('⌚ [FLUTTER DEBUG] 📝 Using noteTecniche as Form Cues fallback');
+          debugPrint(
+            '⌚ [FLUTTER DEBUG] 📝 Using noteTecniche as Form Cues fallback',
+          );
         }
       } else {
-        debugPrint('⌚ [FLUTTER DEBUG] 📚 Exercise not found in database: $exerciseName');
+        debugPrint(
+          '⌚ [FLUTTER DEBUG] 📚 Exercise not found in database: $exerciseName',
+        );
       }
     } catch (e) {
       debugPrint('⌚ [FLUTTER DEBUG] ⚠️ Failed to fetch from database: $e');
     }
 
-    debugPrint('⌚ [FLUTTER DEBUG] Form Cues for $exerciseName: ${effectiveFormCues != null ? "${effectiveFormCues.length} chars (from db: ${effectiveFormCues != formCues})" : "none"}');
+    debugPrint(
+      '⌚ [FLUTTER DEBUG] Form Cues for $exerciseName: ${effectiveFormCues != null ? "${effectiveFormCues.length} chars (from db: ${effectiveFormCues != formCues})" : "none"}',
+    );
 
     if (isStartup) {
       debugPrint('⌚ [FLUTTER DEBUG] Calling notifyWorkoutStarted with:');
       debugPrint('   - exerciseName: $exerciseName');
       debugPrint('   - currentSet: $currentSet');
       debugPrint('   - totalSets: $totalSets');
-      debugPrint('   - formCues: ${effectiveFormCues != null ? "${effectiveFormCues.length} chars" : "none"}');
-      debugPrint('   - tut: ${effectiveTut ?? "none"} (from db: ${effectiveTut != tut})');
+      debugPrint(
+        '   - formCues: ${effectiveFormCues != null ? "${effectiveFormCues.length} chars" : "none"}',
+      );
+      debugPrint(
+        '   - tut: ${effectiveTut ?? "none"} (from db: ${effectiveTut != tut})',
+      );
       debugPrint('   - allSets: ${allSets?.length ?? 0} sets');
       if (isSuperset) {
-        debugPrint('   - 🔥 SUPERSET: $supersetName, Ex $currentExerciseInSuperset/$totalExercisesInSuperset, Round $supersetRound/$totalSupersetRounds');
+        debugPrint(
+          '   - 🔥 SUPERSET: $supersetName, Ex $currentExerciseInSuperset/$totalExercisesInSuperset, Round $supersetRound/$totalSupersetRounds',
+        );
       }
       watchNotifier.notifyWorkoutStarted(
         exerciseName: exerciseName,
@@ -558,8 +622,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         targetWeight: targetWeight,
         targetReps: targetReps,
         setsCompleted: setsCompleted,
-        setsCompletedInExercise: setsCompletedInExercise ?? 0,  // ✅ NEW
-        lastCompletedReps: lastCompletedReps,                    // ✅ NEW
+        setsCompletedInExercise: setsCompletedInExercise ?? 0, // ✅ NEW
+        lastCompletedReps: lastCompletedReps, // ✅ NEW
         rpeTrackingEnabled: rpeTrackingEnabled,
         effortScale: effortScale,
         locale: locale,
@@ -578,10 +642,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         supersetRound: supersetRound,
         totalSupersetRounds: totalSupersetRounds,
       );
-      debugPrint('⌚ [FLUTTER DEBUG] ✅ notifyWorkoutStarted called successfully');
+      debugPrint(
+        '⌚ [FLUTTER DEBUG] ✅ notifyWorkoutStarted called successfully',
+      );
     } else {
       if (isSuperset) {
-        debugPrint('⌚ [FLUTTER DEBUG] 🔥 SUPERSET Update: $supersetName, Ex $currentExerciseInSuperset/$totalExercisesInSuperset, Round $supersetRound/$totalSupersetRounds');
+        debugPrint(
+          '⌚ [FLUTTER DEBUG] 🔥 SUPERSET Update: $supersetName, Ex $currentExerciseInSuperset/$totalExercisesInSuperset, Round $supersetRound/$totalSupersetRounds',
+        );
       }
       watchNotifier.sendWorkoutUpdate(
         exerciseName: exerciseName,
@@ -590,8 +658,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         targetWeight: targetWeight,
         targetReps: targetReps,
         setsCompleted: setsCompleted,
-        setsCompletedInExercise: setsCompletedInExercise ?? 0,  // ✅ NEW
-        lastCompletedReps: lastCompletedReps,                    // ✅ NEW
+        setsCompletedInExercise: setsCompletedInExercise ?? 0, // ✅ NEW
+        lastCompletedReps: lastCompletedReps, // ✅ NEW
         rpeTrackingEnabled: rpeTrackingEnabled,
         effortScale: effortScale,
         locale: locale,
@@ -647,15 +715,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     // Calculate total completed sets (including superset rounds)
-    final completedSets = workout.exercises.fold<int>(
-      0,
-      (total, e) {
-        if (e is SupersetExercise) {
-          return total + e.supersetSets.where((s) => s.isCompleted).length;
-        }
-        return total + e.sets.where((s) => s.isCompleted).length;
-      },
-    );
+    final completedSets = workout.exercises.fold<int>(0, (total, e) {
+      if (e is SupersetExercise) {
+        return total + e.supersetSets.where((s) => s.isCompleted).length;
+      }
+      return total + e.sets.where((s) => s.isCompleted).length;
+    });
 
     if (currentExercise == null) return;
 
@@ -672,46 +737,62 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     // Regular exercise handling
-    final currentSetIndex = currentExercise.sets.indexWhere((s) => !s.isCompleted);
-    final currentSet = currentSetIndex >= 0 ? currentExercise.sets[currentSetIndex] : null;
+    final currentSetIndex = currentExercise.sets.indexWhere(
+      (s) => !s.isCompleted,
+    );
+    final currentSet = currentSetIndex >= 0
+        ? currentExercise.sets[currentSetIndex]
+        : null;
     // ⌚ Use actual TUT or generate default (same logic as UI)
     final effectiveTut = currentExercise.tut ?? _getDefaultTut(currentExercise);
 
     // ✅ FIX: Calculate sets completed IN CURRENT EXERCISE (not total workout)
-    final setsCompletedInExercise = currentExercise.sets.where((s) => s.isCompleted).length;
+    final setsCompletedInExercise = currentExercise.sets
+        .where((s) => s.isCompleted)
+        .length;
 
     // ✅ FIX: Get actualReps of last completed set in current exercise
     int? lastCompletedReps;
     for (int i = currentExercise.sets.length - 1; i >= 0; i--) {
       if (currentExercise.sets[i].isCompleted) {
-        lastCompletedReps = currentExercise.sets[i].actualReps ?? currentExercise.sets[i].reps;
+        lastCompletedReps =
+            currentExercise.sets[i].actualReps ?? currentExercise.sets[i].reps;
         break;
       }
     }
 
     // ✅ FIX: Build allSets list for Watch navigation (include actualReps for edit mode)
-    final allSets = currentExercise.sets.map((s) => {
-      'weight': s.weight?.toDouble() ?? 0.0,
-      'reps': s.reps ?? 0,
-      'actualReps': s.actualReps,  // ✅ Reps effettive (null se non completato)
-      'isCompleted': s.isCompleted, // ✅ Stato completamento
-    }).toList();
+    final allSets = currentExercise.sets
+        .map(
+          (s) => {
+            'weight': s.weight?.toDouble() ?? 0.0,
+            'reps': s.reps ?? 0,
+            'actualReps':
+                s.actualReps, // ✅ Reps effettive (null se non completato)
+            'isCompleted': s.isCompleted, // ✅ Stato completamento
+          },
+        )
+        .toList();
 
     // 🔄 Build exercise names list and find current index for Watch navigation
     final exerciseNames = workout.exercises.map((e) => e.name).toList();
-    final currentExerciseIdx = workout.exercises.indexWhere((e) => e.id == currentExercise!.id);
+    final currentExerciseIdx = workout.exercises.indexWhere(
+      (e) => e.id == currentExercise!.id,
+    );
 
     // 📝 Use async helper to fetch Form Cues and send update
     _getFormCuesAndNotifyWatch(
       exerciseName: currentExercise.name,
       exerciseId: currentExercise.id,
-      currentSet: currentSetIndex >= 0 ? currentSetIndex + 1 : currentExercise.sets.length,
+      currentSet: currentSetIndex >= 0
+          ? currentSetIndex + 1
+          : currentExercise.sets.length,
       totalSets: currentExercise.sets.length,
       targetWeight: currentSet?.weight,
       targetReps: currentSet?.reps,
       setsCompleted: completedSets,
-      setsCompletedInExercise: setsCompletedInExercise,  // ✅ NEW
-      lastCompletedReps: lastCompletedReps,               // ✅ NEW
+      setsCompletedInExercise: setsCompletedInExercise, // ✅ NEW
+      lastCompletedReps: lastCompletedReps, // ✅ NEW
       rpeTrackingEnabled: rpeTrackingEnabled,
       effortScale: effortScale,
       locale: locale,
@@ -735,7 +816,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     required String locale,
   }) {
     // Find current round (first incomplete)
-    final currentRoundIndex = superset.supersetSets.indexWhere((s) => !s.isCompleted);
+    final currentRoundIndex = superset.supersetSets.indexWhere(
+      (s) => !s.isCompleted,
+    );
     if (currentRoundIndex < 0) return;
 
     final currentRound = superset.supersetSets[currentRoundIndex];
@@ -765,15 +848,21 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     // Build exercise names list for Watch display
-    final supersetExerciseNames = superset.exercises.map((e) => e.name).toList();
+    final supersetExerciseNames = superset.exercises
+        .map((e) => e.name)
+        .toList();
 
     // Rounds completed in this superset
-    final roundsCompletedInSuperset = superset.supersetSets.where((s) => s.isCompleted).length;
+    final roundsCompletedInSuperset = superset.supersetSets
+        .where((s) => s.isCompleted)
+        .length;
 
     debugPrint('⌚ [FLUTTER DEBUG] 🔥 SUPERSET Watch Update:');
     debugPrint('   - Superset: ${superset.name}');
     debugPrint('   - Exercises: ${supersetExerciseNames.join(", ")}');
-    debugPrint('   - Current Exercise: $currentExerciseName (${currentExerciseIndex + 1}/${superset.exercises.length})');
+    debugPrint(
+      '   - Current Exercise: $currentExerciseName (${currentExerciseIndex + 1}/${superset.exercises.length})',
+    );
     debugPrint('   - Round: ${currentRoundIndex + 1}/$totalRounds');
 
     // Send update with superset info
@@ -797,7 +886,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       isSuperset: true,
       supersetName: superset.name,
       supersetExercises: supersetExerciseNames,
-      currentExerciseInSuperset: currentExerciseIndex + 1, // 1-indexed for display
+      currentExerciseInSuperset:
+          currentExerciseIndex + 1, // 1-indexed for display
       totalExercisesInSuperset: superset.exercises.length,
       supersetRound: currentRoundIndex + 1, // 1-indexed for display
       totalSupersetRounds: totalRounds,
@@ -812,7 +902,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     required String locale,
   }) {
     if (superset.supersetSets.isEmpty) {
-      debugPrint('⌚ [FLUTTER DEBUG] ⚠️ Superset has no rounds, skipping Watch notification');
+      debugPrint(
+        '⌚ [FLUTTER DEBUG] ⚠️ Superset has no rounds, skipping Watch notification',
+      );
       return;
     }
 
@@ -841,7 +933,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     // Build exercise names list for Watch display
-    final supersetExerciseNames = superset.exercises.map((e) => e.name).toList();
+    final supersetExerciseNames = superset.exercises
+        .map((e) => e.name)
+        .toList();
 
     debugPrint('⌚ [FLUTTER DEBUG] 🔥 SUPERSET Watch Startup:');
     debugPrint('   - Superset: ${superset.name}');
@@ -893,7 +987,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     // BEFORE completeSet calls transitionToRest, causing iOS to show wrong mode
     if (laState.mode == WorkoutSessionMode.rpe ||
         laState.mode == WorkoutSessionMode.rest) {
-      debugPrint('[WorkoutProvider] 📱 Skipping LA update - mode is ${laState.mode} (will transition after)');
+      debugPrint(
+        '[WorkoutProvider] 📱 Skipping LA update - mode is ${laState.mode} (will transition after)',
+      );
       return;
     }
 
@@ -910,11 +1006,13 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           .where((e) => e.sets.every((s) => s.isCompleted))
           .length;
 
-      ref.read(workoutSessionLAProvider.notifier).updateExercise(
-        currentExercise,
-        completedExercises,
-        workout.exercises.length,
-      );
+      ref
+          .read(workoutSessionLAProvider.notifier)
+          .updateExercise(
+            currentExercise,
+            completedExercises,
+            workout.exercises.length,
+          );
     }
   }
 
@@ -924,7 +1022,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   /// This restores the full workout state including all exercises and sets.
   void restoreFromDraft(Workout workout) {
     if (kDebugMode) {
-      debugPrint('🔄 [WorkoutProvider] Restoring workout from draft: ${workout.name}');
+      debugPrint(
+        '🔄 [WorkoutProvider] Restoring workout from draft: ${workout.name}',
+      );
       debugPrint('   - Exercises: ${workout.exercises.length}');
       debugPrint('   - Status: ${workout.status}');
     }
@@ -944,7 +1044,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       // 📱 Start iOS 17+ Workout Session Live Activity
       if (Platform.isIOS) {
-        debugPrint('[WorkoutProvider] 📱 Starting LA for restored workout: ${workout.name}');
+        debugPrint(
+          '[WorkoutProvider] 📱 Starting LA for restored workout: ${workout.name}',
+        );
         ref.read(workoutSessionLAProvider.notifier).startLiveActivity(workout);
       }
     }
@@ -970,13 +1072,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     if (state == null || state!.startTime == null) return;
 
     final newEndTime = state!.startTime!.add(newDuration);
-    state = state!.copyWith(
-      endTime: newEndTime,
-      updatedAt: DateTime.now(),
-    );
+    state = state!.copyWith(endTime: newEndTime, updatedAt: DateTime.now());
 
     if (kDebugMode) {
-      debugPrint('⏱️ [WorkoutProvider] Duration updated to: ${newDuration.inMinutes}m');
+      debugPrint(
+        '⏱️ [WorkoutProvider] Duration updated to: ${newDuration.inMinutes}m',
+      );
     }
   }
 
@@ -1004,15 +1105,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       );
       final totalWeight = workout.exercises.fold<double>(
         0.0,
-        (total, ex) => total + ex.sets.fold<double>(
-          0.0,
-          (exTotal, set) {
-            if (!set.isCompleted) return exTotal;
-            final weight = set.weight ?? 0;
-            final reps = set.reps ?? 0;
-            return exTotal + (weight.toDouble() * reps.toDouble());
-          },
-        ),
+        (total, ex) =>
+            total +
+            ex.sets.fold<double>(0.0, (exTotal, set) {
+              if (!set.isCompleted) return exTotal;
+              final weight = set.weight ?? 0;
+              final reps = set.reps ?? 0;
+              return exTotal + (weight.toDouble() * reps.toDouble());
+            }),
       );
 
       tracker.trackWorkoutCompleted(
@@ -1025,7 +1125,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         completionRate: totalSetsCount > 0
             ? ((completedSets / totalSetsCount) * 100).round()
             : 0,
-        sessionId: workout.sessionId, // ✅ FIX #8: Add sessionId for funnel correlation
+        sessionId:
+            workout.sessionId, // ✅ FIX #8: Add sessionId for funnel correlation
       );
 
       state = state!.completeWorkout();
@@ -1038,7 +1139,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       // 📱 End iOS 17+ Workout Session Live Activity (show completion for 5s)
       if (Platform.isIOS) {
-        ref.read(workoutSessionLAProvider.notifier).endLiveActivity(dismissPolicy: 'after_5s');
+        ref
+            .read(workoutSessionLAProvider.notifier)
+            .endLiveActivity(dismissPolicy: 'after_5s');
       }
 
       // 💾 Clear cache after workout completion (start fresh next time)
@@ -1080,7 +1183,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     final isAuthenticated = currentUser != null;
 
     if (!isAuthenticated && kDebugMode) {
-      debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] User not authenticated - workout will be saved locally only');
+      debugLog(
+        LogCategory.workout,
+        '⚠️ [WorkoutProvider] User not authenticated - workout will be saved locally only',
+      );
     }
 
     // 📢 UI Feedback: Show "Saving workout..." toast
@@ -1091,7 +1197,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     try {
       // 🔒 SECURITY: Sanitize user input to prevent XSS/injection attacks
       final sanitizedWorkoutName = InputValidator.sanitizeName(workout.name);
-      final sanitizedWorkoutNotes = InputValidator.sanitizeText(workout.notes ?? '');
+      final sanitizedWorkoutNotes = InputValidator.sanitizeText(
+        workout.notes ?? '',
+      );
 
       // Validate workout data before save
       final validation = InputValidator.validateWorkoutData(
@@ -1101,15 +1209,23 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       );
 
       if (!validation.isValid) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Validation failed: ${validation.errors.join(', ')}');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Validation failed: ${validation.errors.join(', ')}',
+        );
         // Don't throw - log error but continue with sanitized data
       }
 
       // 1. Convert Workout to WorkoutHistoryDetail (with sanitized data)
       final exercisesHistory = workout.exercises.map((exercise) {
         // 🔒 Sanitize exercise data
-        final sanitizedExerciseName = InputValidator.sanitizeName(exercise.name);
-        final sanitizedExerciseNotes = InputValidator.sanitizeText(exercise.notes ?? '', maxLength: 500);
+        final sanitizedExerciseName = InputValidator.sanitizeName(
+          exercise.name,
+        );
+        final sanitizedExerciseNotes = InputValidator.sanitizeText(
+          exercise.notes ?? '',
+          maxLength: 500,
+        );
 
         final setsHistory = exercise.sets.map((set) {
           // 🔒 Sanitize set notes
@@ -1147,7 +1263,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       final workoutHistoryDetail = WorkoutHistoryDetail(
         id: workout.id,
-        userId: effectiveUserId, // 🔧 FIX CASE 3: Use effectiveUserId for local save
+        userId:
+            effectiveUserId, // 🔧 FIX CASE 3: Use effectiveUserId for local save
         name: sanitizedWorkoutName,
         description: sanitizedWorkoutNotes,
         createdAt: workout.createdAt,
@@ -1157,7 +1274,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         duration: workout.duration ?? Duration.zero,
         exercises: exercisesHistory,
         metadata: {'source': 'app_completion'},
-        templateId: workout.templateId, // ✅ CRITICAL FIX: Pass templateId for routine auto-detection
+        templateId: workout
+            .templateId, // ✅ CRITICAL FIX: Pass templateId for routine auto-detection
       );
 
       // 2. SEMPRE salvare localmente PRIMA (BLOCKING ma veloce ~50ms)
@@ -1169,364 +1287,475 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         final workoutModel = WorkoutModel.fromDomain(workout);
         await hiveDataSource.saveWorkout(workoutModel, effectiveUserId);
 
+        if (kDebugMode) {
+          debugLog(
+            LogCategory.workout,
+            '✅ [WorkoutProvider] Workout saved to Hive local storage',
+          );
+        }
+
+        // 📜 HISTORY: Salva anche nel box workout_history_enhanced per la cronologia
+        // FIX: La cronologia legge da questo box, non da 'workouts'
+        // Senza questo, il workout non appare nella history finché Firebase non sincronizza
+        // 🔧 FIX: Key format MUST match repository format: workout_{userId}_{workoutId}
+        // Without userId in key, repository's _getLocalWorkouts() won't find it!
+        try {
+          final boxManager = ref.read(hiveBoxManagerProvider);
+          final historyBox = await boxManager.openBox(
+            'workout_history_enhanced',
+          );
+          final historyKey =
+              'workout_${effectiveUserId}_${workoutHistoryDetail.id}';
+          await historyBox.put(historyKey, workoutHistoryDetail.toMap());
+
           if (kDebugMode) {
-            debugLog(LogCategory.workout, '✅ [WorkoutProvider] Workout saved to Hive local storage');
+            debugLog(
+              LogCategory.workout,
+              '✅ [WorkoutProvider] Workout saved to history box (key: $historyKey)',
+            );
           }
 
-          // 📜 HISTORY: Salva anche nel box workout_history_enhanced per la cronologia
-          // FIX: La cronologia legge da questo box, non da 'workouts'
-          // Senza questo, il workout non appare nella history finché Firebase non sincronizza
-          // 🔧 FIX: Key format MUST match repository format: workout_{userId}_{workoutId}
-          // Without userId in key, repository's _getLocalWorkouts() won't find it!
+          // 🔧 FIX: Notify history provider that new workout was added
+          // Without this, UI won't update until Firebase sync completes
           try {
-            final boxManager = ref.read(hiveBoxManagerProvider);
-            final historyBox = await boxManager.openBox('workout_history_enhanced');
-            final historyKey = 'workout_${effectiveUserId}_${workoutHistoryDetail.id}';
-            await historyBox.put(historyKey, workoutHistoryDetail.toMap());
-
+            final historyRepo = ref.read(workoutHistoryRepositoryProvider);
+            await historyRepo.notifyLocalWorkoutAdded();
+          } catch (notifyError) {
             if (kDebugMode) {
-              debugLog(LogCategory.workout, '✅ [WorkoutProvider] Workout saved to history box (key: $historyKey)');
-            }
-
-            // 🔧 FIX: Notify history provider that new workout was added
-            // Without this, UI won't update until Firebase sync completes
-            try {
-              final historyRepo = ref.read(workoutHistoryRepositoryProvider);
-              await historyRepo.notifyLocalWorkoutAdded();
-            } catch (notifyError) {
-              if (kDebugMode) {
-                debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to notify history: $notifyError');
-              }
-            }
-          } catch (historyBoxError) {
-            // Non-critical: la cronologia verrà popolata dal sync Firebase
-            if (kDebugMode) {
-              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to save to history box: $historyBoxError');
-            }
-          }
-
-          // 📊 ANALYTICS: Update analytics collection for each exercise
-          // Uses WorkoutToAnalyticsConverter utility to centralize conversion logic
-          // This populates users/{userId}/analytics/{exerciseName} for efficient querying
-          try {
-            final analyticsRepo = ref.read(analyticsRepositoryProvider);
-
-            // 🏋️ Get user body weight for bodyweight exercise volume calculation
-            double? userBodyWeightKg;
-            try {
-              final weightMeasurements = await ref.read(
-                bodyMeasurementsProvider(HealthDataType.bodyWeight).future,
+              debugLog(
+                LogCategory.workout,
+                '⚠️ [WorkoutProvider] Failed to notify history: $notifyError',
               );
-              if (weightMeasurements.isNotEmpty) {
-                final latestWeight = weightMeasurements.first;
-                userBodyWeightKg = latestWeight.unit == MeasurementUnit.pounds
-                    ? latestWeight.value * 0.453592 // lbs to kg
-                    : latestWeight.value;
-                if (kDebugMode) {
-                  debugLog(LogCategory.workout, '📏 [WorkoutProvider] User body weight for analytics: ${userBodyWeightKg.toStringAsFixed(1)}kg');
-                }
-              }
-            } catch (weightError) {
-              // Non-critical: bodyweight exercises will have volume = 0
+            }
+          }
+        } catch (historyBoxError) {
+          // Non-critical: la cronologia verrà popolata dal sync Firebase
+          if (kDebugMode) {
+            debugLog(
+              LogCategory.workout,
+              '⚠️ [WorkoutProvider] Failed to save to history box: $historyBoxError',
+            );
+          }
+        }
+
+        // 📊 ANALYTICS: Update analytics collection for each exercise
+        // Uses WorkoutToAnalyticsConverter utility to centralize conversion logic
+        // This populates users/{userId}/analytics/{exerciseName} for efficient querying
+        try {
+          final analyticsRepo = ref.read(analyticsRepositoryProvider);
+
+          // 🏋️ Get user body weight for bodyweight exercise volume calculation
+          double? userBodyWeightKg;
+          try {
+            final weightMeasurements = await ref.read(
+              bodyMeasurementsProvider(HealthDataType.bodyWeight).future,
+            );
+            if (weightMeasurements.isNotEmpty) {
+              final latestWeight = weightMeasurements.first;
+              userBodyWeightKg = latestWeight.unit == MeasurementUnit.pounds
+                  ? latestWeight.value *
+                        0.453592 // lbs to kg
+                  : latestWeight.value;
               if (kDebugMode) {
-                debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Could not fetch body weight: $weightError');
+                debugLog(
+                  LogCategory.workout,
+                  '📏 [WorkoutProvider] User body weight for analytics: ${userBodyWeightKg.toStringAsFixed(1)}kg',
+                );
               }
             }
+          } catch (weightError) {
+            // Non-critical: bodyweight exercises will have volume = 0
+            if (kDebugMode) {
+              debugLog(
+                LogCategory.workout,
+                '⚠️ [WorkoutProvider] Could not fetch body weight: $weightError',
+              );
+            }
+          }
 
-            final analyticsData = WorkoutToAnalyticsConverter.convert(
-              workout,
-              userBodyWeightKg: userBodyWeightKg,
+          final analyticsData = WorkoutToAnalyticsConverter.convert(
+            workout,
+            userBodyWeightKg: userBodyWeightKg,
+          );
+
+          if (kDebugMode) {
+            debugLog(
+              LogCategory.workout,
+              '📊 [WorkoutProvider] Converting ${analyticsData.length} exercises to analytics',
+            );
+          }
+
+          // Update analytics for each exercise
+          for (final data in analyticsData) {
+            await analyticsRepo.updateExerciseHistory(
+              userId: effectiveUserId,
+              exerciseId: data.exerciseId,
+              exerciseName: data.exerciseName,
+              muscleGroup: data.muscleGroup,
+              session: data.session,
+            );
+          }
+
+          if (kDebugMode) {
+            debugLog(
+              LogCategory.workout,
+              '✅ [WorkoutProvider] Analytics updated for ${analyticsData.length} exercises',
+            );
+          }
+        } catch (analyticsError) {
+          // Non-critical error - log but don't fail workout save
+          if (kDebugMode) {
+            debugLog(
+              LogCategory.workout,
+              '⚠️ [WorkoutProvider] Failed to update analytics: $analyticsError',
+            );
+          }
+        }
+
+        // 💾 CACHING: Invalidate analytics cache after workout completion
+        try {
+          final analyticsRepo = ref.read(workoutAnalyticsRepositoryProvider);
+          if (analyticsRepo is WorkoutAnalyticsRepositoryImpl) {
+            await analyticsRepo.invalidateAnalyticsCache(effectiveUserId);
+            if (kDebugMode) {
+              debugLog(
+                LogCategory.workout,
+                '🗑️ [WorkoutProvider] Analytics cache invalidated for user: $effectiveUserId',
+              );
+            }
+          }
+        } catch (cacheError) {
+          // Non-critical error - log but don't fail workout save
+          if (kDebugMode) {
+            debugLog(
+              LogCategory.workout,
+              '⚠️ [WorkoutProvider] Failed to invalidate analytics cache: $cacheError',
+            );
+          }
+        }
+
+        // 💾 CACHING: Clear exercise records cache for Exercise Detail Screen
+        try {
+          clearRecordsCache();
+          if (kDebugMode) {
+            debugLog(
+              LogCategory.workout,
+              '🗑️ [WorkoutProvider] Exercise records cache cleared (Exercise Detail Screen will refresh)',
+            );
+          }
+        } catch (recordsCacheError) {
+          // Non-critical error - log but don't fail workout save
+          if (kDebugMode) {
+            debugLog(
+              LogCategory.workout,
+              '⚠️ [WorkoutProvider] Failed to clear exercise records cache: $recordsCacheError',
+            );
+          }
+        }
+
+        // 📢 UI Feedback: Show "Workout saved locally" toast
+        if (context != null) {
+          SyncStatusToast.showWorkoutSavedLocally(context);
+        }
+
+        // 🍎 HEALTHKIT: Export workout to Apple Fitness / Activity rings
+        // This enables the workout to count toward the Exercise ring
+        if (Platform.isIOS &&
+            workout.startTime != null &&
+            workout.endTime != null) {
+          try {
+            final healthRemote = ref.read(healthRemoteDatasourceProvider);
+            final success = await healthRemote.writeWorkout(
+              startTime: workout.startTime!,
+              endTime: workout.endTime!,
+              workoutName: workout.name,
             );
 
             if (kDebugMode) {
-              debugLog(LogCategory.workout, '📊 [WorkoutProvider] Converting ${analyticsData.length} exercises to analytics');
+              if (success) {
+                debugLog(
+                  LogCategory.workout,
+                  '🍎 [WorkoutProvider] ✅ Workout exported to Apple Fitness',
+                );
+                debugLog(
+                  LogCategory.workout,
+                  '🍎 [WorkoutProvider] Exercise ring should update with workout duration',
+                );
+              } else {
+                debugLog(
+                  LogCategory.workout,
+                  '🍎 [WorkoutProvider] ⚠️ Failed to export workout to Apple Fitness',
+                );
+              }
             }
-
-            // Update analytics for each exercise
-            for (final data in analyticsData) {
-              await analyticsRepo.updateExerciseHistory(
-                userId: effectiveUserId,
-                exerciseId: data.exerciseId,
-                exerciseName: data.exerciseName,
-                muscleGroup: data.muscleGroup,
-                session: data.session,
+          } catch (healthKitError) {
+            // Non-critical: HealthKit export failure shouldn't affect workout save
+            if (kDebugMode) {
+              debugLog(
+                LogCategory.workout,
+                '🍎 [WorkoutProvider] ⚠️ HealthKit export error: $healthKitError',
               );
             }
+          }
+        }
 
-            if (kDebugMode) {
-              debugLog(LogCategory.workout, '✅ [WorkoutProvider] Analytics updated for ${analyticsData.length} exercises');
-            }
-          } catch (analyticsError) {
-            // Non-critical error - log but don't fail workout save
-            if (kDebugMode) {
-              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to update analytics: $analyticsError');
-            }
+        // 🏆 PR CELEBRATION: Check for new personal records after successful save
+        // Records PRs to repository for future celebration and tracking
+        bool hasNewPersonalRecords = false; // Tracked for XP bonus
+        try {
+          final prTracker = ref.read(prTrackerProvider);
+          final prCelebrationRepo = ref.read(prCelebrationRepositoryProvider);
+          final allNewPRs = <service_pr.PersonalRecord>[];
+
+          // Check each exercise for new PRs
+          for (final exercise in workout.exercises) {
+            // Skip exercises with no completed sets
+            if (!exercise.sets.any((s) => s.isCompleted)) continue;
+
+            // Convert Exercise to ExerciseActivity
+            final activity = ExerciseActivity.fromExercise(
+              exercise: exercise,
+              userEmail: currentUser?.email ?? effectiveUserId,
+              workoutName: workout.name,
+              workoutDate: workout.endTime ?? DateTime.now(),
+            );
+
+            // Check for PRs in this exercise
+            // ✅ FIX: Pass Firebase UID for correct Firestore permissions
+            final exercisePRs = await prTracker.checkAndUpdatePRs(
+              activity,
+              userId: effectiveUserId,
+            );
+            allNewPRs.addAll(exercisePRs);
           }
 
-          // 💾 CACHING: Invalidate analytics cache after workout completion
-          try {
-            final analyticsRepo = ref.read(workoutAnalyticsRepositoryProvider);
-            if (analyticsRepo is WorkoutAnalyticsRepositoryImpl) {
-              await analyticsRepo.invalidateAnalyticsCache(effectiveUserId);
-              if (kDebugMode) {
-                debugLog(LogCategory.workout, '🗑️ [WorkoutProvider] Analytics cache invalidated for user: $effectiveUserId');
-              }
-            }
-          } catch (cacheError) {
-            // Non-critical error - log but don't fail workout save
+          if (allNewPRs.isNotEmpty) {
+            hasNewPersonalRecords = true; // For XP bonus calculation
             if (kDebugMode) {
-              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to invalidate analytics cache: $cacheError');
-            }
-          }
-
-          // 💾 CACHING: Clear exercise records cache for Exercise Detail Screen
-          try {
-            clearRecordsCache();
-            if (kDebugMode) {
-              debugLog(LogCategory.workout, '🗑️ [WorkoutProvider] Exercise records cache cleared (Exercise Detail Screen will refresh)');
-            }
-          } catch (recordsCacheError) {
-            // Non-critical error - log but don't fail workout save
-            if (kDebugMode) {
-              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to clear exercise records cache: $recordsCacheError');
-            }
-          }
-
-          // 📢 UI Feedback: Show "Workout saved locally" toast
-          if (context != null) {
-            SyncStatusToast.showWorkoutSavedLocally(context);
-          }
-
-          // 🍎 HEALTHKIT: Export workout to Apple Fitness / Activity rings
-          // This enables the workout to count toward the Exercise ring
-          if (Platform.isIOS && workout.startTime != null && workout.endTime != null) {
-            try {
-              final healthRemote = ref.read(healthRemoteDatasourceProvider);
-              final success = await healthRemote.writeWorkout(
-                startTime: workout.startTime!,
-                endTime: workout.endTime!,
-                workoutName: workout.name,
+              debugLog(
+                LogCategory.workout,
+                '🎉 [WorkoutProvider] ${allNewPRs.length} new PR(s) detected!',
               );
-
-              if (kDebugMode) {
-                if (success) {
-                  debugLog(LogCategory.workout, '🍎 [WorkoutProvider] ✅ Workout exported to Apple Fitness');
-                  debugLog(LogCategory.workout, '🍎 [WorkoutProvider] Exercise ring should update with workout duration');
-                } else {
-                  debugLog(LogCategory.workout, '🍎 [WorkoutProvider] ⚠️ Failed to export workout to Apple Fitness');
-                }
-              }
-            } catch (healthKitError) {
-              // Non-critical: HealthKit export failure shouldn't affect workout save
-              if (kDebugMode) {
-                debugLog(LogCategory.workout, '🍎 [WorkoutProvider] ⚠️ HealthKit export error: $healthKitError');
-              }
-            }
-          }
-
-          // 🏆 PR CELEBRATION: Check for new personal records after successful save
-          // Records PRs to repository for future celebration and tracking
-          bool hasNewPersonalRecords = false; // Tracked for XP bonus
-          try {
-            final prTracker = ref.read(prTrackerProvider);
-            final prCelebrationRepo = ref.read(prCelebrationRepositoryProvider);
-            final allNewPRs = <service_pr.PersonalRecord>[];
-
-            // Check each exercise for new PRs
-            for (final exercise in workout.exercises) {
-              // Skip exercises with no completed sets
-              if (!exercise.sets.any((s) => s.isCompleted)) continue;
-
-              // Convert Exercise to ExerciseActivity
-              final activity = ExerciseActivity.fromExercise(
-                exercise: exercise,
-                userEmail: currentUser?.email ?? effectiveUserId,
-                workoutName: workout.name,
-                workoutDate: workout.endTime ?? DateTime.now(),
-              );
-
-              // Check for PRs in this exercise
-              // ✅ FIX: Pass Firebase UID for correct Firestore permissions
-              final exercisePRs = await prTracker.checkAndUpdatePRs(activity, userId: effectiveUserId);
-              allNewPRs.addAll(exercisePRs);
-            }
-
-            if (allNewPRs.isNotEmpty) {
-              hasNewPersonalRecords = true; // For XP bonus calculation
-              if (kDebugMode) {
-                debugLog(LogCategory.workout, '🎉 [WorkoutProvider] ${allNewPRs.length} new PR(s) detected!');
-                for (final pr in allNewPRs) {
-                  debugLog(LogCategory.workout, '   - ${pr.exerciseName}: ${pr.type.name} = ${pr.value}');
-                }
-              }
-
-              // Record celebrations for all PRs and prepare for UI display
-              final celebrations = <PRCelebration>[];
-
               for (final pr in allNewPRs) {
-                // Convert service PR to domain PR for repository
-                final domainPR = domain_pr.PersonalRecord(
-                  id: pr.id,
-                  exerciseName: pr.exerciseName,
-                  exerciseId: pr.exerciseId,
-                  type: _mapSharedPRTypeToDomain(pr.type),
-                  value: pr.value,
-                  reps: null,
-                  weight: null,
-                  achievedAt: pr.achievedAt,
-                  workoutId: workout.id,
+                debugLog(
+                  LogCategory.workout,
+                  '   - ${pr.exerciseName}: ${pr.type.name} = ${pr.value}',
                 );
+              }
+            }
 
-                // Record celebration to Firestore
-                await prCelebrationRepo.recordCelebration(effectiveUserId, domainPR);
+            // Record celebrations for all PRs and prepare for UI display
+            final celebrations = <PRCelebration>[];
 
-                // Create PRCelebration object for UI display
-                // Note: previousValue will be fetched from repository in recordCelebration
-                final celebration = PRCelebration(
-                  id: '${effectiveUserId}_${pr.id}_${DateTime.now().millisecondsSinceEpoch}',
-                  userId: effectiveUserId,
-                  prId: pr.id,
-                  prType: pr.type, // Already shared PRType
-                  celebratedAt: DateTime.now(),
-                  engagement: CelebrationEngagement.viewed, // Default to viewed
-                  previousValue: pr.previousValue ?? 0.0,
-                  newValue: pr.value,
-                  exerciseName: pr.exerciseName,
+            for (final pr in allNewPRs) {
+              // Convert service PR to domain PR for repository
+              final domainPR = domain_pr.PersonalRecord(
+                id: pr.id,
+                exerciseName: pr.exerciseName,
+                exerciseId: pr.exerciseId,
+                type: _mapSharedPRTypeToDomain(pr.type),
+                value: pr.value,
+                reps: null,
+                weight: null,
+                achievedAt: pr.achievedAt,
+                workoutId: workout.id,
+              );
+
+              // Record celebration to Firestore
+              await prCelebrationRepo.recordCelebration(
+                effectiveUserId,
+                domainPR,
+              );
+
+              // Create PRCelebration object for UI display
+              // Note: previousValue will be fetched from repository in recordCelebration
+              final celebration = PRCelebration(
+                id: '${effectiveUserId}_${pr.id}_${DateTime.now().millisecondsSinceEpoch}',
+                userId: effectiveUserId,
+                prId: pr.id,
+                prType: pr.type, // Already shared PRType
+                celebratedAt: DateTime.now(),
+                engagement: CelebrationEngagement.viewed, // Default to viewed
+                previousValue: pr.previousValue ?? 0.0,
+                newValue: pr.value,
+                exerciseName: pr.exerciseName,
+              );
+
+              celebrations.add(celebration);
+            }
+
+            if (kDebugMode) {
+              debugLog(
+                LogCategory.workout,
+                '✅ [WorkoutProvider] ${celebrations.length} PR celebrations recorded to Firestore',
+              );
+            }
+
+            // 🎉 Populate newly detected PRs for UI to display celebration modal
+            ref.read(newlyDetectedPRsProvider.notifier).state = celebrations;
+
+            if (kDebugMode) {
+              debugLog(
+                LogCategory.workout,
+                '✅ [WorkoutProvider] PR celebrations ready for UI display',
+              );
+            }
+
+            // 🔔 NOTIFICATIONS: Schedule PR notification for first PR in list
+            // Only schedule for the first PR to avoid notification spam
+            try {
+              final isNotificationInitialized = ref.read(
+                notificationInitializedProvider,
+              );
+              if (isNotificationInitialized && allNewPRs.isNotEmpty) {
+                final scheduler = ref.read(notificationSchedulerProvider);
+                final l10n = ref.read(appLocalizationsProvider);
+                await scheduler.schedulePrNotification(
+                  exerciseName: allNewPRs.first.exerciseName,
+                  l10n: l10n,
                 );
-
-                celebrations.add(celebration);
-              }
-
-              if (kDebugMode) {
-                debugLog(LogCategory.workout, '✅ [WorkoutProvider] ${celebrations.length} PR celebrations recorded to Firestore');
-              }
-
-              // 🎉 Populate newly detected PRs for UI to display celebration modal
-              ref.read(newlyDetectedPRsProvider.notifier).state = celebrations;
-
-              if (kDebugMode) {
-                debugLog(LogCategory.workout, '✅ [WorkoutProvider] PR celebrations ready for UI display');
-              }
-
-              // 🔔 NOTIFICATIONS: Schedule PR notification for first PR in list
-              // Only schedule for the first PR to avoid notification spam
-              try {
-                final isNotificationInitialized = ref.read(notificationInitializedProvider);
-                if (isNotificationInitialized && allNewPRs.isNotEmpty) {
-                  final scheduler = ref.read(notificationSchedulerProvider);
-                  final l10n = ref.read(appLocalizationsProvider);
-                  await scheduler.schedulePrNotification(
-                    exerciseName: allNewPRs.first.exerciseName,
-                    l10n: l10n,
-                  );
-                  if (kDebugMode) {
-                    debugLog(LogCategory.workout, '🔔 [WorkoutProvider] PR notification scheduled for ${allNewPRs.first.exerciseName}');
-                  }
-                }
-              } catch (notificationError) {
                 if (kDebugMode) {
-                  debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to schedule PR notification: $notificationError');
+                  debugLog(
+                    LogCategory.workout,
+                    '🔔 [WorkoutProvider] PR notification scheduled for ${allNewPRs.first.exerciseName}',
+                  );
                 }
               }
-            } else if (kDebugMode) {
-              debugLog(LogCategory.workout, 'ℹ️ [WorkoutProvider] No new PRs detected');
-            }
-          } catch (prError) {
-            // Non-critical error - log but don't fail workout save
-            if (kDebugMode) {
-              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to check PR achievements: $prError');
-            }
-          }
-
-          // 🔔 NOTIFICATIONS: Reset inactivity sequence after successful workout completion
-          // This ensures user won't get inactivity reminders after completing a workout
-          try {
-            final isNotificationInitialized = ref.read(notificationInitializedProvider);
-            if (isNotificationInitialized) {
-              final scheduler = ref.read(notificationSchedulerProvider);
-              await scheduler.resetInactivitySequence();
+            } catch (notificationError) {
               if (kDebugMode) {
-                debugLog(LogCategory.workout, '🔔 [WorkoutProvider] Inactivity notification sequence reset');
+                debugLog(
+                  LogCategory.workout,
+                  '⚠️ [WorkoutProvider] Failed to schedule PR notification: $notificationError',
+                );
               }
             }
-          } catch (notificationError) {
-            if (kDebugMode) {
-              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to reset inactivity sequence: $notificationError');
-            }
-          }
-
-          // 📈 STRESS INDEX: Calculate and save training stress for this workout
-          // Non-critical feature - failure won't affect workout save
-          try {
-            final stressNotifier = ref.read(stressIndexNotifierProvider.notifier);
-            final stressResult = await stressNotifier.calculateAndSave(workout);
-
-            if (stressResult != null && kDebugMode) {
-              debugLog(
-                LogCategory.workout,
-                '📈 [WorkoutProvider] Stress index calculated: ${stressResult.displayScore.toStringAsFixed(0)} '
-                '(${stressResult.stressLevel.name}, ${(stressResult.confidence * 100).toStringAsFixed(0)}% confidence)',
-              );
-            }
-          } catch (stressError) {
-            // Non-critical error - log but don't fail workout save
-            if (kDebugMode) {
-              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to calculate stress index: $stressError');
-            }
-          }
-
-          // 🎮 XP AWARDING: Calculate and award XP for completed workout
-          // Non-critical feature - failure won't affect workout save
-          try {
-            // Calculate total volume (weight × reps for all completed sets)
-            double totalVolume = 0;
-            for (final exercise in workout.exercises) {
-              for (final set in exercise.sets) {
-                if (set.isCompleted) {
-                  final weight = double.tryParse(set.weight.toString()) ?? 0;
-                  final reps = int.tryParse(set.reps.toString()) ?? 0;
-                  totalVolume += weight * reps;
-                }
-              }
-            }
-
-            // Get workout duration in minutes
-            final durationMinutes = workout.duration?.inMinutes ?? 0;
-
-            // Get current streak from progress provider
-            final streakAsync = ref.read(currentStreakProvider);
-            final streakDays = streakAsync.valueOrNull ?? 0;
-
-            // Award XP through central provider
-            final xpAwarded = await ref.read(userXPProvider.notifier).addWorkoutXP(
-              workoutId: workout.id,
-              durationMinutes: durationMinutes,
-              exerciseCount: workout.exercises.length,
-              totalVolume: totalVolume,
-              isPersonalRecord: hasNewPersonalRecords,
-              streakDays: streakDays,
+          } else if (kDebugMode) {
+            debugLog(
+              LogCategory.workout,
+              'ℹ️ [WorkoutProvider] No new PRs detected',
             );
+          }
+        } catch (prError) {
+          // Non-critical error - log but don't fail workout save
+          if (kDebugMode) {
+            debugLog(
+              LogCategory.workout,
+              '⚠️ [WorkoutProvider] Failed to check PR achievements: $prError',
+            );
+          }
+        }
 
-            if (kDebugMode && xpAwarded > 0) {
+        // 🔔 NOTIFICATIONS: Reset inactivity sequence after successful workout completion
+        // This ensures user won't get inactivity reminders after completing a workout
+        try {
+          final isNotificationInitialized = ref.read(
+            notificationInitializedProvider,
+          );
+          if (isNotificationInitialized) {
+            final scheduler = ref.read(notificationSchedulerProvider);
+            await scheduler.resetInactivitySequence();
+            if (kDebugMode) {
               debugLog(
                 LogCategory.workout,
-                '🎮 [WorkoutProvider] XP awarded: +$xpAwarded XP '
-                '(duration: ${durationMinutes}min, exercises: ${workout.exercises.length}, '
-                'volume: ${totalVolume.toStringAsFixed(0)}kg, PR: $hasNewPersonalRecords, streak: $streakDays)',
+                '🔔 [WorkoutProvider] Inactivity notification sequence reset',
               );
             }
-          } catch (xpError) {
-            // Non-critical error - log but don't fail workout save
-            if (kDebugMode) {
-              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to award XP: $xpError');
+          }
+        } catch (notificationError) {
+          if (kDebugMode) {
+            debugLog(
+              LogCategory.workout,
+              '⚠️ [WorkoutProvider] Failed to reset inactivity sequence: $notificationError',
+            );
+          }
+        }
+
+        // 📈 STRESS INDEX: Calculate and save training stress for this workout
+        // Non-critical feature - failure won't affect workout save
+        try {
+          final stressNotifier = ref.read(stressIndexNotifierProvider.notifier);
+          final stressResult = await stressNotifier.calculateAndSave(workout);
+
+          if (stressResult != null && kDebugMode) {
+            debugLog(
+              LogCategory.workout,
+              '📈 [WorkoutProvider] Stress index calculated: ${stressResult.displayScore.toStringAsFixed(0)} '
+              '(${stressResult.stressLevel.name}, ${(stressResult.confidence * 100).toStringAsFixed(0)}% confidence)',
+            );
+          }
+        } catch (stressError) {
+          // Non-critical error - log but don't fail workout save
+          if (kDebugMode) {
+            debugLog(
+              LogCategory.workout,
+              '⚠️ [WorkoutProvider] Failed to calculate stress index: $stressError',
+            );
+          }
+        }
+
+        // 🎮 XP AWARDING: Calculate and award XP for completed workout
+        // Non-critical feature - failure won't affect workout save
+        try {
+          // Calculate total volume (weight × reps for all completed sets)
+          double totalVolume = 0;
+          for (final exercise in workout.exercises) {
+            for (final set in exercise.sets) {
+              if (set.isCompleted) {
+                final weight = double.tryParse(set.weight.toString()) ?? 0;
+                final reps = int.tryParse(set.reps.toString()) ?? 0;
+                totalVolume += weight * reps;
+              }
             }
           }
+
+          // Get workout duration in minutes
+          final durationMinutes = workout.duration?.inMinutes ?? 0;
+
+          // Get current streak from progress provider
+          final streakAsync = ref.read(currentStreakProvider);
+          final streakDays = streakAsync.valueOrNull ?? 0;
+
+          // Award XP through central provider
+          final xpAwarded = await ref
+              .read(userXPProvider.notifier)
+              .addWorkoutXP(
+                workoutId: workout.id,
+                durationMinutes: durationMinutes,
+                exerciseCount: workout.exercises.length,
+                totalVolume: totalVolume,
+                isPersonalRecord: hasNewPersonalRecords,
+                streakDays: streakDays,
+              );
+
+          if (kDebugMode && xpAwarded > 0) {
+            debugLog(
+              LogCategory.workout,
+              '🎮 [WorkoutProvider] XP awarded: +$xpAwarded XP '
+              '(duration: ${durationMinutes}min, exercises: ${workout.exercises.length}, '
+              'volume: ${totalVolume.toStringAsFixed(0)}kg, PR: $hasNewPersonalRecords, streak: $streakDays)',
+            );
+          }
+        } catch (xpError) {
+          // Non-critical error - log but don't fail workout save
+          if (kDebugMode) {
+            debugLog(
+              LogCategory.workout,
+              '⚠️ [WorkoutProvider] Failed to award XP: $xpError',
+            );
+          }
+        }
         // 🔧 FIX CASE 3: Removed closing brace of old `if (userId != null)` block
         // Local save now runs unconditionally with effectiveUserId
       } catch (saveError, stackTrace) {
         if (kDebugMode) {
-          debugLog(LogCategory.workout, '❌ [WorkoutProvider] CRITICAL: Failed to save workout locally: $saveError');
-          debugLog(LogCategory.workout, '📍 [WorkoutProvider] Stack trace: $stackTrace');
+          debugLog(
+            LogCategory.workout,
+            '❌ [WorkoutProvider] CRITICAL: Failed to save workout locally: $saveError',
+          );
+          debugLog(
+            LogCategory.workout,
+            '📍 [WorkoutProvider] Stack trace: $stackTrace',
+          );
         }
 
         // 📢 UI Feedback: Show CRITICAL error toast with retry/export options
@@ -1542,11 +1771,17 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
               try {
                 await _exportWorkoutData(workout);
                 if (kDebugMode) {
-                  debugLog(LogCategory.workout, '✅ [WorkoutProvider] Workout data exported successfully');
+                  debugLog(
+                    LogCategory.workout,
+                    '✅ [WorkoutProvider] Workout data exported successfully',
+                  );
                 }
               } catch (e) {
                 if (kDebugMode) {
-                  debugLog(LogCategory.workout, '❌ [WorkoutProvider] Failed to export workout data: $e');
+                  debugLog(
+                    LogCategory.workout,
+                    '❌ [WorkoutProvider] Failed to export workout data: $e',
+                  );
                 }
               }
             },
@@ -1561,7 +1796,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // CRITICAL FIX: Check disposal after local save
       if (_isDisposed) {
         if (kDebugMode) {
-          debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Provider disposed after local save - aborting cloud sync');
+          debugLog(
+            LogCategory.workout,
+            '⚠️ [WorkoutProvider] Provider disposed after local save - aborting cloud sync',
+          );
         }
         return;
       }
@@ -1570,7 +1808,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // Unauthenticated workouts are saved locally and will sync when user logs in
       if (!isAuthenticated) {
         if (kDebugMode) {
-          debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Skipping cloud sync - user not authenticated');
+          debugLog(
+            LogCategory.workout,
+            '⚠️ [WorkoutProvider] Skipping cloud sync - user not authenticated',
+          );
         }
         // Show success toast for local-only save
         if (context != null) {
@@ -1591,11 +1832,17 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         );
 
         if (kDebugMode) {
-          debugLog(LogCategory.workout, '📸 [WorkoutProvider] Workout tracked for differential sync');
+          debugLog(
+            LogCategory.workout,
+            '📸 [WorkoutProvider] Workout tracked for differential sync',
+          );
         }
       } catch (snapshotError) {
         if (kDebugMode) {
-          debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to track workout snapshot: $snapshotError');
+          debugLog(
+            LogCategory.workout,
+            '⚠️ [WorkoutProvider] Failed to track workout snapshot: $snapshotError',
+          );
         }
         // Non-critical: continua comunque con batch sync
       }
@@ -1616,7 +1863,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         );
 
         if (kDebugMode) {
-          debugLog(LogCategory.workout, '✅ [WorkoutProvider] Workout queued for batch cloud sync');
+          debugLog(
+            LogCategory.workout,
+            '✅ [WorkoutProvider] Workout queued for batch cloud sync',
+          );
         }
 
         // 📢 UI Feedback: Show final success toast with motivation
@@ -1626,7 +1876,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         }
       } catch (batchError) {
         if (kDebugMode) {
-          debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to queue cloud sync: $batchError');
+          debugLog(
+            LogCategory.workout,
+            '⚠️ [WorkoutProvider] Failed to queue cloud sync: $batchError',
+          );
         }
 
         // 📢 UI Feedback: Show warning that cloud sync failed to queue
@@ -1657,7 +1910,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
                 'lastWorkoutDate': FieldValue.serverTimestamp(),
                 'totalVolume': workoutHistoryDetail.totalVolume,
                 'monthlyWorkouts': 1,
-              }
+              },
             }, SetOptions(merge: true));
             return;
           }
@@ -1673,19 +1926,29 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           transaction.update(userRef, {
             'stats.totalWorkouts': currentTotalWorkouts + 1,
             'stats.lastWorkoutDate': FieldValue.serverTimestamp(),
-            'stats.totalVolume': currentTotalVolume + workoutHistoryDetail.totalVolume,
+            'stats.totalVolume':
+                currentTotalVolume + workoutHistoryDetail.totalVolume,
             'stats.monthlyWorkouts': currentMonthlyWorkouts + 1,
           });
         });
-        debugLog(LogCategory.workout, '✅ [WorkoutProvider] User stats updated atomically');
+        debugLog(
+          LogCategory.workout,
+          '✅ [WorkoutProvider] User stats updated atomically',
+        );
       } catch (statsError) {
-        debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to update stats: $statsError');
+        debugLog(
+          LogCategory.workout,
+          '⚠️ [WorkoutProvider] Failed to update stats: $statsError',
+        );
         // Non-critical - workout is already saved
       }
 
       // CRITICAL FIX: Check disposal after stats update
       if (_isDisposed) {
-        debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Provider disposed after stats update - aborting remaining operations');
+        debugLog(
+          LogCategory.workout,
+          '⚠️ [WorkoutProvider] Provider disposed after stats update - aborting remaining operations',
+        );
         return;
       }
 
@@ -1758,16 +2021,15 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // 8. Navigate to workout completion summary screen (if context available)
       if (context != null) {
         // Use pushNamed to navigate to summary screen
-        context.pushNamed(
-          'workout-completion-summary',
-          extra: workout,
-        );
+        context.pushNamed('workout-completion-summary', extra: workout);
 
         if (kDebugMode) {
-          debugLog(LogCategory.workout, '📊 [WorkoutProvider] Navigated to completion summary screen');
+          debugLog(
+            LogCategory.workout,
+            '📊 [WorkoutProvider] Navigated to completion summary screen',
+          );
         }
       }
-
     } catch (e, stackTrace) {
       debugLog(LogCategory.workout, '❌ Critical error saving workout: $e');
       debugLog(LogCategory.workout, 'Stack: $stackTrace');
@@ -1791,16 +2053,22 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   Future<void> _exportWorkoutData(Workout workout) async {
     try {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '📁 [WorkoutProvider] Exporting workout data: ${workout.name}');
+        debugLog(
+          LogCategory.workout,
+          '📁 [WorkoutProvider] Exporting workout data: ${workout.name}',
+        );
       }
 
       // 1. Convert workout to JSON
       final workoutJson = workout.toJson();
-      final prettyJson = const JsonEncoder.withIndent('  ').convert(workoutJson);
+      final prettyJson = const JsonEncoder.withIndent(
+        '  ',
+      ).convert(workoutJson);
 
       // 2. Create filename with timestamp
       final timestamp = DateTime.now();
-      final filename = 'workout_'
+      final filename =
+          'workout_'
           '${timestamp.year}-${timestamp.month.toString().padLeft(2, '0')}-${timestamp.day.toString().padLeft(2, '0')}_'
           '${timestamp.hour.toString().padLeft(2, '0')}-${timestamp.minute.toString().padLeft(2, '0')}-${timestamp.second.toString().padLeft(2, '0')}'
           '.json';
@@ -1811,8 +2079,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       await file.writeAsString(prettyJson);
 
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '📁 [WorkoutProvider] Created file: ${file.path}');
-        debugLog(LogCategory.workout, '📊 [WorkoutProvider] File size: ${await file.length()} bytes');
+        debugLog(
+          LogCategory.workout,
+          '📁 [WorkoutProvider] Created file: ${file.path}',
+        );
+        debugLog(
+          LogCategory.workout,
+          '📊 [WorkoutProvider] File size: ${await file.length()} bytes',
+        );
       }
 
       // 4. Share file using share_plus
@@ -1823,7 +2097,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       );
 
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '✅ [WorkoutProvider] Share result: ${result.status}');
+        debugLog(
+          LogCategory.workout,
+          '✅ [WorkoutProvider] Share result: ${result.status}',
+        );
       }
 
       // 5. Clean up temporary file after short delay
@@ -1832,19 +2109,31 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           if (await file.exists()) {
             await file.delete();
             if (kDebugMode) {
-              debugLog(LogCategory.workout, '🗑️ [WorkoutProvider] Cleaned up temporary file');
+              debugLog(
+                LogCategory.workout,
+                '🗑️ [WorkoutProvider] Cleaned up temporary file',
+              );
             }
           }
         } catch (e) {
           if (kDebugMode) {
-            debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to delete temp file: $e');
+            debugLog(
+              LogCategory.workout,
+              '⚠️ [WorkoutProvider] Failed to delete temp file: $e',
+            );
           }
         }
       });
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error exporting workout: $e');
-        debugLog(LogCategory.workout, '📍 [WorkoutProvider] Stack trace: $stackTrace');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error exporting workout: $e',
+        );
+        debugLog(
+          LogCategory.workout,
+          '📍 [WorkoutProvider] Stack trace: $stackTrace',
+        );
       }
       // Rethrow to allow caller to handle error
       rethrow;
@@ -1888,7 +2177,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     if (state == null) return;
 
     if (kDebugMode) {
-      debugPrint('🔍 [WorkoutProvider] addExercise RECEIVED: name=${exercise.name}, countingMode=${exercise.countingMode}');
+      debugPrint(
+        '🔍 [WorkoutProvider] addExercise RECEIVED: name=${exercise.name}, countingMode=${exercise.countingMode}',
+      );
     }
 
     // 🔒 SESSION: Record activity to prevent auto-logout during workout
@@ -1898,7 +2189,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       state = state!.addExercise(exercise);
 
       if (kDebugMode) {
-        debugPrint('🔍 [WorkoutProvider] addExercise FINAL exercise.countingMode=${exercise.countingMode}');
+        debugPrint(
+          '🔍 [WorkoutProvider] addExercise FINAL exercise.countingMode=${exercise.countingMode}',
+        );
       }
 
       // 💾 Auto-save modifications
@@ -1924,7 +2217,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       );
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error adding exercise: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error adding exercise: $e',
+        );
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
@@ -1936,7 +2232,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     if (state == null) return;
 
     if (kDebugMode) {
-      debugPrint('🔍 [WorkoutProvider] insertExerciseAt index=$index, name=${exercise.name}');
+      debugPrint(
+        '🔍 [WorkoutProvider] insertExerciseAt index=$index, name=${exercise.name}',
+      );
     }
 
     // Record session activity
@@ -1968,7 +2266,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       );
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error inserting exercise: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error inserting exercise: $e',
+        );
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
     }
@@ -2018,10 +2319,15 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
     try {
       // Validate indices
-      if (oldIndex < 0 || oldIndex >= state!.exercises.length ||
-          newIndex < 0 || newIndex >= state!.exercises.length) {
+      if (oldIndex < 0 ||
+          oldIndex >= state!.exercises.length ||
+          newIndex < 0 ||
+          newIndex >= state!.exercises.length) {
         if (kDebugMode) {
-          debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Invalid reorder indices: old=$oldIndex, new=$newIndex, exercises=${state!.exercises.length}');
+          debugLog(
+            LogCategory.workout,
+            '⚠️ [WorkoutProvider] Invalid reorder indices: old=$oldIndex, new=$newIndex, exercises=${state!.exercises.length}',
+          );
         }
         return;
       }
@@ -2047,7 +2353,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error reordering exercises: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error reordering exercises: $e',
+        );
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
@@ -2082,7 +2391,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       );
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error updating exercise: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error updating exercise: $e',
+        );
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
@@ -2103,7 +2415,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       return exercise.sets.where((set) => set.isCompleted).length;
     } catch (e) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error checking completed sets: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error checking completed sets: $e',
+        );
       }
       return 0;
     }
@@ -2153,7 +2468,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error changing counting mode: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error changing counting mode: $e',
+        );
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
@@ -2183,7 +2501,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error in updateExerciseOnly: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error in updateExerciseOnly: $e',
+        );
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
@@ -2196,7 +2517,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   void completeCurrentSetFromWatch({int? effort, String? effortScale}) {
     debugPrint('⌚ [FLUTTER] completeCurrentSetFromWatch called');
     if (effort != null) {
-      debugPrint('⌚ [FLUTTER] Effort from Watch: $effort (${effortScale ?? "rpe"})');
+      debugPrint(
+        '⌚ [FLUTTER] Effort from Watch: $effort (${effortScale ?? "rpe"})',
+      );
     }
 
     if (state == null) {
@@ -2234,14 +2557,20 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     if (_lastCompletedSetId == currentSet.id &&
         _lastWatchSetCompletion != null &&
         now.difference(_lastWatchSetCompletion!).inSeconds < 3) {
-      debugPrint('⌚ [FLUTTER] ⚠️ Duplicate message ignored (set ${currentSet.id} already completed)');
+      debugPrint(
+        '⌚ [FLUTTER] ⚠️ Duplicate message ignored (set ${currentSet.id} already completed)',
+      );
       return;
     }
     _lastWatchSetCompletion = now;
     _lastCompletedSetId = currentSet.id;
 
-    debugPrint('⌚ [FLUTTER] ✅ Completing set ${currentSet.setNumber} of ${currentExercise.name}');
-    debugPrint('⌚ [FLUTTER] Exercise ID: ${currentExercise.id}, Set ID: ${currentSet.id}');
+    debugPrint(
+      '⌚ [FLUTTER] ✅ Completing set ${currentSet.setNumber} of ${currentExercise.name}',
+    );
+    debugPrint(
+      '⌚ [FLUTTER] Exercise ID: ${currentExercise.id}, Set ID: ${currentSet.id}',
+    );
 
     // Convert RIR to RPE if needed (RIR 0-4 → RPE 10-6)
     int? rpeValue = effort;
@@ -2259,12 +2588,16 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     if (rpeValue != null) {
       // Update set with RPE value
       final updatedSet = currentSet.copyWith(rpe: rpeValue);
-      final setIndex = currentExercise.sets.indexWhere((s) => s.id == currentSet.id);
+      final setIndex = currentExercise.sets.indexWhere(
+        (s) => s.id == currentSet.id,
+      );
       if (setIndex >= 0) {
         final updatedSets = List<ExerciseSet>.from(currentExercise.sets);
         updatedSets[setIndex] = updatedSet;
         final updatedExercise = currentExercise.copyWith(sets: updatedSets);
-        final exerciseIndex = workout.exercises.indexWhere((e) => e.id == currentExercise.id);
+        final exerciseIndex = workout.exercises.indexWhere(
+          (e) => e.id == currentExercise.id,
+        );
         if (exerciseIndex >= 0) {
           final updatedExercises = List<Exercise>.from(workout.exercises);
           updatedExercises[exerciseIndex] = updatedExercise;
@@ -2296,8 +2629,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   }
 
   /// ⌚ Handle health metrics from Apple Watch (HR, calories)
-  void _handleHealthMetricsFromWatch(double heartRate, double calories, double elapsedTime) {
-    debugPrint('⌚ [FLUTTER] Health metrics from Watch: HR=${heartRate.toInt()}, Cal=${calories.toInt()}, Time=${elapsedTime.toInt()}s');
+  void _handleHealthMetricsFromWatch(
+    double heartRate,
+    double calories,
+    double elapsedTime,
+  ) {
+    debugPrint(
+      '⌚ [FLUTTER] Health metrics from Watch: HR=${heartRate.toInt()}, Cal=${calories.toInt()}, Time=${elapsedTime.toInt()}s',
+    );
     // TODO: Store/display these metrics in the workout UI
     // For now, we just log them - can be integrated into WorkoutHeader or a dedicated widget
   }
@@ -2332,7 +2671,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   ///   (0 = first completed set, 1 = second completed set, etc.)
   /// - newReps: The new reps value to set
   void _editCompletedSetRepsFromWatch(int setIndex, int newReps) {
-    debugPrint('⌚ [FLUTTER] ✏️ Editing completed set at index $setIndex to: $newReps reps');
+    debugPrint(
+      '⌚ [FLUTTER] ✏️ Editing completed set at index $setIndex to: $newReps reps',
+    );
 
     if (state == null) {
       debugPrint('⌚ [FLUTTER] ⚠️ No active workout');
@@ -2352,7 +2693,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     // If all exercises are complete, use the last exercise
-    currentExercise ??= workout.exercises.isNotEmpty ? workout.exercises.last : null;
+    currentExercise ??= workout.exercises.isNotEmpty
+        ? workout.exercises.last
+        : null;
 
     if (currentExercise == null) {
       debugPrint('⌚ [FLUTTER] ⚠️ No exercise found');
@@ -2369,7 +2712,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
     // Validate setIndex
     if (setIndex < 0 || setIndex >= completedSets.length) {
-      debugPrint('⌚ [FLUTTER] ⚠️ Invalid setIndex $setIndex (have ${completedSets.length} completed sets)');
+      debugPrint(
+        '⌚ [FLUTTER] ⚠️ Invalid setIndex $setIndex (have ${completedSets.length} completed sets)',
+      );
       return;
     }
 
@@ -2378,7 +2723,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     final targetSet = target.set;
     final originalIndex = target.originalIndex;
 
-    debugPrint('⌚ [FLUTTER] Found target set: #${targetSet.setNumber} at index $originalIndex (actualReps: ${targetSet.actualReps} → $newReps)');
+    debugPrint(
+      '⌚ [FLUTTER] Found target set: #${targetSet.setNumber} at index $originalIndex (actualReps: ${targetSet.actualReps} → $newReps)',
+    );
 
     // Update the set with new actualReps
     final updatedSet = targetSet.copyWith(actualReps: newReps);
@@ -2387,7 +2734,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     final updatedExercise = currentExercise.copyWith(sets: updatedSets);
 
     // Find and update exercise in workout
-    final exerciseIndex = workout.exercises.indexWhere((e) => e.id == currentExercise!.id);
+    final exerciseIndex = workout.exercises.indexWhere(
+      (e) => e.id == currentExercise!.id,
+    );
     if (exerciseIndex >= 0) {
       final updatedExercises = List<Exercise>.from(workout.exercises);
       updatedExercises[exerciseIndex] = updatedExercise;
@@ -2396,7 +2745,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         updatedAt: DateTime.now(),
       );
 
-      debugPrint('⌚ [FLUTTER] ✅ Updated set ${targetSet.setNumber} actualReps to $newReps');
+      debugPrint(
+        '⌚ [FLUTTER] ✅ Updated set ${targetSet.setNumber} actualReps to $newReps',
+      );
 
       // Trigger auto-save
       _autoSaveIfNeeded();
@@ -2432,7 +2783,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     // If all exercises are complete, use the last exercise
-    currentExercise ??= workout.exercises.isNotEmpty ? workout.exercises.last : null;
+    currentExercise ??= workout.exercises.isNotEmpty
+        ? workout.exercises.last
+        : null;
 
     if (currentExercise == null) {
       debugPrint('⌚ [FLUTTER] ⚠️ No exercise found');
@@ -2449,7 +2802,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
     // Validate setIndex
     if (setIndex < 0 || setIndex >= completedSets.length) {
-      debugPrint('⌚ [FLUTTER] ⚠️ Invalid setIndex $setIndex (have ${completedSets.length} completed sets)');
+      debugPrint(
+        '⌚ [FLUTTER] ⚠️ Invalid setIndex $setIndex (have ${completedSets.length} completed sets)',
+      );
       return;
     }
 
@@ -2458,7 +2813,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     final targetSet = target.set;
     final originalIndex = target.originalIndex;
 
-    debugPrint('⌚ [FLUTTER] Found target set: #${targetSet.setNumber} at index $originalIndex - marking as incomplete');
+    debugPrint(
+      '⌚ [FLUTTER] Found target set: #${targetSet.setNumber} at index $originalIndex - marking as incomplete',
+    );
 
     // ✅ FIX: Create new set directly instead of copyWith (copyWith can't set null values)
     final updatedSet = ExerciseSet(
@@ -2466,16 +2823,16 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       setNumber: targetSet.setNumber,
       weight: targetSet.weight,
       reps: targetSet.reps,
-      actualReps: null,  // ✅ Reset to null
-      rpe: null,         // ✅ Reset to null
+      actualReps: null, // ✅ Reset to null
+      rpe: null, // ✅ Reset to null
       restTime: targetSet.restTime,
       seconds: targetSet.seconds,
       distance: targetSet.distance,
       isCompleted: false, // ✅ Mark as incomplete
       notes: targetSet.notes,
-      completedAt: null,  // ✅ Reset to null
-      setDurationMillis: null,  // ✅ Reset to null
-      setStartedAt: null,  // ✅ Reset to null
+      completedAt: null, // ✅ Reset to null
+      setDurationMillis: null, // ✅ Reset to null
+      setStartedAt: null, // ✅ Reset to null
       isWarmup: targetSet.isWarmup,
     );
     final updatedSets = List<ExerciseSet>.from(currentExercise.sets);
@@ -2483,7 +2840,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     final updatedExercise = currentExercise.copyWith(sets: updatedSets);
 
     // Find and update exercise in workout
-    final exerciseIndex = workout.exercises.indexWhere((e) => e.id == currentExercise!.id);
+    final exerciseIndex = workout.exercises.indexWhere(
+      (e) => e.id == currentExercise!.id,
+    );
     if (exerciseIndex >= 0) {
       final updatedExercises = List<Exercise>.from(workout.exercises);
       updatedExercises[exerciseIndex] = updatedExercise;
@@ -2517,7 +2876,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     bool isSuperset = false,
     int? exerciseIndexInSuperset,
   }) {
-    debugPrint('⌚ [FLUTTER] ✏️ Updating set #$setNumber target: ${weight}kg × $reps reps (superset: $isSuperset, exerciseIndex: $exerciseIndexInSuperset)');
+    debugPrint(
+      '⌚ [FLUTTER] ✏️ Updating set #$setNumber target: ${weight}kg × $reps reps (superset: $isSuperset, exerciseIndex: $exerciseIndexInSuperset)',
+    );
 
     if (state == null) {
       debugPrint('⌚ [FLUTTER] ⚠️ No active workout');
@@ -2548,7 +2909,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     // 🔥 SUPERSET: Handle superset set modification
-    if (isSuperset && currentExercise is SupersetExercise && exerciseIndexInSuperset != null) {
+    if (isSuperset &&
+        currentExercise is SupersetExercise &&
+        exerciseIndexInSuperset != null) {
       _updateSupersetTargetFromWatch(
         workout: workout,
         superset: currentExercise,
@@ -2566,18 +2929,19 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
     // Validate index bounds
     if (currentSetIndex < 0 || currentSetIndex >= currentExercise.sets.length) {
-      debugPrint('⌚ [FLUTTER] ⚠️ Invalid set index: $currentSetIndex (setNumber: $setNumber, total sets: ${currentExercise.sets.length})');
+      debugPrint(
+        '⌚ [FLUTTER] ⚠️ Invalid set index: $currentSetIndex (setNumber: $setNumber, total sets: ${currentExercise.sets.length})',
+      );
       return;
     }
 
     final currentSet = currentExercise.sets[currentSetIndex];
-    debugPrint('⌚ [FLUTTER] ✅ Targeting set #$setNumber at index $currentSetIndex');
+    debugPrint(
+      '⌚ [FLUTTER] ✅ Targeting set #$setNumber at index $currentSetIndex',
+    );
 
     // Update the set with new weight and reps
-    final updatedSet = currentSet.copyWith(
-      weight: weight,
-      reps: reps,
-    );
+    final updatedSet = currentSet.copyWith(weight: weight, reps: reps);
 
     final updatedSets = List<ExerciseSet>.from(currentExercise.sets);
     updatedSets[currentSetIndex] = updatedSet;
@@ -2591,13 +2955,19 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       updatedAt: DateTime.now(),
     );
 
-    debugPrint('⌚ [FLUTTER] ✅ Updated set ${currentSet.setNumber} target to ${weight}kg × $reps reps');
+    debugPrint(
+      '⌚ [FLUTTER] ✅ Updated set ${currentSet.setNumber} target to ${weight}kg × $reps reps',
+    );
 
     // ✅ DEBUG: Verify the state was updated correctly
     final verifyExercise = state!.exercises[exerciseIndex];
     final verifySet = verifyExercise.sets[currentSetIndex];
-    debugPrint('⌚ [FLUTTER] 🔍 VERIFY: Exercise "${verifyExercise.name}" Set #${verifySet.setNumber}');
-    debugPrint('⌚ [FLUTTER] 🔍 VERIFY: weight=${verifySet.weight}, reps=${verifySet.reps}');
+    debugPrint(
+      '⌚ [FLUTTER] 🔍 VERIFY: Exercise "${verifyExercise.name}" Set #${verifySet.setNumber}',
+    );
+    debugPrint(
+      '⌚ [FLUTTER] 🔍 VERIFY: weight=${verifySet.weight}, reps=${verifySet.reps}',
+    );
 
     // Trigger auto-save
     _autoSaveIfNeeded();
@@ -2615,7 +2985,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     required double weight,
     required int reps,
   }) {
-    debugPrint('⌚🔥 [FLUTTER] Updating superset target: exerciseIndex=$exerciseIndexInSuperset, weight=$weight, reps=$reps');
+    debugPrint(
+      '⌚🔥 [FLUTTER] Updating superset target: exerciseIndex=$exerciseIndexInSuperset, weight=$weight, reps=$reps',
+    );
 
     // Find the current round (first incomplete SupersetSet)
     int currentRoundIndex = -1;
@@ -2632,22 +3004,29 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     // Validate exercise index
-    if (exerciseIndexInSuperset < 0 || exerciseIndexInSuperset >= superset.exercises.length) {
-      debugPrint('⌚🔥 [FLUTTER] ⚠️ Invalid exercise index: $exerciseIndexInSuperset (max: ${superset.exercises.length - 1})');
+    if (exerciseIndexInSuperset < 0 ||
+        exerciseIndexInSuperset >= superset.exercises.length) {
+      debugPrint(
+        '⌚🔥 [FLUTTER] ⚠️ Invalid exercise index: $exerciseIndexInSuperset (max: ${superset.exercises.length - 1})',
+      );
       return;
     }
 
     // Get the exercise ID from the exercises list
     final targetExerciseId = superset.exercises[exerciseIndexInSuperset].id;
     final targetExerciseName = superset.exercises[exerciseIndexInSuperset].name;
-    debugPrint('⌚🔥 [FLUTTER] Target exercise: "$targetExerciseName" (id: $targetExerciseId)');
+    debugPrint(
+      '⌚🔥 [FLUTTER] Target exercise: "$targetExerciseName" (id: $targetExerciseId)',
+    );
 
     // Get current round and update the exercise data
     final currentRound = superset.supersetSets[currentRoundIndex];
     final existingData = currentRound.exerciseData[targetExerciseId];
 
     if (existingData == null) {
-      debugPrint('⌚🔥 [FLUTTER] ⚠️ No exercise data found for id: $targetExerciseId');
+      debugPrint(
+        '⌚🔥 [FLUTTER] ⚠️ No exercise data found for id: $targetExerciseId',
+      );
       return;
     }
 
@@ -2658,7 +3037,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     );
 
     // Create updated exerciseData map
-    final updatedDataMap = Map<String, SupersetExerciseData>.from(currentRound.exerciseData);
+    final updatedDataMap = Map<String, SupersetExerciseData>.from(
+      currentRound.exerciseData,
+    );
     updatedDataMap[targetExerciseId] = updatedExerciseData;
 
     // Create updated round
@@ -2669,7 +3050,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     updatedSupersetSets[currentRoundIndex] = updatedRound;
 
     // Create updated superset
-    final updatedSuperset = superset.copyWith(supersetSets: updatedSupersetSets);
+    final updatedSuperset = superset.copyWith(
+      supersetSets: updatedSupersetSets,
+    );
 
     // Update exercise in workout
     final updatedExercises = List<Exercise>.from(workout.exercises);
@@ -2679,7 +3062,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       updatedAt: DateTime.now(),
     );
 
-    debugPrint('⌚🔥 [FLUTTER] ✅ Updated superset exercise "$targetExerciseName" target to ${weight}kg × $reps reps');
+    debugPrint(
+      '⌚🔥 [FLUTTER] ✅ Updated superset exercise "$targetExerciseName" target to ${weight}kg × $reps reps',
+    );
 
     // Trigger auto-save
     _autoSaveIfNeeded();
@@ -2699,7 +3084,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     _updateCurrentSetTargetFromWatch(
       weight,
       reps,
-      setNumber: 1, // Not used for superset (uses exerciseIndexInSuperset instead)
+      setNumber:
+          1, // Not used for superset (uses exerciseIndexInSuperset instead)
       isSuperset: true,
       exerciseIndexInSuperset: exerciseIndexInSuperset,
     );
@@ -2720,7 +3106,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     String? effortScale,
   }) {
     debugPrint('⌚🔥 [FLUTTER] _completeSupersetRoundFromWatch called');
-    debugPrint('⌚🔥 [FLUTTER] Round $roundNumber/$totalRounds, exercises: $exercises');
+    debugPrint(
+      '⌚🔥 [FLUTTER] Round $roundNumber/$totalRounds, exercises: $exercises',
+    );
     if (effort != null) {
       debugPrint('⌚🔥 [FLUTTER] Effort: $effort (${effortScale ?? "rpe"})');
     }
@@ -2752,14 +3140,18 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     // Find the current round (first incomplete)
-    final currentRoundIndex = currentSuperset.supersetSets.indexWhere((s) => !s.isCompleted);
+    final currentRoundIndex = currentSuperset.supersetSets.indexWhere(
+      (s) => !s.isCompleted,
+    );
     if (currentRoundIndex < 0) {
       debugPrint('⌚🔥 [FLUTTER] ❌ No incomplete round found');
       return;
     }
 
     final currentRound = currentSuperset.supersetSets[currentRoundIndex];
-    debugPrint('⌚🔥 [FLUTTER] Found round ${currentRoundIndex + 1} to complete');
+    debugPrint(
+      '⌚🔥 [FLUTTER] Found round ${currentRoundIndex + 1} to complete',
+    );
 
     // ✅ DEDUPLICATION: Prevent duplicate processing from sendMessage + transferUserInfo
     final now = DateTime.now();
@@ -2767,7 +3159,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     if (_lastCompletedSetId == roundKey &&
         _lastWatchSetCompletion != null &&
         now.difference(_lastWatchSetCompletion!).inSeconds < 3) {
-      debugPrint('⌚🔥 [FLUTTER] ⚠️ Duplicate message ignored (round already completed)');
+      debugPrint(
+        '⌚🔥 [FLUTTER] ⚠️ Duplicate message ignored (round already completed)',
+      );
       return;
     }
     _lastWatchSetCompletion = now;
@@ -2790,7 +3184,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         targetWeight: existingData?.targetWeight ?? 0.0,
         targetReps: existingData?.targetReps ?? 10,
         // Use actual values if already set, otherwise use target values
-        actualWeight: existingData?.actualWeight ?? existingData?.targetWeight ?? 0.0,
+        actualWeight:
+            existingData?.actualWeight ?? existingData?.targetWeight ?? 0.0,
         actualReps: existingData?.actualReps ?? existingData?.targetReps ?? 10,
         rpe: rpeValue, // Apply RPE to all exercises in the round
         isCompleted: true,
@@ -2806,7 +3201,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       completedAt: DateTime.now(),
     );
 
-    debugPrint('⌚🔥 [FLUTTER] ✅ Created completed SupersetSet for round ${currentRound.setNumber}');
+    debugPrint(
+      '⌚🔥 [FLUTTER] ✅ Created completed SupersetSet for round ${currentRound.setNumber}',
+    );
 
     // Update the superset with the completed round
     final updatedSupersetSets = currentSuperset.supersetSets.map((set) {
@@ -2816,7 +3213,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       return set;
     }).toList();
 
-    final updatedSuperset = currentSuperset.copyWith(supersetSets: updatedSupersetSets);
+    final updatedSuperset = currentSuperset.copyWith(
+      supersetSets: updatedSupersetSets,
+    );
     final updatedExercises = List<Exercise>.from(workout.exercises);
     updatedExercises[supersetIndex] = updatedSuperset;
 
@@ -2828,10 +3227,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     debugPrint('⌚🔥 [FLUTTER] ✅ Updated workout state with completed round');
 
     // Check if this was the last round
-    final remainingRounds = updatedSuperset.supersetSets.where((s) => !s.isCompleted).length;
+    final remainingRounds = updatedSuperset.supersetSets
+        .where((s) => !s.isCompleted)
+        .length;
     final isLastRound = remainingRounds == 0;
 
-    debugPrint('⌚🔥 [FLUTTER] Remaining rounds: $remainingRounds, isLastRound: $isLastRound');
+    debugPrint(
+      '⌚🔥 [FLUTTER] Remaining rounds: $remainingRounds, isLastRound: $isLastRound',
+    );
 
     // 💾 Auto-save
     _autoSaveIfNeeded();
@@ -2851,7 +3254,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       final timerActions = ref.read(tier1TimerActionsProvider);
       timerActions.startExerciseRest(
         seconds: restDuration,
-        exerciseName: '${currentSuperset.name} - Round ${currentRoundIndex + 2}',
+        exerciseName:
+            '${currentSuperset.name} - Round ${currentRoundIndex + 2}',
         currentSet: currentRoundIndex + 2,
         totalSets: currentSuperset.supersetSets.length,
       );
@@ -2873,7 +3277,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     String? effortScale,
   }) {
     debugPrint('⌚🔥 [FLUTTER] _completeDropsetStageFromWatch called');
-    debugPrint('⌚🔥 [FLUTTER] Stage ${stageIndex + 1}/$totalStages, reps: $actualReps');
+    debugPrint(
+      '⌚🔥 [FLUTTER] Stage ${stageIndex + 1}/$totalStages, reps: $actualReps',
+    );
 
     if (state == null) {
       debugPrint('⌚🔥 [FLUTTER] ❌ No active workout');
@@ -2902,7 +3308,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     // Find the target stage (should match stageIndex or first incomplete)
-    final targetStageIndex = currentDropset.stages.indexWhere((s) => !s.isCompleted);
+    final targetStageIndex = currentDropset.stages.indexWhere(
+      (s) => !s.isCompleted,
+    );
     if (targetStageIndex < 0) {
       debugPrint('⌚🔥 [FLUTTER] ❌ No incomplete stage found');
       return;
@@ -2954,10 +3362,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       updatedAt: DateTime.now(),
     );
 
-    debugPrint('⌚🔥 [FLUTTER] ✅ Dropset stage ${targetStageIndex + 1} completed');
+    debugPrint(
+      '⌚🔥 [FLUTTER] ✅ Dropset stage ${targetStageIndex + 1} completed',
+    );
 
     // Check if there are more stages
-    final remainingStages = updatedExercise.stages.where((s) => !s.isCompleted).length;
+    final remainingStages = updatedExercise.stages
+        .where((s) => !s.isCompleted)
+        .length;
     final isLastStage = remainingStages == 0;
 
     // 💾 Auto-save
@@ -3091,7 +3503,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     String? effortScale,
   }) {
     debugPrint('⌚🔥 [FLUTTER] _completeRestPauseSetFromWatch called');
-    debugPrint('⌚🔥 [FLUTTER] Set ${setIndex + 1}/$totalSets, reps: $actualReps, weight: $weight');
+    debugPrint(
+      '⌚🔥 [FLUTTER] Set ${setIndex + 1}/$totalSets, reps: $actualReps, weight: $weight',
+    );
 
     if (state == null) {
       debugPrint('⌚🔥 [FLUTTER] ❌ No active workout');
@@ -3120,7 +3534,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     // Find the target set (should match setIndex or first incomplete)
-    final targetSetIndex = currentRestPause.restPauseSets.indexWhere((s) => !s.isCompleted);
+    final targetSetIndex = currentRestPause.restPauseSets.indexWhere(
+      (s) => !s.isCompleted,
+    );
     if (targetSetIndex < 0) {
       debugPrint('⌚🔥 [FLUTTER] ❌ No incomplete set found');
       return;
@@ -3174,10 +3590,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       updatedAt: DateTime.now(),
     );
 
-    debugPrint('⌚🔥 [FLUTTER] ✅ Rest-Pause set ${targetSetIndex + 1} completed');
+    debugPrint(
+      '⌚🔥 [FLUTTER] ✅ Rest-Pause set ${targetSetIndex + 1} completed',
+    );
 
     // Check if there are more sets
-    final remainingSets = updatedExercise.restPauseSets.where((s) => !s.isCompleted).length;
+    final remainingSets = updatedExercise.restPauseSets
+        .where((s) => !s.isCompleted)
+        .length;
     final isLastSet = remainingSets == 0;
 
     // 💾 Auto-save
@@ -3195,7 +3615,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       final nextSetIndex = targetSetIndex + 1;
       if (nextSetIndex < updatedExercise.restPauseSets.length) {
         final nextSet = updatedExercise.restPauseSets[nextSetIndex];
-        final restSeconds = nextSet.restSeconds > 0 ? nextSet.restSeconds : 15; // Default 15s
+        final restSeconds = nextSet.restSeconds > 0
+            ? nextSet.restSeconds
+            : 15; // Default 15s
 
         final timerActions = ref.read(tier1TimerActionsProvider);
         timerActions.startExerciseRest(
@@ -3333,7 +3755,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
     // Validate index
     if (exerciseIndex < 0 || exerciseIndex >= workout.exercises.length) {
-      debugPrint('⌚ [FLUTTER] ⚠️ Invalid exerciseIndex $exerciseIndex (have ${workout.exercises.length} exercises)');
+      debugPrint(
+        '⌚ [FLUTTER] ⚠️ Invalid exerciseIndex $exerciseIndex (have ${workout.exercises.length} exercises)',
+      );
       return;
     }
 
@@ -3345,7 +3769,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
     // Note: The UI will automatically show the correct exercise because
     // _notifyWatchWorkoutUpdate sends the current state based on first incomplete set
-    debugPrint('⌚ [FLUTTER] ✅ Jumped to exercise ${exerciseIndex + 1}: ${targetExercise.name}');
+    debugPrint(
+      '⌚ [FLUTTER] ✅ Jumped to exercise ${exerciseIndex + 1}: ${targetExercise.name}',
+    );
   }
 
   /// ⌚ Jump to a specific set when triggered from Apple Watch
@@ -3377,7 +3803,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     // Fallback to last exercise
-    currentExercise ??= workout.exercises.isNotEmpty ? workout.exercises.last : null;
+    currentExercise ??= workout.exercises.isNotEmpty
+        ? workout.exercises.last
+        : null;
 
     if (currentExercise == null) {
       debugPrint('⌚ [FLUTTER] ⚠️ No exercise found');
@@ -3387,11 +3815,15 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     // Validate setNumber (1-indexed)
     final setIndex = setNumber - 1;
     if (setIndex < 0 || setIndex >= currentExercise.sets.length) {
-      debugPrint('⌚ [FLUTTER] ⚠️ Invalid setNumber $setNumber (have ${currentExercise.sets.length} sets)');
+      debugPrint(
+        '⌚ [FLUTTER] ⚠️ Invalid setNumber $setNumber (have ${currentExercise.sets.length} sets)',
+      );
       return;
     }
 
-    debugPrint('⌚ [FLUTTER] 🎯 Target set: $setNumber of ${currentExercise.name}');
+    debugPrint(
+      '⌚ [FLUTTER] 🎯 Target set: $setNumber of ${currentExercise.name}',
+    );
 
     // Update Watch with the new state
     _notifyWatchWorkoutUpdate();
@@ -3446,10 +3878,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     // Update ALL sets with the new weight and reps (for non-superset exercises)
     if (currentExercise is! SupersetExercise) {
       final updatedSets = currentExercise.sets.map((set) {
-        return set.copyWith(
-          weight: weight,
-          reps: reps,
-        );
+        return set.copyWith(weight: weight, reps: reps);
       }).toList();
 
       final updatedExercise = currentExercise.copyWith(sets: updatedSets);
@@ -3461,7 +3890,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         updatedAt: DateTime.now(),
       );
 
-      debugPrint('⌚ [FLUTTER] ✅ Copied ${weight}kg × $reps to all ${updatedSets.length} sets of ${currentExercise.name}');
+      debugPrint(
+        '⌚ [FLUTTER] ✅ Copied ${weight}kg × $reps to all ${updatedSets.length} sets of ${currentExercise.name}',
+      );
 
       // Auto-save
       _autoSaveIfNeeded();
@@ -3489,7 +3920,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     int exerciseIndex = -1;
     for (int i = 0; i < workout.exercises.length; i++) {
       final exercise = workout.exercises[i];
-      if (exercise is! SupersetExercise && exercise.sets.any((s) => !s.isCompleted)) {
+      if (exercise is! SupersetExercise &&
+          exercise.sets.any((s) => !s.isCompleted)) {
         currentExercise = exercise;
         exerciseIndex = i;
         break;
@@ -3502,9 +3934,13 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     // Find the first incomplete set
-    final firstIncompleteIndex = currentExercise.sets.indexWhere((s) => !s.isCompleted);
+    final firstIncompleteIndex = currentExercise.sets.indexWhere(
+      (s) => !s.isCompleted,
+    );
     if (firstIncompleteIndex <= 0) {
-      debugPrint('⌚ [FLUTTER] ⚠️ No previous set to copy from (current is first set)');
+      debugPrint(
+        '⌚ [FLUTTER] ⚠️ No previous set to copy from (current is first set)',
+      );
       return;
     }
 
@@ -3530,7 +3966,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       updatedAt: DateTime.now(),
     );
 
-    debugPrint('⌚ [FLUTTER] ✅ Copied ${previousSet.weight}kg × ${previousSet.reps} from set ${firstIncompleteIndex} to set ${firstIncompleteIndex + 1}');
+    debugPrint(
+      '⌚ [FLUTTER] ✅ Copied ${previousSet.weight}kg × ${previousSet.reps} from set ${firstIncompleteIndex} to set ${firstIncompleteIndex + 1}',
+    );
 
     // Auto-save
     _autoSaveIfNeeded();
@@ -3576,7 +4014,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   }
 
   void completeSet(String exerciseId, String setId) {
-    debugPrint('🏋️ [completeSet] Called with exerciseId=$exerciseId, setId=$setId');
+    debugPrint(
+      '🏋️ [completeSet] Called with exerciseId=$exerciseId, setId=$setId',
+    );
     if (state == null) {
       debugPrint('🏋️ [completeSet] ❌ state is null, returning early');
       return;
@@ -3614,7 +4054,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       state = state!.copyWith(exercises: updatedExercises);
 
       // 🔄 WEIGHT CARRY-FORWARD: Propagate weight to subsequent incomplete sets
-      if (completedSet != null && completedSet!.weight != null && completedSet!.weight! > 0) {
+      if (completedSet != null &&
+          completedSet!.weight != null &&
+          completedSet!.weight! > 0) {
         final completedWeight = completedSet!.weight!;
 
         final exercisesWithCarryForward = state!.exercises.map((exercise) {
@@ -3632,7 +4074,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
             }).toList();
 
             if (weightUpdated && kDebugMode) {
-              debugLog(LogCategory.workout, '🔄 [WEIGHT-CARRY] Propagated ${completedWeight}kg from set $completedSetNumber to subsequent sets');
+              debugLog(
+                LogCategory.workout,
+                '🔄 [WEIGHT-CARRY] Propagated ${completedWeight}kg from set $completedSetNumber to subsequent sets',
+              );
             }
 
             return exercise.copyWith(sets: updatedSets);
@@ -3662,8 +4107,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       _notifyWatchWorkoutUpdate();
 
       // 🔍 DEBUG: Log timer decision parameters
-      debugPrint('⏰ [TIMER DEBUG] completeSet finished - checking timer conditions:');
-      debugPrint('⏰ [TIMER DEBUG] targetExercise: ${targetExercise?.name ?? "NULL"}');
+      debugPrint(
+        '⏰ [TIMER DEBUG] completeSet finished - checking timer conditions:',
+      );
+      debugPrint(
+        '⏰ [TIMER DEBUG] targetExercise: ${targetExercise?.name ?? "NULL"}',
+      );
       debugPrint('⏰ [TIMER DEBUG] completedSetNumber: $completedSetNumber');
       debugPrint('⏰ [TIMER DEBUG] totalSets: $totalSets');
 
@@ -3678,39 +4127,53 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           final restTime = targetExercise!.restTime ?? 90;
           final nextSetNumber = completedSetNumber + 1;
 
-          debugPrint('⏰ [TIMER] 🚀 Starting rest timer: ${restTime}s for set $nextSetNumber/$totalSets');
+          debugPrint(
+            '⏰ [TIMER] 🚀 Starting rest timer: ${restTime}s for set $nextSetNumber/$totalSets',
+          );
 
           // Start the timer automatically
-          ref.read(unifiedTimerProvider.notifier).startTimer(
-            durationSeconds: restTime,
-            exerciseName: targetExercise!.name,
-            currentSet: nextSetNumber,
-            totalSets: totalSets,
-            exerciseId: targetExercise!.id,
-          );
+          ref
+              .read(unifiedTimerProvider.notifier)
+              .startTimer(
+                durationSeconds: restTime,
+                exerciseName: targetExercise!.name,
+                currentSet: nextSetNumber,
+                totalSets: totalSets,
+                exerciseId: targetExercise!.id,
+              );
 
           debugPrint('⏰ [TIMER] ✅ Timer start called!');
 
           // 📱 iOS 17+: Transition Live Activity to rest mode
           if (Platform.isIOS) {
             final laState = ref.read(workoutSessionLAProvider);
-            debugPrint('[WorkoutProvider] 📱 LA state before transition: isActive=${laState.isActive}, activityId=${laState.activityId}');
-
-            ref.read(workoutSessionLAProvider.notifier).transitionToRest(
-              restDurationSeconds: restTime,
-              nextExercise: targetExercise!,
-              nextSetIndex: nextSetNumber,
+            debugPrint(
+              '[WorkoutProvider] 📱 LA state before transition: isActive=${laState.isActive}, activityId=${laState.activityId}',
             );
+
+            ref
+                .read(workoutSessionLAProvider.notifier)
+                .transitionToRest(
+                  restDurationSeconds: restTime,
+                  nextExercise: targetExercise!,
+                  nextSetIndex: nextSetNumber,
+                );
           }
         } else {
           if (kDebugMode) {
-            debugLog(LogCategory.workout, '⏰ [AUTO-TIMER] Last set completed - no timer started');
+            debugLog(
+              LogCategory.workout,
+              '⏰ [AUTO-TIMER] Last set completed - no timer started',
+            );
           }
         }
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error completing set: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error completing set: $e',
+        );
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
@@ -3747,7 +4210,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error updating exercise set: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error updating exercise set: $e',
+        );
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
@@ -3783,7 +4249,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error updating superset set: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error updating superset set: $e',
+        );
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
@@ -3822,7 +4291,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error adding set to exercise: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error adding set to exercise: $e',
+        );
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
@@ -3835,12 +4307,17 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     try {
       final updatedExercises = state!.exercises.map((exercise) {
         if (exercise.id == exerciseId) {
-          final updatedSets = exercise.sets.where((set) => set.id != setId).toList();
+          final updatedSets = exercise.sets
+              .where((set) => set.id != setId)
+              .toList();
 
           // Prevent removing last set
           if (updatedSets.isEmpty) {
             if (kDebugMode) {
-              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Cannot remove last set from exercise');
+              debugLog(
+                LogCategory.workout,
+                '⚠️ [WorkoutProvider] Cannot remove last set from exercise',
+              );
             }
             return exercise;
           }
@@ -3864,7 +4341,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error removing set from exercise: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error removing set from exercise: $e',
+        );
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
@@ -3892,7 +4372,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
             exerciseData[ex.id] = SupersetExerciseData(
               exerciseId: ex.id,
               exerciseName: ex.name,
-              targetWeight: lastData?.targetWeight ?? lastData?.actualWeight ?? 0.0,
+              targetWeight:
+                  lastData?.targetWeight ?? lastData?.actualWeight ?? 0.0,
               targetReps: lastData?.targetReps ?? lastData?.actualReps ?? 10,
               actualWeight: null,
               actualReps: null,
@@ -3911,7 +4392,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           );
 
           return exercise.copyWith(
-            supersetSets: [...exercise.supersetSets, newRound]
+            supersetSets: [...exercise.supersetSets, newRound],
           );
         }
         return exercise;
@@ -3926,7 +4407,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error adding round to superset: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error adding round to superset: $e',
+        );
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
@@ -3947,7 +4431,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           // Prevent removing last round
           if (updatedRounds.isEmpty) {
             if (kDebugMode) {
-              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Cannot remove last round from superset');
+              debugLog(
+                LogCategory.workout,
+                '⚠️ [WorkoutProvider] Cannot remove last round from superset',
+              );
             }
             return exercise;
           }
@@ -3971,7 +4458,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       _updateLiveActivityIfActive();
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error removing round from superset: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error removing round from superset: $e',
+        );
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
@@ -3985,14 +4475,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   void undoCompletion() {
     if (state != null && state!.isCompleted) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '🔄 [WorkoutProvider] Undoing workout completion: ${state!.name}');
+        debugLog(
+          LogCategory.workout,
+          '🔄 [WorkoutProvider] Undoing workout completion: ${state!.name}',
+        );
       }
 
       // Restore workout to active state
-      state = state!.copyWith(
-        status: WorkoutStatus.inProgress,
-        endTime: null,
-      );
+      state = state!.copyWith(status: WorkoutStatus.inProgress, endTime: null);
 
       // Haptic feedback for undo action
       HapticFeedbackService.exerciseCompletion(ref);
@@ -4038,7 +4528,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
         // 📱 End iOS 17+ Workout Session Live Activity
         if (Platform.isIOS) {
-          ref.read(workoutSessionLAProvider.notifier).endLiveActivity(dismissPolicy: 'immediate');
+          ref
+              .read(workoutSessionLAProvider.notifier)
+              .endLiveActivity(dismissPolicy: 'immediate');
         }
       }
 
@@ -4051,7 +4543,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       ref.read(screenWakelockProvider.notifier).stopWakelock();
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugLog(LogCategory.workout, '❌ [WorkoutProvider] Error clearing workout: $e');
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error clearing workout: $e',
+        );
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Ensure state is cleared even if wakelock fails
@@ -4087,20 +4582,22 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 }
 
 // Exercise suggestions provider (static exercise name database for autocomplete)
-final exerciseTemplatesProvider = Provider<Map<ExerciseCategory, List<String>>>((ref) {
-  return ExerciseSuggestions.exerciseDatabase;
-});
+final exerciseTemplatesProvider = Provider<Map<ExerciseCategory, List<String>>>(
+  (ref) {
+    return ExerciseSuggestions.exerciseDatabase;
+  },
+);
 
 // Exercise search provider
 final exerciseSearchProvider = StateProvider<String>((ref) => '');
 
 final filteredExercisesProvider = Provider<List<String>>((ref) {
   final searchQuery = ref.watch(exerciseSearchProvider);
-  
+
   if (searchQuery.isEmpty) {
     return [];
   }
-  
+
   return ExerciseSuggestions.searchExercises(searchQuery);
 });
 
@@ -4125,19 +4622,20 @@ final selectedExerciseTypeProvider = StateProvider<ExerciseType>((ref) {
 /// Throws: Exception if repository fetch fails
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final recentWorkoutsProvider = FutureProvider.autoDispose.family<List<Workout>, int>(
-  (ref, days) async {
-    final repository = ref.watch(workoutRepositoryProvider);
-    final cutoffDate = DateTime.now().subtract(Duration(days: days));
+final recentWorkoutsProvider = FutureProvider.autoDispose
+    .family<List<Workout>, int>((ref, days) async {
+      final repository = ref.watch(workoutRepositoryProvider);
+      final cutoffDate = DateTime.now().subtract(Duration(days: days));
 
-    final result = await repository.getWorkouts(limit: 50);
+      final result = await repository.getWorkouts(limit: 50);
 
-    return result.fold(
-      (failure) => throw Exception('Failed to load workouts: ${failure.message}'),
-      (workouts) => workouts.where((w) =>
-        w.startTime != null &&
-        w.startTime!.isAfter(cutoffDate)
-      ).toList(),
-    );
-  },
-);
+      return result.fold(
+        (failure) =>
+            throw Exception('Failed to load workouts: ${failure.message}'),
+        (workouts) => workouts
+            .where(
+              (w) => w.startTime != null && w.startTime!.isAfter(cutoffDate),
+            )
+            .toList(),
+      );
+    });

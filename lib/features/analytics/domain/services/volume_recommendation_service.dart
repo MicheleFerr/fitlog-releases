@@ -44,7 +44,8 @@ class VolumeRecommendation {
   final String? rationale;
 
   @override
-  String toString() => 'VolumeRecommendation($sets sets x $reps reps, ${restSeconds}s rest)';
+  String toString() =>
+      'VolumeRecommendation($sets sets x $reps reps, ${restSeconds}s rest)';
 }
 
 /// Service for calculating personalized training volume recommendations
@@ -104,9 +105,12 @@ class VolumeRecommendationService {
     // Determine reps and rest based on goal
     // Rep ranges from NSCA guidelines and Schoenfeld meta-analyses
     final (reps, restSeconds) = switch (goal) {
-      TrainingGoal.strength => (5, 180),    // Strength: heavy, longer rest
-      TrainingGoal.hypertrophy => (10, 90), // Hypertrophy: moderate, medium rest
-      TrainingGoal.endurance => (15, 60),   // Endurance: light, short rest
+      TrainingGoal.strength => (5, 180), // Strength: heavy, longer rest
+      TrainingGoal.hypertrophy => (
+        10,
+        90,
+      ), // Hypertrophy: moderate, medium rest
+      TrainingGoal.endurance => (15, 60), // Endurance: light, short rest
     };
 
     // Build rationale string

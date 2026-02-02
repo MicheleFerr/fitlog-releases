@@ -107,7 +107,11 @@ class ImportResultWidget extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Icon(AppIcons.error, color: context.colors.error, size: 20),
+                        Icon(
+                          AppIcons.error,
+                          color: context.colors.error,
+                          size: 20,
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           context.l10n.importErrors,
@@ -118,15 +122,19 @@ class ImportResultWidget extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 12),
-                    ...result.errors.take(5).map((e) => Padding(
-                          padding: const EdgeInsets.only(bottom: 4),
-                          child: Text(
-                            '• $e',
-                            style: context.textTheme.bodySmall?.copyWith(
-                              color: context.colors.onErrorContainer,
+                    ...result.errors
+                        .take(5)
+                        .map(
+                          (e) => Padding(
+                            padding: const EdgeInsets.only(bottom: 4),
+                            child: Text(
+                              '• $e',
+                              style: context.textTheme.bodySmall?.copyWith(
+                                color: context.colors.onErrorContainer,
+                              ),
                             ),
                           ),
-                        )),
+                        ),
                     if (result.errors.length > 5)
                       Text(
                         context.l10n.andMoreErrors(result.errors.length - 5),

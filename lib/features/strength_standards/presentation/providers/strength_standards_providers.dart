@@ -22,36 +22,40 @@ import 'package:package_info_plus/package_info_plus.dart';
 /// Local datasource provider
 final strengthStandardsLocalDataSourceProvider =
     Provider<StrengthStandardsLocalDataSource>((ref) {
-  return StrengthStandardsLocalDataSource();
-});
+      return StrengthStandardsLocalDataSource();
+    });
 
 /// Fitness profile local datasource provider
 final fitnessProfileLocalDataSourceProvider =
     Provider<FitnessProfileLocalDataSource>((ref) {
-  final boxManager = ref.watch(hiveBoxManagerProvider);
-  return FitnessProfileLocalDataSource(boxManager);
-});
+      final boxManager = ref.watch(hiveBoxManagerProvider);
+      return FitnessProfileLocalDataSource(boxManager);
+    });
 
 /// Questionnaire analytics datasource provider
 final questionnaireAnalyticsDataSourceProvider =
     Provider<QuestionnaireAnalyticsDataSource>((ref) {
-  final boxManager = ref.watch(hiveBoxManagerProvider);
-  return QuestionnaireAnalyticsDataSource(boxManager);
-});
+      final boxManager = ref.watch(hiveBoxManagerProvider);
+      return QuestionnaireAnalyticsDataSource(boxManager);
+    });
 
 /// Repository provider
 final strengthStandardsRepositoryProvider =
     Provider<StrengthStandardsRepository>((ref) {
-  final localDataSource = ref.watch(strengthStandardsLocalDataSourceProvider);
-  return StrengthStandardsRepositoryImpl(localDataSource);
-});
+      final localDataSource = ref.watch(
+        strengthStandardsLocalDataSourceProvider,
+      );
+      return StrengthStandardsRepositoryImpl(localDataSource);
+    });
 
 // ============================================================================
 // PROVIDERS - SERVICES
 // ============================================================================
 
 /// Weight suggestion service provider
-final weightSuggestionServiceProvider = Provider<WeightSuggestionService>((ref) {
+final weightSuggestionServiceProvider = Provider<WeightSuggestionService>((
+  ref,
+) {
   return WeightSuggestionService();
 });
 
@@ -64,80 +68,80 @@ final weightSuggestionServiceProvider = Provider<WeightSuggestionService>((ref) 
 /// Prevents repeated loading of standards on every screen access
 final strengthStandardsProvider =
     FutureProvider.autoDispose<List<StrengthStandard>>((ref) async {
-  ref.keepAlive(); // Static data - cache until app restart
-  final repository = ref.watch(strengthStandardsRepositoryProvider);
-  return repository.getStrengthStandards();
-});
+      ref.keepAlive(); // Static data - cache until app restart
+      final repository = ref.watch(strengthStandardsRepositoryProvider);
+      return repository.getStrengthStandards();
+    });
 
 /// Exercise mappings list (async loaded, cached)
 /// 🔧 PERF FIX: Use keepAlive() for static mapping data
 /// Prevents repeated loading of mappings on every screen access
 final exerciseMappingsProvider =
     FutureProvider.autoDispose<List<ExerciseMapping>>((ref) async {
-  ref.keepAlive(); // Static data - cache until app restart
-  final repository = ref.watch(strengthStandardsRepositoryProvider);
-  return repository.getExerciseMappings();
-});
+      ref.keepAlive(); // Static data - cache until app restart
+      final repository = ref.watch(strengthStandardsRepositoryProvider);
+      return repository.getExerciseMappings();
+    });
 
 /// Get strength standard by ID
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final strengthStandardByIdProvider =
-    FutureProvider.autoDispose.family<StrengthStandard?, String>((ref, id) async {
-  final repository = ref.watch(strengthStandardsRepositoryProvider);
-  return repository.getStrengthStandardById(id);
-});
+final strengthStandardByIdProvider = FutureProvider.autoDispose
+    .family<StrengthStandard?, String>((ref, id) async {
+      final repository = ref.watch(strengthStandardsRepositoryProvider);
+      return repository.getStrengthStandardById(id);
+    });
 
 /// Get exercise mapping by exercise ID
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final exerciseMappingByIdProvider =
-    FutureProvider.autoDispose.family<ExerciseMapping?, String>((ref, exerciseId) async {
-  final repository = ref.watch(strengthStandardsRepositoryProvider);
-  return repository.getMappingForExercise(exerciseId);
-});
+final exerciseMappingByIdProvider = FutureProvider.autoDispose
+    .family<ExerciseMapping?, String>((ref, exerciseId) async {
+      final repository = ref.watch(strengthStandardsRepositoryProvider);
+      return repository.getMappingForExercise(exerciseId);
+    });
 
 /// Get high confidence mappings (≥80%)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
 final highConfidenceMappingsProvider =
     FutureProvider.autoDispose<List<ExerciseMapping>>((ref) async {
-  final repository = ref.watch(strengthStandardsRepositoryProvider);
-  return repository.getHighConfidenceMappings();
-});
+      final repository = ref.watch(strengthStandardsRepositoryProvider);
+      return repository.getHighConfidenceMappings();
+    });
 
 /// Get mappings by status
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final mappingsByStatusProvider = FutureProvider.autoDispose.family<List<ExerciseMapping>,
-    MappingStatus>((ref, status) async {
-  final repository = ref.watch(strengthStandardsRepositoryProvider);
-  return repository.getMappingsByStatus(status);
-});
+final mappingsByStatusProvider = FutureProvider.autoDispose
+    .family<List<ExerciseMapping>, MappingStatus>((ref, status) async {
+      final repository = ref.watch(strengthStandardsRepositoryProvider);
+      return repository.getMappingsByStatus(status);
+    });
 
 /// Get metadata about data sources
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
 final strengthStandardsMetadataProvider =
     FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
-  final repository = ref.watch(strengthStandardsRepositoryProvider);
-  return repository.getMetadata();
-});
+      final repository = ref.watch(strengthStandardsRepositoryProvider);
+      return repository.getMetadata();
+    });
 
 // ============================================================================
 // PROVIDERS - USER FITNESS QUESTIONNAIRE
 // ============================================================================
 
 /// User fitness questionnaire state notifier
-final userFitnessQuestionnaireProvider = NotifierProvider<
-    UserFitnessQuestionnaireNotifier, UserFitnessQuestionnaire?>(
-  UserFitnessQuestionnaireNotifier.new,
-);
+final userFitnessQuestionnaireProvider =
+    NotifierProvider<
+      UserFitnessQuestionnaireNotifier,
+      UserFitnessQuestionnaire?
+    >(UserFitnessQuestionnaireNotifier.new);
 
 /// Notifier for managing user fitness questionnaire state
 class UserFitnessQuestionnaireNotifier
     extends Notifier<UserFitnessQuestionnaire?> {
-
   @override
   UserFitnessQuestionnaire? build() {
     return null;
@@ -183,7 +187,8 @@ class UserFitnessQuestionnaireNotifier
       injuryDetails: injuryDetails,
       currentPainLevel: currentPainLevel ?? state!.currentPainLevel,
       suggestionStyle: suggestionStyle ?? state!.suggestionStyle,
-      selfReportCalibration: selfReportCalibration ?? state!.selfReportCalibration,
+      selfReportCalibration:
+          selfReportCalibration ?? state!.selfReportCalibration,
     );
   }
 
@@ -224,15 +229,15 @@ class UserFitnessQuestionnaireNotifier
 }
 
 /// Medical clearance questionnaire state notifier
-final medicalClearanceQuestionnaireProvider = NotifierProvider<
-    MedicalClearanceQuestionnaireNotifier, MedicalClearanceQuestionnaire?>(
-  MedicalClearanceQuestionnaireNotifier.new,
-);
+final medicalClearanceQuestionnaireProvider =
+    NotifierProvider<
+      MedicalClearanceQuestionnaireNotifier,
+      MedicalClearanceQuestionnaire?
+    >(MedicalClearanceQuestionnaireNotifier.new);
 
 /// Notifier for managing medical clearance questionnaire state
 class MedicalClearanceQuestionnaireNotifier
     extends Notifier<MedicalClearanceQuestionnaire?> {
-
   @override
   MedicalClearanceQuestionnaire? build() {
     return null;
@@ -289,54 +294,60 @@ class MedicalClearanceQuestionnaireNotifier
 /// Get weight suggestion for a specific exercise
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final weightSuggestionProvider = FutureProvider.autoDispose.family<WeightSuggestion?,
-    String>((ref, exerciseId) async {
-  // Get dependencies
-  final service = ref.watch(weightSuggestionServiceProvider);
-  final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
-  final repository = ref.watch(strengthStandardsRepositoryProvider);
+final weightSuggestionProvider = FutureProvider.autoDispose
+    .family<WeightSuggestion?, String>((ref, exerciseId) async {
+      // Get dependencies
+      final service = ref.watch(weightSuggestionServiceProvider);
+      final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
+      final repository = ref.watch(strengthStandardsRepositoryProvider);
 
-  // Validate questionnaire exists
-  if (questionnaire == null || !questionnaire.isValid) {
-    return null;
-  }
+      // Validate questionnaire exists
+      if (questionnaire == null || !questionnaire.isValid) {
+        return null;
+      }
 
-  // Get mapping for exercise
-  final mapping = await repository.getMappingForExercise(exerciseId);
-  if (mapping == null) {
-    return null;
-  }
+      // Get mapping for exercise
+      final mapping = await repository.getMappingForExercise(exerciseId);
+      if (mapping == null) {
+        return null;
+      }
 
-  // Get strength standard if mapping is reliable
-  StrengthStandard? standard;
-  if (mapping.canSuggestWeight && mapping.standardId != null) {
-    standard = await repository.getStrengthStandardById(mapping.standardId!);
-  }
+      // Get strength standard if mapping is reliable
+      StrengthStandard? standard;
+      if (mapping.canSuggestWeight && mapping.standardId != null) {
+        standard = await repository.getStrengthStandardById(
+          mapping.standardId!,
+        );
+      }
 
-  // Calculate suggestion
-  return service.getSuggestedWeight(
-    exerciseId: exerciseId,
-    questionnaire: questionnaire,
-    mapping: mapping,
-    standard: standard,
-  );
-});
+      // Calculate suggestion
+      return service.getSuggestedWeight(
+        exerciseId: exerciseId,
+        questionnaire: questionnaire,
+        mapping: mapping,
+        standard: standard,
+      );
+    });
 
 /// Get weight suggestions for multiple exercises (batch)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final batchWeightSuggestionsProvider = FutureProvider.autoDispose.family<
-    Map<String, WeightSuggestion?>, List<String>>((ref, exerciseIds) async {
-  final suggestions = <String, WeightSuggestion?>{};
+final batchWeightSuggestionsProvider = FutureProvider.autoDispose
+    .family<Map<String, WeightSuggestion?>, List<String>>((
+      ref,
+      exerciseIds,
+    ) async {
+      final suggestions = <String, WeightSuggestion?>{};
 
-  for (final exerciseId in exerciseIds) {
-    final suggestion =
-        await ref.watch(weightSuggestionProvider(exerciseId).future);
-    suggestions[exerciseId] = suggestion;
-  }
+      for (final exerciseId in exerciseIds) {
+        final suggestion = await ref.watch(
+          weightSuggestionProvider(exerciseId).future,
+        );
+        suggestions[exerciseId] = suggestion;
+      }
 
-  return suggestions;
-});
+      return suggestions;
+    });
 
 /// Whether weight suggestions feature is enabled
 final weightSuggestionsEnabledProvider = StateProvider<bool>((ref) {
@@ -357,7 +368,9 @@ final showWeightSuggestionPromptsProvider = StateProvider<bool>((ref) {
 /// Auto-load fitness profile when user is authenticated
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final fitnessProfileAutoLoadProvider = FutureProvider.autoDispose<void>((ref) async {
+final fitnessProfileAutoLoadProvider = FutureProvider.autoDispose<void>((
+  ref,
+) async {
   final userId = ref.watch(currentUserIdProvider);
 
   if (userId != null) {
@@ -366,7 +379,9 @@ final fitnessProfileAutoLoadProvider = FutureProvider.autoDispose<void>((ref) as
     await notifier.loadQuestionnaire();
 
     // Load medical clearance
-    final clearanceNotifier = ref.read(medicalClearanceQuestionnaireProvider.notifier);
+    final clearanceNotifier = ref.read(
+      medicalClearanceQuestionnaireProvider.notifier,
+    );
     await clearanceNotifier.loadClearance();
   }
 });
@@ -378,33 +393,37 @@ final fitnessProfileAutoLoadProvider = FutureProvider.autoDispose<void>((ref) as
 /// Get statistics about exercise mappings coverage
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final mappingStatisticsProvider =
-    FutureProvider.autoDispose<MappingStatistics>((ref) async {
-  final mappings = await ref.watch(exerciseMappingsProvider.future);
+final mappingStatisticsProvider = FutureProvider.autoDispose<MappingStatistics>(
+  (ref) async {
+    final mappings = await ref.watch(exerciseMappingsProvider.future);
 
-  final autoCount = mappings.where((m) => m.status == MappingStatus.auto).length;
-  final reviewCount =
-      mappings.where((m) => m.status == MappingStatus.review).length;
-  final fallbackCount =
-      mappings.where((m) => m.status == MappingStatus.fallback).length;
+    final autoCount = mappings
+        .where((m) => m.status == MappingStatus.auto)
+        .length;
+    final reviewCount = mappings
+        .where((m) => m.status == MappingStatus.review)
+        .length;
+    final fallbackCount = mappings
+        .where((m) => m.status == MappingStatus.fallback)
+        .length;
 
-  final avgConfidence = mappings.isNotEmpty
-      ? mappings.map((m) => m.confidence).reduce((a, b) => a + b) /
-          mappings.length
-      : 0.0;
+    final avgConfidence = mappings.isNotEmpty
+        ? mappings.map((m) => m.confidence).reduce((a, b) => a + b) /
+              mappings.length
+        : 0.0;
 
-  return MappingStatistics(
-    totalMappings: mappings.length,
-    autoMappings: autoCount,
-    reviewMappings: reviewCount,
-    fallbackMappings: fallbackCount,
-    averageConfidence: avgConfidence,
-  );
-});
+    return MappingStatistics(
+      totalMappings: mappings.length,
+      autoMappings: autoCount,
+      reviewMappings: reviewCount,
+      fallbackMappings: fallbackCount,
+      averageConfidence: avgConfidence,
+    );
+  },
+);
 
 /// Statistics about exercise mappings
 class MappingStatistics {
-
   const MappingStatistics({
     required this.totalMappings,
     required this.autoMappings,
@@ -430,14 +449,13 @@ class MappingStatistics {
 // ============================================================================
 
 /// Current questionnaire analytics session provider
-final currentQuestionnaireAnalyticsProvider = NotifierProvider<
-    QuestionnaireAnalyticsNotifier, QuestionnaireAnalytics?>(
-  QuestionnaireAnalyticsNotifier.new,
-);
+final currentQuestionnaireAnalyticsProvider =
+    NotifierProvider<QuestionnaireAnalyticsNotifier, QuestionnaireAnalytics?>(
+      QuestionnaireAnalyticsNotifier.new,
+    );
 
 /// Notifier for managing questionnaire analytics during completion
-class QuestionnaireAnalyticsNotifier
-    extends Notifier<QuestionnaireAnalytics?> {
+class QuestionnaireAnalyticsNotifier extends Notifier<QuestionnaireAnalytics?> {
   DateTime? _stepStartTime;
 
   @override
@@ -464,7 +482,9 @@ class QuestionnaireAnalyticsNotifier
     _stepStartTime = DateTime.now();
 
     if (kDebugMode) {
-      debugPrint('📊 Started questionnaire analytics session for user: $userId');
+      debugPrint(
+        '📊 Started questionnaire analytics session for user: $userId',
+      );
     }
   }
 
@@ -479,10 +499,7 @@ class QuestionnaireAnalyticsNotifier
 
     state = state!.copyWith(
       lastStepReached: step,
-      stepDurations: {
-        ...state!.stepDurations,
-        step: duration,
-      },
+      stepDurations: {...state!.stepDurations, step: duration},
     );
 
     _stepStartTime = now; // Reset for next step
@@ -497,10 +514,7 @@ class QuestionnaireAnalyticsNotifier
     if (state == null) return;
 
     state = state!.copyWith(
-      stepFeedback: {
-        ...state!.stepFeedback,
-        step: rating,
-      },
+      stepFeedback: {...state!.stepFeedback, step: rating},
     );
 
     if (kDebugMode) {
@@ -570,18 +584,18 @@ class QuestionnaireAnalyticsNotifier
 /// Automatically disposes provider instances when widget is disposed
 final aggregatedQuestionnaireAnalyticsProvider =
     FutureProvider.autoDispose<QuestionnaireAnalyticsAggregated>((ref) async {
-  final datasource = ref.watch(questionnaireAnalyticsDataSourceProvider);
-  return datasource.getAggregatedAnalytics();
-});
+      final datasource = ref.watch(questionnaireAnalyticsDataSourceProvider);
+      return datasource.getAggregatedAnalytics();
+    });
 
 /// Get latest analytics for current user
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
 final latestQuestionnaireAnalyticsProvider =
     FutureProvider.autoDispose<QuestionnaireAnalytics?>((ref) async {
-  final userId = ref.watch(currentUserIdProvider);
-  if (userId == null) return null;
+      final userId = ref.watch(currentUserIdProvider);
+      if (userId == null) return null;
 
-  final datasource = ref.watch(questionnaireAnalyticsDataSourceProvider);
-  return datasource.getLatestAnalytics(userId);
-});
+      final datasource = ref.watch(questionnaireAnalyticsDataSourceProvider);
+      return datasource.getLatestAnalytics(userId);
+    });

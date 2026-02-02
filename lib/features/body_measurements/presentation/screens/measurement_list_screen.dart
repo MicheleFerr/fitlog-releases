@@ -23,10 +23,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/metric_display.da
 /// Shows metric cards grid (always visible), collapsible sections,
 /// and recent measurement history below.
 class MeasurementListScreen extends ConsumerStatefulWidget {
-  const MeasurementListScreen({
-    super.key,
-    required this.userId,
-  });
+  const MeasurementListScreen({super.key, required this.userId});
 
   final String userId;
 
@@ -100,12 +97,9 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
 
     if (!mounted) return;
 
-    latestResult.fold(
-      (_) {},
-      (Map<MetricType, Measurement> latest) {
-        _latestByType = latest;
-      },
-    );
+    latestResult.fold((_) {}, (Map<MetricType, Measurement> latest) {
+      _latestByType = latest;
+    });
 
     allResult.fold(
       (failure) {
@@ -202,16 +196,15 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         }
       }
 
-      final permissionResult = await healthKitService.requestPermissions(consentedMetrics);
-      final permissionsGranted = permissionResult.fold(
-        (failure) {
-          if (!mounted) return false;
-          debugPrint('❌ [Import] Permission request failed: ${failure.message}');
-          SnackBarService.showError(context, failure.message);
-          return false;
-        },
-        (granted) => granted,
+      final permissionResult = await healthKitService.requestPermissions(
+        consentedMetrics,
       );
+      final permissionsGranted = permissionResult.fold((failure) {
+        if (!mounted) return false;
+        debugPrint('❌ [Import] Permission request failed: ${failure.message}');
+        SnackBarService.showError(context, failure.message);
+        return false;
+      }, (granted) => granted);
 
       if (!permissionsGranted) {
         if (!mounted) return;
@@ -236,7 +229,9 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         },
         (result) async {
           debugPrint('✅ [Import] Sync completed: ${result.readCount} read');
-          debugPrint('   importedMeasurements: ${result.importedMeasurements.length}');
+          debugPrint(
+            '   importedMeasurements: ${result.importedMeasurements.length}',
+          );
 
           // Edge case: No data found in Apple Health
           if (result.importedMeasurements.isEmpty) {
@@ -256,25 +251,28 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
           for (final measurement in result.importedMeasurements) {
             // Data validation - skip invalid values
             if (!_isValidMeasurement(measurement)) {
-              debugPrint('   ⚠️ Invalid value skipped: ${measurement.metricType.name} = ${measurement.value}');
+              debugPrint(
+                '   ⚠️ Invalid value skipped: ${measurement.metricType.name} = ${measurement.value}',
+              );
               skippedCount++;
               continue;
             }
 
-            debugPrint('   Saving: ${measurement.metricType.name} = ${measurement.value} ${measurement.unit}');
+            debugPrint(
+              '   Saving: ${measurement.metricType.name} = ${measurement.value} ${measurement.unit}',
+            );
             final saveResult = await measurementRepo.addMeasurement(
               measurement,
               hasConsent: true, // Already verified consent above
             );
-            saveResult.fold(
-              (failure) {
-                debugPrint('   ❌ Save failed: $failure');
-                skippedCount++;
-              },
-              (_) => savedCount++,
-            );
+            saveResult.fold((failure) {
+              debugPrint('   ❌ Save failed: $failure');
+              skippedCount++;
+            }, (_) => savedCount++);
           }
-          debugPrint('   ✅ Saved $savedCount/${result.importedMeasurements.length} measurements');
+          debugPrint(
+            '   ✅ Saved $savedCount/${result.importedMeasurements.length} measurements',
+          );
 
           if (!mounted) return;
 
@@ -288,7 +286,10 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             // Partial success
             SnackBarService.showInfo(
               context,
-              context.l10n.bodyMeasurementsImportPartialSuccess(savedCount, result.importedMeasurements.length),
+              context.l10n.bodyMeasurementsImportPartialSuccess(
+                savedCount,
+                result.importedMeasurements.length,
+              ),
             );
           } else {
             // Full success
@@ -362,9 +363,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
           children: [
             Icon(AppIcons.warning, color: context.warningColor),
             const SizedBox(width: 12),
-            Expanded(
-              child: Text(l10n.bodyMeasurementsPermissionDeniedTitle),
-            ),
+            Expanded(child: Text(l10n.bodyMeasurementsPermissionDeniedTitle)),
           ],
         ),
         content: Text(l10n.bodyMeasurementsPermissionDeniedMessage),
@@ -456,15 +455,14 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         consentedMetrics = consentResult.getOrElse((_) => <MetricType>[]);
       }
 
-      final permissionResult = await healthKitService.requestPermissions(consentedMetrics);
-      final permissionsGranted = permissionResult.fold(
-        (failure) {
-          if (!mounted) return false;
-          SnackBarService.showError(context, failure.message);
-          return false;
-        },
-        (granted) => granted,
+      final permissionResult = await healthKitService.requestPermissions(
+        consentedMetrics,
       );
+      final permissionsGranted = permissionResult.fold((failure) {
+        if (!mounted) return false;
+        SnackBarService.showError(context, failure.message);
+        return false;
+      }, (granted) => granted);
 
       if (!permissionsGranted) {
         if (!mounted) return;
@@ -488,7 +486,10 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         (result) async {
           if (result.importedMeasurements.isEmpty) {
             if (!mounted) return;
-            SnackBarService.showInfo(context, context.l10n.bodyMeasurementsImportNoData);
+            SnackBarService.showInfo(
+              context,
+              context.l10n.bodyMeasurementsImportNoData,
+            );
             return;
           }
 
@@ -513,7 +514,10 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
       );
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(context, context.l10n.bodyMeasurementsNetworkError);
+        SnackBarService.showError(
+          context,
+          context.l10n.bodyMeasurementsNetworkError,
+        );
       }
     } finally {
       if (mounted) setState(() => _isImporting = false);
@@ -540,24 +544,28 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
 
       // Same flow as iOS export
       final consentRepo = ref.read(consentRepositoryProvider);
-      final consentResult = await consentRepo.getConsentedMetrics(widget.userId);
+      final consentResult = await consentRepo.getConsentedMetrics(
+        widget.userId,
+      );
       final consentedMetrics = consentResult.getOrElse((_) => <MetricType>[]);
 
       if (consentedMetrics.isEmpty) {
         if (!mounted) return;
-        SnackBarService.showError(context, context.l10n.bodyMeasurementsNoConsentedMetrics);
+        SnackBarService.showError(
+          context,
+          context.l10n.bodyMeasurementsNoConsentedMetrics,
+        );
         return;
       }
 
-      final permissionResult = await healthKitService.requestPermissions(consentedMetrics);
-      final permissionsGranted = permissionResult.fold(
-        (failure) {
-          if (!mounted) return false;
-          SnackBarService.showError(context, failure.message);
-          return false;
-        },
-        (granted) => granted,
+      final permissionResult = await healthKitService.requestPermissions(
+        consentedMetrics,
       );
+      final permissionsGranted = permissionResult.fold((failure) {
+        if (!mounted) return false;
+        SnackBarService.showError(context, failure.message);
+        return false;
+      }, (granted) => granted);
 
       if (!permissionsGranted) {
         if (!mounted) return;
@@ -565,7 +573,9 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         return;
       }
 
-      final validMeasurements = _measurements.where((m) => _isValidMeasurement(m)).toList();
+      final validMeasurements = _measurements
+          .where((m) => _isValidMeasurement(m))
+          .toList();
       final syncResult = await healthKitService.syncMeasurements(
         userId: widget.userId,
         consentedMetrics: consentedMetrics,
@@ -589,7 +599,10 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
       );
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(context, context.l10n.bodyMeasurementsNetworkError);
+        SnackBarService.showError(
+          context,
+          context.l10n.bodyMeasurementsNetworkError,
+        );
       }
     } finally {
       if (mounted) setState(() => _isImporting = false);
@@ -607,9 +620,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
           children: [
             Icon(AppIcons.healthAndSafety, color: context.colors.primary),
             const SizedBox(width: 12),
-            Expanded(
-              child: Text(l10n.bodyMeasurementsPermissionDeniedTitle),
-            ),
+            Expanded(child: Text(l10n.bodyMeasurementsPermissionDeniedTitle)),
           ],
         ),
         content: Text(l10n.bodyMeasurementsHealthConnectRequired),
@@ -645,10 +656,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
 
     // Edge case: No local measurements to export
     if (_measurements.isEmpty) {
-      SnackBarService.showInfo(
-        context,
-        context.l10n.bodyMeasurementsListEmpty,
-      );
+      SnackBarService.showInfo(context, context.l10n.bodyMeasurementsListEmpty);
       return;
     }
 
@@ -658,7 +666,9 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
       final healthKitService = ref.read(healthKitServiceProvider);
       final consentRepo = ref.read(consentRepositoryProvider);
 
-      final consentResult = await consentRepo.getConsentedMetrics(widget.userId);
+      final consentResult = await consentRepo.getConsentedMetrics(
+        widget.userId,
+      );
       final consentedMetrics = consentResult.getOrElse((_) => <MetricType>[]);
 
       if (consentedMetrics.isEmpty) {
@@ -670,16 +680,15 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         return;
       }
 
-      final permissionResult = await healthKitService.requestPermissions(consentedMetrics);
-      final permissionsGranted = permissionResult.fold(
-        (failure) {
-          if (!mounted) return false;
-          debugPrint('❌ [Export] Permission request failed: ${failure.message}');
-          SnackBarService.showError(context, failure.message);
-          return false;
-        },
-        (granted) => granted,
+      final permissionResult = await healthKitService.requestPermissions(
+        consentedMetrics,
       );
+      final permissionsGranted = permissionResult.fold((failure) {
+        if (!mounted) return false;
+        debugPrint('❌ [Export] Permission request failed: ${failure.message}');
+        SnackBarService.showError(context, failure.message);
+        return false;
+      }, (granted) => granted);
 
       if (!permissionsGranted) {
         if (!mounted) return;
@@ -758,9 +767,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
           children: [
             Icon(AppIcons.healthAndSafety, color: context.colors.primary),
             const SizedBox(width: 12),
-            Expanded(
-              child: Text(l10n.bodyMeasurementsHealthKitConsentTitle),
-            ),
+            Expanded(child: Text(l10n.bodyMeasurementsHealthKitConsentTitle)),
           ],
         ),
         content: SingleChildScrollView(
@@ -839,10 +846,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         ipAddress: '0.0.0.0',
       );
 
-      final createFailed = createResult.fold(
-        (failure) => failure,
-        (_) => null,
-      );
+      final createFailed = createResult.fold((failure) => failure, (_) => null);
 
       if (createFailed != null) {
         if (mounted) {
@@ -861,10 +865,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
       ipAddress: '0.0.0.0',
     );
 
-    final grantFailed = grantResult.fold(
-      (failure) => failure,
-      (_) => null,
-    );
+    final grantFailed = grantResult.fold((failure) => failure, (_) => null);
 
     if (grantFailed != null) {
       if (mounted) {
@@ -910,7 +911,6 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         'Rate limit exceeded: $currentCount/$limitPerDay',
     };
   }
-
 
   String _getMetricLabel(MetricType metric) {
     switch (metric) {
@@ -1009,10 +1009,9 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
     // Height doesn't change - no trend needed
     if (_noTrendMetrics.contains(metricType)) return null;
 
-    final filtered = _measurements
-        .where((m) => m.metricType == metricType)
-        .toList()
-      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    final filtered =
+        _measurements.where((m) => m.metricType == metricType).toList()
+          ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
     if (filtered.length < 2) return null;
 
@@ -1026,10 +1025,9 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
     // Height doesn't change - no trend needed
     if (_noTrendMetrics.contains(metricType)) return null;
 
-    final filtered = _measurements
-        .where((m) => m.metricType == metricType)
-        .toList()
-      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    final filtered =
+        _measurements.where((m) => m.metricType == metricType).toList()
+          ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
     if (filtered.length < 2) return null;
 
@@ -1053,7 +1051,8 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => MeasurementChartsScreen(userId: widget.userId),
+                  builder: (_) =>
+                      MeasurementChartsScreen(userId: widget.userId),
                 ),
               );
             },
@@ -1259,5 +1258,4 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
       ],
     );
   }
-
 }

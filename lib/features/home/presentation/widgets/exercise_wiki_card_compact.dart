@@ -84,7 +84,9 @@ class ExerciseWikiCardCompact extends ConsumerWidget {
                               );
                             }
                             return Text(
-                              context.l10n.tipsToReviewCount(contributions.length),
+                              context.l10n.tipsToReviewCount(
+                                contributions.length,
+                              ),
                               style: context.textTheme.bodySmall?.copyWith(
                                 color: context.colors.onSurfaceVariant,
                               ),

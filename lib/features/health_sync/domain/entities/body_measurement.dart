@@ -76,9 +76,7 @@ extension BodyMeasurementExtension on BodyMeasurement {
       case MeasurementUnit.percent:
       case MeasurementUnit.minutes:
       case MeasurementUnit.bpm:
-        throw UnsupportedError(
-          'Cannot convert ${unit.name} to kilograms',
-        );
+        throw UnsupportedError('Cannot convert ${unit.name} to kilograms');
     }
   }
 
@@ -98,9 +96,7 @@ extension BodyMeasurementExtension on BodyMeasurement {
       case MeasurementUnit.percent:
       case MeasurementUnit.minutes:
       case MeasurementUnit.bpm:
-        throw UnsupportedError(
-          'Cannot convert ${unit.name} to pounds',
-        );
+        throw UnsupportedError('Cannot convert ${unit.name} to pounds');
     }
   }
 

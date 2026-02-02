@@ -38,7 +38,9 @@ final exerciseVersionServiceProvider = Provider<ExerciseVersionService>((ref) {
 
 /// Provider principale per HybridExerciseRepository
 /// FIX: keepAlive() + rimosso watch su localeProvider che causava rebuild a cascata
-final hybridExerciseRepositoryProvider = Provider<HybridExerciseRepository>((ref) {
+final hybridExerciseRepositoryProvider = Provider<HybridExerciseRepository>((
+  ref,
+) {
   ref.keepAlive(); // Previene ricreazione su hot reload o dispose
   final boxManager = ref.watch(hiveBoxManagerProvider);
   // FIX: usa watch invece di read per corretta dependency tracking
@@ -108,7 +110,9 @@ final exerciseSyncInitProvider = FutureProvider<void>((ref) async {
 /// Provider per tutti gli esercizi (con gestione asincrona)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final allExercisesProvider = FutureProvider.autoDispose<List<Exercise>>((ref) async {
+final allExercisesProvider = FutureProvider.autoDispose<List<Exercise>>((
+  ref,
+) async {
   final repository = ref.read(hybridExerciseRepositoryProvider);
   return repository.getAllExercises();
 });
@@ -116,50 +120,57 @@ final allExercisesProvider = FutureProvider.autoDispose<List<Exercise>>((ref) as
 /// Provider per ricerca esercizi
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final exerciseSearchProvider = FutureProvider.autoDispose.family<List<Exercise>, String>((ref, query) async {
-  final repository = ref.read(hybridExerciseRepositoryProvider);
-  return repository.searchExercises(query);
-});
+final exerciseSearchProvider = FutureProvider.autoDispose
+    .family<List<Exercise>, String>((ref, query) async {
+      final repository = ref.read(hybridExerciseRepositoryProvider);
+      return repository.searchExercises(query);
+    });
 
 /// Provider per esercizi filtrati per focus
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final exercisesByFocusProvider = FutureProvider.autoDispose.family<List<Exercise>, List<String>>((ref, focusGroups) async {
-  final repository = ref.read(hybridExerciseRepositoryProvider);
-  return repository.getExercisesByFocus(focusGroups);
-});
+final exercisesByFocusProvider = FutureProvider.autoDispose
+    .family<List<Exercise>, List<String>>((ref, focusGroups) async {
+      final repository = ref.read(hybridExerciseRepositoryProvider);
+      return repository.getExercisesByFocus(focusGroups);
+    });
 
 /// Provider per un singolo esercizio
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final exerciseByIdProvider = FutureProvider.autoDispose.family<Exercise?, String>((ref, exerciseId) async {
-  final repository = ref.read(hybridExerciseRepositoryProvider);
-  return repository.getExerciseById(exerciseId);
-});
+final exerciseByIdProvider = FutureProvider.autoDispose
+    .family<Exercise?, String>((ref, exerciseId) async {
+      final repository = ref.read(hybridExerciseRepositoryProvider);
+      return repository.getExerciseById(exerciseId);
+    });
 
 /// Provider per trovare l'ID database di un esercizio dal nome (italiano)
 /// Usato per il lookup strength standards quando l'ID è un UUID (workout esistenti)
 /// Returns null if exercise not found
-final exerciseIdByNameProvider = FutureProvider.autoDispose.family<String?, String>((ref, exerciseName) async {
-  final repository = ref.read(hybridExerciseRepositoryProvider);
+final exerciseIdByNameProvider = FutureProvider.autoDispose
+    .family<String?, String>((ref, exerciseName) async {
+      final repository = ref.read(hybridExerciseRepositoryProvider);
 
-  // Search for exercise with exact name match (case-insensitive)
-  final exercises = await repository.searchExercises(exerciseName);
+      // Search for exercise with exact name match (case-insensitive)
+      final exercises = await repository.searchExercises(exerciseName);
 
-  // Find exact match by name
-  for (final exercise in exercises) {
-    if (exercise.nome.toLowerCase() == exerciseName.toLowerCase()) {
-      return exercise.id;
-    }
-  }
+      // Find exact match by name
+      for (final exercise in exercises) {
+        if (exercise.nome.toLowerCase() == exerciseName.toLowerCase()) {
+          return exercise.id;
+        }
+      }
 
-  // Fallback: return first result if it's a close match
-  if (exercises.isNotEmpty && exercises.first.nome.toLowerCase().contains(exerciseName.toLowerCase().split(' ').first)) {
-    return exercises.first.id;
-  }
+      // Fallback: return first result if it's a close match
+      if (exercises.isNotEmpty &&
+          exercises.first.nome.toLowerCase().contains(
+            exerciseName.toLowerCase().split(' ').first,
+          )) {
+        return exercises.first.id;
+      }
 
-  return null;
-});
+      return null;
+    });
 
 // ====================
 // SYNC STATUS PROVIDERS
@@ -167,7 +178,9 @@ final exerciseIdByNameProvider = FutureProvider.autoDispose.family<String?, Stri
 
 /// Provider per stato sincronizzazione repository
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
-final exerciseSyncStatusProvider = StreamProvider.autoDispose<SyncStatus>((ref) {
+final exerciseSyncStatusProvider = StreamProvider.autoDispose<SyncStatus>((
+  ref,
+) {
   final repository = ref.read(hybridExerciseRepositoryProvider);
   return repository.syncStatus;
 });
@@ -181,10 +194,11 @@ final exerciseSyncEventsProvider = StreamProvider.autoDispose<SyncEvent>((ref) {
 
 /// Provider per controllo versione in tempo reale
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
-final exerciseVersionWatchProvider = StreamProvider.autoDispose<VersionCheckResult>((ref) {
-  final repository = ref.read(hybridExerciseRepositoryProvider);
-  return repository.watchForUpdates();
-});
+final exerciseVersionWatchProvider =
+    StreamProvider.autoDispose<VersionCheckResult>((ref) {
+      final repository = ref.read(hybridExerciseRepositoryProvider);
+      return repository.watchForUpdates();
+    });
 
 // ====================
 // UI STATE PROVIDERS
@@ -194,12 +208,16 @@ final exerciseVersionWatchProvider = StreamProvider.autoDispose<VersionCheckResu
 final exerciseSearchQueryProvider = StateProvider<String>((ref) => '');
 
 /// Provider per filtri attivi
-final exerciseFiltersProvider = StateProvider<ExerciseFilters>((ref) => const ExerciseFilters());
+final exerciseFiltersProvider = StateProvider<ExerciseFilters>(
+  (ref) => const ExerciseFilters(),
+);
 
 /// Provider per esercizi filtrati e ricercati
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final filteredExercisesProvider = FutureProvider.autoDispose<List<Exercise>>((ref) async {
+final filteredExercisesProvider = FutureProvider.autoDispose<List<Exercise>>((
+  ref,
+) async {
   final query = ref.watch(exerciseSearchQueryProvider);
   final filters = ref.watch(exerciseFiltersProvider);
   final repository = ref.read(hybridExerciseRepositoryProvider);
@@ -212,7 +230,9 @@ final filteredExercisesProvider = FutureProvider.autoDispose<List<Exercise>>((re
 
   // Altrimenti usa filtri per focus se specificati
   if (filters.focusGroups.isNotEmpty) {
-    final focusResults = await repository.getExercisesByFocus(filters.focusGroups);
+    final focusResults = await repository.getExercisesByFocus(
+      filters.focusGroups,
+    );
     return _applyFilters(focusResults, filters);
   }
 
@@ -222,25 +242,33 @@ final filteredExercisesProvider = FutureProvider.autoDispose<List<Exercise>>((re
 });
 
 /// Applica filtri agli esercizi
-List<Exercise> _applyFilters(List<Exercise> exercises, ExerciseFilters filters) {
+List<Exercise> _applyFilters(
+  List<Exercise> exercises,
+  ExerciseFilters filters,
+) {
   var filtered = exercises;
 
   // Filtra per attrezzatura
   if (filters.equipment.isNotEmpty) {
-    filtered = filtered.where((exercise) =>
-      filters.equipment.contains(exercise.attrezzatura)).toList();
+    filtered = filtered
+        .where((exercise) => filters.equipment.contains(exercise.attrezzatura))
+        .toList();
   }
 
   // Filtra per difficoltà
   if (filters.difficulties.isNotEmpty) {
-    filtered = filtered.where((exercise) =>
-      filters.difficulties.contains(exercise.difficolta)).toList();
+    filtered = filtered
+        .where((exercise) => filters.difficulties.contains(exercise.difficolta))
+        .toList();
   }
 
   // Filtra per tipo esercizio
   if (filters.exerciseTypes.isNotEmpty) {
-    filtered = filtered.where((exercise) =>
-      filters.exerciseTypes.contains(exercise.tipoEsercizio)).toList();
+    filtered = filtered
+        .where(
+          (exercise) => filters.exerciseTypes.contains(exercise.tipoEsercizio),
+        )
+        .toList();
   }
 
   return filtered;
@@ -255,10 +283,7 @@ final exerciseSyncActionsProvider = Provider<ExerciseSyncActions>((ref) {
   final syncService = ref.read(exerciseSyncServiceProvider);
   final repository = ref.read(hybridExerciseRepositoryProvider);
 
-  return ExerciseSyncActions(
-    syncService: syncService,
-    repository: repository,
-  );
+  return ExerciseSyncActions(syncService: syncService, repository: repository);
 });
 
 // ====================
@@ -268,7 +293,9 @@ final exerciseSyncActionsProvider = Provider<ExerciseSyncActions>((ref) {
 /// Provider per statistiche cache
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final exerciseCacheStatsProvider = FutureProvider.autoDispose<CacheMetadata?>((ref) async {
+final exerciseCacheStatsProvider = FutureProvider.autoDispose<CacheMetadata?>((
+  ref,
+) async {
   final repository = ref.read(hybridExerciseRepositoryProvider);
   return repository.getCacheStats();
 });
@@ -276,7 +303,9 @@ final exerciseCacheStatsProvider = FutureProvider.autoDispose<CacheMetadata?>((r
 /// Provider per informazioni versione locale
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final exerciseVersionInfoProvider = FutureProvider.autoDispose<String>((ref) async {
+final exerciseVersionInfoProvider = FutureProvider.autoDispose<String>((
+  ref,
+) async {
   final versionService = ref.read(exerciseVersionServiceProvider);
   return versionService.getLocalVersion();
 });
@@ -284,10 +313,11 @@ final exerciseVersionInfoProvider = FutureProvider.autoDispose<String>((ref) asy
 /// Provider per ultimo aggiornamento
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final lastExerciseUpdateProvider = FutureProvider.autoDispose<Map<String, dynamic>?>((ref) async {
-  final versionService = ref.read(exerciseVersionServiceProvider);
-  return versionService.getLastUpdateInfo();
-});
+final lastExerciseUpdateProvider =
+    FutureProvider.autoDispose<Map<String, dynamic>?>((ref) async {
+      final versionService = ref.read(exerciseVersionServiceProvider);
+      return versionService.getLastUpdateInfo();
+    });
 
 // ====================
 // FILTER CLASSES
@@ -295,7 +325,6 @@ final lastExerciseUpdateProvider = FutureProvider.autoDispose<Map<String, dynami
 
 /// Classe per gestire filtri degli esercizi
 class ExerciseFilters {
-
   const ExerciseFilters({
     this.focusGroups = const [],
     this.equipment = const [],
@@ -322,19 +351,15 @@ class ExerciseFilters {
   }
 
   bool get isEmpty =>
-    focusGroups.isEmpty &&
-    equipment.isEmpty &&
-    difficulties.isEmpty &&
-    exerciseTypes.isEmpty;
+      focusGroups.isEmpty &&
+      equipment.isEmpty &&
+      difficulties.isEmpty &&
+      exerciseTypes.isEmpty;
 }
 
 /// Classe per azioni di sincronizzazione
 class ExerciseSyncActions {
-
-  ExerciseSyncActions({
-    required this.syncService,
-    required this.repository,
-  });
+  ExerciseSyncActions({required this.syncService, required this.repository});
   final ExerciseSyncService syncService;
   final HybridExerciseRepository repository;
 
@@ -391,11 +416,12 @@ final exerciseDatabaseProvider = allExercisesProvider;
 /// Provider per repository JSON (fallback per compatibilità)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final jsonExerciseRepositoryProvider = FutureProvider.autoDispose<List<Exercise>>((ref) async {
-  // Reindirizza al nuovo sistema ibrido
-  final repository = ref.read(hybridExerciseRepositoryProvider);
-  return repository.getAllExercises();
-});
+final jsonExerciseRepositoryProvider =
+    FutureProvider.autoDispose<List<Exercise>>((ref) async {
+      // Reindirizza al nuovo sistema ibrido
+      final repository = ref.read(hybridExerciseRepositoryProvider);
+      return repository.getAllExercises();
+    });
 
 /// Provider istanza repository (per compatibilità)
 final jsonExerciseRepositoryInstanceProvider = Provider((ref) {
@@ -405,14 +431,17 @@ final jsonExerciseRepositoryInstanceProvider = Provider((ref) {
 
 /// Wrapper per mantenere compatibilità con l'API esistente
 class ExerciseRepositoryWrapper {
-
   ExerciseRepositoryWrapper(this._hybridRepository);
   final HybridExerciseRepository _hybridRepository;
 
-  Future<List<Exercise>> getAllExercises() => _hybridRepository.getAllExercises();
-  Future<List<Exercise>> searchExercises(String query) => _hybridRepository.searchExercises(query);
-  Future<List<Exercise>> getExercisesByFocus(List<String> focusGroups) => _hybridRepository.getExercisesByFocus(focusGroups);
-  Future<Exercise?> getExerciseById(String id) => _hybridRepository.getExerciseById(id);
+  Future<List<Exercise>> getAllExercises() =>
+      _hybridRepository.getAllExercises();
+  Future<List<Exercise>> searchExercises(String query) =>
+      _hybridRepository.searchExercises(query);
+  Future<List<Exercise>> getExercisesByFocus(List<String> focusGroups) =>
+      _hybridRepository.getExercisesByFocus(focusGroups);
+  Future<Exercise?> getExerciseById(String id) =>
+      _hybridRepository.getExerciseById(id);
 
   void clearCache() => _hybridRepository.clearCache();
 }

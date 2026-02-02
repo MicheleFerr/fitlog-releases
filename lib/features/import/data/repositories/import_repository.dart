@@ -13,7 +13,8 @@ import 'package:gymbro_flutter_new/features/import/data/parsers/strong_csv_parse
 import 'package:gymbro_flutter_new/features/import/data/mappers/exercise_name_mapper.dart';
 import 'package:gymbro_flutter_new/features/import/domain/entities/import_result.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as workout_entities;
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart'
+    as workout_entities;
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 
@@ -28,13 +29,18 @@ class ImportRepository {
   final WorkoutRepository workoutRepository;
 
   late final StrongCsvParser _strongParser = StrongCsvParser();
-  late final ExerciseNameMapper _exerciseMapper = ExerciseNameMapper(exerciseDatabase);
+  late final ExerciseNameMapper _exerciseMapper = ExerciseNameMapper(
+    exerciseDatabase,
+  );
 
   /// Parse CSV and prepare for import
   ///
   /// Returns parsed data with exercise mapping suggestions.
   /// User can review and adjust mappings before final import.
-  Future<ImportParseResult> parseAndMap(String csvContent, {String sourceApp = 'strong'}) async {
+  Future<ImportParseResult> parseAndMap(
+    String csvContent, {
+    String sourceApp = 'strong',
+  }) async {
     // Parse CSV
     ImportParseResult parseResult;
 
@@ -63,13 +69,15 @@ class ImportRepository {
     ImportParseResult parseResult,
     Map<String, String> manualMappings, // originalName -> exerciseId
   ) {
-    final updatedAutoMapped = Map<String, String>.from(parseResult.autoMappedExercises)
-      ..addAll(manualMappings);
+    final updatedAutoMapped = Map<String, String>.from(
+      parseResult.autoMappedExercises,
+    )..addAll(manualMappings);
 
     // Update workouts with manual mappings
     final updatedWorkouts = parseResult.workouts.map((workout) {
       final updatedExercises = workout.exercises.map((exercise) {
-        final mappedId = manualMappings[exercise.originalName] ??
+        final mappedId =
+            manualMappings[exercise.originalName] ??
             parseResult.autoMappedExercises[exercise.originalName];
 
         if (mappedId != null && exercise.mappedExerciseId == null) {
@@ -174,8 +182,8 @@ class ImportRepository {
       }
 
       // Get exercise name (mapped or original)
-      final exerciseName = parsedExercise.mappedExerciseName ??
-          parsedExercise.originalName;
+      final exerciseName =
+          parsedExercise.mappedExerciseName ?? parsedExercise.originalName;
 
       // Determine category from database if mapped
       var category = workout_entities.ExerciseCategory.other;
@@ -202,14 +210,16 @@ class ImportRepository {
         );
       }).toList();
 
-      exercises.add(workout_entities.Exercise(
-        id: parsedExercise.mappedExerciseId ?? const Uuid().v4(),
-        name: exerciseName,
-        type: workout_entities.ExerciseType.single,
-        category: category,
-        sets: sets,
-        notes: parsedExercise.notes,
-      ));
+      exercises.add(
+        workout_entities.Exercise(
+          id: parsedExercise.mappedExerciseId ?? const Uuid().v4(),
+          name: exerciseName,
+          type: workout_entities.ExerciseType.single,
+          category: category,
+          sets: sets,
+          notes: parsedExercise.notes,
+        ),
+      );
     }
 
     // Calculate end time from duration

@@ -121,8 +121,16 @@ class RatioBreakdownCalculator {
     return RatioBreakdown(
       pushBreakdown: _buildCategoryBreakdown('Push', pushExercises, pushTotal),
       pullBreakdown: _buildCategoryBreakdown('Pull', pullExercises, pullTotal),
-      upperBreakdown: _buildCategoryBreakdown('Upper', upperExercises, upperTotal),
-      lowerBreakdown: _buildCategoryBreakdown('Lower', lowerExercises, lowerTotal),
+      upperBreakdown: _buildCategoryBreakdown(
+        'Upper',
+        upperExercises,
+        upperTotal,
+      ),
+      lowerBreakdown: _buildCategoryBreakdown(
+        'Lower',
+        lowerExercises,
+        lowerTotal,
+      ),
     );
   }
 
@@ -139,7 +147,9 @@ class RatioBreakdownCalculator {
       final exercises = entry.value;
 
       contributions[muscle] = exercises.map((data) {
-        final percentage = totalVolume > 0 ? (data.volume / totalVolume) * 100 : 0.0;
+        final percentage = totalVolume > 0
+            ? (data.volume / totalVolume) * 100
+            : 0.0;
         return ExerciseContribution(
           exerciseName: data.name,
           muscleGroup: data.muscleGroup,
@@ -147,8 +157,7 @@ class RatioBreakdownCalculator {
           percentage: percentage,
           isPrimary: true,
         );
-      }).toList()
-        ..sort((a, b) => b.volume.compareTo(a.volume));
+      }).toList()..sort((a, b) => b.volume.compareTo(a.volume));
     }
 
     return CategoryBreakdown(
@@ -506,7 +515,9 @@ class RatioBreakdownCalculator {
         return customExercise.focus.isNotEmpty
             ? customExercise.focus.first.toLowerCase()
             : 'back';
-      } else if (pattern == 'hinge' || pattern == 'squat' || pattern == 'accessory') {
+      } else if (pattern == 'hinge' ||
+          pattern == 'squat' ||
+          pattern == 'accessory') {
         // For other patterns, use first focus muscle if available
         if (customExercise.focus.isNotEmpty) {
           return customExercise.focus.first.toLowerCase();
@@ -604,8 +615,16 @@ class RatioBreakdownCalculator {
     return RatioBreakdown(
       pushBreakdown: _buildCategoryBreakdown('Push', pushExercises, pushTotal),
       pullBreakdown: _buildCategoryBreakdown('Pull', pullExercises, pullTotal),
-      upperBreakdown: _buildCategoryBreakdown('Upper', upperExercises, upperTotal),
-      lowerBreakdown: _buildCategoryBreakdown('Lower', lowerExercises, lowerTotal),
+      upperBreakdown: _buildCategoryBreakdown(
+        'Upper',
+        upperExercises,
+        upperTotal,
+      ),
+      lowerBreakdown: _buildCategoryBreakdown(
+        'Lower',
+        lowerExercises,
+        lowerTotal,
+      ),
     );
   }
 }

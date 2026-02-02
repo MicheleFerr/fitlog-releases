@@ -113,5 +113,5 @@ class LandscapeMetricsNotifier extends Notifier<Set<MetricType>> {
 /// **Default**: {MetricType.volume}
 final landscapeMetricsProvider =
     NotifierProvider<LandscapeMetricsNotifier, Set<MetricType>>(
-  LandscapeMetricsNotifier.new,
-);
+      LandscapeMetricsNotifier.new,
+    );

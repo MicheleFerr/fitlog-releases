@@ -35,11 +35,14 @@ class RPEAutoregulationService {
       adjustmentPercent = (deviation / 0.5) * 2.0;
 
       if (deviation >= 2) {
-        reason = 'RPE significantly below target range (${deviation.toStringAsFixed(1)} points)';
+        reason =
+            'RPE significantly below target range (${deviation.toStringAsFixed(1)} points)';
       } else if (deviation >= 1) {
-        reason = 'RPE below target range (${deviation.toStringAsFixed(1)} points)';
+        reason =
+            'RPE below target range (${deviation.toStringAsFixed(1)} points)';
       } else {
-        reason = 'RPE slightly below target (${deviation.toStringAsFixed(1)} points)';
+        reason =
+            'RPE slightly below target (${deviation.toStringAsFixed(1)} points)';
       }
     } else if (actualRPE > targetRPEMax) {
       // Above target range - decrease weight
@@ -48,11 +51,14 @@ class RPEAutoregulationService {
       adjustmentPercent = -(deviation / 0.5) * 2.0;
 
       if (deviation >= 2) {
-        reason = 'RPE significantly above target range (${deviation.toStringAsFixed(1)} points)';
+        reason =
+            'RPE significantly above target range (${deviation.toStringAsFixed(1)} points)';
       } else if (deviation >= 1) {
-        reason = 'RPE above target range (${deviation.toStringAsFixed(1)} points)';
+        reason =
+            'RPE above target range (${deviation.toStringAsFixed(1)} points)';
       } else {
-        reason = 'RPE slightly above target (${deviation.toStringAsFixed(1)} points)';
+        reason =
+            'RPE slightly above target (${deviation.toStringAsFixed(1)} points)';
       }
     } else {
       // Within target range - maintain
@@ -171,12 +177,18 @@ class RPEAutoregulationService {
   /// Convert RIR to RPE (approximate)
   static double rirToRPE(int rir) {
     switch (rir) {
-      case 0: return 10.0;
-      case 1: return 9.0;
-      case 2: return 8.0;
-      case 3: return 7.0;
-      case 4: return 6.0;
-      default: return 5.0; // 5+ RIR
+      case 0:
+        return 10.0;
+      case 1:
+        return 9.0;
+      case 2:
+        return 8.0;
+      case 3:
+        return 7.0;
+      case 4:
+        return 6.0;
+      default:
+        return 5.0; // 5+ RIR
     }
   }
 
@@ -266,7 +278,6 @@ class RestTimeAdjustment {
 
 /// Weight adjustment result
 class WeightAdjustment {
-
   const WeightAdjustment({
     required this.originalWeight,
     required this.adjustedWeight,

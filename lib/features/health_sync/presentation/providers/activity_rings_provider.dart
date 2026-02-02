@@ -36,14 +36,14 @@ class ActivityRingsData {
 
   /// Create empty/loading state
   const ActivityRingsData.empty()
-      : moveCalories = 0,
-        moveGoal = 500,
-        exerciseMinutes = 0,
-        exerciseGoal = 30,
-        standHours = 0,
-        standGoal = 12,
-        lastUpdated = null,
-        errorMessage = null;
+    : moveCalories = 0,
+      moveGoal = 500,
+      exerciseMinutes = 0,
+      exerciseGoal = 30,
+      standHours = 0,
+      standGoal = 12,
+      lastUpdated = null,
+      errorMessage = null;
 
   /// Active calories burned today (Move ring)
   final double moveCalories;
@@ -111,8 +111,8 @@ class ActivityRingsData {
 /// Provider for Activity Rings data
 final activityRingsProvider =
     StateNotifierProvider<ActivityRingsNotifier, ActivityRingsData>((ref) {
-  return ActivityRingsNotifier();
-});
+      return ActivityRingsNotifier();
+    });
 
 /// Notifier that manages Activity Rings state
 class ActivityRingsNotifier extends StateNotifier<ActivityRingsData> {
@@ -156,8 +156,9 @@ class ActivityRingsNotifier extends StateNotifier<ActivityRingsData> {
   Future<void> _fetchFromNativeIOS() async {
     try {
       // Request permission first
-      final permissionGranted =
-          await _iosChannel.invokeMethod<bool>('requestActivitySummaryPermission');
+      final permissionGranted = await _iosChannel.invokeMethod<bool>(
+        'requestActivitySummaryPermission',
+      );
 
       if (permissionGranted != true) {
         state = state.copyWith(
@@ -168,8 +169,9 @@ class ActivityRingsNotifier extends StateNotifier<ActivityRingsData> {
       }
 
       // Get activity summary with real goals
-      final result =
-          await _iosChannel.invokeMethod<Map<Object?, Object?>>('getActivitySummary');
+      final result = await _iosChannel.invokeMethod<Map<Object?, Object?>>(
+        'getActivitySummary',
+      );
 
       if (result == null) {
         state = state.copyWith(
@@ -200,7 +202,9 @@ class ActivityRingsNotifier extends StateNotifier<ActivityRingsData> {
 
       if (kDebugMode) {
         debugPrint('Activity Rings (iOS Native):');
-        debugPrint('  Move: ${moveCalories.toInt()} / ${moveGoal.toInt()} kcal');
+        debugPrint(
+          '  Move: ${moveCalories.toInt()} / ${moveGoal.toInt()} kcal',
+        );
         debugPrint('  Exercise: $exerciseMinutes / $exerciseGoal min');
         debugPrint('  Stand: $standHours / $standGoal hrs');
         debugPrint('  Has Data: $hasData');
@@ -230,10 +234,7 @@ class ActivityRingsNotifier extends StateNotifier<ActivityRingsData> {
               HealthDataType.EXERCISE_TIME,
               HealthDataType.APPLE_STAND_HOUR,
             ]
-          : [
-              HealthDataType.ACTIVE_ENERGY_BURNED,
-              HealthDataType.EXERCISE_TIME,
-            ];
+          : [HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataType.EXERCISE_TIME];
 
       final permissions = types.map((t) => HealthDataAccess.READ).toList();
 
@@ -325,7 +326,8 @@ class ActivityRingsNotifier extends StateNotifier<ActivityRingsData> {
       if (kDebugMode) {
         debugPrint('Activity Rings (Health Package):');
         debugPrint(
-            '  Move: ${moveCalories.toInt()} / ${state.moveGoal.toInt()} kcal');
+          '  Move: ${moveCalories.toInt()} / ${state.moveGoal.toInt()} kcal',
+        );
         debugPrint('  Exercise: $exerciseMinutes / ${state.exerciseGoal} min');
         debugPrint('  Stand: $standHours / ${state.standGoal} hrs');
       }

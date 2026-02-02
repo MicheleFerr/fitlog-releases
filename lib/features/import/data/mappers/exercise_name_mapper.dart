@@ -215,11 +215,13 @@ class ExerciseNameMapper {
     return results
         .where((r) => r.score >= suggestionThreshold)
         .take(maxSuggestions)
-        .map((r) => ExerciseMatch(
-              exerciseId: r.item.id,
-              name: r.item.nome,
-              confidence: r.score,
-            ))
+        .map(
+          (r) => ExerciseMatch(
+            exerciseId: r.item.id,
+            name: r.item.nome,
+            confidence: r.score,
+          ),
+        )
         .toList();
   }
 

@@ -16,7 +16,7 @@ class SimplePremiumScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isPremium = ref.watch(isPremiumUserProvider);
-    
+
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
@@ -47,14 +47,16 @@ class SimplePremiumScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                     SemanticIcon(
-  icon: AppIcons.star,
-  semanticLabel: 'Star',
-  size: AppIconSize.medium,
-  color: theme.colorScheme.onPrimary,
-),
+                      icon: AppIcons.star,
+                      semanticLabel: 'Star',
+                      size: AppIconSize.medium,
+                      color: theme.colorScheme.onPrimary,
+                    ),
                     const SizedBox(height: 16),
                     Text(
-                      isPremium ? context.l10n.youArePremium : context.l10n.unlockPremium,
+                      isPremium
+                          ? context.l10n.youArePremium
+                          : context.l10n.unlockPremium,
                       style: theme.textTheme.headlineMedium?.copyWith(
                         color: theme.colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,
@@ -63,19 +65,21 @@ class SimplePremiumScreen extends ConsumerWidget {
                     const SizedBox(height: 8),
                     Text(
                       isPremium
-                        ? context.l10n.enjoyAllPremiumFeatures
-                        : context.l10n.getUnlimitedAccess,
+                          ? context.l10n.enjoyAllPremiumFeatures
+                          : context.l10n.getUnlimitedAccess,
                       style: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.onPrimary.withValues(alpha: 0.9),
+                        color: theme.colorScheme.onPrimary.withValues(
+                          alpha: 0.9,
+                        ),
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 30),
-              
+
               // Features List
               Text(
                 context.l10n.premiumFeatures,
@@ -84,7 +88,7 @@ class SimplePremiumScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              
+
               _buildFeatureItem(
                 context,
                 AppIcons.analytics,
@@ -134,9 +138,9 @@ class SimplePremiumScreen extends ConsumerWidget {
                 context.l10n.enjoyAdFreeExperience,
                 theme,
               ),
-              
+
               const SizedBox(height: 30),
-              
+
               // Pricing Section
               if (!isPremium) ...[
                 Text(
@@ -146,7 +150,7 @@ class SimplePremiumScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Monthly Plan
                 _buildPricingCard(
                   context,
@@ -178,9 +182,9 @@ class SimplePremiumScreen extends ConsumerWidget {
                   false,
                   theme,
                 ),
-                
+
                 const SizedBox(height: 30),
-                
+
                 // Coming Soon Notice
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -217,11 +221,11 @@ class SimplePremiumScreen extends ConsumerWidget {
                   child: Column(
                     children: [
                       SemanticIcon(
-  icon: AppIcons.complete,
-  semanticLabel: 'Complete',
-  size: AppIconSize.xxlarge,
-  color: theme.colorScheme.primary,
-),
+                        icon: AppIcons.complete,
+                        semanticLabel: 'Complete',
+                        size: AppIconSize.xxlarge,
+                        color: theme.colorScheme.primary,
+                      ),
                       const SizedBox(height: 12),
                       Text(
                         context.l10n.thankYouForBeingPremium,
@@ -247,7 +251,7 @@ class SimplePremiumScreen extends ConsumerWidget {
       ),
     );
   }
-  
+
   Widget _buildFeatureItem(
     BuildContext context,
     IconData icon,
@@ -265,11 +269,7 @@ class SimplePremiumScreen extends ConsumerWidget {
               color: theme.colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
-              icon,
-              color: theme.colorScheme.primary,
-              size: 24,
-            ),
+            child: Icon(icon, color: theme.colorScheme.primary, size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -291,16 +291,12 @@ class SimplePremiumScreen extends ConsumerWidget {
               ],
             ),
           ),
-          Icon(
-            AppIcons.complete,
-            color: theme.colorScheme.primary,
-            size: 20,
-          ),
+          Icon(AppIcons.complete, color: theme.colorScheme.primary, size: 20),
         ],
       ),
     );
   }
-  
+
   Widget _buildPricingCard(
     BuildContext context,
     String title,
@@ -312,20 +308,23 @@ class SimplePremiumScreen extends ConsumerWidget {
     return InkWell(
       onTap: () {
         HapticFeedback.lightImpact();
-        SnackBarService.showInfo(context, context.l10n.planWillBeAvailableSoon(title));
+        SnackBarService.showInfo(
+          context,
+          context.l10n.planWillBeAvailableSoon(title),
+        );
       },
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: isPopular 
-            ? theme.colorScheme.primaryContainer
-            : theme.colorScheme.surfaceContainer,
+          color: isPopular
+              ? theme.colorScheme.primaryContainer
+              : theme.colorScheme.surfaceContainer,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isPopular
-              ? theme.colorScheme.primary
-              : theme.colorScheme.outline.withValues(alpha: 0.3),
+                ? theme.colorScheme.primary
+                : theme.colorScheme.outline.withValues(alpha: 0.3),
             width: isPopular ? 2 : 1,
           ),
         ),
@@ -383,9 +382,9 @@ class SimplePremiumScreen extends ConsumerWidget {
                   price,
                   style: theme.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: isPopular 
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.onSurface,
+                    color: isPopular
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.onSurface,
                   ),
                 ),
                 Text(

@@ -38,19 +38,15 @@ class _HealthSyncSettingsScreenState
   @override
   Widget build(BuildContext context) {
     final permissionStatusAsync = ref.watch(healthPermissionStatusProvider);
-    final backgroundSyncState =
-        ref.watch(healthBackgroundSyncControllerProvider);
+    final backgroundSyncState = ref.watch(
+      healthBackgroundSyncControllerProvider,
+    );
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.healthSyncSettings),
-      ),
+      appBar: AppBar(title: Text(context.l10n.healthSyncSettings)),
       body: permissionStatusAsync.when(
-        data: (permissionStatus) => _buildContent(
-          context,
-          permissionStatus,
-          backgroundSyncState,
-        ),
+        data: (permissionStatus) =>
+            _buildContent(context, permissionStatus, backgroundSyncState),
         loading: () => const Center(child: LoadingIndicator()),
         error: (err, stack) => _buildNotAvailableState(context),
       ),
@@ -65,7 +61,7 @@ class _HealthSyncSettingsScreenState
     final permissions = permissionStatus.permissions as Map;
     final isConnected =
         permissions[HealthDataType.workout] == PermissionState.authorized ||
-            permissions[HealthDataType.bodyWeight] == PermissionState.authorized;
+        permissions[HealthDataType.bodyWeight] == PermissionState.authorized;
 
     // Android: Check if Health Connect is installed
     final healthConnectAvailable =
@@ -235,10 +231,7 @@ class _HealthSyncSettingsScreenState
     );
   }
 
-  Widget _buildDataTypesSection(
-    BuildContext context,
-    Map permissions,
-  ) {
+  Widget _buildDataTypesSection(BuildContext context, Map permissions) {
     final theme = Theme.of(context);
     final l10n = context.l10n;
 
@@ -267,7 +260,8 @@ class _HealthSyncSettingsScreenState
           icon: AppIcons.scale,
           title: l10n.healthDataBodyWeight,
           description: l10n.healthSyncBodyWeightDescription,
-          isEnabled: permissions[HealthDataType.bodyWeight] ==
+          isEnabled:
+              permissions[HealthDataType.bodyWeight] ==
               PermissionState.authorized,
           dataType: HealthDataType.bodyWeight,
         ),
@@ -426,11 +420,7 @@ class _HealthSyncSettingsScreenState
                 color: colorScheme.errorContainer.withValues(alpha: 0.3),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                AppIcons.block,
-                size: 40,
-                color: colorScheme.error,
-              ),
+              child: Icon(AppIcons.block, size: 40, color: colorScheme.error),
             ),
             const SizedBox(height: 24),
             Text(
@@ -554,18 +544,12 @@ class _HealthSyncSettingsScreenState
     result.fold(
       (failure) {
         if (mounted) {
-          SnackBarService.showError(
-            context,
-            failure.message,
-          );
+          SnackBarService.showError(context, failure.message);
         }
       },
       (_) {
         if (mounted) {
-          SnackBarService.showInfo(
-            context,
-            context.l10n.healthConnectInstall,
-          );
+          SnackBarService.showInfo(context, context.l10n.healthConnectInstall);
         }
       },
     );
@@ -584,10 +568,7 @@ class _HealthSyncSettingsScreenState
       await controller.requestPermissionsSequential();
 
       if (mounted) {
-        SnackBarService.showSuccess(
-          context,
-          context.l10n.healthKitConnected,
-        );
+        SnackBarService.showSuccess(context, context.l10n.healthKitConnected);
       }
     } catch (e) {
       if (mounted) {
@@ -625,8 +606,9 @@ class _HealthSyncSettingsScreenState
   Future<void> _handleBackgroundSyncToggle(bool value) async {
     HapticFeedback.lightImpact();
 
-    final controller =
-        ref.read(healthBackgroundSyncControllerProvider.notifier);
+    final controller = ref.read(
+      healthBackgroundSyncControllerProvider.notifier,
+    );
 
     try {
       if (value) {

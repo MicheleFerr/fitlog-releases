@@ -9,7 +9,9 @@ final exerciseRepositoryProvider = Provider<ExerciseRepository>((ref) {
 
 abstract class ExerciseRepository {
   Stream<List<ExerciseTemplate>> getAllExercises();
-  Stream<List<ExerciseTemplate>> getExercisesByCategory(ExerciseCategory category);
+  Stream<List<ExerciseTemplate>> getExercisesByCategory(
+    ExerciseCategory category,
+  );
   Stream<List<ExerciseTemplate>> searchExercises(String query);
   Future<ExerciseTemplate?> getExerciseById(String id);
   Future<List<ExerciseTemplate>> getExercisesByMuscleGroup(String muscleGroup);
@@ -127,7 +129,11 @@ class MockExerciseRepository implements ExerciseRepository {
       type: ExerciseType.single,
       muscleGroups: ['chest', 'triceps', 'shoulders'],
       equipment: ['bodyweight'],
-      instructions: ['Start in plank position', 'Lower chest to ground', 'Push back up'],
+      instructions: [
+        'Start in plank position',
+        'Lower chest to ground',
+        'Push back up',
+      ],
       isActive: true,
     ),
   ];
@@ -138,15 +144,22 @@ class MockExerciseRepository implements ExerciseRepository {
   }
 
   @override
-  Stream<List<ExerciseTemplate>> getExercisesByCategory(ExerciseCategory category) {
-    return Stream.value(_mockExercises.where((e) => e.category == category).toList());
+  Stream<List<ExerciseTemplate>> getExercisesByCategory(
+    ExerciseCategory category,
+  ) {
+    return Stream.value(
+      _mockExercises.where((e) => e.category == category).toList(),
+    );
   }
 
   @override
   Stream<List<ExerciseTemplate>> searchExercises(String query) {
     if (query.isEmpty) return getAllExercises();
-    return Stream.value(_mockExercises.where((e) => 
-      e.name.toLowerCase().contains(query.toLowerCase())).toList());
+    return Stream.value(
+      _mockExercises
+          .where((e) => e.name.toLowerCase().contains(query.toLowerCase()))
+          .toList(),
+    );
   }
 
   @override
@@ -159,8 +172,15 @@ class MockExerciseRepository implements ExerciseRepository {
   }
 
   @override
-  Future<List<ExerciseTemplate>> getExercisesByMuscleGroup(String muscleGroup) async {
-    return _mockExercises.where((e) => e.muscleGroups.any((m) => 
-      m.toLowerCase().contains(muscleGroup.toLowerCase()))).toList();
+  Future<List<ExerciseTemplate>> getExercisesByMuscleGroup(
+    String muscleGroup,
+  ) async {
+    return _mockExercises
+        .where(
+          (e) => e.muscleGroups.any(
+            (m) => m.toLowerCase().contains(muscleGroup.toLowerCase()),
+          ),
+        )
+        .toList();
   }
 }

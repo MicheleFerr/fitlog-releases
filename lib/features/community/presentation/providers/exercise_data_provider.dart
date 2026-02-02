@@ -5,7 +5,10 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 /// Provider che fornisce i dati degli esercizi con merge delle contribuzioni community
 /// ⚡ PERFORMANCE FIX: Uses centralized exercisesDatabaseProvider (loads JSON ONCE)
 /// Prevents repeated JSON loads during scroll - database is cached for entire session
-final exerciseDataProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, exerciseName) async {
+final exerciseDataProvider = FutureProvider.family<Map<String, dynamic>, String>((
+  ref,
+  exerciseName,
+) async {
   // Keep alive to cache per-exercise results
   ref.keepAlive();
 
@@ -25,7 +28,7 @@ final exerciseDataProvider = FutureProvider.family<Map<String, dynamic>, String>
 
   // Crea una copia modificabile
   final mergedData = Map<String, dynamic>.from(baseData);
-  
+
   // 2. Query per correzioni approvate da Firestore
   try {
     // Query semplificata per evitare indici compositi
@@ -34,36 +37,36 @@ final exerciseDataProvider = FutureProvider.family<Map<String, dynamic>, String>
         .where('exerciseName', isEqualTo: exerciseName)
         .limit(50)
         .get();
-    
+
     // 3. Applica ogni correzione approvata (filtra in memoria)
     for (final doc in correctionsSnapshot.docs) {
       final data = doc.data();
-      
+
       // Filtra solo correzioni approvate
       if (data['type'] != 'correction' || data['status'] != 'approved') {
         continue;
       }
-      
+
       final metadata = data['metadata'] as Map<String, dynamic>?;
-      
+
       // Se c'è un campo specifico da correggere
       if (metadata != null && metadata['field'] != null) {
         final fieldToCorrect = metadata['field'] as String;
         final newValue = data['suggestedValue'] ?? data['description'];
-        
+
         // APPLICA L'OVERRIDE
         mergedData[_mapFieldName(fieldToCorrect)] = newValue;
       }
     }
-    
+
     // 4. Aggiungi tips e warnings approvati (usa la stessa query semplificata)
     final tips = [];
     final warnings = [];
-    
+
     // Filtra tips e warnings dalla stessa query
     for (final doc in correctionsSnapshot.docs) {
       final data = doc.data();
-      
+
       if (data['type'] == 'tip' && data['status'] == 'approved') {
         tips.add({
           'description': data['description'],
@@ -76,32 +79,34 @@ final exerciseDataProvider = FutureProvider.family<Map<String, dynamic>, String>
         });
       }
     }
-    
+
     // Ordina per upvotes
     tips.sort((a, b) => (b['upvotes'] as int).compareTo(a['upvotes'] as int));
-    warnings.sort((a, b) => (b['upvotes'] as int).compareTo(a['upvotes'] as int));
-    
+    warnings.sort(
+      (a, b) => (b['upvotes'] as int).compareTo(a['upvotes'] as int),
+    );
+
     // Aggiungi al merged data
     mergedData['communityTips'] = tips
         .take(5)
         .map((t) => t['description'] as String)
         .toList();
-    
+
     mergedData['communityWarnings'] = warnings
         .take(3)
         .map((w) => w['description'] as String)
         .toList();
-    
+
     // Flag per indicare che ci sono correzioni community
     if (correctionsSnapshot.docs.isNotEmpty) {
       mergedData['hasCommunityCorrections'] = true;
-      mergedData['lastCommunityUpdate'] = correctionsSnapshot.docs.first.data()['approvedAt'];
+      mergedData['lastCommunityUpdate'] = correctionsSnapshot.docs.first
+          .data()['approvedAt'];
     }
-    
   } catch (e) {
     // In caso di errore, ritorna solo i dati base
   }
-  
+
   return mergedData;
 });
 
@@ -152,31 +157,38 @@ String _mapFieldName(String uiFieldName) {
 }
 
 /// Provider per il caching dei dati merged
-final mergedExerciseDataCacheProvider = StateProvider<Map<String, Map<String, dynamic>>>((ref) => {});
+final mergedExerciseDataCacheProvider =
+    StateProvider<Map<String, Map<String, dynamic>>>((ref) => {});
 
 /// Provider ottimizzato con cache
-final cachedExerciseDataProvider = Provider.family<AsyncValue<Map<String, dynamic>>, String>((ref, exerciseName) {
-  final cache = ref.watch(mergedExerciseDataCacheProvider);
-  
-  // Se è in cache, ritorna subito
-  if (cache.containsKey(exerciseName)) {
-    return AsyncValue.data(cache[exerciseName]!);
-  }
-  
-  // Altrimenti carica e metti in cache
-  return ref.watch(exerciseDataProvider(exerciseName)).whenData((data) {
-    ref.read(mergedExerciseDataCacheProvider.notifier).update((state) => {
-      ...state,
-      exerciseName: data,
+final cachedExerciseDataProvider =
+    Provider.family<AsyncValue<Map<String, dynamic>>, String>((
+      ref,
+      exerciseName,
+    ) {
+      final cache = ref.watch(mergedExerciseDataCacheProvider);
+
+      // Se è in cache, ritorna subito
+      if (cache.containsKey(exerciseName)) {
+        return AsyncValue.data(cache[exerciseName]!);
+      }
+
+      // Altrimenti carica e metti in cache
+      return ref.watch(exerciseDataProvider(exerciseName)).whenData((data) {
+        ref
+            .read(mergedExerciseDataCacheProvider.notifier)
+            .update((state) => {...state, exerciseName: data});
+        return data;
+      });
     });
-    return data;
-  });
-});
 
 /// Provider per verificare se ci sono aggiornamenti community per un esercizio
 /// ⚡ PERFORMANCE FIX: keepAlive to cache results for session
 /// Prevents repeated Firestore queries during scroll
-final hasCommunityCorrectionProvider = FutureProvider.family<bool, String>((ref, exerciseName) async {
+final hasCommunityCorrectionProvider = FutureProvider.family<bool, String>((
+  ref,
+  exerciseName,
+) async {
   // Keep alive to cache results
   ref.keepAlive();
 
@@ -188,9 +200,10 @@ final hasCommunityCorrectionProvider = FutureProvider.family<bool, String>((ref,
         .get();
 
     // Filtra in memoria per trovare correzioni approvate
-    return corrections.docs.any((doc) =>
-      doc.data()['type'] == 'correction' &&
-      doc.data()['status'] == 'approved'
+    return corrections.docs.any(
+      (doc) =>
+          doc.data()['type'] == 'correction' &&
+          doc.data()['status'] == 'approved',
     );
   } catch (e) {
     return false;
@@ -198,10 +211,12 @@ final hasCommunityCorrectionProvider = FutureProvider.family<bool, String>((ref,
 });
 
 /// Provider per il badge di "contenuto verificato dalla community"
-final communityVerifiedBadgeProvider = Provider.family<bool, String>((ref, exerciseName) {
-  final hasCorrections = ref.watch(hasCommunityCorrectionProvider(exerciseName));
-  return hasCorrections.maybeWhen(
-    data: (value) => value,
-    orElse: () => false,
+final communityVerifiedBadgeProvider = Provider.family<bool, String>((
+  ref,
+  exerciseName,
+) {
+  final hasCorrections = ref.watch(
+    hasCommunityCorrectionProvider(exerciseName),
   );
+  return hasCorrections.maybeWhen(data: (value) => value, orElse: () => false);
 });

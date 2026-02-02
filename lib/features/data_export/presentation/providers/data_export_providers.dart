@@ -52,10 +52,8 @@ class DataExportState {
     this.isExporting = false,
   });
 
-  factory DataExportState.initial() => DataExportState(
-        progress: ExportProgress.initial(),
-        isExporting: false,
-      );
+  factory DataExportState.initial() =>
+      DataExportState(progress: ExportProgress.initial(), isExporting: false);
 
   final ExportProgress progress;
   final ExportRequest? request;
@@ -117,9 +115,9 @@ class DataExportNotifier extends StateNotifier<DataExportState> {
 /// Provider for data export notifier
 final dataExportProvider =
     StateNotifierProvider<DataExportNotifier, DataExportState>((ref) {
-  final service = ref.watch(dataExportServiceProvider);
-  return DataExportNotifier(service);
-});
+      final service = ref.watch(dataExportServiceProvider);
+      return DataExportNotifier(service);
+    });
 
 /// Provider for checking if user can export (must be authenticated)
 final canExportProvider = Provider<bool>((ref) {

@@ -15,7 +15,9 @@ abstract class SchedulingRepository {
   });
 
   /// Get scheduled workouts for a specific template
-  Future<List<ScheduledWorkout>> getScheduledWorkoutsForTemplate(String templateId);
+  Future<List<ScheduledWorkout>> getScheduledWorkoutsForTemplate(
+    String templateId,
+  );
 
   /// Get a single scheduled workout by ID
   Future<ScheduledWorkout?> getScheduledWorkout(String id);

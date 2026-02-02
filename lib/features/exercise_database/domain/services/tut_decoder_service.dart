@@ -176,26 +176,14 @@ class TutDecoderService {
     final pauseTop = int.tryParse(parts[3]) ?? 0;
 
     final phases = <TutPhase>[
-      TutPhase(
-        name: 'Discesa',
-        seconds: eccentric,
-        isExplosive: false,
-      ),
-      TutPhase(
-        name: 'Pausa basso',
-        seconds: pauseBottom,
-        isExplosive: false,
-      ),
+      TutPhase(name: 'Discesa', seconds: eccentric, isExplosive: false),
+      TutPhase(name: 'Pausa basso', seconds: pauseBottom, isExplosive: false),
       TutPhase(
         name: 'Salita',
         seconds: concentric,
         isExplosive: concentric <= 1,
       ),
-      TutPhase(
-        name: 'Pausa alto',
-        seconds: pauseTop,
-        isExplosive: false,
-      ),
+      TutPhase(name: 'Pausa alto', seconds: pauseTop, isExplosive: false),
     ];
 
     return TutDecoded(

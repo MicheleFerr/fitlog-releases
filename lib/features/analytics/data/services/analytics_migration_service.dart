@@ -48,7 +48,6 @@ import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_
 
 /// Migration statistics
 class MigrationStats {
-
   MigrationStats({
     required this.totalWorkouts,
     required this.totalExercises,
@@ -77,10 +76,8 @@ Migration Stats:
 
 /// Analytics migration service
 class AnalyticsMigrationService {
-
-  AnalyticsMigrationService({
-    required FirebaseFirestore firestore,
-  }) : _firestore = firestore;
+  AnalyticsMigrationService({required FirebaseFirestore firestore})
+    : _firestore = firestore;
   final FirebaseFirestore _firestore;
 
   /// Migrate all workouts for a user to analytics collection
@@ -98,9 +95,10 @@ class AnalyticsMigrationService {
     try {
       // Step 1: Fetch all workouts for user (filter completed in-memory)
       // 🔐 SECURITY: Redact userId (show only first 8 chars for debugging)
-      SecureLogger.info('Starting analytics migration', data: {
-        'userIdPrefix': userId.substring(0, 8.clamp(0, userId.length)),
-      });
+      SecureLogger.info(
+        'Starting analytics migration',
+        data: {'userIdPrefix': userId.substring(0, 8.clamp(0, userId.length))},
+      );
 
       final workoutsSnapshot = await _firestore
           .collection('workouts')
@@ -108,9 +106,10 @@ class AnalyticsMigrationService {
           // Note: No orderBy to avoid filtering out docs without startTime field
           .get();
 
-      SecureLogger.info('Fetched workouts for migration', data: {
-        'totalWorkouts': workoutsSnapshot.docs.length,
-      });
+      SecureLogger.info(
+        'Fetched workouts for migration',
+        data: {'totalWorkouts': workoutsSnapshot.docs.length},
+      );
 
       // Filter only completed workouts (with completedAt timestamp)
       final completedWorkoutDocs = workoutsSnapshot.docs.where((doc) {
@@ -118,9 +117,10 @@ class AnalyticsMigrationService {
         return data['completedAt'] != null; // Only workouts with completedAt
       }).toList();
 
-      SecureLogger.info('Filtered completed workouts', data: {
-        'completedWorkouts': completedWorkoutDocs.length,
-      });
+      SecureLogger.info(
+        'Filtered completed workouts',
+        data: {'completedWorkouts': completedWorkoutDocs.length},
+      );
 
       if (completedWorkoutDocs.isEmpty) {
         SecureLogger.info('No completed workouts found - migration skipped');
@@ -144,28 +144,36 @@ class AnalyticsMigrationService {
       int emptyExercisesCount = 0;
       int processedWorkoutsWithExercises = 0;
 
-      SecureLogger.debug('Starting workout parsing', data: {
-        'totalWorkouts': completedWorkoutDocs.length,
-      });
+      SecureLogger.debug(
+        'Starting workout parsing',
+        data: {'totalWorkouts': completedWorkoutDocs.length},
+      );
 
       for (int i = 0; i < completedWorkoutDocs.length; i++) {
         final workoutDoc = completedWorkoutDocs[i];
         try {
           final workoutData = workoutDoc.data();
-          SecureLogger.debug('Processing workout', data: {
-            'progress': '${i + 1}/${completedWorkoutDocs.length}',
-            'workoutId': workoutDoc.id,
-          });
+          SecureLogger.debug(
+            'Processing workout',
+            data: {
+              'progress': '${i + 1}/${completedWorkoutDocs.length}',
+              'workoutId': workoutDoc.id,
+            },
+          );
 
           // Log raw data structure to debug parsing
           if (i == 0) {
-            SecureLogger.debug('Sample workout structure', data: {
-              'keys': workoutData.keys.join(", "),
-              'exercisesType': workoutData['exercises']?.runtimeType.toString() ?? 'null',
-              'exerciseCount': workoutData['exercises'] is List
-                  ? (workoutData['exercises'] as List).length
-                  : 0,
-            });
+            SecureLogger.debug(
+              'Sample workout structure',
+              data: {
+                'keys': workoutData.keys.join(", "),
+                'exercisesType':
+                    workoutData['exercises']?.runtimeType.toString() ?? 'null',
+                'exerciseCount': workoutData['exercises'] is List
+                    ? (workoutData['exercises'] as List).length
+                    : 0,
+              },
+            );
           }
 
           // Add missing fields for old workout documents
@@ -174,17 +182,29 @@ class AnalyticsMigrationService {
           // 3. Convert Firestore Timestamps to ISO strings for proper parsing
           final enrichedData = Map<String, dynamic>.from(workoutData);
           enrichedData['id'] = workoutDoc.id; // Add document ID
-          enrichedData['status'] = 'completed'; // All filtered workouts have completedAt, so they're completed
+          enrichedData['status'] =
+              'completed'; // All filtered workouts have completedAt, so they're completed
 
           // Convert Timestamp fields to ISO strings for proper parsing
-          for (var field in ['createdAt', 'updatedAt', 'startTime', 'endTime', 'completedAt', 'startedAt']) {
-            if (enrichedData[field] != null && enrichedData[field] is Timestamp) {
-              enrichedData[field] = (enrichedData[field] as Timestamp).toDate().toIso8601String();
+          for (var field in [
+            'createdAt',
+            'updatedAt',
+            'startTime',
+            'endTime',
+            'completedAt',
+            'startedAt',
+          ]) {
+            if (enrichedData[field] != null &&
+                enrichedData[field] is Timestamp) {
+              enrichedData[field] = (enrichedData[field] as Timestamp)
+                  .toDate()
+                  .toIso8601String();
             }
           }
 
           // Also convert Timestamps in exercises and their sets
-          if (enrichedData['exercises'] != null && enrichedData['exercises'] is List) {
+          if (enrichedData['exercises'] != null &&
+              enrichedData['exercises'] is List) {
             final exercises = enrichedData['exercises'] as List;
             enrichedData['exercises'] = exercises.map((exercise) {
               if (exercise is Map<String, dynamic>) {
@@ -193,9 +213,13 @@ class AnalyticsMigrationService {
                 // CRITICAL FIX: Flatten exerciseData wrapper if it exists
                 // Old structure: { category: "...", exerciseData: { id: "...", name: "..." }, sets: [...] }
                 // New structure: { category: "...", id: "...", name: "...", sets: [...] }
-                if (exerciseMap['exerciseData'] != null && exerciseMap['exerciseData'] is Map) {
-                  SecureLogger.debug('Flattening exerciseData wrapper structure');
-                  final exerciseData = exerciseMap['exerciseData'] as Map<String, dynamic>;
+                if (exerciseMap['exerciseData'] != null &&
+                    exerciseMap['exerciseData'] is Map) {
+                  SecureLogger.debug(
+                    'Flattening exerciseData wrapper structure',
+                  );
+                  final exerciseData =
+                      exerciseMap['exerciseData'] as Map<String, dynamic>;
                   // Move all fields from exerciseData to top level
                   exerciseData.forEach((key, value) {
                     exerciseMap[key] = value;
@@ -206,19 +230,27 @@ class AnalyticsMigrationService {
 
                 // Convert exercise timestamps
                 for (var field in ['createdAt', 'updatedAt']) {
-                  if (exerciseMap[field] != null && exerciseMap[field] is Timestamp) {
-                    exerciseMap[field] = (exerciseMap[field] as Timestamp).toDate().toIso8601String();
+                  if (exerciseMap[field] != null &&
+                      exerciseMap[field] is Timestamp) {
+                    exerciseMap[field] = (exerciseMap[field] as Timestamp)
+                        .toDate()
+                        .toIso8601String();
                   }
                 }
 
                 // Convert timestamps in sets
-                if (exerciseMap['sets'] != null && exerciseMap['sets'] is List) {
+                if (exerciseMap['sets'] != null &&
+                    exerciseMap['sets'] is List) {
                   final sets = exerciseMap['sets'] as List;
                   exerciseMap['sets'] = sets.map((set) {
                     if (set is Map<String, dynamic>) {
                       final setMap = Map<String, dynamic>.from(set);
-                      if (setMap['completedAt'] != null && setMap['completedAt'] is Timestamp) {
-                        setMap['completedAt'] = (setMap['completedAt'] as Timestamp).toDate().toIso8601String();
+                      if (setMap['completedAt'] != null &&
+                          setMap['completedAt'] is Timestamp) {
+                        setMap['completedAt'] =
+                            (setMap['completedAt'] as Timestamp)
+                                .toDate()
+                                .toIso8601String();
                       }
                       return setMap;
                     }
@@ -236,30 +268,39 @@ class AnalyticsMigrationService {
           if (enrichedData['exercises'] != null) {
             final rawExercises = enrichedData['exercises'];
             if (rawExercises is List) {
-              SecureLogger.debug('Workout has raw exercises', data: {
-                'workoutId': workoutDoc.id,
-                'exerciseCount': rawExercises.length,
-              });
+              SecureLogger.debug(
+                'Workout has raw exercises',
+                data: {
+                  'workoutId': workoutDoc.id,
+                  'exerciseCount': rawExercises.length,
+                },
+              );
             } else {
-              SecureLogger.warning('Exercises field is not a List', data: {
-                'workoutId': workoutDoc.id,
-                'actualType': rawExercises.runtimeType.toString(),
-              });
+              SecureLogger.warning(
+                'Exercises field is not a List',
+                data: {
+                  'workoutId': workoutDoc.id,
+                  'actualType': rawExercises.runtimeType.toString(),
+                },
+              );
             }
           } else {
-            SecureLogger.warning('Workout has no exercises field', data: {
-              'workoutId': workoutDoc.id,
-            });
+            SecureLogger.warning(
+              'Workout has no exercises field',
+              data: {'workoutId': workoutDoc.id},
+            );
           }
 
           Workout workout;
           try {
             workout = Workout.fromJson(enrichedData);
-            SecureLogger.debug('Parsed workout successfully', data: {
-              'exerciseCount': workout.exercises.length,
-            });
+            SecureLogger.debug(
+              'Parsed workout successfully',
+              data: {'exerciseCount': workout.exercises.length},
+            );
           } catch (e, stackTrace) {
-            SecureLogger.error('Failed to parse workout',
+            SecureLogger.error(
+              'Failed to parse workout',
               error: e,
               stackTrace: stackTrace,
               data: {'workoutId': workoutDoc.id},
@@ -271,16 +312,18 @@ class AnalyticsMigrationService {
           // Skip if workout has no exercises
           if (workout.exercises.isEmpty) {
             emptyExercisesCount++;
-            SecureLogger.warning('Workout has no exercises after parsing', data: {
-              'workoutId': workoutDoc.id,
-            });
+            SecureLogger.warning(
+              'Workout has no exercises after parsing',
+              data: {'workoutId': workoutDoc.id},
+            );
             continue;
           }
 
           processedWorkoutsWithExercises++;
-          SecureLogger.debug('Workout parsed with exercises', data: {
-            'exerciseCount': workout.exercises.length,
-          });
+          SecureLogger.debug(
+            'Workout parsed with exercises',
+            data: {'exerciseCount': workout.exercises.length},
+          );
 
           totalWorkouts++;
 
@@ -289,15 +332,19 @@ class AnalyticsMigrationService {
 
           // Process each exercise in workout
           for (final exercise in workout.exercises) {
-            SecureLogger.debug('Processing exercise', data: {
-              'exerciseName': exercise.name,
-              'setCount': exercise.sets.length,
-            });
+            SecureLogger.debug(
+              'Processing exercise',
+              data: {
+                'exerciseName': exercise.name,
+                'setCount': exercise.sets.length,
+              },
+            );
 
             // For completed workouts, consider all sets with valid weight/reps as completed
             // Don't rely on isCompleted field which may be false in older data
             // 🏋️ Bodyweight support: For countingMode.reps, only require valid reps
-            final isBodyweight = exercise.countingMode == ExerciseCountingMode.reps;
+            final isBodyweight =
+                exercise.countingMode == ExerciseCountingMode.reps;
 
             final validSets = exercise.sets.where((set) {
               final reps = set.actualReps ?? set.reps;
@@ -313,9 +360,10 @@ class AnalyticsMigrationService {
             }).toList();
 
             if (validSets.isEmpty) {
-              SecureLogger.warning('Exercise has no valid sets with weight/reps', data: {
-                'exerciseName': exercise.name,
-              });
+              SecureLogger.warning(
+                'Exercise has no valid sets with weight/reps',
+                data: {'exerciseName': exercise.name},
+              );
               skippedExercises.add('${exercise.name} (no valid sets)');
               continue;
             }
@@ -334,10 +382,13 @@ class AnalyticsMigrationService {
               );
             }).toList();
 
-            SecureLogger.debug('Created analytics sets for exercise', data: {
-              'exerciseName': exercise.name,
-              'setCount': analyticsSets.length,
-            });
+            SecureLogger.debug(
+              'Created analytics sets for exercise',
+              data: {
+                'exerciseName': exercise.name,
+                'setCount': analyticsSets.length,
+              },
+            );
             totalSets += analyticsSets.length;
 
             // Create session data
@@ -355,7 +406,8 @@ class AnalyticsMigrationService {
           }
         } catch (e, stack) {
           parseErrors++;
-          SecureLogger.error('Error parsing workout document',
+          SecureLogger.error(
+            'Error parsing workout document',
             error: e,
             stackTrace: stack,
             data: {'workoutId': workoutDoc.id},
@@ -365,13 +417,16 @@ class AnalyticsMigrationService {
         }
       }
 
-      SecureLogger.info('Parsing complete', data: {
-        'parseErrors': parseErrors,
-        'emptyExercisesCount': emptyExercisesCount,
-        'processedWorkouts': processedWorkoutsWithExercises,
-        'uniqueExercises': exerciseSessionsMap.length,
-        'skippedExercises': skippedExercises.length,
-      });
+      SecureLogger.info(
+        'Parsing complete',
+        data: {
+          'parseErrors': parseErrors,
+          'emptyExercisesCount': emptyExercisesCount,
+          'processedWorkouts': processedWorkoutsWithExercises,
+          'uniqueExercises': exerciseSessionsMap.length,
+          'skippedExercises': skippedExercises.length,
+        },
+      );
 
       // Step 3: Create ExerciseHistory documents for each exercise
       final batch = _firestore.batch();
@@ -391,14 +446,17 @@ class AnalyticsMigrationService {
         final history = ExerciseHistory(
           exerciseId: exerciseName, // Fallback: use name as ID for legacy data
           exerciseName: exerciseName,
-          muscleGroup: sessions.first.muscleGroup, // Use first session's muscle group
+          muscleGroup:
+              sessions.first.muscleGroup, // Use first session's muscle group
           sessions: sessions
-              .map((sessionData) => ExerciseSession(
-                    exerciseName: sessionData.exerciseName,
-                    muscleGroup: sessionData.muscleGroup,
-                    sets: sessionData.sets,
-                    date: sessionData.date,
-                  ))
+              .map(
+                (sessionData) => ExerciseSession(
+                  exerciseName: sessionData.exerciseName,
+                  muscleGroup: sessionData.muscleGroup,
+                  sets: sessionData.sets,
+                  date: sessionData.date,
+                ),
+              )
               .toList(),
         );
 
@@ -416,19 +474,25 @@ class AnalyticsMigrationService {
       }
 
       // Step 4: Commit batch write
-      SecureLogger.info('Writing exercises to Firestore', data: {
-        'exerciseCount': exerciseSessionsMap.length,
-        'exercises': exerciseSessionsMap.keys.join(", "),
-      });
+      SecureLogger.info(
+        'Writing exercises to Firestore',
+        data: {
+          'exerciseCount': exerciseSessionsMap.length,
+          'exercises': exerciseSessionsMap.keys.join(", "),
+        },
+      );
 
       await batch.commit();
 
-      SecureLogger.info('Migration complete', data: {
-        'totalWorkouts': totalWorkouts,
-        'uniqueExercises': exerciseSessionsMap.length,
-        'totalSessions': totalSessions,
-        'totalSets': totalSets,
-      });
+      SecureLogger.info(
+        'Migration complete',
+        data: {
+          'totalWorkouts': totalWorkouts,
+          'uniqueExercises': exerciseSessionsMap.length,
+          'totalSessions': totalSessions,
+          'totalSets': totalSets,
+        },
+      );
 
       // Return statistics
       return Right(
@@ -488,7 +552,6 @@ class AnalyticsMigrationService {
 
 /// Internal data structure for migration
 class _ExerciseSessionData {
-
   _ExerciseSessionData({
     required this.exerciseName,
     required this.muscleGroup,

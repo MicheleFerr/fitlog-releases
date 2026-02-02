@@ -44,7 +44,9 @@ class AthleteDetailScreen extends ConsumerWidget {
         slivers: [
           // App bar with athlete name
           SliverAppBar.medium(
-            title: Text(athleteName.isEmpty ? context.l10n.athlete : athleteName),
+            title: Text(
+              athleteName.isEmpty ? context.l10n.athlete : athleteName,
+            ),
             actions: [
               // Message button
               IconButton(
@@ -68,9 +70,8 @@ class AthleteDetailScreen extends ConsumerWidget {
                 statsAsync.when(
                   data: (stats) => _ComplianceCard(stats: stats),
                   loading: () => const _ComplianceCardSkeleton(),
-                  error: (_, __) => const _ComplianceCard(
-                    stats: AthleteWeeklyStats.empty(),
-                  ),
+                  error: (_, __) =>
+                      const _ComplianceCard(stats: AthleteWeeklyStats.empty()),
                 ),
                 const SizedBox(height: AppSpacing.md),
 
@@ -78,9 +79,8 @@ class AthleteDetailScreen extends ConsumerWidget {
                 statsAsync.when(
                   data: (stats) => _WeeklyStatsRow(stats: stats),
                   loading: () => const _WeeklyStatsRowSkeleton(),
-                  error: (_, __) => const _WeeklyStatsRow(
-                    stats: AthleteWeeklyStats.empty(),
-                  ),
+                  error: (_, __) =>
+                      const _WeeklyStatsRow(stats: AthleteWeeklyStats.empty()),
                 ),
                 const SizedBox(height: AppSpacing.xl),
 
@@ -500,10 +500,7 @@ class _RecentActivityList extends StatelessWidget {
 }
 
 class _WorkoutListItem extends StatelessWidget {
-  const _WorkoutListItem({
-    required this.workout,
-    required this.onTap,
-  });
+  const _WorkoutListItem({required this.workout, required this.onTap});
 
   final AthleteWorkoutSummary workout;
   final VoidCallback onTap;
@@ -712,7 +709,9 @@ class _WorkoutDetailModal extends StatelessWidget {
                   color: context.colors.surfaceContainerLow,
                   border: Border(
                     top: BorderSide(
-                      color: context.colors.outlineVariant.withValues(alpha: 0.5),
+                      color: context.colors.outlineVariant.withValues(
+                        alpha: 0.5,
+                      ),
                     ),
                   ),
                 ),
@@ -752,10 +751,7 @@ class _WorkoutDetailModal extends StatelessWidget {
 }
 
 class _ExerciseDetailItem extends StatelessWidget {
-  const _ExerciseDetailItem({
-    required this.index,
-    required this.exercise,
-  });
+  const _ExerciseDetailItem({required this.index, required this.exercise});
 
   final int index;
   final AthleteExerciseSummary exercise;
@@ -815,10 +811,7 @@ class _ExerciseDetailItem extends StatelessWidget {
 }
 
 class _FooterStat extends StatelessWidget {
-  const _FooterStat({
-    required this.label,
-    required this.value,
-  });
+  const _FooterStat({required this.label, required this.value});
 
   final String label;
   final String value;

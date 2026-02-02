@@ -135,10 +135,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       await _saveFitnessProfile();
 
       if (mounted) {
-        SnackBarService.showSuccess(
-          context,
-          context.l10n.profileUpdated,
-        );
+        SnackBarService.showSuccess(context, context.l10n.profileUpdated);
         _hasChanges = false;
         // Invalidate user provider to refresh data
         ref.invalidate(currentUserProvider);
@@ -175,18 +172,20 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final existingQuestionnaire = ref.read(userFitnessQuestionnaireProvider);
 
     // Create or update questionnaire
-    final questionnaire = existingQuestionnaire?.copyWith(
-      age: age,
-      heightCm: height,
-      bodyweightKg: weight,
-      sex: _genderStringToBiologicalSex(gender),
-    ) ?? UserFitnessQuestionnaire(
-      age: age,
-      heightCm: height,
-      bodyweightKg: weight,
-      sex: _genderStringToBiologicalSex(gender),
-      experienceLevel: ExperienceLevel.novice, // Default for new profiles
-    );
+    final questionnaire =
+        existingQuestionnaire?.copyWith(
+          age: age,
+          heightCm: height,
+          bodyweightKg: weight,
+          sex: _genderStringToBiologicalSex(gender),
+        ) ??
+        UserFitnessQuestionnaire(
+          age: age,
+          heightCm: height,
+          bodyweightKg: weight,
+          sex: _genderStringToBiologicalSex(gender),
+          experienceLevel: ExperienceLevel.novice, // Default for new profiles
+        );
 
     // Update state and save to Hive
     notifier.updateQuestionnaire(questionnaire);
@@ -362,10 +361,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 ),
               ),
               items: [
-                DropdownMenuItem(
-                  value: 'male',
-                  child: Text(context.l10n.male),
-                ),
+                DropdownMenuItem(value: 'male', child: Text(context.l10n.male)),
                 DropdownMenuItem(
                   value: 'female',
                   child: Text(context.l10n.female),
@@ -432,7 +428,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     validator: (value) {
                       if (value != null && value.isNotEmpty) {
                         final weight = double.tryParse(value);

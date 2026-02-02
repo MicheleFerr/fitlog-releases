@@ -31,24 +31,18 @@ enum InsightType {
 }
 
 /// Action type for insights that can be acted upon
-enum InsightActionType {
-  replaceExercise,
-  modifyVolume,
-  adjustRest,
-  none,
-}
+enum InsightActionType { replaceExercise, modifyVolume, adjustRest, none }
 
 /// Severity level for insights (affects UI color and priority display)
 enum InsightSeverity {
-  critical,   // 🔴 Red - Immediate attention (injury risk, overtraining)
-  warning,    // 🟠 Orange - Important but not urgent (plateaus, imbalances)
-  info,       // 🔵 Blue - Informative/educational
-  success,    // 🟢 Green - Positive feedback
+  critical, // 🔴 Red - Immediate attention (injury risk, overtraining)
+  warning, // 🟠 Orange - Important but not urgent (plateaus, imbalances)
+  info, // 🔵 Blue - Informative/educational
+  success, // 🟢 Green - Positive feedback
 }
 
 /// Template where affected exercise appears
 class AffectedTemplate {
-
   const AffectedTemplate({
     required this.templateId,
     required this.templateName,
@@ -58,7 +52,8 @@ class AffectedTemplate {
 }
 
 /// AI insight generated for the user
-class AIInsight { // IDs of anomalies affecting this insight
+class AIInsight {
+  // IDs of anomalies affecting this insight
 
   const AIInsight({
     required this.type,
@@ -93,11 +88,13 @@ class AIInsight { // IDs of anomalies affecting this insight
 
   // Actionable exercise data
   final String? affectedExercise; // Exercise name with issue
-  final List<AffectedTemplate>? affectedTemplates; // Templates containing this exercise
+  final List<AffectedTemplate>?
+  affectedTemplates; // Templates containing this exercise
   final InsightActionType? actionType; // Type of action user can take
 
   // UI/UX enhancements
-  final InsightSeverity? severity; // Optional explicit severity (auto-calculated if null)
+  final InsightSeverity?
+  severity; // Optional explicit severity (auto-calculated if null)
 
   // Data quality tracking
   final double? dataQualityConfidence; // 0.0-1.0, null = not checked
@@ -121,7 +118,9 @@ class AIInsight { // IDs of anomalies affecting this insight
       case InsightType.formWarning:
         return InsightSeverity.critical; // 🔴 Injury risk
       case InsightType.volumeOptimization:
-        return priority == 1 ? InsightSeverity.critical : InsightSeverity.warning; // Overtraining
+        return priority == 1
+            ? InsightSeverity.critical
+            : InsightSeverity.warning; // Overtraining
       case InsightType.recoveryPattern:
         return priority <= 2 ? InsightSeverity.warning : InsightSeverity.info;
       case InsightType.muscleGroupBalance:
@@ -139,8 +138,7 @@ class AIInsight { // IDs of anomalies affecting this insight
   /// Whether this insight is based on questionable data (low confidence)
   /// Threshold: < 0.7 is considered low quality
   bool get hasDataQualityIssues =>
-      dataQualityConfidence != null &&
-      dataQualityConfidence! < 0.7;
+      dataQualityConfidence != null && dataQualityConfidence! < 0.7;
 
   /// Generate a deterministic hash for this insight
   /// Used to identify the same insight across sessions for feedback tracking
@@ -165,7 +163,8 @@ class AIInsight { // IDs of anomalies affecting this insight
 }
 
 /// Scientific strategy for resolving training issues
-class ScientificStrategy { // e.g., "Schoenfeld et al. 2017"
+class ScientificStrategy {
+  // e.g., "Schoenfeld et al. 2017"
 
   const ScientificStrategy({
     required this.title,
@@ -197,45 +196,59 @@ class AICoachService {
     final insights = <AIInsight>[];
 
     if (activities.isEmpty) {
-      insights.add(AIInsight(
-        type: InsightType.motivational,
-        title: l10n.aiInsightStartJourney,
-        description: l10n.aiInsightStartJourneyDesc,
-        recommendation: l10n.aiInsightStartJourneyRec,
-        priority: 1,
-      ));
+      insights.add(
+        AIInsight(
+          type: InsightType.motivational,
+          title: l10n.aiInsightStartJourney,
+          description: l10n.aiInsightStartJourneyDesc,
+          recommendation: l10n.aiInsightStartJourneyRec,
+          priority: 1,
+        ),
+      );
       return insights;
     }
 
     // Special handling for new users (1-3 workouts total)
     if (activities.length <= 3) {
-      insights.add(AIInsight(
-        type: InsightType.motivational,
-        title: l10n.aiInsightNewUser,
-        description: l10n.aiInsightNewUserDesc,
-        recommendation: l10n.aiInsightNewUserRec,
-        priority: 1,
-      ));
+      insights.add(
+        AIInsight(
+          type: InsightType.motivational,
+          title: l10n.aiInsightNewUser,
+          description: l10n.aiInsightNewUserDesc,
+          recommendation: l10n.aiInsightNewUserRec,
+          priority: 1,
+        ),
+      );
       return insights; // Skip advanced analytics for new users
     }
 
     // Filtra attività dell'ultima settimana per analisi volume
-    final weeklyActivities = activities.where(
-      (a) => a.createdAt.isAfter(DateTime.now().subtract(const Duration(days: 7))),
-    ).toList();
+    final weeklyActivities = activities
+        .where(
+          (a) => a.createdAt.isAfter(
+            DateTime.now().subtract(const Duration(days: 7)),
+          ),
+        )
+        .toList();
 
     // Analisi scientifica del volume per muscle group
-    insights.addAll(_analyzeVolumeByMuscleGroup(weeklyActivities, exerciseDatabase, l10n));
+    insights.addAll(
+      _analyzeVolumeByMuscleGroup(weeklyActivities, exerciseDatabase, l10n),
+    );
 
     // Analyze progressive overload
-    insights.addAll(_analyzeProgressiveOverload(activities, l10n, userTemplates));
+    insights.addAll(
+      _analyzeProgressiveOverload(activities, l10n, userTemplates),
+    );
 
     // Analyze recovery patterns (use completed workouts if available, fallback to activities)
-    insights.addAll(_analyzeRecoveryPatterns(
-      completedWorkouts.isNotEmpty ? completedWorkouts : activities,
-      l10n,
-      useWorkouts: completedWorkouts.isNotEmpty,
-    ));
+    insights.addAll(
+      _analyzeRecoveryPatterns(
+        completedWorkouts.isNotEmpty ? completedWorkouts : activities,
+        l10n,
+        useWorkouts: completedWorkouts.isNotEmpty,
+      ),
+    );
 
     // Analyze frequency
     insights.addAll(_analyzeFrequency(weeklyFrequency, l10n));
@@ -262,100 +275,118 @@ class AICoachService {
     if (weeklyActivities.isEmpty) return insights;
 
     // Calcola volume settimanale per muscle group
-    final volumeByMuscle = AIVolumeCalculator.calculateWeeklyVolumeByMuscleGroup(
-      weeklyActivities,
-      exerciseDatabase,
-    );
+    final volumeByMuscle =
+        AIVolumeCalculator.calculateWeeklyVolumeByMuscleGroup(
+          weeklyActivities,
+          exerciseDatabase,
+        );
 
     // Identifica muscle groups sbilanciati (sotto MEV)
-    final undertrainedMuscles = AIVolumeCalculator.findImbalancedMuscles(volumeByMuscle);
+    final undertrainedMuscles = AIVolumeCalculator.findImbalancedMuscles(
+      volumeByMuscle,
+    );
     if (undertrainedMuscles.isNotEmpty) {
       final muscle = undertrainedMuscles.first;
       final volume = volumeByMuscle[muscle]!;
 
-      insights.add(AIInsight(
-        type: InsightType.muscleGroupBalance,
-        title: l10n.aiInsightMuscleImbalance,
-        description: l10n.aiInsightMuscleImbalanceDesc(_getMuscleGroupName(muscle, l10n)),
-        recommendation: l10n.aiInsightMuscleImbalanceRec(_getMuscleGroupName(muscle, l10n)),
-        priority: 2,
-        data: {
-          'muscleGroup': muscle,
-          'currentSets': volume.totalSets,
-          'recommendedSets': 15,
-        },
-        detailedAnalysis: l10n.aiMuscleImbalanceAnalysis(
-          _getMuscleGroupName(muscle, l10n),
-          volume.totalSets.toString(),
-        ),
-        dataPoints: [
-          l10n.dataCurrentVolume(volume.totalSets.toString()),
-          l10n.dataMEV,
-          l10n.dataMAV,
-          l10n.dataDeficit((10 - volume.totalSets).toString()),
-          l10n.dataExercisesList(volume.exercises.take(3).join(', ')),
-        ],
-        strategies: _getMuscleBalanceStrategies(l10n),
-        scientificReference: '''Schoenfeld & Grgic (2018) - Evidence-based guidelines for resistance training volume
+      insights.add(
+        AIInsight(
+          type: InsightType.muscleGroupBalance,
+          title: l10n.aiInsightMuscleImbalance,
+          description: l10n.aiInsightMuscleImbalanceDesc(
+            _getMuscleGroupName(muscle, l10n),
+          ),
+          recommendation: l10n.aiInsightMuscleImbalanceRec(
+            _getMuscleGroupName(muscle, l10n),
+          ),
+          priority: 2,
+          data: {
+            'muscleGroup': muscle,
+            'currentSets': volume.totalSets,
+            'recommendedSets': 15,
+          },
+          detailedAnalysis: l10n.aiMuscleImbalanceAnalysis(
+            _getMuscleGroupName(muscle, l10n),
+            volume.totalSets.toString(),
+          ),
+          dataPoints: [
+            l10n.dataCurrentVolume(volume.totalSets.toString()),
+            l10n.dataMEV,
+            l10n.dataMAV,
+            l10n.dataDeficit((10 - volume.totalSets).toString()),
+            l10n.dataExercisesList(volume.exercises.take(3).join(', ')),
+          ],
+          strategies: _getMuscleBalanceStrategies(l10n),
+          scientificReference:
+              '''Schoenfeld & Grgic (2018) - Evidence-based guidelines for resistance training volume
 https://doi.org/10.1519/SSC.0000000000000363''',
-      ));
+        ),
+      );
     }
 
     // Identifica muscle groups in overtraining (sopra MRV)
-    final overtrainedMuscles = AIVolumeCalculator.findOvertrainedMuscles(volumeByMuscle);
+    final overtrainedMuscles = AIVolumeCalculator.findOvertrainedMuscles(
+      volumeByMuscle,
+    );
     if (overtrainedMuscles.isNotEmpty) {
       final muscle = overtrainedMuscles.first;
       final volume = volumeByMuscle[muscle]!;
 
-      insights.add(AIInsight(
-        type: InsightType.volumeOptimization,
-        title: l10n.aiInsightHighVolume,
-        description: l10n.aiInsightHighVolumeDesc(volume.totalSets),
-        recommendation: l10n.aiInsightHighVolumeRec,
-        priority: 1, // Alta priorità - rischio overtraining
-        data: {
-          'muscleGroup': muscle,
-          'currentSets': volume.totalSets,
-          'recommendedSets': 20,
-        },
-        detailedAnalysis: l10n.aiHighVolumeAnalysis(
-          _getMuscleGroupName(muscle, l10n),
-          volume.totalSets.toString(),
-        ),
-        dataPoints: [
-          l10n.dataCurrentVolume(volume.totalSets.toString()),
-          l10n.dataMRV,
-          l10n.dataMAV,
-          l10n.dataExcess((volume.totalSets - 25).toString()),
-          l10n.dataExercisesList(volume.exercises.take(3).join(', ')),
-          l10n.dataRiskOvertraining,
-        ],
-        strategies: [
-          ScientificStrategy(
-            title: l10n.strategyHighvolumereducegraduallyTitle,
-            description: l10n.strategyHighvolumereducegraduallyDesc,
-            howToImplement: l10n.strategyHighvolumereducegraduallyImpl,
-            expectedOutcome: l10n.strategyHighvolumereducegraduallyOutcome,
-            scientificBasis: 'Israetel et al. (2017) - Volume Landmarks for muscle growth',
+      insights.add(
+        AIInsight(
+          type: InsightType.volumeOptimization,
+          title: l10n.aiInsightHighVolume,
+          description: l10n.aiInsightHighVolumeDesc(volume.totalSets),
+          recommendation: l10n.aiInsightHighVolumeRec,
+          priority: 1, // Alta priorità - rischio overtraining
+          data: {
+            'muscleGroup': muscle,
+            'currentSets': volume.totalSets,
+            'recommendedSets': 20,
+          },
+          detailedAnalysis: l10n.aiHighVolumeAnalysis(
+            _getMuscleGroupName(muscle, l10n),
+            volume.totalSets.toString(),
           ),
-          ScientificStrategy(
-            title: l10n.strategyHighvolumedeloadTitle,
-            description: l10n.strategyHighvolumedeloadDesc,
-            howToImplement: l10n.strategyHighvolumedeloadImpl,
-            expectedOutcome: l10n.strategyHighvolumedeloadOutcome,
-            scientificBasis: 'Pritchard et al. (2015) - Effects and mechanisms of deloading',
-          ),
-          ScientificStrategy(
-            title: l10n.strategyHighvolumeincreasefreqTitle,
-            description: l10n.strategyHighvolumeincreasefreqDesc,
-            howToImplement: l10n.strategyHighvolumeincreasefreqImpl,
-            expectedOutcome: l10n.strategyHighvolumeincreasefreqOutcome,
-            scientificBasis: 'Schoenfeld et al. (2019) - Training frequency and hypertrophy',
-          ),
-        ],
-        scientificReference: '''Fry & Kraemer (1997) - Resistance exercise overtraining and overreaching
+          dataPoints: [
+            l10n.dataCurrentVolume(volume.totalSets.toString()),
+            l10n.dataMRV,
+            l10n.dataMAV,
+            l10n.dataExcess((volume.totalSets - 25).toString()),
+            l10n.dataExercisesList(volume.exercises.take(3).join(', ')),
+            l10n.dataRiskOvertraining,
+          ],
+          strategies: [
+            ScientificStrategy(
+              title: l10n.strategyHighvolumereducegraduallyTitle,
+              description: l10n.strategyHighvolumereducegraduallyDesc,
+              howToImplement: l10n.strategyHighvolumereducegraduallyImpl,
+              expectedOutcome: l10n.strategyHighvolumereducegraduallyOutcome,
+              scientificBasis:
+                  'Israetel et al. (2017) - Volume Landmarks for muscle growth',
+            ),
+            ScientificStrategy(
+              title: l10n.strategyHighvolumedeloadTitle,
+              description: l10n.strategyHighvolumedeloadDesc,
+              howToImplement: l10n.strategyHighvolumedeloadImpl,
+              expectedOutcome: l10n.strategyHighvolumedeloadOutcome,
+              scientificBasis:
+                  'Pritchard et al. (2015) - Effects and mechanisms of deloading',
+            ),
+            ScientificStrategy(
+              title: l10n.strategyHighvolumeincreasefreqTitle,
+              description: l10n.strategyHighvolumeincreasefreqDesc,
+              howToImplement: l10n.strategyHighvolumeincreasefreqImpl,
+              expectedOutcome: l10n.strategyHighvolumeincreasefreqOutcome,
+              scientificBasis:
+                  'Schoenfeld et al. (2019) - Training frequency and hypertrophy',
+            ),
+          ],
+          scientificReference:
+              '''Fry & Kraemer (1997) - Resistance exercise overtraining and overreaching
 https://pubmed.ncbi.nlm.nih.gov/9475647/''',
-      ));
+        ),
+      );
     }
 
     // POSITIVE FEEDBACK: Identify optimal volume muscle groups
@@ -363,22 +394,29 @@ https://pubmed.ncbi.nlm.nih.gov/9475647/''',
         .where((e) => e.value.isOptimal)
         .toList();
 
-    if (optimalMuscles.isNotEmpty && undertrainedMuscles.isEmpty && overtrainedMuscles.isEmpty) {
+    if (optimalMuscles.isNotEmpty &&
+        undertrainedMuscles.isEmpty &&
+        overtrainedMuscles.isEmpty) {
       final muscle = optimalMuscles.first.key;
       final volume = optimalMuscles.first.value;
 
-      insights.add(AIInsight(
-        type: InsightType.motivational,
-        title: l10n.aiInsightOptimalVolume,
-        description: l10n.aiInsightOptimalVolumeDesc(_getMuscleGroupName(muscle, l10n), volume.totalSets),
-        recommendation: l10n.aiInsightOptimalVolumeRec,
-        priority: 4, // Bassa priorità - feedback positivo
-        data: {
-          'muscleGroup': muscle,
-          'currentSets': volume.totalSets,
-          'optimalMuscles': optimalMuscles.length,
-        },
-      ));
+      insights.add(
+        AIInsight(
+          type: InsightType.motivational,
+          title: l10n.aiInsightOptimalVolume,
+          description: l10n.aiInsightOptimalVolumeDesc(
+            _getMuscleGroupName(muscle, l10n),
+            volume.totalSets,
+          ),
+          recommendation: l10n.aiInsightOptimalVolumeRec,
+          priority: 4, // Bassa priorità - feedback positivo
+          data: {
+            'muscleGroup': muscle,
+            'currentSets': volume.totalSets,
+            'optimalMuscles': optimalMuscles.length,
+          },
+        ),
+      );
     }
 
     return insights;
@@ -421,40 +459,50 @@ https://pubmed.ncbi.nlm.nih.gov/9475647/''',
 
           if (isStagnant) {
             // Find which templates contain this exercise
-            final affectedTemplates = _findTemplatesWithExercise(exerciseName, userTemplates);
+            final affectedTemplates = _findTemplatesWithExercise(
+              exerciseName,
+              userTemplates,
+            );
 
-            insights.add(AIInsight(
-              type: InsightType.progressOverload,
-              title: l10n.aiInsightPlateauAlert,
-              description: l10n.aiInsightPlateauDesc(exerciseName),
-              recommendation: l10n.aiInsightPlateauRec,
-              priority: 3,
-              data: {
-                'exercise': exerciseName,
-                'currentWeight': avgWeight.toStringAsFixed(1),
-                'weightRange': weightRange,
-              },
-              detailedAnalysis: l10n.aiPlateauAnalysis(
-              ((weightRange / avgWeight) * 100).toStringAsFixed(1),
-            ),
-              dataPoints: [
-                l10n.dataSession1(weights[0].toStringAsFixed(1)),
-                l10n.dataSession2(weights[1].toStringAsFixed(1)),
-                l10n.dataSession3(weights[2].toStringAsFixed(1)),
-                l10n.dataAverageWeight(avgWeight.toStringAsFixed(1)),
-                l10n.dataWeightVariation2(
-                  weightRange.toStringAsFixed(1),
+            insights.add(
+              AIInsight(
+                type: InsightType.progressOverload,
+                title: l10n.aiInsightPlateauAlert,
+                description: l10n.aiInsightPlateauDesc(exerciseName),
+                recommendation: l10n.aiInsightPlateauRec,
+                priority: 3,
+                data: {
+                  'exercise': exerciseName,
+                  'currentWeight': avgWeight.toStringAsFixed(1),
+                  'weightRange': weightRange,
+                },
+                detailedAnalysis: l10n.aiPlateauAnalysis(
                   ((weightRange / avgWeight) * 100).toStringAsFixed(1),
                 ),
-              ],
-              strategies: _getPlateauBreakingStrategies(l10n),
-              scientificReference: '''Schoenfeld et al. (2017) - Mechanisms of Hypertrophy
+                dataPoints: [
+                  l10n.dataSession1(weights[0].toStringAsFixed(1)),
+                  l10n.dataSession2(weights[1].toStringAsFixed(1)),
+                  l10n.dataSession3(weights[2].toStringAsFixed(1)),
+                  l10n.dataAverageWeight(avgWeight.toStringAsFixed(1)),
+                  l10n.dataWeightVariation2(
+                    weightRange.toStringAsFixed(1),
+                    ((weightRange / avgWeight) * 100).toStringAsFixed(1),
+                  ),
+                ],
+                strategies: _getPlateauBreakingStrategies(l10n),
+                scientificReference:
+                    '''Schoenfeld et al. (2017) - Mechanisms of Hypertrophy
 https://doi.org/10.1007/s40279-017-0713-y''',
-              // Actionable data
-              affectedExercise: exerciseName,
-              affectedTemplates: affectedTemplates.isNotEmpty ? affectedTemplates : null,
-              actionType: affectedTemplates.isNotEmpty ? InsightActionType.replaceExercise : InsightActionType.none,
-            ));
+                // Actionable data
+                affectedExercise: exerciseName,
+                affectedTemplates: affectedTemplates.isNotEmpty
+                    ? affectedTemplates
+                    : null,
+                actionType: affectedTemplates.isNotEmpty
+                    ? InsightActionType.replaceExercise
+                    : InsightActionType.none,
+              ),
+            );
             break; // Solo un insight per plateau
           }
         }
@@ -490,7 +538,8 @@ https://doi.org/10.1007/s40279-017-0713-y''',
         });
 
       final lastWorkout = sortedWorkouts.first;
-      lastWorkoutDate = (lastWorkout.endTime ?? lastWorkout.createdAt) as DateTime;
+      lastWorkoutDate =
+          (lastWorkout.endTime ?? lastWorkout.createdAt) as DateTime;
     } else {
       // Fallback to ExerciseActivity
       final activities = data.cast<ExerciseActivity>();
@@ -509,157 +558,190 @@ https://doi.org/10.1007/s40279-017-0713-y''',
       lastWorkoutDate = sortedActivities.first.createdAt;
     }
 
-    final hoursSinceLastWorkout = DateTime.now().difference(lastWorkoutDate).inHours;
+    final hoursSinceLastWorkout = DateTime.now()
+        .difference(lastWorkoutDate)
+        .inHours;
     final daysSinceLastWorkout = hoursSinceLastWorkout / 24.0;
 
     // Insufficient recovery: working out again within 24 hours
     if (daysSinceLastWorkout < 1.0) {
-      insights.add(AIInsight(
-        type: InsightType.recoveryPattern,
-        title: l10n.aiInsightInsufficientRecovery,
-        description: l10n.aiInsightInsufficientRecoveryDesc,
-        recommendation: l10n.aiInsightInsufficientRecoveryRec,
-        priority: 2,
-        data: {'daysSinceLastWorkout': daysSinceLastWorkout},
-        detailedAnalysis: l10n.aiInsufficientRecoveryAnalysis(
-          daysSinceLastWorkout.toStringAsFixed(1),
-        ),
-        dataPoints: [
-          l10n.dataLastWorkout(daysSinceLastWorkout.toStringAsFixed(1)),
-          l10n.dataMinimumRecovery,
-          l10n.dataOptimalRange,
-          l10n.dataCurrentStatus,
-          l10n.dataMuscleProteinSynthesis,
-        ],
-        strategies: _getRecoveryStrategies(l10n),
-        scientificReference: '''Dattilo et al. (2011) - Sleep and muscle recovery
+      insights.add(
+        AIInsight(
+          type: InsightType.recoveryPattern,
+          title: l10n.aiInsightInsufficientRecovery,
+          description: l10n.aiInsightInsufficientRecoveryDesc,
+          recommendation: l10n.aiInsightInsufficientRecoveryRec,
+          priority: 2,
+          data: {'daysSinceLastWorkout': daysSinceLastWorkout},
+          detailedAnalysis: l10n.aiInsufficientRecoveryAnalysis(
+            daysSinceLastWorkout.toStringAsFixed(1),
+          ),
+          dataPoints: [
+            l10n.dataLastWorkout(daysSinceLastWorkout.toStringAsFixed(1)),
+            l10n.dataMinimumRecovery,
+            l10n.dataOptimalRange,
+            l10n.dataCurrentStatus,
+            l10n.dataMuscleProteinSynthesis,
+          ],
+          strategies: _getRecoveryStrategies(l10n),
+          scientificReference:
+              '''Dattilo et al. (2011) - Sleep and muscle recovery
 https://pubmed.ncbi.nlm.nih.gov/21550729/''',
-      ));
+        ),
+      );
     }
     // Long recovery: more than 4 days without training
     else if (daysSinceLastWorkout > 4.0) {
-      insights.add(AIInsight(
-        type: InsightType.recoveryPattern,
-        title: l10n.aiInsightLongRecovery,
-        description: l10n.aiInsightLongRecoveryDesc,
-        recommendation: l10n.aiInsightLongRecoveryRec,
-        priority: 3,
-        data: {'daysSinceLastWorkout': daysSinceLastWorkout},
-        detailedAnalysis: l10n.aiLongRecoveryAnalysis(
-          daysSinceLastWorkout.toStringAsFixed(1),
-        ),
-        dataPoints: [
-          l10n.dataLastWorkout(daysSinceLastWorkout.toStringAsFixed(1)),
-          l10n.dataMaxRecommended,
-          l10n.dataProteinSynthesisPeak,
-          l10n.dataDetrainingRisk,
-          l10n.dataOptimalFrequency,
-        ],
-        strategies: [
-          ScientificStrategy(
-            title: l10n.strategyLongrecoveryscheduleTitle,
-            description: l10n.strategyLongrecoveryscheduleDesc,
-            howToImplement: l10n.strategyLongrecoveryscheduleImpl,
-            expectedOutcome: l10n.strategyLongrecoveryscheduleOutcome,
-            scientificBasis: 'Gardner et al. (2012) - Exercise habit formation',
+      insights.add(
+        AIInsight(
+          type: InsightType.recoveryPattern,
+          title: l10n.aiInsightLongRecovery,
+          description: l10n.aiInsightLongRecoveryDesc,
+          recommendation: l10n.aiInsightLongRecoveryRec,
+          priority: 3,
+          data: {'daysSinceLastWorkout': daysSinceLastWorkout},
+          detailedAnalysis: l10n.aiLongRecoveryAnalysis(
+            daysSinceLastWorkout.toStringAsFixed(1),
           ),
-          ScientificStrategy(
-            title: l10n.strategyLongrecoverymindoseTitle,
-            description: l10n.strategyLongrecoverymindoseDesc,
-            howToImplement: l10n.strategyLongrecoverymindoseImpl,
-            expectedOutcome: l10n.strategyLongrecoverymindoseOutcome,
-            scientificBasis: 'Bickel et al. (2011) - Exercise dosage for muscle maintenance',
-          ),
-        ],
-        scientificReference: '''McMaster et al. (2013) - Strength retention and decay rates
+          dataPoints: [
+            l10n.dataLastWorkout(daysSinceLastWorkout.toStringAsFixed(1)),
+            l10n.dataMaxRecommended,
+            l10n.dataProteinSynthesisPeak,
+            l10n.dataDetrainingRisk,
+            l10n.dataOptimalFrequency,
+          ],
+          strategies: [
+            ScientificStrategy(
+              title: l10n.strategyLongrecoveryscheduleTitle,
+              description: l10n.strategyLongrecoveryscheduleDesc,
+              howToImplement: l10n.strategyLongrecoveryscheduleImpl,
+              expectedOutcome: l10n.strategyLongrecoveryscheduleOutcome,
+              scientificBasis:
+                  'Gardner et al. (2012) - Exercise habit formation',
+            ),
+            ScientificStrategy(
+              title: l10n.strategyLongrecoverymindoseTitle,
+              description: l10n.strategyLongrecoverymindoseDesc,
+              howToImplement: l10n.strategyLongrecoverymindoseImpl,
+              expectedOutcome: l10n.strategyLongrecoverymindoseOutcome,
+              scientificBasis:
+                  'Bickel et al. (2011) - Exercise dosage for muscle maintenance',
+            ),
+          ],
+          scientificReference:
+              '''McMaster et al. (2013) - Strength retention and decay rates
 https://doi.org/10.1007/s40279-013-0031-3''',
-      ));
+        ),
+      );
     }
 
     return insights;
   }
 
   /// Analyze training frequency
-  static List<AIInsight> _analyzeFrequency(double weeklyFrequency, AppLocalizations l10n) {
+  static List<AIInsight> _analyzeFrequency(
+    double weeklyFrequency,
+    AppLocalizations l10n,
+  ) {
     final insights = <AIInsight>[];
 
     // Low frequency: less than 1 workout per week (too low for any progress)
     if (weeklyFrequency > 0 && weeklyFrequency < 1.0) {
-      insights.add(AIInsight(
-        type: InsightType.frequencyRecommendation,
-        title: l10n.aiInsightLowFrequency,
-        description: l10n.aiInsightLowFrequencyDesc(weeklyFrequency.toStringAsFixed(1)),
-        recommendation: l10n.aiInsightLowFrequencyRec,
-        priority: 2,
-        data: {'currentFrequency': weeklyFrequency, 'recommendedFrequency': 3.0},
-        detailedAnalysis: l10n.aiLowFrequencyAnalysis(
-          weeklyFrequency.toStringAsFixed(1),
-        ),
-        dataPoints: [
-          l10n.dataCurrentFrequency(weeklyFrequency.toStringAsFixed(1)),
-          l10n.dataMinimumEffective,
-          l10n.dataOptimalFrequency,
-          l10n.dataAdaptationStatus,
-          l10n.dataMPSCycle('72'),
-        ],
-        strategies: [
-          ScientificStrategy(
-            title: l10n.strategyLowfrequencyminviableTitle,
-            description: l10n.strategyLowfrequencyminviableDesc,
-            howToImplement: l10n.strategyLowfrequencyminviableImpl,
-            expectedOutcome: l10n.strategyLowfrequencyminviableOutcome,
-            scientificBasis: 'Schoenfeld et al. (2016) - Frequency and hypertrophy: A dose-response relationship',
+      insights.add(
+        AIInsight(
+          type: InsightType.frequencyRecommendation,
+          title: l10n.aiInsightLowFrequency,
+          description: l10n.aiInsightLowFrequencyDesc(
+            weeklyFrequency.toStringAsFixed(1),
           ),
-          ScientificStrategy(
-            title: l10n.strategyLowfrequencytimeefficientTitle,
-            description: l10n.strategyLowfrequencytimeefficientDesc,
-            howToImplement: l10n.strategyLowfrequencytimeefficientImpl,
-            expectedOutcome: l10n.strategyLowfrequencytimeefficientOutcome,
-            scientificBasis: 'Gentil et al. (2017) - Exercise selection and muscle activation',
+          recommendation: l10n.aiInsightLowFrequencyRec,
+          priority: 2,
+          data: {
+            'currentFrequency': weeklyFrequency,
+            'recommendedFrequency': 3.0,
+          },
+          detailedAnalysis: l10n.aiLowFrequencyAnalysis(
+            weeklyFrequency.toStringAsFixed(1),
           ),
-        ],
-        scientificReference: '''Dankel et al. (2017) - Training frequency and muscle growth
+          dataPoints: [
+            l10n.dataCurrentFrequency(weeklyFrequency.toStringAsFixed(1)),
+            l10n.dataMinimumEffective,
+            l10n.dataOptimalFrequency,
+            l10n.dataAdaptationStatus,
+            l10n.dataMPSCycle('72'),
+          ],
+          strategies: [
+            ScientificStrategy(
+              title: l10n.strategyLowfrequencyminviableTitle,
+              description: l10n.strategyLowfrequencyminviableDesc,
+              howToImplement: l10n.strategyLowfrequencyminviableImpl,
+              expectedOutcome: l10n.strategyLowfrequencyminviableOutcome,
+              scientificBasis:
+                  'Schoenfeld et al. (2016) - Frequency and hypertrophy: A dose-response relationship',
+            ),
+            ScientificStrategy(
+              title: l10n.strategyLowfrequencytimeefficientTitle,
+              description: l10n.strategyLowfrequencytimeefficientDesc,
+              howToImplement: l10n.strategyLowfrequencytimeefficientImpl,
+              expectedOutcome: l10n.strategyLowfrequencytimeefficientOutcome,
+              scientificBasis:
+                  'Gentil et al. (2017) - Exercise selection and muscle activation',
+            ),
+          ],
+          scientificReference:
+              '''Dankel et al. (2017) - Training frequency and muscle growth
 https://doi.org/10.1007/s40279-016-0543-8''',
-      ));
+        ),
+      );
     }
     // High frequency: more than 6 workouts per week (potential overtraining)
     else if (weeklyFrequency > 6.0) {
-      insights.add(AIInsight(
-        type: InsightType.frequencyRecommendation,
-        title: l10n.aiInsightHighFrequency,
-        description: l10n.aiInsightHighFrequencyDesc(weeklyFrequency.toStringAsFixed(1)),
-        recommendation: l10n.aiInsightHighFrequencyRec,
-        priority: 3,
-        data: {'currentFrequency': weeklyFrequency, 'recommendedFrequency': 5.0},
-        detailedAnalysis: l10n.aiHighFrequencyAnalysis(
-          weeklyFrequency.toStringAsFixed(1),
-        ),
-        dataPoints: [
-          l10n.dataCurrentFrequency(weeklyFrequency.toStringAsFixed(1)),
-          l10n.dataOptimalFrequency,
-          l10n.dataMaxBeneficial,
-          l10n.dataRecoveryStatus,
-          l10n.dataCNSFatigue,
-        ],
-        strategies: [
-          ScientificStrategy(
-            title: l10n.strategyHighfrequencyconsolidateTitle,
-            description: l10n.strategyHighfrequencyconsolidateDesc,
-            howToImplement: l10n.strategyHighfrequencyconsolidateImpl,
-            expectedOutcome: l10n.strategyHighfrequencyconsolidateOutcome,
-            scientificBasis: 'Schoenfeld et al. (2019) - Frequency and muscle hypertrophy: A meta-analysis',
+      insights.add(
+        AIInsight(
+          type: InsightType.frequencyRecommendation,
+          title: l10n.aiInsightHighFrequency,
+          description: l10n.aiInsightHighFrequencyDesc(
+            weeklyFrequency.toStringAsFixed(1),
           ),
-          ScientificStrategy(
-            title: l10n.strategyHighfrequencyrestdaysTitle,
-            description: l10n.strategyHighfrequencyrestdaysDesc,
-            howToImplement: l10n.strategyHighfrequencyrestdaysImpl,
-            expectedOutcome: l10n.strategyHighfrequencyrestdaysOutcome,
-            scientificBasis: 'Kellmann et al. (2018) - Recovery and Performance in Sport',
+          recommendation: l10n.aiInsightHighFrequencyRec,
+          priority: 3,
+          data: {
+            'currentFrequency': weeklyFrequency,
+            'recommendedFrequency': 5.0,
+          },
+          detailedAnalysis: l10n.aiHighFrequencyAnalysis(
+            weeklyFrequency.toStringAsFixed(1),
           ),
-        ],
-        scientificReference: '''Grgic et al. (2018) - Training frequency effects on strength
+          dataPoints: [
+            l10n.dataCurrentFrequency(weeklyFrequency.toStringAsFixed(1)),
+            l10n.dataOptimalFrequency,
+            l10n.dataMaxBeneficial,
+            l10n.dataRecoveryStatus,
+            l10n.dataCNSFatigue,
+          ],
+          strategies: [
+            ScientificStrategy(
+              title: l10n.strategyHighfrequencyconsolidateTitle,
+              description: l10n.strategyHighfrequencyconsolidateDesc,
+              howToImplement: l10n.strategyHighfrequencyconsolidateImpl,
+              expectedOutcome: l10n.strategyHighfrequencyconsolidateOutcome,
+              scientificBasis:
+                  'Schoenfeld et al. (2019) - Frequency and muscle hypertrophy: A meta-analysis',
+            ),
+            ScientificStrategy(
+              title: l10n.strategyHighfrequencyrestdaysTitle,
+              description: l10n.strategyHighfrequencyrestdaysDesc,
+              howToImplement: l10n.strategyHighfrequencyrestdaysImpl,
+              expectedOutcome: l10n.strategyHighfrequencyrestdaysOutcome,
+              scientificBasis:
+                  'Kellmann et al. (2018) - Recovery and Performance in Sport',
+            ),
+          ],
+          scientificReference:
+              '''Grgic et al. (2018) - Training frequency effects on strength
 https://doi.org/10.1007/s40279-018-0872-x''',
-      ));
+        ),
+      );
     }
 
     return insights;
@@ -673,11 +755,15 @@ https://doi.org/10.1007/s40279-018-0872-x''',
     final insights = <AIInsight>[];
 
     if (activities.length >= 5) {
-      final recentActivities = activities
-          .where((a) => a.createdAt.isAfter(
-              DateTime.now().subtract(const Duration(days: 30))))
-          .toList()
-        ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+      final recentActivities =
+          activities
+              .where(
+                (a) => a.createdAt.isAfter(
+                  DateTime.now().subtract(const Duration(days: 30)),
+                ),
+              )
+              .toList()
+            ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
       if (recentActivities.length >= 5) {
         final totalVolumes = recentActivities
@@ -687,14 +773,16 @@ https://doi.org/10.1007/s40279-018-0872-x''',
 
         if (recentTrend.abs() < 0.1) {
           // Less than 10% change over period
-          insights.add(AIInsight(
-            type: InsightType.plateauBreaker,
-            title: l10n.aiInsightVolumePlateau,
-            description: l10n.aiInsightVolumePlateauDesc,
-            recommendation: l10n.aiInsightVolumePlateauRec,
-            priority: 3,
-            data: {'trend': recentTrend},
-          ));
+          insights.add(
+            AIInsight(
+              type: InsightType.plateauBreaker,
+              title: l10n.aiInsightVolumePlateau,
+              description: l10n.aiInsightVolumePlateauDesc,
+              recommendation: l10n.aiInsightVolumePlateauRec,
+              priority: 3,
+              data: {'trend': recentTrend},
+            ),
+          );
         }
       }
     }
@@ -736,68 +824,87 @@ https://doi.org/10.1007/s40279-018-0872-x''',
 
         // Adaptive threshold based on weight and experience
         final isLowWeight = oldWeight < 20; // Low absolute weight
-        final threshold = isLowWeight ? 0.40 : 0.25; // 40% for light weights, 25% for heavy
+        final threshold = isLowWeight
+            ? 0.40
+            : 0.25; // 40% for light weights, 25% for heavy
 
         // Only warn if both percentage AND absolute increase are significant
         if (increase > threshold && absoluteIncrease > 5) {
           // Find which templates contain this exercise
-          final affectedTemplates = _findTemplatesWithExercise(exerciseName, userTemplates);
+          final affectedTemplates = _findTemplatesWithExercise(
+            exerciseName,
+            userTemplates,
+          );
 
-          insights.add(AIInsight(
-            type: InsightType.formWarning,
-            title: l10n.aiInsightLargeWeightJump,
-            description: l10n.aiInsightLargeWeightJumpDesc(
-                exerciseName, (increase * 100).round()),
-            recommendation: l10n.aiInsightLargeWeightJumpRec,
-            priority: 2,
-            data: {
-              'exercise': exerciseName,
-              'increase': increase,
-              'newWeight': newWeight,
-              'absoluteIncrease': absoluteIncrease,
-            },
-            detailedAnalysis: l10n.aiWeightJumpAnalysis(
-              (increase * 100).round().toString(),
-              absoluteIncrease.toStringAsFixed(1),
-            ),
-            dataPoints: [
-              l10n.dataPreviousWeight(oldWeight.toStringAsFixed(1)),
-              l10n.dataCurrentWeight(newWeight.toStringAsFixed(1)),
-              l10n.dataAbsoluteJump(absoluteIncrease.toStringAsFixed(1)),
-              l10n.dataPercentageIncrease((increase * 100).round().toString()),
-              l10n.dataSafeThreshold((threshold * 100).round().toString()),
-              l10n.dataRiskFactors,
-            ],
-            strategies: [
-              ScientificStrategy(
-                title: l10n.strategyUseSmallerIncrementsTitle,
-                description: l10n.strategyUseSmallerIncrementsDesc,
-                howToImplement: l10n.strategyUseSmallerIncrementsHow,
-                expectedOutcome: l10n.strategyUseSmallerIncrementsOutcome,
-                scientificBasis: 'Kubo et al. (2010) - Tendon adaptation to mechanical loading',
+          insights.add(
+            AIInsight(
+              type: InsightType.formWarning,
+              title: l10n.aiInsightLargeWeightJump,
+              description: l10n.aiInsightLargeWeightJumpDesc(
+                exerciseName,
+                (increase * 100).round(),
               ),
-              ScientificStrategy(
-                title: l10n.strategyFocusRepQualityTitle,
-                description: l10n.strategyFocusRepQualityDesc,
-                howToImplement: l10n.strategyFocusRepQualityHow,
-                expectedOutcome: l10n.strategyFocusRepQualityOutcome,
-                scientificBasis: 'Cronin et al. (2001) - Velocity-based training for strength development',
+              recommendation: l10n.aiInsightLargeWeightJumpRec,
+              priority: 2,
+              data: {
+                'exercise': exerciseName,
+                'increase': increase,
+                'newWeight': newWeight,
+                'absoluteIncrease': absoluteIncrease,
+              },
+              detailedAnalysis: l10n.aiWeightJumpAnalysis(
+                (increase * 100).round().toString(),
+                absoluteIncrease.toStringAsFixed(1),
               ),
-              ScientificStrategy(
-                title: l10n.strategyDeloadWeekTitle,
-                description: l10n.strategyDeloadWeekDesc,
-                howToImplement: l10n.strategyDeloadWeekHow,
-                expectedOutcome: l10n.strategyDeloadWeekOutcome,
-                scientificBasis: 'Croisier et al. (2008) - Strength training and injury prevention',
-              ),
-            ],
-            scientificReference: '''Lauersen et al. (2014) - Strength training for injury prevention
+              dataPoints: [
+                l10n.dataPreviousWeight(oldWeight.toStringAsFixed(1)),
+                l10n.dataCurrentWeight(newWeight.toStringAsFixed(1)),
+                l10n.dataAbsoluteJump(absoluteIncrease.toStringAsFixed(1)),
+                l10n.dataPercentageIncrease(
+                  (increase * 100).round().toString(),
+                ),
+                l10n.dataSafeThreshold((threshold * 100).round().toString()),
+                l10n.dataRiskFactors,
+              ],
+              strategies: [
+                ScientificStrategy(
+                  title: l10n.strategyUseSmallerIncrementsTitle,
+                  description: l10n.strategyUseSmallerIncrementsDesc,
+                  howToImplement: l10n.strategyUseSmallerIncrementsHow,
+                  expectedOutcome: l10n.strategyUseSmallerIncrementsOutcome,
+                  scientificBasis:
+                      'Kubo et al. (2010) - Tendon adaptation to mechanical loading',
+                ),
+                ScientificStrategy(
+                  title: l10n.strategyFocusRepQualityTitle,
+                  description: l10n.strategyFocusRepQualityDesc,
+                  howToImplement: l10n.strategyFocusRepQualityHow,
+                  expectedOutcome: l10n.strategyFocusRepQualityOutcome,
+                  scientificBasis:
+                      'Cronin et al. (2001) - Velocity-based training for strength development',
+                ),
+                ScientificStrategy(
+                  title: l10n.strategyDeloadWeekTitle,
+                  description: l10n.strategyDeloadWeekDesc,
+                  howToImplement: l10n.strategyDeloadWeekHow,
+                  expectedOutcome: l10n.strategyDeloadWeekOutcome,
+                  scientificBasis:
+                      'Croisier et al. (2008) - Strength training and injury prevention',
+                ),
+              ],
+              scientificReference:
+                  '''Lauersen et al. (2014) - Strength training for injury prevention
 https://doi.org/10.1136/bjsports-2013-092538''',
-            // Actionable data
-            affectedExercise: exerciseName,
-            affectedTemplates: affectedTemplates.isNotEmpty ? affectedTemplates : null,
-            actionType: affectedTemplates.isNotEmpty ? InsightActionType.replaceExercise : InsightActionType.none,
-          ));
+              // Actionable data
+              affectedExercise: exerciseName,
+              affectedTemplates: affectedTemplates.isNotEmpty
+                  ? affectedTemplates
+                  : null,
+              actionType: affectedTemplates.isNotEmpty
+                  ? InsightActionType.replaceExercise
+                  : InsightActionType.none,
+            ),
+          );
           break; // Solo un warning per form
         }
       }
@@ -884,75 +991,89 @@ https://doi.org/10.1136/bjsports-2013-092538''',
   }
 
   /// Get evidence-based strategies for breaking through plateaus
-  static List<ScientificStrategy> _getPlateauBreakingStrategies(AppLocalizations l10n) {
+  static List<ScientificStrategy> _getPlateauBreakingStrategies(
+    AppLocalizations l10n,
+  ) {
     return [
       ScientificStrategy(
         title: l10n.strategyPlateauincreasevolumeTitle,
         description: l10n.strategyPlateauincreasevolumeDesc,
         howToImplement: l10n.strategyPlateauincreasevolumeImpl,
         expectedOutcome: l10n.strategyPlateauincreasevolumeOutcome,
-        scientificBasis: 'Schoenfeld et al. (2017) - Dose-response relationship between weekly resistance training volume and increases in muscle mass',
+        scientificBasis:
+            'Schoenfeld et al. (2017) - Dose-response relationship between weekly resistance training volume and increases in muscle mass',
       ),
       ScientificStrategy(
         title: l10n.strategyPlateauvaryrepsTitle,
         description: l10n.strategyPlateauvaryrepsDesc,
         howToImplement: l10n.strategyPlateauvaryrepsImpl,
         expectedOutcome: l10n.strategyPlateauvaryrepsOutcome,
-        scientificBasis: 'Schoenfeld et al. (2021) - Hypertrophic Effects of Concentric vs. Eccentric Muscle Actions',
+        scientificBasis:
+            'Schoenfeld et al. (2021) - Hypertrophic Effects of Concentric vs. Eccentric Muscle Actions',
       ),
       ScientificStrategy(
         title: l10n.strategyPlateauadvancedtechniquesTitle,
         description: l10n.strategyPlateauadvancedtechniquesDesc,
         howToImplement: l10n.strategyPlateauadvancedtechniquesImpl,
         expectedOutcome: l10n.strategyPlateauadvancedtechniquesOutcome,
-        scientificBasis: 'Fink et al. (2018) - Effects of drop set resistance training on acute stress indicators',
+        scientificBasis:
+            'Fink et al. (2018) - Effects of drop set resistance training on acute stress indicators',
       ),
       ScientificStrategy(
         title: l10n.strategyPlateauchangeexercisesTitle,
         description: l10n.strategyPlateauchangeexercisesDesc,
         howToImplement: l10n.strategyPlateauchangeexercisesImpl,
         expectedOutcome: l10n.strategyPlateauchangeexercisesOutcome,
-        scientificBasis: 'Fonseca et al. (2014) - Changes in exercises are more effective than in loading schemes to improve muscle strength',
+        scientificBasis:
+            'Fonseca et al. (2014) - Changes in exercises are more effective than in loading schemes to improve muscle strength',
       ),
       ScientificStrategy(
         title: l10n.strategyPlateaudeloadweekTitle,
         description: l10n.strategyPlateaudeloadweekDesc,
         howToImplement: l10n.strategyPlateaudeloadweekImpl,
         expectedOutcome: l10n.strategyPlateaudeloadweekOutcome,
-        scientificBasis: 'Pritchard et al. (2015) - Effects of deloading in trained individuals',
+        scientificBasis:
+            'Pritchard et al. (2015) - Effects of deloading in trained individuals',
       ),
     ];
   }
 
   /// Get strategies for muscle group imbalances
-  static List<ScientificStrategy> _getMuscleBalanceStrategies(AppLocalizations l10n) {
+  static List<ScientificStrategy> _getMuscleBalanceStrategies(
+    AppLocalizations l10n,
+  ) {
     return [
       ScientificStrategy(
         title: l10n.strategyBalanceincreasefrequencyTitle,
         description: l10n.strategyBalanceincreasefrequencyDesc,
         howToImplement: l10n.strategyBalanceincreasefrequencyImpl,
         expectedOutcome: l10n.strategyBalanceincreasefrequencyOutcome,
-        scientificBasis: 'Schoenfeld et al. (2019) - Effects of Resistance Training Frequency on Measures of Muscle Hypertrophy',
+        scientificBasis:
+            'Schoenfeld et al. (2019) - Effects of Resistance Training Frequency on Measures of Muscle Hypertrophy',
       ),
       ScientificStrategy(
         title: l10n.strategyBalanceprioritizeweakTitle,
         description: l10n.strategyBalanceprioritizeweakDesc,
         howToImplement: l10n.strategyBalanceprioritizeweakImpl,
         expectedOutcome: l10n.strategyBalanceprioritizeweakOutcome,
-        scientificBasis: 'Simão et al. (2012) - Exercise order in resistance training',
+        scientificBasis:
+            'Simão et al. (2012) - Exercise order in resistance training',
       ),
       ScientificStrategy(
         title: l10n.strategyBalanceaddisolationTitle,
         description: l10n.strategyBalanceaddisolationDesc,
         howToImplement: l10n.strategyBalanceaddisolationImpl,
         expectedOutcome: l10n.strategyBalanceaddisolationOutcome,
-        scientificBasis: 'Paoli et al. (2017) - Resistance Training with Single vs. Multi-joint Exercises',
+        scientificBasis:
+            'Paoli et al. (2017) - Resistance Training with Single vs. Multi-joint Exercises',
       ),
     ];
   }
 
   /// Get strategies for recovery optimization
-  static List<ScientificStrategy> _getRecoveryStrategies(AppLocalizations l10n) {
+  static List<ScientificStrategy> _getRecoveryStrategies(
+    AppLocalizations l10n,
+  ) {
     return [
       ScientificStrategy(
         title: l10n.strategyRecoveryoptimizesleepTitle,
@@ -966,7 +1087,8 @@ https://doi.org/10.1136/bjsports-2013-092538''',
         description: l10n.strategyRecoveryperiodizeDesc,
         howToImplement: l10n.strategyRecoveryperiodizeImpl,
         expectedOutcome: l10n.strategyRecoveryperiodizeOutcome,
-        scientificBasis: 'Williams et al. (2017) - Periodization strategies for athletes',
+        scientificBasis:
+            'Williams et al. (2017) - Periodization strategies for athletes',
       ),
       ScientificStrategy(
         title: l10n.strategyRecoveryactiverecoveryTitle,
@@ -991,10 +1113,12 @@ https://doi.org/10.1136/bjsports-2013-092538''',
       );
 
       if (hasExercise) {
-        affectedTemplates.add(AffectedTemplate(
-          templateId: template.id,
-          templateName: template.name,
-        ));
+        affectedTemplates.add(
+          AffectedTemplate(
+            templateId: template.id,
+            templateName: template.name,
+          ),
+        );
       }
     }
 

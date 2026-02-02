@@ -7,7 +7,6 @@ import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.da
 
 /// Widget che fornisce consigli contestuali invece di un numero astratto
 class ContextualTrainingAdvisor extends StatelessWidget {
-
   const ContextualTrainingAdvisor({
     super.key,
     required this.currentWeekVolume,
@@ -31,7 +30,7 @@ class ContextualTrainingAdvisor extends StatelessWidget {
     final theme = Theme.of(context);
     final advice = _generateContextualAdvice();
     final category = _getAdviceCategory();
-    
+
     return InkWell(
       onTap: () => _showDetailedExplanation(context),
       borderRadius: BorderRadius.circular(16),
@@ -46,7 +45,10 @@ class ContextualTrainingAdvisor extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: _getGradientColors(context, category).first.withValues(alpha: 0.3),
+              color: _getGradientColors(
+                context,
+                category,
+              ).first.withValues(alpha: 0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -73,7 +75,10 @@ class ContextualTrainingAdvisor extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: context.colors.surface.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
@@ -98,7 +103,7 @@ class ContextualTrainingAdvisor extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Main advice message
             Text(
               advice.mainMessage,
@@ -107,7 +112,7 @@ class ContextualTrainingAdvisor extends StatelessWidget {
                 height: 1.4,
               ),
             ),
-            
+
             if (advice.subMessage != null) ...[
               const SizedBox(height: 12),
               Container(
@@ -136,7 +141,7 @@ class ContextualTrainingAdvisor extends StatelessWidget {
                 ),
               ),
             ],
-            
+
             // Quick stats
             const SizedBox(height: 16),
             Row(
@@ -146,7 +151,9 @@ class ContextualTrainingAdvisor extends StatelessWidget {
                   context,
                   'Volume Change',
                   '${_getVolumeChangePercent().toStringAsFixed(1)}%',
-                  _getVolumeChangePercent() > 0 ? AppIcons.trendUp : AppIcons.trendDown,
+                  _getVolumeChangePercent() > 0
+                      ? AppIcons.trendUp
+                      : AppIcons.trendDown,
                   theme,
                 ),
                 _buildQuickStat(
@@ -171,10 +178,20 @@ class ContextualTrainingAdvisor extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickStat(BuildContext context, String label, String value, IconData icon, ThemeData theme) {
+  Widget _buildQuickStat(
+    BuildContext context,
+    String label,
+    String value,
+    IconData icon,
+    ThemeData theme,
+  ) {
     return Column(
       children: [
-        Icon(icon, color: context.colors.surface.withValues(alpha: 0.7), size: 20),
+        Icon(
+          icon,
+          color: context.colors.surface.withValues(alpha: 0.7),
+          size: 20,
+        ),
         const SizedBox(height: 4),
         Text(
           value,
@@ -193,18 +210,36 @@ class ContextualTrainingAdvisor extends StatelessWidget {
     );
   }
 
-  List<Color> _getGradientColors(BuildContext context, AdviceCategory category) {
+  List<Color> _getGradientColors(
+    BuildContext context,
+    AdviceCategory category,
+  ) {
     switch (category) {
       case AdviceCategory.pushHard:
-        return [context.colors.success.withValues(alpha: 0.7), context.colors.success];
+        return [
+          context.colors.success.withValues(alpha: 0.7),
+          context.colors.success,
+        ];
       case AdviceCategory.maintainPace:
-        return [context.colors.tertiary.withValues(alpha: 0.7), context.colors.tertiary];
+        return [
+          context.colors.tertiary.withValues(alpha: 0.7),
+          context.colors.tertiary,
+        ];
       case AdviceCategory.beCareful:
-        return [context.colors.warning.withValues(alpha: 0.7), context.colors.warning];
+        return [
+          context.colors.warning.withValues(alpha: 0.7),
+          context.colors.warning,
+        ];
       case AdviceCategory.takeRest:
-        return [context.colors.error.withValues(alpha: 0.7), context.colors.error];
+        return [
+          context.colors.error.withValues(alpha: 0.7),
+          context.colors.error,
+        ];
       case AdviceCategory.recovery:
-        return [context.colors.primary.withValues(alpha: 0.7), context.colors.primary];
+        return [
+          context.colors.primary.withValues(alpha: 0.7),
+          context.colors.primary,
+        ];
     }
   }
 
@@ -226,8 +261,10 @@ class ContextualTrainingAdvisor extends StatelessWidget {
   AdviceCategory _getAdviceCategory() {
     final volumeChange = _getVolumeChangePercent();
     final avgFatigue = _getAverageFatigue();
-    final daysSinceLastWorkout = DateTime.now().difference(lastWorkoutDate).inDays;
-    
+    final daysSinceLastWorkout = DateTime.now()
+        .difference(lastWorkoutDate)
+        .inDays;
+
     // Logica contestuale per determinare la categoria
     if (volumeChange < -30 && avgFatigue > 3.5) {
       return AdviceCategory.takeRest;
@@ -245,54 +282,68 @@ class ContextualTrainingAdvisor extends StatelessWidget {
   ContextualAdvice _generateContextualAdvice() {
     final volumeChange = _getVolumeChangePercent();
     final avgFatigue = _getAverageFatigue();
-    final daysSinceLastWorkout = DateTime.now().difference(lastWorkoutDate).inDays;
+    final daysSinceLastWorkout = DateTime.now()
+        .difference(lastWorkoutDate)
+        .inDays;
     final normalizedIntensity = _normalizeIntensity(avgIntensity);
-    
+
     // Analisi contestuale completa
     if (volumeChange < -30) {
       if (avgFatigue > 3.5) {
         return ContextualAdvice(
-          mainMessage: 'Il tuo corpo sta chiedendo riposo. Il volume è calato del ${volumeChange.abs().toStringAsFixed(0)}% e la fatica è alta.',
-          subMessage: 'Considera 2-3 giorni di recupero completo o un allenamento molto leggero.',
+          mainMessage:
+              'Il tuo corpo sta chiedendo riposo. Il volume è calato del ${volumeChange.abs().toStringAsFixed(0)}% e la fatica è alta.',
+          subMessage:
+              'Considera 2-3 giorni di recupero completo o un allenamento molto leggero.',
           subIcon: AppIcons.spa,
         );
       } else {
         return ContextualAdvice(
-          mainMessage: 'Settimana di scarico rilevata. Volume ridotto del ${volumeChange.abs().toStringAsFixed(0)}%.',
-          subMessage: 'Se pianificato, ottimo! Altrimenti, verifica se stai recuperando bene.',
+          mainMessage:
+              'Settimana di scarico rilevata. Volume ridotto del ${volumeChange.abs().toStringAsFixed(0)}%.',
+          subMessage:
+              'Se pianificato, ottimo! Altrimenti, verifica se stai recuperando bene.',
           subIcon: AppIcons.complete,
         );
       }
     } else if (volumeChange > 15) {
       if (avgFatigue < 3) {
         return ContextualAdvice(
-          mainMessage: 'Ottima progressione! Volume aumentato del ${volumeChange.toStringAsFixed(0)}% con fatica gestibile.',
-          subMessage: 'Puoi mantenere questo ritmo, ma monitora il recupero nei prossimi giorni.',
+          mainMessage:
+              'Ottima progressione! Volume aumentato del ${volumeChange.toStringAsFixed(0)}% con fatica gestibile.',
+          subMessage:
+              'Puoi mantenere questo ritmo, ma monitora il recupero nei prossimi giorni.',
           subIcon: AppIcons.rocket,
         );
       } else {
         return ContextualAdvice(
-          mainMessage: 'Volume aumentato del ${volumeChange.toStringAsFixed(0)}%, ma la fatica è elevata.',
-          subMessage: 'Considera di mantenere il volume attuale per consolidare i progressi.',
+          mainMessage:
+              'Volume aumentato del ${volumeChange.toStringAsFixed(0)}%, ma la fatica è elevata.',
+          subMessage:
+              'Considera di mantenere il volume attuale per consolidare i progressi.',
           subIcon: AppIcons.warningAmber,
         );
       }
     } else if (daysSinceLastWorkout > 4) {
       return ContextualAdvice(
-        mainMessage: "Sono passati $daysSinceLastWorkout giorni dall'ultimo allenamento.",
-        subMessage: 'Riparti con calma, magari con un volume ridotto del 20-30%.',
+        mainMessage:
+            "Sono passati $daysSinceLastWorkout giorni dall'ultimo allenamento.",
+        subMessage:
+            'Riparti con calma, magari con un volume ridotto del 20-30%.',
         subIcon: AppIcons.directionsWalk,
       );
     } else if (normalizedIntensity > 8) {
       return ContextualAdvice(
-        mainMessage: 'Intensità molto alta questa settimana (RPE medio: ${normalizedIntensity.toStringAsFixed(1)}).',
+        mainMessage:
+            'Intensità molto alta questa settimana (RPE medio: ${normalizedIntensity.toStringAsFixed(1)}).',
         subMessage: 'Assicurati di bilanciare con giorni di recupero adeguati.',
         subIcon: AppIcons.flashOn,
       );
     } else if (workoutCount >= 5) {
       return ContextualAdvice(
-        mainMessage: 'Frequenza di allenamento elevata con $workoutCount sessioni questa settimana.',
-        subMessage: avgFatigue > 3 
+        mainMessage:
+            'Frequenza di allenamento elevata con $workoutCount sessioni questa settimana.',
+        subMessage: avgFatigue > 3
             ? 'Valuta se ridurre la frequenza per migliorare il recupero.'
             : 'Ottimo ritmo! Continua a monitorare i segnali del corpo.',
         subIcon: AppIcons.calendar,
@@ -300,7 +351,8 @@ class ContextualTrainingAdvisor extends StatelessWidget {
     } else {
       // Messaggio standard basato su performance generale
       return ContextualAdvice(
-        mainMessage: "Settimana equilibrata con volume ${volumeChange > 0 ? 'in crescita' : 'stabile'}.",
+        mainMessage:
+            "Settimana equilibrata con volume ${volumeChange > 0 ? 'in crescita' : 'stabile'}.",
         subMessage: 'Continua così, ascoltando sempre i segnali del tuo corpo.',
         subIcon: AppIcons.thumbUp,
       );
@@ -309,12 +361,17 @@ class ContextualTrainingAdvisor extends StatelessWidget {
 
   double _getVolumeChangePercent() {
     if (previousWeekVolume == 0) return 0;
-    return ((currentWeekVolume - previousWeekVolume) / previousWeekVolume * 100);
+    return ((currentWeekVolume - previousWeekVolume) /
+        previousWeekVolume *
+        100);
   }
 
   double _getAverageFatigue() {
     if (fatigueHistory.isEmpty) return 3.0; // Default medio
-    final sum = fatigueHistory.fold(0, (sum, entry) => sum + entry.fatigueLevel);
+    final sum = fatigueHistory.fold(
+      0,
+      (sum, entry) => sum + entry.fatigueLevel,
+    );
     return sum / fatigueHistory.length;
   }
 
@@ -356,7 +413,6 @@ class ContextualTrainingAdvisor extends StatelessWidget {
 }
 
 class _DetailedExplanationSheet extends StatelessWidget {
-
   const _DetailedExplanationSheet({
     required this.volumeChange,
     required this.avgIntensity,
@@ -375,7 +431,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.9);
     return DraggableScrollableSheet(
       initialChildSize: 0.7,
@@ -395,13 +451,15 @@ class _DetailedExplanationSheet extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.3,
+                  ),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
             const SizedBox(height: 24),
-            
+
             Text(
               '📊 Analisi Dettagliata',
               style: theme.textTheme.headlineSmall?.copyWith(
@@ -409,14 +467,16 @@ class _DetailedExplanationSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            
+
             _buildExplanationCard(
               context,
               'Volume Training',
               'Il volume è ${volumeChange > 0 ? "aumentato" : "diminuito"} del ${volumeChange.abs().toStringAsFixed(1)}%',
               _getVolumeExplanation(),
               volumeChange > 0 ? AppIcons.trendingUp : AppIcons.trendingDown,
-              volumeChange > 0 ? context.colors.success : context.colors.warning,
+              volumeChange > 0
+                  ? context.colors.success
+                  : context.colors.warning,
             ),
 
             _buildExplanationCard(
@@ -445,7 +505,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
               AppIcons.calendarToday,
               context.colors.tertiary,
             ),
-            
+
             if (!isPremium) ...[
               const SizedBox(height: 24),
               Container(
@@ -503,16 +563,14 @@ class _DetailedExplanationSheet extends StatelessWidget {
     Color color,
   ) {
     final theme = Theme.of(context);
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: color.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -566,19 +624,19 @@ class _DetailedExplanationSheet extends StatelessWidget {
   String _getVolumeExplanation() {
     if (volumeChange > 15) {
       return 'Grande aumento di volume! Assicurati di recuperare adeguatamente. '
-             'Se ti senti bene, puoi mantenere questo ritmo per 2-3 settimane prima di una settimana di scarico.';
+          'Se ti senti bene, puoi mantenere questo ritmo per 2-3 settimane prima di una settimana di scarico.';
     } else if (volumeChange > 5) {
       return "Progressione moderata e sostenibile. Questo è l'incremento ideale per costruire forza "
-             'e massa muscolare senza accumulare troppa fatica.';
+          'e massa muscolare senza accumulare troppa fatica.';
     } else if (volumeChange > -5) {
       return 'Volume stabile rispetto alla settimana precedente. Perfetto per consolidare i progressi '
-             'o per una fase di mantenimento.';
+          'o per una fase di mantenimento.';
     } else if (volumeChange > -20) {
       return 'Leggera riduzione del volume. Può essere utile per favorire il recupero '
-             'mantenendo comunque lo stimolo allenante.';
+          'mantenendo comunque lo stimolo allenante.';
     } else {
       return 'Significativa riduzione del volume. Se pianificata (deload week), ottimo per il recupero. '
-             'Altrimenti, valuta se ci sono fattori esterni che influenzano il tuo allenamento.';
+          'Altrimenti, valuta se ci sono fattori esterni che influenzano il tuo allenamento.';
     }
   }
 
@@ -586,48 +644,48 @@ class _DetailedExplanationSheet extends StatelessWidget {
     final rpe = 6 + (avgIntensity - 1) * 4 / 9;
     if (rpe >= 9) {
       return 'Intensità molto alta! Stai lavorando vicino al massimale. '
-             'Assicurati di non mantenere questa intensità per troppe settimane consecutive.';
+          'Assicurati di non mantenere questa intensità per troppe settimane consecutive.';
     } else if (rpe >= 7.5) {
       return 'Intensità ottimale per costruire forza e massa. '
-             'Stai lasciando 2-3 ripetizioni in riserva, perfetto per progressi sostenibili.';
+          'Stai lasciando 2-3 ripetizioni in riserva, perfetto per progressi sostenibili.';
     } else if (rpe >= 6.5) {
       return 'Intensità moderata, ideale per volume alto o fase di apprendimento tecnico. '
-             "Puoi aumentare gradualmente l'intensità se ti senti recuperato.";
+          "Puoi aumentare gradualmente l'intensità se ti senti recuperato.";
     } else {
       return 'Intensità bassa, utile per recupero attivo o perfezionamento tecnico. '
-             'Se non è una settimana di scarico, considera di aumentare i carichi.';
+          'Se non è una settimana di scarico, considera di aumentare i carichi.';
     }
   }
 
   String _getRecoveryExplanation() {
     if (avgFatigue < 2) {
       return "Recupero eccellente! Il tuo corpo risponde molto bene all'allenamento. "
-             'Potresti anche aumentare volume o frequenza se desideri.';
+          'Potresti anche aumentare volume o frequenza se desideri.';
     } else if (avgFatigue < 3) {
       return 'Buon recupero con fatica gestibile. Questo è il range ideale per progressi '
-             'costanti senza rischio di sovrallenamento.';
+          'costanti senza rischio di sovrallenamento.';
     } else if (avgFatigue < 4) {
       return 'Fatica accumulata moderata. Monitora attentamente i prossimi allenamenti '
-             'e considera di ridurre volume o intensità se peggiora.';
+          'e considera di ridurre volume o intensità se peggiora.';
     } else {
       return 'Fatica elevata! Il tuo corpo ha bisogno di più recupero. '
-             'Considera 2-3 giorni di riposo completo o una settimana di scarico.';
+          'Considera 2-3 giorni di riposo completo o una settimana di scarico.';
     }
   }
 
   String _getFrequencyExplanation() {
     if (workoutCount >= 6) {
       return "Frequenza molto alta! Assicurati di variare l'intensità tra le sessioni "
-             'e di includere giorni più leggeri per favorire il recupero.';
+          'e di includere giorni più leggeri per favorire il recupero.';
     } else if (workoutCount >= 4) {
       return 'Frequenza ottimale per la maggior parte degli atleti intermedi/avanzati. '
-             'Permette buon volume settimanale con recupero adeguato.';
+          'Permette buon volume settimanale con recupero adeguato.';
     } else if (workoutCount >= 3) {
       return 'Frequenza standard, ideale per principianti/intermedi o per chi ha tempo limitato. '
-             'Focus sulla qualità degli allenamenti piuttosto che sulla quantità.';
+          'Focus sulla qualità degli allenamenti piuttosto che sulla quantità.';
     } else {
       return 'Frequenza bassa. Se è il tuo standard, assicurati che ogni sessione '
-             'sia sufficientemente stimolante. Altrimenti, cerca di aumentare gradualmente.';
+          'sia sufficientemente stimolante. Altrimenti, cerca di aumentare gradualmente.';
     }
   }
 
@@ -647,21 +705,10 @@ class _DetailedExplanationSheet extends StatelessWidget {
   }
 }
 
-enum AdviceCategory {
-  pushHard,
-  maintainPace,
-  beCareful,
-  takeRest,
-  recovery,
-}
+enum AdviceCategory { pushHard, maintainPace, beCareful, takeRest, recovery }
 
 class ContextualAdvice {
-
-  ContextualAdvice({
-    required this.mainMessage,
-    this.subMessage,
-    this.subIcon,
-  });
+  ContextualAdvice({required this.mainMessage, this.subMessage, this.subIcon});
   final String mainMessage;
   final String? subMessage;
   final IconData? subIcon;

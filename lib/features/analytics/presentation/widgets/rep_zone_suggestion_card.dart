@@ -106,8 +106,9 @@ class _RepZoneSuggestionCardState extends State<RepZoneSuggestionCard>
               ),
               boxShadow: [
                 BoxShadow(
-                  color: colorScheme.shadow
-                      .withValues(alpha: widget.isTop ? 0.15 : 0.08),
+                  color: colorScheme.shadow.withValues(
+                    alpha: widget.isTop ? 0.15 : 0.08,
+                  ),
                   blurRadius: widget.isTop ? 16 : 8,
                   offset: const Offset(0, 4),
                 ),
@@ -158,9 +159,7 @@ class _RepZoneSuggestionCardState extends State<RepZoneSuggestionCard>
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: zoneColor.withValues(alpha: 0.1),
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(18),
-        ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
       ),
       child: Row(
         children: [
@@ -286,11 +285,7 @@ class _RepZoneSuggestionCardState extends State<RepZoneSuggestionCard>
                 ),
               ),
               const SizedBox(width: 4),
-              Icon(
-                AppIcons.expandMore,
-                size: 18,
-                color: zoneColor,
-              ),
+              Icon(AppIcons.expandMore, size: 18, color: zoneColor),
             ],
           ),
         ],
@@ -371,9 +366,7 @@ class _RepZoneSuggestionCardState extends State<RepZoneSuggestionCard>
         decoration: BoxDecoration(
           color: zoneColor.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: zoneColor.withValues(alpha: 0.2),
-          ),
+          border: Border.all(color: zoneColor.withValues(alpha: 0.2)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -413,15 +406,9 @@ class _RepZoneSuggestionCardState extends State<RepZoneSuggestionCard>
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '\u2022 ',
-                        style: context.textTheme.bodySmall,
-                      ),
+                      Text('\u2022 ', style: context.textTheme.bodySmall),
                       Expanded(
-                        child: Text(
-                          m,
-                          style: context.textTheme.bodySmall,
-                        ),
+                        child: Text(m, style: context.textTheme.bodySmall),
                       ),
                     ],
                   ),
@@ -446,15 +433,9 @@ class _RepZoneSuggestionCardState extends State<RepZoneSuggestionCard>
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '\u2022 ',
-                        style: context.textTheme.bodySmall,
-                      ),
+                      Text('\u2022 ', style: context.textTheme.bodySmall),
                       Expanded(
-                        child: Text(
-                          m,
-                          style: context.textTheme.bodySmall,
-                        ),
+                        child: Text(m, style: context.textTheme.bodySmall),
                       ),
                     ],
                   ),
@@ -494,7 +475,8 @@ class _RepZoneSuggestionCardState extends State<RepZoneSuggestionCard>
           ),
           _VolumeItem(
             icon: AppIcons.timer,
-            value: '${suggestion.recommendedRestSeconds ~/ 60}:${(suggestion.recommendedRestSeconds % 60).toString().padLeft(2, '0')}',
+            value:
+                '${suggestion.recommendedRestSeconds ~/ 60}:${(suggestion.recommendedRestSeconds % 60).toString().padLeft(2, '0')}',
             label: l10n.rest,
           ),
         ],
@@ -609,7 +591,10 @@ class _RepZoneSuggestionCardState extends State<RepZoneSuggestionCard>
     }
   }
 
-  String _getShortMotivation(BuildContext context, RepZoneSuggestion suggestion) {
+  String _getShortMotivation(
+    BuildContext context,
+    RepZoneSuggestion suggestion,
+  ) {
     final l10n = context.l10n;
 
     // Build short motivation from first motivation + zone info
@@ -753,9 +738,7 @@ class _AlternativeChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: colorScheme.outline.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: colorScheme.outline.withValues(alpha: 0.3)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -788,11 +771,7 @@ class _AlternativeChip extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Icon(
-                  AppIcons.swapHoriz,
-                  size: 18,
-                  color: zoneColor,
-                ),
+                Icon(AppIcons.swapHoriz, size: 18, color: zoneColor),
               ],
             ),
           ],

@@ -93,10 +93,8 @@ class WeightJumpIndicator extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (context) => WeightJumpInfoSheet(
-        minWeight: minWeight,
-        maxWeight: maxWeight,
-      ),
+      builder: (context) =>
+          WeightJumpInfoSheet(minWeight: minWeight, maxWeight: maxWeight),
     );
   }
 }
@@ -131,7 +129,9 @@ class WeightJumpInfoSheet extends StatelessWidget {
                   height: 4,
                   margin: const EdgeInsets.only(bottom: 24),
                   decoration: BoxDecoration(
-                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
+                    color: context.colors.onSurfaceVariant.withValues(
+                      alpha: 0.4,
+                    ),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -320,11 +320,7 @@ class _SafetyTipItem extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
-          icon,
-          size: AppIconSize.small,
-          color: context.colors.primary,
-        ),
+        Icon(icon, size: AppIconSize.small, color: context.colors.primary),
         const SizedBox(width: 12),
         Expanded(
           child: Text(

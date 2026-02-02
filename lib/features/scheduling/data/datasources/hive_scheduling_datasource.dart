@@ -78,9 +78,7 @@ class HiveSchedulingDatasource {
     String templateId,
   ) async {
     final box = await _getBox();
-    return box.values
-        .where((model) => model.templateId == templateId)
-        .toList();
+    return box.values.where((model) => model.templateId == templateId).toList();
   }
 
   /// Get upcoming scheduled workouts (pending or due status)
@@ -141,11 +139,13 @@ class HiveSchedulingDatasource {
     final box = await _getBox();
     return box.values
         .where((model) => model.templateId == templateId)
-        .map((model) => DateTime(
-              model.scheduledDate.year,
-              model.scheduledDate.month,
-              model.scheduledDate.day,
-            ))
+        .map(
+          (model) => DateTime(
+            model.scheduledDate.year,
+            model.scheduledDate.month,
+            model.scheduledDate.day,
+          ),
+        )
         .toList();
   }
 

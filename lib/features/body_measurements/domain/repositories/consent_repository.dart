@@ -296,10 +296,7 @@ class FirebaseConsentFailure extends ConsentFailure {
   final String message;
   final String? code;
 
-  const FirebaseConsentFailure({
-    required this.message,
-    this.code,
-  });
+  const FirebaseConsentFailure({required this.message, this.code});
 }
 
 /// Rate limit exceeded (too many consent changes)

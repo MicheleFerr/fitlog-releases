@@ -278,173 +278,173 @@ class _WorkoutMiniBarState extends State<WorkoutMiniBar>
       child: Container(
         height: 60,
         margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-          child: Stack(
-            alignment: Alignment.center,
-            clipBehavior: Clip.none,
-            children: [
-              // Save indicator (left side, revealed when swiping right)
-              if (_horizontalDragOffset > 10)
-                Positioned(
-                  left: AppSpacing.md,
-                  child: _buildActionIndicator(
-                    icon: AppIcons.checkCircle,
-                    backgroundColor: context.colors.success,
-                    iconColor: context.colors.onPrimary,
-                    opacity: saveOpacity,
-                  ),
+        child: Stack(
+          alignment: Alignment.center,
+          clipBehavior: Clip.none,
+          children: [
+            // Save indicator (left side, revealed when swiping right)
+            if (_horizontalDragOffset > 10)
+              Positioned(
+                left: AppSpacing.md,
+                child: _buildActionIndicator(
+                  icon: AppIcons.checkCircle,
+                  backgroundColor: context.colors.success,
+                  iconColor: context.colors.onPrimary,
+                  opacity: saveOpacity,
                 ),
+              ),
 
-              // Discard indicator (right side, revealed when swiping left)
-              if (_horizontalDragOffset < -10)
-                Positioned(
-                  right: AppSpacing.md,
-                  child: _buildActionIndicator(
-                    icon: AppIcons.delete,
-                    backgroundColor: context.colors.error,
-                    iconColor: context.colors.onError,
-                    opacity: discardOpacity,
-                  ),
+            // Discard indicator (right side, revealed when swiping left)
+            if (_horizontalDragOffset < -10)
+              Positioned(
+                right: AppSpacing.md,
+                child: _buildActionIndicator(
+                  icon: AppIcons.delete,
+                  backgroundColor: context.colors.error,
+                  iconColor: context.colors.onError,
+                  opacity: discardOpacity,
                 ),
+              ),
 
-              // Main card (slides horizontally) - frosted glass effect
-              Transform.translate(
-                offset: Offset(_horizontalDragOffset, 0),
-                child: GestureDetector(
-                  onTap: () => _navigateToWorkout(context),
-                  onHorizontalDragStart: _onHorizontalDragStart,
-                  onHorizontalDragUpdate: _onHorizontalDragUpdate,
-                  onHorizontalDragEnd: _onHorizontalDragEnd,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(AppSpacing.md),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          // Semi-transparent for frosted glass effect
-                          color: context.colors.surface.withValues(alpha: 0.85),
-                          borderRadius: BorderRadius.circular(AppSpacing.md),
-                          border: Border.all(
-                            color: context.colors.outlineVariant.withValues(
-                              alpha: 0.3,
-                            ),
-                            width: 1,
+            // Main card (slides horizontally) - frosted glass effect
+            Transform.translate(
+              offset: Offset(_horizontalDragOffset, 0),
+              child: GestureDetector(
+                onTap: () => _navigateToWorkout(context),
+                onHorizontalDragStart: _onHorizontalDragStart,
+                onHorizontalDragUpdate: _onHorizontalDragUpdate,
+                onHorizontalDragEnd: _onHorizontalDragEnd,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(AppSpacing.md),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        // Semi-transparent for frosted glass effect
+                        color: context.colors.surface.withValues(alpha: 0.85),
+                        borderRadius: BorderRadius.circular(AppSpacing.md),
+                        border: Border.all(
+                          color: context.colors.outlineVariant.withValues(
+                            alpha: 0.3,
                           ),
-                          boxShadow: [
-                            // Ambient shadow - spreads in all directions for corner coverage
-                            BoxShadow(
-                              color: context.colors.shadow.withValues(
-                                alpha: 0.06,
-                              ),
-                              blurRadius: 24,
-                              spreadRadius: 8,
-                              offset: Offset.zero,
-                            ),
-                            // Primary shadow for depth
-                            BoxShadow(
-                              color: context.colors.shadow.withValues(
-                                alpha: 0.10,
-                              ),
-                              blurRadius: 12,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
+                          width: 1,
                         ),
-                        child: Column(
-                          children: [
-                            // Main content
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: AppSpacing.md,
-                                ),
-                                child: Row(
-                                  children: [
-                                    // Workout icon
-                                    SemanticIcon(
-                                      icon: AppIcons.workout,
-                                      semanticLabel: context.l10n.workout,
-                                      size: AppIconSize.medium,
-                                      color: isPaused
-                                          ? context.colors.onSurfaceVariant
-                                          : context.colors.primary,
-                                    ),
-                                    const SizedBox(width: AppSpacing.sm),
-
-                                    // Workout name
-                                    Expanded(
-                                      child: Text(
-                                        workout.name,
-                                        style: context.textTheme.titleSmall
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-
-                                    // Timer (stops updating when paused)
-                                    Text(
-                                      _formatDuration(duration),
-                                      style: context.textTheme.titleMedium
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            fontFeatures: const [
-                                              FontFeature.tabularFigures(),
-                                            ],
-                                            color: isPaused
-                                                ? context.colors.warning
-                                                : context.colors.onSurface,
-                                          ),
-                                    ),
-                                    const SizedBox(width: AppSpacing.xs),
-
-                                    // Arrow to indicate tap action
-                                    SemanticIcon(
-                                      icon: AppIcons.chevronRight,
-                                      semanticLabel: context.l10n.goToWorkout,
-                                      size: AppIconSize.small,
-                                      color: context.colors.onSurfaceVariant,
-                                    ),
-                                  ],
-                                ),
-                              ),
+                        boxShadow: [
+                          // Ambient shadow - spreads in all directions for corner coverage
+                          BoxShadow(
+                            color: context.colors.shadow.withValues(
+                              alpha: 0.06,
                             ),
-
-                            // Progress bar
-                            Container(
-                              height: 4,
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.vertical(
-                                  bottom: Radius.circular(AppSpacing.md),
-                                ),
-                                color: context.colors.surfaceContainerLow,
+                            blurRadius: 24,
+                            spreadRadius: 8,
+                            offset: Offset.zero,
+                          ),
+                          // Primary shadow for depth
+                          BoxShadow(
+                            color: context.colors.shadow.withValues(
+                              alpha: 0.10,
+                            ),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          // Main content
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.md,
                               ),
-                              child: FractionallySizedBox(
-                                alignment: Alignment.centerLeft,
-                                widthFactor: progress.clamp(0.0, 1.0),
-                                child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.vertical(
-                                      bottom: Radius.circular(AppSpacing.md),
-                                    ),
+                              child: Row(
+                                children: [
+                                  // Workout icon
+                                  SemanticIcon(
+                                    icon: AppIcons.workout,
+                                    semanticLabel: context.l10n.workout,
+                                    size: AppIconSize.medium,
                                     color: isPaused
-                                        ? context.colors.warning
+                                        ? context.colors.onSurfaceVariant
                                         : context.colors.primary,
                                   ),
+                                  const SizedBox(width: AppSpacing.sm),
+
+                                  // Workout name
+                                  Expanded(
+                                    child: Text(
+                                      workout.name,
+                                      style: context.textTheme.titleSmall
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+
+                                  // Timer (stops updating when paused)
+                                  Text(
+                                    _formatDuration(duration),
+                                    style: context.textTheme.titleMedium
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontFeatures: const [
+                                            FontFeature.tabularFigures(),
+                                          ],
+                                          color: isPaused
+                                              ? context.colors.warning
+                                              : context.colors.onSurface,
+                                        ),
+                                  ),
+                                  const SizedBox(width: AppSpacing.xs),
+
+                                  // Arrow to indicate tap action
+                                  SemanticIcon(
+                                    icon: AppIcons.chevronRight,
+                                    semanticLabel: context.l10n.goToWorkout,
+                                    size: AppIconSize.small,
+                                    color: context.colors.onSurfaceVariant,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // Progress bar
+                          Container(
+                            height: 4,
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.vertical(
+                                bottom: Radius.circular(AppSpacing.md),
+                              ),
+                              color: context.colors.surfaceContainerLow,
+                            ),
+                            child: FractionallySizedBox(
+                              alignment: Alignment.centerLeft,
+                              widthFactor: progress.clamp(0.0, 1.0),
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.vertical(
+                                    bottom: Radius.circular(AppSpacing.md),
+                                  ),
+                                  color: isPaused
+                                      ? context.colors.warning
+                                      : context.colors.primary,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
     );
   }
 

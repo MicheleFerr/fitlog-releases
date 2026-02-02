@@ -177,7 +177,10 @@ class StressIndexTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildCurrentScoreCard(BuildContext context, StressIndexResult result) {
+  Widget _buildCurrentScoreCard(
+    BuildContext context,
+    StressIndexResult result,
+  ) {
     final score = result.displayScore;
     final color = _getScoreColor(context, score);
 
@@ -300,7 +303,9 @@ class StressIndexTab extends ConsumerWidget {
 
     // Sort by recovery percentage (least recovered first), then by name
     allMuscleStatuses.sort((a, b) {
-      final recoveryCompare = a.recoveryPercentage.compareTo(b.recoveryPercentage);
+      final recoveryCompare = a.recoveryPercentage.compareTo(
+        b.recoveryPercentage,
+      );
       if (recoveryCompare != 0) return recoveryCompare;
       return a.displayName.compareTo(b.displayName);
     });
@@ -308,7 +313,9 @@ class StressIndexTab extends ConsumerWidget {
     // Group by category for better organization
     final groupedMuscles = <MuscleCategory, List<MuscleRecoveryStatus>>{};
     for (final status in allMuscleStatuses) {
-      final muscleInfo = MuscleAbbreviationMapper.getMuscleInfo(status.muscleId);
+      final muscleInfo = MuscleAbbreviationMapper.getMuscleInfo(
+        status.muscleId,
+      );
       if (muscleInfo != null) {
         final category = muscleInfo.category;
         groupedMuscles.putIfAbsent(category, () => []).add(status);
@@ -404,7 +411,10 @@ class StressIndexTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildMuscleRecoveryRow(BuildContext context, MuscleRecoveryStatus status) {
+  Widget _buildMuscleRecoveryRow(
+    BuildContext context,
+    MuscleRecoveryStatus status,
+  ) {
     final color = _getRecoveryColor(context, status.state);
     final percentage = status.recoveryPercentage.clamp(0, 100).round();
 
@@ -456,7 +466,10 @@ class StressIndexTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildHistorySection(BuildContext context, List<StressIndexResult> history) {
+  Widget _buildHistorySection(
+    BuildContext context,
+    List<StressIndexResult> history,
+  ) {
     // Take last 7 entries
     final recentHistory = history.take(7).toList();
 
@@ -567,10 +580,18 @@ class StressIndexTab extends ConsumerWidget {
     return switch (state) {
       RecoveryState.fullyRecovered => context.colors.success,
       // Almost ready: blend between success and warning
-      RecoveryState.almostReady => Color.lerp(context.colors.success, context.colors.warning, 0.3)!,
+      RecoveryState.almostReady => Color.lerp(
+        context.colors.success,
+        context.colors.warning,
+        0.3,
+      )!,
       RecoveryState.recovering => context.colors.warning,
       // Fatigued: blend between warning and error
-      RecoveryState.fatigued => Color.lerp(context.colors.warning, context.colors.error, 0.5)!,
+      RecoveryState.fatigued => Color.lerp(
+        context.colors.warning,
+        context.colors.error,
+        0.5,
+      )!,
       RecoveryState.exhausted => context.colors.error,
     };
   }

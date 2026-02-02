@@ -8,12 +8,13 @@ import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 /// Repository for managing workout drafts in local storage
 class WorkoutDraftRepository {
   WorkoutDraftRepository([HiveBoxManagerEnhanced? boxManager])
-      : _boxManager = boxManager ?? HiveBoxManagerEnhanced();
+    : _boxManager = boxManager ?? HiveBoxManagerEnhanced();
 
   static const String _boxName = 'workout_drafts';
   // 🔐 User-scoped cache keys
   String get _currentDraftKey => userCacheKeys.userScopedKey('current_draft');
-  String get _recoveredDraftsKey => userCacheKeys.userScopedKey('recovered_drafts');
+  String get _recoveredDraftsKey =>
+      userCacheKeys.userScopedKey('recovered_drafts');
 
   final HiveBoxManagerEnhanced _boxManager;
   Box<WorkoutDraft>? _draftBox;
@@ -21,6 +22,7 @@ class WorkoutDraftRepository {
 
   /// Flag to track if init failed (prevents repeated failing attempts)
   bool _initFailed = false;
+
   /// Flag to track if already initialized successfully
   bool _initialized = false;
 
@@ -32,7 +34,9 @@ class WorkoutDraftRepository {
     // Skip if init already failed to prevent repeated errors
     if (_initFailed) {
       if (kDebugMode) {
-        debugPrint('⚠️ [WorkoutDraftRepository] Skipping init - previous attempt failed');
+        debugPrint(
+          '⚠️ [WorkoutDraftRepository] Skipping init - previous attempt failed',
+        );
       }
       return;
     }
@@ -58,7 +62,9 @@ class WorkoutDraftRepository {
     } on BoxCorruptedException catch (e) {
       // HiveBoxManagerEnhanced already deleted corrupted box, box is recreated empty
       if (kDebugMode) {
-        debugPrint('⚠️ [WorkoutDraftRepository] Box was corrupted and recovered: $e');
+        debugPrint(
+          '⚠️ [WorkoutDraftRepository] Box was corrupted and recovered: $e',
+        );
       }
       // Try again - box should be recreated
       try {
@@ -67,7 +73,9 @@ class WorkoutDraftRepository {
       } catch (retryError) {
         _initFailed = true;
         if (kDebugMode) {
-          debugPrint('❌ [WorkoutDraftRepository] Init failed after corruption recovery: $retryError');
+          debugPrint(
+            '❌ [WorkoutDraftRepository] Init failed after corruption recovery: $retryError',
+          );
         }
       }
     } on BoxOpenException catch (e) {
@@ -87,10 +95,10 @@ class WorkoutDraftRepository {
   Future<void> saveCurrentDraft(Workout workout) async {
     try {
       await init();
-      
+
       final draft = WorkoutDraft.fromWorkout(workout);
       await _draftBox?.put(_currentDraftKey, draft);
-      
+
       if (kDebugMode) {
         debugPrint('✅ Workout draft saved at ${draft.lastSaved}');
       }
@@ -123,7 +131,9 @@ class WorkoutDraftRepository {
         } catch (conversionError) {
           // Draft data is corrupted or incompatible with current code
           if (kDebugMode) {
-            debugPrint('⚠️ [WorkoutDraftRepository] Draft conversion failed, clearing corrupt data: $conversionError');
+            debugPrint(
+              '⚠️ [WorkoutDraftRepository] Draft conversion failed, clearing corrupt data: $conversionError',
+            );
           }
           await clearCurrentDraft();
           return null;
@@ -133,14 +143,18 @@ class WorkoutDraftRepository {
     } on TypeError catch (e) {
       // Type mismatch - data format changed between app versions
       if (kDebugMode) {
-        debugPrint('⚠️ [WorkoutDraftRepository] Type error reading draft (format changed?): $e');
+        debugPrint(
+          '⚠️ [WorkoutDraftRepository] Type error reading draft (format changed?): $e',
+        );
       }
       // Clear corrupted/incompatible data
       await clearCurrentDraft();
       return null;
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('❌ [WorkoutDraftRepository] Failed to get workout draft: $e');
+        debugPrint(
+          '❌ [WorkoutDraftRepository] Failed to get workout draft: $e',
+        );
       }
       return null;
     }
@@ -169,17 +183,17 @@ class WorkoutDraftRepository {
     try {
       final draft = await getCurrentDraft();
       if (draft == null) return null;
-      
+
       // Mark as recovered to prevent showing again
       final recoveredDraft = draft.copyWith(isRecovered: true);
       await _draftBox?.put(_currentDraftKey, recoveredDraft);
-      
+
       // Also save to recovered drafts history
       final existing = _recoveredBox?.get(_recoveredDraftsKey);
       final recoveredList = (existing is List) ? List.from(existing) : [];
       recoveredList.add(recoveredDraft);
       await _recoveredBox?.put(_recoveredDraftsKey, recoveredList);
-      
+
       return draft.toWorkout();
     } catch (e) {
       if (kDebugMode) {
@@ -271,7 +285,9 @@ class WorkoutDraftRepository {
       }
 
       if (kDebugMode) {
-        debugPrint('✅ WorkoutDraftRepository disposed: $closedCount boxes closed');
+        debugPrint(
+          '✅ WorkoutDraftRepository disposed: $closedCount boxes closed',
+        );
       }
     } catch (e) {
       if (kDebugMode) {

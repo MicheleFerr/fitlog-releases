@@ -61,7 +61,9 @@ class SwipeableTemplateCard extends ConsumerWidget {
     final hasSchedule = onSchedule != null;
     final showRefresh = needsRefresh && onRefresh != null;
     final leftActionCount = (hasSchedule ? 1 : 0) + (showRefresh ? 1 : 0);
-    final leftExtentRatio = leftActionCount > 0 ? (0.20 * leftActionCount) : 0.0;
+    final leftExtentRatio = leftActionCount > 0
+        ? (0.20 * leftActionCount)
+        : 0.0;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -115,7 +117,8 @@ class SwipeableTemplateCard extends ConsumerWidget {
         endActionPane: ActionPane(
           motion: const StretchMotion(), // More resistance than BehindMotion
           extentRatio: onView != null ? 0.72 : 0.56, // Reduced from 0.80/0.64
-          openThreshold: 0.3, // Must swipe 30% before actions reveal (default 0.5)
+          openThreshold:
+              0.3, // Must swipe 30% before actions reveal (default 0.5)
           children: [
             // View action (presentation mode)
             if (onView != null)

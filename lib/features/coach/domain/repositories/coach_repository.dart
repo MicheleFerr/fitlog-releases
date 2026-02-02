@@ -56,10 +56,7 @@ abstract class CoachRepository {
   );
 
   /// Add note to athlete profile
-  Future<void> addAthleteNote(
-    String relationshipId,
-    String note,
-  );
+  Future<void> addAthleteNote(String relationshipId, String note);
 
   // ============================================================
   // ATHLETE WORKOUT ACCESS
@@ -204,10 +201,7 @@ class AthleteWorkoutSummary {
 
 /// Summary of exercise in workout
 class AthleteExerciseSummary {
-  const AthleteExerciseSummary({
-    required this.name,
-    required this.sets,
-  });
+  const AthleteExerciseSummary({required this.name, required this.sets});
 
   final String name;
   final List<AthleteSetSummary> sets;
@@ -226,10 +220,7 @@ class AthleteExerciseSummary {
 
 /// Summary of a single set
 class AthleteSetSummary {
-  const AthleteSetSummary({
-    required this.weight,
-    required this.reps,
-  });
+  const AthleteSetSummary({required this.weight, required this.reps});
 
   final double weight;
   final int reps;
@@ -248,12 +239,12 @@ class AthleteWeeklyStats {
 
   /// Create empty stats
   const AthleteWeeklyStats.empty()
-      : totalWorkouts = 0,
-        plannedWorkouts = 4, // Default assumption
-        totalMinutes = 0,
-        totalVolume = 0,
-        compliancePercent = 0,
-        lastWorkoutAt = null;
+    : totalWorkouts = 0,
+      plannedWorkouts = 4, // Default assumption
+      totalMinutes = 0,
+      totalVolume = 0,
+      compliancePercent = 0,
+      lastWorkoutAt = null;
 
   final int totalWorkouts;
   final int plannedWorkouts;

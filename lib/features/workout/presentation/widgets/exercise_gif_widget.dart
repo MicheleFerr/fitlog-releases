@@ -140,10 +140,7 @@ class _ExerciseGifWidgetState extends State<ExerciseGifWidget> {
       child: Container(
         width: widget.size,
         height: widget.size,
-        decoration: BoxDecoration(
-          color: bgColor,
-          shape: BoxShape.circle,
-        ),
+        decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
         clipBehavior: Clip.antiAlias,
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
@@ -156,10 +153,7 @@ class _ExerciseGifWidgetState extends State<ExerciseGifWidget> {
             fit: BoxFit.cover,
             // Placeholder durante il caricamento
             placeholder: (context, url) => Center(
-              child: LoadingIndicator(
-                size: widget.size * 0.4,
-                color: icColor,
-              ),
+              child: LoadingIndicator(size: widget.size * 0.4, color: icColor),
             ),
             // Fallback se l'immagine non carica
             errorWidget: (context, url, error) => Icon(
@@ -178,15 +172,8 @@ class _ExerciseGifWidgetState extends State<ExerciseGifWidget> {
     return Container(
       width: widget.size,
       height: widget.size,
-      decoration: BoxDecoration(
-        color: bgColor,
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        AppIcons.workout,
-        color: icColor,
-        size: widget.size * 0.45,
-      ),
+      decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
+      child: Icon(AppIcons.workout, color: icColor, size: widget.size * 0.45),
     );
   }
 

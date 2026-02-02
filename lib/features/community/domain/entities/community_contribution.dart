@@ -4,18 +4,18 @@ part 'community_contribution.freezed.dart';
 part 'community_contribution.g.dart';
 
 enum ContributionType {
-  correction,   // Correzione di info errate
-  tip,         // Suggerimento/consiglio
-  warning,     // Avviso sicurezza
-  variant,     // Variante esercizio
+  correction, // Correzione di info errate
+  tip, // Suggerimento/consiglio
+  warning, // Avviso sicurezza
+  variant, // Variante esercizio
   translation, // Traduzione
-  technique,   // Correzione tecnica
+  technique, // Correzione tecnica
 }
 
 enum ContributionStatus {
-  pending,     // In attesa di review
-  approved,    // Approvato dalla community
-  rejected,    // Rifiutato
+  pending, // In attesa di review
+  approved, // Approvato dalla community
+  rejected, // Rifiutato
   underReview, // In fase di review (3+ votes)
 }
 
@@ -49,11 +49,14 @@ abstract class CommunityContribution with _$CommunityContribution {
     Map<String, dynamic>? metadata,
 
     // NEW: Discovery & Search fields
-    @Default([]) List<String> exerciseIds, // Multiple exercises (was single exerciseId)
+    @Default([])
+    List<String> exerciseIds, // Multiple exercises (was single exerciseId)
     @Default('beginner') String difficulty, // beginner, intermediate, advanced
     @Default([]) List<String> tags, // User-added tags (lowercase, max 5)
-    @Default([]) List<String> applicableTo, // Goals: hypertrophy, strength, mobility
-    String? authorTier, // community, expert, admin (nullable for backward compat)
+    @Default([])
+    List<String> applicableTo, // Goals: hypertrophy, strength, mobility
+    String?
+    authorTier, // community, expert, admin (nullable for backward compat)
     @Default(0.5) double authorTrustScore, // 0-1
     @Default(0.5) double qualityScore, // 0-1 (aggregate score)
     @Default(0) int saves, // How many users saved
@@ -135,7 +138,7 @@ class ContributionPoints {
   static const int commentOnContribution = 3;
   static const int dailyStreak = 20;
   static const int weeklyBonus = 100;
-  
+
   static String getLevelFromPoints(int points) {
     if (points < 100) return 'Rookie';
     if (points < 500) return 'Contributor';
@@ -144,16 +147,23 @@ class ContributionPoints {
     if (points < 10000) return 'Legend';
     return 'Mythic';
   }
-  
+
   static String getLevelIcon(String level) {
     switch (level) {
-      case 'Rookie': return '🌱';
-      case 'Contributor': return '⭐';
-      case 'Expert': return '💪';
-      case 'Master': return '🏆';
-      case 'Legend': return '👑';
-      case 'Mythic': return '💎';
-      default: return '🌱';
+      case 'Rookie':
+        return '🌱';
+      case 'Contributor':
+        return '⭐';
+      case 'Expert':
+        return '💪';
+      case 'Master':
+        return '🏆';
+      case 'Legend':
+        return '👑';
+      case 'Mythic':
+        return '💎';
+      default:
+        return '🌱';
     }
   }
 }

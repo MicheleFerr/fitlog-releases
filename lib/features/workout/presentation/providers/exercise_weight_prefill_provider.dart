@@ -53,75 +53,79 @@ class WeightPrefill {
 /// [ExerciseHistoryService] matches by name.
 final exerciseWeightPrefillProvider = FutureProvider.autoDispose
     .family<WeightPrefill?, String>((ref, exerciseName) async {
-  // ── 1. History ──────────────────────────────────────────────────────────
-  final userId = ref.read(currentUserIdProvider);
-  if (userId != null) {
-    final historyService = ref.read(exerciseHistoryServiceProvider);
-    final lastData =
-        await historyService.getLastExerciseData(exerciseName, userId);
+      // ── 1. History ──────────────────────────────────────────────────────────
+      final userId = ref.read(currentUserIdProvider);
+      if (userId != null) {
+        final historyService = ref.read(exerciseHistoryServiceProvider);
+        final lastData = await historyService.getLastExerciseData(
+          exerciseName,
+          userId,
+        );
 
-    if (lastData.weight != null) {
-      // Fetch last N session-weights (including duplicates) for overload check
-      final history = await historyService.getExerciseHistory(
-        exerciseName,
-        userId,
-        limit: 10,
-      );
+        if (lastData.weight != null) {
+          // Fetch last N session-weights (including duplicates) for overload check
+          final history = await historyService.getExerciseHistory(
+            exerciseName,
+            userId,
+            limit: 10,
+          );
 
-      // Group by workout date and take the max weight per session
-      final sessionWeights = _extractSessionWeights(history, limit: 4);
-      final shouldIncrease =
-          _shouldProgressiveOverload(sessionWeights, lastData.weight!);
+          // Group by workout date and take the max weight per session
+          final sessionWeights = _extractSessionWeights(history, limit: 4);
+          final shouldIncrease = _shouldProgressiveOverload(
+            sessionWeights,
+            lastData.weight!,
+          );
 
-      return WeightPrefill(
-        weight:
-            shouldIncrease ? lastData.weight! + 2.5 : lastData.weight!,
-        reps: 10,
-        source: shouldIncrease
-            ? PrefillSource.progressiveOverload
-            : PrefillSource.history,
-      );
-    }
-  }
+          return WeightPrefill(
+            weight: shouldIncrease ? lastData.weight! + 2.5 : lastData.weight!,
+            reps: 10,
+            source: shouldIncrease
+                ? PrefillSource.progressiveOverload
+                : PrefillSource.history,
+          );
+        }
+      }
 
-  // ── 2. Strength standard ───────────────────────────────────────────────
-  final questionnaire = ref.read(userFitnessQuestionnaireProvider);
-  if (questionnaire != null && questionnaire.isValid) {
-    final service = ref.read(weightSuggestionServiceProvider);
-    final repository = ref.read(strengthStandardsRepositoryProvider);
+      // ── 2. Strength standard ───────────────────────────────────────────────
+      final questionnaire = ref.read(userFitnessQuestionnaireProvider);
+      if (questionnaire != null && questionnaire.isValid) {
+        final service = ref.read(weightSuggestionServiceProvider);
+        final repository = ref.read(strengthStandardsRepositoryProvider);
 
-    // exerciseName may not be a valid exerciseId for the mapping lookup,
-    // but the repository does a name-based search internally.
-    final mapping = await repository.getMappingForExercise(exerciseName);
+        // exerciseName may not be a valid exerciseId for the mapping lookup,
+        // but the repository does a name-based search internally.
+        final mapping = await repository.getMappingForExercise(exerciseName);
 
-    StrengthStandard? standard;
-    if (mapping != null &&
-        mapping.canSuggestWeight &&
-        mapping.standardId != null) {
-      standard =
-          await repository.getStrengthStandardById(mapping.standardId!);
-    }
+        StrengthStandard? standard;
+        if (mapping != null &&
+            mapping.canSuggestWeight &&
+            mapping.standardId != null) {
+          standard = await repository.getStrengthStandardById(
+            mapping.standardId!,
+          );
+        }
 
-    final suggestion = service.getSuggestedWeight(
-      exerciseId: exerciseName,
-      questionnaire: questionnaire,
-      mapping: mapping,
-      standard: standard,
-    );
+        final suggestion = service.getSuggestedWeight(
+          exerciseId: exerciseName,
+          questionnaire: questionnaire,
+          mapping: mapping,
+          standard: standard,
+        );
 
-    if (suggestion != null) {
-      return WeightPrefill(
-        weight: suggestion.suggestedWeightKg,
-        reps: suggestion.suggestedReps,
-        source: PrefillSource.strengthStandard,
-        confidence: suggestion.confidence,
-      );
-    }
-  }
+        if (suggestion != null) {
+          return WeightPrefill(
+            weight: suggestion.suggestedWeightKg,
+            reps: suggestion.suggestedReps,
+            source: PrefillSource.strengthStandard,
+            confidence: suggestion.confidence,
+          );
+        }
+      }
 
-  // ── 3. null – no suggestion available ──────────────────────────────────
-  return null;
-});
+      // ── 3. null – no suggestion available ──────────────────────────────────
+      return null;
+    });
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -138,8 +142,7 @@ List<double> _extractSessionWeights(
 
   for (final data in history) {
     if (data.weight == null) continue;
-    final dayKey =
-        '${data.date.year}-${data.date.month}-${data.date.day}';
+    final dayKey = '${data.date.year}-${data.date.month}-${data.date.day}';
     if (seen.contains(dayKey)) continue;
     seen.add(dayKey);
     weights.add(data.weight!);
@@ -156,8 +159,5 @@ bool _shouldProgressiveOverload(
   double currentWeight,
 ) {
   if (sessionWeights.length < 4) return false;
-  return sessionWeights
-      .take(4)
-      .every((w) => (w - currentWeight).abs() < 0.1);
+  return sessionWeights.take(4).every((w) => (w - currentWeight).abs() < 0.1);
 }
-

@@ -18,14 +18,14 @@ final schedulingRepositoryProvider = Provider<SchedulingRepository>((ref) {
 /// Provider for the scheduling notification service
 final schedulingNotificationServiceProvider =
     Provider<SchedulingNotificationService>((ref) {
-  return SchedulingNotificationService();
-});
+      return SchedulingNotificationService();
+    });
 
 /// Provider for the schedule Live Activity service
 final scheduleLiveActivityServiceProvider =
     Provider<ScheduleLiveActivityService>((ref) {
-  return ScheduleLiveActivityService.instance;
-});
+      return ScheduleLiveActivityService.instance;
+    });
 
 /// State class for scheduling
 class SchedulingState {
@@ -90,10 +90,7 @@ class SchedulingNotifier extends Notifier<SchedulingState> {
       await _repository.updateMissedWorkouts();
 
       final workouts = await _repository.getScheduledWorkouts();
-      state = state.copyWith(
-        scheduledWorkouts: workouts,
-        isLoading: false,
-      );
+      state = state.copyWith(scheduledWorkouts: workouts, isLoading: false);
 
       // Check for upcoming workouts and start Live Activity if needed
       await _checkAndStartLiveActivity();
@@ -111,18 +108,12 @@ class SchedulingNotifier extends Notifier<SchedulingState> {
 
     // Find the next workout within the threshold
     final now = DateTime.now();
-    final nextWorkout = upcoming.firstWhere(
-      (w) {
-        final minutesUntil =
-            w.reminderDateTime.difference(now).inMinutes;
-        return minutesUntil > 0 &&
-            minutesUntil <= _liveActivityThresholdMinutes;
-      },
-      orElse: () => upcoming.first,
-    );
+    final nextWorkout = upcoming.firstWhere((w) {
+      final minutesUntil = w.reminderDateTime.difference(now).inMinutes;
+      return minutesUntil > 0 && minutesUntil <= _liveActivityThresholdMinutes;
+    }, orElse: () => upcoming.first);
 
-    final minutesUntil =
-        nextWorkout.reminderDateTime.difference(now).inMinutes;
+    final minutesUntil = nextWorkout.reminderDateTime.difference(now).inMinutes;
 
     // Only start Live Activity if within threshold
     if (minutesUntil > 0 && minutesUntil <= _liveActivityThresholdMinutes) {
@@ -189,10 +180,7 @@ class SchedulingNotifier extends Notifier<SchedulingState> {
 
       // Refresh state
       final updated = await _repository.getScheduledWorkouts();
-      state = state.copyWith(
-        scheduledWorkouts: updated,
-        isLoading: false,
-      );
+      state = state.copyWith(scheduledWorkouts: updated, isLoading: false);
 
       // Check if any newly scheduled workout is within threshold and start Live Activity
       await _checkAndStartLiveActivity();
@@ -212,8 +200,9 @@ class SchedulingNotifier extends Notifier<SchedulingState> {
 
       // Update state
       state = state.copyWith(
-        scheduledWorkouts:
-            state.scheduledWorkouts.where((w) => w.id != id).toList(),
+        scheduledWorkouts: state.scheduledWorkouts
+            .where((w) => w.id != id)
+            .toList(),
       );
     } catch (e) {
       state = state.copyWith(error: e);
@@ -260,10 +249,7 @@ class SchedulingNotifier extends Notifier<SchedulingState> {
     try {
       await _repository.updateMissedWorkouts();
       final updated = await _repository.getScheduledWorkouts();
-      state = state.copyWith(
-        scheduledWorkouts: updated,
-        isLoading: false,
-      );
+      state = state.copyWith(scheduledWorkouts: updated, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e);
     }
@@ -275,20 +261,21 @@ class SchedulingNotifier extends Notifier<SchedulingState> {
 /// Migrated to NotifierProvider (Riverpod 2.0+ pattern)
 final schedulingProvider =
     NotifierProvider<SchedulingNotifier, SchedulingState>(
-  SchedulingNotifier.new,
-);
+      SchedulingNotifier.new,
+    );
 
 /// Provider for upcoming scheduled workouts only
 final upcomingScheduledWorkoutsProvider =
     FutureProvider<List<ScheduledWorkout>>((ref) async {
-  final repository = ref.watch(schedulingRepositoryProvider);
-  await repository.updateMissedWorkouts();
-  return repository.getUpcomingScheduledWorkouts();
-});
+      final repository = ref.watch(schedulingRepositoryProvider);
+      await repository.updateMissedWorkouts();
+      return repository.getUpcomingScheduledWorkouts();
+    });
 
 /// Provider for today's scheduled workouts
-final todaysScheduledWorkoutsProvider =
-    FutureProvider<List<ScheduledWorkout>>((ref) async {
+final todaysScheduledWorkoutsProvider = FutureProvider<List<ScheduledWorkout>>((
+  ref,
+) async {
   final repository = ref.watch(schedulingRepositoryProvider);
   return repository.getScheduledWorkoutsForDate(DateTime.now());
 });

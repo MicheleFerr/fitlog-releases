@@ -118,17 +118,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
   // These are used in callbacks (didUpdateWidget, _autoCollapseIfCompleted) where
   // we need current value but don't want to trigger rebuilds.
   // Reactive watching is done ONLY in build() method with local variables.
-  bool get _isExpandedRead => ref.read(
-    exerciseExpansionProvider(widget.exercise.id),
-  ).isExpanded;
+  bool get _isExpandedRead =>
+      ref.read(exerciseExpansionProvider(widget.exercise.id)).isExpanded;
 
-  bool get _hasAutoCollapsedRead => ref.read(
-    exerciseExpansionProvider(widget.exercise.id),
-  ).hasAutoCollapsed;
+  bool get _hasAutoCollapsedRead =>
+      ref.read(exerciseExpansionProvider(widget.exercise.id)).hasAutoCollapsed;
 
-  bool get _userManuallyExpandedRead => ref.read(
-    exerciseExpansionProvider(widget.exercise.id),
-  ).userManuallyExpanded;
+  bool get _userManuallyExpandedRead => ref
+      .read(exerciseExpansionProvider(widget.exercise.id))
+      .userManuallyExpanded;
 
   ExerciseExpansionNotifier get _expansionNotifier =>
       ref.read(exerciseExpansionProvider(widget.exercise.id).notifier);
@@ -441,7 +439,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
           if (widget.onExerciseUpdate != null) {
             final updatedExercise = widget.exercise.copyWith(
               restTime: newRestTime,
-              clearRestTime: newRestTime == null, // ✅ FIX: Allow clearing restTime to null
+              clearRestTime:
+                  newRestTime == null, // ✅ FIX: Allow clearing restTime to null
               updatedAt: DateTime.now(),
             );
             widget.onExerciseUpdate!(updatedExercise);
@@ -964,16 +963,21 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
           result.formCues,
         );
         // Invalidate the provider to refresh UI
-        ref.invalidate(formCuesProvider((
-          exerciseId: widget.exercise.id,
-          exerciseName: widget.exercise.name,
-        )));
+        ref.invalidate(
+          formCuesProvider((
+            exerciseId: widget.exercise.id,
+            exerciseName: widget.exercise.name,
+          )),
+        );
       }
 
       // Save Session Notes if changed
-      if (result.sessionNotes != widget.exercise.notes && widget.onExerciseUpdate != null) {
+      if (result.sessionNotes != widget.exercise.notes &&
+          widget.onExerciseUpdate != null) {
         final updatedExercise = widget.exercise.copyWith(
-          notes: result.sessionNotes?.isEmpty == true ? null : result.sessionNotes,
+          notes: result.sessionNotes?.isEmpty == true
+              ? null
+              : result.sessionNotes,
           updatedAt: DateTime.now(),
         );
         widget.onExerciseUpdate!(updatedExercise);
@@ -981,10 +985,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
       await HapticFeedback.lightImpact();
       if (mounted) {
-        SnackBarService.showSuccess(
-          context,
-          context.l10n.notesSaved,
-        );
+        SnackBarService.showSuccess(context, context.l10n.notesSaved);
       }
     }
   }
@@ -1018,17 +1019,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       // TODO: Create superset from configuration result
       // For now, log the selection
       if (kDebugMode) {
-        debugPrint('🔗 [Superset] Created with ${result.exercises.length} exercises');
+        debugPrint(
+          '🔗 [Superset] Created with ${result.exercises.length} exercises',
+        );
         for (final ex in result.exercises) {
           debugPrint('   - ${ex.nome}');
         }
       }
 
       HapticFeedback.mediumImpact();
-      SnackBarService.showSuccess(
-        context,
-        context.l10n.supersetCreated,
-      );
+      SnackBarService.showSuccess(context, context.l10n.supersetCreated);
     }
   }
 
@@ -1056,9 +1056,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       // Update exercise name in current workout
       workoutNotifier.updateExercise(
         widget.exercise.id,
-        widget.exercise.copyWith(
-          name: result.targetExercise.nome,
-        ),
+        widget.exercise.copyWith(name: result.targetExercise.nome),
       );
 
       // If user wants to update other workouts/templates
@@ -1076,10 +1074,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       }
 
       HapticFeedback.mediumImpact();
-      SnackBarService.showSuccess(
-        context,
-        context.l10n.exerciseUpgraded,
-      );
+      SnackBarService.showSuccess(context, context.l10n.exerciseUpgraded);
     }
   }
 
@@ -1091,11 +1086,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     final result = await CountingModePickerModal.show(
       context,
       currentMode: widget.exercise.countingMode,
-      exerciseId: widget.exercise.id, // ✅ workout exercise uses 'id' (preserves database exercise ID)
+      exerciseId: widget
+          .exercise
+          .id, // ✅ workout exercise uses 'id' (preserves database exercise ID)
       exerciseName: widget.exercise.name,
     );
 
-    if (result != null && result.mode != widget.exercise.countingMode && mounted) {
+    if (result != null &&
+        result.mode != widget.exercise.countingMode &&
+        mounted) {
       // Update exercise with new counting mode
       final updatedExercise = widget.exercise.copyWith(
         countingMode: result.mode,
@@ -1112,7 +1111,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
         final repo = ref.read(exercisePreferencesRepositoryProvider);
         if (repo != null) {
           await repo.setCountingModeOverride(
-            widget.exercise.id, // ✅ workout exercise uses 'id' (preserves database exercise ID)
+            widget
+                .exercise
+                .id, // ✅ workout exercise uses 'id' (preserves database exercise ID)
             result.mode.name,
           );
         }
@@ -1142,7 +1143,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
   /// If no warmup sets: generates defaults based on target weight, opens modal to configure
   void _handleAddWarmupSets() {
     // Check for existing warmup sets
-    final existingWarmupSets = widget.exercise.sets.where((s) => s.isWarmup).toList();
+    final existingWarmupSets = widget.exercise.sets
+        .where((s) => s.isWarmup)
+        .toList();
     final workingSets = widget.exercise.sets.where((s) => !s.isWarmup).toList();
 
     // If editing existing warmup sets
@@ -1150,7 +1153,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       // Convert ExerciseSet to WarmupSet for the modal
       final warmupSetsForModal = existingWarmupSets.map((s) {
         // Calculate percentage if we have working sets
-        final targetWeight = workingSets.isNotEmpty ? workingSets.first.weight ?? 0.0 : 0.0;
+        final targetWeight = workingSets.isNotEmpty
+            ? workingSets.first.weight ?? 0.0
+            : 0.0;
         final percentage = targetWeight > 0
             ? ((s.weight ?? 0) / targetWeight * 100).round()
             : 0;
@@ -1167,26 +1172,22 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
     // No existing warmup sets - generate new ones
     if (workingSets.isEmpty) {
-      SnackBarService.showError(
-        context,
-        context.l10n.addWorkingSetFirst,
-      );
+      SnackBarService.showError(context, context.l10n.addWorkingSetFirst);
       return;
     }
 
     final targetWeight = workingSets.first.weight ?? 0.0;
 
     if (targetWeight <= 0) {
-      SnackBarService.showError(
-        context,
-        context.l10n.setTargetWeightFirst,
-      );
+      SnackBarService.showError(context, context.l10n.setTargetWeightFirst);
       return;
     }
 
     // Generate warmup sets using WarmupCalculatorService
     final warmupCalculator = WarmupCalculatorService();
-    final isBarbell = warmupCalculator.isLikelyBarbellExercise(widget.exercise.name);
+    final isBarbell = warmupCalculator.isLikelyBarbellExercise(
+      widget.exercise.name,
+    );
     final generatedSets = warmupCalculator.calculateWarmupSets(
       targetWeight,
       isBarbell: isBarbell,
@@ -1196,7 +1197,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
   }
 
   /// Shows the warmup customization modal and handles the result
-  void _showWarmupModal(List<WarmupSet> initialSets, {required bool isEditing}) {
+  void _showWarmupModal(
+    List<WarmupSet> initialSets, {
+    required bool isEditing,
+  }) {
     HapticFeedback.lightImpact();
 
     WarmupCustomizationModal.show(
@@ -1214,10 +1218,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       // User deleted all warmup sets
       if (isEditing) {
         // Remove all warmup sets from exercise
-        final workingSets = widget.exercise.sets.where((s) => !s.isWarmup).toList();
-        final renumberedSets = workingSets.asMap().map((index, set) {
-          return MapEntry(index, set.copyWith(setNumber: index + 1));
-        }).values.toList();
+        final workingSets = widget.exercise.sets
+            .where((s) => !s.isWarmup)
+            .toList();
+        final renumberedSets = workingSets
+            .asMap()
+            .map((index, set) {
+              return MapEntry(index, set.copyWith(setNumber: index + 1));
+            })
+            .values
+            .toList();
 
         final updatedExercise = widget.exercise.copyWith(
           sets: renumberedSets,
@@ -1238,29 +1248,37 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     }
 
     // Convert WarmupSet to ExerciseSet
-    final newWarmupExerciseSets = warmupSets.asMap().map((index, warmup) {
-      return MapEntry(
-        index,
-        ExerciseSet(
-          setNumber: index + 1,
-          weight: warmup.weight,
-          reps: warmup.reps,
-          isWarmup: true,
-          isCompleted: false,
-        ),
-      );
-    }).values.toList();
+    final newWarmupExerciseSets = warmupSets
+        .asMap()
+        .map((index, warmup) {
+          return MapEntry(
+            index,
+            ExerciseSet(
+              setNumber: index + 1,
+              weight: warmup.weight,
+              reps: warmup.reps,
+              isWarmup: true,
+              isCompleted: false,
+            ),
+          );
+        })
+        .values
+        .toList();
 
     // Get working sets (non-warmup)
     final workingSets = widget.exercise.sets.where((s) => !s.isWarmup).toList();
 
     // Renumber working sets to come after warmup sets
-    final renumberedWorkingSets = workingSets.asMap().map((index, set) {
-      return MapEntry(
-        index,
-        set.copyWith(setNumber: newWarmupExerciseSets.length + index + 1),
-      );
-    }).values.toList();
+    final renumberedWorkingSets = workingSets
+        .asMap()
+        .map((index, set) {
+          return MapEntry(
+            index,
+            set.copyWith(setNumber: newWarmupExerciseSets.length + index + 1),
+          );
+        })
+        .values
+        .toList();
 
     // Combine: warmup sets first, then working sets
     final allSets = [...newWarmupExerciseSets, ...renumberedWorkingSets];
@@ -1291,7 +1309,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
     if (kDebugMode) {
       final action = isEditing ? 'Updated' : 'Added';
-      debugPrint('🔥 [Warmup] $action ${warmupSets.length} warmup sets for ${widget.exercise.name}');
+      debugPrint(
+        '🔥 [Warmup] $action ${warmupSets.length} warmup sets for ${widget.exercise.name}',
+      );
     }
   }
 
@@ -1366,10 +1386,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
     if (firstIncompleteIndex == -1) {
       // All stages completed - show completion message
-      SnackBarService.showSuccess(
-        context,
-        context.l10n.dropsetCompleted,
-      );
+      SnackBarService.showSuccess(context, context.l10n.dropsetCompleted);
       return;
     }
 
@@ -1508,13 +1525,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     }
   }
 
-  Future<void> _handleExecuteRestPause(RestPauseExercise restPauseExercise) async {
+  Future<void> _handleExecuteRestPause(
+    RestPauseExercise restPauseExercise,
+  ) async {
     if (kDebugMode) {
       debugPrint('Execute rest-pause for ${widget.exercise.name}');
     }
 
     // Check if already completed
-    final allCompleted = restPauseExercise.restPauseSets.isNotEmpty &&
+    final allCompleted =
+        restPauseExercise.restPauseSets.isNotEmpty &&
         restPauseExercise.restPauseSets.every((s) => s.isCompleted);
 
     if (allCompleted) {
@@ -1637,10 +1657,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     // Previously, getters with ref.watch were causing rebuild chains when accessed.
     // Now we watch once in build() and use the local variables.
     final isExpanded = ref.watch(
-      exerciseExpansionProvider(widget.exercise.id)
-          .select((state) => state.isExpanded),
+      exerciseExpansionProvider(
+        widget.exercise.id,
+      ).select((state) => state.isExpanded),
     );
-    final suggestions = ref.watch(exerciseSuggestionsProvider(widget.exercise.id));
+    final suggestions = ref.watch(
+      exerciseSuggestionsProvider(widget.exercise.id),
+    );
 
     // Watch Form Cues for this exercise (persistent technique reminders)
     final formCuesAsync = ref.watch(
@@ -1653,8 +1676,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
     // Listen for auto-collapse completion
     ref.listen(
-      exerciseAutoCollapseProvider(widget.exercise.id)
-          .select((state) => state.shouldExecuteCollapse),
+      exerciseAutoCollapseProvider(
+        widget.exercise.id,
+      ).select((state) => state.shouldExecuteCollapse),
       (previous, shouldCollapse) {
         if (shouldCollapse) {
           // Execute the collapse
@@ -1672,15 +1696,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
     // ✅ FIX: Listen for autoCollapseCompleted toggle changes
     // This ensures immediate reactivity when user changes the toggle in settings modal
-    ref.listen(
-      appConfigProvider.select((c) => c.autoCollapseCompleted),
-      (previous, next) {
-        // When toggle is enabled and exercise is completed, trigger auto-collapse
-        if (next == true && previous == false && _areAllSetsCompleted()) {
-          _autoCollapseIfCompleted();
-        }
-      },
-    );
+    ref.listen(appConfigProvider.select((c) => c.autoCollapseCompleted), (
+      previous,
+      next,
+    ) {
+      // When toggle is enabled and exercise is completed, trigger auto-collapse
+      if (next == true && previous == false && _areAllSetsCompleted()) {
+        _autoCollapseIfCompleted();
+      }
+    });
 
     // Reorder mode - show simplified card (matching normal card styling)
     if (widget.isReorderMode) {

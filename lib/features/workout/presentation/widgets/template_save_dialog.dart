@@ -23,17 +23,11 @@ import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mix
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Dialog options for template save
-enum TemplateSaveOption {
-  updateTemplate,
-  discardChanges,
-}
+enum TemplateSaveOption { updateTemplate, discardChanges }
 
 /// Result from the template save dialog
 class TemplateSaveResult {
-  const TemplateSaveResult({
-    required this.option,
-    this.newTemplateName,
-  });
+  const TemplateSaveResult({required this.option, this.newTemplateName});
 
   final TemplateSaveOption option;
   final String? newTemplateName;
@@ -64,7 +58,8 @@ Future<TemplateSaveResult?> showTemplateSaveDialog({
 
   // If dismissed without choice (swipe to close), default to update template
   // to prevent accidental data loss
-  return result ?? const TemplateSaveResult(option: TemplateSaveOption.updateTemplate);
+  return result ??
+      const TemplateSaveResult(option: TemplateSaveOption.updateTemplate);
 }
 
 class _TemplateSaveDialogContent extends ConsumerStatefulWidget {
@@ -116,148 +111,154 @@ class _TemplateSaveDialogContentState
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
+                      color: context.colors.onSurfaceVariant.withValues(
+                        alpha: 0.4,
+                      ),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
               ),
 
-          // Compact header with icon
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: context.colors.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: SemanticIcon(
-                  icon: AppIcons.save,
-                  semanticLabel: context.l10n.saveTemplate,
-                  size: AppIconSize.medium,
-                  color: context.colors.primary,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.l10n.saveTemplateChanges,
-                      style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      widget.originalTemplate.name,
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: AppSpacing.md),
-
-          // Compact changes summary
-          if (changes.isNotEmpty) ...[
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: context.colors.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
+              // Compact header with icon
+              Row(
                 children: [
-                  SemanticIcon(
-                    icon: AppIcons.info,
-                    semanticLabel: context.l10n.changesDetected,
-                    size: AppIconSize.small,
-                    color: context.colors.primary,
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: context.colors.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: SemanticIcon(
+                      icon: AppIcons.save,
+                      semanticLabel: context.l10n.saveTemplate,
+                      size: AppIconSize.medium,
+                      color: context.colors.primary,
+                    ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 12),
                   Expanded(
-                    child: Text(
-                      changes.join(' • '),
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          context.l10n.saveTemplateChanges,
+                          style: context.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          widget.originalTemplate.name,
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: context.colors.onSurfaceVariant,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-          ],
 
-          // Two clear action buttons
-          FilledButton.icon(
-            onPressed: _isLoading ? null : () => _handleChoice(TemplateSaveOption.updateTemplate),
-            icon: _isLoading
-                ? const SizedBox(
-                    height: 18,
-                    width: 18,
-                    child: LoadingIndicator(),
-                  )
-                : SemanticIcon(
-                    icon: AppIcons.save,
-                    semanticLabel: context.l10n.updateTemplate,
-                    size: AppIconSize.small,
-                    color: context.colors.onPrimary,
+              const SizedBox(height: AppSpacing.md),
+
+              // Compact changes summary
+              if (changes.isNotEmpty) ...[
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: context.colors.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-            label: Text(context.l10n.updateTemplate),
-            style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-            ),
-          ),
+                  child: Row(
+                    children: [
+                      SemanticIcon(
+                        icon: AppIcons.info,
+                        semanticLabel: context.l10n.changesDetected,
+                        size: AppIconSize.small,
+                        color: context.colors.primary,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          changes.join(' • '),
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: context.colors.onSurfaceVariant,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
 
-          const SizedBox(height: 8),
-
-          OutlinedButton.icon(
-            onPressed: _isLoading ? null : () => _handleChoice(TemplateSaveOption.discardChanges),
-            icon: SemanticIcon(
-              icon: AppIcons.close,
-              semanticLabel: context.l10n.keepOriginal,
-              size: AppIconSize.small,
-              color: context.colors.onSurfaceVariant,
-            ),
-            label: Text(context.l10n.keepOriginal),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              foregroundColor: context.colors.onSurfaceVariant,
-            ),
-          ),
-
-          // Hint about swipe behavior - changes during loading
-          Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.sm),
-            child: Text(
-              _isLoading
-                  ? context.l10n.savingWorkout
-                  : context.l10n.swipeDownToSave,
-              style: context.textTheme.labelSmall?.copyWith(
-                color: _isLoading
-                    ? context.colors.primary
-                    : context.colors.outline,
+              // Two clear action buttons
+              FilledButton.icon(
+                onPressed: _isLoading
+                    ? null
+                    : () => _handleChoice(TemplateSaveOption.updateTemplate),
+                icon: _isLoading
+                    ? const SizedBox(
+                        height: 18,
+                        width: 18,
+                        child: LoadingIndicator(),
+                      )
+                    : SemanticIcon(
+                        icon: AppIcons.save,
+                        semanticLabel: context.l10n.updateTemplate,
+                        size: AppIconSize.small,
+                        color: context.colors.onPrimary,
+                      ),
+                label: Text(context.l10n.updateTemplate),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
               ),
-              textAlign: TextAlign.center,
-            ),
-          ),
 
-          // Bottom safe area
-          SizedBox(height: MediaQuery.of(context).padding.bottom),
-        ],
-      ),
-      ),
+              const SizedBox(height: 8),
+
+              OutlinedButton.icon(
+                onPressed: _isLoading
+                    ? null
+                    : () => _handleChoice(TemplateSaveOption.discardChanges),
+                icon: SemanticIcon(
+                  icon: AppIcons.close,
+                  semanticLabel: context.l10n.keepOriginal,
+                  size: AppIconSize.small,
+                  color: context.colors.onSurfaceVariant,
+                ),
+                label: Text(context.l10n.keepOriginal),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  foregroundColor: context.colors.onSurfaceVariant,
+                ),
+              ),
+
+              // Hint about swipe behavior - changes during loading
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.sm),
+                child: Text(
+                  _isLoading
+                      ? context.l10n.savingWorkout
+                      : context.l10n.swipeDownToSave,
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: _isLoading
+                        ? context.colors.primary
+                        : context.colors.outline,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+
+              // Bottom safe area
+              SizedBox(height: MediaQuery.of(context).padding.bottom),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -285,10 +286,7 @@ class _TemplateSaveDialogContentState
       }
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(
-          context,
-          context.l10n.failedToSaveTemplate,
-        );
+        SnackBarService.showError(context, context.l10n.failedToSaveTemplate);
         safeSetState(() => _isLoading = false);
       }
     }
@@ -304,13 +302,17 @@ class _TemplateSaveDialogContentState
     final completedExerciseCount = completed.exercises.length;
 
     if (completedExerciseCount > originalExerciseCount) {
-      changes.add(context.l10n.exercisesAdded(
-        completedExerciseCount - originalExerciseCount,
-      ));
+      changes.add(
+        context.l10n.exercisesAdded(
+          completedExerciseCount - originalExerciseCount,
+        ),
+      );
     } else if (completedExerciseCount < originalExerciseCount) {
-      changes.add(context.l10n.exercisesRemoved(
-        originalExerciseCount - completedExerciseCount,
-      ));
+      changes.add(
+        context.l10n.exercisesRemoved(
+          originalExerciseCount - completedExerciseCount,
+        ),
+      );
     }
 
     // Check for modified exercises (different names or set counts)
@@ -359,10 +361,7 @@ class _TemplateSaveDialogContentState
         .saveTemplate(updatedTemplate);
 
     if (mounted) {
-      SnackBarService.showSuccess(
-        context,
-        context.l10n.templateUpdated,
-      );
+      SnackBarService.showSuccess(context, context.l10n.templateUpdated);
     }
   }
 }

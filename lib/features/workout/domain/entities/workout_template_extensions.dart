@@ -117,7 +117,10 @@ extension WorkoutTemplateExtensions on WorkoutTemplate {
 
     // Filter out non-muscle categories
     final muscleCategories = categoryDistribution.keys
-        .where((cat) => cat != ExerciseCategory.other && cat != ExerciseCategory.cardio)
+        .where(
+          (cat) =>
+              cat != ExerciseCategory.other && cat != ExerciseCategory.cardio,
+        )
         .toList();
 
     // Sort by frequency (descending)
@@ -156,7 +159,8 @@ extension WorkoutTemplateExtensions on WorkoutTemplate {
       total += exercise.sets.length;
 
       // If superset, count sub-exercise sets too
-      if (exercise.type == ExerciseType.superset && exercise.subExercises != null) {
+      if (exercise.type == ExerciseType.superset &&
+          exercise.subExercises != null) {
         for (final subExercise in exercise.subExercises!) {
           total += subExercise.sets.length;
         }
@@ -174,10 +178,12 @@ extension WorkoutTemplateExtensions on WorkoutTemplate {
 
     for (final exercise in exercises) {
       // Increment count for this category
-      distribution[exercise.category] = (distribution[exercise.category] ?? 0) + 1;
+      distribution[exercise.category] =
+          (distribution[exercise.category] ?? 0) + 1;
 
       // If superset, count sub-exercises too
-      if (exercise.type == ExerciseType.superset && exercise.subExercises != null) {
+      if (exercise.type == ExerciseType.superset &&
+          exercise.subExercises != null) {
         for (final subExercise in exercise.subExercises!) {
           distribution[subExercise.category] =
               (distribution[subExercise.category] ?? 0) + 1;

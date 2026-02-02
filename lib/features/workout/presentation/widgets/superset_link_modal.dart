@@ -43,7 +43,9 @@ class SupersetLinkModal extends ConsumerStatefulWidget {
     return showModalBottomSheet<SupersetConfiguration>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (_) => DraggableScrollableSheet(
         initialChildSize: 0.85,
         minChildSize: 0.5,
@@ -120,9 +122,11 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
           } else {
             final lowerQuery = query.toLowerCase();
             _filteredDbExercises = _dbExercises
-                .where((ex) =>
-                    ex.nome.toLowerCase().contains(lowerQuery) ||
-                    ex.focus.any((m) => m.toLowerCase().contains(lowerQuery)))
+                .where(
+                  (ex) =>
+                      ex.nome.toLowerCase().contains(lowerQuery) ||
+                      ex.focus.any((m) => m.toLowerCase().contains(lowerQuery)),
+                )
                 .toList();
           }
         });
@@ -178,8 +182,9 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
 
   exercise_db.Exercise? _findDbExerciseByName(String name) {
     final nameLower = name.toLowerCase();
-    return _dbExercises.where((db) =>
-        db.nome.toLowerCase() == nameLower).firstOrNull;
+    return _dbExercises
+        .where((db) => db.nome.toLowerCase() == nameLower)
+        .firstOrNull;
   }
 
   void _onContinue() async {
@@ -213,7 +218,9 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+              color: context.colors.surfaceContainerHighest.withValues(
+                alpha: 0.3,
+              ),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -271,11 +278,7 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
             ),
             child: Row(
               children: [
-                Icon(
-                  AppIcons.lock,
-                  size: 16,
-                  color: theme.colorScheme.primary,
-                ),
+                Icon(AppIcons.lock, size: 16, color: theme.colorScheme.primary),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -287,7 +290,10 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary,
                     borderRadius: BorderRadius.circular(8),
@@ -465,7 +471,10 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
             ),
           ),
         ),
@@ -475,34 +484,37 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
           child: _isLoadingDb
               ? const Center(child: LoadingIndicator())
               : _filteredDbExercises.isEmpty
-                  ? Center(
-                      child: Text(
-                        context.l10n.noExercisesFound,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                        ),
-                      ),
-                    )
-                  : ListView.builder(
-                      controller: widget.scrollController,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: _filteredDbExercises.length,
-                      itemBuilder: (context, index) {
-                        final exercise = _filteredDbExercises[index];
-                        final isSelected = _selectedExerciseIds.contains(exercise.id);
-                        final isCurrentExercise = exercise.nome.toLowerCase() ==
-                            widget.currentExercise.name.toLowerCase();
-
-                        return _buildExerciseTile(
-                          id: exercise.id,
-                          name: exercise.nome,
-                          subtitle: exercise.focus.take(2).join(', '),
-                          isSelected: isSelected,
-                          isLocked: isCurrentExercise,
-                          theme: theme,
-                        );
-                      },
+              ? Center(
+                  child: Text(
+                    context.l10n.noExercisesFound,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
+                  ),
+                )
+              : ListView.builder(
+                  controller: widget.scrollController,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: _filteredDbExercises.length,
+                  itemBuilder: (context, index) {
+                    final exercise = _filteredDbExercises[index];
+                    final isSelected = _selectedExerciseIds.contains(
+                      exercise.id,
+                    );
+                    final isCurrentExercise =
+                        exercise.nome.toLowerCase() ==
+                        widget.currentExercise.name.toLowerCase();
+
+                    return _buildExerciseTile(
+                      id: exercise.id,
+                      name: exercise.nome,
+                      subtitle: exercise.focus.take(2).join(', '),
+                      isSelected: isSelected,
+                      isLocked: isCurrentExercise,
+                      theme: theme,
+                    );
+                  },
+                ),
         ),
       ],
     );
@@ -539,14 +551,14 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
                     color: isLocked
                         ? theme.colorScheme.primary.withValues(alpha: 0.2)
                         : isSelected
-                            ? theme.colorScheme.primary
-                            : theme.colorScheme.surface.withValues(alpha: 0),
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.surface.withValues(alpha: 0),
                     border: Border.all(
                       color: isLocked
                           ? theme.colorScheme.primary.withValues(alpha: 0.5)
                           : isSelected
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.outline,
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.outline,
                       width: 2,
                     ),
                   ),
@@ -557,12 +569,12 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
                           color: theme.colorScheme.primary,
                         )
                       : isSelected
-                          ? Icon(
-                              AppIcons.check,
-                              size: 16,
-                              color: theme.colorScheme.onPrimary,
-                            )
-                          : null,
+                      ? Icon(
+                          AppIcons.check,
+                          size: 16,
+                          color: theme.colorScheme.onPrimary,
+                        )
+                      : null,
                 ),
                 const SizedBox(width: 12),
                 // Exercise info
@@ -583,7 +595,9 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
                         Text(
                           subtitle,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.6,
+                            ),
                           ),
                         ),
                     ],

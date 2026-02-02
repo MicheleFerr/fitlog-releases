@@ -18,7 +18,9 @@ part 'exercise_template.g.dart';
 /// with workout ExerciseTemplate entity.
 ///
 /// This typedef exists for backward compatibility during migration.
-@Deprecated('Use ExerciseDefinitionTemplate instead - avoids naming conflict with workout ExerciseTemplate')
+@Deprecated(
+  'Use ExerciseDefinitionTemplate instead - avoids naming conflict with workout ExerciseTemplate',
+)
 typedef ExerciseTemplate = ExerciseDefinitionTemplate;
 
 @freezed

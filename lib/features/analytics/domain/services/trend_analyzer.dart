@@ -5,32 +5,20 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_cal
 
 /// Types of trends that can be analyzed
 enum TrendType {
-  improving,    // Positive trend
-  declining,    // Negative trend
-  plateau,      // No significant change
+  improving, // Positive trend
+  declining, // Negative trend
+  plateau, // No significant change
   inconsistent, // Too variable to determine
 }
 
 /// Time periods for analysis
-enum AnalysisPeriod {
-  week,
-  month,
-  quarter,
-  year,
-}
+enum AnalysisPeriod { week, month, quarter, year }
 
 /// Trend direction for compatibility
-enum TrendDirection {
-  strongUp,
-  up,
-  stable,
-  down,
-  strongDown,
-}
+enum TrendDirection { strongUp, up, stable, down, strongDown }
 
 /// Trend analysis result
 class TrendAnalysis {
-
   TrendAnalysis({
     required this.type,
     required this.slope,
@@ -42,12 +30,12 @@ class TrendAnalysis {
     this.metadata = const {},
   });
   final TrendType type;
-  final double slope;          // Rate of change
-  final double correlation;    // Strength of trend (0-1)
+  final double slope; // Rate of change
+  final double correlation; // Strength of trend (0-1)
   final double currentValue;
   final double predictedValue; // Next period prediction
   final String recommendation;
-  final double averageVolume;  // Average volume over the period
+  final double averageVolume; // Average volume over the period
   final Map<String, dynamic> metadata;
 
   /// Get percentage change
@@ -94,27 +82,37 @@ class TrendAnalyzer {
 
     // Group activities by period and calculate volume
     final volumeByPeriod = _groupVolumeByPeriod(activities, period);
-    
+
     if (volumeByPeriod.length < 3) {
       return TrendAnalysis(
         type: TrendType.inconsistent,
         slope: 0,
         correlation: 0,
-        currentValue: volumeByPeriod.isNotEmpty ? volumeByPeriod.values.last : 0,
-        predictedValue: volumeByPeriod.isNotEmpty ? volumeByPeriod.values.last : 0,
+        currentValue: volumeByPeriod.isNotEmpty
+            ? volumeByPeriod.values.last
+            : 0,
+        predictedValue: volumeByPeriod.isNotEmpty
+            ? volumeByPeriod.values.last
+            : 0,
         recommendation: 'Need more data to establish trend',
       );
     }
 
     // Perform linear regression
     final regression = _performLinearRegression(volumeByPeriod);
-    
+
     // Determine trend type
-    final trendType = _determineTrendType(regression.slope, regression.correlation);
-    
+    final trendType = _determineTrendType(
+      regression.slope,
+      regression.correlation,
+    );
+
     // Generate recommendation
-    final recommendation = _generateVolumeRecommendation(trendType, regression.slope);
-    
+    final recommendation = _generateVolumeRecommendation(
+      trendType,
+      regression.slope,
+    );
+
     return TrendAnalysis(
       type: trendType,
       slope: regression.slope,
@@ -122,10 +120,7 @@ class TrendAnalyzer {
       currentValue: volumeByPeriod.values.last,
       predictedValue: regression.predictNext(),
       recommendation: recommendation,
-      metadata: {
-        'dataPoints': volumeByPeriod.length,
-        'period': period.name,
-      },
+      metadata: {'dataPoints': volumeByPeriod.length, 'period': period.name},
     );
   }
 
@@ -134,10 +129,9 @@ class TrendAnalyzer {
     List<ExerciseActivity> activities,
     String exerciseId,
   ) {
-    final exerciseActivities = activities
-        .where((a) => a.exerciseId == exerciseId)
-        .toList()
-      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    final exerciseActivities =
+        activities.where((a) => a.exerciseId == exerciseId).toList()
+          ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     if (exerciseActivities.isEmpty) {
       return TrendAnalysis(
@@ -152,20 +146,20 @@ class TrendAnalyzer {
 
     // Calculate 1RM for each session
     final oneRMByDate = <DateTime, double>{};
-    
+
     for (final activity in exerciseActivities) {
       double maxEstimated1RM = 0;
-      
+
       for (final set in activity.sets.where((s) => s.done && !s.isWarmup)) {
         final weight = double.tryParse(set.weight) ?? 0;
         final reps = int.tryParse(set.reps) ?? 0;
-        
+
         if (weight > 0 && reps > 0) {
           final estimated1RM = OneRMCalculator.calculateAverage(weight, reps);
           maxEstimated1RM = math.max(maxEstimated1RM, estimated1RM);
         }
       }
-      
+
       if (maxEstimated1RM > 0) {
         oneRMByDate[activity.createdAt] = maxEstimated1RM;
       }
@@ -190,7 +184,10 @@ class TrendAnalyzer {
     }
 
     final regression = _performLinearRegression(indexedData);
-    final trendType = _determineTrendType(regression.slope, regression.correlation);
+    final trendType = _determineTrendType(
+      regression.slope,
+      regression.correlation,
+    );
     final recommendation = _generateStrengthRecommendation(
       trendType,
       regression.slope,
@@ -217,12 +214,13 @@ class TrendAnalyzer {
     String exerciseId,
   ) {
     final trend = analyzeStrengthTrend(activities, exerciseId);
-    
+
     // Check for plateau conditions
-    final isPlateaued = trend.type == TrendType.plateau ||
+    final isPlateaued =
+        trend.type == TrendType.plateau ||
         (trend.type == TrendType.improving && trend.slope < 0.5) ||
         (trend.correlation < 0.3);
-    
+
     if (!isPlateaued) {
       return PlateauDetection(
         isPlateaued: false,
@@ -232,10 +230,9 @@ class TrendAnalyzer {
     }
 
     // Calculate plateau duration
-    final exerciseActivities = activities
-        .where((a) => a.exerciseId == exerciseId)
-        .toList()
-      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    final exerciseActivities =
+        activities.where((a) => a.exerciseId == exerciseId).toList()
+          ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     if (exerciseActivities.length < 4) {
       return PlateauDetection(
@@ -248,16 +245,16 @@ class TrendAnalyzer {
     // Find when plateau started
     var plateauStart = exerciseActivities.length - 1;
     final recentMax = trend.currentValue;
-    
+
     for (var i = exerciseActivities.length - 2; i >= 0; i--) {
       final activity = exerciseActivities[i];
       double maxWeight = 0;
-      
+
       for (final set in activity.sets.where((s) => s.done && !s.isWarmup)) {
         final weight = double.tryParse(set.weight) ?? 0;
         maxWeight = math.max(maxWeight, weight);
       }
-      
+
       // If weight differs by more than 5%, plateau hasn't started yet
       if ((maxWeight - recentMax).abs() / recentMax > 0.05) {
         break;
@@ -296,11 +293,11 @@ class TrendAnalyzer {
     // Group by week and count unique workout days
     final workoutsByWeek = <int, int>{};
     final now = DateTime.now();
-    
+
     for (final activity in activities) {
       final weeksDiff = now.difference(activity.createdAt).inDays ~/ 7;
       if (weeksDiff > 12) continue; // Last 12 weeks only
-      
+
       final weekKey = 12 - weeksDiff;
       workoutsByWeek[weekKey] = (workoutsByWeek[weekKey] ?? 0) + 1;
     }
@@ -317,10 +314,18 @@ class TrendAnalyzer {
     }
 
     // Convert to double map for regression
-    final doubleWorkoutsByWeek = workoutsByWeek.map((k, v) => MapEntry(k, v.toDouble()));
+    final doubleWorkoutsByWeek = workoutsByWeek.map(
+      (k, v) => MapEntry(k, v.toDouble()),
+    );
     final regression = _performLinearRegression(doubleWorkoutsByWeek);
-    final trendType = _determineTrendType(regression.slope, regression.correlation);
-    final recommendation = _generateFrequencyRecommendation(trendType, regression.slope);
+    final trendType = _determineTrendType(
+      regression.slope,
+      regression.correlation,
+    );
+    final recommendation = _generateFrequencyRecommendation(
+      trendType,
+      regression.slope,
+    );
 
     return TrendAnalysis(
       type: trendType,
@@ -339,26 +344,26 @@ class TrendAnalyzer {
   ) {
     final strengthTrend = analyzeStrengthTrend(activities, exerciseId);
     final volumeTrend = analyzeVolumeTrend(activities, AnalysisPeriod.week);
-    
+
     // Calculate suggested working weight (85% of predicted 1RM)
     final predicted1RM = strengthTrend.predictedValue;
     final workingWeight = predicted1RM * 0.85;
-    
+
     // Suggest rep range based on recent performance
     final recentActivities = activities
         .where((a) => a.exerciseId == exerciseId)
         .take(3)
         .toList();
-    
+
     final avgReps = recentActivities.isEmpty
         ? 8
         : recentActivities
-            .expand((a) => a.sets)
-            .where((s) => s.done && !s.isWarmup)
-            .map((s) => int.tryParse(s.reps) ?? 0)
-            .fold(0, (sum, r) => sum + r) ~/
-            math.max(1, recentActivities.expand((a) => a.sets).length);
-    
+                  .expand((a) => a.sets)
+                  .where((s) => s.done && !s.isWarmup)
+                  .map((s) => int.tryParse(s.reps) ?? 0)
+                  .fold(0, (sum, r) => sum + r) ~/
+              math.max(1, recentActivities.expand((a) => a.sets).length);
+
     return PerformancePrediction(
       predicted1RM: predicted1RM,
       suggestedWeight: workingWeight.roundToPlate(),
@@ -372,38 +377,45 @@ class TrendAnalyzer {
   }
 
   // Helper methods
-  
+
   static Map<int, double> _groupVolumeByPeriod(
     List<ExerciseActivity> activities,
     AnalysisPeriod period,
   ) {
     final grouped = <int, double>{};
     final now = DateTime.now();
-    
+
     for (final activity in activities) {
       final periodKey = _getPeriodKey(activity.createdAt, now, period);
       if (periodKey < 0) continue;
-      
+
       final volume = VolumeCalculator.calculateTotalVolume(activity.sets);
       grouped[periodKey] = (grouped[periodKey] ?? 0) + volume;
     }
-    
+
     return grouped;
   }
 
-  static int _getPeriodKey(DateTime date, DateTime reference, AnalysisPeriod period) {
+  static int _getPeriodKey(
+    DateTime date,
+    DateTime reference,
+    AnalysisPeriod period,
+  ) {
     final diff = reference.difference(date);
-    
+
     switch (period) {
       case AnalysisPeriod.week:
         final weeks = diff.inDays ~/ 7;
         return weeks > 52 ? -1 : 52 - weeks;
       case AnalysisPeriod.month:
-        final months = (reference.year - date.year) * 12 + (reference.month - date.month);
+        final months =
+            (reference.year - date.year) * 12 + (reference.month - date.month);
         return months > 12 ? -1 : 12 - months;
       case AnalysisPeriod.quarter:
-        final quarters = ((reference.year - date.year) * 4) + 
-            ((reference.month - 1) ~/ 3) - ((date.month - 1) ~/ 3);
+        final quarters =
+            ((reference.year - date.year) * 4) +
+            ((reference.month - 1) ~/ 3) -
+            ((date.month - 1) ~/ 3);
         return quarters > 8 ? -1 : 8 - quarters;
       case AnalysisPeriod.year:
         final years = reference.year - date.year;
@@ -418,37 +430,37 @@ class TrendAnalyzer {
 
     final n = data.length;
     final keys = data.keys.toList()..sort();
-    
+
     // Calculate means
     final xMean = keys.fold(0.0, (sum, x) => sum + x) / n;
     final yMean = data.values.fold(0.0, (sum, y) => sum + y) / n;
-    
+
     // Calculate slope and correlation
     var numerator = 0.0;
     var denominatorX = 0.0;
     var denominatorY = 0.0;
-    
+
     for (final x in keys) {
       final y = data[x]!;
       final xDiff = x - xMean;
       final yDiff = y - yMean;
-      
+
       numerator += xDiff * yDiff;
       denominatorX += xDiff * xDiff;
       denominatorY += yDiff * yDiff;
     }
-    
+
     if (denominatorX == 0) {
       return LinearRegression(slope: 0, intercept: yMean, correlation: 0);
     }
-    
+
     final slope = numerator / denominatorX;
     final intercept = yMean - slope * xMean;
-    
+
     final correlation = denominatorX * denominatorY == 0
         ? 0
         : numerator / math.sqrt(denominatorX * denominatorY);
-    
+
     return LinearRegression(
       slope: slope,
       intercept: intercept,
@@ -459,13 +471,13 @@ class TrendAnalyzer {
 
   static TrendType _determineTrendType(double slope, double correlation) {
     final absCorrelation = correlation.abs();
-    
+
     // Weak correlation = inconsistent
     if (absCorrelation < 0.3) return TrendType.inconsistent;
-    
+
     // Check slope magnitude
     final slopePercent = slope.abs();
-    
+
     if (slopePercent < 1) return TrendType.plateau;
     if (slope > 0) return TrendType.improving;
     return TrendType.declining;
@@ -531,7 +543,8 @@ class TrendAnalyzer {
     TrendType strengthTrend,
     TrendType volumeTrend,
   ) {
-    if (strengthTrend == TrendType.improving && volumeTrend == TrendType.improving) {
+    if (strengthTrend == TrendType.improving &&
+        volumeTrend == TrendType.improving) {
       return 'All systems go! Push for a new PR today';
     } else if (strengthTrend == TrendType.plateau) {
       return 'Focus on perfect form and consider increasing volume';
@@ -545,7 +558,6 @@ class TrendAnalyzer {
 
 /// Linear regression result
 class LinearRegression {
-
   LinearRegression({
     required this.slope,
     required this.intercept,
@@ -568,7 +580,6 @@ class LinearRegression {
 
 /// Plateau detection result
 class PlateauDetection {
-
   PlateauDetection({
     required this.isPlateaued,
     required this.duration,
@@ -583,7 +594,6 @@ class PlateauDetection {
 
 /// Performance prediction for next workout
 class PerformancePrediction {
-
   PerformancePrediction({
     required this.predicted1RM,
     required this.suggestedWeight,

@@ -18,7 +18,6 @@ final databaseManagerServiceProvider = Provider<DatabaseManagerService>((ref) {
 
 /// Stato del Database Manager
 class DatabaseManagerState {
-
   DatabaseManagerState({
     this.exercises = const [],
     this.filteredExercises = const [],
@@ -109,7 +108,9 @@ class DatabaseManagerNotifier extends Notifier<DatabaseManagerState> {
         searchQuery: state.searchQuery,
         difficulty: state.selectedDifficulty,
         equipment: state.selectedEquipment,
-        focusMuscles: state.selectedMuscles.isEmpty ? null : state.selectedMuscles,
+        focusMuscles: state.selectedMuscles.isEmpty
+            ? null
+            : state.selectedMuscles,
         exerciseType: state.selectedExerciseType,
       );
 
@@ -119,10 +120,7 @@ class DatabaseManagerNotifier extends Notifier<DatabaseManagerState> {
         isLoading: false,
       );
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -200,7 +198,11 @@ class DatabaseManagerNotifier extends Notifier<DatabaseManagerState> {
   }
 
   /// Quick update campo singolo
-  Future<void> quickUpdateField(String exerciseId, String field, dynamic value) async {
+  Future<void> quickUpdateField(
+    String exerciseId,
+    String field,
+    dynamic value,
+  ) async {
     try {
       final result = await _service.quickUpdateField(
         exerciseId: exerciseId,
@@ -316,20 +318,25 @@ class DatabaseManagerNotifier extends Notifier<DatabaseManagerState> {
 
 /// Provider principale per Database Manager
 final databaseManagerProvider =
-    NotifierProvider<DatabaseManagerNotifier, DatabaseManagerState>(DatabaseManagerNotifier.new);
+    NotifierProvider<DatabaseManagerNotifier, DatabaseManagerState>(
+      DatabaseManagerNotifier.new,
+    );
 
 /// Provider per dropdown values
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final exerciseDropdownValuesProvider = FutureProvider.autoDispose<ExerciseDropdownValues>((ref) async {
-  final service = ref.watch(databaseManagerServiceProvider);
-  return await service.getDropdownValues();
-});
+final exerciseDropdownValuesProvider =
+    FutureProvider.autoDispose<ExerciseDropdownValues>((ref) async {
+      final service = ref.watch(databaseManagerServiceProvider);
+      return await service.getDropdownValues();
+    });
 
 /// Provider per statistiche database
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final databaseStatsProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
+final databaseStatsProvider = FutureProvider.autoDispose<Map<String, dynamic>>((
+  ref,
+) async {
   final service = ref.watch(databaseManagerServiceProvider);
   return await service.getDatabaseStats();
 });

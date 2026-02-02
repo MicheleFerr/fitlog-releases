@@ -20,45 +20,45 @@ enum SetDisplayMode {
 extension SetDisplayModeExtension on SetDisplayMode {
   /// Vertical padding for the set row
   double get verticalPadding => switch (this) {
-        SetDisplayMode.compact => 6.0,
-        SetDisplayMode.comfortable => 12.0,
-      };
+    SetDisplayMode.compact => 6.0,
+    SetDisplayMode.comfortable => 12.0,
+  };
 
   /// Horizontal padding for the set row
   double get horizontalPadding => switch (this) {
-        SetDisplayMode.compact => 8.0,
-        SetDisplayMode.comfortable => 12.0,
-      };
+    SetDisplayMode.compact => 8.0,
+    SetDisplayMode.comfortable => 12.0,
+  };
 
   /// Bottom margin between sets
   double get bottomMargin => switch (this) {
-        SetDisplayMode.compact => 4.0,
-        SetDisplayMode.comfortable => 8.0,
-      };
+    SetDisplayMode.compact => 4.0,
+    SetDisplayMode.comfortable => 8.0,
+  };
 
   /// Set number circle size
   double get circleSize => switch (this) {
-        SetDisplayMode.compact => 22.0,
-        SetDisplayMode.comfortable => 28.0,
-      };
+    SetDisplayMode.compact => 22.0,
+    SetDisplayMode.comfortable => 28.0,
+  };
 
   /// Border radius
   double get borderRadius => switch (this) {
-        SetDisplayMode.compact => 8.0,
-        SetDisplayMode.comfortable => 12.0,
-      };
+    SetDisplayMode.compact => 8.0,
+    SetDisplayMode.comfortable => 12.0,
+  };
 
   /// Icon for the settings UI
   String get icon => switch (this) {
-        SetDisplayMode.compact => '📦',
-        SetDisplayMode.comfortable => '📐',
-      };
+    SetDisplayMode.compact => '📦',
+    SetDisplayMode.comfortable => '📐',
+  };
 
   /// Label for settings
   String get label => switch (this) {
-        SetDisplayMode.compact => 'Compatto',
-        SetDisplayMode.comfortable => 'Comodo',
-      };
+    SetDisplayMode.compact => 'Compatto',
+    SetDisplayMode.comfortable => 'Comodo',
+  };
 }
 
 /// Notifier for set display mode
@@ -95,5 +95,6 @@ class SetDisplayNotifier extends Notifier<SetDisplayMode> {
 }
 
 /// Provider for set display mode
-final setDisplayProvider =
-    NotifierProvider<SetDisplayNotifier, SetDisplayMode>(SetDisplayNotifier.new);
+final setDisplayProvider = NotifierProvider<SetDisplayNotifier, SetDisplayMode>(
+  SetDisplayNotifier.new,
+);

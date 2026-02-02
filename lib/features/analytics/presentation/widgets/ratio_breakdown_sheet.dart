@@ -134,10 +134,7 @@ class RatioBreakdownSheet extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: colorScheme.outlineVariant,
-            width: 1,
-          ),
+          bottom: BorderSide(color: colorScheme.outlineVariant, width: 1),
         ),
       ),
       child: Row(
@@ -231,7 +228,10 @@ class RatioBreakdownSheet extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: accentColor.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(16),
@@ -283,11 +283,10 @@ class RatioBreakdownSheet extends StatelessWidget {
                   ),
                 ),
                 // Exercise cards
-                ...exercises.map((exercise) => _buildExerciseCard(
-                      context,
-                      exercise,
-                      accentColor,
-                    )),
+                ...exercises.map(
+                  (exercise) =>
+                      _buildExerciseCard(context, exercise, accentColor),
+                ),
                 const SizedBox(height: 12),
               ],
             );

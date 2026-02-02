@@ -57,10 +57,7 @@ class _AudioDebugTestScreenState extends ConsumerState<AudioDebugTestScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [
-          _QuickTestsTab(),
-          _FullTestsTab(),
-        ],
+        children: const [_QuickTestsTab(), _FullTestsTab()],
       ),
     );
   }
@@ -98,9 +95,10 @@ class _QuickTestsTab extends ConsumerWidget {
             description: context.l10n.testADescription,
             icon: AppIcons.phone,
             expectedResult: context.l10n.alwaysWorks,
-            result: state.quickResults?.tests
-                .firstWhere((t) => t.testId == 'A', orElse: () => _emptyResult('A'))
-                ,
+            result: state.quickResults?.tests.firstWhere(
+              (t) => t.testId == 'A',
+              orElse: () => _emptyResult('A'),
+            ),
           ),
 
           const SizedBox(height: 12),
@@ -111,8 +109,10 @@ class _QuickTestsTab extends ConsumerWidget {
             description: context.l10n.testBDescription,
             icon: AppIcons.darkMode,
             expectedResult: context.l10n.sixtyPercentSuccess,
-            result: state.quickResults?.tests
-                .firstWhere((t) => t.testId == 'B', orElse: () => _emptyResult('B')),
+            result: state.quickResults?.tests.firstWhere(
+              (t) => t.testId == 'B',
+              orElse: () => _emptyResult('B'),
+            ),
           ),
 
           const SizedBox(height: 12),
@@ -124,8 +124,10 @@ class _QuickTestsTab extends ConsumerWidget {
             icon: AppIcons.notifications,
             expectedResult: context.l10n.consistentlyFails,
             isHighlighted: true,
-            result: state.quickResults?.tests
-                .firstWhere((t) => t.testId == 'C', orElse: () => _emptyResult('C')),
+            result: state.quickResults?.tests.firstWhere(
+              (t) => t.testId == 'C',
+              orElse: () => _emptyResult('C'),
+            ),
           ),
 
           const SizedBox(height: 24),
@@ -145,8 +147,8 @@ class _QuickTestsTab extends ConsumerWidget {
                   onPressed: state.isRunning
                       ? null
                       : () => ref
-                          .read(audioDebugTestProvider.notifier)
-                          .runQuickTests(),
+                            .read(audioDebugTestProvider.notifier)
+                            .runQuickTests(),
                   icon: Icon(
                     state.isRunning ? AppIcons.hourglassEmpty : AppIcons.play,
                   ),
@@ -189,19 +191,23 @@ class _QuickTestsTab extends ConsumerWidget {
   }
 
   TestResult _emptyResult(String id) => TestResult(
-        testId: id,
-        testName: '',
-        duration: Duration.zero,
-        expectedSounds: 1,
-        actualSounds: 0,
-        traceId: '',
-        status: TestStatus.pending,
-        appState: AppState.foreground,
-        liveActivityEnabled: false,
-        startTime: DateTime.now(),
-      );
+    testId: id,
+    testName: '',
+    duration: Duration.zero,
+    expectedSounds: 1,
+    actualSounds: 0,
+    traceId: '',
+    status: TestStatus.pending,
+    appState: AppState.foreground,
+    liveActivityEnabled: false,
+    startTime: DateTime.now(),
+  );
 
-  void _showResults(BuildContext context, WidgetRef ref, {required bool isQuick}) {
+  void _showResults(
+    BuildContext context,
+    WidgetRef ref, {
+    required bool isQuick,
+  }) {
     final results = isQuick
         ? ref.read(audioDebugTestProvider).quickResults
         : ref.read(audioDebugTestProvider).fullResults;
@@ -214,18 +220,18 @@ class _QuickTestsTab extends ConsumerWidget {
     );
   }
 
-  void _exportResults(BuildContext context, WidgetRef ref,
-      {required bool isQuick}) {
+  void _exportResults(
+    BuildContext context,
+    WidgetRef ref, {
+    required bool isQuick,
+  }) {
     final results = isQuick
         ? ref.read(audioDebugTestProvider).quickResults
         : ref.read(audioDebugTestProvider).fullResults;
 
     if (results == null) return;
 
-    Share.share(
-      results.summary,
-      subject: 'FitLog Audio Debug Test Results',
-    );
+    Share.share(results.summary, subject: 'FitLog Audio Debug Test Results');
   }
 }
 
@@ -305,8 +311,8 @@ class _FullTestsTab extends ConsumerWidget {
                   onPressed: state.isRunning
                       ? null
                       : () => ref
-                          .read(audioDebugTestProvider.notifier)
-                          .runFullTests(),
+                            .read(audioDebugTestProvider.notifier)
+                            .runFullTests(),
                   icon: Icon(
                     state.isRunning ? AppIcons.hourglassEmpty : AppIcons.play,
                   ),
@@ -325,15 +331,21 @@ class _FullTestsTab extends ConsumerWidget {
               if (state.fullResults != null) ...[
                 const SizedBox(width: 12),
                 IconButton.filledTonal(
-                  onPressed: () =>
-                      _QuickTestsTab()._showResults(context, ref, isQuick: false),
+                  onPressed: () => _QuickTestsTab()._showResults(
+                    context,
+                    ref,
+                    isQuick: false,
+                  ),
                   icon: Icon(AppIcons.list),
                   tooltip: context.l10n.viewResults,
                 ),
                 const SizedBox(width: 8),
                 IconButton.filledTonal(
-                  onPressed: () =>
-                      _QuickTestsTab()._exportResults(context, ref, isQuick: false),
+                  onPressed: () => _QuickTestsTab()._exportResults(
+                    context,
+                    ref,
+                    isQuick: false,
+                  ),
                   icon: Icon(AppIcons.share),
                   tooltip: context.l10n.exportResults,
                 ),
@@ -399,11 +411,7 @@ class _InfoCard extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                _InfoChip(
-                  icon: AppIcons.timer,
-                  label: duration,
-                  color: color,
-                ),
+                _InfoChip(icon: AppIcons.timer, label: duration, color: color),
                 const SizedBox(width: 8),
                 _InfoChip(
                   icon: AppIcons.checklist,
@@ -481,9 +489,7 @@ class _TestCaseCard extends StatelessWidget {
 
     return Card(
       elevation: isHighlighted ? 4 : 1,
-      color: isHighlighted
-          ? context.colors.error.withOpacity(0.05)
-          : null,
+      color: isHighlighted ? context.colors.error.withOpacity(0.05) : null,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -636,10 +642,7 @@ class _ProgressCard extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation(context.colors.primary),
             ),
             const SizedBox(height: 12),
-            Text(
-              progress.testName,
-              style: context.textTheme.bodyMedium,
-            ),
+            Text(progress.testName, style: context.textTheme.bodyMedium),
           ],
         ),
       ),
@@ -658,8 +661,8 @@ class _ResultsSummaryCard extends StatelessWidget {
     final color = successRate >= 90
         ? context.colors.success
         : successRate >= 50
-            ? context.colors.warning
-            : context.colors.error;
+        ? context.colors.warning
+        : context.colors.error;
 
     return Card(
       color: color.withOpacity(0.05),
@@ -711,10 +714,7 @@ class _ResultsSummaryCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Text(
-              results.recommendation,
-              style: context.textTheme.bodySmall,
-            ),
+            Text(results.recommendation, style: context.textTheme.bodySmall),
           ],
         ),
       ),
@@ -810,12 +810,7 @@ class _TestMatrixRow extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
-            child: Text(
-              name,
-              style: context.textTheme.bodySmall,
-            ),
-          ),
+          Expanded(child: Text(name, style: context.textTheme.bodySmall)),
         ],
       ),
     );
@@ -831,9 +826,7 @@ class _ResultsDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(context.l10n.detailedResults),
-      content: SingleChildScrollView(
-        child: Text(results.summary),
-      ),
+      content: SingleChildScrollView(child: Text(results.summary)),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),

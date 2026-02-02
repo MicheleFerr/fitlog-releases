@@ -1,19 +1,21 @@
-import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as ExerciseDB;
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart'
+    as ExerciseDB;
 
 /// Configuration model for creating supersets with tier-1 UX
 class SupersetConfiguration {
-
   const SupersetConfiguration({
     required this.exercises,
     required this.rounds,
-    this.restBetweenExercises = 0, // True superset has no rest between exercises
-    this.restAfterRound = 90,      // Standard rest after completing full round
+    this.restBetweenExercises =
+        0, // True superset has no rest between exercises
+    this.restAfterRound = 90, // Standard rest after completing full round
     this.name = 'Superset',
   });
   final List<ExerciseDB.Exercise> exercises;
   final List<SupersetRound> rounds;
-  final int restBetweenExercises; // Seconds between exercises in a round (usually 0)
-  final int restAfterRound;       // Seconds between rounds (typically 60-120s)
+  final int
+  restBetweenExercises; // Seconds between exercises in a round (usually 0)
+  final int restAfterRound; // Seconds between rounds (typically 60-120s)
   final String name;
 
   SupersetConfiguration copyWith({
@@ -33,13 +35,12 @@ class SupersetConfiguration {
   }
 
   bool get isValid => exercises.length >= 2 && rounds.isNotEmpty;
-  
+
   int get totalSets => rounds.length;
 }
 
 /// Exercise-specific configuration within a superset round
 class SupersetExerciseConfig {
-
   const SupersetExerciseConfig({
     required this.exerciseId,
     required this.targetReps,
@@ -64,7 +65,6 @@ class SupersetExerciseConfig {
 
 /// Represents a single round/set in a superset where all exercises are performed
 class SupersetRound {
-
   const SupersetRound({
     required this.roundNumber,
     required this.exerciseConfigs,
@@ -78,11 +78,14 @@ class SupersetRound {
     double? targetWeight,
     this.notes,
     required List<ExerciseDB.Exercise> exercises,
-  }) : exerciseConfigs = { for (var e in exercises) e.id : SupersetExerciseConfig(
-            exerciseId: e.id,
-            targetReps: targetReps,
-            targetWeight: targetWeight,
-          ) };
+  }) : exerciseConfigs = {
+         for (var e in exercises)
+           e.id: SupersetExerciseConfig(
+             exerciseId: e.id,
+             targetReps: targetReps,
+             targetWeight: targetWeight,
+           ),
+       };
 
   // Simple constructor that creates same config for all exercises
   SupersetRound.uniform({
@@ -91,13 +94,17 @@ class SupersetRound {
     double? targetWeight,
     this.notes,
     required List<String> exerciseIds,
-  }) : exerciseConfigs = { for (var id in exerciseIds) id : SupersetExerciseConfig(
-            exerciseId: id,
-            targetReps: targetReps,
-            targetWeight: targetWeight,
-          ) };
+  }) : exerciseConfigs = {
+         for (var id in exerciseIds)
+           id: SupersetExerciseConfig(
+             exerciseId: id,
+             targetReps: targetReps,
+             targetWeight: targetWeight,
+           ),
+       };
   final int roundNumber;
-  final Map<String, SupersetExerciseConfig> exerciseConfigs; // Per-exercise configuration
+  final Map<String, SupersetExerciseConfig>
+  exerciseConfigs; // Per-exercise configuration
   final String? notes;
 
   SupersetRound copyWith({

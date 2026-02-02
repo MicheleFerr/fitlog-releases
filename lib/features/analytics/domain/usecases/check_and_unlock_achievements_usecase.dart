@@ -96,9 +96,7 @@ class CheckAndUnlockAchievementsUseCase {
 
       return fpdart.Right(unlockedAchievements);
     } catch (e) {
-      return fpdart.Left(
-        UnexpectedFailure('Failed to check achievements: $e'),
-      );
+      return fpdart.Left(UnexpectedFailure('Failed to check achievements: $e'));
     }
   }
 
@@ -141,12 +139,9 @@ class CheckAndUnlockAchievementsUseCase {
           userId,
           BadgeType.streakMaster7,
         );
-        isUnlocked.fold(
-          (l) => null,
-          (unlocked) {
-            if (!unlocked) newBadges.add(BadgeType.streakMaster7);
-          },
-        );
+        isUnlocked.fold((l) => null, (unlocked) {
+          if (!unlocked) newBadges.add(BadgeType.streakMaster7);
+        });
       }
 
       // Check 14-day streak
@@ -155,12 +150,9 @@ class CheckAndUnlockAchievementsUseCase {
           userId,
           BadgeType.streakMaster14,
         );
-        isUnlocked.fold(
-          (l) => null,
-          (unlocked) {
-            if (!unlocked) newBadges.add(BadgeType.streakMaster14);
-          },
-        );
+        isUnlocked.fold((l) => null, (unlocked) {
+          if (!unlocked) newBadges.add(BadgeType.streakMaster14);
+        });
       }
 
       // Check 30-day streak
@@ -169,12 +161,9 @@ class CheckAndUnlockAchievementsUseCase {
           userId,
           BadgeType.streakMaster30,
         );
-        isUnlocked.fold(
-          (l) => null,
-          (unlocked) {
-            if (!unlocked) newBadges.add(BadgeType.streakMaster30);
-          },
-        );
+        isUnlocked.fold((l) => null, (unlocked) {
+          if (!unlocked) newBadges.add(BadgeType.streakMaster30);
+        });
       }
 
       return newBadges;
@@ -276,9 +265,13 @@ class CheckAndUnlockAchievementsUseCase {
       final workouts = workoutsResult.fold((l) => <dynamic>[], (r) => r);
 
       final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
-      final recentWorkouts = workouts.where((w) =>
-        w.isCompleted && (w.endTime ?? w.createdAt).isAfter(thirtyDaysAgo)
-      ).toList();
+      final recentWorkouts = workouts
+          .where(
+            (w) =>
+                w.isCompleted &&
+                (w.endTime ?? w.createdAt).isAfter(thirtyDaysAgo),
+          )
+          .toList();
 
       double pushVolume = 0;
       double pullVolume = 0;
@@ -294,11 +287,15 @@ class CheckAndUnlockAchievementsUseCase {
 
           // Classify exercise (simplified - would need proper muscle group mapping)
           final exerciseName = exercise.exerciseName.toLowerCase();
-          if (exerciseName.contains('press') || exerciseName.contains('fly') ||
-              exerciseName.contains('dip') || exerciseName.contains('extension')) {
+          if (exerciseName.contains('press') ||
+              exerciseName.contains('fly') ||
+              exerciseName.contains('dip') ||
+              exerciseName.contains('extension')) {
             pushVolume += exerciseVolume;
-          } else if (exerciseName.contains('pull') || exerciseName.contains('row') ||
-                     exerciseName.contains('curl') || exerciseName.contains('lat')) {
+          } else if (exerciseName.contains('pull') ||
+              exerciseName.contains('row') ||
+              exerciseName.contains('curl') ||
+              exerciseName.contains('lat')) {
             pullVolume += exerciseVolume;
           }
         }
@@ -328,7 +325,9 @@ class CheckAndUnlockAchievementsUseCase {
   }
 
   /// Check if WorkoutCompletionist badges should be unlocked
-  Future<List<BadgeType>> _checkWorkoutCompletionistBadges(String userId) async {
+  Future<List<BadgeType>> _checkWorkoutCompletionistBadges(
+    String userId,
+  ) async {
     try {
       final workoutsResult = await workoutRepository.getWorkouts();
       final workouts = workoutsResult.fold((l) => <dynamic>[], (r) => r);
@@ -383,22 +382,29 @@ class CheckAndUnlockAchievementsUseCase {
       final workouts = workoutsResult.fold((l) => <dynamic>[], (r) => r);
 
       final ninetyDaysAgo = DateTime.now().subtract(const Duration(days: 90));
-      final recentWorkouts = workouts.where((w) =>
-        w.isCompleted && (w.endTime ?? w.createdAt).isAfter(ninetyDaysAgo)
-      ).toList();
+      final recentWorkouts = workouts
+          .where(
+            (w) =>
+                w.isCompleted &&
+                (w.endTime ?? w.createdAt).isAfter(ninetyDaysAgo),
+          )
+          .toList();
 
       if (recentWorkouts.isEmpty) return null;
 
       // Get unique workout dates
-      final workoutDates = recentWorkouts
-          .map((w) => DateTime(
-                (w.endTime ?? w.createdAt).year,
-                (w.endTime ?? w.createdAt).month,
-                (w.endTime ?? w.createdAt).day,
-              ))
-          .toSet()
-          .toList()
-        ..sort();
+      final workoutDates =
+          recentWorkouts
+              .map(
+                (w) => DateTime(
+                  (w.endTime ?? w.createdAt).year,
+                  (w.endTime ?? w.createdAt).month,
+                  (w.endTime ?? w.createdAt).day,
+                ),
+              )
+              .toSet()
+              .toList()
+            ..sort();
 
       // Calculate max gap
       int maxGap = 0;
@@ -470,9 +476,7 @@ class CheckAndUnlockAchievementsUseCase {
         };
 
       case BadgeType.balancedBuilder:
-        return {
-          'timestamp': DateTime.now().toIso8601String(),
-        };
+        return {'timestamp': DateTime.now().toIso8601String()};
 
       case BadgeType.workoutCompletionist50:
       case BadgeType.workoutCompletionist100:
@@ -483,9 +487,7 @@ class CheckAndUnlockAchievementsUseCase {
         };
 
       case BadgeType.consistencyChampion:
-        return {
-          'timestamp': DateTime.now().toIso8601String(),
-        };
+        return {'timestamp': DateTime.now().toIso8601String()};
     }
   }
 }

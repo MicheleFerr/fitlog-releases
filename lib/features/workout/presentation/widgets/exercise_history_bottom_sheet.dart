@@ -43,17 +43,21 @@ class _ExerciseHistoryBottomSheetState
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final historyAsync =
-        ref.watch(exerciseHistoryDataGroupedProvider(widget.exerciseName));
-    final statsAsync =
-        ref.watch(exerciseStatsFromActivitiesProvider(widget.exerciseName));
+    final historyAsync = ref.watch(
+      exerciseHistoryDataGroupedProvider(widget.exerciseName),
+    );
+    final statsAsync = ref.watch(
+      exerciseStatsFromActivitiesProvider(widget.exerciseName),
+    );
 
     // Watch Form Cues for this exercise
     // ⚠️ FIX: Use null for exerciseId to always use name-based key
-    final formCuesAsync = ref.watch(formCuesProvider((
-      exerciseId: null, // Use name-based key for persistence across workouts
-      exerciseName: widget.exerciseName,
-    )));
+    final formCuesAsync = ref.watch(
+      formCuesProvider((
+        exerciseId: null, // Use name-based key for persistence across workouts
+        exerciseName: widget.exerciseName,
+      )),
+    );
 
     return DraggableScrollableSheet(
       initialChildSize: 0.75,
@@ -166,14 +170,15 @@ class _ExerciseHistoryBottomSheetState
     ScrollController scrollController,
     Map<DateTime, List<ExerciseHistoryData>> groupedHistory,
     AsyncValue<
-            ({
-              double? maxWeight,
-              int totalSets,
-              double avgWeight,
-              DateTime? firstWorkout,
-              DateTime? lastWorkout,
-            })>
-        statsAsync,
+      ({
+        double? maxWeight,
+        int totalSets,
+        double avgWeight,
+        DateTime? firstWorkout,
+        DateTime? lastWorkout,
+      })
+    >
+    statsAsync,
     AsyncValue<String?> formCuesAsync,
   ) {
     if (groupedHistory.isEmpty) {
@@ -194,8 +199,9 @@ class _ExerciseHistoryBottomSheetState
         // Stats section
         SliverToBoxAdapter(
           child: statsAsync.when(
-            data: (stats) =>
-                stats.totalSets > 0 ? _buildStatsSection(context, l10n, stats) : const SizedBox.shrink(),
+            data: (stats) => stats.totalSets > 0
+                ? _buildStatsSection(context, l10n, stats)
+                : const SizedBox.shrink(),
             loading: () => const SizedBox.shrink(),
             error: (_, __) => const SizedBox.shrink(),
           ),
@@ -216,21 +222,22 @@ class _ExerciseHistoryBottomSheetState
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
           sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final date = sortedDates[index];
-                final dayHistory = groupedHistory[date]!;
-                return _buildDaySection(context, l10n, date, dayHistory);
-              },
-              childCount: sortedDates.length,
-            ),
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final date = sortedDates[index];
+              final dayHistory = groupedHistory[date]!;
+              return _buildDaySection(context, l10n, date, dayHistory);
+            }, childCount: sortedDates.length),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildFormCuesSection(BuildContext context, AppLocalizations l10n, String formCues) {
+  Widget _buildFormCuesSection(
+    BuildContext context,
+    AppLocalizations l10n,
+    String formCues,
+  ) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 16),
       padding: const EdgeInsets.all(16),
@@ -247,11 +254,7 @@ class _ExerciseHistoryBottomSheetState
         children: [
           Row(
             children: [
-              Icon(
-                AppIcons.lightbulb,
-                color: context.colors.primary,
-                size: 18,
-              ),
+              Icon(AppIcons.lightbulb, color: context.colors.primary, size: 18),
               const SizedBox(width: 8),
               Text(
                 l10n.formCues,
@@ -283,7 +286,8 @@ class _ExerciseHistoryBottomSheetState
       double avgWeight,
       DateTime? firstWorkout,
       DateTime? lastWorkout,
-    }) stats,
+    })
+    stats,
   ) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
@@ -477,8 +481,10 @@ class _ExerciseHistoryBottomSheetState
                     ),
                   ),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: context.colors.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
@@ -516,20 +522,21 @@ class _ExerciseHistoryBottomSheetState
                 children: dayHistory
                     .asMap()
                     .entries
-                    .map((entry) => TweenAnimationBuilder<double>(
-                          key: ValueKey('${date.toIso8601String()}_${entry.key}'),
-                          tween: Tween(begin: 0.0, end: 1.0),
-                          duration: Duration(milliseconds: 150 + (entry.key * 50)),
-                          curve: Curves.easeOutCubic,
-                          builder: (context, value, child) => Transform.translate(
-                            offset: Offset(0, 10 * (1 - value)),
-                            child: Opacity(
-                              opacity: value,
-                              child: child,
-                            ),
-                          ),
-                          child: _buildHistoryItem(context, l10n, entry.value),
-                        ))
+                    .map(
+                      (entry) => TweenAnimationBuilder<double>(
+                        key: ValueKey('${date.toIso8601String()}_${entry.key}'),
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        duration: Duration(
+                          milliseconds: 150 + (entry.key * 50),
+                        ),
+                        curve: Curves.easeOutCubic,
+                        builder: (context, value, child) => Transform.translate(
+                          offset: Offset(0, 10 * (1 - value)),
+                          child: Opacity(opacity: value, child: child),
+                        ),
+                        child: _buildHistoryItem(context, l10n, entry.value),
+                      ),
+                    )
                     .toList(),
               ),
             ),
@@ -646,9 +653,7 @@ class _ExerciseHistoryBottomSheetState
   }
 
   Widget _buildLoadingState(BuildContext context) {
-    return const Center(
-      child: LoadingIndicator(),
-    );
+    return const Center(child: LoadingIndicator());
   }
 
   Widget _buildErrorState(BuildContext context, AppLocalizations l10n) {

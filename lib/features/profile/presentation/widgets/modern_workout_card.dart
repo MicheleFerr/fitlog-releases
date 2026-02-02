@@ -54,18 +54,12 @@ class _ModernWorkoutCardState extends State<ModernWorkoutCard>
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.1),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     // Start animation after delay (for stagger effect)
     Future.delayed(widget.animationDelay, () {
@@ -131,10 +125,7 @@ class _ModernWorkoutCardState extends State<ModernWorkoutCard>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Workout emoji
-                  Text(
-                    emoji,
-                    style: context.textTheme.titleLarge,
-                  ),
+                  Text(emoji, style: context.textTheme.titleLarge),
                   const SizedBox(width: 12),
 
                   // Name and date
@@ -173,9 +164,7 @@ class _ModernWorkoutCardState extends State<ModernWorkoutCard>
               const SizedBox(height: 12),
 
               // Exercise chips row
-              _ExerciseChipsRow(
-                exercises: workout.exercises,
-              ),
+              _ExerciseChipsRow(exercises: workout.exercises),
               const SizedBox(height: 12),
 
               // Progress bar + intensity badge
@@ -187,10 +176,7 @@ class _ModernWorkoutCardState extends State<ModernWorkoutCard>
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    intensity,
-                    style: context.textTheme.bodyMedium,
-                  ),
+                  Text(intensity, style: context.textTheme.bodyMedium),
                 ],
               ),
             ],
@@ -203,9 +189,13 @@ class _ModernWorkoutCardState extends State<ModernWorkoutCard>
   String _getWorkoutEmoji(String workoutName) {
     final nameLower = workoutName.toLowerCase();
 
-    if (nameLower.contains('push') || nameLower.contains('chest') || nameLower.contains('petto')) {
+    if (nameLower.contains('push') ||
+        nameLower.contains('chest') ||
+        nameLower.contains('petto')) {
       return '🏋️';
-    } else if (nameLower.contains('pull') || nameLower.contains('back') || nameLower.contains('schiena')) {
+    } else if (nameLower.contains('pull') ||
+        nameLower.contains('back') ||
+        nameLower.contains('schiena')) {
       return '🔙';
     } else if (nameLower.contains('leg') || nameLower.contains('gamb')) {
       return '🦵';
@@ -213,7 +203,9 @@ class _ModernWorkoutCardState extends State<ModernWorkoutCard>
       return '💪';
     } else if (nameLower.contains('shoulder') || nameLower.contains('spall')) {
       return '🤷';
-    } else if (nameLower.contains('core') || nameLower.contains('abs') || nameLower.contains('addom')) {
+    } else if (nameLower.contains('core') ||
+        nameLower.contains('abs') ||
+        nameLower.contains('addom')) {
       return '🎯';
     } else if (nameLower.contains('full') || nameLower.contains('total')) {
       return '⚡';
@@ -323,8 +315,7 @@ class _ExerciseChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Abbreviate name to max 8 characters
-    final displayName =
-        name.length > 8 ? '${name.substring(0, 7)}…' : name;
+    final displayName = name.length > 8 ? '${name.substring(0, 7)}…' : name;
 
     return Container(
       height: 24,

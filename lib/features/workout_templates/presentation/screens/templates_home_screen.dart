@@ -26,7 +26,8 @@ import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/wo
 import 'package:gymbro_flutter_new/features/workout/domain/entities/template_stats.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/providers/template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as workout_template;
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart'
+    as workout_template;
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_quota_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
@@ -64,7 +65,8 @@ class TemplatesHomeScreen extends ConsumerStatefulWidget {
   const TemplatesHomeScreen({super.key});
 
   @override
-  ConsumerState<TemplatesHomeScreen> createState() => _TemplatesHomeScreenState();
+  ConsumerState<TemplatesHomeScreen> createState() =>
+      _TemplatesHomeScreenState();
 }
 
 class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
@@ -182,8 +184,12 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                             if (_tabController.index == 0)
                               IconButton(
                                 icon: SemanticIcon(
-                                  icon: _isGridView ? AppIcons.viewList : AppIcons.gridView,
-                                  semanticLabel: _isGridView ? l10n.listView : l10n.gridView,
+                                  icon: _isGridView
+                                      ? AppIcons.viewList
+                                      : AppIcons.gridView,
+                                  semanticLabel: _isGridView
+                                      ? l10n.listView
+                                      : l10n.gridView,
                                   size: AppIconSize.medium,
                                   color: context.colors.onSurfaceVariant,
                                 ),
@@ -199,15 +205,16 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
                         // Title and subtitle
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.sm,
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 l10n.workoutTemplates,
-                                style: context.textTheme.headlineMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: context.textTheme.headlineMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: AppSpacing.xs),
                               Text(
@@ -244,7 +251,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                         } else {
                           _minimizeController.forward();
                         }
-                        setState(() => _isMetricsMinimized = !_isMetricsMinimized);
+                        setState(
+                          () => _isMetricsMinimized = !_isMetricsMinimized,
+                        );
                       },
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(
@@ -288,7 +297,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                                   builder: (context, ref, _) {
                                     final defaultCount = ref.watch(
                                       defaultTemplatesProvider.select(
-                                        (state) => state.valueOrNull?.length ?? 30,
+                                        (state) =>
+                                            state.valueOrNull?.length ?? 30,
                                       ),
                                     );
                                     return _buildAnimatedMetricCard(
@@ -355,7 +365,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   ? _createNewTemplate(context)
                   : _showAdvancedTemplateTypeSelector(context),
               icon: AppIcons.add,
-              label: _tabController.index == 0 ? l10n.newTemplate : l10n.advancedTechniques,
+              label: _tabController.index == 0
+                  ? l10n.newTemplate
+                  : l10n.advancedTechniques,
               positionKey: 'templates_screen_fab',
               backgroundColor: _tabController.index == 0
                   ? context.colors.primary
@@ -436,9 +448,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
     return templatesAsync.when(
       loading: () => const Center(child: LoadingIndicator()),
-      error: (error, stack) => Center(
-        child: Text(l10n.errorLoadingTemplates),
-      ),
+      error: (error, stack) => Center(child: Text(l10n.errorLoadingTemplates)),
       data: (templates) {
         return RefreshIndicator(
           onRefresh: () => ref.refresh(customWorkoutTemplatesProvider.future),
@@ -470,9 +480,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     : _buildMyTemplatesList(templates, context),
 
               // Bottom padding for FAB
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 100),
-              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 100)),
             ],
           ),
         );
@@ -480,7 +488,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     );
   }
 
-  Widget _buildMyTemplatesGrid(List<workout_template.WorkoutTemplate> templates, BuildContext context) {
+  Widget _buildMyTemplatesGrid(
+    List<workout_template.WorkoutTemplate> templates,
+    BuildContext context,
+  ) {
     // 🚀 OPTIMIZATION: Batch load all template stats in one pass
     final allStatsAsync = ref.watch(allTemplateStatsProvider);
     final allStats = allStatsAsync.valueOrNull ?? {};
@@ -494,191 +505,211 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           crossAxisSpacing: AppSpacing.sm,
           mainAxisSpacing: AppSpacing.sm,
         ),
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final template = templates[index];
-            return _WorkoutTemplateCard(
-              template: template,
-              onTap: () => _editWorkoutTemplate(context, template), // Tap → Edit
-              onStartWorkout: () => _openWorkoutTemplate(context, template), // Menu → Start workout
-              onDuplicate: () => _duplicateTemplate(context, template),
-              onShare: () => _shareTemplate(context, template),
-              onDelete: () => _deleteWorkoutTemplate(context, template),
-              preloadedStats: allStats[template.id], // Pass pre-calculated stats
-            );
-          },
-          childCount: templates.length,
-        ),
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final template = templates[index];
+          return _WorkoutTemplateCard(
+            template: template,
+            onTap: () => _editWorkoutTemplate(context, template), // Tap → Edit
+            onStartWorkout: () =>
+                _openWorkoutTemplate(context, template), // Menu → Start workout
+            onDuplicate: () => _duplicateTemplate(context, template),
+            onShare: () => _shareTemplate(context, template),
+            onDelete: () => _deleteWorkoutTemplate(context, template),
+            preloadedStats: allStats[template.id], // Pass pre-calculated stats
+          );
+        }, childCount: templates.length),
       ),
     );
   }
 
-  Widget _buildMyTemplatesList(List<workout_template.WorkoutTemplate> templates, BuildContext context) {
+  Widget _buildMyTemplatesList(
+    List<workout_template.WorkoutTemplate> templates,
+    BuildContext context,
+  ) {
     final l10n = AppLocalizations.of(context);
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final template = templates[index];
-            return Card(
-              margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-              child: ListTile(
-                onTap: () => _editWorkoutTemplate(context, template), // Tap → Edit
-                leading: CircleAvatar(
-                  backgroundColor: context.colors.primaryContainer,
-                  child: SemanticIcon(
-                    icon: AppIcons.workout,
-                    semanticLabel: l10n.workout,
-                    size: AppIconSize.small,
-                    color: context.colors.onPrimaryContainer,
-                  ),
-                ),
-                title: Text(
-                  template.name,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  template.description.isNotEmpty ? template.description : l10n.noDescription,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                trailing: PopupMenuButton<String>(
-                  onSelected: (value) {
-                    if (value == 'start') _openWorkoutTemplate(context, template);
-                    if (value == 'duplicate') _duplicateTemplate(context, template);
-                    if (value == 'share') _shareTemplate(context, template);
-                    if (value == 'delete') _deleteWorkoutTemplate(context, template);
-                  },
-                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                    // Start Workout option (primary action in menu)
-                    PopupMenuItem<String>(
-                      value: 'start',
-                      child: Row(
-                        children: [
-                          SemanticIcon(
-                            icon: AppIcons.play,
-                            semanticLabel: l10n.startWorkout,
-                            size: AppIconSize.small,
-                            color: context.colors.primary,
-                          ),
-                          const SizedBox(width: AppSpacing.sm),
-                          Text(
-                            l10n.startWorkout,
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              color: context.colors.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const PopupMenuDivider(),
-                    // Duplicate option
-                    PopupMenuItem<String>(
-                      value: 'duplicate',
-                      child: Row(
-                        children: [
-                          SemanticIcon(
-                            icon: AppIcons.copy,
-                            semanticLabel: l10n.duplicate,
-                            size: AppIconSize.small,
-                            color: context.colors.onSurface,
-                          ),
-                          const SizedBox(width: AppSpacing.sm),
-                          Text(l10n.duplicate, style: context.textTheme.bodyMedium),
-                        ],
-                      ),
-                    ),
-                    // Share option
-                    PopupMenuItem<String>(
-                      value: 'share',
-                      child: Row(
-                        children: [
-                          SemanticIcon(
-                            icon: AppIcons.share,
-                            semanticLabel: l10n.share,
-                            size: AppIconSize.small,
-                            color: context.colors.onSurface,
-                          ),
-                          const SizedBox(width: AppSpacing.sm),
-                          Text(l10n.share, style: context.textTheme.bodyMedium),
-                        ],
-                      ),
-                    ),
-                    // Make Public option (future feature - disabled)
-                    PopupMenuItem<String>(
-                      value: 'make_public',
-                      enabled: false,
-                      child: Row(
-                        children: [
-                          SemanticIcon(
-                            icon: AppIcons.public,
-                            semanticLabel: l10n.makePublic,
-                            size: AppIconSize.small,
-                            color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
-                          ),
-                          const SizedBox(width: AppSpacing.sm),
-                          Text(
-                            l10n.makePublic,
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
-                            ),
-                          ),
-                          const SizedBox(width: AppSpacing.sm),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.xs,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: context.colors.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'Soon',
-                              style: context.textTheme.labelSmall?.copyWith(
-                                color: context.colors.onSurfaceVariant,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const PopupMenuDivider(),
-                    // Delete option
-                    PopupMenuItem<String>(
-                      value: 'delete',
-                      child: Row(
-                        children: [
-                          SemanticIcon(
-                            icon: AppIcons.delete,
-                            semanticLabel: l10n.delete,
-                            size: AppIconSize.small,
-                            color: context.colors.error,
-                          ),
-                          const SizedBox(width: AppSpacing.sm),
-                          Text(l10n.delete, style: context.textTheme.bodyMedium?.copyWith(color: context.colors.error)),
-                        ],
-                      ),
-                    ),
-                  ],
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final template = templates[index];
+          return Card(
+            margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+            child: ListTile(
+              onTap: () =>
+                  _editWorkoutTemplate(context, template), // Tap → Edit
+              leading: CircleAvatar(
+                backgroundColor: context.colors.primaryContainer,
+                child: SemanticIcon(
+                  icon: AppIcons.workout,
+                  semanticLabel: l10n.workout,
+                  size: AppIconSize.small,
+                  color: context.colors.onPrimaryContainer,
                 ),
               ),
-            );
-          },
-          childCount: templates.length,
-        ),
+              title: Text(
+                template.name,
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Text(
+                template.description.isNotEmpty
+                    ? template.description
+                    : l10n.noDescription,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              trailing: PopupMenuButton<String>(
+                onSelected: (value) {
+                  if (value == 'start') _openWorkoutTemplate(context, template);
+                  if (value == 'duplicate')
+                    _duplicateTemplate(context, template);
+                  if (value == 'share') _shareTemplate(context, template);
+                  if (value == 'delete')
+                    _deleteWorkoutTemplate(context, template);
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  // Start Workout option (primary action in menu)
+                  PopupMenuItem<String>(
+                    value: 'start',
+                    child: Row(
+                      children: [
+                        SemanticIcon(
+                          icon: AppIcons.play,
+                          semanticLabel: l10n.startWorkout,
+                          size: AppIconSize.small,
+                          color: context.colors.primary,
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Text(
+                          l10n.startWorkout,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.colors.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuDivider(),
+                  // Duplicate option
+                  PopupMenuItem<String>(
+                    value: 'duplicate',
+                    child: Row(
+                      children: [
+                        SemanticIcon(
+                          icon: AppIcons.copy,
+                          semanticLabel: l10n.duplicate,
+                          size: AppIconSize.small,
+                          color: context.colors.onSurface,
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Text(
+                          l10n.duplicate,
+                          style: context.textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Share option
+                  PopupMenuItem<String>(
+                    value: 'share',
+                    child: Row(
+                      children: [
+                        SemanticIcon(
+                          icon: AppIcons.share,
+                          semanticLabel: l10n.share,
+                          size: AppIconSize.small,
+                          color: context.colors.onSurface,
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Text(l10n.share, style: context.textTheme.bodyMedium),
+                      ],
+                    ),
+                  ),
+                  // Make Public option (future feature - disabled)
+                  PopupMenuItem<String>(
+                    value: 'make_public',
+                    enabled: false,
+                    child: Row(
+                      children: [
+                        SemanticIcon(
+                          icon: AppIcons.public,
+                          semanticLabel: l10n.makePublic,
+                          size: AppIconSize.small,
+                          color: context.colors.onSurfaceVariant.withValues(
+                            alpha: 0.5,
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Text(
+                          l10n.makePublic,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.colors.onSurfaceVariant.withValues(
+                              alpha: 0.5,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.xs,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: context.colors.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            'Soon',
+                            style: context.textTheme.labelSmall?.copyWith(
+                              color: context.colors.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuDivider(),
+                  // Delete option
+                  PopupMenuItem<String>(
+                    value: 'delete',
+                    child: Row(
+                      children: [
+                        SemanticIcon(
+                          icon: AppIcons.delete,
+                          semanticLabel: l10n.delete,
+                          size: AppIconSize.small,
+                          color: context.colors.error,
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Text(
+                          l10n.delete,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.colors.error,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }, childCount: templates.length),
       ),
     );
   }
 
-  void _openWorkoutTemplate(BuildContext context, workout_template.WorkoutTemplate template) async {
+  void _openWorkoutTemplate(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) async {
     try {
       // Increment usage count
-      await ref.read(workoutTemplateNotifierProvider.notifier).incrementUsage(template.id);
+      await ref
+          .read(workoutTemplateNotifierProvider.notifier)
+          .incrementUsage(template.id);
 
       // Create and start workout from template with templateId for duration tracking
       final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
@@ -692,7 +723,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       }
 
       if (context.mounted) {
-        SnackBarService.showSuccess(context, context.l10n.workoutStartedFromTemplate(template.name));
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.workoutStartedFromTemplate(template.name),
+        );
         // Navigate to workout tab (separate branch in StatefulShellRoute)
         context.go(AppRoutes.workoutPath);
       }
@@ -703,7 +737,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     }
   }
 
-  void _editWorkoutTemplate(BuildContext context, workout_template.WorkoutTemplate template) {
+  void _editWorkoutTemplate(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EditTemplateScreen(template: template),
@@ -711,7 +748,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     );
   }
 
-  Future<void> _deleteWorkoutTemplate(BuildContext context, workout_template.WorkoutTemplate template) async {
+  Future<void> _deleteWorkoutTemplate(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) async {
     final l10n = AppLocalizations.of(context);
     final confirm = await showDialog<bool>(
       context: context,
@@ -736,9 +776,14 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
     if (confirm == true) {
       try {
-        await ref.read(workoutTemplateNotifierProvider.notifier).deleteTemplate(template.id);
+        await ref
+            .read(workoutTemplateNotifierProvider.notifier)
+            .deleteTemplate(template.id);
         if (context.mounted) {
-          SnackBarService.showSuccess(context, l10n.templateDeleted(template.name));
+          SnackBarService.showSuccess(
+            context,
+            l10n.templateDeleted(template.name),
+          );
         }
       } catch (e) {
         if (context.mounted) {
@@ -748,12 +793,20 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     }
   }
 
-  Future<void> _duplicateTemplate(BuildContext context, workout_template.WorkoutTemplate template) async {
+  Future<void> _duplicateTemplate(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) async {
     final l10n = AppLocalizations.of(context);
     try {
-      await ref.read(workoutTemplateNotifierProvider.notifier).duplicateTemplate(template);
+      await ref
+          .read(workoutTemplateNotifierProvider.notifier)
+          .duplicateTemplate(template);
       if (context.mounted) {
-        SnackBarService.showSuccess(context, l10n.templateDuplicated(template.name));
+        SnackBarService.showSuccess(
+          context,
+          l10n.templateDuplicated(template.name),
+        );
       }
     } catch (e) {
       if (context.mounted) {
@@ -762,7 +815,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     }
   }
 
-  Future<void> _shareTemplate(BuildContext context, workout_template.WorkoutTemplate template) async {
+  Future<void> _shareTemplate(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) async {
     final l10n = AppLocalizations.of(context);
 
     // Store navigator before any async gap to avoid context issues
@@ -780,25 +836,27 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
     // Show loading dialog for PDF generation
     if (context.mounted) {
-      unawaited(showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (dialogContext) => Center(
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const LoadingIndicator(),
-                  const SizedBox(height: AppSpacing.md),
-                  Text(l10n.generatingPdf),
-                ],
+      unawaited(
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (dialogContext) => Center(
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const LoadingIndicator(),
+                    const SizedBox(height: AppSpacing.md),
+                    Text(l10n.generatingPdf),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ));
+      );
     }
 
     try {
@@ -821,10 +879,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
       // Step 4: Share with share_plus (provides proper callbacks)
       final result = await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(file.path)],
-          subject: template.name,
-        ),
+        ShareParams(files: [XFile(file.path)], subject: template.name),
       );
 
       // Step 5: Handle result (optional: show feedback)
@@ -852,9 +907,15 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     // Watch default templates from bundled JSON
     final defaultTemplatesAsync = ref.watch(defaultTemplatesProvider);
     // Watch predefined advanced technique templates
-    final predefinedSupersetsAsync = ref.watch(predefinedSupersetTemplatesProvider);
-    final predefinedDropsetsAsync = ref.watch(predefinedDropsetTemplatesProvider);
-    final predefinedRestPauseAsync = ref.watch(predefinedRestPauseTemplatesProvider);
+    final predefinedSupersetsAsync = ref.watch(
+      predefinedSupersetTemplatesProvider,
+    );
+    final predefinedDropsetsAsync = ref.watch(
+      predefinedDropsetTemplatesProvider,
+    );
+    final predefinedRestPauseAsync = ref.watch(
+      predefinedRestPauseTemplatesProvider,
+    );
     // Watch custom advanced technique templates (user's saved templates)
     final customSupersetsAsync = ref.watch(customSupersetTemplatesProvider);
     final customDropsetsAsync = ref.watch(customDropsetTemplatesProvider);
@@ -927,69 +988,80 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
             // Workout Templates (filtered by category)
             defaultTemplatesAsync.when(
-            loading: () => const SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.all(AppSpacing.lg),
-                child: Center(child: LoadingIndicator()),
+              loading: () => const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.all(AppSpacing.lg),
+                  child: Center(child: LoadingIndicator()),
+                ),
               ),
-            ),
-            error: (error, _) => SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                child: Center(child: Text(l10n.errorLoadingTemplates)),
+              error: (error, _) => SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  child: Center(child: Text(l10n.errorLoadingTemplates)),
+                ),
               ),
-            ),
-            data: (templates) {
-              if (templates.isEmpty) {
-                return SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.lg),
-                    child: Center(child: Text(l10n.noTemplatesFound)),
+              data: (templates) {
+                if (templates.isEmpty) {
+                  return SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.lg),
+                      child: Center(child: Text(l10n.noTemplatesFound)),
+                    ),
+                  );
+                }
+
+                // Group templates by category
+                final categories =
+                    <String, List<workout_template.WorkoutTemplate>>{};
+                for (final t in templates) {
+                  final cat = t.category ?? 'other';
+                  categories.putIfAbsent(cat, () => []).add(t);
+                }
+
+                // Category display info
+                final categoryInfo = {
+                  'beginner': (l10n.beginner, AppIcons.school),
+                  'intermediate': (l10n.intermediate, AppIcons.trendUp),
+                  'advanced': (l10n.advanced, AppIcons.localFireDepartment),
+                  'home': (l10n.homeWorkouts, AppIcons.home),
+                  'dumbbell': (l10n.dumbbellOnly, AppIcons.workout),
+                  'express': (l10n.express, AppIcons.timer),
+                  'specialty': (l10n.specialty, AppIcons.star),
+                };
+
+                // Order of categories
+                final orderedCategories = [
+                  'beginner',
+                  'intermediate',
+                  'advanced',
+                  'home',
+                  'dumbbell',
+                  'express',
+                  'specialty',
+                ];
+
+                // Filter categories based on selection
+                final categoriesToShow = _selectedCategory != null
+                    ? [_selectedCategory!]
+                    : orderedCategories;
+
+                return SliverPadding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.sm,
                   ),
-                );
-              }
-
-              // Group templates by category
-              final categories = <String, List<workout_template.WorkoutTemplate>>{};
-              for (final t in templates) {
-                final cat = t.category ?? 'other';
-                categories.putIfAbsent(cat, () => []).add(t);
-              }
-
-              // Category display info
-              final categoryInfo = {
-                'beginner': (l10n.beginner, AppIcons.school),
-                'intermediate': (l10n.intermediate, AppIcons.trendUp),
-                'advanced': (l10n.advanced, AppIcons.localFireDepartment),
-                'home': (l10n.homeWorkouts, AppIcons.home),
-                'dumbbell': (l10n.dumbbellOnly, AppIcons.workout),
-                'express': (l10n.express, AppIcons.timer),
-                'specialty': (l10n.specialty, AppIcons.star),
-              };
-
-              // Order of categories
-              final orderedCategories = [
-                'beginner', 'intermediate', 'advanced',
-                'home', 'dumbbell', 'express', 'specialty',
-              ];
-
-              // Filter categories based on selection
-              final categoriesToShow = _selectedCategory != null
-                  ? [_selectedCategory!]
-                  : orderedCategories;
-
-              return SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
                       final categoryKey = categoriesToShow[index];
                       final categoryTemplates = categories[categoryKey];
-                      if (categoryTemplates == null || categoryTemplates.isEmpty) {
+                      if (categoryTemplates == null ||
+                          categoryTemplates.isEmpty) {
                         return const SizedBox.shrink();
                       }
 
-                      final (categoryName, categoryIcon) = categoryInfo[categoryKey] ?? (categoryKey, AppIcons.workout);
+                      final (categoryName, categoryIcon) =
+                          categoryInfo[categoryKey] ??
+                          (categoryKey, AppIcons.workout);
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -997,7 +1069,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                           // Compact category header (only show if viewing all)
                           if (_selectedCategory == null)
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: AppSpacing.sm,
+                              ),
                               child: Row(
                                 children: [
                                   SemanticIcon(
@@ -1009,16 +1083,17 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                                   const SizedBox(width: AppSpacing.sm),
                                   Text(
                                     categoryName,
-                                    style: context.textTheme.titleSmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: context.textTheme.titleSmall
+                                        ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
                                   const Spacer(),
                                   Text(
                                     '${categoryTemplates.length}',
-                                    style: context.textTheme.labelMedium?.copyWith(
-                                      color: context.colors.onSurfaceVariant,
-                                    ),
+                                    style: context.textTheme.labelMedium
+                                        ?.copyWith(
+                                          color:
+                                              context.colors.onSurfaceVariant,
+                                        ),
                                   ),
                                 ],
                               ),
@@ -1030,13 +1105,18 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               itemCount: categoryTemplates.length,
-                              separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.sm),
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(width: AppSpacing.sm),
                               itemBuilder: (context, i) {
                                 final template = categoryTemplates[i];
                                 return _CompactTemplateCard(
                                   template: template,
-                                  onTap: () => _previewDefaultTemplate(context, template),
-                                  onUse: () => _useDefaultTemplate(context, template),
+                                  onTap: () => _previewDefaultTemplate(
+                                    context,
+                                    template,
+                                  ),
+                                  onUse: () =>
+                                      _useDefaultTemplate(context, template),
                                 );
                               },
                             ),
@@ -1044,15 +1124,12 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                           const SizedBox(height: AppSpacing.md),
                         ],
                       );
-                    },
-                    childCount: categoriesToShow.length,
+                    }, childCount: categoriesToShow.length),
                   ),
-                ),
-              );
-            },
-          ),
+                );
+              },
+            ),
           ], // END SUB-TAB 0: Workout Templates
-
           // ═══════════════════════════════════════════════════════════════════
           // SUB-TAB 1: Advanced Techniques
           // ═══════════════════════════════════════════════════════════════════
@@ -1079,82 +1156,82 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
             // Superset Templates (Custom first, then Predefined)
             // ═══════════════════════════════════════════════════════════════════
             _buildAdvancedTechniqueWithCustom<SupersetTemplate>(
-            context: context,
-            title: l10n.superset,
-            icon: AppIcons.link,
-            color: context.colors.secondary,
-            customAsync: customSupersetsAsync,
-            predefinedAsync: predefinedSupersetsAsync,
-            isExpanded: _isSupersetsExpanded,
-            onToggleExpanded: () => setState(() => _isSupersetsExpanded = !_isSupersetsExpanded),
-            customCardBuilder: (template) => _CompactSupersetCard(
-              template: template,
-              onTap: () => _previewPredefinedSuperset(context, template),
-              onUse: () => _usePredefinedSuperset(context, template),
-              isCustom: true,
+              context: context,
+              title: l10n.superset,
+              icon: AppIcons.link,
+              color: context.colors.secondary,
+              customAsync: customSupersetsAsync,
+              predefinedAsync: predefinedSupersetsAsync,
+              isExpanded: _isSupersetsExpanded,
+              onToggleExpanded: () =>
+                  setState(() => _isSupersetsExpanded = !_isSupersetsExpanded),
+              customCardBuilder: (template) => _CompactSupersetCard(
+                template: template,
+                onTap: () => _previewPredefinedSuperset(context, template),
+                onUse: () => _usePredefinedSuperset(context, template),
+                isCustom: true,
+              ),
+              predefinedCardBuilder: (template) => _CompactSupersetCard(
+                template: template,
+                onTap: () => _previewPredefinedSuperset(context, template),
+                onUse: () => _usePredefinedSuperset(context, template),
+              ),
             ),
-            predefinedCardBuilder: (template) => _CompactSupersetCard(
-              template: template,
-              onTap: () => _previewPredefinedSuperset(context, template),
-              onUse: () => _usePredefinedSuperset(context, template),
-            ),
-          ),
 
-          // ═══════════════════════════════════════════════════════════════════
-          // Dropset Templates (Custom first, then Predefined)
-          // ═══════════════════════════════════════════════════════════════════
-          _buildAdvancedTechniqueWithCustom<DropsetTemplate>(
-            context: context,
-            title: l10n.dropset,
-            icon: AppIcons.trendDown,
-            color: context.colors.tertiary,
-            customAsync: customDropsetsAsync,
-            predefinedAsync: predefinedDropsetsAsync,
-            isExpanded: _isDropsetsExpanded,
-            onToggleExpanded: () => setState(() => _isDropsetsExpanded = !_isDropsetsExpanded),
-            customCardBuilder: (template) => _CompactDropsetCard(
-              template: template,
-              onTap: () => _previewPredefinedDropset(context, template),
-              onUse: () => _usePredefinedDropset(context, template),
-              isCustom: true,
+            // ═══════════════════════════════════════════════════════════════════
+            // Dropset Templates (Custom first, then Predefined)
+            // ═══════════════════════════════════════════════════════════════════
+            _buildAdvancedTechniqueWithCustom<DropsetTemplate>(
+              context: context,
+              title: l10n.dropset,
+              icon: AppIcons.trendDown,
+              color: context.colors.tertiary,
+              customAsync: customDropsetsAsync,
+              predefinedAsync: predefinedDropsetsAsync,
+              isExpanded: _isDropsetsExpanded,
+              onToggleExpanded: () =>
+                  setState(() => _isDropsetsExpanded = !_isDropsetsExpanded),
+              customCardBuilder: (template) => _CompactDropsetCard(
+                template: template,
+                onTap: () => _previewPredefinedDropset(context, template),
+                onUse: () => _usePredefinedDropset(context, template),
+                isCustom: true,
+              ),
+              predefinedCardBuilder: (template) => _CompactDropsetCard(
+                template: template,
+                onTap: () => _previewPredefinedDropset(context, template),
+                onUse: () => _usePredefinedDropset(context, template),
+              ),
             ),
-            predefinedCardBuilder: (template) => _CompactDropsetCard(
-              template: template,
-              onTap: () => _previewPredefinedDropset(context, template),
-              onUse: () => _usePredefinedDropset(context, template),
-            ),
-          ),
 
-          // ═══════════════════════════════════════════════════════════════════
-          // Rest-Pause Templates (Custom first, then Predefined)
-          // ═══════════════════════════════════════════════════════════════════
-          _buildAdvancedTechniqueWithCustom<RestPauseTemplate>(
-            context: context,
-            title: l10n.restPause,
-            icon: AppIcons.timer,
-            color: context.colors.error,
-            customAsync: customRestPauseAsync,
-            predefinedAsync: predefinedRestPauseAsync,
-            isExpanded: _isRestPauseExpanded,
-            onToggleExpanded: () => setState(() => _isRestPauseExpanded = !_isRestPauseExpanded),
-            customCardBuilder: (template) => _CompactRestPauseCard(
-              template: template,
-              onTap: () => _previewPredefinedRestPause(context, template),
-              onUse: () => _usePredefinedRestPause(context, template),
-              isCustom: true,
+            // ═══════════════════════════════════════════════════════════════════
+            // Rest-Pause Templates (Custom first, then Predefined)
+            // ═══════════════════════════════════════════════════════════════════
+            _buildAdvancedTechniqueWithCustom<RestPauseTemplate>(
+              context: context,
+              title: l10n.restPause,
+              icon: AppIcons.timer,
+              color: context.colors.error,
+              customAsync: customRestPauseAsync,
+              predefinedAsync: predefinedRestPauseAsync,
+              isExpanded: _isRestPauseExpanded,
+              onToggleExpanded: () =>
+                  setState(() => _isRestPauseExpanded = !_isRestPauseExpanded),
+              customCardBuilder: (template) => _CompactRestPauseCard(
+                template: template,
+                onTap: () => _previewPredefinedRestPause(context, template),
+                onUse: () => _usePredefinedRestPause(context, template),
+                isCustom: true,
+              ),
+              predefinedCardBuilder: (template) => _CompactRestPauseCard(
+                template: template,
+                onTap: () => _previewPredefinedRestPause(context, template),
+                onUse: () => _usePredefinedRestPause(context, template),
+              ),
             ),
-            predefinedCardBuilder: (template) => _CompactRestPauseCard(
-              template: template,
-              onTap: () => _previewPredefinedRestPause(context, template),
-              onUse: () => _usePredefinedRestPause(context, template),
-            ),
-          ),
           ], // END SUB-TAB 1: Advanced Techniques
-
           // Bottom padding for FAB
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 100),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],
       ),
     );
@@ -1277,8 +1354,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: customTemplates.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.sm),
-                  itemBuilder: (context, i) => customCardBuilder(customTemplates[i]),
+                  separatorBuilder: (_, __) =>
+                      const SizedBox(width: AppSpacing.sm),
+                  itemBuilder: (context, i) =>
+                      customCardBuilder(customTemplates[i]),
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
@@ -1292,7 +1371,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   },
                   borderRadius: BorderRadius.circular(8),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.xs,
+                    ),
                     child: Row(
                       children: [
                         SemanticIcon(
@@ -1310,8 +1391,12 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                         ),
                         const Spacer(),
                         SemanticIcon(
-                          icon: isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
-                          semanticLabel: isExpanded ? l10n.hideTemplates : l10n.discoverMoreTemplates,
+                          icon: isExpanded
+                              ? AppIcons.expandLess
+                              : AppIcons.expandMore,
+                          semanticLabel: isExpanded
+                              ? l10n.hideTemplates
+                              : l10n.discoverMoreTemplates,
                           size: AppIconSize.small,
                           color: context.colors.primary,
                         ),
@@ -1359,7 +1444,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                           onToggleExpanded();
                         },
                         style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.sm,
+                          ),
                           minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
@@ -1379,8 +1466,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: predefinedTemplates.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.sm),
-                    itemBuilder: (context, i) => predefinedCardBuilder(predefinedTemplates[i]),
+                    separatorBuilder: (_, __) =>
+                        const SizedBox(width: AppSpacing.sm),
+                    itemBuilder: (context, i) =>
+                        predefinedCardBuilder(predefinedTemplates[i]),
                   ),
                 ),
               ],
@@ -1427,8 +1516,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: predefinedTemplates.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.sm),
-                  itemBuilder: (context, i) => predefinedCardBuilder(predefinedTemplates[i]),
+                  separatorBuilder: (_, __) =>
+                      const SizedBox(width: AppSpacing.sm),
+                  itemBuilder: (context, i) =>
+                      predefinedCardBuilder(predefinedTemplates[i]),
                 ),
               ),
             ],
@@ -1440,7 +1531,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     );
   }
 
-  void _previewDefaultTemplate(BuildContext context, workout_template.WorkoutTemplate template) {
+  void _previewDefaultTemplate(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) {
     HapticFeedback.lightImpact();
     // ═══════════════════════════════════════════════════════════════════════
     // EDGE CASE: Capture parent context before showing modal
@@ -1466,7 +1560,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     );
   }
 
-  Future<void> _useDefaultTemplate(BuildContext context, workout_template.WorkoutTemplate template) async {
+  Future<void> _useDefaultTemplate(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) async {
     // ═══════════════════════════════════════════════════════════════════════
     // EDGE CASE 1: Prevent double-tap - check if already saving
     // ═══════════════════════════════════════════════════════════════════════
@@ -1502,7 +1599,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     // EDGE CASE 4: Check template quota BEFORE attempting save
     // ═══════════════════════════════════════════════════════════════════════
     final entitlements = ref.read(tierEntitlementsProvider);
-    final existingTemplates = ref.read(customWorkoutTemplatesProvider).valueOrNull ?? [];
+    final existingTemplates =
+        ref.read(customWorkoutTemplatesProvider).valueOrNull ?? [];
     final currentCount = existingTemplates.length;
 
     if (!entitlements.canSaveTemplate(currentCount)) {
@@ -1521,12 +1619,17 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     int suffix = 1;
 
     // Find all existing names (case-insensitive)
-    final existingNames = existingTemplates.map((t) => t.name.toLowerCase()).toSet();
+    final existingNames = existingTemplates
+        .map((t) => t.name.toLowerCase())
+        .toSet();
 
     if (existingNames.contains(baseName.toLowerCase())) {
       // Show warning dialog first
       if (context.mounted) {
-        final shouldContinue = await _showDuplicateWarningDialog(context, template.name);
+        final shouldContinue = await _showDuplicateWarningDialog(
+          context,
+          template.name,
+        );
         if (!shouldContinue) return;
       }
 
@@ -1604,9 +1707,11 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
         final errorMessage = e.toString().toLowerCase();
         if (errorMessage.contains('quota') || errorMessage.contains('limit')) {
           _showQuotaExceededDialog(context, entitlements.maxTemplates);
-        } else if (errorMessage.contains('network') || errorMessage.contains('timeout')) {
+        } else if (errorMessage.contains('network') ||
+            errorMessage.contains('timeout')) {
           SnackBarService.showError(context, l10n.networkError);
-        } else if (errorMessage.contains('permission') || errorMessage.contains('unauthenticated')) {
+        } else if (errorMessage.contains('permission') ||
+            errorMessage.contains('unauthenticated')) {
           // EDGE CASE 9: Session expired or permission denied
           SnackBarService.showError(context, l10n.sessionExpired);
         } else {
@@ -1655,7 +1760,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   }
 
   /// Shows warning when adding duplicate template
-  Future<bool> _showDuplicateWarningDialog(BuildContext context, String templateName) async {
+  Future<bool> _showDuplicateWarningDialog(
+    BuildContext context,
+    String templateName,
+  ) async {
     final l10n = AppLocalizations.of(context);
     final result = await showDialog<bool>(
       context: context,
@@ -1688,7 +1796,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   // ═══════════════════════════════════════════════════════════════════════════
 
   /// Preview a predefined superset template
-  void _previewPredefinedSuperset(BuildContext context, SupersetTemplate template) {
+  void _previewPredefinedSuperset(
+    BuildContext context,
+    SupersetTemplate template,
+  ) {
     HapticFeedback.lightImpact();
 
     showModalBottomSheet<void>(
@@ -1708,7 +1819,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   }
 
   /// Save predefined superset as custom template
-  Future<void> _usePredefinedSuperset(BuildContext context, SupersetTemplate template) async {
+  Future<void> _usePredefinedSuperset(
+    BuildContext context,
+    SupersetTemplate template,
+  ) async {
     if (_isSaving) return;
 
     HapticFeedback.mediumImpact();
@@ -1725,7 +1839,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
     // Check quota
     final entitlements = ref.read(tierEntitlementsProvider);
-    final existing = ref.read(customSupersetTemplatesProvider).valueOrNull ?? [];
+    final existing =
+        ref.read(customSupersetTemplatesProvider).valueOrNull ?? [];
     if (existing.length >= entitlements.maxCustomSupersets) {
       if (context.mounted) {
         SnackBarService.showWarning(context, l10n.quotaExceeded);
@@ -1743,7 +1858,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       );
 
       // Save via notifier
-      await ref.read(supersetTemplateNotifierProvider.notifier).saveCustomTemplate(customTemplate);
+      await ref
+          .read(supersetTemplateNotifierProvider.notifier)
+          .saveCustomTemplate(customTemplate);
 
       HapticFeedback.heavyImpact();
 
@@ -1763,7 +1880,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   }
 
   /// Preview a predefined dropset template
-  void _previewPredefinedDropset(BuildContext context, DropsetTemplate template) {
+  void _previewPredefinedDropset(
+    BuildContext context,
+    DropsetTemplate template,
+  ) {
     HapticFeedback.lightImpact();
 
     showModalBottomSheet<void>(
@@ -1783,7 +1903,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   }
 
   /// Save predefined dropset as custom template
-  Future<void> _usePredefinedDropset(BuildContext context, DropsetTemplate template) async {
+  Future<void> _usePredefinedDropset(
+    BuildContext context,
+    DropsetTemplate template,
+  ) async {
     if (_isSaving) return;
 
     HapticFeedback.mediumImpact();
@@ -1818,7 +1941,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       );
 
       // Save via notifier
-      await ref.read(dropsetTemplateNotifierProvider.notifier).saveCustomTemplate(customTemplate);
+      await ref
+          .read(dropsetTemplateNotifierProvider.notifier)
+          .saveCustomTemplate(customTemplate);
 
       HapticFeedback.heavyImpact();
 
@@ -1838,7 +1963,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   }
 
   /// Preview a predefined rest-pause template
-  void _previewPredefinedRestPause(BuildContext context, RestPauseTemplate template) {
+  void _previewPredefinedRestPause(
+    BuildContext context,
+    RestPauseTemplate template,
+  ) {
     HapticFeedback.lightImpact();
 
     showModalBottomSheet<void>(
@@ -1858,7 +1986,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   }
 
   /// Save predefined rest-pause as custom template
-  Future<void> _usePredefinedRestPause(BuildContext context, RestPauseTemplate template) async {
+  Future<void> _usePredefinedRestPause(
+    BuildContext context,
+    RestPauseTemplate template,
+  ) async {
     if (_isSaving) return;
 
     HapticFeedback.mediumImpact();
@@ -1875,7 +2006,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
     // Check quota
     final entitlements = ref.read(tierEntitlementsProvider);
-    final existing = ref.read(customRestPauseTemplatesProvider).valueOrNull ?? [];
+    final existing =
+        ref.read(customRestPauseTemplatesProvider).valueOrNull ?? [];
     if (existing.length >= entitlements.maxCustomRestPause) {
       if (context.mounted) {
         SnackBarService.showWarning(context, l10n.quotaExceeded);
@@ -1893,7 +2025,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       );
 
       // Save via notifier
-      await ref.read(restPauseTemplateNotifierProvider.notifier).saveCustomTemplate(customTemplate);
+      await ref
+          .read(restPauseTemplateNotifierProvider.notifier)
+          .saveCustomTemplate(customTemplate);
 
       HapticFeedback.heavyImpact();
 
@@ -1955,15 +2089,20 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               asyncValue: customExercisesAsync,
               emptyMessage: l10n.noCustomExercises,
               itemBuilder: (exercises) => Column(
-                children: exercises.take(3).map((exercise) =>
-                  _CustomExerciseCard(
-                    exercise: exercise,
-                    onTap: () => _editExercise(context, exercise),
-                    onDelete: () => _deleteExercise(context, exercise),
-                  ),
-                ).toList(),
+                children: exercises
+                    .take(3)
+                    .map(
+                      (exercise) => _CustomExerciseCard(
+                        exercise: exercise,
+                        onTap: () => _editExercise(context, exercise),
+                        onDelete: () => _deleteExercise(context, exercise),
+                      ),
+                    )
+                    .toList(),
               ),
-              onViewAll: (customExercisesAsync.valueOrNull?.length ?? 0) > 3 ? () => _showAllCustomExercises(context) : null,
+              onViewAll: (customExercisesAsync.valueOrNull?.length ?? 0) > 3
+                  ? () => _showAllCustomExercises(context)
+                  : null,
               count: customExercisesAsync.valueOrNull?.length ?? 0,
             ),
           ),
@@ -1978,16 +2117,21 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               asyncValue: supersetTemplatesAsync,
               emptyMessage: l10n.noSupersetTemplates,
               itemBuilder: (templates) => Column(
-                children: templates.take(3).map((template) =>
-                  _SupersetTemplateCard(
-                    template: template,
-                    onTap: () => _editSupersetTemplate(context, template),
-                    onDelete: () => _deleteSupersetTemplate(context, template),
-                  ),
-                ).toList(),
+                children: templates
+                    .take(3)
+                    .map(
+                      (template) => _SupersetTemplateCard(
+                        template: template,
+                        onTap: () => _editSupersetTemplate(context, template),
+                        onDelete: () =>
+                            _deleteSupersetTemplate(context, template),
+                      ),
+                    )
+                    .toList(),
               ),
               onViewAll: (supersetTemplatesAsync.valueOrNull?.length ?? 0) > 3
-                  ? () => _showAllSupersetTemplates(context) : null,
+                  ? () => _showAllSupersetTemplates(context)
+                  : null,
               count: supersetTemplatesAsync.valueOrNull?.length ?? 0,
             ),
           ),
@@ -2002,16 +2146,21 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               asyncValue: dropsetTemplatesAsync,
               emptyMessage: l10n.noDropsetTemplates,
               itemBuilder: (templates) => Column(
-                children: templates.take(3).map((template) =>
-                  _DropsetTemplateCard(
-                    template: template,
-                    onTap: () => _editDropsetTemplate(context, template),
-                    onDelete: () => _deleteDropsetTemplate(context, template),
-                  ),
-                ).toList(),
+                children: templates
+                    .take(3)
+                    .map(
+                      (template) => _DropsetTemplateCard(
+                        template: template,
+                        onTap: () => _editDropsetTemplate(context, template),
+                        onDelete: () =>
+                            _deleteDropsetTemplate(context, template),
+                      ),
+                    )
+                    .toList(),
               ),
               onViewAll: (dropsetTemplatesAsync.valueOrNull?.length ?? 0) > 3
-                  ? () => _showAllDropsetTemplates(context) : null,
+                  ? () => _showAllDropsetTemplates(context)
+                  : null,
               count: dropsetTemplatesAsync.valueOrNull?.length ?? 0,
             ),
           ),
@@ -2026,24 +2175,27 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               asyncValue: restPauseTemplatesAsync,
               emptyMessage: l10n.noRestPauseTemplates,
               itemBuilder: (templates) => Column(
-                children: templates.take(3).map((template) =>
-                  _RestPauseTemplateCard(
-                    template: template,
-                    onTap: () => _editRestPauseTemplate(context, template),
-                    onDelete: () => _deleteRestPauseTemplate(context, template),
-                  ),
-                ).toList(),
+                children: templates
+                    .take(3)
+                    .map(
+                      (template) => _RestPauseTemplateCard(
+                        template: template,
+                        onTap: () => _editRestPauseTemplate(context, template),
+                        onDelete: () =>
+                            _deleteRestPauseTemplate(context, template),
+                      ),
+                    )
+                    .toList(),
               ),
               onViewAll: (restPauseTemplatesAsync.valueOrNull?.length ?? 0) > 3
-                  ? () => _showAllRestPauseTemplates(context) : null,
+                  ? () => _showAllRestPauseTemplates(context)
+                  : null,
               count: restPauseTemplatesAsync.valueOrNull?.length ?? 0,
             ),
           ),
 
           // Bottom padding for FAB
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 100),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],
       ),
     );
@@ -2069,10 +2221,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: color.withValues(alpha: 0.2),
-          width: 1,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
       ),
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
@@ -2193,7 +2342,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.3),
+                    color: context.colors.onSurfaceVariant.withValues(
+                      alpha: 0.3,
+                    ),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -2300,11 +2451,17 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     // TODO: Implement dropset template edit
   }
 
-  void _editRestPauseTemplate(BuildContext context, RestPauseTemplate template) {
+  void _editRestPauseTemplate(
+    BuildContext context,
+    RestPauseTemplate template,
+  ) {
     // TODO: Implement rest-pause template edit
   }
 
-  Future<void> _deleteSupersetTemplate(BuildContext context, SupersetTemplate template) async {
+  Future<void> _deleteSupersetTemplate(
+    BuildContext context,
+    SupersetTemplate template,
+  ) async {
     final l10n = AppLocalizations.of(context);
     final confirm = await showDialog<bool>(
       context: context,
@@ -2318,7 +2475,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            style: FilledButton.styleFrom(backgroundColor: context.colors.error),
+            style: FilledButton.styleFrom(
+              backgroundColor: context.colors.error,
+            ),
             child: Text(l10n.delete),
           ),
         ],
@@ -2326,12 +2485,16 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     );
 
     if (confirm == true) {
-      await ref.read(supersetTemplateNotifierProvider.notifier)
+      await ref
+          .read(supersetTemplateNotifierProvider.notifier)
           .deleteCustomTemplate(template.id);
     }
   }
 
-  Future<void> _deleteDropsetTemplate(BuildContext context, DropsetTemplate template) async {
+  Future<void> _deleteDropsetTemplate(
+    BuildContext context,
+    DropsetTemplate template,
+  ) async {
     final l10n = AppLocalizations.of(context);
     final confirm = await showDialog<bool>(
       context: context,
@@ -2345,7 +2508,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            style: FilledButton.styleFrom(backgroundColor: context.colors.error),
+            style: FilledButton.styleFrom(
+              backgroundColor: context.colors.error,
+            ),
             child: Text(l10n.delete),
           ),
         ],
@@ -2353,12 +2518,16 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     );
 
     if (confirm == true) {
-      await ref.read(dropsetTemplateNotifierProvider.notifier)
+      await ref
+          .read(dropsetTemplateNotifierProvider.notifier)
           .deleteCustomTemplate(template.id);
     }
   }
 
-  Future<void> _deleteRestPauseTemplate(BuildContext context, RestPauseTemplate template) async {
+  Future<void> _deleteRestPauseTemplate(
+    BuildContext context,
+    RestPauseTemplate template,
+  ) async {
     final l10n = AppLocalizations.of(context);
     final confirm = await showDialog<bool>(
       context: context,
@@ -2372,7 +2541,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            style: FilledButton.styleFrom(backgroundColor: context.colors.error),
+            style: FilledButton.styleFrom(
+              backgroundColor: context.colors.error,
+            ),
             child: Text(l10n.delete),
           ),
         ],
@@ -2380,7 +2551,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     );
 
     if (confirm == true) {
-      await ref.read(restPauseTemplateNotifierProvider.notifier)
+      await ref
+          .read(restPauseTemplateNotifierProvider.notifier)
           .deleteCustomTemplate(template.id);
     }
   }
@@ -2394,7 +2566,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     if (!entitlements.canCreateCustomSingleExercise(exerciseCount)) {
       SnackBarService.showCustom(
         context,
-        message: l10n.customExerciseLimit(entitlements.maxCustomSingleExercises),
+        message: l10n.customExerciseLimit(
+          entitlements.maxCustomSingleExercises,
+        ),
         actionLabel: l10n.upgrade,
         onAction: () {
           // TODO: Navigate to premium screen
@@ -2419,7 +2593,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     );
   }
 
-  Future<void> _deleteExercise(BuildContext context, CustomExercise exercise) async {
+  Future<void> _deleteExercise(
+    BuildContext context,
+    CustomExercise exercise,
+  ) async {
     final l10n = AppLocalizations.of(context);
     final confirm = await showDialog<bool>(
       context: context,
@@ -2460,7 +2637,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   void _createNewTemplate(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    final availablePrivate = ref.read(templateProvider.notifier)
+    final availablePrivate = ref
+        .read(templateProvider.notifier)
         .getAvailableTemplateCount(TemplateVisibility.private);
 
     if (availablePrivate <= 0) {
@@ -2535,18 +2713,20 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 );
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => EditTemplateScreen(template: newTemplate),
+                    builder: (context) =>
+                        EditTemplateScreen(template: newTemplate),
                   ),
                 );
               },
             ),
-            SizedBox(height: MediaQuery.of(context).padding.bottom + AppSpacing.md),
+            SizedBox(
+              height: MediaQuery.of(context).padding.bottom + AppSpacing.md,
+            ),
           ],
         ),
       ),
     );
   }
-
 }
 
 // ============================================================================
@@ -2554,10 +2734,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 // ============================================================================
 
 class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverTabBarDelegate({
-    required this.tabBar,
-    required this.backgroundColor,
-  });
+  _SliverTabBarDelegate({required this.tabBar, required this.backgroundColor});
 
   final TabBar tabBar;
   final Color backgroundColor;
@@ -2569,17 +2746,18 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => tabBar.preferredSize.height;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return ColoredBox(
-      color: backgroundColor,
-      child: tabBar,
-    );
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return ColoredBox(color: backgroundColor, child: tabBar);
   }
 
   @override
   bool shouldRebuild(_SliverTabBarDelegate oldDelegate) {
     return tabBar != oldDelegate.tabBar ||
-           backgroundColor != oldDelegate.backgroundColor;
+        backgroundColor != oldDelegate.backgroundColor;
   }
 }
 
@@ -3020,7 +3198,10 @@ class _WorkoutTemplateCard extends ConsumerWidget {
                               color: context.colors.onSurface,
                             ),
                             const SizedBox(width: AppSpacing.sm),
-                            Text(l10n.duplicate, style: context.textTheme.bodyMedium),
+                            Text(
+                              l10n.duplicate,
+                              style: context.textTheme.bodyMedium,
+                            ),
                           ],
                         ),
                       ),
@@ -3036,7 +3217,10 @@ class _WorkoutTemplateCard extends ConsumerWidget {
                               color: context.colors.onSurface,
                             ),
                             const SizedBox(width: AppSpacing.sm),
-                            Text(l10n.share, style: context.textTheme.bodyMedium),
+                            Text(
+                              l10n.share,
+                              style: context.textTheme.bodyMedium,
+                            ),
                           ],
                         ),
                       ),
@@ -3050,13 +3234,16 @@ class _WorkoutTemplateCard extends ConsumerWidget {
                               icon: AppIcons.public,
                               semanticLabel: l10n.makePublic,
                               size: AppIconSize.small,
-                              color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                              color: context.colors.onSurfaceVariant.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
                             const SizedBox(width: AppSpacing.sm),
                             Text(
                               l10n.makePublic,
                               style: context.textTheme.bodyMedium?.copyWith(
-                                color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                                color: context.colors.onSurfaceVariant
+                                    .withValues(alpha: 0.5),
                               ),
                             ),
                             const Spacer(),
@@ -3094,7 +3281,9 @@ class _WorkoutTemplateCard extends ConsumerWidget {
                             const SizedBox(width: AppSpacing.sm),
                             Text(
                               l10n.delete,
-                              style: context.textTheme.bodyMedium?.copyWith(color: context.colors.error),
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: context.colors.error,
+                              ),
                             ),
                           ],
                         ),
@@ -3147,7 +3336,9 @@ class _WorkoutTemplateCard extends ConsumerWidget {
                   ),
                   const SizedBox(width: AppSpacing.xs),
                   // Duration display: real average or estimated
-                  if (stats != null && stats.totalCompletions > 0 && stats.avgDuration != null)
+                  if (stats != null &&
+                      stats.totalCompletions > 0 &&
+                      stats.avgDuration != null)
                     Text(
                       '${stats.avgDuration!.inMinutes}m',
                       style: context.textTheme.bodySmall?.copyWith(
@@ -3358,10 +3549,7 @@ class _CompactSupersetCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       minimumSize: const Size(0, 32),
                     ),
-                    child: Text(
-                      l10n.use,
-                      style: context.textTheme.labelSmall,
-                    ),
+                    child: Text(l10n.use, style: context.textTheme.labelSmall),
                   ),
                 ),
               ],
@@ -3460,10 +3648,7 @@ class _CompactDropsetCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       minimumSize: const Size(0, 32),
                     ),
-                    child: Text(
-                      l10n.use,
-                      style: context.textTheme.labelSmall,
-                    ),
+                    child: Text(l10n.use, style: context.textTheme.labelSmall),
                   ),
                 ),
               ],
@@ -3562,10 +3747,7 @@ class _CompactRestPauseCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       minimumSize: const Size(0, 32),
                     ),
-                    child: Text(
-                      l10n.use,
-                      style: context.textTheme.labelSmall,
-                    ),
+                    child: Text(l10n.use, style: context.textTheme.labelSmall),
                   ),
                 ),
               ],
@@ -3579,10 +3761,7 @@ class _CompactRestPauseCard extends StatelessWidget {
 
 /// Small difficulty badge for compact cards
 class _DifficultyBadge extends StatelessWidget {
-  const _DifficultyBadge({
-    required this.difficulty,
-    required this.color,
-  });
+  const _DifficultyBadge({required this.difficulty, required this.color});
 
   final String difficulty;
   final Color color;
@@ -3629,7 +3808,11 @@ class _CategoryFilterDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     final l10n = AppLocalizations.of(context);
 
     // Category data with localized names and icons
@@ -3637,7 +3820,11 @@ class _CategoryFilterDelegate extends SliverPersistentHeaderDelegate {
       (key: null, label: l10n.all, icon: AppIcons.gridView),
       (key: 'beginner', label: l10n.beginner, icon: AppIcons.school),
       (key: 'intermediate', label: l10n.intermediate, icon: AppIcons.trendUp),
-      (key: 'advanced', label: l10n.advanced, icon: AppIcons.localFireDepartment),
+      (
+        key: 'advanced',
+        label: l10n.advanced,
+        icon: AppIcons.localFireDepartment,
+      ),
       (key: 'home', label: l10n.homeWorkouts, icon: AppIcons.home),
       (key: 'dumbbell', label: l10n.dumbbellOnly, icon: AppIcons.workout),
       (key: 'express', label: l10n.express, icon: AppIcons.timer),
@@ -3677,12 +3864,16 @@ class _CategoryFilterDelegate extends SliverPersistentHeaderDelegate {
                     color: isSelected
                         ? context.colors.onSecondaryContainer
                         : context.colors.onSurfaceVariant,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                   selectedColor: context.colors.secondaryContainer,
                   backgroundColor: context.colors.surfaceContainerHighest,
                   side: BorderSide.none,
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.xs,
+                  ),
                   onSelected: (_) => onCategorySelected(category.key),
                 );
               },
@@ -3757,7 +3948,8 @@ class _DefaultTemplatePreviewSheet extends StatelessWidget {
                           Row(
                             children: [
                               // Only show difficulty badge if difficulty is not null
-                              if (template.difficulty != null && template.difficulty!.isNotEmpty)
+                              if (template.difficulty != null &&
+                                  template.difficulty!.isNotEmpty)
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: AppSpacing.sm,
@@ -3769,13 +3961,16 @@ class _DefaultTemplatePreviewSheet extends StatelessWidget {
                                   ),
                                   child: Text(
                                     template.difficulty!.toUpperCase(),
-                                    style: context.textTheme.labelSmall?.copyWith(
-                                      color: context.colors.onPrimaryContainer,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    style: context.textTheme.labelSmall
+                                        ?.copyWith(
+                                          color:
+                                              context.colors.onPrimaryContainer,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                   ),
                                 ),
-                              if (template.difficulty != null && template.difficulty!.isNotEmpty)
+                              if (template.difficulty != null &&
+                                  template.difficulty!.isNotEmpty)
                                 const SizedBox(width: AppSpacing.sm),
                               Text(
                                 '${template.exercises.length} ${l10n.exercises}',
@@ -3826,7 +4021,9 @@ class _DefaultTemplatePreviewSheet extends StatelessWidget {
               Expanded(
                 child: ListView.builder(
                   controller: scrollController,
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg,
+                  ),
                   itemCount: template.exercises.length,
                   itemBuilder: (context, index) {
                     final exercise = template.exercises[index];
@@ -3849,7 +4046,8 @@ class _DefaultTemplatePreviewSheet extends StatelessWidget {
                           color: context.colors.onSurfaceVariant,
                         ),
                       ),
-                      trailing: exercise.notes != null && exercise.notes!.isNotEmpty
+                      trailing:
+                          exercise.notes != null && exercise.notes!.isNotEmpty
                           ? IconButton(
                               onPressed: () => _showExerciseNotes(
                                 context,
@@ -3907,10 +4105,7 @@ class _DefaultTemplatePreviewSheet extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        content: Text(
-          notes,
-          style: context.textTheme.bodyMedium,
-        ),
+        content: Text(notes, style: context.textTheme.bodyMedium),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -4318,7 +4513,9 @@ class _PredefinedSupersetPreviewSheet extends StatelessWidget {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.3),
+                    color: context.colors.onSurfaceVariant.withValues(
+                      alpha: 0.3,
+                    ),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -4336,7 +4533,9 @@ class _PredefinedSupersetPreviewSheet extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: context.colors.secondary.withValues(alpha: 0.15),
+                            color: context.colors.secondary.withValues(
+                              alpha: 0.15,
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: SemanticIcon(
@@ -4358,22 +4557,24 @@ class _PredefinedSupersetPreviewSheet extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                  margin: const EdgeInsets.only(top: 4),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 2,
+                                margin: const EdgeInsets.only(top: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: context.colors.secondary.withValues(
+                                    alpha: 0.2,
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: context.colors.secondary.withValues(alpha: 0.2),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    template.difficulty.name,
-                                    style: context.textTheme.labelSmall?.copyWith(
-                                      color: context.colors.secondary,
-                                    ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  template.difficulty.name,
+                                  style: context.textTheme.labelSmall?.copyWith(
+                                    color: context.colors.secondary,
                                   ),
                                 ),
+                              ),
                             ],
                           ),
                         ),
@@ -4416,7 +4617,9 @@ class _PredefinedSupersetPreviewSheet extends StatelessWidget {
                     ...template.exerciseNames.asMap().entries.map((entry) {
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: context.colors.secondary.withValues(alpha: 0.2),
+                          backgroundColor: context.colors.secondary.withValues(
+                            alpha: 0.2,
+                          ),
                           child: Text(
                             '${entry.key + 1}',
                             style: TextStyle(color: context.colors.secondary),
@@ -4527,7 +4730,9 @@ class _PredefinedDropsetPreviewSheet extends StatelessWidget {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.3),
+                    color: context.colors.onSurfaceVariant.withValues(
+                      alpha: 0.3,
+                    ),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -4545,7 +4750,9 @@ class _PredefinedDropsetPreviewSheet extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: context.colors.tertiary.withValues(alpha: 0.15),
+                            color: context.colors.tertiary.withValues(
+                              alpha: 0.15,
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: SemanticIcon(
@@ -4567,22 +4774,24 @@ class _PredefinedDropsetPreviewSheet extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                  margin: const EdgeInsets.only(top: 4),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 2,
+                                margin: const EdgeInsets.only(top: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: context.colors.tertiary.withValues(
+                                    alpha: 0.2,
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: context.colors.tertiary.withValues(alpha: 0.2),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    template.difficulty.name,
-                                    style: context.textTheme.labelSmall?.copyWith(
-                                      color: context.colors.tertiary,
-                                    ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  template.difficulty.name,
+                                  style: context.textTheme.labelSmall?.copyWith(
+                                    color: context.colors.tertiary,
                                   ),
                                 ),
+                              ),
                             ],
                           ),
                         ),
@@ -4624,7 +4833,9 @@ class _PredefinedDropsetPreviewSheet extends StatelessWidget {
                     const SizedBox(height: AppSpacing.sm),
                     ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: context.colors.tertiary.withValues(alpha: 0.2),
+                        backgroundColor: context.colors.tertiary.withValues(
+                          alpha: 0.2,
+                        ),
                         child: SemanticIcon(
                           icon: AppIcons.workout,
                           semanticLabel: l10n.exercise,
@@ -4736,7 +4947,9 @@ class _PredefinedRestPausePreviewSheet extends StatelessWidget {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.3),
+                    color: context.colors.onSurfaceVariant.withValues(
+                      alpha: 0.3,
+                    ),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -4776,22 +4989,24 @@ class _PredefinedRestPausePreviewSheet extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                  margin: const EdgeInsets.only(top: 4),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 2,
+                                margin: const EdgeInsets.only(top: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: context.colors.error.withValues(
+                                    alpha: 0.2,
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: context.colors.error.withValues(alpha: 0.2),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    template.difficulty.name,
-                                    style: context.textTheme.labelSmall?.copyWith(
-                                      color: context.colors.error,
-                                    ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  template.difficulty.name,
+                                  style: context.textTheme.labelSmall?.copyWith(
+                                    color: context.colors.error,
                                   ),
                                 ),
+                              ),
                             ],
                           ),
                         ),
@@ -4833,7 +5048,9 @@ class _PredefinedRestPausePreviewSheet extends StatelessWidget {
                     const SizedBox(height: AppSpacing.sm),
                     ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: context.colors.error.withValues(alpha: 0.2),
+                        backgroundColor: context.colors.error.withValues(
+                          alpha: 0.2,
+                        ),
                         child: SemanticIcon(
                           icon: AppIcons.workout,
                           semanticLabel: l10n.exercise,

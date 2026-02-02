@@ -45,11 +45,9 @@ abstract class ExerciseRecords with _$ExerciseRecords {
     required double estimated1RM, // Estimated 1 rep max (Epley formula)
     required double totalVolumeRecord, // Highest single-workout volume (kg)
     required int totalSetsRecord, // Most sets in single workout
-
     /// Recent Activity
     required DateTime lastWorkoutDate, // Most recent workout date
     required double weeklyFrequency, // Avg workouts per week (last 4 weeks)
-
     /// Time Range
     required DateTime firstWorkoutDate, // First recorded workout
     required int totalWorkouts, // Total workout sessions

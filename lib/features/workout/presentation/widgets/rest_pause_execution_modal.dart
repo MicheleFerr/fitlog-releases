@@ -30,7 +30,8 @@ class RestPauseExecutionModal extends StatefulWidget {
   final int defaultRestSeconds;
 
   @override
-  State<RestPauseExecutionModal> createState() => _RestPauseExecutionModalState();
+  State<RestPauseExecutionModal> createState() =>
+      _RestPauseExecutionModalState();
 
   /// Show the modal and return updated sets with RPE
   static Future<RestPauseExecutionResult?> show({
@@ -46,7 +47,9 @@ class RestPauseExecutionModal extends StatefulWidget {
       isScrollControlled: true,
       isDismissible: false,
       enableDrag: false,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => RestPauseExecutionModal(
         exerciseName: exerciseName,
         weight: weight,
@@ -60,20 +63,17 @@ class RestPauseExecutionModal extends StatefulWidget {
 
 /// Result of rest-pause execution
 class RestPauseExecutionResult {
-  RestPauseExecutionResult({
-    required this.completedSets,
-    required this.rpe,
-  });
+  RestPauseExecutionResult({required this.completedSets, required this.rpe});
 
   final List<RestPauseSet> completedSets;
   final int? rpe;
 }
 
 enum _ExecutionPhase {
-  ready,      // Ready to start a set
-  resting,    // Resting between sets
-  logging,    // Logging reps for current set
-  completed,  // All done, showing summary
+  ready, // Ready to start a set
+  resting, // Resting between sets
+  logging, // Logging reps for current set
+  completed, // All done, showing summary
 }
 
 class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
@@ -87,7 +87,8 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
   int _restSecondsRemaining = 0;
   int? _selectedRpe;
 
-  int get _totalRepsCompleted => _completedSets.fold(0, (sum, set) => sum + set.effectiveReps);
+  int get _totalRepsCompleted =>
+      _completedSets.fold(0, (sum, set) => sum + set.effectiveReps);
   bool get _targetReached => _totalRepsCompleted >= widget.targetReps;
 
   @override
@@ -223,9 +224,7 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
         }
       },
       child: Container(
-        constraints: BoxConstraints(
-          maxHeight: context.screenHeight * 0.9,
-        ),
+        constraints: BoxConstraints(maxHeight: context.screenHeight * 0.9),
         decoration: BoxDecoration(
           color: context.colors.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -360,7 +359,9 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
               minHeight: 8,
               backgroundColor: context.colors.outline.withValues(alpha: 0.2),
               valueColor: AlwaysStoppedAnimation(
-                _targetReached ? context.colors.success : context.colors.primary,
+                _targetReached
+                    ? context.colors.success
+                    : context.colors.primary,
               ),
             ),
           ),
@@ -463,11 +464,7 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
           ),
           child: Column(
             children: [
-              Icon(
-                AppIcons.timer,
-                size: 48,
-                color: context.colors.tertiary,
-              ),
+              Icon(AppIcons.timer, size: 48, color: context.colors.tertiary),
               const SizedBox(height: 16),
               Text(
                 '$_restSecondsRemaining',
@@ -652,7 +649,9 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
               final set = entry.value;
               return Chip(
                 avatar: CircleAvatar(
-                  backgroundColor: context.colors.success.withValues(alpha: 0.2),
+                  backgroundColor: context.colors.success.withValues(
+                    alpha: 0.2,
+                  ),
                   child: Text(
                     '${index + 1}',
                     style: context.textTheme.labelSmall?.copyWith(

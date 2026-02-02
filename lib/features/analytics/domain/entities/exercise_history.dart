@@ -41,7 +41,6 @@ part 'exercise_history.g.dart';
 
 @freezed
 abstract class ExerciseHistory with _$ExerciseHistory {
-
   const factory ExerciseHistory({
     /// Unique identifier for the exercise (from database)
     /// Used for exact matching in suggestion engine
@@ -122,10 +121,7 @@ abstract class ExerciseHistory with _$ExerciseHistory {
   /// ```
   ///
   /// Returns sessions where: start <= session.date <= end
-  List<ExerciseSession> getSessionsByTimeframe(
-    DateTime start,
-    DateTime end,
-  ) {
+  List<ExerciseSession> getSessionsByTimeframe(DateTime start, DateTime end) {
     return sessions
         .where((s) => s.date.isAfter(start) && s.date.isBefore(end))
         .toList()
@@ -153,8 +149,10 @@ abstract class ExerciseHistory with _$ExerciseHistory {
   /// );
   /// ```
   double getTotalVolumeForTimeframe(DateTime start, DateTime end) {
-    return getSessionsByTimeframe(start, end)
-        .fold<double>(0, (sum, s) => sum + s.totalVolume);
+    return getSessionsByTimeframe(
+      start,
+      end,
+    ).fold<double>(0, (sum, s) => sum + s.totalVolume);
   }
 
   /// Find the session with the highest 1RM

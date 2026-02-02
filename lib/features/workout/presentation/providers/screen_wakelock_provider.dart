@@ -6,21 +6,17 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// Provider per gestire lo stato dello schermo always on durante l'allenamento
-final screenWakelockProvider = NotifierProvider<ScreenWakelockNotifier, ScreenWakelockState>(ScreenWakelockNotifier.new);
+final screenWakelockProvider =
+    NotifierProvider<ScreenWakelockNotifier, ScreenWakelockState>(
+      ScreenWakelockNotifier.new,
+    );
 
 class ScreenWakelockState {
-
-  const ScreenWakelockState({
-    required this.isEnabled,
-    required this.isActive,
-  });
+  const ScreenWakelockState({required this.isEnabled, required this.isActive});
   final bool isEnabled;
   final bool isActive;
 
-  ScreenWakelockState copyWith({
-    bool? isEnabled,
-    bool? isActive,
-  }) {
+  ScreenWakelockState copyWith({bool? isEnabled, bool? isActive}) {
     return ScreenWakelockState(
       isEnabled: isEnabled ?? this.isEnabled,
       isActive: isActive ?? this.isActive,
@@ -29,7 +25,6 @@ class ScreenWakelockState {
 }
 
 class ScreenWakelockNotifier extends Notifier<ScreenWakelockState> {
-
   @override
   ScreenWakelockState build() {
     _loadPreference();
@@ -42,7 +37,9 @@ class ScreenWakelockNotifier extends Notifier<ScreenWakelockState> {
         unawaited(
           WakelockPlus.disable().catchError((error) {
             if (kDebugMode) {
-              debugPrint('⚠️ [Wakelock] Error disabling wakelock in dispose: $error');
+              debugPrint(
+                '⚠️ [Wakelock] Error disabling wakelock in dispose: $error',
+              );
             }
             // Don't rethrow - we're in dispose, just log the error
             return null;
@@ -55,7 +52,8 @@ class ScreenWakelockNotifier extends Notifier<ScreenWakelockState> {
   }
 
   // 🔐 User-scoped cache key
-  String get _prefsKey => userCacheKeys.userScopedKey('workout_screen_always_on');
+  String get _prefsKey =>
+      userCacheKeys.userScopedKey('workout_screen_always_on');
 
   Future<void> _loadPreference() async {
     final prefs = await SharedPreferences.getInstance();

@@ -148,9 +148,7 @@ abstract class IHealthRepository {
   ///
   /// await repository.writeBodyWeight(measurement);
   /// ```
-  Future<Either<Failure, void>> writeBodyWeight(
-    BodyMeasurement measurement,
-  );
+  Future<Either<Failure, void>> writeBodyWeight(BodyMeasurement measurement);
 
   // ============================================================
   // SYNC STATUS & HISTORY

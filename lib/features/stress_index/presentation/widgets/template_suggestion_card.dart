@@ -47,14 +47,14 @@ class TemplateSuggestionCard extends ConsumerWidget {
         // If best template is "avoid", show rest day suggestion instead
         if (best.recommendation == TemplateRecommendation.avoid) {
           // Check if there's an acceptable alternative
-          final acceptable = analyses.skip(1).where((a) =>
-              a.recommendation != TemplateRecommendation.avoid).toList();
+          final acceptable = analyses
+              .skip(1)
+              .where((a) => a.recommendation != TemplateRecommendation.avoid)
+              .toList();
 
           if (acceptable.isEmpty) {
             // All templates should be avoided - suggest rest day
-            return _RestDaySuggestionCard(
-              bestAnalysis: best,
-            );
+            return _RestDaySuggestionCard(bestAnalysis: best);
           }
 
           // Show the best acceptable alternative instead
@@ -100,7 +100,10 @@ class TemplateSuggestionCard extends ConsumerWidget {
     );
   }
 
-  void _handleTemplateTap(BuildContext context, TemplateStressAnalysis analysis) {
+  void _handleTemplateTap(
+    BuildContext context,
+    TemplateStressAnalysis analysis,
+  ) {
     HapticFeedback.mediumImpact();
     // Navigate to template detail
     context.push('/templates/detail', extra: analysis.templateId);
@@ -166,10 +169,7 @@ class _TemplateSuggestionContent extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: color.withValues(alpha: 0.25),
-          width: 1.5,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.25), width: 1.5),
         boxShadow: [
           BoxShadow(
             color: context.colors.shadow.withValues(alpha: 0.08),
@@ -266,7 +266,9 @@ class _TemplateSuggestionContent extends StatelessWidget {
                               Text(
                                 '%',
                                 style: context.textTheme.bodySmall?.copyWith(
-                                  color: context.colors.surface.withValues(alpha: 0.8),
+                                  color: context.colors.surface.withValues(
+                                    alpha: 0.8,
+                                  ),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -287,9 +289,7 @@ class _TemplateSuggestionContent extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: color.withValues(alpha: 0.3),
-                      ),
+                      border: Border.all(color: color.withValues(alpha: 0.3)),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -317,7 +317,9 @@ class _TemplateSuggestionContent extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+                      color: context.colors.surfaceContainerHighest.withValues(
+                        alpha: 0.5,
+                      ),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -334,7 +336,9 @@ class _TemplateSuggestionContent extends StatelessWidget {
                           child: Text(
                             analysis.rationale,
                             style: context.textTheme.bodyMedium?.copyWith(
-                              color: context.colors.onSurface.withValues(alpha: 0.85),
+                              color: context.colors.onSurface.withValues(
+                                alpha: 0.85,
+                              ),
                               height: 1.4,
                             ),
                             maxLines: 3,
@@ -539,7 +543,10 @@ class _TemplateSuggestionContent extends StatelessWidget {
                         onTap: () {
                           Navigator.of(sheetContext).pop();
                           HapticFeedback.mediumImpact();
-                          context.push('/templates/detail', extra: alt.templateId);
+                          context.push(
+                            '/templates/detail',
+                            extra: alt.templateId,
+                          );
                         },
                       );
                     },
@@ -556,10 +563,7 @@ class _TemplateSuggestionContent extends StatelessWidget {
 
 /// List tile for alternative template in bottom sheet
 class _AlternativeListTile extends StatelessWidget {
-  const _AlternativeListTile({
-    required this.analysis,
-    required this.onTap,
-  });
+  const _AlternativeListTile({required this.analysis, required this.onTap});
 
   final TemplateStressAnalysis analysis;
   final VoidCallback onTap;
@@ -654,9 +658,7 @@ class _AlternativeListTile extends StatelessWidget {
 ///
 /// Includes "Complete your split" option with scientific context
 class _RestDaySuggestionCard extends StatelessWidget {
-  const _RestDaySuggestionCard({
-    required this.bestAnalysis,
-  });
+  const _RestDaySuggestionCard({required this.bestAnalysis});
 
   final TemplateStressAnalysis bestAnalysis;
 
@@ -672,10 +674,7 @@ class _RestDaySuggestionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: color.withValues(alpha: 0.25),
-          width: 1.5,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.25), width: 1.5),
         boxShadow: [
           BoxShadow(
             color: context.colors.shadow.withValues(alpha: 0.08),
@@ -811,7 +810,9 @@ class _RestDaySuggestionCard extends StatelessWidget {
         .join(', ');
 
     final moreCount = fatiguedMuscles.length - 3;
-    final displayText = moreCount > 0 ? '$muscleNames +$moreCount' : muscleNames;
+    final displayText = moreCount > 0
+        ? '$muscleNames +$moreCount'
+        : muscleNames;
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -845,7 +846,10 @@ class _RestDaySuggestionCard extends StatelessWidget {
     );
   }
 
-  Widget _buildCompleteSplitSection(BuildContext context, double primaryRecovery) {
+  Widget _buildCompleteSplitSection(
+    BuildContext context,
+    double primaryRecovery,
+  ) {
     // Get primary muscle names for this template
     final primaryMuscleNames = bestAnalysis.primaryMuscles
         .take(3)
@@ -854,7 +858,9 @@ class _RestDaySuggestionCard extends StatelessWidget {
 
     // Determine if primary muscles are actually OK (>60%)
     final primaryMusclesOk = primaryRecovery >= 60;
-    final cardColor = primaryMusclesOk ? context.warningColor : context.errorColor;
+    final cardColor = primaryMusclesOk
+        ? context.warningColor
+        : context.errorColor;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -905,7 +911,10 @@ class _RestDaySuggestionCard extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: cardColor,
                       borderRadius: BorderRadius.circular(12),
@@ -935,7 +944,9 @@ class _RestDaySuggestionCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: context.colors.surfaceContainerHighest.withValues(alpha: 0.6),
+                  color: context.colors.surfaceContainerHighest.withValues(
+                    alpha: 0.6,
+                  ),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -955,7 +966,9 @@ class _RestDaySuggestionCard extends StatelessWidget {
                           primaryRecovery.round(),
                         ),
                         style: context.textTheme.bodySmall?.copyWith(
-                          color: context.colors.onSurface.withValues(alpha: 0.8),
+                          color: context.colors.onSurface.withValues(
+                            alpha: 0.8,
+                          ),
                           fontStyle: FontStyle.italic,
                           height: 1.3,
                         ),
@@ -972,7 +985,10 @@ class _RestDaySuggestionCard extends StatelessWidget {
                 child: FilledButton.icon(
                   onPressed: () {
                     HapticFeedback.mediumImpact();
-                    context.push('/templates/detail', extra: bestAnalysis.templateId);
+                    context.push(
+                      '/templates/detail',
+                      extra: bestAnalysis.templateId,
+                    );
                   },
                   icon: SemanticIcon(
                     icon: primaryMusclesOk ? AppIcons.play : AppIcons.warning,

@@ -47,7 +47,9 @@ class AddDropsetStageModal extends StatefulWidget {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => AddDropsetStageModal(
         exerciseName: exerciseName,
         lastStageWeight: lastStageWeight,
@@ -70,7 +72,10 @@ class _AddDropsetStageModalState extends State<AddDropsetStageModal> {
     super.initState();
 
     // Suggest a -5kg drop by default
-    final suggestedWeight = (widget.lastStageWeight - 5.0).clamp(0.0, double.infinity);
+    final suggestedWeight = (widget.lastStageWeight - 5.0).clamp(
+      0.0,
+      double.infinity,
+    );
 
     _weightController = TextEditingController(
       text: suggestedWeight > 0 ? suggestedWeight.toStringAsFixed(1) : '',
@@ -88,7 +93,10 @@ class _AddDropsetStageModalState extends State<AddDropsetStageModal> {
   }
 
   void _applyQuickDrop(double dropAmount) {
-    final newWeight = (widget.lastStageWeight - dropAmount).clamp(0.0, double.infinity);
+    final newWeight = (widget.lastStageWeight - dropAmount).clamp(
+      0.0,
+      double.infinity,
+    );
     setState(() {
       _weightController.text = newWeight.toStringAsFixed(1);
     });
@@ -118,9 +126,7 @@ class _AddDropsetStageModalState extends State<AddDropsetStageModal> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(
-        maxHeight: context.screenHeight * 0.7,
-      ),
+      constraints: BoxConstraints(maxHeight: context.screenHeight * 0.7),
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -198,7 +204,8 @@ class _AddDropsetStageModalState extends State<AddDropsetStageModal> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+                        color: context.colors.surfaceContainerHighest
+                            .withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -237,7 +244,9 @@ class _AddDropsetStageModalState extends State<AddDropsetStageModal> {
                       runSpacing: 8,
                       children: quickDropValues.map((drop) {
                         return ActionChip(
-                          label: Text('-${drop.toStringAsFixed(drop == 2.5 ? 1 : 0)} kg'),
+                          label: Text(
+                            '-${drop.toStringAsFixed(drop == 2.5 ? 1 : 0)} kg',
+                          ),
                           onPressed: () => _applyQuickDrop(drop),
                           avatar: Icon(
                             AppIcons.arrowDownward,
@@ -266,9 +275,14 @@ class _AddDropsetStageModalState extends State<AddDropsetStageModal> {
                               const SizedBox(height: 8),
                               TextField(
                                 controller: _weightController,
-                                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
                                 inputFormatters: [
-                                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d+\.?\d{0,1}'),
+                                  ),
                                 ],
                                 textAlign: TextAlign.center,
                                 style: context.textTheme.titleLarge?.copyWith(

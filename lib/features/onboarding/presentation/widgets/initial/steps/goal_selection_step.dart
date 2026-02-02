@@ -157,10 +157,7 @@ class _GoalCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
-                child: Text(
-                  emoji,
-                  style: const TextStyle(fontSize: 32),
-                ),
+                child: Text(emoji, style: const TextStyle(fontSize: 32)),
               ),
             ),
 

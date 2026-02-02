@@ -29,29 +29,30 @@ import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/h
 ///   error: (err, stack) => Text('Error: $err'),
 /// );
 /// ```
-final healthSyncStatusProvider = FutureProvider.family<HealthSyncStatus, HealthDataType>(
-  (ref, dataType) async {
-    // P0 FIX: Add proper error handling
-    try {
-      final repository = ref.watch(healthRepositoryProvider);
+final healthSyncStatusProvider =
+    FutureProvider.family<HealthSyncStatus, HealthDataType>((
+      ref,
+      dataType,
+    ) async {
+      // P0 FIX: Add proper error handling
+      try {
+        final repository = ref.watch(healthRepositoryProvider);
 
-      final result = await repository.getLastSyncStatus(dataType);
+        final result = await repository.getLastSyncStatus(dataType);
 
-      return result.fold(
-        (failure) {
-          throw Exception('Failed to get sync status for ${dataType.name}: ${failure.toString()}');
-        },
-        (status) => status,
-      );
-    } catch (e, stackTrace) {
-      // Re-throw with context for better debugging
-      Error.throwWithStackTrace(
-        Exception('HealthSyncStatus error for ${dataType.name}: $e'),
-        stackTrace,
-      );
-    }
-  },
-);
+        return result.fold((failure) {
+          throw Exception(
+            'Failed to get sync status for ${dataType.name}: ${failure.toString()}',
+          );
+        }, (status) => status);
+      } catch (e, stackTrace) {
+        // Re-throw with context for better debugging
+        Error.throwWithStackTrace(
+          Exception('HealthSyncStatus error for ${dataType.name}: $e'),
+          stackTrace,
+        );
+      }
+    });
 
 /// Provider that exposes sync history for a data type (last 30 days).
 ///
@@ -62,32 +63,32 @@ final healthSyncStatusProvider = FutureProvider.family<HealthSyncStatus, HealthD
 /// );
 /// ```
 final healthSyncHistoryProvider =
-    FutureProvider.family<List<HealthSyncStatus>, HealthDataType>(
-  (ref, dataType) async {
-    // P0 FIX: Add proper error handling
-    try {
-      final repository = ref.watch(healthRepositoryProvider);
+    FutureProvider.family<List<HealthSyncStatus>, HealthDataType>((
+      ref,
+      dataType,
+    ) async {
+      // P0 FIX: Add proper error handling
+      try {
+        final repository = ref.watch(healthRepositoryProvider);
 
-      final result = await repository.getSyncHistory(
-        dataType: dataType,
-        since: DateTime.now().subtract(const Duration(days: 30)),
-      );
+        final result = await repository.getSyncHistory(
+          dataType: dataType,
+          since: DateTime.now().subtract(const Duration(days: 30)),
+        );
 
-      return result.fold(
-        (failure) {
-          throw Exception('Failed to get sync history for ${dataType.name}: ${failure.toString()}');
-        },
-        (history) => history,
-      );
-    } catch (e, stackTrace) {
-      // Re-throw with context for better debugging
-      Error.throwWithStackTrace(
-        Exception('HealthSyncHistory error for ${dataType.name}: $e'),
-        stackTrace,
-      );
-    }
-  },
-);
+        return result.fold((failure) {
+          throw Exception(
+            'Failed to get sync history for ${dataType.name}: ${failure.toString()}',
+          );
+        }, (history) => history);
+      } catch (e, stackTrace) {
+        // Re-throw with context for better debugging
+        Error.throwWithStackTrace(
+          Exception('HealthSyncHistory error for ${dataType.name}: $e'),
+          stackTrace,
+        );
+      }
+    });
 
 // ============================================================
 // MEASUREMENTS PROVIDERS
@@ -105,33 +106,33 @@ final healthSyncHistoryProvider =
 /// );
 /// ```
 final bodyMeasurementsProvider =
-    FutureProvider.family<List<BodyMeasurement>, HealthDataType>(
-  (ref, dataType) async {
-    // P0 FIX: Add proper error handling
-    try {
-      final repository = ref.watch(healthRepositoryProvider);
+    FutureProvider.family<List<BodyMeasurement>, HealthDataType>((
+      ref,
+      dataType,
+    ) async {
+      // P0 FIX: Add proper error handling
+      try {
+        final repository = ref.watch(healthRepositoryProvider);
 
-      final result = await repository.getMeasurements(
-        dataType: dataType,
-        startDate: DateTime.now().subtract(const Duration(days: 90)),
-        endDate: DateTime.now(),
-      );
+        final result = await repository.getMeasurements(
+          dataType: dataType,
+          startDate: DateTime.now().subtract(const Duration(days: 90)),
+          endDate: DateTime.now(),
+        );
 
-      return result.fold(
-        (failure) {
-          throw Exception('Failed to get measurements for ${dataType.name}: ${failure.toString()}');
-        },
-        (measurements) => measurements,
-      );
-    } catch (e, stackTrace) {
-      // Re-throw with context for better debugging
-      Error.throwWithStackTrace(
-        Exception('BodyMeasurements error for ${dataType.name}: $e'),
-        stackTrace,
-      );
-    }
-  },
-);
+        return result.fold((failure) {
+          throw Exception(
+            'Failed to get measurements for ${dataType.name}: ${failure.toString()}',
+          );
+        }, (measurements) => measurements);
+      } catch (e, stackTrace) {
+        // Re-throw with context for better debugging
+        Error.throwWithStackTrace(
+          Exception('BodyMeasurements error for ${dataType.name}: $e'),
+          stackTrace,
+        );
+      }
+    });
 
 // ============================================================
 // SYNC CONTROLLER
@@ -168,8 +169,8 @@ final bodyMeasurementsProvider =
 /// ```
 final healthSyncControllerProvider =
     NotifierProvider<HealthSyncController, AsyncValue<void>>(
-  HealthSyncController.new,
-);
+      HealthSyncController.new,
+    );
 
 class HealthSyncController extends Notifier<AsyncValue<void>> {
   @override
@@ -193,10 +194,8 @@ class HealthSyncController extends Notifier<AsyncValue<void>> {
     );
 
     state = result.fold(
-      (failure) => AsyncValue.error(
-        Exception(failure.toString()),
-        StackTrace.current,
-      ),
+      (failure) =>
+          AsyncValue.error(Exception(failure.toString()), StackTrace.current),
       (_) => const AsyncValue.data(null),
     );
   }
@@ -217,10 +216,8 @@ class HealthSyncController extends Notifier<AsyncValue<void>> {
     );
 
     state = result.fold(
-      (failure) => AsyncValue.error(
-        Exception(failure.toString()),
-        StackTrace.current,
-      ),
+      (failure) =>
+          AsyncValue.error(Exception(failure.toString()), StackTrace.current),
       (_) => const AsyncValue.data(null),
     );
   }
@@ -250,10 +247,8 @@ class HealthSyncController extends Notifier<AsyncValue<void>> {
     final result = await _repository.writeBodyWeight(measurement);
 
     state = result.fold(
-      (failure) => AsyncValue.error(
-        Exception(failure.toString()),
-        StackTrace.current,
-      ),
+      (failure) =>
+          AsyncValue.error(Exception(failure.toString()), StackTrace.current),
       (_) => const AsyncValue.data(null),
     );
   }
@@ -279,10 +274,8 @@ class HealthSyncController extends Notifier<AsyncValue<void>> {
     final result = await _repository.retryFailedSync(dataType);
 
     state = result.fold(
-      (failure) => AsyncValue.error(
-        Exception(failure.toString()),
-        StackTrace.current,
-      ),
+      (failure) =>
+          AsyncValue.error(Exception(failure.toString()), StackTrace.current),
       (_) => const AsyncValue.data(null),
     );
   }
@@ -301,10 +294,8 @@ class HealthSyncController extends Notifier<AsyncValue<void>> {
     final result = await _repository.clearSyncCache();
 
     state = result.fold(
-      (failure) => AsyncValue.error(
-        Exception(failure.toString()),
-        StackTrace.current,
-      ),
+      (failure) =>
+          AsyncValue.error(Exception(failure.toString()), StackTrace.current),
       (_) => const AsyncValue.data(null),
     );
   }

@@ -63,11 +63,7 @@ class TemplateFoldersSection extends ConsumerWidget {
       padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
         children: [
-          Icon(
-            AppIcons.folderOpen,
-            size: 48,
-            color: context.colors.outline,
-          ),
+          Icon(AppIcons.folderOpen, size: 48, color: context.colors.outline),
           const SizedBox(height: AppSpacing.sm),
           Text(
             context.l10n.noFolders,
@@ -132,10 +128,9 @@ class TemplateFoldersSection extends ConsumerWidget {
   ) {
     if (newIndex > oldIndex) newIndex--;
     final folder = folders[oldIndex];
-    ref.read(templateFoldersProvider.notifier).updateSortOrder(
-          folder.id,
-          newIndex,
-        );
+    ref
+        .read(templateFoldersProvider.notifier)
+        .updateSortOrder(folder.id, newIndex);
   }
 
   Future<void> _showCreateFolderDialog(
@@ -212,10 +207,9 @@ class TemplateFoldersSection extends ConsumerWidget {
 
     if (result == true && nameController.text.trim().isNotEmpty) {
       await HapticFeedback.mediumImpact();
-      await ref.read(templateFoldersProvider.notifier).createFolder(
-            name: nameController.text.trim(),
-            icon: selectedIcon,
-          );
+      await ref
+          .read(templateFoldersProvider.notifier)
+          .createFolder(name: nameController.text.trim(), icon: selectedIcon);
       if (context.mounted) {
         SnackBarService.showSuccess(context, context.l10n.folderCreated);
       }
@@ -298,7 +292,9 @@ class TemplateFoldersSection extends ConsumerWidget {
 
     if (result == true && nameController.text.trim().isNotEmpty) {
       await HapticFeedback.mediumImpact();
-      await ref.read(templateFoldersProvider.notifier).updateFolder(
+      await ref
+          .read(templateFoldersProvider.notifier)
+          .updateFolder(
             folder.id,
             name: nameController.text.trim(),
             icon: selectedIcon,
@@ -411,20 +407,14 @@ class _FolderTile extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton(
-            icon: const Icon(AppIcons.edit),
-            onPressed: onEdit,
-          ),
+          IconButton(icon: const Icon(AppIcons.edit), onPressed: onEdit),
           IconButton(
             icon: Icon(AppIcons.delete, color: context.colors.error),
             onPressed: onDelete,
           ),
           ReorderableDragStartListener(
             index: 0,
-            child: Icon(
-              AppIcons.dragHandle,
-              color: context.colors.outline,
-            ),
+            child: Icon(AppIcons.dragHandle, color: context.colors.outline),
           ),
         ],
       ),

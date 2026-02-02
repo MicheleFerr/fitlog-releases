@@ -41,8 +41,8 @@ class ExerciseUpgradeService {
   ExerciseUpgradeService({
     required WorkoutHistoryRepositoryEnhanced historyRepository,
     required TemplateRepository templateRepository,
-  })  : _historyRepository = historyRepository,
-        _templateRepository = templateRepository;
+  }) : _historyRepository = historyRepository,
+       _templateRepository = templateRepository;
 
   final WorkoutHistoryRepositoryEnhanced _historyRepository;
   final TemplateRepository _templateRepository;
@@ -89,7 +89,10 @@ class ExerciseUpgradeService {
     }
 
     if (updateTemplates) {
-      updatedCount += await _updateInTemplates(oldExerciseName, newExerciseName);
+      updatedCount += await _updateInTemplates(
+        oldExerciseName,
+        newExerciseName,
+      );
     }
 
     if (kDebugMode) {
@@ -165,58 +168,53 @@ class ExerciseUpgradeService {
   }
 
   /// Update exercise name in workout history
-  Future<int> _updateInWorkouts(
-    String oldName,
-    String newName,
-  ) async {
+  Future<int> _updateInWorkouts(String oldName, String newName) async {
     try {
       final result = await _historyRepository.getWorkouts();
 
-      return await result.fold(
-        (failure) async => 0,
-        (workouts) async {
-          int updatedCount = 0;
-          final normalizedOld = oldName.toLowerCase().trim();
+      return await result.fold((failure) async => 0, (workouts) async {
+        int updatedCount = 0;
+        final normalizedOld = oldName.toLowerCase().trim();
 
-          for (final workout in workouts) {
-            bool hasMatch = false;
+        for (final workout in workouts) {
+          bool hasMatch = false;
 
-            // Check if workout contains the exercise
-            final updatedExercises = workout.exercises.map((exercise) {
-              if (exercise.name.toLowerCase().trim() == normalizedOld) {
-                hasMatch = true;
-                return exercise.copyWith(name: newName);
-              }
-              return exercise;
-            }).toList();
-
-            if (hasMatch) {
-              // Update workout with new exercise names using copyWith
-              final updatedWorkout = workout.copyWith(
-                exercises: updatedExercises,
-                updatedAt: DateTime.now(),
-              );
-
-              final updateResult =
-                  await _historyRepository.updateWorkout(updatedWorkout);
-              updateResult.fold(
-                (failure) {
-                  if (kDebugMode) {
-                    debugPrint(
-                      '⚠️ [ExerciseUpgrade] Failed to update workout ${workout.id}',
-                    );
-                  }
-                },
-                (_) {
-                  updatedCount++;
-                },
-              );
+          // Check if workout contains the exercise
+          final updatedExercises = workout.exercises.map((exercise) {
+            if (exercise.name.toLowerCase().trim() == normalizedOld) {
+              hasMatch = true;
+              return exercise.copyWith(name: newName);
             }
-          }
+            return exercise;
+          }).toList();
 
-          return updatedCount;
-        },
-      );
+          if (hasMatch) {
+            // Update workout with new exercise names using copyWith
+            final updatedWorkout = workout.copyWith(
+              exercises: updatedExercises,
+              updatedAt: DateTime.now(),
+            );
+
+            final updateResult = await _historyRepository.updateWorkout(
+              updatedWorkout,
+            );
+            updateResult.fold(
+              (failure) {
+                if (kDebugMode) {
+                  debugPrint(
+                    '⚠️ [ExerciseUpgrade] Failed to update workout ${workout.id}',
+                  );
+                }
+              },
+              (_) {
+                updatedCount++;
+              },
+            );
+          }
+        }
+
+        return updatedCount;
+      });
     } catch (e) {
       if (kDebugMode) {
         debugPrint('⚠️ [ExerciseUpgrade] Error updating workouts: $e');
@@ -226,10 +224,7 @@ class ExerciseUpgradeService {
   }
 
   /// Update exercise name in templates
-  Future<int> _updateInTemplates(
-    String oldName,
-    String newName,
-  ) async {
+  Future<int> _updateInTemplates(String oldName, String newName) async {
     try {
       final templates = await _templateRepository.getUserTemplates();
       final affectedTemplateIds = <String>[];

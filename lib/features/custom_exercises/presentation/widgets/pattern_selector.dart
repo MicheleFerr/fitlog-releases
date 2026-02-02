@@ -161,11 +161,7 @@ class _PatternInfoButton extends StatelessWidget {
       onTap: () => _showPatternInfoDialog(context),
       child: Tooltip(
         message: context.l10n.info,
-        child: Icon(
-          AppIcons.info,
-          size: 18,
-          color: colorScheme.primary,
-        ),
+        child: Icon(AppIcons.info, size: 18, color: colorScheme.primary),
       ),
     );
   }
@@ -178,10 +174,7 @@ class _PatternInfoButton extends StatelessWidget {
       builder: (context) => AlertDialog(
         title: Row(
           children: [
-            Icon(
-              AppIcons.help,
-              color: colorScheme.primary,
-            ),
+            Icon(AppIcons.help, color: colorScheme.primary),
             const SizedBox(width: 8),
             Text(context.l10n.movementPattern),
           ],

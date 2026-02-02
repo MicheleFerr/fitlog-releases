@@ -89,7 +89,9 @@ class WebLandingPage extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(AppSpacing.lg),
                       decoration: BoxDecoration(
-                        color: context.colors.primaryContainer.withValues(alpha: 0.5),
+                        color: context.colors.primaryContainer.withValues(
+                          alpha: 0.5,
+                        ),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: context.colors.primary.withValues(alpha: 0.3),
@@ -208,25 +210,20 @@ class WebLandingPage extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.md),
-        ...features.map((feature) => Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-              child: Row(
-                children: [
-                  Icon(
-                    feature.$1,
-                    size: 24,
-                    color: context.colors.primary,
-                  ),
-                  const SizedBox(width: AppSpacing.md),
-                  Expanded(
-                    child: Text(
-                      feature.$2,
-                      style: context.textTheme.bodyLarge,
-                    ),
-                  ),
-                ],
-              ),
-            )),
+        ...features.map(
+          (feature) => Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+            child: Row(
+              children: [
+                Icon(feature.$1, size: 24, color: context.colors.primary),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Text(feature.$2, style: context.textTheme.bodyLarge),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }

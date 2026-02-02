@@ -36,7 +36,6 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 /// - Peso 120 kg vs Reps 4 → normalizzati visivamente
 /// - Tooltip mostra valori reali: "Peso: 120.0 kg", "Reps: 4"
 class MultiMetricChart extends StatefulWidget {
-
   const MultiMetricChart({
     super.key,
     required this.dataByMetric,
@@ -93,11 +92,10 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SemanticIcon(
-  icon: AppIcons.infoOutline,
-  semanticLabel: 'Info outline',
-  size: AppIconSize.tiny,
-  color: context.colors.onSurface.withValues(alpha: 0.5,
-),
+                  icon: AppIcons.infoOutline,
+                  semanticLabel: 'Info outline',
+                  size: AppIconSize.tiny,
+                  color: context.colors.onSurface.withValues(alpha: 0.5),
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -154,21 +152,28 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
                         return Text(
                           DateFormat('dd/MM').format(date),
                           style: context.textTheme.labelSmall?.copyWith(
-                            color: context.colors.onSurface.withValues(alpha: 0.6),
+                            color: context.colors.onSurface.withValues(
+                              alpha: 0.6,
+                            ),
                           ),
                         );
                       },
                     ),
                   ),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                 ),
                 borderData: FlBorderData(show: false),
                 lineBarsData: _buildLineBarsData(context, visibleMetrics),
                 lineTouchData: LineTouchData(
                   touchTooltipData: LineTouchTooltipData(
                     getTooltipColor: (touchedSpot) => context.colors.surface,
-                    getTooltipItems: (touchedSpots) => _buildTooltipItems(context, touchedSpots),
+                    getTooltipItems: (touchedSpots) =>
+                        _buildTooltipItems(context, touchedSpots),
                   ),
                 ),
               ),
@@ -249,7 +254,10 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
   /// - Normalizza valori a scala 0-100
   /// - Salva valori originali in _originalValues per tooltip
   /// - Tutte le metriche ora visibili (Peso 120 kg e Reps 4 entrambi visibili)
-  List<LineChartBarData> _buildLineBarsData(BuildContext context, List<String> visibleMetrics) {
+  List<LineChartBarData> _buildLineBarsData(
+    BuildContext context,
+    List<String> visibleMetrics,
+  ) {
     final allDates = _getAllUniqueDates();
     final bars = <LineChartBarData>[];
 
@@ -275,9 +283,10 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
       final spots = <FlSpot>[];
       for (final point in dataPoints) {
         final dateIndex = allDates.indexWhere(
-          (d) => d.year == point.date.year &&
-                 d.month == point.date.month &&
-                 d.day == point.date.day,
+          (d) =>
+              d.year == point.date.year &&
+              d.month == point.date.month &&
+              d.day == point.date.day,
         );
         if (dateIndex != -1) {
           // Salva valore originale
@@ -300,12 +309,13 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
           barWidth: 2.5,
           dotData: FlDotData(
             show: true,
-            getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
-              radius: 3,
-              color: color,
-              strokeWidth: 1.5,
-              strokeColor: context.colors.surface,
-            ),
+            getDotPainter: (spot, percent, barData, index) =>
+                FlDotCirclePainter(
+                  radius: 3,
+                  color: color,
+                  strokeWidth: 1.5,
+                  strokeColor: context.colors.surface,
+                ),
           ),
           belowBarData: BarAreaData(show: false),
         ),
@@ -322,7 +332,10 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
   /// - Primo item contiene data + tutti i valori metriche
   /// - Restanti items sono null
   /// - Usa _originalValues per recuperare valori reali
-  List<LineTooltipItem?> _buildTooltipItems(BuildContext context, List<LineBarSpot> touchedSpots) {
+  List<LineTooltipItem?> _buildTooltipItems(
+    BuildContext context,
+    List<LineBarSpot> touchedSpots,
+  ) {
     if (touchedSpots.isEmpty) return [];
 
     final dateIndex = touchedSpots.first.x.toInt();
@@ -371,25 +384,29 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
         final children = <TextSpan>[];
 
         for (final line in metricLines) {
-          children.add(TextSpan(
-            text: '\n${line.text}',
-            style: TextStyle(
-              color: line.color,
-              fontWeight: FontWeight.w500,
-              fontSize: 10,
+          children.add(
+            TextSpan(
+              text: '\n${line.text}',
+              style: TextStyle(
+                color: line.color,
+                fontWeight: FontWeight.w500,
+                fontSize: 10,
+              ),
             ),
-          ));
+          );
         }
 
-        result.add(LineTooltipItem(
-          DateFormat('dd/MM').format(date),
-          TextStyle(
-            color: context.colors.onSurface,
-            fontWeight: FontWeight.bold,
-            fontSize: 11,
+        result.add(
+          LineTooltipItem(
+            DateFormat('dd/MM').format(date),
+            TextStyle(
+              color: context.colors.onSurface,
+              fontWeight: FontWeight.bold,
+              fontSize: 11,
+            ),
+            children: children,
           ),
-          children: children,
-        ));
+        );
       } else {
         // Remaining items are null (fl_chart requires exactly touchedSpots.length)
         result.add(null);
@@ -472,23 +489,31 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
     final repsData = widget.dataByMetric['Reps'] ?? [];
     final rpeData = widget.dataByMetric['RPE'] ?? [];
 
-    final lastPeso = pesoData.firstWhere(
-      (p) => _sameDay(p.date, lastDate),
-      orElse: () => pesoData.last,
-    ).value;
-    final prevPeso = pesoData.firstWhere(
-      (p) => _sameDay(p.date, prevDate),
-      orElse: () => pesoData.first,
-    ).value;
+    final lastPeso = pesoData
+        .firstWhere(
+          (p) => _sameDay(p.date, lastDate),
+          orElse: () => pesoData.last,
+        )
+        .value;
+    final prevPeso = pesoData
+        .firstWhere(
+          (p) => _sameDay(p.date, prevDate),
+          orElse: () => pesoData.first,
+        )
+        .value;
 
-    final lastReps = repsData.firstWhere(
-      (p) => _sameDay(p.date, lastDate),
-      orElse: () => repsData.last,
-    ).value;
-    final prevReps = repsData.firstWhere(
-      (p) => _sameDay(p.date, prevDate),
-      orElse: () => repsData.first,
-    ).value;
+    final lastReps = repsData
+        .firstWhere(
+          (p) => _sameDay(p.date, lastDate),
+          orElse: () => repsData.last,
+        )
+        .value;
+    final prevReps = repsData
+        .firstWhere(
+          (p) => _sameDay(p.date, prevDate),
+          orElse: () => repsData.first,
+        )
+        .value;
 
     final pesoDiff = lastPeso - prevPeso;
     final repsDiff = lastReps - prevReps;
@@ -529,7 +554,10 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
 
     // ✅ Pattern 4: RPE sempre alto (media >9) → Recupero
     if (rpeData.length >= 3) {
-      final lastThreeRPE = rpeData.reversed.take(3).map((p) => p.value).toList();
+      final lastThreeRPE = rpeData.reversed
+          .take(3)
+          .map((p) => p.value)
+          .toList();
       final avgRPE = lastThreeRPE.reduce((a, b) => a + b) / lastThreeRPE.length;
       if (avgRPE > 9) {
         return _InsightData(
@@ -577,11 +605,7 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
               color: insight.color.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              insight.icon,
-              size: 20,
-              color: insight.color,
-            ),
+            child: Icon(insight.icon, size: 20, color: insight.color),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -627,11 +651,10 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SemanticIcon(
-  icon: AppIcons.showChart,
-  semanticLabel: 'Show chart',
-  size: AppIconSize.xxlarge,
-  color: context.colors.onSurface.withValues(alpha: 0.3,
-),
+              icon: AppIcons.showChart,
+              semanticLabel: 'Show chart',
+              size: AppIconSize.xxlarge,
+              color: context.colors.onSurface.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 8),
             Text(

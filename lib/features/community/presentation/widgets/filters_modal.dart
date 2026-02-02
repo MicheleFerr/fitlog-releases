@@ -36,7 +36,9 @@ class FiltersModal extends ConsumerStatefulWidget {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (_) => const FiltersModal(),
     );
   }
@@ -67,9 +69,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: context.colors.surface,
-        ),
+        decoration: BoxDecoration(color: context.colors.surface),
         child: SafeArea(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -110,10 +110,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: context.colors.outlineVariant,
-            width: 1,
-          ),
+          bottom: BorderSide(color: context.colors.outlineVariant, width: 1),
         ),
       ),
       child: Row(
@@ -347,9 +344,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
       onPressed: onTap,
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -367,9 +362,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  date != null
-                      ? '${date.day}/${date.month}/${date.year}'
-                      : '-',
+                  date != null ? '${date.day}/${date.month}/${date.year}' : '-',
                   style: context.textTheme.bodyMedium,
                 ),
               ],
@@ -378,11 +371,11 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
           if (date != null)
             IconButton(
               icon: SemanticIcon(
-  icon: AppIcons.clear,
-  semanticLabel: 'Clear',
-  size: AppIconSize.small,
-  color: context.colors.onSurfaceVariant,
-),
+                icon: AppIcons.clear,
+                semanticLabel: 'Clear',
+                size: AppIconSize.small,
+                color: context.colors.onSurfaceVariant,
+              ),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
               onPressed: onClear,
@@ -397,10 +390,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(
-            color: context.colors.outlineVariant,
-            width: 1,
-          ),
+          top: BorderSide(color: context.colors.outlineVariant, width: 1),
         ),
       ),
       child: Row(

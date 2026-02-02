@@ -13,10 +13,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 
 /// Shows the suggestion info bottom sheet
-void showSuggestionInfoSheet(
-  BuildContext context,
-  SmartSuggestion suggestion,
-) {
+void showSuggestionInfoSheet(BuildContext context, SmartSuggestion suggestion) {
   HapticFeedback.lightImpact();
 
   showModalBottomSheet(
@@ -32,10 +29,7 @@ void showSuggestionInfoSheet(
 
 /// Bottom sheet with suggestion details
 class SuggestionInfoSheet extends StatelessWidget {
-  const SuggestionInfoSheet({
-    super.key,
-    required this.suggestion,
-  });
+  const SuggestionInfoSheet({super.key, required this.suggestion});
 
   final SmartSuggestion suggestion;
 
@@ -56,7 +50,9 @@ class SuggestionInfoSheet extends StatelessWidget {
                   height: 4,
                   margin: const EdgeInsets.only(bottom: 24),
                   decoration: BoxDecoration(
-                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
+                    color: context.colors.onSurfaceVariant.withValues(
+                      alpha: 0.4,
+                    ),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -254,10 +250,7 @@ class SuggestionInfoSheet extends StatelessWidget {
     else {
       switch (suggestion.type) {
         case ContributionType.tip:
-          tips.addAll([
-            context.l10n.tipAdvice1,
-            context.l10n.tipAdvice2,
-          ]);
+          tips.addAll([context.l10n.tipAdvice1, context.l10n.tipAdvice2]);
           break;
         case ContributionType.warning:
           tips.addAll([
@@ -281,28 +274,30 @@ class SuggestionInfoSheet extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 12),
-      ...tips.map((tip) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  AppIcons.checkCircle,
-                  size: AppIconSize.small,
-                  color: context.colors.primary,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    tip,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colors.onSurfaceVariant,
-                    ),
+      ...tips.map(
+        (tip) => Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                AppIcons.checkCircle,
+                size: AppIconSize.small,
+                color: context.colors.primary,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  tip,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.colors.onSurfaceVariant,
                   ),
                 ),
-              ],
-            ),
-          )),
+              ),
+            ],
+          ),
+        ),
+      ),
     ];
   }
 }

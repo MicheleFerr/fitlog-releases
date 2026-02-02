@@ -15,11 +15,13 @@ final workoutDraftRepositoryProvider = Provider<WorkoutDraftRepository>((ref) {
 });
 
 /// Provider for workout auto-save functionality
-final workoutAutoSaveProvider = NotifierProvider<WorkoutAutoSaveNotifier, WorkoutAutoSaveState>(WorkoutAutoSaveNotifier.new);
+final workoutAutoSaveProvider =
+    NotifierProvider<WorkoutAutoSaveNotifier, WorkoutAutoSaveState>(
+      WorkoutAutoSaveNotifier.new,
+    );
 
 /// State for auto-save functionality
 class WorkoutAutoSaveState {
-
   WorkoutAutoSaveState({
     this.isAutoSaveEnabled = true,
     this.lastSaveTime,
@@ -92,11 +94,13 @@ class WorkoutAutoSaveNotifier extends Notifier<WorkoutAutoSaveState> {
     _saveDebouncer = Debouncer(
       duration: _debounceDelay,
       onError: (error, stackTrace) {
-        AppLogger.error('Debouncer error: $error', tag: 'WorkoutAutoSave', error: error, stackTrace: stackTrace);
-        state = state.copyWith(
-          isSaving: false,
-          lastError: error.toString(),
+        AppLogger.error(
+          'Debouncer error: $error',
+          tag: 'WorkoutAutoSave',
+          error: error,
+          stackTrace: stackTrace,
         );
+        state = state.copyWith(isSaving: false, lastError: error.toString());
       },
     );
 
@@ -168,19 +172,20 @@ class WorkoutAutoSaveNotifier extends Notifier<WorkoutAutoSaveState> {
       await _repository.saveCurrentDraft(workout);
       _lastSavedWorkout = workout;
 
-      state = state.copyWith(
-        isSaving: false,
-        lastSaveTime: DateTime.now(),
-      );
+      state = state.copyWith(isSaving: false, lastSaveTime: DateTime.now());
 
-      AppLogger.info('Emergency save completed at ${DateTime.now()}', tag: 'WorkoutAutoSave');
+      AppLogger.info(
+        'Emergency save completed at ${DateTime.now()}',
+        tag: 'WorkoutAutoSave',
+      );
     } catch (e) {
-      state = state.copyWith(
-        isSaving: false,
-        lastError: e.toString(),
-      );
+      state = state.copyWith(isSaving: false, lastError: e.toString());
 
-      AppLogger.error('Emergency save failed: $e', tag: 'WorkoutAutoSave', error: e);
+      AppLogger.error(
+        'Emergency save failed: $e',
+        tag: 'WorkoutAutoSave',
+        error: e,
+      );
 
       // Rethrow so caller knows it failed
       rethrow;
@@ -202,7 +207,7 @@ class WorkoutAutoSaveNotifier extends Notifier<WorkoutAutoSaveState> {
   /// Check if workout has changed since last save
   bool _hasWorkoutChanged(Workout workout) {
     if (_lastSavedWorkout == null) return true;
-    
+
     // Compare JSON representations for deep equality
     return workout.toJson() != _lastSavedWorkout!.toJson();
   }
@@ -210,26 +215,23 @@ class WorkoutAutoSaveNotifier extends Notifier<WorkoutAutoSaveState> {
   /// Save workout to local storage
   Future<void> _saveWorkout(Workout workout, {bool force = false}) async {
     if (state.isSaving) return;
-    
+
     if (!force && !_hasWorkoutChanged(workout)) return;
-    
+
     state = state.copyWith(isSaving: true, lastError: null);
-    
+
     try {
       await _repository.saveCurrentDraft(workout);
       _lastSavedWorkout = workout;
-      
-      state = state.copyWith(
-        isSaving: false,
-        lastSaveTime: DateTime.now(),
-      );
 
-      AppLogger.info('Auto-save completed at ${DateTime.now()}', tag: 'WorkoutAutoSave');
-    } catch (e) {
-      state = state.copyWith(
-        isSaving: false,
-        lastError: e.toString(),
+      state = state.copyWith(isSaving: false, lastSaveTime: DateTime.now());
+
+      AppLogger.info(
+        'Auto-save completed at ${DateTime.now()}',
+        tag: 'WorkoutAutoSave',
       );
+    } catch (e) {
+      state = state.copyWith(isSaving: false, lastError: e.toString());
 
       AppLogger.error('Auto-save failed: $e', tag: 'WorkoutAutoSave', error: e);
     }

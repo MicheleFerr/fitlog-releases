@@ -29,7 +29,6 @@ final getExerciseChartDataProvider = Provider<GetExerciseChartData>((ref) {
 
 /// Parameters per chart data request
 class ChartDataParams {
-
   const ChartDataParams({
     required this.exerciseName,
     required this.metric,
@@ -59,32 +58,30 @@ class ChartDataParams {
 /// FASE 3: TODO - Performance optimization (caching, debounce)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final exerciseChartCleanProvider = FutureProvider.autoDispose.family<List<ChartDataPoint>, ChartDataParams>(
-  (ref, params) async {
-    final useCase = ref.watch(getExerciseChartDataProvider);
+final exerciseChartCleanProvider = FutureProvider.autoDispose
+    .family<List<ChartDataPoint>, ChartDataParams>((ref, params) async {
+      final useCase = ref.watch(getExerciseChartDataProvider);
 
-    // Call use case (returns Either<ChartFailure, List<ChartDataPoint>>)
-    final result = await useCase(
-      exerciseName: params.exerciseName,
-      metric: params.metric,
-      days: params.days,
-    );
+      // Call use case (returns Either<ChartFailure, List<ChartDataPoint>>)
+      final result = await useCase(
+        exerciseName: params.exerciseName,
+        metric: params.metric,
+        days: params.days,
+      );
 
-    // ✅ FASE 2: Handle Either pattern
-    return result.fold(
-      // Left (Failure) → throw exception → AsyncValue.error
-      (failure) => throw ChartDataException(failure),
-      // Right (Success) → return data → AsyncValue.data
-      (data) => data,
-    );
-  },
-);
+      // ✅ FASE 2: Handle Either pattern
+      return result.fold(
+        // Left (Failure) → throw exception → AsyncValue.error
+        (failure) => throw ChartDataException(failure),
+        // Right (Success) → return data → AsyncValue.data
+        (data) => data,
+      );
+    });
 
 /// Exception wrapper per ChartFailure
 ///
 /// Permette a FutureProvider di catturare errori in AsyncValue.error
 class ChartDataException implements Exception {
-
   const ChartDataException(this.failure);
   final ChartFailure failure;
 

@@ -4,15 +4,15 @@ class LevelSystem {
   static const int maxLevel = 100;
   static const int baseXpPerLevel = 100;
   static const double xpMultiplier = 1.15;
-  
+
   // Calcola XP necessari per un livello specifico
   static int getXpForLevel(int level) {
     if (level <= 1) return 0;
     if (level > maxLevel) return getXpForLevel(maxLevel);
-    
+
     return (baseXpPerLevel * pow(xpMultiplier, level - 1)).round();
   }
-  
+
   // Calcola XP totali necessari per raggiungere un livello
   static int getTotalXpForLevel(int level) {
     int totalXp = 0;
@@ -21,12 +21,12 @@ class LevelSystem {
     }
     return totalXp;
   }
-  
+
   // Determina livello attuale basato su XP totali
   static LevelInfo getLevelInfo(int totalXp) {
     int currentLevel = 1;
     int xpProgress = totalXp;
-    
+
     while (currentLevel < maxLevel) {
       final int xpNeeded = getXpForLevel(currentLevel + 1);
       if (xpProgress >= xpNeeded) {
@@ -36,10 +36,14 @@ class LevelSystem {
         break;
       }
     }
-    
-    final int xpForNextLevel = currentLevel < maxLevel ? getXpForLevel(currentLevel + 1) : 0;
-    final double progressPercentage = xpForNextLevel > 0 ? xpProgress / xpForNextLevel : 1.0;
-    
+
+    final int xpForNextLevel = currentLevel < maxLevel
+        ? getXpForLevel(currentLevel + 1)
+        : 0;
+    final double progressPercentage = xpForNextLevel > 0
+        ? xpProgress / xpForNextLevel
+        : 1.0;
+
     return LevelInfo(
       level: currentLevel,
       currentXp: xpProgress,
@@ -50,7 +54,7 @@ class LevelSystem {
       perks: _getPerksForLevel(currentLevel),
     );
   }
-  
+
   static String _getTitleForLevel(int level) {
     if (level <= 10) return 'Principiante';
     if (level <= 20) return 'Apprendista';
@@ -64,10 +68,10 @@ class LevelSystem {
     if (level <= 99) return 'Leggenda';
     return 'Titano';
   }
-  
+
   static List<LevelPerk> _getPerksForLevel(int level) {
     final List<LevelPerk> perks = [];
-    
+
     // Sblocchi ogni 5 livelli
     if (level >= 5) perks.add(LevelPerk.customWorkoutTemplates);
     if (level >= 10) perks.add(LevelPerk.advancedAnalytics);
@@ -79,10 +83,10 @@ class LevelSystem {
     if (level >= 40) perks.add(LevelPerk.advancedTimers);
     if (level >= 45) perks.add(LevelPerk.teamWorkouts);
     if (level >= 50) perks.add(LevelPerk.coachingMode);
-    
+
     return perks;
   }
-  
+
   // Calcola XP guadagnati per un workout
   static int calculateWorkoutXp({
     required int duration, // in minuti
@@ -92,30 +96,30 @@ class LevelSystem {
     int streakDays = 0,
   }) {
     int baseXp = 50;
-    
+
     // XP per durata (1 XP per minuto, max 60)
     baseXp += min(duration, 60);
-    
+
     // XP per esercizi (5 XP per esercizio, max 50)
     baseXp += min(exercises * 5, 50);
-    
+
     // XP per volume (1 XP per 100kg, max 100)
     baseXp += min((totalVolume / 100).round(), 100);
-    
+
     // Bonus PR
     if (isPersonalRecord) baseXp += 50;
-    
+
     // Bonus streak (2 XP per giorno, max 50)
     baseXp += min(streakDays * 2, 50);
-    
+
     return baseXp;
   }
-  
+
   // Calcola XP bonus per accesso quotidiano consecutivo
   // Progressione: 1, 2, 4, 8, 16, 32, 64, 100 (poi sempre 100)
   static int calculateDailyLoginBonus(int consecutiveDays) {
     if (consecutiveDays <= 0) return 0;
-    
+
     // Progressione esponenziale fino al giorno 7
     if (consecutiveDays <= 7) {
       // Giorni 1-6: 2^(n-1) con cap a 64
@@ -125,16 +129,16 @@ class LevelSystem {
       // Giorno 7: 100 XP
       return 100;
     }
-    
+
     // Dal giorno 8 in poi: sempre 100 XP
     return 100;
   }
-  
+
   // Ottieni la descrizione del bonus login per UI
   static DailyLoginBonusInfo getDailyLoginBonusInfo(int consecutiveDays) {
     final currentBonus = calculateDailyLoginBonus(consecutiveDays);
     final nextDayBonus = calculateDailyLoginBonus(consecutiveDays + 1);
-    
+
     String message;
     if (consecutiveDays == 0) {
       message = 'Accedi domani per iniziare il bonus giornaliero!';
@@ -143,7 +147,7 @@ class LevelSystem {
     } else {
       message = 'Bonus massimo raggiunto! 100 XP al giorno';
     }
-    
+
     return DailyLoginBonusInfo(
       currentDayBonus: currentBonus,
       nextDayBonus: nextDayBonus,
@@ -155,7 +159,6 @@ class LevelSystem {
 }
 
 class LevelInfo {
-  
   const LevelInfo({
     required this.level,
     required this.currentXp,
@@ -175,7 +178,6 @@ class LevelInfo {
 }
 
 class DailyLoginBonusInfo {
-  
   const DailyLoginBonusInfo({
     required this.currentDayBonus,
     required this.nextDayBonus,
@@ -228,7 +230,7 @@ extension LevelPerkExtension on LevelPerk {
         return 'Modalità Coach';
     }
   }
-  
+
   String get description {
     switch (this) {
       case LevelPerk.customWorkoutTemplates:

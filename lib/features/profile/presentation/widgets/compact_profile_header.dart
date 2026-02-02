@@ -17,7 +17,8 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
 import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
 import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak_provider.dart';
-import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart' hide currentStreakProvider;
+import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart'
+    hide currentStreakProvider;
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/level_info_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_provider.dart';
 
@@ -107,7 +108,9 @@ class CompactProfileHeader extends ConsumerWidget {
               children: [
                 // Avatar with tier gradient border (hidden in Ghost Mode)
                 _TierAvatar(
-                  initial: userName.isNotEmpty ? userName[0].toUpperCase() : '?',
+                  initial: userName.isNotEmpty
+                      ? userName[0].toUpperCase()
+                      : '?',
                   tier: currentTier,
                   hideTier: shouldHideTier,
                 ),
@@ -133,10 +136,7 @@ class CompactProfileHeader extends ConsumerWidget {
                       if (!shouldHideStreak) ...[
                         Row(
                           children: [
-                            Text(
-                              '🔥',
-                              style: context.textTheme.bodyMedium,
-                            ),
+                            Text('🔥', style: context.textTheme.bodyMedium),
                             const SizedBox(width: 4),
                             Text(
                               context.l10n.dayStreak(streak),
@@ -152,10 +152,7 @@ class CompactProfileHeader extends ConsumerWidget {
                       // Total workouts
                       Row(
                         children: [
-                          Text(
-                            '💪',
-                            style: context.textTheme.bodyMedium,
-                          ),
+                          Text('💪', style: context.textTheme.bodyMedium),
                           const SizedBox(width: 4),
                           Text(
                             context.l10n.totalWorkoutsLabel(totalWorkouts),
@@ -308,7 +305,9 @@ class _TierAvatar extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.all(4), // Border padding (must be multiple of 4)
+      padding: const EdgeInsets.all(
+        4,
+      ), // Border padding (must be multiple of 4)
       child: DecoratedBox(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
@@ -340,25 +339,13 @@ class _TierAvatar extends StatelessWidget {
   List<Color> _getGradientColors(UserTier tier) {
     switch (tier) {
       case UserTier.starter:
-        return [
-          const Color(0xFF9E9E9E),
-          const Color(0xFF757575),
-        ];
+        return [const Color(0xFF9E9E9E), const Color(0xFF757575)];
       case UserTier.bronze:
-        return [
-          const Color(0xFFCD7F32),
-          const Color(0xFF8B4513),
-        ];
+        return [const Color(0xFFCD7F32), const Color(0xFF8B4513)];
       case UserTier.silver:
-        return [
-          const Color(0xFFE8E8E8),
-          const Color(0xFF9E9E9E),
-        ];
+        return [const Color(0xFFE8E8E8), const Color(0xFF9E9E9E)];
       case UserTier.gold:
-        return [
-          const Color(0xFFFFD700),
-          const Color(0xFFDAA520),
-        ];
+        return [const Color(0xFFFFD700), const Color(0xFFDAA520)];
       case UserTier.platinum:
         return [
           const Color(0xFFE5E4E2),

@@ -8,7 +8,6 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 class WeeklyDashboardWidget extends StatefulWidget {
-
   const WeeklyDashboardWidget({
     super.key,
     required this.activities,
@@ -23,13 +22,13 @@ class WeeklyDashboardWidget extends StatefulWidget {
   State<WeeklyDashboardWidget> createState() => _WeeklyDashboardWidgetState();
 }
 
-class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget> 
+class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
-  
+
   ProgressiveOverloadData? _currentWeekData;
-  
+
   @override
   void initState() {
     super.initState();
@@ -37,14 +36,10 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.elasticOut,
-    ));
-    
+    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
+    );
+
     _calculateWeeklyData();
     _animationController.forward();
   }
@@ -59,20 +54,24 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
     final now = DateTime.now();
     final currentWeekStart = _getWeekStart(now);
     final currentWeekEnd = currentWeekStart.add(const Duration(days: 6));
-    final previousWeekStart = currentWeekStart.subtract(const Duration(days: 7));
-    
+    final previousWeekStart = currentWeekStart.subtract(
+      const Duration(days: 7),
+    );
+
     // Calculate current week data
     final currentWeekActivities = widget.activities.where((activity) {
       return activity.createdAt.isAfter(currentWeekStart) &&
-             activity.createdAt.isBefore(currentWeekEnd.add(const Duration(days: 1)));
+          activity.createdAt.isBefore(
+            currentWeekEnd.add(const Duration(days: 1)),
+          );
     }).toList();
-    
+
     // Calculate previous week data
     final previousWeekActivities = widget.activities.where((activity) {
       return activity.createdAt.isAfter(previousWeekStart) &&
-             activity.createdAt.isBefore(currentWeekStart);
+          activity.createdAt.isBefore(currentWeekStart);
     }).toList();
-    
+
     if (currentWeekActivities.isNotEmpty) {
       _currentWeekData = _createWeekData(
         currentWeekActivities,
@@ -81,21 +80,16 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
         _calculatePreviousScore(previousWeekActivities),
       );
     }
-    
   }
 
   DateTime _getWeekStart(DateTime date) {
     final weekday = date.weekday;
-    return DateTime(
-      date.year,
-      date.month,
-      date.day - (weekday - 1),
-    );
+    return DateTime(date.year, date.month, date.day - (weekday - 1));
   }
 
   double _calculatePreviousScore(List<ExerciseActivity> activities) {
     if (activities.isEmpty) return 0;
-    
+
     final volume = _calculateTotalVolume(activities);
     final intensity = _calculateAvgIntensity(activities);
     return volume * intensity;
@@ -103,37 +97,39 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
 
   double _calculateTotalVolume(List<ExerciseActivity> activities) {
     return activities.fold(0.0, (sum, activity) {
-      return sum + activity.sets.fold(0.0, (setSum, set) {
-        final weight = double.tryParse(set.weight) ?? 0.0;
-        final reps = int.tryParse(set.reps) ?? 0;
-        return setSum + (weight * reps);
-      });
+      return sum +
+          activity.sets.fold(0.0, (setSum, set) {
+            final weight = double.tryParse(set.weight) ?? 0.0;
+            final reps = int.tryParse(set.reps) ?? 0;
+            return setSum + (weight * reps);
+          });
     });
   }
 
   double _calculateAvgIntensity(List<ExerciseActivity> activities) {
     if (activities.isEmpty) return 7.0; // Default RPE 7
-    
+
     // Calculate average RPE from sets
     int totalSets = 0;
     double totalRPE = 0.0;
-    
+
     for (final activity in activities) {
       for (final set in activity.sets) {
         // effort is stored as 1-10, but RPE scale is 6-10
         // Convert: if effort <= 5, use RPE 6-7, if effort > 5, map to RPE 7-10
         final effort = set.effort;
-        final rpe = effort <= 5 
-            ? 6.0 + (effort / 5.0) // Maps 1-5 to 6-7
+        final rpe = effort <= 5
+            ? 6.0 +
+                  (effort / 5.0) // Maps 1-5 to 6-7
             : 7.0 + ((effort - 5) / 5.0 * 3); // Maps 6-10 to 7-10
-        
+
         totalRPE += rpe;
         totalSets++;
       }
     }
-    
+
     if (totalSets == 0) return 7.0; // Default RPE 7
-    
+
     // Return average RPE (will be between 6-10)
     return (totalRPE / totalSets).clamp(6.0, 10.0);
   }
@@ -148,15 +144,15 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
     final intensity = _calculateAvgIntensity(activities);
     final currentScore = volume * intensity;
     final poScore = previousScore > 0 ? currentScore / previousScore : 1.0;
-    
+
     // Calculate e1RM for each exercise
     final e1RMProgression = <String, double>{};
     final exerciseGroups = <String, List<ExerciseActivity>>{};
-    
+
     for (final activity in activities) {
       exerciseGroups.putIfAbsent(activity.exerciseName, () => []).add(activity);
     }
-    
+
     for (final entry in exerciseGroups.entries) {
       double maxE1RM = 0;
       for (final activity in entry.value) {
@@ -175,11 +171,11 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
         e1RMProgression[entry.key] = maxE1RM;
       }
     }
-    
+
     // Find best set of the week
     BestSetPerformance? bestSet;
     double maxE1RM = 0;
-    
+
     for (final activity in activities) {
       for (final set in activity.sets) {
         final weight = double.tryParse(set.weight) ?? 0.0;
@@ -200,10 +196,10 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
         }
       }
     }
-    
+
     // Calculate effective volume
     final effectiveVolume = volume * 0.85; // Simplified calculation
-    
+
     return ProgressiveOverloadData(
       userId: '', // TODO: Get from auth
       weekStart: weekStart,
@@ -233,11 +229,11 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     if (_currentWeekData == null) {
       return _buildEmptyState(theme);
     }
-    
+
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
@@ -249,21 +245,21 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
               // Header with PO Score
               _buildPOScoreCard(theme),
               const SizedBox(height: 16),
-              
+
               // Weekly Stats Grid
               _buildStatsGrid(theme),
               const SizedBox(height: 16),
-              
+
               // e1RM Tracker Chart
               _buildE1RMChart(theme),
               const SizedBox(height: 16),
-              
+
               // Best Set Performance
               if (_currentWeekData!.bestSet != null) ...[
                 _buildBestSetCard(theme),
                 const SizedBox(height: 16),
               ],
-              
+
               // Premium sync button
               if (widget.isPremium) _buildSyncButton(theme),
             ],
@@ -275,25 +271,28 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
 
   Widget _buildPOScoreCard(ThemeData theme) {
     if (_currentWeekData == null) return const SizedBox.shrink();
-    
+
     // Get current week activities for workout count and last workout date
     final now = DateTime.now();
-    final weekStart = DateTime(now.year, now.month, now.day).subtract(
-      Duration(days: now.weekday - 1),
-    );
+    final weekStart = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).subtract(Duration(days: now.weekday - 1));
     final weekEnd = weekStart.add(const Duration(days: 6));
-    
+
     final currentWeekActivities = widget.activities.where((activity) {
-      return activity.createdAt.isAfter(weekStart) && 
-             activity.createdAt.isBefore(weekEnd.add(const Duration(days: 1)));
+      return activity.createdAt.isAfter(weekStart) &&
+          activity.createdAt.isBefore(weekEnd.add(const Duration(days: 1)));
     }).toList();
-    
+
     // Get last workout date
-    final lastWorkout = widget.activities.isEmpty 
+    final lastWorkout = widget.activities.isEmpty
         ? DateTime.now().subtract(const Duration(days: 7))
-        : widget.activities.reduce((a, b) => 
-            a.createdAt.isAfter(b.createdAt) ? a : b).createdAt;
-    
+        : widget.activities
+              .reduce((a, b) => a.createdAt.isAfter(b.createdAt) ? a : b)
+              .createdAt;
+
     return ContextualTrainingAdvisor(
       currentWeekVolume: _currentWeekData!.totalVolume,
       previousWeekVolume: _currentWeekData!.previousWeekScore,
@@ -389,14 +388,14 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
   Widget _buildE1RMChart(ThemeData theme) {
     final e1rmData = _currentWeekData!.e1RMProgression.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    
+
     if (e1rmData.isEmpty) {
       return const SizedBox();
     }
-    
+
     // Take top 5 exercises
     final topExercises = e1rmData.take(5).toList();
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -413,41 +412,43 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
             ),
           ),
           const SizedBox(height: 16),
-          ...topExercises.map((entry) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        entry.key,
-                        style: theme.textTheme.bodyMedium,
-                        overflow: TextOverflow.ellipsis,
+          ...topExercises.map(
+            (entry) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          entry.key,
+                          style: theme.textTheme.bodyMedium,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                    Text(
-                      '${entry.value.toStringAsFixed(1)} kg',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
+                      Text(
+                        '${entry.value.toStringAsFixed(1)} kg',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.primary,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                LinearProgressIndicator(
-                  value: entry.value / (topExercises.first.value + 10),
-                  backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    theme.colorScheme.primary,
+                    ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 4),
+                  LinearProgressIndicator(
+                    value: entry.value / (topExercises.first.value + 10),
+                    backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      theme.colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          )),
+          ),
         ],
       ),
     );
@@ -455,7 +456,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
 
   Widget _buildBestSetCard(ThemeData theme) {
     final bestSet = _currentWeekData!.bestSet!;
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -477,10 +478,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
         children: [
           Row(
             children: [
-              Icon(
-                AppIcons.achievement,
-                color: theme.colorScheme.tertiary,
-              ),
+              Icon(AppIcons.achievement, color: theme.colorScheme.tertiary),
               const SizedBox(width: 8),
               Text(
                 'Best Set of the Week',
@@ -491,7 +489,10 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
               if (bestSet.isPR) ...[
                 const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: context.colors.error,
                     borderRadius: BorderRadius.circular(12),
@@ -517,7 +518,11 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
           const SizedBox(height: 8),
           Row(
             children: [
-              Icon(AppIcons.workout, size: 16, color: theme.colorScheme.onSurfaceVariant),
+              Icon(
+                AppIcons.workout,
+                size: 16,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
               const SizedBox(width: 4),
               Text(
                 '${bestSet.weight.toStringAsFixed(1)} kg × ${bestSet.reps} reps',
@@ -528,7 +533,11 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
           const SizedBox(height: 4),
           Row(
             children: [
-              Icon(AppIcons.rocket, size: 16, color: theme.colorScheme.onSurfaceVariant),
+              Icon(
+                AppIcons.rocket,
+                size: 16,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
               const SizedBox(width: 4),
               Text(
                 'e1RM: ${bestSet.e1RM.toStringAsFixed(1)} kg',
@@ -551,7 +560,10 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
           if (_currentWeekData != null) {
             HapticFeedback.lightImpact();
             widget.onDataSync?.call(_currentWeekData!);
-            SnackBarService.showSuccess(context, context.l10n.dataSyncedToCloud);
+            SnackBarService.showSuccess(
+              context,
+              context.l10n.dataSyncedToCloud,
+            );
           }
         },
         icon: const Icon(AppIcons.cloudUpload),
@@ -579,10 +591,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
             color: theme.colorScheme.onSurfaceVariant,
           ),
           const SizedBox(height: 16),
-          Text(
-            'No workout data this week',
-            style: theme.textTheme.titleMedium,
-          ),
+          Text('No workout data this week', style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
           Text(
             'Complete workouts to see your progress',

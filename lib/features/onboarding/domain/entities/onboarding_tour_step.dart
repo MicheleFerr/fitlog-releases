@@ -39,7 +39,8 @@ abstract class OnboardingTourStep with _$OnboardingTourStep {
 
     /// Bottom sheet position (bottom or top) - default is bottom
     /// Use top for FAB to avoid obscuring it
-    @Default(BottomSheetPosition.bottom) BottomSheetPosition bottomSheetPosition,
+    @Default(BottomSheetPosition.bottom)
+    BottomSheetPosition bottomSheetPosition,
   }) = _OnboardingTourStep;
 
   const OnboardingTourStep._();

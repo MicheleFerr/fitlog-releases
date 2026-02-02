@@ -226,7 +226,13 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
         try {
           final hasPermission = await _health.hasPermissions([type]);
 
-          _addLog('   ${type.name}: ${hasPermission == true ? "✅ GRANTED" : hasPermission == false ? "❌ DENIED" : "⚠️ NOT DETERMINED"}');
+          _addLog(
+            '   ${type.name}: ${hasPermission == true
+                ? "✅ GRANTED"
+                : hasPermission == false
+                ? "❌ DENIED"
+                : "⚠️ NOT DETERMINED"}',
+          );
         } catch (e) {
           _addLog('   ${type.name}: ❌ ERROR - $e');
         }
@@ -308,7 +314,13 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
         try {
           final hasPermission = await _health.hasPermissions([type]);
 
-          _addLog('   ${type.name}: ${hasPermission == true ? "✅ GRANTED" : hasPermission == false ? "❌ DENIED" : "⚠️ NOT DETERMINED"}');
+          _addLog(
+            '   ${type.name}: ${hasPermission == true
+                ? "✅ GRANTED"
+                : hasPermission == false
+                ? "❌ DENIED"
+                : "⚠️ NOT DETERMINED"}',
+          );
         } catch (e) {
           _addLog('   ${type.name}: ❌ ERROR - $e');
         }
@@ -353,13 +365,10 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
 
       if (dataPoints.isNotEmpty) {
         // health package v13+ returns NumericHealthValue, not raw num
-        final totalSteps = dataPoints.fold<num>(
-          0,
-          (sum, point) {
-            final numericValue = point.value as NumericHealthValue;
-            return sum + numericValue.numericValue;
-          },
-        );
+        final totalSteps = dataPoints.fold<num>(0, (sum, point) {
+          final numericValue = point.value as NumericHealthValue;
+          return sum + numericValue.numericValue;
+        });
 
         _addLog('✅ PASS: Data fetched successfully');
         _addLog('   Steps today: ${totalSteps.toInt()}');
@@ -415,7 +424,9 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
 
         _addLog('✅ PASS: Weight data fetched successfully');
         _addLog('   Latest weight: ${weightKg.toStringAsFixed(1)} kg');
-        _addLog('   Date: ${latestWeight.dateFrom.toString().substring(0, 10)}');
+        _addLog(
+          '   Date: ${latestWeight.dateFrom.toString().substring(0, 10)}',
+        );
         _addLog('   Total records: ${dataPoints.length}');
       } else {
         _addLog('⚠️ PASS (No Data): No weight recorded');
@@ -589,7 +600,10 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
     await Clipboard.setData(ClipboardData(text: logsText));
 
     if (mounted) {
-      SnackBarService.showSuccess(context, 'Logs copied to clipboard (${_logs.length} lines)');
+      SnackBarService.showSuccess(
+        context,
+        'Logs copied to clipboard (${_logs.length} lines)',
+      );
     }
   }
 
@@ -641,17 +655,14 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Test Results',
-                  style: context.textTheme.titleLarge,
-                ),
+                Text('Test Results', style: context.textTheme.titleLarge),
                 const SizedBox(height: 8),
                 ..._testResults.entries.map((entry) {
                   final icon = entry.value == null
                       ? '⚪'
                       : entry.value == true
-                          ? '✅'
-                          : '❌';
+                      ? '✅'
+                      : '❌';
                   final label = entry.key
                       .replaceAll('_', ' ')
                       .split(' ')
@@ -662,10 +673,7 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Row(
                       children: [
-                        Text(
-                          icon,
-                          style: const TextStyle(fontSize: 18),
-                        ),
+                        Text(icon, style: const TextStyle(fontSize: 18)),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -701,10 +709,10 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
                         color: log.contains('✅')
                             ? context.iconSuccess
                             : log.contains('❌')
-                                ? context.iconError
-                                : log.contains('⚠️')
-                                    ? context.iconWarning
-                                    : context.colors.onSurface.withValues(alpha: 0.7),
+                            ? context.iconError
+                            : log.contains('⚠️')
+                            ? context.iconWarning
+                            : context.colors.onSurface.withValues(alpha: 0.7),
                       ),
                     ),
                   );

@@ -54,7 +54,6 @@ part 'exercise_preferences_model.g.dart';
 /// - Local caching to minimize reads
 @freezed
 abstract class ExercisePreferencesModel with _$ExercisePreferencesModel {
-
   const factory ExercisePreferencesModel({
     /// Set of exercise names marked as favorite
     ///
@@ -73,6 +72,7 @@ abstract class ExercisePreferencesModel with _$ExercisePreferencesModel {
     /// Used for sync conflict resolution and cache invalidation
     @TimestampConverter() DateTime? lastUpdated,
   }) = _ExercisePreferencesModel;
+
   /// Create from Firestore document
   factory ExercisePreferencesModel.fromJson(Map<String, dynamic> json) =>
       _$ExercisePreferencesModelFromJson(json);

@@ -50,7 +50,8 @@ class JSONPresetService implements IPresetService {
   /// Asset paths for JSON files
   static const String _repPresetsPath = 'assets/data/rep_presets.json';
   static const String _setPresetsPath = 'assets/data/set_presets.json';
-  static const String _restTimePresetsPath = 'assets/data/rest_time_presets.json';
+  static const String _restTimePresetsPath =
+      'assets/data/rest_time_presets.json';
 
   @override
   Future<void> initialize() async {
@@ -190,13 +191,18 @@ class JSONPresetService implements IPresetService {
       final jsonData = json.decode(jsonString) as Map<String, dynamic>;
       final presetsList = jsonData['presets'] as List;
 
-      _repRangePresetsCache = presetsList
-          .map((json) => RepRangePreset.fromJson(json as Map<String, dynamic>))
-          .toList()
-        ..sort((a, b) => a.order.compareTo(b.order));
+      _repRangePresetsCache =
+          presetsList
+              .map(
+                (json) => RepRangePreset.fromJson(json as Map<String, dynamic>),
+              )
+              .toList()
+            ..sort((a, b) => a.order.compareTo(b.order));
 
       if (kDebugMode) {
-        debugPrint('   ✓ Loaded ${_repRangePresetsCache!.length} rep presets from $_repPresetsPath');
+        debugPrint(
+          '   ✓ Loaded ${_repRangePresetsCache!.length} rep presets from $_repPresetsPath',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -213,13 +219,18 @@ class JSONPresetService implements IPresetService {
       final jsonData = json.decode(jsonString) as Map<String, dynamic>;
       final presetsList = jsonData['presets'] as List;
 
-      _setCountPresetsCache = presetsList
-          .map((json) => SetCountPreset.fromJson(json as Map<String, dynamic>))
-          .toList()
-        ..sort((a, b) => a.order.compareTo(b.order));
+      _setCountPresetsCache =
+          presetsList
+              .map(
+                (json) => SetCountPreset.fromJson(json as Map<String, dynamic>),
+              )
+              .toList()
+            ..sort((a, b) => a.order.compareTo(b.order));
 
       if (kDebugMode) {
-        debugPrint('   ✓ Loaded ${_setCountPresetsCache!.length} set presets from $_setPresetsPath');
+        debugPrint(
+          '   ✓ Loaded ${_setCountPresetsCache!.length} set presets from $_setPresetsPath',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -236,13 +247,18 @@ class JSONPresetService implements IPresetService {
       final jsonData = json.decode(jsonString) as Map<String, dynamic>;
       final presetsList = jsonData['presets'] as List;
 
-      _restTimePresetsCache = presetsList
-          .map((json) => RestTimePreset.fromJson(json as Map<String, dynamic>))
-          .toList()
-        ..sort((a, b) => a.order.compareTo(b.order));
+      _restTimePresetsCache =
+          presetsList
+              .map(
+                (json) => RestTimePreset.fromJson(json as Map<String, dynamic>),
+              )
+              .toList()
+            ..sort((a, b) => a.order.compareTo(b.order));
 
       if (kDebugMode) {
-        debugPrint('   ✓ Loaded ${_restTimePresetsCache!.length} rest time presets from $_restTimePresetsPath');
+        debugPrint(
+          '   ✓ Loaded ${_restTimePresetsCache!.length} rest time presets from $_restTimePresetsPath',
+        );
       }
     } catch (e) {
       if (kDebugMode) {

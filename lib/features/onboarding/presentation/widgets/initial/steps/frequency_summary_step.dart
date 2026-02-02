@@ -9,10 +9,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 
 /// Step 5: Workout frequency + Summary (Yazio-inspired)
 class FrequencySummaryStep extends ConsumerWidget {
-  const FrequencySummaryStep({
-    super.key,
-    required this.onComplete,
-  });
+  const FrequencySummaryStep({super.key, required this.onComplete});
 
   final VoidCallback onComplete;
 
@@ -58,9 +55,7 @@ class FrequencySummaryStep extends ConsumerWidget {
           const SizedBox(height: 28),
 
           // Divider
-          Divider(
-            color: context.colors.outline.withValues(alpha: 0.2),
-          ),
+          Divider(color: context.colors.outline.withValues(alpha: 0.2)),
 
           const SizedBox(height: 16),
 
@@ -130,7 +125,8 @@ class FrequencySummaryStep extends ConsumerWidget {
                 _SummaryCard(
                   icon: AppIcons.schedule,
                   label: context.l10n.initialOnboardingSummaryFrequency,
-                  value: '${state.workoutsPerWeek}x / ${context.l10n.initialOnboardingWeek}',
+                  value:
+                      '${state.workoutsPerWeek}x / ${context.l10n.initialOnboardingWeek}',
                 ),
               ],
             ),
@@ -240,7 +236,10 @@ class FrequencySummaryStep extends ConsumerWidget {
     }
   }
 
-  String _getExperienceLabel(BuildContext context, ExperienceLevelUI experience) {
+  String _getExperienceLabel(
+    BuildContext context,
+    ExperienceLevelUI experience,
+  ) {
     switch (experience) {
       case ExperienceLevelUI.beginner:
         return context.l10n.initialOnboardingExperienceBeginner;
@@ -256,10 +255,7 @@ class FrequencySummaryStep extends ConsumerWidget {
 
 /// Frequency selector with pill-shaped buttons
 class _FrequencySelector extends StatelessWidget {
-  const _FrequencySelector({
-    required this.value,
-    required this.onChanged,
-  });
+  const _FrequencySelector({required this.value, required this.onChanged});
 
   final int value;
   final ValueChanged<int> onChanged;
@@ -281,7 +277,9 @@ class _FrequencySelector extends StatelessWidget {
             decoration: BoxDecoration(
               color: isSelected
                   ? context.colors.primary
-                  : context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+                  : context.colors.surfaceContainerHighest.withValues(
+                      alpha: 0.5,
+                    ),
               borderRadius: BorderRadius.circular(22),
               border: Border.all(
                 color: isSelected
@@ -330,11 +328,7 @@ class _SummaryCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
-            icon,
-            size: 20,
-            color: context.colors.primary,
-          ),
+          Icon(icon, size: 20, color: context.colors.primary),
           const SizedBox(width: 12),
           Text(
             label,

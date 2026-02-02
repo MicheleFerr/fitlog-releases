@@ -33,11 +33,11 @@ class SyncProgressOverlay extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SemanticIcon(
-  icon: AppIcons.syncIcon,
-  semanticLabel: 'Sync icon',
-  size: AppIconSize.medium,
-  color: theme.colorScheme.primary,
-),
+                  icon: AppIcons.syncIcon,
+                  semanticLabel: 'Sync icon',
+                  size: AppIconSize.medium,
+                  color: theme.colorScheme.primary,
+                ),
                 const SizedBox(height: 24),
 
                 Text(
@@ -117,7 +117,8 @@ class SyncProgressOverlay extends ConsumerWidget {
       case SyncState.completed:
         return 'Tutti i dati sono stati sincronizzati!';
       case SyncState.error:
-        return status.errorMessage ?? 'Si è verificato un errore durante la sincronizzazione.';
+        return status.errorMessage ??
+            'Si è verificato un errore durante la sincronizzazione.';
       default:
         return '';
     }

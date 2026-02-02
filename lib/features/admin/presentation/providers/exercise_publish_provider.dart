@@ -18,10 +18,11 @@ final exercisePublishServiceProvider = Provider<ExercisePublishService>((ref) {
 /// Provider per metadata versione corrente
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically cancels Firestore listener when widget is disposed
-final versionMetadataProvider = StreamProvider.autoDispose<Map<String, dynamic>?>((ref) {
-  final service = ref.watch(exercisePublishServiceProvider);
-  return service.watchVersionMetadata();
-});
+final versionMetadataProvider =
+    StreamProvider.autoDispose<Map<String, dynamic>?>((ref) {
+      final service = ref.watch(exercisePublishServiceProvider);
+      return service.watchVersionMetadata();
+    });
 
 /// Provider per versione corrente (string)
 /// Restituisce '1.0.0' come default per prima pubblicazione

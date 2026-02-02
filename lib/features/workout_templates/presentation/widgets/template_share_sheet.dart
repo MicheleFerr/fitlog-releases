@@ -24,7 +24,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 
 /// Share format options
 enum ShareFormat {
-  text,    // Chat/social friendly text
+  text, // Chat/social friendly text
   compact, // Ultra compact (5x10, 3x8)
 }
 
@@ -278,21 +278,25 @@ class _TemplateShareSheetContentState
                 icon: AppIcons.timer,
                 isEnabled: _options.includeRestTime,
                 onTap: () => setState(
-                    () => _options.includeRestTime = !_options.includeRestTime),
+                  () => _options.includeRestTime = !_options.includeRestTime,
+                ),
               ),
               _buildOptionChip(
                 label: l10n.notes,
                 icon: AppIcons.note,
                 isEnabled: _options.includeNotes,
-                onTap: () =>
-                    setState(() => _options.includeNotes = !_options.includeNotes),
+                onTap: () => setState(
+                  () => _options.includeNotes = !_options.includeNotes,
+                ),
               ),
               _buildOptionChip(
                 label: l10n.techniques,
                 icon: AppIcons.layers,
                 isEnabled: _options.showTechniqueChips,
                 onTap: () => setState(
-                    () => _options.showTechniqueChips = !_options.showTechniqueChips),
+                  () => _options.showTechniqueChips =
+                      !_options.showTechniqueChips,
+                ),
               ),
             ],
           ),
@@ -403,10 +407,7 @@ class _TemplateShareSheetContentState
               ),
             ),
             child: SingleChildScrollView(
-              child: Text(
-                previewText,
-                style: context.textTheme.bodySmall,
-              ),
+              child: Text(previewText, style: context.textTheme.bodySmall),
             ),
           ),
         ],
@@ -428,9 +429,7 @@ class _TemplateShareSheetContentState
               semanticLabel: l10n.cancel,
               size: AppIconSize.medium,
             ),
-            style: IconButton.styleFrom(
-              padding: const EdgeInsets.all(16),
-            ),
+            style: IconButton.styleFrom(padding: const EdgeInsets.all(16)),
           ),
           const SizedBox(width: AppSpacing.xl),
           // Share button (larger, primary)
@@ -482,9 +481,11 @@ class _TemplateShareSheetContentState
       // Technique chips
       if (_options.showTechniqueChips) {
         final techniques = <String>[];
-        if (exercise.type == ExerciseType.superset) techniques.add('🔗 Superset');
+        if (exercise.type == ExerciseType.superset)
+          techniques.add('🔗 Superset');
         if (exercise.type == ExerciseType.dropset) techniques.add('⬇️ Dropset');
-        if (exercise.type == ExerciseType.restPause) techniques.add('⏸️ Rest-Pause');
+        if (exercise.type == ExerciseType.restPause)
+          techniques.add('⏸️ Rest-Pause');
         if (techniques.isNotEmpty) {
           buffer.write(' ${techniques.join(' ')}');
         }
@@ -632,7 +633,10 @@ class _TemplateShareSheetContentState
   Future<void> _copyToClipboard(String text) async {
     await Clipboard.setData(ClipboardData(text: text));
     if (mounted) {
-      SnackBarService.showSuccess(context, AppLocalizations.of(context).copiedToClipboard);
+      SnackBarService.showSuccess(
+        context,
+        AppLocalizations.of(context).copiedToClipboard,
+      );
     }
   }
 
@@ -641,17 +645,17 @@ class _TemplateShareSheetContentState
 
     try {
       await SharePlus.instance.share(
-        ShareParams(
-          text: text,
-          subject: widget.template.name,
-        ),
+        ShareParams(text: text, subject: widget.template.name),
       );
       if (mounted) {
         Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(context, AppLocalizations.of(context).errorSharing);
+        SnackBarService.showError(
+          context,
+          AppLocalizations.of(context).errorSharing,
+        );
       }
     }
   }

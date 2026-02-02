@@ -14,7 +14,6 @@ import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abb
 
 /// Risultato del calcolo volume per un muscle group
 class MuscleGroupVolume {
-
   const MuscleGroupVolume({
     required this.muscleGroup,
     required this.totalSets,
@@ -99,9 +98,10 @@ class AIVolumeCalculator {
       } else {
         // Fallback: usa categorizzazione SSOT se esercizio non trovato (custom exercise)
         // **Uses SSOT**: MuscleAbbreviationMapper.categorizeExerciseToAbbreviation
-        final muscleGroup = MuscleAbbreviationMapper.categorizeExerciseToAbbreviation(
-          activity.exerciseName,
-        );
+        final muscleGroup =
+            MuscleAbbreviationMapper.categorizeExerciseToAbbreviation(
+              activity.exerciseName,
+            );
         _addVolumeToMuscle(
           volumeByMuscle,
           muscleGroup,
@@ -136,10 +136,7 @@ class AIVolumeCalculator {
     String exerciseName, {
     required bool isPrimary,
   }) {
-    volumeMap.putIfAbsent(
-      muscle,
-      () => _MuscleGroupData(),
-    );
+    volumeMap.putIfAbsent(muscle, () => _MuscleGroupData());
 
     volumeMap[muscle]!.totalSets += sets;
     volumeMap[muscle]!.totalVolume += volume;

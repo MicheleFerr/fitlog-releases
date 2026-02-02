@@ -6,7 +6,6 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 /// Tracks usage metrics to show freshness and engagement.
 /// Used to display "last performed" metadata in template cards.
 class TemplateStats {
-
   const TemplateStats({
     this.lastPerformed,
     this.totalCompletions = 0,
@@ -21,6 +20,7 @@ class TemplateStats {
       avgDuration: null,
     );
   }
+
   /// Last time this template was used (null if never)
   final DateTime? lastPerformed;
 
@@ -132,9 +132,7 @@ class TemplateStats {
 
   @override
   int get hashCode =>
-      lastPerformed.hashCode ^
-      totalCompletions.hashCode ^
-      avgDuration.hashCode;
+      lastPerformed.hashCode ^ totalCompletions.hashCode ^ avgDuration.hashCode;
 
   @override
   String toString() {
@@ -149,8 +147,9 @@ class TemplateStats {
     Duration? Function()? avgDuration,
   }) {
     return TemplateStats(
-      lastPerformed:
-          lastPerformed != null ? lastPerformed() : this.lastPerformed,
+      lastPerformed: lastPerformed != null
+          ? lastPerformed()
+          : this.lastPerformed,
       totalCompletions: totalCompletions ?? this.totalCompletions,
       avgDuration: avgDuration != null ? avgDuration() : this.avgDuration,
     );

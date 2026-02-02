@@ -68,7 +68,8 @@ class MinimalSetEditSheet extends StatefulWidget {
   final ExerciseSet? previousSet; // Previous set data for copy
   final List<ExerciseSet>? allSets; // All sets for dot indicators
   final String measurementUnit;
-  final List<double>? recentWeights; // History of recent weights for quick select
+  final List<double>?
+  recentWeights; // History of recent weights for quick select
   final double? suggestedWeight; // Pre-fill weight from suggestion provider
   final String? suggestedSource; // Source label for the suggestion chip
 
@@ -107,7 +108,10 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     _reps = widget.exerciseSet.reps ?? 10;
 
     // Initialize wheel controllers at current values
-    final weightIndex = ((_weight - _minWeight) / _weightStep).round().clamp(0, _weightItemCount - 1);
+    final weightIndex = ((_weight - _minWeight) / _weightStep).round().clamp(
+      0,
+      _weightItemCount - 1,
+    );
     final repsIndex = (_reps - _minReps).clamp(0, _maxReps - _minReps);
 
     _weightController = FixedExtentScrollController(initialItem: weightIndex);
@@ -147,7 +151,8 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
 
   String _formatWeight(double weight) {
     if (weight % 1 == 0) return '${weight.toInt()}';
-    if ((weight * 2) % 1 == 0) return weight.toStringAsFixed(1); // .5 increments
+    if ((weight * 2) % 1 == 0)
+      return weight.toStringAsFixed(1); // .5 increments
     return weight.toStringAsFixed(2); // .25 increments
   }
 
@@ -166,10 +171,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
       widget.currentSetIndex! > 0;
 
   ExerciseSet _createUpdatedSet() {
-    return widget.exerciseSet.copyWith(
-      weight: _weight,
-      reps: _reps,
-    );
+    return widget.exerciseSet.copyWith(weight: _weight, reps: _reps);
   }
 
   void _save() {
@@ -205,13 +207,18 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     final parsedWeight = double.tryParse(weightText);
     if (parsedWeight != null && parsedWeight >= _minWeight) {
       _weight = parsedWeight;
-      final weightIndex = ((_weight - _minWeight) / _weightStep).round().clamp(0, _weightItemCount - 1);
+      final weightIndex = ((_weight - _minWeight) / _weightStep).round().clamp(
+        0,
+        _weightItemCount - 1,
+      );
       _weightController.jumpToItem(weightIndex);
     }
 
     // Parse reps from text
     final parsedReps = int.tryParse(_repsTextController.text);
-    if (parsedReps != null && parsedReps >= _minReps && parsedReps <= _maxReps) {
+    if (parsedReps != null &&
+        parsedReps >= _minReps &&
+        parsedReps <= _maxReps) {
       _reps = parsedReps;
       final repsIndex = (_reps - _minReps).clamp(0, _maxReps - _minReps);
       _repsController.jumpToItem(repsIndex);
@@ -235,7 +242,10 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
       _repsTextController.text = '$_reps';
 
       // Update wheel positions
-      final weightIndex = ((_weight - _minWeight) / _weightStep).round().clamp(0, _weightItemCount - 1);
+      final weightIndex = ((_weight - _minWeight) / _weightStep).round().clamp(
+        0,
+        _weightItemCount - 1,
+      );
       final repsIndex = (_reps - _minReps).clamp(0, _maxReps - _minReps);
       _weightController.jumpToItem(weightIndex);
       _repsController.jumpToItem(repsIndex);
@@ -302,11 +312,11 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
               if (_hasMultipleSets) _buildDotIndicators(),
 
               // Suggested weight chip
-              if (widget.suggestedWeight != null)
-                _buildSuggestionChip(),
+              if (widget.suggestedWeight != null) _buildSuggestionChip(),
 
               // Recent weights chips
-              if (widget.recentWeights != null && widget.recentWeights!.isNotEmpty)
+              if (widget.recentWeights != null &&
+                  widget.recentWeights!.isNotEmpty)
                 _buildRecentWeightsChips(),
 
               const SizedBox(height: 12),
@@ -387,7 +397,8 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                 mainAxisSize: MainAxisSize.min,
                 children: List.generate(totalSets, (index) {
                   final isActive = index == currentIndex;
-                  final hasWeight = allSets != null &&
+                  final hasWeight =
+                      allSets != null &&
                       index < allSets.length &&
                       (allSets[index].weight ?? 0) > 0;
 
@@ -415,12 +426,14 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                         color: isActive
                             ? context.colors.primary
                             : hasWeight
-                                ? context.colors.primary.withValues(alpha: 0.5)
-                                : context.colors.outlineVariant,
+                            ? context.colors.primary.withValues(alpha: 0.5)
+                            : context.colors.outlineVariant,
                         borderRadius: BorderRadius.circular(8),
                         border: !hasWeight && !isActive
                             ? Border.all(
-                                color: context.colors.outline.withValues(alpha: 0.3),
+                                color: context.colors.outline.withValues(
+                                  alpha: 0.3,
+                                ),
                                 width: 1,
                               )
                             : null,
@@ -470,7 +483,10 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                     FocusScope.of(context).unfocus();
                   },
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
@@ -507,7 +523,10 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                 ),
                 label: Text(_isManualInput ? 'Wheel' : 'Digita'),
                 style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
                   minimumSize: Size.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
@@ -524,15 +543,23 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
               Expanded(
                 child: _isManualInput
                     ? _buildManualInput(
-                        label: context.l10n.weightKg.replaceAll('kg', widget.measurementUnit),
+                        label: context.l10n.weightKg.replaceAll(
+                          'kg',
+                          widget.measurementUnit,
+                        ),
                         controller: _weightTextController,
                         focusNode: _weightFocusNode,
                         onChanged: _onWeightTextChanged,
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
                         suffix: widget.measurementUnit,
                       )
                     : _buildWheelPicker(
-                        label: context.l10n.weightKg.replaceAll('kg', widget.measurementUnit),
+                        label: context.l10n.weightKg.replaceAll(
+                          'kg',
+                          widget.measurementUnit,
+                        ),
                         controller: _weightController,
                         itemCount: _weightItemCount,
                         itemBuilder: (index) {
@@ -553,13 +580,17 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                         showFastScrub: true,
                         fastScrubValues: [0, 20, 40, 60, 80, 100, 150, 200],
                         onFastScrubSelect: (value) {
-                          final index = ((value - _minWeight) / _weightStep).round().clamp(0, _weightItemCount - 1);
+                          final index = ((value - _minWeight) / _weightStep)
+                              .round()
+                              .clamp(0, _weightItemCount - 1);
                           _weightController.jumpToItem(index);
                           setState(() => _weight = value.toDouble());
                         },
                         isFastScrubActive: _isWeightFastScrubActive,
-                        onFastScrubStart: () => setState(() => _isWeightFastScrubActive = true),
-                        onFastScrubEnd: () => setState(() => _isWeightFastScrubActive = false),
+                        onFastScrubStart: () =>
+                            setState(() => _isWeightFastScrubActive = true),
+                        onFastScrubEnd: () =>
+                            setState(() => _isWeightFastScrubActive = false),
                         currentValue: _weight,
                       ),
               ),
@@ -597,13 +628,18 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                         showFastScrub: true,
                         fastScrubValues: [1, 5, 8, 10, 12, 15, 20, 30],
                         onFastScrubSelect: (value) {
-                          final index = (value - _minReps).clamp(0, _maxReps - _minReps);
+                          final index = (value - _minReps).clamp(
+                            0,
+                            _maxReps - _minReps,
+                          );
                           _repsController.jumpToItem(index);
                           setState(() => _reps = value);
                         },
                         isFastScrubActive: _isRepsFastScrubActive,
-                        onFastScrubStart: () => setState(() => _isRepsFastScrubActive = true),
-                        onFastScrubEnd: () => setState(() => _isRepsFastScrubActive = false),
+                        onFastScrubStart: () =>
+                            setState(() => _isRepsFastScrubActive = true),
+                        onFastScrubEnd: () =>
+                            setState(() => _isRepsFastScrubActive = false),
                         currentValue: _reps.toDouble(),
                         fastScrubOnRight: true,
                       ),
@@ -637,7 +673,9 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
           height: 150,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+            color: context.colors.surfaceContainerHighest.withValues(
+              alpha: 0.3,
+            ),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Center(
@@ -718,7 +756,9 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
               Expanded(
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+                    color: context.colors.surfaceContainerHighest.withValues(
+                      alpha: 0.3,
+                    ),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Stack(
@@ -729,10 +769,14 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                           height: 44,
                           margin: const EdgeInsets.symmetric(horizontal: 8),
                           decoration: BoxDecoration(
-                            color: context.colors.primary.withValues(alpha: 0.1),
+                            color: context.colors.primary.withValues(
+                              alpha: 0.1,
+                            ),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: context.colors.primary.withValues(alpha: 0.3),
+                              color: context.colors.primary.withValues(
+                                alpha: 0.3,
+                              ),
                               width: 2,
                             ),
                           ),
@@ -834,10 +878,15 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                   final isNearCurrent = (currentValue - value).abs() < 3;
                   return AnimatedContainer(
                     duration: const Duration(milliseconds: 100),
-                    padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 2),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 1,
+                      horizontal: 2,
+                    ),
                     decoration: isNearCurrent
                         ? BoxDecoration(
-                            color: context.colors.primary.withValues(alpha: 0.3),
+                            color: context.colors.primary.withValues(
+                              alpha: 0.3,
+                            ),
                             borderRadius: BorderRadius.circular(8),
                           )
                         : null,
@@ -845,7 +894,9 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                       '$value',
                       style: context.textTheme.labelSmall?.copyWith(
                         fontSize: 8,
-                        fontWeight: isNearCurrent ? FontWeight.bold : FontWeight.w500,
+                        fontWeight: isNearCurrent
+                            ? FontWeight.bold
+                            : FontWeight.w500,
                         color: isNearCurrent
                             ? context.colors.primary
                             : context.colors.onSurfaceVariant,
@@ -869,10 +920,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     );
   }
 
-  Widget _buildPickerItem({
-    required String text,
-    required bool isSelected,
-  }) {
+  Widget _buildPickerItem({required String text, required bool isSelected}) {
     return Center(
       child: Text(
         text,
@@ -1028,8 +1076,9 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                     child: Text(
                       '${_formatWeight(weight)} ${widget.measurementUnit}',
                       style: TextStyle(
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.w500,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.w500,
                         color: isSelected
                             ? context.colors.primary
                             : context.colors.onSurface,

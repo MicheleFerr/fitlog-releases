@@ -17,7 +17,8 @@ import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 
 /// Complete workout history with all exercise details
-class WorkoutHistoryDetail { // ID of the workout template used
+class WorkoutHistoryDetail {
+  // ID of the workout template used
 
   const WorkoutHistoryDetail({
     required this.id,
@@ -62,12 +63,17 @@ class WorkoutHistoryDetail { // ID of the workout template used
       description: data['description'] ?? '',
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       startedAt: (data['startedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      completedAt: (data['completedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      completedAt:
+          (data['completedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       duration: Duration(minutes: data['durationMinutes'] ?? 0),
-      exercises: (data['exercises'] as List<dynamic>?)
-          ?.map((e) => ExerciseHistoryDetail.fromMap(e as Map<String, dynamic>))
-          .toList() ?? [],
+      exercises:
+          (data['exercises'] as List<dynamic>?)
+              ?.map(
+                (e) => ExerciseHistoryDetail.fromMap(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          [],
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       templateId: data['templateId'] as String?,
     );
@@ -80,14 +86,27 @@ class WorkoutHistoryDetail { // ID of the workout template used
       userId: map['userId'] ?? '',
       name: map['name'] ?? 'Unknown Workout',
       description: map['description'] ?? '',
-      createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-      startedAt: DateTime.parse(map['startedAt'] ?? DateTime.now().toIso8601String()),
-      completedAt: DateTime.parse(map['completedAt'] ?? DateTime.now().toIso8601String()),
-      updatedAt: DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(
+        map['createdAt'] ?? DateTime.now().toIso8601String(),
+      ),
+      startedAt: DateTime.parse(
+        map['startedAt'] ?? DateTime.now().toIso8601String(),
+      ),
+      completedAt: DateTime.parse(
+        map['completedAt'] ?? DateTime.now().toIso8601String(),
+      ),
+      updatedAt: DateTime.parse(
+        map['updatedAt'] ?? DateTime.now().toIso8601String(),
+      ),
       duration: Duration(minutes: map['durationMinutes'] ?? 0),
-      exercises: (map['exercises'] as List<dynamic>?)
-          ?.map((e) => ExerciseHistoryDetail.fromMap(e as Map<dynamic, dynamic>))
-          .toList() ?? [],
+      exercises:
+          (map['exercises'] as List<dynamic>?)
+              ?.map(
+                (e) =>
+                    ExerciseHistoryDetail.fromMap(e as Map<dynamic, dynamic>),
+              )
+              .toList() ??
+          [],
       metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
       templateId: map['templateId'] as String?,
     );
@@ -132,7 +151,9 @@ class WorkoutHistoryDetail { // ID of the workout template used
       'createdAt': Timestamp.fromDate(createdAt),
       'startedAt': Timestamp.fromDate(startedAt),
       'completedAt': Timestamp.fromDate(completedAt),
-      'updatedAt': Timestamp.fromDate(DateTime.now()), // Always update timestamp
+      'updatedAt': Timestamp.fromDate(
+        DateTime.now(),
+      ), // Always update timestamp
       'durationMinutes': duration.inMinutes,
       'exercises': exercises.map((e) => e.toMap()).toList(),
       'metadata': metadata,
@@ -217,7 +238,6 @@ class WorkoutHistoryDetail { // ID of the workout template used
 
 /// Exercise history with complete details
 class ExerciseHistoryDetail {
-
   const ExerciseHistoryDetail({
     required this.id,
     required this.name,
@@ -240,9 +260,11 @@ class ExerciseHistoryDetail {
       name: map['name'] ?? '',
       category: map['category'] ?? '',
       notes: map['notes'],
-      sets: (map['sets'] as List<dynamic>?)
-          ?.map((s) => SetHistoryDetail.fromMap(s as Map<dynamic, dynamic>))
-          .toList() ?? [],
+      sets:
+          (map['sets'] as List<dynamic>?)
+              ?.map((s) => SetHistoryDetail.fromMap(s as Map<dynamic, dynamic>))
+              .toList() ??
+          [],
       exerciseData: normalizedExerciseData,
     );
   }
@@ -268,7 +290,9 @@ class ExerciseHistoryDetail {
   ///   'muscoliSecondari': ['BICI', 'LOMB']
   /// }
   /// ```
-  static Map<String, dynamic> _normalizeExerciseData(Map<String, dynamic> data) {
+  static Map<String, dynamic> _normalizeExerciseData(
+    Map<String, dynamic> data,
+  ) {
     final normalized = Map<String, dynamic>.from(data);
 
     // Normalize focus field (primary muscles)
@@ -276,15 +300,23 @@ class ExerciseHistoryDetail {
       final focus = normalized['focus'];
       if (focus is List) {
         normalized['focus'] = focus
-            .map((muscle) => MuscleAbbreviationMapper.normalizeToCanonicalId(
-                  muscle.toString(),
-                ))
+            .map(
+              (muscle) => MuscleAbbreviationMapper.normalizeToCanonicalId(
+                muscle.toString(),
+              ),
+            )
             .toList();
       } else if (focus is String) {
         // Handle comma-separated string format
-        final muscles = focus.split(',').map((m) => m.trim()).where((m) => m.isNotEmpty);
+        final muscles = focus
+            .split(',')
+            .map((m) => m.trim())
+            .where((m) => m.isNotEmpty);
         normalized['focus'] = muscles
-            .map((muscle) => MuscleAbbreviationMapper.normalizeToCanonicalId(muscle))
+            .map(
+              (muscle) =>
+                  MuscleAbbreviationMapper.normalizeToCanonicalId(muscle),
+            )
             .toList();
       }
     }
@@ -294,21 +326,30 @@ class ExerciseHistoryDetail {
       final secondary = normalized['muscoliSecondari'];
       if (secondary is List) {
         normalized['muscoliSecondari'] = secondary
-            .map((muscle) => MuscleAbbreviationMapper.normalizeToCanonicalId(
-                  muscle.toString(),
-                ))
+            .map(
+              (muscle) => MuscleAbbreviationMapper.normalizeToCanonicalId(
+                muscle.toString(),
+              ),
+            )
             .toList();
       } else if (secondary is String) {
         // Handle comma-separated string format
-        final muscles = secondary.split(',').map((m) => m.trim()).where((m) => m.isNotEmpty);
+        final muscles = secondary
+            .split(',')
+            .map((m) => m.trim())
+            .where((m) => m.isNotEmpty);
         normalized['muscoliSecondari'] = muscles
-            .map((muscle) => MuscleAbbreviationMapper.normalizeToCanonicalId(muscle))
+            .map(
+              (muscle) =>
+                  MuscleAbbreviationMapper.normalizeToCanonicalId(muscle),
+            )
             .toList();
       }
     }
 
     return normalized;
   }
+
   final String id;
   final String name;
   final String category;
@@ -349,7 +390,8 @@ class ExerciseHistoryDetail {
   double get averageRPE {
     final setsWithRPE = sets.where((s) => s.rpe > 0);
     if (setsWithRPE.isEmpty) return 0.0;
-    return setsWithRPE.map((s) => s.rpe).reduce((a, b) => a + b) / setsWithRPE.length;
+    return setsWithRPE.map((s) => s.rpe).reduce((a, b) => a + b) /
+        setsWithRPE.length;
   }
 
   /// Create copy with modifications
@@ -397,7 +439,8 @@ class ExerciseHistoryDetail {
 }
 
 /// Set history with complete details
-class SetHistoryDetail {            // Actual reps completed (vs planned reps)
+class SetHistoryDetail {
+  // Actual reps completed (vs planned reps)
 
   const SetHistoryDetail({
     required this.setNumber,
@@ -449,9 +492,9 @@ class SetHistoryDetail {            // Actual reps completed (vs planned reps)
   final bool isDropSet;
   final bool isFailure;
   // ✅ TUT & Advanced Tracking Fields
-  final double? setDurationMillis;  // Duration in milliseconds (TUT)
-  final DateTime? setStartedAt;     // Timestamp when set started
-  final DateTime? completedAt;      // Timestamp when set completed
+  final double? setDurationMillis; // Duration in milliseconds (TUT)
+  final DateTime? setStartedAt; // Timestamp when set started
+  final DateTime? completedAt; // Timestamp when set completed
   final int? actualReps;
 
   /// Convert to Map

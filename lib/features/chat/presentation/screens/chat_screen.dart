@@ -28,10 +28,7 @@ import 'package:intl/intl.dart';
 
 /// Main chat interface for messaging
 class ChatScreen extends ConsumerStatefulWidget {
-  const ChatScreen({
-    super.key,
-    required this.conversationId,
-  });
+  const ChatScreen({super.key, required this.conversationId});
 
   final String conversationId;
 
@@ -67,7 +64,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final messagesAsync = ref.watch(messagesProvider(widget.conversationId));
-    final conversationAsync = ref.watch(conversationProvider(widget.conversationId));
+    final conversationAsync = ref.watch(
+      conversationProvider(widget.conversationId),
+    );
     final currentUser = ref.watch(currentUserProvider).valueOrNull;
     final currentUserId = currentUser?.uid ?? '';
 
@@ -79,11 +78,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           // Messages list
           Expanded(
             child: messagesAsync.when(
-              data: (messages) => _buildMessagesList(
-                context,
-                messages,
-                currentUserId,
-              ),
+              data: (messages) =>
+                  _buildMessagesList(context, messages, currentUserId),
               loading: () => const Center(child: LoadingIndicator()),
               error: (error, _) => Center(
                 child: Padding(
@@ -272,7 +268,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await ref.read(chatActionsProvider).sendTextMessage(
+      await ref
+          .read(chatActionsProvider)
+          .sendTextMessage(
             conversationId: widget.conversationId,
             text: text.trim(),
           );
@@ -292,7 +290,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await ref.read(chatActionsProvider).sendImageMessage(
+      await ref
+          .read(chatActionsProvider)
+          .sendImageMessage(
             conversationId: widget.conversationId,
             imageFile: imageFile,
             caption: caption,
@@ -309,11 +309,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     }
   }
 
-  Future<void> _sendWorkoutLink(WorkoutHistoryDetail workout, String? comment) async {
+  Future<void> _sendWorkoutLink(
+    WorkoutHistoryDetail workout,
+    String? comment,
+  ) async {
     setState(() => _isLoading = true);
 
     try {
-      await ref.read(chatActionsProvider).sendWorkoutLink(
+      await ref
+          .read(chatActionsProvider)
+          .sendWorkoutLink(
             conversationId: widget.conversationId,
             workout: workout,
             comment: comment,
@@ -332,7 +337,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   Future<void> _deleteMessage(String messageId) async {
     try {
-      await ref.read(chatActionsProvider).deleteMessage(
+      await ref
+          .read(chatActionsProvider)
+          .deleteMessage(
             conversationId: widget.conversationId,
             messageId: messageId,
           );
@@ -396,7 +403,9 @@ class _WorkoutPickerSheet extends ConsumerWidget {
                   width: 32,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
+                    color: context.colors.onSurfaceVariant.withValues(
+                      alpha: 0.4,
+                    ),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -479,10 +488,7 @@ class _WorkoutPickerSheet extends ConsumerWidget {
 
 /// Tile for displaying a workout in the picker
 class _WorkoutTile extends StatelessWidget {
-  const _WorkoutTile({
-    required this.workout,
-    required this.onTap,
-  });
+  const _WorkoutTile({required this.workout, required this.onTap});
 
   final WorkoutHistoryDetail workout;
   final VoidCallback onTap;
@@ -526,11 +532,7 @@ class _WorkoutTile extends StatelessWidget {
           color: context.colors.onSurfaceVariant,
         ),
       ),
-      trailing: Icon(
-        AppIcons.send,
-        color: context.colors.primary,
-        size: 20,
-      ),
+      trailing: Icon(AppIcons.send, color: context.colors.primary, size: 20),
     );
   }
 }

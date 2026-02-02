@@ -46,7 +46,9 @@ enum SortBy {
 /// **Purpose**: Controls whether search bar is visible in analytics screen
 /// **Behavior**: Persistent within session (resets on screen exit)
 /// **Default**: false (hidden)
-final searchBarVisibilityProvider = StateProvider.autoDispose<bool>((ref) => false);
+final searchBarVisibilityProvider = StateProvider.autoDispose<bool>(
+  (ref) => false,
+);
 
 class AnalyticsScreen extends ConsumerWidget {
   const AnalyticsScreen({super.key});
@@ -70,12 +72,17 @@ class AnalyticsScreen extends ConsumerWidget {
               return IconButton(
                 icon: SemanticIcon.button(
                   icon: isSearchVisible ? AppIcons.close : AppIcons.search,
-                  semanticLabel: isSearchVisible ? context.l10n.close : context.l10n.search,
+                  semanticLabel: isSearchVisible
+                      ? context.l10n.close
+                      : context.l10n.search,
                 ),
-                tooltip: isSearchVisible ? context.l10n.close : context.l10n.search,
+                tooltip: isSearchVisible
+                    ? context.l10n.close
+                    : context.l10n.search,
                 onPressed: () {
                   // Toggle search bar visibility
-                  ref.read(searchBarVisibilityProvider.notifier).state = !isSearchVisible;
+                  ref.read(searchBarVisibilityProvider.notifier).state =
+                      !isSearchVisible;
 
                   // Haptic feedback
                   HapticFeedback.lightImpact();
@@ -88,8 +95,8 @@ class AnalyticsScreen extends ConsumerWidget {
       body: authState != AuthState.authenticated
           ? const _NotAuthenticatedView()
           : userId == null
-              ? const _NotAuthenticatedView()
-              : _AuthenticatedAnalyticsView(userId: userId),
+          ? const _NotAuthenticatedView()
+          : _AuthenticatedAnalyticsView(userId: userId),
     );
   }
 }
@@ -138,7 +145,8 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
   // Scroll-away behavior state
   bool _showBars = true; // Show stats + search + chips
   double _lastScrollOffset = 0.0;
-  static const double _scrollThreshold = 100.0; // Minimum scroll to trigger (increased for stability)
+  static const double _scrollThreshold =
+      100.0; // Minimum scroll to trigger (increased for stability)
 
   /// Debounced search handler - waits 300ms after user stops typing
   void _onSearchChanged(String query) {
@@ -238,13 +246,13 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
           final aLast = a.sessions.isEmpty
               ? DateTime(1970)
               : a.sessions
-                  .map((s) => s.date)
-                  .reduce((a, b) => a.isAfter(b) ? a : b);
+                    .map((s) => s.date)
+                    .reduce((a, b) => a.isAfter(b) ? a : b);
           final bLast = b.sessions.isEmpty
               ? DateTime(1970)
               : b.sessions
-                  .map((s) => s.date)
-                  .reduce((a, b) => a.isAfter(b) ? a : b);
+                    .map((s) => s.date)
+                    .reduce((a, b) => a.isAfter(b) ? a : b);
           return bLast.compareTo(aLast);
         });
         break;
@@ -269,132 +277,147 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
 
             return Column(
               children: [
-        // Stats bar (with scroll-away animation)
-        AnimatedSize(
-          duration: AppAnimations.normal,
-          curve: AppAnimations.decelerate,
-          child: _showBars
-              ? _QuickStatsSummary(exerciseHistories: widget.exerciseHistories)
-              : const SizedBox.shrink(),
-        ),
-
-        // Search bar (conditional with slide animation + scroll-away)
-        Consumer(
-          builder: (context, ref, child) {
-            final isSearchVisible = ref.watch(searchBarVisibilityProvider);
-
-            return AnimatedSize(
-              duration: AppAnimations.normal,
-              curve: AppAnimations.decelerate,
-              child: (_showBars && isSearchVisible)
-                  ? Padding(
-                      padding: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, AppSpacing.xs),
-                      child: TextField(
-                        controller: _searchController,
-                        autofocus: true, // Auto-focus when appears
-                        decoration: InputDecoration(
-                          hintText: context.l10n.searchExercises,
-                          prefixIcon: SemanticIcon(
-                            icon: AppIcons.search,
-                            semanticLabel: context.l10n.search,
-                            size: AppIconSize.medium,
-                            color: context.colors.onSurfaceVariant,
-                          ),
-                          suffixIcon: searchQuery.isNotEmpty
-                              ? IconButton(
-                                  icon: SemanticIcon.button(
-                                    icon: AppIcons.close,
-                                    semanticLabel: context.l10n.clear,
-                                  ),
-                                  onPressed: () {
-                                    _debounce?.cancel();
-                                    _searchController.clear();
-                                    _searchQuery.value = ''; // ValueNotifier update
-                                  },
-                                )
-                              : null,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onChanged: _onSearchChanged,
-                      ),
-                    )
-                  : const SizedBox.shrink(), // Hidden state: no height
-            );
-          },
-        ),
-
-        // Sort & Filter chips with live counters (with scroll-away animation)
-        AnimatedSize(
-          duration: AppAnimations.normal,
-          curve: AppAnimations.decelerate,
-          child: _showBars
-              ? _SortFilterChips(
-                  sortBy: _sortBy,
-                  filterCounts: _filterCounts,
-                  onSortChanged: (newSort) => safeSetState(() => _sortBy = newSort),
-                )
-              : const SizedBox.shrink(),
-        ),
-
-        // Pro Insights Badge - Compact clickable badge with PRO label
-        // Click → Navigate to /analytics/pro for full analytics view
-        // FREE: Lock icon + upgrade CTA
-        // PREMIUM: Quick stats preview + "View Details"
-        if (_showBars)
-          ProInsightsBadge(exerciseHistories: widget.exerciseHistories),
-
-        // Results list
-        Expanded(
-          child: filteredHistories.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SemanticIcon(
-                        icon: AppIcons.search,
-                        semanticLabel: context.l10n.noResultsFound,
-                        size: AppIconSize.xxlarge,
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      Text(
-                        context.l10n.noResultsFound,
-                        style: context.textTheme.titleMedium?.copyWith(
-                          color: context.colors.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        context.l10n.tryAnotherSearch,
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          color: context.colors.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : RefreshIndicator(
-                  onRefresh: () async {
-                    // Invalidate provider to trigger fresh data fetch
-                    ref.invalidate(exerciseHistoryStreamProvider(widget.userId));
-                    // Wait for new data to be available
-                    await ref.read(exerciseHistoryStreamProvider(widget.userId).future);
-                  },
-                  // Use compact flat list - simplified UX (removed view mode toggle)
-                  child: _buildFlatList(filteredHistories),
+                // Stats bar (with scroll-away animation)
+                AnimatedSize(
+                  duration: AppAnimations.normal,
+                  curve: AppAnimations.decelerate,
+                  child: _showBars
+                      ? _QuickStatsSummary(
+                          exerciseHistories: widget.exerciseHistories,
+                        )
+                      : const SizedBox.shrink(),
                 ),
-        ),
+
+                // Search bar (conditional with slide animation + scroll-away)
+                Consumer(
+                  builder: (context, ref, child) {
+                    final isSearchVisible = ref.watch(
+                      searchBarVisibilityProvider,
+                    );
+
+                    return AnimatedSize(
+                      duration: AppAnimations.normal,
+                      curve: AppAnimations.decelerate,
+                      child: (_showBars && isSearchVisible)
+                          ? Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                AppSpacing.md,
+                                0,
+                                AppSpacing.md,
+                                AppSpacing.xs,
+                              ),
+                              child: TextField(
+                                controller: _searchController,
+                                autofocus: true, // Auto-focus when appears
+                                decoration: InputDecoration(
+                                  hintText: context.l10n.searchExercises,
+                                  prefixIcon: SemanticIcon(
+                                    icon: AppIcons.search,
+                                    semanticLabel: context.l10n.search,
+                                    size: AppIconSize.medium,
+                                    color: context.colors.onSurfaceVariant,
+                                  ),
+                                  suffixIcon: searchQuery.isNotEmpty
+                                      ? IconButton(
+                                          icon: SemanticIcon.button(
+                                            icon: AppIcons.close,
+                                            semanticLabel: context.l10n.clear,
+                                          ),
+                                          onPressed: () {
+                                            _debounce?.cancel();
+                                            _searchController.clear();
+                                            _searchQuery.value =
+                                                ''; // ValueNotifier update
+                                          },
+                                        )
+                                      : null,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                onChanged: _onSearchChanged,
+                              ),
+                            )
+                          : const SizedBox.shrink(), // Hidden state: no height
+                    );
+                  },
+                ),
+
+                // Sort & Filter chips with live counters (with scroll-away animation)
+                AnimatedSize(
+                  duration: AppAnimations.normal,
+                  curve: AppAnimations.decelerate,
+                  child: _showBars
+                      ? _SortFilterChips(
+                          sortBy: _sortBy,
+                          filterCounts: _filterCounts,
+                          onSortChanged: (newSort) =>
+                              safeSetState(() => _sortBy = newSort),
+                        )
+                      : const SizedBox.shrink(),
+                ),
+
+                // Pro Insights Badge - Compact clickable badge with PRO label
+                // Click → Navigate to /analytics/pro for full analytics view
+                // FREE: Lock icon + upgrade CTA
+                // PREMIUM: Quick stats preview + "View Details"
+                if (_showBars)
+                  ProInsightsBadge(exerciseHistories: widget.exerciseHistories),
+
+                // Results list
+                Expanded(
+                  child: filteredHistories.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SemanticIcon(
+                                icon: AppIcons.search,
+                                semanticLabel: context.l10n.noResultsFound,
+                                size: AppIconSize.xxlarge,
+                                color: context.colors.onSurfaceVariant,
+                              ),
+                              const SizedBox(height: AppSpacing.md),
+                              Text(
+                                context.l10n.noResultsFound,
+                                style: context.textTheme.titleMedium?.copyWith(
+                                  color: context.colors.onSurfaceVariant,
+                                ),
+                              ),
+                              const SizedBox(height: AppSpacing.xs),
+                              Text(
+                                context.l10n.tryAnotherSearch,
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: context.colors.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : RefreshIndicator(
+                          onRefresh: () async {
+                            // Invalidate provider to trigger fresh data fetch
+                            ref.invalidate(
+                              exerciseHistoryStreamProvider(widget.userId),
+                            );
+                            // Wait for new data to be available
+                            await ref.read(
+                              exerciseHistoryStreamProvider(
+                                widget.userId,
+                              ).future,
+                            );
+                          },
+                          // Use compact flat list - simplified UX (removed view mode toggle)
+                          child: _buildFlatList(filteredHistories),
+                        ),
+                ),
               ],
             ); // Close Column
           }, // Close ValueListenableBuilder builder
         ), // Close ValueListenableBuilder
-
       ],
     ); // Close Stack
   }
-
 
   /// Build flat list of exercises (compact view)
   ///
@@ -408,7 +431,10 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
 
     return ListView.builder(
       controller: _scrollController,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.xs,
+      ),
       itemCount: histories.length,
       itemBuilder: (context, index) {
         final history = histories[index];
@@ -448,8 +474,7 @@ class _QuickStatsSummary extends ConsumerWidget {
     }
 
     // Sort dates descending (newest first)
-    final sortedDates = allDates.toList()
-      ..sort((a, b) => b.compareTo(a));
+    final sortedDates = allDates.toList()..sort((a, b) => b.compareTo(a));
 
     if (sortedDates.isEmpty) return 0;
 
@@ -567,7 +592,10 @@ class _QuickStatsSummary extends ConsumerWidget {
     final weeklyGoal = ref.watch(weeklyWorkoutGoalProvider);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
+      margin: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.xs,
+      ),
       padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -698,7 +726,9 @@ class _QuickStatsSummary extends ConsumerWidget {
               icon: AppIcons.achievement,
               label: '${context.l10n.pr} (7 ${context.l10n.days})',
               value: '$recentPRs',
-              suffix: recentPRs == 1 ? context.l10n.newSingular : context.l10n.newPlural,
+              suffix: recentPRs == 1
+                  ? context.l10n.newSingular
+                  : context.l10n.newPlural,
               color: context.colors.onPrimaryContainer,
               trend: null,
               onTap: () {
@@ -732,10 +762,7 @@ class _QuickStatsSummary extends ConsumerWidget {
 /// Animated counter widget - Smoothly animates from 0 to target value
 /// **Used in**: Quick Stats card for dynamic number animation
 class _AnimatedCounter extends StatefulWidget {
-  const _AnimatedCounter({
-    required this.value,
-    required this.style,
-  });
+  const _AnimatedCounter({required this.value, required this.style});
 
   final String value; // Can be "123", "12.5t", etc.
   final TextStyle? style;
@@ -754,7 +781,10 @@ class _AnimatedCounterState extends State<_AnimatedCounter>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: const Duration(milliseconds: 800), vsync: this);
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
     _parseValueAndAnimate();
   }
 
@@ -773,13 +803,9 @@ class _AnimatedCounterState extends State<_AnimatedCounter>
       _targetValue = double.tryParse(match.group(1)!) ?? 0;
       _suffix = match.group(2)!;
 
-      _animation = Tween<double>(
-        begin: 0,
-        end: _targetValue,
-      ).animate(CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOutCubic,
-      ));
+      _animation = Tween<double>(begin: 0, end: _targetValue).animate(
+        CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+      );
 
       _controller.forward(from: 0);
     }
@@ -802,10 +828,7 @@ class _AnimatedCounterState extends State<_AnimatedCounter>
             ? currentValue.toStringAsFixed(1) // Decimal for tons
             : currentValue.toInt().toString(); // Integer for counts
 
-        return Text(
-          '$formattedValue$_suffix',
-          style: widget.style,
-        );
+        return Text('$formattedValue$_suffix', style: widget.style);
       },
     );
   }
@@ -847,70 +870,72 @@ class _HybridStatItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header: Icon + Label
-          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SemanticIcon(
-                icon: icon,
-                semanticLabel: label,
-                size: AppIconSize.tiny,
-                color: color.withValues(alpha: 0.7),
-              ),
-              const SizedBox(width: AppSpacing.xxs),
-              Expanded(
-                child: Text(
-                  label,
-                  style: context.textTheme.labelSmall?.copyWith(
+              // Header: Icon + Label
+              Row(
+                children: [
+                  SemanticIcon(
+                    icon: icon,
+                    semanticLabel: label,
+                    size: AppIconSize.tiny,
                     color: color.withValues(alpha: 0.7),
-                    fontSize: 9,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                  const SizedBox(width: AppSpacing.xxs),
+                  Expanded(
+                    child: Text(
+                      label,
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: color.withValues(alpha: 0.7),
+                        fontSize: 9,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  // Trend indicator (if provided)
+                  if (trend != null && trendColor != null)
+                    SemanticIcon(
+                      icon: trend == 'up'
+                          ? AppIcons.trendingUp
+                          : AppIcons.trendingDown,
+                      semanticLabel: trend == 'up' ? 'Aumentato' : 'Diminuito',
+                      size: AppIconSize.tiny,
+                      color: trendColor!,
+                    ),
+                ],
               ),
-              // Trend indicator (if provided)
-              if (trend != null && trendColor != null)
-                SemanticIcon(
-                  icon: trend == 'up' ? AppIcons.trendingUp : AppIcons.trendingDown,
-                  semanticLabel: trend == 'up' ? 'Aumentato' : 'Diminuito',
-                  size: AppIconSize.tiny,
-                  color: trendColor!,
-                ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.xxs),
+              const SizedBox(height: AppSpacing.xxs),
 
-          // Value + Suffix
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(
-                value,
-                style: context.textTheme.titleLarge?.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              const SizedBox(width: 2),
-              Flexible(
-                child: Text(
-                  suffix,
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: color.withValues(alpha: 0.6),
-                    fontSize: 9,
+              // Value + Suffix
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(
+                    value,
+                    style: context.textTheme.titleLarge?.copyWith(
+                      color: color,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                  const SizedBox(width: 2),
+                  Flexible(
+                    child: Text(
+                      suffix,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: color.withValues(alpha: 0.6),
+                        fontSize: 9,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
         ),
       ),
     );
@@ -918,7 +943,7 @@ class _HybridStatItem extends StatelessWidget {
 }
 
 /// Exercise history card - shows exercise name, PR, sessions count
-class _ExerciseHistoryCard extends ConsumerWidget{
+class _ExerciseHistoryCard extends ConsumerWidget {
   const _ExerciseHistoryCard({required this.history});
 
   final ExerciseHistory history;
@@ -945,9 +970,7 @@ class _ExerciseHistoryCard extends ConsumerWidget{
     if (correction != null && context.mounted) {
       final submitted = await showDialog<bool>(
         context: context,
-        builder: (_) => FeedbackSubmissionDialog(
-          correction: correction,
-        ),
+        builder: (_) => FeedbackSubmissionDialog(correction: correction),
       );
 
       // Refresh analytics data if correction was made
@@ -1047,7 +1070,9 @@ class _ExerciseHistoryCard extends ConsumerWidget{
                       size: AppIconSize.small,
                       color: isFavorite
                           ? context.iconWarning
-                          : context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                          : context.colors.onSurfaceVariant.withValues(
+                              alpha: 0.5,
+                            ),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),
@@ -1088,7 +1113,9 @@ class _ExerciseHistoryCard extends ConsumerWidget{
                     icon: AppIcons.chevronRight,
                     semanticLabel: context.l10n.viewDetails,
                     size: AppIconSize.small,
-                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                    color: context.colors.onSurfaceVariant.withValues(
+                      alpha: 0.5,
+                    ),
                   ),
                 ],
               ),
@@ -1166,9 +1193,7 @@ class _SkeletonLoadingView extends StatelessWidget {
         ),
 
         // Exercise cards skeletons
-        Expanded(
-          child: _SkeletonList(),
-        ),
+        Expanded(child: _SkeletonList()),
       ],
     );
   }
@@ -1272,9 +1297,10 @@ class _ShimmerBoxState extends State<_ShimmerBox>
       duration: const Duration(milliseconds: 1500),
     )..repeat();
 
-    _animation = Tween<double>(begin: -1.0, end: 2.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: -1.0,
+      end: 2.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override

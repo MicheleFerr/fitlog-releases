@@ -49,8 +49,9 @@ class ProInsightsPreviewSection extends ConsumerWidget {
     if (userId == null) return const SizedBox.shrink();
 
     // Watch exercise histories for data
-    final exerciseHistoriesAsync =
-        ref.watch(exerciseHistoryStreamProvider(userId));
+    final exerciseHistoriesAsync = ref.watch(
+      exerciseHistoryStreamProvider(userId),
+    );
 
     return exerciseHistoriesAsync.when(
       data: (histories) {
@@ -96,7 +97,9 @@ class ProInsightsPreviewSection extends ConsumerWidget {
                       // Divider
                       Divider(
                         height: 1,
-                        color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+                        color: colorScheme.outlineVariant.withValues(
+                          alpha: 0.3,
+                        ),
                       ),
 
                       // Row 2: Volume Radar + Stress Index side by side
@@ -108,9 +111,7 @@ class ProInsightsPreviewSection extends ConsumerWidget {
                               child: _VolumeRadarPreview(histories: histories),
                             ),
                             const SizedBox(width: AppSpacing.sm),
-                            const Expanded(
-                              child: _StressIndexPreview(),
-                            ),
+                            const Expanded(child: _StressIndexPreview()),
                           ],
                         ),
                       ),
@@ -118,7 +119,9 @@ class ProInsightsPreviewSection extends ConsumerWidget {
                       // Divider
                       Divider(
                         height: 1,
-                        color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+                        color: colorScheme.outlineVariant.withValues(
+                          alpha: 0.3,
+                        ),
                       ),
 
                       // Row 3: Rep Zones Bar
@@ -217,9 +220,7 @@ class ProInsightsPreviewSection extends ConsumerWidget {
       ),
       decoration: BoxDecoration(
         color: colorScheme.tertiary.withValues(alpha: 0.1),
-        borderRadius: const BorderRadius.vertical(
-          bottom: Radius.circular(20),
-        ),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -359,7 +360,9 @@ class _MuscleMapPreview extends ConsumerWidget {
 
   /// Group detailed muscle percentages into display categories
   /// Same grouping logic as Pro Analytics muscle balance chart
-  Map<String, double> _groupMuscleVolumes(Map<String, double> volumePercentages) {
+  Map<String, double> _groupMuscleVolumes(
+    Map<String, double> volumePercentages,
+  ) {
     final grouped = <String, double>{
       'chest': 0.0,
       'back': 0.0,
@@ -540,7 +543,9 @@ class _VolumeRadarPreview extends ConsumerWidget {
               RadarChartData(
                 dataSets: [
                   RadarDataSet(
-                    dataEntries: volumeData.map((v) => RadarEntry(value: v)).toList(),
+                    dataEntries: volumeData
+                        .map((v) => RadarEntry(value: v))
+                        .toList(),
                     fillColor: colorScheme.tertiary.withValues(alpha: 0.2),
                     borderColor: colorScheme.tertiary,
                     borderWidth: 2,
@@ -596,7 +601,8 @@ class _VolumeRadarPreview extends ConsumerWidget {
           muscleLower.contains('back') ||
           muscleLower.contains('rhomb')) {
         grouped['back'] = (grouped['back'] ?? 0) + percentage;
-      } else if (muscleLower.contains('delt') || muscleLower.contains('spall')) {
+      } else if (muscleLower.contains('delt') ||
+          muscleLower.contains('spall')) {
         grouped['shoulders'] = (grouped['shoulders'] ?? 0) + percentage;
       } else if (muscleLower.contains('bic') ||
           muscleLower.contains('tric') ||
@@ -932,10 +938,7 @@ class _ZoneLegend extends StatelessWidget {
         Container(
           width: 8,
           height: 8,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: AppSpacing.xxs),
         Text(

@@ -37,123 +37,132 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exe
 /// Correlations are calculated ONCE when the provider is first accessed,
 /// not on each bottom sheet open (Critical Fix #2 from design doc).
 final exerciseAnalyticsProvider =
-    FutureProvider.family<ExerciseAnalyticsData?, String>((ref, exerciseId) async {
-  // Get exercise metrics from existing provider
-  final metrics = ref.watch(exerciseMetricsProvider(exerciseId));
+    FutureProvider.family<ExerciseAnalyticsData?, String>((
+      ref,
+      exerciseId,
+    ) async {
+      // Get exercise metrics from existing provider
+      final metrics = ref.watch(exerciseMetricsProvider(exerciseId));
 
-  if (metrics == null || metrics.totalSessions < 1) {
-    return null;
-  }
+      if (metrics == null || metrics.totalSessions < 1) {
+        return null;
+      }
 
-  // Extract data for calculations
-  final sets = metrics.allSets;
-  if (sets.isEmpty) return null;
+      // Extract data for calculations
+      final sets = metrics.allSets;
+      if (sets.isEmpty) return null;
 
-  // Build chart data points
-  final weightHistory = <ChartDataPoint>[];
-  final volumeHistory = <ChartDataPoint>[];
-  final rpeHistory = <ChartDataPoint>[];
+      // Build chart data points
+      final weightHistory = <ChartDataPoint>[];
+      final volumeHistory = <ChartDataPoint>[];
+      final rpeHistory = <ChartDataPoint>[];
 
-  // Group sets by session date for better chart representation
-  final sessionsByDate = <DateTime, List<ExerciseSetData>>{};
-  for (final set in sets) {
-    final dateKey = DateTime(set.date.year, set.date.month, set.date.day);
-    sessionsByDate.putIfAbsent(dateKey, () => []).add(set);
-  }
+      // Group sets by session date for better chart representation
+      final sessionsByDate = <DateTime, List<ExerciseSetData>>{};
+      for (final set in sets) {
+        final dateKey = DateTime(set.date.year, set.date.month, set.date.day);
+        sessionsByDate.putIfAbsent(dateKey, () => []).add(set);
+      }
 
-  // Process each session
-  var sessionIndex = 0;
-  final sortedDates = sessionsByDate.keys.toList()..sort();
+      // Process each session
+      var sessionIndex = 0;
+      final sortedDates = sessionsByDate.keys.toList()..sort();
 
-  for (final date in sortedDates) {
-    final sessionSets = sessionsByDate[date]!;
-    sessionIndex++;
+      for (final date in sortedDates) {
+        final sessionSets = sessionsByDate[date]!;
+        sessionIndex++;
 
-    // Calculate session aggregates
-    final maxWeight = sessionSets.fold<double>(
-      0,
-      (max, set) => set.weight > max ? set.weight : max,
-    );
-    final totalVolume = sessionSets.fold<double>(
-      0,
-      (sum, set) => sum + set.volume,
-    );
+        // Calculate session aggregates
+        final maxWeight = sessionSets.fold<double>(
+          0,
+          (max, set) => set.weight > max ? set.weight : max,
+        );
+        final totalVolume = sessionSets.fold<double>(
+          0,
+          (sum, set) => sum + set.volume,
+        );
 
-    // Get average RPE for session (if any sets have RPE)
-    final setsWithRpe = sessionSets.where((s) => s.rpe != null);
-    final avgRpe = setsWithRpe.isNotEmpty
-        ? setsWithRpe.fold<double>(0, (sum, s) => sum + (s.rpe ?? 0)) /
-            setsWithRpe.length
-        : null;
+        // Get average RPE for session (if any sets have RPE)
+        final setsWithRpe = sessionSets.where((s) => s.rpe != null);
+        final avgRpe = setsWithRpe.isNotEmpty
+            ? setsWithRpe.fold<double>(0, (sum, s) => sum + (s.rpe ?? 0)) /
+                  setsWithRpe.length
+            : null;
 
-    // Get representative reps (from heaviest set)
-    final heaviestSet = sessionSets.reduce(
-      (a, b) => a.weight > b.weight ? a : b,
-    );
+        // Get representative reps (from heaviest set)
+        final heaviestSet = sessionSets.reduce(
+          (a, b) => a.weight > b.weight ? a : b,
+        );
 
-    weightHistory.add(ChartDataPoint(
-      date: date,
-      value: maxWeight,
-      rpe: avgRpe?.round(),
-      reps: heaviestSet.reps,
-      sessionIndex: sessionIndex,
-    ));
+        weightHistory.add(
+          ChartDataPoint(
+            date: date,
+            value: maxWeight,
+            rpe: avgRpe?.round(),
+            reps: heaviestSet.reps,
+            sessionIndex: sessionIndex,
+          ),
+        );
 
-    volumeHistory.add(ChartDataPoint(
-      date: date,
-      value: totalVolume,
-      sessionIndex: sessionIndex,
-    ));
+        volumeHistory.add(
+          ChartDataPoint(
+            date: date,
+            value: totalVolume,
+            sessionIndex: sessionIndex,
+          ),
+        );
 
-    if (avgRpe != null) {
-      rpeHistory.add(ChartDataPoint(
-        date: date,
-        value: avgRpe,
-        rpe: avgRpe.round(),
-        sessionIndex: sessionIndex,
-      ));
-    }
-  }
+        if (avgRpe != null) {
+          rpeHistory.add(
+            ChartDataPoint(
+              date: date,
+              value: avgRpe,
+              rpe: avgRpe.round(),
+              sessionIndex: sessionIndex,
+            ),
+          );
+        }
+      }
 
-  // Calculate correlations (async for performance with large datasets)
-  final correlations = await _calculateCorrelations(
-    weightHistory: weightHistory,
-    volumeHistory: volumeHistory,
-    rpeHistory: rpeHistory,
-  );
+      // Calculate correlations (async for performance with large datasets)
+      final correlations = await _calculateCorrelations(
+        weightHistory: weightHistory,
+        volumeHistory: volumeHistory,
+        rpeHistory: rpeHistory,
+      );
 
-  // Calculate trend using existing TrendAnalyzer (simplified)
-  final trend = _calculateTrend(weightHistory, volumeHistory);
+      // Calculate trend using existing TrendAnalyzer (simplified)
+      final trend = _calculateTrend(weightHistory, volumeHistory);
 
-  // Calculate progressive overload
-  final overload = _calculateOverload(volumeHistory);
+      // Calculate progressive overload
+      final overload = _calculateOverload(volumeHistory);
 
-  // Calculate intensity (1RM estimation)
-  final intensity = _calculateIntensity(
-    metrics.maxWeight,
-    sets.isNotEmpty ? sets.last.reps : 0,
-  );
+      // Calculate intensity (1RM estimation)
+      final intensity = _calculateIntensity(
+        metrics.maxWeight,
+        sets.isNotEmpty ? sets.last.reps : 0,
+      );
 
-  // Calculate data span
-  final firstDate = sortedDates.first;
-  final lastDate = sortedDates.last;
-  final dataSpanDays = lastDate.difference(firstDate).inDays;
+      // Calculate data span
+      final firstDate = sortedDates.first;
+      final lastDate = sortedDates.last;
+      final dataSpanDays = lastDate.difference(firstDate).inDays;
 
-  return ExerciseAnalyticsData(
-    exerciseId: exerciseId,
-    exerciseName: metrics.exerciseName,
-    weightHistory: weightHistory,
-    volumeHistory: volumeHistory,
-    rpeHistory: rpeHistory,
-    trend: trend,
-    overload: overload,
-    intensity: intensity,
-    correlations: correlations,
-    lastUpdated: DateTime.now(),
-    sessionCount: sessionIndex,
-    dataSpanDays: dataSpanDays,
-  );
-});
+      return ExerciseAnalyticsData(
+        exerciseId: exerciseId,
+        exerciseName: metrics.exerciseName,
+        weightHistory: weightHistory,
+        volumeHistory: volumeHistory,
+        rpeHistory: rpeHistory,
+        trend: trend,
+        overload: overload,
+        intensity: intensity,
+        correlations: correlations,
+        lastUpdated: DateTime.now(),
+        sessionCount: sessionIndex,
+        dataSpanDays: dataSpanDays,
+      );
+    });
 
 /// Calculate correlations using the CorrelationCalculator service
 Future<CorrelationResults> _calculateCorrelations({
@@ -219,8 +228,7 @@ TrendAnalysis _calculateTrend(
   // Simple linear regression for weight progression
   final n = weightHistory.length;
   final xMean = (n - 1) / 2;
-  final yMean =
-      weightHistory.fold<double>(0, (sum, p) => sum + p.value) / n;
+  final yMean = weightHistory.fold<double>(0, (sum, p) => sum + p.value) / n;
 
   var numerator = 0.0;
   var denomX = 0.0;
@@ -235,8 +243,9 @@ TrendAnalysis _calculateTrend(
   }
 
   final slope = denomX > 0 ? numerator / denomX : 0.0;
-  final correlation =
-      (denomX > 0 && denomY > 0) ? numerator / (denomX * denomY) : 0.0;
+  final correlation = (denomX > 0 && denomY > 0)
+      ? numerator / (denomX * denomY)
+      : 0.0;
 
   // Determine trend type
   TrendType type;
@@ -247,7 +256,8 @@ TrendAnalysis _calculateTrend(
     recommendation = 'Training pattern is inconsistent. Focus on consistency.';
   } else if (slope.abs() < 0.5) {
     type = TrendType.plateau;
-    recommendation = 'Weight has plateaued. Try different rep ranges or variations.';
+    recommendation =
+        'Weight has plateaued. Try different rep ranges or variations.';
   } else if (slope > 0) {
     type = TrendType.improving;
     recommendation = 'Great progress! Continue progressive overload.';
@@ -258,7 +268,8 @@ TrendAnalysis _calculateTrend(
 
   // Calculate average volume
   final avgVolume = volumeHistory.isNotEmpty
-      ? volumeHistory.fold<double>(0, (sum, p) => sum + p.value) / volumeHistory.length
+      ? volumeHistory.fold<double>(0, (sum, p) => sum + p.value) /
+            volumeHistory.length
       : 0.0;
 
   return TrendAnalysis(

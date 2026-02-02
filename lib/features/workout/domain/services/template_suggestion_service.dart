@@ -76,10 +76,13 @@ class TemplateSuggestionService {
     final templates = _getPredefinedTemplates();
 
     // Score each template based on match quality
-    final scored = templates.map((t) {
-      final score = _calculateMatchScore(t, context, category);
-      return (template: t, score: score);
-    }).where((r) => r.score > 0).toList();
+    final scored = templates
+        .map((t) {
+          final score = _calculateMatchScore(t, context, category);
+          return (template: t, score: score);
+        })
+        .where((r) => r.score > 0)
+        .toList();
 
     // Sort by score descending
     scored.sort((a, b) => b.score.compareTo(a.score));

@@ -53,9 +53,9 @@ class CustomExerciseRepositoryImpl
     required CustomExerciseLocalDatasource localDatasource,
     FirebaseFirestore? firestore,
     FirebaseAuth? auth,
-  })  : _localDatasource = localDatasource,
-        _firestore = firestore ?? FirebaseFirestore.instance,
-        _auth = auth ?? FirebaseAuth.instance;
+  }) : _localDatasource = localDatasource,
+       _firestore = firestore ?? FirebaseFirestore.instance,
+       _auth = auth ?? FirebaseAuth.instance;
 
   final CustomExerciseLocalDatasource _localDatasource;
   final FirebaseFirestore _firestore;
@@ -65,6 +65,7 @@ class CustomExerciseRepositoryImpl
 
   // Cache user profile to reduce Firestore queries
   UserProfile? _cachedUserProfile;
+
   /// Get current user ID
   String? get _currentUserId => _auth.currentUser?.uid;
 
@@ -122,7 +123,9 @@ class CustomExerciseRepositoryImpl
   }
 
   @override
-  Future<Either<Failure, CustomExercise?>> findByName(String exerciseName) async {
+  Future<Either<Failure, CustomExercise?>> findByName(
+    String exerciseName,
+  ) async {
     try {
       final userId = _currentUserId;
       if (userId == null) {
@@ -203,14 +206,14 @@ class CustomExerciseRepositoryImpl
 
       // Get existing exercise to check validation rules
       final existingResult = await getById(exercise.id);
-      final existing = existingResult.fold(
-        (failure) => null,
-        (ex) => ex,
-      );
+      final existing = existingResult.fold((failure) => null, (ex) => ex);
 
       if (existing == null) {
         return left(
-          const ValidationFailure('Custom exercise not found', code: 'NOT_FOUND'),
+          const ValidationFailure(
+            'Custom exercise not found',
+            code: 'NOT_FOUND',
+          ),
         );
       }
 
@@ -354,24 +357,21 @@ class CustomExerciseRepositoryImpl
     );
 
     // Sync to Firestore using error mapper
-    return handleFirebaseVoidOperation(
-      () async {
-        final batch = _firestore.batch();
-        for (final exercise in exercises) {
-          final docRef = _firestore
-              .collection(_firestoreCollection)
-              .doc(userId)
-              .collection('exercises')
-              .doc(exercise.id);
+    return handleFirebaseVoidOperation(() async {
+      final batch = _firestore.batch();
+      for (final exercise in exercises) {
+        final docRef = _firestore
+            .collection(_firestoreCollection)
+            .doc(userId)
+            .collection('exercises')
+            .doc(exercise.id);
 
-          batch.set(docRef, exercise.toJson());
-        }
+        batch.set(docRef, exercise.toJson());
+      }
 
-        await batch.commit();
-        debugPrint('✅ Synced ${exercises.length} custom exercises to cloud');
-      },
-      operationName: 'Sync custom exercises to cloud',
-    );
+      await batch.commit();
+      debugPrint('✅ Synced ${exercises.length} custom exercises to cloud');
+    }, operationName: 'Sync custom exercises to cloud');
   }
 
   @override
@@ -393,29 +393,28 @@ class CustomExerciseRepositoryImpl
     }
 
     // Refresh from Firestore using error mapper
-    return handleFirebaseVoidOperation(
-      () async {
-        final snapshot = await _firestore
-            .collection(_firestoreCollection)
-            .doc(userId)
-            .collection('exercises')
-            .get();
+    return handleFirebaseVoidOperation(() async {
+      final snapshot = await _firestore
+          .collection(_firestoreCollection)
+          .doc(userId)
+          .collection('exercises')
+          .get();
 
-        // Save each to local storage (server wins)
-        for (final doc in snapshot.docs) {
-          try {
-            final data = doc.data();
-            final exercise = CustomExercise.fromJson(data);
-            await _localDatasource.save(exercise);
-          } catch (e) {
-            debugPrint('⚠️ Failed to parse exercise ${doc.id}: $e');
-          }
+      // Save each to local storage (server wins)
+      for (final doc in snapshot.docs) {
+        try {
+          final data = doc.data();
+          final exercise = CustomExercise.fromJson(data);
+          await _localDatasource.save(exercise);
+        } catch (e) {
+          debugPrint('⚠️ Failed to parse exercise ${doc.id}: $e');
         }
+      }
 
-        debugPrint('✅ Refreshed ${snapshot.docs.length} custom exercises from cloud');
-      },
-      operationName: 'Refresh custom exercises from cloud',
-    );
+      debugPrint(
+        '✅ Refreshed ${snapshot.docs.length} custom exercises from cloud',
+      );
+    }, operationName: 'Refresh custom exercises from cloud');
   }
 
   // ============================================================
@@ -423,20 +422,20 @@ class CustomExerciseRepositoryImpl
   // ============================================================
 
   /// Background sync to Firestore (fire and forget)
-  Future<void> _syncToCloudBackground(CustomExercise exercise, String userId) async {
-    final result = await handleFirebaseVoidOperation(
-      () async {
-        await _firestore
-            .collection(_firestoreCollection)
-            .doc(userId)
-            .collection('exercises')
-            .doc(exercise.id)
-            .set(exercise.toJson());
+  Future<void> _syncToCloudBackground(
+    CustomExercise exercise,
+    String userId,
+  ) async {
+    final result = await handleFirebaseVoidOperation(() async {
+      await _firestore
+          .collection(_firestoreCollection)
+          .doc(userId)
+          .collection('exercises')
+          .doc(exercise.id)
+          .set(exercise.toJson());
 
-        debugPrint('☁️ Synced custom exercise "${exercise.nome}" to cloud');
-      },
-      operationName: 'Background sync custom exercise',
-    );
+      debugPrint('☁️ Synced custom exercise "${exercise.nome}" to cloud');
+    }, operationName: 'Background sync custom exercise');
 
     // Log failure if any (fire and forget, no error propagation)
     result.fold(
@@ -446,20 +445,20 @@ class CustomExerciseRepositoryImpl
   }
 
   /// Background delete from Firestore (fire and forget)
-  Future<void> _deleteFromCloudBackground(String exerciseId, String userId) async {
-    final result = await handleFirebaseVoidOperation(
-      () async {
-        await _firestore
-            .collection(_firestoreCollection)
-            .doc(userId)
-            .collection('exercises')
-            .doc(exerciseId)
-            .delete();
+  Future<void> _deleteFromCloudBackground(
+    String exerciseId,
+    String userId,
+  ) async {
+    final result = await handleFirebaseVoidOperation(() async {
+      await _firestore
+          .collection(_firestoreCollection)
+          .doc(userId)
+          .collection('exercises')
+          .doc(exerciseId)
+          .delete();
 
-        debugPrint('☁️ Deleted custom exercise $exerciseId from cloud');
-      },
-      operationName: 'Background delete custom exercise',
-    );
+      debugPrint('☁️ Deleted custom exercise $exerciseId from cloud');
+    }, operationName: 'Background delete custom exercise');
 
     // Log failure if any (fire and forget, no error propagation)
     result.fold(

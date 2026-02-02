@@ -159,11 +159,7 @@ class RepRangePreset {
 /// );
 /// ```
 class SetCountPreset {
-  const SetCountPreset({
-    required this.id,
-    required this.sets,
-    this.order = 0,
-  });
+  const SetCountPreset({required this.id, required this.sets, this.order = 0});
 
   /// Create from JSON
   factory SetCountPreset.fromJson(Map<String, dynamic> json) {
@@ -185,11 +181,7 @@ class SetCountPreset {
 
   /// Convert to JSON
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'sets': sets,
-      'order': order,
-    };
+    return {'id': id, 'sets': sets, 'order': order};
   }
 
   @override

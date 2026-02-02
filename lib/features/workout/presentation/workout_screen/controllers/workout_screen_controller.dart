@@ -7,7 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart'
+    as wt;
 import 'package:gymbro_flutter_new/features/workout/domain/services/workout_time_calculator.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
@@ -72,7 +73,9 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
     String? sessionId,
   }) async {
     if (kDebugMode) {
-      debugPrint('🏋️ [WorkoutScreenController] Starting workout${template != null ? ' from template: ${template.name}' : ' (empty)'}');
+      debugPrint(
+        '🏋️ [WorkoutScreenController] Starting workout${template != null ? ' from template: ${template.name}' : ' (empty)'}',
+      );
     }
 
     try {
@@ -81,12 +84,15 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
       if (template != null) {
         // Start from template
         // Convert template exercises to workout exercises
-        final exercises = template.exercises.map((et) => et.toWorkoutExercise()).toList();
+        final exercises = template.exercises
+            .map((et) => et.toWorkoutExercise())
+            .toList();
 
         await workoutNotifier.createWorkoutFromRoutine(
           routineName: template.name,
           exercises: exercises,
-          sessionId: sessionId ?? DateTime.now().millisecondsSinceEpoch.toString(),
+          sessionId:
+              sessionId ?? DateTime.now().millisecondsSinceEpoch.toString(),
           templateId: template.id,
         );
       } else {
@@ -122,9 +128,7 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
   ///
   /// If the workout was started from a template and has modifications,
   /// shows a dialog to let user choose: update template, save as new, or keep original.
-  Future<void> endWorkout({
-    required BuildContext context,
-  }) async {
+  Future<void> endWorkout({required BuildContext context}) async {
     if (kDebugMode) {
       debugPrint('🏁 [WorkoutScreenController] Ending workout');
     }
@@ -133,22 +137,30 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
       // Track first workout completion for onboarding
       final onboardingState = ref.read(onboardingProvider);
       if (onboardingState.isInGuidedFirstWorkout) {
-        unawaited(ref.read(onboardingProvider.notifier).markFirstWorkoutCompleted());
+        unawaited(
+          ref.read(onboardingProvider.notifier).markFirstWorkoutCompleted(),
+        );
 
         if (kDebugMode) {
-          debugPrint('🎉 [WorkoutScreenController] First workout completed! Onboarding Phase 2 complete');
+          debugPrint(
+            '🎉 [WorkoutScreenController] First workout completed! Onboarding Phase 2 complete',
+          );
         }
       }
 
       // Check if workout duration seems suspiciously short
       final currentWorkout = ref.read(currentWorkoutProvider);
       if (currentWorkout != null && context.mounted) {
-        final timeMetrics = WorkoutTimeCalculator.getTimeMetrics(currentWorkout);
+        final timeMetrics = WorkoutTimeCalculator.getTimeMetrics(
+          currentWorkout,
+        );
 
         if (timeMetrics.isSuspicious) {
           if (kDebugMode) {
-            debugPrint('⏱️ [WorkoutScreenController] Workout time suspicious: '
-                '${timeMetrics.actualDurationFormatted} < ${timeMetrics.totalRestTimeFormatted}');
+            debugPrint(
+              '⏱️ [WorkoutScreenController] Workout time suspicious: '
+              '${timeMetrics.actualDurationFormatted} < ${timeMetrics.totalRestTimeFormatted}',
+            );
           }
 
           // Show time edit sheet
@@ -159,10 +171,14 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
 
           // If user selected new duration, update workout
           if (newDuration != null && context.mounted) {
-            ref.read(currentWorkoutProvider.notifier).updateWorkoutDuration(newDuration);
+            ref
+                .read(currentWorkoutProvider.notifier)
+                .updateWorkoutDuration(newDuration);
 
             if (kDebugMode) {
-              debugPrint('✅ [WorkoutScreenController] Workout duration updated to: $newDuration');
+              debugPrint(
+                '✅ [WorkoutScreenController] Workout duration updated to: $newDuration',
+              );
             }
           }
         }
@@ -181,14 +197,18 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
       // If user cancelled, return to workout screen to modify
       if (celebrationResult == CelebrationResult.cancelled) {
         if (kDebugMode) {
-          debugPrint('↩️ [WorkoutScreenController] User cancelled - returning to workout screen');
+          debugPrint(
+            '↩️ [WorkoutScreenController] User cancelled - returning to workout screen',
+          );
         }
         return; // Don't save, user can modify the workout
       }
 
       // User confirmed - now check template and save
       if (kDebugMode) {
-        debugPrint('✅ [WorkoutScreenController] User confirmed - proceeding with save');
+        debugPrint(
+          '✅ [WorkoutScreenController] User confirmed - proceeding with save',
+        );
       }
 
       // 🏆 Check for achievement unlocks after workout completion
@@ -198,7 +218,9 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
           final user = await ref.read(currentUserProvider.future);
           if (user != null) {
             // Get metrics for the completed workout
-            final metricsUseCase = ref.read(calculateWorkoutMetricsUseCaseProvider);
+            final metricsUseCase = ref.read(
+              calculateWorkoutMetricsUseCaseProvider,
+            );
             final metrics = metricsUseCase.execute(workoutForCelebration);
 
             // Check and unlock achievements
@@ -206,20 +228,21 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
             final result = await useCase(user.uid, metrics);
 
             // Extract achievements from Either result
-            final unlockedAchievements = result.fold(
-              (failure) {
-                if (kDebugMode) {
-                  debugPrint('⚠️ [WorkoutScreenController] Failed to check achievements: ${failure.message}');
-                }
-                return <Achievement>[];
-              },
-              (achievements) => achievements,
-            );
+            final unlockedAchievements = result.fold((failure) {
+              if (kDebugMode) {
+                debugPrint(
+                  '⚠️ [WorkoutScreenController] Failed to check achievements: ${failure.message}',
+                );
+              }
+              return <Achievement>[];
+            }, (achievements) => achievements);
 
             // Award XP and show modal if achievements unlocked
             if (unlockedAchievements.isNotEmpty && context.mounted) {
               if (kDebugMode) {
-                debugPrint('🎉 [WorkoutScreenController] ${unlockedAchievements.length} achievements unlocked!');
+                debugPrint(
+                  '🎉 [WorkoutScreenController] ${unlockedAchievements.length} achievements unlocked!',
+                );
                 for (final achievement in unlockedAchievements) {
                   debugPrint('   - ${achievement.badgeType.name}');
                 }
@@ -229,14 +252,18 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
               try {
                 for (final achievement in unlockedAchievements) {
                   final xpReward = achievement.badgeType.xpReward;
-                  await ref.read(userXPProvider.notifier).addAchievementXP(
-                    xpReward,
-                    badgeName: achievement.badgeType.name,
-                  );
+                  await ref
+                      .read(userXPProvider.notifier)
+                      .addAchievementXP(
+                        xpReward,
+                        badgeName: achievement.badgeType.name,
+                      );
                 }
               } catch (xpError) {
                 if (kDebugMode) {
-                  debugPrint('⚠️ [WorkoutScreenController] Failed to award achievement XP: $xpError');
+                  debugPrint(
+                    '⚠️ [WorkoutScreenController] Failed to award achievement XP: $xpError',
+                  );
                 }
               }
 
@@ -248,7 +275,9 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
           }
         } catch (e) {
           if (kDebugMode) {
-            debugPrint('⚠️ [WorkoutScreenController] Failed to check achievements: $e');
+            debugPrint(
+              '⚠️ [WorkoutScreenController] Failed to check achievements: $e',
+            );
           }
         }
       }
@@ -268,7 +297,9 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
 
         if (originalTemplate != null && context.mounted) {
           if (kDebugMode) {
-            debugPrint('📝 [WorkoutScreenController] Workout from template, showing save dialog');
+            debugPrint(
+              '📝 [WorkoutScreenController] Workout from template, showing save dialog',
+            );
           }
 
           // Show template save dialog
@@ -279,7 +310,9 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
           );
 
           if (kDebugMode) {
-            debugPrint('📝 [WorkoutScreenController] Template save dialog completed');
+            debugPrint(
+              '📝 [WorkoutScreenController] Template save dialog completed',
+            );
           }
         }
       }
@@ -304,14 +337,16 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
       if (!isPremium && context.mounted) {
         await Future.delayed(const Duration(milliseconds: 500));
 
-        unawaited(_interstitialAdService.showAdIfReady(
-          onAdClosed: () {
-            ref.read(currentWorkoutProvider.notifier).clearWorkout();
-            if (context.mounted) {
-              context.goNamed('home');
-            }
-          },
-        ));
+        unawaited(
+          _interstitialAdService.showAdIfReady(
+            onAdClosed: () {
+              ref.read(currentWorkoutProvider.notifier).clearWorkout();
+              if (context.mounted) {
+                context.goNamed('home');
+              }
+            },
+          ),
+        );
 
         // Fallback navigation if ad doesn't show
         Future.delayed(const Duration(seconds: 2), () {
@@ -345,9 +380,7 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
   ///
   /// Clears workout state and navigates back.
   /// Should show confirmation dialog before calling this.
-  Future<void> discardWorkout({
-    required BuildContext context,
-  }) async {
+  Future<void> discardWorkout({required BuildContext context}) async {
     if (kDebugMode) {
       debugPrint('🗑️ [WorkoutScreenController] Discarding workout');
     }
@@ -399,7 +432,9 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
   /// Enables/disables drag-and-drop reordering of exercises in workout.
   void toggleReorderMode() {
     if (kDebugMode) {
-      debugPrint('🔄 [WorkoutScreenController] Toggling reorder mode: ${!state.isReorderMode}');
+      debugPrint(
+        '🔄 [WorkoutScreenController] Toggling reorder mode: ${!state.isReorderMode}',
+      );
     }
 
     state = state.copyWith(isReorderMode: !state.isReorderMode);
@@ -409,7 +444,9 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
   ///
   /// Adds the exercise to the end of the workout's exercise list.
   Future<void> addExercise(Exercise exercise) async {
-    debugPrint('➕ [WorkoutScreenController] Adding exercise: ${exercise.name}, countingMode=${exercise.countingMode}');
+    debugPrint(
+      '➕ [WorkoutScreenController] Adding exercise: ${exercise.name}, countingMode=${exercise.countingMode}',
+    );
 
     try {
       ref.read(currentWorkoutProvider.notifier).addExercise(exercise);
@@ -454,7 +491,9 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
   /// Moves exercise from [oldIndex] to [newIndex] in the exercise list.
   Future<void> reorderExercises(int oldIndex, int newIndex) async {
     if (kDebugMode) {
-      debugPrint('🔀 [WorkoutScreenController] Reordering: $oldIndex → $newIndex');
+      debugPrint(
+        '🔀 [WorkoutScreenController] Reordering: $oldIndex → $newIndex',
+      );
     }
 
     try {
@@ -480,7 +519,9 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
       }
     } catch (e, stack) {
       if (kDebugMode) {
-        debugPrint('❌ [WorkoutScreenController] Error reordering exercises: $e');
+        debugPrint(
+          '❌ [WorkoutScreenController] Error reordering exercises: $e',
+        );
         debugPrint('Stack: $stack');
       }
       rethrow;
@@ -530,23 +571,29 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) {
       if (kDebugMode) {
-        debugPrint('⚠️ [WorkoutScreenController] Cannot show PR celebration: user not authenticated');
+        debugPrint(
+          '⚠️ [WorkoutScreenController] Cannot show PR celebration: user not authenticated',
+        );
       }
       return;
     }
 
     // Track engagement
     final celebrationRepo = ref.read(prCelebrationRepositoryProvider);
-    unawaited(celebrationRepo.trackEngagement(
-      userId,
-      celebration.prId,
-      CelebrationEngagement.viewed,
-    ));
+    unawaited(
+      celebrationRepo.trackEngagement(
+        userId,
+        celebration.prId,
+        CelebrationEngagement.viewed,
+      ),
+    );
 
     // TODO: Implement PRCelebrationOverlay UI component
     // For now, this is a placeholder for the celebration display logic
     if (kDebugMode) {
-      debugPrint('🏆 [WorkoutScreenController] PR Celebration: ${celebration.exerciseName}');
+      debugPrint(
+        '🏆 [WorkoutScreenController] PR Celebration: ${celebration.exerciseName}',
+      );
     }
   }
 
@@ -562,4 +609,6 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
 
 /// Provider for WorkoutScreenController
 final workoutScreenControllerProvider =
-    NotifierProvider<WorkoutScreenController, WorkoutScreenState>(WorkoutScreenController.new);
+    NotifierProvider<WorkoutScreenController, WorkoutScreenState>(
+      WorkoutScreenController.new,
+    );

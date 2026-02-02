@@ -19,7 +19,6 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseReplacementDialog extends ConsumerStatefulWidget {
-
   const ExerciseReplacementDialog({
     super.key,
     required this.affectedExercise,
@@ -31,10 +30,12 @@ class ExerciseReplacementDialog extends ConsumerStatefulWidget {
   final Map<String, Exercise> exerciseDatabase;
 
   @override
-  ConsumerState<ExerciseReplacementDialog> createState() => _ExerciseReplacementDialogState();
+  ConsumerState<ExerciseReplacementDialog> createState() =>
+      _ExerciseReplacementDialogState();
 }
 
-class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementDialog> {
+class _ExerciseReplacementDialogState
+    extends ConsumerState<ExerciseReplacementDialog> {
   Exercise? selectedReplacement;
   final Set<String> selectedTemplateIds = {};
   String weightOption = 'keep'; // 'keep', 'reset', 'manual'
@@ -43,7 +44,9 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
   void initState() {
     super.initState();
     // Pre-select all templates
-    selectedTemplateIds.addAll(widget.affectedTemplates.map((t) => t.templateId));
+    selectedTemplateIds.addAll(
+      widget.affectedTemplates.map((t) => t.templateId),
+    );
   }
 
   @override
@@ -76,7 +79,10 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               ),
               child: Row(
                 children: [
-                  Icon(AppIcons.swapHoriz, color: colorScheme.onPrimaryContainer),
+                  Icon(
+                    AppIcons.swapHoriz,
+                    color: colorScheme.onPrimaryContainer,
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
@@ -88,7 +94,10 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                     ),
                   ),
                   IconButton(
-                    icon: Icon(AppIcons.close, color: colorScheme.onPrimaryContainer),
+                    icon: Icon(
+                      AppIcons.close,
+                      color: colorScheme.onPrimaryContainer,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -124,11 +133,10 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                         ),
                       )
                     else
-                      ...similarExercises.map((exercise) => _buildExerciseTile(
-                            exercise,
-                            theme,
-                            colorScheme,
-                          )),
+                      ...similarExercises.map(
+                        (exercise) =>
+                            _buildExerciseTile(exercise, theme, colorScheme),
+                      ),
 
                     const SizedBox(height: 24),
 
@@ -141,21 +149,25 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                     ),
                     const SizedBox(height: 12),
 
-                    ...widget.affectedTemplates.map((template) => CheckboxListTile(
-                          value: selectedTemplateIds.contains(template.templateId),
-                          onChanged: (value) {
-                            setState(() {
-                              if (value == true) {
-                                selectedTemplateIds.add(template.templateId);
-                              } else {
-                                selectedTemplateIds.remove(template.templateId);
-                              }
-                            });
-                          },
-                          title: Text(template.templateName),
-                          dense: true,
-                          controlAffinity: ListTileControlAffinity.leading,
-                        )),
+                    ...widget.affectedTemplates.map(
+                      (template) => CheckboxListTile(
+                        value: selectedTemplateIds.contains(
+                          template.templateId,
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            if (value == true) {
+                              selectedTemplateIds.add(template.templateId);
+                            } else {
+                              selectedTemplateIds.remove(template.templateId);
+                            }
+                          });
+                        },
+                        title: Text(template.templateName),
+                        dense: true,
+                        controlAffinity: ListTileControlAffinity.leading,
+                      ),
+                    ),
 
                     const SizedBox(height: 24),
 
@@ -210,7 +222,9 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               decoration: BoxDecoration(
                 color: colorScheme.surface,
                 border: Border(
-                  top: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
+                  top: BorderSide(
+                    color: colorScheme.outline.withValues(alpha: 0.2),
+                  ),
                 ),
               ),
               child: Row(
@@ -222,14 +236,18 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                   ),
                   const SizedBox(width: 12),
                   FilledButton(
-                    onPressed: selectedReplacement == null || selectedTemplateIds.isEmpty
+                    onPressed:
+                        selectedReplacement == null ||
+                            selectedTemplateIds.isEmpty
                         ? null
                         : () => Navigator.pop(context, {
-                              'replacement': selectedReplacement,
-                              'templateIds': selectedTemplateIds.toList(),
-                              'weightOption': weightOption,
-                            }),
-                    child: Text(l10n.applyToTemplates(selectedTemplateIds.length)),
+                            'replacement': selectedReplacement,
+                            'templateIds': selectedTemplateIds.toList(),
+                            'weightOption': weightOption,
+                          }),
+                    child: Text(
+                      l10n.applyToTemplates(selectedTemplateIds.length),
+                    ),
                   ),
                 ],
               ),
@@ -240,7 +258,11 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
     );
   }
 
-  Widget _buildExerciseTile(Exercise exercise, ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildExerciseTile(
+    Exercise exercise,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     final isSelected = selectedReplacement?.id == exercise.id;
 
     return Container(
@@ -251,7 +273,9 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isSelected ? colorScheme.primaryContainer : colorScheme.surfaceContainerHighest,
+            color: isSelected
+                ? colorScheme.primaryContainer
+                : colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(12),
             border: isSelected
                 ? Border.all(color: colorScheme.primary, width: 2)
@@ -262,7 +286,10 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               if (isSelected)
                 Icon(AppIcons.complete, color: colorScheme.primary)
               else
-                Icon(AppIcons.radioButtonUnchecked, color: colorScheme.onSurfaceVariant),
+                Icon(
+                  AppIcons.radioButtonUnchecked,
+                  color: colorScheme.onSurfaceVariant,
+                ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -271,8 +298,12 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                     Text(
                       exercise.nome,
                       style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                        color: isSelected ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                        color: isSelected
+                            ? colorScheme.onPrimaryContainer
+                            : colorScheme.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -280,8 +311,12 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                       ExerciseReplacementService.getExerciseDetails(exercise),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: isSelected
-                            ? colorScheme.onPrimaryContainer.withValues(alpha: 0.7)
-                            : colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                            ? colorScheme.onPrimaryContainer.withValues(
+                                alpha: 0.7,
+                              )
+                            : colorScheme.onSurfaceVariant.withValues(
+                                alpha: 0.7,
+                              ),
                       ),
                     ),
                   ],

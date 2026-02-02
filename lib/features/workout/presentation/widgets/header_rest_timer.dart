@@ -22,10 +22,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 /// - Running: mostra countdown MM:SS con progress bar
 /// - Completed: auto-reset a idle
 class HeaderRestTimer extends ConsumerStatefulWidget {
-  const HeaderRestTimer({
-    super.key,
-    this.compact = false,
-  });
+  const HeaderRestTimer({super.key, this.compact = false});
 
   /// Se true, usa dimensioni più piccole (per minimized view)
   final bool compact;
@@ -64,8 +61,8 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
     final timerSound = ref.watch(appConfigProvider.select((c) => c.timerSound));
 
     // Auto-reset quando completa (status completed O remainingSeconds == 0)
-    final shouldReset = isTimerActive &&
-        (isCompleted || (remainingSeconds <= 0 && !isIdle));
+    final shouldReset =
+        isTimerActive && (isCompleted || (remainingSeconds <= 0 && !isIdle));
 
     if (shouldReset) {
       // Schedule reset after build
@@ -104,10 +101,22 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
           vertical: widget.compact ? 4 : 6,
         ),
         decoration: BoxDecoration(
-          color: _getBackgroundColor(context, isIdle, isRunning, isPaused, remainingSeconds),
+          color: _getBackgroundColor(
+            context,
+            isIdle,
+            isRunning,
+            isPaused,
+            remainingSeconds,
+          ),
           borderRadius: BorderRadius.circular(widget.compact ? 10 : 12),
           border: Border.all(
-            color: _getBorderColor(context, isIdle, isRunning, isPaused, remainingSeconds),
+            color: _getBorderColor(
+              context,
+              isIdle,
+              isRunning,
+              isPaused,
+              remainingSeconds,
+            ),
             width: 1,
           ),
         ),
@@ -116,9 +125,17 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
           children: [
             // Icona timer
             Icon(
-              isRunning ? AppIcons.timer : (isPaused ? AppIcons.pause : AppIcons.timer),
+              isRunning
+                  ? AppIcons.timer
+                  : (isPaused ? AppIcons.pause : AppIcons.timer),
               size: widget.compact ? AppIconSize.tiny : AppIconSize.small,
-              color: _getTextColor(context, isIdle, isRunning, isPaused, remainingSeconds),
+              color: _getTextColor(
+                context,
+                isIdle,
+                isRunning,
+                isPaused,
+                remainingSeconds,
+              ),
             ),
             SizedBox(width: widget.compact ? 4 : 6),
             // Testo
@@ -128,11 +145,23 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
                 style: TextStyle(
                   fontSize: widget.compact ? 11 : 13,
                   fontWeight: FontWeight.w600,
-                  color: _getTextColor(context, isIdle, isRunning, isPaused, remainingSeconds),
+                  color: _getTextColor(
+                    context,
+                    isIdle,
+                    isRunning,
+                    isPaused,
+                    remainingSeconds,
+                  ),
                 ),
               )
             else
-              _buildCountdown(context, remainingSeconds, remainingProgress, isRunning, isPaused),
+              _buildCountdown(
+                context,
+                remainingSeconds,
+                remainingProgress,
+                isRunning,
+                isPaused,
+              ),
           ],
         ),
       ),
@@ -141,7 +170,13 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
 
   /// Countdown grande e leggibile
   /// 🔧 PERF FIX: Accept primitives instead of full UnifiedTimerState
-  Widget _buildCountdown(BuildContext context, int remainingSeconds, double progress, bool isRunning, bool isPaused) {
+  Widget _buildCountdown(
+    BuildContext context,
+    int remainingSeconds,
+    double progress,
+    bool isRunning,
+    bool isPaused,
+  ) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -152,7 +187,13 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
             fontSize: widget.compact ? 12 : 14,
             fontWeight: FontWeight.bold,
             fontFeatures: const [FontFeature.tabularFigures()],
-            color: _getTextColor(context, false, isRunning, isPaused, remainingSeconds),
+            color: _getTextColor(
+              context,
+              false,
+              isRunning,
+              isPaused,
+              remainingSeconds,
+            ),
           ),
         ),
         SizedBox(width: widget.compact ? 4 : 6),
@@ -181,24 +222,34 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
     showModalBottomSheet(
       context: context,
       // 🔧 PERF FIX: Use theme color instead of hardcoded Colors.transparent
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       isScrollControlled: true,
       builder: (context) => _CustomTimerModal(
         onSelectDuration: (seconds) {
           Navigator.pop(context);
-          ref.read(unifiedTimerProvider.notifier).startTimer(
-            durationSeconds: seconds,
-            type: TimerType.rest,
-            exerciseName: 'Rest',
-            customSound: timerSound,
-          );
+          ref
+              .read(unifiedTimerProvider.notifier)
+              .startTimer(
+                durationSeconds: seconds,
+                type: TimerType.rest,
+                exerciseName: 'Rest',
+                customSound: timerSound,
+              );
         },
       ),
     );
   }
 
   /// 🔧 PERF FIX: Accept remainingSeconds directly instead of UnifiedTimerState
-  Color _getBackgroundColor(BuildContext context, bool isIdle, bool isRunning, bool isPaused, int remainingSeconds) {
+  Color _getBackgroundColor(
+    BuildContext context,
+    bool isIdle,
+    bool isRunning,
+    bool isPaused,
+    int remainingSeconds,
+  ) {
     if (isIdle) {
       return context.colors.surfaceContainerHighest.withValues(alpha: 0.8);
     }
@@ -217,7 +268,13 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
   }
 
   /// 🔧 PERF FIX: Accept remainingSeconds directly instead of UnifiedTimerState
-  Color _getBorderColor(BuildContext context, bool isIdle, bool isRunning, bool isPaused, int remainingSeconds) {
+  Color _getBorderColor(
+    BuildContext context,
+    bool isIdle,
+    bool isRunning,
+    bool isPaused,
+    int remainingSeconds,
+  ) {
     if (isIdle) {
       return context.colors.outline.withValues(alpha: 0.3);
     }
@@ -225,13 +282,22 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
       return context.colors.secondary.withValues(alpha: 0.5);
     }
     if (isRunning) {
-      return _getProgressColor(context, remainingSeconds).withValues(alpha: 0.5);
+      return _getProgressColor(
+        context,
+        remainingSeconds,
+      ).withValues(alpha: 0.5);
     }
     return context.colors.outline.withValues(alpha: 0.3);
   }
 
   /// 🔧 PERF FIX: Accept remainingSeconds directly instead of UnifiedTimerState
-  Color _getTextColor(BuildContext context, bool isIdle, bool isRunning, bool isPaused, int remainingSeconds) {
+  Color _getTextColor(
+    BuildContext context,
+    bool isIdle,
+    bool isRunning,
+    bool isPaused,
+    int remainingSeconds,
+  ) {
     if (isIdle) {
       return context.colors.onSurfaceVariant;
     }
@@ -265,9 +331,7 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
 
 /// Modal per timer personalizzato
 class _CustomTimerModal extends StatefulWidget {
-  const _CustomTimerModal({
-    required this.onSelectDuration,
-  });
+  const _CustomTimerModal({required this.onSelectDuration});
 
   final void Function(int seconds) onSelectDuration;
 
@@ -323,13 +387,41 @@ class _CustomTimerModalState extends State<_CustomTimerModal> {
             runSpacing: 10,
             alignment: WrapAlignment.center,
             children: [
-              _PresetChip(label: '30s', seconds: 30, onTap: widget.onSelectDuration),
-              _PresetChip(label: '45s', seconds: 45, onTap: widget.onSelectDuration),
-              _PresetChip(label: '1:00', seconds: 60, onTap: widget.onSelectDuration),
-              _PresetChip(label: '1:30', seconds: 90, onTap: widget.onSelectDuration),
-              _PresetChip(label: '2:00', seconds: 120, onTap: widget.onSelectDuration),
-              _PresetChip(label: '3:00', seconds: 180, onTap: widget.onSelectDuration),
-              _PresetChip(label: '5:00', seconds: 300, onTap: widget.onSelectDuration),
+              _PresetChip(
+                label: '30s',
+                seconds: 30,
+                onTap: widget.onSelectDuration,
+              ),
+              _PresetChip(
+                label: '45s',
+                seconds: 45,
+                onTap: widget.onSelectDuration,
+              ),
+              _PresetChip(
+                label: '1:00',
+                seconds: 60,
+                onTap: widget.onSelectDuration,
+              ),
+              _PresetChip(
+                label: '1:30',
+                seconds: 90,
+                onTap: widget.onSelectDuration,
+              ),
+              _PresetChip(
+                label: '2:00',
+                seconds: 120,
+                onTap: widget.onSelectDuration,
+              ),
+              _PresetChip(
+                label: '3:00',
+                seconds: 180,
+                onTap: widget.onSelectDuration,
+              ),
+              _PresetChip(
+                label: '5:00',
+                seconds: 300,
+                onTap: widget.onSelectDuration,
+              ),
             ],
           ),
           const SizedBox(height: 24),
@@ -337,7 +429,11 @@ class _CustomTimerModalState extends State<_CustomTimerModal> {
           // Divider con "oppure"
           Row(
             children: [
-              Expanded(child: Divider(color: context.colors.outline.withValues(alpha: 0.3))),
+              Expanded(
+                child: Divider(
+                  color: context.colors.outline.withValues(alpha: 0.3),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
@@ -347,7 +443,11 @@ class _CustomTimerModalState extends State<_CustomTimerModal> {
                   ),
                 ),
               ),
-              Expanded(child: Divider(color: context.colors.outline.withValues(alpha: 0.3))),
+              Expanded(
+                child: Divider(
+                  color: context.colors.outline.withValues(alpha: 0.3),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 24),
@@ -393,7 +493,8 @@ class _CustomTimerModalState extends State<_CustomTimerModal> {
               button: true,
               child: FilledButton.icon(
                 onPressed: () {
-                  final totalSeconds = (_selectedMinutes * 60) + _selectedSeconds;
+                  final totalSeconds =
+                      (_selectedMinutes * 60) + _selectedSeconds;
                   if (totalSeconds > 0) {
                     HapticFeedback.mediumImpact();
                     widget.onSelectDuration(totalSeconds);
@@ -469,7 +570,9 @@ class _CustomTimerModalState extends State<_CustomTimerModal> {
                 label: context.l10n.a11yIncreaseTimer,
                 button: true,
                 child: IconButton(
-                  onPressed: value < maxValue ? () => onChanged(value + 1) : null,
+                  onPressed: value < maxValue
+                      ? () => onChanged(value + 1)
+                      : null,
                   icon: const Icon(AppIcons.add),
                   iconSize: AppIconSize.small,
                 ),

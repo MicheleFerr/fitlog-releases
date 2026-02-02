@@ -22,11 +22,7 @@ import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// View modes for streak visualization
-enum _StreakViewMode {
-  monthly,
-  annual,
-  multiYear,
-}
+enum _StreakViewMode { monthly, annual, multiYear }
 
 /// Extension for localized labels
 extension _StreakViewModeExtension on _StreakViewMode {
@@ -47,7 +43,8 @@ class StreakCalendarScreen extends ConsumerStatefulWidget {
   const StreakCalendarScreen({super.key});
 
   @override
-  ConsumerState<StreakCalendarScreen> createState() => _StreakCalendarScreenState();
+  ConsumerState<StreakCalendarScreen> createState() =>
+      _StreakCalendarScreenState();
 }
 
 class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
@@ -82,7 +79,11 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
                 child: Row(
                   children: [
                     if (mode == _viewMode)
-                      Icon(AppIcons.check, size: AppIconSize.small, color: context.colors.primary)
+                      Icon(
+                        AppIcons.check,
+                        size: AppIconSize.small,
+                        color: context.colors.primary,
+                      )
                     else
                       const SizedBox(width: AppIconSize.small),
                     const SizedBox(width: 8),
@@ -109,15 +110,20 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
     );
   }
 
-  Widget _buildContent(BuildContext context, List<WorkoutHistoryDetail> workouts) {
+  Widget _buildContent(
+    BuildContext context,
+    List<WorkoutHistoryDetail> workouts,
+  ) {
     // Extract workout dates
     final workoutDates = <DateTime>{};
     for (final workout in workouts) {
-      workoutDates.add(DateTime(
-        workout.completedAt.year,
-        workout.completedAt.month,
-        workout.completedAt.day,
-      ));
+      workoutDates.add(
+        DateTime(
+          workout.completedAt.year,
+          workout.completedAt.month,
+          workout.completedAt.day,
+        ),
+      );
     }
 
     return SingleChildScrollView(
@@ -131,9 +137,16 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
 
           // Calendar view based on mode
           switch (_viewMode) {
-            _StreakViewMode.monthly => _buildMonthlyView(context, workoutDates, workouts),
+            _StreakViewMode.monthly => _buildMonthlyView(
+              context,
+              workoutDates,
+              workouts,
+            ),
             _StreakViewMode.annual => _buildAnnualView(context, workoutDates),
-            _StreakViewMode.multiYear => _buildMultiYearView(context, workoutDates),
+            _StreakViewMode.multiYear => _buildMultiYearView(
+              context,
+              workoutDates,
+            ),
           },
         ],
       ),
@@ -169,10 +182,14 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
               label: context.l10n.daysSinceLastWorkout,
               value: '$daysSinceLastWorkout',
               color: daysSinceLastWorkout == 0
-                  ? context.colors.primary // Worked out today
+                  ? context
+                        .colors
+                        .primary // Worked out today
                   : daysSinceLastWorkout <= 2
-                      ? context.colors.primary // Recent
-                      : context.colors.error, // Warning - need to workout
+                  ? context
+                        .colors
+                        .primary // Recent
+                  : context.colors.error, // Warning - need to workout
             ),
           ),
         ],
@@ -185,7 +202,9 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
     if (workoutDates.isEmpty) return 0;
 
     // Find most recent workout date
-    final mostRecentWorkout = workoutDates.reduce((a, b) => a.isAfter(b) ? a : b);
+    final mostRecentWorkout = workoutDates.reduce(
+      (a, b) => a.isAfter(b) ? a : b,
+    );
 
     final today = DateTime.now();
     final todayOnly = DateTime(today.year, today.month, today.day);
@@ -222,7 +241,9 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => _DayDetailsSheet(
         date: date,
         formattedDate: dateFormat.format(date),
@@ -237,8 +258,16 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
     List<WorkoutHistoryDetail> workouts,
   ) {
     final now = DateTime.now();
-    final firstDayOfMonth = DateTime(_selectedMonth.year, _selectedMonth.month, 1);
-    final lastDayOfMonth = DateTime(_selectedMonth.year, _selectedMonth.month + 1, 0);
+    final firstDayOfMonth = DateTime(
+      _selectedMonth.year,
+      _selectedMonth.month,
+      1,
+    );
+    final lastDayOfMonth = DateTime(
+      _selectedMonth.year,
+      _selectedMonth.month + 1,
+      0,
+    );
     final daysInMonth = lastDayOfMonth.day;
     final firstWeekday = firstDayOfMonth.weekday;
 
@@ -253,7 +282,10 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
               onPressed: () {
                 HapticFeedback.selectionClick();
                 setState(() {
-                  _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month - 1);
+                  _selectedMonth = DateTime(
+                    _selectedMonth.year,
+                    _selectedMonth.month - 1,
+                  );
                 });
               },
             ),
@@ -264,13 +296,21 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
               ),
             ),
             IconButton(
-              icon: const Icon(AppIcons.arrowForwardIos, size: AppIconSize.small),
-              onPressed: _selectedMonth.month == now.month && _selectedMonth.year == now.year
+              icon: const Icon(
+                AppIcons.arrowForwardIos,
+                size: AppIconSize.small,
+              ),
+              onPressed:
+                  _selectedMonth.month == now.month &&
+                      _selectedMonth.year == now.year
                   ? null
                   : () {
                       HapticFeedback.selectionClick();
                       setState(() {
-                        _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month + 1);
+                        _selectedMonth = DateTime(
+                          _selectedMonth.year,
+                          _selectedMonth.month + 1,
+                        );
                       });
                     },
             ),
@@ -312,9 +352,14 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
             }
 
             final day = index - (firstWeekday - 1) + 1;
-            final date = DateTime(_selectedMonth.year, _selectedMonth.month, day);
+            final date = DateTime(
+              _selectedMonth.year,
+              _selectedMonth.month,
+              day,
+            );
             final hasWorkout = workoutDates.contains(date);
-            final isToday = date.day == now.day &&
+            final isToday =
+                date.day == now.day &&
                 date.month == now.month &&
                 date.year == now.year;
             final isFuture = date.isAfter(now);
@@ -328,8 +373,8 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
                   color: hasWorkout
                       ? context.colors.primary
                       : (isToday
-                          ? context.colors.primaryContainer
-                          : context.colors.surfaceContainerHighest),
+                            ? context.colors.primaryContainer
+                            : context.colors.surfaceContainerHighest),
                   borderRadius: BorderRadius.circular(8),
                   border: isToday
                       ? Border.all(color: context.colors.primary, width: 2)
@@ -342,8 +387,10 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
                       color: hasWorkout
                           ? context.colors.onPrimary
                           : (isFuture
-                              ? context.colors.onSurfaceVariant.withValues(alpha: 0.5)
-                              : context.colors.onSurface),
+                                ? context.colors.onSurfaceVariant.withValues(
+                                    alpha: 0.5,
+                                  )
+                                : context.colors.onSurface),
                       fontWeight: isToday ? FontWeight.bold : null,
                     ),
                   ),
@@ -402,7 +449,12 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
           itemCount: 12,
           itemBuilder: (context, monthIndex) {
             final month = monthIndex + 1;
-            return _buildMiniMonthHeatmap(context, currentYear, month, workoutDates);
+            return _buildMiniMonthHeatmap(
+              context,
+              currentYear,
+              month,
+              workoutDates,
+            );
           },
         ),
       ],
@@ -417,7 +469,20 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
     Set<DateTime> workoutDates,
   ) {
     // Short month names
-    final monthNames = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
+    final monthNames = [
+      'gen',
+      'feb',
+      'mar',
+      'apr',
+      'mag',
+      'giu',
+      'lug',
+      'ago',
+      'set',
+      'ott',
+      'nov',
+      'dic',
+    ];
     final monthName = monthNames[month - 1];
 
     // Calculate days in month
@@ -472,7 +537,8 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
                 final date = DateTime(year, month, dayNumber);
                 final hasWorkout = workoutDates.contains(date);
                 final today = DateTime.now();
-                final isToday = date.year == today.year &&
+                final isToday =
+                    date.year == today.year &&
                     date.month == today.month &&
                     date.day == today.day;
 
@@ -483,10 +549,7 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
                         : context.colors.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(2),
                     border: isToday
-                        ? Border.all(
-                            color: context.colors.primary,
-                            width: 1,
-                          )
+                        ? Border.all(color: context.colors.primary, width: 1)
                         : null,
                   ),
                 );
@@ -509,7 +572,20 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
     final sortedYears = years.toList()..sort((a, b) => b.compareTo(a));
 
     // Month names for header
-    final monthNames = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
+    final monthNames = [
+      'gen',
+      'feb',
+      'mar',
+      'apr',
+      'mag',
+      'giu',
+      'lug',
+      'ago',
+      'set',
+      'ott',
+      'nov',
+      'dic',
+    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -547,7 +623,11 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
   }
 
   /// GitHub-style horizontal strip for a single year
-  Widget _buildYearStrip(BuildContext context, int year, Set<DateTime> workoutDates) {
+  Widget _buildYearStrip(
+    BuildContext context,
+    int year,
+    Set<DateTime> workoutDates,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: GestureDetector(
@@ -603,7 +683,8 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
         final day = dayIndex + 1;
         final date = DateTime(year, month, day);
         final hasWorkout = workoutDates.contains(date);
-        final isToday = date.year == today.year &&
+        final isToday =
+            date.year == today.year &&
             date.month == today.month &&
             date.day == today.day;
 
@@ -617,17 +698,13 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
                 : context.colors.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(2),
             border: isToday
-                ? Border.all(
-                    color: context.colors.primary,
-                    width: 1,
-                  )
+                ? Border.all(color: context.colors.primary, width: 1)
                 : null,
           ),
         );
       }),
     );
   }
-
 }
 
 /// Emoji-based stat card widget (matches StreakModal design)
@@ -654,10 +731,7 @@ class _EmojiStatCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text(
-            emoji,
-            style: context.textTheme.titleLarge,
-          ),
+          Text(emoji, style: context.textTheme.titleLarge),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -687,10 +761,7 @@ class _EmojiStatCard extends StatelessWidget {
 
 /// Legend item widget
 class _LegendItem extends StatelessWidget {
-  const _LegendItem({
-    required this.color,
-    required this.label,
-  });
+  const _LegendItem({required this.color, required this.label});
 
   final Color color;
   final String label;

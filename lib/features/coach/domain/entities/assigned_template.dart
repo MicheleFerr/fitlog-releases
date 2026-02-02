@@ -51,8 +51,7 @@ abstract class AssignedTemplate with _$AssignedTemplate {
   const AssignedTemplate._();
 
   /// Whether this assignment has local notes
-  bool get hasAthleteNotes =>
-      athleteNotes != null && athleteNotes!.isNotEmpty;
+  bool get hasAthleteNotes => athleteNotes != null && athleteNotes!.isNotEmpty;
 
   /// Whether the template might need sync (assigned more than 1 day ago)
   bool get mightNeedSync {

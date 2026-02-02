@@ -40,7 +40,9 @@ class AudioDebugTestState {
   }) {
     return AudioDebugTestState(
       isRunning: isRunning ?? this.isRunning,
-      currentProgress: clearProgress ? null : (currentProgress ?? this.currentProgress),
+      currentProgress: clearProgress
+          ? null
+          : (currentProgress ?? this.currentProgress),
       quickResults: quickResults ?? this.quickResults,
       fullResults: fullResults ?? this.fullResults,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
@@ -68,7 +70,9 @@ class AudioDebugTestNotifier extends Notifier<AudioDebugTestState> {
 
     if (quickResults != null) {
       if (kDebugMode) {
-        debugPrint('[AudioDebugTest] Loaded previous quick results: ${quickResults.tests.length} tests');
+        debugPrint(
+          '[AudioDebugTest] Loaded previous quick results: ${quickResults.tests.length} tests',
+        );
       }
 
       state = state.copyWith(quickResults: quickResults);
@@ -79,7 +83,9 @@ class AudioDebugTestNotifier extends Notifier<AudioDebugTestState> {
   Future<void> runQuickTests() async {
     if (state.isRunning) {
       if (kDebugMode) {
-        debugPrint('[AudioDebugTest] Cannot start quick tests - tests already running');
+        debugPrint(
+          '[AudioDebugTest] Cannot start quick tests - tests already running',
+        );
       }
       return;
     }
@@ -99,14 +105,18 @@ class AudioDebugTestNotifier extends Notifier<AudioDebugTestState> {
       final results = await _service.runQuickTests(
         onProgress: (progress) {
           if (kDebugMode) {
-            debugPrint('[AudioDebugTest] Progress: ${progress.currentTest}/${progress.totalTests} - ${progress.testName}');
+            debugPrint(
+              '[AudioDebugTest] Progress: ${progress.currentTest}/${progress.totalTests} - ${progress.testName}',
+            );
           }
           state = state.copyWith(currentProgress: progress);
         },
       );
 
       if (kDebugMode) {
-        debugPrint('[AudioDebugTest] Quick tests completed - Success rate: ${(results.successRate * 100).toStringAsFixed(1)}%');
+        debugPrint(
+          '[AudioDebugTest] Quick tests completed - Success rate: ${(results.successRate * 100).toStringAsFixed(1)}%',
+        );
       }
 
       state = state.copyWith(
@@ -131,7 +141,9 @@ class AudioDebugTestNotifier extends Notifier<AudioDebugTestState> {
   Future<void> runFullTests() async {
     if (state.isRunning) {
       if (kDebugMode) {
-        debugPrint('[AudioDebugTest] Cannot start full tests - tests already running');
+        debugPrint(
+          '[AudioDebugTest] Cannot start full tests - tests already running',
+        );
       }
       return;
     }
@@ -151,14 +163,18 @@ class AudioDebugTestNotifier extends Notifier<AudioDebugTestState> {
       final results = await _service.runFullTests(
         onProgress: (progress) {
           if (kDebugMode) {
-            debugPrint('[AudioDebugTest] Progress: ${progress.currentTest}/${progress.totalTests} - ${progress.testName}');
+            debugPrint(
+              '[AudioDebugTest] Progress: ${progress.currentTest}/${progress.totalTests} - ${progress.testName}',
+            );
           }
           state = state.copyWith(currentProgress: progress);
         },
       );
 
       if (kDebugMode) {
-        debugPrint('[AudioDebugTest] Full tests completed - Success rate: ${(results.successRate * 100).toStringAsFixed(1)}%');
+        debugPrint(
+          '[AudioDebugTest] Full tests completed - Success rate: ${(results.successRate * 100).toStringAsFixed(1)}%',
+        );
       }
 
       state = state.copyWith(
@@ -195,6 +211,7 @@ class AudioDebugTestNotifier extends Notifier<AudioDebugTestState> {
 }
 
 /// Provider for audio debug test management
-final audioDebugTestProvider = NotifierProvider<AudioDebugTestNotifier, AudioDebugTestState>(
-  AudioDebugTestNotifier.new,
-);
+final audioDebugTestProvider =
+    NotifierProvider<AudioDebugTestNotifier, AudioDebugTestState>(
+      AudioDebugTestNotifier.new,
+    );

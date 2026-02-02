@@ -105,10 +105,10 @@ abstract class CoachBranding with _$CoachBranding {
 
   /// Default branding for non-coaches (uses FitLog Pro)
   static CoachBranding get defaultBranding => CoachBranding(
-        id: 'default',
-        coachId: 'system',
-        businessName: 'FitLog Pro',
-        tagline: 'Your Personal Fitness Tracker',
-        createdAt: DateTime.now(),
-      );
+    id: 'default',
+    coachId: 'system',
+    businessName: 'FitLog Pro',
+    tagline: 'Your Personal Fitness Tracker',
+    createdAt: DateTime.now(),
+  );
 }

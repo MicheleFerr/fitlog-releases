@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+
 /// Bottom sheet for selecting workout category or entering custom name.
 ///
 /// Features:
@@ -42,7 +43,8 @@ class _WorkoutCategoryBottomSheetState
   bool _isCustomMode = false;
   final TextEditingController _customNameController = TextEditingController();
   final FocusNode _customFieldFocus = FocusNode();
-  final TemplateSuggestionService _templateService = TemplateSuggestionService();
+  final TemplateSuggestionService _templateService =
+      TemplateSuggestionService();
 
   @override
   void dispose() {
@@ -123,7 +125,9 @@ class _WorkoutCategoryBottomSheetState
             children: [
               Expanded(child: _buildCategoryChip(context, 'cardio', '❤️', 4)),
               const SizedBox(width: 12),
-              Expanded(child: _buildCategoryChip(context, 'fullBody', '🏋️', 5)),
+              Expanded(
+                child: _buildCategoryChip(context, 'fullBody', '🏋️', 5),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -354,7 +358,11 @@ class _WorkoutCategoryBottomSheetState
     });
   }
 
-  void _onCategorySelected(BuildContext context, String category, String workoutName) {
+  void _onCategorySelected(
+    BuildContext context,
+    String category,
+    String workoutName,
+  ) {
     // Get workout context from provider
     final workoutContext = ref.read(workoutContextProvider);
 
@@ -380,10 +388,14 @@ class _WorkoutCategoryBottomSheetState
         );
 
         // Create a modified template with custom name
-        final templateWithName = suggestedTemplate.copyWith(name: fullWorkoutName);
+        final templateWithName = suggestedTemplate.copyWith(
+          name: fullWorkoutName,
+        );
 
         // Start workout from template with pre-populated exercises
-        ref.read(currentWorkoutProvider.notifier).startFromTemplate(templateWithName);
+        ref
+            .read(currentWorkoutProvider.notifier)
+            .startFromTemplate(templateWithName);
 
         // Close bottom sheet
         Navigator.pop(context);

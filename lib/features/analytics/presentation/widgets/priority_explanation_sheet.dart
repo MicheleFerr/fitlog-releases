@@ -18,10 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 /// - Antagonist imbalance contribution
 /// - Posture risk contribution
 class PriorityExplanationSheet extends StatelessWidget {
-  const PriorityExplanationSheet({
-    required this.neglectedMuscle,
-    super.key,
-  });
+  const PriorityExplanationSheet({required this.neglectedMuscle, super.key});
 
   final NeglectedMuscle neglectedMuscle;
 
@@ -99,9 +96,7 @@ class PriorityExplanationSheet extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: _getPriorityColor(context).withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: _getPriorityColor(context),
-                      ),
+                      border: Border.all(color: _getPriorityColor(context)),
                     ),
                     child: Text(
                       neglectedMuscle.priority.toStringAsFixed(1),
@@ -370,11 +365,7 @@ class _ScoreRow extends StatelessWidget {
               color: iconColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(
-              icon,
-              color: iconColor,
-              size: AppIconSize.small,
-            ),
+            child: Icon(icon, color: iconColor, size: AppIconSize.small),
           ),
           const SizedBox(width: 12),
           Expanded(

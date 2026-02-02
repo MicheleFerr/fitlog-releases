@@ -246,7 +246,7 @@ enum MetricGroup {
 
   /// Vital metrics (Body Temp, Water Mass, Bone Mass)
   /// Unlocked via Just-in-Time consent when user taps "Track Vitals"
-  vitals;
+  vitals,
 }
 
 /// MeasurementSource - Tracks where measurement data originated
@@ -264,5 +264,5 @@ enum MeasurementSource {
   imported,
 
   /// Calculated from other metrics (e.g., BMI from weight + height)
-  calculated;
+  calculated,
 }

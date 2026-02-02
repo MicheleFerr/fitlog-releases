@@ -390,7 +390,8 @@ class RepZoneSuggestion {
       targetTemplateId: targetTemplateId ?? this.targetTemplateId,
       recommendedSets: recommendedSets ?? this.recommendedSets,
       recommendedReps: recommendedReps ?? this.recommendedReps,
-      recommendedRestSeconds: recommendedRestSeconds ?? this.recommendedRestSeconds,
+      recommendedRestSeconds:
+          recommendedRestSeconds ?? this.recommendedRestSeconds,
       difficulty: difficulty ?? this.difficulty,
       equipment: equipment ?? this.equipment,
       reasonKey: reasonKey ?? this.reasonKey,

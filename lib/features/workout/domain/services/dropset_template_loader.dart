@@ -52,8 +52,6 @@ class DropsetTemplateLoader {
     int maxMinutes = 15,
   }) async {
     final all = await loadPredefinedTemplates();
-    return all
-        .where((t) => t.estimatedTimeMinutes <= maxMinutes)
-        .toList();
+    return all.where((t) => t.estimatedTimeMinutes <= maxMinutes).toList();
   }
 }

@@ -33,7 +33,8 @@ class ExerciseDetailScreen extends ConsumerStatefulWidget {
   final String? exerciseId;
 
   @override
-  ConsumerState<ExerciseDetailScreen> createState() => _ExerciseDetailScreenState();
+  ConsumerState<ExerciseDetailScreen> createState() =>
+      _ExerciseDetailScreenState();
 }
 
 /// Chart type enum for reorderable charts
@@ -79,20 +80,36 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
 
     switch (type) {
       case ChartType.weight:
-        firstAvg = firstHalf.fold<double>(0, (sum, s) => sum + s.weight) / firstHalf.length;
-        secondAvg = secondHalf.fold<double>(0, (sum, s) => sum + s.weight) / secondHalf.length;
+        firstAvg =
+            firstHalf.fold<double>(0, (sum, s) => sum + s.weight) /
+            firstHalf.length;
+        secondAvg =
+            secondHalf.fold<double>(0, (sum, s) => sum + s.weight) /
+            secondHalf.length;
       case ChartType.volume:
-        firstAvg = firstHalf.fold<double>(0, (sum, s) => sum + s.volume) / firstHalf.length;
-        secondAvg = secondHalf.fold<double>(0, (sum, s) => sum + s.volume) / secondHalf.length;
+        firstAvg =
+            firstHalf.fold<double>(0, (sum, s) => sum + s.volume) /
+            firstHalf.length;
+        secondAvg =
+            secondHalf.fold<double>(0, (sum, s) => sum + s.volume) /
+            secondHalf.length;
       case ChartType.reps:
-        firstAvg = firstHalf.fold<double>(0, (sum, s) => sum + s.reps) / firstHalf.length;
-        secondAvg = secondHalf.fold<double>(0, (sum, s) => sum + s.reps) / secondHalf.length;
+        firstAvg =
+            firstHalf.fold<double>(0, (sum, s) => sum + s.reps) /
+            firstHalf.length;
+        secondAvg =
+            secondHalf.fold<double>(0, (sum, s) => sum + s.reps) /
+            secondHalf.length;
       case ChartType.rpe:
         final firstWithRpe = firstHalf.where((s) => s.rpe != null).toList();
         final secondWithRpe = secondHalf.where((s) => s.rpe != null).toList();
         if (firstWithRpe.isEmpty || secondWithRpe.isEmpty) return null;
-        firstAvg = firstWithRpe.fold<double>(0, (sum, s) => sum + (s.rpe ?? 0)) / firstWithRpe.length;
-        secondAvg = secondWithRpe.fold<double>(0, (sum, s) => sum + (s.rpe ?? 0)) / secondWithRpe.length;
+        firstAvg =
+            firstWithRpe.fold<double>(0, (sum, s) => sum + (s.rpe ?? 0)) /
+            firstWithRpe.length;
+        secondAvg =
+            secondWithRpe.fold<double>(0, (sum, s) => sum + (s.rpe ?? 0)) /
+            secondWithRpe.length;
     }
 
     if (firstAvg == 0) return null;
@@ -109,21 +126,26 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       insight = context.l10n.analyticsInsightStable;
     } else if (type == ChartType.rpe) {
       // For RPE, interpret high/low differently
-      insight = secondAvg >= 8 ? context.l10n.analyticsInsightRpeHigh :
-                secondAvg <= 6 ? context.l10n.analyticsInsightRpeLow :
-                context.l10n.analyticsInsightStable;
+      insight = secondAvg >= 8
+          ? context.l10n.analyticsInsightRpeHigh
+          : secondAvg <= 6
+          ? context.l10n.analyticsInsightRpeLow
+          : context.l10n.analyticsInsightStable;
     } else {
       // Use parameterized localization functions
       insight = switch (type) {
-        ChartType.weight => isPositive
-            ? context.l10n.analyticsInsightWeightUp(percentStr)
-            : context.l10n.analyticsInsightWeightDown(percentStr),
-        ChartType.volume => isPositive
-            ? context.l10n.analyticsInsightVolumeUp(percentStr)
-            : context.l10n.analyticsInsightVolumeDown(percentStr),
-        ChartType.reps => isPositive
-            ? context.l10n.analyticsInsightRepsUp(percentStr)
-            : context.l10n.analyticsInsightRepsDown(percentStr),
+        ChartType.weight =>
+          isPositive
+              ? context.l10n.analyticsInsightWeightUp(percentStr)
+              : context.l10n.analyticsInsightWeightDown(percentStr),
+        ChartType.volume =>
+          isPositive
+              ? context.l10n.analyticsInsightVolumeUp(percentStr)
+              : context.l10n.analyticsInsightVolumeDown(percentStr),
+        ChartType.reps =>
+          isPositive
+              ? context.l10n.analyticsInsightRepsUp(percentStr)
+              : context.l10n.analyticsInsightRepsDown(percentStr),
         ChartType.rpe => context.l10n.analyticsInsightStable, // handled above
       };
     }
@@ -195,17 +217,21 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     final userId = ref.watch(currentUserIdProvider);
 
     // Watch Form Cues
-    final formCuesAsync = ref.watch(formCuesProvider((
-      exerciseId: widget.exerciseId,
-      exerciseName: widget.exerciseName,
-    )));
+    final formCuesAsync = ref.watch(
+      formCuesProvider((
+        exerciseId: widget.exerciseId,
+        exerciseName: widget.exerciseName,
+      )),
+    );
 
     // Try workout-based metrics first
     var metrics = ref.watch(exerciseMetricsProvider(widget.exerciseName));
 
     // Get Firebase analytics history (used for fallback and landscape screen)
     final historyAsync = userId != null
-        ? ref.watch(exerciseHistoryByNameProvider((userId, widget.exerciseName)))
+        ? ref.watch(
+            exerciseHistoryByNameProvider((userId, widget.exerciseName)),
+          )
         : null;
 
     // If workout metrics not found, try Firebase analytics as fallback
@@ -217,9 +243,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
 
     if (metrics == null) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.exerciseName),
-        ),
+        appBar: AppBar(title: Text(widget.exerciseName)),
         body: EnhancedEmptyState(
           type: EmptyStateType.error,
           icon: AppIcons.error,
@@ -322,9 +346,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
 
           // Training Pattern Cards (Decision Narrative - above charts)
           // Based on UX research 2024-2025: Insights prominently visible BEFORE detailed data
-          SliverToBoxAdapter(
-            child: _buildPatternCards(),
-          ),
+          SliverToBoxAdapter(child: _buildPatternCards()),
 
           // Drag hint and charts header
           SliverToBoxAdapter(
@@ -338,13 +360,17 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                       Icon(
                         AppIcons.dragHandle,
                         size: AppIconSize.small,
-                        color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                        color: context.colors.onSurfaceVariant.withValues(
+                          alpha: 0.5,
+                        ),
                       ),
                       const SizedBox(width: 8),
                       Text(
                         context.l10n.dragToReorder,
                         style: context.textTheme.bodySmall?.copyWith(
-                          color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
+                          color: context.colors.onSurfaceVariant.withValues(
+                            alpha: 0.7,
+                          ),
                           fontStyle: FontStyle.italic,
                         ),
                       ),
@@ -363,7 +389,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               itemBuilder: (context, index) {
                 final chartType = _chartOrder[index];
                 // Skip RPE if no data
-                if (chartType == ChartType.rpe && !filteredSets.any((s) => s.rpe != null)) {
+                if (chartType == ChartType.rpe &&
+                    !filteredSets.any((s) => s.rpe != null)) {
                   return const SizedBox.shrink(key: ValueKey('rpe_empty'));
                 }
                 return _buildReorderableChartCard(
@@ -393,9 +420,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
           ),
 
           // Bottom padding
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 100),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],
       ),
     );
@@ -432,7 +457,9 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                     // Drag handle
                     Icon(
                       AppIcons.dragHandle,
-                      color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
+                      color: context.colors.onSurfaceVariant.withValues(
+                        alpha: 0.4,
+                      ),
                       size: AppIconSize.medium,
                     ),
                     const SizedBox(width: 8),
@@ -447,7 +474,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                       ),
                     ),
                     // Trend badge
-                    if (trendData != null) _buildTrendBadge(trendData, chartType),
+                    if (trendData != null)
+                      _buildTrendBadge(trendData, chartType),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -471,7 +499,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     // For RPE, interpret trend differently (lower can be good)
     final bool isGood;
     if (type == ChartType.rpe) {
-      isGood = !trend.isPositive || trend.isStable; // Lower RPE or stable is good
+      isGood =
+          !trend.isPositive || trend.isStable; // Lower RPE or stable is good
     } else {
       isGood = trend.isPositive || trend.isStable; // Higher or stable is good
     }
@@ -479,26 +508,30 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     final bgColor = trend.isStable
         ? context.colors.surfaceContainerHighest
         : isGood
-            ? context.colors.success.withValues(alpha: 0.15)
-            : context.colors.error.withValues(alpha: 0.15);
+        ? context.colors.success.withValues(alpha: 0.15)
+        : context.colors.error.withValues(alpha: 0.15);
 
     final textColor = trend.isStable
         ? context.colors.onSurfaceVariant
         : isGood
-            ? context.colors.success
-            : context.colors.error;
+        ? context.colors.success
+        : context.colors.error;
 
     final icon = trend.isStable
         ? AppIcons.trendFlat
         : trend.isPositive
-            ? AppIcons.trendUp
-            : AppIcons.trendDown;
+        ? AppIcons.trendUp
+        : AppIcons.trendDown;
 
     final text = trend.isStable
         ? context.l10n.analyticsTrendBadgeStable
         : trend.isPositive
-            ? context.l10n.analyticsTrendBadgeUp(trend.percentChange.abs().toStringAsFixed(1))
-            : context.l10n.analyticsTrendBadgeDown(trend.percentChange.toStringAsFixed(1));
+        ? context.l10n.analyticsTrendBadgeUp(
+            trend.percentChange.abs().toStringAsFixed(1),
+          )
+        : context.l10n.analyticsTrendBadgeDown(
+            trend.percentChange.toStringAsFixed(1),
+          );
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -530,17 +563,11 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       decoration: BoxDecoration(
         color: chartColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: chartColor.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: chartColor.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
-          Icon(
-            AppIcons.lightbulb,
-            size: AppIconSize.small,
-            color: chartColor,
-          ),
+          Icon(AppIcons.lightbulb, size: AppIconSize.small, color: chartColor),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
@@ -558,7 +585,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
 
   /// Get chart data (title, icon, color, widget) for a chart type
   /// Updated 2026-01-18: Using new Syncfusion charts based on UX research
-  (String, IconData, Color, Widget) _getChartData(ChartType type, List<ExerciseSetData> sets) {
+  (String, IconData, Color, Widget) _getChartData(
+    ChartType type,
+    List<ExerciseSetData> sets,
+  ) {
     switch (type) {
       case ChartType.weight:
         return (
@@ -623,14 +653,18 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
         child: Container(
           margin: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: isSelected ? context.colors.primary : context.colors.surface.withValues(alpha: 0),
+            color: isSelected
+                ? context.colors.primary
+                : context.colors.surface.withValues(alpha: 0),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
             child: Text(
               label,
               style: context.textTheme.labelLarge?.copyWith(
-                color: isSelected ? context.colors.onPrimary : context.colors.onSurfaceVariant,
+                color: isSelected
+                    ? context.colors.onPrimary
+                    : context.colors.onSurfaceVariant,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -640,9 +674,15 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     );
   }
 
-  Widget _buildStatsSummary(ExerciseProgressMetrics metrics, List<ExerciseSetData> sets) {
+  Widget _buildStatsSummary(
+    ExerciseProgressMetrics metrics,
+    List<ExerciseSetData> sets,
+  ) {
     final periodMaxWeight = sets.isNotEmpty
-        ? sets.fold<double>(0, (max, set) => set.weight > max ? set.weight : max)
+        ? sets.fold<double>(
+            0,
+            (max, set) => set.weight > max ? set.weight : max,
+          )
         : 0.0;
 
     final periodAvgWeight = sets.isNotEmpty
@@ -655,7 +695,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
 
     final setsWithRPE = sets.where((s) => s.rpe != null).toList();
     final periodAvgRPE = setsWithRPE.isNotEmpty
-        ? setsWithRPE.fold<double>(0, (sum, set) => sum + (set.rpe ?? 0)) / setsWithRPE.length
+        ? setsWithRPE.fold<double>(0, (sum, set) => sum + (set.rpe ?? 0)) /
+              setsWithRPE.length
         : 0.0;
 
     return Container(
@@ -790,11 +831,26 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
   /// Show terminology explanation bottom sheet
   void _showTerminologyExplanation(TerminologyType type) {
     final (term, explanation) = switch (type) {
-      TerminologyType.pr => (context.l10n.tooltipPR, context.l10n.tooltipPRExplanation),
-      TerminologyType.rpe => (context.l10n.tooltipRPE, context.l10n.tooltipRPEExplanation),
-      TerminologyType.volume => (context.l10n.tooltipVolume, context.l10n.tooltipVolumeExplanation),
-      TerminologyType.reps => (context.l10n.tooltipReps, context.l10n.tooltipRepsExplanation),
-      TerminologyType.avg => (context.l10n.tooltipAvg, context.l10n.tooltipAvgExplanation),
+      TerminologyType.pr => (
+        context.l10n.tooltipPR,
+        context.l10n.tooltipPRExplanation,
+      ),
+      TerminologyType.rpe => (
+        context.l10n.tooltipRPE,
+        context.l10n.tooltipRPEExplanation,
+      ),
+      TerminologyType.volume => (
+        context.l10n.tooltipVolume,
+        context.l10n.tooltipVolumeExplanation,
+      ),
+      TerminologyType.reps => (
+        context.l10n.tooltipReps,
+        context.l10n.tooltipRepsExplanation,
+      ),
+      TerminologyType.avg => (
+        context.l10n.tooltipAvg,
+        context.l10n.tooltipAvgExplanation,
+      ),
     };
 
     showModalBottomSheet(
@@ -921,7 +977,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
   }
 
   Widget _buildSessionItem(DateTime date, List<ExerciseSetData> sets) {
-    final maxWeight = sets.fold<double>(0, (max, set) => set.weight > max ? set.weight : max);
+    final maxWeight = sets.fold<double>(
+      0,
+      (max, set) => set.weight > max ? set.weight : max,
+    );
     final totalVolume = sets.fold<double>(0, (sum, set) => sum + set.volume);
 
     return Padding(
@@ -985,7 +1044,9 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
   /// following the "Decision Narrative" UX pattern from Nielsen Norman 2024.
   Widget _buildPatternCards() {
     // Watch the pattern provider for this exercise
-    final patternsAsync = ref.watch(trainingPatternProvider(widget.exerciseName));
+    final patternsAsync = ref.watch(
+      trainingPatternProvider(widget.exerciseName),
+    );
 
     return patternsAsync.when(
       data: (results) {
@@ -1020,8 +1081,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     final firstHalf = sets.sublist(0, midpoint);
     final secondHalf = sets.sublist(midpoint);
 
-    final firstAvg = firstHalf.fold<double>(0, (sum, s) => sum + s.weight) / firstHalf.length;
-    final secondAvg = secondHalf.fold<double>(0, (sum, s) => sum + s.weight) / secondHalf.length;
+    final firstAvg =
+        firstHalf.fold<double>(0, (sum, s) => sum + s.weight) /
+        firstHalf.length;
+    final secondAvg =
+        secondHalf.fold<double>(0, (sum, s) => sum + s.weight) /
+        secondHalf.length;
 
     if (firstAvg == 0) return const SizedBox.shrink();
 
@@ -1044,7 +1109,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
     }
 
     // Get current PR and suggested next goal
-    final currentPR = sets.fold<double>(0, (max, s) => s.weight > max ? s.weight : max);
+    final currentPR = sets.fold<double>(
+      0,
+      (max, s) => s.weight > max ? s.weight : max,
+    );
     // Suggest 2.5kg increment (standard plate)
     final nextGoal = (currentPR + 2.5).ceilToDouble();
 
@@ -1057,7 +1125,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
 
     if (isImproving) {
       title = context.l10n.quickAnswerImproving;
-      subtitle = context.l10n.quickAnswerWeightUp(absChange.toStringAsFixed(0), periodLabel);
+      subtitle = context.l10n.quickAnswerWeightUp(
+        absChange.toStringAsFixed(0),
+        periodLabel,
+      );
       icon = AppIcons.trendUp;
       bgColor = context.colors.success.withValues(alpha: 0.12);
       iconColor = context.colors.success;
@@ -1069,7 +1140,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       iconColor = context.colors.primary;
     } else {
       title = context.l10n.quickAnswerDeclining;
-      subtitle = context.l10n.quickAnswerWeightDown(absChange.toStringAsFixed(0), periodLabel);
+      subtitle = context.l10n.quickAnswerWeightDown(
+        absChange.toStringAsFixed(0),
+        periodLabel,
+      );
       icon = AppIcons.trendDown;
       bgColor = context.colors.warning.withValues(alpha: 0.12);
       iconColor = context.colors.warning;
@@ -1081,10 +1155,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: iconColor.withValues(alpha: 0.3),
-          width: 1.5,
-        ),
+        border: Border.all(color: iconColor.withValues(alpha: 0.3), width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

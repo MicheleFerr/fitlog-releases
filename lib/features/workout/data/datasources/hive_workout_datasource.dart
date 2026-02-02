@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ FitLog Pro - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: data/datasources
 /// 🎯 Feature: workout
 /// 🔧 Type: datasource
 /// 🌍 Localization: N/A
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - Hive (local storage)
 /// - Data models
@@ -62,7 +62,6 @@ class SyncQueueItem {
 /// - Centralized box lifecycle management
 /// - Memory leak prevention
 class HiveWorkoutDataSource {
-
   /// Constructor with dependency injection
   ///
   /// Usage:
@@ -89,7 +88,9 @@ class HiveWorkoutDataSource {
 
   /// Get sync queue box via HiveBoxManagerEnhanced
   Future<Box<Map>> _getSyncQueueBox() async {
-    return await _boxManager.openBox<Map>(HiveBoxNames.getSyncQueueName('workouts'));
+    return await _boxManager.openBox<Map>(
+      HiveBoxNames.getSyncQueueName('workouts'),
+    );
   }
 
   /// ⚡ PERFORMANCE: Get workouts box directly for batch operations
@@ -102,7 +103,9 @@ class HiveWorkoutDataSource {
   /// ⚡ PERFORMANCE: Get existing workout timestamps for a user
   /// Returns a map of workoutId -> updatedAt timestamp
   /// Used for efficient cache comparison without loading full workout data
-  Future<Map<String, DateTime>> getExistingWorkoutTimestamps(String userId) async {
+  Future<Map<String, DateTime>> getExistingWorkoutTimestamps(
+    String userId,
+  ) async {
     final box = await _getWorkoutsBox();
     final timestamps = <String, DateTime>{};
 
@@ -137,7 +140,10 @@ class HiveWorkoutDataSource {
 
   /// ⚡ PERFORMANCE: Batch save multiple workouts in a single operation
   /// Much faster than calling saveWorkout() in a loop
-  Future<void> batchSaveWorkouts(List<WorkoutModel> workouts, String userId) async {
+  Future<void> batchSaveWorkouts(
+    List<WorkoutModel> workouts,
+    String userId,
+  ) async {
     if (workouts.isEmpty) return;
 
     final box = await _getWorkoutsBox();
@@ -172,10 +178,13 @@ class HiveWorkoutDataSource {
 
     // DEBUG: Log first set's isCompleted value before saving
     // ✅ FIX: Added null-safety checks to prevent crash on empty lists
-    if (workout.exercises.isNotEmpty && workout.exercises.first.sets.isNotEmpty) {
+    if (workout.exercises.isNotEmpty &&
+        workout.exercises.first.sets.isNotEmpty) {
       final firstSet = workout.exercises.first.sets.first;
       if (kDebugMode) {
-        debugPrint('💾 [Hive] Saving workout "${workout.name}" - First set isCompleted: ${firstSet.isCompleted}');
+        debugPrint(
+          '💾 [Hive] Saving workout "${workout.name}" - First set isCompleted: ${firstSet.isCompleted}',
+        );
       }
       final exercisesJson = data['exercises'] as List?;
       if (exercisesJson != null && exercisesJson.isNotEmpty) {
@@ -184,7 +193,9 @@ class HiveWorkoutDataSource {
         if (setsJson != null && setsJson.isNotEmpty) {
           final firstSetJson = setsJson.first as Map;
           if (kDebugMode) {
-            debugPrint('💾 [Hive] First set JSON isCompleted: ${firstSetJson['isCompleted']}');
+            debugPrint(
+              '💾 [Hive] First set JSON isCompleted: ${firstSetJson['isCompleted']}',
+            );
           }
         }
       }
@@ -204,14 +215,14 @@ class HiveWorkoutDataSource {
   Future<void> updateWorkout(WorkoutModel workout, String userId) async {
     final box = await _getWorkoutsBox();
     final key = '${userId}_${workout.id}';
-    
+
     final data = workout.toJson();
     data['userId'] = userId;
     data['localLastModified'] = DateTime.now().toIso8601String();
     data['syncStatus'] = 'pending';
-    
+
     await box.put(key, data);
-    
+
     // Add to sync queue
     await _addToSyncQueue(key, 'update', userId);
   }
@@ -220,10 +231,10 @@ class HiveWorkoutDataSource {
   Future<WorkoutModel?> getWorkout(String workoutId, String userId) async {
     final box = await _getWorkoutsBox();
     final key = '${userId}_$workoutId';
-    
+
     final data = box.get(key);
     if (data == null) return null;
-    
+
     return WorkoutModel.fromJson(Map<String, dynamic>.from(data));
   }
 
@@ -235,11 +246,11 @@ class HiveWorkoutDataSource {
     DateTime? endDate,
   }) async {
     final box = await _getWorkoutsBox();
-    
+
     // Verbose logging only in extreme debug scenarios
     // debugPrint('📦 Reading workouts from Hive for user: $userId');
     // debugPrint('📦 Total keys in box: ${box.keys.length}');
-    
+
     // Get all workouts for this user
     final userWorkouts = box.keys
         .where((key) => key.toString().startsWith('${userId}_'))
@@ -253,11 +264,11 @@ class HiveWorkoutDataSource {
               jsonData = data;
             } else {
               // Cast keys to String and preserve values
-            jsonData = Map<String, dynamic>.from(
-              data.map((key, value) => MapEntry(key.toString(), value))
-            );
+              jsonData = Map<String, dynamic>.from(
+                data.map((key, value) => MapEntry(key.toString(), value)),
+              );
             }
-          
+
             return WorkoutModel.fromJson(jsonData);
           } catch (e) {
             debugPrint('❌ Error parsing workout with key $key: $e');
@@ -267,29 +278,29 @@ class HiveWorkoutDataSource {
         .where((workout) => workout != null)
         .cast<WorkoutModel>()
         .toList();
-    
+
     // Verbose logging only in extreme debug scenarios
     // debugPrint('📦 Successfully parsed ${userWorkouts.length} workouts for user');
-    
+
     // Apply filters
     var filtered = userWorkouts;
-    
+
     if (startDate != null) {
       filtered = filtered.where((w) => w.createdAt.isAfter(startDate)).toList();
     }
-    
+
     if (endDate != null) {
       filtered = filtered.where((w) => w.createdAt.isBefore(endDate)).toList();
     }
-    
+
     // Sort by date (newest first)
     filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    
+
     // Apply limit
     if (limit != null && filtered.length > limit) {
       filtered = filtered.take(limit).toList();
     }
-    
+
     return filtered;
   }
 
@@ -297,9 +308,9 @@ class HiveWorkoutDataSource {
   Future<void> deleteWorkout(String workoutId, String userId) async {
     final box = await _getWorkoutsBox();
     final key = '${userId}_$workoutId';
-    
+
     await box.delete(key);
-    
+
     // Add to sync queue
     await _addToSyncQueue(key, 'delete', userId);
   }
@@ -312,14 +323,16 @@ class HiveWorkoutDataSource {
     final activitiesBox = await _getActivitiesBox();
     final summariesBox = await _getSummariesBox();
     final activityIds = <String>[];
-    
+
     // Create exercise activities for each completed exercise
     for (final exercise in workout.exercises) {
-      final completedSets = exercise.sets.where((set) => set.isCompleted).toList();
-      
+      final completedSets = exercise.sets
+          .where((set) => set.isCompleted)
+          .toList();
+
       if (completedSets.isNotEmpty) {
         final activityId = '${workout.id}_${exercise.id}';
-        
+
         final activityData = {
           'id': activityId,
           'userEmail': userEmail.toLowerCase().trim(),
@@ -330,7 +343,7 @@ class HiveWorkoutDataSource {
           'workoutName': workout.name,
           'sets': completedSets.map((set) => set.toJson()).toList(),
           'totalVolume': completedSets.fold<double>(
-            0.0, 
+            0.0,
             (sum, set) => sum + set.volume,
           ),
           'totalSets': completedSets.length,
@@ -343,14 +356,14 @@ class HiveWorkoutDataSource {
                 : null,
             'notes': exercise.notes,
             'restTime': exercise.restTime,
-          }
+          },
         };
-        
+
         await activitiesBox.put(activityId, activityData);
         activityIds.add(activityId);
       }
     }
-    
+
     // Save workout summary
     final summaryId = 'summary_${workout.id}';
     final summaryData = {
@@ -359,12 +372,18 @@ class HiveWorkoutDataSource {
       'workoutId': workout.id,
       'workoutName': workout.name,
       'totalExercises': workout.exercises.length,
-      'completedExercises': workout.exercises.where((e) => e.isCompleted).length,
+      'completedExercises': workout.exercises
+          .where((e) => e.isCompleted)
+          .length,
       'totalSets': workout.exercises.fold(0, (sum, e) => sum + e.sets.length),
-      'completedSets': workout.exercises.fold(0, 
-        (sum, e) => sum + e.sets.where((s) => s.isCompleted).length),
-      'totalVolume': workout.exercises.fold<double>(0.0, 
-        (sum, e) => sum + e.totalVolume),
+      'completedSets': workout.exercises.fold(
+        0,
+        (sum, e) => sum + e.sets.where((s) => s.isCompleted).length,
+      ),
+      'totalVolume': workout.exercises.fold<double>(
+        0.0,
+        (sum, e) => sum + e.totalVolume,
+      ),
       'duration': workout.endTime != null && workout.startTime != null
           ? workout.endTime!.difference(workout.startTime!).inSeconds
           : null,
@@ -373,10 +392,10 @@ class HiveWorkoutDataSource {
       'createdAt': DateTime.now().toIso8601String(),
       'localOnly': true,
     };
-    
+
     await summariesBox.put(summaryId, summaryData);
     activityIds.add(summaryId);
-    
+
     return activityIds;
   }
 
@@ -391,47 +410,50 @@ class HiveWorkoutDataSource {
       startDate: startDate,
       endDate: endDate,
     );
-    
-    final completedWorkouts = workouts.where((w) => w.status == 'completed').toList();
-    
+
+    final completedWorkouts = workouts
+        .where((w) => w.status == 'completed')
+        .toList();
+
     // Calculate statistics
     int totalExercises = 0;
     int totalSets = 0;
     Duration totalDuration = Duration.zero;
     final exercisesByCategory = <ExerciseCategory, int>{};
     DateTime? lastWorkoutDate;
-    
+
     for (final workout in completedWorkouts) {
       totalExercises += workout.exercises.length;
-      
+
       for (final exercise in workout.exercises) {
         totalSets += exercise.sets.length;
-        
+
         // Count by category
         // ✅ FIX: Changed default from ExerciseCategory.chest to ExerciseCategory.other
         final category = ExerciseCategory.values.firstWhere(
           (e) => e.name == exercise.category,
           orElse: () => ExerciseCategory.other,
         );
-        exercisesByCategory[category] = (exercisesByCategory[category] ?? 0) + 1;
+        exercisesByCategory[category] =
+            (exercisesByCategory[category] ?? 0) + 1;
       }
-      
+
       // Add duration
       if (workout.startTime != null && workout.endTime != null) {
         totalDuration += workout.endTime!.difference(workout.startTime!);
       }
-      
+
       // Track last workout date
       final workoutDate = workout.startTime ?? workout.createdAt;
       if (lastWorkoutDate == null || workoutDate.isAfter(lastWorkoutDate)) {
         lastWorkoutDate = workoutDate;
       }
     }
-    
-    final averageWorkoutDuration = completedWorkouts.isNotEmpty 
+
+    final averageWorkoutDuration = completedWorkouts.isNotEmpty
         ? (totalDuration.inSeconds / completedWorkouts.length).toDouble()
         : 0.0;
-    
+
     return WorkoutStats(
       totalWorkouts: completedWorkouts.length,
       totalExercises: totalExercises,
@@ -446,7 +468,7 @@ class HiveWorkoutDataSource {
   /// Get active workout from local storage
   Future<WorkoutModel?> getActiveWorkout(String userId) async {
     final workouts = await getWorkouts(userId);
-    
+
     try {
       return workouts.firstWhere((w) => w.status == 'inProgress');
     } catch (_) {
@@ -461,17 +483,19 @@ class HiveWorkoutDataSource {
     int limit = 10,
   }) async {
     final allWorkouts = await getWorkouts(userId);
-    
+
     final totalCount = allWorkouts.length;
     final startIndex = (page - 1) * limit;
     final endIndex = startIndex + limit;
-    
-    final paginatedWorkouts = allWorkouts.skip(startIndex).take(limit)
+
+    final paginatedWorkouts = allWorkouts
+        .skip(startIndex)
+        .take(limit)
         .map((model) => model.toDomain())
         .toList();
-    
+
     final hasMore = endIndex < totalCount;
-    
+
     return WorkoutHistory(
       workouts: paginatedWorkouts,
       totalCount: totalCount,
@@ -481,7 +505,11 @@ class HiveWorkoutDataSource {
   }
 
   /// Add operation to sync queue for later processing
-  Future<void> _addToSyncQueue(String key, String operation, String userId) async {
+  Future<void> _addToSyncQueue(
+    String key,
+    String operation,
+    String userId,
+  ) async {
     final box = await _getSyncQueueBox();
 
     final queueItem = {
@@ -531,14 +559,16 @@ class HiveWorkoutDataSource {
         }
       }
 
-      items.add(SyncQueueItem(
-        index: i,
-        key: item['key'] as String,
-        operation: item['operation'] as String,
-        userId: userId,
-        retryCount: retryCount,
-        maxRetries: maxRetries,
-      ));
+      items.add(
+        SyncQueueItem(
+          index: i,
+          key: item['key'] as String,
+          operation: item['operation'] as String,
+          userId: userId,
+          retryCount: retryCount,
+          maxRetries: maxRetries,
+        ),
+      );
     }
 
     return items;
@@ -561,7 +591,9 @@ class HiveWorkoutDataSource {
       item['status'] = 'permanently_failed';
       item['failedAt'] = DateTime.now().toIso8601String();
       if (kDebugMode) {
-        debugPrint('❌ [SyncQueue] Item permanently failed after $retryCount retries: ${item['key']}');
+        debugPrint(
+          '❌ [SyncQueue] Item permanently failed after $retryCount retries: ${item['key']}',
+        );
       }
     } else {
       // Calculate next retry with exponential backoff
@@ -574,7 +606,9 @@ class HiveWorkoutDataSource {
       item['lastError'] = DateTime.now().toIso8601String();
 
       if (kDebugMode) {
-        debugPrint('⚠️ [SyncQueue] Item failed (retry $retryCount/$maxRetries), next retry in $backoffMinutes min: ${item['key']}');
+        debugPrint(
+          '⚠️ [SyncQueue] Item failed (retry $retryCount/$maxRetries), next retry in $backoffMinutes min: ${item['key']}',
+        );
       }
     }
 
@@ -622,9 +656,11 @@ class HiveWorkoutDataSource {
   /// Get pending sync items for a user
   Future<List<Map<String, dynamic>>> getPendingSyncItems(String userId) async {
     final box = await _getSyncQueueBox();
-    
+
     return box.values
-        .where((item) => item['userId'] == userId && item['status'] == 'pending')
+        .where(
+          (item) => item['userId'] == userId && item['status'] == 'pending',
+        )
         .map((item) => Map<String, dynamic>.from(item))
         .toList();
   }
@@ -632,7 +668,7 @@ class HiveWorkoutDataSource {
   /// Mark sync item as completed
   Future<void> markSyncCompleted(int syncQueueIndex) async {
     final box = await _getSyncQueueBox();
-    
+
     final item = box.getAt(syncQueueIndex);
     if (item != null) {
       item['status'] = 'completed';
@@ -646,7 +682,7 @@ class HiveWorkoutDataSource {
     final box = await _getSyncQueueBox();
     final now = DateTime.now();
     final keysToDelete = <dynamic>[];
-    
+
     for (var i = 0; i < box.length; i++) {
       final item = box.getAt(i);
       if (item != null && item['status'] == 'completed') {
@@ -656,7 +692,7 @@ class HiveWorkoutDataSource {
         }
       }
     }
-    
+
     await box.deleteAll(keysToDelete);
   }
 
@@ -665,15 +701,19 @@ class HiveWorkoutDataSource {
     final workouts = await getWorkouts(userId);
     final activitiesBox = await _getActivitiesBox();
     final summariesBox = await _getSummariesBox();
-    
+
     final activities = activitiesBox.values
-        .where((item) => item['userEmail']?.toString().contains(userId) ?? false)
+        .where(
+          (item) => item['userEmail']?.toString().contains(userId) ?? false,
+        )
         .toList();
-    
+
     final summaries = summariesBox.values
-        .where((item) => item['userEmail']?.toString().contains(userId) ?? false)
+        .where(
+          (item) => item['userEmail']?.toString().contains(userId) ?? false,
+        )
         .toList();
-    
+
     return {
       'exportDate': DateTime.now().toIso8601String(),
       'userId': userId,
@@ -695,14 +735,18 @@ class HiveWorkoutDataSource {
       final workoutEntries = <String, Map<String, dynamic>>{};
 
       for (final workoutData in data['workouts']) {
-        final workout = WorkoutModel.fromJson(Map<String, dynamic>.from(workoutData));
+        final workout = WorkoutModel.fromJson(
+          Map<String, dynamic>.from(workoutData),
+        );
         final key = '${userId}_${workout.id}';
         workoutEntries[key] = Map<String, dynamic>.from(workoutData);
       }
 
       await workoutsBox.putAll(workoutEntries);
       if (kDebugMode) {
-        debugPrint('⚡ [Import] Batch imported ${workoutEntries.length} workouts');
+        debugPrint(
+          '⚡ [Import] Batch imported ${workoutEntries.length} workouts',
+        );
       }
     }
 
@@ -718,7 +762,9 @@ class HiveWorkoutDataSource {
 
       await activitiesBox.putAll(activityEntries);
       if (kDebugMode) {
-        debugPrint('⚡ [Import] Batch imported ${activityEntries.length} activities');
+        debugPrint(
+          '⚡ [Import] Batch imported ${activityEntries.length} activities',
+        );
       }
     }
 
@@ -734,7 +780,9 @@ class HiveWorkoutDataSource {
 
       await summariesBox.putAll(summaryEntries);
       if (kDebugMode) {
-        debugPrint('⚡ [Import] Batch imported ${summaryEntries.length} summaries');
+        debugPrint(
+          '⚡ [Import] Batch imported ${summaryEntries.length} summaries',
+        );
       }
     }
   }
@@ -742,22 +790,22 @@ class HiveWorkoutDataSource {
   /// Get unsynced workouts for premium sync
   Future<List<WorkoutModel>> getUnsyncedWorkouts(String userId) async {
     final box = await _getWorkoutsBox();
-    
+
     final unsyncedWorkouts = box.keys
         .where((key) => key.toString().startsWith('${userId}_'))
         .map((key) => box.get(key))
         .where((data) => data != null && data['syncStatus'] != 'synced')
         .map((data) => WorkoutModel.fromJson(Map<String, dynamic>.from(data!)))
         .toList();
-    
+
     return unsyncedWorkouts;
   }
-  
+
   /// Mark workout as synced
   Future<void> markWorkoutAsSynced(String workoutId, String userId) async {
     final box = await _getWorkoutsBox();
     final key = '${userId}_$workoutId';
-    
+
     final data = box.get(key);
     if (data != null) {
       data['syncStatus'] = 'synced';
@@ -765,7 +813,7 @@ class HiveWorkoutDataSource {
       await box.put(key, data);
     }
   }
-  
+
   /// Clear all local data for a user (for logout/account deletion)
   Future<void> clearUserData(String userId) async {
     final workoutsBox = await _getWorkoutsBox();
@@ -798,7 +846,9 @@ class HiveWorkoutDataSource {
   }) async {
     try {
       if (kDebugMode) {
-        debugPrint('📊 [HiveWorkoutDataSource] Getting workouts for analytics - User: $userId');
+        debugPrint(
+          '📊 [HiveWorkoutDataSource] Getting workouts for analytics - User: $userId',
+        );
       }
 
       // Use the same method as regular getWorkouts
@@ -809,12 +859,16 @@ class HiveWorkoutDataSource {
       );
 
       if (kDebugMode) {
-        debugPrint('✅ [HiveWorkoutDataSource] Retrieved ${workouts.length} workouts for analytics');
+        debugPrint(
+          '✅ [HiveWorkoutDataSource] Retrieved ${workouts.length} workouts for analytics',
+        );
       }
       return workouts;
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [HiveWorkoutDataSource] Error getting workouts for analytics: $e');
+        debugPrint(
+          '❌ [HiveWorkoutDataSource] Error getting workouts for analytics: $e',
+        );
       }
       if (kDebugMode) {
         debugPrint('📍 Stack trace: $stackTrace');
@@ -830,7 +884,9 @@ class HiveWorkoutDataSource {
   Future<WorkoutModel?> getLastCompletedWorkout(String userId) async {
     try {
       if (kDebugMode) {
-        debugPrint('🔍 [HiveWorkoutDataSource] getLastCompletedWorkout - userId: $userId');
+        debugPrint(
+          '🔍 [HiveWorkoutDataSource] getLastCompletedWorkout - userId: $userId',
+        );
       }
 
       // Get all workouts for user
@@ -859,7 +915,9 @@ class HiveWorkoutDataSource {
       final lastWorkout = completedWorkouts.first;
 
       if (kDebugMode) {
-        debugPrint('✅ [HiveWorkoutDataSource] Found last workout: ${lastWorkout.id}');
+        debugPrint(
+          '✅ [HiveWorkoutDataSource] Found last workout: ${lastWorkout.id}',
+        );
       }
 
       return lastWorkout;
@@ -897,8 +955,12 @@ class HiveWorkoutDataSource {
     final box = await _getWorkoutsBox();
 
     if (kDebugMode) {
-      debugPrint('📦 [HivePaginated] Getting paginated workouts for user: $userId');
-      debugPrint('📦 [HivePaginated] PageSize: $pageSize, LastId: $lastWorkoutId');
+      debugPrint(
+        '📦 [HivePaginated] Getting paginated workouts for user: $userId',
+      );
+      debugPrint(
+        '📦 [HivePaginated] PageSize: $pageSize, LastId: $lastWorkoutId',
+      );
     }
 
     // Get all workouts for this user
@@ -919,7 +981,9 @@ class HiveWorkoutDataSource {
             return WorkoutModel.fromJson(jsonData);
           } catch (e) {
             if (kDebugMode) {
-              debugPrint('❌ [HivePaginated] Error parsing workout with key $key: $e');
+              debugPrint(
+                '❌ [HivePaginated] Error parsing workout with key $key: $e',
+              );
             }
             return null;
           }
@@ -934,11 +998,15 @@ class HiveWorkoutDataSource {
     }
 
     if (dateFrom != null) {
-      userWorkouts = userWorkouts.where((w) => w.createdAt.isAfter(dateFrom)).toList();
+      userWorkouts = userWorkouts
+          .where((w) => w.createdAt.isAfter(dateFrom))
+          .toList();
     }
 
     if (dateTo != null) {
-      userWorkouts = userWorkouts.where((w) => w.createdAt.isBefore(dateTo)).toList();
+      userWorkouts = userWorkouts
+          .where((w) => w.createdAt.isBefore(dateTo))
+          .toList();
     }
 
     // Sort by date (newest first) - consistent with Firestore query
@@ -969,7 +1037,9 @@ class HiveWorkoutDataSource {
 
     if (kDebugMode) {
       debugPrint('📦 [HivePaginated] Total filtered: ${userWorkouts.length}');
-      debugPrint('📦 [HivePaginated] Returning: ${resultWorkouts.length}, HasMore: $hasMore');
+      debugPrint(
+        '📦 [HivePaginated] Returning: ${resultWorkouts.length}, HasMore: $hasMore',
+      );
     }
 
     return PaginatedResult<WorkoutModel>(

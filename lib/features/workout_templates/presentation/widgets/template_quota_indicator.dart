@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: presentation
 /// 🎯 Feature: workout_templates
 /// 🔧 Type: widget
 /// 🌍 Localization: ✅ AppLocalizations used
 /// 🎨 Theme: ✅ ColorScheme responsive
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - Riverpod: None
 /// - Firebase: None
@@ -18,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class TemplateQuotaIndicator extends StatelessWidget {
-  
   const TemplateQuotaIndicator({
     super.key,
     required this.usedPrivate,
@@ -30,7 +29,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
   final int usedPublic;
   final int maxPrivate;
   final int maxPublic;
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -48,20 +47,14 @@ class TemplateQuotaIndicator extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(
-                AppIcons.inventory2,
-                size: 20,
-                color: colorScheme.primary,
-              ),
+              Icon(AppIcons.inventory2, size: 20, color: colorScheme.primary),
               const SizedBox(width: 8),
               Text(
                 'Template Quota',
@@ -71,10 +64,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
               ),
               const Spacer(),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
@@ -90,7 +80,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          
+
           // Private templates
           _buildQuotaBar(
             context: context,
@@ -100,9 +90,9 @@ class TemplateQuotaIndicator extends StatelessWidget {
             icon: AppIcons.lock,
             color: colorScheme.primary,
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           // Public templates
           _buildQuotaBar(
             context: context,
@@ -112,9 +102,9 @@ class TemplateQuotaIndicator extends StatelessWidget {
             icon: AppIcons.public,
             color: colorScheme.secondary,
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Upgrade prompt
           if (usedPrivate >= maxPrivate || usedPublic >= maxPublic)
             Container(
@@ -125,11 +115,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.star,
-                    color: colorScheme.tertiary,
-                    size: 20,
-                  ),
+                  Icon(AppIcons.star, color: colorScheme.tertiary, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Column(
@@ -163,7 +149,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildQuotaBar({
     required BuildContext context,
     required String label,
@@ -177,7 +163,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
     final percentage = (used / max).clamp(0.0, 1.0);
     final isAlmostFull = percentage >= 0.8;
     final isFull = percentage >= 1.0;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -185,20 +171,17 @@ class TemplateQuotaIndicator extends StatelessWidget {
           children: [
             Icon(icon, size: 16, color: color),
             const SizedBox(width: 4),
-            Text(
-              label,
-              style: theme.textTheme.labelMedium,
-            ),
+            Text(label, style: theme.textTheme.labelMedium),
             const Spacer(),
             Text(
               '$used / $max',
               style: theme.textTheme.labelMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: isFull 
-                    ? colorScheme.error 
-                    : isAlmostFull 
-                        ? context.colors.secondary 
-                        : colorScheme.onSurface,
+                color: isFull
+                    ? colorScheme.error
+                    : isAlmostFull
+                    ? context.colors.secondary
+                    : colorScheme.onSurface,
               ),
             ),
           ],
@@ -211,11 +194,11 @@ class TemplateQuotaIndicator extends StatelessWidget {
             minHeight: 8,
             backgroundColor: colorScheme.surfaceContainerHighest,
             valueColor: AlwaysStoppedAnimation<Color>(
-              isFull 
-                  ? colorScheme.error 
-                  : isAlmostFull 
-                      ? context.colors.secondary 
-                      : color,
+              isFull
+                  ? colorScheme.error
+                  : isAlmostFull
+                  ? context.colors.secondary
+                  : color,
             ),
           ),
         ),

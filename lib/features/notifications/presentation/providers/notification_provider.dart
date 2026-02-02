@@ -16,19 +16,23 @@ import 'package:gymbro_flutter_new/features/notifications/data/datasources/local
 import 'package:gymbro_flutter_new/features/notifications/data/datasources/notification_storage_datasource.dart';
 
 /// Provider for the message pool (stateless, can be instantiated directly)
-final notificationMessagePoolProvider = Provider<NotificationMessagePool>((ref) {
+final notificationMessagePoolProvider = Provider<NotificationMessagePool>((
+  ref,
+) {
   return NotificationMessagePool();
 });
 
 /// Provider for the storage datasource
-final notificationStorageDatasourceProvider = Provider<NotificationStorageDatasource>((ref) {
-  return NotificationStorageDatasource();
-});
+final notificationStorageDatasourceProvider =
+    Provider<NotificationStorageDatasource>((ref) {
+      return NotificationStorageDatasource();
+    });
 
 /// Provider for the local notification datasource
-final localNotificationDatasourceProvider = Provider<LocalNotificationDatasource>((ref) {
-  return LocalNotificationDatasource();
-});
+final localNotificationDatasourceProvider =
+    Provider<LocalNotificationDatasource>((ref) {
+      return LocalNotificationDatasource();
+    });
 
 /// Provider for the notification repository
 final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {

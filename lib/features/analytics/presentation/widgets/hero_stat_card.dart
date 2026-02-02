@@ -4,7 +4,6 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Large hero card for displaying primary metrics
 class HeroStatCard extends StatelessWidget {
-  
   const HeroStatCard({
     super.key,
     required this.title,
@@ -28,11 +27,8 @@ class HeroStatCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colors = gradientColors.isNotEmpty
         ? gradientColors
-        : [
-            theme.colorScheme.primary,
-            theme.colorScheme.secondary,
-          ];
-    
+        : [theme.colorScheme.primary, theme.colorScheme.secondary];
+
     return Material(
       color: theme.colorScheme.surface.withValues(alpha: 0),
       child: InkWell(
@@ -100,10 +96,7 @@ class HeroStatCard extends StatelessWidget {
                     ),
                     const Spacer(),
                     // Chart or additional content
-                    if (chart != null) 
-                      Expanded(
-                        child: chart!,
-                      ),
+                    if (chart != null) Expanded(child: chart!),
                   ],
                 ),
               ),

@@ -36,8 +36,9 @@ class MergeSuggestionCard extends ConsumerWidget {
           return const SizedBox.shrink();
         }
 
-        final highQuality =
-            candidates.where((c) => c.hasHighQualityMatch).length;
+        final highQuality = candidates
+            .where((c) => c.hasHighQualityMatch)
+            .length;
 
         return _MergeSuggestionCardContent(
           totalCandidates: candidates.length,

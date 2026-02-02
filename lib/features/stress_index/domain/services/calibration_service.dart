@@ -66,21 +66,21 @@ class CalibrationService {
   }) {
     // Calculate individual factors
     final ageFactor = _calculateAgeFactor(questionnaire?.age);
-    final trainingAgeFactor =
-        _calculateTrainingAgeFactor(questionnaire?.experienceLevel);
+    final trainingAgeFactor = _calculateTrainingAgeFactor(
+      questionnaire?.experienceLevel,
+    );
     final sexFactor = _calculateSexFactor(questionnaire?.sex);
     final injuryFactor = _calculateInjuryFactor(questionnaire);
 
     // Calculate baselines from historical data
-    final baselineHrv =
-        historicalHrv != null && historicalHrv.isNotEmpty
-            ? historicalHrv.reduce((a, b) => a + b) / historicalHrv.length
-            : null;
+    final baselineHrv = historicalHrv != null && historicalHrv.isNotEmpty
+        ? historicalHrv.reduce((a, b) => a + b) / historicalHrv.length
+        : null;
 
     final baselineSleepHours =
         historicalSleep != null && historicalSleep.isNotEmpty
-            ? historicalSleep.reduce((a, b) => a + b) / historicalSleep.length
-            : null;
+        ? historicalSleep.reduce((a, b) => a + b) / historicalSleep.length
+        : null;
 
     // Calculate dynamic factors based on current health data
     final hrvFactor = _calculateHrvFactor(
@@ -153,7 +153,7 @@ class CalibrationService {
     // 1. BASE: Time elapsed vs theoretical recovery time
     final baseRecoveryHours =
         StressIndexConstants.muscleRecoveryHours[muscleId.toUpperCase()] ??
-            StressIndexConstants.defaultRecoveryHours;
+        StressIndexConstants.defaultRecoveryHours;
 
     double recoveryPercent = (hoursSinceWorkout / baseRecoveryHours) * 100;
 
@@ -275,10 +275,7 @@ class CalibrationService {
   /// Calculate HRV factor (0.8-1.3)
   /// High HRV (>70ms): 0.8 (fast recovery)
   /// Low HRV (<40ms): 1.3 (slow recovery)
-  static double _calculateHrvFactor({
-    double? currentHrv,
-    double? baselineHrv,
-  }) {
+  static double _calculateHrvFactor({double? currentHrv, double? baselineHrv}) {
     // If we have baseline, use ratio
     if (currentHrv != null && baselineHrv != null && baselineHrv > 0) {
       final ratio = currentHrv / baselineHrv;
@@ -315,7 +312,9 @@ class CalibrationService {
 
   /// Calculate injury factor (1.0-1.3)
   /// None: 1.0, Active injury: 1.3
-  static double _calculateInjuryFactor(UserFitnessQuestionnaire? questionnaire) {
+  static double _calculateInjuryFactor(
+    UserFitnessQuestionnaire? questionnaire,
+  ) {
     if (questionnaire == null) return 1.0;
     if (!questionnaire.hasInjuryHistory) return 1.0;
 

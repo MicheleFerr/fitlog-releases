@@ -15,7 +15,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// State for exercise auto-collapse
-class AutoCollapseState { // Signal that collapse should be executed
+class AutoCollapseState {
+  // Signal that collapse should be executed
 
   const AutoCollapseState({
     this.inProgress = false,
@@ -38,7 +39,8 @@ class AutoCollapseState { // Signal that collapse should be executed
       inProgress: inProgress ?? this.inProgress,
       countdown: countdown ?? this.countdown,
       enabled: enabled ?? this.enabled,
-      shouldExecuteCollapse: shouldExecuteCollapse ?? this.shouldExecuteCollapse,
+      shouldExecuteCollapse:
+          shouldExecuteCollapse ?? this.shouldExecuteCollapse,
     );
   }
 }
@@ -159,10 +161,7 @@ class AutoCollapseNotifier extends FamilyNotifier<AutoCollapseState, String> {
     _countdownTimer?.cancel();
     _autoCollapseTimer?.cancel();
 
-    state = state.copyWith(
-      inProgress: false,
-      countdown: 0,
-    );
+    state = state.copyWith(inProgress: false, countdown: 0);
 
     if (kDebugMode) {
       debugPrint('❌ [AutoCollapse] Cancelled');
@@ -179,13 +178,11 @@ class AutoCollapseNotifier extends FamilyNotifier<AutoCollapseState, String> {
   void enable() {
     state = state.copyWith(enabled: true);
   }
-
 }
 
 /// Provider for exercise auto-collapse state
 /// Family provider indexed by exercise ID
-final exerciseAutoCollapseProvider = NotifierProvider.family<
-  AutoCollapseNotifier,
-  AutoCollapseState,
-  String
->(AutoCollapseNotifier.new);
+final exerciseAutoCollapseProvider =
+    NotifierProvider.family<AutoCollapseNotifier, AutoCollapseState, String>(
+      AutoCollapseNotifier.new,
+    );

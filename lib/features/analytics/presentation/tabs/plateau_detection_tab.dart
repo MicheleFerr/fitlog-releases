@@ -61,19 +61,22 @@ class PlateauDetectionTab extends ConsumerWidget {
     }
 
     // Separate into categories
-    final plateaued =
-        plateaus.where((p) => p.isPlateau).toList();
-    final declining =
-        plateaus.where((p) => p.isDeclining && !p.isPlateau).toList();
-    final progressing =
-        plateaus.where((p) => p.isProgressing).toList();
+    final plateaued = plateaus.where((p) => p.isPlateau).toList();
+    final declining = plateaus
+        .where((p) => p.isDeclining && !p.isPlateau)
+        .toList();
+    final progressing = plateaus.where((p) => p.isProgressing).toList();
 
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         // Summary card
-        _buildSummaryCard(context, plateaued.length, declining.length,
-            progressing.length),
+        _buildSummaryCard(
+          context,
+          plateaued.length,
+          declining.length,
+          progressing.length,
+        ),
         const SizedBox(height: 16),
 
         // Plateau section (priority)
@@ -160,7 +163,11 @@ class PlateauDetectionTab extends ConsumerWidget {
   }
 
   Widget _buildSummaryCard(
-      BuildContext context, int plateaued, int declining, int progressing) {
+    BuildContext context,
+    int plateaued,
+    int declining,
+    int progressing,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -204,8 +211,13 @@ class PlateauDetectionTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatItem(BuildContext context, String value, String label,
-      Color color, IconData icon) {
+  Widget _buildStatItem(
+    BuildContext context,
+    String value,
+    String label,
+    Color color,
+    IconData icon,
+  ) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -235,7 +247,11 @@ class PlateauDetectionTab extends ConsumerWidget {
   }
 
   Widget _buildSectionHeader(
-      BuildContext context, String title, IconData icon, Color color) {
+    BuildContext context,
+    String title,
+    IconData icon,
+    Color color,
+  ) {
     return Row(
       children: [
         Container(
@@ -261,8 +277,8 @@ class PlateauDetectionTab extends ConsumerWidget {
     final color = data.isPlateau
         ? context.colors.warning
         : data.isDeclining
-            ? context.colors.error
-            : context.colors.success;
+        ? context.colors.error
+        : context.colors.success;
 
     final trendText = data.trendPercent >= 0
         ? '+${data.trendPercent.toStringAsFixed(1)}%'
@@ -289,8 +305,8 @@ class PlateauDetectionTab extends ConsumerWidget {
                     data.isPlateau
                         ? AppIcons.warning
                         : data.isDeclining
-                            ? AppIcons.trendDown
-                            : AppIcons.trendUp,
+                        ? AppIcons.trendDown
+                        : AppIcons.trendUp,
                     size: AppIconSize.small,
                     color: color,
                   ),
@@ -329,7 +345,9 @@ class PlateauDetectionTab extends ConsumerWidget {
                   Text(
                     '${context.l10n.lastWorkout}: ${DateFormat.MMMd().format(data.lastSessionDate)}',
                     style: context.textTheme.bodySmall?.copyWith(
-                      color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
+                      color: context.colors.onSurfaceVariant.withValues(
+                        alpha: 0.7,
+                      ),
                     ),
                   ),
                 ],
@@ -394,7 +412,10 @@ class PlateauDetectionTab extends ConsumerWidget {
   }
 
   Widget _buildStrategyItem(
-      BuildContext context, String title, String description) {
+    BuildContext context,
+    String title,
+    String description,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(

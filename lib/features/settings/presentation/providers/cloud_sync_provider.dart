@@ -1,9 +1,9 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: presentation/providers
 /// 🎯 Feature: settings
 /// 🔧 Type: provider (cloud sync management)
-/// 
+///
 /// Handles syncing user data from cloud to local device
 /// Essential for premium users with multiple devices
 library;
@@ -20,7 +20,6 @@ import 'package:gymbro_flutter_new/core/auth/admin_status_provider.dart';
 
 /// Cloud sync state
 class CloudSyncState {
-  
   const CloudSyncState({
     this.isSyncing = false,
     this.lastSyncTime,
@@ -33,7 +32,7 @@ class CloudSyncState {
   final SyncProgress? progress;
   final List<String> errors;
   final SyncSummary? lastSyncSummary;
-  
+
   CloudSyncState copyWith({
     bool? isSyncing,
     String? lastSyncTime,
@@ -53,7 +52,6 @@ class CloudSyncState {
 
 /// Sync progress tracking
 class SyncProgress {
-  
   SyncProgress({
     required this.currentItem,
     required this.totalItems,
@@ -67,7 +65,6 @@ class SyncProgress {
 
 /// Sync summary
 class SyncSummary {
-  
   SyncSummary({
     required this.workoutsSynced,
     required this.templatesSynced,
@@ -84,14 +81,17 @@ class SyncSummary {
   final int personalRecordsSynced;
   final DateTime syncedAt;
   final bool success;
-  
-  int get totalItemsSynced => 
-      workoutsSynced + templatesSynced + exercisesSynced + settingsSynced + personalRecordsSynced;
+
+  int get totalItemsSynced =>
+      workoutsSynced +
+      templatesSynced +
+      exercisesSynced +
+      settingsSynced +
+      personalRecordsSynced;
 }
 
 /// Cloud sync provider
 class CloudSyncNotifier extends Notifier<CloudSyncState> {
-
   late final HiveBoxManagerEnhanced _boxManager;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -117,7 +117,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       }
     }
   }
-  
+
   /// Save last sync time to local storage
   Future<void> _saveLastSyncTime(String time) async {
     try {
@@ -129,34 +129,28 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       }
     }
   }
-  
+
   /// Sync all user data from cloud to local device
   Future<void> syncFromCloud() async {
     final user = _auth.currentUser;
     if (user == null) {
-      state = state.copyWith(
-        errors: ['User not authenticated'],
-      );
+      state = state.copyWith(errors: ['User not authenticated']);
       return;
     }
-    
-    state = state.copyWith(
-      isSyncing: true,
-      errors: [],
-      progress: null,
-    );
-    
+
+    state = state.copyWith(isSyncing: true, errors: [], progress: null);
+
     try {
       if (kDebugMode) {
         debugPrint('🔄 Starting cloud sync for user: ${user.email}');
       }
-      
+
       int workoutsSynced = 0;
       int templatesSynced = 0;
       int exercisesSynced = 0;
       int settingsSynced = 0;
       int personalRecordsSynced = 0;
-      
+
       // 1. Sync Workouts
       state = state.copyWith(
         progress: SyncProgress(
@@ -166,7 +160,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         ),
       );
       workoutsSynced = await _syncWorkouts(user.uid);
-      
+
       // 2. Sync Templates
       state = state.copyWith(
         progress: SyncProgress(
@@ -176,7 +170,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         ),
       );
       templatesSynced = await _syncTemplates(user.uid);
-      
+
       // 3. Sync Custom Exercises
       state = state.copyWith(
         progress: SyncProgress(
@@ -186,7 +180,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         ),
       );
       exercisesSynced = await _syncExercises(user.uid);
-      
+
       // 4. Sync Personal Records
       state = state.copyWith(
         progress: SyncProgress(
@@ -196,7 +190,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         ),
       );
       personalRecordsSynced = await _syncPersonalRecords(user.uid);
-      
+
       // 5. Sync User Settings/Profile
       state = state.copyWith(
         progress: SyncProgress(
@@ -206,7 +200,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         ),
       );
       settingsSynced = await _syncUserSettings(user.uid);
-      
+
       // Create summary
       final summary = SyncSummary(
         workoutsSynced: workoutsSynced,
@@ -217,11 +211,11 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         syncedAt: DateTime.now(),
         success: true,
       );
-      
+
       // Save sync time
       final syncTime = DateTime.now().toIso8601String();
       await _saveLastSyncTime(syncTime);
-      
+
       state = state.copyWith(
         isSyncing: false,
         lastSyncTime: syncTime,
@@ -232,22 +226,20 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
           syncedItems: 100,
         ),
       );
-      
+
       if (kDebugMode) {
-        debugPrint('✅ Cloud sync complete: ${summary.totalItemsSynced} items synced');
+        debugPrint(
+          '✅ Cloud sync complete: ${summary.totalItemsSynced} items synced',
+        );
       }
-      
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Cloud sync failed: $e');
       }
-      state = state.copyWith(
-        isSyncing: false,
-        errors: ['Sync failed: $e'],
-      );
+      state = state.copyWith(isSyncing: false, errors: ['Sync failed: $e']);
     }
   }
-  
+
   /// Sync workouts from Firestore to local
   Future<int> _syncWorkouts(String userId) async {
     try {
@@ -265,41 +257,41 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
           .orderBy('createdAt', descending: true)
           .limit(500) // Limit to prevent memory issues
           .get();
-      
+
       if (kDebugMode) {
         debugPrint('📥 Found ${snapshot.docs.length} workouts in cloud');
       }
-      
+
       int synced = 0;
       for (final doc in snapshot.docs) {
         final data = Map<String, dynamic>.from(doc.data());
         data['id'] = doc.id; // Ensure ID is included
-        
+
         // Convert Timestamps to ISO strings for Hive storage
         _convertTimestampsToStrings(data);
-        
+
         // Save to local storage
         final key = '${userId}_${doc.id}';
         await box.put(key, data);
         synced++;
-        
+
         // Update progress
         if (synced % 10 == 0) {
           state = state.copyWith(
             progress: SyncProgress(
-              currentItem: 'Syncing workouts... ($synced/${snapshot.docs.length})',
+              currentItem:
+                  'Syncing workouts... ($synced/${snapshot.docs.length})',
               totalItems: snapshot.docs.length,
               syncedItems: synced,
             ),
           );
         }
       }
-      
+
       if (kDebugMode) {
         debugPrint('✅ Synced $synced workouts to local storage');
       }
       return synced;
-      
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to sync workouts: $e');
@@ -307,7 +299,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       return 0;
     }
   }
-  
+
   /// Sync templates from Firestore to local
   Future<int> _syncTemplates(String userId) async {
     try {
@@ -327,31 +319,30 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
           .where('isPublic', isEqualTo: true)
           .limit(100)
           .get();
-      
+
       final allTemplates = [...snapshot.docs, ...publicSnapshot.docs];
       if (kDebugMode) {
         debugPrint('📥 Found ${allTemplates.length} templates in cloud');
       }
-      
+
       int synced = 0;
       for (final doc in allTemplates) {
         final data = Map<String, dynamic>.from(doc.data());
         data['id'] = doc.id;
-        
+
         // Convert Timestamps to ISO strings for Hive storage
         _convertTimestampsToStrings(data);
-        
+
         // Save to local storage
         final key = doc.id;
         await box.put(key, data);
         synced++;
       }
-      
+
       if (kDebugMode) {
         debugPrint('✅ Synced $synced templates to local storage');
       }
       return synced;
-      
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to sync templates: $e');
@@ -359,42 +350,43 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       return 0;
     }
   }
-  
+
   /// Sync custom exercises from Firestore to local
   Future<int> _syncExercises(String userId) async {
     try {
       final box = await _boxManager.openBox<Map>('exercises_data');
-      
+
       // Get user's custom exercises
       final snapshot = await _firestore
           .collection('users')
           .doc(userId)
           .collection('customExercises')
           .get();
-      
+
       if (kDebugMode) {
-        debugPrint('📥 Found ${snapshot.docs.length} custom exercises in cloud');
+        debugPrint(
+          '📥 Found ${snapshot.docs.length} custom exercises in cloud',
+        );
       }
-      
+
       int synced = 0;
       for (final doc in snapshot.docs) {
         final data = Map<String, dynamic>.from(doc.data());
         data['id'] = doc.id;
-        
+
         // Convert Timestamps to ISO strings for Hive storage (recursive)
         _convertTimestampsToStrings(data);
-        
+
         // Save to local storage
         final key = '${userId}_${doc.id}';
         await box.put(key, data);
         synced++;
       }
-      
+
       if (kDebugMode) {
         debugPrint('✅ Synced $synced exercises to local storage');
       }
       return synced;
-      
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to sync exercises: $e');
@@ -402,7 +394,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       return 0;
     }
   }
-  
+
   /// Sync personal records from Firestore to local
   Future<int> _syncPersonalRecords(String userId) async {
     try {
@@ -418,30 +410,31 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
           .orderBy('achievedAt', descending: true)
           .limit(500)
           .get();
-      
+
       if (kDebugMode) {
-        debugPrint('📥 Found ${snapshot.docs.length} personal records in cloud');
+        debugPrint(
+          '📥 Found ${snapshot.docs.length} personal records in cloud',
+        );
       }
-      
+
       int synced = 0;
       for (final doc in snapshot.docs) {
         final data = Map<String, dynamic>.from(doc.data());
         data['id'] = doc.id;
-        
+
         // Convert Timestamps to ISO strings for Hive storage (recursive)
         _convertTimestampsToStrings(data);
-        
+
         // Save to local storage
         final key = '${userId}_${doc.id}';
         await box.put(key, data);
         synced++;
       }
-      
+
       if (kDebugMode) {
         debugPrint('✅ Synced $synced personal records to local storage');
       }
       return synced;
-      
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to sync personal records: $e');
@@ -449,23 +442,20 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       return 0;
     }
   }
-  
+
   /// Sync user settings from Firestore to local
   Future<int> _syncUserSettings(String userId) async {
     try {
       // Get user profile
-      final userDoc = await _firestore
-          .collection('users')
-          .doc(userId)
-          .get();
-      
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+
       if (userDoc.exists) {
         final data = userDoc.data()!;
-        
+
         // Convert all Timestamps to ISO strings before saving to Hive
         final profileData = Map<String, dynamic>.from(data);
         _convertTimestampsToStrings(profileData);
-        
+
         // Save profile to local cache
         final profileBox = await _boxManager.openBox<Map>('user_profile_cache');
         await profileBox.put('profile', {
@@ -477,21 +467,20 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         if (data['settings'] != null) {
           final settingsBox = await _boxManager.openBox('app_settings');
           final settings = data['settings'] as Map<String, dynamic>;
-          
+
           // Save each setting
           for (final entry in settings.entries) {
             await settingsBox.put(entry.key, entry.value);
           }
         }
-        
+
         if (kDebugMode) {
           debugPrint('✅ Synced user settings and profile');
         }
         return 1;
       }
-      
+
       return 0;
-      
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to sync user settings: $e');
@@ -499,7 +488,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       return 0;
     }
   }
-  
+
   /// Clear all local data (useful before fresh sync)
   Future<void> clearLocalData() async {
     try {
@@ -523,18 +512,17 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
       // Clear personal records
       final prsBox = await _boxManager.openBox<Map>('personal_records_data');
       await prsBox.clear();
-      
+
       if (kDebugMode) {
         debugPrint('✅ Local data cleared');
       }
-      
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to clear local data: $e');
       }
     }
   }
-  
+
   /// Check if user can sync (premium or admin)
   bool get canSync {
     final profileAsync = ref.read(userProfileProvider);
@@ -557,17 +545,17 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
     // Premium users can sync
     return profile.isPremium;
   }
-  
+
   /// Get sync status message
   String getSyncStatusMessage() {
     if (state.isSyncing) {
       return state.progress?.currentItem ?? 'Syncing...';
     }
-    
+
     if (state.lastSyncTime != null) {
       final lastSync = DateTime.parse(state.lastSyncTime!);
       final diff = DateTime.now().difference(lastSync);
-      
+
       if (diff.inMinutes < 1) {
         return 'Synced just now';
       } else if (diff.inHours < 1) {
@@ -578,10 +566,10 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         return 'Synced ${diff.inDays} days ago';
       }
     }
-    
+
     return 'Never synced';
   }
-  
+
   /// Convert all Timestamp fields to ISO strings recursively
   void _convertTimestampsToStrings(Map<String, dynamic> data) {
     data.forEach((key, value) {
@@ -608,7 +596,9 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
 }
 
 /// Cloud sync provider
-final cloudSyncProvider = NotifierProvider<CloudSyncNotifier, CloudSyncState>(CloudSyncNotifier.new);
+final cloudSyncProvider = NotifierProvider<CloudSyncNotifier, CloudSyncState>(
+  CloudSyncNotifier.new,
+);
 
 /// Check if user can sync
 final canSyncProvider = Provider<bool>((ref) {

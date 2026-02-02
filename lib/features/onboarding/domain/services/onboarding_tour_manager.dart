@@ -17,11 +17,9 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 ///
 /// Extends ChangeNotifier to notify listeners when state changes.
 class OnboardingTourManager extends ChangeNotifier {
+  OnboardingTourManager(this._targetKeys, {VoidCallback? onTourCompleted})
+    : _onTourCompleted = onTourCompleted;
 
-  OnboardingTourManager(
-    this._targetKeys, {
-    VoidCallback? onTourCompleted,
-  }) : _onTourCompleted = onTourCompleted;
   /// Current step index (0-based)
   int _currentStepIndex = 0;
 
@@ -59,10 +57,7 @@ class OnboardingTourManager extends ChangeNotifier {
   /// Current tour step
   OnboardingTourStep get currentStep {
     final step = OnboardingTourConfig.getStepByPosition(_currentStepIndex);
-    assert(
-      step != null,
-      'Invalid step index: $_currentStepIndex',
-    );
+    assert(step != null, 'Invalid step index: $_currentStepIndex');
     return step!;
   }
 
@@ -185,7 +180,9 @@ class OnboardingTourManager extends ChangeNotifier {
       final step = OnboardingTourConfig.getStepByPosition(stepIndex);
       if (step == null) {
         if (kDebugMode) {
-          debugPrint('❌ [OnboardingTourManager] Invalid step index: $stepIndex');
+          debugPrint(
+            '❌ [OnboardingTourManager] Invalid step index: $stepIndex',
+          );
         }
         _isTransitioning = false;
         notifyListeners();
@@ -258,10 +255,11 @@ class OnboardingTourManager extends ChangeNotifier {
       }
 
       // Calculate centering offset
-      _currentSpotlightOffset = SpotlightPositioningUtil.calculateCenteringOffset(
-        targetBounds: _currentSpotlightBounds!,
-        screenSize: screenSize,
-      );
+      _currentSpotlightOffset =
+          SpotlightPositioningUtil.calculateCenteringOffset(
+            targetBounds: _currentSpotlightBounds!,
+            screenSize: screenSize,
+          );
 
       if (kDebugMode) {
         debugPrint(
@@ -322,9 +320,7 @@ class OnboardingTourManager extends ChangeNotifier {
   void _cancelAutoAdvance() {
     if (_autoAdvanceTimer != null && _autoAdvanceTimer!.isActive) {
       if (kDebugMode) {
-        debugPrint(
-          '⏹️ [OnboardingTourManager] Cancelling auto-advance timer',
-        );
+        debugPrint('⏹️ [OnboardingTourManager] Cancelling auto-advance timer');
       }
       _autoAdvanceTimer!.cancel();
       _autoAdvanceTimer = null;

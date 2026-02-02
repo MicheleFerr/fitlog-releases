@@ -37,9 +37,7 @@ class CoachTemplateCard extends StatelessWidget {
     return Card(
       elevation: 0,
       color: context.colors.surfaceContainerLow,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
@@ -218,10 +216,7 @@ class CoachTemplateCard extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(
-                AppIcons.delete,
-                color: context.colors.error,
-              ),
+              leading: Icon(AppIcons.delete, color: context.colors.error),
               title: Text(
                 context.l10n.delete,
                 style: context.textTheme.bodyLarge?.copyWith(

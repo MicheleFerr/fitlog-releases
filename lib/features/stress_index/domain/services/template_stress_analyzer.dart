@@ -16,7 +16,8 @@ import 'package:gymbro_flutter_new/features/stress_index/domain/entities/muscle_
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/personal_calibration.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/template_stress_analysis.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/services/calibration_service.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as workout;
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart'
+    as workout;
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
 
 /// Muscle recovery history for analysis
@@ -206,8 +207,8 @@ class TemplateStressAnalyzer {
 
     for (final exercise in template.exercises) {
       // Look up by exercise name (templates use name to reference exercises)
-      final definition = exerciseDatabase[exercise.name] ??
-          exerciseDatabase[exercise.id];
+      final definition =
+          exerciseDatabase[exercise.name] ?? exerciseDatabase[exercise.id];
 
       if (definition != null) {
         primaryMuscles.addAll(definition.focus);
@@ -217,7 +218,8 @@ class TemplateStressAnalyzer {
       // Also check sub-exercises (for supersets)
       if (exercise is workout.SupersetExercise) {
         for (final subExercise in exercise.exercises) {
-          final subDef = exerciseDatabase[subExercise.name] ??
+          final subDef =
+              exerciseDatabase[subExercise.name] ??
               exerciseDatabase[subExercise.id];
           if (subDef != null) {
             primaryMuscles.addAll(subDef.focus);
@@ -230,10 +232,7 @@ class TemplateStressAnalyzer {
     // Remove primary muscles from secondary (no overlap)
     secondaryMuscles.removeWhere((m) => primaryMuscles.contains(m));
 
-    return {
-      'primary': primaryMuscles,
-      'secondary': secondaryMuscles,
-    };
+    return {'primary': primaryMuscles, 'secondary': secondaryMuscles};
   }
 
   /// Calculate expected stress from template
@@ -252,7 +251,11 @@ class TemplateStressAnalyzer {
         final subExerciseCount = exercise.exercises.length;
         // Estimate: 3 rounds × 2 exercises × 50kg × 10 reps / 1000
         totalStress +=
-            (roundCount == 0 ? 3 : roundCount) * subExerciseCount * 50 * 10 / 1000;
+            (roundCount == 0 ? 3 : roundCount) *
+            subExerciseCount *
+            50 *
+            10 /
+            1000;
         continue;
       }
 

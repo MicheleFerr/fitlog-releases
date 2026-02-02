@@ -18,13 +18,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_bal
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 
 /// Time Filter Period
-enum TimePeriod {
-  last7Days,
-  last30Days,
-  last3Months,
-  lastYear,
-  allTime,
-}
+enum TimePeriod { last7Days, last30Days, last3Months, lastYear, allTime }
 
 /// Trend Direction
 enum TrendDirection {
@@ -62,8 +56,9 @@ class BalanceTrendData {
   String get currentRating => _getRating(currentMetrics.balanceScore);
 
   /// Helper: Get rating for previous metrics
-  String? get previousRating =>
-      previousMetrics != null ? _getRating(previousMetrics!.balanceScore) : null;
+  String? get previousRating => previousMetrics != null
+      ? _getRating(previousMetrics!.balanceScore)
+      : null;
 
   String _getRating(double score) {
     if (score >= 9.0) return 'Excellent';
@@ -105,7 +100,10 @@ class BalanceTrendCalculator {
 
     // Get date ranges
     final currentPeriodStart = _getPeriodStartDate(now, period);
-    final previousPeriodStart = _getPreviousPeriodStartDate(currentPeriodStart, period);
+    final previousPeriodStart = _getPreviousPeriodStartDate(
+      currentPeriodStart,
+      period,
+    );
 
     // Filter histories for current period
     final currentHistories = _filterHistoriesByDateRange(
@@ -171,7 +169,10 @@ class BalanceTrendCalculator {
   }
 
   /// Get start date for the previous period (for comparison)
-  DateTime _getPreviousPeriodStartDate(DateTime currentPeriodStart, TimePeriod period) {
+  DateTime _getPreviousPeriodStartDate(
+    DateTime currentPeriodStart,
+    TimePeriod period,
+  ) {
     switch (period) {
       case TimePeriod.last7Days:
         return currentPeriodStart.subtract(const Duration(days: 7));
@@ -200,20 +201,23 @@ class BalanceTrendCalculator {
     required DateTime start,
     required DateTime end,
   }) {
-    return histories.map((history) {
-      // Filter sessions within date range
-      final filteredSessions = history.sessions.where((session) {
-        return session.date.isAfter(start) && session.date.isBefore(end);
-      }).toList();
+    return histories
+        .map((history) {
+          // Filter sessions within date range
+          final filteredSessions = history.sessions.where((session) {
+            return session.date.isAfter(start) && session.date.isBefore(end);
+          }).toList();
 
-      // Return history with filtered sessions
-      return ExerciseHistory(
-        exerciseId: history.exerciseId,
-        exerciseName: history.exerciseName,
-        muscleGroup: history.muscleGroup,
-        sessions: filteredSessions,
-      );
-    }).where((history) => history.sessions.isNotEmpty).toList();
+          // Return history with filtered sessions
+          return ExerciseHistory(
+            exerciseId: history.exerciseId,
+            exerciseName: history.exerciseName,
+            muscleGroup: history.muscleGroup,
+            sessions: filteredSessions,
+          );
+        })
+        .where((history) => history.sessions.isNotEmpty)
+        .toList();
   }
 
   /// Calculate trend direction based on balance score change

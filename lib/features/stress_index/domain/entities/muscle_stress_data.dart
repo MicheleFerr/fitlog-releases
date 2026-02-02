@@ -56,9 +56,4 @@ abstract class MuscleStressData with _$MuscleStressData {
 }
 
 /// Muscle-level stress categories
-enum MuscleStressLevel {
-  low,
-  moderate,
-  high,
-  veryHigh,
-}
+enum MuscleStressLevel { low, moderate, high, veryHigh }

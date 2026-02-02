@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// This allows users to rate insights (thumbs up/down) and helps
 /// improve AI Coach recommendations over time.
 class InsightFeedback {
-
   const InsightFeedback({
     required this.id,
     required this.userId,
@@ -28,6 +27,7 @@ class InsightFeedback {
       timestamp: (json['timestamp'] as Timestamp).toDate(),
     );
   }
+
   /// Unique identifier for this feedback
   final String id;
 

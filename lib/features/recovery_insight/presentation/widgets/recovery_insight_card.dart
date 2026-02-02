@@ -32,7 +32,8 @@ class RecoveryInsightCard extends ConsumerStatefulWidget {
   const RecoveryInsightCard({super.key});
 
   @override
-  ConsumerState<RecoveryInsightCard> createState() => _RecoveryInsightCardState();
+  ConsumerState<RecoveryInsightCard> createState() =>
+      _RecoveryInsightCardState();
 }
 
 class _RecoveryInsightCardState extends ConsumerState<RecoveryInsightCard>
@@ -52,10 +53,7 @@ class _RecoveryInsightCardState extends ConsumerState<RecoveryInsightCard>
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeOut));
 
     Future.delayed(const Duration(milliseconds: 200), () {
       if (mounted) {
@@ -122,10 +120,12 @@ class _RecoveryInsightCardState extends ConsumerState<RecoveryInsightCard>
 
   Widget _buildErrorState(BuildContext context, Object error) {
     // Handle different error types with appropriate UI
-    if (error is HealthKitNotAvailableError || error is HealthKitDisabledError) {
+    if (error is HealthKitNotAvailableError ||
+        error is HealthKitDisabledError) {
       // Platform not available - show info card
       return _RecoveryInsightPlatformCard();
-    } else if (error is HealthKitNoDataError || error is HealthKitInvalidDataError) {
+    } else if (error is HealthKitNoDataError ||
+        error is HealthKitInvalidDataError) {
       // Connected but no data - show no data card
       return _RecoveryInsightNoDataCard(
         onRefresh: () => ref.invalidate(recoveryInsightProvider),
@@ -150,10 +150,7 @@ class _RecoveryInsightCardState extends ConsumerState<RecoveryInsightCard>
     HapticFeedback.mediumImpact();
 
     if (!Platform.isIOS) {
-      SnackBarService.showInfo(
-        context,
-        context.l10n.healthKitOnlyiOS,
-      );
+      SnackBarService.showInfo(context, context.l10n.healthKitOnlyiOS);
       return;
     }
 
@@ -165,10 +162,7 @@ class _RecoveryInsightCardState extends ConsumerState<RecoveryInsightCard>
       ref.invalidate(recoveryInsightProvider);
 
       if (context.mounted) {
-        SnackBarService.showSuccess(
-          context,
-          context.l10n.healthKitConnected,
-        );
+        SnackBarService.showSuccess(context, context.l10n.healthKitConnected);
       }
     } catch (e) {
       if (context.mounted) {
@@ -325,17 +319,17 @@ class _RecoveryInsightCardContent extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        Icon(
-                          AppIcons.tip,
-                          color: categoryColor,
-                          size: 18,
-                        ),
+                        Icon(AppIcons.tip, color: categoryColor, size: 18),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            insight.recommendation.localizedRecommendation(context),
+                            insight.recommendation.localizedRecommendation(
+                              context,
+                            ),
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              color: colorScheme.onSurface.withValues(alpha: 0.9),
+                              color: colorScheme.onSurface.withValues(
+                                alpha: 0.9,
+                              ),
                               fontWeight: FontWeight.w500,
                             ),
                             maxLines: 2,
@@ -478,9 +472,7 @@ class _RecoveryInsightCardContent extends StatelessWidget {
 /// Card shown when HealthKit is not connected
 /// Provides clear CTA to connect Apple Health
 class _RecoveryInsightConnectCard extends StatelessWidget {
-  const _RecoveryInsightConnectCard({
-    required this.onConnect,
-  });
+  const _RecoveryInsightConnectCard({required this.onConnect});
 
   final VoidCallback onConnect;
 
@@ -621,11 +613,7 @@ class _RecoveryInsightConnectCard extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          icon,
-          size: 20,
-          color: colorScheme.primary.withValues(alpha: 0.8),
-        ),
+        Icon(icon, size: 20, color: colorScheme.primary.withValues(alpha: 0.8)),
         const SizedBox(height: 4),
         Text(
           label,
@@ -641,9 +629,7 @@ class _RecoveryInsightConnectCard extends StatelessWidget {
 
 /// Card shown when HealthKit is connected but has no sleep data
 class _RecoveryInsightNoDataCard extends StatelessWidget {
-  const _RecoveryInsightNoDataCard({
-    required this.onRefresh,
-  });
+  const _RecoveryInsightNoDataCard({required this.onRefresh});
 
   final VoidCallback onRefresh;
 
@@ -712,11 +698,7 @@ class _RecoveryInsightNoDataCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.tip,
-                    color: colorScheme.tertiary,
-                    size: 18,
-                  ),
+                  Icon(AppIcons.tip, color: colorScheme.tertiary, size: 18),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -813,9 +795,7 @@ class _RecoveryInsightPlatformCard extends StatelessWidget {
 
 /// Card shown when there's a sync error
 class _RecoveryInsightSyncErrorCard extends StatelessWidget {
-  const _RecoveryInsightSyncErrorCard({
-    required this.onRetry,
-  });
+  const _RecoveryInsightSyncErrorCard({required this.onRetry});
 
   final VoidCallback onRetry;
 
@@ -847,11 +827,7 @@ class _RecoveryInsightSyncErrorCard extends StatelessWidget {
                 color: colorScheme.error.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                AppIcons.wifiOff,
-                color: colorScheme.error,
-                size: 28,
-              ),
+              child: Icon(AppIcons.wifiOff, color: colorScheme.error, size: 28),
             ),
             const SizedBox(height: 16),
 

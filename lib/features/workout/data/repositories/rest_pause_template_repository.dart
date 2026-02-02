@@ -99,9 +99,7 @@ class RestPauseTemplateRepository {
     required int maxCustomRestPause,
   }) async {
     if (kDebugMode) {
-      debugPrint(
-        '💾 Saving custom rest-pause template "${template.name}"',
-      );
+      debugPrint('💾 Saving custom rest-pause template "${template.name}"');
     }
 
     try {

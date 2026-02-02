@@ -78,10 +78,8 @@ abstract class PersonalCalibration with _$PersonalCalibration {
       _$PersonalCalibrationFromJson(json);
 
   /// Create default calibration (no personalization)
-  factory PersonalCalibration.defaultFor(String userId) => PersonalCalibration(
-        userId: userId,
-        lastUpdated: DateTime.now(),
-      );
+  factory PersonalCalibration.defaultFor(String userId) =>
+      PersonalCalibration(userId: userId, lastUpdated: DateTime.now());
 
   // === COMPUTED PROPERTIES ===
 
@@ -100,7 +98,8 @@ abstract class PersonalCalibration with _$PersonalCalibration {
   double get personalTau2Hours => 240.0 * tau2Modifier;
 
   /// Whether this calibration has HealthKit data
-  bool get hasHealthKitData => baselineHrv != null || baselineSleepHours != null;
+  bool get hasHealthKitData =>
+      baselineHrv != null || baselineSleepHours != null;
 
   /// Whether calibration is high confidence (>0.7)
   bool get isHighConfidence => confidenceLevel >= 0.7;

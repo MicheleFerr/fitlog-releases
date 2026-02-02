@@ -24,15 +24,12 @@ import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abb
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 
 class AnalyticsOverviewTab extends ConsumerStatefulWidget {
-
-  const AnalyticsOverviewTab({
-    super.key,
-    required this.workouts,
-  });
+  const AnalyticsOverviewTab({super.key, required this.workouts});
   final List<Workout> workouts;
 
   @override
-  ConsumerState<AnalyticsOverviewTab> createState() => _AnalyticsOverviewTabState();
+  ConsumerState<AnalyticsOverviewTab> createState() =>
+      _AnalyticsOverviewTabState();
 }
 
 class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
@@ -43,20 +40,28 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     switch (_selectedPeriod) {
       case TimePeriod.week:
         final weekAgo = now.subtract(const Duration(days: 7));
-        return widget.workouts.where((w) => (w.endTime ?? w.createdAt).isAfter(weekAgo)).toList();
+        return widget.workouts
+            .where((w) => (w.endTime ?? w.createdAt).isAfter(weekAgo))
+            .toList();
       case TimePeriod.month:
         final monthAgo = now.subtract(const Duration(days: 30));
-        return widget.workouts.where((w) => (w.endTime ?? w.createdAt).isAfter(monthAgo)).toList();
+        return widget.workouts
+            .where((w) => (w.endTime ?? w.createdAt).isAfter(monthAgo))
+            .toList();
       case TimePeriod.year:
         final yearAgo = now.subtract(const Duration(days: 365));
-        return widget.workouts.where((w) => (w.endTime ?? w.createdAt).isAfter(yearAgo)).toList();
+        return widget.workouts
+            .where((w) => (w.endTime ?? w.createdAt).isAfter(yearAgo))
+            .toList();
       case TimePeriod.all:
         return widget.workouts;
     }
   }
 
   /// Compute period statistics from workouts
-  ({int totalWorkouts, double totalVolume}) _computePeriodStats(List<Workout> workouts) {
+  ({int totalWorkouts, double totalVolume}) _computePeriodStats(
+    List<Workout> workouts,
+  ) {
     var totalVolume = 0.0;
 
     for (final workout in workouts) {
@@ -138,7 +143,8 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    ref.read(weeklyWorkoutGoalProvider.notifier).state = selectedGoal;
+                    ref.read(weeklyWorkoutGoalProvider.notifier).state =
+                        selectedGoal;
                     Navigator.of(context).pop();
                   },
                   child: Text(l10n.save),
@@ -219,7 +225,9 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                           ),
                           const SizedBox(height: 16),
                           WeeklyDashboardWidget(
-                            activities: _convertWorkoutsToActivities(widget.workouts),
+                            activities: _convertWorkoutsToActivities(
+                              widget.workouts,
+                            ),
                             isPremium: isPremium, // Dynamic from user profile
                             onDataSync: (data) {
                               HapticFeedback.mediumImpact();
@@ -274,7 +282,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       ),
     );
   }
-  
+
   Widget _buildPeriodSelector(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
@@ -287,10 +295,30 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       ),
       child: Row(
         children: [
-          _buildPeriodButton(context, l10n.week, _selectedPeriod == TimePeriod.week, TimePeriod.week),
-          _buildPeriodButton(context, l10n.month, _selectedPeriod == TimePeriod.month, TimePeriod.month),
-          _buildPeriodButton(context, l10n.year, _selectedPeriod == TimePeriod.year, TimePeriod.year),
-          _buildPeriodButton(context, l10n.all, _selectedPeriod == TimePeriod.all, TimePeriod.all),
+          _buildPeriodButton(
+            context,
+            l10n.week,
+            _selectedPeriod == TimePeriod.week,
+            TimePeriod.week,
+          ),
+          _buildPeriodButton(
+            context,
+            l10n.month,
+            _selectedPeriod == TimePeriod.month,
+            TimePeriod.month,
+          ),
+          _buildPeriodButton(
+            context,
+            l10n.year,
+            _selectedPeriod == TimePeriod.year,
+            TimePeriod.year,
+          ),
+          _buildPeriodButton(
+            context,
+            l10n.all,
+            _selectedPeriod == TimePeriod.all,
+            TimePeriod.all,
+          ),
         ],
       ),
     );
@@ -314,14 +342,16 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
         child: Container(
           margin: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: isSelected ? theme.colorScheme.primary : theme.colorScheme.surface.withValues(alpha: 0),
+            color: isSelected
+                ? theme.colorScheme.primary
+                : theme.colorScheme.surface.withValues(alpha: 0),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
             child: Text(
               label,
               style: theme.textTheme.labelLarge?.copyWith(
-                color: isSelected 
+                color: isSelected
                     ? theme.colorScheme.onPrimary
                     : theme.colorScheme.onSurfaceVariant,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
@@ -349,10 +379,12 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
           title: l10n.proInsights,
           subtitle: l10n.advancedAnalytics,
           isPremium: isPremium,
-          onSeeAllTap: isPremium ? () {
-            HapticFeedback.lightImpact();
-            // Navigate to full analytics dashboard when available
-          } : null,
+          onSeeAllTap: isPremium
+              ? () {
+                  HapticFeedback.lightImpact();
+                  // Navigate to full analytics dashboard when available
+                }
+              : null,
         ),
 
         // Premium Cards Grid
@@ -537,7 +569,10 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
   }
 
   /// Preview content for Muscle Distribution
-  Widget _buildMuscleDistributionPreview(BuildContext context, ThemeData theme) {
+  Widget _buildMuscleDistributionPreview(
+    BuildContext context,
+    ThemeData theme,
+  ) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -561,7 +596,9 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
           width: 44,
           height: 44,
           decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withValues(alpha: percentage + 0.2),
+            color: theme.colorScheme.primary.withValues(
+              alpha: percentage + 0.2,
+            ),
             shape: BoxShape.circle,
           ),
           child: Center(
@@ -575,12 +612,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
           ),
         ),
         const SizedBox(height: 4),
-        Text(
-          label,
-          style: theme.textTheme.labelSmall?.copyWith(
-            fontSize: 10,
-          ),
-        ),
+        Text(label, style: theme.textTheme.labelSmall?.copyWith(fontSize: 10)),
       ],
     );
   }
@@ -603,11 +635,12 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             child: Column(
               children: [
                 SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: l10n.workout,
-  size: AppIconSize.xxlarge,
-  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
-),
+                  icon: AppIcons.workout,
+                  semanticLabel: l10n.workout,
+                  size: AppIconSize.xxlarge,
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.5,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 Text(
@@ -620,7 +653,9 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                 Text(
                   l10n.noRecentWorkoutsDesc,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                    color: theme.colorScheme.onSurfaceVariant.withValues(
+                      alpha: 0.7,
+                    ),
                   ),
                 ),
               ],
@@ -660,7 +695,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       ),
     );
   }
-  
+
   Widget _buildWorkoutItem(BuildContext context, Workout workout) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
@@ -790,7 +825,9 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            DateFormat('dd MMMM yyyy - HH:mm').format(workout.endTime ?? workout.createdAt),
+                            DateFormat(
+                              'dd MMMM yyyy - HH:mm',
+                            ).format(workout.endTime ?? workout.createdAt),
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
@@ -813,14 +850,27 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    _buildStatChip(context, AppIcons.workout, '${workout.exercises.length}', l10n.exercises),
+                    _buildStatChip(
+                      context,
+                      AppIcons.workout,
+                      '${workout.exercises.length}',
+                      l10n.exercises,
+                    ),
                     const SizedBox(width: 12),
-                    _buildStatChip(context, AppIcons.scale, '${workout.exercises.fold(0.0, (sum, e) => sum + e.totalVolume).toStringAsFixed(0)} kg', l10n.volumeLabel),
+                    _buildStatChip(
+                      context,
+                      AppIcons.scale,
+                      '${workout.exercises.fold(0.0, (sum, e) => sum + e.totalVolume).toStringAsFixed(0)} kg',
+                      l10n.volumeLabel,
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 16),
-              Divider(height: 1, color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+              Divider(
+                height: 1,
+                color: theme.colorScheme.outline.withValues(alpha: 0.2),
+              ),
               // Exercise list
               Expanded(
                 child: ListView.builder(
@@ -829,7 +879,11 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                   itemCount: workout.exercises.length,
                   itemBuilder: (context, index) {
                     final exercise = workout.exercises[index];
-                    return _buildExerciseDetailCard(context, exercise, index + 1);
+                    return _buildExerciseDetailCard(
+                      context,
+                      exercise,
+                      index + 1,
+                    );
                   },
                 ),
               ),
@@ -840,7 +894,12 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     );
   }
 
-  Widget _buildStatChip(BuildContext context, IconData icon, String value, String label) {
+  Widget _buildStatChip(
+    BuildContext context,
+    IconData icon,
+    String value,
+    String label,
+  ) {
     final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -875,7 +934,11 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     );
   }
 
-  Widget _buildExerciseDetailCard(BuildContext context, Exercise exercise, int order) {
+  Widget _buildExerciseDetailCard(
+    BuildContext context,
+    Exercise exercise,
+    int order,
+  ) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
@@ -930,10 +993,43 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
           // Sets table header
           Row(
             children: [
-              SizedBox(width: 40, child: Text(l10n.sets, style: theme.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.bold))),
-              Expanded(child: Text(l10n.weightLabel, style: theme.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
-              Expanded(child: Text(l10n.repsLabel, style: theme.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
-              SizedBox(width: 60, child: Text('RPE', style: theme.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
+              SizedBox(
+                width: 40,
+                child: Text(
+                  l10n.sets,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  l10n.weightLabel,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  l10n.repsLabel,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(
+                width: 60,
+                child: Text(
+                  'RPE',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -942,7 +1038,8 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             final setIndex = entry.key;
             final set = entry.value;
             // Display as warmup if RPE is 0 or if isWarmup is true
-            final isWarmupSet = set.isWarmup || (set.rpe != null && set.rpe == 0);
+            final isWarmupSet =
+                set.isWarmup || (set.rpe != null && set.rpe == 0);
 
             return Container(
               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -957,7 +1054,10 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                   SizedBox(
                     width: 40,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: isWarmupSet
                             ? theme.colorScheme.secondary.withValues(alpha: 0.2)
@@ -968,7 +1068,9 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                         isWarmupSet ? 'W' : '${setIndex + 1}',
                         style: theme.textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: isWarmupSet ? theme.colorScheme.secondary : theme.colorScheme.primary,
+                          color: isWarmupSet
+                              ? theme.colorScheme.secondary
+                              : theme.colorScheme.primary,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -976,7 +1078,9 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                   ),
                   Expanded(
                     child: Text(
-                      set.weight != null ? '${set.weight!.toStringAsFixed(1)} kg' : '-',
+                      set.weight != null
+                          ? '${set.weight!.toStringAsFixed(1)} kg'
+                          : '-',
                       style: theme.textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),
@@ -1000,8 +1104,12 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                             textAlign: TextAlign.center,
                           )
                         : set.rpe != null
-                            ? _buildRpeIndicator(context, set.rpe!)
-                            : Text('-', style: theme.textTheme.bodyMedium, textAlign: TextAlign.center),
+                        ? _buildRpeIndicator(context, set.rpe!)
+                        : Text(
+                            '-',
+                            style: theme.textTheme.bodyMedium,
+                            textAlign: TextAlign.center,
+                          ),
                   ),
                 ],
               ),
@@ -1017,10 +1125,10 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     final color = rpe <= 5
         ? theme.colorScheme.primary.withValues(alpha: 0.7)
         : rpe <= 7
-            ? theme.colorScheme.secondary
-            : rpe <= 8
-                ? theme.colorScheme.tertiary
-                : theme.colorScheme.error;
+        ? theme.colorScheme.secondary
+        : rpe <= 8
+        ? theme.colorScheme.tertiary
+        : theme.colorScheme.error;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -1038,7 +1146,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       ),
     );
   }
-  
+
   Widget _buildQuickActions(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
@@ -1049,10 +1157,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             onPressed: () {
               Navigator.pushNamed(context, '/workout');
             },
-            icon: SemanticIcon(
-  icon: AppIcons.add,
-  semanticLabel: l10n.add,
-),
+            icon: SemanticIcon(icon: AppIcons.add, semanticLabel: l10n.add),
             label: Text(l10n.startWorkout),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -1069,9 +1174,9 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
               // Navigate to detailed stats
             },
             icon: SemanticIcon(
-  icon: AppIcons.barChart,
-  semanticLabel: l10n.viewStats,
-),
+              icon: AppIcons.barChart,
+              semanticLabel: l10n.viewStats,
+            ),
             label: Text(l10n.viewStats),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -1084,15 +1189,16 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       ],
     );
   }
-  
-  
+
   void _showAllWorkouts(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     if (kDebugMode) {
       debugPrint('🔍 [Analytics] _showAllWorkouts called');
     }
     if (kDebugMode) {
-      debugPrint('📊 [Analytics] Total workouts to process: ${widget.workouts.length}');
+      debugPrint(
+        '📊 [Analytics] Total workouts to process: ${widget.workouts.length}',
+      );
     }
 
     // TEMPORARY FIX: Don't filter by isCompleted since all sets from Firebase have isCompleted=false
@@ -1101,18 +1207,23 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       final hasValidExercises = w.exercises.any((e) => e.sets.isNotEmpty);
       if (!hasValidExercises) {
         if (kDebugMode) {
-          debugPrint('  ⚠️ [Analytics] Skipping workout "${w.name}" - no exercises with sets');
+          debugPrint(
+            '  ⚠️ [Analytics] Skipping workout "${w.name}" - no exercises with sets',
+          );
         }
       }
       return hasValidExercises;
     }).toList();
 
     if (kDebugMode) {
-      debugPrint('📋 [Analytics] Valid workouts after filtering: ${validWorkouts.length}/${widget.workouts.length}');
+      debugPrint(
+        '📋 [Analytics] Valid workouts after filtering: ${validWorkouts.length}/${widget.workouts.length}',
+      );
     }
 
     // Log detailed workout information (only for valid workouts)
-    for (var i = 0; i < validWorkouts.length.clamp(0, 5); i++) {  // Log first 5 workouts max
+    for (var i = 0; i < validWorkouts.length.clamp(0, 5); i++) {
+      // Log first 5 workouts max
       final workout = validWorkouts[i];
       if (kDebugMode) {
         debugPrint('  📋 [Analytics] Workout $i: "${workout.name}"');
@@ -1133,12 +1244,16 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
           debugPrint('          - Total sets: ${exercise.sets.length}');
         }
         if (kDebugMode) {
-          debugPrint('          - Exercise isCompleted: ${exercise.isCompleted}');
+          debugPrint(
+            '          - Exercise isCompleted: ${exercise.isCompleted}',
+          );
         }
 
         if (exercise.sets.isEmpty) {
           if (kDebugMode) {
-            debugPrint('          ⚠️ [Analytics] WARNING: Exercise has NO sets!');
+            debugPrint(
+              '          ⚠️ [Analytics] WARNING: Exercise has NO sets!',
+            );
           }
           continue;
         }
@@ -1146,23 +1261,31 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
         for (var k = 0; k < exercise.sets.length; k++) {
           final set = exercise.sets[k];
           if (kDebugMode) {
-            debugPrint('          ✓ [Analytics] Set ${k + 1}: weight=${set.weight}, reps=${set.reps}, isCompleted=${set.isCompleted}');
+            debugPrint(
+              '          ✓ [Analytics] Set ${k + 1}: weight=${set.weight}, reps=${set.reps}, isCompleted=${set.isCompleted}',
+            );
           }
         }
 
         final completedSets = exercise.sets.where((s) => s.isCompleted).length;
         if (kDebugMode) {
-          debugPrint('          - Completed sets: $completedSets/${exercise.sets.length}');
+          debugPrint(
+            '          - Completed sets: $completedSets/${exercise.sets.length}',
+          );
         }
         if (kDebugMode) {
-          debugPrint('          - Has any completed set: ${exercise.sets.any((s) => s.isCompleted)}');
+          debugPrint(
+            '          - Has any completed set: ${exercise.sets.any((s) => s.isCompleted)}',
+          );
         }
       }
     }
 
     if (validWorkouts.length > 5) {
       if (kDebugMode) {
-        debugPrint('  ... (${validWorkouts.length - 5} more workouts not logged)');
+        debugPrint(
+          '  ... (${validWorkouts.length - 5} more workouts not logged)',
+        );
       }
     }
 
@@ -1193,31 +1316,37 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
         debugPrint('🔄 [Analytics] Processing workout: "${w.name}"');
       }
 
-      final filteredExercises = w.exercises
-        .where((e) {
-          // Extra safety check: ensure sets array is not empty
-          if (e.sets.isEmpty) {
-            if (kDebugMode) {
-              debugPrint('  ⚠️ [Analytics] Exercise "${e.name}" has EMPTY sets array - skipping');
-            }
-            return false;
-          }
-
-          final hasCompletedSets = e.sets.any((s) => s.isCompleted);
+      final filteredExercises = w.exercises.where((e) {
+        // Extra safety check: ensure sets array is not empty
+        if (e.sets.isEmpty) {
           if (kDebugMode) {
-            debugPrint('  🔎 [Analytics] Exercise "${e.name}": hasCompletedSets=$hasCompletedSets (${e.sets.length} sets)');
+            debugPrint(
+              '  ⚠️ [Analytics] Exercise "${e.name}" has EMPTY sets array - skipping',
+            );
           }
-          return hasCompletedSets;
-        })
-        .toList();
+          return false;
+        }
+
+        final hasCompletedSets = e.sets.any((s) => s.isCompleted);
+        if (kDebugMode) {
+          debugPrint(
+            '  🔎 [Analytics] Exercise "${e.name}": hasCompletedSets=$hasCompletedSets (${e.sets.length} sets)',
+          );
+        }
+        return hasCompletedSets;
+      }).toList();
 
       if (kDebugMode) {
-        debugPrint('  ✅ [Analytics] Filtered exercises for "${w.name}": ${filteredExercises.length}/${w.exercises.length}');
+        debugPrint(
+          '  ✅ [Analytics] Filtered exercises for "${w.name}": ${filteredExercises.length}/${w.exercises.length}',
+        );
       }
 
       return filteredExercises.map((e) {
         if (kDebugMode) {
-          debugPrint('  🏗️ [Analytics] Creating ExerciseActivity for "${e.name}"');
+          debugPrint(
+            '  🏗️ [Analytics] Creating ExerciseActivity for "${e.name}"',
+          );
         }
         final activity = ExerciseActivity.fromExercise(
           exercise: e,
@@ -1233,7 +1362,9 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     }).toList();
 
     if (kDebugMode) {
-      debugPrint('🎯 [Analytics] Total synthetic activities created: ${syntheticActivities.length}');
+      debugPrint(
+        '🎯 [Analytics] Total synthetic activities created: ${syntheticActivities.length}',
+      );
     }
     if (kDebugMode) {
       debugPrint('');
@@ -1242,7 +1373,9 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     // Safety check before showing modal
     if (syntheticActivities.isEmpty) {
       if (kDebugMode) {
-        debugPrint('❌ [Analytics] ERROR: syntheticActivities is EMPTY after processing!');
+        debugPrint(
+          '❌ [Analytics] ERROR: syntheticActivities is EMPTY after processing!',
+        );
       }
       SnackBarService.showError(context, l10n.errorLoadingData);
       return;
@@ -1258,7 +1391,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       ),
     );
   }
-  
+
   String _getPeriodTitle(BuildContext context, TimePeriod period) {
     final l10n = AppLocalizations.of(context);
     switch (period) {
@@ -1273,7 +1406,6 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     }
   }
 
-  
   String _getTimeAgo(BuildContext context, DateTime date) {
     final l10n = AppLocalizations.of(context);
     final now = DateTime.now();
@@ -1314,14 +1446,13 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
 
 // Enhanced modal with muscle group filters
 class _AllActivitiesModal extends StatefulWidget {
-
   const _AllActivitiesModal({
     required this.activities,
     required this.exerciseRepository,
   });
   final List<ExerciseActivity> activities;
   final ExerciseRepository exerciseRepository;
-  
+
   @override
   State<_AllActivitiesModal> createState() => _AllActivitiesModalState();
 }
@@ -1331,18 +1462,20 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
   Map<String, List<String>> exerciseMuscleGroups = {};
   Map<String, MuscleGroupStats> muscleGroupStats = {};
   bool isLoading = true;
-  
+
   @override
   void initState() {
     super.initState();
     _loadExerciseData();
   }
-  
+
   Future<void> _loadExerciseData() async {
     try {
       // Load exercise data to get muscle groups
       for (final activity in widget.activities) {
-        final exercise = await widget.exerciseRepository.getExerciseById(activity.exerciseId);
+        final exercise = await widget.exerciseRepository.getExerciseById(
+          activity.exerciseId,
+        );
         if (exercise != null) {
           exerciseMuscleGroups[activity.id] = exercise.muscleGroups;
 
@@ -1357,7 +1490,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
           }
         }
       }
-      
+
       setState(() {
         isLoading = false;
       });
@@ -1370,18 +1503,18 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
       });
     }
   }
-  
+
   List<ExerciseActivity> get filteredActivities {
     if (selectedMuscleGroups.isEmpty) {
       return widget.activities;
     }
-    
+
     return widget.activities.where((activity) {
       final muscleGroups = exerciseMuscleGroups[activity.id] ?? [];
       return muscleGroups.any((group) => selectedMuscleGroups.contains(group));
     }).toList();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -1407,7 +1540,9 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.3,
+                  ),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -1426,14 +1561,14 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
                       icon: SemanticIcon(
-  icon: AppIcons.close,
-  semanticLabel: l10n.close,
-),
+                        icon: AppIcons.close,
+                        semanticLabel: l10n.close,
+                      ),
                     ),
                   ],
                 ),
               ),
-              
+
               // Muscle Group Filters
               if (!isLoading && muscleGroupStats.isNotEmpty) ...[
                 Container(
@@ -1453,29 +1588,31 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                         theme,
                       ),
                       const SizedBox(width: 8),
-                      ...muscleGroupStats.keys.map((group) => Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: _buildFilterChip(
-                          _getMuscleGroupName(group),
-                          selectedMuscleGroups.contains(group),
-                          () {
-                            setState(() {
-                              if (selectedMuscleGroups.contains(group)) {
-                                selectedMuscleGroups.remove(group);
-                              } else {
-                                selectedMuscleGroups.add(group);
-                              }
-                            });
-                          },
-                          theme,
+                      ...muscleGroupStats.keys.map(
+                        (group) => Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: _buildFilterChip(
+                            _getMuscleGroupName(group),
+                            selectedMuscleGroups.contains(group),
+                            () {
+                              setState(() {
+                                if (selectedMuscleGroups.contains(group)) {
+                                  selectedMuscleGroups.remove(group);
+                                } else {
+                                  selectedMuscleGroups.add(group);
+                                }
+                              });
+                            },
+                            theme,
+                          ),
                         ),
-                      )),
+                      ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 12),
               ],
-              
+
               // Expandable Muscle Group Stats
               if (!isLoading && selectedMuscleGroups.isNotEmpty) ...[
                 Container(
@@ -1496,48 +1633,54 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                 ),
                 const SizedBox(height: 8),
               ],
-              
+
               const Divider(height: 1),
-              
+
               // Activities list
               Expanded(
                 child: isLoading
                     ? const Center(child: LoadingIndicator())
                     : filteredActivities.isEmpty
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: l10n.workout,
-  size: AppIconSize.xxlarge,
-  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
-),
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  selectedMuscleGroups.isEmpty
-                                      ? l10n.noActivitiesInPeriod
-                                      : l10n.noActivitiesForSelectedMuscleGroups,
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                              ],
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SemanticIcon(
+                              icon: AppIcons.workout,
+                              semanticLabel: l10n.workout,
+                              size: AppIconSize.xxlarge,
+                              color: theme.colorScheme.onSurfaceVariant
+                                  .withValues(alpha: 0.5),
                             ),
-                          )
-                        : ListView.separated(
-                            controller: scrollController,
-                            padding: const EdgeInsets.all(16),
-                            itemCount: filteredActivities.length,
-                            separatorBuilder: (context, index) => const SizedBox(height: 12),
-                            itemBuilder: (context, index) {
-                              final activity = filteredActivities[index];
-                              final muscleGroups = exerciseMuscleGroups[activity.id] ?? [];
-                              return _buildDetailedActivityCard(context, activity, muscleGroups);
-                            },
-                          ),
+                            const SizedBox(height: 16),
+                            Text(
+                              selectedMuscleGroups.isEmpty
+                                  ? l10n.noActivitiesInPeriod
+                                  : l10n.noActivitiesForSelectedMuscleGroups,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : ListView.separated(
+                        controller: scrollController,
+                        padding: const EdgeInsets.all(16),
+                        itemCount: filteredActivities.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 12),
+                        itemBuilder: (context, index) {
+                          final activity = filteredActivities[index];
+                          final muscleGroups =
+                              exerciseMuscleGroups[activity.id] ?? [];
+                          return _buildDetailedActivityCard(
+                            context,
+                            activity,
+                            muscleGroups,
+                          );
+                        },
+                      ),
               ),
             ],
           ),
@@ -1545,8 +1688,13 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
       },
     );
   }
-  
-  Widget _buildFilterChip(String label, bool isSelected, VoidCallback onTap, ThemeData theme) {
+
+  Widget _buildFilterChip(
+    String label,
+    bool isSelected,
+    VoidCallback onTap,
+    ThemeData theme,
+  ) {
     return FilterChip(
       label: Text(label),
       selected: isSelected,
@@ -1561,8 +1709,12 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
       ),
     );
   }
-  
-  Widget _buildMuscleGroupStatCard(String group, MuscleGroupStats stats, ThemeData theme) {
+
+  Widget _buildMuscleGroupStatCard(
+    String group,
+    MuscleGroupStats stats,
+    ThemeData theme,
+  ) {
     final l10n = AppLocalizations.of(context);
 
     return Card(
@@ -1583,7 +1735,10 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primaryContainer,
                     borderRadius: BorderRadius.circular(12),
@@ -1602,9 +1757,21 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
               spacing: 12,
               runSpacing: 8,
               children: [
-                _buildStatChip(AppIcons.workout, l10n.exercisesCount(stats.exercises.length), theme),
-                _buildStatChip(AppIcons.formatListNumbered, l10n.setsCount(stats.totalSets), theme),
-                _buildStatChip(AppIcons.weight, '${stats.totalVolume.toStringAsFixed(0)} kg', theme),
+                _buildStatChip(
+                  AppIcons.workout,
+                  l10n.exercisesCount(stats.exercises.length),
+                  theme,
+                ),
+                _buildStatChip(
+                  AppIcons.formatListNumbered,
+                  l10n.setsCount(stats.totalSets),
+                  theme,
+                ),
+                _buildStatChip(
+                  AppIcons.weight,
+                  '${stats.totalVolume.toStringAsFixed(0)} kg',
+                  theme,
+                ),
               ],
             ),
             if (stats.exercises.isNotEmpty) ...[
@@ -1621,24 +1788,33 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
       ),
     );
   }
-  
-  Widget _buildDetailedActivityCard(BuildContext context, ExerciseActivity activity, List<String> muscleGroups) {
+
+  Widget _buildDetailedActivityCard(
+    BuildContext context,
+    ExerciseActivity activity,
+    List<String> muscleGroups,
+  ) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
     final volume = _calculateExerciseVolume(activity);
-    final dateStr = DateFormat('MMM d, yyyy • h:mm a').format(activity.createdAt);
+    final dateStr = DateFormat(
+      'MMM d, yyyy • h:mm a',
+    ).format(activity.createdAt);
 
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: theme.colorScheme.surface.withValues(alpha: 0)),
+        data: Theme.of(context).copyWith(
+          dividerColor: theme.colorScheme.surface.withValues(alpha: 0),
+        ),
         child: ExpansionTile(
           tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          childrenPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-          leading: Icon(
-            AppIcons.workout,
-            color: theme.colorScheme.primary,
+          childrenPadding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            bottom: 16,
           ),
+          leading: Icon(AppIcons.workout, color: theme.colorScheme.primary),
           title: Text(
             activity.exerciseName,
             style: theme.textTheme.titleMedium?.copyWith(
@@ -1660,19 +1836,26 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                 Wrap(
                   spacing: 6,
                   runSpacing: 6,
-                  children: muscleGroups.map((group) => Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      _getMuscleGroupName(group),
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.onSecondaryContainer,
-                      ),
-                    ),
-                  )).toList(),
+                  children: muscleGroups
+                      .map(
+                        (group) => Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.secondaryContainer,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            _getMuscleGroupName(group),
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: theme.colorScheme.onSecondaryContainer,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
                 ),
             ],
           ),
@@ -1751,31 +1934,35 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                                 Row(
                                   children: [
                                     SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: l10n.weightLabel,
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.onSurfaceVariant,
-),
+                                      icon: AppIcons.workout,
+                                      semanticLabel: l10n.weightLabel,
+                                      size: AppIconSize.tiny,
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
                                     const SizedBox(width: 4),
                                     Text(
                                       '${weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1)} kg',
-                                      style: theme.textTheme.bodyMedium?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                     ),
                                     const SizedBox(width: 8),
                                     SemanticIcon(
-  icon: AppIcons.repeat,
-  semanticLabel: l10n.repsLabel,
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.onSurfaceVariant,
-),
+                                      icon: AppIcons.repeat,
+                                      semanticLabel: l10n.repsLabel,
+                                      size: AppIconSize.tiny,
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
                                     const SizedBox(width: 4),
                                     Text(
-                                      AppLocalizations.of(context).repsCount(reps),
-                                      style: theme.textTheme.bodyMedium?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      AppLocalizations.of(
+                                        context,
+                                      ).repsCount(reps),
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -1783,40 +1970,61 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                                 Row(
                                   children: [
                                     Text(
-                                      AppLocalizations.of(context).volumeWithValue(setVolume.toStringAsFixed(0)),
-                                      style: theme.textTheme.bodySmall?.copyWith(
-                                        color: theme.colorScheme.onSurfaceVariant,
+                                      AppLocalizations.of(
+                                        context,
+                                      ).volumeWithValue(
+                                        setVolume.toStringAsFixed(0),
                                       ),
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: theme
+                                                .colorScheme
+                                                .onSurfaceVariant,
+                                          ),
                                     ),
                                     ...[
-                                    const SizedBox(width: 12),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: theme.colorScheme.secondaryContainer,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          SemanticIcon(
-  icon: AppIcons.speed,
-  semanticLabel: l10n.effort,
-  size: AppIconSize.medium,
-  color: theme.colorScheme.onSecondaryContainer,
-),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            AppLocalizations.of(context).rpeWithValue(rpe.toString()),
-                                            style: theme.textTheme.labelSmall?.copyWith(
-                                              color: theme.colorScheme.onSecondaryContainer,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                      const SizedBox(width: 12),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: theme
+                                              .colorScheme
+                                              .secondaryContainer,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
                                           ),
-                                        ],
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SemanticIcon(
+                                              icon: AppIcons.speed,
+                                              semanticLabel: l10n.effort,
+                                              size: AppIconSize.medium,
+                                              color: theme
+                                                  .colorScheme
+                                                  .onSecondaryContainer,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              AppLocalizations.of(
+                                                context,
+                                              ).rpeWithValue(rpe.toString()),
+                                              style: theme.textTheme.labelSmall
+                                                  ?.copyWith(
+                                                    color: theme
+                                                        .colorScheme
+                                                        .onSecondaryContainer,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
                                   ],
                                 ),
                               ],
@@ -1831,7 +2039,9 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                    color: theme.colorScheme.primaryContainer.withValues(
+                      alpha: 0.3,
+                    ),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -1839,17 +2049,23 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                     children: [
                       _buildSummaryItem(
                         AppIcons.formatListNumbered,
-                        AppLocalizations.of(context).setsCount(activity.sets.length),
+                        AppLocalizations.of(
+                          context,
+                        ).setsCount(activity.sets.length),
                         theme,
                       ),
                       _buildSummaryItem(
                         AppIcons.workout,
-                        AppLocalizations.of(context).kgMax(_getMaxWeight(activity).toStringAsFixed(0)),
+                        AppLocalizations.of(
+                          context,
+                        ).kgMax(_getMaxWeight(activity).toStringAsFixed(0)),
                         theme,
                       ),
                       _buildSummaryItem(
                         AppIcons.repeat,
-                        AppLocalizations.of(context).repsCount(_getTotalReps(activity)),
+                        AppLocalizations.of(
+                          context,
+                        ).repsCount(_getTotalReps(activity)),
                         theme,
                       ),
                     ],
@@ -1879,7 +2095,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
       ],
     );
   }
-  
+
   Widget _buildStatChip(IconData icon, String label, ThemeData theme) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -1890,7 +2106,11 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: AppIconSize.tiny, color: theme.colorScheme.onSurfaceVariant),
+          Icon(
+            icon,
+            size: AppIconSize.tiny,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
           const SizedBox(width: 4),
           Text(
             label,
@@ -1902,7 +2122,6 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
       ),
     );
   }
-  
 
   double _calculateExerciseVolume(ExerciseActivity activity) {
     double total = 0;
@@ -1922,7 +2141,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
     }
     return maxWeight;
   }
-  
+
   int _getTotalReps(ExerciseActivity activity) {
     int totalReps = 0;
     for (final set in activity.sets) {
@@ -1930,7 +2149,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
     }
     return totalReps;
   }
-  
+
   /// Get display name for muscle code using centralized mapper
   ///
   /// Uses [MuscleAbbreviationMapper] as SINGLE SOURCE OF TRUTH.
@@ -1995,7 +2214,11 @@ class _MinimalStatsBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => maxHeight;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     final theme = Theme.of(context);
     final progress = (shrinkOffset / maxExtent).clamp(0.0, 1.0);
     final opacity = 1.0 - progress;
@@ -2127,10 +2350,7 @@ class _MinimalStatsBarDelegate extends SliverPersistentHeaderDelegate {
 /// Simple line chart painter for volume progression preview
 /// Shows an upward-trending line to visualize progress concept
 class _SimpleLineChartPainter extends CustomPainter {
-  _SimpleLineChartPainter({
-    required this.color,
-    required this.backgroundColor,
-  });
+  _SimpleLineChartPainter({required this.color, required this.backgroundColor});
 
   final Color color;
   final Color backgroundColor;
@@ -2150,11 +2370,7 @@ class _SimpleLineChartPainter extends CustomPainter {
     // Draw subtle horizontal grid lines
     for (var i = 0; i < 4; i++) {
       final y = size.height * (i / 3);
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(size.width, y),
-        gridPaint,
-      );
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), gridPaint);
     }
 
     // Create upward-trending sample data points
@@ -2189,10 +2405,7 @@ class _SimpleLineChartPainter extends CustomPainter {
       ..shader = LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [
-          color.withValues(alpha: 0.3),
-          color.withValues(alpha: 0.0),
-        ],
+        colors: [color.withValues(alpha: 0.3), color.withValues(alpha: 0.0)],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
 
     final fillPath = Path.from(path);

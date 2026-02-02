@@ -5,7 +5,9 @@ import 'package:gymbro_flutter_new/features/workout/data/repositories/dropset_te
 import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 
 // Repository provider
-final dropsetTemplateRepositoryProvider = Provider<DropsetTemplateRepository>((ref) {
+final dropsetTemplateRepositoryProvider = Provider<DropsetTemplateRepository>((
+  ref,
+) {
   return DropsetTemplateRepository();
 });
 
@@ -13,37 +15,37 @@ final dropsetTemplateRepositoryProvider = Provider<DropsetTemplateRepository>((r
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final allDropsetTemplatesProvider =
     FutureProvider.autoDispose<List<DropsetTemplate>>((ref) async {
-  if (kDebugMode) {
-    debugPrint('🔗 [ALL_DROPSET_TEMPLATES] Provider called');
-  }
+      if (kDebugMode) {
+        debugPrint('🔗 [ALL_DROPSET_TEMPLATES] Provider called');
+      }
 
-  final repository = ref.watch(dropsetTemplateRepositoryProvider);
-  final templates = await repository.getAllTemplates();
+      final repository = ref.watch(dropsetTemplateRepositoryProvider);
+      final templates = await repository.getAllTemplates();
 
-  if (kDebugMode) {
-    debugPrint(
-      '🔗 [ALL_DROPSET_TEMPLATES] Got ${templates.length} templates',
-    );
-  }
+      if (kDebugMode) {
+        debugPrint(
+          '🔗 [ALL_DROPSET_TEMPLATES] Got ${templates.length} templates',
+        );
+      }
 
-  return templates;
-});
+      return templates;
+    });
 
 // Predefined templates only
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final predefinedDropsetTemplatesProvider =
     FutureProvider.autoDispose<List<DropsetTemplate>>((ref) async {
-  final repository = ref.watch(dropsetTemplateRepositoryProvider);
-  return repository.getPredefinedTemplates();
-});
+      final repository = ref.watch(dropsetTemplateRepositoryProvider);
+      return repository.getPredefinedTemplates();
+    });
 
 // Custom templates only
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final customDropsetTemplatesProvider =
     FutureProvider.autoDispose<List<DropsetTemplate>>((ref) async {
-  final repository = ref.watch(dropsetTemplateRepositoryProvider);
-  return repository.getCustomTemplates();
-});
+      final repository = ref.watch(dropsetTemplateRepositoryProvider);
+      return repository.getCustomTemplates();
+    });
 
 // Search query state
 final dropsetTemplateSearchQueryProvider = StateProvider<String>((ref) => '');
@@ -52,15 +54,15 @@ final dropsetTemplateSearchQueryProvider = StateProvider<String>((ref) => '');
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final dropsetTemplateSearchResultsProvider =
     FutureProvider.autoDispose<List<DropsetTemplate>>((ref) async {
-  final repository = ref.watch(dropsetTemplateRepositoryProvider);
-  final query = ref.watch(dropsetTemplateSearchQueryProvider);
+      final repository = ref.watch(dropsetTemplateRepositoryProvider);
+      final query = ref.watch(dropsetTemplateSearchQueryProvider);
 
-  if (query.isEmpty) {
-    return repository.getAllTemplates();
-  }
+      if (query.isEmpty) {
+        return repository.getAllTemplates();
+      }
 
-  return repository.searchTemplates(query);
-});
+      return repository.searchTemplates(query);
+    });
 
 // Filter by difficulty
 final dropsetTemplateDifficultyFilterProvider =
@@ -69,21 +71,21 @@ final dropsetTemplateDifficultyFilterProvider =
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final filteredDropsetTemplatesByDifficultyProvider =
     FutureProvider.autoDispose<List<DropsetTemplate>>((ref) async {
-  final repository = ref.watch(dropsetTemplateRepositoryProvider);
-  final difficulty = ref.watch(dropsetTemplateDifficultyFilterProvider);
+      final repository = ref.watch(dropsetTemplateRepositoryProvider);
+      final difficulty = ref.watch(dropsetTemplateDifficultyFilterProvider);
 
-  if (difficulty == null) {
-    return repository.getAllTemplates();
-  }
+      if (difficulty == null) {
+        return repository.getAllTemplates();
+      }
 
-  return repository.getTemplatesByDifficulty(difficulty);
-});
+      return repository.getTemplatesByDifficulty(difficulty);
+    });
 
 // Notifier for template management
 final dropsetTemplateNotifierProvider =
     NotifierProvider<DropsetTemplateNotifier, DropsetTemplateState>(
-  DropsetTemplateNotifier.new,
-);
+      DropsetTemplateNotifier.new,
+    );
 
 class DropsetTemplateState {
   const DropsetTemplateState({
@@ -246,16 +248,16 @@ class DropsetTemplateNotifier extends Notifier<DropsetTemplateState> {
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final dropsetTemplateByIdProvider = FutureProvider.autoDispose
     .family<DropsetTemplate?, String>((ref, templateId) async {
-  final templates = await ref.watch(allDropsetTemplatesProvider.future);
+      final templates = await ref.watch(allDropsetTemplatesProvider.future);
 
-  try {
-    return templates.firstWhere((template) => template.id == templateId);
-  } catch (e) {
-    if (kDebugMode) {
-      debugPrint(
-        '⚠️ Dropset template with ID $templateId not found in ${templates.length} templates',
-      );
-    }
-    return null;
-  }
-});
+      try {
+        return templates.firstWhere((template) => template.id == templateId);
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint(
+            '⚠️ Dropset template with ID $templateId not found in ${templates.length} templates',
+          );
+        }
+        return null;
+      }
+    });

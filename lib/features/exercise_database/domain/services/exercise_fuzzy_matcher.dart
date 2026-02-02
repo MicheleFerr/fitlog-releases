@@ -74,7 +74,9 @@ class ExerciseFuzzyMatcher {
         }
 
         if (kDebugMode) {
-          debugPrint('✅ Batch pre-calculated ${userBoosts.length} user boosts${usageRepository != null ? " (via repository)" : " (via tracker)"}');
+          debugPrint(
+            '✅ Batch pre-calculated ${userBoosts.length} user boosts${usageRepository != null ? " (via repository)" : " (via tracker)"}',
+          );
         }
       }
 
@@ -91,12 +93,14 @@ class ExerciseFuzzyMatcher {
 
       // Convert to legacy format for backward compatibility
       return results
-          .map((r) => ExerciseFuzzyResult(
-                exercise: r.exercise,
-                score: r.score,
-                matchedText: r.matchedText,
-                wasAutoCorrected: r.wasAutoCorrected,
-              ))
+          .map(
+            (r) => ExerciseFuzzyResult(
+              exercise: r.exercise,
+              score: r.score,
+              matchedText: r.matchedText,
+              wasAutoCorrected: r.wasAutoCorrected,
+            ),
+          )
           .toList();
     } catch (e) {
       if (kDebugMode) {
@@ -131,7 +135,8 @@ class ExerciseFuzzyMatcher {
 }
 
 /// Risultato fuzzy match con metadati per UI
-class ExerciseFuzzyResult {  // True se score < 0.95 (c'era typo/variante)
+class ExerciseFuzzyResult {
+  // True se score < 0.95 (c'era typo/variante)
 
   ExerciseFuzzyResult({
     required this.exercise,
@@ -140,8 +145,8 @@ class ExerciseFuzzyResult {  // True se score < 0.95 (c'era typo/variante)
     required this.wasAutoCorrected,
   });
   final Exercise exercise;
-  final double score;           // 0.0-1.0 (1.0 = match perfetto)
-  final String matchedText;     // Testo che ha matchato (per debug/UI)
+  final double score; // 0.0-1.0 (1.0 = match perfetto)
+  final String matchedText; // Testo che ha matchato (per debug/UI)
   final bool wasAutoCorrected;
 
   /// Formatta score come percentuale

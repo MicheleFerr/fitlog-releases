@@ -18,21 +18,27 @@ final streakRepositoryProvider = Provider<StreakRepository>((ref) {
 ///
 /// Fetches current streak data from repository
 /// Auto-invalidates when dependencies change
-final currentStreakProvider = FutureProvider.autoDispose<WorkoutStreak>((ref) async {
+final currentStreakProvider = FutureProvider.autoDispose<WorkoutStreak>((
+  ref,
+) async {
   final repository = ref.watch(streakRepositoryProvider);
   return repository.getCurrentStreak();
 });
 
 /// Provider for consistency score calculator
-final consistencyScoreCalculatorProvider = Provider<ConsistencyScoreCalculator>((ref) {
-  return ConsistencyScoreCalculator();
-});
+final consistencyScoreCalculatorProvider = Provider<ConsistencyScoreCalculator>(
+  (ref) {
+    return ConsistencyScoreCalculator();
+  },
+);
 
 /// Provider for consistency score
 ///
 /// Calculates workout adherence quality from last 30 days of workout data
 /// Updates automatically when workouts or streak changes
-final consistencyScoreProvider = FutureProvider.autoDispose<ConsistencyScore>((ref) async {
+final consistencyScoreProvider = FutureProvider.autoDispose<ConsistencyScore>((
+  ref,
+) async {
   // Get dependencies
   final workoutRepository = ref.watch(workoutRepositoryProvider);
   final calculator = ref.watch(consistencyScoreCalculatorProvider);
@@ -53,13 +59,10 @@ final consistencyScoreProvider = FutureProvider.autoDispose<ConsistencyScore>((r
     },
     (allWorkouts) {
       // Filter to last 30 days of completed workouts
-      final recentWorkouts = allWorkouts
-          .where((w) => w.isCompleted)
-          .where((w) {
-            final workoutDate = w.endTime ?? w.createdAt;
-            return workoutDate.isAfter(thirtyDaysAgo);
-          })
-          .toList();
+      final recentWorkouts = allWorkouts.where((w) => w.isCompleted).where((w) {
+        final workoutDate = w.endTime ?? w.createdAt;
+        return workoutDate.isAfter(thirtyDaysAgo);
+      }).toList();
 
       // If no workouts in last 30 days, return empty
       if (recentWorkouts.isEmpty) {

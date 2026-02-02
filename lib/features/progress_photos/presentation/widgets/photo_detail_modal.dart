@@ -46,9 +46,7 @@ class _PhotoDetailModalState extends ConsumerState<PhotoDetailModal> {
       height: MediaQuery.of(context).size.height * 0.95,
       decoration: BoxDecoration(
         color: context.colors.surface,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
@@ -148,7 +146,9 @@ class _PhotoDetailModalState extends ConsumerState<PhotoDetailModal> {
                   ),
                 ),
                 Text(
-                  DateFormat('MMM d, yyyy • HH:mm').format(widget.photo.takenAt),
+                  DateFormat(
+                    'MMM d, yyyy • HH:mm',
+                  ).format(widget.photo.takenAt),
                   style: context.textTheme.bodySmall?.copyWith(
                     color: context.colors.onSurfaceVariant,
                   ),
@@ -166,10 +166,7 @@ class _PhotoDetailModalState extends ConsumerState<PhotoDetailModal> {
           IconButton(
             onPressed: _isDeleting ? null : _confirmDelete,
             icon: _isDeleting
-                ? LoadingIndicator(
-                    size: 20,
-                    color: context.colors.error,
-                  )
+                ? LoadingIndicator(size: 20, color: context.colors.error)
                 : Icon(AppIcons.delete, color: context.colors.error),
             tooltip: 'Delete',
           ),
@@ -184,10 +181,7 @@ class _PhotoDetailModalState extends ConsumerState<PhotoDetailModal> {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Colors.transparent,
-            Colors.black.withValues(alpha: 0.7),
-          ],
+          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
         ),
       ),
       padding: const EdgeInsets.all(16),
@@ -235,11 +229,7 @@ class _PhotoDetailModalState extends ConsumerState<PhotoDetailModal> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
-                      AppIcons.note,
-                      size: 16,
-                      color: Colors.white70,
-                    ),
+                    const Icon(AppIcons.note, size: 16, color: Colors.white70),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -297,10 +287,7 @@ class _PhotoDetailModalState extends ConsumerState<PhotoDetailModal> {
     );
   }
 
-  Widget _buildStatChip({
-    required IconData icon,
-    required String label,
-  }) {
+  Widget _buildStatChip({required IconData icon, required String label}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
@@ -355,24 +342,17 @@ class _PhotoDetailModalState extends ConsumerState<PhotoDetailModal> {
   Future<void> _deletePhoto() async {
     setState(() => _isDeleting = true);
 
-    final success = await ref.read(photoUploadProvider.notifier).deletePhoto(
-          userId: widget.userId,
-          photoId: widget.photo.id,
-        );
+    final success = await ref
+        .read(photoUploadProvider.notifier)
+        .deletePhoto(userId: widget.userId, photoId: widget.photo.id);
 
     if (mounted) {
       if (success) {
-        SnackBarService.showSuccess(
-          context,
-          'Photo moved to trash',
-        );
+        SnackBarService.showSuccess(context, 'Photo moved to trash');
         widget.onDelete();
       } else {
         setState(() => _isDeleting = false);
-        SnackBarService.showError(
-          context,
-          'Failed to delete photo',
-        );
+        SnackBarService.showError(context, 'Failed to delete photo');
       }
     }
   }

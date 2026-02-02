@@ -60,9 +60,7 @@ class PredictionEngineService {
     final missing = <WorkoutFingerprint>[];
 
     for (final cycleItem in pattern.cycle) {
-      final isDone = doneFingerprints.any(
-        (done) => done.matches(cycleItem),
-      );
+      final isDone = doneFingerprints.any((done) => done.matches(cycleItem));
       if (!isDone) {
         missing.add(cycleItem);
       }
@@ -129,9 +127,7 @@ class PredictionEngineService {
     final predictions = <PatternPrediction>[];
 
     for (final cycleItem in pattern.cycle) {
-      final isDone = doneFingerprints.any(
-        (done) => done.matches(cycleItem),
-      );
+      final isDone = doneFingerprints.any((done) => done.matches(cycleItem));
 
       if (!isDone) {
         // Try to find matching template
@@ -156,14 +152,16 @@ class PredictionEngineService {
           suggestedTemplateName = cycleItem.templateName;
         }
 
-        predictions.add(PatternPrediction(
-          missing: cycleItem,
-          musclesCovered: cycleItem.dominantMuscles,
-          suggestedTemplateId: suggestedTemplateId,
-          suggestedTemplateName: suggestedTemplateName,
-          missingCount: 1,
-          patternConfidence: pattern.confidence,
-        ));
+        predictions.add(
+          PatternPrediction(
+            missing: cycleItem,
+            musclesCovered: cycleItem.dominantMuscles,
+            suggestedTemplateId: suggestedTemplateId,
+            suggestedTemplateName: suggestedTemplateName,
+            missingCount: 1,
+            patternConfidence: pattern.confidence,
+          ),
+        );
       }
     }
 
@@ -288,8 +286,9 @@ class PredictionEngineService {
       final templateMuscles = _getTemplateDominantMuscles(template, muscleMap);
 
       // Match if 2/3 muscles overlap
-      final overlap =
-          fingerprint.dominantMuscles.where((m) => templateMuscles.contains(m));
+      final overlap = fingerprint.dominantMuscles.where(
+        (m) => templateMuscles.contains(m),
+      );
       if (overlap.length >= 2) {
         return template;
       }

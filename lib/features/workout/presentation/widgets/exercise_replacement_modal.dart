@@ -7,7 +7,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/features/workout/domain/services/exercise_compatibility_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_json_provider.dart';
 // Removed: FuzzySearchService (overengineered - simple token matching is sufficient)
-import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as exercise_db;
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart'
+    as exercise_db;
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -19,7 +20,6 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 
 class ExerciseReplacementModal extends ConsumerStatefulWidget {
-
   const ExerciseReplacementModal({
     super.key,
     required this.currentExercise,
@@ -37,7 +37,7 @@ class ExerciseReplacementModal extends ConsumerStatefulWidget {
   static void clearStaticCache() {
     enrichedExercisesCache.clear();
   }
-  
+
   static Future<void> show(
     BuildContext context,
     Exercise currentExercise,
@@ -46,7 +46,9 @@ class ExerciseReplacementModal extends ConsumerStatefulWidget {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (_) => DraggableScrollableSheet(
         initialChildSize: 0.85,
         minChildSize: 0.85,
@@ -61,20 +63,24 @@ class ExerciseReplacementModal extends ConsumerStatefulWidget {
       ),
     );
   }
-  
+
   @override
-  ConsumerState<ExerciseReplacementModal> createState() => _ExerciseReplacementModalState();
+  ConsumerState<ExerciseReplacementModal> createState() =>
+      _ExerciseReplacementModalState();
 }
 
-class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementModal> {
+class _ExerciseReplacementModalState
+    extends ConsumerState<ExerciseReplacementModal> {
   String _searchQuery = '';
   ExerciseCategory? _filterCategory;
   bool _showOnlyCompatible = false; // Mostra tutti di default
   bool _isSearching = false;
   Timer? _searchDebounce;
   List<exercise_db.Exercise> _dbExercises = [];
-  List<exercise_db.Exercise> _searchResults = []; // Simplified from FuzzySearchService
-  Exercise? _enrichedCurrentExercise; // Esercizio corrente arricchito con dati dal DB
+  List<exercise_db.Exercise> _searchResults =
+      []; // Simplified from FuzzySearchService
+  Exercise?
+  _enrichedCurrentExercise; // Esercizio corrente arricchito con dati dal DB
 
   // ✅ Cache statica per esercizi arricchiti - delegated to widget-level public cache
   static Map<String, Exercise> get _enrichedExercisesCache =>
@@ -124,7 +130,9 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
         _enrichedCurrentExercise = _enrichedExercisesCache[exerciseNameLower];
       });
       if (kDebugMode) {
-        debugPrint('⚡ [ExerciseReplacement] Loaded "${widget.currentExercise.name}" from cache (category: ${_enrichedCurrentExercise?.category.name})');
+        debugPrint(
+          '⚡ [ExerciseReplacement] Loaded "${widget.currentExercise.name}" from cache (category: ${_enrichedCurrentExercise?.category.name})',
+        );
       }
       return;
     }
@@ -143,7 +151,10 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       );
 
       // Mappa categoria dai muscoli del database (single source of truth)
-      final enrichedCategory = MuscleAbbreviationMapper.focusListToExerciseCategory(dbExercise.focus);
+      final enrichedCategory =
+          MuscleAbbreviationMapper.focusListToExerciseCategory(
+            dbExercise.focus,
+          );
 
       // Crea esercizio arricchito solo se categoria è diversa da quella attuale
       // O se categoria attuale è "other" (default fallback)
@@ -161,16 +172,22 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
         _enrichedExercisesCache[exerciseNameLower] = enrichedExercise;
 
         if (kDebugMode) {
-          debugPrint('✅ [ExerciseReplacement] Enriched "${widget.currentExercise.name}" with category: ${enrichedCategory.name} (cached)');
+          debugPrint(
+            '✅ [ExerciseReplacement] Enriched "${widget.currentExercise.name}" with category: ${enrichedCategory.name} (cached)',
+          );
         }
-        debugPrint('📊 [ExerciseReplacement] Cache size: ${_enrichedExercisesCache.length} exercises');
+        debugPrint(
+          '📊 [ExerciseReplacement] Cache size: ${_enrichedExercisesCache.length} exercises',
+        );
       } else {
         // Categoria già corretta → usa esercizio originale
         _enrichedCurrentExercise = widget.currentExercise;
       }
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('⚠️ [ExerciseReplacement] Could not enrich exercise "${widget.currentExercise.name}": $e');
+        debugPrint(
+          '⚠️ [ExerciseReplacement] Could not enrich exercise "${widget.currentExercise.name}": $e',
+        );
       }
       // Fallback: usa currentExercise originale
       _enrichedCurrentExercise = widget.currentExercise;
@@ -204,13 +221,19 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       final queryLower = query.toLowerCase().trim();
       final queryTokens = queryLower.split(RegExp(r'\s+'));
 
-      final results = _dbExercises.where((exercise) {
-        final nameTokens = exercise.nome.toLowerCase().split(RegExp(r'\s+'));
-        // All query tokens must match some name token (order-agnostic)
-        return queryTokens.every((qt) =>
-          nameTokens.any((nt) => nt.contains(qt) || qt.contains(nt))
-        );
-      }).take(50).toList(); // Limit results
+      final results = _dbExercises
+          .where((exercise) {
+            final nameTokens = exercise.nome.toLowerCase().split(
+              RegExp(r'\s+'),
+            );
+            // All query tokens must match some name token (order-agnostic)
+            return queryTokens.every(
+              (qt) =>
+                  nameTokens.any((nt) => nt.contains(qt) || qt.contains(nt)),
+            );
+          })
+          .take(50)
+          .toList(); // Limit results
 
       if (mounted) {
         setState(() {
@@ -234,103 +257,136 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
     );
 
     // Usa esercizio arricchito con dati dal DB (se disponibile) per matching più accurato
-    final currentExerciseForMatching = _enrichedCurrentExercise ?? widget.currentExercise;
+    final currentExerciseForMatching =
+        _enrichedCurrentExercise ?? widget.currentExercise;
 
     // Get suggestions or all exercises based on search/toggle
     List<ExerciseSuggestion> displayList;
 
     if (_searchQuery.isNotEmpty && _searchResults.isNotEmpty) {
       // Use simple token search results with compatibility scoring
-      displayList = _searchResults.map((dbExercise) {
-        // Try to find existing workout exercise with same name
-        Exercise? matchingWorkoutExercise;
-        try {
-          matchingWorkoutExercise = allExercises.firstWhere(
-            (ex) => ex.name.toLowerCase() == dbExercise.nome.toLowerCase(),
-          );
-        } catch (e) {
-          // Exercise not found in workout provider, create minimal Exercise from DB exercise
-          matchingWorkoutExercise = Exercise(
-            name: dbExercise.nome,
-            type: ExerciseType.single, // Default to single exercise
-            category: MuscleAbbreviationMapper.focusListToExerciseCategory(dbExercise.focus),
-          );
-        }
+      displayList =
+          _searchResults.map((dbExercise) {
+            // Try to find existing workout exercise with same name
+            Exercise? matchingWorkoutExercise;
+            try {
+              matchingWorkoutExercise = allExercises.firstWhere(
+                (ex) => ex.name.toLowerCase() == dbExercise.nome.toLowerCase(),
+              );
+            } catch (e) {
+              // Exercise not found in workout provider, create minimal Exercise from DB exercise
+              matchingWorkoutExercise = Exercise(
+                name: dbExercise.nome,
+                type: ExerciseType.single, // Default to single exercise
+                category: MuscleAbbreviationMapper.focusListToExerciseCategory(
+                  dbExercise.focus,
+                ),
+              );
+            }
 
-        // Calculate compatibility between current exercise and candidate
-        final compatibility = ExerciseCompatibilityService.calculateCompatibility(
-          currentExerciseForMatching,
-          matchingWorkoutExercise,
-        );
+            // Calculate compatibility between current exercise and candidate
+            final compatibility =
+                ExerciseCompatibilityService.calculateCompatibility(
+                  currentExerciseForMatching,
+                  matchingWorkoutExercise,
+                );
 
-        // Use compatibility score directly (name already matched by search)
-        return ExerciseSuggestion(
-          exercise: matchingWorkoutExercise,
-          compatibilityScore: compatibility,
-          reason: _getCompatibilityReason(compatibility, matchingWorkoutExercise, currentExerciseForMatching),
-        );
-      }).toList()
-        ..sort((a, b) => b.compatibilityScore.compareTo(a.compatibilityScore));
+            // Use compatibility score directly (name already matched by search)
+            return ExerciseSuggestion(
+              exercise: matchingWorkoutExercise,
+              compatibilityScore: compatibility,
+              reason: _getCompatibilityReason(
+                compatibility,
+                matchingWorkoutExercise,
+                currentExerciseForMatching,
+              ),
+            );
+          }).toList()..sort(
+            (a, b) => b.compatibilityScore.compareTo(a.compatibilityScore),
+          );
     } else if (_showOnlyCompatible) {
       // Show smart suggestions from ENTIRE database (1550+ exercises)
       // Use all DB exercises with compatibility scoring
-      displayList = _dbExercises.map((dbExercise) {
-        // Try to find existing workout exercise with same name
-        Exercise? matchingWorkoutExercise;
-        try {
-          matchingWorkoutExercise = allExercises.firstWhere(
-            (ex) => ex.name.toLowerCase() == dbExercise.nome.toLowerCase(),
-          );
-        } catch (e) {
-          // Exercise not found in workout provider, create minimal Exercise from DB exercise
-          matchingWorkoutExercise = Exercise(
-            name: dbExercise.nome,
-            type: ExerciseType.single,
-            category: MuscleAbbreviationMapper.focusListToExerciseCategory(dbExercise.focus),
-          );
-        }
+      displayList =
+          _dbExercises.map((dbExercise) {
+              // Try to find existing workout exercise with same name
+              Exercise? matchingWorkoutExercise;
+              try {
+                matchingWorkoutExercise = allExercises.firstWhere(
+                  (ex) =>
+                      ex.name.toLowerCase() == dbExercise.nome.toLowerCase(),
+                );
+              } catch (e) {
+                // Exercise not found in workout provider, create minimal Exercise from DB exercise
+                matchingWorkoutExercise = Exercise(
+                  name: dbExercise.nome,
+                  type: ExerciseType.single,
+                  category:
+                      MuscleAbbreviationMapper.focusListToExerciseCategory(
+                        dbExercise.focus,
+                      ),
+                );
+              }
 
-        // Calculate compatibility
-        final compatibility = ExerciseCompatibilityService.calculateCompatibility(
-          currentExerciseForMatching,
-          matchingWorkoutExercise,
-        );
+              // Calculate compatibility
+              final compatibility =
+                  ExerciseCompatibilityService.calculateCompatibility(
+                    currentExerciseForMatching,
+                    matchingWorkoutExercise,
+                  );
 
-        return ExerciseSuggestion(
-          exercise: matchingWorkoutExercise,
-          compatibilityScore: compatibility,
-          reason: _getCompatibilityReason(compatibility, matchingWorkoutExercise, currentExerciseForMatching),
-        );
-      }).toList()
-        // Filter: only show suggestions with compatibility >= 30%
-        ..removeWhere((s) => s.compatibilityScore < 30)
-        // Sort by compatibility descending
-        ..sort((a, b) => b.compatibilityScore.compareTo(a.compatibilityScore))
-        // Limit to top 20 suggestions (avoid overwhelming UI)
-        ..take(20).toList();
+              return ExerciseSuggestion(
+                exercise: matchingWorkoutExercise,
+                compatibilityScore: compatibility,
+                reason: _getCompatibilityReason(
+                  compatibility,
+                  matchingWorkoutExercise,
+                  currentExerciseForMatching,
+                ),
+              );
+            }).toList()
+            // Filter: only show suggestions with compatibility >= 30%
+            ..removeWhere((s) => s.compatibilityScore < 30)
+            // Sort by compatibility descending
+            ..sort(
+              (a, b) => b.compatibilityScore.compareTo(a.compatibilityScore),
+            )
+            // Limit to top 20 suggestions (avoid overwhelming UI)
+            ..take(20).toList();
     } else {
       // Show all exercises with compatibility scores (no search query)
-      displayList = allExercises.map((exercise) {
-        // Special handling for same exercise
-        if (exercise.name == currentExerciseForMatching.name) {
-          return ExerciseSuggestion(
-            exercise: exercise,
-            compatibilityScore: 100, // Show current exercise at top
-            reason: _getCompatibilityReason(100, exercise, currentExerciseForMatching),
-          );
-        }
+      displayList =
+          allExercises.map((exercise) {
+            // Special handling for same exercise
+            if (exercise.name == currentExerciseForMatching.name) {
+              return ExerciseSuggestion(
+                exercise: exercise,
+                compatibilityScore: 100, // Show current exercise at top
+                reason: _getCompatibilityReason(
+                  100,
+                  exercise,
+                  currentExerciseForMatching,
+                ),
+              );
+            }
 
-        final compatibility = ExerciseCompatibilityService.calculateCompatibility(
-          currentExerciseForMatching,
-          exercise,
-        );
-        return ExerciseSuggestion(
-          exercise: exercise,
-          compatibilityScore: compatibility,
-          reason: _getCompatibilityReason(compatibility, exercise, currentExerciseForMatching),
-        );
-      }).toList()
-        ..sort((a, b) => b.compatibilityScore.compareTo(a.compatibilityScore));
+            final compatibility =
+                ExerciseCompatibilityService.calculateCompatibility(
+                  currentExerciseForMatching,
+                  exercise,
+                );
+            return ExerciseSuggestion(
+              exercise: exercise,
+              compatibilityScore: compatibility,
+              reason: _getCompatibilityReason(
+                compatibility,
+                exercise,
+                currentExerciseForMatching,
+              ),
+            );
+          }).toList()..sort(
+            (a, b) => b.compatibilityScore.compareTo(a.compatibilityScore),
+          );
     }
 
     // Filter based on category only (search filtering is done by fuzzy search)
@@ -341,7 +397,6 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       return true;
     }).toList();
 
-
     return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
@@ -351,255 +406,266 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
         top: false,
         child: Column(
           children: [
-          // Handle bar
-          Container(
-            margin: const EdgeInsets.only(top: 12),
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(2),
+            // Handle bar
+            Container(
+              margin: const EdgeInsets.only(top: 12),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-          ),
-          
-          // Header
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      AppIcons.swapHorizRounded,
-                      color: theme.colorScheme.primary,
-                      size: 28,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.replaceExercise,
-                            style: theme.textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            widget.currentExercise.name,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: const SemanticIcon(
-  icon: AppIcons.close,
-  semanticLabel: 'Close',
-),
-                    ),
-                  ],
-                ),
-                
-                const SizedBox(height: 16),
-                
-                // Info card
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                    ),
-                  ),
-                  child: Row(
+
+            // Header
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
                       Icon(
-                        AppIcons.info,
+                        AppIcons.swapHorizRounded,
                         color: theme.colorScheme.primary,
-                        size: 20,
+                        size: 28,
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 12),
                       Expanded(
-                        child: Text(
-                          l10n.replacementKeepsSetsAndReps,
-                          style: context.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                
-                const SizedBox(height: 16),
-                
-                // Search bar
-                TextField(
-                  onChanged: (value) {
-                    setState(() => _searchQuery = value);
-                    _performFuzzySearch(value);
-                  },
-                  decoration: InputDecoration(
-                    hintText: l10n.searchExercises,
-                    prefixIcon: const SemanticIcon(
-  icon: AppIcons.search,
-  semanticLabel: 'Search',
-),
-                    suffixIcon: _isSearching
-                        ? const Padding(
-                            padding: EdgeInsets.all(12.0),
-                            child: LoadingIndicator(size: 20),
-                          )
-                        : (_searchQuery.isNotEmpty
-                            ? IconButton(
-                                onPressed: () {
-                                  setState(() => _searchQuery = '');
-                                  _performFuzzySearch('');
-                                },
-                                icon: const SemanticIcon(
-  icon: AppIcons.clear,
-  semanticLabel: 'Clear',
-),
-                              )
-                            : null),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    filled: true,
-                    fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                  ),
-                ),
-                
-                const SizedBox(height: 12),
-                
-                // Filters
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      // Compatibility toggle
-                      FilterChip(
-                        label: Row(
-                          mainAxisSize: MainAxisSize.min,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SemanticIcon(
-  icon: AppIcons.autoAwesome,
-  semanticLabel: 'Auto awesome',
-  size: AppIconSize.tiny,
-  color: _showOnlyCompatible 
-                                  ? theme.colorScheme.onPrimary
-                                  : theme.colorScheme.onSurface,
-),
-                            const SizedBox(width: 4),
-                            Text(l10n.smartSuggestions),
+                            Text(
+                              l10n.replaceExercise,
+                              style: theme.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              widget.currentExercise.name,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.7,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
-                        selected: _showOnlyCompatible,
-                        onSelected: (value) => setState(() => _showOnlyCompatible = value),
-                        backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                        selectedColor: theme.colorScheme.primary,
                       ),
-                      const SizedBox(width: 8),
-                      
-                      // Category filters
-                      for (final category in ExerciseCategory.values)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: FilterChip(
-                            label: Text(_getCategoryName(category)),
-                            selected: _filterCategory == category,
-                            onSelected: (selected) {
-                              setState(() {
-                                _filterCategory = selected ? category : null;
-                              });
-                            },
-                          ),
+                      IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const SemanticIcon(
+                          icon: AppIcons.close,
+                          semanticLabel: 'Close',
                         ),
+                      ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          ),
-          
-          const Divider(height: 1),
-          
-          // Exercise list
-          Expanded(
-            child: exercisesAsync.when(
-              loading: () => const Center(
-                child: LoadingIndicator(),
-              ),
-              error: (error, stack) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SemanticIcon(
-  icon: AppIcons.error,
-  semanticLabel: 'Error',
-  size: AppIconSize.medium,
-  color: theme.colorScheme.error,
-),
-                    const SizedBox(height: 16),
-                    Text(
-                      l10n.errorLoadingExercises,
-                      style: theme.textTheme.titleMedium,
+
+                  const SizedBox(height: 16),
+
+                  // Info card
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primaryContainer.withValues(
+                        alpha: 0.3,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                      ),
                     ),
-                  ],
-                ),
-              ),
-              data: (_) => filteredSuggestions.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Row(
                       children: [
-                        SemanticIcon(
-  icon: AppIcons.searchOff,
-  semanticLabel: 'Search off',
-  size: AppIconSize.medium,
-  color: theme.colorScheme.onSurface.withValues(alpha: 0.3,
-),
+                        Icon(
+                          AppIcons.info,
+                          color: theme.colorScheme.primary,
+                          size: 20,
                         ),
-                        const SizedBox(height: 16),
-                        Text(
-                          l10n.noExercisesFound,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            l10n.replacementKeepsSetsAndReps,
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  )
-                : ListView.builder(
-                    controller: widget.scrollController,
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    itemCount: filteredSuggestions.length,
-                    itemBuilder: (context, index) {
-                      final suggestion = filteredSuggestions[index];
-                      return _buildExerciseTile(context, suggestion);
-                    },
                   ),
+
+                  const SizedBox(height: 16),
+
+                  // Search bar
+                  TextField(
+                    onChanged: (value) {
+                      setState(() => _searchQuery = value);
+                      _performFuzzySearch(value);
+                    },
+                    decoration: InputDecoration(
+                      hintText: l10n.searchExercises,
+                      prefixIcon: const SemanticIcon(
+                        icon: AppIcons.search,
+                        semanticLabel: 'Search',
+                      ),
+                      suffixIcon: _isSearching
+                          ? const Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: LoadingIndicator(size: 20),
+                            )
+                          : (_searchQuery.isNotEmpty
+                                ? IconButton(
+                                    onPressed: () {
+                                      setState(() => _searchQuery = '');
+                                      _performFuzzySearch('');
+                                    },
+                                    icon: const SemanticIcon(
+                                      icon: AppIcons.clear,
+                                      semanticLabel: 'Clear',
+                                    ),
+                                  )
+                                : null),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      filled: true,
+                      fillColor: theme.colorScheme.surfaceContainerHighest
+                          .withValues(alpha: 0.3),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // Filters
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        // Compatibility toggle
+                        FilterChip(
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SemanticIcon(
+                                icon: AppIcons.autoAwesome,
+                                semanticLabel: 'Auto awesome',
+                                size: AppIconSize.tiny,
+                                color: _showOnlyCompatible
+                                    ? theme.colorScheme.onPrimary
+                                    : theme.colorScheme.onSurface,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(l10n.smartSuggestions),
+                            ],
+                          ),
+                          selected: _showOnlyCompatible,
+                          onSelected: (value) =>
+                              setState(() => _showOnlyCompatible = value),
+                          backgroundColor:
+                              theme.colorScheme.surfaceContainerHighest,
+                          selectedColor: theme.colorScheme.primary,
+                        ),
+                        const SizedBox(width: 8),
+
+                        // Category filters
+                        for (final category in ExerciseCategory.values)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: FilterChip(
+                              label: Text(_getCategoryName(category)),
+                              selected: _filterCategory == category,
+                              onSelected: (selected) {
+                                setState(() {
+                                  _filterCategory = selected ? category : null;
+                                });
+                              },
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+
+            const Divider(height: 1),
+
+            // Exercise list
+            Expanded(
+              child: exercisesAsync.when(
+                loading: () => const Center(child: LoadingIndicator()),
+                error: (error, stack) => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SemanticIcon(
+                        icon: AppIcons.error,
+                        semanticLabel: 'Error',
+                        size: AppIconSize.medium,
+                        color: theme.colorScheme.error,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        l10n.errorLoadingExercises,
+                        style: theme.textTheme.titleMedium,
+                      ),
+                    ],
+                  ),
+                ),
+                data: (_) => filteredSuggestions.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SemanticIcon(
+                              icon: AppIcons.searchOff,
+                              semanticLabel: 'Search off',
+                              size: AppIconSize.medium,
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.3,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              l10n.noExercisesFound,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.5,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        controller: widget.scrollController,
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        itemCount: filteredSuggestions.length,
+                        itemBuilder: (context, index) {
+                          final suggestion = filteredSuggestions[index];
+                          return _buildExerciseTile(context, suggestion);
+                        },
+                      ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
-  
-  Widget _buildExerciseTile(BuildContext context, ExerciseSuggestion suggestion) {
+
+  Widget _buildExerciseTile(
+    BuildContext context,
+    ExerciseSuggestion suggestion,
+  ) {
     final theme = Theme.of(context);
 
     // Calculate color based on compatibility
     Color compatibilityColor;
     IconData compatibilityIcon;
-    
+
     if (suggestion.compatibilityScore >= 80) {
       compatibilityColor = context.colors.success;
       compatibilityIcon = AppIcons.star;
@@ -613,7 +679,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       compatibilityColor = theme.colorScheme.onSurface.withValues(alpha: 0.5);
       compatibilityIcon = AppIcons.starOutline;
     }
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Material(
@@ -631,7 +697,9 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: _getCategoryColor(suggestion.exercise.category).withValues(alpha: 0.2),
+                    color: _getCategoryColor(
+                      suggestion.exercise.category,
+                    ).withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -641,7 +709,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                   ),
                 ),
                 const SizedBox(width: 12),
-                
+
                 // Exercise info
                 Expanded(
                   child: Column(
@@ -657,16 +725,21 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                       Text(
                         suggestion.reason,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.7,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                
+
                 // Compatibility score
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: compatibilityColor.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(20),
@@ -700,13 +773,13 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       ),
     );
   }
-  
+
   void _confirmReplacement(BuildContext context, Exercise newExercise) {
     final theme = Theme.of(context);
     final l10n = context.l10n;
-    
+
     HapticFeedback.lightImpact();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -726,17 +799,19 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: 0.3,
+                ),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
                 children: [
                   SemanticIcon(
-  icon: AppIcons.info,
-  semanticLabel: 'Information',
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.primary,
-),
+                    icon: AppIcons.info,
+                    semanticLabel: 'Information',
+                    size: AppIconSize.tiny,
+                    color: theme.colorScheme.primary,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -761,7 +836,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
               Navigator.of(context).pop(); // Close dialog
               Navigator.of(context).pop(); // Close modal
               widget.onReplace(newExercise);
-              
+
               SnackBarService.showSuccess(context, l10n.exerciseReplaced);
             },
             child: Text(l10n.replace),
@@ -770,7 +845,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       ),
     );
   }
-  
+
   String _getCategoryName(ExerciseCategory category) {
     switch (category) {
       case ExerciseCategory.chest:
@@ -791,7 +866,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
         return 'Other';
     }
   }
-  
+
   IconData _getCategoryIcon(ExerciseCategory category) {
     switch (category) {
       case ExerciseCategory.chest:
@@ -812,7 +887,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
         return AppIcons.sports;
     }
   }
-  
+
   Color _getCategoryColor(ExerciseCategory category) {
     final colors = Theme.of(context).colorScheme;
     switch (category) {
@@ -834,8 +909,12 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
         return colors.onSurface.withValues(alpha: 0.5);
     }
   }
-  
-  String _getCompatibilityReason(double score, Exercise exercise, Exercise currentExercise) {
+
+  String _getCompatibilityReason(
+    double score,
+    Exercise exercise,
+    Exercise currentExercise,
+  ) {
     final l10n = context.l10n;
 
     if (exercise.name == currentExercise.name) {

@@ -116,16 +116,17 @@ class _ExpandableRatioCardState extends State<ExpandableRatioCard>
     final colorScheme = context.colors;
     final l10n = context.l10n;
 
-    final ratioColor = widget.hasWarning ? colorScheme.error : colorScheme.primary;
-    final hasData = widget.firstCategory.hasData || widget.secondCategory.hasData;
+    final ratioColor = widget.hasWarning
+        ? colorScheme.error
+        : colorScheme.primary;
+    final hasData =
+        widget.firstCategory.hasData || widget.secondCategory.hasData;
 
     return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: ratioColor.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: ratioColor.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
             color: colorScheme.shadow.withValues(alpha: 0.05),
@@ -153,7 +154,11 @@ class _ExpandableRatioCardState extends State<ExpandableRatioCard>
                           color: ratioColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Icon(widget.icon, color: ratioColor, size: AppIconSize.medium),
+                        child: Icon(
+                          widget.icon,
+                          color: ratioColor,
+                          size: AppIconSize.medium,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -228,7 +233,9 @@ class _ExpandableRatioCardState extends State<ExpandableRatioCard>
                       child: Text(
                         l10n.tapForDetails,
                         style: context.textTheme.labelSmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                          color: colorScheme.onSurfaceVariant.withValues(
+                            alpha: 0.7,
+                          ),
                           fontStyle: FontStyle.italic,
                         ),
                       ),
@@ -297,10 +304,7 @@ class _ExpandableRatioCardState extends State<ExpandableRatioCard>
                     decoration: BoxDecoration(
                       color: color,
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: colorScheme.surface,
-                        width: 2,
-                      ),
+                      border: Border.all(color: colorScheme.surface, width: 2),
                     ),
                   ),
                 ),
@@ -373,9 +377,7 @@ class _ExpandableRatioCardState extends State<ExpandableRatioCard>
               onPressed: _openFullScreenSheet,
               icon: const Icon(AppIcons.fullscreen, size: AppIconSize.small),
               label: Text(l10n.dragToExpand),
-              style: TextButton.styleFrom(
-                foregroundColor: colorScheme.primary,
-              ),
+              style: TextButton.styleFrom(foregroundColor: colorScheme.primary),
             ),
           ),
         ],
@@ -432,15 +434,17 @@ class _ExpandableRatioCardState extends State<ExpandableRatioCard>
             ),
           )
         else
-          ...topExercises.map((exercise) => Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: _buildExerciseBar(
-                  context,
-                  exercise.exerciseName,
-                  exercise.percentage,
-                  accentColor,
-                ),
-              )),
+          ...topExercises.map(
+            (exercise) => Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: _buildExerciseBar(
+                context,
+                exercise.exerciseName,
+                exercise.percentage,
+                accentColor,
+              ),
+            ),
+          ),
       ],
     );
   }

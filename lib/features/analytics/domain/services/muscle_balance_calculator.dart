@@ -99,7 +99,8 @@ class MuscleBalanceCalculator {
 
       // Try to get muscle data from the map first
       // Use case-insensitive lookup: try exact match, then lowercase
-      final muscleData = exerciseMuscleMap?[history.exerciseName] ??
+      final muscleData =
+          exerciseMuscleMap?[history.exerciseName] ??
           exerciseMuscleMap?[history.exerciseName.toLowerCase()];
 
       if (muscleData != null && muscleData.hasData) {
@@ -184,22 +185,30 @@ class MuscleBalanceCalculator {
     });
 
     // Calculate ratios
-    final pushPullRatio = pullVolume > 0 ? (pushVolume / pullVolume).toDouble() : 0.0;
-    final upperLowerRatio = lowerVolume > 0 ? (upperVolume / lowerVolume).toDouble() : 0.0;
+    final pushPullRatio = pullVolume > 0
+        ? (pushVolume / pullVolume).toDouble()
+        : 0.0;
+    final upperLowerRatio = lowerVolume > 0
+        ? (upperVolume / lowerVolume).toDouble()
+        : 0.0;
 
     // P1: Separated upper/lower push-pull ratios
-    final upperPushPullRatio =
-        upperPullVolume > 0 ? (upperPushVolume / upperPullVolume).toDouble() : 0.0;
-    final lowerPushPullRatio =
-        lowerPullVolume > 0 ? (lowerPushVolume / lowerPullVolume).toDouble() : 0.0;
+    final upperPushPullRatio = upperPullVolume > 0
+        ? (upperPushVolume / upperPullVolume).toDouble()
+        : 0.0;
+    final lowerPushPullRatio = lowerPullVolume > 0
+        ? (lowerPushVolume / lowerPullVolume).toDouble()
+        : 0.0;
 
     // Detect warnings (imbalance >50% from optimal 1:1)
     final pushPullWarning = pushPullRatio > 1.5 || pushPullRatio < 0.7;
     final upperLowerWarning = upperLowerRatio > 1.5 || upperLowerRatio < 0.7;
 
     // P1: Warnings for separated upper/lower push-pull
-    final upperPushPullWarning = upperPushPullRatio > 1.5 || upperPushPullRatio < 0.7;
-    final lowerPushPullWarning = lowerPushPullRatio > 1.5 || lowerPushPullRatio < 0.7;
+    final upperPushPullWarning =
+        upperPushPullRatio > 1.5 || upperPushPullRatio < 0.7;
+    final lowerPushPullWarning =
+        lowerPushPullRatio > 1.5 || lowerPushPullRatio < 0.7;
 
     // Find neglected muscles (<5% of total volume)
     final neglectedMuscles = muscleVolumes.entries
@@ -208,15 +217,16 @@ class MuscleBalanceCalculator {
         .toList();
 
     // Find top trained muscles (>15% of total volume)
-    final topMuscles = muscleVolumes.entries
-        .where((e) => (e.value / totalVolume) > 0.15)
-        .map((e) => e.key)
-        .toList()
-      ..sort((a, b) {
-        final aVol = muscleVolumes[a] ?? 0;
-        final bVol = muscleVolumes[b] ?? 0;
-        return bVol.compareTo(aVol);
-      });
+    final topMuscles =
+        muscleVolumes.entries
+            .where((e) => (e.value / totalVolume) > 0.15)
+            .map((e) => e.key)
+            .toList()
+          ..sort((a, b) {
+            final aVol = muscleVolumes[a] ?? 0;
+            final bVol = muscleVolumes[b] ?? 0;
+            return bVol.compareTo(aVol);
+          });
 
     // Calculate overall balance score (0-10)
     // 10 = perfect balance, 0 = severe imbalance
@@ -440,8 +450,17 @@ class MuscleBalanceCalculator {
 
     // Quad-dominant (PUSH)
     const quadPatterns = [
-      'leg extension', 'leg press', 'squat', 'sissy squat', 'hack squat',
-      'front squat', 'affond', 'lunge', 'bulgarian', 'step up', 'pressa',
+      'leg extension',
+      'leg press',
+      'squat',
+      'sissy squat',
+      'hack squat',
+      'front squat',
+      'affond',
+      'lunge',
+      'bulgarian',
+      'step up',
+      'pressa',
       'quadricip',
     ];
     for (final pattern in quadPatterns) {
@@ -450,9 +469,17 @@ class MuscleBalanceCalculator {
 
     // Triceps (PUSH)
     const tricepsPatterns = [
-      'tricep', 'pushdown', 'push down', 'skull crusher', 'french press',
-      'dip', 'close grip', 'diamond', 'kickback',
-      'estensione tricipiti', 'push-down',
+      'tricep',
+      'pushdown',
+      'push down',
+      'skull crusher',
+      'french press',
+      'dip',
+      'close grip',
+      'diamond',
+      'kickback',
+      'estensione tricipiti',
+      'push-down',
     ];
     for (final pattern in tricepsPatterns) {
       if (nameLower.contains(pattern)) return 'triceps';
@@ -460,8 +487,17 @@ class MuscleBalanceCalculator {
 
     // Chest (PUSH)
     const chestPatterns = [
-      'bench press', 'panca piana', 'panca inclinata', 'panca declinata',
-      'chest', 'pettoral', 'fly', 'flye', 'crossover', 'pec deck', 'push up',
+      'bench press',
+      'panca piana',
+      'panca inclinata',
+      'panca declinata',
+      'chest',
+      'pettoral',
+      'fly',
+      'flye',
+      'crossover',
+      'pec deck',
+      'push up',
       'pushup',
     ];
     for (final pattern in chestPatterns) {
@@ -472,9 +508,18 @@ class MuscleBalanceCalculator {
 
     // Hamstring-dominant (PULL)
     const hamstringPatterns = [
-      'leg curl', 'lying curl', 'seated curl', 'stacco rumeno',
-      'romanian deadlift', 'rdl', 'good morning', 'glute ham',
-      'hip thrust', 'femorali', 'nordic', 'hyperextension',
+      'leg curl',
+      'lying curl',
+      'seated curl',
+      'stacco rumeno',
+      'romanian deadlift',
+      'rdl',
+      'good morning',
+      'glute ham',
+      'hip thrust',
+      'femorali',
+      'nordic',
+      'hyperextension',
     ];
     for (final pattern in hamstringPatterns) {
       if (nameLower.contains(pattern)) return 'hamstrings';
@@ -482,8 +527,15 @@ class MuscleBalanceCalculator {
 
     // Biceps (PULL)
     const bicepsPatterns = [
-      'bicep', 'curl', 'preacher', 'hammer', 'concentration',
-      'spider curl', 'incline curl', 'ez bar curl', 'barbell curl',
+      'bicep',
+      'curl',
+      'preacher',
+      'hammer',
+      'concentration',
+      'spider curl',
+      'incline curl',
+      'ez bar curl',
+      'barbell curl',
     ];
     for (final pattern in bicepsPatterns) {
       if (nameLower.contains(pattern) && !nameLower.contains('leg curl')) {
@@ -493,10 +545,24 @@ class MuscleBalanceCalculator {
 
     // Back (PULL)
     const backPatterns = [
-      'row', 'pull up', 'pullup', 'pull-up', 'chin up', 'chinup', 'chin-up',
-      'lat pull', 'pulldown', 'deadlift', 'stacco da terra',
-      'rematore', 'trazioni', 'lat machine', 't-bar',
-      'seal row', 'meadow', 'dorso',
+      'row',
+      'pull up',
+      'pullup',
+      'pull-up',
+      'chin up',
+      'chinup',
+      'chin-up',
+      'lat pull',
+      'pulldown',
+      'deadlift',
+      'stacco da terra',
+      'rematore',
+      'trazioni',
+      'lat machine',
+      't-bar',
+      'seal row',
+      'meadow',
+      'dorso',
     ];
     for (final pattern in backPatterns) {
       if (nameLower.contains(pattern)) return 'back';
@@ -533,7 +599,9 @@ class MuscleBalanceCalculator {
         return customExercise.focus.isNotEmpty
             ? customExercise.focus.first.toLowerCase()
             : 'back';
-      } else if (pattern == 'hinge' || pattern == 'squat' || pattern == 'accessory') {
+      } else if (pattern == 'hinge' ||
+          pattern == 'squat' ||
+          pattern == 'accessory') {
         // For other patterns, use first focus muscle if available
         if (customExercise.focus.isNotEmpty) {
           return customExercise.focus.first.toLowerCase();
@@ -579,7 +647,8 @@ class MuscleBalanceCalculator {
       final perPrimary = primaryVolume / primary.length;
       for (final muscle in primary) {
         final muscleLower = muscle.toLowerCase();
-        muscleVolumes[muscleLower] = (muscleVolumes[muscleLower] ?? 0) + perPrimary;
+        muscleVolumes[muscleLower] =
+            (muscleVolumes[muscleLower] ?? 0) + perPrimary;
       }
     }
 
@@ -588,15 +657,18 @@ class MuscleBalanceCalculator {
       // First synergist gets highSynergistRatio
       final firstSynergist = secondary.first.toLowerCase();
       final highVolume = volume * highSynergistRatio;
-      muscleVolumes[firstSynergist] = (muscleVolumes[firstSynergist] ?? 0) + highVolume;
+      muscleVolumes[firstSynergist] =
+          (muscleVolumes[firstSynergist] ?? 0) + highVolume;
 
       // Remaining synergists split moderateSynergistRatio
       if (secondary.length > 1) {
         final remainingSynergists = secondary.sublist(1);
-        final volumePerMod = (volume * moderateSynergistRatio) / remainingSynergists.length;
+        final volumePerMod =
+            (volume * moderateSynergistRatio) / remainingSynergists.length;
         for (final muscle in remainingSynergists) {
           final muscleLower = muscle.toLowerCase();
-          muscleVolumes[muscleLower] = (muscleVolumes[muscleLower] ?? 0) + volumePerMod;
+          muscleVolumes[muscleLower] =
+              (muscleVolumes[muscleLower] ?? 0) + volumePerMod;
         }
       }
     }
@@ -638,19 +710,19 @@ class MuscleBalanceMetrics {
   });
 
   factory MuscleBalanceMetrics.empty() => const MuscleBalanceMetrics(
-        pushPullRatio: 1.0,
-        upperLowerRatio: 1.0,
-        pushPullWarning: false,
-        upperLowerWarning: false,
-        neglectedMuscles: [],
-        topMuscles: [],
-        balanceScore: 10.0,
-        muscleVolumePercentages: {},
-        upperPushPullRatio: 1.0,
-        lowerPushPullRatio: 1.0,
-        upperPushPullWarning: false,
-        lowerPushPullWarning: false,
-      );
+    pushPullRatio: 1.0,
+    upperLowerRatio: 1.0,
+    pushPullWarning: false,
+    upperLowerWarning: false,
+    neglectedMuscles: [],
+    topMuscles: [],
+    balanceScore: 10.0,
+    muscleVolumePercentages: {},
+    upperPushPullRatio: 1.0,
+    lowerPushPullRatio: 1.0,
+    upperPushPullWarning: false,
+    lowerPushPullWarning: false,
+  );
 
   /// Push/Pull ratio (optimal: 1.0) - TOTAL (upper + lower combined)
   final double pushPullRatio;

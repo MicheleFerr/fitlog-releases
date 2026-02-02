@@ -142,10 +142,7 @@ class _DataExportSheetState extends ConsumerState<DataExportSheet> {
       ),
       child: Row(
         children: [
-          Icon(
-            AppIcons.info,
-            color: context.colors.secondary,
-          ),
+          Icon(AppIcons.info, color: context.colors.secondary),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -189,7 +186,8 @@ class _DataExportSheetState extends ConsumerState<DataExportSheet> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  if (_selectedCategories.length == ExportCategory.values.length) {
+                  if (_selectedCategories.length ==
+                      ExportCategory.values.length) {
                     _selectedCategories.clear();
                   } else {
                     _selectedCategories.addAll(ExportCategory.values);
@@ -212,10 +210,7 @@ class _DataExportSheetState extends ConsumerState<DataExportSheet> {
             return FilterChip(
               selected: _selectedCategories.contains(category),
               label: Text(_getCategoryLabel(context, category)),
-              avatar: Icon(
-                _getCategoryIcon(category),
-                size: 18,
-              ),
+              avatar: Icon(_getCategoryIcon(category), size: 18),
               onSelected: (selected) {
                 setState(() {
                   if (selected) {
@@ -361,7 +356,10 @@ class _DataExportSheetState extends ConsumerState<DataExportSheet> {
     );
   }
 
-  Widget _buildItemCounts(BuildContext context, Map<ExportCategory, int> counts) {
+  Widget _buildItemCounts(
+    BuildContext context,
+    Map<ExportCategory, int> counts,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -542,10 +540,7 @@ class _DataExportSheetState extends ConsumerState<DataExportSheet> {
       );
     } catch (e) {
       if (context.mounted) {
-        SnackBarService.showError(
-          context,
-          context.l10n.exportShareFailed,
-        );
+        SnackBarService.showError(context, context.l10n.exportShareFailed);
       }
     }
   }
@@ -555,7 +550,8 @@ class _DataExportSheetState extends ConsumerState<DataExportSheet> {
       ExportCategory.workoutHistory => context.l10n.exportCategoryWorkouts,
       ExportCategory.templates => context.l10n.exportCategoryTemplates,
       ExportCategory.customExercises => context.l10n.exportCategoryExercises,
-      ExportCategory.bodyMeasurements => context.l10n.exportCategoryMeasurements,
+      ExportCategory.bodyMeasurements =>
+        context.l10n.exportCategoryMeasurements,
       ExportCategory.progressPhotos => context.l10n.exportCategoryPhotos,
       ExportCategory.personalRecords => context.l10n.exportCategoryRecords,
       ExportCategory.settings => context.l10n.exportCategorySettings,

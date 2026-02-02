@@ -25,10 +25,8 @@ final exerciseUpgradeServiceProvider = Provider<ExerciseUpgradeService>((ref) {
 ///
 /// Use this to show how many workouts/templates will be affected
 /// when upgrading an exercise.
-final affectedItemsCountProvider =
-    FutureProvider.autoDispose.family<AffectedItemsCount, String>(
-  (ref, exerciseName) async {
-    final service = ref.watch(exerciseUpgradeServiceProvider);
-    return service.countAffectedItems(exerciseName);
-  },
-);
+final affectedItemsCountProvider = FutureProvider.autoDispose
+    .family<AffectedItemsCount, String>((ref, exerciseName) async {
+      final service = ref.watch(exerciseUpgradeServiceProvider);
+      return service.countAffectedItems(exerciseName);
+    });

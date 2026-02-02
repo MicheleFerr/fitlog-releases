@@ -48,10 +48,7 @@ class SettingsScreen extends ConsumerWidget {
         title: Text(l10n.settingsTitle),
         backgroundColor: context.colors.surfaceContainerHighest,
         leading: IconButton(
-          icon: const SemanticIcon(
-  icon: AppIcons.back,
-  semanticLabel: 'Back',
-),
+          icon: const SemanticIcon(icon: AppIcons.back, semanticLabel: 'Back'),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -130,7 +127,10 @@ class SettingsScreen extends ConsumerWidget {
             _buildAboutCreditsSection(context),
 
             // DEBUG: Migration tool (ferrara-michele only)
-            if (currentUser.value?.email?.toString().contains('ferrara-michele') == true)
+            if (currentUser.value?.email?.toString().contains(
+                  'ferrara-michele',
+                ) ==
+                true)
               Padding(
                 padding: const EdgeInsets.only(top: 24),
                 child: Center(
@@ -142,7 +142,9 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                     label: Text(context.l10n.migrateWorkoutHistory),
                     style: FilledButton.styleFrom(
-                      backgroundColor: context.colors.primary.withValues(alpha: 0.1),
+                      backgroundColor: context.colors.primary.withValues(
+                        alpha: 0.1,
+                      ),
                       foregroundColor: context.colors.primary,
                     ),
                   ),
@@ -154,7 +156,11 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildUserInfoSection(BuildContext context, WidgetRef ref, AsyncValue<dynamic> currentUser) {
+  Widget _buildUserInfoSection(
+    BuildContext context,
+    WidgetRef ref,
+    AsyncValue<dynamic> currentUser,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -192,9 +198,9 @@ class SettingsScreen extends ConsumerWidget {
                                   : null,
                               child: user.photoURL == null
                                   ? const SemanticIcon(
-  icon: AppIcons.person,
-  semanticLabel: 'Profile',
-)
+                                      icon: AppIcons.person,
+                                      semanticLabel: 'Profile',
+                                    )
                                   : null,
                             ),
                             const SizedBox(width: 12),
@@ -204,15 +210,16 @@ class SettingsScreen extends ConsumerWidget {
                                 children: [
                                   Text(
                                     user.displayName ?? context.l10n.gymbroUser,
-                                    style: context.textTheme.titleSmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: context.textTheme.titleSmall
+                                        ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
                                   Text(
                                     user.email ?? context.l10n.settingsNoEmail,
-                                    style: context.textTheme.bodySmall?.copyWith(
-                                      color: context.colors.onSurface.withValues(alpha: 0.7),
-                                    ),
+                                    style: context.textTheme.bodySmall
+                                        ?.copyWith(
+                                          color: context.colors.onSurface
+                                              .withValues(alpha: 0.7),
+                                        ),
                                   ),
                                 ],
                               ),
@@ -245,7 +252,8 @@ class SettingsScreen extends ConsumerWidget {
                               onPressed: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (_) => const DatabaseManagerScreen(),
+                                    builder: (_) =>
+                                        const DatabaseManagerScreen(),
                                   ),
                                 );
                               },
@@ -267,7 +275,8 @@ class SettingsScreen extends ConsumerWidget {
                               onPressed: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (_) => const AudioDebugTestScreen(),
+                                    builder: (_) =>
+                                        const AudioDebugTestScreen(),
                                   ),
                                 );
                               },
@@ -289,7 +298,8 @@ class SettingsScreen extends ConsumerWidget {
                               onPressed: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (_) => const TierLimitsTestScreen(),
+                                    builder: (_) =>
+                                        const TierLimitsTestScreen(),
                                   ),
                                 );
                               },
@@ -309,15 +319,26 @@ class SettingsScreen extends ConsumerWidget {
                             width: double.infinity,
                             child: OutlinedButton.icon(
                               onPressed: () async {
-                                final actions = ref.read(exerciseSyncActionsProvider);
-                                SnackBarService.showInfo(context, '🧪 Resetting exercise database...');
+                                final actions = ref.read(
+                                  exerciseSyncActionsProvider,
+                                );
+                                SnackBarService.showInfo(
+                                  context,
+                                  '🧪 Resetting exercise database...',
+                                );
                                 await actions.resetForTesting();
                                 if (context.mounted) {
-                                  SnackBarService.showInfo(context, '🧪 Forcing re-sync...');
+                                  SnackBarService.showInfo(
+                                    context,
+                                    '🧪 Forcing re-sync...',
+                                  );
                                 }
                                 await actions.forceSync();
                                 if (context.mounted) {
-                                  SnackBarService.showSuccess(context, '✅ Reset & sync complete!');
+                                  SnackBarService.showSuccess(
+                                    context,
+                                    '✅ Reset & sync complete!',
+                                  );
                                 }
                               },
                               icon: const SemanticIcon(
@@ -416,7 +437,11 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildAppearanceSection(BuildContext context, WidgetRef ref, AppConfig config) {
+  Widget _buildAppearanceSection(
+    BuildContext context,
+    WidgetRef ref,
+    AppConfig config,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -450,7 +475,10 @@ class SettingsScreen extends ConsumerWidget {
                 children: [
                   SemanticIcon(
                     icon: _getThemeModeIcon(config.themeMode),
-                    semanticLabel: _getThemeModeText(context.l10n, config.themeMode),
+                    semanticLabel: _getThemeModeText(
+                      context.l10n,
+                      config.themeMode,
+                    ),
                     size: AppIconSize.small,
                   ),
                   const SizedBox(width: 8),
@@ -459,13 +487,16 @@ class SettingsScreen extends ConsumerWidget {
               ),
               leading: SemanticIcon(
                 icon: _getThemeModeIcon(config.themeMode),
-                semanticLabel: _getThemeModeText(context.l10n, config.themeMode),
+                semanticLabel: _getThemeModeText(
+                  context.l10n,
+                  config.themeMode,
+                ),
                 size: AppIconSize.medium,
               ),
               trailing: const SemanticIcon(
-  icon: AppIcons.chevronRight,
-  semanticLabel: 'Chevron right',
-),
+                icon: AppIcons.chevronRight,
+                semanticLabel: 'Chevron right',
+              ),
               onTap: () => _showThemeDialog(context, ref, config.themeMode),
               contentPadding: EdgeInsets.zero,
             ),
@@ -479,9 +510,9 @@ class SettingsScreen extends ConsumerWidget {
                 Row(
                   children: [
                     const SemanticIcon(
-  icon: AppIcons.formatSize,
-  semanticLabel: 'Format size',
-),
+                      icon: AppIcons.formatSize,
+                      semanticLabel: 'Format size',
+                    ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
@@ -496,8 +527,13 @@ class SettingsScreen extends ConsumerWidget {
                               _getFontSizeText(context, config.fontSize),
                             ),
                             style: context.textTheme.bodyMedium?.copyWith(
-                              color: context.colors.onSurface.withValues(alpha: 0.6),
-                              fontSize: (context.textTheme.bodyMedium?.fontSize ?? 14) * config.fontSize,
+                              color: context.colors.onSurface.withValues(
+                                alpha: 0.6,
+                              ),
+                              fontSize:
+                                  (context.textTheme.bodyMedium?.fontSize ??
+                                      14) *
+                                  config.fontSize,
                             ),
                           ),
                         ],
@@ -590,7 +626,9 @@ class SettingsScreen extends ConsumerWidget {
                     title: Text(context.l10n.ghostModeHideXP),
                     value: config.hideXPProgress,
                     onChanged: (value) {
-                      ref.read(ghostModeProvider.notifier).updateConfigField(
+                      ref
+                          .read(ghostModeProvider.notifier)
+                          .updateConfigField(
                             'hideXPProgress',
                             value: value ?? true,
                           );
@@ -602,7 +640,9 @@ class SettingsScreen extends ConsumerWidget {
                     title: Text(context.l10n.ghostModeHideTier),
                     value: config.hideTierBadge,
                     onChanged: (value) {
-                      ref.read(ghostModeProvider.notifier).updateConfigField(
+                      ref
+                          .read(ghostModeProvider.notifier)
+                          .updateConfigField(
                             'hideTierBadge',
                             value: value ?? true,
                           );
@@ -614,7 +654,9 @@ class SettingsScreen extends ConsumerWidget {
                     title: Text(context.l10n.ghostModeHideStreak),
                     value: config.hideStreak,
                     onChanged: (value) {
-                      ref.read(ghostModeProvider.notifier).updateConfigField(
+                      ref
+                          .read(ghostModeProvider.notifier)
+                          .updateConfigField(
                             'hideStreak',
                             value: value ?? false,
                           );
@@ -626,7 +668,9 @@ class SettingsScreen extends ConsumerWidget {
                     title: Text(context.l10n.ghostModeHideCommunity),
                     value: config.hideCommunity,
                     onChanged: (value) {
-                      ref.read(ghostModeProvider.notifier).updateConfigField(
+                      ref
+                          .read(ghostModeProvider.notifier)
+                          .updateConfigField(
                             'hideCommunity',
                             value: value ?? true,
                           );
@@ -638,7 +682,9 @@ class SettingsScreen extends ConsumerWidget {
                     title: Text(context.l10n.ghostModeHideComparisons),
                     value: config.hideStrengthComparisons,
                     onChanged: (value) {
-                      ref.read(ghostModeProvider.notifier).updateConfigField(
+                      ref
+                          .read(ghostModeProvider.notifier)
+                          .updateConfigField(
                             'hideStrengthComparisons',
                             value: value ?? true,
                           );
@@ -650,7 +696,9 @@ class SettingsScreen extends ConsumerWidget {
                     title: Text(context.l10n.ghostModeHideAnimations),
                     value: config.hideXPAnimations,
                     onChanged: (value) {
-                      ref.read(ghostModeProvider.notifier).updateConfigField(
+                      ref
+                          .read(ghostModeProvider.notifier)
+                          .updateConfigField(
                             'hideXPAnimations',
                             value: value ?? true,
                           );
@@ -666,7 +714,11 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildWorkoutEssentialsSection(BuildContext context, WidgetRef ref, AppConfig config) {
+  Widget _buildWorkoutEssentialsSection(
+    BuildContext context,
+    WidgetRef ref,
+    AppConfig config,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -699,10 +751,11 @@ class SettingsScreen extends ConsumerWidget {
               title: context.l10n.settingsDefaultRestTime,
               subtitle: '${config.defaultRestTime}s',
               leading: const SemanticIcon(
-  icon: AppIcons.timer,
-  semanticLabel: 'Timer',
-),
-              onTap: () => _showRestTimeDialog(context, ref, config.defaultRestTime),
+                icon: AppIcons.timer,
+                semanticLabel: 'Timer',
+              ),
+              onTap: () =>
+                  _showRestTimeDialog(context, ref, config.defaultRestTime),
             ),
           ],
         ),
@@ -710,7 +763,11 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildFeedbackDisplaySection(BuildContext context, WidgetRef ref, AppConfig config) {
+  Widget _buildFeedbackDisplaySection(
+    BuildContext context,
+    WidgetRef ref,
+    AppConfig config,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -747,7 +804,9 @@ class SettingsScreen extends ConsumerWidget {
                 ref.read(appConfigProvider.notifier).setSoundEnabled(value);
               },
               leading: SemanticIcon(
-                icon: config.soundEnabled ? AppIcons.volumeUp : AppIcons.volumeOff,
+                icon: config.soundEnabled
+                    ? AppIcons.volumeUp
+                    : AppIcons.volumeOff,
                 semanticLabel: 'Sound',
                 size: AppIconSize.medium,
               ),
@@ -767,7 +826,9 @@ class SettingsScreen extends ConsumerWidget {
               subtitle: context.l10n.settingsVibrationsDesc,
               value: config.vibrationsEnabled,
               onChanged: (value) {
-                ref.read(appConfigProvider.notifier).setVibrationsEnabled(value);
+                ref
+                    .read(appConfigProvider.notifier)
+                    .setVibrationsEnabled(value);
               },
               leading: SemanticIcon(
                 icon: AppIcons.vibration,
@@ -785,7 +846,9 @@ class SettingsScreen extends ConsumerWidget {
               subtitle: context.l10n.settingsKeepScreenAwakeDesc,
               value: config.keepScreenAwakeDuringWorkout,
               onChanged: (value) {
-                ref.read(appConfigProvider.notifier).setKeepScreenAwakeDuringWorkout(value);
+                ref
+                    .read(appConfigProvider.notifier)
+                    .setKeepScreenAwakeDuringWorkout(value);
               },
               leading: const SemanticIcon(
                 icon: AppIcons.screenLockPortrait,
@@ -876,7 +939,9 @@ class SettingsScreen extends ConsumerWidget {
                       ? null
                       : () async {
                           // Step 1: Clear analytics cache (forces recalculation of all views)
-                          final cacheService = ref.read(analyticsCacheServiceProvider);
+                          final cacheService = ref.read(
+                            analyticsCacheServiceProvider,
+                          );
                           await cacheService.clear();
 
                           // Step 2: Recalculate stress index with new EMG ratios
@@ -888,7 +953,9 @@ class SettingsScreen extends ConsumerWidget {
                           if (context.mounted) {
                             SnackBarService.showSuccess(
                               context,
-                              context.l10n.stressIndexRecalculatedSuccess(result.$2),
+                              context.l10n.stressIndexRecalculatedSuccess(
+                                result.$2,
+                              ),
                             );
                           }
                         },
@@ -945,7 +1012,11 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildUnitsLanguageSection(BuildContext context, WidgetRef ref, AppConfig config) {
+  Widget _buildUnitsLanguageSection(
+    BuildContext context,
+    WidgetRef ref,
+    AppConfig config,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -977,10 +1048,11 @@ class SettingsScreen extends ConsumerWidget {
               title: context.l10n.settingsLanguage,
               subtitle: _getLanguageText(config.languageCode),
               leading: const SemanticIcon(
-  icon: AppIcons.translate,
-  semanticLabel: 'Translate',
-),
-              onTap: () => _showLanguageDialog(context, ref, config.languageCode),
+                icon: AppIcons.translate,
+                semanticLabel: 'Translate',
+              ),
+              onTap: () =>
+                  _showLanguageDialog(context, ref, config.languageCode),
             ),
 
             const Divider(),
@@ -991,17 +1063,17 @@ class SettingsScreen extends ConsumerWidget {
               title: context.l10n.weightUnits,
               subtitle: config.measurementUnit.toUpperCase(),
               leading: const SemanticIcon(
-  icon: AppIcons.weight,
-  semanticLabel: 'Weight',
-),
-              onTap: () => _showUnitsDialog(context, ref, config.measurementUnit),
+                icon: AppIcons.weight,
+                semanticLabel: 'Weight',
+              ),
+              onTap: () =>
+                  _showUnitsDialog(context, ref, config.measurementUnit),
             ),
           ],
         ),
       ),
     );
   }
-
 
   Widget _buildTutorialHelpSection(BuildContext context, WidgetRef ref) {
     final tutorialsEnabled = ref.watch(tutorialsEnabledProvider);
@@ -1039,7 +1111,9 @@ class SettingsScreen extends ConsumerWidget {
               subtitle: context.l10n.settingsContextualTutorialsDesc,
               value: tutorialsEnabled,
               onChanged: (value) {
-                ref.read(tutorialStateProvider.notifier).setTutorialsEnabled(value);
+                ref
+                    .read(tutorialStateProvider.notifier)
+                    .setTutorialsEnabled(value);
                 SnackBarService.showSuccess(
                   context,
                   value
@@ -1131,7 +1205,11 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildAdvancedSettingsSection(BuildContext context, WidgetRef ref, AppConfig config) {
+  Widget _buildAdvancedSettingsSection(
+    BuildContext context,
+    WidgetRef ref,
+    AppConfig config,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -1192,7 +1270,8 @@ class SettingsScreen extends ConsumerWidget {
                 icon: AppIcons.speed,
                 semanticLabel: 'Effort scale',
               ),
-              onTap: () => _showEffortScaleDialog(context, ref, config.effortScale),
+              onTap: () =>
+                  _showEffortScaleDialog(context, ref, config.effortScale),
             ),
 
             const Divider(),
@@ -1462,10 +1541,12 @@ class SettingsScreen extends ConsumerWidget {
       title: Text(title),
       subtitle: Text(subtitle),
       leading: leading,
-      trailing: trailing ?? const SemanticIcon(
-  icon: AppIcons.chevronRight,
-  semanticLabel: 'Chevron right',
-),
+      trailing:
+          trailing ??
+          const SemanticIcon(
+            icon: AppIcons.chevronRight,
+            semanticLabel: 'Chevron right',
+          ),
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
     );
@@ -1490,7 +1571,11 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   // Timer sound selector with preview
-  Widget _buildTimerSoundSelector(BuildContext context, WidgetRef ref, AppConfig config) {
+  Widget _buildTimerSoundSelector(
+    BuildContext context,
+    WidgetRef ref,
+    AppConfig config,
+  ) {
     // Map internal sound names to display names
     String getSoundDisplayName(String soundName) {
       switch (soundName) {
@@ -1541,12 +1626,25 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   // Show timer sound picker bottom sheet
-  void _showTimerSoundPicker(BuildContext context, WidgetRef ref, AppConfig config) {
+  void _showTimerSoundPicker(
+    BuildContext context,
+    WidgetRef ref,
+    AppConfig config,
+  ) {
     final availableSounds = [
       {'name': 'sound', 'displayName': context.l10n.settingsTimerSoundClassic},
-      {'name': 'timer_complete', 'displayName': context.l10n.settingsTimerSoundComplete},
-      {'name': 'LightWeight', 'displayName': context.l10n.settingsTimerSoundLightWeight},
-      {'name': 'YehBuddie', 'displayName': context.l10n.settingsTimerSoundYehBuddie},
+      {
+        'name': 'timer_complete',
+        'displayName': context.l10n.settingsTimerSoundComplete,
+      },
+      {
+        'name': 'LightWeight',
+        'displayName': context.l10n.settingsTimerSoundLightWeight,
+      },
+      {
+        'name': 'YehBuddie',
+        'displayName': context.l10n.settingsTimerSoundYehBuddie,
+      },
     ];
 
     showModalBottomSheet(
@@ -1559,7 +1657,10 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               // Header
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: Row(
                   children: [
                     const SemanticIcon(
@@ -1586,7 +1687,9 @@ class SettingsScreen extends ConsumerWidget {
 
                 return ListTile(
                   leading: SemanticIcon(
-                    icon: isSelected ? AppIcons.checkCircle : AppIcons.radioButtonUnchecked,
+                    icon: isSelected
+                        ? AppIcons.checkCircle
+                        : AppIcons.radioButtonUnchecked,
                     semanticLabel: isSelected ? 'Selected' : 'Not selected',
                     size: AppIconSize.medium,
                     color: isSelected ? context.colors.primary : null,
@@ -1594,7 +1697,9 @@ class SettingsScreen extends ConsumerWidget {
                   title: Text(
                     displayName,
                     style: context.textTheme.bodyLarge?.copyWith(
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                       color: isSelected ? context.colors.primary : null,
                     ),
                   ),
@@ -1607,7 +1712,9 @@ class SettingsScreen extends ConsumerWidget {
                     onPressed: () => _previewTimerSound(soundName),
                   ),
                   onTap: () {
-                    ref.read(appConfigProvider.notifier).setTimerSound(soundName);
+                    ref
+                        .read(appConfigProvider.notifier)
+                        .setTimerSound(soundName);
                     Navigator.of(bottomSheetContext).pop();
 
                     // Show feedback
@@ -1632,9 +1739,7 @@ class SettingsScreen extends ConsumerWidget {
 
     try {
       // Use TimerSoundFix channel to play the sound
-      platform.invokeMethod('playTimerSound', {
-        'soundName': soundName,
-      });
+      platform.invokeMethod('playTimerSound', {'soundName': soundName});
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Failed to preview timer sound: $e');
@@ -1643,7 +1748,10 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   // Stress Index Recalculation
-  Future<void> _recalculateStressIndex(BuildContext context, WidgetRef ref) async {
+  Future<void> _recalculateStressIndex(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     // Clear analytics cache (forces recalculation of all views)
     final cacheService = ref.read(analyticsCacheServiceProvider);
     await cacheService.clear();
@@ -1663,7 +1771,11 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   // Dialog Methods
-  void _showThemeDialog(BuildContext context, WidgetRef ref, ThemeMode currentMode) {
+  void _showThemeDialog(
+    BuildContext context,
+    WidgetRef ref,
+    ThemeMode currentMode,
+  ) {
     final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
@@ -1702,7 +1814,11 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showLanguageDialog(BuildContext context, WidgetRef ref, String currentLang) {
+  void _showLanguageDialog(
+    BuildContext context,
+    WidgetRef ref,
+    String currentLang,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -1711,7 +1827,9 @@ class SettingsScreen extends ConsumerWidget {
           groupValue: currentLang,
           onChanged: (value) {
             if (value != null) {
-              ref.read(appConfigProvider.notifier).setLanguage(value, value == 'en' ? 'US' : 'IT');
+              ref
+                  .read(appConfigProvider.notifier)
+                  .setLanguage(value, value == 'en' ? 'US' : 'IT');
               Navigator.pop(context);
             }
           },
@@ -1735,7 +1853,11 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showUnitsDialog(BuildContext context, WidgetRef ref, String currentUnit) {
+  void _showUnitsDialog(
+    BuildContext context,
+    WidgetRef ref,
+    String currentUnit,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -1768,7 +1890,11 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showEffortScaleDialog(BuildContext context, WidgetRef ref, String currentScale) {
+  void _showEffortScaleDialog(
+    BuildContext context,
+    WidgetRef ref,
+    String currentScale,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -1801,9 +1927,13 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showRestTimeDialog(BuildContext context, WidgetRef ref, int currentTime) {
+  void _showRestTimeDialog(
+    BuildContext context,
+    WidgetRef ref,
+    int currentTime,
+  ) {
     int selectedTime = currentTime;
-    
+
     showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
@@ -1833,7 +1963,9 @@ class SettingsScreen extends ConsumerWidget {
             ),
             FilledButton(
               onPressed: () {
-                ref.read(appConfigProvider.notifier).setDefaultRestTime(selectedTime);
+                ref
+                    .read(appConfigProvider.notifier)
+                    .setDefaultRestTime(selectedTime);
                 Navigator.pop(context);
               },
               child: Text(context.l10n.save),
@@ -1892,13 +2024,15 @@ class SettingsScreen extends ConsumerWidget {
               onPressed: () async {
                 if (currentProfile != null) {
                   // Update preferences map with new cutoff hour
-                  final updatedPreferences = Map<String, dynamic>.from(currentProfile.preferences);
+                  final updatedPreferences = Map<String, dynamic>.from(
+                    currentProfile.preferences,
+                  );
                   updatedPreferences['dayCutoffHour'] = selectedHour;
 
                   // Update profile in Firestore
-                  await ref.read(userProfileNotifierProvider.notifier).updateProfile({
-                    'preferences': updatedPreferences,
-                  });
+                  await ref
+                      .read(userProfileNotifierProvider.notifier)
+                      .updateProfile({'preferences': updatedPreferences});
 
                   if (context.mounted) {
                     Navigator.pop(context);
@@ -1936,7 +2070,9 @@ class SettingsScreen extends ConsumerWidget {
                 context.go('/login');
               }
             },
-            style: FilledButton.styleFrom(backgroundColor: context.colors.error),
+            style: FilledButton.styleFrom(
+              backgroundColor: context.colors.error,
+            ),
             child: Text(context.l10n.signOutButton),
           ),
         ],
@@ -2031,34 +2167,38 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   /// Perform the actual account deletion
-  Future<void> _performAccountDeletion(BuildContext context, WidgetRef ref) async {
+  Future<void> _performAccountDeletion(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     // Show loading dialog (intentionally not awaited - we dismiss it later)
-    unawaited(showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        content: Row(
-          children: [
-            const LoadingIndicator(size: 24),
-            const SizedBox(width: 16),
-            Expanded(child: Text(context.l10n.deleteAccountProgress)),
-          ],
+    unawaited(
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          content: Row(
+            children: [
+              const LoadingIndicator(size: 24),
+              const SizedBox(width: 16),
+              Expanded(child: Text(context.l10n.deleteAccountProgress)),
+            ],
+          ),
         ),
       ),
-    ));
+    );
 
     try {
-      final success = await ref.read(authControllerProvider.notifier).deleteAccount();
+      final success = await ref
+          .read(authControllerProvider.notifier)
+          .deleteAccount();
 
       if (!context.mounted) return;
       Navigator.pop(context); // Close loading dialog
 
       if (success) {
         // Account deleted successfully
-        SnackBarService.showSuccess(
-          context,
-          context.l10n.deleteAccountSuccess,
-        );
+        SnackBarService.showSuccess(context, context.l10n.deleteAccountSuccess);
         context.go('/login');
       } else {
         // Re-authentication required
@@ -2068,10 +2208,7 @@ class SettingsScreen extends ConsumerWidget {
       if (!context.mounted) return;
       Navigator.pop(context); // Close loading dialog
 
-      SnackBarService.showError(
-        context,
-        context.l10n.deleteAccountError,
-      );
+      SnackBarService.showError(context, context.l10n.deleteAccountError);
     }
   }
 
@@ -2121,7 +2258,9 @@ class SettingsScreen extends ConsumerWidget {
           FilledButton(
             onPressed: () async {
               Navigator.pop(context);
-              await ref.read(tutorialStateProvider.notifier).resetAllTutorials();
+              await ref
+                  .read(tutorialStateProvider.notifier)
+                  .resetAllTutorials();
               if (context.mounted) {
                 SnackBarService.showSuccess(
                   context,

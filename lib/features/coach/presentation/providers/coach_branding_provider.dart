@@ -14,8 +14,8 @@ import 'package:gymbro_flutter_new/features/coach/domain/entities/coach_branding
 /// Provider for coach branding data
 final coachBrandingProvider =
     AsyncNotifierProvider<CoachBrandingNotifier, CoachBranding?>(
-  CoachBrandingNotifier.new,
-);
+      CoachBrandingNotifier.new,
+    );
 
 /// Notifier for managing coach branding state
 class CoachBrandingNotifier extends AsyncNotifier<CoachBranding?> {
@@ -50,10 +50,7 @@ class CoachBrandingNotifier extends AsyncNotifier<CoachBranding?> {
         );
       }
 
-      return CoachBranding.fromJson({
-        'id': doc.id,
-        ...doc.data()!,
-      });
+      return CoachBranding.fromJson({'id': doc.id, ...doc.data()!});
     } catch (e) {
       // Return default on error
       return CoachBranding(
@@ -84,9 +81,7 @@ class CoachBrandingNotifier extends AsyncNotifier<CoachBranding?> {
           .doc('branding')
           .set(data, SetOptions(merge: true));
 
-      state = AsyncValue.data(branding.copyWith(
-        updatedAt: DateTime.now(),
-      ));
+      state = AsyncValue.data(branding.copyWith(updatedAt: DateTime.now()));
     } catch (e, stack) {
       state = AsyncValue.error(e, stack);
     }

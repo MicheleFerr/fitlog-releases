@@ -12,12 +12,16 @@ import 'package:gymbro_flutter_new/features/progress_photos/domain/repositories/
 import 'package:gymbro_flutter_new/features/progress_photos/domain/services/photo_compression_service.dart';
 
 /// Provider for PhotoCompressionService
-final photoCompressionServiceProvider = Provider<PhotoCompressionService>((ref) {
+final photoCompressionServiceProvider = Provider<PhotoCompressionService>((
+  ref,
+) {
   return PhotoCompressionService();
 });
 
 /// Provider for ProgressPhotoRepository
-final progressPhotoRepositoryProvider = Provider<ProgressPhotoRepository>((ref) {
+final progressPhotoRepositoryProvider = Provider<ProgressPhotoRepository>((
+  ref,
+) {
   final compressionService = ref.watch(photoCompressionServiceProvider);
   return FirebasePhotoRepository(compressionService: compressionService);
 });
@@ -27,34 +31,37 @@ final progressPhotoRepositoryProvider = Provider<ProgressPhotoRepository>((ref) 
 /// Watches real-time updates to user's progress photos
 final userPhotosStreamProvider =
     StreamProvider.family<List<ProgressPhoto>, String>((ref, userId) {
-  final repository = ref.watch(progressPhotoRepositoryProvider);
-  return repository.watchPhotos(userId: userId);
-});
+      final repository = ref.watch(progressPhotoRepositoryProvider);
+      return repository.watchPhotos(userId: userId);
+    });
 
 /// Provider for photos filtered by pose
-final photosByPoseProvider = FutureProvider.family<List<ProgressPhoto>,
-    ({String userId, PhotoPose pose})>((ref, params) async {
-  final repository = ref.watch(progressPhotoRepositoryProvider);
-  final result = await repository.getPhotosByPose(
-    userId: params.userId,
-    pose: params.pose,
-  );
-  return result.fold(
-    (failure) => throw Exception('Failed to load photos: $failure'),
-    (photos) => photos,
-  );
-});
+final photosByPoseProvider =
+    FutureProvider.family<
+      List<ProgressPhoto>,
+      ({String userId, PhotoPose pose})
+    >((ref, params) async {
+      final repository = ref.watch(progressPhotoRepositoryProvider);
+      final result = await repository.getPhotosByPose(
+        userId: params.userId,
+        pose: params.pose,
+      );
+      return result.fold(
+        (failure) => throw Exception('Failed to load photos: $failure'),
+        (photos) => photos,
+      );
+    });
 
 /// Provider for storage stats
 final photoStorageStatsProvider =
     FutureProvider.family<PhotoStorageStats, String>((ref, userId) async {
-  final repository = ref.watch(progressPhotoRepositoryProvider);
-  final result = await repository.getStorageStats(userId: userId);
-  return result.fold(
-    (failure) => throw Exception('Failed to get storage stats'),
-    (stats) => stats,
-  );
-});
+      final repository = ref.watch(progressPhotoRepositoryProvider);
+      final result = await repository.getStorageStats(userId: userId);
+      return result.fold(
+        (failure) => throw Exception('Failed to get storage stats'),
+        (stats) => stats,
+      );
+    });
 
 /// State for photo upload
 class PhotoUploadState {
@@ -100,7 +107,11 @@ class PhotoUploadNotifier extends StateNotifier<PhotoUploadState> {
     String? notes,
     double? weightKg,
   }) async {
-    state = state.copyWith(isUploading: true, progress: 0.0, errorMessage: null);
+    state = state.copyWith(
+      isUploading: true,
+      progress: 0.0,
+      errorMessage: null,
+    );
 
     final result = await _repository.uploadPhoto(
       userId: userId,
@@ -142,13 +153,10 @@ class PhotoUploadNotifier extends StateNotifier<PhotoUploadState> {
       photoId: photoId,
     );
 
-    return result.fold(
-      (failure) {
-        state = state.copyWith(errorMessage: _getErrorMessage(failure));
-        return false;
-      },
-      (_) => true,
-    );
+    return result.fold((failure) {
+      state = state.copyWith(errorMessage: _getErrorMessage(failure));
+      return false;
+    }, (_) => true);
   }
 
   /// Permanently delete a photo
@@ -161,13 +169,10 @@ class PhotoUploadNotifier extends StateNotifier<PhotoUploadState> {
       photoId: photoId,
     );
 
-    return result.fold(
-      (failure) {
-        state = state.copyWith(errorMessage: _getErrorMessage(failure));
-        return false;
-      },
-      (_) => true,
-    );
+    return result.fold((failure) {
+      state = state.copyWith(errorMessage: _getErrorMessage(failure));
+      return false;
+    }, (_) => true);
   }
 
   /// Clear error message
@@ -197,9 +202,9 @@ class PhotoUploadNotifier extends StateNotifier<PhotoUploadState> {
 /// Provider for photo upload notifier
 final photoUploadProvider =
     StateNotifierProvider<PhotoUploadNotifier, PhotoUploadState>((ref) {
-  final repository = ref.watch(progressPhotoRepositoryProvider);
-  return PhotoUploadNotifier(repository);
-});
+      final repository = ref.watch(progressPhotoRepositoryProvider);
+      return PhotoUploadNotifier(repository);
+    });
 
 /// Provider for selected photo (for detail view)
 final selectedPhotoProvider = StateProvider<ProgressPhoto?>((ref) => null);
@@ -208,82 +213,91 @@ final selectedPhotoProvider = StateProvider<ProgressPhoto?>((ref) => null);
 final comparisonModeProvider = StateProvider<bool>((ref) => false);
 
 /// Provider for selected photos in comparison mode
-final comparisonPhotosProvider =
-    StateProvider<List<ProgressPhoto>>((ref) => []);
+final comparisonPhotosProvider = StateProvider<List<ProgressPhoto>>(
+  (ref) => [],
+);
 
 /// Provider for photo filter (by pose)
 final photoFilterPoseProvider = StateProvider<PhotoPose?>((ref) => null);
 
 /// Filtered photos based on selected pose filter
-final filteredPhotosProvider = Provider.family<AsyncValue<List<ProgressPhoto>>,
-    String>((ref, userId) {
-  final photosAsync = ref.watch(userPhotosStreamProvider(userId));
-  final filterPose = ref.watch(photoFilterPoseProvider);
+final filteredPhotosProvider =
+    Provider.family<AsyncValue<List<ProgressPhoto>>, String>((ref, userId) {
+      final photosAsync = ref.watch(userPhotosStreamProvider(userId));
+      final filterPose = ref.watch(photoFilterPoseProvider);
 
-  return photosAsync.whenData((photos) {
-    if (filterPose == null) return photos;
-    return photos.where((p) => p.pose == filterPose).toList();
-  });
-});
+      return photosAsync.whenData((photos) {
+        if (filterPose == null) return photos;
+        return photos.where((p) => p.pose == filterPose).toList();
+      });
+    });
 
 /// Provider for photo groups by date
-final photosByDateProvider = Provider.family<
-    AsyncValue<Map<DateTime, List<ProgressPhoto>>>, String>((ref, userId) {
-  final photosAsync = ref.watch(userPhotosStreamProvider(userId));
+final photosByDateProvider =
+    Provider.family<AsyncValue<Map<DateTime, List<ProgressPhoto>>>, String>((
+      ref,
+      userId,
+    ) {
+      final photosAsync = ref.watch(userPhotosStreamProvider(userId));
 
-  return photosAsync.whenData((photos) {
-    final grouped = <DateTime, List<ProgressPhoto>>{};
+      return photosAsync.whenData((photos) {
+        final grouped = <DateTime, List<ProgressPhoto>>{};
 
-    for (final photo in photos) {
-      // Group by date only (ignore time)
-      final dateKey = DateTime(
-        photo.takenAt.year,
-        photo.takenAt.month,
-        photo.takenAt.day,
-      );
+        for (final photo in photos) {
+          // Group by date only (ignore time)
+          final dateKey = DateTime(
+            photo.takenAt.year,
+            photo.takenAt.month,
+            photo.takenAt.day,
+          );
 
-      grouped.putIfAbsent(dateKey, () => []).add(photo);
-    }
+          grouped.putIfAbsent(dateKey, () => []).add(photo);
+        }
 
-    return grouped;
-  });
-});
+        return grouped;
+      });
+    });
 
 /// Provider for comparison pairs (before/after)
-final comparisonPairsProvider = Provider.family<
-    AsyncValue<List<PhotoComparisonPair>>,
-    ({String userId, PhotoPose pose})>((ref, params) {
-  final photosAsync = ref.watch(photosByPoseProvider(params));
+final comparisonPairsProvider =
+    Provider.family<
+      AsyncValue<List<PhotoComparisonPair>>,
+      ({String userId, PhotoPose pose})
+    >((ref, params) {
+      final photosAsync = ref.watch(photosByPoseProvider(params));
 
-  return photosAsync.whenData((photos) {
-    if (photos.length < 2) return [];
+      return photosAsync.whenData((photos) {
+        if (photos.length < 2) return [];
 
-    // Sort by date ascending
-    final sorted = [...photos]..sort((a, b) => a.takenAt.compareTo(b.takenAt));
+        // Sort by date ascending
+        final sorted = [...photos]
+          ..sort((a, b) => a.takenAt.compareTo(b.takenAt));
 
-    final pairs = <PhotoComparisonPair>[];
-    for (var i = 0; i < sorted.length - 1; i++) {
-      final before = sorted[i];
-      final after = sorted[i + 1];
+        final pairs = <PhotoComparisonPair>[];
+        for (var i = 0; i < sorted.length - 1; i++) {
+          final before = sorted[i];
+          final after = sorted[i + 1];
 
-      final daysBetween = after.takenAt.difference(before.takenAt).inDays;
+          final daysBetween = after.takenAt.difference(before.takenAt).inDays;
 
-      double? weightChange;
-      if (before.weightKg != null && after.weightKg != null) {
-        weightChange = after.weightKg! - before.weightKg!;
-      }
+          double? weightChange;
+          if (before.weightKg != null && after.weightKg != null) {
+            weightChange = after.weightKg! - before.weightKg!;
+          }
 
-      pairs.add(PhotoComparisonPair(
-        before: before,
-        after: after,
-        daysBetween: daysBetween,
-        weightChangeKg: weightChange,
-      ));
-    }
+          pairs.add(
+            PhotoComparisonPair(
+              before: before,
+              after: after,
+              daysBetween: daysBetween,
+              weightChangeKg: weightChange,
+            ),
+          );
+        }
 
-    return pairs;
-  });
-});
+        return pairs;
+      });
+    });
 
 // ============================================================================
 // Photo Reminder Providers
@@ -292,19 +306,21 @@ final comparisonPairsProvider = Provider.family<
 /// Provider for PhotoReminderNotificationService
 final photoReminderNotificationServiceProvider =
     Provider<PhotoReminderNotificationService>((ref) {
-  return PhotoReminderNotificationService();
-});
+      return PhotoReminderNotificationService();
+    });
 
 /// Provider for PhotoReminderRepository (requires async initialization)
-final photoReminderRepositoryProvider =
-    FutureProvider<PhotoReminderRepository>((ref) async {
-  final prefs = await SharedPreferences.getInstance();
-  return PhotoReminderRepository(prefs: prefs);
-});
+final photoReminderRepositoryProvider = FutureProvider<PhotoReminderRepository>(
+  (ref) async {
+    final prefs = await SharedPreferences.getInstance();
+    return PhotoReminderRepository(prefs: prefs);
+  },
+);
 
 /// Provider for current reminder settings
-final photoReminderSettingsProvider =
-    FutureProvider<PhotoReminderSettings>((ref) async {
+final photoReminderSettingsProvider = FutureProvider<PhotoReminderSettings>((
+  ref,
+) async {
   final repo = await ref.watch(photoReminderRepositoryProvider.future);
   return repo.getSettings();
 });
@@ -347,9 +363,9 @@ class PhotoReminderNotifier extends StateNotifier<PhotoReminderState> {
     required PhotoReminderRepository repository,
     required PhotoReminderNotificationService notificationService,
     required PhotoReminderSettings initialSettings,
-  })  : _repository = repository,
-        _notificationService = notificationService,
-        super(PhotoReminderState(settings: initialSettings));
+  }) : _repository = repository,
+       _notificationService = notificationService,
+       super(PhotoReminderState(settings: initialSettings));
 
   /// Enable reminders
   Future<void> enableReminders({
@@ -403,10 +419,7 @@ class PhotoReminderNotifier extends StateNotifier<PhotoReminderState> {
 
       final updated = await _repository.disableReminders();
 
-      state = state.copyWith(
-        settings: updated,
-        isLoading: false,
-      );
+      state = state.copyWith(settings: updated, isLoading: false);
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -446,10 +459,7 @@ class PhotoReminderNotifier extends StateNotifier<PhotoReminderState> {
         ),
       );
 
-      state = state.copyWith(
-        settings: updated,
-        isLoading: false,
-      );
+      state = state.copyWith(settings: updated, isLoading: false);
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -470,10 +480,8 @@ class PhotoReminderNotifier extends StateNotifier<PhotoReminderState> {
 
       // Update settings
       var updated = await _repository.updateSettings(
-        (current) => current.copyWith(
-          reminderHour: hour,
-          reminderMinute: minute,
-        ),
+        (current) =>
+            current.copyWith(reminderHour: hour, reminderMinute: minute),
       );
 
       // Reschedule if enabled
@@ -493,10 +501,7 @@ class PhotoReminderNotifier extends StateNotifier<PhotoReminderState> {
         );
       }
 
-      state = state.copyWith(
-        settings: updated,
-        isLoading: false,
-      );
+      state = state.copyWith(settings: updated, isLoading: false);
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -522,19 +527,21 @@ class PhotoReminderNotifier extends StateNotifier<PhotoReminderState> {
 /// Provider for photo reminder notifier
 final photoReminderProvider =
     StateNotifierProvider<PhotoReminderNotifier, PhotoReminderState>((ref) {
-  // This will throw if accessed before async initialization
-  // Use photoReminderProviderAsync instead for initial setup
-  throw UnimplementedError(
-    'Use photoReminderProviderAsync for initial setup',
-  );
-});
+      // This will throw if accessed before async initialization
+      // Use photoReminderProviderAsync instead for initial setup
+      throw UnimplementedError(
+        'Use photoReminderProviderAsync for initial setup',
+      );
+    });
 
 /// Async provider for photo reminder notifier (handles initialization)
-final photoReminderProviderAsync =
-    FutureProvider<PhotoReminderNotifier>((ref) async {
+final photoReminderProviderAsync = FutureProvider<PhotoReminderNotifier>((
+  ref,
+) async {
   final repository = await ref.watch(photoReminderRepositoryProvider.future);
-  final notificationService =
-      ref.watch(photoReminderNotificationServiceProvider);
+  final notificationService = ref.watch(
+    photoReminderNotificationServiceProvider,
+  );
   final settings = repository.getSettings();
 
   return PhotoReminderNotifier(

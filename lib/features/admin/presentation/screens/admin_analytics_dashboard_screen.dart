@@ -47,39 +47,27 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
         }
         return _buildDashboard(context, ref);
       },
-      loading: () => const Scaffold(
-        body: Center(
-          child: LoadingIndicator(),
-        ),
-      ),
-      error: (error, stack) => Scaffold(
-        body: Center(
-          child: Text(context.l10n.error),
-        ),
-      ),
+      loading: () => const Scaffold(body: Center(child: LoadingIndicator())),
+      error: (error, stack) =>
+          Scaffold(body: Center(child: Text(context.l10n.error))),
     );
   }
 
   Widget _buildAccessDenied(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.accessDenied),
-      ),
+      appBar: AppBar(title: Text(context.l10n.accessDenied)),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SemanticIcon(
-  icon: AppIcons.lock,
-  semanticLabel: 'Lock',
-  size: AppIconSize.medium,
-  color: context.colors.error,
-),
-            const SizedBox(height: 16),
-            Text(
-              'Admin access required',
-              style: context.textTheme.titleLarge,
+              icon: AppIcons.lock,
+              semanticLabel: 'Lock',
+              size: AppIconSize.medium,
+              color: context.colors.error,
             ),
+            const SizedBox(height: 16),
+            Text('Admin access required', style: context.textTheme.titleLarge),
             const SizedBox(height: 8),
             Text(
               'You do not have permission to view this page',
@@ -91,9 +79,9 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             ElevatedButton.icon(
               onPressed: () => Navigator.of(context).pop(),
               icon: const SemanticIcon(
-  icon: AppIcons.back,
-  semanticLabel: 'Back',
-),
+                icon: AppIcons.back,
+                semanticLabel: 'Back',
+              ),
               label: Text(context.l10n.goBack),
             ),
           ],
@@ -112,18 +100,12 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: const SemanticIcon(
-  icon: AppIcons.back,
-  semanticLabel: 'Back',
-),
+          icon: const SemanticIcon(icon: AppIcons.back, semanticLabel: 'Back'),
           tooltip: MaterialLocalizations.of(context).backButtonTooltip,
         ),
         title: Row(
           children: [
-            Icon(
-              AppIcons.admin,
-              color: context.colors.primary,
-            ),
+            Icon(AppIcons.admin, color: context.colors.primary),
             const SizedBox(width: 8),
             Text(context.l10n.analyticsAdmin),
           ],
@@ -132,9 +114,9 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
           IconButton(
             onPressed: () => _showRefreshInfo(context, hybridService),
             icon: const SemanticIcon(
-  icon: AppIcons.info,
-  semanticLabel: 'Information',
-),
+              icon: AppIcons.info,
+              semanticLabel: 'Information',
+            ),
             tooltip: 'Analytics Info',
           ),
         ],
@@ -215,11 +197,11 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             Row(
               children: [
                 SemanticIcon(
-  icon: AppIcons.admin,
-  semanticLabel: 'Admin',
-  size: AppIconSize.large,
-  color: context.colors.primary,
-),
+                  icon: AppIcons.admin,
+                  semanticLabel: 'Admin',
+                  size: AppIconSize.large,
+                  color: context.colors.primary,
+                ),
                 const SizedBox(width: 12),
                 Text(
                   'Analytics Dashboard',
@@ -241,11 +223,11 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             Row(
               children: [
                 SemanticIcon(
-  icon: AppIcons.security,
-  semanticLabel: 'Security',
-  size: AppIconSize.tiny,
-  color: context.colors.primary,
-),
+                  icon: AppIcons.security,
+                  semanticLabel: 'Security',
+                  size: AppIconSize.tiny,
+                  color: context.colors.primary,
+                ),
                 const SizedBox(width: 4),
                 Text(
                   kDebugMode ? 'Debug Mode' : 'Production Mode',
@@ -367,20 +349,48 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
   ) {
     // Get counts for all major event types
     final eventCounts = <String, int>{
-      AnalyticsEvents.workoutStarted: hybridService.getEventCount(AnalyticsEvents.workoutStarted),
-      AnalyticsEvents.workoutCompleted: hybridService.getEventCount(AnalyticsEvents.workoutCompleted),
-      AnalyticsEvents.workoutPaused: hybridService.getEventCount(AnalyticsEvents.workoutPaused),
-      AnalyticsEvents.workoutResumed: hybridService.getEventCount(AnalyticsEvents.workoutResumed),
-      AnalyticsEvents.workoutCancelled: hybridService.getEventCount(AnalyticsEvents.workoutCancelled),
-      AnalyticsEvents.exerciseAdded: hybridService.getEventCount(AnalyticsEvents.exerciseAdded),
-      AnalyticsEvents.exerciseRemoved: hybridService.getEventCount(AnalyticsEvents.exerciseRemoved),
-      AnalyticsEvents.exerciseCustomized: hybridService.getEventCount(AnalyticsEvents.exerciseCustomized),
-      AnalyticsEvents.setCompleted: hybridService.getEventCount(AnalyticsEvents.setCompleted),
-      AnalyticsEvents.repPresetSelected: hybridService.getEventCount(AnalyticsEvents.repPresetSelected),
-      AnalyticsEvents.setCountPresetSelected: hybridService.getEventCount(AnalyticsEvents.setCountPresetSelected),
-      AnalyticsEvents.restTimePresetSelected: hybridService.getEventCount(AnalyticsEvents.restTimePresetSelected),
-      AnalyticsEvents.customTimerSet: hybridService.getEventCount(AnalyticsEvents.customTimerSet),
-      AnalyticsEvents.appOpen: hybridService.getEventCount(AnalyticsEvents.appOpen),
+      AnalyticsEvents.workoutStarted: hybridService.getEventCount(
+        AnalyticsEvents.workoutStarted,
+      ),
+      AnalyticsEvents.workoutCompleted: hybridService.getEventCount(
+        AnalyticsEvents.workoutCompleted,
+      ),
+      AnalyticsEvents.workoutPaused: hybridService.getEventCount(
+        AnalyticsEvents.workoutPaused,
+      ),
+      AnalyticsEvents.workoutResumed: hybridService.getEventCount(
+        AnalyticsEvents.workoutResumed,
+      ),
+      AnalyticsEvents.workoutCancelled: hybridService.getEventCount(
+        AnalyticsEvents.workoutCancelled,
+      ),
+      AnalyticsEvents.exerciseAdded: hybridService.getEventCount(
+        AnalyticsEvents.exerciseAdded,
+      ),
+      AnalyticsEvents.exerciseRemoved: hybridService.getEventCount(
+        AnalyticsEvents.exerciseRemoved,
+      ),
+      AnalyticsEvents.exerciseCustomized: hybridService.getEventCount(
+        AnalyticsEvents.exerciseCustomized,
+      ),
+      AnalyticsEvents.setCompleted: hybridService.getEventCount(
+        AnalyticsEvents.setCompleted,
+      ),
+      AnalyticsEvents.repPresetSelected: hybridService.getEventCount(
+        AnalyticsEvents.repPresetSelected,
+      ),
+      AnalyticsEvents.setCountPresetSelected: hybridService.getEventCount(
+        AnalyticsEvents.setCountPresetSelected,
+      ),
+      AnalyticsEvents.restTimePresetSelected: hybridService.getEventCount(
+        AnalyticsEvents.restTimePresetSelected,
+      ),
+      AnalyticsEvents.customTimerSet: hybridService.getEventCount(
+        AnalyticsEvents.customTimerSet,
+      ),
+      AnalyticsEvents.appOpen: hybridService.getEventCount(
+        AnalyticsEvents.appOpen,
+      ),
     };
 
     // Sort by count descending
@@ -392,10 +402,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Icon(
-              AppIcons.barChart,
-              color: context.colors.primary,
-            ),
+            Icon(AppIcons.barChart, color: context.colors.primary),
             const SizedBox(width: 8),
             Text(
               'Event Counters',
@@ -466,16 +473,24 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
     BuildContext context,
     HybridAnalyticsService hybridService,
   ) {
-    final workoutsStarted = hybridService.getEventCount(AnalyticsEvents.workoutStarted);
-    final workoutsCompleted = hybridService.getEventCount(AnalyticsEvents.workoutCompleted);
-    final workoutsCancelled = hybridService.getEventCount(AnalyticsEvents.workoutCancelled);
+    final workoutsStarted = hybridService.getEventCount(
+      AnalyticsEvents.workoutStarted,
+    );
+    final workoutsCompleted = hybridService.getEventCount(
+      AnalyticsEvents.workoutCompleted,
+    );
+    final workoutsCancelled = hybridService.getEventCount(
+      AnalyticsEvents.workoutCancelled,
+    );
 
     final completionRate = workoutsStarted > 0
         ? (workoutsCompleted / workoutsStarted * 100).toStringAsFixed(1)
         : '0.0';
 
     // Calculate average duration from completed workouts
-    final completedWorkouts = hybridService.getEvents(AnalyticsEvents.workoutCompleted);
+    final completedWorkouts = hybridService.getEvents(
+      AnalyticsEvents.workoutCompleted,
+    );
     int totalDurationSeconds = 0;
     int totalVolume = 0;
 
@@ -496,10 +511,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Icon(
-              AppIcons.workout,
-              color: context.colors.primary,
-            ),
+            Icon(AppIcons.workout, color: context.colors.primary),
             const SizedBox(width: 8),
             Text(
               'Workout Metrics',
@@ -614,10 +626,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Icon(
-              AppIcons.person,
-              color: context.colors.primary,
-            ),
+            Icon(AppIcons.person, color: context.colors.primary),
             const SizedBox(width: 8),
             Text(
               'User Properties',
@@ -673,10 +682,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Icon(
-              AppIcons.history,
-              color: context.colors.primary,
-            ),
+            Icon(AppIcons.history, color: context.colors.primary),
             const SizedBox(width: 8),
             Text(
               'Recent Events',
@@ -723,10 +729,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ExpansionTile(
-        leading: Icon(
-          _getEventIcon(name),
-          color: context.colors.primary,
-        ),
+        leading: Icon(_getEventIcon(name), color: context.colors.primary),
         title: Text(
           _formatEventName(name),
           style: context.textTheme.bodyMedium?.copyWith(
@@ -796,16 +799,16 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
     );
   }
 
-  void _showRefreshInfo(BuildContext context, HybridAnalyticsService hybridService) {
+  void _showRefreshInfo(
+    BuildContext context,
+    HybridAnalyticsService hybridService,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Row(
           children: [
-            Icon(
-              AppIcons.info,
-              color: context.colors.primary,
-            ),
+            Icon(AppIcons.info, color: context.colors.primary),
             const SizedBox(width: 8),
             Text(context.l10n.analyticsInfo),
           ],
@@ -848,11 +851,11 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
               child: Row(
                 children: [
                   SemanticIcon(
-  icon: AppIcons.cloudDone,
-  semanticLabel: 'Cloud done',
-  size: AppIconSize.tiny,
-  color: context.colors.primary,
-),
+                    icon: AppIcons.cloudDone,
+                    semanticLabel: 'Cloud done',
+                    size: AppIconSize.tiny,
+                    color: context.colors.primary,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -933,10 +936,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({
-    required this.label,
-    required this.value,
-  });
+  const _InfoRow({required this.label, required this.value});
 
   final String label;
   final String value;

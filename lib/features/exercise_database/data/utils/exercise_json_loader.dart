@@ -19,7 +19,9 @@ class ExerciseJsonLoader {
   ];
 
   /// Carica tutti gli esercizi dalla struttura a cartelle
-  static Future<List<Map<String, dynamic>>> loadExercises(String languageCode) async {
+  static Future<List<Map<String, dynamic>>> loadExercises(
+    String languageCode,
+  ) async {
     final baseFolder = languageCode == 'it'
         ? 'assets/data/exercises'
         : 'assets/data/exercises_en';

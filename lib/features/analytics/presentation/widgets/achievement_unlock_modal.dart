@@ -26,10 +26,7 @@ void showAchievementUnlockModal(
 }
 
 class AchievementUnlockModal extends StatefulWidget {
-  const AchievementUnlockModal({
-    required this.achievements,
-    super.key,
-  });
+  const AchievementUnlockModal({required this.achievements, super.key});
 
   final List<Achievement> achievements;
 
@@ -78,16 +75,18 @@ class _AchievementUnlockModalState extends State<AchievementUnlockModal>
   void _generateConfetti() {
     final random = math.Random();
     for (int i = 0; i < 50; i++) {
-      _particles.add(_ConfettiParticle(
-        x: random.nextDouble() * 400,
-        y: -20 - random.nextDouble() * 100,
-        vx: (random.nextDouble() - 0.5) * 200,
-        vy: random.nextDouble() * 300 + 200,
-        rotation: random.nextDouble() * math.pi * 2,
-        rotationSpeed: (random.nextDouble() - 0.5) * 4,
-        size: random.nextDouble() * 8 + 4,
-        colorIndex: random.nextInt(5),
-      ));
+      _particles.add(
+        _ConfettiParticle(
+          x: random.nextDouble() * 400,
+          y: -20 - random.nextDouble() * 100,
+          vx: (random.nextDouble() - 0.5) * 200,
+          vy: random.nextDouble() * 300 + 200,
+          rotation: random.nextDouble() * math.pi * 2,
+          rotationSpeed: (random.nextDouble() - 0.5) * 4,
+          size: random.nextDouble() * 8 + 4,
+          colorIndex: random.nextInt(5),
+        ),
+      );
     }
   }
 
@@ -239,7 +238,10 @@ class _BadgeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final badgeName = _getBadgeName(context, achievement.badgeType);
-    final badgeDescription = _getBadgeDescription(context, achievement.badgeType);
+    final badgeDescription = _getBadgeDescription(
+      context,
+      achievement.badgeType,
+    );
     final badgeIcon = _getBadgeIcon(achievement.badgeType);
     final badgeColor = _getBadgeColor(achievement.badgeType, context);
 
@@ -248,19 +250,12 @@ class _BadgeCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: badgeColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: badgeColor.withValues(alpha: 0.3),
-          width: 2,
-        ),
+        border: Border.all(color: badgeColor.withValues(alpha: 0.3), width: 2),
       ),
       child: Column(
         children: [
           // Badge icon
-          Icon(
-            badgeIcon,
-            size: 64,
-            color: badgeColor,
-          ),
+          Icon(badgeIcon, size: 64, color: badgeColor),
           const SizedBox(height: 16),
 
           // Badge name
@@ -440,7 +435,8 @@ class _ConfettiPainter extends CustomPainter {
       // Update position based on progress
       final currentX = particle.x + (particle.vx * progress);
       final currentY = particle.y + (particle.vy * progress);
-      final currentRotation = particle.rotation + (particle.rotationSpeed * progress);
+      final currentRotation =
+          particle.rotation + (particle.rotationSpeed * progress);
 
       // Only draw if within bounds
       if (currentY < size.height && currentY > -100) {

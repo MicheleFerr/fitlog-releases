@@ -47,7 +47,9 @@ class NotificationStorageDatasource {
     final recordJson = box.get(recordId);
     if (recordJson == null) return;
 
-    final record = NotificationRecord.fromJson(Map<String, dynamic>.from(recordJson));
+    final record = NotificationRecord.fromJson(
+      Map<String, dynamic>.from(recordJson),
+    );
     final updatedRecord = record.copyWith(openedAt: DateTime.now());
 
     await box.put(recordId, updatedRecord.toJson());
@@ -64,19 +66,26 @@ class NotificationStorageDatasource {
     final recordJson = box.get(recordId);
     if (recordJson == null) return;
 
-    final record = NotificationRecord.fromJson(Map<String, dynamic>.from(recordJson));
+    final record = NotificationRecord.fromJson(
+      Map<String, dynamic>.from(recordJson),
+    );
     final updatedRecord = record.copyWith(wasCanceled: true);
 
     await box.put(recordId, updatedRecord.toJson());
   }
 
   /// Get all records for a notification type
-  Future<List<NotificationRecord>> getRecordsByType(NotificationType type) async {
+  Future<List<NotificationRecord>> getRecordsByType(
+    NotificationType type,
+  ) async {
     final box = _recordsBox;
     if (box == null) return [];
 
     return box.values
-        .map((json) => NotificationRecord.fromJson(Map<String, dynamic>.from(json)))
+        .map(
+          (json) =>
+              NotificationRecord.fromJson(Map<String, dynamic>.from(json)),
+        )
         .where((record) => record.type == type)
         .toList()
       ..sort((a, b) => b.sentAt.compareTo(a.sentAt));
@@ -88,7 +97,10 @@ class NotificationStorageDatasource {
     if (box == null) return [];
 
     return box.values
-        .map((json) => NotificationRecord.fromJson(Map<String, dynamic>.from(json)))
+        .map(
+          (json) =>
+              NotificationRecord.fromJson(Map<String, dynamic>.from(json)),
+        )
         .where((record) => record.sentAt.isAfter(since) && !record.wasCanceled)
         .toList()
       ..sort((a, b) => b.sentAt.compareTo(a.sentAt));
@@ -131,7 +143,9 @@ class NotificationStorageDatasource {
     );
     if (recentRecords.isNotEmpty) {
       if (kDebugMode) {
-        debugPrint('📵 Notification blocked: global cooldown (last sent ${recentRecords.first.sentAt})');
+        debugPrint(
+          '📵 Notification blocked: global cooldown (last sent ${recentRecords.first.sentAt})',
+        );
       }
       return false;
     }
@@ -141,7 +155,9 @@ class NotificationStorageDatasource {
     final weekRecords = await getRecordsSince(weekStart);
     if (weekRecords.length >= NotificationConfig.maxNotificationsPerWeek) {
       if (kDebugMode) {
-        debugPrint('📵 Notification blocked: weekly cap (${weekRecords.length}/${NotificationConfig.maxNotificationsPerWeek})');
+        debugPrint(
+          '📵 Notification blocked: weekly cap (${weekRecords.length}/${NotificationConfig.maxNotificationsPerWeek})',
+        );
       }
       return false;
     }
@@ -158,7 +174,9 @@ class NotificationStorageDatasource {
     final stats = await getStats(type);
     if (stats.shouldStopSending(type.maxIgnoreCount)) {
       if (kDebugMode) {
-        debugPrint('📵 Notification blocked: stop-after-ignore (${stats.consecutiveIgnores} ignores for ${type.name})');
+        debugPrint(
+          '📵 Notification blocked: stop-after-ignore (${stats.consecutiveIgnores} ignores for ${type.name})',
+        );
       }
       return false;
     }
@@ -188,7 +206,9 @@ class NotificationStorageDatasource {
     final keysToDelete = <String>[];
 
     for (final entry in box.toMap().entries) {
-      final record = NotificationRecord.fromJson(Map<String, dynamic>.from(entry.value));
+      final record = NotificationRecord.fromJson(
+        Map<String, dynamic>.from(entry.value),
+      );
       if (record.sentAt.isBefore(cutoff)) {
         keysToDelete.add(entry.key);
       }
@@ -199,20 +219,29 @@ class NotificationStorageDatasource {
     }
 
     if (kDebugMode && keysToDelete.isNotEmpty) {
-      debugPrint('🧹 Cleaned up ${keysToDelete.length} old notification records');
+      debugPrint(
+        '🧹 Cleaned up ${keysToDelete.length} old notification records',
+      );
     }
   }
 
   /// Update stats for a notification type
-  Future<void> _updateStats(NotificationType type, {required bool wasOpened}) async {
+  Future<void> _updateStats(
+    NotificationType type, {
+    required bool wasOpened,
+  }) async {
     final box = _statsBox;
     if (box == null) return;
 
     final currentStats = await getStats(type);
 
     final updatedStats = NotificationStats(
-      totalSent: wasOpened ? currentStats.totalSent : currentStats.totalSent + 1,
-      totalOpened: wasOpened ? currentStats.totalOpened + 1 : currentStats.totalOpened,
+      totalSent: wasOpened
+          ? currentStats.totalSent
+          : currentStats.totalSent + 1,
+      totalOpened: wasOpened
+          ? currentStats.totalOpened + 1
+          : currentStats.totalOpened,
       consecutiveIgnores: wasOpened ? 0 : currentStats.consecutiveIgnores + 1,
       lastSentAt: wasOpened ? currentStats.lastSentAt : DateTime.now(),
       lastMessageKey: currentStats.lastMessageKey,
@@ -222,7 +251,10 @@ class NotificationStorageDatasource {
   }
 
   /// Update the last message key used (for rotation tracking)
-  Future<void> updateLastMessageKey(NotificationType type, String messageKey) async {
+  Future<void> updateLastMessageKey(
+    NotificationType type,
+    String messageKey,
+  ) async {
     final box = _statsBox;
     if (box == null) return;
 

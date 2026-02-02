@@ -49,18 +49,14 @@ abstract class IExerciseUsageRepository {
   /// Useful when user removes exercise from workout or marks as "not useful"
   ///
   /// [exerciseId] - Unique ID of the exercise
-  Future<void> decrementUsage({
-    required String exerciseId,
-  });
+  Future<void> decrementUsage({required String exerciseId});
 
   /// Remove exercise completely from usage tracking
   ///
   /// This deletes all history for this exercise
   ///
   /// [exerciseId] - Unique ID of the exercise to remove
-  Future<void> removeExercise({
-    required String exerciseId,
-  });
+  Future<void> removeExercise({required String exerciseId});
 
   /// Get ML boost score for a single exercise (0.0 - 1.0)
   ///

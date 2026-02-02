@@ -59,8 +59,14 @@ class WarmupSuggestionChips extends StatelessWidget {
 
   Widget _buildTypeHeader(BuildContext context, WarmupType type) {
     final (icon, label) = switch (type) {
-      WarmupType.mobility => ('🔄', context.l10n.warmupPhase1Title.replaceAll('🔄 ', '')),
-      WarmupType.activation => ('⚡', context.l10n.warmupPhase2Title.replaceAll('⚡ ', '')),
+      WarmupType.mobility => (
+        '🔄',
+        context.l10n.warmupPhase1Title.replaceAll('🔄 ', ''),
+      ),
+      WarmupType.activation => (
+        '⚡',
+        context.l10n.warmupPhase2Title.replaceAll('⚡ ', ''),
+      ),
     };
 
     return Row(
@@ -110,9 +116,7 @@ class _WarmupChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isAdded
-        ? context.colors.success
-        : context.colors.primary;
+    final color = isAdded ? context.colors.success : context.colors.primary;
 
     return Material(
       color: context.colors.surface.withValues(alpha: 0),

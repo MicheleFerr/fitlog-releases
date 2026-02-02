@@ -32,7 +32,8 @@ class PdfExportBottomSheet extends ConsumerStatefulWidget {
   const PdfExportBottomSheet({super.key});
 
   @override
-  ConsumerState<PdfExportBottomSheet> createState() => _PdfExportBottomSheetState();
+  ConsumerState<PdfExportBottomSheet> createState() =>
+      _PdfExportBottomSheetState();
 }
 
 class _PdfExportBottomSheetState extends ConsumerState<PdfExportBottomSheet> {
@@ -218,7 +219,9 @@ class _PdfExportBottomSheetState extends ConsumerState<PdfExportBottomSheet> {
               ),
               child: Icon(
                 icon,
-                color: isSelected ? context.colors.primary : context.colors.outline,
+                color: isSelected
+                    ? context.colors.primary
+                    : context.colors.outline,
                 size: 22,
               ),
             ),
@@ -232,8 +235,12 @@ class _PdfExportBottomSheetState extends ConsumerState<PdfExportBottomSheet> {
                   Text(
                     title,
                     style: context.textTheme.titleMedium?.copyWith(
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                      color: isSelected ? context.colors.primary : context.colors.onSurface,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.w500,
+                      color: isSelected
+                          ? context.colors.primary
+                          : context.colors.onSurface,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -255,10 +262,14 @@ class _PdfExportBottomSheetState extends ConsumerState<PdfExportBottomSheet> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? context.colors.primary : context.colors.outline,
+                  color: isSelected
+                      ? context.colors.primary
+                      : context.colors.outline,
                   width: isSelected ? 2 : 1.5,
                 ),
-                color: isSelected ? context.colors.primary : context.colors.surface.withValues(alpha: 0),
+                color: isSelected
+                    ? context.colors.primary
+                    : context.colors.surface.withValues(alpha: 0),
               ),
               child: isSelected
                   ? Icon(
@@ -283,11 +294,7 @@ class _PdfExportBottomSheetState extends ConsumerState<PdfExportBottomSheet> {
       ),
       child: Row(
         children: [
-          Icon(
-            AppIcons.save,
-            color: context.colors.outline,
-            size: 20,
-          ),
+          Icon(AppIcons.save, color: context.colors.outline, size: 20),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -353,7 +360,9 @@ class _PdfExportBottomSheetState extends ConsumerState<PdfExportBottomSheet> {
 
     // Save preference if requested
     if (_rememberChoice) {
-      await ref.read(pdfPreferencesProvider.notifier).savePreference(_selectedLevel);
+      await ref
+          .read(pdfPreferencesProvider.notifier)
+          .savePreference(_selectedLevel);
     } else {
       await ref.read(pdfPreferencesProvider.notifier).clearPreference();
     }

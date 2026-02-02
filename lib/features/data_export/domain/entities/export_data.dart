@@ -27,11 +27,7 @@ enum ExportCategory {
 }
 
 /// Export format options
-enum ExportFormat {
-  json,
-  csv,
-  zip,
-}
+enum ExportFormat { json, csv, zip }
 
 /// Status of the export process
 enum ExportStatus {
@@ -64,9 +60,8 @@ abstract class ExportRequest with _$ExportRequest {
       _$ExportRequestFromJson(json);
 
   /// Default request with all categories
-  factory ExportRequest.all() => ExportRequest(
-        categories: ExportCategory.values.toSet(),
-      );
+  factory ExportRequest.all() =>
+      ExportRequest(categories: ExportCategory.values.toSet());
 }
 
 /// Export progress state
@@ -85,9 +80,8 @@ abstract class ExportProgress with _$ExportProgress {
   factory ExportProgress.fromJson(Map<String, dynamic> json) =>
       _$ExportProgressFromJson(json);
 
-  factory ExportProgress.initial() => const ExportProgress(
-        status: ExportStatus.idle,
-      );
+  factory ExportProgress.initial() =>
+      const ExportProgress(status: ExportStatus.idle);
 }
 
 /// Exported data container

@@ -53,7 +53,8 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
           if (importState is ImportParsed)
             IconButton(
               icon: const Icon(AppIcons.refresh),
-              onPressed: () => ref.read(importNotifierProvider.notifier).reset(),
+              onPressed: () =>
+                  ref.read(importNotifierProvider.notifier).reset(),
               tooltip: context.l10n.reset,
             ),
         ],
@@ -83,11 +84,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Header
-          Icon(
-            AppIcons.download,
-            size: 64,
-            color: context.colors.primary,
-          ),
+          Icon(AppIcons.download, size: 64, color: context.colors.primary),
           const SizedBox(height: 16),
           Text(
             context.l10n.importFromOtherApp,
@@ -132,7 +129,11 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
                 children: [
                   Row(
                     children: [
-                      Icon(AppIcons.info, size: 20, color: context.colors.primary),
+                      Icon(
+                        AppIcons.info,
+                        size: 20,
+                        color: context.colors.primary,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         context.l10n.howToExport,
@@ -159,13 +160,17 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
-        onTap: app.isSupported ? () => setState(() => _selectedSourceApp = app.id) : null,
+        onTap: app.isSupported
+            ? () => setState(() => _selectedSourceApp = app.id)
+            : null,
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             border: Border.all(
-              color: isSelected ? context.colors.primary : context.colors.outline,
+              color: isSelected
+                  ? context.colors.primary
+                  : context.colors.outline,
               width: isSelected ? 2 : 1,
             ),
             borderRadius: BorderRadius.circular(12),
@@ -197,10 +202,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      app.name,
-                      style: context.textTheme.titleMedium,
-                    ),
+                    Text(app.name, style: context.textTheme.titleMedium),
                     Text(
                       app.description,
                       style: context.textTheme.bodySmall?.copyWith(
@@ -248,12 +250,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
             ),
           ),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: context.textTheme.bodyMedium,
-            ),
-          ),
+          Expanded(child: Text(text, style: context.textTheme.bodyMedium)),
         ],
       ),
     );
@@ -305,15 +302,9 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          context.l10n.readyToImport,
-          style: context.textTheme.titleMedium,
-        ),
+        Text(context.l10n.readyToImport, style: context.textTheme.titleMedium),
         const SizedBox(height: 16),
-        _buildSummaryRow(
-          context.l10n.workouts,
-          '${result.workouts.length}',
-        ),
+        _buildSummaryRow(context.l10n.workouts, '${result.workouts.length}'),
         _buildSummaryRow(
           context.l10n.exercises,
           '${result.autoMappedExercises.length + unmappedCount}',
@@ -336,10 +327,9 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
               color: context.colors.warning,
             ),
           ),
-          ...result.warnings.take(3).map((w) => Text(
-                '• $w',
-                style: context.textTheme.bodySmall,
-              )),
+          ...result.warnings
+              .take(3)
+              .map((w) => Text('• $w', style: context.textTheme.bodySmall)),
           if (result.warnings.length > 3)
             Text(
               context.l10n.andMoreWarnings(result.warnings.length - 3),
@@ -352,7 +342,11 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
     );
   }
 
-  Widget _buildSummaryRow(String label, String value, {bool isWarning = false}) {
+  Widget _buildSummaryRow(
+    String label,
+    String value, {
+    bool isWarning = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -391,11 +385,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              AppIcons.error,
-              size: 64,
-              color: context.colors.error,
-            ),
+            Icon(AppIcons.error, size: 64, color: context.colors.error),
             const SizedBox(height: 16),
             Text(
               context.l10n.importError,
@@ -411,7 +401,8 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
             ),
             const SizedBox(height: 24),
             FilledButton.icon(
-              onPressed: () => ref.read(importNotifierProvider.notifier).reset(),
+              onPressed: () =>
+                  ref.read(importNotifierProvider.notifier).reset(),
               icon: const Icon(AppIcons.refresh),
               label: Text(context.l10n.tryAgain),
             ),
@@ -439,10 +430,9 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
 
       final content = String.fromCharCodes(file.bytes!);
 
-      await ref.read(importNotifierProvider.notifier).parseCSV(
-            content,
-            sourceApp: _selectedSourceApp,
-          );
+      await ref
+          .read(importNotifierProvider.notifier)
+          .parseCSV(content, sourceApp: _selectedSourceApp);
     } catch (e) {
       _showError(e.toString());
     }

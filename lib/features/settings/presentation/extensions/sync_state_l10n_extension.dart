@@ -136,7 +136,9 @@ extension SyncSummaryL10n on SyncSummary {
     final parts = <String>[];
 
     if (workoutsSynced > 0) {
-      parts.add('$workoutsSynced ${_pluralize(context, workoutsSynced, l10n.workout, l10n.workouts)}');
+      parts.add(
+        '$workoutsSynced ${_pluralize(context, workoutsSynced, l10n.workout, l10n.workouts)}',
+      );
     }
 
     if (templatesSynced > 0) {
@@ -144,11 +146,15 @@ extension SyncSummaryL10n on SyncSummary {
     }
 
     if (exercisesSynced > 0) {
-      parts.add('$exercisesSynced ${_pluralize(context, exercisesSynced, l10n.exercise, l10n.exercises)}');
+      parts.add(
+        '$exercisesSynced ${_pluralize(context, exercisesSynced, l10n.exercise, l10n.exercises)}',
+      );
     }
 
     if (personalRecordsSynced > 0) {
-      parts.add('$personalRecordsSynced record${personalRecordsSynced == 1 ? '' : 's'}');
+      parts.add(
+        '$personalRecordsSynced record${personalRecordsSynced == 1 ? '' : 's'}',
+      );
     }
 
     if (parts.isEmpty) {
@@ -159,7 +165,12 @@ extension SyncSummaryL10n on SyncSummary {
   }
 
   /// Helper to pluralize words
-  String _pluralize(BuildContext context, int count, String singular, String plural) {
+  String _pluralize(
+    BuildContext context,
+    int count,
+    String singular,
+    String plural,
+  ) {
     return count == 1 ? singular : plural;
   }
 }

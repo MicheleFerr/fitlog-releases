@@ -141,11 +141,13 @@ class FitnessFatigueService {
         final data = entry.value;
 
         muscleImpulses.putIfAbsent(muscleId, () => []);
-        muscleImpulses[muscleId]!.add(TrainingImpulse(
-          timestamp: workout.calculatedAt,
-          muscleId: muscleId,
-          stressScore: data.stressScore,
-        ));
+        muscleImpulses[muscleId]!.add(
+          TrainingImpulse(
+            timestamp: workout.calculatedAt,
+            muscleId: muscleId,
+            stressScore: data.stressScore,
+          ),
+        );
 
         muscleDisplayNames[muscleId] = data.displayName;
       }
@@ -201,8 +203,8 @@ class FitnessFatigueService {
     double fatigueSum = 0;
 
     // Get muscle-specific fatigue modifier
-    final fatigueModifier = StressIndexConstants
-            .muscleFatigueModifiers[muscleId.toUpperCase()] ??
+    final fatigueModifier =
+        StressIndexConstants.muscleFatigueModifiers[muscleId.toUpperCase()] ??
         StressIndexConstants.defaultFatigueModifier;
 
     for (final impulse in sortedImpulses) {
@@ -214,15 +216,19 @@ class FitnessFatigueService {
       final trainingLoad = impulse.stressScore / 100.0;
 
       // Fitness component: k₁ × w × e^(-t/τ₁)
-      final fitnessDecay = exp(-hoursSince / StressIndexConstants.fitnessTimeConstant);
-      fitnessSum += StressIndexConstants.fitnessGainK1 * trainingLoad * fitnessDecay;
+      final fitnessDecay = exp(
+        -hoursSince / StressIndexConstants.fitnessTimeConstant,
+      );
+      fitnessSum +=
+          StressIndexConstants.fitnessGainK1 * trainingLoad * fitnessDecay;
 
       // Fatigue component: k₂ × w × e^(-t/τ₂)
       // Apply muscle-specific modifier to fatigue time constant
       final effectiveFatigueTC =
           StressIndexConstants.fatigueTimeConstant * fatigueModifier;
       final fatigueDecay = exp(-hoursSince / effectiveFatigueTC);
-      fatigueSum += StressIndexConstants.fatigueGainK2 * trainingLoad * fatigueDecay;
+      fatigueSum +=
+          StressIndexConstants.fatigueGainK2 * trainingLoad * fatigueDecay;
     }
 
     // Scale components to percentage points
@@ -292,8 +298,8 @@ class FitnessFatigueService {
     }
 
     // Get muscle-specific fatigue modifier
-    final fatigueModifier = StressIndexConstants
-            .muscleFatigueModifiers[muscleId.toUpperCase()] ??
+    final fatigueModifier =
+        StressIndexConstants.muscleFatigueModifiers[muscleId.toUpperCase()] ??
         StressIndexConstants.defaultFatigueModifier;
 
     final effectiveFatigueTC =

@@ -16,7 +16,6 @@ part 'exercise_usage_model.g.dart';
 /// Usato per boost personalizzato nel fuzzy matching ML-enhanced
 @HiveType(typeId: 30) // Unique ID, non in conflitto con altri models
 class ExerciseUsageModel extends HiveObject {
-
   ExerciseUsageModel({
     required this.exerciseId,
     required this.exerciseName,
@@ -42,6 +41,7 @@ class ExerciseUsageModel extends HiveObject {
       userId: userId,
     );
   }
+
   /// ID esercizio (chiave univoca)
   @HiveField(0)
   final String exerciseId;

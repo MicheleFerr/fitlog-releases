@@ -66,8 +66,9 @@ class ExerciseNotesHandler {
     required String? currentFormCues,
   }) async {
     final formCuesController = TextEditingController(text: currentFormCues);
-    final sessionNotesController =
-        TextEditingController(text: currentSessionNotes);
+    final sessionNotesController = TextEditingController(
+      text: currentSessionNotes,
+    );
 
     return showModalBottomSheet<NotesDialogResult>(
       context: context,
@@ -256,8 +257,8 @@ class ExerciseNotesHandler {
                               : formCuesController.text.trim(),
                           sessionNotes:
                               sessionNotesController.text.trim().isEmpty
-                                  ? null
-                                  : sessionNotesController.text.trim(),
+                              ? null
+                              : sessionNotesController.text.trim(),
                         ),
                       );
                     },

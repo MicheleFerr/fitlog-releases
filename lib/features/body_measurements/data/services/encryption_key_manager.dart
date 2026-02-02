@@ -57,20 +57,21 @@ class EncryptionKeyManager {
   EncryptionKeyManager({
     FlutterSecureStorage? secureStorage,
     Duration? rotationInterval,
-  })  : _secureStorage = secureStorage ??
-            const FlutterSecureStorage(
-              aOptions: AndroidOptions(
-                encryptedSharedPreferences: true,
-                // Use Android Keystore for hardware-backed encryption
-                resetOnError: true,
-              ),
-              iOptions: IOSOptions(
-                // Use iOS Keychain with Secure Enclave
-                accessibility: KeychainAccessibility.first_unlock_this_device,
-                synchronizable: false,
-              ),
-            ),
-        _rotationInterval = rotationInterval ?? defaultRotationInterval;
+  }) : _secureStorage =
+           secureStorage ??
+           const FlutterSecureStorage(
+             aOptions: AndroidOptions(
+               encryptedSharedPreferences: true,
+               // Use Android Keystore for hardware-backed encryption
+               resetOnError: true,
+             ),
+             iOptions: IOSOptions(
+               // Use iOS Keychain with Secure Enclave
+               accessibility: KeychainAccessibility.first_unlock_this_device,
+               synchronizable: false,
+             ),
+           ),
+       _rotationInterval = rotationInterval ?? defaultRotationInterval;
 
   /// Generate new encryption key for user
   ///
@@ -115,10 +116,7 @@ class EncryptionKeyManager {
 
       // Store key in secure storage
       final keyStorageKey = _getKeyStorageKey(userId, version);
-      await _secureStorage.write(
-        key: keyStorageKey,
-        value: keyBase64,
-      );
+      await _secureStorage.write(key: keyStorageKey, value: keyBase64);
 
       // Store key metadata
       final now = DateTime.now();
@@ -175,10 +173,7 @@ class EncryptionKeyManager {
   ///   },
   /// );
   /// ```
-  Future<Either<Failure, String>> getKey(
-    String userId, {
-    int? version,
-  }) async {
+  Future<Either<Failure, String>> getKey(String userId, {int? version}) async {
     try {
       // Get latest key metadata
       var metadataResult = await _getKeyMetadata(userId);
@@ -187,45 +182,46 @@ class EncryptionKeyManager {
       if (metadataResult.isLeft()) {
         final generateResult = await generateKeyForUser(userId);
         if (generateResult.isLeft()) {
-          return Left(generateResult.fold(
-            (failure) => failure,
-            (_) => throw Exception('Unexpected state'),
-          ));
+          return Left(
+            generateResult.fold(
+              (failure) => failure,
+              (_) => throw Exception('Unexpected state'),
+            ),
+          );
         }
         metadataResult = await _getKeyMetadata(userId);
       }
 
-      return await metadataResult.fold(
-        (failure) => Left(failure),
-        (metadata) async {
-          final keyVersion = version ?? metadata.version;
-          final keyStorageKey = _getKeyStorageKey(userId, keyVersion);
+      return await metadataResult.fold((failure) => Left(failure), (
+        metadata,
+      ) async {
+        final keyVersion = version ?? metadata.version;
+        final keyStorageKey = _getKeyStorageKey(userId, keyVersion);
 
-          final keyBase64 = await _secureStorage.read(key: keyStorageKey);
+        final keyBase64 = await _secureStorage.read(key: keyStorageKey);
 
-          if (keyBase64 == null) {
-            return Left(
-              CacheFailure(
-                'Encryption key not found for user $userId v$keyVersion',
-                code: 'KEY_NOT_FOUND',
-              ),
-            );
-          }
+        if (keyBase64 == null) {
+          return Left(
+            CacheFailure(
+              'Encryption key not found for user $userId v$keyVersion',
+              code: 'KEY_NOT_FOUND',
+            ),
+          );
+        }
 
-          // Verify key is valid AES-256 (32 bytes)
-          final keyBytes = base64.decode(keyBase64);
-          if (keyBytes.length != 32) {
-            return Left(
-              ValidationFailure(
-                'Invalid key length: ${keyBytes.length} (expected 32)',
-                code: 'INVALID_KEY_LENGTH',
-              ),
-            );
-          }
+        // Verify key is valid AES-256 (32 bytes)
+        final keyBytes = base64.decode(keyBase64);
+        if (keyBytes.length != 32) {
+          return Left(
+            ValidationFailure(
+              'Invalid key length: ${keyBytes.length} (expected 32)',
+              code: 'INVALID_KEY_LENGTH',
+            ),
+          );
+        }
 
-          return Right(keyBase64);
-        },
-      );
+        return Right(keyBase64);
+      });
     } catch (e) {
       return Left(
         CacheFailure(
@@ -304,32 +300,30 @@ class EncryptionKeyManager {
       // Get current key metadata
       final metadataResult = await _getKeyMetadata(userId);
 
-      return await metadataResult.fold(
-        (failure) => Left(failure),
-        (currentMetadata) async {
-          // Generate new key with incremented version
-          final newVersion = currentMetadata.version + 1;
+      return await metadataResult.fold((failure) => Left(failure), (
+        currentMetadata,
+      ) async {
+        // Generate new key with incremented version
+        final newVersion = currentMetadata.version + 1;
 
-          final newKeyResult = await generateKeyForUser(
-            userId,
-            version: newVersion,
+        final newKeyResult = await generateKeyForUser(
+          userId,
+          version: newVersion,
+        );
+
+        return newKeyResult.fold((failure) => Left(failure), (
+          newKeyData,
+        ) async {
+          // Update metadata with rotation timestamp
+          final updatedMetadata = newKeyData.copyWith(
+            lastRotated: DateTime.now(),
           );
 
-          return newKeyResult.fold(
-            (failure) => Left(failure),
-            (newKeyData) async {
-              // Update metadata with rotation timestamp
-              final updatedMetadata = newKeyData.copyWith(
-                lastRotated: DateTime.now(),
-              );
+          await _storeKeyMetadata(userId, updatedMetadata);
 
-              await _storeKeyMetadata(userId, updatedMetadata);
-
-              return Right(updatedMetadata);
-            },
-          );
-        },
-      );
+          return Right(updatedMetadata);
+        });
+      });
     } catch (e) {
       return Left(
         UnexpectedFailure(
@@ -361,10 +355,7 @@ class EncryptionKeyManager {
   /// // Delete ALL keys (account deletion)
   /// await keyManager.deleteKey('user-123');
   /// ```
-  Future<Either<Failure, void>> deleteKey(
-    String userId, {
-    int? version,
-  }) async {
+  Future<Either<Failure, void>> deleteKey(String userId, {int? version}) async {
     try {
       if (version != null) {
         // Delete specific version
@@ -374,28 +365,22 @@ class EncryptionKeyManager {
         // Delete all versions
         final metadataResult = await _getKeyMetadata(userId);
 
-        await metadataResult.fold(
-          (failure) => null,
-          (metadata) async {
-            // Delete all versions from 1 to current
-            for (var v = 1; v <= metadata.version; v++) {
-              final keyStorageKey = _getKeyStorageKey(userId, v);
-              await _secureStorage.delete(key: keyStorageKey);
-            }
+        await metadataResult.fold((failure) => null, (metadata) async {
+          // Delete all versions from 1 to current
+          for (var v = 1; v <= metadata.version; v++) {
+            final keyStorageKey = _getKeyStorageKey(userId, v);
+            await _secureStorage.delete(key: keyStorageKey);
+          }
 
-            // Delete metadata
-            await _secureStorage.delete(key: _getMetadataStorageKey(userId));
-          },
-        );
+          // Delete metadata
+          await _secureStorage.delete(key: _getMetadataStorageKey(userId));
+        });
       }
 
       return const Right(null);
     } catch (e) {
       return Left(
-        CacheFailure(
-          'Failed to delete key: $e',
-          code: 'KEY_DELETION_FAILED',
-        ),
+        CacheFailure('Failed to delete key: $e', code: 'KEY_DELETION_FAILED'),
       );
     }
   }
@@ -617,8 +602,7 @@ class EncryptionKeyData {
       lastRotated: json['lastRotated'] != null
           ? DateTime.parse(json['lastRotated'] as String)
           : null,
-      rotationScheduled:
-          DateTime.parse(json['rotationScheduled'] as String),
+      rotationScheduled: DateTime.parse(json['rotationScheduled'] as String),
       algorithm: json['algorithm'] as String,
       keyDerivationFunction: json['keyDerivationFunction'] as String?,
     );

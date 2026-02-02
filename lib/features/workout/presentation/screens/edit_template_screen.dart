@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -20,11 +19,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolid
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/template_view_screen.dart';
 
 class EditTemplateScreen extends ConsumerStatefulWidget {
-
-  const EditTemplateScreen({
-    super.key,
-    required this.template,
-  });
+  const EditTemplateScreen({super.key, required this.template});
   final WorkoutTemplate template;
 
   @override
@@ -44,8 +39,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.template.name);
-    _descriptionController =
-        TextEditingController(text: widget.template.description);
+    _descriptionController = TextEditingController(
+      text: widget.template.description,
+    );
     _exercises = List.from(widget.template.exercises);
 
     // Start first exercise expanded for immediate feedback
@@ -233,12 +229,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: _showAddExercise,
-          child: const SemanticIcon(
-  icon: AppIcons.add,
-  semanticLabel: 'Add',
-),
+          child: const SemanticIcon(icon: AppIcons.add, semanticLabel: 'Add'),
         ),
-
       ),
     );
   }
@@ -249,11 +241,10 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SemanticIcon(
-  icon: AppIcons.fitnessCenterOutlined,
-  semanticLabel: 'Fitness center outlined',
-  size: AppIconSize.medium,
-  color: context.colors.onSurface.withValues(alpha: 0.3,
-),
+            icon: AppIcons.fitnessCenterOutlined,
+            semanticLabel: 'Fitness center outlined',
+            size: AppIconSize.medium,
+            color: context.colors.onSurface.withValues(alpha: 0.3),
           ),
           const SizedBox(height: 16),
           Text(
@@ -272,10 +263,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
           const SizedBox(height: 24),
           FilledButton.icon(
             onPressed: _showAddExercise,
-            icon: const SemanticIcon(
-  icon: AppIcons.add,
-  semanticLabel: 'Add',
-),
+            icon: const SemanticIcon(icon: AppIcons.add, semanticLabel: 'Add'),
             label: Text(context.l10n.addExercise),
           ),
         ],
@@ -319,8 +307,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
           return await ModalService.showConfirmDialog(
             context,
             title: context.l10n.removeExercise,
-            message:
-                context.l10n.confirmRemoveExercise(exerciseTemplate.exerciseName),
+            message: context.l10n.confirmRemoveExercise(
+              exerciseTemplate.exerciseName,
+            ),
             isDangerous: true,
           );
         },
@@ -341,7 +330,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                         index: index,
                         child: Icon(
                           AppIcons.dragHandle,
-                          color: context.colors.onSurface.withValues(alpha: 0.5),
+                          color: context.colors.onSurface.withValues(
+                            alpha: 0.5,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -361,24 +352,32 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                               children: [
                                 Text(
                                   // ✅ FIX: For superset, show "X round x Y exercises" instead of "X set"
-                                  exerciseTemplate.type == ExerciseType.superset &&
-                                  exerciseTemplate.subExercises != null &&
-                                  exerciseTemplate.subExercises!.isNotEmpty
+                                  exerciseTemplate.type ==
+                                              ExerciseType.superset &&
+                                          exerciseTemplate.subExercises !=
+                                              null &&
+                                          exerciseTemplate
+                                              .subExercises!
+                                              .isNotEmpty
                                       ? '${exerciseTemplate.sets.length} round × ${exerciseTemplate.subExercises!.length} esercizi • ${exerciseTemplate.category.name}'
                                       : '${exerciseTemplate.sets.length} set • ${exerciseTemplate.category.name}',
                                   style: context.textTheme.bodySmall?.copyWith(
-                                    color: context.colors.onSurface
-                                        .withValues(alpha: 0.7),
+                                    color: context.colors.onSurface.withValues(
+                                      alpha: 0.7,
+                                    ),
                                   ),
                                 ),
                                 if (exerciseTemplate.restTime != null) ...[
                                   const SizedBox(width: 8),
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 6, vertical: 2),
+                                      horizontal: 6,
+                                      vertical: 2,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: context.colors.primary
-                                          .withValues(alpha: 0.1),
+                                      color: context.colors.primary.withValues(
+                                        alpha: 0.1,
+                                      ),
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
                                         color: context.colors.primary
@@ -389,20 +388,22 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         SemanticIcon(
-  icon: AppIcons.timer,
-  semanticLabel: 'Timer',
-  size: AppIconSize.medium,
-  color: context.colors.primary,
-),
+                                          icon: AppIcons.timer,
+                                          semanticLabel: 'Timer',
+                                          size: AppIconSize.medium,
+                                          color: context.colors.primary,
+                                        ),
                                         const SizedBox(width: 2),
                                         Text(
                                           _formatRestTime(
-                                              exerciseTemplate.restTime!),
-                                          style: context.textTheme.labelSmall?.copyWith(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w600,
-                                            color: context.colors.primary,
+                                            exerciseTemplate.restTime!,
                                           ),
+                                          style: context.textTheme.labelSmall
+                                              ?.copyWith(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w600,
+                                                color: context.colors.primary,
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -417,9 +418,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                       IconButton.filledTonal(
                         onPressed: () => _showRestTimePicker(index),
                         icon: const SemanticIcon(
-  icon: AppIcons.timer,
-  semanticLabel: 'Timer',
-),
+                          icon: AppIcons.timer,
+                          semanticLabel: 'Timer',
+                        ),
                         iconSize: 20,
                         tooltip: context.l10n.restTimer,
                       ),
@@ -457,9 +458,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: color.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -471,9 +470,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                 Text(
                   label,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        fontSize: 10,
-                      ),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontSize: 10,
+                  ),
                 ),
               ],
             ),
@@ -481,9 +480,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
             Text(
               value,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                  ),
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
             ),
           ],
         ),
@@ -492,9 +491,12 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
   }
 
   Widget _buildSetsEditor(
-      int exerciseIndex, ExerciseTemplate exerciseTemplate) {
+    int exerciseIndex,
+    ExerciseTemplate exerciseTemplate,
+  ) {
     // ✅ FIX: For superset, show different UI - click to edit all exercises in round
-    final isSupersetWithSubExercises = exerciseTemplate.type == ExerciseType.superset &&
+    final isSupersetWithSubExercises =
+        exerciseTemplate.type == ExerciseType.superset &&
         exerciseTemplate.subExercises != null &&
         exerciseTemplate.subExercises!.isNotEmpty;
 
@@ -502,9 +504,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
         border: Border(
-          top: BorderSide(
-            color: context.colors.outline.withValues(alpha: 0.2),
-          ),
+          top: BorderSide(color: context.colors.outline.withValues(alpha: 0.2)),
         ),
       ),
       child: Column(
@@ -570,7 +570,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                 Text(
                                   '${exerciseTemplate.subExercises!.length} ${context.l10n.exercises}',
                                   style: context.textTheme.bodySmall?.copyWith(
-                                    color: context.colors.onSurface.withValues(alpha: 0.7),
+                                    color: context.colors.onSurface.withValues(
+                                      alpha: 0.7,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -586,7 +588,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                           // Remove round button
                           if (exerciseTemplate.sets.length > 1)
                             IconButton(
-                              onPressed: () => _removeSet(exerciseIndex, setIndex),
+                              onPressed: () =>
+                                  _removeSet(exerciseIndex, setIndex),
                               icon: const SemanticIcon(
                                 icon: AppIcons.removeCircleOutline,
                                 semanticLabel: 'Remove round',
@@ -644,13 +647,22 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                             initialWeight: set.targetWeight ?? 0,
                           );
                           if (newWeight != null) {
-                            _updateSetWeight(exerciseIndex, setIndex, newWeight);
+                            _updateSetWeight(
+                              exerciseIndex,
+                              setIndex,
+                              newWeight,
+                            );
                           }
                         },
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Text('×', style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
+                    Text(
+                      '×',
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     const SizedBox(width: 8),
                     // Reps Picker Button
                     Expanded(
@@ -676,9 +688,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                       IconButton(
                         onPressed: () => _removeSet(exerciseIndex, setIndex),
                         icon: const SemanticIcon(
-  icon: AppIcons.removeCircleOutline,
-  semanticLabel: 'Remove circle outline',
-),
+                          icon: AppIcons.removeCircleOutline,
+                          semanticLabel: 'Remove circle outline',
+                        ),
                         color: context.colors.error,
                         iconSize: 20,
                         tooltip: context.l10n.removeSet,
@@ -694,11 +706,13 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
             child: OutlinedButton.icon(
               onPressed: () => _addSet(exerciseIndex),
               icon: const SemanticIcon(
-  icon: AppIcons.add,
-  semanticLabel: 'Add',
-),
+                icon: AppIcons.add,
+                semanticLabel: 'Add',
+              ),
               label: Text(
-                isSupersetWithSubExercises ? context.l10n.addRound : context.l10n.addSet,
+                isSupersetWithSubExercises
+                    ? context.l10n.addRound
+                    : context.l10n.addSet,
               ),
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 40),
@@ -922,7 +936,11 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                               initialWeight: round.targetWeight ?? 0,
                             );
                             if (newWeight != null) {
-                              _updateSetWeight(exerciseIndex, roundIndex, newWeight);
+                              _updateSetWeight(
+                                exerciseIndex,
+                                roundIndex,
+                                newWeight,
+                              );
                               Navigator.pop(context);
                             }
                           },
@@ -948,7 +966,11 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                               initialReps: round.targetReps ?? 0,
                             );
                             if (newReps != null) {
-                              _updateSetReps(exerciseIndex, roundIndex, newReps);
+                              _updateSetReps(
+                                exerciseIndex,
+                                roundIndex,
+                                newReps,
+                              );
                               Navigator.pop(context);
                             }
                           },
@@ -1039,10 +1061,14 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
         description: _descriptionController.text.trim(),
         exercises: _exercises,
         updatedAt: DateTime.now(),
-        userId: widget.template.userId ?? currentUserId, // ✅ Safety net for Firestore rules
+        userId:
+            widget.template.userId ??
+            currentUserId, // ✅ Safety net for Firestore rules
       );
 
-      await ref.read(workoutTemplateNotifierProvider.notifier).saveTemplate(templateToSave);
+      await ref
+          .read(workoutTemplateNotifierProvider.notifier)
+          .saveTemplate(templateToSave);
 
       ref.invalidate(customWorkoutTemplatesProvider);
 

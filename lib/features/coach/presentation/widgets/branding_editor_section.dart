@@ -51,7 +51,9 @@ class _BrandingEditorSectionState extends State<BrandingEditorSection> {
 
   void _initControllers() {
     final b = widget.branding;
-    _businessNameController = TextEditingController(text: b?.businessName ?? '');
+    _businessNameController = TextEditingController(
+      text: b?.businessName ?? '',
+    );
     _taglineController = TextEditingController(text: b?.tagline ?? '');
     _emailController = TextEditingController(text: b?.email ?? '');
     _phoneController = TextEditingController(text: b?.phone ?? '');
@@ -92,7 +94,8 @@ class _BrandingEditorSectionState extends State<BrandingEditorSection> {
 
   String _colorToHex(Color color) {
     // Convert to ARGB int and format as hex (without alpha)
-    final argb = ((color.a * 255).round() << 24) |
+    final argb =
+        ((color.a * 255).round() << 24) |
         ((color.r * 255).round() << 16) |
         ((color.g * 255).round() << 8) |
         (color.b * 255).round();
@@ -157,9 +160,9 @@ class _BrandingEditorSectionState extends State<BrandingEditorSection> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(isPrimary
-            ? context.l10n.primaryColor
-            : context.l10n.accentColor),
+        title: Text(
+          isPrimary ? context.l10n.primaryColor : context.l10n.accentColor,
+        ),
         content: SingleChildScrollView(
           child: ColorPicker(
             pickerColor: currentColor,

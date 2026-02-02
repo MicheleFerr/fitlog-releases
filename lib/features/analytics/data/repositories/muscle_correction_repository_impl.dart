@@ -66,17 +66,12 @@ class MuscleCorrectionRepositoryImpl implements MuscleCorrectionRepository {
 
       // Store correction with exerciseName as key
       // This ensures one correction per exercise (latest wins)
-      await box.put(
-        correction.exerciseName,
-        correction.toHiveJson(),
-      );
+      await box.put(correction.exerciseName, correction.toHiveJson());
 
       return right(unit);
     } catch (e) {
       return left(
-        CacheFailure(
-          'Failed to save correction locally: ${e.toString()}',
-        ),
+        CacheFailure('Failed to save correction locally: ${e.toString()}'),
       );
     }
   }
@@ -95,8 +90,9 @@ class MuscleCorrectionRepositoryImpl implements MuscleCorrectionRepository {
       for (final dynamic value in box.values) {
         if (value is Map<String, dynamic>) {
           try {
-            final correction =
-                MuscleCorrectionHiveExtension.fromHiveJson(value);
+            final correction = MuscleCorrectionHiveExtension.fromHiveJson(
+              value,
+            );
             corrections.add(correction);
           } catch (e) {
             // Skip malformed entries
@@ -111,9 +107,7 @@ class MuscleCorrectionRepositoryImpl implements MuscleCorrectionRepository {
       return right(corrections);
     } catch (e) {
       return left(
-        CacheFailure(
-          'Failed to get local corrections: ${e.toString()}',
-        ),
+        CacheFailure('Failed to get local corrections: ${e.toString()}'),
       );
     }
   }
@@ -155,11 +149,7 @@ class MuscleCorrectionRepositoryImpl implements MuscleCorrectionRepository {
         ),
       );
     } catch (e) {
-      return left(
-        ServerFailure(
-          'Failed to submit feedback: ${e.toString()}',
-        ),
-      );
+      return left(ServerFailure('Failed to submit feedback: ${e.toString()}'));
     }
   }
 
@@ -174,55 +164,41 @@ class MuscleCorrectionRepositoryImpl implements MuscleCorrectionRepository {
           .doc(correctionId)
           .snapshots()
           .map((snapshot) {
-        if (!snapshot.exists) {
-          return left(
-            const ServerFailure(
-              'Correction document not found',
-            ),
-          );
-        }
+            if (!snapshot.exists) {
+              return left(const ServerFailure('Correction document not found'));
+            }
 
-        final data = snapshot.data();
-        if (data == null) {
-          return left(
-            const ServerFailure(
-              'Correction document has no data',
-            ),
-          );
-        }
+            final data = snapshot.data();
+            if (data == null) {
+              return left(
+                const ServerFailure('Correction document has no data'),
+              );
+            }
 
-        // Parse status string to enum
-        final statusString = data['status'] as String?;
-        if (statusString == null) {
-          return left(
-            const ServerFailure(
-              'Status field missing in document',
-            ),
-          );
-        }
+            // Parse status string to enum
+            final statusString = data['status'] as String?;
+            if (statusString == null) {
+              return left(
+                const ServerFailure('Status field missing in document'),
+              );
+            }
 
-        try {
-          final status = FeedbackStatus.values.firstWhere(
-            (e) => e.name == statusString,
-            orElse: () => FeedbackStatus.pending,
-          );
-          return right(status);
-        } catch (e) {
-          return left(
-            ServerFailure(
-              'Failed to parse status: ${e.toString()}',
-            ),
-          );
-        }
-      });
+            try {
+              final status = FeedbackStatus.values.firstWhere(
+                (e) => e.name == statusString,
+                orElse: () => FeedbackStatus.pending,
+              );
+              return right(status);
+            } catch (e) {
+              return left(
+                ServerFailure('Failed to parse status: ${e.toString()}'),
+              );
+            }
+          });
     } catch (e) {
       // If stream creation fails, return error stream
       return Stream.value(
-        left(
-          ServerFailure(
-            'Failed to watch feedback status: ${e.toString()}',
-          ),
-        ),
+        left(ServerFailure('Failed to watch feedback status: ${e.toString()}')),
       );
     }
   }
@@ -242,11 +218,7 @@ class MuscleCorrectionRepositoryImpl implements MuscleCorrectionRepository {
 
       return right(unit);
     } catch (e) {
-      return left(
-        CacheFailure(
-          'Failed to delete correction: ${e.toString()}',
-        ),
-      );
+      return left(CacheFailure('Failed to delete correction: ${e.toString()}'));
     }
   }
 }

@@ -45,10 +45,7 @@ class MuscleGroupExpansionNotifier extends Notifier<Map<String, bool>> {
   /// If group is expanded → collapse it
   /// If group is collapsed (or missing) → expand it
   void toggleExpansion(String muscleGroup) {
-    state = {
-      ...state,
-      muscleGroup: !(state[muscleGroup] ?? false),
-    };
+    state = {...state, muscleGroup: !(state[muscleGroup] ?? false)};
   }
 
   /// Expand all muscle groups
@@ -63,9 +60,7 @@ class MuscleGroupExpansionNotifier extends Notifier<Map<String, bool>> {
     if (allGroups.isEmpty) return;
 
     // Set all known groups to expanded (true)
-    state = {
-      for (final group in allGroups) group: true,
-    };
+    state = {for (final group in allGroups) group: true};
   }
 
   /// Collapse all muscle groups
@@ -116,5 +111,5 @@ class MuscleGroupExpansionNotifier extends Notifier<Map<String, bool>> {
 /// ```
 final muscleGroupExpansionProvider =
     NotifierProvider<MuscleGroupExpansionNotifier, Map<String, bool>>(
-  MuscleGroupExpansionNotifier.new,
-);
+      MuscleGroupExpansionNotifier.new,
+    );

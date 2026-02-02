@@ -102,8 +102,11 @@ class MultiSelectCalendar extends StatelessWidget {
     // Check if date is in disabled list
     if (disabledDates != null) {
       for (final disabled in disabledDates!) {
-        final normalizedDisabled =
-            DateTime(disabled.year, disabled.month, disabled.day);
+        final normalizedDisabled = DateTime(
+          disabled.year,
+          disabled.month,
+          disabled.day,
+        );
         if (normalizedDate.isAtSameMomentAs(normalizedDisabled)) {
           return false;
         }

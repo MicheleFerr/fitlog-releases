@@ -43,7 +43,8 @@ class CountingModePickerModal extends StatefulWidget {
   final bool showSaveAsDefault;
 
   @override
-  State<CountingModePickerModal> createState() => _CountingModePickerModalState();
+  State<CountingModePickerModal> createState() =>
+      _CountingModePickerModalState();
 
   /// Static helper to show modal
   ///
@@ -60,7 +61,9 @@ class CountingModePickerModal extends StatefulWidget {
     return showModalBottomSheet<CountingModePickerResult>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => CountingModePickerModal(
         currentMode: currentMode,
         exerciseId: exerciseId,
@@ -138,7 +141,9 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+                  color: context.colors.surfaceContainerHighest.withValues(
+                    alpha: 0.5,
+                  ),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: context.colors.outline.withValues(alpha: 0.2),
@@ -157,7 +162,9 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
                       child: Text(
                         '${context.l10n.currentFormat}: ${widget.currentMode.getDisplayName(context.l10n)}',
                         style: context.textTheme.bodyMedium?.copyWith(
-                          color: context.colors.onSurface.withValues(alpha: 0.7),
+                          color: context.colors.onSurface.withValues(
+                            alpha: 0.7,
+                          ),
                         ),
                       ),
                     ),
@@ -222,8 +229,12 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: _saveAsDefault
-                          ? context.colors.primaryContainer.withValues(alpha: 0.3)
-                          : context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+                          ? context.colors.primaryContainer.withValues(
+                              alpha: 0.3,
+                            )
+                          : context.colors.surfaceContainerHighest.withValues(
+                              alpha: 0.5,
+                            ),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: _saveAsDefault
@@ -262,7 +273,9 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
                               Text(
                                 context.l10n.saveAsDefaultForExerciseDesc,
                                 style: context.textTheme.bodySmall?.copyWith(
-                                  color: context.colors.onSurface.withValues(alpha: 0.6),
+                                  color: context.colors.onSurface.withValues(
+                                    alpha: 0.6,
+                                  ),
                                 ),
                               ),
                             ],
@@ -313,7 +326,8 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         backgroundColor: context.colors.primary,
-                        disabledBackgroundColor: context.colors.surfaceContainerHighest,
+                        disabledBackgroundColor:
+                            context.colors.surfaceContainerHighest,
                       ),
                       child: Text(
                         context.l10n.confirmChange,
@@ -387,11 +401,11 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
               ),
               child: isSelected
                   ? SemanticIcon(
-  icon: AppIcons.check,
-  semanticLabel: 'Check',
-  size: AppIconSize.tiny,
-  color: context.colors.onPrimary,
-)
+                      icon: AppIcons.check,
+                      semanticLabel: 'Check',
+                      size: AppIconSize.tiny,
+                      color: context.colors.onPrimary,
+                    )
                   : null,
             ),
             const SizedBox(width: 12),
@@ -401,7 +415,9 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
               icon: icon,
               semanticLabel: title,
               size: AppIconSize.medium,
-              color: isSelected ? context.iconPrimary : context.iconMediumEmphasis,
+              color: isSelected
+                  ? context.iconPrimary
+                  : context.iconMediumEmphasis,
             ),
             const SizedBox(width: 12),
 

@@ -29,6 +29,7 @@ import 'package:gymbro_flutter_new/features/profile/presentation/providers/user_
 import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_detail_modal.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+
 /// Profile hub screen - Apple Fitness+ style design
 ///
 /// Features:
@@ -47,12 +48,8 @@ class ProfileHubScreen extends ConsumerWidget {
       data: (user) => _ProfileHubContent(
         userName: user?.displayName ?? context.l10n.profile,
       ),
-      loading: () => const Scaffold(
-        body: Center(child: LoadingIndicator()),
-      ),
-      error: (error, _) => Scaffold(
-        body: Center(child: Text('Error: $error')),
-      ),
+      loading: () => const Scaffold(body: Center(child: LoadingIndicator())),
+      error: (error, _) => Scaffold(body: Center(child: Text('Error: $error'))),
     );
   }
 }
@@ -79,48 +76,35 @@ class _ProfileHubContent extends ConsumerWidget {
           ),
 
           // Account mode section (Solo/Coach/Coached)
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 16),
-          ),
-          const SliverToBoxAdapter(
-            child: AccountModeSection(),
-          ),
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 16),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 16)),
+          const SliverToBoxAdapter(child: AccountModeSection()),
+          const SliverToBoxAdapter(child: SizedBox(height: 16)),
 
           // Metric ring cards
-          SliverToBoxAdapter(
-            child: _MetricRingsSection(),
-          ),
+          SliverToBoxAdapter(child: _MetricRingsSection()),
 
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 24),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
           // Quick action chips
           SliverToBoxAdapter(
             child: ProfileQuickActions(
               onStatsTap: () => context.go(AppRoutes.statsPath),
-              onHistoryTap: () => context.pushNamed(AppRoutes.workoutHistoryName),
-              onMeasuresTap: () => context.pushNamed(AppRoutes.bodyMeasurementsName),
-              onCalendarTap: () => context.pushNamed(AppRoutes.streakCalendarName),
+              onHistoryTap: () =>
+                  context.pushNamed(AppRoutes.workoutHistoryName),
+              onMeasuresTap: () =>
+                  context.pushNamed(AppRoutes.bodyMeasurementsName),
+              onCalendarTap: () =>
+                  context.pushNamed(AppRoutes.streakCalendarName),
             ),
           ),
 
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 24),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
           // Recent workouts section
-          SliverToBoxAdapter(
-            child: _RecentWorkoutsSection(),
-          ),
+          SliverToBoxAdapter(child: _RecentWorkoutsSection()),
 
           // Bottom padding
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 100),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],
       ),
     );
@@ -134,7 +118,8 @@ class _MetricRingsSection extends ConsumerWidget {
     final weeklyVolumeAsync = ref.watch(weeklyVolumeProgressProvider);
     final streakWeeksAsync = ref.watch(streakWeeksProgressProvider);
 
-    final weeklyVolume = weeklyVolumeAsync.valueOrNull ??
+    final weeklyVolume =
+        weeklyVolumeAsync.valueOrNull ??
         const WeeklyVolumeProgress(
           currentKg: 0,
           goalKg: null,
@@ -142,7 +127,8 @@ class _MetricRingsSection extends ConsumerWidget {
           isComplete: false,
         );
 
-    final streakWeeks = streakWeeksAsync.valueOrNull ??
+    final streakWeeks =
+        streakWeeksAsync.valueOrNull ??
         const StreakWeeksProgress(
           current: 0,
           goal: 4,
@@ -192,11 +178,8 @@ class _MetricRingsSection extends ConsumerWidget {
                     ),
                     percentage: weeklyVolume.percentage,
                     color: context.colors.secondary,
-                    onTap: () => _showVolumeGoalSheet(
-                      context,
-                      ref,
-                      weeklyVolume.goalKg,
-                    ),
+                    onTap: () =>
+                        _showVolumeGoalSheet(context, ref, weeklyVolume.goalKg),
                   ),
                 ),
               ),
@@ -368,17 +351,20 @@ class _RecentWorkoutsSection extends ConsumerWidget {
                   showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
-                    backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.surface.withValues(alpha: 0),
                     builder: (_) => DraggableScrollableSheet(
                       initialChildSize: 0.8,
                       minChildSize: 0.8,
                       maxChildSize: 1.0,
                       expand: false,
                       snap: true,
-                      builder: (context, scrollController) => WorkoutDetailModal(
-                        workout: workout,
-                        scrollController: scrollController,
-                      ),
+                      builder: (context, scrollController) =>
+                          WorkoutDetailModal(
+                            workout: workout,
+                            scrollController: scrollController,
+                          ),
                     ),
                   );
                 },
@@ -468,10 +454,7 @@ class _EmptyWorkoutsCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              '🏋️',
-              style: context.textTheme.headlineMedium,
-            ),
+            Text('🏋️', style: context.textTheme.headlineMedium),
             const SizedBox(height: 8),
             Text(
               context.l10n.noRecentWorkouts,

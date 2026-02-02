@@ -44,11 +44,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolid
 
 /// In-memory cache entry for computed records
 class _CachedRecords {
-
-  _CachedRecords({
-    required this.records,
-    required this.cachedAt,
-  });
+  _CachedRecords({required this.records, required this.cachedAt});
   final ExerciseRecords records;
   final DateTime cachedAt;
 
@@ -79,8 +75,10 @@ final _recordsCache = <String, _CachedRecords>{};
 /// 3. Fetch from Firestore → Compute → Cache in all layers
 ///
 /// **Returns**: `AsyncValue<ExerciseRecords>`
-final exerciseRecordsProvider = FutureProvider.autoDispose
-    .family<ExerciseRecords, String>((ref, exerciseName) async {
+final exerciseRecordsProvider = FutureProvider.autoDispose.family<ExerciseRecords, String>((
+  ref,
+  exerciseName,
+) async {
   // Get current user ID
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) {

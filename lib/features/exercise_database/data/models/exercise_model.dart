@@ -1,7 +1,6 @@
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 
 class ExerciseModel {
-
   const ExerciseModel({
     required this.id,
     required this.nome,
@@ -30,9 +29,15 @@ class ExerciseModel {
       attrezzatura: json['attrezzatura'] ?? '',
       patternMovimento: json['patternMovimento'] ?? '',
       rangeRipetizioni: json['rangeRipetizioni'] ?? '',
-      noteTecniche: json['noteTecniche']?.isEmpty == true ? null : json['noteTecniche'],
-      mobilitaPre: json['mobilitaPre']?.isEmpty == true ? null : json['mobilitaPre'],
-      attivazionePre: json['attivazionePre']?.isEmpty == true ? null : json['attivazionePre'],
+      noteTecniche: json['noteTecniche']?.isEmpty == true
+          ? null
+          : json['noteTecniche'],
+      mobilitaPre: json['mobilitaPre']?.isEmpty == true
+          ? null
+          : json['mobilitaPre'],
+      attivazionePre: json['attivazionePre']?.isEmpty == true
+          ? null
+          : json['attivazionePre'],
     );
   }
 

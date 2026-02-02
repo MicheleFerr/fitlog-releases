@@ -318,9 +318,8 @@ class _TemplateAwareMuscleCard extends StatelessWidget {
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: context.colors.surface.withValues(alpha: 0),
-      builder: (context) => PriorityExplanationSheet(
-        neglectedMuscle: adjustedMuscle.original,
-      ),
+      builder: (context) =>
+          PriorityExplanationSheet(neglectedMuscle: adjustedMuscle.original),
     );
   }
 
@@ -330,17 +329,17 @@ class _TemplateAwareMuscleCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final l10n = context.l10n;
 
-    final severityColor = _getSeverityColor(context, adjustedMuscle.adjustedSeverity);
+    final severityColor = _getSeverityColor(
+      context,
+      adjustedMuscle.adjustedSeverity,
+    );
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: severityColor,
-          width: 2,
-        ),
+        border: Border.all(color: severityColor, width: 2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -377,7 +376,9 @@ class _TemplateAwareMuscleCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     // Planned badge
                     if (adjustedMuscle.hasPlannedExercises)
-                      _PlannedBadge(templateCount: adjustedMuscle.coveringTemplates.length),
+                      _PlannedBadge(
+                        templateCount: adjustedMuscle.coveringTemplates.length,
+                      ),
                     const SizedBox(width: 8),
                     // Priority chip
                     GestureDetector(
@@ -450,8 +451,12 @@ class _TemplateAwareMuscleCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ...suggestions.map((suggestion) {
-                  final isPlanned = coverage.isExercisePlanned(suggestion.exerciseName);
-                  final templates = coverage.getTemplatesForExercise(suggestion.exerciseName);
+                  final isPlanned = coverage.isExercisePlanned(
+                    suggestion.exerciseName,
+                  );
+                  final templates = coverage.getTemplatesForExercise(
+                    suggestion.exerciseName,
+                  );
 
                   // Skip planned exercises if toggle is off
                   if (isPlanned && !showPlannedExercises) {
@@ -487,10 +492,7 @@ class _TemplateAwareMuscleCard extends StatelessWidget {
 
 /// Severity Badge with optional "reduced" indicator
 class _SeverityBadge extends StatelessWidget {
-  const _SeverityBadge({
-    required this.severity,
-    this.wasReduced = false,
-  });
+  const _SeverityBadge({required this.severity, this.wasReduced = false});
 
   final NeglectSeverity severity;
   final bool wasReduced;
@@ -513,17 +515,13 @@ class _SeverityBadge extends StatelessWidget {
           Text(
             _getSeverityLabel(l10n, severity),
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.bold,
-                ),
+              color: color,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           if (wasReduced) ...[
             const SizedBox(width: 4),
-            Icon(
-              AppIcons.arrowDropDown,
-              size: AppIconSize.tiny,
-              color: color,
-            ),
+            Icon(AppIcons.arrowDropDown, size: AppIconSize.tiny, color: color),
           ],
         ],
       ),
@@ -582,9 +580,9 @@ class _PlannedBadge extends StatelessWidget {
           Text(
             l10n.planned,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: colorScheme.onSecondaryContainer,
-                  fontWeight: FontWeight.bold,
-                ),
+              color: colorScheme.onSecondaryContainer,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),
@@ -764,10 +762,7 @@ class _TemplateAwareExerciseTile extends StatelessWidget {
             // Add to template button
             IconButton(
               onPressed: () => _openTemplateSelector(context),
-              icon: const Icon(
-                AppIcons.add,
-                size: AppIconSize.medium,
-              ),
+              icon: const Icon(AppIcons.add, size: AppIconSize.medium),
               style: IconButton.styleFrom(
                 backgroundColor: colorScheme.primaryContainer,
                 foregroundColor: colorScheme.onPrimaryContainer,
@@ -798,9 +793,9 @@ class _DifficultyChip extends StatelessWidget {
       padding: EdgeInsets.zero,
       visualDensity: VisualDensity.compact,
       labelStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: color,
-            fontWeight: FontWeight.bold,
-          ),
+        color: color,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 
@@ -815,7 +810,10 @@ class _DifficultyChip extends StatelessWidget {
     }
   }
 
-  Color _getDifficultyColor(BuildContext context, ExerciseDifficulty difficulty) {
+  Color _getDifficultyColor(
+    BuildContext context,
+    ExerciseDifficulty difficulty,
+  ) {
     switch (difficulty) {
       case ExerciseDifficulty.beginner:
         return context.colors.success;

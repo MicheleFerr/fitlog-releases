@@ -13,7 +13,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// State for exercise expansion
 class ExerciseExpansionState {
-
   const ExerciseExpansionState({
     this.isExpanded = true,
     this.hasAutoCollapsed = false,
@@ -37,7 +36,8 @@ class ExerciseExpansionState {
 }
 
 /// Notifier for managing exercise expansion
-class ExerciseExpansionNotifier extends FamilyNotifier<ExerciseExpansionState, String> {
+class ExerciseExpansionNotifier
+    extends FamilyNotifier<ExerciseExpansionState, String> {
   @override
   ExerciseExpansionState build(String exerciseId) {
     return const ExerciseExpansionState();
@@ -45,10 +45,7 @@ class ExerciseExpansionNotifier extends FamilyNotifier<ExerciseExpansionState, S
 
   /// Expand the exercise
   void expand() {
-    state = state.copyWith(
-      isExpanded: true,
-      userManuallyExpanded: true,
-    );
+    state = state.copyWith(isExpanded: true, userManuallyExpanded: true);
   }
 
   /// Collapse the exercise
@@ -58,10 +55,7 @@ class ExerciseExpansionNotifier extends FamilyNotifier<ExerciseExpansionState, S
 
   /// Mark as auto-collapsed
   void markAutoCollapsed() {
-    state = state.copyWith(
-      isExpanded: false,
-      hasAutoCollapsed: true,
-    );
+    state = state.copyWith(isExpanded: false, hasAutoCollapsed: true);
   }
 
   /// Reset flags when exercise becomes incomplete again
@@ -75,14 +69,17 @@ class ExerciseExpansionNotifier extends FamilyNotifier<ExerciseExpansionState, S
 
   /// Check if auto-collapse should be allowed
   bool shouldAutoCollapse() {
-    return state.isExpanded && !state.hasAutoCollapsed && !state.userManuallyExpanded;
+    return state.isExpanded &&
+        !state.hasAutoCollapsed &&
+        !state.userManuallyExpanded;
   }
 }
 
 /// Provider for exercise expansion state
 /// Family provider indexed by exercise ID
-final exerciseExpansionProvider = NotifierProvider.family<
-  ExerciseExpansionNotifier,
-  ExerciseExpansionState,
-  String
->(ExerciseExpansionNotifier.new);
+final exerciseExpansionProvider =
+    NotifierProvider.family<
+      ExerciseExpansionNotifier,
+      ExerciseExpansionState,
+      String
+    >(ExerciseExpansionNotifier.new);

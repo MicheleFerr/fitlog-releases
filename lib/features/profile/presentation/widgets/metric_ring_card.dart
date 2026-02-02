@@ -44,10 +44,7 @@ class MetricRingConfig {
 /// Displays a circular progress ring with animated fill,
 /// glow effect on completion, and tap interaction.
 class MetricRingCard extends StatefulWidget {
-  const MetricRingCard({
-    required this.config,
-    super.key,
-  });
+  const MetricRingCard({required this.config, super.key});
 
   final MetricRingConfig config;
 
@@ -83,10 +80,7 @@ class _MetricRingCardState extends State<MetricRingCard>
     _progressAnimation = Tween<double>(
       begin: 0.0,
       end: widget.config.percentage,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     // Start animation after a slight delay for stagger effect
     Future.delayed(const Duration(milliseconds: 100), () {
@@ -100,13 +94,13 @@ class _MetricRingCardState extends State<MetricRingCard>
   void didUpdateWidget(MetricRingCard oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.config.percentage != widget.config.percentage) {
-      _progressAnimation = Tween<double>(
-        begin: _progressAnimation.value,
-        end: widget.config.percentage,
-      ).animate(CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOutCubic,
-      ));
+      _progressAnimation =
+          Tween<double>(
+            begin: _progressAnimation.value,
+            end: widget.config.percentage,
+          ).animate(
+            CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+          );
       _controller.forward(from: 0.0);
     }
   }
@@ -290,10 +284,7 @@ class _RingPainter extends CustomPainter {
 ///
 /// Standard layout for Profile Hub metrics display
 class MetricRingsRow extends StatelessWidget {
-  const MetricRingsRow({
-    required this.rings,
-    super.key,
-  });
+  const MetricRingsRow({required this.rings, super.key});
 
   /// List of ring configurations (typically 3)
   final List<MetricRingConfig> rings;
@@ -306,9 +297,7 @@ class MetricRingsRow extends StatelessWidget {
         children: [
           for (int i = 0; i < rings.length; i++) ...[
             if (i > 0) const SizedBox(width: 12),
-            Expanded(
-              child: MetricRingCard(config: rings[i]),
-            ),
+            Expanded(child: MetricRingCard(config: rings[i])),
           ],
         ],
       ),

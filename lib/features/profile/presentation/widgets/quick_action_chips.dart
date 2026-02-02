@@ -70,10 +70,7 @@ class _QuickActionChipState extends State<QuickActionChip>
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -105,10 +102,7 @@ class _QuickActionChipState extends State<QuickActionChip>
       child: AnimatedBuilder(
         animation: _scaleAnimation,
         builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: child,
-          );
+          return Transform.scale(scale: _scaleAnimation.value, child: child);
         },
         child: Container(
           height: 48,
@@ -116,10 +110,7 @@ class _QuickActionChipState extends State<QuickActionChip>
           decoration: BoxDecoration(
             color: context.colors.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: context.colors.outlineVariant,
-              width: 1,
-            ),
+            border: Border.all(color: context.colors.outlineVariant, width: 1),
           ),
           child: Row(
             mainAxisSize: widget.expanded ? MainAxisSize.max : MainAxisSize.min,
@@ -151,10 +142,7 @@ class _QuickActionChipState extends State<QuickActionChip>
 /// Displays 4 action chips in a 2x2 grid layout
 /// with equal size for all chips.
 class QuickActionChipsRow extends StatelessWidget {
-  const QuickActionChipsRow({
-    required this.actions,
-    super.key,
-  });
+  const QuickActionChipsRow({required this.actions, super.key});
 
   /// List of action configurations (expects 4 items)
   final List<QuickActionConfig> actions;

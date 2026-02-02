@@ -188,11 +188,11 @@ class _PRDetailDialog extends StatelessWidget {
         _buildDateInfo(context),
 
         // Session summary (if available)
-        if (data.sessionExercises != null && data.sessionExercises!.isNotEmpty)
-          ...[
-            const SizedBox(height: 16),
-            _buildSessionSummary(context),
-          ],
+        if (data.sessionExercises != null &&
+            data.sessionExercises!.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _buildSessionSummary(context),
+        ],
       ],
     );
   }
@@ -424,26 +424,32 @@ class _PRDetailDialog extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           // Exercise list
-          ...data.sessionExercises!.take(4).map((exercise) => Padding(
-                padding: const EdgeInsets.only(left: 8, top: 4),
-                child: Row(
-                  children: [
-                    Text(
-                      '•',
-                      style: TextStyle(color: context.colors.onSurfaceVariant),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        exercise,
-                        style: context.textTheme.bodySmall,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+          ...data.sessionExercises!
+              .take(4)
+              .map(
+                (exercise) => Padding(
+                  padding: const EdgeInsets.only(left: 8, top: 4),
+                  child: Row(
+                    children: [
+                      Text(
+                        '•',
+                        style: TextStyle(
+                          color: context.colors.onSurfaceVariant,
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          exercise,
+                          style: context.textTheme.bodySmall,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              )),
+              ),
           if (data.sessionExercises!.length > 4)
             Padding(
               padding: const EdgeInsets.only(left: 8, top: 4),
@@ -515,7 +521,9 @@ class _PRDetailBottomSheet extends StatelessWidget {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: context.colors.onSurfaceVariant.withValues(alpha: 0.3),
+                    color: context.colors.onSurfaceVariant.withValues(
+                      alpha: 0.3,
+                    ),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),

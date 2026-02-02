@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: domain
 /// 🎯 Feature: analytics
 /// 🔧 Type: usecase
 /// 🌍 Localization: ✅ AppLocalizations used
 /// 🎨 Theme: ✅ ColorScheme responsive
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - workout/domain/entities: Workout
 /// - analytics/domain/entities: WorkoutMetrics, WorkoutComparison
@@ -18,7 +18,6 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_me
 
 /// Use case for comparing workouts and finding similar training sessions
 class CompareWorkoutsUseCase {
-
   /// Compare current workout with historical workouts
   WorkoutComparison? execute(
     Workout currentWorkout,
@@ -46,11 +45,13 @@ class CompareWorkoutsUseCase {
 
       final similarity = _calculateWorkoutSimilarity(targetWorkout, workout);
       if (similarity >= minSimilarity) {
-        similarities.add(WorkoutSimilarity(
-          workout: workout,
-          similarity: similarity,
-          comparison: _createComparison(targetWorkout, workout),
-        ));
+        similarities.add(
+          WorkoutSimilarity(
+            workout: workout,
+            similarity: similarity,
+            comparison: _createComparison(targetWorkout, workout),
+          ),
+        );
       }
     }
 
@@ -98,17 +99,19 @@ class CompareWorkoutsUseCase {
     for (int i = 1; i < sortedWorkouts.length; i++) {
       final current = sortedWorkouts[i];
       final previous = sortedWorkouts[i - 1];
-      
+
       // Only include workouts within the period
       if (now.difference(current.updatedAt).inDays > periodDays) continue;
 
       final comparison = _createComparison(current, previous);
-      trends.add(WorkoutTrend(
-        date: current.updatedAt,
-        workout: current,
-        comparison: comparison,
-        trendDirection: _getTrendDirection(comparison.improvementScore),
-      ));
+      trends.add(
+        WorkoutTrend(
+          date: current.updatedAt,
+          workout: current,
+          comparison: comparison,
+          trendDirection: _getTrendDirection(comparison.improvementScore),
+        ),
+      );
     }
 
     return trends;
@@ -135,72 +138,84 @@ class CompareWorkoutsUseCase {
 
   double _calculateWorkoutSimilarity(Workout workout1, Workout workout2) {
     // Calculate similarity based on multiple factors
-    
+
     // 1. Exercise overlap (50% weight)
     final exerciseSimilarity = _calculateExerciseSimilarity(workout1, workout2);
-    
+
     // 2. Muscle group overlap (30% weight)
-    final muscleGroupSimilarity = _calculateMuscleGroupSimilarity(workout1, workout2);
-    
+    final muscleGroupSimilarity = _calculateMuscleGroupSimilarity(
+      workout1,
+      workout2,
+    );
+
     // 3. Volume similarity (20% weight)
     final volumeSimilarity = _calculateVolumeSimilarity(workout1, workout2);
 
-    return (exerciseSimilarity * 0.5) + 
-           (muscleGroupSimilarity * 0.3) + 
-           (volumeSimilarity * 0.2);
+    return (exerciseSimilarity * 0.5) +
+        (muscleGroupSimilarity * 0.3) +
+        (volumeSimilarity * 0.2);
   }
 
   double _calculateExerciseSimilarity(Workout workout1, Workout workout2) {
-    final exercises1 = workout1.exercises.map((e) => e.name.toLowerCase()).toSet();
-    final exercises2 = workout2.exercises.map((e) => e.name.toLowerCase()).toSet();
-    
+    final exercises1 = workout1.exercises
+        .map((e) => e.name.toLowerCase())
+        .toSet();
+    final exercises2 = workout2.exercises
+        .map((e) => e.name.toLowerCase())
+        .toSet();
+
     final intersection = exercises1.intersection(exercises2);
     final union = exercises1.union(exercises2);
-    
+
     return union.isEmpty ? 0 : intersection.length / union.length;
   }
 
   double _calculateMuscleGroupSimilarity(Workout workout1, Workout workout2) {
     final groups1 = workout1.exercises.map((e) => e.category).toSet();
     final groups2 = workout2.exercises.map((e) => e.category).toSet();
-    
+
     final intersection = groups1.intersection(groups2);
     final union = groups1.union(groups2);
-    
+
     return union.isEmpty ? 0 : intersection.length / union.length;
   }
 
   double _calculateVolumeSimilarity(Workout workout1, Workout workout2) {
     final metrics1 = WorkoutMetrics.fromWorkout(workout1);
     final metrics2 = WorkoutMetrics.fromWorkout(workout2);
-    
+
     if (metrics1.totalVolume == 0 && metrics2.totalVolume == 0) return 1.0;
     if (metrics1.totalVolume == 0 || metrics2.totalVolume == 0) return 0.0;
-    
-    final ratio = min(metrics1.totalVolume, metrics2.totalVolume) / 
-                  max(metrics1.totalVolume, metrics2.totalVolume);
-    
+
+    final ratio =
+        min(metrics1.totalVolume, metrics2.totalVolume) /
+        max(metrics1.totalVolume, metrics2.totalVolume);
+
     return ratio;
   }
 
   WorkoutComparison _createComparison(Workout current, Workout previous) {
     final currentMetrics = WorkoutMetrics.fromWorkout(current);
     final previousMetrics = WorkoutMetrics.fromWorkout(previous);
-    
+
     // Calculate changes
-    final volumeChange = currentMetrics.totalVolume - previousMetrics.totalVolume;
+    final volumeChange =
+        currentMetrics.totalVolume - previousMetrics.totalVolume;
     final volumeChangePercentage = previousMetrics.totalVolume > 0
         ? (volumeChange / previousMetrics.totalVolume) * 100
         : 0;
-    
-    final intensityChange = currentMetrics.averageRPE - previousMetrics.averageRPE;
+
+    final intensityChange =
+        currentMetrics.averageRPE - previousMetrics.averageRPE;
     final intensityChangePercentage = previousMetrics.averageRPE > 0
         ? (intensityChange / previousMetrics.averageRPE) * 100
         : 0;
-    
-    final durationChange = currentMetrics.totalDuration - previousMetrics.totalDuration;
-    final densityChange = currentMetrics.trainingDensity - previousMetrics.trainingDensity;
-    
+
+    final durationChange =
+        currentMetrics.totalDuration - previousMetrics.totalDuration;
+    final densityChange =
+        currentMetrics.trainingDensity - previousMetrics.trainingDensity;
+
     // Calculate overall improvement score
     final improvementScore = _calculateImprovementScore(
       volumeChangePercentage.toDouble(),
@@ -230,67 +245,87 @@ class CompareWorkoutsUseCase {
     double densityChange,
   ) {
     double score = 0;
-    
+
     // Volume improvement (40% weight)
     score += (volumeChange * 0.4);
-    
-    // Intensity improvement (30% weight)  
+
+    // Intensity improvement (30% weight)
     score += (intensityChange * 0.3);
-    
+
     // Density improvement (20% weight)
     score += (densityChange > 0 ? densityChange * 5 : densityChange * 2) * 0.2;
-    
+
     // Duration efficiency (10% weight) - shorter is better if volume/intensity maintained
     if (volumeChange >= 0 && intensityChange >= 0) {
-      score += (durationChange < 0 ? durationChange.abs() * 2 : -durationChange) * 0.1;
+      score +=
+          (durationChange < 0 ? durationChange.abs() * 2 : -durationChange) *
+          0.1;
     }
-    
+
     return score.clamp(-100, 100);
   }
 
-  MetricComparison _compareVolume(WorkoutMetrics metrics1, WorkoutMetrics metrics2) {
+  MetricComparison _compareVolume(
+    WorkoutMetrics metrics1,
+    WorkoutMetrics metrics2,
+  ) {
     return MetricComparison(
       current: metrics1.totalVolume,
       previous: metrics2.totalVolume,
       change: metrics1.totalVolume - metrics2.totalVolume,
-      changePercentage: metrics2.totalVolume > 0 
-          ? ((metrics1.totalVolume - metrics2.totalVolume) / metrics2.totalVolume) * 100
+      changePercentage: metrics2.totalVolume > 0
+          ? ((metrics1.totalVolume - metrics2.totalVolume) /
+                    metrics2.totalVolume) *
+                100
           : 0,
     );
   }
 
-  MetricComparison _compareIntensity(WorkoutMetrics metrics1, WorkoutMetrics metrics2) {
+  MetricComparison _compareIntensity(
+    WorkoutMetrics metrics1,
+    WorkoutMetrics metrics2,
+  ) {
     return MetricComparison(
       current: metrics1.averageRPE,
       previous: metrics2.averageRPE,
       change: metrics1.averageRPE - metrics2.averageRPE,
       changePercentage: metrics2.averageRPE > 0
-          ? ((metrics1.averageRPE - metrics2.averageRPE) / metrics2.averageRPE) * 100
+          ? ((metrics1.averageRPE - metrics2.averageRPE) /
+                    metrics2.averageRPE) *
+                100
           : 0,
     );
   }
 
-  MetricComparison _compareDuration(WorkoutMetrics metrics1, WorkoutMetrics metrics2) {
+  MetricComparison _compareDuration(
+    WorkoutMetrics metrics1,
+    WorkoutMetrics metrics2,
+  ) {
     final current = metrics1.totalDuration.inMinutes.toDouble();
     final previous = metrics2.totalDuration.inMinutes.toDouble();
-    
+
     return MetricComparison(
       current: current,
       previous: previous,
       change: current - previous,
-      changePercentage: previous > 0 ? ((current - previous) / previous) * 100 : 0,
+      changePercentage: previous > 0
+          ? ((current - previous) / previous) * 100
+          : 0,
     );
   }
 
-  Map<String, ExerciseComparison> _compareExercises(Workout workout1, Workout workout2) {
+  Map<String, ExerciseComparison> _compareExercises(
+    Workout workout1,
+    Workout workout2,
+  ) {
     final comparisons = <String, ExerciseComparison>{};
-    
+
     // Get all exercise names from both workouts
     final allExercises = {
       ...workout1.exercises.map((e) => e.name),
       ...workout2.exercises.map((e) => e.name),
     };
-    
+
     for (final exerciseName in allExercises) {
       final exercise1 = workout1.exercises.cast().firstWhere(
         (e) => e.name == exerciseName,
@@ -300,7 +335,7 @@ class CompareWorkoutsUseCase {
         (e) => e.name == exerciseName,
         orElse: () => null,
       );
-      
+
       comparisons[exerciseName] = ExerciseComparison(
         exerciseName: exerciseName,
         inWorkout1: exercise1 != null,
@@ -311,24 +346,27 @@ class CompareWorkoutsUseCase {
         sets2: exercise2?.sets.length ?? 0,
       );
     }
-    
+
     return comparisons;
   }
 
-  double _calculateOverallScore(WorkoutMetrics metrics1, WorkoutMetrics metrics2) {
+  double _calculateOverallScore(
+    WorkoutMetrics metrics1,
+    WorkoutMetrics metrics2,
+  ) {
     // Calculate a comprehensive comparison score
-    final volumeScore = metrics2.totalVolume > 0 
+    final volumeScore = metrics2.totalVolume > 0
         ? (metrics1.totalVolume / metrics2.totalVolume - 1) * 100
         : 0;
-    
+
     final intensityScore = metrics2.averageRPE > 0
         ? (metrics1.averageRPE / metrics2.averageRPE - 1) * 100
         : 0;
-    
+
     final densityScore = metrics2.trainingDensity > 0
         ? (metrics1.trainingDensity / metrics2.trainingDensity - 1) * 100
         : 0;
-    
+
     return (volumeScore * 0.5) + (intensityScore * 0.3) + (densityScore * 0.2);
   }
 
@@ -343,7 +381,6 @@ class CompareWorkoutsUseCase {
 
 /// Workout similarity result
 class WorkoutSimilarity {
-
   const WorkoutSimilarity({
     required this.workout,
     required this.similarity,
@@ -356,7 +393,6 @@ class WorkoutSimilarity {
 
 /// Detailed comparison between two workouts
 class DetailedWorkoutComparison {
-
   const DetailedWorkoutComparison({
     required this.workout1,
     required this.workout2,
@@ -381,7 +417,6 @@ class DetailedWorkoutComparison {
 
 /// Comparison of a specific metric
 class MetricComparison {
-
   const MetricComparison({
     required this.current,
     required this.previous,
@@ -400,7 +435,6 @@ class MetricComparison {
 
 /// Exercise-specific comparison
 class ExerciseComparison {
-
   const ExerciseComparison({
     required this.exerciseName,
     required this.inWorkout1,
@@ -421,14 +455,13 @@ class ExerciseComparison {
   bool get isInBoth => inWorkout1 && inWorkout2;
   bool get isNewExercise => inWorkout1 && !inWorkout2;
   bool get isRemovedExercise => !inWorkout1 && inWorkout2;
-  
+
   double get volumeChange => volume1 - volume2;
   int get setsChange => sets1 - sets2;
 }
 
 /// Workout trend over time
 class WorkoutTrend {
-
   const WorkoutTrend({
     required this.date,
     required this.workout,
@@ -442,10 +475,4 @@ class WorkoutTrend {
 }
 
 /// Trend direction enum
-enum TrendDirection {
-  strongUp,
-  up,
-  stable,
-  down,
-  strongDown,
-}
+enum TrendDirection { strongUp, up, stable, down, strongDown }

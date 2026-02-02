@@ -31,7 +31,9 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
     // Set default age if not already set
     if (currentAge == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(initialOnboardingNotifierProvider.notifier).setAge(_defaultAge);
+        ref
+            .read(initialOnboardingNotifierProvider.notifier)
+            .setAge(_defaultAge);
       });
     }
   }
@@ -142,24 +144,23 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
               onSelectedItemChanged: (index) {
                 notifier.setAge(_minAge + index);
               },
-              children: List.generate(
-                _maxAge - _minAge + 1,
-                (index) {
-                  final age = _minAge + index;
-                  final isSelected = age == (state.age ?? _defaultAge);
-                  return Center(
-                    child: Text(
-                      '$age ${context.l10n.initialOnboardingAgeYears}',
-                      style: context.textTheme.titleLarge?.copyWith(
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                        color: isSelected
-                            ? context.colors.primary
-                            : context.colors.onSurface.withValues(alpha: 0.6),
-                      ),
+              children: List.generate(_maxAge - _minAge + 1, (index) {
+                final age = _minAge + index;
+                final isSelected = age == (state.age ?? _defaultAge);
+                return Center(
+                  child: Text(
+                    '$age ${context.l10n.initialOnboardingAgeYears}',
+                    style: context.textTheme.titleLarge?.copyWith(
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                      color: isSelected
+                          ? context.colors.primary
+                          : context.colors.onSurface.withValues(alpha: 0.6),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              }),
             ),
           ),
 
@@ -230,10 +231,7 @@ class _SexCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Text(
-              emoji,
-              style: const TextStyle(fontSize: 48),
-            ),
+            Text(emoji, style: const TextStyle(fontSize: 48)),
             const SizedBox(height: 12),
             Text(
               label,

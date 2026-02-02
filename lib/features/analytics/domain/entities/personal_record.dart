@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: domain
 /// 🎯 Feature: analytics
 /// 🔧 Type: entity
 /// 🌍 Localization: ✅ AppLocalizations used
 /// 🎨 Theme: ✅ ColorScheme responsive
 /// 📱 Platform: iOS/Android/Universal
-/// 
+///
 /// Dependencies:
 /// - workout/domain/entities
 library;
@@ -15,26 +15,25 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 
 /// Types of personal records that can be tracked
 enum PRType {
-  weight,     // Heaviest weight lifted for any reps
-  volume,     // Highest volume (weight * reps) in a single set
-  reps,       // Most reps at a specific weight
-  oneRM,      // Calculated 1RM estimate
+  weight, // Heaviest weight lifted for any reps
+  volume, // Highest volume (weight * reps) in a single set
+  reps, // Most reps at a specific weight
+  oneRM, // Calculated 1RM estimate
   totalVolume, // Total volume for an exercise in a workout
-  totalSets,  // Total sets completed for an exercise
-  time,       // Fastest time for time-based exercises
+  totalSets, // Total sets completed for an exercise
+  time, // Fastest time for time-based exercises
 }
 
 /// Status of an exercise relative to personal records
 enum PRStatus {
-  newPR,      // New personal record achieved
-  nearPR,     // Within 5% of personal record
+  newPR, // New personal record achieved
+  nearPR, // Within 5% of personal record
   approaching, // Within 10% of personal record
-  normal,     // Not close to PR
+  normal, // Not close to PR
 }
 
 /// Personal Record entity for tracking exercise achievements
 class PersonalRecord {
-
   const PersonalRecord({
     required this.id,
     required this.exerciseName,
@@ -57,7 +56,7 @@ class PersonalRecord {
     required String workoutId,
   }) {
     double value;
-    
+
     switch (type) {
       case PRType.weight:
         value = set.weight ?? 0.0;
@@ -81,7 +80,7 @@ class PersonalRecord {
         value = set.volume;
         break;
       case PRType.totalSets:
-        value = 1.0;  // Each set counts as 1
+        value = 1.0; // Each set counts as 1
         break;
     }
 
@@ -154,9 +153,11 @@ class PersonalRecord {
       case PRType.weight:
         return reps != null ? '$formattedValue × $reps reps' : formattedValue;
       case PRType.reps:
-        return weight != null ? '${value.toInt()} reps @ ${weight!.toStringAsFixed(1)} kg' : formattedValue;
+        return weight != null
+            ? '${value.toInt()} reps @ ${weight!.toStringAsFixed(1)} kg'
+            : formattedValue;
       case PRType.volume:
-        return weight != null && reps != null 
+        return weight != null && reps != null
             ? '${weight!.toStringAsFixed(1)} kg × $reps = $formattedValue'
             : formattedValue;
       default:
@@ -206,7 +207,6 @@ class PersonalRecord {
 
 /// PR Detection result for an exercise
 class PRDetectionResult {
-
   const PRDetectionResult({
     required this.exerciseId,
     required this.exerciseName,
@@ -225,8 +225,9 @@ class PRDetectionResult {
   final Map<PRType, PersonalRecord> prsByType;
 
   bool get hasNewPR => newPRs.isNotEmpty;
-  
-  bool get isNearPR => status == PRStatus.nearPR || status == PRStatus.approaching;
+
+  bool get isNearPR =>
+      status == PRStatus.nearPR || status == PRStatus.approaching;
 
   /// Get motivational message based on status
   String getMotivationalMessage() {
@@ -245,10 +246,7 @@ class PRDetectionResult {
 
 /// Service for detecting PRs in real-time
 class PRDetector {
-
-  const PRDetector({
-    required this.historicalPRs,
-  });
+  const PRDetector({required this.historicalPRs});
   final Map<String, List<PersonalRecord>> historicalPRs;
 
   /// Detect PRs for a single exercise
@@ -256,7 +254,7 @@ class PRDetector {
     final exercisePRs = historicalPRs[exercise.id] ?? [];
     final newPRs = <PersonalRecord>[];
     final prsByType = <PRType, PersonalRecord>{};
-    
+
     // Group historical PRs by type
     for (final pr in exercisePRs) {
       final existing = prsByType[pr.type];
@@ -269,17 +267,22 @@ class PRDetector {
     PersonalRecord? closestPR;
 
     // Check each completed set for PRs
-    for (final set in exercise.sets.where((s) => s.isCompleted && !s.isWarmup)) {
+    for (final set in exercise.sets.where(
+      (s) => s.isCompleted && !s.isWarmup,
+    )) {
       // Check weight PR
       final weightPR = prsByType[PRType.weight];
-      if (weightPR == null || (set.weight != null && set.weight! > weightPR.value)) {
-        newPRs.add(PersonalRecord.fromSet(
-          exerciseName: exercise.name,
-          exerciseId: exercise.id,
-          set: set,
-          type: PRType.weight,
-          workoutId: workoutId,
-        ));
+      if (weightPR == null ||
+          (set.weight != null && set.weight! > weightPR.value)) {
+        newPRs.add(
+          PersonalRecord.fromSet(
+            exerciseName: exercise.name,
+            exerciseId: exercise.id,
+            set: set,
+            type: PRType.weight,
+            workoutId: workoutId,
+          ),
+        );
       } else if (set.weight != null) {
         final proximity = (set.weight! / weightPR.value) * 100;
         if (proximity > maxProximity) {
@@ -291,32 +294,39 @@ class PRDetector {
       // Check volume PR
       final volumePR = prsByType[PRType.volume];
       if (volumePR == null || set.volume > volumePR.value) {
-        newPRs.add(PersonalRecord.fromSet(
-          exerciseName: exercise.name,
-          exerciseId: exercise.id,
-          set: set,
-          type: PRType.volume,
-          workoutId: workoutId,
-        ));
+        newPRs.add(
+          PersonalRecord.fromSet(
+            exerciseName: exercise.name,
+            exerciseId: exercise.id,
+            set: set,
+            type: PRType.volume,
+            workoutId: workoutId,
+          ),
+        );
       }
 
       // Check reps PR at this weight
       final actualReps = set.actualReps ?? set.reps;
-      final repsPRs = exercisePRs.where((pr) =>
-        pr.type == PRType.reps &&
-        pr.weight != null &&
-        set.weight != null &&
-        (pr.weight! - set.weight!).abs() < 2.5 // Within 2.5kg
-      ).toList();
-      
+      final repsPRs = exercisePRs
+          .where(
+            (pr) =>
+                pr.type == PRType.reps &&
+                pr.weight != null &&
+                set.weight != null &&
+                (pr.weight! - set.weight!).abs() < 2.5, // Within 2.5kg
+          )
+          .toList();
+
       if (repsPRs.isEmpty || (actualReps ?? 0) > repsPRs.first.value) {
-        newPRs.add(PersonalRecord.fromSet(
-          exerciseName: exercise.name,
-          exerciseId: exercise.id,
-          set: set,
-          type: PRType.reps,
-          workoutId: workoutId,
-        ));
+        newPRs.add(
+          PersonalRecord.fromSet(
+            exerciseName: exercise.name,
+            exerciseId: exercise.id,
+            set: set,
+            type: PRType.reps,
+            workoutId: workoutId,
+          ),
+        );
       }
 
       // Check 1RM estimate
@@ -324,18 +334,20 @@ class PRDetector {
         final oneRM = set.weight! * (1 + actualReps / 30.0);
         final oneRMPR = prsByType[PRType.oneRM];
         if (oneRMPR == null || oneRM > oneRMPR.value) {
-          newPRs.add(PersonalRecord(
-          id: '${exercise.id}_oneRM_${DateTime.now().millisecondsSinceEpoch}',
-          exerciseName: exercise.name,
-          exerciseId: exercise.id,
-          type: PRType.oneRM,
-          value: oneRM,
-          reps: actualReps,
-          weight: set.weight,
-          achievedAt: set.completedAt ?? DateTime.now(),
-          workoutId: workoutId,
-          metadata: {'setNumber': set.setNumber},
-        ));
+          newPRs.add(
+            PersonalRecord(
+              id: '${exercise.id}_oneRM_${DateTime.now().millisecondsSinceEpoch}',
+              exerciseName: exercise.name,
+              exerciseId: exercise.id,
+              type: PRType.oneRM,
+              value: oneRM,
+              reps: actualReps,
+              weight: set.weight,
+              achievedAt: set.completedAt ?? DateTime.now(),
+              workoutId: workoutId,
+              metadata: {'setNumber': set.setNumber},
+            ),
+          );
         }
       }
     }
@@ -344,19 +356,23 @@ class PRDetector {
     final totalVolume = exercise.sets
         .where((s) => s.isCompleted && !s.isWarmup)
         .fold<double>(0, (sum, set) => sum + set.volume);
-    
+
     final totalVolumePR = prsByType[PRType.totalVolume];
     if (totalVolumePR == null || totalVolume > totalVolumePR.value) {
-      newPRs.add(PersonalRecord(
-        id: '${exercise.id}_totalVolume_${DateTime.now().millisecondsSinceEpoch}',
-        exerciseName: exercise.name,
-        exerciseId: exercise.id,
-        type: PRType.totalVolume,
-        value: totalVolume,
-        achievedAt: DateTime.now(),
-        workoutId: workoutId,
-        metadata: {'setsCount': exercise.sets.where((s) => s.isCompleted).length},
-      ));
+      newPRs.add(
+        PersonalRecord(
+          id: '${exercise.id}_totalVolume_${DateTime.now().millisecondsSinceEpoch}',
+          exerciseName: exercise.name,
+          exerciseId: exercise.id,
+          type: PRType.totalVolume,
+          value: totalVolume,
+          achievedAt: DateTime.now(),
+          workoutId: workoutId,
+          metadata: {
+            'setsCount': exercise.sets.where((s) => s.isCompleted).length,
+          },
+        ),
+      );
     }
 
     // Determine status
@@ -387,8 +403,8 @@ class PRDetector {
     List<Exercise> exercises,
     String workoutId,
   ) {
-    return exercises.map((exercise) => 
-      detectForExercise(exercise, workoutId)
-    ).toList();
+    return exercises
+        .map((exercise) => detectForExercise(exercise, workoutId))
+        .toList();
   }
 }

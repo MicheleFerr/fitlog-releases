@@ -98,14 +98,14 @@ abstract class ProgressiveOverloadData with _$ProgressiveOverloadData {
 
   /// Factory for no baseline data
   factory ProgressiveOverloadData.noBaseline() => const ProgressiveOverloadData(
-        currentPercent: 0,
-        targetMin: 0,
-        targetMax: 0,
-        status: OverloadStatus.noBaseline,
-        userLevel: 'unknown',
-        currentVolume: 0,
-        previousVolume: 0,
-      );
+    currentPercent: 0,
+    targetMin: 0,
+    targetMax: 0,
+    status: OverloadStatus.noBaseline,
+    userLevel: 'unknown',
+    currentVolume: 0,
+    previousVolume: 0,
+  );
 
   /// Check if progressing optimally
   bool get isOptimal => status == OverloadStatus.optimal;
@@ -141,14 +141,14 @@ abstract class IntensityData with _$IntensityData {
 
   /// Factory for no data
   factory IntensityData.empty() => const IntensityData(
-        estimated1RM: 0,
-        currentWeight: 0,
-        currentReps: 0,
-        percentOf1RM: 0,
-        formula: 'None',
-        confidence: 'No data',
-        zone: IntensityZone.endurance,
-      );
+    estimated1RM: 0,
+    currentWeight: 0,
+    currentReps: 0,
+    percentOf1RM: 0,
+    formula: 'None',
+    confidence: 'No data',
+    zone: IntensityZone.endurance,
+  );
 }
 
 /// Main analytics data container

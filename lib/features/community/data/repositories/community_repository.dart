@@ -26,13 +26,28 @@ abstract class CommunityRepository {
   Stream<UserContributionStats> getUserStats(String userId);
 
   Future<void> submitContribution(CommunityContribution contribution);
-  Future<void> voteOnContribution(String contributionId, String userId, bool isUpvote);
-  Future<void> commentOnContribution(String contributionId, ContributionComment comment);
-  Future<void> reportContribution(String contributionId, String userId, String reason);
+  Future<void> voteOnContribution(
+    String contributionId,
+    String userId,
+    bool isUpvote,
+  );
+  Future<void> commentOnContribution(
+    String contributionId,
+    ContributionComment comment,
+  );
+  Future<void> reportContribution(
+    String contributionId,
+    String userId,
+    String reason,
+  );
 
   // Admin moderation
   Future<void> approveContribution(String contributionId, String adminId);
-  Future<void> rejectContribution(String contributionId, String adminId, String reason);
+  Future<void> rejectContribution(
+    String contributionId,
+    String adminId,
+    String reason,
+  );
 
   Future<List<CommunityContribution>> searchContributions(String query);
   Future<UserContributionStats> calculateUserStats(String userId);
@@ -58,12 +73,13 @@ abstract class CommunityRepository {
   Future<void> incrementViewCount(String contributionId);
 }
 
-class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements CommunityRepository {
-
+class FirestoreCommunityRepository
+    with FirebaseErrorMapperMixin
+    implements CommunityRepository {
   FirestoreCommunityRepository(this._ref);
   final Ref _ref;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
   static const String _contributionsCollection = 'community_contributions';
   static const String _userStatsCollection = 'user_contribution_stats';
   // 🚀 FIRESTORE OPTIMIZATION: Cache search results to reduce redundant queries
@@ -93,30 +109,29 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
           .handleError((error) {}, test: (error) => true)
           .startWith(<CommunityContribution>[]);
     }
-    
+
     Query query = _firestore.collection(_contributionsCollection);
-    
+
     // Altri filtri
     if (exerciseId != null) {
       query = query.where('exerciseId', isEqualTo: exerciseId);
     } else if (status != null) {
       query = query.where('status', isEqualTo: status.name);
     }
-    
+
     // Se non ci sono filtri, ordina semplicemente
     if (exerciseId == null && status == null) {
       query = query.orderBy('createdAt', descending: true);
     }
-    
+
     return query
         .limit(50)
         .snapshots()
         .map(_mapSnapshotToContributions)
-        .handleError((error) {
-        }, test: (error) => true)
+        .handleError((error) {}, test: (error) => true)
         .startWith(<CommunityContribution>[]);
   }
-  
+
   @override
   Stream<List<CommunityContribution>> getTrendingContributions() {
     // Simplified query - just get recent contributions
@@ -126,11 +141,10 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
         .limit(20)
         .snapshots()
         .map(_mapSnapshotToContributions)
-        .handleError((error) {
-        }, test: (error) => true)
+        .handleError((error) {}, test: (error) => true)
         .startWith(<CommunityContribution>[]); // Inizia con lista vuota
   }
-  
+
   @override
   Stream<List<CommunityContribution>> getContributionsForReview(String userId) {
     // Simplified query - just get recent contributions not by this user
@@ -142,17 +156,20 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
         .map((snapshot) {
           final contributions = _mapSnapshotToContributions(snapshot);
           // Filter out user's own contributions and already voted
-          return contributions.where((c) => 
-            c.userId != userId &&
-            !c.upvotedBy.contains(userId) && 
-            !c.downvotedBy.contains(userId)
-          ).take(10).toList();
+          return contributions
+              .where(
+                (c) =>
+                    c.userId != userId &&
+                    !c.upvotedBy.contains(userId) &&
+                    !c.downvotedBy.contains(userId),
+              )
+              .take(10)
+              .toList();
         })
-        .handleError((error) {
-        }, test: (error) => true)
+        .handleError((error) {}, test: (error) => true)
         .startWith(<CommunityContribution>[]); // Inizia con lista vuota
   }
-  
+
   @override
   Stream<UserContributionStats> getUserStats(String userId) {
     final defaultStats = UserContributionStats(
@@ -174,7 +191,7 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
       monthlyRank: 0,
       allTimeRank: 0,
     );
-    
+
     // Ritorna direttamente lo stream con gestione errori
     return _firestore
         .collection(_userStatsCollection)
@@ -190,11 +207,13 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
           }
           return defaultStats;
         })
-        .handleError((error) {
-        }, test: (error) => true) // Gestisce tutti gli errori
+        .handleError(
+          (error) {},
+          test: (error) => true,
+        ) // Gestisce tutti gli errori
         .startWith(defaultStats); // Inizia con default stats
   }
-  
+
   @override
   Future<void> submitContribution(CommunityContribution contribution) async {
     final userAsync = await _ref.read(currentUserProvider.future);
@@ -205,35 +224,38 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
     // Tutti i contributi richiedono approvazione admin
     const status = ContributionStatus.pending;
 
-    final data = contribution.copyWith(
-      id: docRef.id,
-      userId: userAsync.uid,
-      userName: userAsync.displayName,
-      createdAt: DateTime.now(),
-      status: status,
-      upvotes: 0,
-    ).toJson();
+    final data = contribution
+        .copyWith(
+          id: docRef.id,
+          userId: userAsync.uid,
+          userName: userAsync.displayName,
+          createdAt: DateTime.now(),
+          status: status,
+          upvotes: 0,
+        )
+        .toJson();
 
     // Convert enums to strings for Firestore
     data['type'] = contribution.type.name;
     data['status'] = status.name;
 
     final result = await handleFirebaseVoidOperation(
-      () => docRef.set(data).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Firestore submitContribution timed out'),
-      ),
+      () => docRef
+          .set(data)
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException(
+              'Firestore submitContribution timed out',
+            ),
+          ),
       operationName: 'submitContribution',
     );
 
-    result.fold(
-      (failure) => throw Exception(failure.message),
-      (_) {
-        if (kDebugMode) {
-          debugPrint('✅ [CommunityRepo] Contribution submitted: ${docRef.id}');
-        }
-      },
-    );
+    result.fold((failure) => throw Exception(failure.message), (_) {
+      if (kDebugMode) {
+        debugPrint('✅ [CommunityRepo] Contribution submitted: ${docRef.id}');
+      }
+    });
 
     // 🚀 CACHE INVALIDATION: Clear search cache after new contribution
     await _clearSearchCache();
@@ -241,34 +263,40 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
     // Update user stats per submission
     await _updateUserStats(userAsync.uid, 'submit');
   }
-  
+
   @override
-  Future<void> voteOnContribution(String contributionId, String userId, bool isUpvote) async {
-    final docRef = _firestore.collection(_contributionsCollection).doc(contributionId);
-    
+  Future<void> voteOnContribution(
+    String contributionId,
+    String userId,
+    bool isUpvote,
+  ) async {
+    final docRef = _firestore
+        .collection(_contributionsCollection)
+        .doc(contributionId);
+
     await _firestore.runTransaction((transaction) async {
       final snapshot = await transaction.get(docRef);
       if (!snapshot.exists) return;
-      
+
       final data = snapshot.data()!;
       final upvotedBy = List<String>.from(data['upvotedBy'] ?? []);
       final downvotedBy = List<String>.from(data['downvotedBy'] ?? []);
-      
+
       // Remove existing vote if any
       upvotedBy.remove(userId);
       downvotedBy.remove(userId);
-      
+
       // Add new vote
       if (isUpvote) {
         upvotedBy.add(userId);
       } else {
         downvotedBy.add(userId);
       }
-      
+
       // Update counts
       final upvotes = upvotedBy.length;
       final downvotes = downvotedBy.length;
-      
+
       // Auto-approve if enough upvotes
       String status = data['status'];
       if (upvotes >= 10 && downvotes < 3) {
@@ -276,7 +304,7 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
       } else if (downvotes >= 10) {
         status = ContributionStatus.rejected.name;
       }
-      
+
       transaction.update(docRef, {
         'upvotes': upvotes,
         'downvotes': downvotes,
@@ -286,44 +314,55 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
         'updatedAt': FieldValue.serverTimestamp(),
       });
     });
-    
+
     // Update user stats
     await _updateUserStats(userId, 'vote');
   }
-  
+
   @override
-  Future<void> commentOnContribution(String contributionId, ContributionComment comment) async {
-    final docRef = _firestore.collection(_contributionsCollection).doc(contributionId);
-    
+  Future<void> commentOnContribution(
+    String contributionId,
+    ContributionComment comment,
+  ) async {
+    final docRef = _firestore
+        .collection(_contributionsCollection)
+        .doc(contributionId);
+
     await docRef.update({
       'comments': FieldValue.arrayUnion([comment.toJson()]),
       'updatedAt': FieldValue.serverTimestamp(),
     });
-    
+
     // Update user stats
     await _updateUserStats(comment.userId, 'comment');
   }
-  
+
   @override
-  Future<void> reportContribution(String contributionId, String userId, String reason) async {
+  Future<void> reportContribution(
+    String contributionId,
+    String userId,
+    String reason,
+  ) async {
     // Create report document
     final addResult = await handleFirebaseOperation(
-      () => _firestore.collection('contribution_reports').add({
-        'contributionId': contributionId,
-        'reportedBy': userId,
-        'reason': reason,
-        'createdAt': FieldValue.serverTimestamp(),
-      }).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Firestore reportContribution add timed out'),
-      ),
+      () => _firestore
+          .collection('contribution_reports')
+          .add({
+            'contributionId': contributionId,
+            'reportedBy': userId,
+            'reason': reason,
+            'createdAt': FieldValue.serverTimestamp(),
+          })
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException(
+              'Firestore reportContribution add timed out',
+            ),
+          ),
       operationName: 'reportContribution_add',
     );
 
-    addResult.fold(
-      (failure) => throw Exception(failure.message),
-      (_) {},
-    );
+    addResult.fold((failure) => throw Exception(failure.message), (_) {});
 
     // If multiple reports, mark for review
     final getResult = await handleFirebaseOperation(
@@ -333,7 +372,9 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
           .get()
           .timeout(
             const Duration(seconds: 10),
-            onTimeout: () => throw TimeoutException('Firestore reportContribution get timed out'),
+            onTimeout: () => throw TimeoutException(
+              'Firestore reportContribution get timed out',
+            ),
           ),
       operationName: 'reportContribution_get',
     );
@@ -351,9 +392,12 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
             .update({
               'status': ContributionStatus.underReview.name,
               'updatedAt': FieldValue.serverTimestamp(),
-            }).timeout(
+            })
+            .timeout(
               const Duration(seconds: 10),
-              onTimeout: () => throw TimeoutException('Firestore reportContribution update timed out'),
+              onTimeout: () => throw TimeoutException(
+                'Firestore reportContribution update timed out',
+              ),
             ),
         operationName: 'reportContribution_update',
       );
@@ -361,18 +405,22 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
       updateResult.fold(
         (failure) {
           if (kDebugMode) {
-            debugPrint('⚠️ [CommunityRepo] Failed to mark for review: ${failure.message}');
+            debugPrint(
+              '⚠️ [CommunityRepo] Failed to mark for review: ${failure.message}',
+            );
           }
         },
         (_) {
           if (kDebugMode) {
-            debugPrint('🚨 [CommunityRepo] Contribution marked for review: $contributionId');
+            debugPrint(
+              '🚨 [CommunityRepo] Contribution marked for review: $contributionId',
+            );
           }
         },
       );
     }
   }
-  
+
   @override
   Future<List<CommunityContribution>> searchContributions(String query) async {
     if (query.isEmpty) return [];
@@ -382,7 +430,9 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
     // 🚀 TIER 1: Check memory cache first (fastest)
     if (_searchCache.containsKey(queryLower) &&
         _searchCacheTimestamp.containsKey(queryLower)) {
-      final cacheAge = DateTime.now().difference(_searchCacheTimestamp[queryLower]!);
+      final cacheAge = DateTime.now().difference(
+        _searchCacheTimestamp[queryLower]!,
+      );
       if (cacheAge < _searchCacheDuration) {
         return _searchCache[queryLower]!; // ✅ Memory cache hit
       }
@@ -401,7 +451,10 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
         // ✅ SharedPreferences cache hit - restore to memory cache
         final List<dynamic> jsonList = json.decode(cachedJson) as List<dynamic>;
         final results = jsonList
-            .map((item) => CommunityContribution.fromJson(item as Map<String, dynamic>))
+            .map(
+              (item) =>
+                  CommunityContribution.fromJson(item as Map<String, dynamic>),
+            )
             .toList();
 
         _searchCache[queryLower] = results;
@@ -421,7 +474,9 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
           .get()
           .timeout(
             const Duration(seconds: 10),
-            onTimeout: () => throw TimeoutException('Firestore searchContributions timed out'),
+            onTimeout: () => throw TimeoutException(
+              'Firestore searchContributions timed out',
+            ),
           ),
       operationName: 'searchContributions',
     );
@@ -433,11 +488,14 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
 
     final contributions = _mapSnapshotToContributions(snapshot);
 
-    final results = contributions.where((c) =>
-      c.title.toLowerCase().contains(queryLower) ||
-      c.description.toLowerCase().contains(queryLower) ||
-      c.exerciseName.toLowerCase().contains(queryLower)
-    ).toList();
+    final results = contributions
+        .where(
+          (c) =>
+              c.title.toLowerCase().contains(queryLower) ||
+              c.description.toLowerCase().contains(queryLower) ||
+              c.exerciseName.toLowerCase().contains(queryLower),
+        )
+        .toList();
 
     // 💾 Save to both caches
     _searchCache[queryLower] = results;
@@ -454,7 +512,7 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
 
     return results;
   }
-  
+
   @override
   Future<UserContributionStats> calculateUserStats(String userId) async {
     final result = await handleFirebaseOperation(
@@ -464,7 +522,9 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
           .get()
           .timeout(
             const Duration(seconds: 10),
-            onTimeout: () => throw TimeoutException('Firestore calculateUserStats timed out'),
+            onTimeout: () => throw TimeoutException(
+              'Firestore calculateUserStats timed out',
+            ),
           ),
       operationName: 'calculateUserStats',
     );
@@ -478,27 +538,30 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
     int rejected = 0;
     int pending = 0;
     final contributionsByType = <String, int>{};
-    
+
     for (final doc in contributions.docs) {
       final status = doc.data()['status'];
       if (status == ContributionStatus.approved.name) {
         approved++;
-      } else if (status == ContributionStatus.rejected.name) rejected++;
-      else if (status == ContributionStatus.pending.name) pending++;
-      
+      } else if (status == ContributionStatus.rejected.name)
+        rejected++;
+      else if (status == ContributionStatus.pending.name)
+        pending++;
+
       final type = doc.data()['type'] as String;
       contributionsByType[type] = (contributionsByType[type] ?? 0) + 1;
     }
-    
+
     final total = contributions.docs.length;
     final approvalRate = total > 0 ? approved / total : 0.0;
-    
+
     // Calculate points
-    final points = (approved * ContributionPoints.contributionApproved) +
-                  (pending * ContributionPoints.submitContribution);
-    
+    final points =
+        (approved * ContributionPoints.contributionApproved) +
+        (pending * ContributionPoints.submitContribution);
+
     final level = ContributionPoints.getLevelFromPoints(points);
-    
+
     return UserContributionStats(
       userId: userId,
       totalContributions: total,
@@ -511,7 +574,7 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
       approvalRate: approvalRate,
     );
   }
-  
+
   // Helper methods
   /// 🚀 FIRESTORE OPTIMIZATION: Clear search cache
   /// Called after new contributions are submitted to ensure fresh search results
@@ -522,31 +585,44 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
 
     // Clear SharedPreferences cache
     final prefs = await SharedPreferences.getInstance();
-    final keys = prefs.getKeys().where((key) =>
-      key.startsWith(_searchCacheKey) || key.startsWith(_searchTimestampKey)
-    ).toList();
+    final keys = prefs
+        .getKeys()
+        .where(
+          (key) =>
+              key.startsWith(_searchCacheKey) ||
+              key.startsWith(_searchTimestampKey),
+        )
+        .toList();
 
     for (final key in keys) {
       await prefs.remove(key);
     }
   }
 
-  List<CommunityContribution> _mapSnapshotToContributions(QuerySnapshot snapshot) {
+  List<CommunityContribution> _mapSnapshotToContributions(
+    QuerySnapshot snapshot,
+  ) {
     return snapshot.docs.map((doc) {
       final data = doc.data() as Map<String, dynamic>;
       data['id'] = doc.id;
-      
+
       // Convert Firestore timestamps
       if (data['createdAt'] is Timestamp) {
-        data['createdAt'] = (data['createdAt'] as Timestamp).toDate().toIso8601String();
+        data['createdAt'] = (data['createdAt'] as Timestamp)
+            .toDate()
+            .toIso8601String();
       }
       if (data['updatedAt'] is Timestamp) {
-        data['updatedAt'] = (data['updatedAt'] as Timestamp).toDate().toIso8601String();
+        data['updatedAt'] = (data['updatedAt'] as Timestamp)
+            .toDate()
+            .toIso8601String();
       }
       if (data['reviewedAt'] is Timestamp) {
-        data['reviewedAt'] = (data['reviewedAt'] as Timestamp).toDate().toIso8601String();
+        data['reviewedAt'] = (data['reviewedAt'] as Timestamp)
+            .toDate()
+            .toIso8601String();
       }
-      
+
       // Convert string enums back to enum values
       data['type'] = ContributionType.values.firstWhere(
         (e) => e.name == data['type'],
@@ -556,18 +632,22 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
         (e) => e.name == data['status'],
         orElse: () => ContributionStatus.pending,
       );
-      
+
       // Ensure lists are properly typed
       data['upvotedBy'] = List<String>.from(data['upvotedBy'] ?? []);
       data['downvotedBy'] = List<String>.from(data['downvotedBy'] ?? []);
-      data['comments'] = (data['comments'] as List<dynamic>?)
-          ?.map((c) => ContributionComment.fromJson(c as Map<String, dynamic>))
-          .toList() ?? [];
-      
+      data['comments'] =
+          (data['comments'] as List<dynamic>?)
+              ?.map(
+                (c) => ContributionComment.fromJson(c as Map<String, dynamic>),
+              )
+              .toList() ??
+          [];
+
       return CommunityContribution.fromJson(data);
     }).toList();
   }
-  
+
   Future<void> _updateUserStats(String userId, String action) async {
     final statsRef = _firestore.collection(_userStatsCollection).doc(userId);
 
@@ -587,50 +667,65 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
     final getResult = await handleFirebaseOperation(
       () => statsRef.get().timeout(
         const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Firestore _updateUserStats get timed out'),
+        onTimeout: () =>
+            throw TimeoutException('Firestore _updateUserStats get timed out'),
       ),
       operationName: '_updateUserStats_get',
     );
 
-    final currentStats = getResult.fold(
-      (failure) {
-        if (kDebugMode) {
-          debugPrint('⚠️ [CommunityRepo] Failed to get stats: ${failure.message}');
-        }
-        return null;
-      },
-      (snap) => snap,
-    );
+    final currentStats = getResult.fold((failure) {
+      if (kDebugMode) {
+        debugPrint(
+          '⚠️ [CommunityRepo] Failed to get stats: ${failure.message}',
+        );
+      }
+      return null;
+    }, (snap) => snap);
 
     final currentPoints = (currentStats?.data()?['totalPoints'] ?? 0) as int;
     final newTotalPoints = currentPoints + pointsToAdd;
     final newLevel = ContributionPoints.getLevelFromPoints(newTotalPoints);
 
     final setResult = await handleFirebaseVoidOperation(
-      () => statsRef.set({
-        'userId': userId,
-        'totalPoints': FieldValue.increment(pointsToAdd),
-        'level': newLevel,
-        'lastActivity': FieldValue.serverTimestamp(),
-        'totalContributions': action == 'submit' ? FieldValue.increment(1) : null,
-        'approvedContributions': action == 'approved' ? FieldValue.increment(1) : null,
-      }, SetOptions(merge: true)).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Firestore _updateUserStats set timed out'),
-      ),
+      () => statsRef
+          .set({
+            'userId': userId,
+            'totalPoints': FieldValue.increment(pointsToAdd),
+            'level': newLevel,
+            'lastActivity': FieldValue.serverTimestamp(),
+            'totalContributions': action == 'submit'
+                ? FieldValue.increment(1)
+                : null,
+            'approvedContributions': action == 'approved'
+                ? FieldValue.increment(1)
+                : null,
+          }, SetOptions(merge: true))
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException(
+              'Firestore _updateUserStats set timed out',
+            ),
+          ),
       operationName: '_updateUserStats_set',
     );
 
     setResult.mapLeft((failure) {
       if (kDebugMode) {
-        debugPrint('⚠️ [CommunityRepo] Failed to update stats: ${failure.message}');
+        debugPrint(
+          '⚠️ [CommunityRepo] Failed to update stats: ${failure.message}',
+        );
       }
     });
   }
 
   @override
-  Future<void> approveContribution(String contributionId, String adminId) async {
-    final docRef = _firestore.collection(_contributionsCollection).doc(contributionId);
+  Future<void> approveContribution(
+    String contributionId,
+    String adminId,
+  ) async {
+    final docRef = _firestore
+        .collection(_contributionsCollection)
+        .doc(contributionId);
 
     await _firestore.runTransaction((transaction) async {
       final snapshot = await transaction.get(docRef);
@@ -657,31 +752,38 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
   }
 
   @override
-  Future<void> rejectContribution(String contributionId, String adminId, String reason) async {
-    final docRef = _firestore.collection(_contributionsCollection).doc(contributionId);
+  Future<void> rejectContribution(
+    String contributionId,
+    String adminId,
+    String reason,
+  ) async {
+    final docRef = _firestore
+        .collection(_contributionsCollection)
+        .doc(contributionId);
 
     final result = await handleFirebaseVoidOperation(
-      () => docRef.update({
-        'status': ContributionStatus.rejected.name,
-        'reviewedBy': adminId,
-        'reviewedAt': FieldValue.serverTimestamp(),
-        'reviewNote': reason,
-        'updatedAt': FieldValue.serverTimestamp(),
-      }).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Firestore rejectContribution timed out'),
-      ),
+      () => docRef
+          .update({
+            'status': ContributionStatus.rejected.name,
+            'reviewedBy': adminId,
+            'reviewedAt': FieldValue.serverTimestamp(),
+            'reviewNote': reason,
+            'updatedAt': FieldValue.serverTimestamp(),
+          })
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException(
+              'Firestore rejectContribution timed out',
+            ),
+          ),
       operationName: 'rejectContribution',
     );
 
-    result.fold(
-      (failure) => throw Exception(failure.message),
-      (_) {
-        if (kDebugMode) {
-          debugPrint('❌ [CommunityRepo] Contribution rejected: $contributionId');
-        }
-      },
-    );
+    result.fold((failure) => throw Exception(failure.message), (_) {
+      if (kDebugMode) {
+        debugPrint('❌ [CommunityRepo] Contribution rejected: $contributionId');
+      }
+    });
 
     // No XP awarded for rejected contributions
   }
@@ -706,7 +808,10 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
       baseQuery = _applyFilters(baseQuery, filters);
     } else {
       // Default: only approved contributions
-      baseQuery = baseQuery.where('status', isEqualTo: ContributionStatus.approved.name);
+      baseQuery = baseQuery.where(
+        'status',
+        isEqualTo: ContributionStatus.approved.name,
+      );
     }
 
     // Step 3: Fetch contributions (over-fetch for client filtering)
@@ -745,7 +850,9 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
 
   @override
   Future<void> saveContribution(String contributionId, String userId) async {
-    final docRef = _firestore.collection(_contributionsCollection).doc(contributionId);
+    final docRef = _firestore
+        .collection(_contributionsCollection)
+        .doc(contributionId);
 
     await _firestore.runTransaction((transaction) async {
       final snapshot = await transaction.get(docRef);
@@ -759,18 +866,17 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
     });
 
     // Store in user's saved collection
-    await _firestore
-        .collection('user_saved_contributions')
-        .doc(userId)
-        .set({
-          'contributionIds': FieldValue.arrayUnion([contributionId]),
-          'updatedAt': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true));
+    await _firestore.collection('user_saved_contributions').doc(userId).set({
+      'contributionIds': FieldValue.arrayUnion([contributionId]),
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
   }
 
   @override
   Future<void> unsaveContribution(String contributionId, String userId) async {
-    final docRef = _firestore.collection(_contributionsCollection).doc(contributionId);
+    final docRef = _firestore
+        .collection(_contributionsCollection)
+        .doc(contributionId);
 
     await _firestore.runTransaction((transaction) async {
       final snapshot = await transaction.get(docRef);
@@ -787,13 +893,10 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
     });
 
     // Remove from user's saved collection
-    await _firestore
-        .collection('user_saved_contributions')
-        .doc(userId)
-        .set({
-          'contributionIds': FieldValue.arrayRemove([contributionId]),
-          'updatedAt': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true));
+    await _firestore.collection('user_saved_contributions').doc(userId).set({
+      'contributionIds': FieldValue.arrayRemove([contributionId]),
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
   }
 
   @override
@@ -805,7 +908,9 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
           .get()
           .timeout(
             const Duration(seconds: 10),
-            onTimeout: () => throw TimeoutException('Firestore getSavedContributionIds timed out'),
+            onTimeout: () => throw TimeoutException(
+              'Firestore getSavedContributionIds timed out',
+            ),
           ),
       operationName: 'getSavedContributionIds',
     );
@@ -813,7 +918,9 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
     return result.fold(
       (failure) {
         if (kDebugMode) {
-          debugPrint('⚠️ [CommunityRepo] Failed to get saved IDs: ${failure.message}');
+          debugPrint(
+            '⚠️ [CommunityRepo] Failed to get saved IDs: ${failure.message}',
+          );
         }
         return <String>[];
       },
@@ -827,23 +934,31 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
 
   @override
   Future<void> incrementViewCount(String contributionId) async {
-    final docRef = _firestore.collection(_contributionsCollection).doc(contributionId);
+    final docRef = _firestore
+        .collection(_contributionsCollection)
+        .doc(contributionId);
 
     final result = await handleFirebaseVoidOperation(
-      () => docRef.update({
-        'viewCount': FieldValue.increment(1),
-        'lastActivityAt': FieldValue.serverTimestamp(),
-      }).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Firestore incrementViewCount timed out'),
-      ),
+      () => docRef
+          .update({
+            'viewCount': FieldValue.increment(1),
+            'lastActivityAt': FieldValue.serverTimestamp(),
+          })
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException(
+              'Firestore incrementViewCount timed out',
+            ),
+          ),
       operationName: 'incrementViewCount',
     );
 
     // Silent failure - view count is not critical
     result.mapLeft((failure) {
       if (kDebugMode) {
-        debugPrint('⚠️ [CommunityRepo] Failed to increment view: ${failure.message}');
+        debugPrint(
+          '⚠️ [CommunityRepo] Failed to increment view: ${failure.message}',
+        );
       }
     });
   }
@@ -866,15 +981,24 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
 
     // Date range filters
     if (filters.dateFrom != null) {
-      baseQuery = baseQuery.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(filters.dateFrom!));
+      baseQuery = baseQuery.where(
+        'createdAt',
+        isGreaterThanOrEqualTo: Timestamp.fromDate(filters.dateFrom!),
+      );
     }
     if (filters.dateTo != null) {
-      baseQuery = baseQuery.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(filters.dateTo!));
+      baseQuery = baseQuery.where(
+        'createdAt',
+        isLessThanOrEqualTo: Timestamp.fromDate(filters.dateTo!),
+      );
     }
 
     // Default: only approved contributions (unless already filtered)
     if (filters.exerciseIds.isEmpty && filters.type == null) {
-      baseQuery = baseQuery.where('status', isEqualTo: ContributionStatus.approved.name);
+      baseQuery = baseQuery.where(
+        'status',
+        isEqualTo: ContributionStatus.approved.name,
+      );
     }
 
     return baseQuery;
@@ -893,17 +1017,20 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
       // Search in: title, description, exerciseName, tags
       final titleMatch = contrib.title.toLowerCase().contains(lowerQuery);
       final descMatch = contrib.description.toLowerCase().contains(lowerQuery);
-      final exerciseMatch = contrib.exerciseName.toLowerCase().contains(lowerQuery);
-      final tagsMatch = contrib.tags.any((tag) => tag.toLowerCase().contains(lowerQuery));
+      final exerciseMatch = contrib.exerciseName.toLowerCase().contains(
+        lowerQuery,
+      );
+      final tagsMatch = contrib.tags.any(
+        (tag) => tag.toLowerCase().contains(lowerQuery),
+      );
 
       return titleMatch || descMatch || exerciseMatch || tagsMatch;
-    }).toList()
-      ..sort((a, b) {
-        // Relevance scoring: title > tags > description
-        final int scoreA = _calculateRelevanceScore(a, lowerQuery);
-        final int scoreB = _calculateRelevanceScore(b, lowerQuery);
-        return scoreB.compareTo(scoreA);
-      });
+    }).toList()..sort((a, b) {
+      // Relevance scoring: title > tags > description
+      final int scoreA = _calculateRelevanceScore(a, lowerQuery);
+      final int scoreB = _calculateRelevanceScore(b, lowerQuery);
+      return scoreB.compareTo(scoreA);
+    });
   }
 
   /// Calculate relevance score for search result ranking
@@ -914,7 +1041,8 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
     if (contrib.title.toLowerCase().contains(query)) score += 100;
 
     // Tags match = high priority (50 points)
-    if (contrib.tags.any((tag) => tag.toLowerCase().contains(query))) score += 50;
+    if (contrib.tags.any((tag) => tag.toLowerCase().contains(query)))
+      score += 50;
 
     // Exercise name match = medium priority (30 points)
     if (contrib.exerciseName.toLowerCase().contains(query)) score += 30;
@@ -986,7 +1114,8 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
         : daysSinceCreated;
 
     // Engagement score
-    final engagementScore = contrib.upvotes + contrib.saves + contrib.comments.length;
+    final engagementScore =
+        contrib.upvotes + contrib.saves + contrib.comments.length;
 
     // Time decay (recent = higher score)
     final timeFactor = 1.0 / (1.0 + daysSinceActivity * 0.1);

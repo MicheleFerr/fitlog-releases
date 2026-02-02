@@ -42,7 +42,6 @@ part 'exercise_session_model.freezed.dart';
 
 @freezed
 abstract class ExerciseSessionModel with _$ExerciseSessionModel {
-
   const factory ExerciseSessionModel({
     /// Name of the exercise (e.g., "Bench Press", "Squat")
     required String exerciseName,
@@ -76,8 +75,10 @@ abstract class ExerciseSessionModel with _$ExerciseSessionModel {
       exerciseName: json['exerciseName'] as String,
       muscleGroup: json['muscleGroup'] as String,
       sets: (json['sets'] as List<dynamic>)
-          .map((setJson) =>
-              AnalyticsSetModel.fromJson(setJson as Map<String, dynamic>))
+          .map(
+            (setJson) =>
+                AnalyticsSetModel.fromJson(setJson as Map<String, dynamic>),
+          )
           .toList(),
       date: _timestampFromJson(json['date']),
     );

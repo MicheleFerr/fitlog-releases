@@ -115,7 +115,9 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => const CreateContributionModal(),
     );
   }
@@ -147,7 +149,9 @@ class _FeedTab extends ConsumerWidget {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 12),
-                child: _ContributionFeedCard(contribution: contributions[index]),
+                child: _ContributionFeedCard(
+                  contribution: contributions[index],
+                ),
               );
             },
           ),
@@ -228,10 +232,7 @@ class _GuideTab extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  context.colors.primary,
-                  context.colors.secondary,
-                ],
+                colors: [context.colors.primary, context.colors.secondary],
               ),
               borderRadius: BorderRadius.circular(16),
             ),
@@ -309,8 +310,14 @@ class _GuideTab extends StatelessWidget {
               child: Column(
                 children: [
                   _XPRow(action: context.l10n.submitContribution, xp: '+10 XP'),
-                  _XPRow(action: context.l10n.contributionApproved, xp: '+50 XP'),
-                  _XPRow(action: context.l10n.contributionFeatured, xp: '+100 XP'),
+                  _XPRow(
+                    action: context.l10n.contributionApproved,
+                    xp: '+50 XP',
+                  ),
+                  _XPRow(
+                    action: context.l10n.contributionFeatured,
+                    xp: '+100 XP',
+                  ),
                   _XPRow(action: context.l10n.voteOnContribution, xp: '+1 XP'),
                 ],
               ),
@@ -452,7 +459,9 @@ class _ContributionFeedCard extends ConsumerWidget {
                   _VoteButton(
                     icon: AppIcons.thumbDown,
                     count: contribution.downvotes,
-                    isSelected: contribution.downvotedBy.contains(currentUserId),
+                    isSelected: contribution.downvotedBy.contains(
+                      currentUserId,
+                    ),
                     isDownvote: true,
                     onTap: () => _handleVote(ref, context, false),
                   ),
@@ -470,18 +479,23 @@ class _ContributionFeedCard extends ConsumerWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => ContributionDetailModal(contribution: contribution),
     );
   }
 
-  Future<void> _handleVote(WidgetRef ref, BuildContext context, bool isUpvote) async {
+  Future<void> _handleVote(
+    WidgetRef ref,
+    BuildContext context,
+    bool isUpvote,
+  ) async {
     HapticFeedback.lightImpact();
     try {
-      await ref.read(contributionSubmissionProvider.notifier).voteOnContribution(
-        contribution.id,
-        isUpvote,
-      );
+      await ref
+          .read(contributionSubmissionProvider.notifier)
+          .voteOnContribution(contribution.id, isUpvote);
     } catch (e) {
       if (context.mounted) {
         SnackBarService.showError(context, e.toString());
@@ -502,11 +516,31 @@ class _TypeBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final (icon, color, label) = switch (type) {
       ContributionType.tip => (AppIcons.tip, context.colors.primary, 'Tip'),
-      ContributionType.warning => (AppIcons.warning, context.warningColor, 'Warning'),
-      ContributionType.correction => (AppIcons.editNote, context.successColor, 'Fix'),
-      ContributionType.technique => (AppIcons.workout, context.colors.tertiary, 'Technique'),
-      ContributionType.variant => (AppIcons.altRoute, context.colors.secondary, 'Variant'),
-      ContributionType.translation => (AppIcons.translate, context.colors.primary, 'Translation'),
+      ContributionType.warning => (
+        AppIcons.warning,
+        context.warningColor,
+        'Warning',
+      ),
+      ContributionType.correction => (
+        AppIcons.editNote,
+        context.successColor,
+        'Fix',
+      ),
+      ContributionType.technique => (
+        AppIcons.workout,
+        context.colors.tertiary,
+        'Technique',
+      ),
+      ContributionType.variant => (
+        AppIcons.altRoute,
+        context.colors.secondary,
+        'Variant',
+      ),
+      ContributionType.translation => (
+        AppIcons.translate,
+        context.colors.primary,
+        'Translation',
+      ),
     };
 
     return Container(
@@ -540,10 +574,22 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (color, label) = switch (status) {
-      ContributionStatus.pending => (context.warningColor, context.l10n.pending),
-      ContributionStatus.approved => (context.successColor, context.l10n.approved),
-      ContributionStatus.rejected => (context.errorColor, context.l10n.rejected),
-      ContributionStatus.underReview => (context.colors.primary, context.l10n.underReview),
+      ContributionStatus.pending => (
+        context.warningColor,
+        context.l10n.pending,
+      ),
+      ContributionStatus.approved => (
+        context.successColor,
+        context.l10n.approved,
+      ),
+      ContributionStatus.rejected => (
+        context.errorColor,
+        context.l10n.rejected,
+      ),
+      ContributionStatus.underReview => (
+        context.colors.primary,
+        context.l10n.underReview,
+      ),
     };
 
     return Container(
@@ -798,7 +844,8 @@ class _ErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isNetworkError = error.toString().contains('unavailable') ||
+    final isNetworkError =
+        error.toString().contains('unavailable') ||
         error.toString().contains('network');
 
     return Center(

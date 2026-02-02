@@ -11,11 +11,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 
 /// Tab Cronologia: mostra lo storico delle esecuzioni dell'esercizio raggruppate per data
 class ExerciseHistoryTab extends ConsumerStatefulWidget {
-
-  const ExerciseHistoryTab({
-    super.key,
-    required this.exerciseName,
-  });
+  const ExerciseHistoryTab({super.key, required this.exerciseName});
   final String exerciseName;
 
   @override
@@ -27,8 +23,9 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
 
   @override
   Widget build(BuildContext context) {
-    final historyDataAsync =
-        ref.watch(exerciseHistoryDataGroupedProvider(widget.exerciseName));
+    final historyDataAsync = ref.watch(
+      exerciseHistoryDataGroupedProvider(widget.exerciseName),
+    );
 
     return historyDataAsync.when(
       data: (historyMap) {
@@ -37,18 +34,19 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
         }
 
         // Converti la mappa in lista ordinata per data
-        final historyList = historyMap.entries.map((entry) {
-          return {
-            'date': entry.key,
-            'items': entry.value,
-          };
-        }).toList()
-          ..sort((a, b) => (b['date'] as DateTime).compareTo(a['date'] as DateTime));
+        final historyList =
+            historyMap.entries.map((entry) {
+              return {'date': entry.key, 'items': entry.value};
+            }).toList()..sort(
+              (a, b) =>
+                  (b['date'] as DateTime).compareTo(a['date'] as DateTime),
+            );
 
         return RefreshIndicator(
           onRefresh: () async {
             ref.invalidate(
-                exerciseHistoryDataGroupedProvider(widget.exerciseName));
+              exerciseHistoryDataGroupedProvider(widget.exerciseName),
+            );
           },
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
@@ -71,11 +69,11 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SemanticIcon(
-  icon: AppIcons.errorOutline,
-  semanticLabel: 'Error outline',
-  size: AppIconSize.medium,
-  color: context.colors.error,
-),
+              icon: AppIcons.errorOutline,
+              semanticLabel: 'Error outline',
+              size: AppIconSize.medium,
+              color: context.colors.error,
+            ),
             const SizedBox(height: 16),
             Text(
               context.l10n.errorLoadingHistory,
@@ -95,11 +93,10 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SemanticIcon(
-  icon: AppIcons.history,
-  semanticLabel: 'History',
-  size: AppIconSize.medium,
-  color: context.colors.onSurface.withValues(alpha: 0.3,
-),
+            icon: AppIcons.history,
+            semanticLabel: 'History',
+            size: AppIconSize.medium,
+            color: context.colors.onSurface.withValues(alpha: 0.3),
           ),
           const SizedBox(height: 16),
           Text(
@@ -122,20 +119,21 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
   }
 
   Widget _buildDateGroup(
-      DateTime date, List items, bool isExpanded, String dateKey) {
+    DateTime date,
+    List items,
+    bool isExpanded,
+    String dateKey,
+  ) {
     final dateFormatter = DateFormat('EEEE, dd MMMM yyyy', 'it_IT');
     final formattedDate = dateFormatter.format(date);
 
     // Calcola totali per questa data
     final totalSets = items.length;
-    final totalVolume = items.fold<double>(
-      0,
-      (sum, item) {
-        final weight = double.tryParse(item.weight?.toString() ?? '0') ?? 0;
-        final reps = item.reps ?? 0;
-        return sum + (weight * reps);
-      },
-    );
+    final totalVolume = items.fold<double>(0, (sum, item) {
+      final weight = double.tryParse(item.weight?.toString() ?? '0') ?? 0;
+      final reps = item.reps ?? 0;
+      return sum + (weight * reps);
+    });
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -187,7 +185,9 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                         Text(
                           '$totalSets ${context.l10n.sets} · ${totalVolume.toStringAsFixed(0)} kg ${context.l10n.totalVolume}',
                           style: context.textTheme.labelSmall?.copyWith(
-                            color: context.colors.onSurface.withValues(alpha: 0.6),
+                            color: context.colors.onSurface.withValues(
+                              alpha: 0.6,
+                            ),
                           ),
                         ),
                       ],
@@ -262,11 +262,11 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                 Row(
                   children: [
                     SemanticIcon(
-  icon: AppIcons.fitnessCenter,
-  semanticLabel: 'Fitness center',
-  size: AppIconSize.tiny,
-  color: context.colors.primary,
-),
+                      icon: AppIcons.fitnessCenter,
+                      semanticLabel: 'Fitness center',
+                      size: AppIconSize.tiny,
+                      color: context.colors.primary,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       '${weight.toStringAsFixed(1)} kg',
@@ -277,11 +277,11 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                     ),
                     const SizedBox(width: 8),
                     SemanticIcon(
-  icon: AppIcons.repeat,
-  semanticLabel: 'Repeat',
-  size: AppIconSize.tiny,
-  color: context.colors.secondary,
-),
+                      icon: AppIcons.repeat,
+                      semanticLabel: 'Repeat',
+                      size: AppIconSize.tiny,
+                      color: context.colors.secondary,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       '$reps ${context.l10n.reps}',

@@ -115,8 +115,8 @@ class BackgroundSyncState {
 /// ```
 final healthBackgroundSyncControllerProvider =
     NotifierProvider<HealthBackgroundSyncController, BackgroundSyncState>(
-  HealthBackgroundSyncController.new,
-);
+      HealthBackgroundSyncController.new,
+    );
 
 class HealthBackgroundSyncController extends Notifier<BackgroundSyncState> {
   @override
@@ -144,8 +144,9 @@ class HealthBackgroundSyncController extends Notifier<BackgroundSyncState> {
   /// - Battery optimization must be disabled (Android Settings)
   Future<void> enableBackgroundSync() async {
     // Check if user has any authorized permissions
-    final permissionStatus =
-        await ref.read(healthPermissionStatusProvider.future);
+    final permissionStatus = await ref.read(
+      healthPermissionStatusProvider.future,
+    );
 
     if (permissionStatus.hasNoPermissions) {
       throw Exception(
@@ -182,10 +183,7 @@ class HealthBackgroundSyncController extends Notifier<BackgroundSyncState> {
     }
 
     // Update state
-    state = state.copyWith(
-      isScheduled: false,
-      nextScheduledSync: null,
-    );
+    state = state.copyWith(isScheduled: false, nextScheduledSync: null);
   }
 
   /// Manually triggers a background sync operation.
@@ -208,8 +206,7 @@ class HealthBackgroundSyncController extends Notifier<BackgroundSyncState> {
 
     try {
       // Get sync controller
-      final syncController =
-          ref.read(healthSyncControllerProvider.notifier);
+      final syncController = ref.read(healthSyncControllerProvider.notifier);
 
       // Trigger sync for all authorized data types
       await syncController.syncAll();
@@ -270,8 +267,9 @@ class HealthBackgroundSyncController extends Notifier<BackgroundSyncState> {
 
     // Throttle: Only sync if last sync was > 12 hours ago
     if (state.lastBackgroundSync != null) {
-      final timeSinceLastSync =
-          DateTime.now().difference(state.lastBackgroundSync!);
+      final timeSinceLastSync = DateTime.now().difference(
+        state.lastBackgroundSync!,
+      );
       if (timeSinceLastSync < const Duration(hours: 12)) {
         return; // Too soon, skip
       }

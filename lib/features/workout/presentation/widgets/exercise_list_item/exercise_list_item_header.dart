@@ -113,9 +113,7 @@ class ExerciseListItemHeader extends StatelessWidget {
       children: [
         // ✅ PERFORMANCE: GIF icon is now isolated in its own ConsumerWidget
         // This prevents rebuild of the entire header when GIF loads
-        _ExerciseGifIcon(
-          exercise: exercise,
-        ),
+        _ExerciseGifIcon(exercise: exercise),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -157,15 +155,16 @@ class ExerciseListItemHeader extends StatelessWidget {
         debugPrint('🏋️ [STRENGTH DEBUG] Navigation to exercise detail:');
         debugPrint('   exercise.name: ${exercise.name}');
         debugPrint('   exercise.id: ${exercise.id}');
-        debugPrint('   ID looks like UUID: ${exercise.id.contains('-') && exercise.id.length > 30}');
+        debugPrint(
+          '   ID looks like UUID: ${exercise.id.contains('-') && exercise.id.length > 30}',
+        );
 
         context.pushNamed(
           'workout-exercise-detail',
-          pathParameters: {
-            'exerciseName': Uri.encodeComponent(exercise.name),
-          },
+          pathParameters: {'exerciseName': Uri.encodeComponent(exercise.name)},
           queryParameters: {
-            'id': exercise.id, // Pass exercise database ID for strength standards lookup
+            'id': exercise
+                .id, // Pass exercise database ID for strength standards lookup
           },
         );
       },
@@ -177,8 +176,9 @@ class ExerciseListItemHeader extends StatelessWidget {
             Expanded(
               child: Text(
                 exercise.name,
-                style: context.textTheme.titleMedium
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             // Upgrade icon - isolated in ConsumerWidget for performance
@@ -243,8 +243,7 @@ class ExerciseListItemHeader extends StatelessWidget {
               color: context.warningColor,
               onTap: () async {
                 final data = await onLoadExerciseData();
-                if (data != null &&
-                    (hasWarmupData?.call(data) ?? true)) {
+                if (data != null && (hasWarmupData?.call(data) ?? true)) {
                   onShowWarmupModal(data);
                 }
               },
@@ -566,7 +565,9 @@ class ExerciseListItemHeader extends StatelessWidget {
         child: Ink(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+            color: context.colors.surfaceContainerHighest.withValues(
+              alpha: 0.5,
+            ),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: context.colors.outline.withValues(alpha: 0.2),
@@ -598,7 +599,10 @@ class ExerciseListItemHeader extends StatelessWidget {
 
   /// Builds Form Cues chip (prominent style - persistent technique reminders)
   Widget _buildFormCuesChip(BuildContext context) {
-    final preview = ExerciseNotesHandler.formatNotesPreview(formCues, maxLength: 35);
+    final preview = ExerciseNotesHandler.formatNotesPreview(
+      formCues,
+      maxLength: 35,
+    );
 
     return Material(
       color: context.colors.surface.withValues(alpha: 0),
@@ -648,7 +652,10 @@ class ExerciseListItemHeader extends StatelessWidget {
 
   /// Builds Session Notes chip (subtle style - per-workout notes)
   Widget _buildSessionNotesChip(BuildContext context) {
-    final preview = ExerciseNotesHandler.formatNotesPreview(exercise.notes, maxLength: 30);
+    final preview = ExerciseNotesHandler.formatNotesPreview(
+      exercise.notes,
+      maxLength: 30,
+    );
 
     return Material(
       color: context.colors.surface.withValues(alpha: 0),
@@ -809,8 +816,9 @@ class ExerciseListItemHeader extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   'Delete',
-                  style: context.textTheme.bodyMedium
-                      ?.copyWith(color: context.errorColor),
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.errorColor,
+                  ),
                 ),
               ],
             ),
@@ -896,7 +904,9 @@ class ExerciseListItemHeader extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(context.l10n.exerciseOptionsChangeCountingFormat),
+                    child: Text(
+                      context.l10n.exerciseOptionsChangeCountingFormat,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Container(
@@ -981,7 +991,9 @@ class ExerciseListItemHeader extends StatelessWidget {
     // Default TUT based on exercise type
     switch (exercise.type) {
       case ExerciseType.single:
-        return exercise.category == ExerciseCategory.legs ? '3-0-1-0' : '2-1-2-0';
+        return exercise.category == ExerciseCategory.legs
+            ? '3-0-1-0'
+            : '2-1-2-0';
       case ExerciseType.superset:
         return '2-0-1-0';
       case ExerciseType.dropset:
@@ -1042,9 +1054,7 @@ class _WarmupSetsMenuItem extends StatelessWidget {
 /// Before: GIF loading → entire header rebuild → insight chip flickers
 /// After: GIF loading → only this widget rebuilds → no flicker
 class _ExerciseGifIcon extends ConsumerWidget {
-  const _ExerciseGifIcon({
-    required this.exercise,
-  });
+  const _ExerciseGifIcon({required this.exercise});
 
   final Exercise exercise;
 
@@ -1054,9 +1064,7 @@ class _ExerciseGifIcon extends ConsumerWidget {
 
     // For single type exercises, use animated GIF
     if (exercise.type == ExerciseType.single) {
-      final gifUrlAsync = ref.watch(
-        exerciseGifUrlProvider(exercise.name),
-      );
+      final gifUrlAsync = ref.watch(exerciseGifUrlProvider(exercise.name));
 
       return gifUrlAsync.when(
         // RepaintBoundary isolates GIF animation from parent repaints
@@ -1076,17 +1084,11 @@ class _ExerciseGifIcon extends ConsumerWidget {
             shape: BoxShape.circle,
           ),
           child: Center(
-            child: LoadingIndicator(
-              size: 20,
-              color: colorScheme.primary,
-            ),
+            child: LoadingIndicator(size: 20, color: colorScheme.primary),
           ),
         ),
-        error: (_, __) => _buildStaticIcon(
-          context,
-          AppIcons.workout,
-          colorScheme.primary,
-        ),
+        error: (_, __) =>
+            _buildStaticIcon(context, AppIcons.workout, colorScheme.primary),
       );
     }
 
@@ -1124,10 +1126,7 @@ class _ExerciseGifIcon extends ConsumerWidget {
 /// ✅ PERFORMANCE: Isolato per evitare rebuild dell'header
 /// quando cambia lo stato del provider upgrade matches.
 class _UpgradeIconInline extends ConsumerWidget {
-  const _UpgradeIconInline({
-    required this.exerciseName,
-    required this.onTap,
-  });
+  const _UpgradeIconInline({required this.exerciseName, required this.onTap});
 
   final String exerciseName;
   final void Function(MergeCandidate candidate) onTap;

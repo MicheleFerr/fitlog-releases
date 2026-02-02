@@ -224,12 +224,17 @@ class _QuickUpgradeModalState extends ConsumerState<QuickUpgradeModal> {
                       label: l10n.muscles,
                       value: _selectedMatch.exercise.focus.join(', '),
                     ),
-                    if (_selectedMatch.exercise.muscoliSecondari.isNotEmpty) ...[
+                    if (_selectedMatch
+                        .exercise
+                        .muscoliSecondari
+                        .isNotEmpty) ...[
                       const Divider(height: 16),
                       _MetadataRow(
                         icon: AppIcons.accessibility,
                         label: l10n.secondaryMuscles,
-                        value: _selectedMatch.exercise.muscoliSecondari.join(', '),
+                        value: _selectedMatch.exercise.muscoliSecondari.join(
+                          ', ',
+                        ),
                       ),
                     ],
                     const Divider(height: 16),
@@ -304,7 +309,9 @@ class _QuickUpgradeModalState extends ConsumerState<QuickUpgradeModal> {
                 ),
                 if (_showAlternatives) ...[
                   const SizedBox(height: AppSpacing.sm),
-                  ...widget.candidate.matchingExercises.skip(1).map(
+                  ...widget.candidate.matchingExercises
+                      .skip(1)
+                      .map(
                         (match) => _AlternativeMatchTile(
                           match: match,
                           isSelected: _selectedMatch == match,
@@ -448,9 +455,7 @@ class _MetadataRow extends StatelessWidget {
         ),
         Text(
           value,
-          style: textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w500,
-          ),
+          style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
         ),
       ],
     );
@@ -511,10 +516,7 @@ class _AlternativeMatchTile extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? colorScheme.primary

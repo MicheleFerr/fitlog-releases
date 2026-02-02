@@ -428,10 +428,7 @@ class ValidationResult {
   /// Error message if validation failed (null if valid)
   final String? errorMessage;
 
-  const ValidationResult._({
-    required this.isValid,
-    this.errorMessage,
-  });
+  const ValidationResult._({required this.isValid, this.errorMessage});
 
   /// Create valid result
   factory ValidationResult.valid() {
@@ -440,10 +437,7 @@ class ValidationResult {
 
   /// Create invalid result with error message
   factory ValidationResult.invalid(String errorMessage) {
-    return ValidationResult._(
-      isValid: false,
-      errorMessage: errorMessage,
-    );
+    return ValidationResult._(isValid: false, errorMessage: errorMessage);
   }
 
   @override

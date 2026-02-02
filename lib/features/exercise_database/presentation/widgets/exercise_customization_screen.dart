@@ -6,7 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as WorkoutExercise;
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart'
+    as WorkoutExercise;
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
@@ -22,7 +23,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
-class ExerciseCustomizationScreen extends ConsumerStatefulWidget { // 🔥 FIX: Add callback parameter
+class ExerciseCustomizationScreen extends ConsumerStatefulWidget {
+  // 🔥 FIX: Add callback parameter
 
   const ExerciseCustomizationScreen({
     super.key,
@@ -32,14 +34,17 @@ class ExerciseCustomizationScreen extends ConsumerStatefulWidget { // 🔥 FIX: 
   });
   final List<Exercise> selectedExercises;
   final Function(WorkoutExercise.Exercise)? onExerciseAdded;
+
   /// Map of exerciseId → ExerciseCountingMode from user preferences
   final Map<String, ExerciseCountingMode>? countingModeOverrides;
 
   @override
-  ConsumerState<ExerciseCustomizationScreen> createState() => _ExerciseCustomizationScreenState();
+  ConsumerState<ExerciseCustomizationScreen> createState() =>
+      _ExerciseCustomizationScreenState();
 }
 
-class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizationScreen> {
+class _ExerciseCustomizationScreenState
+    extends ConsumerState<ExerciseCustomizationScreen> {
   late List<ExerciseCustomization> _customizations;
 
   @override
@@ -47,7 +52,8 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
     super.initState();
     _customizations = widget.selectedExercises.map((exercise) {
       // ✅ Priority: 1. User override, 2. Database default
-      final countingMode = widget.countingModeOverrides?[exercise.id] ?? exercise.countingMode;
+      final countingMode =
+          widget.countingModeOverrides?[exercise.id] ?? exercise.countingMode;
 
       // ✅ NUOVO: Create default sets based on counting mode
       List<SetCustomization> defaultSets;
@@ -92,10 +98,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
         title: Text('${l10n.customize} (${_customizations.length})'),
         centerTitle: true,
         leading: IconButton(
-          icon: const SemanticIcon(
-            icon: AppIcons.back,
-            semanticLabel: 'Back',
-          ),
+          icon: const SemanticIcon(icon: AppIcons.back, semanticLabel: 'Back'),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -126,7 +129,10 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
     );
   }
 
-  Widget _buildExerciseCard(ExerciseCustomization customization, int exerciseIndex) {
+  Widget _buildExerciseCard(
+    ExerciseCustomization customization,
+    int exerciseIndex,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -150,24 +156,34 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                       Text(
                         customization.exercise.focusDisplayName,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                       ),
                       const SizedBox(height: 4),
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
-                              color: _getDifficultyColor(customization.exercise.difficolta).withValues(alpha: 0.2),
+                              color: _getDifficultyColor(
+                                customization.exercise.difficolta,
+                              ).withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               customization.exercise.difficolta,
-                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: _getDifficultyColor(customization.exercise.difficolta),
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context).textTheme.labelSmall
+                                  ?.copyWith(
+                                    color: _getDifficultyColor(
+                                      customization.exercise.difficolta,
+                                    ),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -219,9 +235,9 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Set List
             ...customization.sets.asMap().entries.map((entry) {
               final setIndex = entry.key;
@@ -231,7 +247,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                 child: _buildSetRow(exerciseIndex, setIndex, setCustomization),
               );
             }),
-            
+
             const SizedBox(height: 16),
 
             // Notes Section
@@ -245,9 +261,10 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               maxLines: 2,
               onChanged: (value) {
                 setState(() {
-                  _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
-                    notes: value.isEmpty ? null : value,
-                  );
+                  _customizations[exerciseIndex] =
+                      _customizations[exerciseIndex].copyWith(
+                        notes: value.isEmpty ? null : value,
+                      );
                 });
               },
             ),
@@ -258,7 +275,10 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
   }
 
   // ✅ MIGLIORATO: Counting Mode Selector Widget (HIG-compliant)
-  Widget _buildCountingModeSelector(ExerciseCustomization customization, int exerciseIndex) {
+  Widget _buildCountingModeSelector(
+    ExerciseCustomization customization,
+    int exerciseIndex,
+  ) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
 
@@ -274,10 +294,10 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
             ),
           ),
           icon: const SemanticIcon(
-  icon: AppIcons.fitnessCenter,
-  semanticLabel: 'Fitness center',
-  size: AppIconSize.tiny,
-),
+            icon: AppIcons.fitnessCenter,
+            semanticLabel: 'Fitness center',
+            size: AppIconSize.tiny,
+          ),
         ),
         ButtonSegment<ExerciseCountingMode>(
           value: ExerciseCountingMode.reps,
@@ -289,10 +309,10 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
             ),
           ),
           icon: const SemanticIcon(
-  icon: AppIcons.repeat,
-  semanticLabel: 'Repeat',
-  size: AppIconSize.tiny,
-),
+            icon: AppIcons.repeat,
+            semanticLabel: 'Repeat',
+            size: AppIconSize.tiny,
+          ),
         ),
         ButtonSegment<ExerciseCountingMode>(
           value: ExerciseCountingMode.time,
@@ -304,10 +324,10 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
             ),
           ),
           icon: const SemanticIcon(
-  icon: AppIcons.timer,
-  semanticLabel: 'Timer',
-  size: AppIconSize.tiny,
-),
+            icon: AppIcons.timer,
+            semanticLabel: 'Timer',
+            size: AppIconSize.tiny,
+          ),
         ),
       ],
       selected: {customization.countingMode},
@@ -350,8 +370,12 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
   // ✅ NUOVO: Change Counting Mode Handler
   void _changeCountingMode(int exerciseIndex, ExerciseCountingMode newMode) {
     if (kDebugMode) {
-      debugPrint('🔍 [CustomizationScreen] _changeCountingMode: exerciseIndex=$exerciseIndex, newMode=$newMode');
-      debugPrint('🔍 [CustomizationScreen] Before: ${_customizations[exerciseIndex].countingMode}');
+      debugPrint(
+        '🔍 [CustomizationScreen] _changeCountingMode: exerciseIndex=$exerciseIndex, newMode=$newMode',
+      );
+      debugPrint(
+        '🔍 [CustomizationScreen] Before: ${_customizations[exerciseIndex].countingMode}',
+      );
     }
 
     setState(() {
@@ -401,11 +425,17 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
     });
 
     if (kDebugMode) {
-      debugPrint('🔍 [CustomizationScreen] After setState: ${_customizations[exerciseIndex].countingMode}');
+      debugPrint(
+        '🔍 [CustomizationScreen] After setState: ${_customizations[exerciseIndex].countingMode}',
+      );
     }
   }
 
-  Widget _buildSetRow(int exerciseIndex, int setIndex, SetCustomization setCustomization) {
+  Widget _buildSetRow(
+    int exerciseIndex,
+    int setIndex,
+    SetCustomization setCustomization,
+  ) {
     final countingMode = _customizations[exerciseIndex].countingMode;
 
     return Row(
@@ -442,15 +472,17 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                   : setCustomization.weight.toStringAsFixed(1),
               icon: AppIcons.fitnessCenter,
               color: Theme.of(context).colorScheme.primary,
-              onTap: () => _showWeightPicker(
-                exerciseIndex,
-                setIndex,
-                setCustomization,
-              ),
+              onTap: () =>
+                  _showWeightPicker(exerciseIndex, setIndex, setCustomization),
             ),
           ),
           const SizedBox(width: 8),
-          Text('×', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
+          Text(
+            '×',
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+          ),
           const SizedBox(width: 8),
         ],
 
@@ -463,7 +495,8 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               value: '${setCustomization.reps}',
               icon: AppIcons.repeat,
               color: Theme.of(context).colorScheme.secondary,
-              onTap: () => _showRepsPicker(exerciseIndex, setIndex, setCustomization),
+              onTap: () =>
+                  _showRepsPicker(exerciseIndex, setIndex, setCustomization),
             ),
           ),
 
@@ -475,7 +508,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               value: _formatDuration(setCustomization.seconds ?? 60),
               icon: AppIcons.timer,
               color: Theme.of(context).colorScheme.tertiary,
-              onTap: () => _showDurationPicker(exerciseIndex, setIndex, setCustomization),
+              onTap: () => _showDurationPicker(
+                exerciseIndex,
+                setIndex,
+                setCustomization,
+              ),
             ),
           ),
 
@@ -486,10 +523,10 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
           IconButton(
             onPressed: () => _removeSet(exerciseIndex, setIndex),
             icon: const SemanticIcon(
-  icon: AppIcons.removeCircleOutline,
-  semanticLabel: 'Remove circle outline',
-  size: AppIconSize.small,
-),
+              icon: AppIcons.removeCircleOutline,
+              semanticLabel: 'Remove circle outline',
+              size: AppIconSize.small,
+            ),
             tooltip: 'Rimuovi Set',
           ),
       ],
@@ -511,13 +548,13 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
       final currentSets = _customizations[exerciseIndex].sets;
       final newSetNumber = currentSets.length + 1;
       final lastSet = currentSets.isNotEmpty ? currentSets.last : null;
-      
+
       final newSet = SetCustomization(
         setNumber: newSetNumber,
         weight: lastSet?.weight ?? 0,
         reps: lastSet?.reps ?? 10,
       );
-      
+
       _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
         sets: [...currentSets, newSet],
       );
@@ -526,25 +563,33 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
 
   void _removeSet(int exerciseIndex, int setIndex) {
     setState(() {
-      final currentSets = List<SetCustomization>.from(_customizations[exerciseIndex].sets);
+      final currentSets = List<SetCustomization>.from(
+        _customizations[exerciseIndex].sets,
+      );
       currentSets.removeAt(setIndex);
-      
+
       // Renumber sets
       for (int i = 0; i < currentSets.length; i++) {
         currentSets[i] = currentSets[i].copyWith(setNumber: i + 1);
       }
-      
+
       _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
         sets: currentSets,
       );
     });
   }
 
-  void _updateSet(int exerciseIndex, int setIndex, SetCustomization updatedSet) {
+  void _updateSet(
+    int exerciseIndex,
+    int setIndex,
+    SetCustomization updatedSet,
+  ) {
     setState(() {
-      final currentSets = List<SetCustomization>.from(_customizations[exerciseIndex].sets);
+      final currentSets = List<SetCustomization>.from(
+        _customizations[exerciseIndex].sets,
+      );
       currentSets[setIndex] = updatedSet;
-      
+
       _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
         sets: currentSets,
       );
@@ -554,48 +599,67 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
   void _addAllToWorkout() {
     for (final customization in _customizations) {
       if (kDebugMode) {
-        debugPrint('🔍 [CustomizationScreen] _addAllToWorkout: exercise=${customization.exercise.nome}, countingMode=${customization.countingMode}');
+        debugPrint(
+          '🔍 [CustomizationScreen] _addAllToWorkout: exercise=${customization.exercise.nome}, countingMode=${customization.countingMode}',
+        );
       }
 
       final workoutExercise = _convertToWorkoutExercise(customization);
 
       if (kDebugMode) {
-        debugPrint('🔍 [CustomizationScreen] After conversion: name=${workoutExercise.name}, countingMode=${workoutExercise.countingMode}');
+        debugPrint(
+          '🔍 [CustomizationScreen] After conversion: name=${workoutExercise.name}, countingMode=${workoutExercise.countingMode}',
+        );
       }
 
       // 🔥 FIX: Use callback if available, otherwise fallback to provider
       if (widget.onExerciseAdded != null) {
-        if (kDebugMode) debugPrint('🔍 [CustomizationScreen] Using CALLBACK onExerciseAdded');
+        if (kDebugMode)
+          debugPrint('🔍 [CustomizationScreen] Using CALLBACK onExerciseAdded');
         widget.onExerciseAdded!(workoutExercise);
       } else {
-        if (kDebugMode) debugPrint('🔍 [CustomizationScreen] Using PROVIDER addExercise');
+        if (kDebugMode)
+          debugPrint('🔍 [CustomizationScreen] Using PROVIDER addExercise');
         ref.read(currentWorkoutProvider.notifier).addExercise(workoutExercise);
       }
     }
-    
-    SnackBarService.showSuccess(context, context.l10n.exercisesAddedToWorkout(_customizations.length));
-    
+
+    SnackBarService.showSuccess(
+      context,
+      context.l10n.exercisesAddedToWorkout(_customizations.length),
+    );
+
     // Go back - different behavior based on context
     if (widget.onExerciseAdded != null) {
       // We're in template editing mode, go back exactly 2 steps (this screen + search screen)
       Navigator.of(context).pop(); // Pop customization screen
-      Navigator.of(context).pop(); // Pop search screen -> back to template editor
+      Navigator.of(
+        context,
+      ).pop(); // Pop search screen -> back to template editor
     } else {
       // We're in normal workout mode, go back to workout screen
-      Navigator.of(context).popUntil((route) => route.settings.name == AppRoutes.workoutName || route.isFirst);
+      Navigator.of(context).popUntil(
+        (route) =>
+            route.settings.name == AppRoutes.workoutName || route.isFirst,
+      );
     }
   }
 
-  WorkoutExercise.Exercise _convertToWorkoutExercise(ExerciseCustomization customization) {
+  WorkoutExercise.Exercise _convertToWorkoutExercise(
+    ExerciseCustomization customization,
+  ) {
     // ✅ NUOVO: Convert custom sets to workout sets with counting mode awareness
-    final sets = customization.sets.map((setCustomization) =>
-      WorkoutExercise.ExerciseSet(
-        setNumber: setCustomization.setNumber,
-        weight: setCustomization.weight,
-        reps: setCustomization.reps,
-        seconds: setCustomization.seconds, // ✅ NUOVO: Include seconds for time-based exercises
-      )
-    ).toList();
+    final sets = customization.sets
+        .map(
+          (setCustomization) => WorkoutExercise.ExerciseSet(
+            setNumber: setCustomization.setNumber,
+            weight: setCustomization.weight,
+            reps: setCustomization.reps,
+            seconds: setCustomization
+                .seconds, // ✅ NUOVO: Include seconds for time-based exercises
+          ),
+        )
+        .toList();
 
     // Use centralized converter with custom sets and notes
     final exercise = ExerciseConverter.fromDatabaseExerciseWithSets(
@@ -605,11 +669,15 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
 
     // ✅ NUOVO: Override notes AND counting mode
     final result = exercise.copyWith(
-      notes: customization.notes, // Note utente separate - non usare noteTecniche
-      countingMode: customization.countingMode, // ✅ NUOVO: Include counting mode
+      notes:
+          customization.notes, // Note utente separate - non usare noteTecniche
+      countingMode:
+          customization.countingMode, // ✅ NUOVO: Include counting mode
     );
     if (kDebugMode) {
-      debugPrint('🔍 [CustomizationScreen] _convertToWorkoutExercise FINAL: countingMode=${result.countingMode}');
+      debugPrint(
+        '🔍 [CustomizationScreen] _convertToWorkoutExercise FINAL: countingMode=${result.countingMode}',
+      );
     }
     return result;
   }
@@ -647,9 +715,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: color.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -682,10 +748,16 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
   }
 
   /// ✅ Show reps picker dialog with quick select buttons
-  void _showRepsPicker(int exerciseIndex, int setIndex, SetCustomization setCustomization) {
+  void _showRepsPicker(
+    int exerciseIndex,
+    int setIndex,
+    SetCustomization setCustomization,
+  ) {
     final theme = Theme.of(context);
     int selectedReps = setCustomization.reps;
-    final controller = FixedExtentScrollController(initialItem: selectedReps - 1);
+    final controller = FixedExtentScrollController(
+      initialItem: selectedReps - 1,
+    );
 
     showModalBottomSheet(
       context: context,
@@ -737,7 +809,9 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                       color: isSelected
                           ? theme.colorScheme.onSecondaryContainer
                           : theme.colorScheme.onSurface,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                   );
                 }).toList(),
@@ -761,7 +835,9 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                         child: Text(
                           reps.toString(),
                           style: theme.textTheme.headlineSmall?.copyWith(
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                             color: isSelected
                                 ? theme.colorScheme.secondary
                                 : theme.colorScheme.onSurface,
@@ -781,7 +857,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: () {
-                    _updateSet(exerciseIndex, setIndex, setCustomization.copyWith(reps: selectedReps));
+                    _updateSet(
+                      exerciseIndex,
+                      setIndex,
+                      setCustomization.copyWith(reps: selectedReps),
+                    );
                     Navigator.of(context).pop();
                   },
                   child: Text(AppLocalizations.of(context).confirm),
@@ -795,7 +875,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
   }
 
   /// ✅ NUOVO: Show duration picker dialog with quick select buttons
-  void _showDurationPicker(int exerciseIndex, int setIndex, SetCustomization setCustomization) {
+  void _showDurationPicker(
+    int exerciseIndex,
+    int setIndex,
+    SetCustomization setCustomization,
+  ) {
     final theme = Theme.of(context);
     int selectedSeconds = setCustomization.seconds ?? 60;
     final controller = FixedExtentScrollController(
@@ -852,7 +936,9 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                       color: isSelected
                           ? theme.colorScheme.onTertiaryContainer
                           : theme.colorScheme.onSurface,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                   );
                 }).toList(),
@@ -876,7 +962,9 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                         child: Text(
                           _formatDuration(seconds),
                           style: theme.textTheme.headlineSmall?.copyWith(
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                             color: isSelected
                                 ? theme.colorScheme.tertiary
                                 : theme.colorScheme.onSurface,
@@ -896,7 +984,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: () {
-                    _updateSet(exerciseIndex, setIndex, setCustomization.copyWith(seconds: selectedSeconds));
+                    _updateSet(
+                      exerciseIndex,
+                      setIndex,
+                      setCustomization.copyWith(seconds: selectedSeconds),
+                    );
                     Navigator.of(context).pop();
                   },
                   child: Text(AppLocalizations.of(context).confirm),
@@ -968,7 +1060,9 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               // 🆕 History section - Quick fill from previous workouts
               Consumer(
                 builder: (context, ref, _) {
-                  final historyAsync = ref.watch(recentWeightsWithDetailsProvider(exerciseName));
+                  final historyAsync = ref.watch(
+                    recentWeightsWithDetailsProvider(exerciseName),
+                  );
 
                   return historyAsync.when(
                     data: (historyList) {
@@ -1001,90 +1095,143 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               itemCount: historyList.length.clamp(0, 5),
-                              separatorBuilder: (_, __) => const SizedBox(width: 8),
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(width: 8),
                               itemBuilder: (context, index) {
                                 final historyItem = historyList[index];
                                 final weight = historyItem.weight ?? 0;
                                 final reps = historyItem.reps ?? 0;
-                                final daysAgo = DateTime.now().difference(historyItem.date).inDays;
+                                final daysAgo = DateTime.now()
+                                    .difference(historyItem.date)
+                                    .inDays;
 
                                 // Format relative date
                                 String dateLabel;
                                 if (daysAgo == 0) {
-                                  dateLabel = AppLocalizations.of(context).today;
+                                  dateLabel = AppLocalizations.of(
+                                    context,
+                                  ).today;
                                 } else if (daysAgo == 1) {
-                                  dateLabel = AppLocalizations.of(context).yesterday;
+                                  dateLabel = AppLocalizations.of(
+                                    context,
+                                  ).yesterday;
                                 } else if (daysAgo < 7) {
-                                  dateLabel = AppLocalizations.of(context).daysAgo(daysAgo);
+                                  dateLabel = AppLocalizations.of(
+                                    context,
+                                  ).daysAgo(daysAgo);
                                 } else {
-                                  dateLabel = DateFormat('d MMM').format(historyItem.date);
+                                  dateLabel = DateFormat(
+                                    'd MMM',
+                                  ).format(historyItem.date);
                                 }
 
                                 // Convert to display unit
-                                final displayWeight = weight.toDisplayUnit(unit);
-                                final isSelected = (displayWeight - selectedWeight).abs() < 0.05;
+                                final displayWeight = weight.toDisplayUnit(
+                                  unit,
+                                );
+                                final isSelected =
+                                    (displayWeight - selectedWeight).abs() <
+                                    0.05;
 
                                 return Material(
-                                  color: context.colors.surface.withValues(alpha: 0),
+                                  color: context.colors.surface.withValues(
+                                    alpha: 0,
+                                  ),
                                   child: InkWell(
                                     onTap: () {
-                                      setModalState(() => selectedWeight = displayWeight);
+                                      setModalState(
+                                        () => selectedWeight = displayWeight,
+                                      );
                                       controller.animateToItem(
-                                        WeightHelper.weightToIndex(displayWeight, unit),
-                                        duration: const Duration(milliseconds: 300),
+                                        WeightHelper.weightToIndex(
+                                          displayWeight,
+                                          unit,
+                                        ),
+                                        duration: const Duration(
+                                          milliseconds: 300,
+                                        ),
                                         curve: Curves.easeInOut,
                                       );
                                       HapticFeedback.mediumImpact();
                                     },
                                     borderRadius: BorderRadius.circular(12),
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 8,
+                                      ),
                                       decoration: BoxDecoration(
                                         color: isSelected
                                             ? theme.colorScheme.primaryContainer
-                                            : theme.colorScheme.surfaceContainerHighest,
+                                            : theme
+                                                  .colorScheme
+                                                  .surfaceContainerHighest,
                                         borderRadius: BorderRadius.circular(12),
                                         border: Border.all(
                                           color: isSelected
                                               ? theme.colorScheme.primary
-                                              : theme.colorScheme.outline.withValues(alpha: 0.3),
+                                              : theme.colorScheme.outline
+                                                    .withValues(alpha: 0.3),
                                           width: isSelected ? 2 : 1,
                                         ),
                                       ),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Text(
                                                 '${WeightHelper.formatPickerWeight(displayWeight, unit)}$unit',
-                                                style: theme.textTheme.titleSmall?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: isSelected
-                                                      ? theme.colorScheme.primary
-                                                      : theme.colorScheme.onSurface,
-                                                ),
+                                                style: theme
+                                                    .textTheme
+                                                    .titleSmall
+                                                    ?.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: isSelected
+                                                          ? theme
+                                                                .colorScheme
+                                                                .primary
+                                                          : theme
+                                                                .colorScheme
+                                                                .onSurface,
+                                                    ),
                                               ),
                                               if (reps > 0) ...[
                                                 Text(
                                                   ' × $reps',
-                                                  style: theme.textTheme.bodySmall?.copyWith(
-                                                    color: isSelected
-                                                        ? theme.colorScheme.primary.withValues(alpha: 0.8)
-                                                        : theme.colorScheme.onSurfaceVariant,
-                                                  ),
+                                                  style: theme
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                        color: isSelected
+                                                            ? theme
+                                                                  .colorScheme
+                                                                  .primary
+                                                                  .withValues(
+                                                                    alpha: 0.8,
+                                                                  )
+                                                            : theme
+                                                                  .colorScheme
+                                                                  .onSurfaceVariant,
+                                                      ),
                                                 ),
                                               ],
                                             ],
                                           ),
                                           Text(
                                             dateLabel,
-                                            style: theme.textTheme.labelSmall?.copyWith(
-                                              color: theme.colorScheme.onSurfaceVariant,
-                                              fontSize: 10,
-                                            ),
+                                            style: theme.textTheme.labelSmall
+                                                ?.copyWith(
+                                                  color: theme
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                                  fontSize: 10,
+                                                ),
                                           ),
                                         ],
                                       ),
@@ -1109,7 +1256,8 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                           itemBuilder: (_, __) => Container(
                             width: 80,
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                              color: theme.colorScheme.surfaceContainerHighest
+                                  .withValues(alpha: 0.5),
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
@@ -1122,138 +1270,169 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               ),
 
               // Quick increment buttons (custom or default from settings)
-              ref.watch(weightSettingsProvider).when(
-                data: (settings) {
-                  final increment = settings.activeIncrement.value;
-                  return Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      // Decrement button
-                      OutlinedButton.icon(
-                        onPressed: () {
-                          final newWeight = (selectedWeight - increment).clamp(0.0, 999.0).toDouble();
-                          setModalState(() => selectedWeight = newWeight);
-                          controller.animateToItem(
-                            WeightHelper.weightToIndex(newWeight, unit),
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                          HapticFeedback.mediumImpact();
-                        },
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          minimumSize: const Size(80, 36),
-                          foregroundColor: theme.colorScheme.error,
-                        ),
-                        icon: const SemanticIcon(
-  icon: AppIcons.remove,
-  semanticLabel: 'Remove',
-  size: AppIconSize.tiny,
-),
-                        label: Text(
-                          increment.toStringAsFixed(increment.truncateToDouble() == increment ? 0 : 1),
-                          style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      // Increment button
-                      FilledButton.icon(
-                        onPressed: () {
-                          final newWeight = (selectedWeight + increment).clamp(0.0, 999.0).toDouble();
-                          setModalState(() => selectedWeight = newWeight);
-                          controller.animateToItem(
-                            WeightHelper.weightToIndex(newWeight, unit),
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                          HapticFeedback.mediumImpact();
-                        },
-                        style: FilledButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          minimumSize: const Size(80, 36),
-                        ),
-                        icon: const SemanticIcon(
-  icon: AppIcons.add,
-  semanticLabel: 'Add',
-  size: AppIconSize.tiny,
-),
-                        label: Text(
-                          '+${increment.toStringAsFixed(increment.truncateToDouble() == increment ? 0 : 1)}',
-                          style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      // Quick jumps (10, 20, 50 for kg or similar for lbs)
-                      ...WeightHelper.getQuickJumps(selectedWeight, unit).map((jump) {
-                        return OutlinedButton(
-                          onPressed: () {
-                            final newWeight = WeightHelper.applyQuickJump(
-                              currentWeight: selectedWeight,
-                              jump: jump,
-                              unit: unit,
-                            );
-                            setModalState(() => selectedWeight = newWeight);
-                            controller.animateToItem(
-                              WeightHelper.weightToIndex(newWeight, unit),
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                            HapticFeedback.mediumImpact();
-                          },
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            minimumSize: const Size(60, 36),
-                          ),
-                          child: Text(
-                            jump > 0 ? '+$jump' : '$jump',
-                            style: theme.textTheme.labelMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: jump > 0
-                                  ? theme.colorScheme.tertiary
-                                  : theme.colorScheme.error,
+              ref
+                  .watch(weightSettingsProvider)
+                  .when(
+                    data: (settings) {
+                      final increment = settings.activeIncrement.value;
+                      return Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          // Decrement button
+                          OutlinedButton.icon(
+                            onPressed: () {
+                              final newWeight = (selectedWeight - increment)
+                                  .clamp(0.0, 999.0)
+                                  .toDouble();
+                              setModalState(() => selectedWeight = newWeight);
+                              controller.animateToItem(
+                                WeightHelper.weightToIndex(newWeight, unit),
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                              HapticFeedback.mediumImpact();
+                            },
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              minimumSize: const Size(80, 36),
+                              foregroundColor: theme.colorScheme.error,
+                            ),
+                            icon: const SemanticIcon(
+                              icon: AppIcons.remove,
+                              semanticLabel: 'Remove',
+                              size: AppIconSize.tiny,
+                            ),
+                            label: Text(
+                              increment.toStringAsFixed(
+                                increment.truncateToDouble() == increment
+                                    ? 0
+                                    : 1,
+                              ),
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        );
-                      }),
-                    ],
-                  );
-                },
-                loading: () => const SizedBox.shrink(),
-                error: (_, __) => Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: WeightHelper.getQuickJumps(selectedWeight, unit).map((jump) {
-                    return OutlinedButton(
-                      onPressed: () {
-                        final newWeight = WeightHelper.applyQuickJump(
-                          currentWeight: selectedWeight,
-                          jump: jump,
-                          unit: unit,
-                        );
-                        setModalState(() => selectedWeight = newWeight);
-                        controller.animateToItem(
-                          WeightHelper.weightToIndex(newWeight, unit),
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
-                        HapticFeedback.mediumImpact();
-                      },
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        minimumSize: const Size(60, 36),
-                      ),
-                      child: Text(
-                        jump > 0 ? '+$jump' : '$jump',
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: jump > 0
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.error,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
+                          // Increment button
+                          FilledButton.icon(
+                            onPressed: () {
+                              final newWeight = (selectedWeight + increment)
+                                  .clamp(0.0, 999.0)
+                                  .toDouble();
+                              setModalState(() => selectedWeight = newWeight);
+                              controller.animateToItem(
+                                WeightHelper.weightToIndex(newWeight, unit),
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                              HapticFeedback.mediumImpact();
+                            },
+                            style: FilledButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              minimumSize: const Size(80, 36),
+                            ),
+                            icon: const SemanticIcon(
+                              icon: AppIcons.add,
+                              semanticLabel: 'Add',
+                              size: AppIconSize.tiny,
+                            ),
+                            label: Text(
+                              '+${increment.toStringAsFixed(increment.truncateToDouble() == increment ? 0 : 1)}',
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          // Quick jumps (10, 20, 50 for kg or similar for lbs)
+                          ...WeightHelper.getQuickJumps(
+                            selectedWeight,
+                            unit,
+                          ).map((jump) {
+                            return OutlinedButton(
+                              onPressed: () {
+                                final newWeight = WeightHelper.applyQuickJump(
+                                  currentWeight: selectedWeight,
+                                  jump: jump,
+                                  unit: unit,
+                                );
+                                setModalState(() => selectedWeight = newWeight);
+                                controller.animateToItem(
+                                  WeightHelper.weightToIndex(newWeight, unit),
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                );
+                                HapticFeedback.mediumImpact();
+                              },
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                                minimumSize: const Size(60, 36),
+                              ),
+                              child: Text(
+                                jump > 0 ? '+$jump' : '$jump',
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: jump > 0
+                                      ? theme.colorScheme.tertiary
+                                      : theme.colorScheme.error,
+                                ),
+                              ),
+                            );
+                          }),
+                        ],
+                      );
+                    },
+                    loading: () => const SizedBox.shrink(),
+                    error: (_, __) => Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: WeightHelper.getQuickJumps(selectedWeight, unit)
+                          .map((jump) {
+                            return OutlinedButton(
+                              onPressed: () {
+                                final newWeight = WeightHelper.applyQuickJump(
+                                  currentWeight: selectedWeight,
+                                  jump: jump,
+                                  unit: unit,
+                                );
+                                setModalState(() => selectedWeight = newWeight);
+                                controller.animateToItem(
+                                  WeightHelper.weightToIndex(newWeight, unit),
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                );
+                                HapticFeedback.mediumImpact();
+                              },
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                                minimumSize: const Size(60, 36),
+                              ),
+                              child: Text(
+                                jump > 0 ? '+$jump' : '$jump',
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: jump > 0
+                                      ? theme.colorScheme.primary
+                                      : theme.colorScheme.error,
+                                ),
+                              ),
+                            );
+                          })
+                          .toList(),
+                    ),
+                  ),
 
               const SizedBox(height: 16),
               // Picker
@@ -1269,13 +1448,18 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                     builder: (context, index) {
                       final weight = WeightHelper.indexToWeight(index, unit);
                       final isSelected = (weight - selectedWeight).abs() < 0.05;
-                      final displayText = WeightHelper.formatPickerWeight(weight, unit);
+                      final displayText = WeightHelper.formatPickerWeight(
+                        weight,
+                        unit,
+                      );
 
                       return Center(
                         child: Text(
                           displayText,
                           style: theme.textTheme.headlineSmall?.copyWith(
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                             color: isSelected
                                 ? theme.colorScheme.primary
                                 : theme.colorScheme.onSurface,
@@ -1285,7 +1469,12 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                     },
                   ),
                   onSelectedItemChanged: (index) {
-                    setModalState(() => selectedWeight = WeightHelper.indexToWeight(index, unit));
+                    setModalState(
+                      () => selectedWeight = WeightHelper.indexToWeight(
+                        index,
+                        unit,
+                      ),
+                    );
                     HapticFeedback.selectionClick();
                   },
                 ),
@@ -1298,7 +1487,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                   onPressed: () {
                     // Convert display weight back to kg for storage
                     final weightInKg = selectedWeight.fromDisplayUnit(unit);
-                    _updateSet(exerciseIndex, setIndex, setCustomization.copyWith(weight: weightInKg));
+                    _updateSet(
+                      exerciseIndex,
+                      setIndex,
+                      setCustomization.copyWith(weight: weightInKg),
+                    );
                     Navigator.of(context).pop();
                     HapticFeedback.mediumImpact();
                   },
@@ -1315,7 +1508,6 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
 
 // Data Classes
 class ExerciseCustomization {
-
   ExerciseCustomization({
     required this.exercise,
     required this.sets,
@@ -1343,7 +1535,6 @@ class ExerciseCustomization {
 }
 
 class SetCustomization {
-
   SetCustomization({
     required this.setNumber,
     this.weight = 0, // Optional for bodyweight/time exercises

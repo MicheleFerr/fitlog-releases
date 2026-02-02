@@ -107,7 +107,9 @@ class MuscleGroupExpansionTile extends ConsumerWidget {
 
       // Trailing icon: Arrow down/up based on expansion state
       trailing: SemanticIcon(
-        icon: isExpanded ? AppIcons.keyboardArrowUp : AppIcons.keyboardArrowDown,
+        icon: isExpanded
+            ? AppIcons.keyboardArrowUp
+            : AppIcons.keyboardArrowDown,
         semanticLabel: isExpanded ? 'Collapse' : 'Expand',
         size: AppIconSize.medium,
         color: context.colors.primary,
@@ -123,9 +125,9 @@ class MuscleGroupExpansionTile extends ConsumerWidget {
 
         // Toggle expansion state in provider
         // OK: read - Using ref.read() in callback is correct pattern for calling notifier methods
-        ref.read(muscleGroupExpansionProvider.notifier).toggleExpansion(
-              muscleGroup,
-            );
+        ref
+            .read(muscleGroupExpansionProvider.notifier)
+            .toggleExpansion(muscleGroup);
       },
 
       // Theme customization
@@ -137,9 +139,7 @@ class MuscleGroupExpansionTile extends ConsumerWidget {
       collapsedTextColor: context.colors.onSurface,
 
       // Shape: Rounded corners
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       collapsedShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),

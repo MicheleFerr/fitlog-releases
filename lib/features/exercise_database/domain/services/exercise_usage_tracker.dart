@@ -20,10 +20,10 @@ import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 /// - Persistenza con Hive (locale)
 /// - Auto-sync con Firebase (future)
 class ExerciseUsageTracker {
-
   factory ExerciseUsageTracker() => _instance;
 
   ExerciseUsageTracker._internal();
+
   /// Box Hive per storage locale
   static const String _boxName = 'exercise_usage';
 
@@ -34,7 +34,8 @@ class ExerciseUsageTracker {
   HiveBoxManagerEnhanced? _boxManager;
 
   /// Singleton instance
-  static final ExerciseUsageTracker _instance = ExerciseUsageTracker._internal();
+  static final ExerciseUsageTracker _instance =
+      ExerciseUsageTracker._internal();
 
   /// Inizializza Hive box (chiamare all'avvio app)
   Future<void> initialize({HiveBoxManagerEnhanced? boxManager}) async {
@@ -50,7 +51,9 @@ class ExerciseUsageTracker {
       _box = await _boxManager!.openBox<ExerciseUsageModel>(_boxName);
 
       if (kDebugMode) {
-        debugPrint('✅ ExerciseUsageTracker initialized: ${_box!.length} entries');
+        debugPrint(
+          '✅ ExerciseUsageTracker initialized: ${_box!.length} entries',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -87,7 +90,9 @@ class ExerciseUsageTracker {
         // Incrementa existing
         existingEntry.increment();
         if (kDebugMode) {
-          debugPrint('📈 Exercise usage incremented: $exerciseName (${existingEntry.usageCount})');
+          debugPrint(
+            '📈 Exercise usage incremented: $exerciseName (${existingEntry.usageCount})',
+          );
         }
       } else {
         // Crea nuovo entry
@@ -111,9 +116,7 @@ class ExerciseUsageTracker {
   /// Decrementa contatore utilizzo (negative feedback)
   ///
   /// [exerciseId] - ID univoco esercizio
-  Future<void> decrementUsage({
-    required String exerciseId,
-  }) async {
+  Future<void> decrementUsage({required String exerciseId}) async {
     try {
       final box = await _getBox;
 
@@ -121,7 +124,9 @@ class ExerciseUsageTracker {
       if (entry != null) {
         entry.decrement();
         if (kDebugMode) {
-          debugPrint('📉 Exercise usage decremented: ${entry.exerciseName} (${entry.usageCount})');
+          debugPrint(
+            '📉 Exercise usage decremented: ${entry.exerciseName} (${entry.usageCount})',
+          );
         }
       }
     } catch (e) {
@@ -135,9 +140,7 @@ class ExerciseUsageTracker {
   ///
   /// Questo elimina totalmente l'esercizio dai "popolari" e "recenti"
   /// [exerciseId] - ID univoco esercizio da rimuovere
-  Future<void> removeExercise({
-    required String exerciseId,
-  }) async {
+  Future<void> removeExercise({required String exerciseId}) async {
     try {
       final box = await _getBox;
 
@@ -251,7 +254,9 @@ class ExerciseUsageTracker {
   ///
   /// [limit] - Numero massimo risultati (default 10)
   /// Returns: Lista di ExerciseUsageModel ordinata per lastUsedAt DESC
-  Future<List<ExerciseUsageModel>> getRecentlyUsedExercises({int limit = 10}) async {
+  Future<List<ExerciseUsageModel>> getRecentlyUsedExercises({
+    int limit = 10,
+  }) async {
     try {
       final box = await _getBox;
 

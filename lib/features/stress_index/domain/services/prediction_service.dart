@@ -89,13 +89,13 @@ class StressInsight {
 
   /// Creates empty/default insight when no data available
   factory StressInsight.empty() => const StressInsight(
-        currentStress: 0,
-        predictedTomorrow: 0,
-        predictedIfWorkout: 30,
-        recommendation: RecoveryRecommendation.readyHard,
-        rationale: 'No data available',
-        factors: {},
-      );
+    currentStress: 0,
+    predictedTomorrow: 0,
+    predictedIfWorkout: 30,
+    recommendation: RecoveryRecommendation.readyHard,
+    rationale: 'No data available',
+    factors: {},
+  );
 
   /// Current stress level (0-100)
   final double currentStress;
@@ -308,7 +308,8 @@ class PredictionService {
       debugPrint('  - Current: ${currentStress.toStringAsFixed(1)}');
       debugPrint('  - Predicted (rest): ${predictedRest.toStringAsFixed(1)}');
       debugPrint(
-          '  - Predicted (workout): ${predictedWorkout.toStringAsFixed(1)}');
+        '  - Predicted (workout): ${predictedWorkout.toStringAsFixed(1)}',
+      );
       debugPrint('  - Recommendation: ${recommendation.name}');
     }
 

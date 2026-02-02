@@ -58,12 +58,11 @@ import 'package:hive_ce_flutter/hive_flutter.dart';
 class AnalyticsRepositoryImpl
     with FirebaseErrorMapperMixin
     implements AnalyticsRepository {
-
   AnalyticsRepositoryImpl({
     required FirebaseFirestore firestore,
     required Box<Map<dynamic, dynamic>> cacheBox,
-  })  : _firestore = firestore,
-        _cacheBox = cacheBox;
+  }) : _firestore = firestore,
+       _cacheBox = cacheBox;
   final FirebaseFirestore _firestore;
   final Box<Map<dynamic, dynamic>> _cacheBox;
 
@@ -91,7 +90,9 @@ class AnalyticsRepositoryImpl
   ) {
     try {
       if (kDebugMode) {
-        debugPrint('📊 [ANALYTICS] Subscribing to analytics stream for user: $userId');
+        debugPrint(
+          '📊 [ANALYTICS] Subscribing to analytics stream for user: $userId',
+        );
       }
 
       return _firestore
@@ -100,42 +101,52 @@ class AnalyticsRepositoryImpl
           .collection('analytics')
           .snapshots()
           .map((snapshot) {
-        try {
-          if (kDebugMode) {
-            debugPrint('📊 [ANALYTICS] Received snapshot: ${snapshot.docs.length} documents');
-            if (snapshot.docs.isEmpty) {
-              debugPrint('⚠️ [ANALYTICS] Empty analytics collection! Run migration to populate.');
-            } else {
-              debugPrint('📊 [ANALYTICS] Exercises found: ${snapshot.docs.map((d) => d.id).join(", ")}');
+            try {
+              if (kDebugMode) {
+                debugPrint(
+                  '📊 [ANALYTICS] Received snapshot: ${snapshot.docs.length} documents',
+                );
+                if (snapshot.docs.isEmpty) {
+                  debugPrint(
+                    '⚠️ [ANALYTICS] Empty analytics collection! Run migration to populate.',
+                  );
+                } else {
+                  debugPrint(
+                    '📊 [ANALYTICS] Exercises found: ${snapshot.docs.map((d) => d.id).join(", ")}',
+                  );
+                }
+              }
+
+              final histories = snapshot.docs
+                  .map(
+                    (doc) => ExerciseHistoryModel.fromFirestore(doc).toDomain(),
+                  )
+                  .toList();
+
+              // Sort by exercise name alphabetically
+              histories.sort(
+                (a, b) => a.exerciseName.compareTo(b.exerciseName),
+              );
+
+              if (kDebugMode) {
+                debugPrint(
+                  '✅ [ANALYTICS] Returning ${histories.length} exercise histories',
+                );
+              }
+
+              return Right(histories);
+            } catch (e) {
+              if (kDebugMode) {
+                debugPrint('❌ [ANALYTICS] Parse error: $e');
+              }
+              return Left(CacheFailure('Failed to parse analytics: $e'));
             }
-          }
-
-          final histories = snapshot.docs
-              .map((doc) => ExerciseHistoryModel.fromFirestore(doc).toDomain())
-              .toList();
-
-          // Sort by exercise name alphabetically
-          histories.sort((a, b) => a.exerciseName.compareTo(b.exerciseName));
-
-          if (kDebugMode) {
-            debugPrint('✅ [ANALYTICS] Returning ${histories.length} exercise histories');
-          }
-
-          return Right(histories);
-        } catch (e) {
-          if (kDebugMode) {
-            debugPrint('❌ [ANALYTICS] Parse error: $e');
-          }
-          return Left(CacheFailure( 'Failed to parse analytics: $e'));
-        }
-      });
+          });
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ [ANALYTICS] Stream error: $e');
       }
-      return Stream.value(
-        Left(ServerFailure( 'Failed to fetch analytics: $e')),
-      );
+      return Stream.value(Left(ServerFailure('Failed to fetch analytics: $e')));
     }
   }
 
@@ -174,31 +185,28 @@ class AnalyticsRepositoryImpl
     }
 
     // Fetch from Firestore using mixin
-    return handleFirebaseOperation(
-      () async {
-        final doc = await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('analytics')
-            .doc(exerciseName)
-            .get()
-            .timeout(const Duration(seconds: 10));
+    return handleFirebaseOperation(() async {
+      final doc = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('analytics')
+          .doc(exerciseName)
+          .get()
+          .timeout(const Duration(seconds: 10));
 
-        if (!doc.exists) {
-          return <ExerciseSession>[]; // No history for this exercise yet
-        }
+      if (!doc.exists) {
+        return <ExerciseSession>[]; // No history for this exercise yet
+      }
 
-        final model = ExerciseHistoryModel.fromFirestore(doc);
-        final history = model.toDomain();
+      final model = ExerciseHistoryModel.fromFirestore(doc);
+      final history = model.toDomain();
 
-        // Cache for future reads
-        _saveToCache(cacheKey, history);
+      // Cache for future reads
+      _saveToCache(cacheKey, history);
 
-        // Filter sessions by timeframe
-        return history.getSessionsByTimeframe(start, end);
-      },
-      operationName: 'getSessionsByTimeframe',
-    );
+      // Filter sessions by timeframe
+      return history.getSessionsByTimeframe(start, end);
+    }, operationName: 'getSessionsByTimeframe');
   }
 
   /// Search exercises by name (fuzzy search)
@@ -221,35 +229,34 @@ class AnalyticsRepositoryImpl
     required String userId,
     required String query,
   }) async {
-    return handleFirebaseOperation(
-      () async {
-        final snapshot = await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('analytics')
-            .get()
-            .timeout(const Duration(seconds: 10));
+    return handleFirebaseOperation(() async {
+      final snapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('analytics')
+          .get()
+          .timeout(const Duration(seconds: 10));
 
-        final queryLower = query.toLowerCase();
-        final matchingHistories = snapshot.docs
-            .map((doc) => ExerciseHistoryModel.fromFirestore(doc).toDomain())
-            .where((history) =>
-                history.exerciseName.toLowerCase().contains(queryLower))
-            .toList();
+      final queryLower = query.toLowerCase();
+      final matchingHistories = snapshot.docs
+          .map((doc) => ExerciseHistoryModel.fromFirestore(doc).toDomain())
+          .where(
+            (history) =>
+                history.exerciseName.toLowerCase().contains(queryLower),
+          )
+          .toList();
 
-        // Sort by relevance (exact match first, then alphabetically)
-        matchingHistories.sort((a, b) {
-          final aExact = a.exerciseName.toLowerCase() == queryLower;
-          final bExact = b.exerciseName.toLowerCase() == queryLower;
-          if (aExact && !bExact) return -1;
-          if (!aExact && bExact) return 1;
-          return a.exerciseName.compareTo(b.exerciseName);
-        });
+      // Sort by relevance (exact match first, then alphabetically)
+      matchingHistories.sort((a, b) {
+        final aExact = a.exerciseName.toLowerCase() == queryLower;
+        final bExact = b.exerciseName.toLowerCase() == queryLower;
+        if (aExact && !bExact) return -1;
+        if (!aExact && bExact) return 1;
+        return a.exerciseName.compareTo(b.exerciseName);
+      });
 
-        return matchingHistories;
-      },
-      operationName: 'searchExercises',
-    );
+      return matchingHistories;
+    }, operationName: 'searchExercises');
   }
 
   /// Get exercise history for a specific exercise
@@ -278,30 +285,27 @@ class AnalyticsRepositoryImpl
     }
 
     // Fetch from Firestore using mixin
-    return handleFirebaseOperation(
-      () async {
-        final doc = await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('analytics')
-            .doc(exerciseName)
-            .get()
-            .timeout(const Duration(seconds: 10));
+    return handleFirebaseOperation(() async {
+      final doc = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('analytics')
+          .doc(exerciseName)
+          .get()
+          .timeout(const Duration(seconds: 10));
 
-        if (!doc.exists) {
-          throw NotFoundFailure('No history found for $exerciseName');
-        }
+      if (!doc.exists) {
+        throw NotFoundFailure('No history found for $exerciseName');
+      }
 
-        final model = ExerciseHistoryModel.fromFirestore(doc);
-        final history = model.toDomain();
+      final model = ExerciseHistoryModel.fromFirestore(doc);
+      final history = model.toDomain();
 
-        // Cache for future reads
-        _saveToCache(cacheKey, history);
+      // Cache for future reads
+      _saveToCache(cacheKey, history);
 
-        return history;
-      },
-      operationName: 'getExerciseHistoryByName',
-    );
+      return history;
+    }, operationName: 'getExerciseHistoryByName');
   }
 
   /// Update exercise history (write-through to analytics collection)
@@ -335,56 +339,50 @@ class AnalyticsRepositoryImpl
     required String muscleGroup,
     required ExerciseSession session,
   }) async {
-    final result = await handleFirebaseVoidOperation(
-      () async {
-        final docRef = _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('analytics')
-            .doc(exerciseName);
+    final result = await handleFirebaseVoidOperation(() async {
+      final docRef = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('analytics')
+          .doc(exerciseName);
 
-        // Read existing document
-        final doc = await docRef.get().timeout(const Duration(seconds: 10));
+      // Read existing document
+      final doc = await docRef.get().timeout(const Duration(seconds: 10));
 
-        ExerciseHistory updatedHistory;
-        if (doc.exists) {
-          // Append session to existing history
-          final model = ExerciseHistoryModel.fromFirestore(doc);
-          final existingHistory = model.toDomain();
-          updatedHistory = ExerciseHistory(
-            exerciseId: exerciseId,
-            exerciseName: exerciseName,
-            muscleGroup: muscleGroup,
-            sessions: [...existingHistory.sessions, session],
-          );
-        } else {
-          // Create new history with first session
-          updatedHistory = ExerciseHistory(
-            exerciseId: exerciseId,
-            exerciseName: exerciseName,
-            muscleGroup: muscleGroup,
-            sessions: [session],
-          );
-        }
+      ExerciseHistory updatedHistory;
+      if (doc.exists) {
+        // Append session to existing history
+        final model = ExerciseHistoryModel.fromFirestore(doc);
+        final existingHistory = model.toDomain();
+        updatedHistory = ExerciseHistory(
+          exerciseId: exerciseId,
+          exerciseName: exerciseName,
+          muscleGroup: muscleGroup,
+          sessions: [...existingHistory.sessions, session],
+        );
+      } else {
+        // Create new history with first session
+        updatedHistory = ExerciseHistory(
+          exerciseId: exerciseId,
+          exerciseName: exerciseName,
+          muscleGroup: muscleGroup,
+          sessions: [session],
+        );
+      }
 
-        // Write back to Firestore
-        final updatedModel = ExerciseHistoryModel.fromDomain(updatedHistory);
-        await docRef.set(updatedModel.toFirestore()).timeout(
-              const Duration(seconds: 10),
-            );
+      // Write back to Firestore
+      final updatedModel = ExerciseHistoryModel.fromDomain(updatedHistory);
+      await docRef
+          .set(updatedModel.toFirestore())
+          .timeout(const Duration(seconds: 10));
 
-        // Invalidate cache
-        final cacheKey = _getCacheKey(userId, exerciseName);
-        await _cacheBox.delete(cacheKey);
-      },
-      operationName: 'updateExerciseHistory',
-    );
+      // Invalidate cache
+      final cacheKey = _getCacheKey(userId, exerciseName);
+      await _cacheBox.delete(cacheKey);
+    }, operationName: 'updateExerciseHistory');
 
     // Convert Either<Failure, Unit> to Either<Failure, void> for backward compatibility
-    return result.fold(
-      (failure) => Left(failure),
-      (_) => const Right(null),
-    );
+    return result.fold((failure) => Left(failure), (_) => const Right(null));
   }
 
   /// Delete all analytics for a user (for testing/cleanup)
@@ -400,37 +398,32 @@ class AnalyticsRepositoryImpl
   Future<Either<Failure, void>> deleteAllAnalytics({
     required String userId,
   }) async {
-    final result = await handleFirebaseVoidOperation(
-      () async {
-        final snapshot = await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('analytics')
-            .get()
-            .timeout(const Duration(seconds: 10));
+    final result = await handleFirebaseVoidOperation(() async {
+      final snapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('analytics')
+          .get()
+          .timeout(const Duration(seconds: 10));
 
-        // Delete all documents in batch
-        final batch = _firestore.batch();
-        for (final doc in snapshot.docs) {
-          batch.delete(doc.reference);
-        }
-        await batch.commit().timeout(const Duration(seconds: 15));
+      // Delete all documents in batch
+      final batch = _firestore.batch();
+      for (final doc in snapshot.docs) {
+        batch.delete(doc.reference);
+      }
+      await batch.commit().timeout(const Duration(seconds: 15));
 
-        // Clear all cache for this user
-        final cacheKeys =
-            _cacheBox.keys.where((key) => key.toString().contains(userId));
-        for (final key in cacheKeys) {
-          await _cacheBox.delete(key);
-        }
-      },
-      operationName: 'deleteAllAnalytics',
-    );
+      // Clear all cache for this user
+      final cacheKeys = _cacheBox.keys.where(
+        (key) => key.toString().contains(userId),
+      );
+      for (final key in cacheKeys) {
+        await _cacheBox.delete(key);
+      }
+    }, operationName: 'deleteAllAnalytics');
 
     // Convert Either<Failure, Unit> to Either<Failure, void> for backward compatibility
-    return result.fold(
-      (failure) => Left(failure),
-      (_) => const Right(null),
-    );
+    return result.fold((failure) => Left(failure), (_) => const Right(null));
   }
 
   // ============================================================================
@@ -497,7 +490,7 @@ class AnalyticsRepositoryImpl
       await _cacheBox.clear();
       return const Right(null);
     } catch (e) {
-      return Left(CacheFailure( 'Failed to clear cache: $e'));
+      return Left(CacheFailure('Failed to clear cache: $e'));
     }
   }
 
@@ -510,8 +503,9 @@ class AnalyticsRepositoryImpl
   @override
   Future<bool> isCacheValid(String userId) async {
     try {
-      final userCacheKeys = _cacheBox.keys
-          .where((key) => key.toString().contains('analytics_$userId'));
+      final userCacheKeys = _cacheBox.keys.where(
+        (key) => key.toString().contains('analytics_$userId'),
+      );
 
       for (final key in userCacheKeys) {
         final cached = _cacheBox.get(key);

@@ -190,7 +190,10 @@ extension UnifiedFeedbackX on UnifiedFeedback {
   }
 
   /// Mark as dismissed by admin
-  UnifiedFeedback markAsDismissed(String adminUserId, {required String reason}) {
+  UnifiedFeedback markAsDismissed(
+    String adminUserId, {
+    required String reason,
+  }) {
     return copyWith(
       status: UnifiedFeedbackStatus.dismissed,
       reviewedBy: adminUserId,
@@ -202,10 +205,7 @@ extension UnifiedFeedbackX on UnifiedFeedback {
 
   /// Update severity level
   UnifiedFeedback updateSeverity(FeedbackSeverity newSeverity) {
-    return copyWith(
-      severity: newSeverity,
-      updatedAt: DateTime.now(),
-    );
+    return copyWith(severity: newSeverity, updatedAt: DateTime.now());
   }
 
   /// Add admin note (append to existing if present)
@@ -215,10 +215,7 @@ extension UnifiedFeedbackX on UnifiedFeedback {
         ? note
         : '$existingNotes\n\n--- ${DateTime.now().toIso8601String()} ---\n$note';
 
-    return copyWith(
-      adminNotes: newNotes,
-      updatedAt: DateTime.now(),
-    );
+    return copyWith(adminNotes: newNotes, updatedAt: DateTime.now());
   }
 }
 
@@ -299,12 +296,14 @@ extension UnifiedFeedbackFactory on UnifiedFeedback {
       type: UnifiedFeedbackType.analytics,
       status: UnifiedFeedbackStatus.open,
       severity: FeedbackSeverity.medium,
-      message: comment ?? (isHelpful ? 'Positive feedback' : 'Needs improvement'),
+      message:
+          comment ?? (isHelpful ? 'Positive feedback' : 'Needs improvement'),
       createdAt: DateTime.now(),
       metadata: {
         'isHelpful': isHelpful,
         if (lastViewedSection != null) 'lastViewedSection': lastViewedSection,
-        if (totalWorkoutsViewed != null) 'totalWorkoutsViewed': totalWorkoutsViewed,
+        if (totalWorkoutsViewed != null)
+          'totalWorkoutsViewed': totalWorkoutsViewed,
       },
     );
   }

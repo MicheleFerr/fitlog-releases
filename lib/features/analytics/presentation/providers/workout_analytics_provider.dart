@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: presentation
 /// 🎯 Feature: analytics
 /// 🔧 Type: provider
 /// 🌍 Localization: ✅ AppLocalizations used
 /// 🎨 Theme: ✅ ColorScheme responsive
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - Riverpod: StateNotifierProvider, StreamProvider
 /// - workout/presentation/providers: workoutProvider
@@ -39,7 +39,9 @@ import 'package:gymbro_flutter_new/features/analytics/data/services/analytics_ca
 final workoutMetricsCacheProvider = Provider<Box<Map>>((ref) {
   // Open box if not already open
   if (!Hive.isBoxOpen('workoutMetrics')) {
-    throw StateError('workoutMetrics box not opened. Call Hive.openBox<Map>(\'workoutMetrics\') first.');
+    throw StateError(
+      'workoutMetrics box not opened. Call Hive.openBox<Map>(\'workoutMetrics\') first.',
+    );
   }
   return Hive.box<Map>('workoutMetrics');
 });
@@ -71,49 +73,55 @@ final analyticsCacheServiceProvider = Provider<AnalyticsCacheService>((ref) {
 });
 
 /// Workout Analytics Repository Provider
-final workoutAnalyticsRepositoryProvider = Provider<WorkoutAnalyticsRepository>((ref) {
-  final hiveDataSource = ref.watch(hiveWorkoutDataSourceProvider);
+final workoutAnalyticsRepositoryProvider = Provider<WorkoutAnalyticsRepository>(
+  (ref) {
+    final hiveDataSource = ref.watch(hiveWorkoutDataSourceProvider);
 
-  // Get the metrics cache box
-  final Box<Map> cache;
-  if (Hive.isBoxOpen('workoutMetrics')) {
-    cache = Hive.box<Map>('workoutMetrics');
-  } else {
-    throw StateError('workoutMetrics box must be opened before using analytics');
-  }
+    // Get the metrics cache box
+    final Box<Map> cache;
+    if (Hive.isBoxOpen('workoutMetrics')) {
+      cache = Hive.box<Map>('workoutMetrics');
+    } else {
+      throw StateError(
+        'workoutMetrics box must be opened before using analytics',
+      );
+    }
 
-  // Get HiveBoxManagerEnhanced
-  final boxManager = ref.watch(hiveBoxManagerProvider);
+    // Get HiveBoxManagerEnhanced
+    final boxManager = ref.watch(hiveBoxManagerProvider);
 
-  // Get analytics cache service
-  final cacheService = ref.watch(analyticsCacheServiceProvider);
+    // Get analytics cache service
+    final cacheService = ref.watch(analyticsCacheServiceProvider);
 
-  // Pass cache, boxManager, and cacheService to repository
-  final repository = WorkoutAnalyticsRepositoryImpl(
-    metricsCache: cache,
-    boxManager: boxManager,
-    hiveWorkoutDataSource: hiveDataSource,
-    cacheService: cacheService,
-  );
+    // Pass cache, boxManager, and cacheService to repository
+    final repository = WorkoutAnalyticsRepositoryImpl(
+      metricsCache: cache,
+      boxManager: boxManager,
+      hiveWorkoutDataSource: hiveDataSource,
+      cacheService: cacheService,
+    );
 
-  // Dispose repository on provider disposal
-  ref.onDispose(() {
-    repository.dispose();
-  });
+    // Dispose repository on provider disposal
+    ref.onDispose(() {
+      repository.dispose();
+    });
 
-  return repository;
-});
+    return repository;
+  },
+);
 
 /// Calculate Workout Metrics Use Case Provider
-final calculateWorkoutMetricsUseCaseProvider = Provider<CalculateWorkoutMetricsUseCase>((ref) {
-  return CalculateWorkoutMetricsUseCase();
-});
+final calculateWorkoutMetricsUseCaseProvider =
+    Provider<CalculateWorkoutMetricsUseCase>((ref) {
+      return CalculateWorkoutMetricsUseCase();
+    });
 
 /// Detect Personal Records Use Case Provider
-final detectPersonalRecordsUseCaseProvider = Provider<DetectPersonalRecordsUseCase>((ref) {
-  final prTracker = PRTracker();
-  return DetectPersonalRecordsUseCase(prTracker);
-});
+final detectPersonalRecordsUseCaseProvider =
+    Provider<DetectPersonalRecordsUseCase>((ref) {
+      final prTracker = PRTracker();
+      return DetectPersonalRecordsUseCase(prTracker);
+    });
 
 /// Compare Workouts Use Case Provider
 final compareWorkoutsUseCaseProvider = Provider<CompareWorkoutsUseCase>((ref) {
@@ -125,13 +133,13 @@ final compareWorkoutsUseCaseProvider = Provider<CompareWorkoutsUseCase>((ref) {
 // =============================================================================
 
 /// Main workout analytics state provider
-final workoutAnalyticsProvider = NotifierProvider<WorkoutAnalyticsNotifier, WorkoutAnalyticsState>(
-  WorkoutAnalyticsNotifier.new,
-);
+final workoutAnalyticsProvider =
+    NotifierProvider<WorkoutAnalyticsNotifier, WorkoutAnalyticsState>(
+      WorkoutAnalyticsNotifier.new,
+    );
 
 /// Workout analytics state
 class WorkoutAnalyticsState {
-
   const WorkoutAnalyticsState({
     this.currentMetrics,
     this.currentPRs = const [],
@@ -176,12 +184,11 @@ class WorkoutAnalyticsState {
   int get totalPRs => currentPRs.length;
 
   /// Get significant PRs only (>2.5% improvement)
-  List<PersonalRecordAchieved> get significantPRs => 
+  List<PersonalRecordAchieved> get significantPRs =>
       currentPRs.where((pr) => pr.isSignificant).toList();
 
   /// Check if workout shows improvement
-  bool get showsImprovement => 
-      comparison?.isImprovement == true || hasNewPRs;
+  bool get showsImprovement => comparison?.isImprovement == true || hasNewPRs;
 
   /// Get workout quality rating (A+ to F)
   String get qualityRating {
@@ -250,7 +257,10 @@ class WorkoutAnalyticsNotifier extends Notifier<WorkoutAnalyticsState> {
       final repository = ref.read(workoutAnalyticsRepositoryProvider);
 
       // Calculate current metrics (with incremental optimization)
-      final metrics = calculateUseCase.executeIncremental(workout, _lastMetrics);
+      final metrics = calculateUseCase.executeIncremental(
+        workout,
+        _lastMetrics,
+      );
 
       // Detect potential PRs
       final potentialPRs = await detectPRsUseCase.execute(userId, workout);
@@ -258,14 +268,20 @@ class WorkoutAnalyticsNotifier extends Notifier<WorkoutAnalyticsState> {
       // Get comparison with historical workouts (cached for performance)
       WorkoutComparison? comparison;
       if (_shouldUpdateComparison()) {
-        final historicalWorkouts = await repository.getHistoricalWorkouts(userId, limit: 20);
+        final historicalWorkouts = await repository.getHistoricalWorkouts(
+          userId,
+          limit: 20,
+        );
         comparison = compareUseCase.execute(workout, historicalWorkouts);
       }
 
       // Get PR predictions for upcoming sets
       final prPredictions = <PRPrediction>[];
       for (final exercise in workout.exercises) {
-        final predictions = await detectPRsUseCase.getPRPredictions(userId, exercise);
+        final predictions = await detectPRsUseCase.getPRPredictions(
+          userId,
+          exercise,
+        );
         prPredictions.addAll(predictions);
       }
 
@@ -288,7 +304,6 @@ class WorkoutAnalyticsNotifier extends Notifier<WorkoutAnalyticsState> {
       if (repository is WorkoutAnalyticsRepositoryImpl) {
         repository.notifyWorkoutUpdate(metrics);
       }
-
     } catch (e) {
       state = state.copyWith(
         isCalculating: false,
@@ -334,9 +349,9 @@ class WorkoutAnalyticsNotifier extends Notifier<WorkoutAnalyticsState> {
   bool _shouldUpdateComparison() {
     final lastUpdate = state.lastUpdated;
     final now = DateTime.now();
-    return now.difference(lastUpdate).inMinutes >= 5; // Update every 5 minutes max
+    return now.difference(lastUpdate).inMinutes >=
+        5; // Update every 5 minutes max
   }
-
 }
 
 // =============================================================================
@@ -345,44 +360,50 @@ class WorkoutAnalyticsNotifier extends Notifier<WorkoutAnalyticsState> {
 
 /// Current workout volume (optimized selector)
 final currentWorkoutVolumeProvider = Provider<double>((ref) {
-  return ref.watch(workoutAnalyticsProvider.select(
-    (state) => state.currentMetrics?.totalVolume ?? 0,
-  ));
+  return ref.watch(
+    workoutAnalyticsProvider.select(
+      (state) => state.currentMetrics?.totalVolume ?? 0,
+    ),
+  );
 });
 
 /// Current workout completion percentage
 final workoutCompletionProvider = Provider<double>((ref) {
-  return ref.watch(workoutAnalyticsProvider.select(
-    (state) => state.currentMetrics?.completionPercentage ?? 0,
-  ));
+  return ref.watch(
+    workoutAnalyticsProvider.select(
+      (state) => state.currentMetrics?.completionPercentage ?? 0,
+    ),
+  );
 });
 
 /// Current workout quality score
 final workoutQualityProvider = Provider<double>((ref) {
-  return ref.watch(workoutAnalyticsProvider.select(
-    (state) => state.currentMetrics?.qualityScore ?? 0,
-  ));
+  return ref.watch(
+    workoutAnalyticsProvider.select(
+      (state) => state.currentMetrics?.qualityScore ?? 0,
+    ),
+  );
 });
 
 /// Current PRs achieved
 final currentPRsProvider = Provider<List<PersonalRecordAchieved>>((ref) {
-  return ref.watch(workoutAnalyticsProvider.select(
-    (state) => state.currentPRs,
-  ));
+  return ref.watch(
+    workoutAnalyticsProvider.select((state) => state.currentPRs),
+  );
 });
 
 /// Workout comparison data
 final workoutComparisonProvider = Provider<WorkoutComparison?>((ref) {
-  return ref.watch(workoutAnalyticsProvider.select(
-    (state) => state.comparison,
-  ));
+  return ref.watch(
+    workoutAnalyticsProvider.select((state) => state.comparison),
+  );
 });
 
 /// PR predictions for current workout
 final prPredictionsProvider = Provider<List<PRPrediction>>((ref) {
-  return ref.watch(workoutAnalyticsProvider.select(
-    (state) => state.prPredictions,
-  ));
+  return ref.watch(
+    workoutAnalyticsProvider.select((state) => state.prPredictions),
+  );
 });
 
 // =============================================================================
@@ -392,7 +413,9 @@ final prPredictionsProvider = Provider<List<PRPrediction>>((ref) {
 /// Historical workout statistics
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final workoutStatsProvider = FutureProvider.autoDispose<WorkoutAnalyticsStats>((ref) async {
+final workoutStatsProvider = FutureProvider.autoDispose<WorkoutAnalyticsStats>((
+  ref,
+) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) throw Exception('User not authenticated');
 
@@ -403,7 +426,9 @@ final workoutStatsProvider = FutureProvider.autoDispose<WorkoutAnalyticsStats>((
 /// Recent PRs (last 30 days)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-final recentPRsProvider = FutureProvider.autoDispose<List<PersonalRecord>>((ref) async {
+final recentPRsProvider = FutureProvider.autoDispose<List<PersonalRecord>>((
+  ref,
+) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
@@ -414,12 +439,11 @@ final recentPRsProvider = FutureProvider.autoDispose<List<PersonalRecord>>((ref)
 /// Workout analytics stream for real-time updates
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically cancels Firestore listener when widget is disposed
-final workoutAnalyticsStreamProvider = StreamProvider.autoDispose.family<WorkoutAnalyticsUpdate, String>(
-  (ref, workoutId) {
-    final repository = ref.watch(workoutAnalyticsRepositoryProvider);
-    return repository.watchWorkoutUpdates(workoutId);
-  },
-);
+final workoutAnalyticsStreamProvider = StreamProvider.autoDispose
+    .family<WorkoutAnalyticsUpdate, String>((ref, workoutId) {
+      final repository = ref.watch(workoutAnalyticsRepositoryProvider);
+      return repository.watchWorkoutUpdates(workoutId);
+    });
 
 // =============================================================================
 // UTILITY PROVIDERS
@@ -427,33 +451,31 @@ final workoutAnalyticsStreamProvider = StreamProvider.autoDispose.family<Workout
 
 /// Check if analytics are loading
 final analyticsLoadingProvider = Provider<bool>((ref) {
-  return ref.watch(workoutAnalyticsProvider.select(
-    (state) => state.isCalculating,
-  ));
+  return ref.watch(
+    workoutAnalyticsProvider.select((state) => state.isCalculating),
+  );
 });
 
 /// Get analytics error message
 final analyticsErrorProvider = Provider<String?>((ref) {
-  return ref.watch(workoutAnalyticsProvider.select(
-    (state) => state.error,
-  ));
+  return ref.watch(workoutAnalyticsProvider.select((state) => state.error));
 });
 
 /// Check if workout shows improvement over previous
 final workoutImprovementProvider = Provider<bool>((ref) {
-  return ref.watch(workoutAnalyticsProvider.select(
-    (state) => state.showsImprovement,
-  ));
+  return ref.watch(
+    workoutAnalyticsProvider.select((state) => state.showsImprovement),
+  );
 });
 
 /// Get formatted workout summary for sharing
 final workoutSummaryProvider = Provider<String>((ref) {
-  final metrics = ref.watch(workoutAnalyticsProvider.select(
-    (state) => state.currentMetrics,
-  ));
-  
+  final metrics = ref.watch(
+    workoutAnalyticsProvider.select((state) => state.currentMetrics),
+  );
+
   if (metrics == null) return '';
-  
+
   return '''
 Workout Summary:
 • Volume: ${metrics.formattedVolume}

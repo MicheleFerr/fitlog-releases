@@ -192,7 +192,9 @@ class _PhotoReminderSettingsSheetState
       child: Row(
         children: [
           Icon(
-            isEnabled ? AppIcons.notificationsActive : AppIcons.notificationsNone,
+            isEnabled
+                ? AppIcons.notificationsActive
+                : AppIcons.notificationsNone,
             color: isEnabled
                 ? context.colors.primary
                 : context.colors.onSurfaceVariant,
@@ -224,7 +226,8 @@ class _PhotoReminderSettingsSheetState
             onChanged: (value) async {
               if (value) {
                 await notifier.enableReminders(
-                  frequency: _selectedFrequency ?? PhotoReminderFrequency.monthly,
+                  frequency:
+                      _selectedFrequency ?? PhotoReminderFrequency.monthly,
                   hour: _selectedTime?.hour ?? 9,
                   minute: _selectedTime?.minute ?? 0,
                 );
@@ -258,12 +261,14 @@ class _PhotoReminderSettingsSheetState
           runSpacing: 8,
           children: PhotoReminderFrequency.values
               .where((f) => f != PhotoReminderFrequency.custom)
-              .map((frequency) => _buildFrequencyChip(
-                    context,
-                    notifier,
-                    frequency,
-                    settings.frequency == frequency,
-                  ))
+              .map(
+                (frequency) => _buildFrequencyChip(
+                  context,
+                  notifier,
+                  frequency,
+                  settings.frequency == frequency,
+                ),
+              )
               .toList(),
         ),
       ],
@@ -340,10 +345,7 @@ class _PhotoReminderSettingsSheetState
             ),
             child: Row(
               children: [
-                Icon(
-                  AppIcons.schedule,
-                  color: context.colors.primary,
-                ),
+                Icon(AppIcons.schedule, color: context.colors.primary),
                 const SizedBox(width: 16),
                 Text(
                   settings.formattedReminderTime,
@@ -375,9 +377,7 @@ class _PhotoReminderSettingsSheetState
       initialTime: settings.reminderTime,
       builder: (context, child) {
         return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: context.colors,
-          ),
+          data: Theme.of(context).copyWith(colorScheme: context.colors),
           child: child!,
         );
       },
@@ -407,10 +407,7 @@ class _PhotoReminderSettingsSheetState
       ),
       child: Row(
         children: [
-          Icon(
-            AppIcons.event,
-            color: context.colors.secondary,
-          ),
+          Icon(AppIcons.event, color: context.colors.secondary),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -449,11 +446,7 @@ class _PhotoReminderSettingsSheetState
       ),
       child: Row(
         children: [
-          Icon(
-            AppIcons.info,
-            size: 16,
-            color: context.colors.onSurfaceVariant,
-          ),
+          Icon(AppIcons.info, size: 16, color: context.colors.onSurfaceVariant),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -477,10 +470,7 @@ class _PhotoReminderSettingsSheetState
       ),
       child: Row(
         children: [
-          Icon(
-            AppIcons.warning,
-            color: context.colors.warning,
-          ),
+          Icon(AppIcons.warning, color: context.colors.warning),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -507,7 +497,10 @@ class _PhotoReminderSettingsSheetState
     );
   }
 
-  String _getFrequencyLabel(BuildContext context, PhotoReminderFrequency frequency) {
+  String _getFrequencyLabel(
+    BuildContext context,
+    PhotoReminderFrequency frequency,
+  ) {
     return switch (frequency) {
       PhotoReminderFrequency.biweekly => context.l10n.everyTwoWeeks,
       PhotoReminderFrequency.monthly => context.l10n.everyFourWeeks,

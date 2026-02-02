@@ -97,16 +97,15 @@ abstract class TemplateStressAnalysis with _$TemplateStressAnalysis {
       muscleReadiness.values.where((m) => m.isReady).length;
 
   /// Number of muscles needing caution (<70%)
-  int get musclesNeedCautionCount =>
-      muscleReadiness.values.where((m) => m.shouldAvoid || m.isSuboptimal).length;
+  int get musclesNeedCautionCount => muscleReadiness.values
+      .where((m) => m.shouldAvoid || m.isSuboptimal)
+      .length;
 
   /// Whether this template is safe to do
-  bool get isSafe =>
-      recommendation != TemplateRecommendation.avoid;
+  bool get isSafe => recommendation != TemplateRecommendation.avoid;
 
   /// Whether this template is optimal
-  bool get isOptimal =>
-      recommendation == TemplateRecommendation.optimal;
+  bool get isOptimal => recommendation == TemplateRecommendation.optimal;
 
   /// Whether this is the best choice for today
   bool get isRecommended =>

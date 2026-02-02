@@ -96,7 +96,9 @@ class HybridWorkoutRepositoryImpl
     });
 
     // Listen to connectivity changes to trigger sync when back online
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((results) {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      results,
+    ) {
       if (_isDisposed) return;
 
       // Check if we have any connectivity
@@ -186,7 +188,9 @@ class HybridWorkoutRepositoryImpl
       }
 
       if (kDebugMode) {
-        debugPrint('🔄 [SyncQueue] Processing ${pendingItems.length} pending items');
+        debugPrint(
+          '🔄 [SyncQueue] Processing ${pendingItems.length} pending items',
+        );
       }
 
       for (final item in pendingItems) {
@@ -195,22 +199,31 @@ class HybridWorkoutRepositoryImpl
         try {
           await _processSyncItem(item, currentUser.uid);
           await _localDataSource.markSyncCompleted(item.index);
-          await _localDataSource.markWorkoutAsSynced(item.workoutId, currentUser.uid);
+          await _localDataSource.markWorkoutAsSynced(
+            item.workoutId,
+            currentUser.uid,
+          );
           syncedCount++;
 
           if (kDebugMode) {
-            debugPrint('✅ [SyncQueue] Synced: ${item.operation} ${item.workoutId}');
+            debugPrint(
+              '✅ [SyncQueue] Synced: ${item.operation} ${item.workoutId}',
+            );
           }
         } catch (e) {
           await _localDataSource.markSyncFailed(item.index);
           if (kDebugMode) {
-            debugPrint('❌ [SyncQueue] Failed: ${item.operation} ${item.workoutId} - $e');
+            debugPrint(
+              '❌ [SyncQueue] Failed: ${item.operation} ${item.workoutId} - $e',
+            );
           }
         }
       }
 
       if (kDebugMode) {
-        debugPrint('📊 [SyncQueue] Completed: $syncedCount/${pendingItems.length} items synced');
+        debugPrint(
+          '📊 [SyncQueue] Completed: $syncedCount/${pendingItems.length} items synced',
+        );
       }
     } finally {
       _isSyncInProgress = false;
@@ -224,7 +237,10 @@ class HybridWorkoutRepositoryImpl
     switch (item.operation) {
       case 'create':
       case 'update':
-        final workout = await _localDataSource.getWorkout(item.workoutId, userId);
+        final workout = await _localDataSource.getWorkout(
+          item.workoutId,
+          userId,
+        );
         if (workout != null) {
           if (item.operation == 'create') {
             await _remoteDataSource.saveWorkout(workout, userId);
@@ -806,7 +822,8 @@ class HybridWorkoutRepositoryImpl
     if (workouts.isEmpty) return;
 
     // ⚡ BATCH: Get all existing timestamps in ONE operation (1 openBox call)
-    final existingTimestamps = await _localDataSource.getExistingWorkoutTimestamps(userId);
+    final existingTimestamps = await _localDataSource
+        .getExistingWorkoutTimestamps(userId);
 
     // Separate workouts into new/updated vs unchanged
     final workoutsToSave = <WorkoutModel>[];
@@ -833,7 +850,9 @@ class HybridWorkoutRepositoryImpl
     }
 
     if (kDebugMode) {
-      debugPrint('⚡ [CACHE] Batch update: ${workoutsToSave.length} saved, $skippedCount skipped');
+      debugPrint(
+        '⚡ [CACHE] Batch update: ${workoutsToSave.length} saved, $skippedCount skipped',
+      );
     }
   }
 
@@ -851,7 +870,9 @@ class HybridWorkoutRepositoryImpl
     _scheduleSyncQueueProcessing();
 
     if (kDebugMode) {
-      debugPrint('📤 [SyncQueue] Scheduled sync for $operation: ${workoutModel.id}');
+      debugPrint(
+        '📤 [SyncQueue] Scheduled sync for $operation: ${workoutModel.id}',
+      );
     }
   }
 

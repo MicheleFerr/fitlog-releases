@@ -15,8 +15,8 @@ import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 /// - Anti-spam protection (cooldowns)
 final tutorialStateProvider =
     NotifierProvider<TutorialStateNotifier, TutorialState>(
-  TutorialStateNotifier.new,
-);
+      TutorialStateNotifier.new,
+    );
 
 /// StateNotifier for the contextual tutorial system.
 ///
@@ -211,10 +211,11 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
         : [...state.dismissedHintsList, hintId];
 
     // Update or add timestamp entry
-    final newTimeList = state.lastDismissTimeList
-        .where((e) => !e.startsWith('$hintId:'))
-        .toList()
-      ..add('$hintId:${DateTime.now().toIso8601String()}');
+    final newTimeList =
+        state.lastDismissTimeList
+            .where((e) => !e.startsWith('$hintId:'))
+            .toList()
+          ..add('$hintId:${DateTime.now().toIso8601String()}');
 
     state = state.copyWith(
       dismissedHintsList: newDismissedList,
@@ -297,7 +298,10 @@ class TutorialStateNotifier extends Notifier<TutorialState> {
 // ============ HELPER PROVIDERS ============
 
 /// Check if a specific tutorial has been seen.
-final hasTutorialBeenSeenProvider = Provider.family<bool, String>((ref, tutorialId) {
+final hasTutorialBeenSeenProvider = Provider.family<bool, String>((
+  ref,
+  tutorialId,
+) {
   final state = ref.watch(tutorialStateProvider);
   return state.hasSeen(tutorialId);
 });

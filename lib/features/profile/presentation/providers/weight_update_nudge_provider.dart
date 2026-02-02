@@ -71,8 +71,8 @@ class WeightNudgeState {
 /// Provider for weight update nudge state
 final weightUpdateNudgeProvider =
     AsyncNotifierProvider<WeightUpdateNudgeNotifier, WeightNudgeState>(
-  WeightUpdateNudgeNotifier.new,
-);
+      WeightUpdateNudgeNotifier.new,
+    );
 
 /// Notifier for managing weight update nudge
 class WeightUpdateNudgeNotifier extends AsyncNotifier<WeightNudgeState> {
@@ -112,15 +112,17 @@ class WeightUpdateNudgeNotifier extends AsyncNotifier<WeightNudgeState> {
 
     // Check if recently dismissed
     if (lastDismissedMillis != null) {
-      final lastDismissed =
-          DateTime.fromMillisecondsSinceEpoch(lastDismissedMillis);
+      final lastDismissed = DateTime.fromMillisecondsSinceEpoch(
+        lastDismissedMillis,
+      );
       final daysSinceDismissal = now.difference(lastDismissed).inDays;
       isDismissed =
           daysSinceDismissal < WeightUpdateNudgeConfig.dismissalCooldownDays;
     }
 
     // Determine if should show nudge
-    final shouldShow = !isDismissed &&
+    final shouldShow =
+        !isDismissed &&
         daysSinceLastUpdate >= WeightUpdateNudgeConfig.reminderIntervalDays;
 
     return WeightNudgeState(
@@ -140,12 +142,14 @@ class WeightUpdateNudgeNotifier extends AsyncNotifier<WeightNudgeState> {
     // Clear dismissal when weight is updated
     await prefs.remove(_keyLastDismissed);
 
-    state = AsyncValue.data(WeightNudgeState(
-      shouldShowNudge: false,
-      daysSinceLastUpdate: 0,
-      lastUpdateDate: now,
-      isDismissed: false,
-    ));
+    state = AsyncValue.data(
+      WeightNudgeState(
+        shouldShowNudge: false,
+        daysSinceLastUpdate: 0,
+        lastUpdateDate: now,
+        isDismissed: false,
+      ),
+    );
   }
 
   /// Dismiss the nudge temporarily
@@ -156,10 +160,9 @@ class WeightUpdateNudgeNotifier extends AsyncNotifier<WeightNudgeState> {
     await prefs.setInt(_keyLastDismissed, now.millisecondsSinceEpoch);
 
     final currentState = state.valueOrNull ?? WeightNudgeState.hidden;
-    state = AsyncValue.data(currentState.copyWith(
-      shouldShowNudge: false,
-      isDismissed: true,
-    ));
+    state = AsyncValue.data(
+      currentState.copyWith(shouldShowNudge: false, isDismissed: true),
+    );
   }
 
   /// Force refresh the nudge state

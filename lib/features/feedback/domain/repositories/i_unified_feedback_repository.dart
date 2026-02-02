@@ -36,9 +36,7 @@ abstract class IUnifiedFeedbackRepository {
   /// - ValidationFailure: Invalid feedback data (empty message, invalid userId, etc.)
   /// - ServerFailure: Firestore write error
   /// - UnexpectedFailure: Unknown error
-  Future<Either<Failure, String>> submitFeedback(
-    UnifiedFeedback feedback,
-  );
+  Future<Either<Failure, String>> submitFeedback(UnifiedFeedback feedback);
 
   /// Get all feedback submitted by specific user
   ///
@@ -47,9 +45,7 @@ abstract class IUnifiedFeedbackRepository {
   /// **Errors**:
   /// - ServerFailure: Firestore read error
   /// - UnexpectedFailure: Unknown error
-  Future<Either<Failure, List<UnifiedFeedback>>> getUserFeedback(
-    String userId,
-  );
+  Future<Either<Failure, List<UnifiedFeedback>>> getUserFeedback(String userId);
 
   /// Get user feedback filtered by type
   ///
@@ -93,9 +89,7 @@ abstract class IUnifiedFeedbackRepository {
   /// - ValidationFailure: Feedback not found
   /// - ServerFailure: Firestore read error
   /// - UnexpectedFailure: Unknown error
-  Future<Either<Failure, UnifiedFeedback>> getFeedbackById(
-    String feedbackId,
-  );
+  Future<Either<Failure, UnifiedFeedback>> getFeedbackById(String feedbackId);
 
   /// Get all pending feedback (open + reviewing status)
   ///
@@ -182,9 +176,7 @@ abstract class IUnifiedFeedbackRepository {
   /// - ValidationFailure: Feedback not found
   /// - ServerFailure: Firestore write error
   /// - UnexpectedFailure: Unknown error
-  Future<Either<Failure, void>> deleteFeedback(
-    String feedbackId,
-  );
+  Future<Either<Failure, void>> deleteFeedback(String feedbackId);
 
   // ========================================
   // REAL-TIME STREAMS

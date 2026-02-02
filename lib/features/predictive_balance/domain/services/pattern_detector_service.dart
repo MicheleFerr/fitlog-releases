@@ -62,10 +62,12 @@ class PatternDetectorService {
     // 1. Filter last N weeks of completed workouts
     final cutoff = DateTime.now().subtract(Duration(days: weeksToAnalyze * 7));
     final recent = history
-        .where((w) =>
-            w.status == WorkoutStatus.completed &&
-            w.completedAt != null &&
-            w.completedAt!.isAfter(cutoff))
+        .where(
+          (w) =>
+              w.status == WorkoutStatus.completed &&
+              w.completedAt != null &&
+              w.completedAt!.isAfter(cutoff),
+        )
         .toList();
 
     if (recent.length < minWorkoutsForPattern) return null;
@@ -97,9 +99,12 @@ class PatternDetectorService {
     final confidence = matchedWeeks / weekFingerprints.length;
 
     // Calculate average workouts per week
-    final totalWorkouts =
-        weekFingerprints.fold(0, (sum, week) => sum + week.length);
-    final avgWorkoutsPerWeek = (totalWorkouts / weekFingerprints.length).round();
+    final totalWorkouts = weekFingerprints.fold(
+      0,
+      (sum, week) => sum + week.length,
+    );
+    final avgWorkoutsPerWeek = (totalWorkouts / weekFingerprints.length)
+        .round();
 
     return WeeklyPattern(
       cycle: cycle,
@@ -225,7 +230,8 @@ class PatternDetectorService {
     final muscleSet = muscles.toSet();
 
     // Push: chest, shoulders, triceps
-    final hasPushMuscles = muscleSet.contains('chest') ||
+    final hasPushMuscles =
+        muscleSet.contains('chest') ||
         muscleSet.contains('shoulders') ||
         muscleSet.contains('triceps');
     final pushCount = [
@@ -243,7 +249,8 @@ class PatternDetectorService {
     ].length;
 
     // Legs: quadriceps, hamstrings, glutes, calves
-    final hasLegMuscles = muscleSet.contains('quadriceps') ||
+    final hasLegMuscles =
+        muscleSet.contains('quadriceps') ||
         muscleSet.contains('hamstrings') ||
         muscleSet.contains('glutes') ||
         muscleSet.contains('calves');

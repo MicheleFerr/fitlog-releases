@@ -24,16 +24,18 @@ import 'package:gymbro_flutter_new/features/history/domain/entities/workout_hist
 import 'package:gymbro_flutter_new/features/progress_photos/domain/services/photo_compression_service.dart';
 
 /// Firestore implementation of ChatRepository
-class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository {
+class ChatRepositoryImpl
+    with FirebaseErrorMapperMixin
+    implements ChatRepository {
   ChatRepositoryImpl({
     FirebaseFirestore? firestore,
     FirebaseAuth? auth,
     FirebaseStorage? storage,
     PhotoCompressionService? compressionService,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _auth = auth ?? FirebaseAuth.instance,
-        _storage = storage ?? FirebaseStorage.instance,
-        _compressionService = compressionService ?? PhotoCompressionService();
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _auth = auth ?? FirebaseAuth.instance,
+       _storage = storage ?? FirebaseStorage.instance,
+       _compressionService = compressionService ?? PhotoCompressionService();
 
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
@@ -53,8 +55,9 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
       _firestore.collection('conversations');
 
   /// Get messages subcollection for a conversation
-  CollectionReference<Map<String, dynamic>> _messagesRef(String conversationId) =>
-      _conversationsRef.doc(conversationId).collection('messages');
+  CollectionReference<Map<String, dynamic>> _messagesRef(
+    String conversationId,
+  ) => _conversationsRef.doc(conversationId).collection('messages');
 
   /// Get storage reference for chat images
   Reference _chatStorageRef(String conversationId) =>
@@ -75,10 +78,10 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
         .orderBy('lastMessageAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => ChatConversation.fromFirestore(doc))
-          .toList();
-    });
+          return snapshot.docs
+              .map((doc) => ChatConversation.fromFirestore(doc))
+              .toList();
+        });
   }
 
   @override
@@ -92,10 +95,14 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
 
     // Check if conversation exists
     final getResult = await handleFirebaseOperation(
-      () => _conversationsRef.doc(conversationId).get().timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Firestore getConversation timed out'),
-      ),
+      () => _conversationsRef
+          .doc(conversationId)
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () =>
+                throw TimeoutException('Firestore getConversation timed out'),
+          ),
       operationName: 'getOrCreateConversation',
     );
 
@@ -122,24 +129,26 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
 
     // Save with participants array for querying
     final createResult = await handleFirebaseVoidOperation(
-      () => _conversationsRef.doc(conversationId).set({
-        ...conversation.toFirestore(),
-        'participants': [coachId, athleteId],
-      }).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Firestore createConversation timed out'),
-      ),
+      () => _conversationsRef
+          .doc(conversationId)
+          .set({
+            ...conversation.toFirestore(),
+            'participants': [coachId, athleteId],
+          })
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw TimeoutException(
+              'Firestore createConversation timed out',
+            ),
+          ),
       operationName: 'createConversation',
     );
 
-    createResult.fold(
-      (failure) => throw Exception(failure.message),
-      (_) {
-        if (kDebugMode) {
-          debugPrint('💬 [ChatRepo] Created conversation: $conversationId');
-        }
-      },
-    );
+    createResult.fold((failure) => throw Exception(failure.message), (_) {
+      if (kDebugMode) {
+        debugPrint('💬 [ChatRepo] Created conversation: $conversationId');
+      }
+    });
 
     return conversation;
   }
@@ -147,10 +156,14 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
   @override
   Future<ChatConversation?> getConversation(String conversationId) async {
     final result = await handleFirebaseOperation(
-      () => _conversationsRef.doc(conversationId).get().timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Firestore getConversation timed out'),
-      ),
+      () => _conversationsRef
+          .doc(conversationId)
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () =>
+                throw TimeoutException('Firestore getConversation timed out'),
+          ),
       operationName: 'getConversation',
     );
 
@@ -170,9 +183,9 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
     int limit = 50,
     DateTime? before,
   }) {
-    var query = _messagesRef(conversationId)
-        .orderBy('createdAt', descending: true)
-        .limit(limit);
+    var query = _messagesRef(
+      conversationId,
+    ).orderBy('createdAt', descending: true).limit(limit);
 
     if (before != null) {
       query = query.endBefore([Timestamp.fromDate(before)]);
@@ -214,7 +227,10 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
     final batch = _firestore.batch();
 
     // Add message
-    batch.set(_messagesRef(conversationId).doc(messageId), message.toFirestore());
+    batch.set(
+      _messagesRef(conversationId).doc(messageId),
+      message.toFirestore(),
+    );
 
     // Update conversation metadata
     batch.update(_conversationsRef.doc(conversationId), {
@@ -229,19 +245,17 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
     final result = await handleFirebaseVoidOperation(
       () => batch.commit().timeout(
         const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Firestore sendTextMessage timed out'),
+        onTimeout: () =>
+            throw TimeoutException('Firestore sendTextMessage timed out'),
       ),
       operationName: 'sendTextMessage',
     );
 
-    result.fold(
-      (failure) => throw Exception(failure.message),
-      (_) {
-        if (kDebugMode) {
-          debugPrint('💬 [ChatRepo] Sent message: $messageId');
-        }
-      },
-    );
+    result.fold((failure) => throw Exception(failure.message), (_) {
+      if (kDebugMode) {
+        debugPrint('💬 [ChatRepo] Sent message: $messageId');
+      }
+    });
 
     return message;
   }
@@ -260,8 +274,9 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
     final now = DateTime.now();
 
     // Compress image
-    final compressed =
-        await _compressionService.compressAndSaveToTemp(imageFile);
+    final compressed = await _compressionService.compressAndSaveToTemp(
+      imageFile,
+    );
 
     // Upload to Firebase Storage
     final imagePath = '$messageId.webp';
@@ -271,20 +286,14 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
     final thumbRef = _chatStorageRef(conversationId).child(thumbPath);
 
     // Upload full image
-    final uploadResult = await handleFirebaseVoidOperation(
-      () async {
-        await imageRef.putData(
-          compressed.fullPhotoBytes,
-          SettableMetadata(contentType: 'image/webp'),
-        );
-      },
-      operationName: 'uploadFullImage',
-    );
+    final uploadResult = await handleFirebaseVoidOperation(() async {
+      await imageRef.putData(
+        compressed.fullPhotoBytes,
+        SettableMetadata(contentType: 'image/webp'),
+      );
+    }, operationName: 'uploadFullImage');
 
-    uploadResult.fold(
-      (failure) => throw Exception(failure.message),
-      (_) {},
-    );
+    uploadResult.fold((failure) => throw Exception(failure.message), (_) {});
 
     final imageUrlResult = await handleFirebaseOperation(
       () => imageRef.getDownloadURL(),
@@ -297,15 +306,12 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
     );
 
     // Upload thumbnail
-    final thumbUploadResult = await handleFirebaseVoidOperation(
-      () async {
-        await thumbRef.putData(
-          compressed.thumbnailBytes,
-          SettableMetadata(contentType: 'image/webp'),
-        );
-      },
-      operationName: 'uploadThumbnail',
-    );
+    final thumbUploadResult = await handleFirebaseVoidOperation(() async {
+      await thumbRef.putData(
+        compressed.thumbnailBytes,
+        SettableMetadata(contentType: 'image/webp'),
+      );
+    }, operationName: 'uploadThumbnail');
 
     thumbUploadResult.fold(
       (failure) => throw Exception(failure.message),
@@ -344,12 +350,17 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
     final batch = _firestore.batch();
 
     // Add message
-    batch.set(_messagesRef(conversationId).doc(messageId), message.toFirestore());
+    batch.set(
+      _messagesRef(conversationId).doc(messageId),
+      message.toFirestore(),
+    );
 
     // Update conversation metadata
     final preview = caption?.isNotEmpty == true ? caption! : '📷 Photo';
     batch.update(_conversationsRef.doc(conversationId), {
-      'lastMessage': preview.length > 100 ? '${preview.substring(0, 97)}...' : preview,
+      'lastMessage': preview.length > 100
+          ? '${preview.substring(0, 97)}...'
+          : preview,
       'lastMessageAt': Timestamp.fromDate(now),
       'lastMessageSenderId': userId,
       'updatedAt': Timestamp.fromDate(now),
@@ -359,19 +370,17 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
     final commitResult = await handleFirebaseVoidOperation(
       () => batch.commit().timeout(
         const Duration(seconds: 15),
-        onTimeout: () => throw TimeoutException('Firestore sendImageMessage timed out'),
+        onTimeout: () =>
+            throw TimeoutException('Firestore sendImageMessage timed out'),
       ),
       operationName: 'sendImageMessage',
     );
 
-    commitResult.fold(
-      (failure) => throw Exception(failure.message),
-      (_) {
-        if (kDebugMode) {
-          debugPrint('💬 [ChatRepo] Sent image message: $messageId');
-        }
-      },
-    );
+    commitResult.fold((failure) => throw Exception(failure.message), (_) {
+      if (kDebugMode) {
+        debugPrint('💬 [ChatRepo] Sent image message: $messageId');
+      }
+    });
 
     return message;
   }
@@ -419,12 +428,17 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
     final batch = _firestore.batch();
 
     // Add message
-    batch.set(_messagesRef(conversationId).doc(messageId), message.toFirestore());
+    batch.set(
+      _messagesRef(conversationId).doc(messageId),
+      message.toFirestore(),
+    );
 
     // Update conversation metadata
     final preview = '🏋️ ${workout.name}';
     batch.update(_conversationsRef.doc(conversationId), {
-      'lastMessage': preview.length > 100 ? '${preview.substring(0, 97)}...' : preview,
+      'lastMessage': preview.length > 100
+          ? '${preview.substring(0, 97)}...'
+          : preview,
       'lastMessageAt': Timestamp.fromDate(now),
       'lastMessageSenderId': userId,
       'updatedAt': Timestamp.fromDate(now),
@@ -434,25 +448,28 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
     final result = await handleFirebaseVoidOperation(
       () => batch.commit().timeout(
         const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Firestore sendWorkoutLink timed out'),
+        onTimeout: () =>
+            throw TimeoutException('Firestore sendWorkoutLink timed out'),
       ),
       operationName: 'sendWorkoutLink',
     );
 
-    result.fold(
-      (failure) => throw Exception(failure.message),
-      (_) {
-        if (kDebugMode) {
-          debugPrint('💬 [ChatRepo] Sent workout link: $messageId (${workout.name})');
-        }
-      },
-    );
+    result.fold((failure) => throw Exception(failure.message), (_) {
+      if (kDebugMode) {
+        debugPrint(
+          '💬 [ChatRepo] Sent workout link: $messageId (${workout.name})',
+        );
+      }
+    });
 
     return message;
   }
 
   /// Helper to generate unread count increment for the other participant
-  Map<String, dynamic> _incrementUnreadCount(String conversationId, String senderId) {
+  Map<String, dynamic> _incrementUnreadCount(
+    String conversationId,
+    String senderId,
+  ) {
     final parts = ChatConversation.parseId(conversationId);
     if (parts == null) return {};
 
@@ -485,36 +502,37 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
 
     // Update each message's readAt
     for (final messageId in messageIds) {
-      batch.update(
-        _messagesRef(conversationId).doc(messageId),
-        {'readAt': Timestamp.fromDate(now)},
-      );
+      batch.update(_messagesRef(conversationId).doc(messageId), {
+        'readAt': Timestamp.fromDate(now),
+      });
     }
 
     // Reset unread count for this user
     final parts = ChatConversation.parseId(conversationId);
     if (parts != null) {
       final (coachId, _) = parts;
-      final unreadField = userId == coachId ? 'coachUnreadCount' : 'athleteUnreadCount';
+      final unreadField = userId == coachId
+          ? 'coachUnreadCount'
+          : 'athleteUnreadCount';
       batch.update(_conversationsRef.doc(conversationId), {unreadField: 0});
     }
 
     final result = await handleFirebaseVoidOperation(
       () => batch.commit().timeout(
         const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Firestore markAsRead timed out'),
+        onTimeout: () =>
+            throw TimeoutException('Firestore markAsRead timed out'),
       ),
       operationName: 'markAsRead',
     );
 
-    result.fold(
-      (failure) => throw Exception(failure.message),
-      (_) {
-        if (kDebugMode) {
-          debugPrint('💬 [ChatRepo] Marked ${messageIds.length} messages as read');
-        }
-      },
-    );
+    result.fold((failure) => throw Exception(failure.message), (_) {
+      if (kDebugMode) {
+        debugPrint(
+          '💬 [ChatRepo] Marked ${messageIds.length} messages as read',
+        );
+      }
+    });
   }
 
   @override
@@ -529,7 +547,8 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
           .get()
           .timeout(
             const Duration(seconds: 10),
-            onTimeout: () => throw TimeoutException('Firestore markAllAsRead timed out'),
+            onTimeout: () =>
+                throw TimeoutException('Firestore markAllAsRead timed out'),
           ),
       operationName: 'markAllAsRead',
     );
@@ -542,10 +561,7 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
     final messageIds = snapshot.docs.map((doc) => doc.id).toList();
 
     if (messageIds.isNotEmpty) {
-      await markAsRead(
-        conversationId: conversationId,
-        messageIds: messageIds,
-      );
+      await markAsRead(conversationId: conversationId, messageIds: messageIds);
     }
   }
 
@@ -561,13 +577,13 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
         .where('participants', arrayContains: userId)
         .snapshots()
         .map((snapshot) {
-      int total = 0;
-      for (final doc in snapshot.docs) {
-        final conversation = ChatConversation.fromFirestore(doc);
-        total += conversation.unreadCountFor(userId);
-      }
-      return total;
-    });
+          int total = 0;
+          for (final doc in snapshot.docs) {
+            final conversation = ChatConversation.fromFirestore(doc);
+            total += conversation.unreadCountFor(userId);
+          }
+          return total;
+        });
   }
 
   // ============================================================
@@ -581,23 +597,24 @@ class ChatRepositoryImpl with FirebaseErrorMapperMixin implements ChatRepository
   }) async {
     // Soft delete only
     final result = await handleFirebaseVoidOperation(
-      () => _messagesRef(conversationId).doc(messageId).update({
-        'isDeleted': true,
-        'deletedAt': Timestamp.fromDate(DateTime.now()),
-      }).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => throw TimeoutException('Firestore deleteMessage timed out'),
-      ),
+      () => _messagesRef(conversationId)
+          .doc(messageId)
+          .update({
+            'isDeleted': true,
+            'deletedAt': Timestamp.fromDate(DateTime.now()),
+          })
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () =>
+                throw TimeoutException('Firestore deleteMessage timed out'),
+          ),
       operationName: 'deleteMessage',
     );
 
-    result.fold(
-      (failure) => throw Exception(failure.message),
-      (_) {
-        if (kDebugMode) {
-          debugPrint('💬 [ChatRepo] Soft deleted message: $messageId');
-        }
-      },
-    );
+    result.fold((failure) => throw Exception(failure.message), (_) {
+      if (kDebugMode) {
+        debugPrint('💬 [ChatRepo] Soft deleted message: $messageId');
+      }
+    });
   }
 }

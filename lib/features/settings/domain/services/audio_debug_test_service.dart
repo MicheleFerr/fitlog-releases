@@ -40,7 +40,9 @@ class AudioDebugTestService {
     final traceId = result['traceId'] as String;
 
     if (kDebugMode) {
-      debugPrint('[$_tag] Received test result for $testId: $actualSounds sounds, trace: $traceId');
+      debugPrint(
+        '[$_tag] Received test result for $testId: $actualSounds sounds, trace: $traceId',
+      );
     }
 
     final completer = _pendingTests[testId];
@@ -66,19 +68,27 @@ class AudioDebugTestService {
 
   String _getTestName(String testId) {
     switch (testId) {
-      case 'A': return 'Foreground Timer (30s)';
-      case 'B': return 'Background Timer NO LA (90s)';
-      case 'C': return 'Background WITH LA (90s)';
-      default: return 'Test $testId';
+      case 'A':
+        return 'Foreground Timer (30s)';
+      case 'B':
+        return 'Background Timer NO LA (90s)';
+      case 'C':
+        return 'Background WITH LA (90s)';
+      default:
+        return 'Test $testId';
     }
   }
 
   Duration _getTestDuration(String testId) {
     switch (testId) {
-      case 'A': return const Duration(seconds: 30);
-      case 'B': return const Duration(seconds: 90);
-      case 'C': return const Duration(seconds: 90);
-      default: return const Duration(seconds: 60);
+      case 'A':
+        return const Duration(seconds: 30);
+      case 'B':
+        return const Duration(seconds: 90);
+      case 'C':
+        return const Duration(seconds: 90);
+      default:
+        return const Duration(seconds: 60);
     }
   }
 
@@ -97,32 +107,38 @@ class AudioDebugTestService {
     final results = <TestResult>[];
 
     // Test A: Foreground timer (baseline)
-    onProgress(TestProgress(
-      currentTest: 1,
-      totalTests: 3,
-      testName: 'Test A: Foreground Timer (30s)',
-      status: TestStatus.running,
-    ));
+    onProgress(
+      TestProgress(
+        currentTest: 1,
+        totalTests: 3,
+        testName: 'Test A: Foreground Timer (30s)',
+        status: TestStatus.running,
+      ),
+    );
 
     results.add(await _runTestA());
 
     // Test B: Background NO Live Activity
-    onProgress(TestProgress(
-      currentTest: 2,
-      totalTests: 3,
-      testName: 'Test B: Background Timer NO LA (90s)',
-      status: TestStatus.running,
-    ));
+    onProgress(
+      TestProgress(
+        currentTest: 2,
+        totalTests: 3,
+        testName: 'Test B: Background Timer NO LA (90s)',
+        status: TestStatus.running,
+      ),
+    );
 
     results.add(await _runTestB());
 
     // Test C: Background WITH Live Activity
-    onProgress(TestProgress(
-      currentTest: 3,
-      totalTests: 3,
-      testName: 'Test C: Background WITH LA (90s)',
-      status: TestStatus.running,
-    ));
+    onProgress(
+      TestProgress(
+        currentTest: 3,
+        totalTests: 3,
+        testName: 'Test C: Background WITH LA (90s)',
+        status: TestStatus.running,
+      ),
+    );
 
     results.add(await _runTestC());
 
@@ -172,7 +188,9 @@ class AudioDebugTestService {
       final results = QuickTestResults.fromJson(json);
 
       if (kDebugMode) {
-        debugPrint('[AudioDebugTest] Loaded saved quick results: ${results.tests.length} tests');
+        debugPrint(
+          '[AudioDebugTest] Loaded saved quick results: ${results.tests.length} tests',
+        );
       }
 
       return results;
@@ -266,12 +284,14 @@ class AudioDebugTestService {
       for (int run = 1; run <= 5; run++) {
         testNumber++;
 
-        onProgress(TestProgress(
-          currentTest: testNumber,
-          totalTests: totalTests,
-          testName: '${testCase.id} (Run $run/5): ${testCase.name}',
-          status: TestStatus.running,
-        ));
+        onProgress(
+          TestProgress(
+            currentTest: testNumber,
+            totalTests: totalTests,
+            testName: '${testCase.id} (Run $run/5): ${testCase.name}',
+            status: TestStatus.running,
+          ),
+        );
 
         final result = await _runTestCase(testCase, run);
         results.add(result);
@@ -382,7 +402,9 @@ class AudioDebugTestService {
             actualSounds: 0,
             traceId: traceId ?? 'timeout',
             status: TestStatus.failed,
-            appState: appState == 'foreground' ? AppState.foreground : AppState.background,
+            appState: appState == 'foreground'
+                ? AppState.foreground
+                : AppState.background,
             liveActivityEnabled: liveActivityEnabled,
             startTime: DateTime.now(),
             endTime: DateTime.now(),
@@ -392,7 +414,6 @@ class AudioDebugTestService {
       );
 
       return result;
-
     } catch (e, stack) {
       if (kDebugMode) {
         debugPrint('[$_tag] Test $testId failed: $e\n$stack');
@@ -408,7 +429,9 @@ class AudioDebugTestService {
         actualSounds: 0,
         traceId: 'error',
         status: TestStatus.failed,
-        appState: appState == 'foreground' ? AppState.foreground : AppState.background,
+        appState: appState == 'foreground'
+            ? AppState.foreground
+            : AppState.background,
         liveActivityEnabled: liveActivityEnabled,
         startTime: DateTime.now(),
         endTime: DateTime.now(),
@@ -438,25 +461,11 @@ class AudioDebugTestService {
 
 // Models
 
-enum TestStatus {
-  pending,
-  running,
-  completed,
-  failed,
-  cancelled,
-}
+enum TestStatus { pending, running, completed, failed, cancelled }
 
-enum AppState {
-  foreground,
-  background,
-}
+enum AppState { foreground, background }
 
-enum BugType {
-  none,
-  doublePlay,
-  noSound,
-  raceCondition,
-}
+enum BugType { none, doublePlay, noSound, raceCondition }
 
 class TestCase {
   final String id;
@@ -509,7 +518,8 @@ class TestResult {
     this.errorMessage,
   });
 
-  bool get isPassed => actualSounds == expectedSounds && status == TestStatus.completed;
+  bool get isPassed =>
+      actualSounds == expectedSounds && status == TestStatus.completed;
 
   BugType get bugType {
     if (actualSounds > expectedSounds) return BugType.doublePlay;
@@ -567,11 +577,17 @@ class TestResult {
       expectedSounds: json['expectedSounds'] as int,
       actualSounds: json['actualSounds'] as int,
       traceId: json['traceId'] as String,
-      status: TestStatus.values.firstWhere((e) => e.toString() == json['status']),
-      appState: AppState.values.firstWhere((e) => e.toString() == json['appState']),
+      status: TestStatus.values.firstWhere(
+        (e) => e.toString() == json['status'],
+      ),
+      appState: AppState.values.firstWhere(
+        (e) => e.toString() == json['appState'],
+      ),
       liveActivityEnabled: json['liveActivityEnabled'] as bool,
       startTime: DateTime.parse(json['startTime'] as String),
-      endTime: json['endTime'] != null ? DateTime.parse(json['endTime'] as String) : null,
+      endTime: json['endTime'] != null
+          ? DateTime.parse(json['endTime'] as String)
+          : null,
       runNumber: json['runNumber'] as int?,
       errorMessage: json['errorMessage'] as String?,
     );
@@ -626,7 +642,9 @@ class QuickTestResults {
     for (final test in tests) {
       final icon = test.isPassed ? '✅' : '❌';
       buffer.writeln('$icon ${test.testId}: ${test.testName}');
-      buffer.writeln('   Expected: ${test.expectedSounds}x, Actual: ${test.actualSounds}x');
+      buffer.writeln(
+        '   Expected: ${test.expectedSounds}x, Actual: ${test.actualSounds}x',
+      );
       buffer.writeln('   Trace ID: ${test.traceId}');
       if (test.bugType != BugType.none) {
         buffer.writeln('   Bug: ${test.bugType.name}');
@@ -656,7 +674,9 @@ class QuickTestResults {
 
   factory QuickTestResults.fromJson(Map<String, dynamic> json) {
     return QuickTestResults(
-      tests: (json['tests'] as List).map((t) => TestResult.fromJson(t as Map<String, dynamic>)).toList(),
+      tests: (json['tests'] as List)
+          .map((t) => TestResult.fromJson(t as Map<String, dynamic>))
+          .toList(),
       startTime: DateTime.parse(json['startTime'] as String),
       endTime: DateTime.parse(json['endTime'] as String),
     );
@@ -687,10 +707,14 @@ class FullTestResults extends QuickTestResults {
     final buffer = StringBuffer();
     buffer.writeln('Full Test Matrix Results');
     buffer.writeln('========================');
-    buffer.writeln('Total tests: $totalTests (${testCases.length} cases × 5 runs)');
+    buffer.writeln(
+      'Total tests: $totalTests (${testCases.length} cases × 5 runs)',
+    );
     buffer.writeln('Passed: $passedTests');
     buffer.writeln('Success rate: ${(successRate * 100).toStringAsFixed(1)}%');
-    buffer.writeln('Duration: ${totalDuration.inHours}h ${totalDuration.inMinutes % 60}m');
+    buffer.writeln(
+      'Duration: ${totalDuration.inHours}h ${totalDuration.inMinutes % 60}m',
+    );
     buffer.writeln();
 
     buffer.writeln('Results by Test Case:');
@@ -699,11 +723,19 @@ class FullTestResults extends QuickTestResults {
     for (final testCase in testCases) {
       final caseResults = resultsByTestCase[testCase.id] ?? [];
       final casePassed = caseResults.where((t) => t.isPassed).length;
-      final caseSuccess = caseResults.isNotEmpty ? casePassed / caseResults.length : 0.0;
+      final caseSuccess = caseResults.isNotEmpty
+          ? casePassed / caseResults.length
+          : 0.0;
 
-      final icon = caseSuccess >= 0.8 ? '✅' : caseSuccess >= 0.5 ? '⚠️' : '❌';
+      final icon = caseSuccess >= 0.8
+          ? '✅'
+          : caseSuccess >= 0.5
+          ? '⚠️'
+          : '❌';
       buffer.writeln('$icon ${testCase.id}: ${testCase.name}');
-      buffer.writeln('   Success: $casePassed/${caseResults.length} (${(caseSuccess * 100).toStringAsFixed(0)}%)');
+      buffer.writeln(
+        '   Success: $casePassed/${caseResults.length} (${(caseSuccess * 100).toStringAsFixed(0)}%)',
+      );
 
       // Show bug patterns
       final bugCounts = <BugType, int>{};
@@ -714,7 +746,9 @@ class FullTestResults extends QuickTestResults {
       }
 
       if (bugCounts.isNotEmpty) {
-        buffer.writeln('   Bugs: ${bugCounts.entries.map((e) => '${e.key.name}=${e.value}').join(', ')}');
+        buffer.writeln(
+          '   Bugs: ${bugCounts.entries.map((e) => '${e.key.name}=${e.value}').join(', ')}',
+        );
       }
     }
 

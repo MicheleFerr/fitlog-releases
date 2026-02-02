@@ -3,10 +3,13 @@ import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider
 import 'package:gymbro_flutter_new/features/workout/data/repositories/user_exercise_preferences_repository.dart';
 
 /// Provider for the user exercise preferences repository
-final userExercisePreferencesRepositoryProvider = Provider<UserExercisePreferencesRepository>((ref) {
-  ref.keepAlive(); // FIX: previene ricreazione repository con Hive box
-  return UserExercisePreferencesRepository(ref.watch(hiveBoxManagerProvider));
-});
+final userExercisePreferencesRepositoryProvider =
+    Provider<UserExercisePreferencesRepository>((ref) {
+      ref.keepAlive(); // FIX: previene ricreazione repository con Hive box
+      return UserExercisePreferencesRepository(
+        ref.watch(hiveBoxManagerProvider),
+      );
+    });
 
 /// Provider for form cues of a specific exercise
 ///
@@ -14,12 +17,17 @@ final userExercisePreferencesRepositoryProvider = Provider<UserExercisePreferenc
 /// ```dart
 /// final formCues = ref.watch(formCuesProvider((exerciseId: 'ex123', exerciseName: 'Bench Press')));
 /// ```
-final formCuesProvider = FutureProvider.autoDispose.family<String?, ({String? exerciseId, String exerciseName})>(
-  (ref, params) async {
-    final repository = ref.watch(userExercisePreferencesRepositoryProvider);
-    return await repository.getFormCues(params.exerciseId, params.exerciseName);
-  },
-);
+final formCuesProvider = FutureProvider.autoDispose
+    .family<String?, ({String? exerciseId, String exerciseName})>((
+      ref,
+      params,
+    ) async {
+      final repository = ref.watch(userExercisePreferencesRepositoryProvider);
+      return await repository.getFormCues(
+        params.exerciseId,
+        params.exerciseName,
+      );
+    });
 
 /// Provider to check if exercise has form cues
 ///
@@ -27,9 +35,14 @@ final formCuesProvider = FutureProvider.autoDispose.family<String?, ({String? ex
 /// ```dart
 /// final hasFormCues = ref.watch(hasFormCuesProvider((exerciseId: 'ex123', exerciseName: 'Bench Press')));
 /// ```
-final hasFormCuesProvider = FutureProvider.autoDispose.family<bool, ({String? exerciseId, String exerciseName})>(
-  (ref, params) async {
-    final repository = ref.watch(userExercisePreferencesRepositoryProvider);
-    return await repository.hasFormCues(params.exerciseId, params.exerciseName);
-  },
-);
+final hasFormCuesProvider = FutureProvider.autoDispose
+    .family<bool, ({String? exerciseId, String exerciseName})>((
+      ref,
+      params,
+    ) async {
+      final repository = ref.watch(userExercisePreferencesRepositoryProvider);
+      return await repository.hasFormCues(
+        params.exerciseId,
+        params.exerciseName,
+      );
+    });

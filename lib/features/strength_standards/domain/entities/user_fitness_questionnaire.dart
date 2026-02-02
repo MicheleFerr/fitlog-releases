@@ -74,7 +74,8 @@ abstract class UserFitnessQuestionnaire with _$UserFitnessQuestionnaire {
 
     /// Self-reported accuracy calibration (Aandstad 2023: over-reporting bias)
     /// User's honesty about their actual performance vs perceived
-    @Default(SelfReportCalibration.realistic) SelfReportCalibration selfReportCalibration,
+    @Default(SelfReportCalibration.realistic)
+    SelfReportCalibration selfReportCalibration,
   }) = _UserFitnessQuestionnaire;
 
   factory UserFitnessQuestionnaire.fromJson(Map<String, dynamic> json) =>

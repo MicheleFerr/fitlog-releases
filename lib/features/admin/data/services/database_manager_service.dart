@@ -39,7 +39,6 @@ enum EquipmentType {
 
 /// Risultato operazione database
 class DatabaseOperationResult {
-
   DatabaseOperationResult({
     required this.success,
     required this.message,
@@ -53,10 +52,8 @@ class DatabaseOperationResult {
 }
 
 class DatabaseManagerService {
-
-  DatabaseManagerService({
-    FirebaseFirestore? firestore,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance;
+  DatabaseManagerService({FirebaseFirestore? firestore})
+    : _firestore = firestore ?? FirebaseFirestore.instance;
   final FirebaseFirestore _firestore;
 
   // Cache per performance
@@ -120,7 +117,6 @@ class DatabaseManagerService {
         focusMuscles: focusMuscles,
         exerciseType: exerciseType,
       );
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Error fetching exercises: $e');
@@ -142,11 +138,14 @@ class DatabaseManagerService {
 
     if (searchQuery != null && searchQuery.isNotEmpty) {
       final query = searchQuery.toLowerCase();
-      filtered = filtered.where((e) =>
-        e.nome.toLowerCase().contains(query) ||
-        e.focus.any((f) => f.toLowerCase().contains(query)) ||
-        e.muscoliSecondari.any((m) => m.toLowerCase().contains(query))
-      ).toList();
+      filtered = filtered
+          .where(
+            (e) =>
+                e.nome.toLowerCase().contains(query) ||
+                e.focus.any((f) => f.toLowerCase().contains(query)) ||
+                e.muscoliSecondari.any((m) => m.toLowerCase().contains(query)),
+          )
+          .toList();
     }
 
     if (difficulty != null && difficulty.isNotEmpty) {
@@ -158,13 +157,15 @@ class DatabaseManagerService {
     }
 
     if (focusMuscles != null && focusMuscles.isNotEmpty) {
-      filtered = filtered.where((e) =>
-        e.focus.any((f) => focusMuscles.contains(f))
-      ).toList();
+      filtered = filtered
+          .where((e) => e.focus.any((f) => focusMuscles.contains(f)))
+          .toList();
     }
 
     if (exerciseType != null && exerciseType.isNotEmpty) {
-      filtered = filtered.where((e) => e.tipoEsercizio == exerciseType).toList();
+      filtered = filtered
+          .where((e) => e.tipoEsercizio == exerciseType)
+          .toList();
     }
 
     return filtered;
@@ -192,7 +193,9 @@ class DatabaseManagerService {
       // Se è stato cambiato attrezzatura a corpo libero, logga per tracking
       if (fieldName == 'attrezzatura' && value == 'Corpo Libero') {
         if (kDebugMode) {
-          debugPrint('🏃 Exercise $exerciseId set to bodyweight - weights disabled');
+          debugPrint(
+            '🏃 Exercise $exerciseId set to bodyweight - weights disabled',
+          );
         }
       }
 
@@ -201,7 +204,6 @@ class DatabaseManagerService {
         message: 'Campo aggiornato',
         affectedCount: 1,
       );
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Quick update failed: $e');
@@ -227,7 +229,9 @@ class DatabaseManagerService {
       final batch = _firestore.batch();
 
       for (final id in exerciseIds) {
-        final docRef = _firestore.collection('exercises_it').doc(id); // FIX: was 'exercises'
+        final docRef = _firestore
+            .collection('exercises_it')
+            .doc(id); // FIX: was 'exercises'
         batch.update(docRef, {
           fieldName: value,
           'lastModified': FieldValue.serverTimestamp(),
@@ -242,7 +246,6 @@ class DatabaseManagerService {
         message: 'Aggiornati ${exerciseIds.length} esercizi',
         affectedCount: exerciseIds.length,
       );
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Bulk update failed: $e');
@@ -264,7 +267,10 @@ class DatabaseManagerService {
       final data = exercise.toJson();
       data['lastModified'] = FieldValue.serverTimestamp();
 
-      await _firestore.collection('exercises_it').doc(exercise.id).set(data); // FIX: was 'exercises'
+      await _firestore
+          .collection('exercises_it')
+          .doc(exercise.id)
+          .set(data); // FIX: was 'exercises'
       _invalidateCache();
 
       return DatabaseOperationResult(
@@ -272,7 +278,6 @@ class DatabaseManagerService {
         message: 'Esercizio aggiornato',
         data: exercise,
       );
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Update exercise failed: $e');
@@ -295,7 +300,9 @@ class DatabaseManagerService {
       data['createdAt'] = FieldValue.serverTimestamp();
       data['lastModified'] = FieldValue.serverTimestamp();
 
-      await _firestore.collection('exercises_it').add(data); // FIX: was 'exercises'
+      await _firestore
+          .collection('exercises_it')
+          .add(data); // FIX: was 'exercises'
       _invalidateCache();
 
       return DatabaseOperationResult(
@@ -303,7 +310,6 @@ class DatabaseManagerService {
         message: 'Esercizio aggiunto',
         data: exercise,
       );
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Add exercise failed: $e');
@@ -322,7 +328,10 @@ class DatabaseManagerService {
         debugPrint('🗑️ Deleting exercise: $exerciseId');
       }
 
-      await _firestore.collection('exercises_it').doc(exerciseId).delete(); // FIX: was 'exercises'
+      await _firestore
+          .collection('exercises_it')
+          .doc(exerciseId)
+          .delete(); // FIX: was 'exercises'
       _invalidateCache();
 
       return DatabaseOperationResult(
@@ -330,7 +339,6 @@ class DatabaseManagerService {
         message: 'Esercizio eliminato',
         affectedCount: 1,
       );
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Delete exercise failed: $e');
@@ -343,7 +351,9 @@ class DatabaseManagerService {
   }
 
   /// Elimina multipli esercizi
-  Future<DatabaseOperationResult> bulkDeleteExercises(List<String> exerciseIds) async {
+  Future<DatabaseOperationResult> bulkDeleteExercises(
+    List<String> exerciseIds,
+  ) async {
     try {
       if (kDebugMode) {
         debugPrint('🗑️ Bulk deleting: ${exerciseIds.length} exercises');
@@ -352,7 +362,9 @@ class DatabaseManagerService {
       final batch = _firestore.batch();
 
       for (final id in exerciseIds) {
-        final docRef = _firestore.collection('exercises_it').doc(id); // FIX: was 'exercises'
+        final docRef = _firestore
+            .collection('exercises_it')
+            .doc(id); // FIX: was 'exercises'
         batch.delete(docRef);
       }
 
@@ -364,7 +376,6 @@ class DatabaseManagerService {
         message: 'Eliminati ${exerciseIds.length} esercizi',
         affectedCount: exerciseIds.length,
       );
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Bulk delete failed: $e');
@@ -389,7 +400,10 @@ class DatabaseManagerService {
         // Export solo selezionati
         exercises = [];
         for (final id in exerciseIds) {
-          final doc = await _firestore.collection('exercises_it').doc(id).get(); // FIX: was 'exercises'
+          final doc = await _firestore
+              .collection('exercises_it')
+              .doc(id)
+              .get(); // FIX: was 'exercises'
           if (doc.exists) {
             final data = doc.data()!;
             data['id'] = doc.id;
@@ -407,19 +421,21 @@ class DatabaseManagerService {
           'version': '2.0.0',
           'exportDate': DateTime.now().toIso8601String(),
           'totalExercises': exercises.length,
-          'bodyweightExercises': exercises.where((e) =>
-            e.attrezzatura == 'Corpo Libero'
-          ).length,
-          'weightedExercises': exercises.where((e) =>
-            e.attrezzatura != 'Corpo Libero' &&
-            e.attrezzatura != 'Elastici' &&
-            e.attrezzatura != 'TRX'
-          ).length,
+          'bodyweightExercises': exercises
+              .where((e) => e.attrezzatura == 'Corpo Libero')
+              .length,
+          'weightedExercises': exercises
+              .where(
+                (e) =>
+                    e.attrezzatura != 'Corpo Libero' &&
+                    e.attrezzatura != 'Elastici' &&
+                    e.attrezzatura != 'TRX',
+              )
+              .length,
         },
       };
 
       return const JsonEncoder.withIndent('  ').convert(jsonData);
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Export failed: $e');
@@ -442,8 +458,12 @@ class DatabaseManagerService {
       int importCount = 0;
 
       for (final exerciseJson in exercisesList) {
-        final exercise = Exercise.fromJson(exerciseJson as Map<String, dynamic>);
-        final docRef = _firestore.collection('exercises_it').doc(exercise.id); // FIX: was 'exercises'
+        final exercise = Exercise.fromJson(
+          exerciseJson as Map<String, dynamic>,
+        );
+        final docRef = _firestore
+            .collection('exercises_it')
+            .doc(exercise.id); // FIX: was 'exercises'
         batch.set(docRef, exercise.toJson(), SetOptions(merge: true));
         importCount++;
 
@@ -461,7 +481,6 @@ class DatabaseManagerService {
         message: 'Importati $importCount esercizi',
         affectedCount: importCount,
       );
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Import failed: $e');
@@ -481,21 +500,24 @@ class DatabaseManagerService {
       return {
         'totalExercises': exercises.length,
         'byDifficulty': {
-          'Principiante': exercises.where((e) => e.difficolta == 'Principiante').length,
-          'Intermedio': exercises.where((e) => e.difficolta == 'Intermedio').length,
+          'Principiante': exercises
+              .where((e) => e.difficolta == 'Principiante')
+              .length,
+          'Intermedio': exercises
+              .where((e) => e.difficolta == 'Intermedio')
+              .length,
           'Avanzato': exercises.where((e) => e.difficolta == 'Avanzato').length,
         },
         'byEquipment': {
           for (var eq in EquipmentType.values)
-            eq.displayName: exercises.where((e) => e.attrezzatura == eq.displayName).length,
+            eq.displayName: exercises
+                .where((e) => e.attrezzatura == eq.displayName)
+                .length,
         },
-        'bodyweightCount': exercises.where((e) =>
-          e.attrezzatura == 'Corpo Libero'
-        ).length,
-        'uniqueMuscles': exercises
-          .expand((e) => e.focus)
-          .toSet()
-          .length,
+        'bodyweightCount': exercises
+            .where((e) => e.attrezzatura == 'Corpo Libero')
+            .length,
+        'uniqueMuscles': exercises.expand((e) => e.focus).toSet().length,
       };
     } catch (e) {
       if (kDebugMode) {
@@ -522,7 +544,8 @@ class DatabaseManagerService {
     if (_cachedExercises == null || _lastCacheUpdate == null) {
       return false;
     }
-    return DateTime.now().difference(_lastCacheUpdate!) < _cacheValidityDuration;
+    return DateTime.now().difference(_lastCacheUpdate!) <
+        _cacheValidityDuration;
   }
 
   /// Ottieni valori unici per dropdown
@@ -532,18 +555,28 @@ class DatabaseManagerService {
     return ExerciseDropdownValues(
       difficulties: ['Principiante', 'Intermedio', 'Avanzato'],
       equipments: EquipmentType.values.map((e) => e.displayName).toList(),
-      exerciseTypes: exercises.map((e) => e.tipoEsercizio).toSet().toList()..sort(),
-      movementPatterns: exercises.map((e) => e.patternMovimento).toSet().toList()..sort(),
+      exerciseTypes: exercises.map((e) => e.tipoEsercizio).toSet().toList()
+        ..sort(),
+      movementPatterns:
+          exercises.map((e) => e.patternMovimento).toSet().toList()..sort(),
       muscles: exercises.expand((e) => e.focus).toSet().toList()..sort(),
       repRanges: ['1-5', '6-8', '8-12', '12-15', '15-20', '20+'],
-      tutOptions: ['1-0-1-0', '2-0-1-0', '2-1-2-0', '3-0-1-0', '3-1-2-0', '4-0-1-0', 'ISO', 'EXP'],
+      tutOptions: [
+        '1-0-1-0',
+        '2-0-1-0',
+        '2-1-2-0',
+        '3-0-1-0',
+        '3-1-2-0',
+        '4-0-1-0',
+        'ISO',
+        'EXP',
+      ],
     );
   }
 }
 
 /// Valori per dropdown
 class ExerciseDropdownValues {
-
   ExerciseDropdownValues({
     required this.difficulties,
     required this.equipments,

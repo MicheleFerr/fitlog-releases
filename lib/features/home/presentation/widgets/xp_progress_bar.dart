@@ -213,9 +213,7 @@ class XPProgressBar extends ConsumerWidget {
             curve: Curves.easeOutCubic,
             height: 8,
             width: (MediaQuery.of(context).size.width - 64) * progress,
-            decoration: BoxDecoration(
-              color: context.colors.primary,
-            ),
+            decoration: BoxDecoration(color: context.colors.primary),
           ),
         ],
       ),

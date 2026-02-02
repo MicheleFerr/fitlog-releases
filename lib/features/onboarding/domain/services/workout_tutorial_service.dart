@@ -83,12 +83,15 @@ class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
   static WorkoutTutorialState? _cachedState;
 
   WorkoutTutorialNotifier()
-      : super(_cachedState ?? const WorkoutTutorialState(
-          isActive: false,
-          currentStep: WorkoutTutorialStep.addExercise,
-          hasCompletedTutorial: false,
-          hasStartedTutorial: false,
-        )) {
+    : super(
+        _cachedState ??
+            const WorkoutTutorialState(
+              isActive: false,
+              currentStep: WorkoutTutorialStep.addExercise,
+              hasCompletedTutorial: false,
+              hasStartedTutorial: false,
+            ),
+      ) {
     // Load from SharedPreferences if no cache available
     if (_cachedState == null) {
       _loadState();
@@ -202,7 +205,8 @@ class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
 
     // For addExercise step, allow tapping the FAB to open the exercise picker
     // This is required because the next step (tapSet) needs an exercise to exist
-    final isAddExerciseStep = state.currentStep == WorkoutTutorialStep.addExercise;
+    final isAddExerciseStep =
+        state.currentStep == WorkoutTutorialStep.addExercise;
 
     final target = TargetFocus(
       identify: state.currentStep.name,
@@ -223,7 +227,8 @@ class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
             title: stepConfig.title,
             message: stepConfig.message,
             stepNumber: state.currentStep.index + 1,
-            totalSteps: WorkoutTutorialStep.values.length - 1, // exclude 'completed'
+            totalSteps:
+                WorkoutTutorialStep.values.length - 1, // exclude 'completed'
             onNext: () {
               // Only call controller.next() - onFinish callback handles onComplete
               // to avoid double-calling when tutorial finishes
@@ -365,7 +370,10 @@ class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: colors.primaryContainer,
                   borderRadius: BorderRadius.circular(12),
@@ -410,7 +418,10 @@ class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colors.primary,
                   foregroundColor: colors.onPrimary,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -449,8 +460,8 @@ class _StepConfig {
 /// Provider for the workout tutorial state
 final workoutTutorialProvider =
     StateNotifierProvider<WorkoutTutorialNotifier, WorkoutTutorialState>((ref) {
-  return WorkoutTutorialNotifier();
-});
+      return WorkoutTutorialNotifier();
+    });
 
 /// Provider for checking if tutorial is completed
 final workoutTutorialCompletedProvider = Provider<bool>((ref) {

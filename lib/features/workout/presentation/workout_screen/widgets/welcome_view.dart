@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart'
+    as wt;
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/swipeable_template_card.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -73,9 +74,7 @@ class WelcomeView extends ConsumerWidget {
             const SizedBox(height: AppSpacing.md),
 
             // Quick Start e Template
-            Expanded(
-              child: _buildQuickStartList(context, ref),
-            ),
+            Expanded(child: _buildQuickStartList(context, ref)),
           ],
         ),
       ),
@@ -100,7 +99,8 @@ class WelcomeView extends ConsumerWidget {
                 context.colors.primary,
                 HSLColor.fromColor(context.colors.primary)
                     .withLightness(
-                      (HSLColor.fromColor(context.colors.primary).lightness - 0.08)
+                      (HSLColor.fromColor(context.colors.primary).lightness -
+                              0.08)
                           .clamp(0.0, 1.0),
                     )
                     .toColor(),
@@ -153,7 +153,9 @@ class WelcomeView extends ConsumerWidget {
                       Text(
                         context.l10n.startImmediately,
                         style: context.textTheme.bodySmall?.copyWith(
-                          color: context.colors.onPrimary.withValues(alpha: 0.85),
+                          color: context.colors.onPrimary.withValues(
+                            alpha: 0.85,
+                          ),
                         ),
                       ),
                     ],
@@ -185,13 +187,16 @@ class WelcomeView extends ConsumerWidget {
           Container(
             margin: const EdgeInsets.only(bottom: AppSpacing.xs),
             decoration: BoxDecoration(
-              color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+              color: context.colors.surfaceContainerHighest.withValues(
+                alpha: 0.5,
+              ),
               borderRadius: BorderRadius.circular(12),
             ),
             child: TabBar(
               labelColor: context.colors.onSurface,
-              unselectedLabelColor:
-                  context.colors.onSurface.withValues(alpha: 0.5),
+              unselectedLabelColor: context.colors.onSurface.withValues(
+                alpha: 0.5,
+              ),
               indicator: BoxDecoration(
                 color: context.colors.surface,
                 borderRadius: BorderRadius.circular(8),
@@ -205,20 +210,15 @@ class WelcomeView extends ConsumerWidget {
               ),
               indicatorSize: TabBarIndicatorSize.tab,
               dividerColor: context.colors.surface.withValues(alpha: 0),
-              labelStyle: context.textTheme.labelLarge
-                  ?.copyWith(fontWeight: FontWeight.w600),
+              labelStyle: context.textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
               unselectedLabelStyle: context.textTheme.labelLarge,
               padding: const EdgeInsets.all(4),
               labelPadding: EdgeInsets.zero,
               tabs: [
-                Tab(
-                  height: 36,
-                  text: context.l10n.yourTemplates,
-                ),
-                Tab(
-                  height: 36,
-                  text: context.l10n.predefinedWorkouts,
-                ),
+                Tab(height: 36, text: context.l10n.yourTemplates),
+                Tab(height: 36, text: context.l10n.predefinedWorkouts),
               ],
             ),
           ),
@@ -227,10 +227,12 @@ class WelcomeView extends ConsumerWidget {
           Expanded(
             child: Consumer(
               builder: (context, ref, child) {
-                final customTemplatesAsync =
-                    ref.watch(customWorkoutTemplatesProvider);
-                final allTemplatesAsync =
-                    ref.watch(allWorkoutTemplatesProvider);
+                final customTemplatesAsync = ref.watch(
+                  customWorkoutTemplatesProvider,
+                );
+                final allTemplatesAsync = ref.watch(
+                  allWorkoutTemplatesProvider,
+                );
 
                 return TabBarView(
                   children: [
@@ -238,7 +240,9 @@ class WelcomeView extends ConsumerWidget {
                     customTemplatesAsync.when(
                       loading: () => const LoadingIndicator(),
                       error: (error, stack) => Center(
-                        child: Text(context.l10n.errorLoading(error.toString())),
+                        child: Text(
+                          context.l10n.errorLoading(error.toString()),
+                        ),
                       ),
                       data: (customTemplates) {
                         return _buildTemplateList(
@@ -253,12 +257,15 @@ class WelcomeView extends ConsumerWidget {
                     allTemplatesAsync.when(
                       loading: () => const LoadingIndicator(),
                       error: (error, stack) => Center(
-                        child: Text(context.l10n.errorLoading(error.toString())),
+                        child: Text(
+                          context.l10n.errorLoading(error.toString()),
+                        ),
                       ),
                       data: (allTemplates) {
                         // Filtra solo i template predefiniti (non custom)
-                        final predefinedTemplates =
-                            allTemplates.where((t) => !t.isCustom).toList();
+                        final predefinedTemplates = allTemplates
+                            .where((t) => !t.isCustom)
+                            .toList();
                         return _buildTemplateList(
                           context,
                           predefinedTemplates,
@@ -321,9 +328,7 @@ class WelcomeView extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SemanticIcon(
-            icon: isCustomTab
-                ? AppIcons.noteAdd
-                : AppIcons.inventory2Outlined,
+            icon: isCustomTab ? AppIcons.noteAdd : AppIcons.inventory2Outlined,
             semanticLabel: isCustomTab
                 ? 'No custom templates'
                 : 'No predefined workouts',

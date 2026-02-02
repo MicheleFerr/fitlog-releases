@@ -29,7 +29,8 @@ abstract class ScheduleBottomSheetState with _$ScheduleBottomSheetState {
   }) = _ScheduleBottomSheetState;
 
   /// Get reminder time as TimeOfDay
-  TimeOfDay get reminderTime => TimeOfDay(hour: reminderHour, minute: reminderMinute);
+  TimeOfDay get reminderTime =>
+      TimeOfDay(hour: reminderHour, minute: reminderMinute);
 
   /// Check if any dates are selected
   bool get hasSelection => selectedDates.isNotEmpty;
@@ -51,10 +52,7 @@ abstract class ScheduleBottomSheetState with _$ScheduleBottomSheetState {
 extension ScheduleBottomSheetStateExtension on ScheduleBottomSheetState {
   /// Create a copy with updated reminder time
   ScheduleBottomSheetState copyWithReminderTime(TimeOfDay time) {
-    return copyWith(
-      reminderHour: time.hour,
-      reminderMinute: time.minute,
-    );
+    return copyWith(reminderHour: time.hour, reminderMinute: time.minute);
   }
 
   /// Toggle a date selection
@@ -62,10 +60,12 @@ extension ScheduleBottomSheetStateExtension on ScheduleBottomSheetState {
     final normalizedDate = DateTime(date.year, date.month, date.day);
     final currentDates = List<DateTime>.from(selectedDates);
 
-    final existingIndex = currentDates.indexWhere((d) =>
-        d.year == normalizedDate.year &&
-        d.month == normalizedDate.month &&
-        d.day == normalizedDate.day);
+    final existingIndex = currentDates.indexWhere(
+      (d) =>
+          d.year == normalizedDate.year &&
+          d.month == normalizedDate.month &&
+          d.day == normalizedDate.day,
+    );
 
     if (existingIndex >= 0) {
       currentDates.removeAt(existingIndex);
@@ -86,25 +86,16 @@ extension ScheduleBottomSheetStateExtension on ScheduleBottomSheetState {
 
   /// Set submitting state
   ScheduleBottomSheetState setSubmitting(bool submitting) {
-    return copyWith(
-      isSubmitting: submitting,
-      errorMessage: null,
-    );
+    return copyWith(isSubmitting: submitting, errorMessage: null);
   }
 
   /// Set error state
   ScheduleBottomSheetState setError(String message) {
-    return copyWith(
-      isSubmitting: false,
-      errorMessage: message,
-    );
+    return copyWith(isSubmitting: false, errorMessage: message);
   }
 
   /// Set success state
   ScheduleBottomSheetState setSuccess(String message) {
-    return copyWith(
-      isSubmitting: false,
-      successMessage: message,
-    );
+    return copyWith(isSubmitting: false, successMessage: message);
   }
 }

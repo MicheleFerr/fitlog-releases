@@ -49,7 +49,8 @@ class ExerciseReplacementService {
       }
 
       // Optionally match equipment
-      if (matchEquipment && exercise.attrezzatura != currentExercise.attrezzatura) {
+      if (matchEquipment &&
+          exercise.attrezzatura != currentExercise.attrezzatura) {
         return false;
       }
 
@@ -58,8 +59,12 @@ class ExerciseReplacementService {
 
     // Sort by relevance (more matching muscle groups first)
     similarExercises.sort((a, b) {
-      final aMatchCount = a.focus.where((m) => currentExercise.focus.contains(m)).length;
-      final bMatchCount = b.focus.where((m) => currentExercise.focus.contains(m)).length;
+      final aMatchCount = a.focus
+          .where((m) => currentExercise.focus.contains(m))
+          .length;
+      final bMatchCount = b.focus
+          .where((m) => currentExercise.focus.contains(m))
+          .length;
       return bMatchCount.compareTo(aMatchCount);
     });
 
@@ -80,9 +85,9 @@ class ExerciseReplacementService {
     int score = 0;
 
     // Primary muscles (40 points max)
-    final matchingPrimaryMuscles = exercise1.focus.where(
-      (m) => exercise2.focus.contains(m),
-    ).length;
+    final matchingPrimaryMuscles = exercise1.focus
+        .where((m) => exercise2.focus.contains(m))
+        .length;
     final totalPrimaryMuscles = exercise1.focus.length;
     score += ((matchingPrimaryMuscles / totalPrimaryMuscles) * 40).round();
 

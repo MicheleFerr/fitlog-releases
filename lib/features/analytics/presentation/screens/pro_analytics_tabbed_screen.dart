@@ -75,8 +75,9 @@ class _ProAnalyticsTabbedScreenState
     }
 
     // Watch exercise histories
-    final exerciseHistoriesAsync =
-        ref.watch(exerciseHistoryStreamProvider(userId));
+    final exerciseHistoriesAsync = ref.watch(
+      exerciseHistoryStreamProvider(userId),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -107,10 +108,7 @@ class _ProAnalyticsTabbedScreenState
 
               // 5. Show confirmation
               if (context.mounted) {
-                SnackBarService.showSuccess(
-                  context,
-                  l10n.refreshed,
-                );
+                SnackBarService.showSuccess(context, l10n.refreshed);
               }
             },
           ),
@@ -193,22 +191,13 @@ class _ProAnalyticsTabbedScreenState
               unselectedLabelStyle: context.textTheme.labelMedium,
               dividerColor: colorScheme.surface.withValues(alpha: 0),
               tabs: [
-                _buildPremiumTab(
-                  icon: AppIcons.barChart,
-                  label: l10n.repZones,
-                ),
-                _buildPremiumTab(
-                  icon: AppIcons.trendUp,
-                  label: l10n.volume,
-                ),
+                _buildPremiumTab(icon: AppIcons.barChart, label: l10n.repZones),
+                _buildPremiumTab(icon: AppIcons.trendUp, label: l10n.volume),
                 _buildPremiumTab(
                   icon: AppIcons.accessibility,
                   label: l10n.muscleBalance,
                 ),
-                _buildPremiumTab(
-                  icon: AppIcons.bolt,
-                  label: l10n.stressIndex,
-                ),
+                _buildPremiumTab(icon: AppIcons.bolt, label: l10n.stressIndex),
                 _buildPremiumTab(
                   icon: AppIcons.warning,
                   label: l10n.analyticsTrendPlateau,
@@ -308,8 +297,10 @@ class _ProAnalyticsTabbedScreenState
               style: FilledButton.styleFrom(
                 backgroundColor: colorScheme.tertiary,
                 foregroundColor: colorScheme.onTertiary,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
               ),
               icon: const Icon(AppIcons.premium, size: AppIconSize.small),
               label: Text(
@@ -362,10 +353,7 @@ class _ProAnalyticsTabbedScreenState
   }
 
   /// Build premium-styled tab with icon and text inline
-  Widget _buildPremiumTab({
-    required IconData icon,
-    required String label,
-  }) {
+  Widget _buildPremiumTab({required IconData icon, required String label}) {
     return Tab(
       height: 56,
       child: Padding(

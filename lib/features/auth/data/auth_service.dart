@@ -118,9 +118,8 @@ class AuthService with RateLimiterMixin {
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
       // google_sign_in 7.x: accessToken requires authorization step
-      final authorization = await googleUser.authorizationClient.authorizeScopes(
-        ['email', 'profile'],
-      );
+      final authorization = await googleUser.authorizationClient
+          .authorizeScopes(['email', 'profile']);
 
       // Create a new credential with idToken and accessToken
       final credential = GoogleAuthProvider.credential(
@@ -174,10 +173,14 @@ class AuthService with RateLimiterMixin {
       final userCredential = await _auth.signInWithCredential(oauthCredential);
 
       // Create user document if it's a new user
-      if (userCredential.user != null && userCredential.additionalUserInfo?.isNewUser == true) {
+      if (userCredential.user != null &&
+          userCredential.additionalUserInfo?.isNewUser == true) {
         // Update display name from Apple ID if available
-        if (appleCredential.givenName != null || appleCredential.familyName != null) {
-          final displayName = '${appleCredential.givenName ?? ''} ${appleCredential.familyName ?? ''}'.trim();
+        if (appleCredential.givenName != null ||
+            appleCredential.familyName != null) {
+          final displayName =
+              '${appleCredential.givenName ?? ''} ${appleCredential.familyName ?? ''}'
+                  .trim();
           if (displayName.isNotEmpty) {
             await userCredential.user?.updateDisplayName(displayName);
           }
@@ -414,7 +417,9 @@ class AuthService with RateLimiterMixin {
       await userDoc.set({
         'uid': user.uid,
         'email': user.email,
-        'displayName': isGuest ? 'Guest User' : (user.displayName ?? 'GymBro User'),
+        'displayName': isGuest
+            ? 'Guest User'
+            : (user.displayName ?? 'GymBro User'),
         'photoURL': user.photoURL,
         'createdAt': FieldValue.serverTimestamp(),
         'lastLoginAt': FieldValue.serverTimestamp(),
@@ -431,11 +436,7 @@ class AuthService with RateLimiterMixin {
           'restTimerSound': true,
           'notifications': true,
         },
-        'stats': {
-          'totalWorkouts': 0,
-          'totalExercises': 0,
-          'totalVolume': 0.0,
-        }
+        'stats': {'totalWorkouts': 0, 'totalExercises': 0, 'totalVolume': 0.0},
       }, SetOptions(merge: true));
     } catch (e) {
       // Don't throw - user creation is more important than document creation
@@ -492,9 +493,13 @@ class AuthService with RateLimiterMixin {
 
   // Helper methods for Apple Sign In
   String _generateNonce([int length = 32]) {
-    const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    const charset =
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
     final random = Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
+    return List.generate(
+      length,
+      (_) => charset[random.nextInt(charset.length)],
+    ).join();
   }
 
   String _sha256ofString(String input) {

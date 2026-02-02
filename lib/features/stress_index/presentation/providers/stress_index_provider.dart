@@ -77,60 +77,62 @@ class ExerciseMuscleData {
 /// Example: "Panca Piana con Bilanciere", "panca piana", "bp" all → same muscle data
 final exerciseMuscleMapProvider =
     FutureProvider.autoDispose<Map<String, ExerciseMuscleData>>((ref) async {
-  try {
-    final repository = ref.watch(hybridExerciseRepositoryProvider);
-    final exercises = await repository.getAllExercises();
+      try {
+        final repository = ref.watch(hybridExerciseRepositoryProvider);
+        final exercises = await repository.getAllExercises();
 
-    final muscleMap = <String, ExerciseMuscleData>{};
-    for (final exercise in exercises) {
-      if (exercise.focus.isNotEmpty || exercise.muscoliSecondari.isNotEmpty) {
-        final muscleData = ExerciseMuscleData(
-          primary: exercise.focus,
-          secondary: exercise.muscoliSecondari,
-          // Use patternMovimento for movement pattern inference (replaces missing file field)
-          fileCategory: exercise.patternMovimento,
-          exerciseName: exercise.nome,
-        );
+        final muscleMap = <String, ExerciseMuscleData>{};
+        for (final exercise in exercises) {
+          if (exercise.focus.isNotEmpty ||
+              exercise.muscoliSecondari.isNotEmpty) {
+            final muscleData = ExerciseMuscleData(
+              primary: exercise.focus,
+              secondary: exercise.muscoliSecondari,
+              // Use patternMovimento for movement pattern inference (replaces missing file field)
+              fileCategory: exercise.patternMovimento,
+              exerciseName: exercise.nome,
+            );
 
-        // Add main name (exact match)
-        muscleMap[exercise.nome] = muscleData;
+            // Add main name (exact match)
+            muscleMap[exercise.nome] = muscleData;
 
-        // Add lowercase version for case-insensitive matching
-        final nomeLower = exercise.nome.toLowerCase();
-        if (!muscleMap.containsKey(nomeLower)) {
-          muscleMap[nomeLower] = muscleData;
-        }
+            // Add lowercase version for case-insensitive matching
+            final nomeLower = exercise.nome.toLowerCase();
+            if (!muscleMap.containsKey(nomeLower)) {
+              muscleMap[nomeLower] = muscleData;
+            }
 
-        // Add all aliases for flexible matching
-        // Example: "panca piana", "bp", "ppcb" all map to "Panca Piana con Bilanciere"
-        for (final alias in exercise.aliases) {
-          final aliasNormalized = alias.toLowerCase().trim();
-          if (aliasNormalized.isNotEmpty && !muscleMap.containsKey(aliasNormalized)) {
-            muscleMap[aliasNormalized] = muscleData;
+            // Add all aliases for flexible matching
+            // Example: "panca piana", "bp", "ppcb" all map to "Panca Piana con Bilanciere"
+            for (final alias in exercise.aliases) {
+              final aliasNormalized = alias.toLowerCase().trim();
+              if (aliasNormalized.isNotEmpty &&
+                  !muscleMap.containsKey(aliasNormalized)) {
+                muscleMap[aliasNormalized] = muscleData;
+              }
+            }
           }
         }
-      }
-    }
 
-    return muscleMap;
-  } catch (e) {
-    // Return empty map on error - calculator will use category fallback
-    return {};
-  }
-});
+        return muscleMap;
+      } catch (e) {
+        // Return empty map on error - calculator will use category fallback
+        return {};
+      }
+    });
 
 /// @deprecated Use [exerciseMuscleMapProvider] instead
 /// Kept for backward compatibility
 final exerciseFocusMapProvider =
     FutureProvider.autoDispose<Map<String, List<String>>>((ref) async {
-  try {
-    final muscleMap = await ref.watch(exerciseMuscleMapProvider.future);
-    // Convert to old format (primary muscles only)
-    return muscleMap.map((key, value) => MapEntry(key, value.primary));
-  } catch (e) {
-    return {};
-  }
-});
+      try {
+        final muscleMap = await ref.watch(exerciseMuscleMapProvider.future);
+        // Convert to old format (primary muscles only)
+        return muscleMap.map((key, value) => MapEntry(key, value.primary));
+      } catch (e) {
+        return {};
+      }
+    });
 
 // ====================
 // RECENT RESULTS PROVIDER
@@ -139,16 +141,16 @@ final exerciseFocusMapProvider =
 /// Provider for recent stress index results (last 7 days)
 final recentStressIndexResultsProvider =
     FutureProvider.autoDispose<List<StressIndexResult>>((ref) async {
-  final repository = ref.watch(stressIndexRepositoryProvider);
-  return repository.getRecent(days: 7);
-});
+      final repository = ref.watch(stressIndexRepositoryProvider);
+      return repository.getRecent(days: 7);
+    });
 
 /// Stream provider for watching recent results
 final recentStressIndexStreamProvider =
     StreamProvider.autoDispose<List<StressIndexResult>>((ref) {
-  final repository = ref.watch(stressIndexRepositoryProvider);
-  return repository.watchRecent(days: 7);
-});
+      final repository = ref.watch(stressIndexRepositoryProvider);
+      return repository.watchRecent(days: 7);
+    });
 
 // ====================
 // STATE NOTIFIER PROVIDER
@@ -184,14 +186,17 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
         }
       }
 
-      final muscleRecovery =
-          StressIndexCalculator.calculateRecoveryStatus(recentResults);
+      final muscleRecovery = StressIndexCalculator.calculateRecoveryStatus(
+        recentResults,
+      );
 
-      state = AsyncValue.data(StressIndexState(
-        latestResult: recentResults.isNotEmpty ? recentResults.first : null,
-        muscleRecovery: muscleRecovery,
-        history: recentResults,
-      ));
+      state = AsyncValue.data(
+        StressIndexState(
+          latestResult: recentResults.isNotEmpty ? recentResults.first : null,
+          muscleRecovery: muscleRecovery,
+          history: recentResults,
+        ),
+      );
     } catch (e, st) {
       state = AsyncValue.error(e, st);
     }
@@ -263,8 +268,9 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
   Future<StressIndexResult?> calculateAndSave(Workout workout) async {
     try {
       // Get exercise muscle map for accurate muscle tracking (primary + secondary)
-      final muscleMap =
-          await _ref.read(exerciseMuscleMapProvider.future).catchError((_) => <String, ExerciseMuscleData>{});
+      final muscleMap = await _ref
+          .read(exerciseMuscleMapProvider.future)
+          .catchError((_) => <String, ExerciseMuscleData>{});
 
       // 🏋️ Get user body weight for bodyweight exercise stress calculation
       final userBodyWeightKg = await _getUserBodyWeightKg();
@@ -286,14 +292,17 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
           .take(50) // Keep last 50 results
           .toList();
 
-      final muscleRecovery =
-          StressIndexCalculator.calculateRecoveryStatus(updatedHistory);
+      final muscleRecovery = StressIndexCalculator.calculateRecoveryStatus(
+        updatedHistory,
+      );
 
-      state = AsyncValue.data(StressIndexState(
-        latestResult: result,
-        muscleRecovery: muscleRecovery,
-        history: updatedHistory,
-      ));
+      state = AsyncValue.data(
+        StressIndexState(
+          latestResult: result,
+          muscleRecovery: muscleRecovery,
+          history: updatedHistory,
+        ),
+      );
 
       return result;
     } catch (e, st) {
@@ -316,7 +325,9 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
   /// 2. Recalculate from workout history using updated exercise focus values
   ///
   /// Returns a tuple of (cleared count, recalculated count)
-  Future<(int cleared, int recalculated)> clearAndRecalculate({int days = 30}) async {
+  Future<(int cleared, int recalculated)> clearAndRecalculate({
+    int days = 30,
+  }) async {
     state = const AsyncValue.loading();
 
     try {
@@ -437,7 +448,9 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
       }
 
       if (kDebugMode) {
-        debugPrint('[StressIndex] Backfill complete: $processedCount workouts processed');
+        debugPrint(
+          '[StressIndex] Backfill complete: $processedCount workouts processed',
+        );
       }
 
       return processedCount;
@@ -475,24 +488,27 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
 
 /// Provider for StressIndexNotifier
 final stressIndexNotifierProvider =
-    StateNotifierProvider.autoDispose<StressIndexNotifier, AsyncValue<StressIndexState>>(
-  (ref) => StressIndexNotifier(ref),
-);
+    StateNotifierProvider.autoDispose<
+      StressIndexNotifier,
+      AsyncValue<StressIndexState>
+    >((ref) => StressIndexNotifier(ref));
 
 // ====================
 // CONVENIENCE PROVIDERS
 // ====================
 
 /// Provider for latest stress index result
-final latestStressIndexProvider =
-    Provider.autoDispose<StressIndexResult?>((ref) {
+final latestStressIndexProvider = Provider.autoDispose<StressIndexResult?>((
+  ref,
+) {
   final state = ref.watch(stressIndexNotifierProvider);
   return state.valueOrNull?.latestResult;
 });
 
 /// Provider for muscle recovery status map
-final muscleRecoveryProvider =
-    Provider.autoDispose<Map<String, dynamic>>((ref) {
+final muscleRecoveryProvider = Provider.autoDispose<Map<String, dynamic>>((
+  ref,
+) {
   final state = ref.watch(stressIndexNotifierProvider);
   return state.valueOrNull?.muscleRecovery ?? {};
 });
@@ -594,8 +610,9 @@ class SleepAwareStressData {
 /// - Consecutive bad nights penalty
 ///
 /// **Formula**: `AdjustedReadiness = FFM_Readiness × SleepModifier × ConsecutivePenalty`
-final sleepAwareStressDataProvider =
-    FutureProvider.autoDispose<SleepAwareStressData>((ref) async {
+final sleepAwareStressDataProvider = FutureProvider.autoDispose<SleepAwareStressData>((
+  ref,
+) async {
   // Get stress index history
   final stressState = ref.watch(stressIndexNotifierProvider);
   final history = stressState.valueOrNull?.history ?? [];
@@ -646,10 +663,18 @@ final sleepAwareStressDataProvider =
   final sleepModifier = StressIndexCalculator.getSleepModifier(sleepHours);
 
   if (kDebugMode) {
-    debugPrint('[SleepAwareStress] Raw readiness: ${rawReadiness.toStringAsFixed(1)}%');
-    debugPrint('[SleepAwareStress] Sleep: ${sleepHours.toStringAsFixed(1)}h ($sleepCategory)');
-    debugPrint('[SleepAwareStress] Consecutive bad nights: $consecutiveBadNights');
-    debugPrint('[SleepAwareStress] Adjusted readiness: ${adjustedReadiness.toStringAsFixed(1)}%');
+    debugPrint(
+      '[SleepAwareStress] Raw readiness: ${rawReadiness.toStringAsFixed(1)}%',
+    );
+    debugPrint(
+      '[SleepAwareStress] Sleep: ${sleepHours.toStringAsFixed(1)}h ($sleepCategory)',
+    );
+    debugPrint(
+      '[SleepAwareStress] Consecutive bad nights: $consecutiveBadNights',
+    );
+    debugPrint(
+      '[SleepAwareStress] Adjusted readiness: ${adjustedReadiness.toStringAsFixed(1)}%',
+    );
   }
 
   return SleepAwareStressData(
@@ -677,4 +702,3 @@ final hasSleepImpactProvider = Provider.autoDispose<bool>((ref) {
   final dataAsync = ref.watch(sleepAwareStressDataProvider);
   return dataAsync.valueOrNull?.hasSleepImpact ?? false;
 });
-

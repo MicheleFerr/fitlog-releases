@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: presentation
 /// 🎯 Feature: workout_templates
 /// 🔧 Type: provider
 /// 🌍 Localization: N/A
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - Riverpod: NotifierProvider (Riverpod 2.x)
 /// - Firebase: Through repository
@@ -22,7 +22,6 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolid
 
 // State class
 class TemplateState {
-
   TemplateState({
     this.userTemplates = const [],
     this.publicTemplates = const [],
@@ -59,7 +58,6 @@ class TemplateState {
 
 // Notifier (Riverpod 2.x)
 class TemplateNotifier extends Notifier<TemplateState> {
-
   late final TemplateRepository _repository;
 
   @override
@@ -76,7 +74,9 @@ class TemplateNotifier extends Notifier<TemplateState> {
       // Reload templates when user state changes (login/logout)
       next.whenData((_) {
         if (kDebugMode) {
-          debugPrint('🔄 [TemplateProvider] User state changed, reloading templates');
+          debugPrint(
+            '🔄 [TemplateProvider] User state changed, reloading templates',
+          );
         }
         loadUserTemplates();
       });
@@ -86,7 +86,7 @@ class TemplateNotifier extends Notifier<TemplateState> {
     Future.microtask(() => loadUserTemplates());
     return TemplateState();
   }
-  
+
   // Carica template dell'utente
   Future<void> loadUserTemplates() async {
     state = state.copyWith(isLoading: true, error: null);
@@ -94,24 +94,20 @@ class TemplateNotifier extends Notifier<TemplateState> {
     try {
       final templates = await _repository.getUserTemplates();
       if (kDebugMode) {
-        debugPrint('✅ [TemplateProvider] Loaded ${templates.length} user templates');
+        debugPrint(
+          '✅ [TemplateProvider] Loaded ${templates.length} user templates',
+        );
       }
-      state = state.copyWith(
-        userTemplates: templates,
-        isLoading: false,
-      );
+      state = state.copyWith(userTemplates: templates, isLoading: false);
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [TemplateProvider] Error loading user templates: $e');
         debugPrint('📍 Stack trace: $stackTrace');
       }
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
-  
+
   // Carica template pubblici
   Future<void> loadPublicTemplates({
     TemplateCategory? category,
@@ -129,30 +125,28 @@ class TemplateNotifier extends Notifier<TemplateState> {
         difficultyLevel: difficultyLevel,
       );
       if (kDebugMode) {
-        debugPrint('✅ [TemplateProvider] Loaded ${templates.length} public templates (category: $category, search: $searchQuery)');
+        debugPrint(
+          '✅ [TemplateProvider] Loaded ${templates.length} public templates (category: $category, search: $searchQuery)',
+        );
       }
-      state = state.copyWith(
-        publicTemplates: templates,
-        isLoading: false,
-      );
+      state = state.copyWith(publicTemplates: templates, isLoading: false);
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [TemplateProvider] Error loading public templates: $e');
         debugPrint('📍 Stack trace: $stackTrace');
       }
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
-  
+
   // Crea nuovo template
   Future<String?> createTemplate(WorkoutTemplate template) async {
     // Input validation
     if (template.name.trim().isEmpty) {
       if (kDebugMode) {
-        debugPrint('⚠️ [TemplateProvider] Cannot create template with empty name');
+        debugPrint(
+          '⚠️ [TemplateProvider] Cannot create template with empty name',
+        );
       }
       state = state.copyWith(error: 'Template name cannot be empty');
       return null;
@@ -165,8 +159,10 @@ class TemplateNotifier extends Notifier<TemplateState> {
       final entitlements = ref.read(tierEntitlementsProvider);
 
       if (kDebugMode) {
-        debugPrint('📝 [TemplateProvider] Creating template: ${template.name} '
-            '(maxPrivate: ${entitlements.maxTemplates}, maxPublic: ${entitlements.maxPublicTemplates})');
+        debugPrint(
+          '📝 [TemplateProvider] Creating template: ${template.name} '
+          '(maxPrivate: ${entitlements.maxTemplates}, maxPublic: ${entitlements.maxPublicTemplates})',
+        );
       }
 
       final templateId = await _repository.createTemplate(
@@ -176,7 +172,9 @@ class TemplateNotifier extends Notifier<TemplateState> {
       );
 
       if (kDebugMode) {
-        debugPrint('✅ [TemplateProvider] Template created with ID: $templateId');
+        debugPrint(
+          '✅ [TemplateProvider] Template created with ID: $templateId',
+        );
       }
 
       // Ricarica template utente
@@ -188,20 +186,19 @@ class TemplateNotifier extends Notifier<TemplateState> {
         debugPrint('❌ [TemplateProvider] Error creating template: $e');
         debugPrint('📍 Stack trace: $stackTrace');
       }
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
       return null;
     }
   }
-  
+
   // Download template pubblico
   Future<bool> downloadTemplate(String templateId) async {
     // Input validation
     if (templateId.trim().isEmpty) {
       if (kDebugMode) {
-        debugPrint('⚠️ [TemplateProvider] Cannot download template with empty ID');
+        debugPrint(
+          '⚠️ [TemplateProvider] Cannot download template with empty ID',
+        );
       }
       state = state.copyWith(error: 'Invalid template ID');
       return false;
@@ -214,8 +211,10 @@ class TemplateNotifier extends Notifier<TemplateState> {
       final entitlements = ref.read(tierEntitlementsProvider);
 
       if (kDebugMode) {
-        debugPrint('📥 [TemplateProvider] Downloading template: $templateId '
-            '(maxPrivate: ${entitlements.maxTemplates})');
+        debugPrint(
+          '📥 [TemplateProvider] Downloading template: $templateId '
+          '(maxPrivate: ${entitlements.maxTemplates})',
+        );
       }
 
       await _repository.downloadTemplate(
@@ -237,20 +236,19 @@ class TemplateNotifier extends Notifier<TemplateState> {
         debugPrint('❌ [TemplateProvider] Error downloading template: $e');
         debugPrint('📍 Stack trace: $stackTrace');
       }
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
       return false;
     }
   }
-  
+
   // Aggiungi review
   Future<bool> addReview(TemplateReview review) async {
     // Input validation
     if (review.templateId.trim().isEmpty) {
       if (kDebugMode) {
-        debugPrint('⚠️ [TemplateProvider] Cannot add review with empty template ID');
+        debugPrint(
+          '⚠️ [TemplateProvider] Cannot add review with empty template ID',
+        );
       }
       state = state.copyWith(error: 'Invalid template ID');
       return false;
@@ -258,7 +256,9 @@ class TemplateNotifier extends Notifier<TemplateState> {
 
     if (review.rating < 1 || review.rating > 5) {
       if (kDebugMode) {
-        debugPrint('⚠️ [TemplateProvider] Invalid rating: ${review.rating} (must be 1-5)');
+        debugPrint(
+          '⚠️ [TemplateProvider] Invalid rating: ${review.rating} (must be 1-5)',
+        );
       }
       state = state.copyWith(error: 'Rating must be between 1 and 5');
       return false;
@@ -268,13 +268,17 @@ class TemplateNotifier extends Notifier<TemplateState> {
 
     try {
       if (kDebugMode) {
-        debugPrint('⭐ [TemplateProvider] Adding review for template: ${review.templateId} (rating: ${review.rating})');
+        debugPrint(
+          '⭐ [TemplateProvider] Adding review for template: ${review.templateId} (rating: ${review.rating})',
+        );
       }
 
       await _repository.addReview(review);
 
       // Aggiorna review locali
-      final reviews = Map<String, List<TemplateReview>>.from(state.templateReviews);
+      final reviews = Map<String, List<TemplateReview>>.from(
+        state.templateReviews,
+      );
       final templateReviews = reviews[review.templateId] ?? [];
       templateReviews.add(review);
       reviews[review.templateId] = templateReviews;
@@ -283,10 +287,7 @@ class TemplateNotifier extends Notifier<TemplateState> {
         debugPrint('✅ [TemplateProvider] Review added successfully');
       }
 
-      state = state.copyWith(
-        templateReviews: reviews,
-        isLoading: false,
-      );
+      state = state.copyWith(templateReviews: reviews, isLoading: false);
 
       return true;
     } catch (e, stackTrace) {
@@ -294,20 +295,19 @@ class TemplateNotifier extends Notifier<TemplateState> {
         debugPrint('❌ [TemplateProvider] Error adding review: $e');
         debugPrint('📍 Stack trace: $stackTrace');
       }
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
       return false;
     }
   }
-  
+
   // Aggiungi commento
   Future<bool> addComment(TemplateComment comment) async {
     // Input validation
     if (comment.templateId.trim().isEmpty) {
       if (kDebugMode) {
-        debugPrint('⚠️ [TemplateProvider] Cannot add comment with empty template ID');
+        debugPrint(
+          '⚠️ [TemplateProvider] Cannot add comment with empty template ID',
+        );
       }
       state = state.copyWith(error: 'Invalid template ID');
       return false;
@@ -325,13 +325,17 @@ class TemplateNotifier extends Notifier<TemplateState> {
 
     try {
       if (kDebugMode) {
-        debugPrint('💬 [TemplateProvider] Adding comment to template: ${comment.templateId}');
+        debugPrint(
+          '💬 [TemplateProvider] Adding comment to template: ${comment.templateId}',
+        );
       }
 
       await _repository.addComment(comment);
 
       // Aggiorna commenti locali
-      final comments = Map<String, List<TemplateComment>>.from(state.templateComments);
+      final comments = Map<String, List<TemplateComment>>.from(
+        state.templateComments,
+      );
       final templateComments = comments[comment.templateId] ?? [];
       templateComments.add(comment);
       comments[comment.templateId] = templateComments;
@@ -340,10 +344,7 @@ class TemplateNotifier extends Notifier<TemplateState> {
         debugPrint('✅ [TemplateProvider] Comment added successfully');
       }
 
-      state = state.copyWith(
-        templateComments: comments,
-        isLoading: false,
-      );
+      state = state.copyWith(templateComments: comments, isLoading: false);
 
       return true;
     } catch (e, stackTrace) {
@@ -351,20 +352,19 @@ class TemplateNotifier extends Notifier<TemplateState> {
         debugPrint('❌ [TemplateProvider] Error adding comment: $e');
         debugPrint('📍 Stack trace: $stackTrace');
       }
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
       return false;
     }
   }
-  
+
   // Toggle like
   Future<bool> toggleLike(String templateId) async {
     // Input validation
     if (templateId.trim().isEmpty) {
       if (kDebugMode) {
-        debugPrint('⚠️ [TemplateProvider] Cannot toggle like with empty template ID');
+        debugPrint(
+          '⚠️ [TemplateProvider] Cannot toggle like with empty template ID',
+        );
       }
       state = state.copyWith(error: 'Invalid template ID');
       return false;
@@ -372,7 +372,9 @@ class TemplateNotifier extends Notifier<TemplateState> {
 
     try {
       if (kDebugMode) {
-        debugPrint('❤️ [TemplateProvider] Toggling like for template: $templateId');
+        debugPrint(
+          '❤️ [TemplateProvider] Toggling like for template: $templateId',
+        );
       }
 
       await _repository.toggleTemplateLike(templateId);
@@ -402,7 +404,7 @@ class TemplateNotifier extends Notifier<TemplateState> {
       return false;
     }
   }
-  
+
   // Conta template disponibili per l'utente
   int getAvailableTemplateCount(TemplateVisibility visibility) {
     try {
@@ -420,7 +422,9 @@ class TemplateNotifier extends Notifier<TemplateState> {
       }
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('❌ [TemplateProvider] Error calculating available template count: $e');
+        debugPrint(
+          '❌ [TemplateProvider] Error calculating available template count: $e',
+        );
       }
       // Return 0 as safe fallback - prevents creating templates if error
       return 0;

@@ -13,9 +13,7 @@ import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 ///
 /// 🔐 USER ISOLATION: Cache keys are user-scoped via UserCacheKeyManager
 class SupersetTemplateRepository {
-  SupersetTemplateRepository({
-    this.exerciseRepository,
-  });
+  SupersetTemplateRepository({this.exerciseRepository});
 
   /// Exercise repository for looking up localized exercise names
   final HybridExerciseRepository? exerciseRepository;
@@ -26,7 +24,8 @@ class SupersetTemplateRepository {
   /// Exercise lookup function that uses the injected repository
   Future<ExerciseLookupFunction?> get _lookupFunction async {
     if (exerciseRepository == null) return null;
-    return (String exerciseId) => exerciseRepository!.getExerciseById(exerciseId);
+    return (String exerciseId) =>
+        exerciseRepository!.getExerciseById(exerciseId);
   }
 
   /// Get all templates (predefined + custom)
@@ -149,9 +148,7 @@ class SupersetTemplateRepository {
   Future<List<SupersetTemplate>> getBeginnerTemplates() async {
     try {
       final lookup = await _lookupFunction;
-      return await SupersetTemplateLoader.loadBeginner(
-        lookupExercise: lookup,
-      );
+      return await SupersetTemplateLoader.loadBeginner(lookupExercise: lookup);
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to load beginner templates: $e');
@@ -164,9 +161,7 @@ class SupersetTemplateRepository {
   Future<List<SupersetTemplate>> getAdvancedTemplates() async {
     try {
       final lookup = await _lookupFunction;
-      return await SupersetTemplateLoader.loadAdvanced(
-        lookupExercise: lookup,
-      );
+      return await SupersetTemplateLoader.loadAdvanced(lookupExercise: lookup);
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to load advanced templates: $e');
@@ -289,9 +284,7 @@ class SupersetTemplateRepository {
 
     return templates.where((template) {
       if (template.targetMuscles == null) return false;
-      return muscles.any(
-        (muscle) => template.targetMuscles!.contains(muscle),
-      );
+      return muscles.any((muscle) => template.targetMuscles!.contains(muscle));
     }).toList();
   }
 

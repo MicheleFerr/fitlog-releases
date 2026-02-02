@@ -57,12 +57,7 @@ class _PersonalizedContentCardState
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 0.98,
-    ).animate(
-      CurvedAnimation(
-        parent: _scaleController,
-        curve: Curves.easeOut,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _scaleController, curve: Curves.easeOut));
   }
 
   @override
@@ -102,123 +97,127 @@ class _PersonalizedContentCardState
             return Transform.scale(
               scale: _scaleAnimation.value,
               child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
-              gradient: RadialGradient(
-                center: const Alignment(-0.3, -0.4),
-                radius: 1.5,
-                colors: [
-                  colorScheme.primaryContainer,
-                  colorScheme.secondaryContainer.withValues(alpha: 0.9),
-                ],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: colorScheme.primary.withValues(alpha: 0.1),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
-                  spreadRadius: 2,
-                ),
-                BoxShadow(
-                  color: context.colors.shadow.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(24),
-              child: Container(
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: context.colors.outline.withValues(alpha: 0.2),
-                    width: 1,
+                  borderRadius: BorderRadius.circular(24),
+                  gradient: RadialGradient(
+                    center: const Alignment(-0.3, -0.4),
+                    radius: 1.5,
+                    colors: [
+                      colorScheme.primaryContainer,
+                      colorScheme.secondaryContainer.withValues(alpha: 0.9),
+                    ],
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.primary.withValues(alpha: 0.1),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                      spreadRadius: 2,
+                    ),
+                    BoxShadow(
+                      color: context.colors.shadow.withValues(alpha: 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Row(
-                    children: [
-                      // Icon with gradient background
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          gradient: RadialGradient(
-                            colors: [
-                              colorScheme.secondary.withValues(alpha: 0.9),
-                              colorScheme.secondary.withValues(alpha: 0.6),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: colorScheme.secondary.withValues(alpha: 0.3),
-                              blurRadius: 8,
-                              spreadRadius: 1,
-                            ),
-                          ],
-                        ),
-                        child: SemanticIcon(
-                          icon: AppIcons.dashboard,
-                          semanticLabel: context.l10n.myTemplates,
-                          size: AppIconSize.medium,
-                          color: colorScheme.surface,
-                        ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: context.colors.outline.withValues(alpha: 0.2),
+                        width: 1,
                       ),
-                      const SizedBox(width: 16),
-
-                      // Text content
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              context.l10n.myTemplates,
-                              style: context.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: colorScheme.onSurface,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Row(
+                        children: [
+                          // Icon with gradient background
+                          Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              gradient: RadialGradient(
+                                colors: [
+                                  colorScheme.secondary.withValues(alpha: 0.9),
+                                  colorScheme.secondary.withValues(alpha: 0.6),
+                                ],
                               ),
-                            ),
-                            const SizedBox(height: 4),
-                            // Stats row
-                            Row(
-                              children: [
-                                _StatChip(
-                                  icon: AppIcons.listAlt,
-                                  count: templateCount,
-                                  max: entitlements.maxTemplates,
-                                  label: context.l10n.templates,
-                                  color: colorScheme.secondary,
-                                ),
-                                const SizedBox(width: 12),
-                                _StatChip(
-                                  icon: AppIcons.workout,
-                                  count: exerciseCount,
-                                  max: entitlements.maxCustomSingleExercises,
-                                  label: context.l10n.exercises,
-                                  color: colorScheme.tertiary,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: colorScheme.secondary.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                  blurRadius: 8,
+                                  spreadRadius: 1,
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
+                            child: SemanticIcon(
+                              icon: AppIcons.dashboard,
+                              semanticLabel: context.l10n.myTemplates,
+                              size: AppIconSize.medium,
+                              color: colorScheme.surface,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
 
-                      // Arrow indicator
-                      SemanticIcon(
-                        icon: AppIcons.chevronRight,
-                        semanticLabel: context.l10n.view,
-                        size: AppIconSize.small,
-                        color: colorScheme.onSurfaceVariant,
+                          // Text content
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  context.l10n.myTemplates,
+                                  style: context.textTheme.titleMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: colorScheme.onSurface,
+                                      ),
+                                ),
+                                const SizedBox(height: 4),
+                                // Stats row
+                                Row(
+                                  children: [
+                                    _StatChip(
+                                      icon: AppIcons.listAlt,
+                                      count: templateCount,
+                                      max: entitlements.maxTemplates,
+                                      label: context.l10n.templates,
+                                      color: colorScheme.secondary,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    _StatChip(
+                                      icon: AppIcons.workout,
+                                      count: exerciseCount,
+                                      max:
+                                          entitlements.maxCustomSingleExercises,
+                                      label: context.l10n.exercises,
+                                      color: colorScheme.tertiary,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // Arrow indicator
+                          SemanticIcon(
+                            icon: AppIcons.chevronRight,
+                            semanticLabel: context.l10n.view,
+                            size: AppIconSize.small,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-        );
+            );
           },
         ),
       ),

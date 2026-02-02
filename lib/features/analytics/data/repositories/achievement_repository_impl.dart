@@ -11,7 +11,8 @@ import 'package:hive_ce_flutter/hive_flutter.dart';
 ///
 /// Uses cache-first strategy with 1h TTL for performance and offline support.
 /// Follows HybridAnalyticsService pattern for dual storage.
-class AchievementRepositoryImpl with FirebaseErrorMapperMixin
+class AchievementRepositoryImpl
+    with FirebaseErrorMapperMixin
     implements AchievementRepository {
   AchievementRepositoryImpl({
     FirebaseFirestore? firestore,
@@ -37,43 +38,39 @@ class AchievementRepositoryImpl with FirebaseErrorMapperMixin
     BadgeType badgeType, {
     Map<String, dynamic>? evidence,
   }) async {
-    return handleFirebaseOperation(
-      () async {
-        // Check if already unlocked
-        final isUnlockedResult = await isAchievementUnlocked(userId, badgeType);
-        final isUnlocked = isUnlockedResult.fold(
-          (l) => false,
-          (r) => r,
+    return handleFirebaseOperation(() async {
+      // Check if already unlocked
+      final isUnlockedResult = await isAchievementUnlocked(userId, badgeType);
+      final isUnlocked = isUnlockedResult.fold((l) => false, (r) => r);
+
+      if (isUnlocked) {
+        throw ValidationFailure(
+          'Achievement ${badgeType.name} already unlocked',
         );
+      }
 
-        if (isUnlocked) {
-          throw ValidationFailure('Achievement ${badgeType.name} already unlocked');
-        }
+      // Create achievement
+      final achievement = Achievement(
+        id: '${userId}_${badgeType.name}_${DateTime.now().millisecondsSinceEpoch}',
+        userId: userId,
+        badgeType: badgeType,
+        unlockedAt: DateTime.now(),
+        evidence: evidence ?? {},
+      );
 
-        // Create achievement
-        final achievement = Achievement(
-          id: '${userId}_${badgeType.name}_${DateTime.now().millisecondsSinceEpoch}',
-          userId: userId,
-          badgeType: badgeType,
-          unlockedAt: DateTime.now(),
-          evidence: evidence ?? {},
-        );
+      // Save to Firestore
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('achievements')
+          .doc(badgeType.name)
+          .set(achievement.toJson());
 
-        // Save to Firestore
-        await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('achievements')
-            .doc(badgeType.name)
-            .set(achievement.toJson());
+      // Update cache
+      await _updateCache(userId, [achievement], append: true);
 
-        // Update cache
-        await _updateCache(userId, [achievement], append: true);
-
-        return achievement;
-      },
-      operationName: 'unlockAchievement',
-    );
+      return achievement;
+    }, operationName: 'unlockAchievement');
   }
 
   @override
@@ -86,38 +83,32 @@ class AchievementRepositoryImpl with FirebaseErrorMapperMixin
       return fpdart.Right(cached.achievements);
     }
 
-    final result = await handleFirebaseOperation(
-      () async {
-        // Fetch from Firestore
-        final snapshot = await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('achievements')
-            .get();
+    final result = await handleFirebaseOperation(() async {
+      // Fetch from Firestore
+      final snapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('achievements')
+          .get();
 
-        final achievements = snapshot.docs
-            .map((doc) => Achievement.fromJson(doc.data()))
-            .toList();
+      final achievements = snapshot.docs
+          .map((doc) => Achievement.fromJson(doc.data()))
+          .toList();
 
-        // Update cache
-        await _updateCache(userId, achievements);
+      // Update cache
+      await _updateCache(userId, achievements);
 
-        return achievements;
-      },
-      operationName: 'getUnlockedAchievements',
-    );
+      return achievements;
+    }, operationName: 'getUnlockedAchievements');
 
     // Offline support: return cached data if Firebase fails
-    return result.fold(
-      (failure) async {
-        final cachedFallback = await _getCachedAchievements(userId);
-        if (cachedFallback != null) {
-          return fpdart.Right(cachedFallback.achievements);
-        }
-        return fpdart.Left(failure);
-      },
-      (achievements) => fpdart.Right(achievements),
-    );
+    return result.fold((failure) async {
+      final cachedFallback = await _getCachedAchievements(userId);
+      if (cachedFallback != null) {
+        return fpdart.Right(cachedFallback.achievements);
+      }
+      return fpdart.Left(failure);
+    }, (achievements) => fpdart.Right(achievements));
   }
 
   @override
@@ -135,19 +126,16 @@ class AchievementRepositoryImpl with FirebaseErrorMapperMixin
     String userId,
     BadgeType badgeType,
   ) async {
-    return handleFirebaseOperation(
-      () async {
-        final doc = await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('achievements')
-            .doc(badgeType.name)
-            .get();
+    return handleFirebaseOperation(() async {
+      final doc = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('achievements')
+          .doc(badgeType.name)
+          .get();
 
-        return doc.exists;
-      },
-      operationName: 'isAchievementUnlocked',
-    );
+      return doc.exists;
+    }, operationName: 'isAchievementUnlocked');
   }
 
   @override
@@ -155,24 +143,21 @@ class AchievementRepositoryImpl with FirebaseErrorMapperMixin
     String userId, {
     int limit = 10,
   }) async {
-    return handleFirebaseOperation(
-      () async {
-        final snapshot = await _firestore
-            .collection('users')
-            .doc(userId)
-            .collection('achievements')
-            .orderBy('unlockedAt', descending: true)
-            .limit(limit)
-            .get();
+    return handleFirebaseOperation(() async {
+      final snapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('achievements')
+          .orderBy('unlockedAt', descending: true)
+          .limit(limit)
+          .get();
 
-        final achievements = snapshot.docs
-            .map((doc) => Achievement.fromJson(doc.data()))
-            .toList();
+      final achievements = snapshot.docs
+          .map((doc) => Achievement.fromJson(doc.data()))
+          .toList();
 
-        return achievements;
-      },
-      operationName: 'getRecentAchievements',
-    );
+      return achievements;
+    }, operationName: 'getRecentAchievements');
   }
 
   /// Get cached achievements
@@ -236,10 +221,7 @@ class AchievementRepositoryImpl with FirebaseErrorMapperMixin
 
 /// Internal class for cached achievements with timestamp
 class _CachedAchievements {
-  _CachedAchievements({
-    required this.achievements,
-    required this.timestamp,
-  });
+  _CachedAchievements({required this.achievements, required this.timestamp});
 
   final List<Achievement> achievements;
   final DateTime timestamp;

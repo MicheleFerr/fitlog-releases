@@ -15,12 +15,7 @@ library;
 /// Rappresenta tutti i possibili errori che possono verificarsi
 /// durante il caricamento dei dati chart
 sealed class ChartFailure {
-
-  const ChartFailure({
-    required this.message,
-    this.error,
-    this.stackTrace,
-  });
+  const ChartFailure({required this.message, this.error, this.stackTrace});
 
   /// Invalid input parameters
   const factory ChartFailure.invalidInput({
@@ -48,15 +43,13 @@ sealed class ChartFailure {
 
 /// Invalid input failure (validation error)
 final class ChartInvalidInputFailure extends ChartFailure {
-
-  const ChartInvalidInputFailure({
-    required super.message,
-    this.details,
-  }) : super(error: null, stackTrace: null);
+  const ChartInvalidInputFailure({required super.message, this.details})
+    : super(error: null, stackTrace: null);
   final String? details;
 
   @override
-  String toString() => 'ChartInvalidInputFailure(message: $message, details: $details)';
+  String toString() =>
+      'ChartInvalidInputFailure(message: $message, details: $details)';
 }
 
 /// Server failure (network, Firebase, etc.)

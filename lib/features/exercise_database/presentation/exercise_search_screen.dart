@@ -10,8 +10,10 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
 import 'package:gymbro_flutter_new/shared/domain/services/request_throttler.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart' hide exerciseSearchQueryProvider;
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as WorkoutExercise;
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart'
+    hide exerciseSearchQueryProvider;
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart'
+    as WorkoutExercise;
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_options_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_history_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_customization_screen.dart';
@@ -42,7 +44,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_con
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_template.dart';
 // Exercise search tutorial REMOVED - UX 2025 analysis: search UI is standard pattern
 
-class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select and return exercise template (for DropSet/Rest-Pause)
+class ExerciseSearchScreen extends ConsumerStatefulWidget {
+  // New: Just select and return exercise template (for DropSet/Rest-Pause)
 
   const ExerciseSearchScreen({
     super.key,
@@ -51,13 +54,16 @@ class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select 
     this.selectionMode = false,
     this.showSupersetTemplates, // ✅ FIX: Control when to show superset templates
   });
-  final Function(WorkoutExercise.Exercise)? onExerciseAdded; // 🔥 FIX: Add callback parameter
+  final Function(WorkoutExercise.Exercise)?
+  onExerciseAdded; // 🔥 FIX: Add callback parameter
   final bool multiSelectMode; // New: Support multi-select for superset builder
   final bool selectionMode;
-  final bool? showSupersetTemplates; // ✅ FIX: null = auto (true for multiSelect, false for single)
+  final bool?
+  showSupersetTemplates; // ✅ FIX: null = auto (true for multiSelect, false for single)
 
   @override
-  ConsumerState<ExerciseSearchScreen> createState() => _ExerciseSearchScreenState();
+  ConsumerState<ExerciseSearchScreen> createState() =>
+      _ExerciseSearchScreenState();
 }
 
 class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
@@ -77,7 +83,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   final List<String> _selectedDifficulty = [];
   String? _selectedType;
 
-  bool _showSearch = true; // P1-3 FIX: Show search by default for faster logging
+  bool _showSearch =
+      true; // P1-3 FIX: Show search by default for faster logging
 
   // 🔐 SECURITY: Fuzzy search state with proper debouncing
   late final Debouncer _searchDebouncer;
@@ -223,10 +230,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         title: Row(
           children: [
             const SemanticIcon(
-  icon: AppIcons.feedbackOutlined,
-  semanticLabel: 'Feedback outlined',
-  size: AppIconSize.medium,
-),
+              icon: AppIcons.feedbackOutlined,
+              semanticLabel: 'Feedback outlined',
+              size: AppIconSize.medium,
+            ),
             const SizedBox(width: 12),
             Expanded(child: Text(context.l10n.exerciseFeedback)),
           ],
@@ -256,19 +263,19 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           TextButton.icon(
             onPressed: () => Navigator.of(context).pop('decrement'),
             icon: const SemanticIcon(
-  icon: AppIcons.arrowDownward,
-  semanticLabel: 'Arrow downward',
-  size: AppIconSize.small,
-),
+              icon: AppIcons.arrowDownward,
+              semanticLabel: 'Arrow downward',
+              size: AppIconSize.small,
+            ),
             label: Text(context.l10n.reducePriority),
           ),
           FilledButton.icon(
             onPressed: () => Navigator.of(context).pop('remove'),
             icon: const SemanticIcon(
-  icon: AppIcons.deleteOutline,
-  semanticLabel: 'Delete outline',
-  size: AppIconSize.small,
-),
+              icon: AppIcons.deleteOutline,
+              semanticLabel: 'Delete outline',
+              size: AppIconSize.small,
+            ),
             label: Text(context.l10n.remove),
             style: FilledButton.styleFrom(
               backgroundColor: context.colors.errorContainer,
@@ -289,7 +296,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         await tracker.decrementUsage(exerciseId: exercise.id);
 
         if (mounted) {
-          SnackBarService.showInfo(context, 'Priorità ridotta per "${exercise.nome}"');
+          SnackBarService.showInfo(
+            context,
+            'Priorità ridotta per "${exercise.nome}"',
+          );
         }
       } else if (result == 'remove') {
         // Rimuovi completamente
@@ -419,7 +429,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         // PERFORMANCE METRICS (debug only)
         if (kDebugMode) {
           final duration = DateTime.now().difference(searchStartTime);
-          debugPrint('🔍 Fuzzy search completed in ${duration.inMilliseconds}ms (${filteredResults.length} results)');
+          debugPrint(
+            '🔍 Fuzzy search completed in ${duration.inMilliseconds}ms (${filteredResults.length} results)',
+          );
         }
 
         // OPTIMIZATION: Batch setState to reduce rebuilds
@@ -511,10 +523,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         title: Text('${l10n.searchExercises} (${_selectedExercises.length})'),
         centerTitle: true,
         leading: IconButton(
-          icon: const SemanticIcon(
-  icon: AppIcons.back,
-  semanticLabel: 'Back',
-),
+          icon: const SemanticIcon(icon: AppIcons.back, semanticLabel: 'Back'),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -526,9 +535,15 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         actions: [
           if (_selectedExercises.isNotEmpty)
             IconButton(
-              icon: Icon(widget.multiSelectMode ? AppIcons.check : AppIcons.add),
-              onPressed: widget.multiSelectMode ? _selectExercises : _addSelectedToWorkout,
-              tooltip: widget.multiSelectMode ? 'Select Exercises' : l10n.addToWorkout,
+              icon: Icon(
+                widget.multiSelectMode ? AppIcons.check : AppIcons.add,
+              ),
+              onPressed: widget.multiSelectMode
+                  ? _selectExercises
+                  : _addSelectedToWorkout,
+              tooltip: widget.multiSelectMode
+                  ? 'Select Exercises'
+                  : l10n.addToWorkout,
             ),
           // Filter button with badge
           Stack(
@@ -574,7 +589,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           if (_showSearch) ...[
             Container(
               padding: const EdgeInsets.all(16.0),
-              color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+              color: context.colors.surfaceContainerHighest.withValues(
+                alpha: 0.5,
+              ),
               child: TextField(
                 controller: _searchController,
                 autofocus: true,
@@ -592,22 +609,23 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                           child: LoadingIndicator(size: 20),
                         )
                       : (_searchQuery.isNotEmpty
-                          ? IconButton(
-                              icon: const SemanticIcon(
-                                icon: AppIcons.clear,
-                                semanticLabel: 'Clear',
-                              ),
-                              onPressed: () {
-                                _searchController.clear();
-                                setState(() {
-                                  _searchQuery = '';
-                                  _useFuzzyResults = false;
-                                  _fuzzyResults = [];
-                                });
-                                _searchDebouncer.cancel(); // 🔐 SECURITY: Cancel pending search
-                              },
-                            )
-                          : null),
+                            ? IconButton(
+                                icon: const SemanticIcon(
+                                  icon: AppIcons.clear,
+                                  semanticLabel: 'Clear',
+                                ),
+                                onPressed: () {
+                                  _searchController.clear();
+                                  setState(() {
+                                    _searchQuery = '';
+                                    _useFuzzyResults = false;
+                                    _fuzzyResults = [];
+                                  });
+                                  _searchDebouncer
+                                      .cancel(); // 🔐 SECURITY: Cancel pending search
+                                },
+                              )
+                            : null),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -622,7 +640,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               ),
             ),
           ],
-          
+
           // Results
           Expanded(
             child: _useFuzzyResults
@@ -650,7 +668,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: context.colors.primaryContainer,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
               ),
               child: SafeArea(
                 child: Row(
@@ -665,9 +685,15 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                     ),
                     FilledButton.icon(
                       key: _addButtonKey, // Tutorial target
-                      onPressed: widget.multiSelectMode ? _selectExercises : _addSelectedToWorkout,
-                      icon: Icon(widget.multiSelectMode ? AppIcons.check : AppIcons.add),
-                      label: Text(widget.multiSelectMode ? l10n.confirm : l10n.add),
+                      onPressed: widget.multiSelectMode
+                          ? _selectExercises
+                          : _addSelectedToWorkout,
+                      icon: Icon(
+                        widget.multiSelectMode ? AppIcons.check : AppIcons.add,
+                      ),
+                      label: Text(
+                        widget.multiSelectMode ? l10n.confirm : l10n.add,
+                      ),
                     ),
                   ],
                 ),
@@ -701,30 +727,39 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     final customExerciseMap = {for (final c in customExercises) c.id: c};
 
     // Convert custom exercises to Exercise format for display
-    final customAsExercises = customExercises.map((custom) => Exercise(
-      id: custom.id,
-      nome: custom.nome,
-      focus: custom.focus,
-      imageUrl: null,
-      muscoliSecondari: custom.muscoliSecondari,
-      difficolta: 'Intermedio',
-      tipoEsercizio: custom.tipoEsercizio,
-      attrezzatura: custom.attrezzatura,
-      patternMovimento: custom.patternMovimento,
-      rangeRipetizioni: '8-12',
-      noteTecniche: '',
-      mobilitaPre: null,
-      attivazionePre: null,
-    )).toList();
+    final customAsExercises = customExercises
+        .map(
+          (custom) => Exercise(
+            id: custom.id,
+            nome: custom.nome,
+            focus: custom.focus,
+            imageUrl: null,
+            muscoliSecondari: custom.muscoliSecondari,
+            difficolta: 'Intermedio',
+            tipoEsercizio: custom.tipoEsercizio,
+            attrezzatura: custom.attrezzatura,
+            patternMovimento: custom.patternMovimento,
+            rangeRipetizioni: '8-12',
+            noteTecniche: '',
+            mobilitaPre: null,
+            attivazionePre: null,
+          ),
+        )
+        .toList();
 
     // Merge: custom exercises first, then catalog
     final allExercises = [...customAsExercises, ...exercises];
 
     // P1-3 FIX: Get recent/frequent exercises for quick access
     final recentExercises = _searchQuery.isEmpty
-        ? allExercises.where((e) =>
-            _frequentExerciseIds.contains(e.id) || _trendingExerciseIds.contains(e.id)
-          ).take(5).toList()
+        ? allExercises
+              .where(
+                (e) =>
+                    _frequentExerciseIds.contains(e.id) ||
+                    _trendingExerciseIds.contains(e.id),
+              )
+              .take(5)
+              .toList()
         : <Exercise>[];
 
     return Column(
@@ -767,7 +802,11 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: ActionChip(
                     avatar: isSelected
-                        ? Icon(AppIcons.check, size: 16, color: context.colors.onPrimary)
+                        ? Icon(
+                            AppIcons.check,
+                            size: 16,
+                            color: context.colors.onPrimary,
+                          )
                         : null,
                     label: Text(
                       exercise.nome,
@@ -814,7 +853,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         Expanded(
           child: ListView.builder(
             key: const PageStorageKey('exercise_search_list'),
-            itemCount: allExercises.length + 1, // +1 for missing exercise widget
+            itemCount:
+                allExercises.length + 1, // +1 for missing exercise widget
             itemBuilder: (context, index) {
               // Show missing exercise widget as last item
               if (index == allExercises.length) {
@@ -825,7 +865,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               final isSelected = _selectedExercises.contains(exercise);
               final isCustom = index < customAsExercises.length;
               // Get original CustomExercise for status info (if custom)
-              final customExercise = isCustom ? customExerciseMap[exercise.id] : null;
+              final customExercise = isCustom
+                  ? customExerciseMap[exercise.id]
+                  : null;
 
               // Add tutorial key to first exercise card
               return _buildExerciseCard(
@@ -856,11 +898,11 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           child: Row(
             children: [
               SemanticIcon(
-  icon: AppIcons.autoAwesome,
-  semanticLabel: 'Auto awesome',
-  size: AppIconSize.tiny,
-  color: context.colors.primary,
-),
+                icon: AppIcons.autoAwesome,
+                semanticLabel: 'Auto awesome',
+                size: AppIconSize.tiny,
+                color: context.colors.primary,
+              ),
               const SizedBox(width: 8),
               Text(
                 '${_fuzzyResults.length} ${l10n.exercisesFound}',
@@ -885,7 +927,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         Expanded(
           child: ListView.builder(
             key: const PageStorageKey('exercise_fuzzy_search_list'),
-            itemCount: _fuzzyResults.length + 1, // +1 for missing exercise widget
+            itemCount:
+                _fuzzyResults.length + 1, // +1 for missing exercise widget
             itemBuilder: (context, index) {
               // Show missing exercise widget as last item
               if (index == _fuzzyResults.length) {
@@ -929,11 +972,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         children: [
           Row(
             children: [
-              Icon(
-                AppIcons.help,
-                color: context.colors.primary,
-                size: 28,
-              ),
+              Icon(AppIcons.help, color: context.colors.primary, size: 28),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
@@ -959,7 +998,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
-              onPressed: () => _showCreateCustomSheet(context, _searchController.text),
+              onPressed: () =>
+                  _showCreateCustomSheet(context, _searchController.text),
               icon: const SemanticIcon(
                 icon: AppIcons.add,
                 semanticLabel: 'Add',
@@ -968,7 +1008,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               style: FilledButton.styleFrom(
                 backgroundColor: context.colors.primary,
                 foregroundColor: context.colors.onPrimary,
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
               ),
             ),
           ),
@@ -986,7 +1029,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               ),
               label: Text(l10n.addTemporaryExercise),
               style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
               ),
             ),
           ),
@@ -1004,14 +1050,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       builder: (context) => AlertDialog(
         title: Row(
           children: [
-            Icon(
-              AppIcons.workout,
-              color: context.colors.primary,
-            ),
+            Icon(AppIcons.workout, color: context.colors.primary),
             const SizedBox(width: 12),
-            Expanded(
-              child: Text(l10n.addTemporaryExercise),
-            ),
+            Expanded(child: Text(l10n.addTemporaryExercise)),
           ],
         ),
         content: Column(
@@ -1033,9 +1074,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 hintText: 'es. Bulgarian Split Squat',
                 border: const OutlineInputBorder(),
                 prefixIcon: const SemanticIcon(
-  icon: AppIcons.edit,
-  semanticLabel: 'Edit',
-),
+                  icon: AppIcons.edit,
+                  semanticLabel: 'Edit',
+                ),
               ),
               textCapitalization: TextCapitalization.words,
             ),
@@ -1069,7 +1110,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 attrezzatura: 'Vario',
                 patternMovimento: '',
                 rangeRipetizioni: '8-12',
-                noteTecniche: 'Esercizio temporaneo - In attesa di approvazione',
+                noteTecniche:
+                    'Esercizio temporaneo - In attesa di approvazione',
                 mobilitaPre: null,
                 attivazionePre: null,
               );
@@ -1096,9 +1138,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               );
             },
             icon: const SemanticIcon(
-  icon: AppIcons.check,
-  semanticLabel: 'Check',
-),
+              icon: AppIcons.check,
+              semanticLabel: 'Check',
+            ),
             label: Text(l10n.add),
           ),
         ],
@@ -1113,7 +1155,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   }
 
   Future<void> _sendMissingExerciseReport(
-      String exerciseName, String exerciseId) async {
+    String exerciseName,
+    String exerciseId,
+  ) async {
     try {
       final service = ref.read(missingExerciseServiceProvider);
       await service.submitRequest(
@@ -1134,11 +1178,11 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SemanticIcon(
-  icon: AppIcons.error,
-  semanticLabel: 'Error',
-  size: AppIconSize.medium,
-  color: context.colors.error,
-),
+            icon: AppIcons.error,
+            semanticLabel: 'Error',
+            size: AppIconSize.medium,
+            color: context.colors.error,
+          ),
           const SizedBox(height: 16),
           Text('${l10n.errorLoadingData}: $error'),
           const SizedBox(height: 16),
@@ -1158,7 +1202,6 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     return MuscleAbbreviationMapper.normalizeToCanonicalId(muscleCode);
   }
 
-
   Widget _buildExerciseLeading(Exercise exercise, bool isSelected) {
     if (isSelected) {
       return CircleAvatar(
@@ -1166,7 +1209,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         child: Icon(AppIcons.check, color: context.colors.surface),
       );
     }
-    
+
     // Se c'è un'immagine, mostra quella, altrimenti l'icona
     if (exercise.imageUrl != null && exercise.imageUrl!.isNotEmpty) {
       return CircleAvatar(
@@ -1198,9 +1241,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 width: 40,
                 height: 40,
                 color: context.colors.surfaceContainerHighest,
-                child: const Center(
-                  child: LoadingIndicator(size: 16),
-                ),
+                child: const Center(child: LoadingIndicator(size: 16)),
               );
             },
           ),
@@ -1235,13 +1276,18 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   child: Text(
                     exercise.nome,
                     style: context.textTheme.bodyLarge?.copyWith(
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                   ),
                 ),
                 // Custom exercise status badge
                 if (isCustom && customExercise != null)
-                  _buildCustomExerciseBadge(customExercise, hasUnlimitedExercises: hasUnlimitedExercises),
+                  _buildCustomExerciseBadge(
+                    customExercise,
+                    hasUnlimitedExercises: hasUnlimitedExercises,
+                  ),
               ],
             ),
             subtitle: Column(
@@ -1252,9 +1298,14 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
-                        color: _getDifficultyColor(exercise.difficolta).withValues(alpha: 0.2),
+                        color: _getDifficultyColor(
+                          exercise.difficolta,
+                        ).withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -1289,14 +1340,16 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 // Selection indicator
                 isSelected
                     ? Icon(AppIcons.checkCircle, color: context.colors.primary)
-                    : (widget.selectionMode ? const SemanticIcon(
-  icon: AppIcons.arrowForwardIos,
-  semanticLabel: 'Arrow forward ios',
-  size: AppIconSize.tiny,
-) : const SemanticIcon(
-  icon: AppIcons.radioButtonUnchecked,
-  semanticLabel: 'Radio button unchecked',
-)),
+                    : (widget.selectionMode
+                          ? const SemanticIcon(
+                              icon: AppIcons.arrowForwardIos,
+                              semanticLabel: 'Arrow forward ios',
+                              size: AppIconSize.tiny,
+                            )
+                          : const SemanticIcon(
+                              icon: AppIcons.radioButtonUnchecked,
+                              semanticLabel: 'Radio button unchecked',
+                            )),
               ],
             ),
             onTap: () {
@@ -1315,7 +1368,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 }
               });
             },
-            onLongPress: widget.selectionMode ? null : () => _showExerciseOptionsModal(exercise),
+            onLongPress: widget.selectionMode
+                ? null
+                : () => _showExerciseOptionsModal(exercise),
           ),
         ],
       ),
@@ -1347,9 +1402,11 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 
     // Check if category matches (for colored border)
     // ML-enhanced: show green border if exercise matches selected muscle groups
-    final hasCategoryMatch = _selectedMuscleGroups.isNotEmpty &&
-        exercise.focus.any((focus) =>
-            _selectedMuscleGroups.contains(_normalizedMuscleCode(focus))
+    final hasCategoryMatch =
+        _selectedMuscleGroups.isNotEmpty &&
+        exercise.focus.any(
+          (focus) =>
+              _selectedMuscleGroups.contains(_normalizedMuscleCode(focus)),
         );
 
     return Card(
@@ -1397,11 +1454,11 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             if (wasAutoCorrected) ...[
               const SizedBox(width: 4),
               SemanticIcon(
-  icon: AppIcons.autoFixHigh,
-  semanticLabel: 'Auto fix high',
-  size: AppIconSize.tiny,
-  color: context.colors.secondary,
-),
+                icon: AppIcons.autoFixHigh,
+                semanticLabel: 'Auto fix high',
+                size: AppIconSize.tiny,
+                color: context.colors.secondary,
+              ),
             ],
           ],
         ),
@@ -1415,7 +1472,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 children: [
                   if (isFrequent)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: context.colors.warning.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
@@ -1441,7 +1501,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   if (isFrequent && isTrending) const SizedBox(width: 4),
                   if (isTrending)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: context.colors.warning.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
@@ -1473,9 +1536,14 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
-                    color: _getDifficultyColor(exercise.difficolta).withValues(alpha: 0.2),
+                    color: _getDifficultyColor(
+                      exercise.difficolta,
+                    ).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -1487,10 +1555,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  exercise.attrezzatura,
-                  style: context.textTheme.bodySmall,
-                ),
+                Text(exercise.attrezzatura, style: context.textTheme.bodySmall),
               ],
             ),
           ],
@@ -1509,29 +1574,29 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(4),
                     child: SemanticIcon(
-  icon: AppIcons.close,
-  semanticLabel: 'Close',
-  size: AppIconSize.tiny,
-  color: context.colors.error.withValues(alpha: 0.7,
-),
+                      icon: AppIcons.close,
+                      semanticLabel: 'Close',
+                      size: AppIconSize.tiny,
+                      color: context.colors.error.withValues(alpha: 0.7),
                     ),
                   ),
                 ),
               // Spacer
-              if (!isSelected && !widget.selectionMode) const SizedBox(width: 4),
+              if (!isSelected && !widget.selectionMode)
+                const SizedBox(width: 4),
               // Selection icon
               isSelected
                   ? Icon(AppIcons.complete, color: context.colors.primary)
                   : (widget.selectionMode
-                      ? const SemanticIcon(
-  icon: AppIcons.arrowForwardIos,
-  semanticLabel: 'Arrow forward ios',
-  size: AppIconSize.tiny,
-)
-                      : const SemanticIcon(
-  icon: AppIcons.radioButtonUnchecked,
-  semanticLabel: 'Radio button unchecked',
-)),
+                        ? const SemanticIcon(
+                            icon: AppIcons.arrowForwardIos,
+                            semanticLabel: 'Arrow forward ios',
+                            size: AppIconSize.tiny,
+                          )
+                        : const SemanticIcon(
+                            icon: AppIcons.radioButtonUnchecked,
+                            semanticLabel: 'Radio button unchecked',
+                          )),
             ],
           ),
         ),
@@ -1567,11 +1632,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       children: [
         const SizedBox(height: 64),
         SemanticIcon(
-  icon: AppIcons.searchOff,
-  semanticLabel: 'Search off',
-  size: AppIconSize.medium,
-  color: context.colors.onSurface.withValues(alpha: 0.5,
-),
+          icon: AppIcons.searchOff,
+          semanticLabel: 'Search off',
+          size: AppIconSize.medium,
+          color: context.colors.onSurface.withValues(alpha: 0.5),
         ),
         const SizedBox(height: 16),
         Text(
@@ -1620,8 +1684,12 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 
       // Muscle groups filter
       if (_selectedMuscleGroups.isNotEmpty) {
-        final normalizedFocus = exercise.focus.map(_normalizedMuscleCode).toList();
-        if (!normalizedFocus.any((focus) => _selectedMuscleGroups.contains(focus))) {
+        final normalizedFocus = exercise.focus
+            .map(_normalizedMuscleCode)
+            .toList();
+        if (!normalizedFocus.any(
+          (focus) => _selectedMuscleGroups.contains(focus),
+        )) {
           return false;
         }
       }
@@ -1666,7 +1734,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 
   /// Build badge showing custom exercise status: permanent, temporary (days left), or expired
   /// For Premium users (hasUnlimitedExercises=true), just show ⚡ without extra badges
-  Widget _buildCustomExerciseBadge(CustomExercise customExercise, {required bool hasUnlimitedExercises}) {
+  Widget _buildCustomExerciseBadge(
+    CustomExercise customExercise, {
+    required bool hasUnlimitedExercises,
+  }) {
     final l10n = context.l10n;
 
     // Determine status and colors
@@ -1692,7 +1763,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       badgeIcon = AppIcons.warning;
     } else if (isTemporary) {
       final daysLeft = customExercise.daysRemaining ?? 0;
-      badgeColor = daysLeft <= 2 ? context.colors.warning : context.colors.secondary;
+      badgeColor = daysLeft <= 2
+          ? context.colors.warning
+          : context.colors.secondary;
       badgeText = l10n.exerciseExpiresInDays(daysLeft);
       badgeIcon = AppIcons.schedule;
     } else {
@@ -1753,7 +1826,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               children: [
                 Icon(
                   isExpired ? AppIcons.warning : AppIcons.schedule,
-                  color: isExpired ? context.colors.error : context.colors.warning,
+                  color: isExpired
+                      ? context.colors.error
+                      : context.colors.warning,
                   size: 28,
                 ),
                 const SizedBox(width: 12),
@@ -1773,7 +1848,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             Text(
               isExpired
                   ? l10n.exerciseExpiredDescription
-                  : l10n.exerciseTemporaryDescription(customExercise.daysRemaining ?? 0),
+                  : l10n.exerciseTemporaryDescription(
+                      customExercise.daysRemaining ?? 0,
+                    ),
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),
@@ -1876,8 +1953,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   }
 
   bool _isSmartFilter(String query) {
-    return ExerciseSearchService.quickFilters
-        .any((filter) => filter['query'] == query.toLowerCase());
+    return ExerciseSearchService.quickFilters.any(
+      (filter) => filter['query'] == query.toLowerCase(),
+    );
   }
 
   void _applySmartFilter(String query) {
@@ -1895,7 +1973,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     // ✅ Read user's saved counting mode preferences
     final overridesAsync = ref.read(allCountingModeOverridesProvider);
     final Map<String, ExerciseCountingMode> overrides = overridesAsync.when(
-      data: (data) => data.map((key, value) => MapEntry(key, ExerciseCountingMode.fromString(value))),
+      data: (data) => data.map(
+        (key, value) => MapEntry(key, ExerciseCountingMode.fromString(value)),
+      ),
       loading: () => {},
       error: (_, __) => {},
     );
@@ -1906,12 +1986,14 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         builder: (context) => ExerciseCustomizationScreen(
           selectedExercises: _selectedExercises.toList(),
           onExerciseAdded: widget.onExerciseAdded, // 🔥 FIX: Pass callback
-          countingModeOverrides: overrides.isEmpty ? null : overrides, // ✅ Pass user preferences
+          countingModeOverrides: overrides.isEmpty
+              ? null
+              : overrides, // ✅ Pass user preferences
         ),
       ),
     );
   }
-  
+
   void _selectExercises() {
     if (_selectedExercises.isEmpty) return;
 
@@ -1940,16 +2022,15 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       // Verify we found all exercises
       if (selectedExercises.length != template.exerciseNames.length) {
         if (!mounted) return;
-        SnackBarService.showError(
-          context,
-          context.l10n.someExercisesNotFound,
-        );
+        SnackBarService.showError(context, context.l10n.someExercisesNotFound);
         return;
       }
 
       // 3. Parse reps range to get target reps (take first number from "10-12" or "8-10")
       final repsMatch = RegExp(r'(\d+)').firstMatch(template.repsRange);
-      final targetReps = repsMatch != null ? int.parse(repsMatch.group(1)!) : 10;
+      final targetReps = repsMatch != null
+          ? int.parse(repsMatch.group(1)!)
+          : 10;
 
       // 4. Create SupersetRounds
       final rounds = List.generate(
@@ -1972,7 +2053,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       );
 
       // 6. Convert to SupersetExercise
-      final supersetExercise = SupersetConverter.configurationToSupersetExercise(config);
+      final supersetExercise =
+          SupersetConverter.configurationToSupersetExercise(config);
 
       // 7. Add to workout
       if (widget.onExerciseAdded != null) {
@@ -1986,16 +2068,12 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         context,
         '✅ ${context.l10n.templateAddedToWorkout}',
       );
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Error using template: $e');
       }
       if (!mounted) return;
-      SnackBarService.showError(
-        context,
-        context.l10n.errorAddingTemplate,
-      );
+      SnackBarService.showError(context, context.l10n.errorAddingTemplate);
     }
   }
 
@@ -2029,7 +2107,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
-          backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+          backgroundColor: Theme.of(
+            context,
+          ).colorScheme.surface.withValues(alpha: 0),
           builder: (context) => ExerciseHistoryBottomSheet(
             exerciseName: exercise.nome,
             exerciseId: exercise.id,
@@ -2042,7 +2122,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   }
 
   /// Show custom exercise creation sheet (pure custom)
-  Future<void> _showCreateCustomSheet(BuildContext context, String initialName) async {
+  Future<void> _showCreateCustomSheet(
+    BuildContext context,
+    String initialName,
+  ) async {
     if (!mounted) return;
 
     final result = await CustomExerciseFormSheet.show(
@@ -2062,7 +2145,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   }
 
   /// Show custom exercise creation sheet (variant of base)
-  Future<void> _showCreateVariantSheet(BuildContext context, Exercise base) async {
+  Future<void> _showCreateVariantSheet(
+    BuildContext context,
+    Exercise base,
+  ) async {
     if (!mounted) return;
 
     final result = await CustomExerciseFormSheet.show(
@@ -2118,17 +2204,11 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    final equipmentOptions = widget.exercises
-        .map((e) => e.attrezzatura)
-        .toSet()
-        .toList()
-      ..sort();
+    final equipmentOptions =
+        widget.exercises.map((e) => e.attrezzatura).toSet().toList()..sort();
 
-    final difficultyOptions = widget.exercises
-        .map((e) => e.difficolta)
-        .toSet()
-        .toList()
-      ..sort();
+    final difficultyOptions =
+        widget.exercises.map((e) => e.difficolta).toSet().toList()..sort();
 
     return Container(
       decoration: BoxDecoration(
@@ -2155,7 +2235,10 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  Icon(AppIcons.filterListOutlined, color: context.colors.primary),
+                  Icon(
+                    AppIcons.filterListOutlined,
+                    color: context.colors.primary,
+                  ),
                   const SizedBox(width: 12),
                   Text(
                     l10n.filters,

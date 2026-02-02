@@ -95,10 +95,12 @@ class RepZoneSuggestionEngine {
 
     // Calculate percentages
     final strengthPct = totalSets > 0 ? (strengthSets / totalSets * 100) : 0.0;
-    final hypertrophyPct =
-        totalSets > 0 ? (hypertrophySets / totalSets * 100) : 0.0;
-    final endurancePct =
-        totalSets > 0 ? (enduranceSets / totalSets * 100) : 0.0;
+    final hypertrophyPct = totalSets > 0
+        ? (hypertrophySets / totalSets * 100)
+        : 0.0;
+    final endurancePct = totalSets > 0
+        ? (enduranceSets / totalSets * 100)
+        : 0.0;
 
     // Determine variety level and dominant zone
     final varietyLevel = _calculateVarietyLevel(
@@ -139,8 +141,11 @@ class RepZoneSuggestionEngine {
     double hypertrophy,
     double endurance,
   ) {
-    final maxPercentage =
-        [strength, hypertrophy, endurance].reduce((a, b) => a > b ? a : b);
+    final maxPercentage = [
+      strength,
+      hypertrophy,
+      endurance,
+    ].reduce((a, b) => a > b ? a : b);
 
     if (maxPercentage > veryDominantThreshold) {
       return VarietyLevel.veryLow;
@@ -183,7 +188,9 @@ class RepZoneSuggestionEngine {
   /// v3: Calculate weekly volume per muscle group from last 7 days
   ///
   /// Returns map of muscle abbreviation → sets done in last 7 days
-  Map<String, int> _calculateWeeklyMuscleVolume(List<ExerciseHistory> histories) {
+  Map<String, int> _calculateWeeklyMuscleVolume(
+    List<ExerciseHistory> histories,
+  ) {
     final volumeMap = <String, int>{};
     final sevenDaysAgo = DateTime.now().subtract(const Duration(days: 7));
 
@@ -195,7 +202,8 @@ class RepZoneSuggestionEngine {
       // Count sets from last 7 days
       for (final session in history.sessions) {
         if (session.date.isAfter(sevenDaysAgo)) {
-          volumeMap[muscleAbbrev] = (volumeMap[muscleAbbrev] ?? 0) + session.sets.length;
+          volumeMap[muscleAbbrev] =
+              (volumeMap[muscleAbbrev] ?? 0) + session.sets.length;
         }
       }
     }
@@ -206,7 +214,10 @@ class RepZoneSuggestionEngine {
   /// v3: Calculate volume completion percentage for a muscle group
   ///
   /// Returns 0.0-1.0+ where 1.0 = 100% of recommended volume
-  double _getMuscleVolumeCompletion(String muscleAbbrev, Map<String, int> weeklyVolume) {
+  double _getMuscleVolumeCompletion(
+    String muscleAbbrev,
+    Map<String, int> weeklyVolume,
+  ) {
     final done = weeklyVolume[muscleAbbrev] ?? 0;
     final recommended = _recommendedWeeklySets[muscleAbbrev] ?? 8;
     return done / recommended;
@@ -216,8 +227,13 @@ class RepZoneSuggestionEngine {
   ///
   /// Uses best set from recent sessions to estimate 1RM, then calculates
   /// what percentage they typically train at.
-  double? _getTypicalIntensity(String exerciseId, List<ExerciseHistory> histories) {
-    final history = histories.where((h) => h.exerciseId == exerciseId).firstOrNull;
+  double? _getTypicalIntensity(
+    String exerciseId,
+    List<ExerciseHistory> histories,
+  ) {
+    final history = histories
+        .where((h) => h.exerciseId == exerciseId)
+        .firstOrNull;
     if (history == null || history.sessions.isEmpty) return null;
 
     // Get sessions from last 30 days
@@ -233,7 +249,10 @@ class RepZoneSuggestionEngine {
     for (final session in recentSessions) {
       for (final set in session.sets) {
         if (set.weight > 0 && set.reps > 0) {
-          final estimated1RM = OneRMCalculator.calculateAverage(set.weight, set.reps);
+          final estimated1RM = OneRMCalculator.calculateAverage(
+            set.weight,
+            set.reps,
+          );
           if (estimated1RM > best1RM) {
             best1RM = estimated1RM;
           }
@@ -354,8 +373,9 @@ class RepZoneSuggestionEngine {
             recommendedSets: scored.zone.recommendedSets,
             recommendedReps: scored.zone.recommendedReps,
             recommendedRestSeconds: scored.zone.recommendedRestSeconds,
-            difficulty:
-                ExerciseDifficulty.fromItalianString(scored.exercise.difficolta),
+            difficulty: ExerciseDifficulty.fromItalianString(
+              scored.exercise.difficolta,
+            ),
             equipment: scored.exercise.attrezzatura,
             reasonKey: _getReasonKey(scored.zone, analysis),
             countingMode: scored.exercise.countingMode,
@@ -375,7 +395,8 @@ class RepZoneSuggestionEngine {
     }
 
     debugPrint(
-        '🎯 [SUGGESTION ENGINE v2] Generated ${suggestions.length} suggestions');
+      '🎯 [SUGGESTION ENGINE v2] Generated ${suggestions.length} suggestions',
+    );
     return suggestions;
   }
 
@@ -414,12 +435,14 @@ class RepZoneSuggestionEngine {
       // Find days since last done
       final daysSince = _daysSinceLastDone(exercise.id, histories);
 
-      scored.add(_ScoredExercise(
-        exercise: exercise,
-        zone: zone,
-        breakdown: breakdown,
-        daysSinceLastDone: daysSince,
-      ));
+      scored.add(
+        _ScoredExercise(
+          exercise: exercise,
+          zone: zone,
+          breakdown: breakdown,
+          daysSinceLastDone: daysSince,
+        ),
+      );
     }
 
     return scored;
@@ -449,8 +472,9 @@ class RepZoneSuggestionEngine {
     final exerciseMuscles = {...exercise.focus, ...exercise.muscoliSecondari};
 
     // Check if targets muscles NOT in templates (filling gaps)
-    final missingMuscles =
-        exerciseMuscles.where((m) => !templateMuscles.contains(m));
+    final missingMuscles = exerciseMuscles.where(
+      (m) => !templateMuscles.contains(m),
+    );
     if (missingMuscles.isNotEmpty) {
       muscleRelevance = 30; // High relevance - fills gap
     } else if (exerciseMuscles.any((m) => templateMuscles.contains(m))) {
@@ -599,7 +623,9 @@ class RepZoneSuggestionEngine {
 
     // User data motivations
     final zonePercent = analysis.getPercentage(scored.zone);
-    motivations.add('zonePercentLast30Days:${zonePercent.toStringAsFixed(0)}:${scored.zone.label}');
+    motivations.add(
+      'zonePercentLast30Days:${zonePercent.toStringAsFixed(0)}:${scored.zone.label}',
+    );
 
     if (scored.daysSinceLastDone != null) {
       motivations.add('notDoneSinceDays:${scored.daysSinceLastDone}');
@@ -636,11 +662,13 @@ class RepZoneSuggestionEngine {
 
     // Find same-zone exercises with decent scores
     final candidates = allScored
-        .where((s) =>
-            s.zone == mainExercise.zone &&
-            !excludeIds.contains(s.exercise.id) &&
-            s.exercise.id != mainExercise.exercise.id &&
-            s.breakdown.normalizedScore >= 40)
+        .where(
+          (s) =>
+              s.zone == mainExercise.zone &&
+              !excludeIds.contains(s.exercise.id) &&
+              s.exercise.id != mainExercise.exercise.id &&
+              s.breakdown.normalizedScore >= 40,
+        )
         .toList();
 
     // Sort by score
@@ -648,26 +676,28 @@ class RepZoneSuggestionEngine {
 
     for (final candidate in candidates.take(maxAlternatives)) {
       final shortReason = _buildShortReason(candidate, mainExercise);
-      alternatives.add(AlternativeExercise(
-        exerciseId: candidate.exercise.id,
-        exerciseName: candidate.exercise.nome,
-        score: candidate.breakdown.normalizedScore,
-        shortReason: shortReason,
-        equipment: candidate.exercise.attrezzatura,
-        countingMode: candidate.exercise.countingMode,
-      ));
+      alternatives.add(
+        AlternativeExercise(
+          exerciseId: candidate.exercise.id,
+          exerciseName: candidate.exercise.nome,
+          score: candidate.breakdown.normalizedScore,
+          shortReason: shortReason,
+          equipment: candidate.exercise.attrezzatura,
+          countingMode: candidate.exercise.countingMode,
+        ),
+      );
     }
 
     return alternatives;
   }
 
   /// Build short reason for alternative
-  String _buildShortReason(
-      _ScoredExercise alternative, _ScoredExercise main) {
+  String _buildShortReason(_ScoredExercise alternative, _ScoredExercise main) {
     final parts = <String>[];
 
     // Same/different pattern
-    if (alternative.exercise.patternMovimento == main.exercise.patternMovimento) {
+    if (alternative.exercise.patternMovimento ==
+        main.exercise.patternMovimento) {
       parts.add('Stesso pattern');
     }
 
@@ -781,7 +811,9 @@ class RepZoneSuggestionEngine {
   /// to avoid false positives (e.g., "Curl" matching "Leg Curl")
   int? _daysSinceLastDone(String exerciseId, List<ExerciseHistory> histories) {
     // Find history for this exercise by exact ID match
-    final history = histories.where((h) => h.exerciseId == exerciseId).firstOrNull;
+    final history = histories
+        .where((h) => h.exerciseId == exerciseId)
+        .firstOrNull;
 
     if (history == null || history.sessions.isEmpty) return null;
 
@@ -838,7 +870,9 @@ class RepZoneSuggestionEngine {
   ///
   /// **SINGLE SOURCE OF TRUTH**: Uses MuscleAbbreviationMapper for category → abbreviations.
   bool _categoriesMatch(ExerciseCategory category, List<String> focus) {
-    final expectedFocus = MuscleAbbreviationMapper.categoryToAbbreviations(category);
+    final expectedFocus = MuscleAbbreviationMapper.categoryToAbbreviations(
+      category,
+    );
     return focus.any((f) => expectedFocus.contains(f));
   }
 

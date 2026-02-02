@@ -29,60 +29,60 @@ class FirebaseWorkoutTemplateRepository
   // Pattern: 'firebase_templates_cache_{userId}' instead of global 'firebase_templates_cache'
   String get _localCacheKey => userCacheKeys.templatesCacheKey;
   String get _lastSyncKey => userCacheKeys.templatesLastSyncKey;
-  
+
   /// Ottiene solo i template personalizzati dell'utente
   Future<List<WorkoutTemplate>> getCustomTemplates() async {
     final allTemplates = await getAllTemplates();
 
     // Debug logging
     if (kDebugMode) {
-      debugPrint('🔍 getCustomTemplates: Found ${allTemplates.length} total templates');
+      debugPrint(
+        '🔍 getCustomTemplates: Found ${allTemplates.length} total templates',
+      );
     }
     for (final template in allTemplates) {
       if (kDebugMode) {
-        debugPrint('  - ${template.name}: isCustom=${template.isCustom}, isPublic=${template.isPublic}');
+        debugPrint(
+          '  - ${template.name}: isCustom=${template.isCustom}, isPublic=${template.isPublic}',
+        );
       }
     }
 
     // FIX: Return ALL user templates since they are all the user's personal templates
     // Don't filter by isPublic because user's templates might be marked as public
     if (kDebugMode) {
-      debugPrint('🔍 getCustomTemplates: Returning ALL ${allTemplates.length} user templates');
+      debugPrint(
+        '🔍 getCustomTemplates: Returning ALL ${allTemplates.length} user templates',
+      );
     }
 
     return allTemplates;
   }
-  
+
   /// Ottiene i template pubblici (rate-limited)
   ///
   /// Uses [FirebaseErrorMapperMixin] for standardized error handling.
   Future<List<WorkoutTemplate>> getPublicTemplates() async {
     return await rateLimitedQuery(() async {
-      final result = await handleFirebaseOperation(
-        () async {
-          final querySnapshot = await _firestore
-              .collection(_templatesCollection)
-              .where('isPublic', isEqualTo: true)
-              .orderBy('downloadCount', descending: true)
-              .limit(50)
-              .get();
+      final result = await handleFirebaseOperation(() async {
+        final querySnapshot = await _firestore
+            .collection(_templatesCollection)
+            .where('isPublic', isEqualTo: true)
+            .orderBy('downloadCount', descending: true)
+            .limit(50)
+            .get();
 
-          return querySnapshot.docs
-              .map((doc) => WorkoutTemplate.fromJson(doc.data()))
-              .toList();
-        },
-        operationName: 'getPublicTemplates',
-      );
+        return querySnapshot.docs
+            .map((doc) => WorkoutTemplate.fromJson(doc.data()))
+            .toList();
+      }, operationName: 'getPublicTemplates');
 
-      return result.fold(
-        (failure) {
-          if (kDebugMode) {
-            debugPrint('❌ getPublicTemplates failed: ${failure.message}');
-          }
-          return <WorkoutTemplate>[];
-        },
-        (templates) => templates,
-      );
+      return result.fold((failure) {
+        if (kDebugMode) {
+          debugPrint('❌ getPublicTemplates failed: ${failure.message}');
+        }
+        return <WorkoutTemplate>[];
+      }, (templates) => templates);
     });
   }
 
@@ -96,18 +96,18 @@ class FirebaseWorkoutTemplateRepository
   Future<List<WorkoutTemplate>> searchTemplates(String query) async {
     final allTemplates = await getAllTemplates();
     final queryLower = query.toLowerCase();
-    
+
     return allTemplates.where((template) {
       return template.name.toLowerCase().contains(queryLower) ||
-             template.description.toLowerCase().contains(queryLower) ||
-             template.tags.any((tag) => tag.toLowerCase().contains(queryLower));
+          template.description.toLowerCase().contains(queryLower) ||
+          template.tags.any((tag) => tag.toLowerCase().contains(queryLower));
     }).toList();
   }
 
   /// Ottiene template per tag
   Future<List<WorkoutTemplate>> getTemplatesByTags(List<String> tags) async {
     final allTemplates = await getAllTemplates();
-    
+
     return allTemplates.where((template) {
       return tags.any((tag) => template.tags.contains(tag));
     }).toList();
@@ -159,13 +159,17 @@ class FirebaseWorkoutTemplateRepository
       // If cache is fresh and not empty, use cached data
       if (cachedTemplates.isNotEmpty && cacheAge < oneHour) {
         if (kDebugMode) {
-          debugPrint('⚡ [CACHE-HIT] Using cached templates (${cachedTemplates.length} templates, age: ${(cacheAge / 1000 / 60).toStringAsFixed(1)} min)');
+          debugPrint(
+            '⚡ [CACHE-HIT] Using cached templates (${cachedTemplates.length} templates, age: ${(cacheAge / 1000 / 60).toStringAsFixed(1)} min)',
+          );
         }
         userTemplates = cachedTemplates;
       } else if (_auth.currentUser != null) {
         // ✅ STEP 3: Cache is stale or empty - query Firestore if user is authenticated
         if (kDebugMode) {
-          final reason = cachedTemplates.isEmpty ? 'cache empty' : 'cache stale (${(cacheAge / 1000 / 60).toStringAsFixed(1)} min old)';
+          final reason = cachedTemplates.isEmpty
+              ? 'cache empty'
+              : 'cache stale (${(cacheAge / 1000 / 60).toStringAsFixed(1)} min old)';
           debugPrint('🔥 [CACHE-MISS] Querying Firestore ($reason)');
         }
 
@@ -179,7 +183,9 @@ class FirebaseWorkoutTemplateRepository
         await prefs.setInt(_lastSyncKey, now);
 
         if (kDebugMode) {
-          debugPrint('✅ [CACHE-UPDATE] Saved ${cloudTemplates.length} templates to cache');
+          debugPrint(
+            '✅ [CACHE-UPDATE] Saved ${cloudTemplates.length} templates to cache',
+          );
         }
 
         userTemplates = cloudTemplates;
@@ -195,7 +201,9 @@ class FirebaseWorkoutTemplateRepository
       // Fallback: use cached data (even if stale)
       final cachedTemplates = await _getTemplatesFromCache();
       if (kDebugMode && cachedTemplates.isNotEmpty) {
-        debugPrint('⚠️ [FALLBACK] Using stale cache (${cachedTemplates.length} templates)');
+        debugPrint(
+          '⚠️ [FALLBACK] Using stale cache (${cachedTemplates.length} templates)',
+        );
       }
       userTemplates = cachedTemplates;
     }
@@ -208,7 +216,9 @@ class FirebaseWorkoutTemplateRepository
     });
 
     if (kDebugMode) {
-      debugPrint('📋 [TEMPLATES] Returning ${userTemplates.length} user templates');
+      debugPrint(
+        '📋 [TEMPLATES] Returning ${userTemplates.length} user templates',
+      );
     }
 
     return userTemplates;
@@ -220,17 +230,14 @@ class FirebaseWorkoutTemplateRepository
     if (userId == null) throw Exception('Utente non autenticato');
 
     return await rateLimitedWrite(() async {
-      await _firestore
-          .collection(_templatesCollection)
-          .doc(templateId)
-          .update({
-            'isPublic': true,
-            'authorName': _auth.currentUser?.displayName ?? 'Anonymous',
-            'userId': userId,
-          });
+      await _firestore.collection(_templatesCollection).doc(templateId).update({
+        'isPublic': true,
+        'authorName': _auth.currentUser?.displayName ?? 'Anonymous',
+        'userId': userId,
+      });
     });
   }
-  
+
   /// Scarica un template pubblico (crea una copia privata) (rate-limited)
   Future<WorkoutTemplate> downloadPublicTemplate(String templateId) async {
     final userId = _auth.currentUser?.uid;
@@ -265,23 +272,19 @@ class FirebaseWorkoutTemplateRepository
 
     // Incrementa il contatore download del template originale (rate-limited write)
     await rateLimitedWrite(() async {
-      await _firestore
-          .collection(_templatesCollection)
-          .doc(templateId)
-          .update({
-            'downloadCount': FieldValue.increment(1),
-          });
+      await _firestore.collection(_templatesCollection).doc(templateId).update({
+        'downloadCount': FieldValue.increment(1),
+      });
     });
 
     return privateTemplate;
   }
-  
+
   /// Salva un template (cloud + cache locale)
   ///
   /// 🔐 SECURITY: For NEW templates, uses Cloud Function to enforce quota.
   /// For UPDATES, uses direct Firestore write (allowed by security rules).
   Future<void> saveTemplate(WorkoutTemplate template) async {
-
     // PRE-SAVE VALIDATION - Critical validation before saving
 
     // Validate template basic fields
@@ -296,26 +299,33 @@ class FirebaseWorkoutTemplateRepository
     // Empty templates are allowed but will only be saved locally (not synced to cloud)
     final isEmptyTemplate = template.exercises.isEmpty;
     if (isEmptyTemplate && kDebugMode) {
-      debugPrint('📝 Empty template "${template.name}" will be saved locally only');
+      debugPrint(
+        '📝 Empty template "${template.name}" will be saved locally only',
+      );
     }
 
     for (int i = 0; i < template.exercises.length; i++) {
       final ex = template.exercises[i];
 
       if (ex.exerciseId.isEmpty) {
-        throw Exception('VALIDATION ERROR: Exercise at index $i has empty exerciseId');
+        throw Exception(
+          'VALIDATION ERROR: Exercise at index $i has empty exerciseId',
+        );
       }
       if (ex.exerciseName.trim().isEmpty) {
-        throw Exception('VALIDATION ERROR: Exercise at index $i has empty exerciseName');
+        throw Exception(
+          'VALIDATION ERROR: Exercise at index $i has empty exerciseName',
+        );
       }
-      if (ex.sets.isEmpty) {
-      }
+      if (ex.sets.isEmpty) {}
 
       // Validate each set
       for (int j = 0; j < ex.sets.length; j++) {
         final set = ex.sets[j];
         if (set.setNumber <= 0) {
-          throw Exception('VALIDATION ERROR: Exercise "${ex.exerciseName}" set $j has invalid setNumber: ${set.setNumber}');
+          throw Exception(
+            'VALIDATION ERROR: Exercise "${ex.exerciseName}" set $j has invalid setNumber: ${set.setNumber}',
+          );
         }
       }
     }
@@ -326,7 +336,9 @@ class FirebaseWorkoutTemplateRepository
     // Skip cloud sync for empty templates - they'll sync when exercises are added
     if (isEmptyTemplate) {
       if (kDebugMode) {
-        debugPrint('⏭️ Skipping cloud sync for empty template - save locally only');
+        debugPrint(
+          '⏭️ Skipping cloud sync for empty template - save locally only',
+        );
       }
       return;
     }
@@ -344,7 +356,9 @@ class FirebaseWorkoutTemplateRepository
               const Duration(seconds: 5),
               onTimeout: () {
                 if (kDebugMode) {
-                  debugPrint('⏱️ Firestore get() timed out - treating as offline');
+                  debugPrint(
+                    '⏱️ Firestore get() timed out - treating as offline',
+                  );
                 }
                 throw TimeoutException('Firestore operation timed out');
               },
@@ -356,7 +370,9 @@ class FirebaseWorkoutTemplateRepository
           // 🔐 NEW TEMPLATE: Use Cloud Function for quota enforcement
           // Firestore security rules block direct creates (allow create: if false;)
           if (kDebugMode) {
-            debugPrint('🔐 Creating NEW template via Cloud Function: ${template.name}');
+            debugPrint(
+              '🔐 Creating NEW template via Cloud Function: ${template.name}',
+            );
           }
 
           // Convert ExerciseTemplate to Exercise for Cloud Function
@@ -389,17 +405,25 @@ class FirebaseWorkoutTemplateRepository
           );
 
           if (!result.success) {
-            throw Exception('Cloud Function failed: ${result.error ?? "Unknown error"}');
+            throw Exception(
+              'Cloud Function failed: ${result.error ?? "Unknown error"}',
+            );
           }
 
           if (kDebugMode) {
-            debugPrint('✅ Template created via Cloud Function: ${result.templateId}');
-            debugPrint('📊 Quota: ${result.quota.privateUsed}/${result.quota.privateMax} private');
+            debugPrint(
+              '✅ Template created via Cloud Function: ${result.templateId}',
+            );
+            debugPrint(
+              '📊 Quota: ${result.quota.privateUsed}/${result.quota.privateMax} private',
+            );
           }
         } else {
           // UPDATE: Direct Firestore write (allowed by security rules)
           if (kDebugMode) {
-            debugPrint('📝 Updating existing template via Firestore: ${template.name}');
+            debugPrint(
+              '📝 Updating existing template via Firestore: ${template.name}',
+            );
           }
           await _saveTemplateToCloud(template);
         }
@@ -421,28 +445,22 @@ class FirebaseWorkoutTemplateRepository
     // Get template info before deletion for quota update
     bool isPublic = false;
     if (_auth.currentUser != null) {
-      final getResult = await handleFirebaseOperation(
-        () async {
-          final doc = await _firestore
-              .collection(_templatesCollection)
-              .doc(templateId)
-              .get();
-          if (doc.exists) {
-            return doc.data()?['isPublic'] ?? false;
-          }
-          return false;
-        },
-        operationName: 'getTemplateForDeletion',
-      );
+      final getResult = await handleFirebaseOperation(() async {
+        final doc = await _firestore
+            .collection(_templatesCollection)
+            .doc(templateId)
+            .get();
+        if (doc.exists) {
+          return doc.data()?['isPublic'] ?? false;
+        }
+        return false;
+      }, operationName: 'getTemplateForDeletion');
 
-      getResult.fold(
-        (failure) {
-          if (kDebugMode) {
-            debugPrint('⚠️ Failed to get template info: ${failure.message}');
-          }
-        },
-        (value) => isPublic = value as bool,
-      );
+      getResult.fold((failure) {
+        if (kDebugMode) {
+          debugPrint('⚠️ Failed to get template info: ${failure.message}');
+        }
+      }, (value) => isPublic = value as bool);
     }
 
     // Elimina localmente
@@ -450,14 +468,11 @@ class FirebaseWorkoutTemplateRepository
 
     // Elimina dal cloud se disponibile
     if (_auth.currentUser != null) {
-      final deleteResult = await handleFirebaseVoidOperation(
-        () async {
-          await _deleteTemplateFromCloud(templateId);
-          // Decrement quota after successful deletion
-          await _decrementQuota(isPublic);
-        },
-        operationName: 'deleteTemplateFromCloud',
-      );
+      final deleteResult = await handleFirebaseVoidOperation(() async {
+        await _deleteTemplateFromCloud(templateId);
+        // Decrement quota after successful deletion
+        await _decrementQuota(isPublic);
+      }, operationName: 'deleteTemplateFromCloud');
 
       deleteResult.fold(
         (failure) {
@@ -511,28 +526,27 @@ class FirebaseWorkoutTemplateRepository
   Future<void> syncWithCloud() async {
     if (_auth.currentUser == null) return;
 
-    final result = await handleFirebaseVoidOperation(
-      () async {
-        // 1. Carica template dal cloud
-        final cloudTemplates = await _getTemplatesFromCloud();
-        final localTemplates = await _getTemplatesFromCache();
+    final result = await handleFirebaseVoidOperation(() async {
+      // 1. Carica template dal cloud
+      final cloudTemplates = await _getTemplatesFromCloud();
+      final localTemplates = await _getTemplatesFromCache();
 
-        // 2. Merge intelligente
-        final mergedTemplates = _mergeTemplates(localTemplates, cloudTemplates);
+      // 2. Merge intelligente
+      final mergedTemplates = _mergeTemplates(localTemplates, cloudTemplates);
 
-        // 3. Salva risultato in cache
-        await _cacheTemplates(mergedTemplates);
+      // 3. Salva risultato in cache
+      await _cacheTemplates(mergedTemplates);
 
-        // 4. Aggiorna timestamp sync
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setInt(_lastSyncKey, DateTime.now().millisecondsSinceEpoch);
+      // 4. Aggiorna timestamp sync
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_lastSyncKey, DateTime.now().millisecondsSinceEpoch);
 
-        if (kDebugMode) {
-          debugPrint('✅ syncWithCloud completed: ${mergedTemplates.length} templates');
-        }
-      },
-      operationName: 'syncWithCloud',
-    );
+      if (kDebugMode) {
+        debugPrint(
+          '✅ syncWithCloud completed: ${mergedTemplates.length} templates',
+        );
+      }
+    }, operationName: 'syncWithCloud');
 
     result.mapLeft((failure) {
       if (kDebugMode) {
@@ -545,11 +559,11 @@ class FirebaseWorkoutTemplateRepository
   /// Verifica se è necessario un sync
   Future<bool> needsSync() async {
     if (_auth.currentUser == null) return false;
-    
+
     final prefs = await SharedPreferences.getInstance();
     final lastSync = prefs.getInt(_lastSyncKey) ?? 0;
     final now = DateTime.now().millisecondsSinceEpoch;
-    
+
     // Sync ogni 30 minuti
     return (now - lastSync) > (30 * 60 * 1000);
   }
@@ -559,19 +573,19 @@ class FirebaseWorkoutTemplateRepository
     if (_auth.currentUser == null) {
       return Stream.value([]);
     }
-    
+
     return _firestore
         .collection(_templatesCollection)
         .where('userId', isEqualTo: _auth.currentUser!.uid)
         .orderBy('updatedAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final data = doc.data();
-        data['id'] = doc.id; // Assicura che l'ID sia nel data
-        return WorkoutTemplate.fromJson(data);
-      }).toList();
-    });
+          return snapshot.docs.map((doc) {
+            final data = doc.data();
+            data['id'] = doc.id; // Assicura che l'ID sia nel data
+            return WorkoutTemplate.fromJson(data);
+          }).toList();
+        });
   }
 
   // METODI PRIVATI
@@ -583,7 +597,9 @@ class FirebaseWorkoutTemplateRepository
 
     return await rateLimitedQuery(() async {
       if (kDebugMode) {
-        debugPrint('🔥 Firebase: Getting templates for user ${_auth.currentUser!.uid}');
+        debugPrint(
+          '🔥 Firebase: Getting templates for user ${_auth.currentUser!.uid}',
+        );
       }
 
       QuerySnapshot<Map<String, dynamic>> querySnapshot;
@@ -599,7 +615,9 @@ class FirebaseWorkoutTemplateRepository
         // Fallback: query without orderBy if index is missing
         // This happens when the composite index hasn't been created yet
         if (kDebugMode) {
-          debugPrint('⚠️ Firebase: Index missing, using fallback query without orderBy: $e');
+          debugPrint(
+            '⚠️ Firebase: Index missing, using fallback query without orderBy: $e',
+          );
         }
         querySnapshot = await _firestore
             .collection(_templatesCollection)
@@ -617,14 +635,19 @@ class FirebaseWorkoutTemplateRepository
 
         // Enhanced Debug Logging - Document validation
         if (kDebugMode) {
-          debugPrint('🔥 Firebase: Template ${data['name']} - id: ${doc.id}, isCustom: ${data['isCustom']}, userId: ${data['userId']}');
+          debugPrint(
+            '🔥 Firebase: Template ${data['name']} - id: ${doc.id}, isCustom: ${data['isCustom']}, userId: ${data['userId']}',
+          );
         }
 
         final template = WorkoutTemplate.fromJson(data);
 
-        if (template.exercises.isEmpty && (data['exercises'] as List?)?.isNotEmpty == true) {
+        if (template.exercises.isEmpty &&
+            (data['exercises'] as List?)?.isNotEmpty == true) {
           if (kDebugMode) {
-            debugPrint('⚠️ Firebase: Template ${template.name} has exercises in data but not after parsing');
+            debugPrint(
+              '⚠️ Firebase: Template ${template.name} has exercises in data but not after parsing',
+            );
           }
         }
 
@@ -654,12 +677,16 @@ class FirebaseWorkoutTemplateRepository
       if (!data.containsKey('isCustom') || data['isCustom'] == null) {
         data['isCustom'] = true; // All user-created templates are custom
         if (kDebugMode) {
-          debugPrint('⚠️ Firebase: Setting isCustom=true for template ${template.name}');
+          debugPrint(
+            '⚠️ Firebase: Setting isCustom=true for template ${template.name}',
+          );
         }
       }
 
       if (kDebugMode) {
-        debugPrint('🔥 Firebase: Saving template ${template.name} with isCustom=${data['isCustom']}');
+        debugPrint(
+          '🔥 Firebase: Saving template ${template.name} with isCustom=${data['isCustom']}',
+        );
       }
 
       // Enhanced Debug Logging - JSON validation
@@ -669,8 +696,7 @@ class FirebaseWorkoutTemplateRepository
         for (int i = 0; i < exercisesJson.length; i++) {
           exercisesJson[i] as Map<String, dynamic>;
         }
-      } else {
-      }
+      } else {}
 
       // 🔧 FIX: Add 10s timeout to prevent infinite hanging on network issues
       await _firestore
@@ -687,7 +713,6 @@ class FirebaseWorkoutTemplateRepository
             },
           );
 
-
       // POST-SAVE VALIDATION - Verify data was saved correctly
       try {
         // Attempt to read back the saved template to verify integrity
@@ -700,14 +725,18 @@ class FirebaseWorkoutTemplateRepository
 
         if (savedDoc.exists) {
           final savedData = savedDoc.data()!;
-          final exercisesInFirestore = (savedData['exercises'] as List?)?.length ?? 0;
+          final exercisesInFirestore =
+              (savedData['exercises'] as List?)?.length ?? 0;
 
           if (exercisesInFirestore != template.exercises.length) {
-            throw Exception('POST-SAVE VALIDATION FAILED: Exercise data integrity compromised');
+            throw Exception(
+              'POST-SAVE VALIDATION FAILED: Exercise data integrity compromised',
+            );
           }
-
         } else {
-          throw Exception('POST-SAVE VALIDATION FAILED: Document not found in Firestore');
+          throw Exception(
+            'POST-SAVE VALIDATION FAILED: Document not found in Firestore',
+          );
         }
       } catch (e) {
         // Don't throw here as the save actually succeeded, just log the issue
@@ -730,28 +759,27 @@ class FirebaseWorkoutTemplateRepository
   /// Carica template dalla cache locale
   Future<List<WorkoutTemplate>> _getTemplatesFromCache() async {
     try {
-      
       final prefs = await SharedPreferences.getInstance();
       final templatesJson = prefs.getString(_localCacheKey);
-      
+
       if (templatesJson == null) {
         return [];
       }
-      
+
       final List<dynamic> templatesList = json.decode(templatesJson);
-      
+
       final templates = templatesList.map((jsonData) {
         // Enhanced Debug Logging - Cache validation
         final templateJson = jsonData as Map<String, dynamic>;
-        
+
         final template = WorkoutTemplate.fromJson(templateJson);
-        
-        if (template.exercises.isEmpty && (templateJson['exercises'] as List?)?.isNotEmpty == true) {
-        }
-        
+
+        if (template.exercises.isEmpty &&
+            (templateJson['exercises'] as List?)?.isNotEmpty == true) {}
+
         return template;
       }).toList();
-      
+
       return templates;
     } catch (e) {
       return [];
@@ -761,37 +789,35 @@ class FirebaseWorkoutTemplateRepository
   /// Salva template in cache locale
   Future<void> _cacheTemplates(List<WorkoutTemplate> templates) async {
     try {
-      
       final prefs = await SharedPreferences.getInstance();
-      
+
       // Pre-serialization validation
       int totalExercises = 0;
       for (final template in templates) {
         totalExercises += template.exercises.length;
       }
-      
+
       final templatesJson = json.encode(
         templates.map((template) => template.toJson()).toList(),
       );
-      
+
       await prefs.setString(_localCacheKey, templatesJson);
-      
+
       // Post-serialization validation
       final savedJson = prefs.getString(_localCacheKey);
       if (savedJson != null) {
         final decodedList = json.decode(savedJson) as List;
-        
+
         int cachedExercises = 0;
         for (final templateJson in decodedList) {
-          final exercisesList = (templateJson as Map<String, dynamic>)['exercises'] as List?;
+          final exercisesList =
+              (templateJson as Map<String, dynamic>)['exercises'] as List?;
           cachedExercises += exercisesList?.length ?? 0;
         }
-        
+
         if (cachedExercises != totalExercises) {
-        } else {
-        }
+        } else {}
       }
-      
     } catch (e) {
       rethrow;
     }
@@ -805,25 +831,27 @@ class FirebaseWorkoutTemplateRepository
 
   /// Salva singolo template localmente
   Future<void> _saveTemplateLocally(WorkoutTemplate template) async {
-    
     final templates = await _getTemplatesFromCache();
     templates.removeWhere((t) => t.id == template.id);
     templates.add(template);
     templates.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-    
+
     await _cacheTemplates(templates);
-    
+
     // POST-SAVE VALIDATION for local cache
     final verifyTemplates = await _getTemplatesFromCache();
     final savedTemplate = verifyTemplates.firstWhere(
       (t) => t.id == template.id,
-      orElse: () => throw Exception('CACHE VALIDATION ERROR: Template not found after save'),
+      orElse: () => throw Exception(
+        'CACHE VALIDATION ERROR: Template not found after save',
+      ),
     );
-    
+
     if (savedTemplate.exercises.length != template.exercises.length) {
-      throw Exception('CACHE VALIDATION FAILED: Exercise data integrity compromised');
+      throw Exception(
+        'CACHE VALIDATION FAILED: Exercise data integrity compromised',
+      );
     }
-    
   }
 
   /// Elimina template localmente
@@ -835,26 +863,26 @@ class FirebaseWorkoutTemplateRepository
 
   /// Merge intelligente tra template locali e cloud
   List<WorkoutTemplate> _mergeTemplates(
-    List<WorkoutTemplate> local, 
+    List<WorkoutTemplate> local,
     List<WorkoutTemplate> cloud,
   ) {
     final Map<String, WorkoutTemplate> merged = {};
-    
+
     // Aggiungi tutti i template cloud
     for (final template in cloud) {
       merged[template.id] = template;
     }
-    
+
     // Aggiungi template locali se più recenti o non esistenti nel cloud
     for (final localTemplate in local) {
       final cloudTemplate = merged[localTemplate.id];
-      
-      if (cloudTemplate == null || 
+
+      if (cloudTemplate == null ||
           localTemplate.updatedAt.isAfter(cloudTemplate.updatedAt)) {
         merged[localTemplate.id] = localTemplate;
       }
     }
-    
+
     final result = merged.values.toList();
     result.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
     return result;
@@ -899,7 +927,9 @@ class FirebaseWorkoutTemplateRepository
     final pendingSync = prefs.getStringList(syncKey) ?? [];
     for (final templateId in pendingSync) {
       final templates = await _getTemplatesFromCache();
-      final templateOpt = templates.where((t) => t.id == templateId).firstOrNull;
+      final templateOpt = templates
+          .where((t) => t.id == templateId)
+          .firstOrNull;
 
       if (templateOpt != null) {
         final result = await handleFirebaseVoidOperation(
@@ -909,7 +939,9 @@ class FirebaseWorkoutTemplateRepository
 
         result.mapLeft((failure) {
           if (kDebugMode) {
-            debugPrint('⚠️ Pending sync failed for $templateId: ${failure.message}');
+            debugPrint(
+              '⚠️ Pending sync failed for $templateId: ${failure.message}',
+            );
           }
         });
       }
@@ -926,7 +958,9 @@ class FirebaseWorkoutTemplateRepository
 
       result.mapLeft((failure) {
         if (kDebugMode) {
-          debugPrint('⚠️ Pending deletion failed for $templateId: ${failure.message}');
+          debugPrint(
+            '⚠️ Pending deletion failed for $templateId: ${failure.message}',
+          );
         }
       });
     }
@@ -937,11 +971,11 @@ class FirebaseWorkoutTemplateRepository
   Future<void> initializePredefinedTemplates() async {
     final templates = await _getTemplatesFromCache();
     final hasAnyTemplate = templates.isNotEmpty;
-    
+
     if (!hasAnyTemplate) {
       // Crea template predefiniti
       final predefinedTemplates = _createPredefinedTemplates();
-      
+
       for (final template in predefinedTemplates) {
         await saveTemplate(template);
       }
@@ -956,26 +990,20 @@ class FirebaseWorkoutTemplateRepository
     if (userId == null) return;
 
     // Get user document (rate-limited read)
-    final getResult = await handleFirebaseOperation(
-      () async {
-        return await rateLimitedRead(() async {
-          final doc = await _firestore.collection('users').doc(userId).get();
-          if (!doc.exists) return null;
-          return doc;
-        });
-      },
-      operationName: 'getQuotaForDecrement',
-    );
+    final getResult = await handleFirebaseOperation(() async {
+      return await rateLimitedRead(() async {
+        final doc = await _firestore.collection('users').doc(userId).get();
+        if (!doc.exists) return null;
+        return doc;
+      });
+    }, operationName: 'getQuotaForDecrement');
 
-    final userDoc = getResult.fold(
-      (failure) {
-        if (kDebugMode) {
-          debugPrint('⚠️ Failed to get quota: ${failure.message}');
-        }
-        return null;
-      },
-      (doc) => doc,
-    );
+    final userDoc = getResult.fold((failure) {
+      if (kDebugMode) {
+        debugPrint('⚠️ Failed to get quota: ${failure.message}');
+      }
+      return null;
+    }, (doc) => doc);
 
     if (userDoc == null) return;
 
@@ -987,19 +1015,18 @@ class FirebaseWorkoutTemplateRepository
     final usedPublic = quotaData['usedPublicTemplates'] ?? 0;
 
     // Update quota (rate-limited write)
-    final updateResult = await handleFirebaseVoidOperation(
-      () async {
-        await rateLimitedWrite(() async {
-          await _firestore.collection('users').doc(userId).update({
-            'templateQuota.usedPrivateTemplates':
-                isPublic ? usedPrivate : (usedPrivate - 1).clamp(0, 999),
-            'templateQuota.usedPublicTemplates':
-                isPublic ? (usedPublic - 1).clamp(0, 999) : usedPublic,
-          });
+    final updateResult = await handleFirebaseVoidOperation(() async {
+      await rateLimitedWrite(() async {
+        await _firestore.collection('users').doc(userId).update({
+          'templateQuota.usedPrivateTemplates': isPublic
+              ? usedPrivate
+              : (usedPrivate - 1).clamp(0, 999),
+          'templateQuota.usedPublicTemplates': isPublic
+              ? (usedPublic - 1).clamp(0, 999)
+              : usedPublic,
         });
-      },
-      operationName: 'decrementQuota',
-    );
+      });
+    }, operationName: 'decrementQuota');
 
     updateResult.mapLeft((failure) {
       // Don't throw - deletion is more important
@@ -1014,7 +1041,8 @@ class FirebaseWorkoutTemplateRepository
     return [
       WorkoutTemplate(
         name: 'Upper Body Strength',
-        description: 'Allenamento completo parte superiore: petto, schiena, spalle e braccia',
+        description:
+            'Allenamento completo parte superiore: petto, schiena, spalle e braccia',
         exercises: [
           const ExerciseTemplate(
             exerciseId: 'panca_piana',
@@ -1052,7 +1080,7 @@ class FirebaseWorkoutTemplateRepository
         estimatedDuration: 60,
         isCustom: false,
       ),
-      
+
       WorkoutTemplate(
         name: 'Lower Body Power',
         description: 'Allenamento gambe e glutei: squat, stacchi e affondi',
@@ -1107,7 +1135,9 @@ class FirebaseWorkoutTemplateRepository
   }
 
   /// Migration: Ensure all user templates have isCustom=true (rate-limited)
-  Future<void> _migrateTemplatesIsCustomField(List<WorkoutTemplate> templates) async {
+  Future<void> _migrateTemplatesIsCustomField(
+    List<WorkoutTemplate> templates,
+  ) async {
     if (_auth.currentUser == null) return;
 
     bool migrationNeeded = false;
@@ -1117,7 +1147,9 @@ class FirebaseWorkoutTemplateRepository
       if (!template.isCustom) {
         migrationNeeded = true;
         if (kDebugMode) {
-          debugPrint('🔄 Migration: Template "${template.name}" needs isCustom=true');
+          debugPrint(
+            '🔄 Migration: Template "${template.name}" needs isCustom=true',
+          );
         }
 
         try {
@@ -1127,17 +1159,21 @@ class FirebaseWorkoutTemplateRepository
                 .collection(_templatesCollection)
                 .doc(template.id)
                 .update({
-              'isCustom': true,
-              'updatedAt': FieldValue.serverTimestamp(),
-            });
+                  'isCustom': true,
+                  'updatedAt': FieldValue.serverTimestamp(),
+                });
           });
 
           if (kDebugMode) {
-            debugPrint('✅ Migration: Updated template "${template.name}" with isCustom=true');
+            debugPrint(
+              '✅ Migration: Updated template "${template.name}" with isCustom=true',
+            );
           }
         } catch (e) {
           if (kDebugMode) {
-            debugPrint('❌ Migration: Failed to update template "${template.name}": $e');
+            debugPrint(
+              '❌ Migration: Failed to update template "${template.name}": $e',
+            );
           }
         }
       }

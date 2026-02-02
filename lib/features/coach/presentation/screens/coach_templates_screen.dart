@@ -66,10 +66,7 @@ class _CoachTemplatesScreenState extends ConsumerState<CoachTemplatesScreen>
         children: [
           TabBarView(
             controller: _tabController,
-            children: const [
-              _MyTemplatesTab(),
-              _AssignedTemplatesTab(),
-            ],
+            children: const [_MyTemplatesTab(), _AssignedTemplatesTab()],
           ),
           // DraggableActionButton for consistent FAB style
           DraggableActionButton(
@@ -105,9 +102,7 @@ class _MyTemplatesTab extends ConsumerWidget {
             )
           : _TemplatesList(templates: templates),
       loading: () => const Center(child: LoadingIndicator()),
-      error: (error, _) => Center(
-        child: Text('${context.l10n.error}: $error'),
-      ),
+      error: (error, _) => Center(child: Text('${context.l10n.error}: $error')),
     );
   }
 }
@@ -123,8 +118,9 @@ class _AssignedTemplatesTab extends ConsumerWidget {
     return templatesAsync.when(
       data: (templates) {
         // Filter to only templates that have assignments
-        final assignedTemplates =
-            templates.where((t) => t.hasAssignments).toList();
+        final assignedTemplates = templates
+            .where((t) => t.hasAssignments)
+            .toList();
 
         if (assignedTemplates.isEmpty) {
           return _EmptyTemplatesState(
@@ -140,9 +136,7 @@ class _AssignedTemplatesTab extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: LoadingIndicator()),
-      error: (error, _) => Center(
-        child: Text('${context.l10n.error}: $error'),
-      ),
+      error: (error, _) => Center(child: Text('${context.l10n.error}: $error')),
     );
   }
 }
@@ -176,10 +170,7 @@ class _TemplatesList extends StatelessWidget {
   }
 
   void _openTemplateDetails(BuildContext context, CoachTemplate template) {
-    context.pushNamed(
-      AppRoutes.coachTemplateEditorName,
-      extra: template,
-    );
+    context.pushNamed(AppRoutes.coachTemplateEditorName, extra: template);
   }
 
   void _showAssignmentSheet(BuildContext context, CoachTemplate template) {
@@ -212,11 +203,7 @@ class _EmptyTemplatesState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              size: 64,
-              color: context.colors.onSurfaceVariant,
-            ),
+            Icon(icon, size: 64, color: context.colors.onSurfaceVariant),
             const SizedBox(height: AppSpacing.lg),
             Text(
               title,

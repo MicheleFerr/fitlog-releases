@@ -55,9 +55,7 @@ class _LinkCoachScreenState extends ConsumerState<LinkCoachScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.surface,
-      appBar: AppBar(
-        title: Text(context.l10n.linkToCoach),
-      ),
+      appBar: AppBar(title: Text(context.l10n.linkToCoach)),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.xl),
@@ -117,9 +115,7 @@ class _LinkCoachScreenState extends ConsumerState<LinkCoachScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(6, (index) {
         return Padding(
-          padding: EdgeInsets.only(
-            left: index == 0 ? 0 : AppSpacing.xs,
-          ),
+          padding: EdgeInsets.only(left: index == 0 ? 0 : AppSpacing.xs),
           child: SizedBox(
             width: 48,
             height: 56,
@@ -149,10 +145,7 @@ class _LinkCoachScreenState extends ConsumerState<LinkCoachScreen> {
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(
-                    color: context.colors.error,
-                    width: 2,
-                  ),
+                  borderSide: BorderSide(color: context.colors.error, width: 2),
                 ),
                 contentPadding: EdgeInsets.zero,
               ),
@@ -201,8 +194,7 @@ class _LinkCoachScreenState extends ConsumerState<LinkCoachScreen> {
     });
 
     try {
-      final coach =
-          await ref.read(coachLookupProvider(_currentCode).future);
+      final coach = await ref.read(coachLookupProvider(_currentCode).future);
 
       setState(() {
         _isValidating = false;
@@ -229,10 +221,7 @@ class _LinkCoachScreenState extends ConsumerState<LinkCoachScreen> {
       ),
       child: Row(
         children: [
-          Icon(
-            AppIcons.error,
-            color: context.colors.error,
-          ),
+          Icon(AppIcons.error, color: context.colors.error),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
@@ -319,10 +308,7 @@ class _LinkCoachScreenState extends ConsumerState<LinkCoachScreen> {
         minimumSize: const Size(double.infinity, 56),
       ),
       child: _isLoading
-          ? LoadingIndicator(
-              size: 24,
-              color: context.colors.onPrimary,
-            )
+          ? LoadingIndicator(size: 24, color: context.colors.onPrimary)
           : Text(context.l10n.linkToCoach),
     );
   }
@@ -345,10 +331,7 @@ class _LinkCoachScreenState extends ConsumerState<LinkCoachScreen> {
           );
           Navigator.of(context).pop(true);
         } else {
-          SnackBarService.showError(
-            context,
-            context.l10n.somethingWentWrong,
-          );
+          SnackBarService.showError(context, context.l10n.somethingWentWrong);
         }
       }
     } catch (e) {
@@ -356,7 +339,9 @@ class _LinkCoachScreenState extends ConsumerState<LinkCoachScreen> {
         final errorMessage = e.toString().replaceFirst('Exception: ', '');
         SnackBarService.showError(
           context,
-          errorMessage.isNotEmpty ? errorMessage : context.l10n.somethingWentWrong,
+          errorMessage.isNotEmpty
+              ? errorMessage
+              : context.l10n.somethingWentWrong,
         );
       }
     } finally {

@@ -41,8 +41,9 @@ class PRCelebrationRepositoryImpl implements PRCelebrationRepository {
           .get();
 
       final previousValue = previousPRQuery.docs.isNotEmpty
-          ? (previousPRQuery.docs.first.data()['newValue'] as num?)?.toDouble() ??
-              0.0
+          ? (previousPRQuery.docs.first.data()['newValue'] as num?)
+                    ?.toDouble() ??
+                0.0
           : 0.0;
 
       final celebration = PRCelebration(
@@ -88,9 +89,7 @@ class PRCelebrationRepositoryImpl implements PRCelebrationRepository {
     } on FirebaseException catch (e) {
       return fpdart.Left(ServerFailure('Firebase error: ${e.message}'));
     } catch (e) {
-      return fpdart.Left(
-        UnexpectedFailure('Failed to record celebration: $e'),
-      );
+      return fpdart.Left(UnexpectedFailure('Failed to record celebration: $e'));
     }
   }
 
@@ -131,9 +130,7 @@ class PRCelebrationRepositoryImpl implements PRCelebrationRepository {
           .get();
 
       if (querySnapshot.docs.isEmpty) {
-        return const fpdart.Left(
-          ValidationFailure('PR celebration not found'),
-        );
+        return const fpdart.Left(ValidationFailure('PR celebration not found'));
       }
 
       final doc = querySnapshot.docs.first;
@@ -158,9 +155,7 @@ class PRCelebrationRepositoryImpl implements PRCelebrationRepository {
     } on FirebaseException catch (e) {
       return fpdart.Left(ServerFailure('Firebase error: ${e.message}'));
     } catch (e) {
-      return fpdart.Left(
-        UnexpectedFailure('Failed to track engagement: $e'),
-      );
+      return fpdart.Left(UnexpectedFailure('Failed to track engagement: $e'));
     }
   }
 
@@ -208,9 +203,7 @@ class PRCelebrationRepositoryImpl implements PRCelebrationRepository {
     } on FirebaseException catch (e) {
       return fpdart.Left(ServerFailure('Firebase error: ${e.message}'));
     } catch (e) {
-      return fpdart.Left(
-        UnexpectedFailure('Failed to fetch celebrations: $e'),
-      );
+      return fpdart.Left(UnexpectedFailure('Failed to fetch celebrations: $e'));
     }
   }
 
@@ -232,9 +225,7 @@ class PRCelebrationRepositoryImpl implements PRCelebrationRepository {
     } on FirebaseException catch (e) {
       return fpdart.Left(ServerFailure('Firebase error: ${e.message}'));
     } catch (e) {
-      return fpdart.Left(
-        UnexpectedFailure('Failed to check celebration: $e'),
-      );
+      return fpdart.Left(UnexpectedFailure('Failed to check celebration: $e'));
     }
   }
 }

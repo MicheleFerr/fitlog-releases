@@ -31,10 +31,7 @@ import 'package:gymbro_flutter_new/features/progress_photos/presentation/widgets
 /// - Photos stored with user consent
 /// - Delete/export functionality
 class MyPhotosScreen extends ConsumerStatefulWidget {
-  const MyPhotosScreen({
-    super.key,
-    required this.userId,
-  });
+  const MyPhotosScreen({super.key, required this.userId});
 
   final String userId;
 
@@ -85,10 +82,7 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
               ref.read(photoFilterPoseProvider.notifier).state = pose;
             },
             itemBuilder: (context) => [
-              PopupMenuItem(
-                value: null,
-                child: Text(context.l10n.allPoses),
-              ),
+              PopupMenuItem(value: null, child: Text(context.l10n.allPoses)),
               const PopupMenuDivider(),
               ...PhotoPose.values.map(
                 (pose) => PopupMenuItem(
@@ -96,9 +90,12 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
                   child: Row(
                     children: [
                       if (pose == filterPose)
-                        Icon(AppIcons.check, size: 18, color: context.colors.primary),
-                      if (pose != filterPose)
-                        const SizedBox(width: 18),
+                        Icon(
+                          AppIcons.check,
+                          size: 18,
+                          color: context.colors.primary,
+                        ),
+                      if (pose != filterPose) const SizedBox(width: 18),
                       const SizedBox(width: 8),
                       Text(pose.label),
                     ],
@@ -138,7 +135,8 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
                     const SizedBox(height: 8),
                     TextButton.icon(
                       onPressed: () => ref.invalidate(
-                          userPhotosStreamProvider(widget.userId)),
+                        userPhotosStreamProvider(widget.userId),
+                      ),
                       icon: const Icon(AppIcons.refresh),
                       label: Text(context.l10n.retry),
                     ),
@@ -187,7 +185,11 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
         color: context.colors.surfaceContainer,
         child: Row(
           children: [
-            Icon(AppIcons.image, size: 16, color: context.colors.onSurfaceVariant),
+            Icon(
+              AppIcons.image,
+              size: 16,
+              color: context.colors.onSurfaceVariant,
+            ),
             const SizedBox(width: 8),
             Text(
               '${stats.totalPhotos} photos',
@@ -196,7 +198,11 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
               ),
             ),
             const Spacer(),
-            Icon(AppIcons.storage, size: 16, color: context.colors.onSurfaceVariant),
+            Icon(
+              AppIcons.storage,
+              size: 16,
+              color: context.colors.onSurfaceVariant,
+            ),
             const SizedBox(width: 4),
             Text(
               stats.formattedSize,
@@ -267,8 +273,7 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
       grouped.putIfAbsent(dateKey, () => []).add(photo);
     }
 
-    final sortedDates = grouped.keys.toList()
-      ..sort((a, b) => b.compareTo(a));
+    final sortedDates = grouped.keys.toList()..sort((a, b) => b.compareTo(a));
 
     return ListView.builder(
       padding: const EdgeInsets.all(8),
@@ -403,9 +408,7 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
   void _openComparisonScreen() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => PhotoComparisonScreen(
-          userId: widget.userId,
-        ),
+        builder: (context) => PhotoComparisonScreen(userId: widget.userId),
       ),
     );
   }
@@ -437,8 +440,9 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
       isScrollControlled: true,
       builder: (context) => PhotoCaptureSheet(
         imagePicker: _imagePicker,
-        previousPhotosByPose:
-            previousPhotosByPose.isNotEmpty ? previousPhotosByPose : null,
+        previousPhotosByPose: previousPhotosByPose.isNotEmpty
+            ? previousPhotosByPose
+            : null,
       ),
     );
 
@@ -466,10 +470,7 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
       );
     } else if (mounted) {
       final error = ref.read(photoUploadProvider).errorMessage;
-      SnackBarService.showError(
-        context,
-        error ?? 'Failed to upload photo',
-      );
+      SnackBarService.showError(context, error ?? 'Failed to upload photo');
     }
   }
 

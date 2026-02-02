@@ -252,7 +252,9 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
 
     try {
       if (kDebugMode) {
-        debugPrint('💾 PROVIDER: Starting template save for "${template.name}"');
+        debugPrint(
+          '💾 PROVIDER: Starting template save for "${template.name}"',
+        );
         debugPrint('   - Template has ${template.exercises.length} exercises');
       }
 
@@ -260,7 +262,9 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
       await repository.saveTemplate(template);
 
       if (kDebugMode) {
-        debugPrint('💾 PROVIDER: Template saved to repository, reloading local state...');
+        debugPrint(
+          '💾 PROVIDER: Template saved to repository, reloading local state...',
+        );
       }
 
       // Ricarica i template
@@ -428,7 +432,9 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
       if (kDebugMode) {
         debugPrint('🆕 PROVIDER: Template created via Cloud Function');
         debugPrint('   - Template ID: ${result.templateId}');
-        debugPrint('   - Quota: ${result.quota.privateUsed}/${result.quota.privateMax} private templates');
+        debugPrint(
+          '   - Quota: ${result.quota.privateUsed}/${result.quota.privateMax} private templates',
+        );
       }
 
       // ✅ FIX: Use ExerciseTemplate.fromExercise() to properly handle
@@ -473,14 +479,18 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
 
       if (kDebugMode) {
         debugPrint('✅ PROVIDER: Template creation completed');
-        debugPrint('   - Remaining quota: ${result.quota.privateRemaining} private templates');
+        debugPrint(
+          '   - Remaining quota: ${result.quota.privateRemaining} private templates',
+        );
       }
 
       return template;
     } on TemplateQuotaExceededException catch (e) {
       if (kDebugMode) {
         debugPrint('🚨 PROVIDER: Template quota exceeded!');
-        debugPrint('   - ${e.quota.privateUsed}/${e.quota.privateMax} private templates');
+        debugPrint(
+          '   - ${e.quota.privateUsed}/${e.quota.privateMax} private templates',
+        );
         debugPrint('   - Account tier: ${e.quota.accountTier}');
       }
       state = state.copyWith(error: 'quota exceeded: ${e.message}');
@@ -556,7 +566,9 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
       await saveTemplate(duplicatedTemplate);
 
       if (kDebugMode) {
-        debugPrint('✅ PROVIDER: Template duplicated successfully as "${duplicatedTemplate.name}"');
+        debugPrint(
+          '✅ PROVIDER: Template duplicated successfully as "${duplicatedTemplate.name}"',
+        );
       }
 
       return duplicatedTemplate;
@@ -588,7 +600,9 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
   Future<int> refreshTemplateFromDatabase(WorkoutTemplate template) async {
     try {
       if (kDebugMode) {
-        debugPrint('🔄 PROVIDER: Refreshing template "${template.name}" from exercise database');
+        debugPrint(
+          '🔄 PROVIDER: Refreshing template "${template.name}" from exercise database',
+        );
       }
 
       // Get exercise database
@@ -599,7 +613,10 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
       for (final dbExercise in exerciseDatabase) {
         exerciseMap[dbExercise.id] = dbExercise;
         // Also map by normalized name for fallback matching
-        final normalizedName = dbExercise.nome.toLowerCase().replaceAll(' ', '_');
+        final normalizedName = dbExercise.nome.toLowerCase().replaceAll(
+          ' ',
+          '_',
+        );
         exerciseMap[normalizedName] = dbExercise;
       }
 
@@ -612,7 +629,9 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
 
         // Fallback: try by normalized exercise name
         if (dbExercise == null) {
-          final normalizedName = exerciseTemplate.exerciseName.toLowerCase().replaceAll(' ', '_');
+          final normalizedName = exerciseTemplate.exerciseName
+              .toLowerCase()
+              .replaceAll(' ', '_');
           dbExercise = exerciseMap[normalizedName];
         }
 
@@ -622,7 +641,9 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
           if (dbTut != null && dbTut != exerciseTemplate.tut) {
             updatedCount++;
             if (kDebugMode) {
-              debugPrint('   📝 Updated TUT for "${exerciseTemplate.exerciseName}": ${exerciseTemplate.tut} → $dbTut');
+              debugPrint(
+                '   📝 Updated TUT for "${exerciseTemplate.exerciseName}": ${exerciseTemplate.tut} → $dbTut',
+              );
             }
             return exerciseTemplate.copyWith(tut: dbTut);
           }
@@ -641,11 +662,15 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
         await saveTemplate(updatedTemplate);
 
         if (kDebugMode) {
-          debugPrint('✅ PROVIDER: Template refreshed - $updatedCount exercises updated');
+          debugPrint(
+            '✅ PROVIDER: Template refreshed - $updatedCount exercises updated',
+          );
         }
       } else {
         if (kDebugMode) {
-          debugPrint('ℹ️ PROVIDER: Template already up to date, no changes needed');
+          debugPrint(
+            'ℹ️ PROVIDER: Template already up to date, no changes needed',
+          );
         }
       }
 
@@ -670,7 +695,10 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
       final exerciseMap = <String, dynamic>{};
       for (final dbExercise in exerciseDatabase) {
         exerciseMap[dbExercise.id] = dbExercise;
-        final normalizedName = dbExercise.nome.toLowerCase().replaceAll(' ', '_');
+        final normalizedName = dbExercise.nome.toLowerCase().replaceAll(
+          ' ',
+          '_',
+        );
         exerciseMap[normalizedName] = dbExercise;
       }
 
@@ -679,14 +707,18 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
         dynamic dbExercise = exerciseMap[exerciseTemplate.exerciseId];
 
         if (dbExercise == null) {
-          final normalizedName = exerciseTemplate.exerciseName.toLowerCase().replaceAll(' ', '_');
+          final normalizedName = exerciseTemplate.exerciseName
+              .toLowerCase()
+              .replaceAll(' ', '_');
           dbExercise = exerciseMap[normalizedName];
         }
 
         if (dbExercise != null) {
           final dbTut = dbExercise.tempoEsecuzione as String?;
           // If database has TUT and it's different from template, needs refresh
-          if (dbTut != null && dbTut.isNotEmpty && dbTut != exerciseTemplate.tut) {
+          if (dbTut != null &&
+              dbTut.isNotEmpty &&
+              dbTut != exerciseTemplate.tut) {
             return true;
           }
         }
@@ -705,58 +737,68 @@ class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
 /// Provider that returns a Set of template IDs that need TUT refresh
 /// Reads exercise database ONCE and checks ALL custom templates in a single pass
 /// This avoids N separate database reads (one per template in the list)
-final templatesNeedingRefreshProvider = FutureProvider.autoDispose<Set<String>>((ref) async {
-  try {
-    // Get all custom templates and exercise database in parallel
-    final customTemplates = await ref.watch(customWorkoutTemplatesProvider.future);
-    final exerciseDatabase = await ref.read(allExercisesProvider.future);
+final templatesNeedingRefreshProvider = FutureProvider.autoDispose<Set<String>>(
+  (ref) async {
+    try {
+      // Get all custom templates and exercise database in parallel
+      final customTemplates = await ref.watch(
+        customWorkoutTemplatesProvider.future,
+      );
+      final exerciseDatabase = await ref.read(allExercisesProvider.future);
 
-    // Create a lookup map for fast matching
-    final exerciseMap = <String, dynamic>{};
-    for (final dbExercise in exerciseDatabase) {
-      exerciseMap[dbExercise.id] = dbExercise;
-      final normalizedName = dbExercise.nome.toLowerCase().replaceAll(' ', '_');
-      exerciseMap[normalizedName] = dbExercise;
-    }
+      // Create a lookup map for fast matching
+      final exerciseMap = <String, dynamic>{};
+      for (final dbExercise in exerciseDatabase) {
+        exerciseMap[dbExercise.id] = dbExercise;
+        final normalizedName = dbExercise.nome.toLowerCase().replaceAll(
+          ' ',
+          '_',
+        );
+        exerciseMap[normalizedName] = dbExercise;
+      }
 
-    // Check each custom template
-    final needsRefresh = <String>{};
-    for (final template in customTemplates) {
-      if (!template.isCustom) continue;
+      // Check each custom template
+      final needsRefresh = <String>{};
+      for (final template in customTemplates) {
+        if (!template.isCustom) continue;
 
-      for (final exerciseTemplate in template.exercises) {
-        dynamic dbExercise = exerciseMap[exerciseTemplate.exerciseId];
-        if (dbExercise == null) {
-          final normalizedName =
-              exerciseTemplate.exerciseName.toLowerCase().replaceAll(' ', '_');
-          dbExercise = exerciseMap[normalizedName];
-        }
+        for (final exerciseTemplate in template.exercises) {
+          dynamic dbExercise = exerciseMap[exerciseTemplate.exerciseId];
+          if (dbExercise == null) {
+            final normalizedName = exerciseTemplate.exerciseName
+                .toLowerCase()
+                .replaceAll(' ', '_');
+            dbExercise = exerciseMap[normalizedName];
+          }
 
-        if (dbExercise != null) {
-          final dbTut = dbExercise.tempoEsecuzione as String?;
-          if (dbTut != null && dbTut.isNotEmpty && dbTut != exerciseTemplate.tut) {
-            needsRefresh.add(template.id);
-            break; // Found one mismatch, no need to check more exercises
+          if (dbExercise != null) {
+            final dbTut = dbExercise.tempoEsecuzione as String?;
+            if (dbTut != null &&
+                dbTut.isNotEmpty &&
+                dbTut != exerciseTemplate.tut) {
+              needsRefresh.add(template.id);
+              break; // Found one mismatch, no need to check more exercises
+            }
           }
         }
       }
-    }
 
-    return needsRefresh;
-  } catch (e) {
-    return <String>{};
-  }
-});
+      return needsRefresh;
+    } catch (e) {
+      return <String>{};
+    }
+  },
+);
 
 /// Provider to check if a specific template needs TUT refresh (uses cached Set)
 /// This is now O(1) lookup instead of a full database read per template
-final templateNeedsRefreshProvider = FutureProvider.autoDispose.family<bool, String>((
-  ref,
-  templateId,
-) async {
-  final needsRefreshSet = await ref.watch(templatesNeedingRefreshProvider.future);
-  return needsRefreshSet.contains(templateId);
-});
+final templateNeedsRefreshProvider = FutureProvider.autoDispose
+    .family<bool, String>((ref, templateId) async {
+      final needsRefreshSet = await ref.watch(
+        templatesNeedingRefreshProvider.future,
+      );
+      return needsRefreshSet.contains(templateId);
+    });
 
 // Provider per ottenere tutti i tag disponibili
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
@@ -820,10 +862,7 @@ final templateStatsProvider = FutureProvider.autoDispose
         data: (workouts) {
           // Filter completed workouts that used this template
           final templateWorkouts = workouts
-              .where(
-                (workout) =>
-                    workout.templateId == templateId,
-              )
+              .where((workout) => workout.templateId == templateId)
               .toList();
 
           if (templateWorkouts.isEmpty) {
@@ -832,8 +871,7 @@ final templateStatsProvider = FutureProvider.autoDispose
 
           // Sort by date (newest first) to get lastPerformed
           templateWorkouts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-          final lastPerformed =
-              templateWorkouts.first.startedAt;
+          final lastPerformed = templateWorkouts.first.startedAt;
 
           // Calculate average duration
           final totalMinutes = templateWorkouts
@@ -952,7 +990,9 @@ class _WorkoutData {
 /// ```
 /// 🔧 FIX BUG #5: Watch currentUserProvider to invalidate on logout/switch
 /// Previously used FirebaseAuth.instance.currentUser directly which didn't react to auth changes
-final templateQuotaProvider = FutureProvider.autoDispose<TemplateQuotaInfo>((ref) async {
+final templateQuotaProvider = FutureProvider.autoDispose<TemplateQuotaInfo>((
+  ref,
+) async {
   // Watch auth stream - provider will invalidate when user changes
   final userAsync = ref.watch(currentUserProvider);
   final user = userAsync.value;

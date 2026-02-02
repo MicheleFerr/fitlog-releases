@@ -3,37 +3,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/providers/shared_preferences_provider.dart';
 import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
-enum WeightUnit {
-  kg,
-  lbs,
-}
+enum WeightUnit { kg, lbs }
 
 enum VolumePeriod {
-  week,     // Ultima settimana
-  month,    // Ultimo mese  
-  year,     // Ultimo anno
-  allTime,  // Tutto il tempo
+  week, // Ultima settimana
+  month, // Ultimo mese
+  year, // Ultimo anno
+  allTime, // Tutto il tempo
 }
 
 class VolumeSettings {
-  
-  VolumeSettings({
-    this.unit = WeightUnit.kg,
-    this.period = VolumePeriod.week,
-  });
+  VolumeSettings({this.unit = WeightUnit.kg, this.period = VolumePeriod.week});
   final WeightUnit unit;
   final VolumePeriod period;
-  
-  VolumeSettings copyWith({
-    WeightUnit? unit,
-    VolumePeriod? period,
-  }) {
+
+  VolumeSettings copyWith({WeightUnit? unit, VolumePeriod? period}) {
     return VolumeSettings(
       unit: unit ?? this.unit,
       period: period ?? this.period,
     );
   }
-  
+
   // Helper per conversione unità
   double convertWeight(double weightInKg) {
     if (unit == WeightUnit.lbs) {
@@ -41,14 +31,14 @@ class VolumeSettings {
     }
     return weightInKg;
   }
-  
+
   String get unitSymbol => unit == WeightUnit.kg ? 'kg' : 'lbs';
-  
+
   // Helper per ottenere il range di date basato sul periodo
   DateRange getDateRange() {
     final now = DateTime.now();
     DateTime startDate;
-    
+
     switch (period) {
       case VolumePeriod.week:
         startDate = now.subtract(const Duration(days: 7));
@@ -63,13 +53,12 @@ class VolumeSettings {
         startDate = DateTime(2020); // Data arbitraria nel passato
         break;
     }
-    
+
     return DateRange(start: startDate, end: now);
   }
 }
 
 class DateRange {
-  
   DateRange({required this.start, required this.end});
   final DateTime start;
   final DateTime end;
@@ -84,30 +73,31 @@ class VolumeSettingsNotifier extends Notifier<VolumeSettings> {
     _loadSettings();
     return VolumeSettings();
   }
+
   // 🔐 User-scoped cache keys
   String get _unitKey => userCacheKeys.userScopedKey('volume_weight_unit');
   String get _periodKey => userCacheKeys.userScopedKey('volume_period');
-  
+
   void _loadSettings() {
     final unitIndex = _prefs.getInt(_unitKey) ?? 0;
     final periodIndex = _prefs.getInt(_periodKey) ?? 0;
-    
+
     state = VolumeSettings(
       unit: WeightUnit.values[unitIndex],
       period: VolumePeriod.values[periodIndex],
     );
   }
-  
+
   Future<void> setUnit(WeightUnit unit) async {
     state = state.copyWith(unit: unit);
     await _prefs.setInt(_unitKey, unit.index);
   }
-  
+
   Future<void> setPeriod(VolumePeriod period) async {
     state = state.copyWith(period: period);
     await _prefs.setInt(_periodKey, period.index);
   }
-  
+
   Future<void> resetToDefaults() async {
     state = VolumeSettings();
     await _prefs.remove(_unitKey);
@@ -115,4 +105,7 @@ class VolumeSettingsNotifier extends Notifier<VolumeSettings> {
   }
 }
 
-final volumeSettingsProvider = NotifierProvider<VolumeSettingsNotifier, VolumeSettings>(VolumeSettingsNotifier.new);
+final volumeSettingsProvider =
+    NotifierProvider<VolumeSettingsNotifier, VolumeSettings>(
+      VolumeSettingsNotifier.new,
+    );

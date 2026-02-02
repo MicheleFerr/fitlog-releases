@@ -26,20 +26,21 @@ enum UserLevel {
 
 /// App experience level (how well user knows the APP features)
 enum AppExperienceLevel {
-  beginner,    // < 5 workouts in app OR < 2 weeks using app
+  beginner, // < 5 workouts in app OR < 2 weeks using app
   intermediate, // 5-20 workouts
-  expert,      // 20+ workouts
+  expert, // 20+ workouts
 }
 
 /// Fitness experience level (how experienced in GYM, not app)
 enum FitnessExperienceLevel {
-  beginner,    // Low volume, low weights, few exercises
+  beginner, // Low volume, low weights, few exercises
   intermediate, // Medium volume and weights
-  expert,      // High volume, heavy weights, variety
+  expert, // High volume, heavy weights, variety
 }
 
 /// Suggestion context - all data needed for smart suggestions
-class SuggestionContext { // Average workouts per week (last 4 weeks)
+class SuggestionContext {
+  // Average workouts per week (last 4 weeks)
 
   const SuggestionContext({
     required this.exercise,
@@ -80,7 +81,8 @@ class SuggestionContext { // Average workouts per week (last 4 weeks)
   final double totalVolume; // Total volume in kg (weight × reps summed)
 
   // App usage data (for app experience level)
-  final int totalWorkoutsCompleted; // Total workouts user has completed in THIS app
+  final int
+  totalWorkoutsCompleted; // Total workouts user has completed in THIS app
   final int accountAgeInDays; // Days since account creation
   final DateTime? workoutStartTime; // When current workout started
   final bool isLastExerciseInWorkout; // Is this the last exercise?
@@ -88,14 +90,18 @@ class SuggestionContext { // Average workouts per week (last 4 weeks)
   final int totalExercisesInWorkout; // Total exercises in workout
 
   // Fitness data (for fitness experience level)
-  final double averageWorkoutVolume; // Average kg lifted per workout (last 5 workouts)
+  final double
+  averageWorkoutVolume; // Average kg lifted per workout (last 5 workouts)
   final int uniqueExercisesCount; // How many different exercises user has tried
   final double workoutsPerWeek;
 
   bool get isCompleted => completedSets == totalSets && totalSets > 0;
-  bool get hasWeightJump => maxWeight != null && minWeight != null && maxWeight! > minWeight! * 2;
-  bool get hasExistingTips => existingContributions.any((c) => c.type == ContributionType.tip);
-  bool get hasExistingWarnings => existingContributions.any((c) => c.type == ContributionType.warning);
+  bool get hasWeightJump =>
+      maxWeight != null && minWeight != null && maxWeight! > minWeight! * 2;
+  bool get hasExistingTips =>
+      existingContributions.any((c) => c.type == ContributionType.tip);
+  bool get hasExistingWarnings =>
+      existingContributions.any((c) => c.type == ContributionType.warning);
 
   /// Determine user's APP experience level (how well they know the app)
   AppExperienceLevel get appExperienceLevel {
@@ -204,7 +210,8 @@ class SuggestionContext { // Average workouts per week (last 4 weeks)
 }
 
 /// Smart suggestion with priority
-class SmartSuggestion { // For analytics
+class SmartSuggestion {
+  // For analytics
 
   const SmartSuggestion({
     required this.id,
@@ -245,7 +252,8 @@ class SmartSuggestion { // For analytics
 }
 
 /// Notifier for exercise suggestions (Riverpod 2.0)
-class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, String> {
+class ExerciseSuggestionsNotifier
+    extends FamilyNotifier<List<SmartSuggestion>, String> {
   @override
   List<SmartSuggestion> build(String exerciseId) => [];
 
@@ -294,10 +302,18 @@ class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, 
     state = newSuggestions;
 
     if (kDebugMode) {
-      debugPrint('🎯 [Suggestions] App: ${context.appExperienceLevel.name.toUpperCase()} | Fitness: ${context.fitnessExperienceLevel.name.toUpperCase()}');
-      debugPrint('   📊 ${context.totalWorkoutsCompleted} workouts, ${context.averageWorkoutVolume.toStringAsFixed(0)}kg avg, ${context.uniqueExercisesCount} exercises, ${context.workoutsPerWeek.toStringAsFixed(1)}/week');
-      debugPrint('   ⏰ Timing: ${context.isLastExerciseInWorkout ? "Last exercise" : "Exercise ${context.currentExerciseIndex + 1}/${context.totalExercisesInWorkout}"}');
-      debugPrint('   💪 Current: ${context.totalVolume.toStringAsFixed(0)}kg volume');
+      debugPrint(
+        '🎯 [Suggestions] App: ${context.appExperienceLevel.name.toUpperCase()} | Fitness: ${context.fitnessExperienceLevel.name.toUpperCase()}',
+      );
+      debugPrint(
+        '   📊 ${context.totalWorkoutsCompleted} workouts, ${context.averageWorkoutVolume.toStringAsFixed(0)}kg avg, ${context.uniqueExercisesCount} exercises, ${context.workoutsPerWeek.toStringAsFixed(1)}/week',
+      );
+      debugPrint(
+        '   ⏰ Timing: ${context.isLastExerciseInWorkout ? "Last exercise" : "Exercise ${context.currentExerciseIndex + 1}/${context.totalExercisesInWorkout}"}',
+      );
+      debugPrint(
+        '   💪 Current: ${context.totalVolume.toStringAsFixed(0)}kg volume',
+      );
       for (var s in state) {
         debugPrint('   - [${s.priority}] ${s.trigger}: ${s.text}');
       }
@@ -326,51 +342,61 @@ class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, 
 
     // 1. Note tecniche (highest priority if they haven't used notes)
     if (!context.hasNotes && context.exerciseData != null) {
-      suggestions.add(SmartSuggestion(
-        id: 'discover_technique_notes',
-        text: '💡 Sai che puoi visualizzare le note tecniche dell\'esercizio?',
-        type: ContributionType.tip,
-        contextType: 'app_feature',
-        priority: 90,
-        createdAt: DateTime.now(),
-        trigger: 'teach_technique_notes',
-      ));
+      suggestions.add(
+        SmartSuggestion(
+          id: 'discover_technique_notes',
+          text:
+              '💡 Sai che puoi visualizzare le note tecniche dell\'esercizio?',
+          type: ContributionType.tip,
+          contextType: 'app_feature',
+          priority: 90,
+          createdAt: DateTime.now(),
+          trigger: 'teach_technique_notes',
+        ),
+      );
     }
 
     // 2. Warmup suggestion
     if (!context.exercise.sets.any((s) => s.isWarmup)) {
-      suggestions.add(SmartSuggestion(
-        id: 'discover_warmup',
-        text: '🔥 Suggerimento: aggiungi serie di riscaldamento prima di iniziare',
-        type: ContributionType.tip,
-        contextType: 'app_feature',
-        priority: 85,
-        createdAt: DateTime.now(),
-        trigger: 'teach_warmup',
-      ));
+      suggestions.add(
+        SmartSuggestion(
+          id: 'discover_warmup',
+          text:
+              '🔥 Suggerimento: aggiungi serie di riscaldamento prima di iniziare',
+          type: ContributionType.tip,
+          contextType: 'app_feature',
+          priority: 85,
+          createdAt: DateTime.now(),
+          trigger: 'teach_warmup',
+        ),
+      );
     }
 
     // 3. Rest timer
-    suggestions.add(SmartSuggestion(
-      id: 'discover_rest_timer',
-      text: '⏱️ Puoi impostare un timer automatico tra le serie',
-      type: ContributionType.tip,
-      contextType: 'app_feature',
-      priority: 80,
-      createdAt: DateTime.now(),
-      trigger: 'teach_rest_timer',
-    ));
+    suggestions.add(
+      SmartSuggestion(
+        id: 'discover_rest_timer',
+        text: '⏱️ Puoi impostare un timer automatico tra le serie',
+        type: ContributionType.tip,
+        contextType: 'app_feature',
+        priority: 80,
+        createdAt: DateTime.now(),
+        trigger: 'teach_rest_timer',
+      ),
+    );
 
     // 4. RPE tracking
-    suggestions.add(SmartSuggestion(
-      id: 'discover_rpe',
-      text: '📊 Prova a tracciare RPE per misurare la fatica percepita',
-      type: ContributionType.tip,
-      contextType: 'app_feature',
-      priority: 60,
-      createdAt: DateTime.now(),
-      trigger: 'teach_rpe',
-    ));
+    suggestions.add(
+      SmartSuggestion(
+        id: 'discover_rpe',
+        text: '📊 Prova a tracciare RPE per misurare la fatica percepita',
+        type: ContributionType.tip,
+        contextType: 'app_feature',
+        priority: 60,
+        createdAt: DateTime.now(),
+        trigger: 'teach_rpe',
+      ),
+    );
   }
 
   /// Fitness beginner suggestions: Safety warnings only, NO data corrections
@@ -380,29 +406,34 @@ class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, 
   ) async {
     // Safety warnings (always important)
     if (context.hasWeightJump && !context.hasExistingWarnings) {
-      suggestions.add(SmartSuggestion(
-        id: 'weight_jump_safety',
-        text: '⚠️ Salto di peso rilevato - fai attenzione alla tecnica e forma',
-        type: ContributionType.warning,
-        contextType: 'weight_progression',
-        priority: 85,
-        createdAt: DateTime.now(),
-        trigger: 'safety_weight_jump',
-      ));
+      suggestions.add(
+        SmartSuggestion(
+          id: 'weight_jump_safety',
+          text:
+              '⚠️ Salto di peso rilevato - fai attenzione alla tecnica e forma',
+          type: ContributionType.warning,
+          contextType: 'weight_progression',
+          priority: 85,
+          createdAt: DateTime.now(),
+          trigger: 'safety_weight_jump',
+        ),
+      );
     }
 
     // PR celebration (encourage positive reinforcement)
     final isPersonalRecord = await _checkPersonalRecord(context);
     if (isPersonalRecord) {
-      suggestions.add(SmartSuggestion(
-        id: 'pr_beginner',
-        text: '🎉 Nuovo record personale! Continua così!',
-        type: ContributionType.tip,
-        contextType: 'achievement',
-        priority: 75,
-        createdAt: DateTime.now(),
-        trigger: 'personal_record',
-      ));
+      suggestions.add(
+        SmartSuggestion(
+          id: 'pr_beginner',
+          text: '🎉 Nuovo record personale! Continua così!',
+          type: ContributionType.tip,
+          contextType: 'achievement',
+          priority: 75,
+          createdAt: DateTime.now(),
+          trigger: 'personal_record',
+        ),
+      );
     }
 
     // NOTE: Workout-level motivation messages moved to workout completion flow
@@ -416,42 +447,49 @@ class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, 
   ) async {
     // Safety warnings (highest priority)
     if (context.hasWeightJump && !context.hasExistingWarnings) {
-      suggestions.add(SmartSuggestion(
-        id: 'weight_jump_warning',
-        text: '⚠️ Salto di peso rilevato - fai attenzione alla tecnica',
-        type: ContributionType.warning,
-        contextType: 'weight_progression',
-        priority: 85,
-        createdAt: DateTime.now(),
-        trigger: 'weight_jump_detected',
-      ));
+      suggestions.add(
+        SmartSuggestion(
+          id: 'weight_jump_warning',
+          text: '⚠️ Salto di peso rilevato - fai attenzione alla tecnica',
+          type: ContributionType.warning,
+          contextType: 'weight_progression',
+          priority: 85,
+          createdAt: DateTime.now(),
+          trigger: 'weight_jump_detected',
+        ),
+      );
     }
 
     // PR celebration
     final isPersonalRecord = await _checkPersonalRecord(context);
     if (isPersonalRecord) {
-      suggestions.add(SmartSuggestion(
-        id: 'pr_celebration',
-        text: '🎉 Nuovo record personale! Ottimo lavoro!',
-        type: ContributionType.tip,
-        contextType: 'achievement',
-        priority: 75,
-        createdAt: DateTime.now(),
-        trigger: 'personal_record',
-      ));
+      suggestions.add(
+        SmartSuggestion(
+          id: 'pr_celebration',
+          text: '🎉 Nuovo record personale! Ottimo lavoro!',
+          type: ContributionType.tip,
+          contextType: 'achievement',
+          priority: 75,
+          createdAt: DateTime.now(),
+          trigger: 'personal_record',
+        ),
+      );
     }
 
     // Technique variation tip
     if (context.totalSets >= 4 && _hasVaryingReps(context)) {
-      suggestions.add(SmartSuggestion(
-        id: 'technique_variation',
-        text: '💪 Pattern ripetizioni variabile - tecnica drop set o piramidale?',
-        type: ContributionType.technique,
-        contextType: 'rep_variation',
-        priority: 60,
-        createdAt: DateTime.now(),
-        trigger: 'varying_reps',
-      ));
+      suggestions.add(
+        SmartSuggestion(
+          id: 'technique_variation',
+          text:
+              '💪 Pattern ripetizioni variabile - tecnica drop set o piramidale?',
+          type: ContributionType.technique,
+          contextType: 'rep_variation',
+          priority: 60,
+          createdAt: DateTime.now(),
+          trigger: 'varying_reps',
+        ),
+      );
     }
 
     // NOTE: Workout-level reflection messages moved to workout completion flow
@@ -467,31 +505,37 @@ class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, 
     if (context.isExperiencedWithExercise &&
         context.exerciseData != null &&
         context.isCompleted) {
-      final hasCorrectionType = context.existingContributions
-          .any((c) => c.type == ContributionType.correction);
+      final hasCorrectionType = context.existingContributions.any(
+        (c) => c.type == ContributionType.correction,
+      );
 
       if (!hasCorrectionType) {
         final muscles = context.exerciseData?['primaryMuscles'] as List?;
         if (muscles != null && muscles.isNotEmpty) {
-          suggestions.add(SmartSuggestion(
-            id: 'verify_muscles',
-            text: '📝 I muscoli target sono corretti? (${muscles.join(", ")})',
-            type: ContributionType.correction,
-            contextType: 'muscle_groups',
-            priority: 95,
-            createdAt: DateTime.now(),
-            trigger: 'verify_exercise_data',
-          ));
+          suggestions.add(
+            SmartSuggestion(
+              id: 'verify_muscles',
+              text:
+                  '📝 I muscoli target sono corretti? (${muscles.join(", ")})',
+              type: ContributionType.correction,
+              contextType: 'muscle_groups',
+              priority: 95,
+              createdAt: DateTime.now(),
+              trigger: 'verify_exercise_data',
+            ),
+          );
         } else {
-          suggestions.add(SmartSuggestion(
-            id: 'add_muscles',
-            text: '📝 Aggiungi i muscoli target per questo esercizio',
-            type: ContributionType.correction,
-            contextType: 'muscle_groups',
-            priority: 95,
-            createdAt: DateTime.now(),
-            trigger: 'missing_muscle_data',
-          ));
+          suggestions.add(
+            SmartSuggestion(
+              id: 'add_muscles',
+              text: '📝 Aggiungi i muscoli target per questo esercizio',
+              type: ContributionType.correction,
+              contextType: 'muscle_groups',
+              priority: 95,
+              createdAt: DateTime.now(),
+              trigger: 'missing_muscle_data',
+            ),
+          );
         }
       }
     }
@@ -500,60 +544,70 @@ class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, 
     if (context.isExperiencedWithExercise &&
         context.isCompleted &&
         context.exerciseData != null) {
-      final hasTechniqueContribution = context.existingContributions
-          .any((c) => c.type == ContributionType.technique);
+      final hasTechniqueContribution = context.existingContributions.any(
+        (c) => c.type == ContributionType.technique,
+      );
 
       if (!hasTechniqueContribution) {
-        suggestions.add(SmartSuggestion(
-          id: 'verify_technique',
-          text: '🔧 La tecnica descritta è accurata? Suggerisci miglioramenti',
-          type: ContributionType.correction,
-          contextType: 'exercise_technique',
-          priority: 85,
-          createdAt: DateTime.now(),
-          trigger: 'verify_technique',
-        ));
+        suggestions.add(
+          SmartSuggestion(
+            id: 'verify_technique',
+            text:
+                '🔧 La tecnica descritta è accurata? Suggerisci miglioramenti',
+            type: ContributionType.correction,
+            contextType: 'exercise_technique',
+            priority: 85,
+            createdAt: DateTime.now(),
+            trigger: 'verify_technique',
+          ),
+        );
       }
     }
 
     // Safety warnings
     if (context.hasWeightJump && !context.hasExistingWarnings) {
-      suggestions.add(SmartSuggestion(
-        id: 'weight_jump_warning',
-        text: '⚠️ Salto di peso rilevato - aggiungi un avviso sicurezza?',
-        type: ContributionType.warning,
-        contextType: 'weight_progression',
-        priority: 80,
-        createdAt: DateTime.now(),
-        trigger: 'weight_jump_detected',
-      ));
+      suggestions.add(
+        SmartSuggestion(
+          id: 'weight_jump_warning',
+          text: '⚠️ Salto di peso rilevato - aggiungi un avviso sicurezza?',
+          type: ContributionType.warning,
+          contextType: 'weight_progression',
+          priority: 80,
+          createdAt: DateTime.now(),
+          trigger: 'weight_jump_detected',
+        ),
+      );
     }
 
     // Missing safety info
     if (context.isCompleted && !context.hasExistingWarnings) {
-      suggestions.add(SmartSuggestion(
-        id: 'add_safety_warning',
-        text: '⚠️ Aggiungi avvertimenti di sicurezza se ne conosci',
-        type: ContributionType.warning,
-        contextType: 'safety_info',
-        priority: 70,
-        createdAt: DateTime.now(),
-        trigger: 'missing_safety_warnings',
-      ));
+      suggestions.add(
+        SmartSuggestion(
+          id: 'add_safety_warning',
+          text: '⚠️ Aggiungi avvertimenti di sicurezza se ne conosci',
+          type: ContributionType.warning,
+          contextType: 'safety_info',
+          priority: 70,
+          createdAt: DateTime.now(),
+          trigger: 'missing_safety_warnings',
+        ),
+      );
     }
 
     // PR celebration
     final isPersonalRecord = await _checkPersonalRecord(context);
     if (isPersonalRecord) {
-      suggestions.add(SmartSuggestion(
-        id: 'pr_celebration',
-        text: '🎉 Nuovo record! La tecnica usata è stata buona?',
-        type: ContributionType.technique,
-        contextType: 'achievement',
-        priority: 65,
-        createdAt: DateTime.now(),
-        trigger: 'personal_record',
-      ));
+      suggestions.add(
+        SmartSuggestion(
+          id: 'pr_celebration',
+          text: '🎉 Nuovo record! La tecnica usata è stata buona?',
+          type: ContributionType.technique,
+          contextType: 'achievement',
+          priority: 65,
+          createdAt: DateTime.now(),
+          trigger: 'personal_record',
+        ),
+      );
     }
   }
 
@@ -576,7 +630,9 @@ class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, 
 
       if (historicalWeights.isEmpty) return false;
 
-      final historicalMaxWeight = historicalWeights.reduce((a, b) => a > b ? a : b);
+      final historicalMaxWeight = historicalWeights.reduce(
+        (a, b) => a > b ? a : b,
+      );
 
       return context.maxWeight! > historicalMaxWeight;
     } catch (e) {
@@ -602,7 +658,6 @@ class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, 
     return (maxReps - minReps) >= 3; // Difference of 3+ reps
   }
 
-
   /// Dismiss a suggestion
   void dismissSuggestion(String suggestionId) {
     state = state.where((s) => s.id != suggestionId).toList();
@@ -623,11 +678,12 @@ class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, 
 }
 
 /// Provider for exercise suggestions (family indexed by exercise ID) (Riverpod 2.0)
-final exerciseSuggestionsProvider = NotifierProvider.family<
-  ExerciseSuggestionsNotifier,
-  List<SmartSuggestion>,
-  String
->(ExerciseSuggestionsNotifier.new);
+final exerciseSuggestionsProvider =
+    NotifierProvider.family<
+      ExerciseSuggestionsNotifier,
+      List<SmartSuggestion>,
+      String
+    >(ExerciseSuggestionsNotifier.new);
 
 /// Helper provider to determine user level based on contribution count
 final userLevelProvider = Provider<UserLevel>((ref) {

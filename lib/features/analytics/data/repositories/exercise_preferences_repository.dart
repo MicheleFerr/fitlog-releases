@@ -54,8 +54,8 @@ class ExercisePreferencesRepository implements IExercisePreferencesRepository {
   ExercisePreferencesRepository({
     required FirebaseFirestore firestore,
     required String userId,
-  })  : _firestore = firestore,
-        _userId = userId;
+  }) : _firestore = firestore,
+       _userId = userId;
 
   final FirebaseFirestore _firestore;
   final String _userId;
@@ -209,8 +209,9 @@ class ExercisePreferencesRepository implements IExercisePreferencesRepository {
   ) async {
     // Get current preferences
     final current = await getPreferences();
-    final currentOverrides =
-        Map<String, String>.from(current?.countingModeOverrides ?? {});
+    final currentOverrides = Map<String, String>.from(
+      current?.countingModeOverrides ?? {},
+    );
 
     // Update override
     currentOverrides[exerciseId] = countingMode;
@@ -231,8 +232,9 @@ class ExercisePreferencesRepository implements IExercisePreferencesRepository {
   @override
   Future<void> removeCountingModeOverride(String exerciseId) async {
     final current = await getPreferences();
-    final currentOverrides =
-        Map<String, String>.from(current?.countingModeOverrides ?? {});
+    final currentOverrides = Map<String, String>.from(
+      current?.countingModeOverrides ?? {},
+    );
 
     // Remove override
     currentOverrides.remove(exerciseId);
@@ -304,20 +306,20 @@ class ExercisePreferencesRepository implements IExercisePreferencesRepository {
 /// **Dependencies**: firebaseUserProvider (for userId)
 final exercisePreferencesRepositoryProvider =
     Provider.autoDispose<ExercisePreferencesRepository?>((ref) {
-  final user = ref.watch(firebaseUserProvider).valueOrNull;
+      final user = ref.watch(firebaseUserProvider).valueOrNull;
 
-  if (user == null) return null;
+      if (user == null) return null;
 
-  final repo = ExercisePreferencesRepository(
-    firestore: FirebaseFirestore.instance,
-    userId: user.uid,
-  );
+      final repo = ExercisePreferencesRepository(
+        firestore: FirebaseFirestore.instance,
+        userId: user.uid,
+      );
 
-  // Dispose debounce timer when provider is disposed
-  ref.onDispose(() => repo.dispose());
+      // Dispose debounce timer when provider is disposed
+      ref.onDispose(() => repo.dispose());
 
-  return repo;
-});
+      return repo;
+    });
 
 /// Provider for counting mode override of a specific exercise
 ///
@@ -327,13 +329,13 @@ final exercisePreferencesRepositoryProvider =
 /// ```
 ///
 /// **Returns**: The counting mode override as string, or null if not set
-final countingModeOverrideProvider =
-    FutureProvider.autoDispose.family<String?, String>((ref, exerciseId) async {
-  final repo = ref.watch(exercisePreferencesRepositoryProvider);
-  if (repo == null) return null;
+final countingModeOverrideProvider = FutureProvider.autoDispose
+    .family<String?, String>((ref, exerciseId) async {
+      final repo = ref.watch(exercisePreferencesRepositoryProvider);
+      if (repo == null) return null;
 
-  return repo.getCountingModeOverride(exerciseId);
-});
+      return repo.getCountingModeOverride(exerciseId);
+    });
 
 /// Provider for all counting mode overrides (for batch operations)
 ///
@@ -343,9 +345,9 @@ final countingModeOverrideProvider =
 /// ```
 final allCountingModeOverridesProvider =
     FutureProvider.autoDispose<Map<String, String>>((ref) async {
-  final repo = ref.watch(exercisePreferencesRepositoryProvider);
-  if (repo == null) return {};
+      final repo = ref.watch(exercisePreferencesRepositoryProvider);
+      if (repo == null) return {};
 
-  final prefs = await repo.getPreferences();
-  return prefs?.countingModeOverrides ?? {};
-});
+      final prefs = await repo.getPreferences();
+      return prefs?.countingModeOverrides ?? {};
+    });

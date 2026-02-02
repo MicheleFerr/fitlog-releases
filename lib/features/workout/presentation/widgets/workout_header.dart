@@ -7,11 +7,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class WorkoutHeader extends StatefulWidget {
-
-  const WorkoutHeader({
-    super.key,
-    required this.workout,
-  });
+  const WorkoutHeader({super.key, required this.workout});
   final Workout workout;
 
   @override
@@ -28,20 +24,16 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
   @override
   void initState() {
     super.initState();
-    
+
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
-    
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
-    
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+
     // Start minimize timer
     _startMinimizeTimer();
   }
@@ -137,7 +129,10 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
             const SizedBox(width: 12),
             if (widget.workout.duration != null)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
@@ -152,9 +147,9 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
               ),
           ],
         ),
-        
+
         const SizedBox(height: 20),
-        
+
         // Progress and stats
         Row(
           children: [
@@ -189,9 +184,9 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
             ),
           ],
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Progress bar
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,13 +201,15 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 ),
                 const Spacer(),
                 Tooltip(
-                  message: '💡 Set Gestures:\n• Tap = Complete\n• Double-tap = Quick Edit\n• Long press = Full Edit',
+                  message:
+                      '💡 Set Gestures:\n• Tap = Complete\n• Double-tap = Quick Edit\n• Long press = Full Edit',
                   child: SemanticIcon(
-  icon: AppIcons.help,
-  semanticLabel: 'Help',
-  size: AppIconSize.tiny,
-  color: Theme.of(context,
-).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                    icon: AppIcons.help,
+                    semanticLabel: 'Help',
+                    size: AppIconSize.tiny,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -220,13 +217,15 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
             const SizedBox(height: 8),
             LinearProgressIndicator(
               value: widget.workout.progressPercentage,
-              backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+              backgroundColor: Theme.of(
+                context,
+              ).colorScheme.surfaceContainerHighest,
               valueColor: AlwaysStoppedAnimation<Color>(
-                widget.workout.progressPercentage < 0.3 
+                widget.workout.progressPercentage < 0.3
                     ? Theme.of(context).colorScheme.error
                     : widget.workout.progressPercentage < 0.7
-                        ? Theme.of(context).colorScheme.secondary  
-                        : Theme.of(context).colorScheme.tertiary,
+                    ? Theme.of(context).colorScheme.secondary
+                    : Theme.of(context).colorScheme.tertiary,
               ),
               borderRadius: BorderRadius.circular(8),
             ),
@@ -276,7 +275,9 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 icon: AppIcons.expandMore,
                 semanticLabel: 'Expand',
                 size: AppIconSize.small,
-                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
               ),
             ],
           ),
@@ -284,13 +285,15 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
           // Progress bar (maintained)
           LinearProgressIndicator(
             value: widget.workout.progressPercentage,
-            backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+            backgroundColor: Theme.of(
+              context,
+            ).colorScheme.surfaceContainerHighest,
             valueColor: AlwaysStoppedAnimation<Color>(
-              widget.workout.progressPercentage < 0.3 
+              widget.workout.progressPercentage < 0.3
                   ? Theme.of(context).colorScheme.error
                   : widget.workout.progressPercentage < 0.7
-                      ? Theme.of(context).colorScheme.secondary  
-                      : Theme.of(context).colorScheme.tertiary,
+                  ? Theme.of(context).colorScheme.secondary
+                  : Theme.of(context).colorScheme.tertiary,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -299,7 +302,12 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
     );
   }
 
-  Widget _buildCompactStat(String label, String value, IconData icon, Color color) {
+  Widget _buildCompactStat(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     final colorScheme = Theme.of(context).colorScheme;
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -344,19 +352,25 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
         text = 'Planned';
         break;
       case WorkoutStatus.inProgress:
-        backgroundColor = Theme.of(context).colorScheme.primary.withValues(alpha: 0.1);
+        backgroundColor = Theme.of(
+          context,
+        ).colorScheme.primary.withValues(alpha: 0.1);
         textColor = Theme.of(context).colorScheme.primary;
         icon = AppIcons.play;
         text = 'In Progress';
         break;
       case WorkoutStatus.completed:
-        backgroundColor = Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.1);
+        backgroundColor = Theme.of(
+          context,
+        ).colorScheme.tertiary.withValues(alpha: 0.1);
         textColor = Theme.of(context).colorScheme.tertiary;
         icon = AppIcons.complete;
         text = 'Completed';
         break;
       case WorkoutStatus.paused:
-        backgroundColor = Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1);
+        backgroundColor = Theme.of(
+          context,
+        ).colorScheme.secondary.withValues(alpha: 0.1);
         textColor = Theme.of(context).colorScheme.secondary;
         icon = AppIcons.pause;
         text = 'Paused';
@@ -438,7 +452,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
 
   double _calculateTotalVolume() {
     double totalVolume = 0.0;
-    
+
     for (final exercise in widget.workout.exercises) {
       for (final set in exercise.sets) {
         if (set.isCompleted && set.weight != null && set.reps != null) {
@@ -446,7 +460,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
         }
       }
     }
-    
+
     return totalVolume;
   }
 }

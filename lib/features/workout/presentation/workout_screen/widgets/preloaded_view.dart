@@ -40,9 +40,7 @@ class PreloadedView extends ConsumerWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            Expanded(
-              child: Text(workout.name),
-            ),
+            Expanded(child: Text(workout.name)),
             const SizedBox(width: AppSpacing.xs),
             Container(
               padding: const EdgeInsets.symmetric(
@@ -78,9 +76,7 @@ class PreloadedView extends ConsumerWidget {
       body: Column(
         children: [
           // "Change Workout" banner
-          ChangeWorkoutBanner(
-            onBrowseTemplates: onBrowseTemplates,
-          ),
+          ChangeWorkoutBanner(onBrowseTemplates: onBrowseTemplates),
 
           // Exercise list
           Expanded(
@@ -89,9 +85,7 @@ class PreloadedView extends ConsumerWidget {
               itemBuilder: (_, i) {
                 final exercise = workout.exercises[i];
                 return ListTile(
-                  leading: CircleAvatar(
-                    child: Text('${i + 1}'),
-                  ),
+                  leading: CircleAvatar(child: Text('${i + 1}')),
                   title: Text(exercise.name),
                   subtitle: Text(exercise.category.toString().split('.').last),
                 );

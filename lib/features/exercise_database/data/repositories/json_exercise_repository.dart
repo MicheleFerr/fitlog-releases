@@ -5,7 +5,6 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercis
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 class JsonExerciseRepository {
-
   JsonExerciseRepository({required this.locale});
   final Locale locale;
   List<Exercise>? _cachedExercises;
@@ -24,7 +23,9 @@ class JsonExerciseRepository {
 
     try {
       // Use ExerciseJsonLoader to load from folder structure
-      final jsonList = await ExerciseJsonLoader.loadExercises(locale.languageCode);
+      final jsonList = await ExerciseJsonLoader.loadExercises(
+        locale.languageCode,
+      );
 
       _cachedExercises = jsonList
           .map((json) => Exercise.fromJson(json))
@@ -43,9 +44,11 @@ class JsonExerciseRepository {
     final lowerQuery = query.toLowerCase();
     return exercises.where((exercise) {
       return exercise.nome.toLowerCase().contains(lowerQuery) ||
-             exercise.focusDisplayName.toLowerCase().contains(lowerQuery) ||
-             exercise.attrezzatura.toLowerCase().contains(lowerQuery) ||
-             exercise.muscoliSecondariDisplayName.toLowerCase().contains(lowerQuery);
+          exercise.focusDisplayName.toLowerCase().contains(lowerQuery) ||
+          exercise.attrezzatura.toLowerCase().contains(lowerQuery) ||
+          exercise.muscoliSecondariDisplayName.toLowerCase().contains(
+            lowerQuery,
+          );
     }).toList();
   }
 
@@ -63,7 +66,9 @@ class JsonExerciseRepository {
     }).toList();
   }
 
-  Future<List<Exercise>> getExercisesByDifficulty(List<String> difficulties) async {
+  Future<List<Exercise>> getExercisesByDifficulty(
+    List<String> difficulties,
+  ) async {
     final exercises = await getAllExercises();
     return exercises.where((exercise) {
       return difficulties.contains(exercise.difficolta);
@@ -82,26 +87,17 @@ class JsonExerciseRepository {
   // Get unique filter options
   Future<List<String>> getUniqueFocusGroups() async {
     final exercises = await getAllExercises();
-    return exercises
-        .expand((e) => e.focus)
-        .toSet()
-        .toList()..sort();
+    return exercises.expand((e) => e.focus).toSet().toList()..sort();
   }
 
   Future<List<String>> getUniqueEquipment() async {
     final exercises = await getAllExercises();
-    return exercises
-        .map((e) => e.attrezzatura)
-        .toSet()
-        .toList()..sort();
+    return exercises.map((e) => e.attrezzatura).toSet().toList()..sort();
   }
 
   Future<List<String>> getUniqueDifficulties() async {
     final exercises = await getAllExercises();
-    return exercises
-        .map((e) => e.difficolta)
-        .toSet()
-        .toList()..sort();
+    return exercises.map((e) => e.difficolta).toSet().toList()..sort();
   }
 
   // Clear cache to force reload
@@ -114,9 +110,12 @@ class JsonExerciseRepository {
 // DEPRECATED: Use hybridExerciseRepositoryProvider from hybrid_exercise_provider.dart instead
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
-@Deprecated('Use hybridExerciseRepositoryProvider from hybrid_exercise_provider.dart')
-final jsonExerciseRepositoryProvider = FutureProvider.autoDispose<List<Exercise>>((ref) async {
-  final locale = ref.watch(localeProvider);
-  final repository = JsonExerciseRepository(locale: locale);
-  return repository.getAllExercises();
-});
+@Deprecated(
+  'Use hybridExerciseRepositoryProvider from hybrid_exercise_provider.dart',
+)
+final jsonExerciseRepositoryProvider =
+    FutureProvider.autoDispose<List<Exercise>>((ref) async {
+      final locale = ref.watch(localeProvider);
+      final repository = JsonExerciseRepository(locale: locale);
+      return repository.getAllExercises();
+    });

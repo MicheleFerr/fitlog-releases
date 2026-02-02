@@ -43,10 +43,10 @@ abstract class WeeklyStats with _$WeeklyStats {
 
   /// Factory for empty/default stats
   factory WeeklyStats.empty() => const WeeklyStats(
-        avgWorkoutsPerWeek: 0.0,
-        avgRestDaysPerWeek: 7.0, // Default: all rest days
-        totalWorkouts: 0,
-        totalRestDays: 7,
-        totalActiveDays: 0,
-      );
+    avgWorkoutsPerWeek: 0.0,
+    avgRestDaysPerWeek: 7.0, // Default: all rest days
+    totalWorkouts: 0,
+    totalRestDays: 7,
+    totalActiveDays: 0,
+  );
 }

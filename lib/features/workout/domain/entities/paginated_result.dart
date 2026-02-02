@@ -64,10 +64,8 @@ class PaginatedResult<T> {
   }
 
   /// Creates an empty result (no items, no more pages).
-  factory PaginatedResult.empty() => PaginatedResult<T>(
-        items: [],
-        hasMore: false,
-      );
+  factory PaginatedResult.empty() =>
+      PaginatedResult<T>(items: [], hasMore: false);
 
   /// Creates a result from a list with automatic hasMore detection.
   ///

@@ -6,10 +6,7 @@ import 'package:lottie/lottie.dart';
 /// Features smooth fade-out transition for natural feel
 /// Reference: https://www.flutterclutter.dev/flutter/tutorials/beautiful-animated-splash-screen/
 class AnimatedSplashScreen extends StatefulWidget {
-  const AnimatedSplashScreen({
-    super.key,
-    required this.onComplete,
-  });
+  const AnimatedSplashScreen({super.key, required this.onComplete});
 
   final VoidCallback onComplete;
 

@@ -8,15 +8,19 @@ import 'package:gymbro_flutter_new/features/home/domain/services/ai_coach_servic
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/template_repository.dart';
-import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart' as TemplateEntity;
+import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart'
+    as TemplateEntity;
 import 'package:flutter/foundation.dart';
 
-export 'package:gymbro_flutter_new/features/home/domain/services/ai_coach_service.dart' show AIInsight;
+export 'package:gymbro_flutter_new/features/home/domain/services/ai_coach_service.dart'
+    show AIInsight;
 
 /// Provider for AI Coach insights
 /// 🔧 FIX BUG #6: Watch currentUserProvider to invalidate on logout/switch
 /// Previously used sync authServiceProvider which didn't react to auth changes
-final aiCoachInsightsProvider = FutureProvider.autoDispose<List<AIInsight>>((ref) async {
+final aiCoachInsightsProvider = FutureProvider.autoDispose<List<AIInsight>>((
+  ref,
+) async {
   // Watch auth stream - provider will invalidate when user changes
   final userAsync = ref.watch(currentUserProvider);
   final currentUser = userAsync.value;
@@ -30,19 +34,24 @@ final aiCoachInsightsProvider = FutureProvider.autoDispose<List<AIInsight>>((ref
     // ✅ Use HybridExerciseActivityRepository for correct workout dates
     final repository = ref.watch(hybridExerciseActivityRepositoryProvider);
 
-    final activities = await repository.getUserActivities(userEmail: currentUser!.email!);
+    final activities = await repository.getUserActivities(
+      userEmail: currentUser!.email!,
+    );
 
     // Get completed workouts for recovery analysis
     final workoutRepo = ref.watch(workoutRepositoryProvider);
     final workoutsResult = await workoutRepo.getWorkouts(limit: 100);
     final completedWorkouts = workoutsResult.fold(
       (failure) => <dynamic>[],
-      (workouts) => workouts.where((w) => w.status == WorkoutStatus.completed).toList(),
+      (workouts) =>
+          workouts.where((w) => w.status == WorkoutStatus.completed).toList(),
     );
 
     // Get exercise database (case-insensitive lookup)
     final exerciseDatabase = await ref.watch(allExercisesProvider.future);
-    final exerciseMap = {for (var e in exerciseDatabase) e.nome.toLowerCase(): e};
+    final exerciseMap = {
+      for (var e in exerciseDatabase) e.nome.toLowerCase(): e,
+    };
 
     // Get progress stats
     final progressData = await ref.watch(progressDataProvider.future);
@@ -58,7 +67,9 @@ final aiCoachInsightsProvider = FutureProvider.autoDispose<List<AIInsight>>((ref
       userTemplates = templates.cast<TemplateEntity.WorkoutTemplate>();
     } catch (templateError) {
       if (kDebugMode) {
-        debugPrint('⚠️ Could not fetch templates (non-critical): $templateError');
+        debugPrint(
+          '⚠️ Could not fetch templates (non-critical): $templateError',
+        );
       }
       // Continue without templates - insights will work but without action buttons
     }

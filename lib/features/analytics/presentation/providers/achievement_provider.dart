@@ -47,77 +47,76 @@ final prCelebrationRepositoryProvider = Provider((ref) {
 /// Includes all dependencies for badge checking (PRs, streaks, volume, workouts).
 final checkAndUnlockAchievementsUseCaseProvider =
     Provider<CheckAndUnlockAchievementsUseCase>((ref) {
-  return CheckAndUnlockAchievementsUseCase(
-    achievementRepository: ref.watch(achievementRepositoryProvider),
-    prTracker: ref.watch(prTrackerProvider),
-    streakRepository: ref.watch(streakRepositoryProvider),
-    workoutRepository: ref.watch(workoutRepositoryProvider),
-  );
-});
+      return CheckAndUnlockAchievementsUseCase(
+        achievementRepository: ref.watch(achievementRepositoryProvider),
+        prTracker: ref.watch(prTrackerProvider),
+        streakRepository: ref.watch(streakRepositoryProvider),
+        workoutRepository: ref.watch(workoutRepositoryProvider),
+      );
+    });
 
 /// State provider for unlocked achievements
 ///
 /// Holds current list of unlocked achievements for the active user.
 /// Updated after each unlock operation or on app startup.
-final unlockedAchievementsProvider =
-    StateProvider<List<Achievement>>((ref) => []);
+final unlockedAchievementsProvider = StateProvider<List<Achievement>>(
+  (ref) => [],
+);
 
 /// State provider for newly detected PRs after workout completion
 ///
 /// Holds PRs detected in the most recent workout completion.
 /// UI can watch this to display PR celebration modal.
 /// Cleared after modal is shown or dismissed.
-final newlyDetectedPRsProvider =
-    StateProvider<List<PRCelebration>>((ref) => []);
+final newlyDetectedPRsProvider = StateProvider<List<PRCelebration>>(
+  (ref) => [],
+);
 
 /// FutureProvider to load unlocked achievements for a user
 ///
 /// Usage: ref.watch(loadUnlockedAchievementsProvider(userId))
 final loadUnlockedAchievementsProvider =
     FutureProvider.family<List<Achievement>, String>((ref, userId) async {
-  final repository = ref.watch(achievementRepositoryProvider);
-  final result = await repository.getUnlockedAchievements(userId);
+      final repository = ref.watch(achievementRepositoryProvider);
+      final result = await repository.getUnlockedAchievements(userId);
 
-  return result.fold(
-    (failure) => [], // On error, return empty list
-    (achievements) {
-      // Update state provider
-      ref.read(unlockedAchievementsProvider.notifier).state = achievements;
-      return achievements;
-    },
-  );
-});
+      return result.fold(
+        (failure) => [], // On error, return empty list
+        (achievements) {
+          // Update state provider
+          ref.read(unlockedAchievementsProvider.notifier).state = achievements;
+          return achievements;
+        },
+      );
+    });
 
 /// Provider for recent achievements (last 10)
 ///
 /// Usage: ref.watch(recentAchievementsProvider(userId))
 final recentAchievementsProvider =
     FutureProvider.family<List<Achievement>, String>((ref, userId) async {
-  final repository = ref.watch(achievementRepositoryProvider);
-  final result = await repository.getRecentAchievements(userId, limit: 10);
+      final repository = ref.watch(achievementRepositoryProvider);
+      final result = await repository.getRecentAchievements(userId, limit: 10);
 
-  return result.fold(
-    (failure) => [],
-    (achievements) => achievements,
-  );
-});
+      return result.fold((failure) => [], (achievements) => achievements);
+    });
 
 /// Provider for checking if a specific achievement is unlocked
 ///
 /// Usage: ref.watch(isAchievementUnlockedProvider((userId, badgeType)))
-final isAchievementUnlockedProvider = FutureProvider.family<bool,
-    ({String userId, BadgeType badgeType})>((ref, params) async {
-  final repository = ref.watch(achievementRepositoryProvider);
-  final result = await repository.isAchievementUnlocked(
-    params.userId,
-    params.badgeType,
-  );
+final isAchievementUnlockedProvider =
+    FutureProvider.family<bool, ({String userId, BadgeType badgeType})>((
+      ref,
+      params,
+    ) async {
+      final repository = ref.watch(achievementRepositoryProvider);
+      final result = await repository.isAchievementUnlocked(
+        params.userId,
+        params.badgeType,
+      );
 
-  return result.fold(
-    (failure) => false,
-    (isUnlocked) => isUnlocked,
-  );
-});
+      return result.fold((failure) => false, (isUnlocked) => isUnlocked);
+    });
 
 /// Notifier for achievement unlock operations
 ///
@@ -128,8 +127,10 @@ class AchievementNotifier extends Notifier<AsyncValue<List<Achievement>>> {
     return const AsyncValue.data([]);
   }
 
-  AchievementRepository get achievementRepository => ref.read(achievementRepositoryProvider);
-  CheckAndUnlockAchievementsUseCase get checkAndUnlockUseCase => ref.read(checkAndUnlockAchievementsUseCaseProvider);
+  AchievementRepository get achievementRepository =>
+      ref.read(achievementRepositoryProvider);
+  CheckAndUnlockAchievementsUseCase get checkAndUnlockUseCase =>
+      ref.read(checkAndUnlockAchievementsUseCaseProvider);
 
   /// Check for new achievements based on workout metrics
   ///
@@ -204,7 +205,7 @@ class AchievementNotifier extends Notifier<AsyncValue<List<Achievement>>> {
 /// Provider for AchievementNotifier
 ///
 /// Usage: ref.read(achievementNotifierProvider.notifier).checkAndUnlockAchievements(...)
-final achievementNotifierProvider = NotifierProvider<AchievementNotifier,
-    AsyncValue<List<Achievement>>>(
-  AchievementNotifier.new,
-);
+final achievementNotifierProvider =
+    NotifierProvider<AchievementNotifier, AsyncValue<List<Achievement>>>(
+      AchievementNotifier.new,
+    );

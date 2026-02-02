@@ -7,7 +7,6 @@ import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
 
 class DailyLoginState {
-  
   DailyLoginState({
     this.lastLoginDate,
     this.consecutiveDays = 0,
@@ -18,7 +17,7 @@ class DailyLoginState {
   final int consecutiveDays;
   final int totalXpEarned;
   final bool bonusClaimedToday;
-  
+
   DailyLoginState copyWith({
     DateTime? lastLoginDate,
     int? consecutiveDays,
@@ -43,31 +42,33 @@ class DailyLoginNotifier extends Notifier<DailyLoginState> {
     _loadState();
     return DailyLoginState();
   }
-  
+
   // 🔐 User-scoped cache keys for login streak data
   String get _lastLoginKey => userCacheKeys.userScopedKey('last_login_date');
-  String get _consecutiveDaysKey => userCacheKeys.userScopedKey('consecutive_login_days');
+  String get _consecutiveDaysKey =>
+      userCacheKeys.userScopedKey('consecutive_login_days');
   String get _totalXpKey => userCacheKeys.userScopedKey('total_login_xp');
-  String get _lastBonusDateKey => userCacheKeys.userScopedKey('last_bonus_claim_date');
-  
+  String get _lastBonusDateKey =>
+      userCacheKeys.userScopedKey('last_bonus_claim_date');
+
   void _loadState() {
     final lastLoginStr = _prefs.getString(_lastLoginKey);
     final lastBonusStr = _prefs.getString(_lastBonusDateKey);
     final consecutiveDays = _prefs.getInt(_consecutiveDaysKey) ?? 0;
     final totalXp = _prefs.getInt(_totalXpKey) ?? 0;
-    
+
     DateTime? lastLogin;
     if (lastLoginStr != null) {
       lastLogin = DateTime.parse(lastLoginStr);
     }
-    
+
     bool bonusClaimedToday = false;
     if (lastBonusStr != null) {
       final lastBonusDate = DateTime.parse(lastBonusStr);
       final today = DateTime.now();
       bonusClaimedToday = _isSameDay(lastBonusDate, today);
     }
-    
+
     state = DailyLoginState(
       lastLoginDate: lastLogin,
       consecutiveDays: consecutiveDays,
@@ -75,17 +76,17 @@ class DailyLoginNotifier extends Notifier<DailyLoginState> {
       bonusClaimedToday: bonusClaimedToday,
     );
   }
-  
+
   // Controlla e aggiorna il login streak
   Future<int> checkDailyLogin() async {
     final now = DateTime.now();
     final lastLogin = state.lastLoginDate;
-    
+
     if (lastLogin == null) {
       // Primo login in assoluto
       return await _updateLoginStreak(now, 1);
     }
-    
+
     if (_isSameDay(lastLogin, now)) {
       // Già loggato oggi, ritorna il bonus corrente se non ancora reclamato
       if (!state.bonusClaimedToday) {
@@ -93,53 +94,58 @@ class DailyLoginNotifier extends Notifier<DailyLoginState> {
       }
       return 0;
     }
-    
+
     if (_isYesterday(lastLogin, now)) {
       // Login consecutivo - incrementa streak
       final newStreak = state.consecutiveDays + 1;
       return await _updateLoginStreak(now, newStreak);
     }
-    
+
     // Streak interrotto - ricomincia da 1
     return await _updateLoginStreak(now, 1);
   }
-  
+
   // Reclama il bonus XP giornaliero
   Future<bool> claimDailyBonus() async {
     if (state.bonusClaimedToday) {
       return false; // Già reclamato oggi
     }
-    
+
     final bonusXp = await checkDailyLogin();
     if (bonusXp > 0) {
       final newTotalXp = state.totalXpEarned + bonusXp;
-      
+
       state = state.copyWith(
         totalXpEarned: newTotalXp,
         bonusClaimedToday: true,
       );
-      
+
       await _prefs.setInt(_totalXpKey, newTotalXp);
-      await _prefs.setString(_lastBonusDateKey, DateTime.now().toIso8601String());
+      await _prefs.setString(
+        _lastBonusDateKey,
+        DateTime.now().toIso8601String(),
+      );
 
       // ✅ FIX: Aggiungi XP al provider centrale
       await ref.read(userXPProvider.notifier).addDailyLoginXP(bonusXp);
 
       if (kDebugMode) {
-        debugPrint('🎁 [DailyLogin] Bonus claimed: +$bonusXp XP (streak: ${state.consecutiveDays} days)');
+        debugPrint(
+          '🎁 [DailyLogin] Bonus claimed: +$bonusXp XP (streak: ${state.consecutiveDays} days)',
+        );
       }
 
       return true;
     }
-    
+
     return false;
   }
-  
+
   // Ottieni info sul bonus corrente
   DailyLoginBonusInfo getBonusInfo() {
     return LevelSystem.getDailyLoginBonusInfo(state.consecutiveDays);
   }
-  
+
   // Helper: aggiorna lo streak
   Future<int> _updateLoginStreak(DateTime loginDate, int newStreak) async {
     state = state.copyWith(
@@ -147,26 +153,26 @@ class DailyLoginNotifier extends Notifier<DailyLoginState> {
       consecutiveDays: newStreak,
       bonusClaimedToday: false, // Reset per il nuovo giorno
     );
-    
+
     await _prefs.setString(_lastLoginKey, loginDate.toIso8601String());
     await _prefs.setInt(_consecutiveDaysKey, newStreak);
-    
+
     return LevelSystem.calculateDailyLoginBonus(newStreak);
   }
-  
+
   // Helper: controlla se due date sono lo stesso giorno
   bool _isSameDay(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
-           date1.month == date2.month &&
-           date1.day == date2.day;
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
-  
+
   // Helper: controlla se date1 è ieri rispetto a date2
   bool _isYesterday(DateTime date1, DateTime date2) {
     final yesterday = date2.subtract(const Duration(days: 1));
     return _isSameDay(date1, yesterday);
   }
-  
+
   // Reset manuale dello streak (per testing o admin)
   Future<void> resetStreak() async {
     state = DailyLoginState();
@@ -177,4 +183,7 @@ class DailyLoginNotifier extends Notifier<DailyLoginState> {
   }
 }
 
-final dailyLoginProvider = NotifierProvider<DailyLoginNotifier, DailyLoginState>(DailyLoginNotifier.new);
+final dailyLoginProvider =
+    NotifierProvider<DailyLoginNotifier, DailyLoginState>(
+      DailyLoginNotifier.new,
+    );

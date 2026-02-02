@@ -12,10 +12,7 @@ import 'package:intl/intl.dart';
 
 /// MeasurementChartsScreen - Progress charts with auto-selection and summary
 class MeasurementChartsScreen extends ConsumerStatefulWidget {
-  const MeasurementChartsScreen({
-    super.key,
-    required this.userId,
-  });
+  const MeasurementChartsScreen({super.key, required this.userId});
 
   final String userId;
 
@@ -25,11 +22,7 @@ class MeasurementChartsScreen extends ConsumerStatefulWidget {
 }
 
 /// Period for chart data filtering
-enum ChartPeriod {
-  week,
-  month,
-  year;
-}
+enum ChartPeriod { week, month, year }
 
 class _MeasurementChartsScreenState
     extends ConsumerState<MeasurementChartsScreen> {
@@ -69,9 +62,7 @@ class _MeasurementChartsScreenState
         _allMeasurements = measurements;
 
         // Discover which metrics have data
-        _metricsWithData = measurements
-            .map((m) => m.metricType)
-            .toSet();
+        _metricsWithData = measurements.map((m) => m.metricType).toSet();
 
         // Auto-select weight if available, otherwise first with data
         if (_metricsWithData.contains(MetricType.weight)) {
@@ -100,12 +91,15 @@ class _MeasurementChartsScreenState
         dateFrom = now.subtract(const Duration(days: 365));
     }
 
-    _filteredMeasurements = _allMeasurements
-        .where((m) =>
-            m.metricType == _selectedMetric &&
-            m.timestamp.isAfter(dateFrom))
-        .toList()
-      ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
+    _filteredMeasurements =
+        _allMeasurements
+            .where(
+              (m) =>
+                  m.metricType == _selectedMetric &&
+                  m.timestamp.isAfter(dateFrom),
+            )
+            .toList()
+          ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
   }
 
   void _onMetricChanged(MetricType newMetric) {
@@ -187,16 +181,17 @@ class _MeasurementChartsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.bodyMeasurementsChartsTitle),
-      ),
+      appBar: AppBar(title: Text(context.l10n.bodyMeasurementsChartsTitle)),
       body: _isLoading
           ? const Center(child: LoadingIndicator())
           : Column(
               children: [
                 // Period selector
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   child: SegmentedButton<ChartPeriod>(
                     segments: [
                       ButtonSegment(
@@ -244,8 +239,7 @@ class _MeasurementChartsScreenState
                 const SizedBox(height: 8),
 
                 // Summary card
-                if (_filteredMeasurements.isNotEmpty)
-                  _buildSummaryCard(),
+                if (_filteredMeasurements.isNotEmpty) _buildSummaryCard(),
 
                 // Chart or empty state
                 Expanded(
@@ -267,7 +261,8 @@ class _MeasurementChartsScreenState
 
     String? trendText;
     if (_filteredMeasurements.length >= 2) {
-      final diff = _filteredMeasurements.last.value - _filteredMeasurements.first.value;
+      final diff =
+          _filteredMeasurements.last.value - _filteredMeasurements.first.value;
       final sign = diff > 0 ? '+' : '';
       trendText = '$sign${diff.toStringAsFixed(1)}';
     }
@@ -291,11 +286,7 @@ class _MeasurementChartsScreenState
         unit,
       ),
       if (trendText != null)
-        _SummaryData(
-          context.l10n.bodyMeasurementsChartsTrend,
-          trendText,
-          unit,
-        ),
+        _SummaryData(context.l10n.bodyMeasurementsChartsTrend, trendText, unit),
     ];
 
     return Padding(

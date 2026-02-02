@@ -137,7 +137,9 @@ class AnalyticsCacheService {
 
       // Log only if there are entries (reduces noise)
       if (kDebugMode && _cacheBox!.length > 0) {
-        debugPrint('💾 [AnalyticsCache] Ready with ${_cacheBox!.length} cached entries');
+        debugPrint(
+          '💾 [AnalyticsCache] Ready with ${_cacheBox!.length} cached entries',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -155,7 +157,9 @@ class AnalyticsCacheService {
     _cleanupTimer = null;
 
     if (kDebugMode) {
-      debugPrint('📊 [AnalyticsCache] Final statistics: ${_statistics.toJson()}');
+      debugPrint(
+        '📊 [AnalyticsCache] Final statistics: ${_statistics.toJson()}',
+      );
     }
 
     _isInitialized = false;
@@ -182,7 +186,10 @@ class AnalyticsCacheService {
   ///   (json) => (json['data'] as List).cast<Map<String, dynamic>>(),
   /// );
   /// ```
-  Future<T?> get<T>(String key, [T Function(Map<String, dynamic>)? fromJson]) async {
+  Future<T?> get<T>(
+    String key, [
+    T Function(Map<String, dynamic>)? fromJson,
+  ]) async {
     if (!_isInitialized || _cacheBox == null) {
       await initialize();
       if (_cacheBox == null) {
@@ -318,7 +325,9 @@ class AnalyticsCacheService {
       await _cacheBox!.put(key, entry);
 
       if (kDebugMode) {
-        debugPrint('💾 [AnalyticsCache] SET: $key (TTL: ${ttl ?? CacheTTL.analyticsStats})');
+        debugPrint(
+          '💾 [AnalyticsCache] SET: $key (TTL: ${ttl ?? CacheTTL.analyticsStats})',
+        );
       }
 
       // Update statistics
@@ -372,11 +381,15 @@ class AnalyticsCacheService {
       await _cacheBox!.deleteAll(keysToDelete);
 
       if (kDebugMode) {
-        debugPrint('🗑️ [AnalyticsCache] Invalidated ${keysToDelete.length} keys matching: $pattern');
+        debugPrint(
+          '🗑️ [AnalyticsCache] Invalidated ${keysToDelete.length} keys matching: $pattern',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('❌ [AnalyticsCache] Error invalidating pattern $pattern: $e');
+        debugPrint(
+          '❌ [AnalyticsCache] Error invalidating pattern $pattern: $e',
+        );
       }
     }
   }
@@ -387,7 +400,9 @@ class AnalyticsCacheService {
   Future<void> invalidateUser(String userId) async {
     await invalidatePattern(userId);
     if (kDebugMode) {
-      debugPrint('🗑️ [AnalyticsCache] Invalidated all cache for user: $userId');
+      debugPrint(
+        '🗑️ [AnalyticsCache] Invalidated all cache for user: $userId',
+      );
     }
   }
 
@@ -450,7 +465,9 @@ class AnalyticsCacheService {
         if (raw == null) continue;
 
         final data = _convertToStringKeyMap(raw);
-        final createdAt = DateTime.tryParse(data['_createdAt'] as String? ?? '');
+        final createdAt = DateTime.tryParse(
+          data['_createdAt'] as String? ?? '',
+        );
         final ttlMs = data['_ttlMs'] as int?;
 
         if (createdAt == null) {
@@ -470,7 +487,9 @@ class AnalyticsCacheService {
       if (keysToDelete.isNotEmpty) {
         await _cacheBox!.deleteAll(keysToDelete);
         if (kDebugMode) {
-          debugPrint('🧹 [AnalyticsCache] Cleaned up $expiredCount expired entries');
+          debugPrint(
+            '🧹 [AnalyticsCache] Cleaned up $expiredCount expired entries',
+          );
         }
       }
 
@@ -497,7 +516,9 @@ class AnalyticsCacheService {
         if (raw == null) continue;
 
         final data = _convertToStringKeyMap(raw);
-        final createdAt = DateTime.tryParse(data['_createdAt'] as String? ?? '');
+        final createdAt = DateTime.tryParse(
+          data['_createdAt'] as String? ?? '',
+        );
         final ttlMs = data['_ttlMs'] as int?;
 
         if (createdAt != null) {
@@ -536,7 +557,9 @@ class AnalyticsCacheService {
     if (map is Map) {
       return map.map((key, value) {
         final stringKey = key.toString();
-        final convertedValue = value is Map ? _convertToStringKeyMap(value) : value;
+        final convertedValue = value is Map
+            ? _convertToStringKeyMap(value)
+            : value;
         return MapEntry(stringKey, convertedValue);
       });
     }

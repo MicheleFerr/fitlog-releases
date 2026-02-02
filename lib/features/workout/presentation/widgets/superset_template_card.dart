@@ -192,7 +192,8 @@ class _SupersetTemplateCardState extends ConsumerState<SupersetTemplateCard>
         onTapUp: (_) => setState(() => _isPressed = false),
         onTapCancel: () => setState(() => _isPressed = false),
         onTap: widget.onTap,
-        onLongPress: (widget.onDuplicate != null ||
+        onLongPress:
+            (widget.onDuplicate != null ||
                 widget.onEdit != null ||
                 widget.onDelete != null)
             ? _showOptionsMenu
@@ -209,8 +210,9 @@ class _SupersetTemplateCardState extends ConsumerState<SupersetTemplateCard>
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: context.colors.shadow
-                      .withValues(alpha: isDark ? 0.2 : 0.1),
+                  color: context.colors.shadow.withValues(
+                    alpha: isDark ? 0.2 : 0.1,
+                  ),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),

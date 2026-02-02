@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: data/datasources
 /// 🎯 Feature: workout
 /// 🔧 Type: datasource
 /// 🌍 Localization: N/A
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
-/// 
+///
 /// Dependencies:
 /// - Cloud Firestore
 /// - Data models
@@ -23,7 +23,6 @@ import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.da
 
 /// Firebase data source for workout operations
 class FirebaseWorkoutDataSource {
-  
   const FirebaseWorkoutDataSource(this._firestore);
   final FirebaseFirestore _firestore;
 
@@ -36,10 +35,13 @@ class FirebaseWorkoutDataSource {
         .collection('workouts')
         .doc(workout.id);
 
-    await docRef.set(workout.toJson()).timeout(
-      const Duration(seconds: 10),
-      onTimeout: () => throw TimeoutException('Firestore saveWorkout timed out'),
-    );
+    await docRef
+        .set(workout.toJson())
+        .timeout(
+          const Duration(seconds: 10),
+          onTimeout: () =>
+              throw TimeoutException('Firestore saveWorkout timed out'),
+        );
 
     return docRef.id;
   }
@@ -144,7 +146,9 @@ class FirebaseWorkoutDataSource {
   ///
   /// This method now returns an empty list (no-op) to prevent permission errors.
   /// Use saveWorkout() instead to save workouts to the proper collection.
-  @Deprecated('Use saveWorkout() instead. exerciseActivities collection is deprecated.')
+  @Deprecated(
+    'Use saveWorkout() instead. exerciseActivities collection is deprecated.',
+  )
   Future<List<String>> saveCompletedWorkout(
     WorkoutModel workout,
     String userEmail,
@@ -187,7 +191,7 @@ class FirebaseWorkoutDataSource {
     for (int i = 0; i < exercises.length; i++) {
       if (exercises[i]['id'] == exerciseId) {
         final sets = List<Map<String, dynamic>>.from(exercises[i]['sets']);
-        
+
         for (int j = 0; j < sets.length; j++) {
           if (sets[j]['id'] == exerciseSet.id) {
             sets[j] = ExerciseSetModel.fromDomain(exerciseSet).toJson();
@@ -195,13 +199,13 @@ class FirebaseWorkoutDataSource {
             break;
           }
         }
-        
+
         if (updated) {
           exercises[i]['sets'] = sets;
           // Recalculate exercise total volume
           final completedSets = sets.where((set) => set['isCompleted'] == true);
           exercises[i]['totalVolume'] = completedSets.fold<double>(
-            0.0, 
+            0.0,
             (sum, set) => sum + (set['volume'] as num).toDouble(),
           );
           break;
@@ -214,14 +218,17 @@ class FirebaseWorkoutDataSource {
     }
 
     // Update the workout with modified exercises
-    await workoutRef.update({
-      'exercises': exercises,
-      'updatedAt': FieldValue.serverTimestamp(),
-    }).timeout(
-      const Duration(seconds: 10),
-      onTimeout: () =>
-          throw TimeoutException('Firestore updateExerciseSet update timed out'),
-    );
+    await workoutRef
+        .update({
+          'exercises': exercises,
+          'updatedAt': FieldValue.serverTimestamp(),
+        })
+        .timeout(
+          const Duration(seconds: 10),
+          onTimeout: () => throw TimeoutException(
+            'Firestore updateExerciseSet update timed out',
+          ),
+        );
   }
 
   /// Add exercise to existing workout
@@ -239,14 +246,17 @@ class FirebaseWorkoutDataSource {
 
     final exerciseModel = ExerciseModel.fromDomain(exercise);
 
-    await workoutRef.update({
-      'exercises': FieldValue.arrayUnion([exerciseModel.toJson()]),
-      'updatedAt': FieldValue.serverTimestamp(),
-    }).timeout(
-      const Duration(seconds: 10),
-      onTimeout: () =>
-          throw TimeoutException('Firestore addExerciseToWorkout timed out'),
-    );
+    await workoutRef
+        .update({
+          'exercises': FieldValue.arrayUnion([exerciseModel.toJson()]),
+          'updatedAt': FieldValue.serverTimestamp(),
+        })
+        .timeout(
+          const Duration(seconds: 10),
+          onTimeout: () => throw TimeoutException(
+            'Firestore addExerciseToWorkout timed out',
+          ),
+        );
   }
 
   /// Remove exercise from workout
@@ -265,8 +275,9 @@ class FirebaseWorkoutDataSource {
     // Get current workout to find the exercise to remove
     final workoutDoc = await workoutRef.get().timeout(
       const Duration(seconds: 10),
-      onTimeout: () =>
-          throw TimeoutException('Firestore removeExerciseFromWorkout get timed out'),
+      onTimeout: () => throw TimeoutException(
+        'Firestore removeExerciseFromWorkout get timed out',
+      ),
     );
     if (!workoutDoc.exists) {
       throw Exception('Workout not found');
@@ -279,14 +290,17 @@ class FirebaseWorkoutDataSource {
     exercises.removeWhere((exercise) => exercise['id'] == exerciseId);
 
     // Update the workout
-    await workoutRef.update({
-      'exercises': exercises,
-      'updatedAt': FieldValue.serverTimestamp(),
-    }).timeout(
-      const Duration(seconds: 10),
-      onTimeout: () =>
-          throw TimeoutException('Firestore removeExerciseFromWorkout update timed out'),
-    );
+    await workoutRef
+        .update({
+          'exercises': exercises,
+          'updatedAt': FieldValue.serverTimestamp(),
+        })
+        .timeout(
+          const Duration(seconds: 10),
+          onTimeout: () => throw TimeoutException(
+            'Firestore removeExerciseFromWorkout update timed out',
+          ),
+        );
   }
 
   /// Get workout statistics
@@ -328,16 +342,17 @@ class FirebaseWorkoutDataSource {
 
     for (final workout in workouts) {
       totalExercises += workout.exercises.length;
-      
+
       for (final exercise in workout.exercises) {
         totalSets += exercise.sets.length;
-        
+
         // Count by category
         final category = ExerciseCategory.values.firstWhere(
           (e) => e.name == exercise.category,
           orElse: () => ExerciseCategory.chest,
         );
-        exercisesByCategory[category] = (exercisesByCategory[category] ?? 0) + 1;
+        exercisesByCategory[category] =
+            (exercisesByCategory[category] ?? 0) + 1;
       }
 
       // Add duration
@@ -352,7 +367,7 @@ class FirebaseWorkoutDataSource {
       }
     }
 
-    final averageWorkoutDuration = workouts.isNotEmpty 
+    final averageWorkoutDuration = workouts.isNotEmpty
         ? (totalDuration.inSeconds / workouts.length).toDouble()
         : 0.0;
 
@@ -398,8 +413,9 @@ class FirebaseWorkoutDataSource {
         .get()
         .timeout(
           const Duration(seconds: 10),
-          onTimeout: () =>
-              throw TimeoutException('Firestore getWorkoutHistory count timed out'),
+          onTimeout: () => throw TimeoutException(
+            'Firestore getWorkoutHistory count timed out',
+          ),
         );
 
     final totalCount = totalQuery.count ?? 0;
@@ -424,8 +440,9 @@ class FirebaseWorkoutDataSource {
           .get()
           .timeout(
             const Duration(seconds: 10),
-            onTimeout: () =>
-                throw TimeoutException('Firestore getWorkoutHistory offset timed out'),
+            onTimeout: () => throw TimeoutException(
+              'Firestore getWorkoutHistory offset timed out',
+            ),
           );
 
       if (offsetSnapshot.docs.isNotEmpty) {
@@ -491,11 +508,17 @@ class FirebaseWorkoutDataSource {
     // NOTE: Firestore allows only one inequality filter per query
     // Using createdAt >= dateFrom OR createdAt <= dateTo
     if (dateFrom != null) {
-      query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(dateFrom));
+      query = query.where(
+        'createdAt',
+        isGreaterThanOrEqualTo: Timestamp.fromDate(dateFrom),
+      );
     }
 
     if (dateTo != null) {
-      query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(dateTo));
+      query = query.where(
+        'createdAt',
+        isLessThanOrEqualTo: Timestamp.fromDate(dateTo),
+      );
     }
 
     // Apply cursor if continuing from previous page

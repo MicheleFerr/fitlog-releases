@@ -22,7 +22,9 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 /// - Network spam (100+ GIF requests/second)
 /// - Memory waste from reloading same JSON repeatedly
 /// This matches the fix in exercise_selection_provider.dart (same database, different use case)
-final exercisesDatabaseProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+final exercisesDatabaseProvider = FutureProvider<List<Map<String, dynamic>>>((
+  ref,
+) async {
   try {
     // Ottieni la lingua dell'app
     final locale = ref.watch(localeProvider);
@@ -38,7 +40,10 @@ final exercisesDatabaseProvider = FutureProvider<List<Map<String, dynamic>>>((re
 /// Provider per ottenere l'URL della GIF di un esercizio specifico
 /// ✅ PERFORMANCE FIX: Added keepAlive to cache GIF URLs for entire session
 /// This prevents repeated database lookups when scrolling or rebuilding widgets
-final exerciseGifUrlProvider = Provider.family<AsyncValue<String?>, String>((ref, exerciseName) {
+final exerciseGifUrlProvider = Provider.family<AsyncValue<String?>, String>((
+  ref,
+  exerciseName,
+) {
   // Keep this provider alive to cache results
   ref.keepAlive();
 
@@ -52,13 +57,10 @@ final exerciseGifUrlProvider = Provider.family<AsyncValue<String?>, String>((ref
       // Cerca l'esercizio nel database con matching flessibile
       try {
         // Prima prova match esatto
-        var exercise = exercises.firstWhere(
-          (ex) {
-            final dbName = _normalizeExerciseName(ex['nome'] ?? '');
-            return dbName == normalizedName;
-          },
-          orElse: () => <String, dynamic>{},
-        );
+        var exercise = exercises.firstWhere((ex) {
+          final dbName = _normalizeExerciseName(ex['nome'] ?? '');
+          return dbName == normalizedName;
+        }, orElse: () => <String, dynamic>{});
 
         // Se non trova match esatto, prova match parziale
         if (exercise.isEmpty) {

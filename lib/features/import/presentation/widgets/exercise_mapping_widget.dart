@@ -18,7 +18,8 @@ class ExerciseMappingWidget extends ConsumerStatefulWidget {
   final ImportParseResult result;
 
   @override
-  ConsumerState<ExerciseMappingWidget> createState() => _ExerciseMappingWidgetState();
+  ConsumerState<ExerciseMappingWidget> createState() =>
+      _ExerciseMappingWidgetState();
 }
 
 class _ExerciseMappingWidgetState extends ConsumerState<ExerciseMappingWidget> {
@@ -122,11 +123,7 @@ class _ExerciseMappingWidgetState extends ConsumerState<ExerciseMappingWidget> {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
-            child: Icon(
-              AppIcons.help,
-              color: context.colors.warning,
-              size: 20,
-            ),
+            child: Icon(AppIcons.help, color: context.colors.warning, size: 20),
           ),
         ),
         title: Text(unmapped.originalName),
@@ -136,7 +133,9 @@ class _ExerciseMappingWidgetState extends ConsumerState<ExerciseMappingWidget> {
         ),
         children: [
           if (unmapped.suggestions.isNotEmpty)
-            ...unmapped.suggestions.map((s) => _buildSuggestionTile(context, unmapped, s))
+            ...unmapped.suggestions.map(
+              (s) => _buildSuggestionTile(context, unmapped, s),
+            )
           else
             Padding(
               padding: const EdgeInsets.all(16),
@@ -155,7 +154,10 @@ class _ExerciseMappingWidgetState extends ConsumerState<ExerciseMappingWidget> {
           ),
           // Skip button
           ListTile(
-            leading: Icon(AppIcons.skipNext, color: context.colors.onSurfaceVariant),
+            leading: Icon(
+              AppIcons.skipNext,
+              color: context.colors.onSurfaceVariant,
+            ),
             title: Text(context.l10n.skipThisExercise),
             subtitle: Text(context.l10n.willImportWithOriginalName),
             onTap: () {
@@ -194,20 +196,23 @@ class _ExerciseMappingWidgetState extends ConsumerState<ExerciseMappingWidget> {
       title: Text(suggestion.name),
       trailing: IconButton(
         icon: Icon(AppIcons.check, color: context.colors.primary),
-        onPressed: () => _applyMapping(unmapped.originalName, suggestion.exerciseId),
+        onPressed: () =>
+            _applyMapping(unmapped.originalName, suggestion.exerciseId),
       ),
       onTap: () => _applyMapping(unmapped.originalName, suggestion.exerciseId),
     );
   }
 
   void _applyMapping(String originalName, String exerciseId) {
-    ref.read(importNotifierProvider.notifier).applyManualMapping(
-          originalName,
-          exerciseId,
-        );
+    ref
+        .read(importNotifierProvider.notifier)
+        .applyManualMapping(originalName, exerciseId);
   }
 
-  Future<void> _showExerciseSearch(BuildContext context, UnmappedExercise unmapped) async {
+  Future<void> _showExerciseSearch(
+    BuildContext context,
+    UnmappedExercise unmapped,
+  ) async {
     final exercises = ref.read(allExercisesProvider).valueOrNull ?? [];
 
     final selectedId = await showModalBottomSheet<String>(

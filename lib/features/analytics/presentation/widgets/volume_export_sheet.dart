@@ -32,10 +32,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Export format options
-enum VolumeExportFormat {
-  csv,
-  pdf,
-}
+enum VolumeExportFormat { csv, pdf }
 
 /// Show volume export bottom sheet
 Future<void> showVolumeExportSheet({
@@ -47,18 +44,14 @@ Future<void> showVolumeExportSheet({
     isScrollControlled: true,
     useSafeArea: true,
     backgroundColor: Colors.transparent,
-    builder: (context) => VolumeExportSheet(
-      exerciseHistories: exerciseHistories,
-    ),
+    builder: (context) =>
+        VolumeExportSheet(exerciseHistories: exerciseHistories),
   );
 }
 
 /// Volume export bottom sheet widget
 class VolumeExportSheet extends StatefulWidget {
-  const VolumeExportSheet({
-    required this.exerciseHistories,
-    super.key,
-  });
+  const VolumeExportSheet({required this.exerciseHistories, super.key});
 
   final List<ExerciseHistory> exerciseHistories;
 
@@ -330,7 +323,9 @@ class _VolumeExportSheetState extends State<VolumeExportSheet> {
                 semanticLabel: context.l10n.export,
                 size: AppIconSize.buttonPrimary,
               ),
-        label: Text(_isExporting ? context.l10n.exporting : context.l10n.export),
+        label: Text(
+          _isExporting ? context.l10n.exporting : context.l10n.export,
+        ),
         style: FilledButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14),
         ),
@@ -372,10 +367,7 @@ class _VolumeExportSheetState extends State<VolumeExportSheet> {
 
         if (mounted) {
           Navigator.pop(context);
-          SnackBarService.showSuccess(
-            context,
-            context.l10n.exportSuccessful,
-          );
+          SnackBarService.showSuccess(context, context.l10n.exportSuccessful);
         }
       }
     } catch (e) {
@@ -393,7 +385,7 @@ class _VolumeExportSheetState extends State<VolumeExportSheet> {
   }
 
   List<({DateTime date, double volume, int workouts, List<String> exercises})>
-      _calculateVolumeData(DateTime start, DateTime end) {
+  _calculateVolumeData(DateTime start, DateTime end) {
     final dataByDate =
         <DateTime, ({double volume, int workouts, Set<String> exercises})>{};
 
@@ -430,19 +422,21 @@ class _VolumeExportSheetState extends State<VolumeExportSheet> {
     }
 
     return dataByDate.entries
-        .map((e) => (
-              date: e.key,
-              volume: e.value.volume,
-              workouts: e.value.workouts,
-              exercises: e.value.exercises.toList(),
-            ))
+        .map(
+          (e) => (
+            date: e.key,
+            volume: e.value.volume,
+            workouts: e.value.workouts,
+            exercises: e.value.exercises.toList(),
+          ),
+        )
         .toList()
       ..sort((a, b) => a.date.compareTo(b.date));
   }
 
   Future<String> _generateCsv(
     List<({DateTime date, double volume, int workouts, List<String> exercises})>
-        data,
+    data,
     DateTime start,
     DateTime end,
   ) async {
@@ -451,7 +445,8 @@ class _VolumeExportSheetState extends State<VolumeExportSheet> {
     // Header
     buffer.writeln('FitLog Volume Trend Export');
     buffer.writeln(
-        'Period,${DateFormat('yyyy-MM-dd').format(start)} to ${DateFormat('yyyy-MM-dd').format(end)}');
+      'Period,${DateFormat('yyyy-MM-dd').format(start)} to ${DateFormat('yyyy-MM-dd').format(end)}',
+    );
     buffer.writeln('');
     buffer.writeln('Date,Volume (kg),Exercises');
 
@@ -473,8 +468,11 @@ class _VolumeExportSheetState extends State<VolumeExportSheet> {
 
     // Save to file
     final directory = await _getExportDirectory();
-    final timestamp =
-        DateTime.now().toIso8601String().replaceAll(':', '-').split('.').first;
+    final timestamp = DateTime.now()
+        .toIso8601String()
+        .replaceAll(':', '-')
+        .split('.')
+        .first;
     final file = File('${directory.path}/volume_trend_$timestamp.csv');
     await file.writeAsString(buffer.toString());
     return file.path;
@@ -482,7 +480,7 @@ class _VolumeExportSheetState extends State<VolumeExportSheet> {
 
   Future<String> _generatePdf(
     List<({DateTime date, double volume, int workouts, List<String> exercises})>
-        data,
+    data,
     DateTime start,
     DateTime end,
   ) async {
@@ -512,7 +510,8 @@ class _VolumeExportSheetState extends State<VolumeExportSheet> {
     buffer.writeln('Workout Days:     ${data.length}');
     if (maxDay != null) {
       buffer.writeln(
-          'Best Day:         ${DateFormat('MMM d').format(maxDay.date)} (${_formatVolume(maxDay.volume)} kg)');
+        'Best Day:         ${DateFormat('MMM d').format(maxDay.date)} (${_formatVolume(maxDay.volume)} kg)',
+      );
     }
     buffer.writeln('');
     buffer.writeln('─' * 50);
@@ -534,13 +533,18 @@ class _VolumeExportSheetState extends State<VolumeExportSheet> {
     }
 
     buffer.writeln('═' * 50);
-    buffer.writeln('Generated: ${DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now())}');
+    buffer.writeln(
+      'Generated: ${DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now())}',
+    );
     buffer.writeln('═' * 50);
 
     // Save to file (as .txt for simplicity - full PDF would use pdf package)
     final directory = await _getExportDirectory();
-    final timestamp =
-        DateTime.now().toIso8601String().replaceAll(':', '-').split('.').first;
+    final timestamp = DateTime.now()
+        .toIso8601String()
+        .replaceAll(':', '-')
+        .split('.')
+        .first;
     final file = File('${directory.path}/volume_report_$timestamp.txt');
     await file.writeAsString(buffer.toString());
     return file.path;

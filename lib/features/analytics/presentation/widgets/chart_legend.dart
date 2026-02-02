@@ -95,10 +95,7 @@ class ChartLegend extends ConsumerWidget {
 
 /// Legend item showing color circle + metric label
 class _LegendItem extends StatelessWidget {
-  const _LegendItem({
-    required this.metric,
-    required this.color,
-  });
+  const _LegendItem({required this.metric, required this.color});
 
   final MetricType metric;
   final Color color;

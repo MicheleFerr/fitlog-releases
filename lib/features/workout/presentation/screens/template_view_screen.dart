@@ -23,10 +23,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 /// - FAB for starting workout
 /// - Edit action in AppBar menu
 class TemplateViewScreen extends ConsumerWidget {
-  const TemplateViewScreen({
-    super.key,
-    required this.templateId,
-  });
+  const TemplateViewScreen({super.key, required this.templateId});
 
   final String templateId;
 
@@ -51,9 +48,7 @@ class TemplateViewScreen extends ConsumerWidget {
       ),
       error: (error, _) => Scaffold(
         appBar: AppBar(),
-        body: Center(
-          child: Text('${context.l10n.errorGeneric}: $error'),
-        ),
+        body: Center(child: Text('${context.l10n.errorGeneric}: $error')),
       ),
     );
   }
@@ -146,10 +141,7 @@ class _TemplateViewContent extends ConsumerWidget {
               separatorBuilder: (_, __) => const Divider(height: 1),
               itemBuilder: (context, index) {
                 final exercise = template.exercises[index];
-                return _ExerciseViewTile(
-                  exercise: exercise,
-                  index: index + 1,
-                );
+                return _ExerciseViewTile(exercise: exercise, index: index + 1);
               },
             ),
           ),
@@ -315,10 +307,7 @@ class _TemplateViewContent extends ConsumerWidget {
 /// - Different weights: one line per weight
 /// - Drop sets: arrows "20kg ×10 → 15kg ×12 → 10kg ×15"
 class _ExerciseViewTile extends StatelessWidget {
-  const _ExerciseViewTile({
-    required this.exercise,
-    required this.index,
-  });
+  const _ExerciseViewTile({required this.exercise, required this.index});
 
   final ExerciseTemplate exercise;
   final int index;
@@ -377,7 +366,10 @@ class _ExerciseViewTile extends StatelessWidget {
               // Rest time badge
               if (exercise.restTime != null)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: context.colors.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(12),
@@ -467,7 +459,9 @@ class _ExerciseViewTile extends StatelessWidget {
   /// Drop set display: "20kg ×10 → 15kg ×12 → 10kg ×15"
   Widget _buildDropSetDisplay(BuildContext context, List<SetTemplate> sets) {
     final parts = sets.map((s) {
-      final weight = s.targetWeight != null ? '${_formatWeight(s.targetWeight!)}' : '?';
+      final weight = s.targetWeight != null
+          ? '${_formatWeight(s.targetWeight!)}'
+          : '?';
       final reps = s.targetReps != null ? '×${s.targetReps}' : '';
       return '$weight$reps';
     }).toList();
@@ -489,7 +483,10 @@ class _ExerciseViewTile extends StatelessWidget {
   }
 
   /// Compact-Smart display logic
-  Widget _buildCompactSmartDisplay(BuildContext context, List<SetTemplate> sets) {
+  Widget _buildCompactSmartDisplay(
+    BuildContext context,
+    List<SetTemplate> sets,
+  ) {
     // Group sets by weight
     final Map<double?, List<SetTemplate>> groupedByWeight = {};
 
@@ -525,7 +522,9 @@ class _ExerciseViewTile extends StatelessWidget {
     List<SetTemplate> sets,
   ) {
     final weightStr = weight != null ? _formatWeight(weight) : '—';
-    final repsStr = sets.map((s) => s.targetReps?.toString() ?? '?').join(' • ');
+    final repsStr = sets
+        .map((s) => s.targetReps?.toString() ?? '?')
+        .join(' • ');
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

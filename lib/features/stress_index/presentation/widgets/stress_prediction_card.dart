@@ -144,10 +144,7 @@ class _StressPredictionContent extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: recColor.withValues(alpha: 0.2),
-          width: 1,
-        ),
+        border: Border.all(color: recColor.withValues(alpha: 0.2), width: 1),
         boxShadow: [
           BoxShadow(
             color: context.colors.shadow.withValues(alpha: 0.06),
@@ -219,7 +216,9 @@ class _StressPredictionContent extends StatelessWidget {
                       SemanticIcon(
                         icon: AppIcons.infoOutline,
                         semanticLabel: 'Details',
-                        color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                        color: context.colors.onSurfaceVariant.withValues(
+                          alpha: 0.5,
+                        ),
                         size: AppIconSize.small,
                       ),
                     ],
@@ -349,7 +348,8 @@ class _StressPredictionContent extends StatelessWidget {
                     left: AppSpacing.lg,
                     right: AppSpacing.lg,
                     top: AppSpacing.md,
-                    bottom: MediaQuery.of(sheetContext).padding.bottom +
+                    bottom:
+                        MediaQuery.of(sheetContext).padding.bottom +
                         AppSpacing.lg,
                   ),
                   child: Column(
@@ -362,8 +362,9 @@ class _StressPredictionContent extends StatelessWidget {
                           width: 40,
                           height: 4,
                           decoration: BoxDecoration(
-                            color: sheetContext.colors.outline
-                                .withValues(alpha: 0.3),
+                            color: sheetContext.colors.outline.withValues(
+                              alpha: 0.3,
+                            ),
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
@@ -394,17 +395,17 @@ class _StressPredictionContent extends StatelessWidget {
                               children: [
                                 Text(
                                   titleText,
-                                  style:
-                                      sheetContext.textTheme.bodySmall?.copyWith(
-                                    color: sheetContext.colors.onSurfaceVariant,
-                                  ),
+                                  style: sheetContext.textTheme.bodySmall
+                                      ?.copyWith(
+                                        color: sheetContext
+                                            .colors
+                                            .onSurfaceVariant,
+                                      ),
                                 ),
                                 Text(
                                   recLabel,
-                                  style:
-                                      sheetContext.textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: sheetContext.textTheme.titleLarge
+                                      ?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -416,7 +417,11 @@ class _StressPredictionContent extends StatelessWidget {
                       // Workout breakdown (when high stress)
                       if (latestResult != null &&
                           insight.currentStress >= 50) ...[
-                        _buildWorkoutBreakdown(sheetContext, latestResult, l10n),
+                        _buildWorkoutBreakdown(
+                          sheetContext,
+                          latestResult,
+                          l10n,
+                        ),
                         const SizedBox(height: 20),
                       ],
 
@@ -447,12 +452,12 @@ class _StressPredictionContent extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 insight.rationale,
-                                style:
-                                    sheetContext.textTheme.bodyMedium?.copyWith(
-                                  color: sheetContext.colors.onSurface
-                                      .withValues(alpha: 0.85),
-                                  height: 1.4,
-                                ),
+                                style: sheetContext.textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: sheetContext.colors.onSurface
+                                          .withValues(alpha: 0.85),
+                                      height: 1.4,
+                                    ),
                               ),
                             ),
                           ],
@@ -502,17 +507,17 @@ class _StressPredictionContent extends StatelessWidget {
     final topMuscles = muscles.take(4).toList();
 
     // Calculate total volume
-    final totalVolume =
-        muscles.fold<double>(0, (sum, m) => sum + m.totalVolume);
+    final totalVolume = muscles.fold<double>(
+      0,
+      (sum, m) => sum + m.totalVolume,
+    );
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: context.errorColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: context.errorColor.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: context.errorColor.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -646,8 +651,9 @@ class _StressPredictionContent extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     child: LinearProgressIndicator(
                       value: muscle.stressScore / 100,
-                      backgroundColor:
-                          context.colors.outline.withValues(alpha: 0.2),
+                      backgroundColor: context.colors.outline.withValues(
+                        alpha: 0.2,
+                      ),
                       valueColor: AlwaysStoppedAnimation(stressColor),
                       minHeight: 6,
                     ),
@@ -766,7 +772,11 @@ class _StressPredictionContent extends StatelessWidget {
     );
   }
 
-  Widget _buildReference(BuildContext context, String title, String description) {
+  Widget _buildReference(
+    BuildContext context,
+    String title,
+    String description,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

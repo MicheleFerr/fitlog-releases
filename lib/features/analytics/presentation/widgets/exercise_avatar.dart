@@ -124,11 +124,7 @@ class ExerciseAvatar extends ConsumerWidget {
     final iconSize = size * 0.5;
 
     return Center(
-      child: Icon(
-        icon,
-        size: iconSize,
-        color: context.colors.onSurfaceVariant,
-      ),
+      child: Icon(icon, size: iconSize, color: context.colors.onSurfaceVariant),
     );
   }
 

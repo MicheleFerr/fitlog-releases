@@ -47,8 +47,9 @@ class _ExerciseGifFullscreenState extends State<ExerciseGifFullscreen> {
   String get _secondFrameUrl => widget.gifUrl.replaceAll('/0.jpg', '/1.jpg');
 
   /// Get current URL based on animation frame
-  String get _currentUrl =>
-      _isTwoFrameAnimation && _currentFrame == 1 ? _secondFrameUrl : widget.gifUrl;
+  String get _currentUrl => _isTwoFrameAnimation && _currentFrame == 1
+      ? _secondFrameUrl
+      : widget.gifUrl;
 
   @override
   void initState() {
@@ -86,8 +87,10 @@ class _ExerciseGifFullscreenState extends State<ExerciseGifFullscreen> {
             // GIF al centro
             Center(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 80),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 80,
+                ),
                 child: InteractiveViewer(
                   minScale: 0.5,
                   maxScale: 4.0,
@@ -99,9 +102,7 @@ class _ExerciseGifFullscreenState extends State<ExerciseGifFullscreen> {
                       imageUrl: _currentUrl,
                       fit: BoxFit.contain,
                       placeholder: (context, url) => Center(
-                        child: LoadingIndicator(
-                          color: colorScheme.primary,
-                        ),
+                        child: LoadingIndicator(color: colorScheme.primary),
                       ),
                       errorWidget: (context, url, error) => Center(
                         child: Column(
@@ -157,7 +158,9 @@ class _ExerciseGifFullscreenState extends State<ExerciseGifFullscreen> {
                             fontWeight: FontWeight.bold,
                             shadows: [
                               Shadow(
-                                color: context.colors.onSurface.withValues(alpha: 0.5),
+                                color: context.colors.onSurface.withValues(
+                                  alpha: 0.5,
+                                ),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
                               ),
@@ -176,7 +179,9 @@ class _ExerciseGifFullscreenState extends State<ExerciseGifFullscreen> {
                           size: 28,
                         ),
                         style: IconButton.styleFrom(
-                          backgroundColor: context.colors.onSurface.withValues(alpha: 0.3),
+                          backgroundColor: context.colors.onSurface.withValues(
+                            alpha: 0.3,
+                          ),
                         ),
                       ),
                     ],

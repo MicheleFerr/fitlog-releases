@@ -21,13 +21,13 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 
 /// Widget button per segnalare problemi su esercizi
 class ExerciseFeedbackButton extends ConsumerStatefulWidget {
-
   const ExerciseFeedbackButton({
     super.key,
     required this.exerciseId,
     required this.exerciseName,
     required this.version,
   });
+
   /// ID dell'esercizio
   final String exerciseId;
 
@@ -66,7 +66,9 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
@@ -110,10 +112,22 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                     ),
                   ),
                   items: [
-                    DropdownMenuItem(value: 'BUG', child: Text('🐛 ${context.l10n.feedbackTypeBug}')),
-                    DropdownMenuItem(value: 'SUGGESTION', child: Text('💡 ${context.l10n.feedbackTypeSuggestion}')),
-                    DropdownMenuItem(value: 'TYPO', child: Text('📝 ${context.l10n.feedbackTypeTypo}')),
-                    DropdownMenuItem(value: 'OTHER', child: Text('❓ ${context.l10n.feedbackTypeOther}')),
+                    DropdownMenuItem(
+                      value: 'BUG',
+                      child: Text('🐛 ${context.l10n.feedbackTypeBug}'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'SUGGESTION',
+                      child: Text('💡 ${context.l10n.feedbackTypeSuggestion}'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'TYPO',
+                      child: Text('📝 ${context.l10n.feedbackTypeTypo}'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'OTHER',
+                      child: Text('❓ ${context.l10n.feedbackTypeOther}'),
+                    ),
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -149,87 +163,115 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
           ),
           actions: [
             TextButton(
-              onPressed: isSubmitting ? null : () {
-                Navigator.of(context).pop();
-                messageController.dispose();
-              },
+              onPressed: isSubmitting
+                  ? null
+                  : () {
+                      Navigator.of(context).pop();
+                      messageController.dispose();
+                    },
               child: Text(context.l10n.cancel),
             ),
             ElevatedButton.icon(
-              onPressed: isSubmitting ? null : () async {
-                final message = messageController.text.trim();
+              onPressed: isSubmitting
+                  ? null
+                  : () async {
+                      final message = messageController.text.trim();
 
-                if (message.isEmpty) {
-                  SnackBarService.showError(context, context.l10n.feedbackRequired);
-                  return;
-                }
+                      if (message.isEmpty) {
+                        SnackBarService.showError(
+                          context,
+                          context.l10n.feedbackRequired,
+                        );
+                        return;
+                      }
 
-                setState(() { isSubmitting = true; });
+                      setState(() {
+                        isSubmitting = true;
+                      });
 
-                try {
-                  final user = FirebaseAuth.instance.currentUser;
-                  if (user == null) {
-                    SnackBarService.showError(context, context.l10n.errorAuthenticationRequired);
-                    return;
-                  }
+                      try {
+                        final user = FirebaseAuth.instance.currentUser;
+                        if (user == null) {
+                          SnackBarService.showError(
+                            context,
+                            context.l10n.errorAuthenticationRequired,
+                          );
+                          return;
+                        }
 
-                  // Get unified feedback repository from Riverpod container
-                  final container = ProviderScope.containerOf(context);
-                  final repository = container.read(unifiedFeedbackRepositoryProvider);
+                        // Get unified feedback repository from Riverpod container
+                        final container = ProviderScope.containerOf(context);
+                        final repository = container.read(
+                          unifiedFeedbackRepositoryProvider,
+                        );
 
-                  // Create unified feedback with exercise metadata
-                  final feedback = UnifiedFeedback(
-                    id: '', // Auto-generated by repository
-                    userId: user.uid,
-                    type: UnifiedFeedbackType.exercise,
-                    status: UnifiedFeedbackStatus.open,
-                    severity: FeedbackSeverity.medium,
-                    message: message,
-                    createdAt: DateTime.now(),
-                    metadata: {
-                      'exerciseId': exerciseId,
-                      'exerciseName': exerciseName,
-                      'version': version,
-                      'feedbackType': selectedType, // BUG, SUGGESTION, TYPO, OTHER
-                      'userEmail': user.email ?? '',
+                        // Create unified feedback with exercise metadata
+                        final feedback = UnifiedFeedback(
+                          id: '', // Auto-generated by repository
+                          userId: user.uid,
+                          type: UnifiedFeedbackType.exercise,
+                          status: UnifiedFeedbackStatus.open,
+                          severity: FeedbackSeverity.medium,
+                          message: message,
+                          createdAt: DateTime.now(),
+                          metadata: {
+                            'exerciseId': exerciseId,
+                            'exerciseName': exerciseName,
+                            'version': version,
+                            'feedbackType':
+                                selectedType, // BUG, SUGGESTION, TYPO, OTHER
+                            'userEmail': user.email ?? '',
+                          },
+                          adminNotes: null,
+                          resolvedAt: null,
+                          updatedAt: null,
+                        );
+
+                        // Submit via unified repository
+                        final result = await repository.submitFeedback(
+                          feedback,
+                        );
+
+                        if (context.mounted) {
+                          result.fold(
+                            (failure) {
+                              SnackBarService.showError(
+                                context,
+                                context.l10n.error,
+                              );
+                            },
+                            (feedbackId) {
+                              Navigator.of(context).pop();
+                              SnackBarService.showSuccess(
+                                context,
+                                context.l10n.feedbackSentSuccess,
+                              );
+                            },
+                          );
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          SnackBarService.showError(
+                            context,
+                            context.l10n.feedbackSentError,
+                          );
+                        }
+                        debugPrint('❌ Error submitting feedback: $e');
+                      } finally {
+                        messageController.dispose();
+                        if (context.mounted) {
+                          setState(() {
+                            isSubmitting = false;
+                          });
+                        }
+                      }
                     },
-                    adminNotes: null,
-                    resolvedAt: null,
-                    updatedAt: null,
-                  );
-
-                  // Submit via unified repository
-                  final result = await repository.submitFeedback(feedback);
-
-                  if (context.mounted) {
-                    result.fold(
-                      (failure) {
-                        SnackBarService.showError(context, context.l10n.error);
-                      },
-                      (feedbackId) {
-                        Navigator.of(context).pop();
-                        SnackBarService.showSuccess(context, context.l10n.feedbackSentSuccess);
-                      },
-                    );
-                  }
-                } catch (e) {
-                  if (context.mounted) {
-                    SnackBarService.showError(context, context.l10n.feedbackSentError);
-                  }
-                  debugPrint('❌ Error submitting feedback: $e');
-                } finally {
-                  messageController.dispose();
-                  if (context.mounted) {
-                    setState(() { isSubmitting = false; });
-                  }
-                }
-              },
               icon: isSubmitting
                   ? const LoadingIndicator(size: 16)
                   : const SemanticIcon(
-  icon: AppIcons.send,
-  semanticLabel: 'Send',
-),
+                      icon: AppIcons.send,
+                      semanticLabel: 'Send',
+                    ),
               label: Text(context.l10n.send),
             ),
           ],
@@ -261,9 +303,9 @@ class _ExerciseFeedbackButtonState
   Widget build(BuildContext context) {
     return IconButton(
       icon: const SemanticIcon(
-  icon: AppIcons.flagOutlined,
-  semanticLabel: 'Flag outlined',
-),
+        icon: AppIcons.flagOutlined,
+        semanticLabel: 'Flag outlined',
+      ),
       tooltip: context.l10n.reportExerciseIssue,
       onPressed: _showFeedbackDialog,
     );
@@ -389,14 +431,11 @@ class _ExerciseFeedbackButtonState
           ElevatedButton.icon(
             onPressed: _isSubmitting ? null : _submitFeedback,
             icon: _isSubmitting
-                ? LoadingIndicator(
-                    size: 16,
-                    color: context.colors.onPrimary,
-                  )
+                ? LoadingIndicator(size: 16, color: context.colors.onPrimary)
                 : const SemanticIcon(
-  icon: AppIcons.send,
-  semanticLabel: 'Send',
-),
+                    icon: AppIcons.send,
+                    semanticLabel: 'Send',
+                  ),
             label: Text(context.l10n.sendFeedback),
           ),
         ],
@@ -410,10 +449,7 @@ class _ExerciseFeedbackButtonState
 
     // Validazione
     if (message.isEmpty) {
-      SnackBarService.showError(
-        context,
-        context.l10n.feedbackRequired,
-      );
+      SnackBarService.showError(context, context.l10n.feedbackRequired);
       return;
     }
 
@@ -461,10 +497,7 @@ class _ExerciseFeedbackButtonState
       if (mounted) {
         result.fold(
           (failure) {
-            SnackBarService.showError(
-              context,
-              context.l10n.feedbackSentError,
-            );
+            SnackBarService.showError(context, context.l10n.feedbackSentError);
           },
           (feedbackId) {
             Navigator.of(context).pop();
@@ -483,10 +516,7 @@ class _ExerciseFeedbackButtonState
       }
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(
-          context,
-          context.l10n.feedbackSentError,
-        );
+        SnackBarService.showError(context, context.l10n.feedbackSentError);
       }
       debugPrint('❌ Error submitting feedback: $e');
     } finally {

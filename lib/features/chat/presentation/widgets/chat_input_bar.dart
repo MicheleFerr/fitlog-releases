@@ -88,9 +88,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
               const SizedBox(width: AppSpacing.xs),
 
               // Text field
-              Expanded(
-                child: _buildTextField(context),
-              ),
+              Expanded(child: _buildTextField(context)),
 
               const SizedBox(width: AppSpacing.xs),
 
@@ -105,10 +103,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
 
   Widget _buildAttachmentButton(BuildContext context) {
     return PopupMenuButton<String>(
-      icon: Icon(
-        AppIcons.attachFile,
-        color: context.colors.onSurfaceVariant,
-      ),
+      icon: Icon(AppIcons.attachFile, color: context.colors.onSurfaceVariant),
       tooltip: context.l10n.attachFile,
       enabled: !widget.isLoading,
       onSelected: (value) {
@@ -189,11 +184,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
         width: 40,
         height: 40,
         alignment: Alignment.center,
-        child: const SizedBox(
-          width: 24,
-          height: 24,
-          child: LoadingIndicator(),
-        ),
+        child: const SizedBox(width: 24, height: 24, child: LoadingIndicator()),
       );
     }
 
@@ -208,7 +199,9 @@ class _ChatInputBarState extends State<ChatInputBar> {
       child: IconButton(
         icon: Icon(
           AppIcons.send,
-          color: _hasText ? context.colors.onPrimary : context.colors.onSurfaceVariant,
+          color: _hasText
+              ? context.colors.onPrimary
+              : context.colors.onSurfaceVariant,
           size: 20,
         ),
         onPressed: _hasText ? _sendMessage : null,
@@ -262,9 +255,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
           controller: controller,
           autofocus: true,
           textCapitalization: TextCapitalization.sentences,
-          decoration: InputDecoration(
-            hintText: context.l10n.captionOptional,
-          ),
+          decoration: InputDecoration(hintText: context.l10n.captionOptional),
         ),
         actions: [
           TextButton(

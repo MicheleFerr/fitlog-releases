@@ -39,22 +39,20 @@ class LegalDisclaimerModal extends StatelessWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      isDismissible: false,  // Cannot dismiss without accepting
-      enableDrag: false,      // Cannot swipe to close
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
-      builder: (context) => LegalDisclaimerModal(
-        onAccept: onAccept,
-        onDecline: onDecline,
-      ),
+      isDismissible: false, // Cannot dismiss without accepting
+      enableDrag: false, // Cannot swipe to close
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
+      builder: (context) =>
+          LegalDisclaimerModal(onAccept: onAccept, onDecline: onDecline),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(
-        maxHeight: context.screenHeight * 0.85,
-      ),
+      constraints: BoxConstraints(maxHeight: context.screenHeight * 0.85),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: context.colors.surface,
@@ -116,9 +114,7 @@ class LegalDisclaimerModal extends StatelessWidget {
                 children: [
                   Text(
                     context.l10n.legalDisclaimerContent,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      height: 1.5,
-                    ),
+                    style: context.textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
                   const SizedBox(height: 16),
                   // Privacy Policy and ToS links

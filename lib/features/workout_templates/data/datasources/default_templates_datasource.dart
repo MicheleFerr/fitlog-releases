@@ -182,7 +182,9 @@ class DefaultTemplateCategory {
       nameEn: json['nameEn'] as String? ?? json['name'] as String? ?? '',
       description: json['description'] as String? ?? '',
       descriptionEn:
-          json['descriptionEn'] as String? ?? json['description'] as String? ?? '',
+          json['descriptionEn'] as String? ??
+          json['description'] as String? ??
+          '',
       file: json['file'] as String? ?? '',
       templateCount: json['templateCount'] as int? ?? 0,
       icon: json['icon'] as String? ?? 'fitness_center',
@@ -199,13 +201,13 @@ class DefaultTemplateCategory {
   final String icon;
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'nameEn': nameEn,
-        'description': description,
-        'descriptionEn': descriptionEn,
-        'file': file,
-        'templateCount': templateCount,
-        'icon': icon,
-      };
+    'id': id,
+    'name': name,
+    'nameEn': nameEn,
+    'description': description,
+    'descriptionEn': descriptionEn,
+    'file': file,
+    'templateCount': templateCount,
+    'icon': icon,
+  };
 }

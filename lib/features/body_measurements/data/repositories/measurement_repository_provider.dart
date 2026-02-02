@@ -50,7 +50,9 @@ import 'package:gymbro_flutter_new/features/body_measurements/presentation/provi
 /// **Note**: Constructor matches MeasurementRepositoryImpl signature:
 /// `MeasurementRepositoryImpl({required FirebaseFirestore, required ConsentRepository,
 ///   required MeasurementLocalDatasource, required EncryptionKeyManager, Uuid? uuid})`
-final measurementRepositoryProvider = Provider<MeasurementRepositoryImpl>((ref) {
+final measurementRepositoryProvider = Provider<MeasurementRepositoryImpl>((
+  ref,
+) {
   ref.keepAlive(); // FIX: previene ricreazione repository con Firestore+Hive
   return MeasurementRepositoryImpl(
     firestore: FirebaseFirestore.instance,

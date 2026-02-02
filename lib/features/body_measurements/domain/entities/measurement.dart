@@ -128,5 +128,5 @@ enum SyncStatus {
   conflict,
 
   /// Sync failed (network error, permission denied, etc.)
-  failed;
+  failed,
 }

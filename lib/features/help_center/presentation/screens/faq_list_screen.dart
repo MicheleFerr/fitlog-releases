@@ -22,10 +22,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 
 /// FAQ List Screen - shows questions for a category
 class FAQListScreen extends StatefulWidget {
-  const FAQListScreen({
-    required this.category,
-    super.key,
-  });
+  const FAQListScreen({required this.category, super.key});
 
   final FAQCategory category;
 
@@ -41,10 +38,7 @@ class _FAQListScreenState extends State<FAQListScreen> {
     final title = _getLocalizedCategoryTitle(context, widget.category.titleKey);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: Text(title), elevation: 0),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: widget.category.items.length,
@@ -224,7 +218,6 @@ class _FAQTile extends StatelessWidget {
       'faqWarmupSetsQuestion': l10n.faqWarmupSetsQuestion,
       'faqExerciseNotesQuestion': l10n.faqExerciseNotesQuestion,
       'faqExercisesQuestion': l10n.faqAddExerciseQuestion, // Legacy
-
       // ============ ADVANCED TECHNIQUES ============
       'faqSupersetsQuestion': l10n.faqSupersetsQuestion,
       'faqDropsetsQuestion': l10n.faqDropsetsQuestion,
@@ -317,7 +310,6 @@ class _FAQTile extends StatelessWidget {
       'faqWarmupSetsAnswer': l10n.faqWarmupSetsAnswer,
       'faqExerciseNotesAnswer': l10n.faqExerciseNotesAnswer,
       'faqExercisesAnswer': l10n.faqAddExerciseAnswer, // Legacy
-
       // ============ ADVANCED TECHNIQUES ============
       'faqSupersetsAnswer': l10n.faqSupersetsAnswer,
       'faqDropsetsAnswer': l10n.faqDropsetsAnswer,

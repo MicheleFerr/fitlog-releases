@@ -49,10 +49,12 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
   Future<void> _applyTierChange() async {
     try {
       // Apply tier/account overrides to Firestore
-      await ref.read(userProfileNotifierProvider.notifier).setDebugOverrides(
-        debugTier: _selectedTier,
-        debugAccount: _selectedAccount,
-      );
+      await ref
+          .read(userProfileNotifierProvider.notifier)
+          .setDebugOverrides(
+            debugTier: _selectedTier,
+            debugAccount: _selectedAccount,
+          );
 
       if (!mounted) return;
 
@@ -62,10 +64,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-      SnackBarService.showError(
-        context,
-        '❌ Errore: $e',
-      );
+      SnackBarService.showError(context, '❌ Errore: $e');
     }
   }
 
@@ -82,10 +81,12 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
 
     try {
       // Apply override immediately to Firestore
-      await ref.read(userProfileNotifierProvider.notifier).setDebugOverrides(
-        debugTier: newTier,
-        debugAccount: _selectedAccount,
-      );
+      await ref
+          .read(userProfileNotifierProvider.notifier)
+          .setDebugOverrides(
+            debugTier: newTier,
+            debugAccount: _selectedAccount,
+          );
 
       if (!mounted) return;
 
@@ -95,10 +96,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-      SnackBarService.showError(
-        context,
-        '❌ Errore: $e',
-      );
+      SnackBarService.showError(context, '❌ Errore: $e');
     }
   }
 
@@ -112,19 +110,16 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
 
     try {
       // Clear all debug overrides from Firestore
-      await ref.read(userProfileNotifierProvider.notifier).setDebugOverrides(
-        clearAll: true,
-      );
+      await ref
+          .read(userProfileNotifierProvider.notifier)
+          .setDebugOverrides(clearAll: true);
 
       if (!mounted) return;
 
       SnackBarService.showInfo(context, '🔄 Reset a Starter (0 XP) + Free');
     } catch (e) {
       if (!mounted) return;
-      SnackBarService.showError(
-        context,
-        '❌ Errore reset: $e',
-      );
+      SnackBarService.showError(context, '❌ Errore reset: $e');
     }
   }
 
@@ -261,28 +256,25 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(color: context.colors.onSurfaceVariant)),
           Text(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            label,
+            style: const TextStyle(color: context.colors.onSurfaceVariant),
           ),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
     );
   }
 
-  Widget _buildSection({
-    required String title,
-    required Widget child,
-  }) {
+  Widget _buildSection({required String title, required Widget child}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         child,
@@ -307,10 +299,12 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
 
             try {
               // Apply override immediately to Firestore for instant feedback
-              await ref.read(userProfileNotifierProvider.notifier).setDebugOverrides(
-                debugTier: tier,
-                debugAccount: _selectedAccount,
-              );
+              await ref
+                  .read(userProfileNotifierProvider.notifier)
+                  .setDebugOverrides(
+                    debugTier: tier,
+                    debugAccount: _selectedAccount,
+                  );
             } catch (e) {
               if (!mounted) return;
               SnackBarService.showError(context, '❌ Errore: $e');
@@ -369,10 +363,12 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
 
             try {
               // Apply override immediately to Firestore for instant feedback
-              await ref.read(userProfileNotifierProvider.notifier).setDebugOverrides(
-                debugTier: _selectedTier,
-                debugAccount: account,
-              );
+              await ref
+                  .read(userProfileNotifierProvider.notifier)
+                  .setDebugOverrides(
+                    debugTier: _selectedTier,
+                    debugAccount: account,
+                  );
             } catch (e) {
               if (!mounted) return;
               SnackBarService.showError(context, '❌ Errore: $e');

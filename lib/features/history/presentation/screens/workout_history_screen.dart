@@ -34,12 +34,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Date range filter options
-enum DateRangeOption {
-  today,
-  thisWeek,
-  thisMonth,
-  allTime,
-}
+enum DateRangeOption { today, thisWeek, thisMonth, allTime }
 
 /// Provider for the selected date range filter
 final dateRangeFilterProvider = StateProvider<DateRangeOption>((ref) {
@@ -61,10 +56,7 @@ class HistoryViewSettings {
   final bool groupByDate;
   final bool isCalendarView;
 
-  HistoryViewSettings copyWith({
-    bool? groupByDate,
-    bool? isCalendarView,
-  }) {
+  HistoryViewSettings copyWith({bool? groupByDate, bool? isCalendarView}) {
     return HistoryViewSettings(
       groupByDate: groupByDate ?? this.groupByDate,
       isCalendarView: isCalendarView ?? this.isCalendarView,
@@ -92,7 +84,8 @@ class WorkoutHistoryScreen extends ConsumerStatefulWidget {
   const WorkoutHistoryScreen({super.key});
 
   @override
-  ConsumerState<WorkoutHistoryScreen> createState() => _WorkoutHistoryScreenState();
+  ConsumerState<WorkoutHistoryScreen> createState() =>
+      _WorkoutHistoryScreenState();
 }
 
 class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
@@ -120,21 +113,13 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
       vsync: this,
     );
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOutCubic,
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
+    );
 
-    _searchAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _searchController,
-      curve: Curves.easeOutCubic,
-    ));
+    _searchAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _searchController, curve: Curves.easeOutCubic),
+    );
 
     _animationController.forward();
   }
@@ -168,8 +153,8 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
 
     // Update filter in provider
     final currentFilter = ref.read(workoutHistoryFilterProvider);
-    ref.read(workoutHistoryFilterProvider.notifier).state =
-        currentFilter.copyWith(searchQuery: query);
+    ref.read(workoutHistoryFilterProvider.notifier).state = currentFilter
+        .copyWith(searchQuery: query);
   }
 
   void _toggleSearch() {
@@ -186,7 +171,6 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -197,8 +181,12 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     final dateRangeFilter = ref.watch(dateRangeFilterProvider);
     final stats = ref.watch(workoutStatsProvider);
     // Select only the fields we need to prevent unnecessary rebuilds
-    final isCalendarView = ref.watch(historyViewSettingsProvider.select((s) => s.isCalendarView));
-    final groupByDate = ref.watch(historyViewSettingsProvider.select((s) => s.groupByDate));
+    final isCalendarView = ref.watch(
+      historyViewSettingsProvider.select((s) => s.isCalendarView),
+    );
+    final groupByDate = ref.watch(
+      historyViewSettingsProvider.select((s) => s.groupByDate),
+    );
 
     // Get filtered workouts based on date range
     final filteredByDateRange = _getFilteredByDateRange(
@@ -289,18 +277,23 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
 
             // Date Range Filter Chips
             if (!_isSearchActive)
-              _buildDateFilterChips(context, dateRangeFilter, colorScheme, l10n),
+              _buildDateFilterChips(
+                context,
+                dateRangeFilter,
+                colorScheme,
+                l10n,
+              ),
 
             // Sync Status Indicator
             if (syncStatus == SyncStatus.initialSyncing)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: Row(
                   children: [
-                    LoadingIndicator(
-                      size: 16,
-                      color: colorScheme.primary,
-                    ),
+                    LoadingIndicator(size: 16, color: colorScheme.primary),
                     const SizedBox(width: 12),
                     Text(
                       l10n.syncingWorkouts,
@@ -316,7 +309,8 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
             Expanded(
               child: workoutsAsync.when(
                 loading: () => _buildLoadingState(l10n, colorScheme, theme),
-                error: (error, stack) => _buildErrorState(l10n, colorScheme, error, theme),
+                error: (error, stack) =>
+                    _buildErrorState(l10n, colorScheme, error, theme),
                 data: (workouts) => isCalendarView
                     ? _buildCalendarView(
                         context,
@@ -326,34 +320,39 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                         l10n,
                       )
                     : filteredByDateRange.isEmpty
-                        ? _buildEmptyStateWithRefresh(context, l10n, colorScheme, theme)
-                        : groupByDate
-                            ? _buildGroupedListWithRefresh(
-                                context,
-                                filteredByDateRange,
-                                colorScheme,
-                                theme,
-                                l10n,
-                              )
-                            : RefreshIndicator(
-                                onRefresh: _onRefresh,
-                                color: colorScheme.primary,
-                                child: MaterialScrollList(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                                  itemCount: filteredByDateRange.length,
-                                  itemBuilder: (context, index) {
-                                    final workout = filteredByDateRange[index];
-                                    return _buildSwipeableWorkoutCard(
-                                      context,
-                                      workout,
-                                      colorScheme,
-                                      theme,
-                                      l10n,
-                                      index,
-                                    );
-                                  },
-                                ),
-                              ),
+                    ? _buildEmptyStateWithRefresh(
+                        context,
+                        l10n,
+                        colorScheme,
+                        theme,
+                      )
+                    : groupByDate
+                    ? _buildGroupedListWithRefresh(
+                        context,
+                        filteredByDateRange,
+                        colorScheme,
+                        theme,
+                        l10n,
+                      )
+                    : RefreshIndicator(
+                        onRefresh: _onRefresh,
+                        color: colorScheme.primary,
+                        child: MaterialScrollList(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: filteredByDateRange.length,
+                          itemBuilder: (context, index) {
+                            final workout = filteredByDateRange[index];
+                            return _buildSwipeableWorkoutCard(
+                              context,
+                              workout,
+                              colorScheme,
+                              theme,
+                              l10n,
+                              index,
+                            );
+                          },
+                        ),
+                      ),
               ),
             ),
           ],
@@ -373,22 +372,38 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     switch (dateRange) {
       case DateRangeOption.today:
         return workouts.where((w) {
-          final workoutDay = DateTime(w.completedAt.year, w.completedAt.month, w.completedAt.day);
+          final workoutDay = DateTime(
+            w.completedAt.year,
+            w.completedAt.month,
+            w.completedAt.day,
+          );
           return workoutDay.isAtSameMomentAs(today);
         }).toList();
       case DateRangeOption.thisWeek:
         final weekStart = today.subtract(Duration(days: today.weekday - 1));
         return workouts.where((w) {
-          final workoutDay = DateTime(w.completedAt.year, w.completedAt.month, w.completedAt.day);
-          return workoutDay.isAfter(weekStart.subtract(const Duration(days: 1))) ||
-                 workoutDay.isAtSameMomentAs(weekStart);
+          final workoutDay = DateTime(
+            w.completedAt.year,
+            w.completedAt.month,
+            w.completedAt.day,
+          );
+          return workoutDay.isAfter(
+                weekStart.subtract(const Duration(days: 1)),
+              ) ||
+              workoutDay.isAtSameMomentAs(weekStart);
         }).toList();
       case DateRangeOption.thisMonth:
         final monthStart = DateTime(now.year, now.month, 1);
         return workouts.where((w) {
-          final workoutDay = DateTime(w.completedAt.year, w.completedAt.month, w.completedAt.day);
-          return workoutDay.isAfter(monthStart.subtract(const Duration(days: 1))) ||
-                 workoutDay.isAtSameMomentAs(monthStart);
+          final workoutDay = DateTime(
+            w.completedAt.year,
+            w.completedAt.month,
+            w.completedAt.day,
+          );
+          return workoutDay.isAfter(
+                monthStart.subtract(const Duration(days: 1)),
+              ) ||
+              workoutDay.isAtSameMomentAs(monthStart);
         }).toList();
       case DateRangeOption.allTime:
         return workouts;
@@ -418,13 +433,20 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
       if (workoutDay.isAfter(thisWeekStart.subtract(const Duration(days: 1))) ||
           workoutDay.isAtSameMomentAs(thisWeekStart)) {
         groupKey = l10n.thisWeek;
-      } else if (workoutDay.isAfter(lastWeekStart.subtract(const Duration(days: 1))) ||
+      } else if (workoutDay.isAfter(
+            lastWeekStart.subtract(const Duration(days: 1)),
+          ) ||
           workoutDay.isAtSameMomentAs(lastWeekStart)) {
         groupKey = l10n.lastWeek;
       } else {
         // Get start of the week for this workout
-        final weekStart = workoutDay.subtract(Duration(days: workoutDay.weekday - 1));
-        final weekLabel = DateFormat('d MMM', l10n.localeName).format(weekStart);
+        final weekStart = workoutDay.subtract(
+          Duration(days: workoutDay.weekday - 1),
+        );
+        final weekLabel = DateFormat(
+          'd MMM',
+          l10n.localeName,
+        ).format(weekStart);
         groupKey = l10n.weekOfDate(weekLabel);
       }
 
@@ -669,8 +691,12 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                 fontWeight: FontWeight.bold,
               ),
               // Default
-              defaultTextStyle: theme.textTheme.bodyMedium!.copyWith(color: colorScheme.onSurface),
-              weekendTextStyle: theme.textTheme.bodyMedium!.copyWith(color: colorScheme.onSurface),
+              defaultTextStyle: theme.textTheme.bodyMedium!.copyWith(
+                color: colorScheme.onSurface,
+              ),
+              weekendTextStyle: theme.textTheme.bodyMedium!.copyWith(
+                color: colorScheme.onSurface,
+              ),
               outsideTextStyle: theme.textTheme.bodyMedium!.copyWith(
                 color: colorScheme.onSurface.withValues(alpha: 0.4),
               ),
@@ -760,7 +786,13 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         // Workouts list for selected day
         Expanded(
           child: selectedDayWorkouts.isEmpty
-              ? _buildNoWorkoutsForDay(context, selectedDay, colorScheme, theme, l10n)
+              ? _buildNoWorkoutsForDay(
+                  context,
+                  selectedDay,
+                  colorScheme,
+                  theme,
+                  l10n,
+                )
               : MaterialScrollList(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: selectedDayWorkouts.length,
@@ -1009,7 +1041,9 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
       selectedColor: colorScheme.primaryContainer,
       checkmarkColor: colorScheme.onPrimaryContainer,
       labelStyle: theme.textTheme.labelMedium?.copyWith(
-        color: isSelected ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant,
+        color: isSelected
+            ? colorScheme.onPrimaryContainer
+            : colorScheme.onSurfaceVariant,
         fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
       ),
     );
@@ -1141,12 +1175,16 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     );
 
     if (result == true && context.mounted) {
-      final deleteResult = await ref.read(workoutHistoryOperationsProvider)
+      final deleteResult = await ref
+          .read(workoutHistoryOperationsProvider)
           .deleteWorkout(workout.id);
 
       deleteResult.fold(
         (failure) {
-          SnackBarService.showError(context, l10n.errorWithMessage(failure.message));
+          SnackBarService.showError(
+            context,
+            l10n.errorWithMessage(failure.message),
+          );
         },
         (_) {
           SnackBarService.showInfo(context, l10n.workoutDeletedSuccessfully);
@@ -1163,12 +1201,18 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => _ViewSettingsSheet(l10n: l10n),
     );
   }
 
-  Widget _buildSearchBar(BuildContext context, AppLocalizations l10n, ColorScheme colorScheme) {
+  Widget _buildSearchBar(
+    BuildContext context,
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+  ) {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
@@ -1177,42 +1221,54 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: TextField(
-        controller: _searchFieldController,
-        onChanged: _onSearchChanged,
-        decoration: InputDecoration(
-          hintText: l10n.searchWorkouts,
-          prefixIcon: Icon(
-            AppIcons.search,
-            color: colorScheme.onSurfaceVariant,
+          controller: _searchFieldController,
+          onChanged: _onSearchChanged,
+          decoration: InputDecoration(
+            hintText: l10n.searchWorkouts,
+            prefixIcon: Icon(
+              AppIcons.search,
+              color: colorScheme.onSurfaceVariant,
+            ),
+            suffixIcon: _searchQuery.isNotEmpty
+                ? IconButton(
+                    icon: Icon(
+                      AppIcons.clear,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                    onPressed: () {
+                      _searchFieldController.clear();
+                      _onSearchChanged('');
+                    },
+                  )
+                : null,
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
           ),
-          suffixIcon: _searchQuery.isNotEmpty
-              ? IconButton(
-                  icon: Icon(
-                    AppIcons.clear,
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                  onPressed: () {
-                    _searchFieldController.clear();
-                    _onSearchChanged('');
-                  },
-                )
-              : null,
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        ),
         ),
       ),
     );
   }
 
-  Widget _buildLoadingState(AppLocalizations l10n, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildLoadingState(
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+    ThemeData theme,
+  ) {
     return LoadingIndicator(
       message: l10n.loadingWorkouts,
       color: colorScheme.primary,
     );
   }
 
-  Widget _buildErrorState(AppLocalizations l10n, ColorScheme colorScheme, Object error, ThemeData theme) {
+  Widget _buildErrorState(
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+    Object error,
+    ThemeData theme,
+  ) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -1220,11 +1276,11 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SemanticIcon(
-  icon: AppIcons.error,
-  semanticLabel: 'Error',
-  size: AppIconSize.medium,
-  color: colorScheme.error,
-),
+              icon: AppIcons.error,
+              semanticLabel: 'Error',
+              size: AppIconSize.medium,
+              color: colorScheme.error,
+            ),
             const SizedBox(height: 16),
             Text(
               l10n.errorLoadingWorkouts,
@@ -1256,7 +1312,12 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, AppLocalizations l10n, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildEmptyState(
+    BuildContext context,
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+    ThemeData theme,
+  ) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -1298,7 +1359,12 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
   }
 
   /// Empty state with pull-to-refresh support to sync workouts from Firestore
-  Widget _buildEmptyStateWithRefresh(BuildContext context, AppLocalizations l10n, ColorScheme colorScheme, ThemeData theme) {
+  Widget _buildEmptyStateWithRefresh(
+    BuildContext context,
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+    ThemeData theme,
+  ) {
     return RefreshIndicator(
       onRefresh: _onRefresh,
       color: colorScheme.primary,
@@ -1358,10 +1424,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Workout emoji
-                  Text(
-                    emoji,
-                    style: theme.textTheme.titleLarge,
-                  ),
+                  Text(emoji, style: theme.textTheme.titleLarge),
                   const SizedBox(width: 12),
 
                   // Name and date
@@ -1397,16 +1460,23 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                     child: GestureDetector(
                       onTap: () => _editWorkoutDuration(context, workout, l10n),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: canEdit
-                              ? colorScheme.primaryContainer.withValues(alpha: 0.3)
+                              ? colorScheme.primaryContainer.withValues(
+                                  alpha: 0.3,
+                                )
                               : colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(8),
                           border: canEdit
                               ? null
                               : Border.all(
-                                  color: colorScheme.outline.withValues(alpha: 0.3),
+                                  color: colorScheme.outline.withValues(
+                                    alpha: 0.3,
+                                  ),
                                 ),
                         ),
                         child: Row(
@@ -1482,9 +1552,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                               child: Text(
                                 l10n.editWorkout,
                                 style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: canEdit
-                                      ? null
-                                      : colorScheme.outline,
+                                  color: canEdit ? null : colorScheme.outline,
                                 ),
                               ),
                             ),
@@ -1534,10 +1602,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    intensity,
-                    style: theme.textTheme.bodyMedium,
-                  ),
+                  Text(intensity, style: theme.textTheme.bodyMedium),
                 ],
               ),
             ],
@@ -1684,11 +1749,17 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     }
   }
 
-  void _showWorkoutDetail(BuildContext context, WorkoutHistoryDetail workout, AppLocalizations l10n) {
+  void _showWorkoutDetail(
+    BuildContext context,
+    WorkoutHistoryDetail workout,
+    AppLocalizations l10n,
+  ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (_) => DraggableScrollableSheet(
         initialChildSize: 0.8,
         minChildSize: 0.8,
@@ -1714,15 +1785,16 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     // Free user: check if this is the latest workout
     final workoutsAsync = ref.read(workoutHistoryProvider);
     return workoutsAsync.whenOrNull(
-      data: (workouts) {
-        if (workouts.isEmpty) return true;
-        // Find the workout with most recent completedAt
-        final latestWorkout = workouts.reduce((a, b) =>
-          a.completedAt.isAfter(b.completedAt) ? a : b,
-        );
-        return workout.id == latestWorkout.id;
-      },
-    ) ?? false;
+          data: (workouts) {
+            if (workouts.isEmpty) return true;
+            // Find the workout with most recent completedAt
+            final latestWorkout = workouts.reduce(
+              (a, b) => a.completedAt.isAfter(b.completedAt) ? a : b,
+            );
+            return workout.id == latestWorkout.id;
+          },
+        ) ??
+        false;
   }
 
   /// Show dialog when user tries to edit a locked workout
@@ -1800,7 +1872,11 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     );
   }
 
-  void _editWorkout(BuildContext context, WorkoutHistoryDetail workout, AppLocalizations l10n) {
+  void _editWorkout(
+    BuildContext context,
+    WorkoutHistoryDetail workout,
+    AppLocalizations l10n,
+  ) {
     HapticFeedback.lightImpact();
 
     // Check if user can edit this workout
@@ -1812,10 +1888,11 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
-      builder: (context) => WorkoutHistoryEditorEnhanced(
-        historyWorkout: workout,
-      ),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
+      builder: (context) =>
+          WorkoutHistoryEditorEnhanced(historyWorkout: workout),
     );
   }
 
@@ -1840,19 +1917,24 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     final newDuration = await WorkoutTimeEditSheet.show(
       context: context,
       workout: workoutEntity,
-      showSuspiciousWarning: false, // User is manually editing, no warning needed
+      showSuspiciousWarning:
+          false, // User is manually editing, no warning needed
     );
 
     // If user selected a new duration, update the workout
     if (newDuration != null && context.mounted) {
       final updatedWorkout = workout.copyWith(duration: newDuration);
 
-      final result = await ref.read(workoutHistoryOperationsProvider)
+      final result = await ref
+          .read(workoutHistoryOperationsProvider)
           .updateWorkout(updatedWorkout);
 
       result.fold(
         (failure) {
-          SnackBarService.showError(context, l10n.errorWithMessage(failure.message));
+          SnackBarService.showError(
+            context,
+            l10n.errorWithMessage(failure.message),
+          );
         },
         (_) {
           SnackBarService.showSuccess(context, l10n.workoutUpdatedSuccessfully);
@@ -1863,7 +1945,11 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     }
   }
 
-  void _deleteWorkout(BuildContext context, WorkoutHistoryDetail workout, AppLocalizations l10n) {
+  void _deleteWorkout(
+    BuildContext context,
+    WorkoutHistoryDetail workout,
+    AppLocalizations l10n,
+  ) {
     HapticFeedback.lightImpact();
     showDialog(
       context: context,
@@ -1879,12 +1965,19 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
             onPressed: () async {
               Navigator.pop(context);
 
-              final result = await ref.read(workoutHistoryOperationsProvider)
+              final result = await ref
+                  .read(workoutHistoryOperationsProvider)
                   .deleteWorkout(workout.id);
 
               result.fold(
-                (failure) => SnackBarService.showError(context, l10n.errorWithMessage(failure.message)),
-                (_) => SnackBarService.showInfo(context, l10n.workoutDeletedSuccessfully),
+                (failure) => SnackBarService.showError(
+                  context,
+                  l10n.errorWithMessage(failure.message),
+                ),
+                (_) => SnackBarService.showInfo(
+                  context,
+                  l10n.workoutDeletedSuccessfully,
+                ),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -1897,15 +1990,11 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
       ),
     );
   }
-
 }
 
 /// Horizontal intensity bar
 class _IntensityBar extends StatelessWidget {
-  const _IntensityBar({
-    required this.intensity,
-    required this.colorScheme,
-  });
+  const _IntensityBar({required this.intensity, required this.colorScheme});
 
   final double intensity;
   final ColorScheme colorScheme;
@@ -1946,8 +2035,12 @@ class _ViewSettingsSheet extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
     // Select only needed fields for surgical rebuilds
-    final isCalendarView = ref.watch(historyViewSettingsProvider.select((s) => s.isCalendarView));
-    final groupByDate = ref.watch(historyViewSettingsProvider.select((s) => s.groupByDate));
+    final isCalendarView = ref.watch(
+      historyViewSettingsProvider.select((s) => s.isCalendarView),
+    );
+    final groupByDate = ref.watch(
+      historyViewSettingsProvider.select((s) => s.groupByDate),
+    );
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -1996,9 +2089,7 @@ class _ViewSettingsSheet extends ConsumerWidget {
             _SettingsTile(
               icon: isCalendarView ? AppIcons.calendarMonth : AppIcons.list,
               title: isCalendarView ? l10n.calendarView : l10n.listView,
-              subtitle: isCalendarView
-                  ? l10n.calendarView
-                  : l10n.listView,
+              subtitle: isCalendarView ? l10n.calendarView : l10n.listView,
               trailing: Switch.adaptive(
                 value: isCalendarView,
                 onChanged: (value) {
@@ -2074,9 +2165,7 @@ class _SettingsTile extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: theme.textTheme.bodyLarge?.copyWith(
-          fontWeight: FontWeight.w500,
-        ),
+        style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
       ),
       trailing: trailing,
     );

@@ -99,9 +99,7 @@ class DropsetTemplateRepository {
     required int maxCustomDropsets,
   }) async {
     if (kDebugMode) {
-      debugPrint(
-        '💾 Saving custom dropset template "${template.name}"',
-      );
+      debugPrint('💾 Saving custom dropset template "${template.name}"');
     }
 
     try {

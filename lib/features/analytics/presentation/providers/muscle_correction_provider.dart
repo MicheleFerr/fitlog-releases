@@ -25,14 +25,15 @@ import 'package:gymbro_flutter_new/features/analytics/domain/repositories/muscle
 /// **Dependencies**:
 /// - HiveBoxManagerEnhanced (singleton)
 /// - FirebaseFirestore (singleton)
-final muscleCorrectionRepositoryProvider =
-    Provider<MuscleCorrectionRepository>((ref) {
-  ref.keepAlive(); // FIX: previene ricreazione repository con Hive+Firestore
-  return MuscleCorrectionRepositoryImpl(
-    hiveBoxManager: HiveBoxManagerEnhanced(),
-    firestore: FirebaseFirestore.instance,
-  );
-});
+final muscleCorrectionRepositoryProvider = Provider<MuscleCorrectionRepository>(
+  (ref) {
+    ref.keepAlive(); // FIX: previene ricreazione repository con Hive+Firestore
+    return MuscleCorrectionRepositoryImpl(
+      hiveBoxManager: HiveBoxManagerEnhanced(),
+      firestore: FirebaseFirestore.instance,
+    );
+  },
+);
 
 /// Provider for watching local corrections
 ///
@@ -41,32 +42,34 @@ final muscleCorrectionRepositoryProvider =
 /// **Updates**: When corrections are saved/deleted locally
 ///
 /// **Note**: Uses autoDispose because this is scoped data (not global auth/config)
-final localCorrectionsProvider = FutureProvider.autoDispose<List<MuscleCorrection>>((ref) async {
-  final repository = ref.watch(muscleCorrectionRepositoryProvider);
+final localCorrectionsProvider =
+    FutureProvider.autoDispose<List<MuscleCorrection>>((ref) async {
+      final repository = ref.watch(muscleCorrectionRepositoryProvider);
 
-  final result = await repository.getLocalCorrections();
+      final result = await repository.getLocalCorrections();
 
-  return result.fold(
-    (failure) => throw Exception(failure.message),
-    (corrections) => corrections,
-  );
-});
+      return result.fold(
+        (failure) => throw Exception(failure.message),
+        (corrections) => corrections,
+      );
+    });
 
 /// Provider for watching feedback status of a specific correction
 ///
 /// **Parameters**: correctionId (Firestore document ID)
 ///
 /// **Returns**: StreamProvider with FeedbackStatus
-final feedbackStatusProvider = StreamProvider.family<FeedbackStatus, String>(
-  (ref, correctionId) {
-    ref.keepAlive(); // FIX: previene ricreazione stream listener
-    final repository = ref.watch(muscleCorrectionRepositoryProvider);
+final feedbackStatusProvider = StreamProvider.family<FeedbackStatus, String>((
+  ref,
+  correctionId,
+) {
+  ref.keepAlive(); // FIX: previene ricreazione stream listener
+  final repository = ref.watch(muscleCorrectionRepositoryProvider);
 
-    return repository.watchFeedbackStatus(correctionId).map((either) {
-      return either.fold(
-        (failure) => throw Exception(failure.message),
-        (status) => status,
-      );
-    });
-  },
-);
+  return repository.watchFeedbackStatus(correctionId).map((either) {
+    return either.fold(
+      (failure) => throw Exception(failure.message),
+      (status) => status,
+    );
+  });
+});

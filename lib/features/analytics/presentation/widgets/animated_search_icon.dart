@@ -6,7 +6,6 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AnimatedSearchIcon extends StatefulWidget {
-  
   const AnimatedSearchIcon({
     super.key,
     required this.onPressed,
@@ -27,68 +26,56 @@ class _AnimatedSearchIconState extends State<AnimatedSearchIcon>
   late Animation<double> _pulseAnimation;
   late Animation<double> _bounceAnimation;
   late Animation<double> _glowAnimation;
-  
+
   bool _hasShownInitialAnimation = false;
 
   @override
   void initState() {
     super.initState();
-    
+
     // Pulse animation (continuous)
     _pulseController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
     );
-    
-    _pulseAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeInOut,
-    ));
-    
+
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+
     // Bounce animation (initial attention grabber)
     _bounceController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
-    _bounceAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(
-      parent: _bounceController,
-      curve: Curves.elasticOut,
-    ));
-    
+
+    _bounceAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _bounceController, curve: Curves.elasticOut),
+    );
+
     // Glow animation
     _glowController = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
     );
-    
-    _glowAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(
-      parent: _glowController,
-      curve: Curves.easeInOut,
-    ));
-    
+
+    _glowAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _glowController, curve: Curves.easeInOut),
+    );
+
     // Start animations
     if (widget.showInitialAnimation && !_hasShownInitialAnimation) {
       _startInitialAnimation();
     }
-    
+
     // Start continuous pulse
     _pulseController.repeat(reverse: true);
   }
-  
+
   void _startInitialAnimation() async {
     // Wait a bit for the screen to load
     await Future.delayed(const Duration(milliseconds: 500));
-    
+
     if (mounted) {
       // Start bounce
       await _bounceController.forward();
@@ -121,7 +108,7 @@ class _AnimatedSearchIconState extends State<AnimatedSearchIcon>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -153,7 +140,7 @@ class _AnimatedSearchIconState extends State<AnimatedSearchIcon>
             );
           },
         ),
-        
+
         // Ripple effect rings
         if (_hasShownInitialAnimation) ...[
           AnimatedBuilder(
@@ -179,18 +166,17 @@ class _AnimatedSearchIconState extends State<AnimatedSearchIcon>
             },
           ),
         ],
-        
+
         // Main icon button
         AnimatedBuilder(
-          animation: Listenable.merge([
-            _bounceAnimation,
-            _pulseAnimation,
-          ]),
+          animation: Listenable.merge([_bounceAnimation, _pulseAnimation]),
           builder: (context, child) {
-            final scale = _bounceAnimation.value == 0 
-                ? 1.0 
-                : 0.9 + (_bounceAnimation.value * 0.1) + (_pulseAnimation.value - 1) * 0.1;
-            
+            final scale = _bounceAnimation.value == 0
+                ? 1.0
+                : 0.9 +
+                      (_bounceAnimation.value * 0.1) +
+                      (_pulseAnimation.value - 1) * 0.1;
+
             return Transform.scale(
               scale: scale,
               child: Transform.rotate(
@@ -218,7 +204,7 @@ class _AnimatedSearchIconState extends State<AnimatedSearchIcon>
             );
           },
         ),
-        
+
         // "NEW" badge (optional, for first time users)
         if (!_hasShownInitialAnimation && widget.showInitialAnimation)
           Positioned(
@@ -257,11 +243,7 @@ class _AnimatedSearchIconState extends State<AnimatedSearchIcon>
 }
 
 class PulsingSearchIcon extends StatefulWidget {
-  
-  const PulsingSearchIcon({
-    super.key,
-    required this.onPressed,
-  });
+  const PulsingSearchIcon({super.key, required this.onPressed});
   final VoidCallback onPressed;
 
   @override
@@ -280,15 +262,12 @@ class _PulsingSearchIconState extends State<PulsingSearchIcon>
       duration: const Duration(seconds: 1),
       vsync: this,
     );
-    
+
     _animation = Tween<double>(
       begin: 0.8,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
-    
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+
     _controller.repeat(reverse: true);
   }
 
@@ -301,7 +280,7 @@ class _PulsingSearchIconState extends State<PulsingSearchIcon>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {

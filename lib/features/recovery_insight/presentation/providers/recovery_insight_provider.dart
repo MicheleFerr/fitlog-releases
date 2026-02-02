@@ -36,8 +36,8 @@ final healthKitDatasourceProvider = Provider<HealthKitDatasource>((ref) {
 /// Provider for SleepWorkoutCorrelationService
 final sleepWorkoutCorrelationServiceProvider =
     Provider<SleepWorkoutCorrelationService>((ref) {
-  return SleepWorkoutCorrelationService();
-});
+      return SleepWorkoutCorrelationService();
+    });
 
 // ==========================================
 // DATA PROVIDERS
@@ -50,46 +50,48 @@ final sleepWorkoutCorrelationServiceProvider =
 /// - Sleep efficiency
 /// - Nights below thresholds
 /// - Recommendations
-final sleepAnalyticsProvider =
-    FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
-  final datasource = ref.watch(healthKitDatasourceProvider);
+final sleepAnalyticsProvider = FutureProvider.autoDispose<Map<String, dynamic>>(
+  (ref) async {
+    final datasource = ref.watch(healthKitDatasourceProvider);
 
-  // Check if HealthKit is available (iOS only)
-  if (!datasource.isAvailable) {
-    return {
-      'available': false,
-      'message': 'HealthKit non disponibile su questo dispositivo',
-    };
-  }
-
-  try {
-    // Initialize HealthKit (request permissions if needed)
-    await datasource.initialize();
-
-    // Get sleep analytics for last 7 days
-    final analytics = await datasource.getSleepAnalytics(days: 7);
-
-    if (kDebugMode) {
-      debugPrint('[SleepAnalytics] Fetched: $analytics');
+    // Check if HealthKit is available (iOS only)
+    if (!datasource.isAvailable) {
+      return {
+        'available': false,
+        'message': 'HealthKit non disponibile su questo dispositivo',
+      };
     }
 
-    return analytics;
-  } catch (e) {
-    if (kDebugMode) {
-      debugPrint('[SleepAnalytics] Error: $e');
+    try {
+      // Initialize HealthKit (request permissions if needed)
+      await datasource.initialize();
+
+      // Get sleep analytics for last 7 days
+      final analytics = await datasource.getSleepAnalytics(days: 7);
+
+      if (kDebugMode) {
+        debugPrint('[SleepAnalytics] Fetched: $analytics');
+      }
+
+      return analytics;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[SleepAnalytics] Error: $e');
+      }
+      return {
+        'available': false,
+        'message': 'Errore nel recupero dati sonno: $e',
+      };
     }
-    return {
-      'available': false,
-      'message': 'Errore nel recupero dati sonno: $e',
-    };
-  }
-});
+  },
+);
 
 /// Provider for sleep records (last 7 days)
 ///
 /// Converts raw HealthKit data to SleepRecord entities
-final sleepRecordsProvider =
-    FutureProvider.autoDispose<List<SleepRecord>>((ref) async {
+final sleepRecordsProvider = FutureProvider.autoDispose<List<SleepRecord>>((
+  ref,
+) async {
   if (kDebugMode) {
     debugPrint('');
     debugPrint('╔══════════════════════════════════════════════════════════╗');
@@ -113,7 +115,9 @@ final sleepRecordsProvider =
   try {
     // Initialize HealthKit (request permissions if needed)
     if (kDebugMode) {
-      debugPrint('🔄 [SleepRecords] Step 2: Calling datasource.initialize()...');
+      debugPrint(
+        '🔄 [SleepRecords] Step 2: Calling datasource.initialize()...',
+      );
     }
     await datasource.initialize();
     if (kDebugMode) {
@@ -122,21 +126,31 @@ final sleepRecordsProvider =
 
     // Fetch raw sleep data for last 7 days
     if (kDebugMode) {
-      debugPrint('🔄 [SleepRecords] Step 3: Calling datasource.getSleepThisWeek()...');
+      debugPrint(
+        '🔄 [SleepRecords] Step 3: Calling datasource.getSleepThisWeek()...',
+      );
     }
     final sleepData = await datasource.getSleepThisWeek();
     if (kDebugMode) {
-      debugPrint('📊 [SleepRecords] Step 3: getSleepThisWeek() returned ${sleepData.length} data points');
+      debugPrint(
+        '📊 [SleepRecords] Step 3: getSleepThisWeek() returned ${sleepData.length} data points',
+      );
       if (sleepData.isNotEmpty) {
-        debugPrint('   First point: ${sleepData.first.dateFrom} - ${sleepData.first.value} (${sleepData.first.type.name})');
-        debugPrint('   Last point: ${sleepData.last.dateFrom} - ${sleepData.last.value} (${sleepData.last.type.name})');
+        debugPrint(
+          '   First point: ${sleepData.first.dateFrom} - ${sleepData.first.value} (${sleepData.first.type.name})',
+        );
+        debugPrint(
+          '   Last point: ${sleepData.last.dateFrom} - ${sleepData.last.value} (${sleepData.last.type.name})',
+        );
       }
     }
 
     if (sleepData.isEmpty) {
       if (kDebugMode) {
         debugPrint('⚠️ [SleepRecords] NO SLEEP DATA - returning empty list');
-        debugPrint('╚══════════════════════════════════════════════════════════╝');
+        debugPrint(
+          '╚══════════════════════════════════════════════════════════╝',
+        );
       }
       return [];
     }
@@ -169,7 +183,8 @@ final sleepRecordsProvider =
 
       // EDGE CASE 2: Deduplication - skip if we've seen this exact time range
       // Different sources (Watch, iPhone) may report same sleep
-      final sessionKey = '${point.dateFrom.millisecondsSinceEpoch}-${point.dateTo.millisecondsSinceEpoch}';
+      final sessionKey =
+          '${point.dateFrom.millisecondsSinceEpoch}-${point.dateTo.millisecondsSinceEpoch}';
       if (processedSessions.contains(sessionKey)) continue;
       processedSessions.add(sessionKey);
 
@@ -193,7 +208,9 @@ final sleepRecordsProvider =
       if (entry.value >= minNightSleepMinutes) {
         validNights[entry.key] = entry.value;
       } else if (kDebugMode) {
-        debugPrint('   ⚠️ Filtered out ${entry.key}: ${entry.value.round()}min (<2h, likely nap)');
+        debugPrint(
+          '   ⚠️ Filtered out ${entry.key}: ${entry.value.round()}min (<2h, likely nap)',
+        );
       }
     }
 
@@ -227,16 +244,20 @@ final sleepRecordsProvider =
         // If in-bed is less than asleep (data error), use asleep + small buffer
         inBedMinutes = asleepMinutes + 15;
         if (kDebugMode) {
-          debugPrint('   ⚠️ Corrected inBed for $date: was ${nightlyInBed[date]?.round()}min, now ${inBedMinutes.round()}min');
+          debugPrint(
+            '   ⚠️ Corrected inBed for $date: was ${nightlyInBed[date]?.round()}min, now ${inBedMinutes.round()}min',
+          );
         }
       }
 
-      records.add(SleepRecord.fromHealthData(
-        date: date,
-        asleepMinutes: asleepMinutes,
-        inBedMinutes: inBedMinutes,
-        source: 'HealthKit',
-      ));
+      records.add(
+        SleepRecord.fromHealthData(
+          date: date,
+          asleepMinutes: asleepMinutes,
+          inBedMinutes: inBedMinutes,
+          source: 'HealthKit',
+        ),
+      );
     }
 
     // Sort by date descending (most recent first)
@@ -256,7 +277,9 @@ final sleepRecordsProvider =
         // Less than 3 hours - likely incomplete data
         // Remove "today" from the list, use yesterday as "last night"
         if (kDebugMode) {
-          debugPrint('   ⚠️ Removed incomplete today record: ${todayRecord.formattedDuration} (before 10 AM)');
+          debugPrint(
+            '   ⚠️ Removed incomplete today record: ${todayRecord.formattedDuration} (before 10 AM)',
+          );
         }
         records.removeAt(0);
       }
@@ -264,11 +287,17 @@ final sleepRecordsProvider =
 
     if (kDebugMode) {
       debugPrint('');
-      debugPrint('✅ [SleepRecords] FINAL RESULT: ${records.length} sleep records');
+      debugPrint(
+        '✅ [SleepRecords] FINAL RESULT: ${records.length} sleep records',
+      );
       for (final record in records) {
-        debugPrint('   📅 ${record.date.toIso8601String().split('T')[0]}: ${record.formattedDuration}');
+        debugPrint(
+          '   📅 ${record.date.toIso8601String().split('T')[0]}: ${record.formattedDuration}',
+        );
       }
-      debugPrint('╚══════════════════════════════════════════════════════════╝');
+      debugPrint(
+        '╚══════════════════════════════════════════════════════════╝',
+      );
     }
 
     return records;
@@ -277,7 +306,9 @@ final sleepRecordsProvider =
       debugPrint('');
       debugPrint('❌ [SleepRecords] EXCEPTION: $e');
       debugPrint('   Stack: $stackTrace');
-      debugPrint('╚══════════════════════════════════════════════════════════╝');
+      debugPrint(
+        '╚══════════════════════════════════════════════════════════╝',
+      );
     }
     return [];
   }
@@ -297,8 +328,9 @@ final sleepRecordsProvider =
 /// **Bodyweight Exercise Volume**:
 /// Automatically uses user's body weight from Body Measurements for
 /// bodyweight exercises (push-ups, pull-ups, etc.) to calculate accurate volume.
-final recoveryInsightProvider =
-    FutureProvider.autoDispose<RecoveryInsight>((ref) async {
+final recoveryInsightProvider = FutureProvider.autoDispose<RecoveryInsight>((
+  ref,
+) async {
   final service = ref.watch(sleepWorkoutCorrelationServiceProvider);
   final sleepRecords = await ref.watch(sleepRecordsProvider.future);
   final isPro = ref.watch(isPremiumUserProvider);
@@ -326,11 +358,14 @@ final recoveryInsightProvider =
       final latestWeight = weightMeasurements.first;
       // Convert to kg if needed
       userBodyWeightKg = latestWeight.unit == MeasurementUnit.pounds
-          ? latestWeight.value * 0.453592 // lbs to kg
+          ? latestWeight.value *
+                0.453592 // lbs to kg
           : latestWeight.value;
 
       if (kDebugMode) {
-        debugPrint('[RecoveryInsight] User body weight: ${userBodyWeightKg.toStringAsFixed(1)}kg');
+        debugPrint(
+          '[RecoveryInsight] User body weight: ${userBodyWeightKg.toStringAsFixed(1)}kg',
+        );
       }
     }
   } catch (e) {
@@ -369,12 +404,12 @@ final recoveryInsightProvider =
 /// Returns null for free users
 final sleepCorrelationProvider =
     FutureProvider.autoDispose<SleepWorkoutCorrelation?>((ref) async {
-  final isPro = ref.watch(isPremiumUserProvider);
-  if (!isPro) return null;
+      final isPro = ref.watch(isPremiumUserProvider);
+      if (!isPro) return null;
 
-  final insight = await ref.watch(recoveryInsightProvider.future);
-  return insight.correlation;
-});
+      final insight = await ref.watch(recoveryInsightProvider.future);
+      return insight.correlation;
+    });
 
 // ==========================================
 // CONVENIENCE PROVIDERS

@@ -32,31 +32,56 @@ class DemoModalData {
         exerciseName: 'Bench Press',
         muscleGroup: 'chest',
         sessions: [
-          _createSession('Bench Press', 'chest', now.subtract(const Duration(days: 0)), [
-            (weight: 80.0, reps: 10),
-            (weight: 85.0, reps: 8),
-            (weight: 90.0, reps: 6),
-          ]),
-          _createSession('Bench Press', 'chest', now.subtract(const Duration(days: 3)), [
-            (weight: 77.5, reps: 10),
-            (weight: 82.5, reps: 8),
-            (weight: 87.5, reps: 6),
-          ]),
-          _createSession('Bench Press', 'chest', now.subtract(const Duration(days: 7)), [
-            (weight: 75.0, reps: 10),
-            (weight: 80.0, reps: 8),
-            (weight: 85.0, reps: 6),
-          ]),
-          _createSession('Bench Press', 'chest', now.subtract(const Duration(days: 10)), [
-            (weight: 72.5, reps: 10),
-            (weight: 77.5, reps: 8),
-            (weight: 82.5, reps: 6),
-          ]),
-          _createSession('Bench Press', 'chest', now.subtract(const Duration(days: 14)), [
-            (weight: 70.0, reps: 10),
-            (weight: 75.0, reps: 8),
-            (weight: 80.0, reps: 6),
-          ]),
+          _createSession(
+            'Bench Press',
+            'chest',
+            now.subtract(const Duration(days: 0)),
+            [
+              (weight: 80.0, reps: 10),
+              (weight: 85.0, reps: 8),
+              (weight: 90.0, reps: 6),
+            ],
+          ),
+          _createSession(
+            'Bench Press',
+            'chest',
+            now.subtract(const Duration(days: 3)),
+            [
+              (weight: 77.5, reps: 10),
+              (weight: 82.5, reps: 8),
+              (weight: 87.5, reps: 6),
+            ],
+          ),
+          _createSession(
+            'Bench Press',
+            'chest',
+            now.subtract(const Duration(days: 7)),
+            [
+              (weight: 75.0, reps: 10),
+              (weight: 80.0, reps: 8),
+              (weight: 85.0, reps: 6),
+            ],
+          ),
+          _createSession(
+            'Bench Press',
+            'chest',
+            now.subtract(const Duration(days: 10)),
+            [
+              (weight: 72.5, reps: 10),
+              (weight: 77.5, reps: 8),
+              (weight: 82.5, reps: 6),
+            ],
+          ),
+          _createSession(
+            'Bench Press',
+            'chest',
+            now.subtract(const Duration(days: 14)),
+            [
+              (weight: 70.0, reps: 10),
+              (weight: 75.0, reps: 8),
+              (weight: 80.0, reps: 6),
+            ],
+          ),
         ],
       ),
 
@@ -66,26 +91,46 @@ class DemoModalData {
         exerciseName: 'Squat',
         muscleGroup: 'legs',
         sessions: [
-          _createSession('Squat', 'legs', now.subtract(const Duration(days: 1)), [
-            (weight: 100.0, reps: 8),
-            (weight: 110.0, reps: 6),
-            (weight: 120.0, reps: 4),
-          ]),
-          _createSession('Squat', 'legs', now.subtract(const Duration(days: 4)), [
-            (weight: 95.0, reps: 8),
-            (weight: 105.0, reps: 6),
-            (weight: 115.0, reps: 4),
-          ]),
-          _createSession('Squat', 'legs', now.subtract(const Duration(days: 8)), [
-            (weight: 90.0, reps: 8),
-            (weight: 100.0, reps: 6),
-            (weight: 110.0, reps: 4),
-          ]),
-          _createSession('Squat', 'legs', now.subtract(const Duration(days: 15)), [
-            (weight: 85.0, reps: 8),
-            (weight: 95.0, reps: 6),
-            (weight: 105.0, reps: 4),
-          ]),
+          _createSession(
+            'Squat',
+            'legs',
+            now.subtract(const Duration(days: 1)),
+            [
+              (weight: 100.0, reps: 8),
+              (weight: 110.0, reps: 6),
+              (weight: 120.0, reps: 4),
+            ],
+          ),
+          _createSession(
+            'Squat',
+            'legs',
+            now.subtract(const Duration(days: 4)),
+            [
+              (weight: 95.0, reps: 8),
+              (weight: 105.0, reps: 6),
+              (weight: 115.0, reps: 4),
+            ],
+          ),
+          _createSession(
+            'Squat',
+            'legs',
+            now.subtract(const Duration(days: 8)),
+            [
+              (weight: 90.0, reps: 8),
+              (weight: 100.0, reps: 6),
+              (weight: 110.0, reps: 4),
+            ],
+          ),
+          _createSession(
+            'Squat',
+            'legs',
+            now.subtract(const Duration(days: 15)),
+            [
+              (weight: 85.0, reps: 8),
+              (weight: 95.0, reps: 6),
+              (weight: 105.0, reps: 4),
+            ],
+          ),
         ],
       ),
 
@@ -95,21 +140,36 @@ class DemoModalData {
         exerciseName: 'Deadlift',
         muscleGroup: 'back',
         sessions: [
-          _createSession('Deadlift', 'back', now.subtract(const Duration(days: 2)), [
-            (weight: 120.0, reps: 5),
-            (weight: 130.0, reps: 4),
-            (weight: 140.0, reps: 3),
-          ]),
-          _createSession('Deadlift', 'back', now.subtract(const Duration(days: 5)), [
-            (weight: 115.0, reps: 5),
-            (weight: 125.0, reps: 4),
-            (weight: 135.0, reps: 3),
-          ]),
-          _createSession('Deadlift', 'back', now.subtract(const Duration(days: 9)), [
-            (weight: 110.0, reps: 5),
-            (weight: 120.0, reps: 4),
-            (weight: 130.0, reps: 3),
-          ]),
+          _createSession(
+            'Deadlift',
+            'back',
+            now.subtract(const Duration(days: 2)),
+            [
+              (weight: 120.0, reps: 5),
+              (weight: 130.0, reps: 4),
+              (weight: 140.0, reps: 3),
+            ],
+          ),
+          _createSession(
+            'Deadlift',
+            'back',
+            now.subtract(const Duration(days: 5)),
+            [
+              (weight: 115.0, reps: 5),
+              (weight: 125.0, reps: 4),
+              (weight: 135.0, reps: 3),
+            ],
+          ),
+          _createSession(
+            'Deadlift',
+            'back',
+            now.subtract(const Duration(days: 9)),
+            [
+              (weight: 110.0, reps: 5),
+              (weight: 120.0, reps: 4),
+              (weight: 130.0, reps: 3),
+            ],
+          ),
         ],
       ),
 
@@ -119,16 +179,26 @@ class DemoModalData {
         exerciseName: 'Pull-ups',
         muscleGroup: 'back',
         sessions: [
-          _createSession('Pull-ups', 'back', now.subtract(const Duration(days: 2)), [
-            (weight: 0.0, reps: 12),
-            (weight: 5.0, reps: 10),
-            (weight: 10.0, reps: 8),
-          ]),
-          _createSession('Pull-ups', 'back', now.subtract(const Duration(days: 6)), [
-            (weight: 0.0, reps: 10),
-            (weight: 5.0, reps: 8),
-            (weight: 10.0, reps: 6),
-          ]),
+          _createSession(
+            'Pull-ups',
+            'back',
+            now.subtract(const Duration(days: 2)),
+            [
+              (weight: 0.0, reps: 12),
+              (weight: 5.0, reps: 10),
+              (weight: 10.0, reps: 8),
+            ],
+          ),
+          _createSession(
+            'Pull-ups',
+            'back',
+            now.subtract(const Duration(days: 6)),
+            [
+              (weight: 0.0, reps: 10),
+              (weight: 5.0, reps: 8),
+              (weight: 10.0, reps: 6),
+            ],
+          ),
         ],
       ),
 
@@ -138,16 +208,26 @@ class DemoModalData {
         exerciseName: 'Shoulder Press',
         muscleGroup: 'shoulders',
         sessions: [
-          _createSession('Shoulder Press', 'shoulders', now.subtract(const Duration(days: 1)), [
-            (weight: 40.0, reps: 10),
-            (weight: 45.0, reps: 8),
-            (weight: 50.0, reps: 6),
-          ]),
-          _createSession('Shoulder Press', 'shoulders', now.subtract(const Duration(days: 5)), [
-            (weight: 37.5, reps: 10),
-            (weight: 42.5, reps: 8),
-            (weight: 47.5, reps: 6),
-          ]),
+          _createSession(
+            'Shoulder Press',
+            'shoulders',
+            now.subtract(const Duration(days: 1)),
+            [
+              (weight: 40.0, reps: 10),
+              (weight: 45.0, reps: 8),
+              (weight: 50.0, reps: 6),
+            ],
+          ),
+          _createSession(
+            'Shoulder Press',
+            'shoulders',
+            now.subtract(const Duration(days: 5)),
+            [
+              (weight: 37.5, reps: 10),
+              (weight: 42.5, reps: 8),
+              (weight: 47.5, reps: 6),
+            ],
+          ),
         ],
       ),
 
@@ -157,16 +237,26 @@ class DemoModalData {
         exerciseName: 'Bicep Curls',
         muscleGroup: 'arms',
         sessions: [
-          _createSession('Bicep Curls', 'arms', now.subtract(const Duration(days: 3)), [
-            (weight: 15.0, reps: 12),
-            (weight: 17.5, reps: 10),
-            (weight: 20.0, reps: 8),
-          ]),
-          _createSession('Bicep Curls', 'arms', now.subtract(const Duration(days: 7)), [
-            (weight: 12.5, reps: 12),
-            (weight: 15.0, reps: 10),
-            (weight: 17.5, reps: 8),
-          ]),
+          _createSession(
+            'Bicep Curls',
+            'arms',
+            now.subtract(const Duration(days: 3)),
+            [
+              (weight: 15.0, reps: 12),
+              (weight: 17.5, reps: 10),
+              (weight: 20.0, reps: 8),
+            ],
+          ),
+          _createSession(
+            'Bicep Curls',
+            'arms',
+            now.subtract(const Duration(days: 7)),
+            [
+              (weight: 12.5, reps: 12),
+              (weight: 15.0, reps: 10),
+              (weight: 17.5, reps: 8),
+            ],
+          ),
         ],
       ),
     ];
@@ -180,12 +270,12 @@ class DemoModalData {
 
   /// Demo exercises performed list
   static List<String> get exercisesPerformed => [
-        'Bench Press',
-        'Squat',
-        'Deadlift',
-        'Pull-ups',
-        'Shoulder Press',
-      ];
+    'Bench Press',
+    'Squat',
+    'Deadlift',
+    'Pull-ups',
+    'Shoulder Press',
+  ];
 
   /// Demo total volume
   static double get totalVolume => 15420.0;
@@ -202,11 +292,7 @@ class DemoModalData {
       muscleGroup: muscleGroup,
       date: date,
       sets: sets
-          .map((s) => AnalyticsSet(
-                weight: s.weight,
-                reps: s.reps,
-                date: date,
-              ))
+          .map((s) => AnalyticsSet(weight: s.weight, reps: s.reps, date: date))
           .toList(),
     );
   }
@@ -230,7 +316,12 @@ class DemoModalData {
             ExerciseSet(setNumber: 1, weight: 80, reps: 10, isCompleted: true),
             ExerciseSet(setNumber: 2, weight: 85, reps: 8, isCompleted: true),
             ExerciseSet(setNumber: 3, weight: 90, reps: 6, isCompleted: true),
-            ExerciseSet(setNumber: 4, weight: 92.5, reps: 5, isCompleted: true), // Extra set added
+            ExerciseSet(
+              setNumber: 4,
+              weight: 92.5,
+              reps: 5,
+              isCompleted: true,
+            ), // Extra set added
           ],
         ),
         Exercise(
@@ -239,7 +330,12 @@ class DemoModalData {
           category: ExerciseCategory.chest,
           sets: [
             ExerciseSet(setNumber: 1, weight: 30, reps: 12, isCompleted: true),
-            ExerciseSet(setNumber: 2, weight: 32.5, reps: 10, isCompleted: true),
+            ExerciseSet(
+              setNumber: 2,
+              weight: 32.5,
+              reps: 10,
+              isCompleted: true,
+            ),
             ExerciseSet(setNumber: 3, weight: 35, reps: 8, isCompleted: true),
           ],
         ),
@@ -408,12 +504,7 @@ class DemoModalData {
 
   /// Demo ExerciseSet for RPE Selector
   static ExerciseSet get demoExerciseSet {
-    return ExerciseSet(
-      setNumber: 1,
-      weight: 80,
-      reps: 10,
-      isCompleted: false,
-    );
+    return ExerciseSet(setNumber: 1, weight: 80, reps: 10, isCompleted: false);
   }
 
   /// Demo Exercise for RPE Selector
@@ -470,7 +561,12 @@ class DemoModalData {
           category: ExerciseCategory.chest,
           sets: [
             ExerciseSet(setNumber: 1, weight: 80, reps: 10, isCompleted: false),
-            ExerciseSet(setNumber: 2, weight: 82.5, reps: 8, isCompleted: false),
+            ExerciseSet(
+              setNumber: 2,
+              weight: 82.5,
+              reps: 8,
+              isCompleted: false,
+            ),
             ExerciseSet(setNumber: 3, weight: 85, reps: 6, isCompleted: false),
           ],
         ),
@@ -702,10 +798,7 @@ class DemoModalData {
       updatedAt: now.subtract(const Duration(days: 1)),
       duration: const Duration(hours: 1, minutes: 15),
       exercises: [], // Empty for demo purposes
-      metadata: {
-        'totalVolume': 5000.0,
-        'averageRPE': 8.5,
-      },
+      metadata: {'totalVolume': 5000.0, 'averageRPE': 8.5},
       templateId: 'template-push-a',
     );
   }

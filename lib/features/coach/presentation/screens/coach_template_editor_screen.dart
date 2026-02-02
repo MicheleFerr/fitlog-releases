@@ -29,10 +29,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 
 /// Screen for creating/editing coach templates
 class CoachTemplateEditorScreen extends ConsumerStatefulWidget {
-  const CoachTemplateEditorScreen({
-    this.template,
-    super.key,
-  });
+  const CoachTemplateEditorScreen({this.template, super.key});
 
   /// Template to edit (null for creating new)
   final CoachTemplate? template;
@@ -61,8 +58,9 @@ class _CoachTemplateEditorScreenState
     super.initState();
     final template = widget.template;
     _nameController = TextEditingController(text: template?.name ?? '');
-    _descriptionController =
-        TextEditingController(text: template?.description ?? '');
+    _descriptionController = TextEditingController(
+      text: template?.description ?? '',
+    );
     _notesController = TextEditingController(text: template?.coachNotes ?? '');
     _exercises = List.from(template?.exercises ?? []);
     _estimatedDuration = template?.estimatedDuration ?? 45;
@@ -96,9 +94,9 @@ class _CoachTemplateEditorScreenState
       child: Scaffold(
         backgroundColor: context.colors.surface,
         appBar: AppBar(
-          title: Text(_isEditing
-              ? context.l10n.edit
-              : context.l10n.newTemplate),
+          title: Text(
+            _isEditing ? context.l10n.edit : context.l10n.newTemplate,
+          ),
           actions: [
             if (_hasChanges || !_isEditing)
               TextButton(
@@ -422,10 +420,7 @@ class _CoachTemplateEditorScreenState
             color: context.colors.error,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(
-            AppIcons.delete,
-            color: context.colors.onError,
-          ),
+          child: Icon(AppIcons.delete, color: context.colors.onError),
         ),
         onDismissed: (_) {
           setState(() => _exercises.removeAt(index));
@@ -490,10 +485,7 @@ class _CoachTemplateEditorScreenState
   Future<void> _editExercise(int index) async {
     // For now, just show a snackbar indicating edit is not yet implemented
     // TODO: Implement exercise editing with a dedicated modal
-    SnackBarService.showInfo(
-      context,
-      'Edit exercise coming soon',
-    );
+    SnackBarService.showInfo(context, 'Edit exercise coming soon');
   }
 
   String _formatExerciseSubtitle(ExerciseTemplate exercise) {

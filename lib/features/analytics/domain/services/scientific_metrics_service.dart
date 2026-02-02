@@ -6,7 +6,6 @@ import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abb
 ///
 /// All formulas are based on published research with citations
 class ScientificMetricsService {
-
   /// Calculate Progressive Overload between workout sessions
   ///
   /// **Scientific Basis:**
@@ -52,7 +51,8 @@ class ScientificMetricsService {
       return ProgressiveOverloadResult.noData();
     }
 
-    final overloadPercent = ((currentVolume - previousVolume) / previousVolume) * 100;
+    final overloadPercent =
+        ((currentVolume - previousVolume) / previousVolume) * 100;
 
     return ProgressiveOverloadResult(
       currentVolume: currentVolume,
@@ -80,7 +80,9 @@ class ScientificMetricsService {
     List<ExerciseActivity> activities,
   ) {
     final results = <String, VolumeLoadResult>{};
-    final volumeByGroup = VolumeCalculator.calculateVolumeByMuscleGroup(activities);
+    final volumeByGroup = VolumeCalculator.calculateVolumeByMuscleGroup(
+      activities,
+    );
 
     // Count sets per muscle group
     // **Uses SSOT**: MuscleAbbreviationMapper.categorizeExerciseByName
@@ -202,7 +204,10 @@ class ScientificMetricsService {
   }
 
   /// Get Progressive Overload feedback based on scientific thresholds
-  static String getOverloadFeedback(double overloadPercent, {String level = 'intermediate'}) {
+  static String getOverloadFeedback(
+    double overloadPercent, {
+    String level = 'intermediate',
+  }) {
     if (overloadPercent < 0) {
       return 'Volume regression detected. Verify recovery status and training stress.';
     }
@@ -273,7 +278,9 @@ class ScientificMetricsService {
   }) {
     if (goal == 'strength' && percentOf1RM >= 85) {
       return 'Perfect intensity for max strength (${percentOf1RM.toStringAsFixed(0)}% 1RM)';
-    } else if (goal == 'hypertrophy' && percentOf1RM >= 67 && percentOf1RM < 85) {
+    } else if (goal == 'hypertrophy' &&
+        percentOf1RM >= 67 &&
+        percentOf1RM < 85) {
       return 'Optimal intensity for hypertrophy (${percentOf1RM.toStringAsFixed(0)}% 1RM)';
     } else if (goal == 'strength' && percentOf1RM < 85) {
       return 'Intensity too low for max strength. Increase to 85%+ 1RM.';
@@ -284,12 +291,10 @@ class ScientificMetricsService {
     }
     return 'Intensity: ${percentOf1RM.toStringAsFixed(0)}% 1RM';
   }
-
 }
 
 /// Progressive Overload calculation result
 class ProgressiveOverloadResult {
-
   ProgressiveOverloadResult({
     required this.currentVolume,
     required this.previousVolume,
@@ -315,12 +320,13 @@ class ProgressiveOverloadResult {
 
   bool get isProgressing => overloadPercent > 0;
   bool get isRegressing => overloadPercent < 0;
-  bool get isOptimal => overloadPercent > 0 && overloadPercent <= 5; // Conservative for all levels
+  bool get isOptimal =>
+      overloadPercent > 0 &&
+      overloadPercent <= 5; // Conservative for all levels
 }
 
 /// Volume Load calculation result
 class VolumeLoadResult {
-
   VolumeLoadResult({
     required this.muscleGroup,
     required this.totalVolume,
@@ -335,7 +341,6 @@ class VolumeLoadResult {
 
 /// Relative Intensity calculation result
 class RelativeIntensityResult {
-
   RelativeIntensityResult({
     required this.weight,
     required this.reps,
@@ -371,8 +376,8 @@ class RelativeIntensityResult {
 
 /// Intensity zones based on % 1RM
 enum IntensityZone {
-  maxStrength,         // 85-100% 1RM
+  maxStrength, // 85-100% 1RM
   strengthHypertrophy, // 75-85% 1RM
-  hypertrophy,         // 67-85% 1RM
-  endurance,           // <67% 1RM
+  hypertrophy, // 67-85% 1RM
+  endurance, // <67% 1RM
 }

@@ -82,7 +82,9 @@ class WarmupCustomizationModal extends StatefulWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => WarmupCustomizationModal(
         initialSets: initialSets,
         onConfirm: onConfirm,
@@ -114,11 +116,13 @@ class _WarmupCustomizationModalState extends State<WarmupCustomizationModal> {
 
   void _initializeControllers() {
     _editableSets = widget.initialSets
-        .map((set) => _EditableWarmupSet(
-              weight: set.weight,
-              reps: set.reps,
-              percentage: set.percentage,
-            ))
+        .map(
+          (set) => _EditableWarmupSet(
+            weight: set.weight,
+            reps: set.reps,
+            percentage: set.percentage,
+          ),
+        )
         .toList();
 
     _weightControllers = _editableSets
@@ -141,11 +145,7 @@ class _WarmupCustomizationModalState extends State<WarmupCustomizationModal> {
 
   void _addSet() {
     setState(() {
-      final newSet = _EditableWarmupSet(
-        weight: 20.0,
-        reps: 10,
-        percentage: 0,
-      );
+      final newSet = _EditableWarmupSet(weight: 20.0, reps: 10, percentage: 0);
       _editableSets.add(newSet);
       _weightControllers.add(TextEditingController(text: '20.0'));
       _repsControllers.add(TextEditingController(text: '10'));
@@ -216,9 +216,7 @@ class _WarmupCustomizationModalState extends State<WarmupCustomizationModal> {
             _buildHeader(context, l10n),
 
             // Scrollable list of warmup sets
-            Flexible(
-              child: _buildSetsList(context, l10n),
-            ),
+            Flexible(child: _buildSetsList(context, l10n)),
 
             // Add Set button
             _buildAddSetButton(context, l10n),
@@ -333,8 +331,9 @@ class _WarmupCustomizationModalState extends State<WarmupCustomizationModal> {
               context: context,
               controller: _weightControllers[index],
               label: l10n.weight,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               suffixText: 'kg',
             ),
           ),
@@ -422,10 +421,7 @@ class _WarmupCustomizationModalState extends State<WarmupCustomizationModal> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.xs),
-          borderSide: BorderSide(
-            color: context.colors.primary,
-            width: 2,
-          ),
+          borderSide: BorderSide(color: context.colors.primary, width: 2),
         ),
       ),
     );
@@ -460,9 +456,7 @@ class _WarmupCustomizationModalState extends State<WarmupCustomizationModal> {
       padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(
-            color: context.colors.outline.withValues(alpha: 0.2),
-          ),
+          top: BorderSide(color: context.colors.outline.withValues(alpha: 0.2)),
         ),
       ),
       child: Row(

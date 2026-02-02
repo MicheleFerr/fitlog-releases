@@ -203,8 +203,8 @@ class FavoriteExercisesNotifier extends Notifier<Set<String>> {
 /// - Automatically syncs with other devices/sessions
 final favoriteExercisesNotifierProvider =
     NotifierProvider<FavoriteExercisesNotifier, Set<String>>(
-  FavoriteExercisesNotifier.new,
-);
+      FavoriteExercisesNotifier.new,
+    );
 
 /// StreamProvider for real-time Firestore sync
 ///

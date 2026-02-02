@@ -20,15 +20,12 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class FeedbackDetailScreen extends ConsumerStatefulWidget {
-
-  const FeedbackDetailScreen({
-    super.key,
-    required this.feedback,
-  });
+  const FeedbackDetailScreen({super.key, required this.feedback});
   final ExerciseFeedback feedback;
 
   @override
-  ConsumerState<FeedbackDetailScreen> createState() => _FeedbackDetailScreenState();
+  ConsumerState<FeedbackDetailScreen> createState() =>
+      _FeedbackDetailScreenState();
 }
 
 class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
@@ -38,7 +35,9 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _notesController = TextEditingController(text: widget.feedback.adminNotes ?? '');
+    _notesController = TextEditingController(
+      text: widget.feedback.adminNotes ?? '',
+    );
   }
 
   @override
@@ -206,11 +205,11 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                     Row(
                       children: [
                         SemanticIcon(
-  icon: AppIcons.message,
-  semanticLabel: 'Message',
-  size: AppIconSize.small,
-  color: context.colors.primary,
-),
+                          icon: AppIcons.message,
+                          semanticLabel: 'Message',
+                          size: AppIconSize.small,
+                          color: context.colors.primary,
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           l10n.feedbackDetailUserMessage,
@@ -241,11 +240,11 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                     Row(
                       children: [
                         SemanticIcon(
-  icon: AppIcons.admin,
-  semanticLabel: 'Admin',
-  size: AppIconSize.small,
-  color: context.colors.secondary,
-),
+                          icon: AppIcons.admin,
+                          semanticLabel: 'Admin',
+                          size: AppIconSize.small,
+                          color: context.colors.secondary,
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           l10n.feedbackDetailAdminNotes,
@@ -275,9 +274,9 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                         icon: _isSaving
                             ? const LoadingIndicator(size: 16)
                             : const SemanticIcon(
-  icon: AppIcons.save,
-  semanticLabel: 'Save',
-),
+                                icon: AppIcons.save,
+                                semanticLabel: 'Save',
+                              ),
                         label: Text(l10n.feedbackDetailSaveNotes),
                       ),
                     ),
@@ -349,11 +348,38 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
               spacing: 8,
               runSpacing: 8,
               children: [
-                _buildSeverityButton(context, 1, l10n.feedbackSeverityLow, context.colors.success),
-                _buildSeverityButton(context, 2, l10n.feedbackSeverityMedium, context.colors.warning),
-                _buildSeverityButton(context, 3, l10n.feedbackSeverityHigh, context.colors.warning),
-                _buildSeverityButton(context, 4, l10n.feedbackSeverityCritical, context.colors.error),
-                _buildSeverityButton(context, 5, l10n.feedbackSeverityUrgent, HSLColor.fromColor(context.colors.error).withLightness(0.2).toColor()),
+                _buildSeverityButton(
+                  context,
+                  1,
+                  l10n.feedbackSeverityLow,
+                  context.colors.success,
+                ),
+                _buildSeverityButton(
+                  context,
+                  2,
+                  l10n.feedbackSeverityMedium,
+                  context.colors.warning,
+                ),
+                _buildSeverityButton(
+                  context,
+                  3,
+                  l10n.feedbackSeverityHigh,
+                  context.colors.warning,
+                ),
+                _buildSeverityButton(
+                  context,
+                  4,
+                  l10n.feedbackSeverityCritical,
+                  context.colors.error,
+                ),
+                _buildSeverityButton(
+                  context,
+                  5,
+                  l10n.feedbackSeverityUrgent,
+                  HSLColor.fromColor(
+                    context.colors.error,
+                  ).withLightness(0.2).toColor(),
+                ),
               ],
             ),
           ],
@@ -448,7 +474,9 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
   ) {
     final isSelected = widget.feedback.severity == severity;
     return OutlinedButton(
-      onPressed: _isSaving || isSelected ? null : () => _updateSeverity(severity),
+      onPressed: _isSaving || isSelected
+          ? null
+          : () => _updateSeverity(severity),
       style: OutlinedButton.styleFrom(
         backgroundColor: isSelected ? color.withValues(alpha: 0.2) : null,
         side: BorderSide(
@@ -475,16 +503,20 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
       await FirebaseFirestore.instance
           .collection('exercise_feedback')
           .doc(widget.feedback.id)
-          .update({
-        'adminNotes': _notesController.text.trim(),
-      });
+          .update({'adminNotes': _notesController.text.trim()});
 
       if (mounted) {
-        SnackBarService.showSuccess(context, context.l10n.feedbackDetailNotesSaved);
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.feedbackDetailNotesSaved,
+        );
       }
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(context, context.l10n.feedbackDetailNotesError);
+        SnackBarService.showError(
+          context,
+          context.l10n.feedbackDetailNotesError,
+        );
       }
       debugPrint('❌ Error saving admin notes: $e');
     } finally {
@@ -505,18 +537,22 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
       await FirebaseFirestore.instance
           .collection('exercise_feedback')
           .doc(widget.feedback.id)
-          .update({
-        'status': newStatus,
-      });
+          .update({'status': newStatus});
 
       if (mounted) {
-        SnackBarService.showSuccess(context, context.l10n.feedbackStatusUpdated(newStatus));
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.feedbackStatusUpdated(newStatus),
+        );
         // Pop back to refresh list
         Navigator.of(context).pop();
       }
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(context, context.l10n.feedbackStatusUpdateError);
+        SnackBarService.showError(
+          context,
+          context.l10n.feedbackStatusUpdateError,
+        );
       }
       debugPrint('❌ Error updating status: $e');
     } finally {
@@ -537,18 +573,22 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
       await FirebaseFirestore.instance
           .collection('exercise_feedback')
           .doc(widget.feedback.id)
-          .update({
-        'severity': newSeverity,
-      });
+          .update({'severity': newSeverity});
 
       if (mounted) {
-        SnackBarService.showSuccess(context, context.l10n.feedbackSeverityUpdated);
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.feedbackSeverityUpdated,
+        );
         // Pop back to refresh list
         Navigator.of(context).pop();
       }
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(context, context.l10n.feedbackSeverityUpdateError);
+        SnackBarService.showError(
+          context,
+          context.l10n.feedbackSeverityUpdateError,
+        );
       }
       debugPrint('❌ Error updating severity: $e');
     } finally {

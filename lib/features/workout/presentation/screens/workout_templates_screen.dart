@@ -38,7 +38,8 @@ class WorkoutTemplatesScreen extends ConsumerStatefulWidget {
   const WorkoutTemplatesScreen({super.key});
 
   @override
-  ConsumerState<WorkoutTemplatesScreen> createState() => _WorkoutTemplatesScreenState();
+  ConsumerState<WorkoutTemplatesScreen> createState() =>
+      _WorkoutTemplatesScreenState();
 }
 
 class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
@@ -58,7 +59,8 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
 
     // Track tab changes for Superset tab
     _tabController.addListener(() {
-      if (_tabController.indexIsChanging || !_tabController.previousIndex.isFinite) {
+      if (_tabController.indexIsChanging ||
+          !_tabController.previousIndex.isFinite) {
         return;
       }
 
@@ -108,36 +110,38 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
     final l10n = context.l10n;
 
     return Scaffold(
-          appBar: AppBar(
-          title: Text(l10n.workoutTemplates),
-          centerTitle: true,
-          leading: Semantics(
-            label: l10n.back,
-            button: true,
-            hint: l10n.backHint,
-            child: IconButton(
-              icon: const SemanticIcon(
-  icon: AppIcons.back,
-  semanticLabel: 'Back',
-),
-              onPressed: () {
-                if (Navigator.of(context).canPop()) {
-                  Navigator.of(context).pop();
-                } else {
-                  context.go('/');
-                }
-              },
+      appBar: AppBar(
+        title: Text(l10n.workoutTemplates),
+        centerTitle: true,
+        leading: Semantics(
+          label: l10n.back,
+          button: true,
+          hint: l10n.backHint,
+          child: IconButton(
+            icon: const SemanticIcon(
+              icon: AppIcons.back,
+              semanticLabel: 'Back',
             ),
+            onPressed: () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              } else {
+                context.go('/');
+              }
+            },
           ),
-          actions: [
-            // Indicatore stato sync
-            Consumer(
-              builder: (context, ref, child) {
-                final user = ref.watch(authStateProvider).value;
-                if (user != null) {
-                  final syncStatus = ref.watch(syncStatusProvider);
-                  final firebaseState = ref.watch(firebaseTemplateNotifierProvider);
-                
+        ),
+        actions: [
+          // Indicatore stato sync
+          Consumer(
+            builder: (context, ref, child) {
+              final user = ref.watch(authStateProvider).value;
+              if (user != null) {
+                final syncStatus = ref.watch(syncStatusProvider);
+                final firebaseState = ref.watch(
+                  firebaseTemplateNotifierProvider,
+                );
+
                 return Semantics(
                   label: l10n.syncStatus,
                   button: true,
@@ -147,9 +151,9 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                     icon: Stack(
                       children: [
                         const SemanticIcon(
-  icon: AppIcons.cloud,
-  semanticLabel: 'Cloud',
-),
+                          icon: AppIcons.cloud,
+                          semanticLabel: 'Cloud',
+                        ),
                         if (firebaseState.isSyncing)
                           Positioned(
                             right: 0,
@@ -193,9 +197,9 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             child: IconButton(
               focusNode: _createButtonFocusNode,
               icon: const SemanticIcon(
-  icon: AppIcons.add,
-  semanticLabel: 'Add',
-),
+                icon: AppIcons.add,
+                semanticLabel: 'Add',
+              ),
               onPressed: () => _showCreateTemplateModal(context),
               tooltip: l10n.createTemplate,
             ),
@@ -204,22 +208,34 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Tab(text: l10n.allExercises.replaceAll(' Exercises', ''), icon: const SemanticIcon(
-  icon: AppIcons.list,
-  semanticLabel: 'List',
-)),
-            Tab(text: 'Superset', icon: const SemanticIcon(
-  icon: AppIcons.link,
-  semanticLabel: 'Link',
-)),
-            Tab(text: l10n.popularTemplates, icon: const SemanticIcon(
-  icon: AppIcons.trendUp,
-  semanticLabel: 'Trend up',
-)),
-            Tab(text: l10n.myTemplates, icon: const SemanticIcon(
-  icon: AppIcons.person,
-  semanticLabel: 'Profile',
-)),
+            Tab(
+              text: l10n.allExercises.replaceAll(' Exercises', ''),
+              icon: const SemanticIcon(
+                icon: AppIcons.list,
+                semanticLabel: 'List',
+              ),
+            ),
+            Tab(
+              text: 'Superset',
+              icon: const SemanticIcon(
+                icon: AppIcons.link,
+                semanticLabel: 'Link',
+              ),
+            ),
+            Tab(
+              text: l10n.popularTemplates,
+              icon: const SemanticIcon(
+                icon: AppIcons.trendUp,
+                semanticLabel: 'Trend up',
+              ),
+            ),
+            Tab(
+              text: l10n.myTemplates,
+              icon: const SemanticIcon(
+                icon: AppIcons.person,
+                semanticLabel: 'Profile',
+              ),
+            ),
           ],
         ),
       ),
@@ -234,18 +250,19 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
               decoration: InputDecoration(
                 hintText: context.l10n.workoutTemplateSearchHint,
                 prefixIcon: const SemanticIcon(
-  icon: AppIcons.search,
-  semanticLabel: 'Search',
-),
+                  icon: AppIcons.search,
+                  semanticLabel: 'Search',
+                ),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
                         icon: const SemanticIcon(
-  icon: AppIcons.clear,
-  semanticLabel: 'Clear',
-),
+                          icon: AppIcons.clear,
+                          semanticLabel: 'Clear',
+                        ),
                         onPressed: () {
                           _searchController.clear();
-                          ref.read(templateSearchQueryProvider.notifier).state = '';
+                          ref.read(templateSearchQueryProvider.notifier).state =
+                              '';
                         },
                       )
                     : null,
@@ -258,7 +275,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
               },
             ),
           ),
-          
+
           // Contenuto delle tab
           Expanded(
             child: TabBarView(
@@ -273,10 +290,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
           ),
 
           // 📱 Banner Ad in fondo
-          AdaptiveBannerAd(
-            adUnitId: AdMobConfig.bannerSettings,
-            height: 60,
-          ),
+          AdaptiveBannerAd(adUnitId: AdMobConfig.bannerSettings, height: 60),
         ],
       ),
     );
@@ -296,11 +310,11 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SemanticIcon(
-  icon: AppIcons.error,
-  semanticLabel: 'Error',
-  size: AppIconSize.medium,
-  color: context.colors.error,
-),
+                icon: AppIcons.error,
+                semanticLabel: 'Error',
+                size: AppIconSize.medium,
+                color: context.colors.error,
+              ),
               const SizedBox(height: 16),
               Text(context.l10n.erroreError),
               const SizedBox(height: 16),
@@ -315,7 +329,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
       );
     } else {
       final searchResultsAsync = ref.watch(templateSearchResultsProvider);
-      
+
       return searchResultsAsync.when(
         loading: () => const Center(child: LoadingIndicator()),
         error: (error, stack) => Center(child: Text(context.l10n.erroreError)),
@@ -338,23 +352,25 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SemanticIcon(
-  icon: AppIcons.trendUp,
-  semanticLabel: 'Trend up',
-  size: AppIconSize.medium,
-  color: context.colors.surfaceContainerHighest,
-),
+                  icon: AppIcons.trendUp,
+                  semanticLabel: 'Trend up',
+                  size: AppIconSize.medium,
+                  color: context.colors.surfaceContainerHighest,
+                ),
                 const SizedBox(height: 16),
                 Text(context.l10n.workoutTemplateNoPopularYet),
                 const SizedBox(height: 8),
                 Text(
                   context.l10n.workoutTemplateMostUsedWillAppear,
-                  style: context.textTheme.bodyMedium?.copyWith(color: context.colors.onSurfaceVariant),
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),
           );
         }
-        
+
         return _buildTemplatesList(templates);
       },
     );
@@ -364,17 +380,23 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
     // FIX: Usa lo stesso provider che funziona in WorkoutScreen
     final customTemplatesAsync = ref.watch(customWorkoutTemplatesProvider);
 
-    debugPrint('🔍 MyTemplatesTab - Using customWorkoutTemplatesProvider (same as WorkoutScreen)');
+    debugPrint(
+      '🔍 MyTemplatesTab - Using customWorkoutTemplatesProvider (same as WorkoutScreen)',
+    );
 
     // customWorkoutTemplatesProvider returns WorkoutTemplate directly (legacy system)
-    
+
     return customTemplatesAsync.when(
       loading: () => const Center(child: LoadingIndicator()),
       error: (error, stack) => Center(child: Text(context.l10n.erroreError)),
       data: (templates) {
-        debugPrint('🔍 MyTemplatesTab - Got ${templates.length} templates from customWorkoutTemplatesProvider');
+        debugPrint(
+          '🔍 MyTemplatesTab - Got ${templates.length} templates from customWorkoutTemplatesProvider',
+        );
         for (final template in templates) {
-          debugPrint('  - ${template.name}: isCustom=${template.isCustom}, id=${template.id}');
+          debugPrint(
+            '  - ${template.name}: isCustom=${template.isCustom}, id=${template.id}',
+          );
         }
 
         if (templates.isEmpty) {
@@ -383,32 +405,34 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: 'Workout',
-  size: AppIconSize.medium,
-  color: context.colors.surfaceContainerHighest,
-),
+                  icon: AppIcons.workout,
+                  semanticLabel: 'Workout',
+                  size: AppIconSize.medium,
+                  color: context.colors.surfaceContainerHighest,
+                ),
                 const SizedBox(height: 16),
                 Text(context.l10n.workoutTemplateNoCustom),
                 const SizedBox(height: 8),
                 Text(
                   context.l10n.workoutTemplateCreateFirstCustom,
-                  style: context.textTheme.bodyMedium?.copyWith(color: context.colors.onSurfaceVariant),
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton.icon(
                   onPressed: () => _showCreateTemplateModal(context),
                   icon: const SemanticIcon(
-  icon: AppIcons.add,
-  semanticLabel: 'Add',
-),
+                    icon: AppIcons.add,
+                    semanticLabel: 'Add',
+                  ),
                   label: Text(context.l10n.creaTemplate),
                 ),
               ],
             ),
           );
         }
-        
+
         return _buildTemplatesList(templates);
       },
     );
@@ -567,11 +591,11 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SemanticIcon(
-  icon: AppIcons.searchOff,
-  semanticLabel: 'Search off',
-  size: AppIconSize.medium,
-  color: context.colors.surfaceContainerHighest,
-),
+              icon: AppIcons.searchOff,
+              semanticLabel: 'Search off',
+              size: AppIconSize.medium,
+              color: context.colors.surfaceContainerHighest,
+            ),
             const SizedBox(height: 16),
             Text(context.l10n.workoutTemplateNoneFound),
           ],
@@ -597,7 +621,9 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
           onDuplicate: () => _duplicateTemplate(template),
           onEdit: () => _editTemplate(template),
           onDelete: () => _deleteTemplate(template),
-          onRefresh: template.isCustom ? () => _refreshTemplate(template) : null,
+          onRefresh: template.isCustom
+              ? () => _refreshTemplate(template)
+              : null,
           onView: () => _viewTemplate(template),
           preloadedStats: allStats[template.id], // Pass pre-calculated stats
         );
@@ -644,10 +670,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
       }
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(
-          context,
-          'Errore: $e',
-        );
+        SnackBarService.showError(context, 'Errore: $e');
       }
     }
   }
@@ -662,7 +685,9 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
       );
 
       // Save to legacy repository
-      await ref.read(workoutTemplateNotifierProvider.notifier).saveTemplate(duplicatedTemplate);
+      await ref
+          .read(workoutTemplateNotifierProvider.notifier)
+          .saveTemplate(duplicatedTemplate);
 
       // Invalidate providers to refresh list
       ref.invalidate(customWorkoutTemplatesProvider);
@@ -670,7 +695,9 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
       if (mounted) {
         SnackBarService.showSuccess(
           context,
-          context.l10n.workoutTemplateDuplicatedSuccess(duplicatedTemplate.name),
+          context.l10n.workoutTemplateDuplicatedSuccess(
+            duplicatedTemplate.name,
+          ),
         );
       }
     } catch (e) {
@@ -757,7 +784,9 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
 
     try {
       // LEGACY SYSTEM: Incrementa contatore utilizzo
-      await ref.read(workoutTemplateNotifierProvider.notifier).incrementUsage(template.id);
+      await ref
+          .read(workoutTemplateNotifierProvider.notifier)
+          .incrementUsage(template.id);
 
       // Crea workout dal template con templateId per tracciare durata media
       final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
@@ -770,9 +799,13 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
       // 🎯 WEIGHT RECOVERY: Recupera workout precedente e chiedi se applicare i pesi
       WeightRecoveryOption? selectedOption;
       try {
-        final recoveryData = await ref.read(weightRecoveryDataProvider(template.id).future);
+        final recoveryData = await ref.read(
+          weightRecoveryDataProvider(template.id).future,
+        );
 
-        if (recoveryData.hasData && recoveryData.previousWorkout != null && mounted) {
+        if (recoveryData.hasData &&
+            recoveryData.previousWorkout != null &&
+            mounted) {
           // Mostra dialog di recupero pesi
           selectedOption = await WeightRecoveryDialog.show(
             context,
@@ -876,7 +909,9 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
       context: rootContext,
       builder: (dialogContext) => AlertDialog(
         title: Text(dialogContext.l10n.workoutTemplateDeleteTitle),
-        content: Text(dialogContext.l10n.workoutTemplateDeleteConfirm(template.name)),
+        content: Text(
+          dialogContext.l10n.workoutTemplateDeleteConfirm(template.name),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
@@ -889,22 +924,27 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
 
               // Show loading indicator usando il rootNavigator
               // ignore: unawaited_futures - dialog intenzionalmente non awaited
-              unawaited(showDialog(
-                context: rootContext,
-                barrierDismissible: false,
-                builder: (_) => const Center(
-                  child: LoadingIndicator(),
+              unawaited(
+                showDialog(
+                  context: rootContext,
+                  barrierDismissible: false,
+                  builder: (_) => const Center(child: LoadingIndicator()),
                 ),
-              ));
+              );
 
               try {
-                SecureLogger.info('Starting template deletion', metadata: {
-                  'templateId': SecureLogger.partialRedact(template.id),
-                  'templateName': template.name,
-                });
+                SecureLogger.info(
+                  'Starting template deletion',
+                  metadata: {
+                    'templateId': SecureLogger.partialRedact(template.id),
+                    'templateName': template.name,
+                  },
+                );
 
                 // Delete using workoutTemplateNotifierProvider (handles all repositories)
-                await ref.read(workoutTemplateNotifierProvider.notifier).deleteTemplate(template.id);
+                await ref
+                    .read(workoutTemplateNotifierProvider.notifier)
+                    .deleteTemplate(template.id);
                 SecureLogger.success('Template deleted successfully');
 
                 // Invalidate providers to refresh UI
@@ -926,10 +966,15 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                   // ignore: unused_result
                   await ref.refresh(customWorkoutTemplatesProvider.future);
                 } catch (e) {
-                  SecureLogger.warning('Error refreshing providers', metadata: {'error': e.toString()});
+                  SecureLogger.warning(
+                    'Error refreshing providers',
+                    metadata: {'error': e.toString()},
+                  );
                 }
 
-                SecureLogger.success('Template deletion completed successfully');
+                SecureLogger.success(
+                  'Template deletion completed successfully',
+                );
 
                 // 🔧 FIX: Dismiss loading usando rootNavigator
                 if (rootNavigator.canPop()) {
@@ -960,7 +1005,9 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 }
               }
             },
-            style: FilledButton.styleFrom(backgroundColor: dialogContext.colors.error),
+            style: FilledButton.styleFrom(
+              backgroundColor: dialogContext.colors.error,
+            ),
             child: Text(context.l10n.delete),
           ),
         ],
@@ -974,14 +1021,14 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
       builder: (context) => Consumer(
         builder: (context, ref, child) {
           final firebaseState = ref.watch(firebaseTemplateNotifierProvider);
-          
+
           return AlertDialog(
             title: Row(
               children: [
                 const SemanticIcon(
-  icon: AppIcons.cloud,
-  semanticLabel: 'Cloud',
-),
+                  icon: AppIcons.cloud,
+                  semanticLabel: 'Cloud',
+                ),
                 const SizedBox(width: 8),
                 Text(context.l10n.workoutTemplateSyncStatus),
               ],
@@ -993,15 +1040,21 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 Text('${context.l10n.status}: $syncStatus'),
                 const SizedBox(height: 8),
                 if (firebaseState.lastSyncTime != null) ...[
-                  Text('${context.l10n.lastSync}: ${_formatDateTime(firebaseState.lastSyncTime!)}'),
+                  Text(
+                    '${context.l10n.lastSync}: ${_formatDateTime(firebaseState.lastSyncTime!)}',
+                  ),
                   const SizedBox(height: 8),
                 ],
-                Text('${context.l10n.totalTemplates}: ${firebaseState.templates.length}'),
+                Text(
+                  '${context.l10n.totalTemplates}: ${firebaseState.templates.length}',
+                ),
                 if (firebaseState.hasOfflineChanges) ...[
                   const SizedBox(height: 8),
                   Text(
                     context.l10n.offlineChangesMessage,
-                    style: context.textTheme.bodyMedium?.copyWith(color: context.colors.secondary),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colors.secondary,
+                    ),
                   ),
                 ],
               ],
@@ -1011,11 +1064,14 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(context.l10n.close),
               ),
-              if (FirebaseAuth.instance.currentUser != null && !firebaseState.isSyncing)
+              if (FirebaseAuth.instance.currentUser != null &&
+                  !firebaseState.isSyncing)
                 FilledButton(
                   onPressed: () async {
                     Navigator.of(context).pop();
-                    await ref.read(firebaseTemplateNotifierProvider.notifier).forcSync();
+                    await ref
+                        .read(firebaseTemplateNotifierProvider.notifier)
+                        .forcSync();
 
                     SnackBarService.showSuccess(
                       context,

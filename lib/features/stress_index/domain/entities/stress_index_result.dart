@@ -58,8 +58,7 @@ abstract class StressIndexResult with _$StressIndexResult {
   /// Get the display score based on confidence
   ///
   /// Returns primary score if confidence >= 50%, otherwise fallback
-  double get displayScore =>
-      confidence >= 0.5 ? primaryScore : fallbackScore;
+  double get displayScore => confidence >= 0.5 ? primaryScore : fallbackScore;
 
   /// Check if confidence is high (>= 80%)
   bool get isHighConfidence => confidence >= 0.80;
@@ -93,9 +92,4 @@ abstract class StressIndexResult with _$StressIndexResult {
 }
 
 /// Stress level categories
-enum StressLevel {
-  light,
-  moderate,
-  hard,
-  veryHard,
-}
+enum StressLevel { light, moderate, hard, veryHard }

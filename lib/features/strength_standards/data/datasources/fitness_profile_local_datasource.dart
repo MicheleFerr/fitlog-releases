@@ -26,7 +26,6 @@ import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
 /// - No direct Hive.openBox() calls
 /// - Centralized box lifecycle management
 class FitnessProfileLocalDataSource {
-
   /// Constructor with dependency injection
   FitnessProfileLocalDataSource(this._boxManager);
   final HiveBoxManagerEnhanced _boxManager;
@@ -79,7 +78,9 @@ class FitnessProfileLocalDataSource {
   }
 
   /// Get fitness questionnaire by userId
-  Future<UserFitnessQuestionnaire?> getFitnessQuestionnaire(String userId) async {
+  Future<UserFitnessQuestionnaire?> getFitnessQuestionnaire(
+    String userId,
+  ) async {
     final box = await _getFitnessProfileBox();
     final key = 'profile_$userId';
 
@@ -99,7 +100,9 @@ class FitnessProfileLocalDataSource {
   }
 
   /// Get medical clearance questionnaire by userId
-  Future<MedicalClearanceQuestionnaire?> getMedicalClearance(String userId) async {
+  Future<MedicalClearanceQuestionnaire?> getMedicalClearance(
+    String userId,
+  ) async {
     final box = await _getMedicalClearanceBox();
     final key = 'clearance_$userId';
 
@@ -195,7 +198,9 @@ class FitnessProfileLocalDataSource {
     }
 
     if (data['medicalClearance'] != null) {
-      final clearance = MedicalClearanceQuestionnaire.fromJson(data['medicalClearance']);
+      final clearance = MedicalClearanceQuestionnaire.fromJson(
+        data['medicalClearance'],
+      );
       await saveMedicalClearance(clearance, userId);
     }
 

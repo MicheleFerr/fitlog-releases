@@ -6,18 +6,13 @@
 /// - Machine exercises: 5kg base increments (no 0.5kg)
 library;
 
-enum EquipmentType {
-  barbell,
-  dumbbell,
-  machine,
-  unknown,
-}
+enum EquipmentType { barbell, dumbbell, machine, unknown }
 
 enum DumbbellIncrement {
-  standard,  // 2.5kg increments (17.5, 20, 22.5, 25, 27.5...)
-  halfKg,    // 0.5kg increments (17.5, 18, 18.5, 19...)
-  oneKg,     // 1kg increments (17, 18, 19, 20...)
-  twoKg,     // 2kg increments (16, 18, 20, 22...)
+  standard, // 2.5kg increments (17.5, 20, 22.5, 25, 27.5...)
+  halfKg, // 0.5kg increments (17.5, 18, 18.5, 19...)
+  oneKg, // 1kg increments (17, 18, 19, 20...)
+  twoKg, // 2kg increments (16, 18, 20, 22...)
 }
 
 class WeightRoundingUtils {
@@ -33,7 +28,8 @@ class WeightRoundingUtils {
     if (attrezzaturaLower.contains('bilanciere')) {
       return EquipmentType.barbell;
     }
-    if (attrezzaturaLower.contains('manubri') || attrezzaturaLower.contains('manubrio')) {
+    if (attrezzaturaLower.contains('manubri') ||
+        attrezzaturaLower.contains('manubrio')) {
       return EquipmentType.dumbbell;
     }
     if (attrezzaturaLower.contains('macchina') ||
@@ -105,10 +101,7 @@ class WeightRoundingUtils {
   ///
   /// Standard gym dumbbells typically come in 2.5kg increments:
   /// 17.5kg, 20kg, 22.5kg, 25kg, 27.5kg, 30kg...
-  static double roundForDumbbell(
-    double weight,
-    DumbbellIncrement increment,
-  ) {
+  static double roundForDumbbell(double weight, DumbbellIncrement increment) {
     switch (increment) {
       case DumbbellIncrement.standard:
         // Standard gym increments: 2.5kg (17.5, 20, 22.5, 25, 27.5...)

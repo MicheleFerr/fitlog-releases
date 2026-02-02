@@ -130,12 +130,13 @@ class StressIndexCalculator {
         final rpe = set.rpe;
         final intensityWithRpe = rpe != null
             ? StressIndexConstants.rpeToIntensity[rpe.round()] ??
-                StressIndexConstants.defaultIntensity
+                  StressIndexConstants.defaultIntensity
             : StressIndexConstants.defaultIntensity;
 
         final setStressWithRpe =
             effectiveWeight * reps * intensityWithRpe * movementMultiplier;
-        final setStressWithoutRpe = effectiveWeight *
+        final setStressWithoutRpe =
+            effectiveWeight *
             reps *
             StressIndexConstants.defaultIntensity *
             movementMultiplier;
@@ -172,8 +173,8 @@ class StressIndexCalculator {
     final muscleBreakdown = <String, MuscleStressData>{};
     for (final entry in muscleStress.entries) {
       final acc = entry.value;
-      final recoveryHours = StressIndexConstants
-              .muscleRecoveryHours[entry.key.toUpperCase()] ??
+      final recoveryHours =
+          StressIndexConstants.muscleRecoveryHours[entry.key.toUpperCase()] ??
           StressIndexConstants.defaultRecoveryHours;
 
       muscleBreakdown[entry.key] = MuscleStressData(
@@ -208,7 +209,8 @@ class StressIndexCalculator {
     List<MuscleInfo> primary,
     List<MuscleInfo> secondary,
     MovementPattern pattern,
-  }) _getMuscleDataForExercise(
+  })
+  _getMuscleDataForExercise(
     Exercise exercise,
     Map<String, ExerciseMuscleData>? exerciseMuscleMap,
     Map<String, List<String>>? exerciseFocusMap,
@@ -217,7 +219,8 @@ class StressIndexCalculator {
     // Supports aliases and case-insensitive matching via expanded map
     if (exerciseMuscleMap != null) {
       // Try exact match first, then lowercase for alias/case-insensitive matching
-      final muscleData = exerciseMuscleMap[exercise.name] ??
+      final muscleData =
+          exerciseMuscleMap[exercise.name] ??
           exerciseMuscleMap[exercise.name.toLowerCase()];
       if (muscleData != null && muscleData.hasData) {
         // Determine movement pattern from patternMovimento (stored in fileCategory)
@@ -252,7 +255,8 @@ class StressIndexCalculator {
 
     // Fallback to old focus map (primary only)
     if (exerciseFocusMap != null) {
-      final focusList = exerciseFocusMap[exercise.name] ??
+      final focusList =
+          exerciseFocusMap[exercise.name] ??
           exerciseFocusMap[exercise.name.toLowerCase()];
       if (focusList != null && focusList.isNotEmpty) {
         // Infer pattern from exercise name
@@ -302,7 +306,8 @@ class StressIndexCalculator {
       List<MuscleInfo> primary,
       List<MuscleInfo> secondary,
       MovementPattern pattern,
-    }) muscleData,
+    })
+    muscleData,
     required double totalStress,
     required double totalVolume,
     double? rpe,
@@ -342,8 +347,10 @@ class StressIndexCalculator {
 
     // Distribute to primary muscles (split evenly among them)
     if (primaryMuscles.isNotEmpty) {
-      final stressPerPrimary = (totalStress * actualPrimaryRatio) / primaryMuscles.length;
-      final volumePerPrimary = (totalVolume * actualPrimaryRatio) / primaryMuscles.length;
+      final stressPerPrimary =
+          (totalStress * actualPrimaryRatio) / primaryMuscles.length;
+      final volumePerPrimary =
+          (totalVolume * actualPrimaryRatio) / primaryMuscles.length;
 
       for (final muscle in primaryMuscles) {
         muscleStress.putIfAbsent(
@@ -378,8 +385,10 @@ class StressIndexCalculator {
       // Remaining synergists split moderateSynergistRatio
       if (secondaryMuscles.length > 1) {
         final remainingSynergists = secondaryMuscles.sublist(1);
-        final stressPerMod = (totalStress * actualModRatio) / remainingSynergists.length;
-        final volumePerMod = (totalVolume * actualModRatio) / remainingSynergists.length;
+        final stressPerMod =
+            (totalStress * actualModRatio) / remainingSynergists.length;
+        final volumePerMod =
+            (totalVolume * actualModRatio) / remainingSynergists.length;
 
         for (final muscle in remainingSynergists) {
           muscleStress.putIfAbsent(
@@ -400,7 +409,8 @@ class StressIndexCalculator {
   ///
   /// **SINGLE SOURCE OF TRUTH**: Uses MuscleAbbreviationMapper.
   static List<MuscleInfo> _getDefaultMusclesForCategory(
-      ExerciseCategory category) {
+    ExerciseCategory category,
+  ) {
     // Use centralized mapper for category → abbreviations
     final abbrs = MuscleAbbreviationMapper.categoryToAbbreviations(category);
 
@@ -419,8 +429,8 @@ class StressIndexCalculator {
     if (rawScore <= 0) return 0.0;
 
     // log(rawScore + 1) / log(maxRaw + 1) * 100
-    final logScore = log(rawScore + 1) /
-        log(StressIndexConstants.rawScoreForMax100 + 1);
+    final logScore =
+        log(rawScore + 1) / log(StressIndexConstants.rawScoreForMax100 + 1);
     return (logScore * 100).clamp(0.0, 100.0);
   }
 
@@ -463,13 +473,15 @@ class StressIndexCalculator {
     // Calculate recovery percentage for each muscle
     for (final entry in lastMuscleWork.entries) {
       final (lastWorked, lastStress, displayName) = entry.value;
-      final recoveryHours = StressIndexConstants
-              .muscleRecoveryHours[entry.key.toUpperCase()] ??
+      final recoveryHours =
+          StressIndexConstants.muscleRecoveryHours[entry.key.toUpperCase()] ??
           StressIndexConstants.defaultRecoveryHours;
 
       final hoursSinceWork = now.difference(lastWorked).inHours;
-      final recoveryPercentage =
-          (hoursSinceWork / recoveryHours * 100).clamp(0.0, 150.0);
+      final recoveryPercentage = (hoursSinceWork / recoveryHours * 100).clamp(
+        0.0,
+        150.0,
+      );
 
       final state = _getRecoveryState(recoveryPercentage);
 
@@ -718,7 +730,9 @@ class StressIndexCalculator {
     required int consecutiveBadNights,
   }) {
     // Get base FFM readiness
-    final ffmReadiness = FitnessFatigueService.getOverallReadiness(recentWorkouts);
+    final ffmReadiness = FitnessFatigueService.getOverallReadiness(
+      recentWorkouts,
+    );
 
     // Apply sleep modifier
     return applySleepModifier(

@@ -42,8 +42,7 @@ abstract class PatternPrediction with _$PatternPrediction {
       _$PatternPredictionFromJson(json);
 
   /// Display name for the missing workout
-  String get displayName =>
-      suggestedTemplateName ?? missing.displayName;
+  String get displayName => suggestedTemplateName ?? missing.displayName;
 
   /// Whether there's a specific template to navigate to
   bool get hasTemplate => suggestedTemplateId != null;

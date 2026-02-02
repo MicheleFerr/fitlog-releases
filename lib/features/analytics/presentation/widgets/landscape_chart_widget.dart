@@ -83,9 +83,7 @@ class LandscapeChartWidget extends StatelessWidget {
 
     // Early return if normalization failed
     if (normalizedData.isEmpty) {
-      return _EmptyChartPlaceholder(
-        message: context.l10n.errorNormalizingData,
-      );
+      return _EmptyChartPlaceholder(message: context.l10n.errorNormalizingData);
     }
 
     // Optimize data points for performance (LTTB algorithm)
@@ -154,7 +152,9 @@ class LandscapeChartWidget extends StatelessWidget {
                   Text(
                     DateFormat('d MMM').format(chartData.date),
                     style: context.textTheme.labelSmall?.copyWith(
-                      color: context.colors.onInverseSurface.withValues(alpha: 0.7),
+                      color: context.colors.onInverseSurface.withValues(
+                        alpha: 0.7,
+                      ),
                     ),
                   ),
                   Text(
@@ -197,12 +197,16 @@ class LandscapeChartWidget extends StatelessWidget {
       final label = _getMetricLabel(context, metric);
 
       // Convert to chart data points
-      final chartData = data.map((point) => _ChartDataPoint(
-        date: point.date,
-        normalizedValue: point.normalizedValue,
-        originalValue: point.originalValue,
-        metricLabel: label,
-      )).toList();
+      final chartData = data
+          .map(
+            (point) => _ChartDataPoint(
+              date: point.date,
+              normalizedValue: point.normalizedValue,
+              originalValue: point.originalValue,
+              metricLabel: label,
+            ),
+          )
+          .toList();
 
       // Add spline series with area fill
       seriesList.add(

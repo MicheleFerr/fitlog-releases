@@ -103,8 +103,9 @@ class InitialOnboardingState {
       bodyweightKg: bodyweightKg!,
       experience: experience!,
       healthKitConnected: healthKitConnected,
-      healthKitPermissionsGranted:
-          selectedHealthTypes.map((e) => e.name).toList(),
+      healthKitPermissionsGranted: selectedHealthTypes
+          .map((e) => e.name)
+          .toList(),
       workoutsPerWeek: workoutsPerWeek,
       completedAt: DateTime.now(),
     );
@@ -273,10 +274,7 @@ class InitialOnboardingNotifier extends Notifier<InitialOnboardingState> {
 
   /// Skip HealthKit and proceed
   void skipHealthKit() {
-    state = state.copyWith(
-      healthKitConnected: false,
-      selectedHealthTypes: [],
-    );
+    state = state.copyWith(healthKitConnected: false, selectedHealthTypes: []);
     nextStep();
   }
 
@@ -314,29 +312,30 @@ class InitialOnboardingNotifier extends Notifier<InitialOnboardingState> {
 /// Provider for initial onboarding state
 final initialOnboardingNotifierProvider =
     NotifierProvider<InitialOnboardingNotifier, InitialOnboardingState>(
-  InitialOnboardingNotifier.new,
-);
+      InitialOnboardingNotifier.new,
+    );
 
 /// Provider for page controller to sync with state
-final initialOnboardingPageControllerProvider = Provider.autoDispose<PageController>((ref) {
-  final controller = PageController();
+final initialOnboardingPageControllerProvider =
+    Provider.autoDispose<PageController>((ref) {
+      final controller = PageController();
 
-  // Listen to state changes and sync page
-  ref.listen(initialOnboardingNotifierProvider, (previous, next) {
-    if (previous?.currentStep != next.currentStep) {
-      if (controller.hasClients) {
-        controller.animateToPage(
-          next.currentStep,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-    }
-  });
+      // Listen to state changes and sync page
+      ref.listen(initialOnboardingNotifierProvider, (previous, next) {
+        if (previous?.currentStep != next.currentStep) {
+          if (controller.hasClients) {
+            controller.animateToPage(
+              next.currentStep,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          }
+        }
+      });
 
-  ref.onDispose(() {
-    controller.dispose();
-  });
+      ref.onDispose(() {
+        controller.dispose();
+      });
 
-  return controller;
-});
+      return controller;
+    });

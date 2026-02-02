@@ -1,7 +1,7 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
 ///
 /// 📁 Layer: presentation/widgets
-/// 🎯 Feature: workout  
+/// 🎯 Feature: workout
 /// 🔧 Type: modal
 /// 🌍 Localization: ✅ Full support
 /// 🎨 Theme: ✅ Adaptive
@@ -19,11 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class CommunityAdviceModal extends ConsumerStatefulWidget {
-
-  const CommunityAdviceModal({
-    super.key,
-    required this.exercise,
-  });
+  const CommunityAdviceModal({super.key, required this.exercise});
   final Exercise exercise;
 
   @override
@@ -59,7 +55,9 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.4,
+                ),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -69,10 +67,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.tip,
-                    color: theme.colorScheme.primary,
-                  ),
+                  Icon(AppIcons.tip, color: theme.colorScheme.primary),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -107,7 +102,9 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                       .toList();
 
                   // Sort by upvotes (most helpful first)
-                  approvedContributions.sort((a, b) => b.upvotes.compareTo(a.upvotes));
+                  approvedContributions.sort(
+                    (a, b) => b.upvotes.compareTo(a.upvotes),
+                  );
 
                   if (approvedContributions.isEmpty) {
                     return _buildEmptyState(context, l10n, theme);
@@ -119,14 +116,17 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                     itemCount: approvedContributions.length,
                     itemBuilder: (context, index) {
                       final contribution = approvedContributions[index];
-                      return _buildContributionCard(context, contribution, theme, l10n);
+                      return _buildContributionCard(
+                        context,
+                        contribution,
+                        theme,
+                        l10n,
+                      );
                     },
                   );
                 },
                 loading: () => Center(
-                  child: LoadingIndicator(
-                    color: theme.colorScheme.primary,
-                  ),
+                  child: LoadingIndicator(color: theme.colorScheme.primary),
                 ),
                 error: (error, _) => Center(
                   child: Column(
@@ -153,7 +153,11 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, AppLocalizations l10n, ThemeData theme) {
+  Widget _buildEmptyState(
+    BuildContext context,
+    AppLocalizations l10n,
+    ThemeData theme,
+  ) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(40),
@@ -177,7 +181,9 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
             Text(
               l10n.beFirstToShare,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.7,
+                ),
               ),
               textAlign: TextAlign.center,
             ),
@@ -193,7 +199,9 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
     ThemeData theme,
     AppLocalizations l10n,
   ) {
-    final contributionSubmission = ref.read(contributionSubmissionProvider.notifier);
+    final contributionSubmission = ref.read(
+      contributionSubmissionProvider.notifier,
+    );
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
@@ -221,10 +229,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
             const SizedBox(height: 12),
 
             // Description
-            Text(
-              contribution.description,
-              style: theme.textTheme.bodyMedium,
-            ),
+            Text(contribution.description, style: theme.textTheme.bodyMedium),
 
             const SizedBox(height: 16),
 
@@ -258,9 +263,14 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                   ),
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                      color: theme.colorScheme.primaryContainer.withValues(
+                        alpha: 0.3,
+                      ),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
@@ -292,7 +302,9 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               Text(
                 l10n.peopleFoundHelpful(contribution.upvotes),
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.7,
+                  ),
                 ),
               ),
             ],
@@ -302,7 +314,11 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
     );
   }
 
-  Widget _getTypeIcon(BuildContext context, ContributionType type, ThemeData theme) {
+  Widget _getTypeIcon(
+    BuildContext context,
+    ContributionType type,
+    ThemeData theme,
+  ) {
     switch (type) {
       case ContributionType.tip:
         return Icon(
@@ -317,11 +333,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
           color: context.colors.secondary,
         );
       case ContributionType.correction:
-        return Icon(
-          AppIcons.edit,
-          size: 20,
-          color: theme.colorScheme.primary,
-        );
+        return Icon(AppIcons.edit, size: 20, color: theme.colorScheme.primary);
       case ContributionType.variant:
         return Icon(
           AppIcons.altRoute,
@@ -335,11 +347,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
           color: context.colors.primary,
         );
       case ContributionType.technique:
-        return Icon(
-          AppIcons.workout,
-          size: 20,
-          color: context.colors.success,
-        );
+        return Icon(AppIcons.workout, size: 20, color: context.colors.success);
     }
   }
 }

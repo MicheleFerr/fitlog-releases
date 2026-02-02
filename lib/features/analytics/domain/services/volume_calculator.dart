@@ -6,16 +6,16 @@ class VolumeCalculator {
   /// Calculate total volume (sets × reps × weight)
   static double calculateTotalVolume(List<ExerciseActivitySet> sets) {
     if (sets.isEmpty) return 0;
-    
+
     return sets.fold(0.0, (total, set) {
       if (!set.done) return total;
-      
+
       final weight = double.tryParse(set.weight) ?? 0;
       final reps = int.tryParse(set.reps) ?? 0;
-      
+
       // Adjust for warmup sets (count at 50% value)
       final multiplier = set.isWarmup ? 0.5 : 1.0;
-      
+
       return total + (weight * reps * multiplier);
     });
   }
@@ -28,14 +28,14 @@ class VolumeCalculator {
   /// Calculate average intensity (average weight used)
   static double calculateAverageIntensity(List<ExerciseActivitySet> sets) {
     if (sets.isEmpty) return 0;
-    
+
     final workingSets = sets.where((set) => set.done && !set.isWarmup).toList();
     if (workingSets.isEmpty) return 0;
-    
+
     final totalWeight = workingSets.fold(0.0, (total, set) {
       return total + (double.tryParse(set.weight) ?? 0);
     });
-    
+
     return totalWeight / workingSets.length;
   }
 
@@ -65,15 +65,15 @@ class VolumeCalculator {
   ) {
     final now = DateTime.now();
     final weeklyVolume = <int, double>{};
-    
+
     for (final activity in activities) {
       final weekNumber = _getWeekNumber(activity.createdAt, now);
       if (weekNumber > 52) continue; // Only last year
-      
+
       final volume = calculateTotalVolume(activity.sets);
       weeklyVolume[weekNumber] = (weeklyVolume[weekNumber] ?? 0) + volume;
     }
-    
+
     return weeklyVolume;
   }
 
@@ -83,20 +83,20 @@ class VolumeCalculator {
   ) {
     final dailyVolume = <DateTime, double>{};
     final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
-    
+
     for (final activity in activities) {
       if (activity.createdAt.isBefore(thirtyDaysAgo)) continue;
-      
+
       final date = DateTime(
         activity.createdAt.year,
         activity.createdAt.month,
         activity.createdAt.day,
       );
-      
+
       final volume = calculateTotalVolume(activity.sets);
       dailyVolume[date] = (dailyVolume[date] ?? 0) + volume;
     }
-    
+
     return dailyVolume;
   }
 
@@ -105,32 +105,32 @@ class VolumeCalculator {
     List<ExerciseActivity> activities,
   ) {
     final now = DateTime.now();
-    
+
     // Calculate for different periods
     final thisWeek = _calculatePeriodVolume(
       activities,
       now.subtract(const Duration(days: 7)),
       now,
     );
-    
+
     final lastWeek = _calculatePeriodVolume(
       activities,
       now.subtract(const Duration(days: 14)),
       now.subtract(const Duration(days: 7)),
     );
-    
+
     final thisMonth = _calculatePeriodVolume(
       activities,
       DateTime(now.year, now.month, 1),
       now,
     );
-    
+
     final lastMonth = _calculatePeriodVolume(
       activities,
       DateTime(now.year, now.month - 1, 1),
       DateTime(now.year, now.month, 1).subtract(const Duration(days: 1)),
     );
-    
+
     return VolumeProgression(
       weeklyChange: _calculatePercentageChange(lastWeek, thisWeek),
       monthlyChange: _calculatePercentageChange(lastMonth, thisMonth),
@@ -145,7 +145,7 @@ class VolumeCalculator {
     Duration workoutDuration,
   ) {
     if (workoutDuration.inMinutes == 0) return 0;
-    
+
     final totalVolume = calculateTotalVolume(sets);
     return totalVolume / workoutDuration.inMinutes;
   }
@@ -154,25 +154,22 @@ class VolumeCalculator {
   static int calculateEffectiveReps(List<ExerciseActivitySet> sets) {
     return sets.fold(0, (total, set) {
       if (!set.done) return total;
-      
+
       final reps = int.tryParse(set.actualReps ?? set.reps) ?? 0;
-      
+
       // Adjust based on effort level (1-5 scale)
       // Effort 5 (max) = 100%, Effort 1 (easy) = 60%
       final effortMultiplier = 0.6 + (set.effort * 0.1);
-      
+
       // Warmup sets count as 50% effective
       final warmupMultiplier = set.isWarmup ? 0.5 : 1.0;
-      
+
       return total + (reps * effortMultiplier * warmupMultiplier).round();
     });
   }
 
   /// Calculate relative volume (volume per body weight)
-  static double calculateRelativeVolume(
-    double totalVolume,
-    double bodyWeight,
-  ) {
+  static double calculateRelativeVolume(double totalVolume, double bodyWeight) {
     if (bodyWeight <= 0) return 0;
     return totalVolume / bodyWeight;
   }
@@ -182,23 +179,26 @@ class VolumeCalculator {
     if (activities.isEmpty) {
       return VolumeStats.empty();
     }
-    
-    final volumes = activities.map((a) => calculateTotalVolume(a.sets)).toList();
+
+    final volumes = activities
+        .map((a) => calculateTotalVolume(a.sets))
+        .toList();
     volumes.sort();
-    
+
     final total = volumes.fold(0.0, (sum, v) => sum + v);
     final average = total / volumes.length;
-    
+
     // Calculate median
     final median = volumes.length.isOdd
         ? volumes[volumes.length ~/ 2]
         : (volumes[volumes.length ~/ 2 - 1] + volumes[volumes.length ~/ 2]) / 2;
-    
+
     // Calculate standard deviation
     final squaredDiffs = volumes.map((v) => (v - average) * (v - average));
-    final avgSquaredDiff = squaredDiffs.fold(0.0, (sum, v) => sum + v) / volumes.length;
+    final avgSquaredDiff =
+        squaredDiffs.fold(0.0, (sum, v) => sum + v) / volumes.length;
     final stdDev = avgSquaredDiff > 0 ? avgSquaredDiff.toString() : '0';
-    
+
     return VolumeStats(
       total: total,
       average: average,
@@ -235,7 +235,6 @@ class VolumeCalculator {
 
 /// Volume progression data
 class VolumeProgression {
-
   const VolumeProgression({
     required this.weeklyChange,
     required this.monthlyChange,
@@ -253,7 +252,6 @@ class VolumeProgression {
 
 /// Volume statistics
 class VolumeStats {
-
   const VolumeStats({
     required this.total,
     required this.average,

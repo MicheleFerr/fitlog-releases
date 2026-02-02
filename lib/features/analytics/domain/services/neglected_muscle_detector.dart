@@ -146,8 +146,9 @@ class NeglectedMuscleDetector {
     if (antagonist != null) {
       final antagonistVolume =
           balance.muscleVolumePercentages[antagonist] ?? 0.0;
-      final imbalanceRatio =
-          antagonistVolume > 0 ? (antagonistVolume / volumePercent) : 1.0;
+      final imbalanceRatio = antagonistVolume > 0
+          ? (antagonistVolume / volumePercent)
+          : 1.0;
 
       if (imbalanceRatio > 3.0) {
         score += 3.0; // Severe imbalance

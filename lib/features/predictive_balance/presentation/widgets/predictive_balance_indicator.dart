@@ -103,13 +103,16 @@ class PredictiveBalanceIndicator extends ConsumerWidget {
             Flexible(
               child: Text(
                 context.l10n.completeToBalance(templateName),
-                style: (compact
-                        ? context.textTheme.labelSmall
-                        : context.textTheme.bodySmall)
-                    ?.copyWith(
-                  color: context.colors.onSurface.withValues(alpha: 0.7),
-                  fontWeight: FontWeight.w500,
-                ),
+                style:
+                    (compact
+                            ? context.textTheme.labelSmall
+                            : context.textTheme.bodySmall)
+                        ?.copyWith(
+                          color: context.colors.onSurface.withValues(
+                            alpha: 0.7,
+                          ),
+                          fontWeight: FontWeight.w500,
+                        ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -265,8 +268,9 @@ class PredictiveBalanceCard extends ConsumerWidget {
                             status.expectedWorkouts,
                           ),
                           style: context.textTheme.bodySmall?.copyWith(
-                            color:
-                                context.colors.onSurface.withValues(alpha: 0.6),
+                            color: context.colors.onSurface.withValues(
+                              alpha: 0.6,
+                            ),
                           ),
                         ),
                       ],
@@ -280,8 +284,9 @@ class PredictiveBalanceCard extends ConsumerWidget {
                       progress: status.progressPercentage,
                       strokeWidth: 4,
                       size: 40,
-                      backgroundColor:
-                          context.colors.primary.withValues(alpha: 0.2),
+                      backgroundColor: context.colors.primary.withValues(
+                        alpha: 0.2,
+                      ),
                       color: context.colors.primary,
                     ),
                   ),
@@ -292,9 +297,9 @@ class PredictiveBalanceCard extends ConsumerWidget {
               GestureDetector(
                 onTap: prediction.hasTemplate
                     ? () => _navigateToTemplate(
-                          context,
-                          prediction.suggestedTemplateId!,
-                        )
+                        context,
+                        prediction.suggestedTemplateId!,
+                      )
                     : null,
                 child: Container(
                   padding: const EdgeInsets.all(12),
@@ -323,7 +328,9 @@ class PredictiveBalanceCard extends ConsumerWidget {
                       if (prediction.hasTemplate)
                         Icon(
                           AppIcons.chevronRight,
-                          color: context.colors.onSurface.withValues(alpha: 0.4),
+                          color: context.colors.onSurface.withValues(
+                            alpha: 0.4,
+                          ),
                           size: AppIconSize.small,
                         ),
                     ],

@@ -392,10 +392,7 @@ class _MergeProgressIndicatorState extends State<_MergeProgressIndicator>
     _progressAnimation = Tween<double>(
       begin: 0.0,
       end: widget.progress,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
     _controller.forward();
   }
 
@@ -406,10 +403,7 @@ class _MergeProgressIndicatorState extends State<_MergeProgressIndicator>
       _progressAnimation = Tween<double>(
         begin: _currentProgress,
         end: widget.progress,
-      ).animate(CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOut,
-      ));
+      ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
       _controller
         ..reset()
         ..forward();

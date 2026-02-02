@@ -20,7 +20,6 @@ import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abb
 import 'package:gymbro_flutter_new/shared/domain/entities/sync_status.dart';
 
 class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
-
   HybridExerciseRepository({
     required super.boxManager,
     ExerciseCacheManager? cacheManager,
@@ -32,7 +31,8 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
        _versionService = versionService ?? ExerciseVersionService(),
        super(
          featureName: 'exercises',
-         collectionName: _baseCollectionName, // Base name for super(), actual queries use _firestoreCollection
+         collectionName:
+             _baseCollectionName, // Base name for super(), actual queries use _firestoreCollection
          requiresPremiumForCloud: false,
        ) {
     _initialize();
@@ -51,7 +51,8 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
   String get _firestoreCollection => 'exercises_${locale.languageCode}';
 
   Timer? _syncTimer;
-  final StreamController<SyncStatus> _syncStatusController = StreamController.broadcast();
+  final StreamController<SyncStatus> _syncStatusController =
+      StreamController.broadcast();
 
   Stream<SyncStatus> get syncStatus => _syncStatusController.stream;
 
@@ -82,10 +83,14 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       _syncStatusController.add(SyncStatus.loading);
 
       // 1. Prova cache locale prima (con controllo locale)
-      final cachedExercises = await _cacheManager.getCachedExercises(forLocale: currentLocale);
+      final cachedExercises = await _cacheManager.getCachedExercises(
+        forLocale: currentLocale,
+      );
       if (cachedExercises.isNotEmpty) {
         if (kDebugMode) {
-          debugPrint('📱 Loaded ${cachedExercises.length} exercises from cache (locale: $currentLocale)');
+          debugPrint(
+            '📱 Loaded ${cachedExercises.length} exercises from cache (locale: $currentLocale)',
+          );
         }
         _syncStatusController.add(SyncStatus.success);
 
@@ -99,13 +104,19 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       final firebaseExercises = await _getExercisesFromFirebase();
       if (firebaseExercises.isNotEmpty) {
         if (kDebugMode) {
-          debugPrint('☁️ Loaded ${firebaseExercises.length} exercises from Firebase');
+          debugPrint(
+            '☁️ Loaded ${firebaseExercises.length} exercises from Firebase',
+          );
         }
 
         // Cache per usi futuri con locale
         final versionInfo = await _versionService.getRemoteVersion();
         if (versionInfo != null) {
-          await _cacheManager.cacheExercises(firebaseExercises, versionInfo.version, locale: currentLocale);
+          await _cacheManager.cacheExercises(
+            firebaseExercises,
+            versionInfo.version,
+            locale: currentLocale,
+          );
           await _versionService.setLocalVersion(versionInfo.version);
         }
 
@@ -121,13 +132,16 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
 
       if (assetExercises.isNotEmpty) {
         // Cache il JSON asset con la locale corretta
-        await _cacheManager.cacheExercises(assetExercises, '1.0.0-asset', locale: currentLocale);
+        await _cacheManager.cacheExercises(
+          assetExercises,
+          '1.0.0-asset',
+          locale: currentLocale,
+        );
         await _versionService.setLocalVersion('1.0.0-asset');
       }
 
       _syncStatusController.add(SyncStatus.success);
       return assetExercises;
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to get exercises: $e');
@@ -154,11 +168,12 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       final lowerQuery = query.toLowerCase();
       return allExercises.where((exercise) {
         return exercise.nome.toLowerCase().contains(lowerQuery) ||
-               exercise.focusDisplayName.toLowerCase().contains(lowerQuery) ||
-               exercise.attrezzatura.toLowerCase().contains(lowerQuery) ||
-               exercise.muscoliSecondariDisplayName.toLowerCase().contains(lowerQuery);
+            exercise.focusDisplayName.toLowerCase().contains(lowerQuery) ||
+            exercise.attrezzatura.toLowerCase().contains(lowerQuery) ||
+            exercise.muscoliSecondariDisplayName.toLowerCase().contains(
+              lowerQuery,
+            );
       }).toList();
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to search exercises: $e');
@@ -171,7 +186,9 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
   Future<List<Exercise>> getExercisesByFocus(List<String> focusGroups) async {
     try {
       // Prova cache prima
-      final cachedResults = await _cacheManager.getCachedExercisesByFocus(focusGroups);
+      final cachedResults = await _cacheManager.getCachedExercisesByFocus(
+        focusGroups,
+      );
       if (cachedResults.isNotEmpty) {
         return cachedResults;
       }
@@ -181,7 +198,6 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       return allExercises.where((exercise) {
         return exercise.focus.any((focus) => focusGroups.contains(focus));
       }).toList();
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to get exercises by focus: $e');
@@ -206,7 +222,6 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       } catch (e) {
         return null;
       }
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to get exercise by ID: $e');
@@ -236,16 +251,24 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       final versionInfo = await _versionService.getRemoteVersion();
 
       if (versionInfo != null) {
-        await _cacheManager.cacheExercises(firebaseExercises, versionInfo.version, locale: currentLocale);
-        await _versionService.markUpdateCompleted(versionInfo.version, firebaseExercises.length);
+        await _cacheManager.cacheExercises(
+          firebaseExercises,
+          versionInfo.version,
+          locale: currentLocale,
+        );
+        await _versionService.markUpdateCompleted(
+          versionInfo.version,
+          firebaseExercises.length,
+        );
       }
 
       _syncStatusController.add(SyncStatus.success);
       if (kDebugMode) {
-        debugPrint('✅ Force sync completed: ${firebaseExercises.length} exercises (locale: $currentLocale)');
+        debugPrint(
+          '✅ Force sync completed: ${firebaseExercises.length} exercises (locale: $currentLocale)',
+        );
       }
       return true;
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Force sync failed: $e');
@@ -268,11 +291,12 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       }
 
       if (kDebugMode) {
-        debugPrint('🆕 Updates available: ${versionCheck.localVersion} → ${versionCheck.remoteVersion?.version}');
+        debugPrint(
+          '🆕 Updates available: ${versionCheck.localVersion} → ${versionCheck.remoteVersion?.version}',
+        );
       }
 
       return await forceSyncFromFirebase();
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to check/apply updates: $e');
@@ -296,7 +320,9 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
     // Fallback to Italian if locale collection is empty and we're not already using Italian
     if (exercises.isEmpty && _firestoreCollection != 'exercises_it') {
       if (kDebugMode) {
-        debugPrint('⚠️ $_firestoreCollection is empty, falling back to exercises_it');
+        debugPrint(
+          '⚠️ $_firestoreCollection is empty, falling back to exercises_it',
+        );
       }
       exercises = await _fetchFromCollection('exercises_it');
     }
@@ -309,9 +335,7 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
     try {
       // NOTE: Removed orderBy('nome') - Firestore requires index for ordered queries
       // Exercises will be sorted client-side if needed
-      final snapshot = await firestore
-          .collection(collectionName)
-          .get();
+      final snapshot = await firestore.collection(collectionName).get();
 
       final exercises = <Exercise>[];
 
@@ -332,7 +356,6 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       }
 
       return exercises;
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to get exercises from Firebase: $e');
@@ -344,12 +367,13 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
   /// Ottiene esercizi da JSON asset (fallback)
   Future<List<Exercise>> _getExercisesFromAsset() async {
     try {
-      final jsonList = await ExerciseJsonLoader.loadExercises(locale.languageCode);
+      final jsonList = await ExerciseJsonLoader.loadExercises(
+        locale.languageCode,
+      );
 
       return jsonList
           .map((json) => ExerciseModel.fromJson(json).toEntity())
           .toList();
-
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to load exercises from asset: $e');
@@ -362,7 +386,9 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
   /// Supports both:
   /// - Direct JSON format (from publish script): nome, focus, difficolta, etc.
   /// - Legacy ExerciseTemplate format: name, muscleGroups, difficulty, etc.
-  Map<String, dynamic> _convertFirebaseToLocalFormat(Map<String, dynamic> firebaseData) {
+  Map<String, dynamic> _convertFirebaseToLocalFormat(
+    Map<String, dynamic> firebaseData,
+  ) {
     // Check if data is already in local JSON format (has 'nome' field)
     if (firebaseData.containsKey('nome')) {
       // Data is already in correct format, return as-is with id
@@ -395,7 +421,9 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       'nome': firebaseData['name'] ?? '',
       'focus': _convertMuscleGroupsToFocus(firebaseData['muscleGroups'] ?? []),
       'imageUrl': firebaseData['imageUrl'] ?? '',
-      'muscoliSecondari': _convertSecondaryMuscles(firebaseData['secondaryMuscles'] ?? []),
+      'muscoliSecondari': _convertSecondaryMuscles(
+        firebaseData['secondaryMuscles'] ?? [],
+      ),
       'difficolta': firebaseData['difficulty'] ?? 'Intermedio',
       'tipoEsercizio': firebaseData['exerciseType'] ?? 'Isolamento',
       'attrezzatura': (firebaseData['equipment'] as List?)?.first ?? 'Vario',
@@ -421,7 +449,9 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
 
     final convertedFocus = muscleGroups.map((muscle) {
       final muscleName = muscle.toString().toLowerCase();
-      final abbreviation = MuscleAbbreviationMapper.nameToAbbreviation(muscleName);
+      final abbreviation = MuscleAbbreviationMapper.nameToAbbreviation(
+        muscleName,
+      );
       return abbreviation ?? muscle.toString().toUpperCase();
     }).toList();
 
@@ -502,13 +532,13 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
   @override
   bool validate(Exercise entity) {
     return entity.id.isNotEmpty &&
-           entity.nome.isNotEmpty &&
-           entity.focus.isNotEmpty &&
-           entity.difficolta.isNotEmpty &&
-           entity.tipoEsercizio.isNotEmpty &&
-           entity.attrezzatura.isNotEmpty &&
-           entity.patternMovimento.isNotEmpty &&
-           entity.rangeRipetizioni.isNotEmpty;
+        entity.nome.isNotEmpty &&
+        entity.focus.isNotEmpty &&
+        entity.difficolta.isNotEmpty &&
+        entity.tipoEsercizio.isNotEmpty &&
+        entity.attrezzatura.isNotEmpty &&
+        entity.patternMovimento.isNotEmpty &&
+        entity.rangeRipetizioni.isNotEmpty;
   }
 
   @override

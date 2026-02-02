@@ -19,9 +19,7 @@ class PhotoReminderRepository {
   /// Key for storing reminder history
   static const String _historyKey = 'photo_reminder_history';
 
-  PhotoReminderRepository({
-    required SharedPreferences prefs,
-  }) : _prefs = prefs;
+  PhotoReminderRepository({required SharedPreferences prefs}) : _prefs = prefs;
 
   /// Get current reminder settings
   PhotoReminderSettings getSettings() {
@@ -103,11 +101,11 @@ class PhotoReminderRepository {
   }
 
   /// Update next scheduled reminder
-  Future<PhotoReminderSettings> updateNextReminder(DateTime nextReminder) async {
+  Future<PhotoReminderSettings> updateNextReminder(
+    DateTime nextReminder,
+  ) async {
     return updateSettings(
-      (current) => current.copyWith(
-        nextReminderScheduled: nextReminder,
-      ),
+      (current) => current.copyWith(nextReminderScheduled: nextReminder),
     );
   }
 
@@ -150,9 +148,7 @@ class PhotoReminderRepository {
     }
 
     return updateSettings(
-      (current) => current.copyWith(
-        consecutiveIgnores: newIgnoreCount,
-      ),
+      (current) => current.copyWith(consecutiveIgnores: newIgnoreCount),
     );
   }
 

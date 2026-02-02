@@ -14,7 +14,6 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_inf
 
 /// Tier-1 SupersetCard che mostra tutti gli esercizi del superset in una singola card
 class SupersetCard extends ConsumerStatefulWidget {
-
   const SupersetCard({
     super.key,
     required this.superset,
@@ -52,14 +51,17 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
   /// Always expanded, auto-collapse ONLY when all sets are completed
   /// Manual toggle only allowed when completed (to re-expand for review)
   bool get _isExpanded {
-    final allCompleted = widget.superset.supersetSets.every((s) => s.isFullyCompleted);
+    final allCompleted = widget.superset.supersetSets.every(
+      (s) => s.isFullyCompleted,
+    );
     // If not completed → always expanded (no manual override)
     if (!allCompleted) return true;
     // If completed → allow manual re-expand
     return _manualExpandOverride;
   }
 
-  bool get _allSetsCompleted => widget.superset.supersetSets.every((s) => s.isFullyCompleted);
+  bool get _allSetsCompleted =>
+      widget.superset.supersetSets.every((s) => s.isFullyCompleted);
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +129,9 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
       ),
       child: GestureDetector(
         onTap: widget.isReorderMode ? null : widget.onTap,
-        onLongPress: widget.isReorderMode ? null : () => _showSupersetOptions(context),
+        onLongPress: widget.isReorderMode
+            ? null
+            : () => _showSupersetOptions(context),
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: context.colors.surfaceContainer,
@@ -228,18 +232,22 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
   }
 
   Widget _buildSupersetHeader(BuildContext context, AppLocalizations l10n) {
-    final completedSets = widget.superset.supersetSets.where((s) => s.isFullyCompleted).length;
+    final completedSets = widget.superset.supersetSets
+        .where((s) => s.isFullyCompleted)
+        .length;
     final totalSets = widget.superset.supersetSets.length;
     final allCompleted = completedSets == totalSets;
 
     return GestureDetector(
       // ✅ FIX Issue 1: Only allow toggle when ALL sets are completed
-      onTap: _allSetsCompleted ? () {
-        setState(() {
-          _manualExpandOverride = !_manualExpandOverride;
-        });
-        HapticFeedback.lightImpact();
-      } : null,
+      onTap: _allSetsCompleted
+          ? () {
+              setState(() {
+                _manualExpandOverride = !_manualExpandOverride;
+              });
+              HapticFeedback.lightImpact();
+            }
+          : null,
       behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -257,7 +265,9 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               ),
               child: Icon(
                 AppIcons.link,
-                color: allCompleted ? context.colors.tertiary : context.colors.secondary,
+                color: allCompleted
+                    ? context.colors.tertiary
+                    : context.colors.secondary,
                 size: 18,
               ),
             ),
@@ -275,8 +285,12 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                     overflow: TextOverflow.ellipsis,
                     style: context.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
-                      decoration: allCompleted ? TextDecoration.lineThrough : null,
-                      color: allCompleted ? context.colors.onSurfaceVariant : null,
+                      decoration: allCompleted
+                          ? TextDecoration.lineThrough
+                          : null,
+                      color: allCompleted
+                          ? context.colors.onSurfaceVariant
+                          : null,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -307,7 +321,9 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                 '$completedSets/$totalSets',
                 style: context.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: allCompleted ? context.colors.tertiary : context.colors.onSurfaceVariant,
+                  color: allCompleted
+                      ? context.colors.tertiary
+                      : context.colors.onSurfaceVariant,
                 ),
               ),
             ),
@@ -315,7 +331,9 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             if (_allSetsCompleted) ...[
               const SizedBox(width: 4),
               Icon(
-                _isExpanded ? AppIcons.keyboardArrowUp : AppIcons.keyboardArrowDown,
+                _isExpanded
+                    ? AppIcons.keyboardArrowUp
+                    : AppIcons.keyboardArrowDown,
                 size: 20,
                 color: context.colors.onSurfaceVariant,
               ),
@@ -328,7 +346,9 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
 
   // 🔧 PERF FIX: Removed config parameter - no longer needed as .select() is used directly
   Widget _buildSupersetSets(BuildContext context, AppLocalizations l10n) {
-    final completedSets = widget.superset.supersetSets.where((s) => s.isFullyCompleted).length;
+    final completedSets = widget.superset.supersetSets
+        .where((s) => s.isFullyCompleted)
+        .length;
     final totalSets = widget.superset.supersetSets.length;
     // ✅ FIX Issue 2: Use setDisplayProvider for Comodo/Compatto mode
     final displayMode = ref.watch(setDisplayProvider);
@@ -366,14 +386,17 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             final index = entry.key;
             final supersetSet = entry.value;
             return _buildSetRowLikeExerciseListItem(
-              context, supersetSet, index + 1, l10n, displayMode,
+              context,
+              supersetSet,
+              index + 1,
+              l10n,
+              displayMode,
             );
           }),
         ],
       ),
     );
   }
-
 
   Widget _buildNotesSection(BuildContext context, AppLocalizations l10n) {
     return Padding(
@@ -413,9 +436,9 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
           children: [
             ListTile(
               leading: const SemanticIcon(
-  icon: AppIcons.edit,
-  semanticLabel: 'Edit',
-),
+                icon: AppIcons.edit,
+                semanticLabel: 'Edit',
+              ),
               title: Text(context.l10n.editSuperset),
               onTap: () {
                 Navigator.pop(context);
@@ -424,9 +447,9 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             ),
             ListTile(
               leading: const SemanticIcon(
-  icon: AppIcons.iconCopy,
-  semanticLabel: 'Icon copy',
-),
+                icon: AppIcons.iconCopy,
+                semanticLabel: 'Icon copy',
+              ),
               title: Text(context.l10n.duplicate),
               onTap: () {
                 Navigator.pop(context);
@@ -496,7 +519,9 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               : context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(displayMode.borderRadius),
           border: isFullyCompleted
-              ? Border.all(color: context.colors.tertiary.withValues(alpha: 0.3))
+              ? Border.all(
+                  color: context.colors.tertiary.withValues(alpha: 0.3),
+                )
               : null,
         ),
         child: Row(
@@ -543,7 +568,9 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                       displayMode,
                     ),
                     if (i < exercises.length - 1)
-                      SizedBox(height: displayMode == SetDisplayMode.compact ? 2 : 4),
+                      SizedBox(
+                        height: displayMode == SetDisplayMode.compact ? 2 : 4,
+                      ),
                   ],
                 ],
               ),
@@ -599,7 +626,8 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
     SetDisplayMode displayMode,
   ) {
     final isCompleted = exerciseData?.isCompleted ?? false;
-    final weight = exerciseData?.actualWeight ?? exerciseData?.targetWeight ?? 0.0;
+    final weight =
+        exerciseData?.actualWeight ?? exerciseData?.targetWeight ?? 0.0;
     final reps = exerciseData?.actualReps ?? exerciseData?.targetReps ?? 0;
 
     // ✅ TUT visibility controlled by setDurationTracking toggle
@@ -826,9 +854,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
     final updatedExerciseData = <String, SupersetExerciseData>{};
 
     for (final entry in supersetSet.exerciseData.entries) {
-      updatedExerciseData[entry.key] = entry.value.copyWith(
-        isCompleted: false,
-      );
+      updatedExerciseData[entry.key] = entry.value.copyWith(isCompleted: false);
     }
 
     final updatedSet = supersetSet.copyWith(

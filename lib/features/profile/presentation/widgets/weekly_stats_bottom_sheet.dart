@@ -41,7 +41,8 @@ class _WeeklyStatsBottomSheetContent extends ConsumerWidget {
     final sunday = monday.add(const Duration(days: 6));
 
     // Filter workouts for this week
-    final thisWeekWorkouts = workoutsAsync.valueOrNull?.where((w) {
+    final thisWeekWorkouts =
+        workoutsAsync.valueOrNull?.where((w) {
           final workoutDate = DateTime(
             w.completedAt.year,
             w.completedAt.month,
@@ -49,7 +50,9 @@ class _WeeklyStatsBottomSheetContent extends ConsumerWidget {
           );
           final mondayDate = DateTime(monday.year, monday.month, monday.day);
           final sundayDate = DateTime(sunday.year, sunday.month, sunday.day);
-          return workoutDate.isAfter(mondayDate.subtract(const Duration(days: 1))) &&
+          return workoutDate.isAfter(
+                mondayDate.subtract(const Duration(days: 1)),
+              ) &&
               workoutDate.isBefore(sundayDate.add(const Duration(days: 1)));
         }).toList() ??
         [];
@@ -171,15 +174,14 @@ class _WeeklyStatsBottomSheetContent extends ConsumerWidget {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: context.colors.primaryContainer.withValues(alpha: 0.5),
+                    color: context.colors.primaryContainer.withValues(
+                      alpha: 0.5,
+                    ),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     children: [
-                      Text(
-                        '💪',
-                        style: context.textTheme.headlineSmall,
-                      ),
+                      Text('💪', style: context.textTheme.headlineSmall),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
@@ -246,11 +248,7 @@ class _StatCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            size: AppIconSize.medium,
-            color: color,
-          ),
+          Icon(icon, size: AppIconSize.medium, color: color),
           const SizedBox(height: 8),
           Text(
             value,

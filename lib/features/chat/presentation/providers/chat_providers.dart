@@ -34,10 +34,11 @@ final chatRepositoryProvider = Provider<ChatRepository>((ref) {
 ///
 /// Watches conversations for the current user in real-time.
 /// Sorted by lastMessageAt (most recent first).
-final conversationsProvider = StreamProvider.autoDispose<List<ChatConversation>>((ref) {
-  final repository = ref.watch(chatRepositoryProvider);
-  return repository.watchConversations();
-});
+final conversationsProvider =
+    StreamProvider.autoDispose<List<ChatConversation>>((ref) {
+      final repository = ref.watch(chatRepositoryProvider);
+      return repository.watchConversations();
+    });
 
 /// Provider to get or create a conversation
 ///
@@ -50,23 +51,23 @@ final conversationsProvider = StreamProvider.autoDispose<List<ChatConversation>>
 ///   'athleteName': athleteName,
 /// }).future);
 /// ```
-final getOrCreateConversationProvider =
-    FutureProvider.autoDispose.family<ChatConversation, Map<String, String>>((ref, params) async {
-  final repository = ref.watch(chatRepositoryProvider);
-  return repository.getOrCreateConversation(
-    coachId: params['coachId']!,
-    athleteId: params['athleteId']!,
-    coachName: params['coachName']!,
-    athleteName: params['athleteName']!,
-  );
-});
+final getOrCreateConversationProvider = FutureProvider.autoDispose
+    .family<ChatConversation, Map<String, String>>((ref, params) async {
+      final repository = ref.watch(chatRepositoryProvider);
+      return repository.getOrCreateConversation(
+        coachId: params['coachId']!,
+        athleteId: params['athleteId']!,
+        coachName: params['coachName']!,
+        athleteName: params['athleteName']!,
+      );
+    });
 
 /// Provider to get a single conversation by ID
-final conversationProvider =
-    FutureProvider.autoDispose.family<ChatConversation?, String>((ref, conversationId) async {
-  final repository = ref.watch(chatRepositoryProvider);
-  return repository.getConversation(conversationId);
-});
+final conversationProvider = FutureProvider.autoDispose
+    .family<ChatConversation?, String>((ref, conversationId) async {
+      final repository = ref.watch(chatRepositoryProvider);
+      return repository.getConversation(conversationId);
+    });
 
 // ============================================================
 // MESSAGES
@@ -76,25 +77,25 @@ final conversationProvider =
 ///
 /// Watches messages in real-time with pagination support.
 /// [params] should contain 'conversationId' and optionally 'limit'.
-final messagesProvider =
-    StreamProvider.autoDispose.family<List<ChatMessage>, String>((ref, conversationId) {
-  final repository = ref.watch(chatRepositoryProvider);
-  return repository.watchMessages(
-    conversationId: conversationId,
-    limit: 50,
-  );
-});
+final messagesProvider = StreamProvider.autoDispose
+    .family<List<ChatMessage>, String>((ref, conversationId) {
+      final repository = ref.watch(chatRepositoryProvider);
+      return repository.watchMessages(
+        conversationId: conversationId,
+        limit: 50,
+      );
+    });
 
 /// Extended messages provider with pagination
-final paginatedMessagesProvider =
-    StreamProvider.autoDispose.family<List<ChatMessage>, MessagesPaginationParams>((ref, params) {
-  final repository = ref.watch(chatRepositoryProvider);
-  return repository.watchMessages(
-    conversationId: params.conversationId,
-    limit: params.limit,
-    before: params.before,
-  );
-});
+final paginatedMessagesProvider = StreamProvider.autoDispose
+    .family<List<ChatMessage>, MessagesPaginationParams>((ref, params) {
+      final repository = ref.watch(chatRepositoryProvider);
+      return repository.watchMessages(
+        conversationId: params.conversationId,
+        limit: params.limit,
+        before: params.before,
+      );
+    });
 
 /// Parameters for paginated messages
 class MessagesPaginationParams {

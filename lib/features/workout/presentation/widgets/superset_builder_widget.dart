@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as ExerciseDB;
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart'
+    as ExerciseDB;
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/exercise_search_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_configuration.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_round_config_sheet.dart';
@@ -12,20 +13,16 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 
 /// Tier-1 UX widget for creating supersets with professional fitness app design
 class SupersetBuilderWidget extends ConsumerStatefulWidget {
-  
-  const SupersetBuilderWidget({
-    super.key,
-    required this.onSupersetCreated,
-  });
+  const SupersetBuilderWidget({super.key, required this.onSupersetCreated});
   final Function(SupersetConfiguration) onSupersetCreated;
 
   @override
-  ConsumerState<SupersetBuilderWidget> createState() => _SupersetBuilderWidgetState();
+  ConsumerState<SupersetBuilderWidget> createState() =>
+      _SupersetBuilderWidgetState();
 }
 
 class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
     with TickerProviderStateMixin {
-
   final List<ExerciseDB.Exercise> _selectedExercises = [];
   SupersetConfiguration? _configuration;
 
@@ -42,13 +39,9 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOut,
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    );
     _animationController.forward();
 
     // ✅ Auto-collapse info card after 3 seconds
@@ -69,7 +62,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    
+
     return FadeTransition(
       opacity: _fadeAnimation,
       child: SingleChildScrollView(
@@ -80,11 +73,11 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
             // Info card with superset explanation
             _buildInfoCard(theme, l10n),
             const SizedBox(height: 20),
-            
+
             // Exercise selection section
             _buildExerciseSection(theme, l10n),
             const SizedBox(height: 20),
-            
+
             // Configuration section (opens ConfigSheet modal)
             if (_selectedExercises.length >= 2) ...[
               _buildConfigurationSection(theme, l10n),
@@ -209,7 +202,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
           ),
         ),
         const SizedBox(height: 12),
-        
+
         // Selected exercises list
         if (_selectedExercises.isNotEmpty) ...[
           ...List.generate(_selectedExercises.length, (index) {
@@ -221,10 +214,10 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
           }),
           const SizedBox(height: 8),
         ],
-        
+
         // Add exercise button
         _buildAddExerciseButton(theme, l10n),
-        
+
         if (_selectedExercises.isEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 8),
@@ -240,7 +233,11 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
     );
   }
 
-  Widget _buildExerciseCard(ExerciseDB.Exercise exercise, int index, ThemeData theme) {
+  Widget _buildExerciseCard(
+    ExerciseDB.Exercise exercise,
+    int index,
+    ThemeData theme,
+  ) {
     return Card(
       elevation: 2,
       child: ListTile(
@@ -263,7 +260,9 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
         ),
         title: Text(
           exercise.nome,
-          style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
         ),
         subtitle: Text('${exercise.focus} • ${exercise.attrezzatura}'),
         trailing: IconButton(
@@ -273,10 +272,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
             });
             HapticFeedback.lightImpact();
           },
-          icon: Icon(
-            AppIcons.close,
-            color: theme.colorScheme.error,
-          ),
+          icon: Icon(AppIcons.close, color: theme.colorScheme.error),
         ),
       ),
     );
@@ -293,10 +289,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                AppIcons.addCircleOutline,
-                color: theme.colorScheme.primary,
-              ),
+              Icon(AppIcons.addCircleOutline, color: theme.colorScheme.primary),
               const SizedBox(width: 8),
               Text(
                 l10n.addExercise,
@@ -350,7 +343,9 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    hasConfiguration ? l10n.editConfiguration : l10n.configureRounds,
+                    hasConfiguration
+                        ? l10n.editConfiguration
+                        : l10n.configureRounds,
                     style: theme.textTheme.labelLarge?.copyWith(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.w500,
@@ -433,9 +428,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
   void _openExerciseSelection() async {
     final result = await Navigator.of(context).push<List<ExerciseDB.Exercise>>(
       MaterialPageRoute(
-        builder: (context) => const ExerciseSearchScreen(
-          multiSelectMode: true,
-        ),
+        builder: (context) => const ExerciseSearchScreen(multiSelectMode: true),
       ),
     );
 

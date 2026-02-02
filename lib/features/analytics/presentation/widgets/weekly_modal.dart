@@ -95,10 +95,14 @@ class _WeeklyModalState extends State<WeeklyModal> {
 
   /// Get motivational message
   String _getMotivationalMessage(BuildContext context) {
-    if (widget.weeklyWorkouts >= _weeklyGoal) return context.l10n.weeklyConsistencyExcellent;
-    if (widget.weeklyWorkouts >= _weeklyGoal - 1) return context.l10n.weeklyConsistencyAlmost;
-    if (widget.weeklyWorkouts >= _weeklyGoal - 2) return context.l10n.weeklyConsistencyGood;
-    if (widget.weeklyWorkouts >= 2) return context.l10n.weeklyConsistencyOnTrack;
+    if (widget.weeklyWorkouts >= _weeklyGoal)
+      return context.l10n.weeklyConsistencyExcellent;
+    if (widget.weeklyWorkouts >= _weeklyGoal - 1)
+      return context.l10n.weeklyConsistencyAlmost;
+    if (widget.weeklyWorkouts >= _weeklyGoal - 2)
+      return context.l10n.weeklyConsistencyGood;
+    if (widget.weeklyWorkouts >= 2)
+      return context.l10n.weeklyConsistencyOnTrack;
     return context.l10n.weeklyConsistencyStart;
   }
 
@@ -224,7 +228,9 @@ class _WeeklyModalState extends State<WeeklyModal> {
               icon: AppIcons.calendar,
               semanticLabel: context.l10n.weeklyWorkouts,
               size: AppIconSize.large,
-              color: isGoalMet ? context.colors.success : context.colors.primary,
+              color: isGoalMet
+                  ? context.colors.success
+                  : context.colors.primary,
             ),
           ),
           const SizedBox(width: 16),
@@ -264,11 +270,11 @@ class _WeeklyModalState extends State<WeeklyModal> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SemanticIcon(
-  icon: AppIcons.achievement,
-  semanticLabel: 'Achievement',
-  size: AppIconSize.tiny,
-  color: context.colors.onSuccess,
-),
+                    icon: AppIcons.achievement,
+                    semanticLabel: 'Achievement',
+                    size: AppIconSize.tiny,
+                    color: context.colors.onSuccess,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     context.l10n.goalAchieved,
@@ -340,19 +346,16 @@ class _WeeklyModalState extends State<WeeklyModal> {
                         : context.colors.surfaceContainerHighest,
                     shape: BoxShape.circle,
                     border: isToday
-                        ? Border.all(
-                            color: context.colors.primary,
-                            width: 2,
-                          )
+                        ? Border.all(color: context.colors.primary, width: 2)
                         : null,
                   ),
                   child: hasWorkout
                       ? SemanticIcon(
-  icon: AppIcons.checkCircle,
-  semanticLabel: 'Complete',
-  size: AppIconSize.small,
-  color: context.colors.onSuccess,
-)
+                          icon: AppIcons.checkCircle,
+                          semanticLabel: 'Complete',
+                          size: AppIconSize.small,
+                          color: context.colors.onSuccess,
+                        )
                       : null,
                 ),
 
@@ -496,11 +499,11 @@ class _WeeklyModalState extends State<WeeklyModal> {
     return Row(
       children: [
         SemanticIcon(
-  icon: AppIcons.checkCircle,
-  semanticLabel: 'Complete',
-  size: AppIconSize.tiny,
-  color: context.colors.primary,
-),
+          icon: AppIcons.checkCircle,
+          semanticLabel: 'Complete',
+          size: AppIconSize.tiny,
+          color: context.colors.primary,
+        ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
@@ -613,7 +616,10 @@ class _WeeklyModalState extends State<WeeklyModal> {
               ),
               const SizedBox(width: 12),
               Text(
-                context.l10n.workoutsCount(widget.weeklyWorkouts, _weeklyGoal.round()),
+                context.l10n.workoutsCount(
+                  widget.weeklyWorkouts,
+                  _weeklyGoal.round(),
+                ),
                 style: context.textTheme.labelMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: widget.weeklyWorkouts >= _weeklyGoal

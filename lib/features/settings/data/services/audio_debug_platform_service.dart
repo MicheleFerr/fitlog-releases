@@ -18,10 +18,13 @@ class AudioDebugPlatformService {
   static const String _tag = 'AudioDebugPlatformService';
 
   // Platform channel for audio debug tests
-  static const MethodChannel _channel = MethodChannel('com.gymbro.fitlog/audio_debug');
+  static const MethodChannel _channel = MethodChannel(
+    'com.gymbro.fitlog/audio_debug',
+  );
 
   // Callback for test results
-  final _testResultController = StreamController<Map<String, dynamic>>.broadcast();
+  final _testResultController =
+      StreamController<Map<String, dynamic>>.broadcast();
   Stream<Map<String, dynamic>> get testResults => _testResultController.stream;
 
   bool _isInitialized = false;
@@ -102,7 +105,9 @@ class AudioDebugPlatformService {
   /// Handle audio played event from iOS
   void _handleAudioPlayed(Map<dynamic, dynamic> args) {
     final traceId = args['traceId'] as String;
-    final method = args['method'] as String; // 'AVAudioPlayer', 'notification', 'liveActivity'
+    final method =
+        args['method']
+            as String; // 'AVAudioPlayer', 'notification', 'liveActivity'
 
     if (kDebugMode) {
       debugPrint('[$_tag] Audio played: $traceId via $method');
@@ -121,7 +126,9 @@ class AudioDebugPlatformService {
     final progress = args['progress'] as double;
 
     if (kDebugMode) {
-      debugPrint('[$_tag] Test progress: $testId - ${(progress * 100).toStringAsFixed(0)}%');
+      debugPrint(
+        '[$_tag] Test progress: $testId - ${(progress * 100).toStringAsFixed(0)}%',
+      );
     }
 
     _testResultController.add({
@@ -145,7 +152,9 @@ class AudioDebugPlatformService {
   }) async {
     if (kDebugMode) {
       debugPrint('[$_tag] Starting audio test: $testId');
-      debugPrint('[$_tag] Duration: ${duration}s, AppState: $appState, LA: $liveActivityEnabled');
+      debugPrint(
+        '[$_tag] Duration: ${duration}s, AppState: $appState, LA: $liveActivityEnabled',
+      );
     }
 
     try {
@@ -176,9 +185,7 @@ class AudioDebugPlatformService {
     }
 
     try {
-      await _channel.invokeMethod('cancelTest', {
-        'testId': testId,
-      });
+      await _channel.invokeMethod('cancelTest', {'testId': testId});
 
       if (kDebugMode) {
         debugPrint('[$_tag] Test cancelled: $testId');
@@ -222,13 +229,17 @@ class AudioDebugPlatformService {
 }
 
 /// Provider for audio debug platform service
-final audioDebugPlatformServiceProvider = Provider<AudioDebugPlatformService>((ref) {
+final audioDebugPlatformServiceProvider = Provider<AudioDebugPlatformService>((
+  ref,
+) {
   final service = AudioDebugPlatformService();
 
   // Initialize on first access with error handling
   service.initialize().catchError((e, stack) {
     if (kDebugMode) {
-      debugPrint('[AudioDebugPlatformService] Failed to initialize: $e\n$stack');
+      debugPrint(
+        '[AudioDebugPlatformService] Failed to initialize: $e\n$stack',
+      );
     }
   });
 

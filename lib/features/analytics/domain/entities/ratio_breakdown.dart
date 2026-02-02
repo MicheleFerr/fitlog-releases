@@ -45,7 +45,8 @@ class ExerciseContribution {
   final bool isPrimary;
 
   @override
-  String toString() => 'ExerciseContribution($exerciseName, $volume kg, $percentage%)';
+  String toString() =>
+      'ExerciseContribution($exerciseName, $volume kg, $percentage%)';
 }
 
 /// Category breakdown with exercises grouped by muscle
@@ -106,27 +107,27 @@ class RatioBreakdown {
 
   /// Empty breakdown (no data)
   factory RatioBreakdown.empty() => const RatioBreakdown(
-        pushBreakdown: CategoryBreakdown(
-          categoryName: 'Push',
-          totalVolume: 0,
-          exercisesByMuscle: {},
-        ),
-        pullBreakdown: CategoryBreakdown(
-          categoryName: 'Pull',
-          totalVolume: 0,
-          exercisesByMuscle: {},
-        ),
-        upperBreakdown: CategoryBreakdown(
-          categoryName: 'Upper',
-          totalVolume: 0,
-          exercisesByMuscle: {},
-        ),
-        lowerBreakdown: CategoryBreakdown(
-          categoryName: 'Lower',
-          totalVolume: 0,
-          exercisesByMuscle: {},
-        ),
-      );
+    pushBreakdown: CategoryBreakdown(
+      categoryName: 'Push',
+      totalVolume: 0,
+      exercisesByMuscle: {},
+    ),
+    pullBreakdown: CategoryBreakdown(
+      categoryName: 'Pull',
+      totalVolume: 0,
+      exercisesByMuscle: {},
+    ),
+    upperBreakdown: CategoryBreakdown(
+      categoryName: 'Upper',
+      totalVolume: 0,
+      exercisesByMuscle: {},
+    ),
+    lowerBreakdown: CategoryBreakdown(
+      categoryName: 'Lower',
+      totalVolume: 0,
+      exercisesByMuscle: {},
+    ),
+  );
 
   final CategoryBreakdown pushBreakdown;
   final CategoryBreakdown pullBreakdown;
@@ -134,10 +135,12 @@ class RatioBreakdown {
   final CategoryBreakdown lowerBreakdown;
 
   /// Get breakdown for push/pull ratio
-  (CategoryBreakdown, CategoryBreakdown) get pushPullPair => (pushBreakdown, pullBreakdown);
+  (CategoryBreakdown, CategoryBreakdown) get pushPullPair =>
+      (pushBreakdown, pullBreakdown);
 
   /// Get breakdown for upper/lower ratio
-  (CategoryBreakdown, CategoryBreakdown) get upperLowerPair => (upperBreakdown, lowerBreakdown);
+  (CategoryBreakdown, CategoryBreakdown) get upperLowerPair =>
+      (upperBreakdown, lowerBreakdown);
 
   /// Check if any data exists
   bool get hasData =>
@@ -147,7 +150,8 @@ class RatioBreakdown {
       lowerBreakdown.hasData;
 
   @override
-  String toString() => 'RatioBreakdown(push: ${pushBreakdown.totalVolume}, '
+  String toString() =>
+      'RatioBreakdown(push: ${pushBreakdown.totalVolume}, '
       'pull: ${pullBreakdown.totalVolume}, '
       'upper: ${upperBreakdown.totalVolume}, '
       'lower: ${lowerBreakdown.totalVolume})';

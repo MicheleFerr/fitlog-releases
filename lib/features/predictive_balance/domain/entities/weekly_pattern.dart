@@ -53,8 +53,7 @@ abstract class WeeklyPattern with _$WeeklyPattern {
   int get cycleLength => cycle.length;
 
   /// Check if pattern is stale (analyzed more than 7 days ago)
-  bool get isStale =>
-      DateTime.now().difference(analyzedAt).inDays > 7;
+  bool get isStale => DateTime.now().difference(analyzedAt).inDays > 7;
 
   /// Get all muscle groups covered by this pattern
   Set<String> get allMusclesCovered {

@@ -105,11 +105,12 @@ extension StrengthStandardExtension on StrengthStandard {
     }
 
     // Interpolate between nearest bodyweights
-    final availableWeights = bodyweightTable!.keys
-        .map((k) => double.tryParse(k))
-        .whereType<double>()
-        .toList()
-      ..sort();
+    final availableWeights =
+        bodyweightTable!.keys
+            .map((k) => double.tryParse(k))
+            .whereType<double>()
+            .toList()
+          ..sort();
 
     if (availableWeights.isEmpty) {
       // Fallback to multiplier if no table data
@@ -151,8 +152,7 @@ extension StrengthStandardExtension on StrengthStandard {
     final upperValue =
         bodyweightTable![upperWeight.toString()]?[levelKey] ?? 0.0;
 
-    final ratio =
-        (bodyweightKg - lowerWeight) / (upperWeight - lowerWeight);
+    final ratio = (bodyweightKg - lowerWeight) / (upperWeight - lowerWeight);
     return lowerValue + (upperValue - lowerValue) * ratio;
   }
 
@@ -162,10 +162,7 @@ extension StrengthStandardExtension on StrengthStandard {
     required ExperienceLevel level,
     double intensityFactor = 0.70, // 70% of 1RM for 8-12 reps
   }) {
-    final oneRM = getOneRepMax(
-      bodyweightKg: bodyweightKg,
-      level: level,
-    );
+    final oneRM = getOneRepMax(bodyweightKg: bodyweightKg, level: level);
 
     return oneRM != null ? oneRM * intensityFactor : null;
   }

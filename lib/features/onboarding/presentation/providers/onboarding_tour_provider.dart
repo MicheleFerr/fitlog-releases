@@ -92,7 +92,9 @@ class OnboardingTourNotifier extends Notifier<OnboardingTourState> {
 
     final nextPosition = state.currentStepPosition + 1;
     if (kDebugMode) {
-      debugPrint('🎯 [TOUR] Moving to step ${nextPosition + 1}/${OnboardingTourConfig.totalSteps}');
+      debugPrint(
+        '🎯 [TOUR] Moving to step ${nextPosition + 1}/${OnboardingTourConfig.totalSteps}',
+      );
     }
 
     state = state.copyWith(
@@ -112,7 +114,9 @@ class OnboardingTourNotifier extends Notifier<OnboardingTourState> {
 
     final previousPosition = state.currentStepPosition - 1;
     if (kDebugMode) {
-      debugPrint('🎯 [TOUR] Moving back to step ${previousPosition + 1}/${OnboardingTourConfig.totalSteps}');
+      debugPrint(
+        '🎯 [TOUR] Moving back to step ${previousPosition + 1}/${OnboardingTourConfig.totalSteps}',
+      );
     }
 
     state = state.copyWith(
@@ -193,4 +197,6 @@ class OnboardingTourNotifier extends Notifier<OnboardingTourState> {
 
 /// Provider for onboarding tour state
 final onboardingTourProvider =
-    NotifierProvider<OnboardingTourNotifier, OnboardingTourState>(OnboardingTourNotifier.new);
+    NotifierProvider<OnboardingTourNotifier, OnboardingTourState>(
+      OnboardingTourNotifier.new,
+    );

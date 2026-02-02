@@ -64,10 +64,9 @@ class HiveMeasurementDatasource implements MeasurementLocalDatasource {
 
       return right(null);
     } catch (e) {
-      return left(HiveFailure(
-        message: 'Failed to initialize Hive box',
-        error: e,
-      ));
+      return left(
+        HiveFailure(message: 'Failed to initialize Hive box', error: e),
+      );
     }
   }
 
@@ -80,10 +79,7 @@ class HiveMeasurementDatasource implements MeasurementLocalDatasource {
       }
       return right(null);
     } catch (e) {
-      return left(HiveFailure(
-        message: 'Failed to close Hive box',
-        error: e,
-      ));
+      return left(HiveFailure(message: 'Failed to close Hive box', error: e));
     }
   }
 
@@ -104,10 +100,12 @@ class HiveMeasurementDatasource implements MeasurementLocalDatasource {
 
       return right(null);
     } catch (e) {
-      return left(HiveFailure(
-        message: 'Failed to save measurement: ${measurement.id}',
-        error: e,
-      ));
+      return left(
+        HiveFailure(
+          message: 'Failed to save measurement: ${measurement.id}',
+          error: e,
+        ),
+      );
     }
   }
 
@@ -131,16 +129,18 @@ class HiveMeasurementDatasource implements MeasurementLocalDatasource {
       final measurement = EncryptedMeasurement.fromJson(json);
       return right(measurement);
     } catch (e) {
-      return left(HiveFailure(
-        message: 'Failed to get measurement: $measurementId',
-        error: e,
-      ));
+      return left(
+        HiveFailure(
+          message: 'Failed to get measurement: $measurementId',
+          error: e,
+        ),
+      );
     }
   }
 
   @override
   Future<Either<LocalStorageFailure, List<EncryptedMeasurement>>>
-      getAllMeasurements(String userId) async {
+  getAllMeasurements(String userId) async {
     try {
       if (!_isInitialized) {
         return left(const HiveNotInitializedFailure());
@@ -164,16 +164,18 @@ class HiveMeasurementDatasource implements MeasurementLocalDatasource {
 
       return right(measurements);
     } catch (e) {
-      return left(HiveFailure(
-        message: 'Failed to get all measurements for user: $userId',
-        error: e,
-      ));
+      return left(
+        HiveFailure(
+          message: 'Failed to get all measurements for user: $userId',
+          error: e,
+        ),
+      );
     }
   }
 
   @override
   Future<Either<LocalStorageFailure, List<EncryptedMeasurement>>>
-      getMeasurementsByMetric({
+  getMeasurementsByMetric({
     required String userId,
     required MetricType metricType,
   }) async {
@@ -189,16 +191,18 @@ class HiveMeasurementDatasource implements MeasurementLocalDatasource {
         return filtered;
       });
     } catch (e) {
-      return left(HiveFailure(
-        message: 'Failed to get measurements by metric: ${metricType.name}',
-        error: e,
-      ));
+      return left(
+        HiveFailure(
+          message: 'Failed to get measurements by metric: ${metricType.name}',
+          error: e,
+        ),
+      );
     }
   }
 
   @override
   Future<Either<LocalStorageFailure, List<EncryptedMeasurement>>>
-      getMeasurementsByDateRange({
+  getMeasurementsByDateRange({
     required String userId,
     required DateTime startDate,
     required DateTime endDate,
@@ -210,16 +214,20 @@ class HiveMeasurementDatasource implements MeasurementLocalDatasource {
       return allResult.map((measurements) {
         // Filter by date range (inclusive)
         final filtered = measurements.where((m) {
-          return m.timestamp.isAfter(startDate.subtract(const Duration(seconds: 1))) &&
+          return m.timestamp.isAfter(
+                startDate.subtract(const Duration(seconds: 1)),
+              ) &&
               m.timestamp.isBefore(endDate.add(const Duration(days: 1)));
         }).toList();
         return filtered;
       });
     } catch (e) {
-      return left(HiveFailure(
-        message: 'Failed to get measurements by date range',
-        error: e,
-      ));
+      return left(
+        HiveFailure(
+          message: 'Failed to get measurements by date range',
+          error: e,
+        ),
+      );
     }
   }
 
@@ -245,10 +253,12 @@ class HiveMeasurementDatasource implements MeasurementLocalDatasource {
 
       return right(null);
     } catch (e) {
-      return left(HiveFailure(
-        message: 'Failed to update measurement: ${measurement.id}',
-        error: e,
-      ));
+      return left(
+        HiveFailure(
+          message: 'Failed to update measurement: ${measurement.id}',
+          error: e,
+        ),
+      );
     }
   }
 
@@ -274,10 +284,12 @@ class HiveMeasurementDatasource implements MeasurementLocalDatasource {
 
       return right(null);
     } catch (e) {
-      return left(HiveFailure(
-        message: 'Failed to delete measurement: $measurementId',
-        error: e,
-      ));
+      return left(
+        HiveFailure(
+          message: 'Failed to delete measurement: $measurementId',
+          error: e,
+        ),
+      );
     }
   }
 
@@ -309,10 +321,12 @@ class HiveMeasurementDatasource implements MeasurementLocalDatasource {
 
       return right(deletedCount);
     } catch (e) {
-      return left(HiveFailure(
-        message: 'Failed to delete all measurements for user: $userId',
-        error: e,
-      ));
+      return left(
+        HiveFailure(
+          message: 'Failed to delete all measurements for user: $userId',
+          error: e,
+        ),
+      );
     }
   }
 
@@ -361,10 +375,13 @@ class HiveMeasurementDatasource implements MeasurementLocalDatasource {
 
       return right(deletedCount);
     } catch (e) {
-      return left(HiveFailure(
-        message: 'Failed to delete measurements by metric: ${metricType.name}',
-        error: e,
-      ));
+      return left(
+        HiveFailure(
+          message:
+              'Failed to delete measurements by metric: ${metricType.name}',
+          error: e,
+        ),
+      );
     }
   }
 
@@ -389,10 +406,12 @@ class HiveMeasurementDatasource implements MeasurementLocalDatasource {
 
       return right(count);
     } catch (e) {
-      return left(HiveFailure(
-        message: 'Failed to get measurement count for user: $userId',
-        error: e,
-      ));
+      return left(
+        HiveFailure(
+          message: 'Failed to get measurement count for user: $userId',
+          error: e,
+        ),
+      );
     }
   }
 
@@ -407,10 +426,7 @@ class HiveMeasurementDatasource implements MeasurementLocalDatasource {
 
       return right(null);
     } catch (e) {
-      return left(HiveFailure(
-        message: 'Failed to clear all data',
-        error: e,
-      ));
+      return left(HiveFailure(message: 'Failed to clear all data', error: e));
     }
   }
 

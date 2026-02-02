@@ -9,7 +9,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/widgets/draggable_action_button.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart'
+    as wt;
 import 'package:gymbro_flutter_new/features/workout/domain/entities/pdf_detail_level.dart';
 import 'package:gymbro_flutter_new/features/workout/services/pdf_template_service.dart';
 import 'package:share_plus/share_plus.dart';
@@ -97,13 +98,13 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
   /// Map of tutorial step keys for the WorkoutTutorialService
   Map<WorkoutTutorialStep, GlobalKey> get _tutorialTargetKeys => {
-        WorkoutTutorialStep.addExercise: _addExerciseFABKey,
-        WorkoutTutorialStep.tapSet: _firstSetRowKey,
-        WorkoutTutorialStep.exerciseMenu: _exerciseMenuKey,
-        WorkoutTutorialStep.reorder: _reorderButtonKey,
-        WorkoutTutorialStep.settings: _settingsButtonKey,
-        WorkoutTutorialStep.finish: _completeWorkoutButtonKey,
-      };
+    WorkoutTutorialStep.addExercise: _addExerciseFABKey,
+    WorkoutTutorialStep.tapSet: _firstSetRowKey,
+    WorkoutTutorialStep.exerciseMenu: _exerciseMenuKey,
+    WorkoutTutorialStep.reorder: _reorderButtonKey,
+    WorkoutTutorialStep.settings: _settingsButtonKey,
+    WorkoutTutorialStep.finish: _completeWorkoutButtonKey,
+  };
 
   @override
   void initState() {
@@ -194,17 +195,20 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     // Now only rebuilds when: status, exercises list, name, or data changes
     // ✅ FIX: Added updatedAt to detect Watch target modifications
     final currentWorkout = ref.watch(
-      currentWorkoutProvider.select((workout) => workout == null
-          ? null
-          : (
-              id: workout.id,
-              name: workout.name,
-              status: workout.status,
-              exercises: workout.exercises,
-              isActive: workout.isActive,
-              startTime: workout.startTime,
-              updatedAt: workout.updatedAt,  // ✅ FIX: Detect data changes from Watch
-            )),
+      currentWorkoutProvider.select(
+        (workout) => workout == null
+            ? null
+            : (
+                id: workout.id,
+                name: workout.name,
+                status: workout.status,
+                exercises: workout.exercises,
+                isActive: workout.isActive,
+                startTime: workout.startTime,
+                updatedAt:
+                    workout.updatedAt, // ✅ FIX: Detect data changes from Watch
+              ),
+      ),
     );
 
     // Convert back to Workout for downstream widgets
@@ -215,7 +219,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
     // Determine which view to show
     // Note: paused workouts should show WorkoutView (not PreloadedView)
-    final isActiveOrPaused = currentWorkout != null &&
+    final isActiveOrPaused =
+        currentWorkout != null &&
         (currentWorkout.status == WorkoutStatus.inProgress ||
             currentWorkout.status == WorkoutStatus.paused);
     final isPreloaded = currentWorkout != null && !isActiveOrPaused;
@@ -246,8 +251,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
           // ✅ Use fullWorkout (from ref.read) for passing to child widgets
           // The select() above ensures we only rebuild when meaningful changes occur
           if (isEmpty) _buildWelcomeView(),
-          if (isPreloaded && fullWorkout != null) _buildPreloadedView(fullWorkout),
-          if (isActive && fullWorkout != null) _buildWorkoutView(fullWorkout, controllerState),
+          if (isPreloaded && fullWorkout != null)
+            _buildPreloadedView(fullWorkout),
+          if (isActive && fullWorkout != null)
+            _buildWorkoutView(fullWorkout, controllerState),
 
           // Timer overlay - COMMENTED OUT: timer now in header
           // if (shouldShowTimer)
@@ -268,8 +275,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       onStartTemplate: (template) => _startTemplateWorkout(template),
       onShareTemplate: (template) => _shareTemplatePdf(context, template),
       onDuplicateTemplate: (template) => _duplicateTemplate(context, template),
-      onEditTemplate: (template) => _editTemplateFromQuickStart(context, template),
-      onDeleteTemplate: (template) => _deleteTemplateFromQuickStart(context, template),
+      onEditTemplate: (template) =>
+          _editTemplateFromQuickStart(context, template),
+      onDeleteTemplate: (template) =>
+          _deleteTemplateFromQuickStart(context, template),
       onCreateTemplate: () => _showCreateTemplateModal(context),
       onScheduleTemplate: (template) => _scheduleTemplate(context, template),
       onRefreshTemplate: (template) => _refreshTemplate(template),
@@ -296,12 +305,13 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       ),
       body: PreloadedView(
         workout: workout,
-        sessionId: widget.sessionId ?? DateTime.now().millisecondsSinceEpoch.toString(),
+        sessionId:
+            widget.sessionId ??
+            DateTime.now().millisecondsSinceEpoch.toString(),
         onStartWorkout: () {
-          ref.read(workoutScreenControllerProvider.notifier).startWorkout(
-            context: context,
-            sessionId: widget.sessionId,
-          );
+          ref
+              .read(workoutScreenControllerProvider.notifier)
+              .startWorkout(context: context, sessionId: widget.sessionId);
         },
         onBrowseTemplates: () => _navigateToTemplates(context),
       ),
@@ -316,8 +326,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
     // Watch connectivity for HR display
     final watchData = ref.watch(watchConnectivityProvider);
-    final hasValidHR = watchData.currentHeartRate > 0 &&
-                       watchData.hasRecentHealthMetrics;
+    final hasValidHR =
+        watchData.currentHeartRate > 0 && watchData.hasRecentHealthMetrics;
 
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainer,
@@ -338,7 +348,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
               // HR Badge from Apple Watch (only when connected and valid)
               if (hasValidHR)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: context.colors.error.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
@@ -380,7 +393,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                   semanticLabel: l10n.cancel,
                 ),
                 onPressed: () {
-                  ref.read(workoutScreenControllerProvider.notifier).toggleReorderMode();
+                  ref
+                      .read(workoutScreenControllerProvider.notifier)
+                      .toggleReorderMode();
                   HapticFeedback.lightImpact();
                 },
               )
@@ -398,7 +413,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
           if (state.isReorderMode)
             TextButton.icon(
               onPressed: () {
-                ref.read(workoutScreenControllerProvider.notifier).toggleReorderMode();
+                ref
+                    .read(workoutScreenControllerProvider.notifier)
+                    .toggleReorderMode();
                 HapticFeedback.mediumImpact();
               },
               icon: SemanticIcon(
@@ -426,7 +443,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                 semanticLabel: l10n.reorderExercises,
               ),
               onPressed: () {
-                ref.read(workoutScreenControllerProvider.notifier).toggleReorderMode();
+                ref
+                    .read(workoutScreenControllerProvider.notifier)
+                    .toggleReorderMode();
                 HapticFeedback.lightImpact();
               },
             ),
@@ -439,9 +458,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                 key: _completeWorkoutButtonKey,
                 onPressed: () {
                   HapticFeedback.mediumImpact();
-                  ref.read(workoutScreenControllerProvider.notifier).endWorkout(
-                    context: context,
-                  );
+                  ref
+                      .read(workoutScreenControllerProvider.notifier)
+                      .endWorkout(context: context);
                 },
                 icon: SemanticIcon(
                   icon: AppIcons.check,
@@ -457,7 +476,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                 style: FilledButton.styleFrom(
                   backgroundColor: colorScheme.primaryContainer,
                   foregroundColor: colorScheme.onPrimaryContainer,
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   visualDensity: VisualDensity.compact,
                 ),
               ),
@@ -484,12 +506,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
         onReplaceExercise: (exercise) => _replaceExercise(context, exercise),
         onUpdateExerciseSet: (exerciseId, updatedSet) =>
             _updateExerciseSet(exerciseId, updatedSet),
-        onUpdateExercise: (updatedExercise) =>
-            _updateExercise(updatedExercise),
+        onUpdateExercise: (updatedExercise) => _updateExercise(updatedExercise),
         onUpdateSupersetSet: (supersetId, supersetSet) =>
             _updateSupersetSet(supersetId, supersetSet),
         onReorderExercises: (oldIndex, newIndex) {
-          ref.read(workoutScreenControllerProvider.notifier)
+          ref
+              .read(workoutScreenControllerProvider.notifier)
               .reorderExercises(oldIndex, newIndex);
         },
         // Tutorial keys for interactive onboarding
@@ -568,7 +590,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
               onPressed: () async {
                 Navigator.of(context).pop();
                 // Force save and pause workout
-                final cacheService = ref.read(workoutTemplateCacheServiceProvider);
+                final cacheService = ref.read(
+                  workoutTemplateCacheServiceProvider,
+                );
                 await cacheService.forceSave();
                 ref.read(currentWorkoutProvider.notifier).pauseWorkout();
                 if (context.mounted) {
@@ -580,9 +604,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                ref.read(workoutScreenControllerProvider.notifier).discardWorkout(
-                  context: context,
-                );
+                ref
+                    .read(workoutScreenControllerProvider.notifier)
+                    .discardWorkout(context: context);
               },
               child: Text(
                 l10n.discard,
@@ -602,9 +626,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   /// Navigate to templates screen
   void _navigateToTemplates(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const WorkoutTemplatesScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => const WorkoutTemplatesScreen()),
     );
   }
 
@@ -624,11 +646,13 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
   /// Start workout from template
   void _startTemplateWorkout(wt.WorkoutTemplate template) {
-    ref.read(workoutScreenControllerProvider.notifier).startWorkout(
-      context: context,
-      template: template,
-      sessionId: widget.sessionId,
-    );
+    ref
+        .read(workoutScreenControllerProvider.notifier)
+        .startWorkout(
+          context: context,
+          template: template,
+          sessionId: widget.sessionId,
+        );
   }
 
   /// Show add exercise modal (standard Single tab)
@@ -637,7 +661,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   }
 
   /// Show add exercise modal on Advanced tab with specific sub-tab
-  void _showAddExerciseAdvanced(BuildContext context, {required int advancedTab}) {
+  void _showAddExerciseAdvanced(
+    BuildContext context, {
+    required int advancedTab,
+  }) {
     _showAddExerciseInternal(
       context,
       initialTab: 1, // Advanced tab
@@ -673,13 +700,17 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       initialTab: initialTab,
       initialAdvancedTab: initialAdvancedTab,
       onExerciseAdded: (exercise) async {
-        debugPrint('🎯 [WorkoutScreen] CALLBACK RECEIVED: name=${exercise.name}, countingMode=${exercise.countingMode}');
+        debugPrint(
+          '🎯 [WorkoutScreen] CALLBACK RECEIVED: name=${exercise.name}, countingMode=${exercise.countingMode}',
+        );
         exerciseWasAdded = true;
 
         // Pre-fill sets with suggested weight/reps (non-blocking, 2s timeout)
         final exerciseToAdd = await _applyWeightPrefill(exercise);
 
-        ref.read(workoutScreenControllerProvider.notifier).addExercise(exerciseToAdd);
+        ref
+            .read(workoutScreenControllerProvider.notifier)
+            .addExercise(exerciseToAdd);
         // Note: Navigator.pop() is called by AddExerciseModal after this callback
         // Do NOT call pop() here - it would cause double-pop and black screen!
 
@@ -694,7 +725,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
         if (tutorialState.isActive) {
           // Reset to addExercise step if we were waiting for exercise
           if (tutorialState.currentStep == WorkoutTutorialStep.tapSet) {
-            ref.read(workoutTutorialProvider.notifier).advanceToStep(WorkoutTutorialStep.addExercise);
+            ref
+                .read(workoutTutorialProvider.notifier)
+                .advanceToStep(WorkoutTutorialStep.addExercise);
           }
           // Re-show the current tutorial step after a short delay
           Future.delayed(const Duration(milliseconds: 300), () {
@@ -762,13 +795,17 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
     // Skip confirmation if user has opted out
     if (config.skipExerciseDeleteConfirmation) {
-      ref.read(workoutScreenControllerProvider.notifier).removeExercise(exerciseId);
+      ref
+          .read(workoutScreenControllerProvider.notifier)
+          .removeExercise(exerciseId);
       return;
     }
 
     // Look up exercise name from current workout
     final workout = ref.read(currentWorkoutProvider);
-    final exercise = workout?.exercises.where((e) => e.id == exerciseId).firstOrNull;
+    final exercise = workout?.exercises
+        .where((e) => e.id == exerciseId)
+        .firstOrNull;
     final exerciseName = exercise?.name ?? 'Exercise';
 
     // Show confirmation dialog
@@ -776,14 +813,18 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     if (result == null) return; // Dialog dismissed
 
     if (result.confirmed) {
-      ref.read(workoutScreenControllerProvider.notifier).removeExercise(exerciseId);
+      ref
+          .read(workoutScreenControllerProvider.notifier)
+          .removeExercise(exerciseId);
 
       // Save preference if "Don't ask again" was checked
       if (result.dontAskAgain) {
         final currentConfig = ref.read(appConfigProvider);
-        ref.read(appConfigProvider.notifier).updateConfig(
-          currentConfig.copyWith(skipExerciseDeleteConfirmation: true),
-        );
+        ref
+            .read(appConfigProvider.notifier)
+            .updateConfig(
+              currentConfig.copyWith(skipExerciseDeleteConfirmation: true),
+            );
       }
     }
   }
@@ -853,7 +894,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                           const SizedBox(width: 8),
                           Expanded(
                             child: GestureDetector(
-                              onTap: () => setState(() => dontAskAgain = !dontAskAgain),
+                              onTap: () =>
+                                  setState(() => dontAskAgain = !dontAskAgain),
                               child: Text(
                                 l10n.dontAskAgain,
                                 style: context.textTheme.bodySmall,
@@ -867,13 +909,19 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(
-                        _DeleteConfirmationResult(confirmed: false, dontAskAgain: false),
+                        _DeleteConfirmationResult(
+                          confirmed: false,
+                          dontAskAgain: false,
+                        ),
                       ),
                       child: Text(l10n.cancel),
                     ),
                     FilledButton(
                       onPressed: () => Navigator.of(context).pop(
-                        _DeleteConfirmationResult(confirmed: true, dontAskAgain: dontAskAgain),
+                        _DeleteConfirmationResult(
+                          confirmed: true,
+                          dontAskAgain: dontAskAgain,
+                        ),
                       ),
                       style: FilledButton.styleFrom(
                         backgroundColor: context.colors.error,
@@ -899,10 +947,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       builder: (context) => AddExerciseModal(
         onExerciseAdded: (newExercise) {
           // Update the exercise at the old exercise's ID position
-          ref.read(currentWorkoutProvider.notifier).updateExercise(
-            exercise.id,
-            newExercise,
-          );
+          ref
+              .read(currentWorkoutProvider.notifier)
+              .updateExercise(exercise.id, newExercise);
           Navigator.of(context).pop();
         },
       ),
@@ -914,7 +961,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     final currentWorkout = ref.read(currentWorkoutProvider);
     if (currentWorkout == null) return;
 
-    final exerciseIndex = currentWorkout.exercises.indexWhere((e) => e.id == exerciseId);
+    final exerciseIndex = currentWorkout.exercises.indexWhere(
+      (e) => e.id == exerciseId,
+    );
     if (exerciseIndex == -1) return;
 
     final exercise = currentWorkout.exercises[exerciseIndex];
@@ -930,15 +979,16 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
   /// Update exercise using notifier method
   void _updateExercise(Exercise updatedExercise) {
-    ref.read(currentWorkoutProvider.notifier).updateExerciseOnly(updatedExercise);
+    ref
+        .read(currentWorkoutProvider.notifier)
+        .updateExerciseOnly(updatedExercise);
   }
 
   /// Update superset set
   void _updateSupersetSet(String supersetId, SupersetSet updatedSupersetSet) {
-    ref.read(currentWorkoutProvider.notifier).updateSupersetSet(
-      supersetId,
-      updatedSupersetSet,
-    );
+    ref
+        .read(currentWorkoutProvider.notifier)
+        .updateSupersetSet(supersetId, updatedSupersetSet);
   }
 
   // ========================================================================
@@ -946,7 +996,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   // ========================================================================
 
   /// Edit template from quick start
-  void _editTemplateFromQuickStart(BuildContext context, wt.WorkoutTemplate template) {
+  void _editTemplateFromQuickStart(
+    BuildContext context,
+    wt.WorkoutTemplate template,
+  ) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EditTemplateScreen(template: template),
@@ -977,25 +1030,27 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
     // Show loading dialog for PDF generation
     if (context.mounted) {
-      unawaited(showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (dialogContext) => Center(
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const LoadingIndicator(),
-                  const SizedBox(height: AppSpacing.md),
-                  Text(l10n.generatingPdf),
-                ],
+      unawaited(
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (dialogContext) => Center(
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const LoadingIndicator(),
+                    const SizedBox(height: AppSpacing.md),
+                    Text(l10n.generatingPdf),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ));
+      );
     }
 
     try {
@@ -1018,10 +1073,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
       // Step 4: Share with share_plus (provides proper callbacks)
       final result = await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(file.path)],
-          subject: template.name,
-        ),
+        ShareParams(files: [XFile(file.path)], subject: template.name),
       );
 
       // Step 5: Handle result (optional: show feedback)
@@ -1064,7 +1116,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              ref.read(workoutTemplateNotifierProvider.notifier).deleteTemplate(template.id);
+              ref
+                  .read(workoutTemplateNotifierProvider.notifier)
+                  .deleteTemplate(template.id);
               SnackBarService.showSuccess(
                 context,
                 l10n.templateDeletedSuccessfully(template.name),
@@ -1115,18 +1169,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
             l10n.refreshFromDatabaseSuccess(updatedCount),
           );
         } else {
-          SnackBarService.showInfo(
-            context,
-            l10n.refreshFromDatabaseNoUpdates,
-          );
+          SnackBarService.showInfo(context, l10n.refreshFromDatabaseNoUpdates);
         }
       }
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(
-          context,
-          'Errore: $e',
-        );
+        SnackBarService.showError(context, 'Errore: $e');
       }
     }
   }
@@ -1192,9 +1240,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       builder: (context) => DecoratedBox(
         decoration: BoxDecoration(
           color: context.colors.surface,
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(20),
-          ),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: SafeArea(
           child: Column(
@@ -1337,11 +1383,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     final targetKey = _tutorialTargetKeys[tutorialState.currentStep];
     if (targetKey == null) return;
 
-    ref.read(workoutTutorialProvider.notifier).showCurrentStep(
-      context: context,
-      targetKey: targetKey,
-      onComplete: () => _handleTutorialStepComplete(tutorialState.currentStep),
-    );
+    ref
+        .read(workoutTutorialProvider.notifier)
+        .showCurrentStep(
+          context: context,
+          targetKey: targetKey,
+          onComplete: () =>
+              _handleTutorialStepComplete(tutorialState.currentStep),
+        );
   }
 
   /// Handle tutorial step completion and advance to next step

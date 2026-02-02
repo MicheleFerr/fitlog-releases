@@ -4,16 +4,17 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/ana
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 
 /// Provider that aggregates exercise data from all completed workouts
-final exerciseProgressMetricsProvider = Provider<Map<String, ExerciseProgressMetrics>>((ref) {
-  ref.keepAlive(); // FIX: previene ricreazione provider con aggregazioni workout
-  final workoutsAsync = ref.watch(historicalWorkoutsProvider);
+final exerciseProgressMetricsProvider =
+    Provider<Map<String, ExerciseProgressMetrics>>((ref) {
+      ref.keepAlive(); // FIX: previene ricreazione provider con aggregazioni workout
+      final workoutsAsync = ref.watch(historicalWorkoutsProvider);
 
-  return workoutsAsync.when(
-    data: (workouts) => _aggregateExerciseData(workouts),
-    loading: () => {},
-    error: (_, __) => {},
-  );
-});
+      return workoutsAsync.when(
+        data: (workouts) => _aggregateExerciseData(workouts),
+        loading: () => {},
+        error: (_, __) => {},
+      );
+    });
 
 /// Provider for a specific exercise's metrics
 ///
@@ -23,32 +24,33 @@ final exerciseProgressMetricsProvider = Provider<Map<String, ExerciseProgressMet
 /// Tries multiple sources:
 /// 1. First: from aggregated workout data (exerciseProgressMetricsProvider)
 /// 2. Fallback: from Firebase analytics collection (exerciseHistoryByNameProvider)
-final exerciseMetricsProvider = Provider.family<ExerciseProgressMetrics?, String>((ref, exerciseName) {
-  ref.keepAlive(); // FIX: previene ricreazione provider family con select
-  // 🔧 PERF FIX: Use select to only watch this specific exercise's metrics
-  // This prevents rebuilds when OTHER exercises are updated
-  final normalizedName = exerciseName.toLowerCase().trim();
+final exerciseMetricsProvider =
+    Provider.family<ExerciseProgressMetrics?, String>((ref, exerciseName) {
+      ref.keepAlive(); // FIX: previene ricreazione provider family con select
+      // 🔧 PERF FIX: Use select to only watch this specific exercise's metrics
+      // This prevents rebuilds when OTHER exercises are updated
+      final normalizedName = exerciseName.toLowerCase().trim();
 
-  final metrics = ref.watch(
-    exerciseProgressMetricsProvider.select((allMetrics) {
-      // Try exact match first
-      if (allMetrics.containsKey(exerciseName)) {
-        return allMetrics[exerciseName];
-      }
+      final metrics = ref.watch(
+        exerciseProgressMetricsProvider.select((allMetrics) {
+          // Try exact match first
+          if (allMetrics.containsKey(exerciseName)) {
+            return allMetrics[exerciseName];
+          }
 
-      // Try case-insensitive match
-      for (final entry in allMetrics.entries) {
-        if (entry.key.toLowerCase().trim() == normalizedName) {
-          return entry.value;
-        }
-      }
+          // Try case-insensitive match
+          for (final entry in allMetrics.entries) {
+            if (entry.key.toLowerCase().trim() == normalizedName) {
+              return entry.value;
+            }
+          }
 
-      return null;
-    }),
-  );
+          return null;
+        }),
+      );
 
-  return metrics;
-});
+      return metrics;
+    });
 
 /// Aggregate exercise data from all workouts
 Map<String, ExerciseProgressMetrics> _aggregateExerciseData(
@@ -116,28 +118,19 @@ Map<String, ExerciseProgressMetrics> _aggregateExerciseData(
       (max, set) => set.weight > max ? set.weight : max,
     );
 
-    final averageWeight = sets.fold<double>(
-      0,
-      (sum, set) => sum + set.weight,
-    ) / sets.length;
+    final averageWeight =
+        sets.fold<double>(0, (sum, set) => sum + set.weight) / sets.length;
 
-    final averageReps = sets.fold<double>(
-      0,
-      (sum, set) => sum + set.reps,
-    ) / sets.length;
+    final averageReps =
+        sets.fold<double>(0, (sum, set) => sum + set.reps) / sets.length;
 
     final setsWithRPE = sets.where((s) => s.rpe != null).toList();
     final averageRPE = setsWithRPE.isNotEmpty
-        ? setsWithRPE.fold<double>(
-            0,
-            (sum, set) => sum + (set.rpe ?? 0),
-          ) / setsWithRPE.length
+        ? setsWithRPE.fold<double>(0, (sum, set) => sum + (set.rpe ?? 0)) /
+              setsWithRPE.length
         : 0.0;
 
-    final totalVolume = sets.fold<double>(
-      0,
-      (sum, set) => sum + set.volume,
-    );
+    final totalVolume = sets.fold<double>(0, (sum, set) => sum + set.volume);
 
     // Count unique workout sessions
     final uniqueDates = sets.map((s) => _dateOnly(s.date)).toSet();
@@ -194,14 +187,16 @@ ExerciseProgressMetrics? convertHistoryToMetrics(
       final sets = session.sets as List;
 
       for (final set in sets) {
-        allSets.add(ExerciseSetData(
-          date: set.date ?? sessionDate,
-          weight: (set.weight as num).toDouble(),
-          reps: set.reps as int,
-          rpe: null, // AnalyticsSet doesn't have RPE
-          volume: (set.weight as num).toDouble() * (set.reps as int),
-          workoutName: session.exerciseName ?? exerciseName,
-        ));
+        allSets.add(
+          ExerciseSetData(
+            date: set.date ?? sessionDate,
+            weight: (set.weight as num).toDouble(),
+            reps: set.reps as int,
+            rpe: null, // AnalyticsSet doesn't have RPE
+            volume: (set.weight as num).toDouble() * (set.reps as int),
+            workoutName: session.exerciseName ?? exerciseName,
+          ),
+        );
       }
     }
 
@@ -211,14 +206,16 @@ ExerciseProgressMetrics? convertHistoryToMetrics(
     allSets.sort((a, b) => a.date.compareTo(b.date));
 
     // Calculate statistics
-    final maxWeight =
-        allSets.fold<double>(0, (max, set) => set.weight > max ? set.weight : max);
+    final maxWeight = allSets.fold<double>(
+      0,
+      (max, set) => set.weight > max ? set.weight : max,
+    );
     final averageWeight =
-        allSets.fold<double>(0, (sum, set) => sum + set.weight) / allSets.length;
+        allSets.fold<double>(0, (sum, set) => sum + set.weight) /
+        allSets.length;
     final averageReps =
         allSets.fold<double>(0, (sum, set) => sum + set.reps) / allSets.length;
-    final totalVolume =
-        allSets.fold<double>(0, (sum, set) => sum + set.volume);
+    final totalVolume = allSets.fold<double>(0, (sum, set) => sum + set.volume);
     final uniqueDates = allSets.map((s) => _dateOnly(s.date)).toSet();
     final totalSessions = uniqueDates.length;
     final lastWorkoutDate = allSets.last.date;

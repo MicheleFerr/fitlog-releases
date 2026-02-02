@@ -119,8 +119,9 @@ class _LandscapeGraphScreenState extends ConsumerState<LandscapeGraphScreen> {
 
     try {
       // Find the render object
-      final boundary = _chartKey.currentContext?.findRenderObject()
-          as RenderRepaintBoundary?;
+      final boundary =
+          _chartKey.currentContext?.findRenderObject()
+              as RenderRepaintBoundary?;
 
       if (boundary == null) {
         throw Exception('Could not find chart to capture');
@@ -217,42 +218,42 @@ class _LandscapeGraphScreenState extends ConsumerState<LandscapeGraphScreen> {
       body: RepaintBoundary(
         key: _chartKey,
         child: Column(
-        children: [
-          // Metric selection chips
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            color: context.colors.surfaceContainerHighest,
-            child: const Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                MetricChip(metric: MetricType.volume),
-                MetricChip(metric: MetricType.weight),
-                MetricChip(metric: MetricType.oneRmEstimated),
-                MetricChip(metric: MetricType.weightTimesReps),
-              ],
+          children: [
+            // Metric selection chips
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              color: context.colors.surfaceContainerHighest,
+              child: const Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  MetricChip(metric: MetricType.volume),
+                  MetricChip(metric: MetricType.weight),
+                  MetricChip(metric: MetricType.oneRmEstimated),
+                  MetricChip(metric: MetricType.weightTimesReps),
+                ],
+              ),
             ),
-          ),
 
-          // Multi-metric chart with 0-100 normalization
-          Expanded(
-            child: Consumer(
-              builder: (context, ref, child) {
-                // Watch selected metrics from provider
-                final selectedMetrics = ref.watch(landscapeMetricsProvider);
+            // Multi-metric chart with 0-100 normalization
+            Expanded(
+              child: Consumer(
+                builder: (context, ref, child) {
+                  // Watch selected metrics from provider
+                  final selectedMetrics = ref.watch(landscapeMetricsProvider);
 
-                return LandscapeChartWidget(
-                  history: widget.history,
-                  selectedMetrics: selectedMetrics,
-                );
-              },
+                  return LandscapeChartWidget(
+                    history: widget.history,
+                    selectedMetrics: selectedMetrics,
+                  );
+                },
+              ),
             ),
-          ),
 
-          // Chart legend (shows selected metrics with colors)
-          const ChartLegend(),
-        ],
-      ),
+            // Chart legend (shows selected metrics with colors)
+            const ChartLegend(),
+          ],
+        ),
       ),
     );
   }

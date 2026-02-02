@@ -72,11 +72,8 @@ class RepsLineChart extends StatelessWidget {
       999999,
       (min, s) => s.maxReps < min ? s.maxReps : min,
     );
-    final avgReps = sessions.fold<double>(
-          0,
-          (sum, s) => sum + s.maxReps,
-        ) /
-        sessions.length;
+    final avgReps =
+        sessions.fold<double>(0, (sum, s) => sum + s.maxReps) / sessions.length;
 
     return SizedBox(
       height: height,
@@ -145,8 +142,9 @@ class RepsLineChart extends StatelessWidget {
                         Text(
                           DateFormat('d MMM').format(session.date),
                           style: context.textTheme.labelSmall?.copyWith(
-                            color: context.colors.onInverseSurface
-                                .withValues(alpha: 0.7),
+                            color: context.colors.onInverseSurface.withValues(
+                              alpha: 0.7,
+                            ),
                           ),
                         ),
                         Text(
@@ -159,8 +157,9 @@ class RepsLineChart extends StatelessWidget {
                         Text(
                           '${session.setCount} sets',
                           style: context.textTheme.labelSmall?.copyWith(
-                            color: context.colors.onInverseSurface
-                                .withValues(alpha: 0.7),
+                            color: context.colors.onInverseSurface.withValues(
+                              alpha: 0.7,
+                            ),
                           ),
                         ),
                       ],

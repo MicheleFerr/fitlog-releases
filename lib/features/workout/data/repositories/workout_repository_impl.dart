@@ -33,18 +33,15 @@ class WorkoutRepositoryImpl
   const WorkoutRepositoryImpl({
     required FirebaseWorkoutDataSource dataSource,
     required FirebaseAuth auth,
-  })  : _dataSource = dataSource,
-        _auth = auth;
+  }) : _dataSource = dataSource,
+       _auth = auth;
 
   final FirebaseWorkoutDataSource _dataSource;
   final FirebaseAuth _auth;
 
   /// Helper to convert fpdart Either to project Either
   Either<Failure, T> _toProjectEither<T>(fpdart.Either<Failure, T> fpResult) {
-    return fpResult.fold(
-      (failure) => left(failure),
-      (value) => right(value),
-    );
+    return fpResult.fold((failure) => left(failure), (value) => right(value));
   }
 
   /// Helper to check authentication and return user ID or failure
@@ -85,10 +82,7 @@ class WorkoutRepositoryImpl
       operationName: 'updateWorkout',
     );
 
-    return result.fold(
-      (failure) => left(failure),
-      (_) => right(null),
-    );
+    return result.fold((failure) => left(failure), (_) => right(null));
   }
 
   @override
@@ -98,22 +92,16 @@ class WorkoutRepositoryImpl
 
     final userId = authResult.rightOrNull!;
 
-    final result = await handleFirebaseOperation(
-      () async {
-        final workoutModel = await _dataSource.getWorkout(workoutId, userId);
-        if (workoutModel == null) {
-          throw const WorkoutNotFoundFailure('Workout not found');
-        }
-        return workoutModel.toDomain();
-      },
-      operationName: 'getWorkout',
-    );
+    final result = await handleFirebaseOperation(() async {
+      final workoutModel = await _dataSource.getWorkout(workoutId, userId);
+      if (workoutModel == null) {
+        throw const WorkoutNotFoundFailure('Workout not found');
+      }
+      return workoutModel.toDomain();
+    }, operationName: 'getWorkout');
 
     // Handle WorkoutNotFoundFailure thrown inside
-    return result.fold(
-      (failure) => left(failure),
-      (workout) => right(workout),
-    );
+    return result.fold((failure) => left(failure), (workout) => right(workout));
   }
 
   @override
@@ -127,18 +115,15 @@ class WorkoutRepositoryImpl
 
     final userId = authResult.rightOrNull!;
 
-    final result = await handleFirebaseOperation(
-      () async {
-        final workoutModels = await _dataSource.getWorkouts(
-          userId,
-          limit: limit,
-          startDate: startDate,
-          endDate: endDate,
-        );
-        return workoutModels.map((model) => model.toDomain()).toList();
-      },
-      operationName: 'getWorkouts',
-    );
+    final result = await handleFirebaseOperation(() async {
+      final workoutModels = await _dataSource.getWorkouts(
+        userId,
+        limit: limit,
+        startDate: startDate,
+        endDate: endDate,
+      );
+      return workoutModels.map((model) => model.toDomain()).toList();
+    }, operationName: 'getWorkouts');
 
     return _toProjectEither(result);
   }
@@ -155,10 +140,7 @@ class WorkoutRepositoryImpl
       operationName: 'deleteWorkout',
     );
 
-    return result.fold(
-      (failure) => left(failure),
-      (_) => right(null),
-    );
+    return result.fold((failure) => left(failure), (_) => right(null));
   }
 
   @override
@@ -200,10 +182,7 @@ class WorkoutRepositoryImpl
       operationName: 'updateExerciseSet',
     );
 
-    return result.fold(
-      (failure) => left(failure),
-      (_) => right(null),
-    );
+    return result.fold((failure) => left(failure), (_) => right(null));
   }
 
   @override
@@ -221,10 +200,7 @@ class WorkoutRepositoryImpl
       operationName: 'addExerciseToWorkout',
     );
 
-    return result.fold(
-      (failure) => left(failure),
-      (_) => right(null),
-    );
+    return result.fold((failure) => left(failure), (_) => right(null));
   }
 
   @override
@@ -238,14 +214,12 @@ class WorkoutRepositoryImpl
     final userId = authResult.rightOrNull!;
 
     final result = await handleFirebaseVoidOperation(
-      () => _dataSource.removeExerciseFromWorkout(workoutId, exerciseId, userId),
+      () =>
+          _dataSource.removeExerciseFromWorkout(workoutId, exerciseId, userId),
       operationName: 'removeExerciseFromWorkout',
     );
 
-    return result.fold(
-      (failure) => left(failure),
-      (_) => right(null),
-    );
+    return result.fold((failure) => left(failure), (_) => right(null));
   }
 
   @override
@@ -279,21 +253,24 @@ class WorkoutRepositoryImpl
 
     final userId = authResult.rightOrNull!;
 
-    return _dataSource.watchActiveWorkout(userId).map((workoutModel) {
-      if (workoutModel == null) {
-        return right<Failure, Workout?>(null);
-      }
-      return right<Failure, Workout?>(workoutModel.toDomain());
-    }).handleError((Object error) {
-      if (error is FirebaseException) {
-        return left<Failure, Workout?>(
-          mapFirebaseException(error, operationName: 'watchActiveWorkout'),
-        );
-      }
-      return left<Failure, Workout?>(
-        UnexpectedFailure('Failed to watch active workout: $error'),
-      );
-    });
+    return _dataSource
+        .watchActiveWorkout(userId)
+        .map((workoutModel) {
+          if (workoutModel == null) {
+            return right<Failure, Workout?>(null);
+          }
+          return right<Failure, Workout?>(workoutModel.toDomain());
+        })
+        .handleError((Object error) {
+          if (error is FirebaseException) {
+            return left<Failure, Workout?>(
+              mapFirebaseException(error, operationName: 'watchActiveWorkout'),
+            );
+          }
+          return left<Failure, Workout?>(
+            UnexpectedFailure('Failed to watch active workout: $error'),
+          );
+        });
   }
 
   @override
@@ -337,28 +314,26 @@ class WorkoutRepositoryImpl
 
     final userId = authResult.rightOrNull!;
 
-    final result = await handleFirebaseOperation(
-      () async {
-        final modelResult = await _dataSource.getWorkoutsPaginated(
-          userId,
-          pageSize: pageSize,
-          startAfter: startAfter,
-          dateFrom: dateFrom,
-          dateTo: dateTo,
-          status: status,
-        );
+    final result = await handleFirebaseOperation(() async {
+      final modelResult = await _dataSource.getWorkoutsPaginated(
+        userId,
+        pageSize: pageSize,
+        startAfter: startAfter,
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+        status: status,
+      );
 
-        final workouts =
-            modelResult.items.map((model) => model.toDomain()).toList();
+      final workouts = modelResult.items
+          .map((model) => model.toDomain())
+          .toList();
 
-        return PaginatedResult<Workout>(
-          items: workouts,
-          hasMore: modelResult.hasMore,
-          lastDocument: modelResult.lastDocument,
-        );
-      },
-      operationName: 'getWorkoutsPaginated',
-    );
+      return PaginatedResult<Workout>(
+        items: workouts,
+        hasMore: modelResult.hasMore,
+        lastDocument: modelResult.lastDocument,
+      );
+    }, operationName: 'getWorkoutsPaginated');
 
     return _toProjectEither(result);
   }

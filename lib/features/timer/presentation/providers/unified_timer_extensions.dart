@@ -10,7 +10,6 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 /// Aggiunge funzionalità avanzate senza creare nuovi provider
 /// Rispetta CLAUDE.md: estende invece di stratificare
 extension Tier1TimerExtensions on Notifier<UnifiedTimerState?> {
-  
   /// Start rest timer con UI automatica
   Future<void> startRestTimerWithUI({
     required int seconds,
@@ -25,11 +24,15 @@ extension Tier1TimerExtensions on Notifier<UnifiedTimerState?> {
 
     // DEBUG: Log what sound is being used
     if (kDebugMode) {
-      debugPrint('🔊 [TIMER SOUND DEBUG 1] Reading timer sound from AppConfig:');
+      debugPrint(
+        '🔊 [TIMER SOUND DEBUG 1] Reading timer sound from AppConfig:',
+      );
       debugPrint('   config.timerSound = "${config.timerSound}"');
       debugPrint('   config.soundEnabled = ${config.soundEnabled}');
       debugPrint('   config.vibrationsEnabled = ${config.vibrationsEnabled}');
-      debugPrint('   About to call startTimer() with customSound="${config.timerSound}"');
+      debugPrint(
+        '   About to call startTimer() with customSound="${config.timerSound}"',
+      );
     }
 
     // Start timer logic - cast to access methods
@@ -45,20 +48,22 @@ extension Tier1TimerExtensions on Notifier<UnifiedTimerState?> {
     );
 
     if (kDebugMode) {
-      debugPrint('🔊 [TIMER SOUND DEBUG 2] startTimer() called successfully with customSound="${config.timerSound}"');
+      debugPrint(
+        '🔊 [TIMER SOUND DEBUG 2] startTimer() called successfully with customSound="${config.timerSound}"',
+      );
     }
-    
+
     // Show UI automatically
     ref.read(timerUIStateProvider.notifier).show();
   }
-  
+
   /// Stop timer e nascondi UI
   Future<void> stopTimerWithUI(Ref ref) async {
     final controller = this as dynamic;
     await controller.stopTimer();
     ref.read(timerUIStateProvider.notifier).hide();
   }
-  
+
   /// Quick rest timer presets
   Future<void> startQuickRest(int seconds, Ref ref) async {
     await startRestTimerWithUI(
@@ -76,10 +81,9 @@ final tier1TimerActionsProvider = Provider<Tier1TimerActions>((ref) {
 
 /// Helper class per azioni comuni tier-1
 class Tier1TimerActions {
-  
   Tier1TimerActions(this.ref);
   final Ref ref;
-  
+
   /// Start rest timer con UI
   Future<void> startExerciseRest({
     required int seconds,
@@ -89,7 +93,7 @@ class Tier1TimerActions {
     int? totalSets,
   }) async {
     final controller = ref.read(unifiedTimerProvider.notifier);
-    
+
     await controller.startRestTimerWithUI(
       seconds: seconds,
       ref: ref,
@@ -99,26 +103,26 @@ class Tier1TimerActions {
       totalSets: totalSets,
     );
   }
-  
+
   /// Stop timer corrente
   Future<void> stopCurrentTimer() async {
     final controller = ref.read(unifiedTimerProvider.notifier);
     await controller.stopTimerWithUI(ref);
   }
-  
+
   /// Toggle visibilità UI
   void toggleTimerVisibility() {
     ref.read(timerUIStateProvider.notifier).toggleVisibility();
   }
-  
+
   /// Smart rest basato su reps
   int calculateSmartRestTime(int reps) {
-    if (reps <= 5) return 180;  // 3 min for strength
-    if (reps <= 8) return 120;  // 2 min for hypertrophy
-    if (reps <= 12) return 90;  // 90s for moderate
-    return 60;  // 60s for endurance
+    if (reps <= 5) return 180; // 3 min for strength
+    if (reps <= 8) return 120; // 2 min for hypertrophy
+    if (reps <= 12) return 90; // 90s for moderate
+    return 60; // 60s for endurance
   }
-  
+
   /// Start smart rest
   Future<void> startSmartRest({
     required int reps,
@@ -128,7 +132,7 @@ class Tier1TimerActions {
     int? totalSets,
   }) async {
     final seconds = calculateSmartRestTime(reps);
-    
+
     await startExerciseRest(
       seconds: seconds,
       exerciseName: exerciseName,
@@ -154,7 +158,7 @@ final timerIsActiveProvider = Provider<bool>((ref) {
 final timerRemainingFormattedProvider = Provider<String>((ref) {
   final state = ref.watch(unifiedTimerProvider);
   if (state == null) return '00:00';
-  
+
   final minutes = (state.remainingSeconds ~/ 60).toString().padLeft(2, '0');
   final seconds = (state.remainingSeconds % 60).toString().padLeft(2, '0');
   return '$minutes:$seconds';
@@ -164,26 +168,27 @@ final timerRemainingFormattedProvider = Provider<String>((ref) {
 final timerProgressProvider = Provider<double>((ref) {
   final state = ref.watch(unifiedTimerProvider);
   if (state == null || state.totalDurationSeconds == 0) return 0.0;
-  
-  return (state.totalDurationSeconds - state.remainingSeconds) / state.totalDurationSeconds;
+
+  return (state.totalDurationSeconds - state.remainingSeconds) /
+      state.totalDurationSeconds;
 });
 
 /// Provider per colore dinamico basato su stato
 final timerColorProvider = Provider<List<int>>((ref) {
   final state = ref.watch(unifiedTimerProvider);
   if (state == null) return [0xFF6B5FCD, 0xFF8B7FDD]; // Default purple
-  
+
   if (state.isPaused) {
     return [0xFFFFA726, 0xFFFFB74D]; // Orange for paused
   }
-  
+
   if (state.remainingSeconds <= 10) {
     return [0xFFEF5350, 0xFFE57373]; // Red for final countdown
   }
-  
+
   if (state.remainingSeconds <= 30) {
     return [0xFFFFA726, 0xFFFFB74D]; // Orange for warning
   }
-  
+
   return [0xFF66BB6A, 0xFF81C784]; // Green for running
 });

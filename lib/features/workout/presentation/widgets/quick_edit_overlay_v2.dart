@@ -1,12 +1,12 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: presentation/widgets
 /// 🎯 Feature: workout
 /// 🔧 Type: widget
 /// 🌍 Localization: ✅ AppLocalizations used
 /// 🎨 Theme: ✅ ColorScheme responsive
 /// 📱 Platform: Universal
-/// 
+///
 /// QuickEditOverlayV2 - Optimized version with better UX and performance
 library;
 
@@ -29,7 +29,6 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class QuickEditOverlayV2 extends ConsumerStatefulWidget {
-
   const QuickEditOverlayV2({
     super.key,
     this.exerciseSet,
@@ -52,8 +51,11 @@ class QuickEditOverlayV2 extends ConsumerStatefulWidget {
     this.onApplyToRemaining,
   }) : assert(
          (!isSuperset && exerciseSet != null && onSave != null) ||
-         (isSuperset && exerciseNames != null && exerciseSets != null && onSupersetSave != null),
-         'For superset mode, exerciseNames, exerciseSets and onSupersetSave are required'
+             (isSuperset &&
+                 exerciseNames != null &&
+                 exerciseSets != null &&
+                 onSupersetSave != null),
+         'For superset mode, exerciseNames, exerciseSets and onSupersetSave are required',
        );
   final ExerciseSet? exerciseSet; // Nullable per superset
   final Function(ExerciseSet)? onSave; // Nullable per superset
@@ -62,14 +64,18 @@ class QuickEditOverlayV2 extends ConsumerStatefulWidget {
   final ExerciseSet? previousSet;
   final String? exerciseName;
   final int? setNumber; // For querying last workout data (1-based)
-  final ExerciseCountingMode countingMode; // ✅ NUOVO: Determines which fields to show/edit
+  final ExerciseCountingMode
+  countingMode; // ✅ NUOVO: Determines which fields to show/edit
 
   // ✅ NEW: Quick edit workflow parameters
   final int? currentSetIndex; // 0-based index of current set being edited
   final int? totalSets; // Total number of sets in exercise
-  final Function(ExerciseSet)? onSaveAndNext; // Callback for swipe left / "Save + Next"
-  final Function(ExerciseSet)? onSaveAndPrevious; // Callback for swipe right (go to previous set)
-  final Function(ExerciseSet, int remainingCount)? onApplyToRemaining; // Callback for applying to remaining sets
+  final Function(ExerciseSet)?
+  onSaveAndNext; // Callback for swipe left / "Save + Next"
+  final Function(ExerciseSet)?
+  onSaveAndPrevious; // Callback for swipe right (go to previous set)
+  final Function(ExerciseSet, int remainingCount)?
+  onApplyToRemaining; // Callback for applying to remaining sets
 
   // Superset support
   final List<String>? exerciseNames;
@@ -98,14 +104,14 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   final Map<String, int> _supersetReps = {};
   final Map<String, int> _supersetSeconds = {}; // ✅ NUOVO
   int _currentExerciseIndex = 0;
-  
+
   // Apply to All states
   bool _isWeightAppliedToAll = false;
   bool _isRepsAppliedToAll = false;
 
   // ✅ NEW: Apply to remaining sets toggle
   bool _applyToRemaining = false;
-  
+
   // Controllers
   late FixedExtentScrollController _weightController;
   late FixedExtentScrollController _repsController;
@@ -118,7 +124,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   final _weightFocusNode = FocusNode();
   final _repsFocusNode = FocusNode();
   final _secondsFocusNode = FocusNode(); // ✅ NUOVO
-  
+
   // UI State
   bool _isManualWeightEntry = false;
   bool _isManualRepsEntry = false;
@@ -156,9 +162,10 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       // Initialize single exercise values
       _selectedWeight = widget.exerciseSet!.weight ?? 0.0;
       _selectedReps = widget.exerciseSet!.reps ?? 0;
-      _selectedSeconds = widget.exerciseSet!.seconds ?? 60; // ✅ NUOVO: Default 60 seconds
+      _selectedSeconds =
+          widget.exerciseSet!.seconds ?? 60; // ✅ NUOVO: Default 60 seconds
     }
-    
+
     // Controllers
     _weightController = FixedExtentScrollController(
       initialItem: (_selectedWeight * 2).round(),
@@ -167,37 +174,36 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       initialItem: _selectedReps > 0 ? _selectedReps - 1 : 0,
     );
     _secondsController = FixedExtentScrollController(
-      initialItem: _selectedSeconds.clamp(0, 600), // ✅ NUOVO: 0-600 seconds range
+      initialItem: _selectedSeconds.clamp(
+        0,
+        600,
+      ), // ✅ NUOVO: 0-600 seconds range
     );
 
-    _weightTextController = TextEditingController(text: _selectedWeight.toString());
+    _weightTextController = TextEditingController(
+      text: _selectedWeight.toString(),
+    );
     _repsTextController = TextEditingController(text: _selectedReps.toString());
-    _secondsTextController = TextEditingController(text: _selectedSeconds.toString()); // ✅ NUOVO
-    
+    _secondsTextController = TextEditingController(
+      text: _selectedSeconds.toString(),
+    ); // ✅ NUOVO
+
     // OPTIMIZED: Simpler, faster animation
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-    
-    _slideAnimation = Tween<double>(
-      begin: 20,
-      end: 0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOutCubic,
-    ));
-    
-    _fadeAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeIn,
-    ));
-    
+
+    _slideAnimation = Tween<double>(begin: 20, end: 0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
+    );
+
     _animationController.forward();
-    
+
     // Focus listeners
     _weightFocusNode.addListener(_onWeightFocusChanged);
     _repsFocusNode.addListener(_onRepsFocusChanged);
@@ -264,10 +270,10 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   Widget build(BuildContext context) {
     // OPTIMIZED: Use .select() for better performance
     final measurementUnit = ref.watch(
-      appConfigProvider.select((config) => config.measurementUnit)
+      appConfigProvider.select((config) => config.measurementUnit),
     );
     final plateCalculatorEnabled = ref.watch(
-      appConfigProvider.select((config) => config.plateCalculator ?? true)
+      appConfigProvider.select((config) => config.plateCalculator ?? true),
     );
 
     final theme = Theme.of(context);
@@ -309,7 +315,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: theme.colorScheme.shadow.withValues(alpha: 0.2),
+                          color: theme.colorScheme.shadow.withValues(
+                            alpha: 0.2,
+                          ),
                           blurRadius: 24,
                           offset: const Offset(0, -8),
                         ),
@@ -323,7 +331,11 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                           // ✅ NEW: Show swipe hint if navigation is available
                           if (_hasSwipeNavigation) _buildSwipeHint(theme),
                           const SizedBox(height: 12),
-                          _buildContent(theme, measurementUnit, plateCalculatorEnabled),
+                          _buildContent(
+                            theme,
+                            measurementUnit,
+                            plateCalculatorEnabled,
+                          ),
                         ],
                       ),
                     ),
@@ -335,7 +347,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         },
       );
     }
-    
+
     return Positioned(
       left: left,
       top: top,
@@ -344,10 +356,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         builder: (context, child) {
           return Transform.translate(
             offset: Offset(0, _slideAnimation.value),
-            child: Opacity(
-              opacity: _fadeAnimation.value,
-              child: child,
-            ),
+            child: Opacity(opacity: _fadeAnimation.value, child: child),
           );
         },
         child: Material(
@@ -377,7 +386,11 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                   children: [
                     _buildHeader(theme),
                     const SizedBox(height: 12),
-                    _buildContent(theme, measurementUnit, plateCalculatorEnabled),
+                    _buildContent(
+                      theme,
+                      measurementUnit,
+                      plateCalculatorEnabled,
+                    ),
                   ],
                 ),
               ),
@@ -401,16 +414,19 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           Row(
             children: [
               Icon(
-                widget.isSuperset ? AppIcons.fitnessCenter : AppIcons.editNoteRounded,
+                widget.isSuperset
+                    ? AppIcons.fitnessCenter
+                    : AppIcons.editNoteRounded,
                 size: 20,
                 color: theme.colorScheme.primary,
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  widget.isSuperset 
-                    ? 'Quick Edit Superset'  // TODO: Add localization key
-                    : (widget.exerciseName ?? 'Quick Edit Set ${widget.exerciseSet?.setNumber ?? ""}'),
+                  widget.isSuperset
+                      ? 'Quick Edit Superset' // TODO: Add localization key
+                      : (widget.exerciseName ??
+                            'Quick Edit Set ${widget.exerciseSet?.setNumber ?? ""}'),
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -422,13 +438,19 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 TextButton.icon(
                   onPressed: _copyFromPreviousSet,
                   icon: const SemanticIcon(
-  icon: AppIcons.contentCopyRounded,
-  semanticLabel: 'Content copy rounded',
-  size: AppIconSize.tiny,
-),
-                  label: Text(AppLocalizations.of(context).copy, style: theme.textTheme.labelMedium),
+                    icon: AppIcons.contentCopyRounded,
+                    semanticLabel: 'Content copy rounded',
+                    size: AppIconSize.tiny,
+                  ),
+                  label: Text(
+                    AppLocalizations.of(context).copy,
+                    style: theme.textTheme.labelMedium,
+                  ),
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     minimumSize: const Size(0, 0),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
@@ -444,7 +466,11 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     );
   }
 
-  Widget _buildContent(ThemeData theme, String measurementUnit, bool plateCalculatorEnabled) {
+  Widget _buildContent(
+    ThemeData theme,
+    String measurementUnit,
+    bool plateCalculatorEnabled,
+  ) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -459,7 +485,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
               // Conditional spacing
               if (widget.countingMode.requiresWeight &&
-                  (widget.countingMode.requiresReps || widget.countingMode.requiresTime))
+                  (widget.countingMode.requiresReps ||
+                      widget.countingMode.requiresTime))
                 const SizedBox(width: 16),
 
               // Conditional reps picker (for weighted + reps modes)
@@ -471,37 +498,40 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 Expanded(child: _buildSecondsPicker(theme)),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Last Workout badge (Feature 1 - Pre-fill)
-          if (widget.exerciseName != null && widget.setNumber != null && !widget.isSuperset) ...[
+          if (widget.exerciseName != null &&
+              widget.setNumber != null &&
+              !widget.isSuperset) ...[
             _buildLastWorkoutBadge(theme),
             const SizedBox(height: 12),
           ],
 
           // Recent Weights (if available)
-          if (widget.exerciseName != null || (widget.isSuperset && widget.exerciseNames != null)) ...[
+          if (widget.exerciseName != null ||
+              (widget.isSuperset && widget.exerciseNames != null)) ...[
             _buildRecentWeights(theme),
             const SizedBox(height: 16),
           ],
-          
+
           // Apply to All buttons for superset
           if (widget.isSuperset) ...[
             _buildApplyToAllButtons(theme),
             const SizedBox(height: 16),
           ],
-          
+
           // NEW: Primary Control Toolbar
           _buildPrimaryToolbar(theme, measurementUnit, plateCalculatorEnabled),
-          
+
           const SizedBox(height: 12),
-          
+
           // Adjustment Buttons
           _buildAdjustmentButtons(theme),
-          
+
           const SizedBox(height: 20),
-          
+
           // Action Buttons
           _buildActionButtons(theme),
         ],
@@ -516,14 +546,16 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         Row(
           children: [
             SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: 'Workout',
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.primary,
-),
+              icon: AppIcons.workout,
+              semanticLabel: 'Workout',
+              size: AppIconSize.tiny,
+              color: theme.colorScheme.primary,
+            ),
             const SizedBox(width: 4),
             Text(
-              AppLocalizations.of(context).weightKg.replaceAll('kg', measurementUnit),
+              AppLocalizations.of(
+                context,
+              ).weightKg.replaceAll('kg', measurementUnit),
               style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.primary,
                 fontWeight: FontWeight.w600,
@@ -564,7 +596,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         Container(
           height: 100,
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            color: theme.colorScheme.surfaceContainerHighest.withValues(
+              alpha: 0.3,
+            ),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: theme.colorScheme.primary.withValues(alpha: 0.2),
@@ -580,12 +614,16 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                         child: TextField(
                           controller: _weightTextController,
                           focusNode: _weightFocusNode,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
                           textAlign: TextAlign.center,
                           style: theme.textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: theme.colorScheme.primary,
-                            fontSize: _selectedWeight >= 100 ? 20 : 24, // Dynamic font size
+                            fontSize: _selectedWeight >= 100
+                                ? 20
+                                : 24, // Dynamic font size
                           ),
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -599,7 +637,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                           textInputAction: TextInputAction.done,
                           onChanged: (value) {
                             // Update weight as user types
-                            final weight = double.tryParse(value.replaceAll(',', '.'));
+                            final weight = double.tryParse(
+                              value.replaceAll(',', '.'),
+                            );
                             if (weight != null) {
                               setState(() {
                                 _selectedWeight = weight;
@@ -638,10 +678,14 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                       final isSelected = (weight - _selectedWeight).abs() < 0.1;
                       return Center(
                         child: Text(
-                          weight % 1 == 0 ? weight.toInt().toString() : weight.toString(),
+                          weight % 1 == 0
+                              ? weight.toInt().toString()
+                              : weight.toString(),
                           style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                            color: isSelected 
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            color: isSelected
                                 ? theme.colorScheme.primary
                                 : theme.colorScheme.onSurface,
                           ),
@@ -653,7 +697,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                     setState(() {
                       _selectedWeight = index / 2.0;
                       _weightTextController.text = _selectedWeight.toString();
-                      
+
                       // Auto-apply to all if weight mode is active
                       if (widget.isSuperset && _isWeightAppliedToAll) {
                         for (String exerciseName in widget.exerciseNames!) {
@@ -676,11 +720,11 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         Row(
           children: [
             SemanticIcon(
-  icon: AppIcons.repeat,
-  semanticLabel: 'Repeat',
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.secondary,
-),
+              icon: AppIcons.repeat,
+              semanticLabel: 'Repeat',
+              size: AppIconSize.tiny,
+              color: theme.colorScheme.secondary,
+            ),
             const SizedBox(width: 4),
             Text(
               AppLocalizations.of(context).reps,
@@ -724,7 +768,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         Container(
           height: 100,
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            color: theme.colorScheme.surfaceContainerHighest.withValues(
+              alpha: 0.3,
+            ),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: theme.colorScheme.secondary.withValues(alpha: 0.2),
@@ -794,8 +840,10 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                         child: Text(
                           reps.toString(),
                           style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                            color: isSelected 
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            color: isSelected
                                 ? theme.colorScheme.secondary
                                 : theme.colorScheme.onSurface,
                           ),
@@ -807,7 +855,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                     setState(() {
                       _selectedReps = index + 1;
                       _repsTextController.text = _selectedReps.toString();
-                      
+
                       // Auto-apply to all if reps mode is active
                       if (widget.isSuperset && _isRepsAppliedToAll) {
                         for (String exerciseName in widget.exerciseNames!) {
@@ -831,14 +879,14 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         Row(
           children: [
             SemanticIcon(
-  icon: AppIcons.timer,
-  semanticLabel: 'Timer',
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.tertiary,
-),
+              icon: AppIcons.timer,
+              semanticLabel: 'Timer',
+              size: AppIconSize.tiny,
+              color: theme.colorScheme.tertiary,
+            ),
             const SizedBox(width: 4),
             Text(
-              'Duration',  // TODO: Add localization
+              'Duration', // TODO: Add localization
               style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.tertiary,
                 fontWeight: FontWeight.w600,
@@ -876,7 +924,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         Container(
           height: 100,
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            color: theme.colorScheme.surfaceContainerHighest.withValues(
+              alpha: 0.3,
+            ),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: theme.colorScheme.tertiary.withValues(alpha: 0.2),
@@ -888,7 +938,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: 110, // ✅ MODIFICATO: Increased from 80 to 110 for 3-digit seconds (e.g., "100s")
+                        width:
+                            110, // ✅ MODIFICATO: Increased from 80 to 110 for 3-digit seconds (e.g., "100s")
                         child: TextField(
                           controller: _secondsTextController,
                           focusNode: _secondsFocusNode,
@@ -901,7 +952,10 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                           ),
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            suffix: Text('s', style: theme.textTheme.labelMedium),
+                            suffix: Text(
+                              's',
+                              style: theme.textTheme.labelMedium,
+                            ),
                           ),
                           textInputAction: TextInputAction.done,
                           onChanged: (value) {
@@ -950,7 +1004,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                               ? '${seconds}s'
                               : '${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}',
                           style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                             color: isSelected
                                 ? theme.colorScheme.tertiary
                                 : theme.colorScheme.onSurface,
@@ -984,11 +1040,11 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       builder: (context, ref, child) {
         // Get exercise name for recent weights
         final exerciseName = widget.isSuperset
-          ? widget.exerciseNames![_currentExerciseIndex]
-          : widget.exerciseName!;
+            ? widget.exerciseNames![_currentExerciseIndex]
+            : widget.exerciseName!;
 
         final recentWeightsAsync = ref.watch(
-          recentWeightsWithDetailsProvider(exerciseName)
+          recentWeightsWithDetailsProvider(exerciseName),
         );
 
         return recentWeightsAsync.when(
@@ -1037,7 +1093,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                       final data = displayWeights[index];
                       final weight = data.weight ?? 0;
                       final isSelected = (_selectedWeight - weight).abs() < 0.1;
-                      final threeDaysAgo = DateTime.now().subtract(const Duration(days: 3));
+                      final threeDaysAgo = DateTime.now().subtract(
+                        const Duration(days: 3),
+                      );
                       final isFromLast3Days = data.date.isAfter(threeDaysAgo);
 
                       return GestureDetector(
@@ -1047,37 +1105,51 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                         },
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 150),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: isSelected
-                              ? theme.colorScheme.primary
-                              : isFromLast3Days
-                                ? theme.colorScheme.primaryContainer.withValues(alpha: 0.8)
+                                ? theme.colorScheme.primary
+                                : isFromLast3Days
+                                ? theme.colorScheme.primaryContainer.withValues(
+                                    alpha: 0.8,
+                                  )
                                 : theme.colorScheme.surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                               color: isSelected
-                                ? theme.colorScheme.primary
-                                : isFromLast3Days
-                                  ? theme.colorScheme.primary.withValues(alpha: 0.5)
-                                  : theme.colorScheme.outline.withValues(alpha: 0.3),
+                                  ? theme.colorScheme.primary
+                                  : isFromLast3Days
+                                  ? theme.colorScheme.primary.withValues(
+                                      alpha: 0.5,
+                                    )
+                                  : theme.colorScheme.outline.withValues(
+                                      alpha: 0.3,
+                                    ),
                               width: isSelected ? 2 : 1,
                             ),
-                            boxShadow: isSelected ? [
-                              BoxShadow(
-                                color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
-                              ),
-                            ] : null,
+                            boxShadow: isSelected
+                                ? [
+                                    BoxShadow(
+                                      color: theme.colorScheme.primary
+                                          .withValues(alpha: 0.3),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ]
+                                : null,
                           ),
                           child: Text(
                             weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1),
                             style: theme.textTheme.bodySmall?.copyWith(
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.w600,
                               color: isSelected
-                                ? theme.colorScheme.onPrimary
-                                : isFromLast3Days
+                                  ? theme.colorScheme.onPrimary
+                                  : isFromLast3Days
                                   ? theme.colorScheme.primary
                                   : theme.colorScheme.onSurface,
                             ),
@@ -1092,9 +1164,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           },
           loading: () => const SizedBox(
             height: 36,
-            child: Center(
-              child: LoadingIndicator(size: 16),
-            ),
+            child: Center(child: LoadingIndicator(size: 16)),
           ),
           error: (_, __) => const SizedBox.shrink(),
         );
@@ -1107,7 +1177,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   /// ✅ COMPACT VERSION - Single row to save vertical space
   Widget _buildLastWorkoutBadge(ThemeData theme) {
     // Only show for single exercise mode (not superset) with valid exercise name and set number
-    if (widget.isSuperset || widget.exerciseName == null || widget.setNumber == null) {
+    if (widget.isSuperset ||
+        widget.exerciseName == null ||
+        widget.setNumber == null) {
       return const SizedBox.shrink();
     }
 
@@ -1139,7 +1211,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             } else if (daysDiff < 7) {
               dateLabel = '${daysDiff}d';
             } else {
-              dateLabel = '${lastWorkoutData.date.day}/${lastWorkoutData.date.month}';
+              dateLabel =
+                  '${lastWorkoutData.date.day}/${lastWorkoutData.date.month}';
             }
 
             // ✅ COMPACT SINGLE-ROW LAYOUT
@@ -1152,12 +1225,19 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 },
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        theme.colorScheme.tertiaryContainer.withValues(alpha: 0.5),
-                        theme.colorScheme.tertiaryContainer.withValues(alpha: 0.3),
+                        theme.colorScheme.tertiaryContainer.withValues(
+                          alpha: 0.5,
+                        ),
+                        theme.colorScheme.tertiaryContainer.withValues(
+                          alpha: 0.3,
+                        ),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(12),
@@ -1185,9 +1265,14 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                       const SizedBox(width: 8),
                       // Date badge
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.tertiary.withValues(alpha: 0.15),
+                          color: theme.colorScheme.tertiary.withValues(
+                            alpha: 0.15,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -1210,7 +1295,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                       Text(
                         ' × ',
                         style: theme.textTheme.labelMedium?.copyWith(
-                          color: theme.colorScheme.onTertiaryContainer.withValues(alpha: 0.6),
+                          color: theme.colorScheme.onTertiaryContainer
+                              .withValues(alpha: 0.6),
                         ),
                       ),
                       Text(
@@ -1226,7 +1312,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                         icon: AppIcons.touchApp,
                         semanticLabel: 'Tap to apply',
                         size: AppIconSize.tiny,
-                        color: theme.colorScheme.tertiary.withValues(alpha: 0.6),
+                        color: theme.colorScheme.tertiary.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ],
                   ),
@@ -1261,7 +1349,11 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   }
 
   // NEW: Redesigned Primary Toolbar
-  Widget _buildPrimaryToolbar(ThemeData theme, String measurementUnit, bool plateCalculatorEnabled) {
+  Widget _buildPrimaryToolbar(
+    ThemeData theme,
+    String measurementUnit,
+    bool plateCalculatorEnabled,
+  ) {
     return Container(
       height: 48,
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -1282,8 +1374,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           // Dynamic content area
           Expanded(
             child: _usePercentage
-              ? _buildPercentageSlider(theme)
-              : const SizedBox.shrink(),
+                ? _buildPercentageSlider(theme)
+                : const SizedBox.shrink(),
           ),
 
           const SizedBox(width: 12),
@@ -1296,10 +1388,15 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     );
   }
 
-  Widget _buildModeToggle(ThemeData theme, bool plateCalculatorEnabled, String measurementUnit) {
+  Widget _buildModeToggle(
+    ThemeData theme,
+    bool plateCalculatorEnabled,
+    String measurementUnit,
+  ) {
     // ✅ MODIFICATO: Different labels based on counting mode
     final String absoluteLabel = widget.countingMode.requiresTime
-        ? AppLocalizations.of(context).duration // "Secondi" or "Duration"
+        ? AppLocalizations.of(context)
+              .duration // "Secondi" or "Duration"
         : 'KG';
 
     return DecoratedBox(
@@ -1326,22 +1423,29 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     );
   }
 
-  Widget _buildModeButton(String label, bool isSelected, ThemeData theme, VoidCallback onTap) {
+  Widget _buildModeButton(
+    String label,
+    bool isSelected,
+    ThemeData theme,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? theme.colorScheme.primary : theme.colorScheme.surface.withValues(alpha: 0),
+          color: isSelected
+              ? theme.colorScheme.primary
+              : theme.colorScheme.surface.withValues(alpha: 0),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
           label,
           style: theme.textTheme.labelMedium?.copyWith(
-            color: isSelected 
-              ? theme.colorScheme.onPrimary 
-              : theme.colorScheme.onSurfaceVariant,
+            color: isSelected
+                ? theme.colorScheme.onPrimary
+                : theme.colorScheme.onSurfaceVariant,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
           ),
         ),
@@ -1364,7 +1468,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           child: SliderTheme(
             data: SliderThemeData(
               activeTrackColor: theme.colorScheme.primary,
-              inactiveTrackColor: theme.colorScheme.primary.withValues(alpha: 0.2),
+              inactiveTrackColor: theme.colorScheme.primary.withValues(
+                alpha: 0.2,
+              ),
               thumbColor: theme.colorScheme.primary,
               overlayColor: theme.colorScheme.primary.withValues(alpha: 0.2),
               trackHeight: 4,
@@ -1398,15 +1504,17 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            gradient: hasWeight 
-              ? LinearGradient(
-                  colors: [
-                    theme.colorScheme.secondary,
-                    theme.colorScheme.secondary.withValues(alpha: 0.8),
-                  ],
-                )
-              : null,
-            color: !hasWeight ? theme.colorScheme.surfaceContainerHighest : null,
+            gradient: hasWeight
+                ? LinearGradient(
+                    colors: [
+                      theme.colorScheme.secondary,
+                      theme.colorScheme.secondary.withValues(alpha: 0.8),
+                    ],
+                  )
+                : null,
+            color: !hasWeight
+                ? theme.colorScheme.surfaceContainerHighest
+                : null,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -1422,11 +1530,13 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               ),
               const SizedBox(width: 6),
               Text(
-                'Plates',  // Using simple English until localization key is added
+                'Plates', // Using simple English until localization key is added
                 style: theme.textTheme.labelMedium?.copyWith(
-                  color: hasWeight 
-                    ? theme.colorScheme.onSecondary 
-                    : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                  color: hasWeight
+                      ? theme.colorScheme.onSecondary
+                      : theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.5,
+                        ),
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -1471,13 +1581,33 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildAdjustButton('-20s', () => _adjustSeconds(-20), theme.colorScheme.error, theme),
+          _buildAdjustButton(
+            '-20s',
+            () => _adjustSeconds(-20),
+            theme.colorScheme.error,
+            theme,
+          ),
           const SizedBox(width: 8),
-          _buildAdjustButton('-5s', () => _adjustSeconds(-5), theme.colorScheme.error.withValues(alpha: 0.7), theme),
+          _buildAdjustButton(
+            '-5s',
+            () => _adjustSeconds(-5),
+            theme.colorScheme.error.withValues(alpha: 0.7),
+            theme,
+          ),
           const SizedBox(width: 8),
-          _buildAdjustButton('+5s', () => _adjustSeconds(5), theme.colorScheme.primary, theme),
+          _buildAdjustButton(
+            '+5s',
+            () => _adjustSeconds(5),
+            theme.colorScheme.primary,
+            theme,
+          ),
           const SizedBox(width: 8),
-          _buildAdjustButton('+20s', () => _adjustSeconds(20), theme.colorScheme.tertiary, theme),
+          _buildAdjustButton(
+            '+20s',
+            () => _adjustSeconds(20),
+            theme.colorScheme.tertiary,
+            theme,
+          ),
         ],
       );
     }
@@ -1486,18 +1616,43 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildAdjustButton('-2.5', () => _adjustWeight(-2.5), theme.colorScheme.error, theme),
+        _buildAdjustButton(
+          '-2.5',
+          () => _adjustWeight(-2.5),
+          theme.colorScheme.error,
+          theme,
+        ),
         const SizedBox(width: 8),
-        _buildAdjustButton('+2.5', () => _adjustWeight(2.5), theme.colorScheme.primary, theme),
+        _buildAdjustButton(
+          '+2.5',
+          () => _adjustWeight(2.5),
+          theme.colorScheme.primary,
+          theme,
+        ),
         const SizedBox(width: 8),
-        _buildAdjustButton('+5', () => _adjustWeight(5), theme.colorScheme.primary, theme),
+        _buildAdjustButton(
+          '+5',
+          () => _adjustWeight(5),
+          theme.colorScheme.primary,
+          theme,
+        ),
         const SizedBox(width: 8),
-        _buildAdjustButton('+10', () => _adjustWeight(10), theme.colorScheme.tertiary, theme),
+        _buildAdjustButton(
+          '+10',
+          () => _adjustWeight(10),
+          theme.colorScheme.tertiary,
+          theme,
+        ),
       ],
     );
   }
 
-  Widget _buildAdjustButton(String label, VoidCallback onTap, Color color, ThemeData theme) {
+  Widget _buildAdjustButton(
+    String label,
+    VoidCallback onTap,
+    Color color,
+    ThemeData theme,
+  ) {
     return Material(
       color: theme.colorScheme.surface.withValues(alpha: 0),
       child: InkWell(
@@ -1508,9 +1663,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: color.withValues(alpha: 0.3),
-            ),
+            border: Border.all(color: color.withValues(alpha: 0.3)),
           ),
           child: Text(
             label,
@@ -1526,7 +1679,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
   Widget _buildActionButtons(ThemeData theme) {
     // Calculate remaining sets for "Apply to remaining" toggle
-    final hasRemainingSets = widget.currentSetIndex != null &&
+    final hasRemainingSets =
+        widget.currentSetIndex != null &&
         widget.totalSets != null &&
         widget.currentSetIndex! < widget.totalSets! - 1;
     final remainingCount = hasRemainingSets
@@ -1550,11 +1704,18 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               },
               borderRadius: BorderRadius.circular(12),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: _applyToRemaining
-                      ? theme.colorScheme.primaryContainer.withValues(alpha: 0.5)
-                      : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                      ? theme.colorScheme.primaryContainer.withValues(
+                          alpha: 0.5,
+                        )
+                      : theme.colorScheme.surfaceContainerHighest.withValues(
+                          alpha: 0.3,
+                        ),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: _applyToRemaining
@@ -1577,7 +1738,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        AppLocalizations.of(context).applyToRemainingNSets(remainingCount),
+                        AppLocalizations.of(
+                          context,
+                        ).applyToRemainingNSets(remainingCount),
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: _applyToRemaining
                               ? theme.colorScheme.primary
@@ -1682,7 +1845,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   }
 
   void _confirmManualWeight() {
-    final weight = double.tryParse(_weightTextController.text.replaceAll(',', '.'));
+    final weight = double.tryParse(
+      _weightTextController.text.replaceAll(',', '.'),
+    );
     if (weight != null && weight > 0) {
       setState(() {
         _selectedWeight = weight;
@@ -1820,7 +1985,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
   Widget _buildExerciseTabs(ThemeData theme) {
     if (!widget.isSuperset) return const SizedBox.shrink();
-    
+
     return SizedBox(
       height: 32,
       child: ListView.builder(
@@ -1829,7 +1994,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         itemBuilder: (context, index) {
           final exerciseName = widget.exerciseNames![index];
           final isSelected = index == _currentExerciseIndex;
-          
+
           return Padding(
             padding: const EdgeInsets.only(right: 8),
             child: Material(
@@ -1838,25 +2003,30 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 onTap: () => _switchToExercise(index),
                 borderRadius: BorderRadius.circular(16),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
-                    color: isSelected 
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.surface,
+                    color: isSelected
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.surface,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: isSelected
-                        ? theme.colorScheme.primary
-                        : theme.colorScheme.outline.withValues(alpha: 0.3),
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.outline.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Text(
                     exerciseName,
                     style: theme.textTheme.labelMedium?.copyWith(
-                      color: isSelected 
-                        ? theme.colorScheme.onPrimary
-                        : theme.colorScheme.onSurface,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                      color: isSelected
+                          ? theme.colorScheme.onPrimary
+                          : theme.colorScheme.onSurface,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.w500,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -1872,78 +2042,78 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
   Widget _buildApplyToAllButtons(ThemeData theme) {
     if (!widget.isSuperset) return const SizedBox.shrink();
-    
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         // Weight to All button
         Expanded(
           child: _isWeightAppliedToAll
-            ? FilledButton.icon(
-                onPressed: _applyWeightToAll,
-                icon: const SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: 'Workout',
-  size: AppIconSize.tiny,
-),
-                label: Text(context.l10n.weightToAll),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  backgroundColor: theme.colorScheme.primary,
-                  foregroundColor: theme.colorScheme.onPrimary,
-                ),
-              )
-            : OutlinedButton.icon(
-                onPressed: _applyWeightToAll,
-                icon: const SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: 'Workout',
-  size: AppIconSize.tiny,
-),
-                label: Text(context.l10n.weightToAll),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  side: BorderSide(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.5),
+              ? FilledButton.icon(
+                  onPressed: _applyWeightToAll,
+                  icon: const SemanticIcon(
+                    icon: AppIcons.workout,
+                    semanticLabel: 'Workout',
+                    size: AppIconSize.tiny,
                   ),
-                  foregroundColor: theme.colorScheme.primary,
+                  label: Text(context.l10n.weightToAll),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: theme.colorScheme.onPrimary,
+                  ),
+                )
+              : OutlinedButton.icon(
+                  onPressed: _applyWeightToAll,
+                  icon: const SemanticIcon(
+                    icon: AppIcons.workout,
+                    semanticLabel: 'Workout',
+                    size: AppIconSize.tiny,
+                  ),
+                  label: Text(context.l10n.weightToAll),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    side: BorderSide(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                    ),
+                    foregroundColor: theme.colorScheme.primary,
+                  ),
                 ),
-              ),
         ),
         const SizedBox(width: 12),
         // Reps to All button
         Expanded(
           child: _isRepsAppliedToAll
-            ? FilledButton.icon(
-                onPressed: _applyRepsToAll,
-                icon: const SemanticIcon(
-  icon: AppIcons.repeat,
-  semanticLabel: 'Repeat',
-  size: AppIconSize.tiny,
-),
-                label: Text(context.l10n.repsToAll),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  backgroundColor: theme.colorScheme.secondary,
-                  foregroundColor: theme.colorScheme.onSecondary,
-                ),
-              )
-            : OutlinedButton.icon(
-                onPressed: _applyRepsToAll,
-                icon: const SemanticIcon(
-  icon: AppIcons.repeat,
-  semanticLabel: 'Repeat',
-  size: AppIconSize.tiny,
-),
-                label: Text(context.l10n.repsToAll),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  side: BorderSide(
-                    color: theme.colorScheme.secondary.withValues(alpha: 0.5),
+              ? FilledButton.icon(
+                  onPressed: _applyRepsToAll,
+                  icon: const SemanticIcon(
+                    icon: AppIcons.repeat,
+                    semanticLabel: 'Repeat',
+                    size: AppIconSize.tiny,
                   ),
-                  foregroundColor: theme.colorScheme.secondary,
+                  label: Text(context.l10n.repsToAll),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    backgroundColor: theme.colorScheme.secondary,
+                    foregroundColor: theme.colorScheme.onSecondary,
+                  ),
+                )
+              : OutlinedButton.icon(
+                  onPressed: _applyRepsToAll,
+                  icon: const SemanticIcon(
+                    icon: AppIcons.repeat,
+                    semanticLabel: 'Repeat',
+                    size: AppIconSize.tiny,
+                  ),
+                  label: Text(context.l10n.repsToAll),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    side: BorderSide(
+                      color: theme.colorScheme.secondary.withValues(alpha: 0.5),
+                    ),
+                    foregroundColor: theme.colorScheme.secondary,
+                  ),
                 ),
-              ),
         ),
       ],
     );
@@ -2034,9 +2204,15 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   /// Creates the updated ExerciseSet with current values
   ExerciseSet _createUpdatedSet() {
     return widget.exerciseSet!.copyWith(
-      weight: widget.countingMode.requiresWeight && _selectedWeight > 0 ? _selectedWeight : null,
-      reps: widget.countingMode.requiresReps && _selectedReps > 0 ? _selectedReps : null,
-      seconds: widget.countingMode.requiresTime && _selectedSeconds > 0 ? _selectedSeconds : null,
+      weight: widget.countingMode.requiresWeight && _selectedWeight > 0
+          ? _selectedWeight
+          : null,
+      reps: widget.countingMode.requiresReps && _selectedReps > 0
+          ? _selectedReps
+          : null,
+      seconds: widget.countingMode.requiresTime && _selectedSeconds > 0
+          ? _selectedSeconds
+          : null,
     );
   }
 
@@ -2074,7 +2250,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
           // ✅ NEW: Handle "Apply to remaining" if toggled
           if (_applyToRemaining && widget.onApplyToRemaining != null) {
-            final remainingCount = widget.totalSets! - widget.currentSetIndex! - 1;
+            final remainingCount =
+                widget.totalSets! - widget.currentSetIndex! - 1;
             widget.onApplyToRemaining!(updatedSet, remainingCount);
           } else {
             widget.onSave!(updatedSet);
@@ -2098,7 +2275,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       if (mounted) {
         // Handle "Apply to remaining" if toggled AND save+next
         if (_applyToRemaining && widget.onApplyToRemaining != null) {
-          final remainingCount = widget.totalSets! - widget.currentSetIndex! - 1;
+          final remainingCount =
+              widget.totalSets! - widget.currentSetIndex! - 1;
           widget.onApplyToRemaining!(updatedSet, remainingCount);
         } else {
           widget.onSaveAndNext!(updatedSet);
@@ -2130,11 +2308,13 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
   /// Check if swipe navigation is available
   bool get _hasSwipeNavigation {
-    final hasNext = widget.onSaveAndNext != null &&
+    final hasNext =
+        widget.onSaveAndNext != null &&
         widget.currentSetIndex != null &&
         widget.totalSets != null &&
         widget.currentSetIndex! < widget.totalSets! - 1;
-    final hasPrevious = widget.onSaveAndPrevious != null &&
+    final hasPrevious =
+        widget.onSaveAndPrevious != null &&
         widget.currentSetIndex != null &&
         widget.currentSetIndex! > 0;
     return hasNext || hasPrevious;
@@ -2232,7 +2412,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
   void _cancel() {
     HapticFeedback.lightImpact();
-    
+
     // Animate out first, then call the callback (which will handle navigation)
     _animationController.reverse().then((_) {
       if (mounted) {
@@ -2243,7 +2423,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
   void _showPlateCalculator(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -2265,7 +2445,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                   height: 4,
                   margin: const EdgeInsets.only(bottom: 16),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                    color: theme.colorScheme.onSurfaceVariant.withValues(
+                      alpha: 0.4,
+                    ),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -2286,9 +2468,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                     const Spacer(),
                     IconButton(
                       icon: const SemanticIcon(
-  icon: AppIcons.close,
-  semanticLabel: 'Close',
-),
+                        icon: AppIcons.close,
+                        semanticLabel: 'Close',
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],
@@ -2313,7 +2495,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         },
       ),
     );
-    
+
     HapticFeedback.lightImpact();
   }
 
@@ -2322,7 +2504,6 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
 // Helper class for smart positioning
 class _SmartPositioning {
-  
   const _SmartPositioning({
     required this.left,
     required this.top,

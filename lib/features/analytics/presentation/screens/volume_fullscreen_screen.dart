@@ -37,13 +37,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Period selection enum for filtering data
-enum VolumePeriod {
-  oneMonth,
-  threeMonths,
-  sixMonths,
-  oneYear,
-  all,
-}
+enum VolumePeriod { oneMonth, threeMonths, sixMonths, oneYear, all }
 
 /// Data point for volume chart
 class VolumeDataPoint {
@@ -62,10 +56,7 @@ class VolumeDataPoint {
 
 /// Fullscreen volume trend chart
 class VolumeFullscreenScreen extends StatefulWidget {
-  const VolumeFullscreenScreen({
-    required this.exerciseHistories,
-    super.key,
-  });
+  const VolumeFullscreenScreen({required this.exerciseHistories, super.key});
 
   final List<ExerciseHistory> exerciseHistories;
 
@@ -148,7 +139,8 @@ class _VolumeFullscreenScreenState extends State<VolumeFullscreenScreen> {
           session.date.day,
         );
 
-        if (dateOnly.isAfter(startDate) || dateOnly.isAtSameMomentAs(startDate)) {
+        if (dateOnly.isAfter(startDate) ||
+            dateOnly.isAtSameMomentAs(startDate)) {
           // Calculate session volume (AnalyticsSet has non-nullable weight/reps)
           double sessionVolume = 0;
           for (final set in session.sets) {
@@ -179,8 +171,7 @@ class _VolumeFullscreenScreenState extends State<VolumeFullscreenScreen> {
         workouts: 1, // Each date = 1 workout day
         exercises: entry.value.exercises.take(3).toList(),
       );
-    }).toList()
-      ..sort((a, b) => a.date.compareTo(b.date));
+    }).toList()..sort((a, b) => a.date.compareTo(b.date));
 
     return dataPoints;
   }
@@ -196,7 +187,8 @@ class _VolumeFullscreenScreenState extends State<VolumeFullscreenScreen> {
 
     try {
       final boundary =
-          _chartKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+          _chartKey.currentContext?.findRenderObject()
+              as RenderRepaintBoundary?;
 
       if (boundary == null) {
         throw Exception('Could not find chart to capture');
@@ -287,9 +279,7 @@ class _VolumeFullscreenScreenState extends State<VolumeFullscreenScreen> {
             _buildPeriodSelector(context),
 
             // Chart
-            Expanded(
-              child: _buildChart(context, dataPoints),
-            ),
+            Expanded(child: _buildChart(context, dataPoints)),
 
             // Summary bar
             _buildSummaryBar(context, dataPoints),
@@ -420,7 +410,9 @@ class _VolumeFullscreenScreenState extends State<VolumeFullscreenScreen> {
                   Text(
                     DateFormat('EEEE, d MMMM').format(dataPoint.date),
                     style: context.textTheme.labelMedium?.copyWith(
-                      color: context.colors.onInverseSurface.withValues(alpha: 0.7),
+                      color: context.colors.onInverseSurface.withValues(
+                        alpha: 0.7,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -440,16 +432,20 @@ class _VolumeFullscreenScreenState extends State<VolumeFullscreenScreen> {
                     Text(
                       context.l10n.exercises,
                       style: context.textTheme.labelSmall?.copyWith(
-                        color: context.colors.onInverseSurface.withValues(alpha: 0.6),
+                        color: context.colors.onInverseSurface.withValues(
+                          alpha: 0.6,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 4),
-                    ...dataPoint.exercises.map((ex) => Text(
-                          '• $ex',
-                          style: context.textTheme.bodySmall?.copyWith(
-                            color: context.colors.onInverseSurface,
-                          ),
-                        )),
+                    ...dataPoint.exercises.map(
+                      (ex) => Text(
+                        '• $ex',
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onInverseSurface,
+                        ),
+                      ),
+                    ),
                   ],
                 ],
               ),
@@ -500,11 +496,10 @@ class _VolumeFullscreenScreenState extends State<VolumeFullscreenScreen> {
     BuildContext context,
     List<VolumeDataPoint> dataPoints,
   ) {
-    final totalVolume = dataPoints.fold<double>(
-      0,
-      (sum, d) => sum + d.volume,
-    );
-    final avgVolume = dataPoints.isNotEmpty ? totalVolume / dataPoints.length : 0.0;
+    final totalVolume = dataPoints.fold<double>(0, (sum, d) => sum + d.volume);
+    final avgVolume = dataPoints.isNotEmpty
+        ? totalVolume / dataPoints.length
+        : 0.0;
     final workoutDays = dataPoints.length;
 
     return Container(
@@ -512,9 +507,7 @@ class _VolumeFullscreenScreenState extends State<VolumeFullscreenScreen> {
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest,
         border: Border(
-          top: BorderSide(
-            color: context.colors.outline.withValues(alpha: 0.1),
-          ),
+          top: BorderSide(color: context.colors.outline.withValues(alpha: 0.1)),
         ),
       ),
       child: Row(

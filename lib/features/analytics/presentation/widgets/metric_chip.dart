@@ -34,10 +34,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 ///
 /// **State**: Managed by landscapeMetricsProvider
 class MetricChip extends ConsumerWidget {
-  const MetricChip({
-    required this.metric,
-    super.key,
-  });
+  const MetricChip({required this.metric, super.key});
 
   /// Metric type to display
   final MetricType metric;

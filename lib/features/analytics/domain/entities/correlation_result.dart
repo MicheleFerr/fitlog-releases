@@ -75,13 +75,13 @@ abstract class CorrelationResult with _$CorrelationResult {
 
   /// Factory for insufficient data
   factory CorrelationResult.insufficient() => const CorrelationResult(
-        r: 0,
-        rSquared: 0,
-        strength: CorrelationStrength.insufficient,
-        interpretation: 'Need 3+ data points for correlation analysis',
-        dataPoints: 0,
-        isSignificant: false,
-      );
+    r: 0,
+    rSquared: 0,
+    strength: CorrelationStrength.insufficient,
+    interpretation: 'Need 3+ data points for correlation analysis',
+    dataPoints: 0,
+    isSignificant: false,
+  );
 
   /// Check if correlation is positive
   bool get isPositive => r > 0;
@@ -114,9 +114,9 @@ abstract class CorrelationResults with _$CorrelationResults {
 
   /// Factory for empty/insufficient data
   factory CorrelationResults.empty() => CorrelationResults(
-        weightRpe: CorrelationResult.insufficient(),
-        volumeRpe: CorrelationResult.insufficient(),
-      );
+    weightRpe: CorrelationResult.insufficient(),
+    volumeRpe: CorrelationResult.insufficient(),
+  );
 
   /// Check if any correlation is significant
   bool get hasSignificantCorrelations =>

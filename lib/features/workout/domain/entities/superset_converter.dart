@@ -1,31 +1,37 @@
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as WorkoutExercise;
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart'
+    as WorkoutExercise;
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_configuration.dart';
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
 
 /// Converts between SupersetConfiguration (builder) and SupersetExercise (workout)
 class SupersetConverter {
-  
   /// Convert SupersetConfiguration to SupersetExercise for adding to workout
   static WorkoutExercise.SupersetExercise configurationToSupersetExercise(
     SupersetConfiguration config,
   ) {
     // Convert database exercises to workout exercises with unique IDs
-    final List<WorkoutExercise.Exercise> workoutExercises = config.exercises.map((dbExercise) {
-      final exerciseId = '${DateTime.now().millisecondsSinceEpoch}_${dbExercise.id}';
-      return WorkoutExercise.Exercise(
-        id: exerciseId, // Generate unique ID for each exercise
-        name: dbExercise.nome,
-        type: WorkoutExercise.ExerciseType.single, // Individual exercises in superset
-        category: _mapFocusToCategory(dbExercise.focus),
-        sets: [], // Will be filled by SupersetSet
-        notes: '',
-        countingMode: dbExercise.countingMode, // ✅ Preserve counting mode
-        tut: dbExercise.tempoEsecuzione, // ✅ Preserve TUT from database
-      );
-    }).toList();
-    
+    final List<WorkoutExercise.Exercise> workoutExercises = config.exercises
+        .map((dbExercise) {
+          final exerciseId =
+              '${DateTime.now().millisecondsSinceEpoch}_${dbExercise.id}';
+          return WorkoutExercise.Exercise(
+            id: exerciseId, // Generate unique ID for each exercise
+            name: dbExercise.nome,
+            type: WorkoutExercise
+                .ExerciseType
+                .single, // Individual exercises in superset
+            category: _mapFocusToCategory(dbExercise.focus),
+            sets: [], // Will be filled by SupersetSet
+            notes: '',
+            countingMode: dbExercise.countingMode, // ✅ Preserve counting mode
+            tut: dbExercise.tempoEsecuzione, // ✅ Preserve TUT from database
+          );
+        })
+        .toList();
+
     // Convert rounds to SupersetSet objects
-    final List<WorkoutExercise.SupersetSet> supersetSets = config.rounds.asMap().entries.map((entry) {
+    final List<WorkoutExercise.SupersetSet>
+    supersetSets = config.rounds.asMap().entries.map((entry) {
       final index = entry.key;
       final round = entry.value;
       final Map<String, WorkoutExercise.SupersetExerciseData> exerciseData = {};
@@ -62,7 +68,7 @@ class SupersetConverter {
         isCompleted: false,
       );
     }).toList();
-    
+
     return WorkoutExercise.SupersetExercise(
       name: config.name,
       exercises: workoutExercises,
@@ -71,9 +77,11 @@ class SupersetConverter {
       restTime: config.restAfterRound,
     );
   }
-  
+
   /// Map exercise focus list to workout exercise category
-  static WorkoutExercise.ExerciseCategory _mapFocusToCategory(List<String> focusList) {
+  static WorkoutExercise.ExerciseCategory _mapFocusToCategory(
+    List<String> focusList,
+  ) {
     // Use centralized converter (fixes bug where only first element was checked)
     return ExerciseConverter.mapFocusToCategory(focusList);
   }

@@ -56,45 +56,45 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
           toolbarButtons: [
             // Left side: Weight presets button
             (node) => GestureDetector(
-                  onTap: () => _showWeightPresets(context),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          AppIcons.weight,
-                          size: 20,
-                          color: context.colors.primary,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          context.l10n.initialOnboardingQuickSelect,
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: context.colors.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
+              onTap: () => _showWeightPresets(context),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      AppIcons.weight,
+                      size: 20,
+                      color: context.colors.primary,
                     ),
-                  ),
-                ),
-            // Spacer
-            (node) => const Expanded(child: SizedBox()),
-            // Right side: Done button
-            (node) => GestureDetector(
-                  onTap: () => node.unfocus(),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      context.l10n.done,
+                    const SizedBox(width: 4),
+                    Text(
+                      context.l10n.initialOnboardingQuickSelect,
                       style: context.textTheme.bodyMedium?.copyWith(
                         color: context.colors.primary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+                  ],
+                ),
+              ),
+            ),
+            // Spacer
+            (node) => const Expanded(child: SizedBox()),
+            // Right side: Done button
+            (node) => GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  context.l10n.done,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.colors.primary,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
+              ),
+            ),
           ],
         ),
       ],
@@ -268,8 +268,9 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
                     overlayRadius: 24,
                   ),
                   activeTrackColor: context.colors.primary,
-                  inactiveTrackColor:
-                      context.colors.primary.withValues(alpha: 0.2),
+                  inactiveTrackColor: context.colors.primary.withValues(
+                    alpha: 0.2,
+                  ),
                   thumbColor: context.colors.primary,
                   overlayColor: context.colors.primary.withValues(alpha: 0.2),
                 ),
@@ -303,8 +304,9 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
               TextField(
                 controller: _weightController,
                 focusNode: _weightFocusNode,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 textInputAction: TextInputAction.done,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
@@ -411,8 +413,9 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
                       child: Text(
                         context.l10n.initialOnboardingBodyInfo,
                         style: context.textTheme.bodySmall?.copyWith(
-                          color:
-                              context.colors.onSurface.withValues(alpha: 0.7),
+                          color: context.colors.onSurface.withValues(
+                            alpha: 0.7,
+                          ),
                         ),
                       ),
                     ),
@@ -428,8 +431,8 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
                 child: FilledButton(
                   onPressed: state.canProceedFromStep(3)
                       ? () => ref
-                          .read(initialOnboardingNotifierProvider.notifier)
-                          .nextStep()
+                            .read(initialOnboardingNotifierProvider.notifier)
+                            .nextStep()
                       : null,
                   style: FilledButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -467,13 +470,11 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
       debugPrint(
         '[HealthKit] Requesting essential permissions (workout + bodyWeight)...',
       );
-      final permissionController =
-          ref.read(healthPermissionControllerProvider.notifier);
+      final permissionController = ref.read(
+        healthPermissionControllerProvider.notifier,
+      );
       await permissionController.requestPermissions(
-        dataTypes: [
-          HealthDataType.workout,
-          HealthDataType.bodyWeight,
-        ],
+        dataTypes: [HealthDataType.workout, HealthDataType.bodyWeight],
       );
 
       if (!mounted) return;
@@ -482,7 +483,7 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
       final permissionState = ref.read(healthPermissionControllerProvider);
       final hasWeightPermission =
           permissionState.valueOrNull?.canSync(HealthDataType.bodyWeight) ??
-              false;
+          false;
       final hasWorkoutPermission =
           permissionState.valueOrNull?.canSync(HealthDataType.workout) ?? false;
       debugPrint(
@@ -507,9 +508,7 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
       if (!mounted) return;
 
       // 4. Get cached measurements
-      debugPrint(
-        '[HealthKit] Fetching cached measurements (last 90 days)...',
-      );
+      debugPrint('[HealthKit] Fetching cached measurements (last 90 days)...');
       final repository = ref.read(healthRepositoryProvider);
       final result = await repository.getMeasurements(
         dataType: HealthDataType.bodyWeight,

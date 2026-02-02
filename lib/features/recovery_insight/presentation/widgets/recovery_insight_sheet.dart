@@ -39,7 +39,9 @@ class RecoveryInsightSheet extends ConsumerStatefulWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => const RecoveryInsightSheet(),
     );
   }
@@ -304,11 +306,11 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                                     '${scoreDiff >= 0 ? '+' : ''}$scoreDiff',
                                     style: context.textTheme.labelSmall
                                         ?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: scoreDiff >= 0
-                                          ? context.successColor
-                                          : context.errorColor,
-                                    ),
+                                          fontWeight: FontWeight.bold,
+                                          color: scoreDiff >= 0
+                                              ? context.successColor
+                                              : context.errorColor,
+                                        ),
                                   ),
                                 ],
                               )
@@ -448,7 +450,9 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
 
   /// Estimate yesterday's score based on sleep records
   int _estimateYesterdayScore(
-      List<SleepRecord> records, RecoveryInsight currentInsight) {
+    List<SleepRecord> records,
+    RecoveryInsight currentInsight,
+  ) {
     if (records.length < 2) return 0;
 
     // Find yesterday's record
@@ -477,7 +481,9 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
   }
 
   Widget _buildCategoryBreakdown(
-      BuildContext context, RecoveryInsight insight) {
+    BuildContext context,
+    RecoveryInsight insight,
+  ) {
     final l10n = context.l10n;
     final categoryColor = _getCategoryColor(insight.category, context);
 
@@ -504,7 +510,10 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
               const Spacer(),
               // Score badge
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: categoryColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
@@ -555,7 +564,9 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                             children: [
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 6, vertical: 2),
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
                                   color: categoryColor,
                                   borderRadius: BorderRadius.circular(8),
@@ -605,8 +616,9 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                               border: isFilled
                                   ? null
                                   : Border.all(
-                                      color: context.colors.outline
-                                          .withValues(alpha: 0.2),
+                                      color: context.colors.outline.withValues(
+                                        alpha: 0.2,
+                                      ),
                                     ),
                               boxShadow: isCurrentSegment
                                   ? [
@@ -640,9 +652,10 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                             color: isCurrentSegment
                                 ? dotColor
                                 : isFilled
-                                    ? dotColor.withValues(alpha: 0.7)
-                                    : context.colors.onSurface
-                                        .withValues(alpha: 0.4),
+                                ? dotColor.withValues(alpha: 0.7)
+                                : context.colors.onSurface.withValues(
+                                    alpha: 0.4,
+                                  ),
                             fontSize: 9,
                             fontWeight: isCurrentSegment
                                 ? FontWeight.bold
@@ -664,8 +677,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
     );
   }
 
-  Widget _buildSleepMetricsGrid(
-      BuildContext context, RecoveryInsight insight) {
+  Widget _buildSleepMetricsGrid(BuildContext context, RecoveryInsight insight) {
     final l10n = context.l10n;
 
     return Row(
@@ -742,7 +754,9 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
   }
 
   Widget _buildWeeklySleepChart(
-      BuildContext context, List<SleepRecord> records) {
+    BuildContext context,
+    List<SleepRecord> records,
+  ) {
     final l10n = context.l10n;
 
     // Get last 7 days (or less if not available)
@@ -809,8 +823,9 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                           _getDayLabel(index, weekRecords.length, context),
                           style: context.textTheme.labelSmall?.copyWith(
                             fontSize: 10,
-                            color:
-                                context.colors.onSurface.withValues(alpha: 0.5),
+                            color: context.colors.onSurface.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                         ),
                       ],
@@ -846,7 +861,9 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
   }
 
   Widget _buildCorrelationContent(
-      BuildContext context, SleepWorkoutCorrelation? correlation) {
+    BuildContext context,
+    SleepWorkoutCorrelation? correlation,
+  ) {
     final l10n = context.l10n;
 
     if (correlation == null || !correlation.hasEnoughData) {
@@ -921,7 +938,9 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    correlation.summaryMessageKey.localizedCorrelationSummary(context),
+                    correlation.summaryMessageKey.localizedCorrelationSummary(
+                      context,
+                    ),
                     style: context.textTheme.bodySmall?.copyWith(
                       fontStyle: FontStyle.italic,
                     ),
@@ -1045,7 +1064,9 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
   }
 
   Widget _buildRecommendationCard(
-      BuildContext context, RecoveryInsight insight) {
+    BuildContext context,
+    RecoveryInsight insight,
+  ) {
     final categoryColor = _getCategoryColor(insight.category, context);
     final l10n = context.l10n;
 
@@ -1143,8 +1164,11 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             ),
             child: Row(
               children: [
-                Icon(icon,
-                    color: context.colors.primary, size: AppIconSize.medium),
+                Icon(
+                  icon,
+                  color: context.colors.primary,
+                  size: AppIconSize.medium,
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -1173,8 +1197,9 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
             child: child,
           ),
           secondChild: const SizedBox.shrink(),
-          crossFadeState:
-              isExpanded ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+          crossFadeState: isExpanded
+              ? CrossFadeState.showFirst
+              : CrossFadeState.showSecond,
           duration: const Duration(milliseconds: 200),
         ),
       ],
@@ -1220,7 +1245,9 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
   }
 
   String _getCategoryDescription(
-      RecoveryCategory category, BuildContext context) {
+    RecoveryCategory category,
+    BuildContext context,
+  ) {
     final l10n = context.l10n;
     return switch (category) {
       RecoveryCategory.optimal => l10n.recoveryOptimalDescription,
@@ -1267,7 +1294,8 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
     if (totalRecords == 0) return '';
     // Show day abbreviations based on actual date
     final days = ['L', 'M', 'M', 'G', 'V', 'S', 'D']; // Italian
-    final dayIndex = (DateTime.now()
+    final dayIndex =
+        (DateTime.now()
             .subtract(Duration(days: totalRecords - 1 - index))
             .weekday -
         1);

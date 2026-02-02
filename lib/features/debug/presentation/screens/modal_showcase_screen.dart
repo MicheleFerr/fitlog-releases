@@ -440,9 +440,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => StreakModal(
-        exerciseHistories: DemoModalData.exerciseHistories,
-      ),
+      builder: (context) =>
+          StreakModal(exerciseHistories: DemoModalData.exerciseHistories),
     );
   }
 
@@ -495,10 +494,7 @@ class ModalShowcaseScreen extends ConsumerWidget {
       context,
       onExerciseAdded: (exercise) {
         Navigator.pop(context);
-        SnackBarService.showSuccess(
-          context,
-          'Added: ${exercise.name} (demo)',
-        );
+        SnackBarService.showSuccess(context, 'Added: ${exercise.name} (demo)');
       },
     );
   }
@@ -554,10 +550,9 @@ class ModalShowcaseScreen extends ConsumerWidget {
   }
 
   void _showRepsPickerModal(BuildContext context) {
-    RepsPickerModal.show(
-      context,
-      initialReps: DemoModalData.demoReps,
-    ).then((selectedReps) {
+    RepsPickerModal.show(context, initialReps: DemoModalData.demoReps).then((
+      selectedReps,
+    ) {
       if (selectedReps != null && context.mounted) {
         SnackBarService.showSuccess(
           context,
@@ -730,10 +725,7 @@ class ModalShowcaseScreen extends ConsumerWidget {
         exercise: DemoModalData.demoExercise,
         onSave: (updatedExercise) {
           Navigator.pop(modalContext);
-          SnackBarService.showSuccess(
-            context,
-            'Exercise auto-adjusted (demo)',
-          );
+          SnackBarService.showSuccess(context, 'Exercise auto-adjusted (demo)');
         },
       ),
     );
@@ -742,7 +734,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
   void _showCountingModePickerModal(BuildContext context) {
     CountingModePickerModal.show(
       context,
-      currentMode: ExerciseCountingMode.weighted, // Must be ExerciseCountingMode enum
+      currentMode:
+          ExerciseCountingMode.weighted, // Must be ExerciseCountingMode enum
       showSaveAsDefault: false, // Demo mode - don't show save checkbox
     ).then((result) {
       if (result != null && context.mounted) {
@@ -794,12 +787,12 @@ class ModalShowcaseScreen extends ConsumerWidget {
     final now = DateTime.now();
     final dailyData = <DateTime, double>{
       now.subtract(const Duration(days: 6)): 2500.0, // Monday
-      now.subtract(const Duration(days: 5)): 0.0,    // Tuesday
+      now.subtract(const Duration(days: 5)): 0.0, // Tuesday
       now.subtract(const Duration(days: 4)): 3000.0, // Wednesday
-      now.subtract(const Duration(days: 3)): 0.0,    // Thursday
+      now.subtract(const Duration(days: 3)): 0.0, // Thursday
       now.subtract(const Duration(days: 2)): 4000.0, // Friday
-      now.subtract(const Duration(days: 1)): 0.0,    // Saturday
-      now: 3000.0,                                    // Sunday
+      now.subtract(const Duration(days: 1)): 0.0, // Saturday
+      now: 3000.0, // Sunday
     };
 
     showModalBottomSheet<void>(
@@ -842,9 +835,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => WorkoutDetailModal(
-        workout: DemoModalData.demoWorkoutHistoryDetail,
-      ),
+      builder: (context) =>
+          WorkoutDetailModal(workout: DemoModalData.demoWorkoutHistoryDetail),
     );
   }
 
@@ -864,7 +856,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
       backgroundColor: Colors.transparent,
       builder: (context) => const MuscleGroupCorrectionSheet(
         exerciseName: 'Bench Press',
-        currentMuscleGroup: 'Back', // Incorrect demo value to show correction UI
+        currentMuscleGroup:
+            'Back', // Incorrect demo value to show correction UI
       ),
     );
   }
@@ -878,9 +871,7 @@ class ModalShowcaseScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => TourBottomSheet(
-        step: DemoModalData.demoTourStep,
-      ),
+      builder: (context) => TourBottomSheet(step: DemoModalData.demoTourStep),
     );
   }
 
@@ -893,9 +884,8 @@ class ModalShowcaseScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => CommunityAdviceModal(
-        exercise: DemoModalData.demoExercise,
-      ),
+      builder: (context) =>
+          CommunityAdviceModal(exercise: DemoModalData.demoExercise),
     );
   }
 
@@ -951,10 +941,7 @@ class ModalShowcaseScreen extends ConsumerWidget {
           children: [
             const LoadingIndicator(),
             const SizedBox(width: 24),
-            Text(
-              'Processing...',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
+            Text('Processing...', style: Theme.of(context).textTheme.bodyLarge),
           ],
         ),
       ),
@@ -1065,10 +1052,7 @@ class ModalShowcaseScreen extends ConsumerWidget {
 }
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({
-    required this.title,
-    required this.subtitle,
-  });
+  const _SectionHeader({required this.title, required this.subtitle});
 
   final String title;
   final String subtitle;
@@ -1200,10 +1184,7 @@ class _ModalItem extends StatelessWidget {
 }
 
 class _GuidelineItem extends StatelessWidget {
-  const _GuidelineItem({
-    required this.title,
-    required this.value,
-  });
+  const _GuidelineItem({required this.title, required this.value});
 
   final String title;
   final String value;
@@ -1229,11 +1210,15 @@ class _GuidelineItem extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: '$title: ',
-                    style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   TextSpan(
                     text: value,
-                    style: context.textTheme.bodyMedium?.copyWith(color: context.colors.onSurfaceVariant),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),

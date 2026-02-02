@@ -93,7 +93,8 @@ abstract class ChatMessage with _$ChatMessage {
   bool get isRead => readAt != null;
 
   /// Check if message has workout link
-  bool get hasWorkoutLink => type == MessageType.workoutLink && workoutMetadata != null;
+  bool get hasWorkoutLink =>
+      type == MessageType.workoutLink && workoutMetadata != null;
 
   /// Check if message has image
   bool get hasImage => type == MessageType.image && imageMetadata != null;
@@ -120,7 +121,7 @@ abstract class ChatMessage with _$ChatMessage {
         completedAt: wm['completedAt'] is Timestamp
             ? (wm['completedAt'] as Timestamp).toDate()
             : DateTime.tryParse(wm['completedAt'] as String? ?? '') ??
-                DateTime.now(),
+                  DateTime.now(),
         exerciseCount: wm['exerciseCount'] as int?,
         totalVolumeKg: (wm['totalVolumeKg'] as num?)?.toDouble(),
       );
@@ -151,12 +152,12 @@ abstract class ChatMessage with _$ChatMessage {
       createdAt: data['createdAt'] is Timestamp
           ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.tryParse(data['createdAt'] as String? ?? '') ??
-              DateTime.now(),
+                DateTime.now(),
       readAt: data['readAt'] is Timestamp
           ? (data['readAt'] as Timestamp).toDate()
           : data['readAt'] != null
-              ? DateTime.tryParse(data['readAt'] as String? ?? '')
-              : null,
+          ? DateTime.tryParse(data['readAt'] as String? ?? '')
+          : null,
       isDeleted: data['isDeleted'] as bool? ?? false,
     );
   }

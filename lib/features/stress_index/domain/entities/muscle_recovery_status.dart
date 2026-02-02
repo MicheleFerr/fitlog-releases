@@ -48,8 +48,7 @@ abstract class MuscleRecoveryStatus with _$MuscleRecoveryStatus {
 
   /// Check if muscle should be avoided
   bool get shouldAvoid =>
-      state == RecoveryState.exhausted ||
-      state == RecoveryState.fatigued;
+      state == RecoveryState.exhausted || state == RecoveryState.fatigued;
 }
 
 /// Recovery state categories based on percentage

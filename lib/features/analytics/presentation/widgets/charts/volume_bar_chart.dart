@@ -116,8 +116,9 @@ class VolumeBarChart extends StatelessWidget {
                         Text(
                           DateFormat('d MMM').format(session.date),
                           style: context.textTheme.labelSmall?.copyWith(
-                            color: context.colors.onInverseSurface
-                                .withValues(alpha: 0.7),
+                            color: context.colors.onInverseSurface.withValues(
+                              alpha: 0.7,
+                            ),
                           ),
                         ),
                         Text(
@@ -130,8 +131,9 @@ class VolumeBarChart extends StatelessWidget {
                         Text(
                           '${session.setCount} sets',
                           style: context.textTheme.labelSmall?.copyWith(
-                            color: context.colors.onInverseSurface
-                                .withValues(alpha: 0.7),
+                            color: context.colors.onInverseSurface.withValues(
+                              alpha: 0.7,
+                            ),
                           ),
                         ),
                       ],

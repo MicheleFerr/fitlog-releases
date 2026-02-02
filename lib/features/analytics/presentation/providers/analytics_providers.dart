@@ -58,8 +58,7 @@ import 'package:hive_ce_flutter/hive_flutter.dart';
 /// ```
 ///
 /// **TTL**: 5 minutes (enforced by repository)
-final analyticsCacheBoxProvider =
-    Provider<Box<Map<dynamic, dynamic>>>((ref) {
+final analyticsCacheBoxProvider = Provider<Box<Map<dynamic, dynamic>>>((ref) {
   // Open Hive box synchronously (must be initialized in main.dart)
   // ✅ FIX: Box is now opened with correct type Box<Map<dynamic, dynamic>> in HiveBoxManagerEnhanced
   // No cast needed - the box already has the correct generic type
@@ -91,10 +90,7 @@ final analyticsRepositoryProvider = Provider<AnalyticsRepository>((ref) {
   final firestore = ref.watch(_firestoreProvider);
   final cacheBox = ref.watch(analyticsCacheBoxProvider);
 
-  return AnalyticsRepositoryImpl(
-    firestore: firestore,
-    cacheBox: cacheBox,
-  );
+  return AnalyticsRepositoryImpl(firestore: firestore, cacheBox: cacheBox);
 });
 
 // ============================================================================
@@ -129,15 +125,15 @@ final analyticsRepositoryProvider = Provider<AnalyticsRepository>((ref) {
 /// ```
 final exerciseHistoryStreamProvider = StreamProvider.family
     .autoDispose<List<ExerciseHistory>, String>((ref, userId) {
-  final repository = ref.watch(analyticsRepositoryProvider);
+      final repository = ref.watch(analyticsRepositoryProvider);
 
-  return repository.getExerciseHistory(userId).map((either) {
-    return either.fold(
-      (failure) => throw Exception(failure.message),
-      (histories) => histories,
-    );
-  });
-});
+      return repository.getExerciseHistory(userId).map((either) {
+        return either.fold(
+          (failure) => throw Exception(failure.message),
+          (histories) => histories,
+        );
+      });
+    });
 
 /// Get exercise history for a specific exercise
 ///
@@ -163,19 +159,19 @@ final exerciseHistoryStreamProvider = StreamProvider.family
 /// ```
 final exerciseHistoryByNameProvider = FutureProvider.autoDispose
     .family<ExerciseHistory, (String, String)>((ref, params) async {
-  final (userId, exerciseName) = params;
-  final repository = ref.watch(analyticsRepositoryProvider);
+      final (userId, exerciseName) = params;
+      final repository = ref.watch(analyticsRepositoryProvider);
 
-  final result = await repository.getExerciseHistoryByName(
-    userId: userId,
-    exerciseName: exerciseName,
-  );
+      final result = await repository.getExerciseHistoryByName(
+        userId: userId,
+        exerciseName: exerciseName,
+      );
 
-  return result.fold(
-    (failure) => throw Exception(failure.message),
-    (history) => history,
-  );
-});
+      return result.fold(
+        (failure) => throw Exception(failure.message),
+        (history) => history,
+      );
+    });
 
 /// Get sessions for a specific exercise within a timeframe
 ///
@@ -200,23 +196,25 @@ final exerciseHistoryByNameProvider = FutureProvider.autoDispose
 /// final sessionsAsync = ref.watch(exerciseSessionsByTimeframeProvider(params));
 /// ```
 final exerciseSessionsByTimeframeProvider = FutureProvider.autoDispose
-    .family<List<ExerciseSession>, (String, String, DateTime, DateTime)>(
-        (ref, params) async {
-  final (userId, exerciseName, start, end) = params;
-  final repository = ref.watch(analyticsRepositoryProvider);
+    .family<List<ExerciseSession>, (String, String, DateTime, DateTime)>((
+      ref,
+      params,
+    ) async {
+      final (userId, exerciseName, start, end) = params;
+      final repository = ref.watch(analyticsRepositoryProvider);
 
-  final result = await repository.getSessionsByTimeframe(
-    userId: userId,
-    exerciseName: exerciseName,
-    start: start,
-    end: end,
-  );
+      final result = await repository.getSessionsByTimeframe(
+        userId: userId,
+        exerciseName: exerciseName,
+        start: start,
+        end: end,
+      );
 
-  return result.fold(
-    (failure) => throw Exception(failure.message),
-    (sessions) => sessions,
-  );
-});
+      return result.fold(
+        (failure) => throw Exception(failure.message),
+        (sessions) => sessions,
+      );
+    });
 
 /// Search exercises by name (fuzzy search)
 ///
@@ -235,19 +233,19 @@ final exerciseSessionsByTimeframeProvider = FutureProvider.autoDispose
 /// ```
 final searchExercisesProvider = FutureProvider.autoDispose
     .family<List<ExerciseHistory>, (String, String)>((ref, params) async {
-  final (userId, query) = params;
-  final repository = ref.watch(analyticsRepositoryProvider);
+      final (userId, query) = params;
+      final repository = ref.watch(analyticsRepositoryProvider);
 
-  final result = await repository.searchExercises(
-    userId: userId,
-    query: query,
-  );
+      final result = await repository.searchExercises(
+        userId: userId,
+        query: query,
+      );
 
-  return result.fold(
-    (failure) => throw Exception(failure.message),
-    (histories) => histories,
-  );
-});
+      return result.fold(
+        (failure) => throw Exception(failure.message),
+        (histories) => histories,
+      );
+    });
 
 // ============================================================================
 // UTILITY PROVIDERS
@@ -306,8 +304,9 @@ final searchExercisesProvider = FutureProvider.autoDispose
 ///   (stats) => print('Migrated: ${stats.totalWorkouts} workouts'),
 /// );
 /// ```
-final analyticsMigrationServiceProvider =
-    Provider<AnalyticsMigrationService>((ref) {
+final analyticsMigrationServiceProvider = Provider<AnalyticsMigrationService>((
+  ref,
+) {
   final firestore = ref.watch(_firestoreProvider);
 
   return AnalyticsMigrationService(firestore: firestore);
@@ -335,22 +334,24 @@ final analyticsMigrationServiceProvider =
 /// final muscleActivity = _groupMuscleVolumes(metrics.muscleVolumePercentages);
 /// ```
 final cachedMuscleBalanceProvider =
-    Provider.family<MuscleBalanceMetrics, List<ExerciseHistory>>(
-        (ref, histories) {
-  // 🔧 PERF FIX: Watch only the value, not loading/error state
-  final exerciseMuscleMap = ref.watch(
-    exerciseMuscleMapProvider.select((async) => async.valueOrNull),
-  );
+    Provider.family<MuscleBalanceMetrics, List<ExerciseHistory>>((
+      ref,
+      histories,
+    ) {
+      // 🔧 PERF FIX: Watch only the value, not loading/error state
+      final exerciseMuscleMap = ref.watch(
+        exerciseMuscleMapProvider.select((async) => async.valueOrNull),
+      );
 
-  // Calculate balance metrics (expensive operation - now cached)
-  final calculator = MuscleBalanceCalculator();
-  final metrics = calculator.calculateBalance(
-    histories,
-    exerciseMuscleMap: exerciseMuscleMap,
-  );
+      // Calculate balance metrics (expensive operation - now cached)
+      final calculator = MuscleBalanceCalculator();
+      final metrics = calculator.calculateBalance(
+        histories,
+        exerciseMuscleMap: exerciseMuscleMap,
+      );
 
-  return metrics;
-});
+      return metrics;
+    });
 
 // ============================================================================
 // USER PREFERENCES PROVIDERS

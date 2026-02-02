@@ -21,7 +21,8 @@ enum TutorialType {
 /// - [event]: The event that triggered this check (may be null for proactive)
 ///
 /// Returns true if the tutorial should be shown.
-typedef TutorialCondition = bool Function(TutorialState state, TutorialEvent? event);
+typedef TutorialCondition =
+    bool Function(TutorialState state, TutorialEvent? event);
 
 /// Definition of a contextual tutorial.
 ///

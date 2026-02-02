@@ -148,10 +148,7 @@ class _MuscleGroupCorrectionSheetState
     result.fold(
       (failure) {
         // Show error
-        SnackBarService.showError(
-          context,
-          failure.message,
-        );
+        SnackBarService.showError(context, failure.message);
       },
       (_) {
         // Success - show success message
@@ -173,16 +170,15 @@ class _MuscleGroupCorrectionSheetState
     final textTheme = context.textTheme;
 
     // Check if selection is valid (different from current)
-    final isSelectionValid = _selectedMuscleGroup != null &&
+    final isSelectionValid =
+        _selectedMuscleGroup != null &&
         _selectedMuscleGroup != widget.currentMuscleGroup;
 
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: colors.surface,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -357,7 +353,9 @@ class _MuscleGroupCorrectionSheetState
 
           // Save button
           FilledButton(
-            onPressed: (!isSelectionValid || _isSaving) ? null : _saveCorrection,
+            onPressed: (!isSelectionValid || _isSaving)
+                ? null
+                : _saveCorrection,
             style: FilledButton.styleFrom(
               backgroundColor: colors.primary,
               foregroundColor: colors.onPrimary,
@@ -370,10 +368,7 @@ class _MuscleGroupCorrectionSheetState
                 ? SizedBox(
                     height: 20,
                     width: 20,
-                    child: LoadingIndicator(
-                      color: colors.onPrimary,
-                      size: 20,
-                    ),
+                    child: LoadingIndicator(color: colors.onPrimary, size: 20),
                   )
                 : Text(
                     context.l10n.saveCorrection,
@@ -392,10 +387,7 @@ class _MuscleGroupCorrectionSheetState
               foregroundColor: colors.onSurfaceVariant,
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            child: Text(
-              context.l10n.cancel,
-              style: textTheme.labelLarge,
-            ),
+            child: Text(context.l10n.cancel, style: textTheme.labelLarge),
           ),
         ],
       ),

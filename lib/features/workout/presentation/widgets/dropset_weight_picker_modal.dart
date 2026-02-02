@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as ExerciseDB;
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart'
+    as ExerciseDB;
 import 'package:gymbro_flutter_new/features/workout/presentation/utils/weight_rounding_utils.dart';
 
 /// Modal for picking weight in DropSet exercises with smart rounding
@@ -14,7 +15,6 @@ import 'package:gymbro_flutter_new/features/workout/presentation/utils/weight_ro
 /// - Equipment type detection (barbell/dumbbell)
 /// - Dumbbell increment preference (0.5kg, 1kg, 2kg)
 class DropSetWeightPickerModal extends StatefulWidget {
-
   const DropSetWeightPickerModal({
     super.key,
     required this.stageIndex,
@@ -23,6 +23,7 @@ class DropSetWeightPickerModal extends StatefulWidget {
     this.selectedExercise,
     this.exerciseName,
   });
+
   /// Stage number (0-indexed: 0 = first stage, 1+ = subsequent stages)
   final int stageIndex;
 
@@ -39,7 +40,8 @@ class DropSetWeightPickerModal extends StatefulWidget {
   final String? exerciseName;
 
   @override
-  State<DropSetWeightPickerModal> createState() => _DropSetWeightPickerModalState();
+  State<DropSetWeightPickerModal> createState() =>
+      _DropSetWeightPickerModalState();
 
   /// Static method to show modal and return selected weight
   static Future<double?> show({
@@ -55,7 +57,9 @@ class DropSetWeightPickerModal extends StatefulWidget {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => DropSetWeightPickerModal(
         stageIndex: stageIndex,
         previousStageWeight: previousStageWeight,
@@ -68,7 +72,8 @@ class DropSetWeightPickerModal extends StatefulWidget {
 }
 
 class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
-  static const String _prefKeyUseAbsoluteDrop = 'dropset_use_absolute_weight_drop';
+  static const String _prefKeyUseAbsoluteDrop =
+      'dropset_use_absolute_weight_drop';
   static const List<double> absoluteDropValues = [2.5, 5, 10, 15, 20];
 
   late final TextEditingController _weightController;
@@ -123,7 +128,8 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
   }
 
   void _detectEquipment() {
-    final exerciseName = widget.selectedExercise?.nome ?? widget.exerciseName ?? '';
+    final exerciseName =
+        widget.selectedExercise?.nome ?? widget.exerciseName ?? '';
     final attrezzatura = widget.selectedExercise?.attrezzatura;
 
     _detectedEquipmentType = WeightRoundingUtils.detectEquipmentType(
@@ -164,7 +170,10 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
       if (calculatedWeight < 0) calculatedWeight = 0;
     } else if (!_useAbsoluteDrop && _selectedDropPercentage != null) {
       // Percentage mode: use smart rounding
-      final equipmentType = _userSelectedEquipmentType ?? _detectedEquipmentType ?? EquipmentType.unknown;
+      final equipmentType =
+          _userSelectedEquipmentType ??
+          _detectedEquipmentType ??
+          EquipmentType.unknown;
       calculatedWeight = WeightRoundingUtils.calculateNextStageWeight(
         currentWeight: widget.previousStageWeight!,
         dropPercentage: _selectedDropPercentage!,
@@ -184,9 +193,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(
-        maxHeight: context.screenHeight * 0.85,
-      ),
+      constraints: BoxConstraints(maxHeight: context.screenHeight * 0.85),
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -210,10 +217,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                Icon(
-                  AppIcons.workout,
-                  color: context.colors.primary,
-                ),
+                Icon(AppIcons.workout, color: context.colors.primary),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -222,7 +226,9 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                       Text(
                         widget.stageIndex == 0
                             ? context.l10n.dropsetStage1Weight
-                            : context.l10n.dropsetStageNWeight(widget.stageIndex + 1),
+                            : context.l10n.dropsetStageNWeight(
+                                widget.stageIndex + 1,
+                              ),
                         style: context.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -255,7 +261,8 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
                   _buildEquipmentSection(),
 
                   // For subsequent stages: percentage chips + calculated weight
-                  if (widget.stageIndex > 0 && widget.previousStageWeight != null) ...[
+                  if (widget.stageIndex > 0 &&
+                      widget.previousStageWeight != null) ...[
                     _buildPercentageSelector(),
                     const SizedBox(height: 16),
                     // Show calculated weight prominently
@@ -400,7 +407,9 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
           children: [
             Icon(
               icon,
-              color: isSelected ? context.colors.primary : context.colors.onSurfaceVariant,
+              color: isSelected
+                  ? context.colors.primary
+                  : context.colors.onSurfaceVariant,
               size: 32,
             ),
             const SizedBox(height: 8),
@@ -543,7 +552,10 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
             hintText: showTitle ? '100.0' : null,
             suffixText: 'kg',
             border: const OutlineInputBorder(),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
           ),
           onChanged: (value) {
             setState(() {

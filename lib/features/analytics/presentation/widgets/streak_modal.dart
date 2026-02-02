@@ -45,11 +45,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// View modes for streak visualization
-enum StreakViewMode {
-  monthly,
-  annual,
-  multiYear,
-}
+enum StreakViewMode { monthly, annual, multiYear }
 
 /// Extension for localized labels
 extension StreakViewModeExtension on StreakViewMode {
@@ -88,22 +84,24 @@ class _StreakModalState extends State<StreakModal> {
   final GlobalKey _calendarKey = GlobalKey();
 
   // 🔐 User-scoped preferences keys
-  String get _defaultViewKey => userCacheKeys.userScopedKey('streak_default_view');
-  String get _calendarColorKey => userCacheKeys.userScopedKey('streak_calendar_color');
+  String get _defaultViewKey =>
+      userCacheKeys.userScopedKey('streak_default_view');
+  String get _calendarColorKey =>
+      userCacheKeys.userScopedKey('streak_calendar_color');
 
   // Available calendar colors
   static const List<Color> _availableColors = [
-    Color(0xFF4CAF50),  // Green (default)
-    Color(0xFF2196F3),  // Blue
-    Color(0xFFFF9800),  // Orange
-    Color(0xFFE91E63),  // Pink
-    Color(0xFF9C27B0),  // Purple
-    Color(0xFFF44336),  // Red
-    Color(0xFF00BCD4),  // Cyan
-    Color(0xFFFFEB3B),  // Yellow
+    Color(0xFF4CAF50), // Green (default)
+    Color(0xFF2196F3), // Blue
+    Color(0xFFFF9800), // Orange
+    Color(0xFFE91E63), // Pink
+    Color(0xFF9C27B0), // Purple
+    Color(0xFFF44336), // Red
+    Color(0xFF00BCD4), // Cyan
+    Color(0xFFFFEB3B), // Yellow
   ];
 
-  Color _selectedCalendarColor = _availableColors[0];  // Default green
+  Color _selectedCalendarColor = _availableColors[0]; // Default green
 
   @override
   void initState() {
@@ -208,7 +206,8 @@ class _StreakModalState extends State<StreakModal> {
   String _getWeekKey(DateTime date) {
     // ISO 8601 week number
     final dayOfYear = date.difference(DateTime(date.year, 1, 1)).inDays;
-    final weekNumber = ((dayOfYear + DateTime(date.year, 1, 1).weekday - 1) / 7).floor() + 1;
+    final weekNumber =
+        ((dayOfYear + DateTime(date.year, 1, 1).weekday - 1) / 7).floor() + 1;
     return '${date.year}-W$weekNumber';
   }
 
@@ -218,7 +217,9 @@ class _StreakModalState extends State<StreakModal> {
     if (workoutDates.isEmpty) return 0;
 
     // Find most recent workout date
-    final mostRecentWorkout = workoutDates.reduce((a, b) => a.isAfter(b) ? a : b);
+    final mostRecentWorkout = workoutDates.reduce(
+      (a, b) => a.isAfter(b) ? a : b,
+    );
 
     final today = DateTime.now();
     final todayOnly = DateTime(today.year, today.month, today.day);
@@ -259,7 +260,7 @@ class _StreakModalState extends State<StreakModal> {
             RepaintBoundary(
               key: _calendarKey,
               child: Container(
-                color: context.colors.surface,  // Background for screenshot
+                color: context.colors.surface, // Background for screenshot
                 padding: const EdgeInsets.all(16),
                 child: _buildCalendarView(context, workoutDates),
               ),
@@ -419,7 +420,10 @@ class _StreakModalState extends State<StreakModal> {
   }
 
   /// Show info dialog for days since last workout metric
-  void _showDaysSinceWorkoutInfo(BuildContext context, int daysSinceLastWorkout) {
+  void _showDaysSinceWorkoutInfo(
+    BuildContext context,
+    int daysSinceLastWorkout,
+  ) {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -440,8 +444,8 @@ class _StreakModalState extends State<StreakModal> {
                 color: daysSinceLastWorkout == 0
                     ? context.colors.success.withValues(alpha: 0.1)
                     : daysSinceLastWorkout <= 2
-                        ? context.colors.primary.withValues(alpha: 0.1)
-                        : context.colors.warning.withValues(alpha: 0.1),
+                    ? context.colors.primary.withValues(alpha: 0.1)
+                    : context.colors.warning.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
@@ -463,8 +467,8 @@ class _StreakModalState extends State<StreakModal> {
                       color: daysSinceLastWorkout == 0
                           ? context.colors.success
                           : daysSinceLastWorkout <= 2
-                              ? context.colors.primary
-                              : context.colors.warning,
+                          ? context.colors.primary
+                          : context.colors.warning,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -487,7 +491,11 @@ class _StreakModalState extends State<StreakModal> {
   }
 
   /// Stats header (weeks in a row, days since last workout)
-  Widget _buildStatsHeader(BuildContext context, int weekStreak, int daysSinceLastWorkout) {
+  Widget _buildStatsHeader(
+    BuildContext context,
+    int weekStreak,
+    int daysSinceLastWorkout,
+  ) {
     // IntrinsicHeight ensures both cards have equal height regardless of text length
     return IntrinsicHeight(
       child: Row(
@@ -523,10 +531,14 @@ class _StreakModalState extends State<StreakModal> {
                 value: '$daysSinceLastWorkout',
                 label: context.l10n.daysSinceLastWorkout,
                 color: daysSinceLastWorkout == 0
-                    ? context.colors.success  // Green if worked out today
+                    ? context
+                          .colors
+                          .success // Green if worked out today
                     : daysSinceLastWorkout <= 2
-                        ? context.colors.primary  // Blue if 1-2 days
-                        : context.colors.warning,  // Warning if 3+ days
+                    ? context
+                          .colors
+                          .primary // Blue if 1-2 days
+                    : context.colors.warning, // Warning if 3+ days
               ),
             ),
           ),
@@ -551,10 +563,7 @@ class _StreakModalState extends State<StreakModal> {
       ),
       child: Row(
         children: [
-          Text(
-            icon,
-            style: context.textTheme.titleLarge,
-          ),
+          Text(icon, style: context.textTheme.titleLarge),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -655,7 +664,9 @@ class _StreakModalState extends State<StreakModal> {
     DateTime today,
   ) {
     // Month title (e.g., "ottobre 2025")
-    final monthName = DateFormat.yMMMM(Localizations.localeOf(context).languageCode).format(month);
+    final monthName = DateFormat.yMMMM(
+      Localizations.localeOf(context).languageCode,
+    ).format(month);
 
     // Calculate first day of month and total days
     final firstDayOfMonth = DateTime(month.year, month.month, 1);
@@ -712,10 +723,7 @@ class _StreakModalState extends State<StreakModal> {
                     : context.colors.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(8),
                 border: isToday
-                    ? Border.all(
-                        color: _selectedCalendarColor,
-                        width: 2,
-                      )
+                    ? Border.all(color: _selectedCalendarColor, width: 2)
                     : null,
               ),
               child: Center(
@@ -726,8 +734,8 @@ class _StreakModalState extends State<StreakModal> {
                     color: isToday
                         ? context.colors.primary
                         : hasWorkout
-                            ? context.colors.onSurface
-                            : context.colors.onSurfaceVariant,
+                        ? context.colors.onSurface
+                        : context.colors.onSurfaceVariant,
                   ),
                 ),
               ),
@@ -783,7 +791,20 @@ class _StreakModalState extends State<StreakModal> {
     Set<DateTime> workoutDates,
   ) {
     // Month name (short form: gen, feb, mar, etc.)
-    final monthNames = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
+    final monthNames = [
+      'gen',
+      'feb',
+      'mar',
+      'apr',
+      'mag',
+      'giu',
+      'lug',
+      'ago',
+      'set',
+      'ott',
+      'nov',
+      'dic',
+    ];
     final monthName = monthNames[month - 1];
 
     // Calculate days in month
@@ -830,7 +851,8 @@ class _StreakModalState extends State<StreakModal> {
               final date = DateTime(year, month, dayNumber);
               final hasWorkout = workoutDates.contains(date);
               final today = DateTime.now();
-              final isToday = date.year == today.year &&
+              final isToday =
+                  date.year == today.year &&
                   date.month == today.month &&
                   date.day == today.day;
 
@@ -841,10 +863,7 @@ class _StreakModalState extends State<StreakModal> {
                       : context.colors.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(2),
                   border: isToday
-                      ? Border.all(
-                          color: _selectedCalendarColor,
-                          width: 1,
-                        )
+                      ? Border.all(color: _selectedCalendarColor, width: 1)
                       : null,
                 ),
               );
@@ -861,7 +880,20 @@ class _StreakModalState extends State<StreakModal> {
     final year = now.year;
 
     // Month names
-    final monthNames = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
+    final monthNames = [
+      'gen',
+      'feb',
+      'mar',
+      'apr',
+      'mag',
+      'giu',
+      'lug',
+      'ago',
+      'set',
+      'ott',
+      'nov',
+      'dic',
+    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -924,7 +956,8 @@ class _StreakModalState extends State<StreakModal> {
         final date = DateTime(year, month, day);
         final hasWorkout = workoutDates.contains(date);
         final today = DateTime.now();
-        final isToday = date.year == today.year &&
+        final isToday =
+            date.year == today.year &&
             date.month == today.month &&
             date.day == today.day;
 
@@ -938,10 +971,7 @@ class _StreakModalState extends State<StreakModal> {
                 : context.colors.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(2),
             border: isToday
-                ? Border.all(
-                    color: _selectedCalendarColor,
-                    width: 1,
-                  )
+                ? Border.all(color: _selectedCalendarColor, width: 1)
                 : null,
           ),
         );
@@ -975,7 +1005,9 @@ class _StreakModalState extends State<StreakModal> {
   Future<void> _shareStreak(BuildContext context) async {
     try {
       // Find the RepaintBoundary and capture screenshot
-      final boundary = _calendarKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      final boundary =
+          _calendarKey.currentContext?.findRenderObject()
+              as RenderRepaintBoundary?;
       if (boundary == null) {
         throw Exception('Could not capture calendar screenshot');
       }
@@ -993,10 +1025,9 @@ class _StreakModalState extends State<StreakModal> {
       await file.writeAsBytes(byteData.buffer.asUint8List());
 
       // Share the file
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        text: context.l10n.shareStreakDescription,
-      );
+      await Share.shareXFiles([
+        XFile(file.path),
+      ], text: context.l10n.shareStreakDescription);
     } catch (e) {
       // Show error snackbar if sharing fails
       if (context.mounted) {
@@ -1083,16 +1114,13 @@ class _StreakModalState extends State<StreakModal> {
                     color: color,
                     shape: BoxShape.circle,
                     border: isSelected
-                        ? Border.all(
-                            color: context.colors.onSurface,
-                            width: 3,
-                          )
+                        ? Border.all(color: context.colors.onSurface, width: 3)
                         : null,
                   ),
                   child: isSelected
                       ? SemanticIcon(
                           icon: AppIcons.check,
-                          semanticLabel: '',  // Decorative icon
+                          semanticLabel: '', // Decorative icon
                           color: Theme.of(context).colorScheme.surface,
                           size: AppIconSize.large,
                         )
@@ -1190,7 +1218,8 @@ class _StreakModalState extends State<StreakModal> {
                 context,
                 icon: AppIcons.colorLens,
                 title: context.l10n.customizeColors,
-                subtitle: '${_availableColors.length} ${context.l10n.colorsAvailable}',
+                subtitle:
+                    '${_availableColors.length} ${context.l10n.colorsAvailable}',
                 enabled: true,
               ),
             ),

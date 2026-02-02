@@ -168,10 +168,15 @@ class TrainingPatternDetector {
     final firstHalf = points.sublist(0, midpoint);
     final secondHalf = points.sublist(midpoint);
 
-    final firstAvg = firstHalf.fold<double>(0, (sum, p) => sum + p.value) / firstHalf.length;
-    final secondAvg = secondHalf.fold<double>(0, (sum, p) => sum + p.value) / secondHalf.length;
+    final firstAvg =
+        firstHalf.fold<double>(0, (sum, p) => sum + p.value) / firstHalf.length;
+    final secondAvg =
+        secondHalf.fold<double>(0, (sum, p) => sum + p.value) /
+        secondHalf.length;
 
-    final changePercent = firstAvg > 0 ? ((secondAvg - firstAvg) / firstAvg) * 100 : 0.0;
+    final changePercent = firstAvg > 0
+        ? ((secondAvg - firstAvg) / firstAvg) * 100
+        : 0.0;
 
     if (changePercent > 5) return _TrendDirection.increasing;
     if (changePercent < -5) return _TrendDirection.decreasing;
@@ -197,7 +202,9 @@ class TrainingPatternDetector {
 
       return TrainingPattern(
         type: PatternType.fatigueWarning,
-        severity: confidence > 0.7 ? PatternSeverity.alert : PatternSeverity.warning,
+        severity: confidence > 0.7
+            ? PatternSeverity.alert
+            : PatternSeverity.warning,
         confidence: confidence,
         titleKey: 'patternFatigueWarningTitle',
         descriptionKey: 'patternFatigueWarningDescription',
@@ -374,21 +381,29 @@ class TrainingPatternDetector {
   }
 
   /// Determine overall training status from patterns
-  static TrainingStatus _determineOverallStatus(List<TrainingPattern> patterns) {
+  static TrainingStatus _determineOverallStatus(
+    List<TrainingPattern> patterns,
+  ) {
     if (patterns.isEmpty) return TrainingStatus.insufficientData;
 
     // Check for alerts/warnings first
     final hasAlert = patterns.any((p) => p.severity == PatternSeverity.alert);
     if (hasAlert) return TrainingStatus.fatigueRisk;
 
-    final hasWarning = patterns.any((p) => p.severity == PatternSeverity.warning);
+    final hasWarning = patterns.any(
+      (p) => p.severity == PatternSeverity.warning,
+    );
     if (hasWarning) return TrainingStatus.needsAttention;
 
     // Check for positive patterns
-    final hasOptimal = patterns.any((p) => p.type == PatternType.optimalTraining);
+    final hasOptimal = patterns.any(
+      (p) => p.type == PatternType.optimalTraining,
+    );
     if (hasOptimal) return TrainingStatus.optimal;
 
-    final hasProgression = patterns.any((p) => p.type == PatternType.greatProgression);
+    final hasProgression = patterns.any(
+      (p) => p.type == PatternType.greatProgression,
+    );
     if (hasProgression) return TrainingStatus.progressing;
 
     return TrainingStatus.progressing;
@@ -396,8 +411,4 @@ class TrainingPatternDetector {
 }
 
 /// Internal enum for trend direction
-enum _TrendDirection {
-  increasing,
-  stable,
-  decreasing,
-}
+enum _TrendDirection { increasing, stable, decreasing }
