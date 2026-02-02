@@ -99,15 +99,21 @@ class _CoachTemplateEditorScreenState
           ),
           actions: [
             if (_hasChanges || !_isEditing)
-              TextButton(
-                onPressed: _isLoading ? null : _saveTemplate,
-                child: _isLoading
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: LoadingIndicator(),
-                      )
-                    : Text(context.l10n.save),
+              // Accessibility: Save button with semantic label
+              Semantics(
+                label: context.l10n.save,
+                button: true,
+                enabled: !_isLoading,
+                child: TextButton(
+                  onPressed: _isLoading ? null : _saveTemplate,
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: LoadingIndicator(),
+                        )
+                      : Text(context.l10n.save),
+                ),
               ),
           ],
         ),
@@ -452,6 +458,7 @@ class _CoachTemplateEditorScreenState
               icon: const Icon(AppIcons.edit),
               onPressed: () => _editExercise(index),
               visualDensity: VisualDensity.compact,
+              tooltip: context.l10n.edit,
             ),
           ),
         ),
