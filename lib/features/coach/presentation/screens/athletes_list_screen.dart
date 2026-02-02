@@ -130,6 +130,7 @@ class _AthletesListScreenState extends ConsumerState<AthletesListScreen> {
                   _searchController.clear();
                   setState(() => _searchQuery = '');
                 },
+                tooltip: context.l10n.clear,
               )
             : null,
         filled: true,
@@ -486,10 +487,15 @@ class _CoachCodeDisplay extends StatelessWidget {
             ),
             const SizedBox(width: AppSpacing.sm),
             Expanded(
-              child: FilledButton.icon(
-                onPressed: () => _shareCode(context),
-                icon: const Icon(AppIcons.share, size: 18),
-                label: Text(context.l10n.shareCode),
+              // Accessibility: Share code button with semantic label
+              child: Semantics(
+                label: context.l10n.shareCode,
+                button: true,
+                child: FilledButton.icon(
+                  onPressed: () => _shareCode(context),
+                  icon: const Icon(AppIcons.share, size: 18),
+                  label: Text(context.l10n.shareCode),
+                ),
               ),
             ),
           ],
