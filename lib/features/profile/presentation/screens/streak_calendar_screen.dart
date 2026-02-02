@@ -58,9 +58,11 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.calendar),
+        // Accessibility: Back button with tooltip
         leading: IconButton(
           icon: const Icon(AppIcons.arrowBackIos, size: AppIconSize.medium),
           onPressed: () => context.pop(),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
         ),
         actions: [
           // View mode dropdown
@@ -277,6 +279,7 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // Accessibility: Previous month button
             IconButton(
               icon: const Icon(AppIcons.arrowBackIos, size: AppIconSize.small),
               onPressed: () {
@@ -288,6 +291,7 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
                   );
                 });
               },
+              tooltip: context.l10n.previousMonth,
             ),
             Text(
               DateFormat.yMMMM(context.l10n.localeName).format(_selectedMonth),
@@ -295,11 +299,13 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            // Accessibility: Next month button
             IconButton(
               icon: const Icon(
                 AppIcons.arrowForwardIos,
                 size: AppIconSize.small,
               ),
+              tooltip: context.l10n.nextMonth,
               onPressed:
                   _selectedMonth.month == now.month &&
                       _selectedMonth.year == now.year
