@@ -452,6 +452,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                       ? AppIcons.visibility
                       : AppIcons.visibilityOff,
                 ),
+                tooltip: _obscurePassword
+                    ? context.l10n.showPassword
+                    : context.l10n.hidePassword,
                 onPressed: () =>
                     setState(() => _obscurePassword = !_obscurePassword),
               ),
@@ -486,6 +489,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                       ? AppIcons.visibility
                       : AppIcons.visibilityOff,
                 ),
+                tooltip: _obscureConfirmPassword
+                    ? context.l10n.showPassword
+                    : context.l10n.hidePassword,
                 onPressed: () => setState(
                   () => _obscureConfirmPassword = !_obscureConfirmPassword,
                 ),

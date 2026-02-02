@@ -479,6 +479,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                       ? AppIcons.visibility
                       : AppIcons.visibilityOff,
                 ),
+                tooltip: _obscurePassword
+                    ? context.l10n.showPassword
+                    : context.l10n.hidePassword,
                 onPressed: () =>
                     setState(() => _obscurePassword = !_obscurePassword),
               ),
