@@ -29,6 +29,7 @@
 library;
 
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 
 /// Firebase App Check Configuration Service
@@ -148,8 +149,8 @@ class AppCheckConfig {
             debugPrint('Stack trace: $stackTrace');
           }
 
-          // TODO: Send error to Firebase Crashlytics (when implemented)
-          // await FirebaseCrashlytics.instance.recordError(e, stackTrace);
+          // Send error to Firebase Crashlytics for monitoring
+          await FirebaseCrashlytics.instance.recordError(e, stackTrace);
 
           _lastActivationAttempt = DateTime.now(); // Prevent immediate retry
         }

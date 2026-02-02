@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -96,6 +98,22 @@ void main() async {
     if (!e.toString().contains('duplicate-app')) {
       rethrow; // Re-throw if it's a different error
     }
+  }
+
+  // ========================================
+  // 🔍 CRASHLYTICS: Error Tracking & Crash Reports
+  // ========================================
+  // Capture Flutter framework errors
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+  // Capture errors outside Flutter (async errors, platform errors)
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+  if (kDebugMode) {
+    debugPrint('✅ Firebase Crashlytics initialized');
   }
 
   // ========================================
