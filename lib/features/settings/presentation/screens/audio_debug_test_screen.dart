@@ -143,24 +143,31 @@ class _QuickTestsTab extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: state.isRunning
-                      ? null
-                      : () => ref
-                            .read(audioDebugTestProvider.notifier)
-                            .runQuickTests(),
-                  icon: Icon(
-                    state.isRunning ? AppIcons.hourglassEmpty : AppIcons.play,
-                  ),
-                  label: Text(
-                    state.isRunning
-                        ? context.l10n.testing
-                        : context.l10n.startQuickTests,
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(16),
-                    backgroundColor: context.colors.primary,
-                    foregroundColor: context.colors.onPrimary,
+                // Accessibility: Quick tests button with semantic label
+                child: Semantics(
+                  label: state.isRunning
+                      ? context.l10n.testing
+                      : context.l10n.startQuickTests,
+                  button: true,
+                  child: ElevatedButton.icon(
+                    onPressed: state.isRunning
+                        ? null
+                        : () => ref
+                              .read(audioDebugTestProvider.notifier)
+                              .runQuickTests(),
+                    icon: Icon(
+                      state.isRunning ? AppIcons.hourglassEmpty : AppIcons.play,
+                    ),
+                    label: Text(
+                      state.isRunning
+                          ? context.l10n.testing
+                          : context.l10n.startQuickTests,
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(16),
+                      backgroundColor: context.colors.primary,
+                      foregroundColor: context.colors.onPrimary,
+                    ),
                   ),
                 ),
               ),
@@ -307,24 +314,31 @@ class _FullTestsTab extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: state.isRunning
-                      ? null
-                      : () => ref
-                            .read(audioDebugTestProvider.notifier)
-                            .runFullTests(),
-                  icon: Icon(
-                    state.isRunning ? AppIcons.hourglassEmpty : AppIcons.play,
-                  ),
-                  label: Text(
-                    state.isRunning
-                        ? context.l10n.testing
-                        : context.l10n.startFullTests,
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(16),
-                    backgroundColor: context.colors.error,
-                    foregroundColor: context.colors.onPrimary,
+                // Accessibility: Full tests button with semantic label
+                child: Semantics(
+                  label: state.isRunning
+                      ? context.l10n.testing
+                      : context.l10n.startFullTests,
+                  button: true,
+                  child: ElevatedButton.icon(
+                    onPressed: state.isRunning
+                        ? null
+                        : () => ref
+                              .read(audioDebugTestProvider.notifier)
+                              .runFullTests(),
+                    icon: Icon(
+                      state.isRunning ? AppIcons.hourglassEmpty : AppIcons.play,
+                    ),
+                    label: Text(
+                      state.isRunning
+                          ? context.l10n.testing
+                          : context.l10n.startFullTests,
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(16),
+                      backgroundColor: context.colors.error,
+                      foregroundColor: context.colors.onPrimary,
+                    ),
                   ),
                 ),
               ),
@@ -828,17 +842,27 @@ class _ResultsDialog extends StatelessWidget {
       title: Text(context.l10n.detailedResults),
       content: SingleChildScrollView(child: Text(results.summary)),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(context.l10n.close),
+        // Accessibility: Close dialog button with semantic label
+        Semantics(
+          label: context.l10n.close,
+          button: true,
+          child: TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(context.l10n.close),
+          ),
         ),
-        FilledButton.icon(
-          onPressed: () {
-            Navigator.pop(context);
-            Share.share(results.summary);
-          },
-          icon: Icon(AppIcons.share),
-          label: Text(context.l10n.share),
+        // Accessibility: Share button with semantic label
+        Semantics(
+          label: context.l10n.share,
+          button: true,
+          child: FilledButton.icon(
+            onPressed: () {
+              Navigator.pop(context);
+              Share.share(results.summary);
+            },
+            icon: Icon(AppIcons.share),
+            label: Text(context.l10n.share),
+          ),
         ),
       ],
     );
