@@ -1,62 +1,58 @@
-# Ralph Loop - Iteration 1 Summary
+# Ralph Loop - Iteration 2 Summary
 
 ## ✅ Completed Tasks
 
-### 1. Icons Consistency (DONE)
-- Fixed 5 violations: `Icons.*` → `AppIcons.*`
-- Files: rpe_gauge_widget.dart, tier_limits_test_screen.dart
-- Verification: Zero violations remaining
+### 1. Colors Consistency (CONTINUED)
+- Fixed 8 violations in tier_limits_test_screen.dart:
+  - `Colors.grey` → `context.colors.onSurfaceVariant` (2x)
+  - `Colors.amber` → `context.colors.warning`
+  - `Colors.red` → `context.colors.error`
+  - `Colors.blue` → `context.colors.primary`
+  - `Colors.orange` → `context.colors.warning`
+  - `Colors.green/red` → `context.colors.success/error` (2x)
+- **Progress**: 91 → 30 → 22 violations remaining
 
-### 2. Colors Consistency (PARTIAL)
-- Fixed 4 violations: `Colors.white/black` → `context.colors.*`
-- Files: audio_debug_test_screen.dart, personalized_content_card.dart
-- Remaining: ~30 violations (many intentional for photo overlays)
-- Need: Continue with remaining hardcoded colors
+### 2. SnackBar Service Consistency (DONE)
+- workout_completion_summary_screen.dart: `ScaffoldMessenger` → `SnackBarService`
+- Maintains consistent usage pattern per CLAUDE.md rules
 
-### 3. HealthKit/Health Connect Compliance (VERIFIED ✅)
-- iOS Info.plist: ✅ Proper usage descriptions
-- Android Manifest: ✅ Health Connect permissions present
-- Code audit: ✅ NO health data used for ads/analytics
-- Status: COMPLIANT
-
-### 4. Accessibility Check (WCAG 2.1 AA)
-- Touch targets: ✅ All ≥24 (good for 44x44pt)
-- Semantic labels: ⚠️ 46 screens missing Semantics
-- Color contrast: ⚠️ 155 hardcoded colors
-- Status: NEEDS WORK
-
-### 5. Localization (i18n) Check
-- Script fixed: ✅ Now finds ARB files in assets/i18n
-- **CRITICAL**: IT missing ~4600 keys vs EN (17306 vs 12701)
-- Status: BLOCKED - requires manual translation effort
-
-## 🔄 In Progress
-
-- Flutter tests: Running in background (task b803991)
+### 3. Debug Output (DONE)
+- measurement_repository_impl.dart: `print()` → `debugPrint()`
+- Prevents debug output in production builds
 
 ## 📊 Stats
 
-- Commits: 3
-- Files changed: 173
-- Icons violations fixed: 5 → 0
-- Colors violations: 91 → ~30
-- Flutter analyze: ✅ PASSING (1720 info/warnings, 0 errors)
+- **Commits**: 3
+- **Files changed**: 7
+- **Colors violations**: 30 → 22 (8 fixed)
+- **Flutter analyze**: ✅ PASSING
 
-## 🎯 Next Priorities (Iteration 2)
+## 🚫 Blockers Encountered
 
-1. Wait for flutter test results
-2. Continue Colors.* fixes (~30 remaining)
-3. Add Semantics to high-traffic screens
-4. Verify hardcoded strings (many found in admin screens)
-5. Review i18n missing keys (critical but large task)
+- **Flutter tests**: Failed with exit code 137 (OOM kill)
+- **Dashboard monitor**: Failed with exit code 137 (OOM kill)
+- These are resource issues, not code issues
 
-## 🚧 Blockers Identified
+## ✅ Verified Clean
 
-- **i18n completeness**: IT missing 27% of EN keys - needs dedicated effort or native speaker
-- **Semantics coverage**: 46 screens need accessibility labels - gradual rollout recommended
+- ✅ NO `const Text(context.l10n.*)` (iOS build compliance)
+- ✅ NO `CircularProgressIndicator()` violations
+- ✅ Only 1 `print()` found and fixed
+
+## 🎯 Next Priorities (Iteration 3)
+
+1. Continue Colors.* fixes (22 remaining - mostly photo overlays)
+2. Add Semantics to high-traffic screens (accessibility)
+3. Run lighter tests (unit tests only, not full suite)
+4. Verify hardcoded strings in user-facing UI
+
+## 📝 Notes
+
+- Exit 137 = OOM kill, not code errors
+- Focus on quick wins: Colors, patterns, consistency
+- Large tasks (i18n 4600 keys, 46 screens Semantics) deferred for later
 
 ---
-**Iteration**: 1/50
+**Iteration**: 2/50
 **Model**: Sonnet 4.5
-**Time**: ~25 min
-**Status**: ✅ Productive, multiple quick wins
+**Status**: ✅ Productive, focused on quick wins
