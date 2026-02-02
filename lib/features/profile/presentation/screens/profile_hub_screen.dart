@@ -286,20 +286,24 @@ class _VolumeGoalEditSheetState extends State<_VolumeGoalEditSheet> {
           const SizedBox(height: 24),
 
           // Save button
+          // Accessibility: Semantic label for screen readers
           SizedBox(
             width: double.infinity,
-            child: FilledButton(
-              onPressed: () async {
-                await HapticFeedback.mediumImpact();
-                final text = _controller.text.trim();
-                final value = text.isEmpty ? null : double.tryParse(text);
-                await widget.onSave(value);
-                if (context.mounted) {
-                  SnackBarService.showInfo(context, context.l10n.goalSaved);
-                  Navigator.of(context).pop();
-                }
-              },
-              child: Text(context.l10n.save),
+            child: Semantics(
+              label: context.l10n.save,
+              child: FilledButton(
+                onPressed: () async {
+                  await HapticFeedback.mediumImpact();
+                  final text = _controller.text.trim();
+                  final value = text.isEmpty ? null : double.tryParse(text);
+                  await widget.onSave(value);
+                  if (context.mounted) {
+                    SnackBarService.showInfo(context, context.l10n.goalSaved);
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: Text(context.l10n.save),
+              ),
             ),
           ),
           const SizedBox(height: 16),
@@ -329,12 +333,16 @@ class _RecentWorkoutsSection extends ConsumerWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  HapticFeedback.lightImpact();
-                  context.pushNamed(AppRoutes.workoutHistoryName);
-                },
-                child: Text(context.l10n.seeAll),
+              // Accessibility: Semantic label for screen readers
+              Semantics(
+                label: context.l10n.seeAll,
+                child: TextButton(
+                  onPressed: () {
+                    HapticFeedback.lightImpact();
+                    context.pushNamed(AppRoutes.workoutHistoryName);
+                  },
+                  child: Text(context.l10n.seeAll),
+                ),
               ),
             ],
           ),
