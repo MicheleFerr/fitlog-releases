@@ -40,6 +40,7 @@ import 'package:gymbro_flutter_new/features/auth/data/auth_service.dart'; // goo
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_draft.dart'; // 💾 Workout Draft for auto-save
 import 'package:gymbro_flutter_new/features/workout/data/models/user_exercise_preferences.dart'; // 📝 Form Cues for exercises
 import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/custom_exercise.dart'; // 🏋️ Custom Exercises
+import 'package:gymbro_flutter_new/features/scheduling/data/models/scheduled_workout_model.dart'; // 📅 Scheduled Workouts
 
 void main() async {
   // 🚀 SPLASH: Preserve native splash screen during initialization
@@ -180,6 +181,14 @@ void main() async {
   // 🏋️ Custom Exercise adapter for user-created exercises
   if (!Hive.isAdapterRegistered(CustomExerciseAdapter().typeId)) {
     Hive.registerAdapter(CustomExerciseAdapter());
+  }
+
+  // 📅 Scheduled Workout adapters for workout planning
+  if (!Hive.isAdapterRegistered(ScheduleStatusModelAdapter().typeId)) {
+    Hive.registerAdapter(ScheduleStatusModelAdapter());
+  }
+  if (!Hive.isAdapterRegistered(ScheduledWorkoutModelAdapter().typeId)) {
+    Hive.registerAdapter(ScheduledWorkoutModelAdapter());
   }
 
   // ✅ CRITICAL FIX: Initialize HiveBoxManagerEnhanced with pre-opened critical boxes

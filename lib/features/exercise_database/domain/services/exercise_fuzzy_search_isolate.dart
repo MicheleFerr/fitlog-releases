@@ -51,6 +51,40 @@ class _SearchResult {
   final bool wasAutoCorrected;
 }
 
+/// Mappa sinonimi per equipaggiamento fitness italiano
+///
+/// Usata per espandere i termini della query e trovare match anche quando
+/// l'utente usa sinonimi (es: "bilanciere" → "barra")
+const Map<String, List<String>> _synonymMap = {
+  // Bilanciere / Barra
+  'bilanciere': ['barra', 'barbell'],
+  'barra': ['bilanciere', 'barbell'],
+  'barbell': ['bilanciere', 'barra'],
+
+  // Manubri
+  'manubri': ['dumbell', 'dumbbell', 'manubrio'],
+  'manubrio': ['dumbell', 'dumbbell', 'manubri'],
+  'dumbell': ['manubri', 'dumbbell', 'manubrio'],
+  'dumbbell': ['manubri', 'dumbell', 'manubrio'],
+
+  // Cavo / Cable / Puleggia
+  'cavo': ['cable', 'puleggia'],
+  'cable': ['cavo', 'puleggia'],
+  'puleggia': ['cavo', 'cable'],
+
+  // Macchina / Machine
+  'macchina': ['machine'],
+  'machine': ['macchina'],
+
+  // Panca / Bench
+  'panca': ['bench'],
+  'bench': ['panca'],
+
+  // Sbarra (pull-up bar context)
+  'sbarra': ['trazioni'],
+  'trazioni': ['sbarra'],
+};
+
 /// Servizio per gestire persistent isolate per fuzzy search
 ///
 /// Vantaggi:
@@ -58,6 +92,7 @@ class _SearchResult {
 /// - Evita overhead creazione/distruzione isolate (200ms saved per search)
 /// - Pre-calcola ML boosts fuori dall'isolate
 /// - Ottimizzato per 1500+ esercizi
+/// - Supporta synonym matching per equipaggiamento (bilanciere ↔ barra, etc.)
 class ExerciseFuzzySearchIsolate {
 
   factory ExerciseFuzzySearchIsolate() => _instance;
@@ -142,11 +177,35 @@ class ExerciseFuzzySearchIsolate {
     });
   }
 
+  /// Espande i termini della query usando la mappa sinonimi
+  ///
+  /// Es: "curl bilanciere ez" → "curl bilanciere barra barbell ez"
+  static String _expandQueryWithSynonyms(String query) {
+    final tokens = query.split(RegExp(r'\s+'));
+    final expandedTokens = <String>{};
+
+    for (final token in tokens) {
+      // Aggiungi il token originale
+      expandedTokens.add(token);
+
+      // Aggiungi sinonimi se esistono
+      final synonyms = _synonymMap[token];
+      if (synonyms != null) {
+        expandedTokens.addAll(synonyms);
+      }
+    }
+
+    return expandedTokens.join(' ');
+  }
+
   /// Esegui fuzzy search nell'isolate
   static Future<List<_SearchResult>> _performSearch(
       _SearchMessage message) async {
     // Normalizza query
     final normalizedQuery = _normalizeQuery(message.query);
+
+    // Espandi query con sinonimi
+    final expandedQuery = _expandQueryWithSynonyms(normalizedQuery);
 
     // Estrai token dalla query (min 2 caratteri)
     final queryTokens = normalizedQuery
@@ -162,11 +221,11 @@ class ExerciseFuzzySearchIsolate {
         ? 0.45
         : message.typeThreshold;
 
-    // Fuzzy search con fuzzy_bolt
+    // Fuzzy search con fuzzy_bolt usando query espansa con sinonimi
     // NOTE: skipIsolate=true perché siamo GIÀ in un isolate!
     var results = await FuzzyBolt.searchWithScores<Exercise>(
       message.exercises,
-      normalizedQuery,
+      expandedQuery, // Usa query espansa con sinonimi
       selectors: [
         (e) => _normalizeString(e.nome),
         (e) => e.aliases.map((a) => _normalizeString(a)).join(' '),
@@ -179,18 +238,31 @@ class ExerciseFuzzySearchIsolate {
 
     // FALLBACK: Se fuzzy_bolt non trova risultati e query ha 2+ token,
     // cerca esercizi che contengono TUTTI i token (order-agnostic)
+    // Cerca sia nel nome che negli aliases
     if (results.isEmpty && queryTokens.length >= 2) {
       final fallbackMatches = message.exercises.where((e) {
+        // Tokenizza nome
         final nameTokens = _normalizeString(e.nome).split(RegExp(r'\s+'));
+
+        // Tokenizza aliases (tutti gli alias concatenati)
+        final aliasTokens = e.aliases
+            .map((a) => _normalizeString(a))
+            .expand((a) => a.split(RegExp(r'\s+')))
+            .toList();
+
+        // Combina tutti i token (nome + aliases)
+        final allTokens = [...nameTokens, ...aliasTokens];
+
+        // Verifica che TUTTI i token della query siano presenti
         return queryTokens.every((qt) =>
-            nameTokens.any((nt) => nt.contains(qt) || qt.contains(nt)));
+            allTokens.any((nt) => nt.contains(qt) || qt.contains(nt)));
       }).take(message.maxResults).toList();
 
       // Esegui fuzzy search sugli esercizi trovati per avere score
       if (fallbackMatches.isNotEmpty) {
         results = await FuzzyBolt.searchWithScores<Exercise>(
           fallbackMatches,
-          normalizedQuery,
+          expandedQuery, // Usa query espansa anche nel fallback
           selectors: [
             (e) => _normalizeString(e.nome),
             (e) => e.aliases.map((a) => _normalizeString(a)).join(' '),
@@ -256,7 +328,7 @@ class ExerciseFuzzySearchIsolate {
       return _SearchResult(
         exerciseId: r.item.id,
         score: cappedScore,
-        matchedText: r.matchedText ?? r.item.nome,
+        matchedText: r.matchedText,
         wasAutoCorrected: r.score < 0.95,
       );
     }).toList();
@@ -361,6 +433,16 @@ class ExerciseFuzzySearchIsolate {
         .replaceAll(RegExp(r'[ñ]'), 'n')
         .replaceAll(RegExp(r'[ç]'), 'c')
         .trim();
+  }
+
+  /// 🔐 SECURITY: Reset on logout - isolate itself has no user data,
+  /// but clearing ensures fresh state for next user session
+  void resetOnLogout() {
+    // Isolate doesn't store user data (exercises are passed per-search),
+    // so no cleanup needed. This is a no-op safety method.
+    if (kDebugMode) {
+      debugPrint('🔐 ExerciseFuzzySearchIsolate: no user data to clear');
+    }
   }
 
   /// Dispose isolate

@@ -8,7 +8,7 @@ part of 'scheduled_workout_model.dart';
 
 class ScheduledWorkoutModelAdapter extends TypeAdapter<ScheduledWorkoutModel> {
   @override
-  final typeId = 60;
+  final typeId = 62;
 
   @override
   ScheduledWorkoutModel read(BinaryReader reader) {

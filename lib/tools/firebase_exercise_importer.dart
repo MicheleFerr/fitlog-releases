@@ -51,8 +51,8 @@ class FirebaseExerciseImporter {
           final end = (i + batchSize < jsonList.length) ? i + batchSize : jsonList.length;
           
           for (int j = i; j < end; j++) {
-            final exerciseJson = jsonList[j] as Map<String, dynamic>;
-            
+            final exerciseJson = jsonList[j];
+
             // Convert JSON structure to Firebase format
             final firebaseData = _convertJsonToFirebaseFormat(exerciseJson);
             
@@ -86,7 +86,7 @@ class FirebaseExerciseImporter {
           
           for (int j = i; j < end; j++) {
             try {
-              final exerciseJson = jsonList[j] as Map<String, dynamic>;
+              final exerciseJson = jsonList[j];
               final firebaseData = _convertJsonToFirebaseFormat(exerciseJson);
               final docRef = _firestore.collection(_collection).doc(exerciseJson['id']);
               
@@ -103,7 +103,7 @@ class FirebaseExerciseImporter {
               await Future.delayed(const Duration(milliseconds: 50));
               
             } catch (individualError) {
-              final exerciseJson = jsonList[j] as Map<String, dynamic>;
+              final exerciseJson = jsonList[j];
               if (kDebugMode) {
                 debugPrint('❌ Failed to import exercise ${exerciseJson['id']}: $individualError');
               }
@@ -270,7 +270,7 @@ class FirebaseExerciseImporter {
       final jsonList = await ExerciseJsonLoader.loadExercises(languageCode);
 
       if (jsonList.isNotEmpty) {
-        final testExercise = jsonList.first as Map<String, dynamic>;
+        final testExercise = jsonList.first;
         final firebaseData = _convertJsonToFirebaseFormat(testExercise);
 
         if (kDebugMode) {

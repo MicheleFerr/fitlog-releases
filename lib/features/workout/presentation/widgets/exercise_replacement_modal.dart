@@ -29,6 +29,14 @@ class ExerciseReplacementModal extends ConsumerStatefulWidget {
   final Exercise currentExercise;
   final Function(Exercise) onReplace;
   final ScrollController? scrollController;
+
+  // 🔐 SECURITY: Static cache moved here for public access during logout cleanup
+  static final Map<String, Exercise> enrichedExercisesCache = {};
+
+  /// 🔐 SECURITY: Clear static cache on logout to prevent data leakage
+  static void clearStaticCache() {
+    enrichedExercisesCache.clear();
+  }
   
   static Future<void> show(
     BuildContext context,
@@ -68,10 +76,9 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   List<exercise_db.Exercise> _searchResults = []; // Simplified from FuzzySearchService
   Exercise? _enrichedCurrentExercise; // Esercizio corrente arricchito con dati dal DB
 
-  // ✅ Cache statica per esercizi arricchiti (condivisa tra tutte le istanze del modal)
-  // Chiave: nome esercizio lowercase
-  // Valore: Exercise arricchito con category corretta dal DB
-  static final Map<String, Exercise> _enrichedExercisesCache = {};
+  // ✅ Cache statica per esercizi arricchiti - delegated to widget-level public cache
+  static Map<String, Exercise> get _enrichedExercisesCache =>
+      ExerciseReplacementModal.enrichedExercisesCache;
 
   @override
   void initState() {
@@ -588,8 +595,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   
   Widget _buildExerciseTile(BuildContext context, ExerciseSuggestion suggestion) {
     final theme = Theme.of(context);
-    final l10n = context.l10n;
-    
+
     // Calculate color based on compatibility
     Color compatibilityColor;
     IconData compatibilityIcon;

@@ -270,8 +270,6 @@ class HybridExerciseActivityRepository {
       final localActivities = <ExerciseActivity>[];
       for (final workout in localWorkouts) {
         for (final exercise in workout.exercises) {
-          final completedSets = exercise.sets.where((s) => s.isCompleted).length;
-          
           if (exercise.sets.any((s) => s.isCompleted)) {
             localActivities.add(
               ExerciseActivity.fromExercise(

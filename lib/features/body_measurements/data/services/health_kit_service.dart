@@ -107,18 +107,49 @@ class HealthKitService {
       return _healthKitDatasource.isAvailable;
     } else if (Platform.isAndroid) {
       // Health Connect availability check
-      await _ensureConfigured();
-      // Health Connect requires Android 8.0+ (API 26)
-      if (kDebugMode) {
-        debugPrint('✅ [HealthKitService] Android Health Connect available');
+      try {
+        await _ensureConfigured();
+        // Check if Health Connect is actually installed/available
+        final status = await _health.getHealthConnectSdkStatus();
+        if (kDebugMode) {
+          debugPrint('📱 [HealthKitService] Health Connect SDK status: $status');
+        }
+        // HealthConnectSdkStatus values:
+        // - unavailable: Not installed
+        // - installed: Ready to use
+        // - sdkUnavailable: SDK not supported on this device
+        return status == HealthConnectSdkStatus.sdkAvailable;
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [HealthKitService] Health Connect check failed: $e');
+        }
+        return false;
       }
-      return true;
     }
 
     if (kDebugMode) {
       debugPrint('⚠️ [HealthKitService] Unsupported platform');
     }
     return false;
+  }
+
+  /// Check Health Connect SDK status (Android only)
+  ///
+  /// Returns detailed status for UI guidance:
+  /// - sdkAvailable: Ready to use
+  /// - sdkUnavailable: Device doesn't support Health Connect
+  /// - sdkUnavailableProviderUpdateRequired: Health Connect app needs update
+  Future<HealthConnectSdkStatus?> getHealthConnectStatus() async {
+    if (!Platform.isAndroid) return null;
+    try {
+      await _ensureConfigured();
+      return await _health.getHealthConnectSdkStatus();
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [HealthKitService] Failed to get Health Connect status: $e');
+      }
+      return null;
+    }
   }
 
   /// Request HealthKit permissions for specific metric types
@@ -276,20 +307,39 @@ class HealthKitService {
           final healthType = _mapMetricTypeToHealthDataType(metricType);
 
           // Read from HealthKit
+          if (kDebugMode) {
+            debugPrint(
+                '📱 [HealthKitService] Querying $healthType from $startDate to $endDateTime');
+          }
+
           final healthData = await _health.getHealthDataFromTypes(
             types: [healthType],
             startTime: startDate,
             endTime: endDateTime,
           );
 
-          // Convert to Measurement entities
+          if (kDebugMode) {
+            debugPrint(
+                '📱 [HealthKitService] Got ${healthData.length} data points for $healthType');
+            for (final dp in healthData.take(3)) {
+              debugPrint('   - ${dp.dateFrom}: ${dp.value}');
+            }
+          }
+
+          // Convert to Measurement entities with validation
           for (final dataPoint in healthData) {
             final measurement = _healthDataPointToMeasurement(
               dataPoint,
               userId,
               metricType,
             );
-            measurements.add(measurement);
+            // Skip invalid measurements (negative, NaN, extreme values)
+            if (_isValidMeasurementValue(measurement)) {
+              measurements.add(measurement);
+            } else if (kDebugMode) {
+              debugPrint(
+                  '⚠️ [HealthKitService] Skipped invalid value: ${metricType.name} = ${measurement.value}');
+            }
           }
         } catch (e) {
           if (kDebugMode) {
@@ -619,12 +669,44 @@ class HealthKitService {
   /// - Body fat percentage as RATIO (0-1, not 0-100)
   /// - Weight in KILOGRAMS
   /// - Body water mass in KILOGRAMS (Android only)
+  ///
+  /// **NOTE:** Some devices/regions may return unexpected formats.
+  /// We use heuristics to detect and handle these edge cases.
   double _convertHealthKitValue(double rawValue, MetricType metricType) {
     switch (metricType) {
-      // Meters → Centimeters (×100)
+      // Height: Meters → Centimeters (×100)
+      // Handle edge cases where HealthKit may return unexpected values
       case MetricType.height:
+        // Take absolute value in case of negative (data corruption)
+        final absValue = rawValue.abs();
+
+        // Heuristic: detect if value is already in cm vs meters
+        // - Meters: typical range 0.5-2.5 (50cm-250cm)
+        // - Centimeters: typical range 50-250
+        if (absValue >= 50 && absValue <= 300) {
+          // Already in cm (some devices/regions report this way)
+          return absValue;
+        } else if (absValue >= 0.4 && absValue <= 3.0) {
+          // In meters, convert to cm
+          return absValue * 100;
+        } else {
+          // Invalid range - return as-is but flag for validation
+          debugPrint(
+              '[HealthKit] Unexpected height value: $rawValue (abs: $absValue)');
+          return absValue * 100; // Assume meters
+        }
+
+      // Waist circumference: Meters → Centimeters
       case MetricType.waistCircumference:
-        return rawValue * 100;
+        final absValue = rawValue.abs();
+        // Waist: 40-200cm typical, 0.4-2.0m in meters
+        if (absValue >= 30 && absValue <= 250) {
+          return absValue; // Already in cm
+        } else if (absValue >= 0.3 && absValue <= 2.5) {
+          return absValue * 100; // Convert from meters
+        } else {
+          return absValue * 100;
+        }
 
       // Ratio (0-1) → Percentage (0-100)
       case MetricType.bodyFatPercentage:
@@ -686,6 +768,52 @@ class HealthKitService {
       // Should not reach here for supported types
       default:
         return appValue;
+    }
+  }
+
+  /// Validate that a measurement value is within reasonable bounds
+  ///
+  /// Filters out:
+  /// - Negative values (impossible for body measurements)
+  /// - NaN or infinite values
+  /// - Extreme outliers that indicate data corruption
+  bool _isValidMeasurementValue(Measurement measurement) {
+    final value = measurement.value;
+
+    // Basic validity checks
+    if (value.isNaN || value.isInfinite || value < 0) {
+      return false;
+    }
+
+    // Type-specific validation bounds
+    switch (measurement.metricType) {
+      case MetricType.weight:
+        // Valid: 1-500 kg (covers infants to extreme cases)
+        return value >= 1 && value <= 500;
+      case MetricType.height:
+        // Valid: 50-300 cm (covers children to tall adults)
+        return value >= 50 && value <= 300;
+      case MetricType.bodyFatPercentage:
+        // Valid: 1-70% (essential fat minimum to obese)
+        return value >= 1 && value <= 70;
+      case MetricType.bmi:
+        // Valid: 10-100 (severely underweight to extremely obese)
+        return value >= 10 && value <= 100;
+      case MetricType.leanMass:
+        // Valid: 10-200 kg
+        return value >= 10 && value <= 200;
+      case MetricType.bodyTemperature:
+        // Valid: 30-45°C (hypothermia to severe fever)
+        return value >= 30 && value <= 45;
+      case MetricType.waistCircumference:
+        // Valid: 30-200 cm
+        return value >= 30 && value <= 200;
+      case MetricType.waterMass:
+        // If in kg: 10-100, if in %: 30-80
+        return value >= 10 && value <= 100;
+      default:
+        // For other metrics, accept reasonable values
+        return value >= 0 && value <= 1000;
     }
   }
 }

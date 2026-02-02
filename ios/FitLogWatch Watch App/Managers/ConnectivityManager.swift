@@ -496,7 +496,19 @@ class ConnectivityManager: NSObject, ObservableObject {
 
     // MARK: - Send to iPhone
 
+    /// Flag to indicate timer shown optimistically (before iPhone confirmation)
+    @Published var isOptimisticTimer = false
+
+    /// Cached rest time for current exercise (from iPhone workout data)
+    private var cachedExerciseRestTime: Int? = nil
+
+    /// Update cached rest time when receiving workout data
+    func updateCachedRestTime(_ restTime: Int?) {
+        cachedExerciseRestTime = restTime
+    }
+
     /// Notify iPhone that set was completed from Watch
+    /// ✅ FIX: Uses sendMessage with replyHandler to receive rest timer immediately
     func sendSetCompleted(effort: Int? = nil) {
         var data: [String: Any] = [
             "type": "setCompleted",
@@ -510,9 +522,57 @@ class ConnectivityManager: NSObject, ObservableObject {
             data["effortScale"] = effortScale
         }
 
-        // Set completion is critical - must be delivered
-        sendToiPhone(data, critical: true, forceImmediate: true)
+        // ✅ FIX: Show optimistic timer immediately while waiting for confirmation
+        // This prevents the "no timer" gap while waiting for iPhone response
+        showOptimisticTimerIfNeeded()
 
+        // ✅ FIX: Use sendMessage with replyHandler to receive rest timer in response
+        // This eliminates the 1-5s latency of applicationContext
+        guard let session = session, session.isReachable else {
+            // Fallback: Not reachable, use standard sendToiPhone (applicationContext)
+            print("⌚ [SYNC] iPhone not reachable, using applicationContext fallback")
+            sendToiPhone(data, critical: true, forceImmediate: true)
+            WKInterfaceDevice.current().play(.success)
+            setsCompleted += 1
+            setsCompletedInExercise += 1
+            if currentSetNumber < totalSets {
+                currentSetNumber += 1
+            }
+            return
+        }
+
+        session.sendMessage(data, replyHandler: { [weak self] response in
+            Task { @MainActor in
+                guard let self = self else { return }
+
+                print("⌚ [SYNC] ✅ setCompleted reply received")
+
+                // ✅ FIX: Check if response contains rest timer data
+                if let timerData = response["restTimer"] as? [String: Any] {
+                    print("⌚ [SYNC] 🕐 Rest timer in reply: \(timerData["duration"] ?? 0)s")
+                    self.handleRestTimerFromContext(timerData)
+                    self.isOptimisticTimer = false  // Confirmed by iPhone
+                    self.shouldShowTimer = true
+                } else {
+                    // No timer in response (last set, or timer disabled)
+                    print("⌚ [SYNC] No rest timer in reply (last set or disabled)")
+                    self.isOptimisticTimer = false
+                    // If we showed optimistic timer for non-last set, clear it
+                    if self.currentSetNumber >= self.totalSets {
+                        self.restTimer?.invalidate()
+                        self.restTimer = nil
+                        self.clearTimerState()
+                        self.shouldShowTimer = false
+                    }
+                }
+            }
+        }) { [weak self] error in
+            print("⌚ [SYNC] ⚠️ sendMessage failed: \(error.localizedDescription)")
+            // Fallback: queue via transferUserInfo for guaranteed delivery
+            self?.session?.transferUserInfo(data)
+        }
+
+        // Immediate feedback
         WKInterfaceDevice.current().play(.success)
         setsCompleted += 1
         setsCompletedInExercise += 1  // ✅ FIX: Also increment exercise-level counter for UI
@@ -520,6 +580,30 @@ class ConnectivityManager: NSObject, ObservableObject {
         if currentSetNumber < totalSets {
             currentSetNumber += 1
         }
+    }
+
+    // MARK: - Optimistic Timer (Fix 2)
+
+    /// Show optimistic timer immediately after set completion
+    /// Uses the exercise's default rest time until iPhone confirms actual duration
+    private func showOptimisticTimerIfNeeded() {
+        // Don't show optimistic timer for last set
+        guard currentSetNumber < totalSets else {
+            print("⌚ [OPTIMISTIC] Last set - no timer needed")
+            return
+        }
+
+        // Use cached rest time from current exercise (set by iPhone during workout sync)
+        // Default to 90s if not available
+        let optimisticDuration = cachedExerciseRestTime ?? 90
+
+        print("⌚ [OPTIMISTIC] Showing optimistic timer: \(optimisticDuration)s")
+
+        isOptimisticTimer = true
+        restTimeDuration = optimisticDuration
+        restTimeRemaining = optimisticDuration
+        startRestTimer(duration: optimisticDuration)
+        shouldShowTimer = true
     }
 
     /// 🔥 SUPERSET: Notify iPhone that entire superset round was completed
@@ -1406,6 +1490,19 @@ class ConnectivityManager: NSObject, ObservableObject {
             totalExercisesInSuperset = 0
             supersetRound = 0
             totalSupersetRounds = 0
+        }
+
+        // ✅ FIX: Cache rest time for optimistic timer
+        // When user completes a set from Watch, we show timer immediately using this cached value
+        if let restTime = data["restTime"] as? Int, restTime > 0 {
+            updateCachedRestTime(restTime)
+            print("⌚ [WATCH] Cached rest time for optimistic timer: \(restTime)s")
+        } else if let restTime = data["restTime"] as? NSNumber {
+            let value = restTime.intValue
+            if value > 0 {
+                updateCachedRestTime(value)
+                print("⌚ [WATCH] Cached rest time for optimistic timer: \(value)s")
+            }
         }
 
         // 🔥 DROPSET SUPPORT: Parse dropset data from iPhone

@@ -1383,6 +1383,7 @@ extension WatchConnectivityManager: WCSessionDelegate {
     }
 
     /// Handle set completion from Watch companion
+    /// ✅ FIX: Returns rest timer data in reply for immediate Watch sync
     private func handleSetCompletedFromWatch(
         _ message: [String: Any],
         replyHandler: @escaping ([String: Any]) -> Void
@@ -1397,8 +1398,25 @@ extension WatchConnectivityManager: WCSessionDelegate {
         }
 
         // Notify Flutter to complete the current set
+        // Flutter will then start the rest timer which updates currentRestTimerState
         notifyFlutter(event: "onSetCompletedFromWatch", data: message)
-        replyHandler(["success": true])
+
+        // ✅ FIX: Wait briefly for Flutter to process and start timer,
+        // then respond with timer data for immediate Watch sync.
+        // This prevents the Watch from waiting for applicationContext (1-5s latency)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            var response: [String: Any] = ["success": true]
+
+            // Include rest timer data if available (Flutter has started the timer)
+            if let timerState = self?.currentRestTimerState {
+                response["restTimer"] = timerState
+                Logger.shared.log(.info, "⏱️ Including rest timer in setCompleted reply: \(timerState["duration"] ?? 0)s", category: .general)
+            } else {
+                Logger.shared.log(.debug, "⏱️ No rest timer to include in reply (last set or timer disabled)", category: .general)
+            }
+
+            replyHandler(response)
+        }
     }
 
     /// Handle skip rest from Watch companion

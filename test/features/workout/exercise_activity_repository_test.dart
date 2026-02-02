@@ -5,7 +5,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 // Mock Firebase Implementation for Testing
 class MockExerciseActivityRepository {
   final List<Map<String, dynamic>> _activities = [];
-  final Map<String, dynamic> _firestoreData = {};
   
   // Simulate Firestore save
   Future<List<String>> saveCompletedWorkout({

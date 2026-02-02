@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 
 /// Device Security Checker
 ///
@@ -35,8 +34,6 @@ import 'package:flutter/services.dart';
 /// Device security checks do NOT collect or transmit personal data.
 /// All checks are performed locally on-device.
 class DeviceSecurityChecker {
-  static const MethodChannel _channel = MethodChannel('device_security');
-
   /// Security check results
   bool _isJailbroken = false;
   bool _isRooted = false;

@@ -334,7 +334,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
         ),
         ElevatedButton.icon(
           onPressed: () => _addXP(100),
-          icon: const Icon(Icons.add, size: 16),
+          icon: const Icon(AppIcons.add, size: 16),
           label: const Text('+100'),
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -343,7 +343,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
         const SizedBox(width: 8),
         ElevatedButton.icon(
           onPressed: () => _addXP(500),
-          icon: const Icon(Icons.add, size: 16),
+          icon: const Icon(AppIcons.add, size: 16),
           label: const Text('+500'),
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -481,7 +481,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios, size: 16, color: color),
+            Icon(AppIcons.chevronRight, size: 16, color: color),
           ],
         ),
       ),
@@ -568,7 +568,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
             ),
           ),
           Icon(
-            matches ? Icons.check_circle : Icons.error,
+            matches ? AppIcons.checkCircle : AppIcons.error,
             size: 16,
             color: matches ? Colors.green : Colors.red,
           ),

@@ -339,7 +339,13 @@ class WorkoutTemplateCacheService {
 /// Provider for the template cache service
 final workoutTemplateCacheServiceProvider = Provider<WorkoutTemplateCacheService>((ref) {
   final service = WorkoutTemplateCacheService();
-  service.initialize(); // Initialize on creation
+
+  // Initialize on creation with error handling
+  service.initialize().catchError((e, stack) {
+    if (kDebugMode) {
+      debugPrint('[WorkoutTemplateCacheService] Failed to initialize: $e\n$stack');
+    }
+  });
 
   // Clean up when provider is disposed
   ref.onDispose(() {

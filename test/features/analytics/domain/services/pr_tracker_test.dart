@@ -195,7 +195,7 @@ void main() {
         ],
       );
 
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       final weightPR = newPRs.firstWhere((pr) => pr.type == PRType.weight);
       expect(weightPR.value, 120.0);
@@ -224,7 +224,7 @@ void main() {
         ],
       );
 
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       final weightPR = newPRs.firstWhere((pr) => pr.type == PRType.weight);
       expect(weightPR.value, 110.0);
@@ -251,7 +251,7 @@ void main() {
         ],
       );
 
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       expect(newPRs.where((pr) => pr.type == PRType.weight).isEmpty, true);
     });
@@ -271,7 +271,7 @@ void main() {
         ],
       );
 
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       final weightPR = newPRs.firstWhere((pr) => pr.type == PRType.weight);
       expect(weightPR.value, 85.0); // Should be max working set, not warmup
@@ -289,7 +289,7 @@ void main() {
         ],
       );
 
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       final weightPR = newPRs.firstWhere((pr) => pr.type == PRType.weight);
       expect(weightPR.value, 100.0); // Should be completed set only
@@ -319,7 +319,7 @@ void main() {
         ],
       );
 
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       final repsPR = newPRs.firstWhere((pr) => pr.type == PRType.reps);
       expect(repsPR.value, 8.0);
@@ -337,7 +337,7 @@ void main() {
         ],
       );
 
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       final repsPR = newPRs.firstWhere((pr) => pr.type == PRType.reps);
       expect(repsPR.value, 6.0); // Should use actualReps
@@ -366,7 +366,7 @@ void main() {
         ],
       );
 
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       // Should NOT detect reps PR because weight (80) < existing weight (100)
       // Reps PR requires same or higher weight
@@ -389,7 +389,7 @@ void main() {
         ],
       );
 
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       final volumePR = newPRs.firstWhere((pr) => pr.type == PRType.volume);
       expect(volumePR.value, 1500.0); // 100×5×3 = 1500
@@ -415,7 +415,7 @@ void main() {
         ],
       );
 
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       expect(newPRs.where((pr) => pr.type == PRType.volume).isEmpty, true);
     });
@@ -434,7 +434,7 @@ void main() {
         ],
       );
 
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       final oneRMPR = newPRs.firstWhere((pr) => pr.type == PRType.oneRM);
       expect(oneRMPR.value, greaterThan(110.0)); // Estimated 1RM should be >110kg
@@ -456,7 +456,7 @@ void main() {
         ],
       );
 
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       final oneRMPR = newPRs.firstWhere((pr) => pr.type == PRType.oneRM);
       // 120×2 should give highest estimated 1RM
@@ -480,7 +480,7 @@ void main() {
         ],
       );
 
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       final setsPR = newPRs.firstWhere((pr) => pr.type == PRType.totalSets);
       expect(setsPR.value, 5.0);
@@ -502,7 +502,7 @@ void main() {
         ],
       );
 
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       final setsPR = newPRs.firstWhere((pr) => pr.type == PRType.totalSets);
       expect(setsPR.value, 3.0); // Only working sets that are completed
@@ -825,7 +825,7 @@ void main() {
         ],
       );
 
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       // Should detect weight, reps, volume, 1RM, and totalSets PRs
       expect(newPRs.length, greaterThanOrEqualTo(3));
@@ -845,7 +845,7 @@ void main() {
         ],
       );
 
-      await prTracker.checkAndUpdatePRs(activity);
+      await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
 
       // Verify PRs were saved to Firestore
       final snapshot = await fakeFirestore
@@ -870,7 +870,7 @@ void main() {
       );
 
       // Step 2: Detect and save PRs
-      final newPRs = await prTracker.checkAndUpdatePRs(activity);
+      final newPRs = await prTracker.checkAndUpdatePRs(activity, userId: 'user-1');
       expect(newPRs.isNotEmpty, true);
 
       // Step 3: Fetch user's PRs

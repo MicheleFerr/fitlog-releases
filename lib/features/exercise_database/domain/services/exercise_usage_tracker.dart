@@ -292,6 +292,22 @@ class ExerciseUsageTracker {
         .reduce((max, count) => count > max ? count : max);
   }
 
+  /// 🔐 SECURITY: Clear all usage data on logout to prevent data leakage
+  Future<void> clearOnLogout() async {
+    try {
+      if (_box != null && _box!.isOpen) {
+        await _box!.clear();
+      }
+      if (kDebugMode) {
+        debugPrint('🔐 ExerciseUsageTracker cleared on logout');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Error clearing ExerciseUsageTracker on logout: $e');
+      }
+    }
+  }
+
   /// Chiudi box (chiamare in dispose app)
   Future<void> dispose() async {
     await _box?.close();

@@ -1,4 +1,4 @@
-import 'package:fpdart/fpdart.dart' as fpdart show Either, Right, Left;
+import 'package:fpdart/fpdart.dart' as fpdart show Either;
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebration.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/personal_record.dart';

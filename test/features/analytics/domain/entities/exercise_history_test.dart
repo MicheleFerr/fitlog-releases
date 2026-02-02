@@ -13,6 +13,7 @@ void main() {
     group('personalRecord', () {
       test('returns 0 when no sessions', () {
         const history = ExerciseHistory(
+          exerciseId: 'bench-press',
           exerciseName: 'Bench Press',
           muscleGroup: 'chest',
           sessions: [],
@@ -50,6 +51,7 @@ void main() {
         ];
 
         final history = ExerciseHistory(
+          exerciseId: 'bench-press',
           exerciseName: 'Bench Press',
           muscleGroup: 'chest',
           sessions: sessions,
@@ -62,6 +64,7 @@ void main() {
 
       test('handles single set correctly', () {
         final history = ExerciseHistory(
+          exerciseId: 'squat',
           exerciseName: 'Squat',
           muscleGroup: 'legs',
           sessions: [
@@ -84,6 +87,7 @@ void main() {
     group('weeklyVolumeProgression', () {
       test('returns 0 when no sessions', () {
         const history = ExerciseHistory(
+          exerciseId: 'bench-press',
           exerciseName: 'Bench Press',
           muscleGroup: 'chest',
           sessions: [],
@@ -95,6 +99,7 @@ void main() {
       test('returns 0 when no previous week data', () {
         final now = DateTime.now();
         final history = ExerciseHistory(
+          exerciseId: 'bench-press',
           exerciseName: 'Bench Press',
           muscleGroup: 'chest',
           sessions: [
@@ -120,6 +125,7 @@ void main() {
         // This week: 2 sessions with 800kg each = 1600kg total
         // Progression: ((1600 - 1280) / 1280) * 100 = 25%
         final history = ExerciseHistory(
+          exerciseId: 'bench-press',
           exerciseName: 'Bench Press',
           muscleGroup: 'chest',
           sessions: [
@@ -170,6 +176,7 @@ void main() {
         // This week: 1280kg
         // Progression: ((1280 - 1600) / 1600) * 100 = -20%
         final history = ExerciseHistory(
+          exerciseId: 'bench-press',
           exerciseName: 'Bench Press',
           muscleGroup: 'chest',
           sessions: [
@@ -203,6 +210,7 @@ void main() {
     group('sessionsSortedByDateAscending', () {
       test('returns empty list when no sessions', () {
         const history = ExerciseHistory(
+          exerciseId: 'bench-press',
           exerciseName: 'Bench Press',
           muscleGroup: 'chest',
           sessions: [],
@@ -234,6 +242,7 @@ void main() {
         ];
 
         final history = ExerciseHistory(
+          exerciseId: 'bench-press',
           exerciseName: 'Bench Press',
           muscleGroup: 'chest',
           sessions: sessions,
@@ -249,6 +258,7 @@ void main() {
 
       test('handles single session', () {
         final history = ExerciseHistory(
+          exerciseId: 'squat',
           exerciseName: 'Squat',
           muscleGroup: 'legs',
           sessions: [
@@ -271,6 +281,7 @@ void main() {
     group('getSessionsByTimeframe', () {
       test('returns empty list when no sessions', () {
         const history = ExerciseHistory(
+          exerciseId: 'bench-press',
           exerciseName: 'Bench Press',
           muscleGroup: 'chest',
           sessions: [],
@@ -308,6 +319,7 @@ void main() {
         ];
 
         final history = ExerciseHistory(
+          exerciseId: 'bench-press',
           exerciseName: 'Bench Press',
           muscleGroup: 'chest',
           sessions: sessions,
@@ -341,6 +353,7 @@ void main() {
         ];
 
         final history = ExerciseHistory(
+          exerciseId: 'bench-press',
           exerciseName: 'Bench Press',
           muscleGroup: 'chest',
           sessions: sessions,

@@ -169,14 +169,14 @@ void main() {
       container.dispose();
     });
 
-    test('Pro user with Starter tier should get 999 unlimited', () async {
+    test('Premium user with Starter tier should get 999 unlimited', () async {
       final now = DateTime.now();
       final proProfile = UserProfile(
         uid: 'test-user',
         email: 'test@example.com',
         displayName: 'Test User',
-        accountTier: AccountTier.pro,
-        templateQuota: TemplateQuota.forTier(AccountTier.pro),
+        accountTier: AccountTier.premium,
+        templateQuota: TemplateQuota.forTier(AccountTier.premium),
         createdAt: now,
         lastLoginAt: now,
       );

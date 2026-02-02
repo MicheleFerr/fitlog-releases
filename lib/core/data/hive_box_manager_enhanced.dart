@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
 import 'package:gymbro_flutter_new/core/security/hive_encryption_manager.dart';
 
 /// Custom exceptions for HiveBoxManagerEnhanced operations
@@ -534,6 +535,108 @@ class HiveBoxManagerEnhanced {
 
     if (kDebugMode) {
       debugPrint('📦 [HiveBoxManagerEnhanced] ✅ All boxes closed');
+    }
+  }
+
+  /// 🔐 SECURITY: Clear all user-specific data from ALL Hive boxes
+  ///
+  /// MUST be called on logout/account switch to prevent data leakage
+  /// between different user accounts sharing the same device.
+  ///
+  /// This clears the CONTENTS of all boxes (not the boxes themselves),
+  /// so they can be repopulated with the new user's data.
+  ///
+  /// FIX: Now also opens and clears boxes that weren't opened yet in this
+  /// session, preventing stale data from leaking to the next user.
+  Future<void> clearAllUserData() async {
+    if (kDebugMode) {
+      debugPrint('🔐 [HiveBoxManagerEnhanced] Clearing all user data...');
+      debugPrint('🔐 [HiveBoxManagerEnhanced] Currently open boxes: ${_openBoxes.length}, lazy: ${_openLazyBoxes.length}');
+    }
+
+    // Boxes that contain device-level (not user-specific) data
+    const systemBoxes = <String>{
+      'privacy',        // GDPR consent - device level, not user level
+      'user_consents',  // GDPR consent history - device level
+    };
+
+    int clearedCount = 0;
+    int failedCount = 0;
+
+    // 1. Clear all currently open boxes
+    for (final entry in _openBoxes.entries.toList()) {
+      if (systemBoxes.contains(entry.key)) continue;
+
+      try {
+        await entry.value.clear();
+        clearedCount++;
+        if (kDebugMode) {
+          debugPrint('🗑️ [HiveBoxManagerEnhanced] Cleared box: "${entry.key}"');
+        }
+      } catch (e) {
+        failedCount++;
+        if (kDebugMode) {
+          debugPrint('⚠️ [HiveBoxManagerEnhanced] Failed to clear box "${entry.key}": $e');
+        }
+      }
+    }
+
+    // 2. Clear all currently open lazy boxes
+    for (final entry in _openLazyBoxes.entries.toList()) {
+      if (systemBoxes.contains(entry.key)) continue;
+
+      try {
+        await entry.value.clear();
+        clearedCount++;
+        if (kDebugMode) {
+          debugPrint('🗑️ [HiveBoxManagerEnhanced] Cleared lazy box: "${entry.key}"');
+        }
+      } catch (e) {
+        failedCount++;
+        if (kDebugMode) {
+          debugPrint('⚠️ [HiveBoxManagerEnhanced] Failed to clear lazy box "${entry.key}": $e');
+        }
+      }
+    }
+
+    // 3. 🔐 CRITICAL FIX: Open and clear ALL known boxes that weren't opened yet
+    // This prevents stale data from surviving logout in unopened boxes
+    final openBoxNames = {..._openBoxes.keys, ..._openLazyBoxes.keys};
+    for (final boxName in HiveBoxNames.allBoxNames) {
+      if (systemBoxes.contains(boxName)) continue;
+      if (openBoxNames.contains(boxName)) continue; // Already cleared above
+
+      try {
+        // Try to open the box - if it doesn't exist on disk, Hive creates an empty one
+        // which is harmless. If it exists with stale data, we clear it.
+        final box = await Hive.openBox<dynamic>(boxName);
+        if (box.isNotEmpty) {
+          await box.clear();
+          clearedCount++;
+          if (kDebugMode) {
+            debugPrint('🗑️ [HiveBoxManagerEnhanced] Opened and cleared unopened box: "$boxName"');
+          }
+        }
+        await box.close();
+      } catch (e) {
+        // Box might be corrupted or have type mismatch - delete the file
+        try {
+          await Hive.deleteBoxFromDisk(boxName);
+          clearedCount++;
+          if (kDebugMode) {
+            debugPrint('🗑️ [HiveBoxManagerEnhanced] Deleted corrupted box from disk: "$boxName"');
+          }
+        } catch (deleteError) {
+          failedCount++;
+          if (kDebugMode) {
+            debugPrint('⚠️ [HiveBoxManagerEnhanced] Failed to clear/delete box "$boxName": $e / $deleteError');
+          }
+        }
+      }
+    }
+
+    if (kDebugMode) {
+      debugPrint('🔐 [HiveBoxManagerEnhanced] ✅ User data cleared: $clearedCount boxes, $failedCount failed');
     }
   }
 

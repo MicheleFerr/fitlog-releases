@@ -19,6 +19,9 @@ export {
   checkAdminStatus,
 } from './admin/manageAdminRole';
 
+// Admin account tier management (only admins can change accountTier)
+export { setAccountTier } from './admin/setAccountTier';
+
 // ========================================
 // 💳 Premium Purchase Verification
 // ========================================

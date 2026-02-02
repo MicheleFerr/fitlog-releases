@@ -87,10 +87,11 @@ class _HealthSyncSettingsScreenState
           _buildDataTypesSection(context, permissions),
           const SizedBox(height: 24),
 
-          // Auto-sync option
-          if (isConnected) ...[
-            _buildAutoSyncSection(context, backgroundSyncState),
-          ],
+          // Auto-sync option — hidden until native background task is implemented
+          // TODO: Re-enable when iOS BGTaskScheduler / Android WorkManager are wired
+          // if (isConnected) ...[
+          //   _buildAutoSyncSection(context, backgroundSyncState),
+          // ],
         ],
       ),
     );

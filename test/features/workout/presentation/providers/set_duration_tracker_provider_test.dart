@@ -102,10 +102,10 @@ void main() {
     });
 
     test('should track multiple sets for same exercise independently', () async {
-      final start1 = tracker.startSet('exercise-1', 1);
+      tracker.startSet('exercise-1', 1);
       await Future.delayed(const Duration(milliseconds: 50));
 
-      final start2 = tracker.startSet('exercise-1', 2);
+      tracker.startSet('exercise-1', 2);
       await Future.delayed(const Duration(milliseconds: 50));
 
       final duration1 = tracker.onSetCompleted('exercise-1', 1);

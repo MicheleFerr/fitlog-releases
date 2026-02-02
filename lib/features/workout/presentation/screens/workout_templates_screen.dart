@@ -31,8 +31,6 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/super
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_template.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_template_card.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_template_preview_sheet.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_template_card.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_template_preview_sheet.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/superset_template_event_tracker.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 
@@ -925,6 +923,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
 
                 // Force refresh the providers
                 try {
+                  // ignore: unused_result
                   await ref.refresh(customWorkoutTemplatesProvider.future);
                 } catch (e) {
                   SecureLogger.warning('Error refreshing providers', metadata: {'error': e.toString()});

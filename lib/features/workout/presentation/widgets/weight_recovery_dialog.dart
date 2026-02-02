@@ -458,7 +458,7 @@ class _WeightRecoveryDialogState extends ConsumerState<WeightRecoveryDialog> {
   }
 
   String _getLastSessionText() {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     if (widget.daysSinceLastSession == 0) {
       return l10n.lastSessionToday;

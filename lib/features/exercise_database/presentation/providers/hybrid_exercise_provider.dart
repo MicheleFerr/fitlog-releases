@@ -48,12 +48,19 @@ final hybridExerciseRepositoryProvider = Provider<HybridExerciseRepository>((ref
   // Questo permette di caricare gli esercizi nella lingua corretta (exercises_it, exercises_en, etc.)
   final locale = ref.watch(localeProvider);
 
-  return HybridExerciseRepository(
+  final repository = HybridExerciseRepository(
     boxManager: boxManager,
     cacheManager: cacheManager,
     versionService: versionService,
     locale: locale,
   );
+
+  // P1 FIX: Cleanup resources on dispose to prevent memory leak
+  ref.onDispose(() async {
+    await repository.dispose();
+  });
+
+  return repository;
 });
 
 /// Provider per ExerciseSyncService
@@ -62,10 +69,17 @@ final exerciseSyncServiceProvider = Provider<ExerciseSyncService>((ref) {
   final repository = ref.read(hybridExerciseRepositoryProvider);
   final versionService = ref.read(exerciseVersionServiceProvider);
 
-  return ExerciseSyncService(
+  final service = ExerciseSyncService(
     repository: repository,
     versionService: versionService,
   );
+
+  // P0 FIX: Cleanup resources on dispose to prevent memory leak
+  ref.onDispose(() async {
+    await service.dispose();
+  });
+
+  return service;
 });
 
 /// Provider per inizializzare ExerciseSyncService

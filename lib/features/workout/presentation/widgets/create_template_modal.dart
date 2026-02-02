@@ -212,15 +212,6 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                         prefixIcon: const Icon(AppIcons.edit, size: AppIconSize.small),
                       ),
                       validator: (value) => TemplateValidator.validateTemplateName(value),
-                      onChanged: (value) {
-                        final sanitized = TemplateValidator.sanitizeTemplateName(value);
-                        if (sanitized != value) {
-                          _nameController.value = TextEditingValue(
-                            text: sanitized,
-                            selection: TextSelection.collapsed(offset: sanitized.length),
-                          );
-                        }
-                      },
                     ),
                     const SizedBox(height: 20),
 
@@ -510,13 +501,15 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
     try {
       final templateId = const Uuid().v4();
       List<ExerciseTemplate> exerciseTemplates = [];
-      String templateName = _nameController.text.trim();
+      // Sanitize name on submission (not during typing)
+      String templateName = TemplateValidator.sanitizeTemplateName(_nameController.text);
 
       if (_createFromCurrentWorkout) {
         final currentWorkout = ref.read(currentWorkoutProvider)!;
+        // Sanitize the template name if using workout name
         templateName = _nameController.text.trim().isNotEmpty
-            ? _nameController.text.trim()
-            : currentWorkout.name;
+            ? templateName
+            : TemplateValidator.sanitizeTemplateName(currentWorkout.name);
 
         exerciseTemplates = currentWorkout.exercises.map((exercise) {
           // ✅ FIX: Use fromExercise() to properly preserve all fields including TUT

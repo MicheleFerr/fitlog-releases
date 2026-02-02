@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_progress_metrics.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/constants/app_icons.dart';
 
 class RpeGaugeWidget extends StatelessWidget {
   const RpeGaugeWidget({
@@ -34,7 +35,7 @@ class RpeGaugeWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.speed_outlined,
+                AppIcons.speed,
                 size: 48,
                 color: context.colors.onSurfaceVariant.withValues(alpha: 0.3),
               ),

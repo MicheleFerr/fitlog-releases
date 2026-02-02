@@ -27,7 +27,7 @@ class JsonExerciseRepository {
       final jsonList = await ExerciseJsonLoader.loadExercises(locale.languageCode);
 
       _cachedExercises = jsonList
-          .map((json) => Exercise.fromJson(json as Map<String, dynamic>))
+          .map((json) => Exercise.fromJson(json))
           .toList();
 
       return _cachedExercises!;

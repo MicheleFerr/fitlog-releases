@@ -23,10 +23,8 @@ Widget createTestWidget(Widget child) {
 void main() {
   group('Exercise Card Widget Tests', () {
     late Exercise testExercise;
-    late WidgetRef mockRef;
 
     setUp(() {
-      mockRef = MockWidgetRef();
       testExercise = Exercise(
         id: 'test-1',
         name: 'Bench Press',

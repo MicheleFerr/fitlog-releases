@@ -255,6 +255,7 @@ class Exercise {         // Target RIR if using RIR-based
   /// This is needed because `copyWith(restTime: null)` cannot distinguish
   /// between "not provided" and "explicitly set to null".
   Exercise copyWith({
+    String? id, // ✅ FIX: Added id parameter
     String? name,
     ExerciseType? type,
     ExerciseCategory? category,
@@ -278,7 +279,7 @@ class Exercise {         // Target RIR if using RIR-based
     MovementType? movementType, // ✅ Smart Workout Suggestion
   }) {
     return Exercise(
-      id: id,
+      id: id ?? this.id, // ✅ FIX: Preserve id if not provided
       name: name ?? this.name,
       type: type ?? this.type,
       category: category ?? this.category,
@@ -357,7 +358,7 @@ class ExerciseSet { // Rest time in seconds after this set
     this.actualReps,        // ✅ Nuovo
     this.rpe,              // ✅ Nuovo
     this.seconds,
-    this.distance,
+    this.distance,         // ✅ Added for cardio support
     this.isCompleted = false,
     this.notes,
     this.completedAt,      // ✅ Nuovo
@@ -376,7 +377,7 @@ class ExerciseSet { // Rest time in seconds after this set
       actualReps: json['actualReps'],                        // ✅ Nuovo
       rpe: json['rpe'],                                     // ✅ Nuovo
       seconds: json['seconds'],
-      distance: json['distance']?.toDouble(),
+      distance: json['distance']?.toDouble(),               // ✅ Added
       isCompleted: json['isCompleted'] ?? false,
       notes: json['notes'],
       completedAt: json['completedAt'] != null              // ✅ Nuovo
@@ -397,7 +398,7 @@ class ExerciseSet { // Rest time in seconds after this set
   final int? actualReps;       // ✅ Reps effettive completate
   final int? rpe;             // ✅ RPE (Rate of Perceived Exertion) 5-10
   final int? seconds;         // For time-based exercises
-  final double? distance;     // For cardio
+  final double? distance;     // ✅ For cardio (meters/km)
   final bool isCompleted;
   final String? notes;
   final DateTime? completedAt; // ✅ Timestamp completamento
@@ -407,13 +408,14 @@ class ExerciseSet { // Rest time in seconds after this set
   final int? restTime;
 
   ExerciseSet copyWith({
+    String? id, // ✅ FIX: Added id parameter
     int? setNumber,
     double? weight,
     int? reps,
     int? actualReps,      // ✅ Nuovo
     int? rpe,            // ✅ Nuovo
     int? seconds,
-    double? distance,
+    double? distance,    // ✅ Added
     bool? isCompleted,
     String? notes,
     DateTime? completedAt, // ✅ Nuovo
@@ -423,7 +425,7 @@ class ExerciseSet { // Rest time in seconds after this set
     int? restTime,   // ✅ Rest time
   }) {
     return ExerciseSet(
-      id: id,
+      id: id ?? this.id, // ✅ FIX: Preserve id
       setNumber: setNumber ?? this.setNumber,
       weight: weight ?? this.weight,
       reps: reps ?? this.reps,
@@ -431,7 +433,7 @@ class ExerciseSet { // Rest time in seconds after this set
       rpe: rpe ?? this.rpe,                         // ✅ Nuovo
       restTime: restTime ?? this.restTime,           // ✅ Rest time
       seconds: seconds ?? this.seconds,
-      distance: distance ?? this.distance,
+      distance: distance ?? this.distance,           // ✅ Added
       isCompleted: isCompleted ?? this.isCompleted,
       notes: notes ?? this.notes,
       completedAt: completedAt ?? this.completedAt, // ✅ Nuovo
@@ -450,7 +452,7 @@ class ExerciseSet { // Rest time in seconds after this set
       'actualReps': actualReps,           // ✅ Nuovo
       'rpe': rpe,                        // ✅ Nuovo
       'seconds': seconds,
-      'distance': distance,
+      'distance': distance,              // ✅ Added
       'isCompleted': isCompleted,
       'notes': notes,
       'completedAt': completedAt?.toIso8601String(), // ✅ Nuovo
@@ -763,6 +765,19 @@ class SupersetExercise extends Exercise { // I set del superset
     super.notes,
     super.restTime,
     super.tut,
+    // Advanced fields from base Exercise
+    super.autoAdjustmentType,
+    super.calculated1RM,
+    super.calculated3RM,
+    super.calculated6RM,
+    super.calculated10RM,
+    super.lastCalculationDate,
+    super.calculationMetadata,
+    super.targetRPEMin,
+    super.targetRPEMax,
+    super.targetRIR,
+    super.countingMode,
+    super.movementType,
   }) :
     exercises = exercises,
     supersetSets = supersetSets ?? [],
@@ -794,6 +809,31 @@ class SupersetExercise extends Exercise { // I set del superset
       supersetSets: supersetSets,
       notes: json['notes'] as String?,
       restTime: json['restTime'] is num ? (json['restTime'] as num).toInt() : null,
+      // Advanced fields
+      autoAdjustmentType: json['autoAdjustmentType'] != null
+          ? AutoAdjustmentType.values.firstWhere(
+              (e) => e.name == json['autoAdjustmentType'],
+              orElse: () => AutoAdjustmentType.rpe,
+            )
+          : null,
+      calculated1RM: json['calculated1RM']?.toDouble(),
+      calculated3RM: json['calculated3RM']?.toDouble(),
+      calculated6RM: json['calculated6RM']?.toDouble(),
+      calculated10RM: json['calculated10RM']?.toDouble(),
+      lastCalculationDate: json['lastCalculationDate'] != null
+          ? DateTime.tryParse(json['lastCalculationDate'] as String)
+          : null,
+      calculationMetadata: json['calculationMetadata'] as String?,
+      targetRPEMin: json['targetRPEMin']?.toDouble(),
+      targetRPEMax: json['targetRPEMax']?.toDouble(),
+      targetRIR: json['targetRIR'] as int?,
+      countingMode: ExerciseCountingMode.fromString(json['countingMode'] as String?),
+      movementType: json['movementType'] != null
+          ? MovementType.values.firstWhere(
+              (e) => e.name == json['movementType'],
+              orElse: () => MovementType.isolationLight,
+            )
+          : null,
     );
   }
 
@@ -805,7 +845,7 @@ class SupersetExercise extends Exercise { // I set del superset
   /// Use [clearRestTime] = true to explicitly set restTime to null.
   @override
   SupersetExercise copyWith({
-    String? id,
+    String? id, // ✅ FIX: Added id parameter
     String? name,
     ExerciseType? type,
     ExerciseCategory? category,
@@ -837,7 +877,19 @@ class SupersetExercise extends Exercise { // I set del superset
       exercises: exercises ?? this.exercises,
       supersetSets: supersetSets ?? this.supersetSets,
       notes: notes ?? this.notes,
-      restTime: clearRestTime ? null : (restTime ?? this.restTime), // ✅ FIX
+      restTime: clearRestTime ? null : (restTime ?? this.restTime),
+      autoAdjustmentType: autoAdjustmentType ?? this.autoAdjustmentType,
+      calculated1RM: calculated1RM ?? this.calculated1RM,
+      calculated3RM: calculated3RM ?? this.calculated3RM,
+      calculated6RM: calculated6RM ?? this.calculated6RM,
+      calculated10RM: calculated10RM ?? this.calculated10RM,
+      lastCalculationDate: lastCalculationDate ?? this.lastCalculationDate,
+      calculationMetadata: calculationMetadata ?? this.calculationMetadata,
+      targetRPEMin: targetRPEMin ?? this.targetRPEMin,
+      targetRPEMax: targetRPEMax ?? this.targetRPEMax,
+      targetRIR: targetRIR ?? this.targetRIR,
+      countingMode: countingMode ?? this.countingMode,
+      movementType: movementType ?? this.movementType,
     );
   }
 
@@ -942,9 +994,22 @@ class SupersetExercise extends Exercise { // I set del superset
       'category': category.name,
       'notes': notes,
       'restTime': restTime,
-      'tut': tut, // ✅ Preserve TUT
+      'tut': tut,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      // Advanced fields
+      'autoAdjustmentType': autoAdjustmentType?.name,
+      'calculated1RM': calculated1RM,
+      'calculated3RM': calculated3RM,
+      'calculated6RM': calculated6RM,
+      'calculated10RM': calculated10RM,
+      'lastCalculationDate': lastCalculationDate?.toIso8601String(),
+      'calculationMetadata': calculationMetadata,
+      'targetRPEMin': targetRPEMin,
+      'targetRPEMax': targetRPEMax,
+      'targetRIR': targetRIR,
+      'countingMode': countingMode.name,
+      'movementType': movementType?.name,
       // Superset-specific fields
       'exercises': exercises.map((e) => e.toJson()).toList(),
       'supersetSets': supersetSets.map((s) => s.toJson()).toList(),
@@ -962,6 +1027,20 @@ class DropSetExercise extends Exercise {
     required List<DropSetStage> stages,
     super.notes,
     super.restTime,
+    super.tut,
+    // Advanced fields from base Exercise
+    super.autoAdjustmentType,
+    super.calculated1RM,
+    super.calculated3RM,
+    super.calculated6RM,
+    super.calculated10RM,
+    super.lastCalculationDate,
+    super.calculationMetadata,
+    super.targetRPEMin,
+    super.targetRPEMax,
+    super.targetRIR,
+    super.countingMode,
+    super.movementType,
   }) :
     stages = stages,
     super(
@@ -985,10 +1064,101 @@ class DropSetExercise extends Exercise {
       stages: stages,
       notes: json['notes'] as String?,
       restTime: json['restTime'] is num ? (json['restTime'] as num).toInt() : null,
+      tut: json['tut'] as String?,
+      // Advanced fields
+      autoAdjustmentType: json['autoAdjustmentType'] != null
+          ? AutoAdjustmentType.values.firstWhere(
+              (e) => e.name == json['autoAdjustmentType'],
+              orElse: () => AutoAdjustmentType.rpe,
+            )
+          : null,
+      calculated1RM: json['calculated1RM']?.toDouble(),
+      calculated3RM: json['calculated3RM']?.toDouble(),
+      calculated6RM: json['calculated6RM']?.toDouble(),
+      calculated10RM: json['calculated10RM']?.toDouble(),
+      lastCalculationDate: json['lastCalculationDate'] != null
+          ? DateTime.tryParse(json['lastCalculationDate'] as String)
+          : null,
+      calculationMetadata: json['calculationMetadata'] as String?,
+      targetRPEMin: json['targetRPEMin']?.toDouble(),
+      targetRPEMax: json['targetRPEMax']?.toDouble(),
+      targetRIR: json['targetRIR'] as int?,
+      countingMode: ExerciseCountingMode.fromString(json['countingMode'] as String?),
+      movementType: json['movementType'] != null
+          ? MovementType.values.firstWhere(
+              (e) => e.name == json['movementType'],
+              orElse: () => MovementType.isolationLight,
+            )
+          : null,
     );
   }
 
   final List<DropSetStage> stages;
+
+  @override
+  DropSetExercise copyWith({
+    String? id,
+    String? name,
+    ExerciseType? type,
+    ExerciseCategory? category,
+    List<ExerciseSet>? sets,
+    List<DropSetStage>? stages,
+    String? notes,
+    int? restTime,
+    bool clearRestTime = false,
+    String? tut,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    AutoAdjustmentType? autoAdjustmentType,
+    double? calculated1RM,
+    double? calculated3RM,
+    double? calculated6RM,
+    double? calculated10RM,
+    DateTime? lastCalculationDate,
+    String? calculationMetadata,
+    double? targetRPEMin,
+    double? targetRPEMax,
+    int? targetRIR,
+    ExerciseCountingMode? countingMode,
+    MovementType? movementType,
+  }) {
+    return DropSetExercise(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      category: category ?? this.category,
+      stages: stages ?? this.stages,
+      notes: notes ?? this.notes,
+      restTime: clearRestTime ? null : (restTime ?? this.restTime),
+      tut: tut ?? this.tut,
+      autoAdjustmentType: autoAdjustmentType ?? this.autoAdjustmentType,
+      calculated1RM: calculated1RM ?? this.calculated1RM,
+      calculated3RM: calculated3RM ?? this.calculated3RM,
+      calculated6RM: calculated6RM ?? this.calculated6RM,
+      calculated10RM: calculated10RM ?? this.calculated10RM,
+      lastCalculationDate: lastCalculationDate ?? this.lastCalculationDate,
+      calculationMetadata: calculationMetadata ?? this.calculationMetadata,
+      targetRPEMin: targetRPEMin ?? this.targetRPEMin,
+      targetRPEMax: targetRPEMax ?? this.targetRPEMax,
+      targetRIR: targetRIR ?? this.targetRIR,
+      countingMode: countingMode ?? this.countingMode,
+      movementType: movementType ?? this.movementType,
+    );
+  }
+
+  @override
+  bool get isCompleted => stages.isNotEmpty && stages.every((stage) => stage.isCompleted);
+
+  @override
+  double get totalVolume {
+    return stages.fold(0.0, (sum, stage) => sum + (stage.weight * stage.effectiveReps));
+  }
+
+  @override
+  DateTime? get completedAt {
+    final completedStages = stages.where((s) => s.isCompleted && s.completedAt != null);
+    if (completedStages.isEmpty) return null;
+    return completedStages.map((s) => s.completedAt!).reduce((a, b) => a.isAfter(b) ? a : b);
+  }
 
   /// Serialize DropSetExercise to JSON
   @override
@@ -1000,9 +1170,23 @@ class DropSetExercise extends Exercise {
       'category': category.name,
       'notes': notes,
       'restTime': restTime,
-      'tut': tut, // ✅ Preserve TUT
+      'tut': tut,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      // Advanced fields
+      'autoAdjustmentType': autoAdjustmentType?.name,
+      'calculated1RM': calculated1RM,
+      'calculated3RM': calculated3RM,
+      'calculated6RM': calculated6RM,
+      'calculated10RM': calculated10RM,
+      'lastCalculationDate': lastCalculationDate?.toIso8601String(),
+      'calculationMetadata': calculationMetadata,
+      'targetRPEMin': targetRPEMin,
+      'targetRPEMax': targetRPEMax,
+      'targetRIR': targetRIR,
+      'countingMode': countingMode.name,
+      'movementType': movementType?.name,
+      // DropSet-specific
       'stages': stages.map((s) => s.toJson()).toList(),
     };
   }
@@ -1095,6 +1279,20 @@ class RestPauseExercise extends Exercise {
     required this.restPauseSets,
     super.notes,
     super.restTime,
+    super.tut,
+    // Advanced fields from base Exercise
+    super.autoAdjustmentType,
+    super.calculated1RM,
+    super.calculated3RM,
+    super.calculated6RM,
+    super.calculated10RM,
+    super.lastCalculationDate,
+    super.calculationMetadata,
+    super.targetRPEMin,
+    super.targetRPEMax,
+    super.targetRIR,
+    super.countingMode,
+    super.movementType,
   }) : super(
       type: ExerciseType.restPause,
     );
@@ -1118,12 +1316,107 @@ class RestPauseExercise extends Exercise {
       restPauseSets: restPauseSets,
       notes: json['notes'] as String?,
       restTime: json['restTime'] is num ? (json['restTime'] as num).toInt() : null,
+      tut: json['tut'] as String?,
+      // Advanced fields
+      autoAdjustmentType: json['autoAdjustmentType'] != null
+          ? AutoAdjustmentType.values.firstWhere(
+              (e) => e.name == json['autoAdjustmentType'],
+              orElse: () => AutoAdjustmentType.rpe,
+            )
+          : null,
+      calculated1RM: json['calculated1RM']?.toDouble(),
+      calculated3RM: json['calculated3RM']?.toDouble(),
+      calculated6RM: json['calculated6RM']?.toDouble(),
+      calculated10RM: json['calculated10RM']?.toDouble(),
+      lastCalculationDate: json['lastCalculationDate'] != null
+          ? DateTime.tryParse(json['lastCalculationDate'] as String)
+          : null,
+      calculationMetadata: json['calculationMetadata'] as String?,
+      targetRPEMin: json['targetRPEMin']?.toDouble(),
+      targetRPEMax: json['targetRPEMax']?.toDouble(),
+      targetRIR: json['targetRIR'] as int?,
+      countingMode: ExerciseCountingMode.fromString(json['countingMode'] as String?),
+      movementType: json['movementType'] != null
+          ? MovementType.values.firstWhere(
+              (e) => e.name == json['movementType'],
+              orElse: () => MovementType.isolationLight,
+            )
+          : null,
     );
   }
 
   final double weight;
   final int targetReps;
   final List<RestPauseSet> restPauseSets;
+
+  @override
+  RestPauseExercise copyWith({
+    String? id,
+    String? name,
+    ExerciseType? type,
+    ExerciseCategory? category,
+    List<ExerciseSet>? sets,
+    double? weight,
+    int? targetReps,
+    List<RestPauseSet>? restPauseSets,
+    String? notes,
+    int? restTime,
+    bool clearRestTime = false,
+    String? tut,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    AutoAdjustmentType? autoAdjustmentType,
+    double? calculated1RM,
+    double? calculated3RM,
+    double? calculated6RM,
+    double? calculated10RM,
+    DateTime? lastCalculationDate,
+    String? calculationMetadata,
+    double? targetRPEMin,
+    double? targetRPEMax,
+    int? targetRIR,
+    ExerciseCountingMode? countingMode,
+    MovementType? movementType,
+  }) {
+    return RestPauseExercise(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      category: category ?? this.category,
+      weight: weight ?? this.weight,
+      targetReps: targetReps ?? this.targetReps,
+      restPauseSets: restPauseSets ?? this.restPauseSets,
+      notes: notes ?? this.notes,
+      restTime: clearRestTime ? null : (restTime ?? this.restTime),
+      tut: tut ?? this.tut,
+      autoAdjustmentType: autoAdjustmentType ?? this.autoAdjustmentType,
+      calculated1RM: calculated1RM ?? this.calculated1RM,
+      calculated3RM: calculated3RM ?? this.calculated3RM,
+      calculated6RM: calculated6RM ?? this.calculated6RM,
+      calculated10RM: calculated10RM ?? this.calculated10RM,
+      lastCalculationDate: lastCalculationDate ?? this.lastCalculationDate,
+      calculationMetadata: calculationMetadata ?? this.calculationMetadata,
+      targetRPEMin: targetRPEMin ?? this.targetRPEMin,
+      targetRPEMax: targetRPEMax ?? this.targetRPEMax,
+      targetRIR: targetRIR ?? this.targetRIR,
+      countingMode: countingMode ?? this.countingMode,
+      movementType: movementType ?? this.movementType,
+    );
+  }
+
+  @override
+  bool get isCompleted => restPauseSets.isNotEmpty && restPauseSets.every((set) => set.isCompleted);
+
+  @override
+  double get totalVolume {
+    return restPauseSets.fold(0.0, (sum, set) => sum + (weight * set.effectiveReps));
+  }
+
+  @override
+  DateTime? get completedAt {
+    final completedSets = restPauseSets.where((s) => s.isCompleted && s.completedAt != null);
+    if (completedSets.isEmpty) return null;
+    return completedSets.map((s) => s.completedAt!).reduce((a, b) => a.isAfter(b) ? a : b);
+  }
 
   /// Serialize RestPauseExercise to JSON
   @override
@@ -1135,9 +1428,23 @@ class RestPauseExercise extends Exercise {
       'category': category.name,
       'notes': notes,
       'restTime': restTime,
-      'tut': tut, // ✅ Preserve TUT
+      'tut': tut,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      // Advanced fields
+      'autoAdjustmentType': autoAdjustmentType?.name,
+      'calculated1RM': calculated1RM,
+      'calculated3RM': calculated3RM,
+      'calculated6RM': calculated6RM,
+      'calculated10RM': calculated10RM,
+      'lastCalculationDate': lastCalculationDate?.toIso8601String(),
+      'calculationMetadata': calculationMetadata,
+      'targetRPEMin': targetRPEMin,
+      'targetRPEMax': targetRPEMax,
+      'targetRIR': targetRIR,
+      'countingMode': countingMode.name,
+      'movementType': movementType?.name,
+      // RestPause-specific
       'weight': weight,
       'targetReps': targetReps,
       'restPauseSets': restPauseSets.map((s) => s.toJson()).toList(),

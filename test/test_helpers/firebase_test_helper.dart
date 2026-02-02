@@ -41,9 +41,8 @@ class MockFirebaseAppPlatform extends FirebaseAppPlatform {
   @override
   bool get isAutomaticDataCollectionEnabled => false;
   
-  @override
   Stream<bool> get onAutomaticDataCollectionEnabledChanged => Stream.value(false);
-  
+
   @override
   Future<void> delete() async {}
   

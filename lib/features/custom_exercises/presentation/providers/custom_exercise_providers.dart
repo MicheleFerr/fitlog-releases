@@ -36,7 +36,6 @@ import 'package:gymbro_flutter_new/features/custom_exercises/domain/repositories
 import 'package:gymbro_flutter_new/features/custom_exercises/domain/services/custom_exercise_limit_service.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/data/repositories/custom_exercise_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/data/datasources/custom_exercise_local_datasource.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:fpdart/fpdart.dart' hide State;

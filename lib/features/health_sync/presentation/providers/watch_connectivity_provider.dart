@@ -938,6 +938,8 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
     // 🔄 Exercise navigation support
     List<String>? exerciseNames, // All exercise names in workout
     int currentExerciseIndex = 0, // 0-indexed current exercise position
+    // ✅ FIX: Rest time for optimistic timer on Watch
+    int? restTime, // Rest time in seconds for current exercise
     // 🔥 SUPERSET SUPPORT
     bool isSuperset = false,
     String? supersetName,
@@ -970,6 +972,8 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
         // 🔄 Exercise navigation support
         'exerciseNames': exerciseNames ?? [],
         'currentExerciseIndex': currentExerciseIndex,
+        // ✅ FIX: Rest time for optimistic timer on Watch
+        'restTime': restTime ?? 0,
         // 🔥 SUPERSET SUPPORT
         'isSuperset': isSuperset,
         'supersetName': supersetName ?? '',

@@ -491,6 +491,24 @@ class WorkoutSessionLAService {
     }
   }
 
+  /// 🔐 SECURITY: Reset session state on logout to prevent data leakage
+  Future<void> resetOnLogout() async {
+    // End any active Live Activity session
+    if (_currentActivityId != null) {
+      try {
+        await endSession(dismissPolicy: 'immediate');
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('[WorkoutSessionLA] Error ending session on logout: $e');
+        }
+      }
+    }
+    _currentActivityId = null;
+    if (kDebugMode) {
+      debugPrint('[WorkoutSessionLA] 🔐 Reset on logout');
+    }
+  }
+
   /// Dispose of resources
   void dispose() {
     _eventController.close();

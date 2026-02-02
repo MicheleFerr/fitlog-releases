@@ -446,7 +446,7 @@ void main() {
 
     test('Should return only active exercises', () async {
       final now = DateTime.now();
-      final expired = CustomExercise(
+      CustomExercise(
         id: 'expired-1',
         nome: 'Expired 1',
         baseExerciseId: null,

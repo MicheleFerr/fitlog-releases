@@ -16,8 +16,6 @@ class AudioDebugTestService {
 
   // SharedPreferences keys
   static const String _quickResultsKey = 'audio_debug_quick_results';
-  static const String _fullResultsKey = 'audio_debug_full_results';
-
   // Test results model
   static const String _tag = 'AudioDebugTestService';
 

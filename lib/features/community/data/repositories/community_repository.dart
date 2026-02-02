@@ -66,8 +66,6 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
   
   static const String _contributionsCollection = 'community_contributions';
   static const String _userStatsCollection = 'user_contribution_stats';
-  static const String _votesCollection = 'contribution_votes';
-
   // 🚀 FIRESTORE OPTIMIZATION: Cache search results to reduce redundant queries
   // Users often search the same queries repeatedly (e.g., "chest exercises")
   // Savings: ~300,000 ops/day with 1000 users (~$60/day)
@@ -210,7 +208,7 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
     final data = contribution.copyWith(
       id: docRef.id,
       userId: userAsync.uid,
-      userName: userAsync.displayName ?? 'Anonymous',
+      userName: userAsync.displayName,
       createdAt: DateTime.now(),
       status: status,
       upvotes: 0,
@@ -640,9 +638,7 @@ class FirestoreCommunityRepository with FirebaseErrorMapperMixin implements Comm
         throw Exception('Contribution not found');
       }
 
-      final data = snapshot.data()!;
-      final contributorUserId = data['userId'] as String;
-
+      snapshot.data()!;
       // Update contribution status
       transaction.update(docRef, {
         'status': ContributionStatus.approved.name,

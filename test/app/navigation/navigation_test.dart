@@ -156,10 +156,6 @@ class AppRouter {
         return '/auth/login';
       }
       
-      if (isAuthenticated && isAuthRoute) {
-        return '/';
-      }
-      
       return null;
     },
   );

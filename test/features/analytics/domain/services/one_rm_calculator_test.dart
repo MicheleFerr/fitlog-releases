@@ -154,7 +154,7 @@ void main() {
       
       final average = OneRMCalculator.calculateAverage(weight, reps);
       final brzycki = OneRMCalculator.calculateBrzycki(weight, reps);
-      final epley = OneRMCalculator.calculateEpley(weight, reps);
+      OneRMCalculator.calculateEpley(weight, reps);
       
       // Average deve essere vicina a Brzycki/Epley per basse rep
       expect((average - brzycki).abs(), lessThan(5.0));

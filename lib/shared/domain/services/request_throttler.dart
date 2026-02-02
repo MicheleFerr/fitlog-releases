@@ -63,7 +63,6 @@ class Debouncer {
   final void Function(Object error, StackTrace stackTrace)? onError;
 
   Timer? _timer;
-  int _generation = 0;
 
   /// Schedule action to run after quiet period
   ///
@@ -71,9 +70,6 @@ class Debouncer {
   void run(VoidCallback action) {
     // Cancel previous timer if exists
     _timer?.cancel();
-
-    // Increment generation to invalidate old timers
-    _generation++;
 
     // Create new timer
     _timer = Timer(duration, () {

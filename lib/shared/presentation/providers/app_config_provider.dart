@@ -23,10 +23,22 @@ class AppConfigNotifier extends Notifier<AppConfig> {
   Completer<void>? _initCompleter;
   int _initRetryCount = 0;
   static const int _maxInitRetries = 3;
+  bool _isInitializing = false; // P0 FIX: Lock flag to prevent concurrent init
 
   // ✅ FIX: Static cache to survive provider rebuilds (background/foreground transitions)
   // This prevents onboarding from restarting when app resumes
   static AppConfig? _cachedConfig;
+
+  /// 🔐 SECURITY: Clear cached config on logout to prevent data leakage
+  /// NOTE: AppConfig is user-agnostic (language, theme, etc.), so we only
+  /// clear the static cache reference - the config itself stays in Hive
+  /// and will be reloaded for the next user.
+  static void clearCachedConfigOnLogout() {
+    _cachedConfig = null;
+    if (kDebugMode) {
+      debugPrint('[AppConfig] 🔐 Cleared static cache on logout');
+    }
+  }
 
   @override
   AppConfig build() {
@@ -75,12 +87,74 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     _initCompleter = Completer<void>();
     _initializeConfig();
 
-    // Return default config immediately (will update once loaded)
-    return const AppConfig();
+    // 🌍 LOCALE FIX: Detect device locale before returning default config
+    // This fixes the issue where Italian users see English during onboarding
+    return _getDefaultConfigWithDeviceLocale();
+  }
+
+  /// Get default config with device locale detection
+  /// Supported locales: en_US, it_IT
+  AppConfig _getDefaultConfigWithDeviceLocale() {
+    try {
+      // Get device locale from platform dispatcher
+      final deviceLocale = WidgetsBinding.instance.platformDispatcher.locale;
+      final languageCode = deviceLocale.languageCode.toLowerCase();
+      final countryCode = deviceLocale.countryCode?.toUpperCase();
+
+      if (kDebugMode) {
+        debugPrint('🌍 [AppConfig] Device locale detected: $languageCode-$countryCode');
+      }
+
+      // Check if device locale is supported (en or it)
+      if (languageCode == 'it') {
+        // Italian device - use Italian config
+        if (kDebugMode) {
+          debugPrint('✅ [AppConfig] Using Italian locale for default config');
+        }
+        return const AppConfig(
+          languageCode: 'it',
+          countryCode: 'IT',
+        );
+      } else if (languageCode == 'en') {
+        // English device - use English config with proper country code
+        final effectiveCountryCode = countryCode ?? 'US';
+        if (kDebugMode) {
+          debugPrint('✅ [AppConfig] Using English locale ($effectiveCountryCode) for default config');
+        }
+        return AppConfig(
+          languageCode: 'en',
+          countryCode: effectiveCountryCode,
+        );
+      } else {
+        // Unsupported locale - fallback to English
+        if (kDebugMode) {
+          debugPrint('⚠️ [AppConfig] Unsupported locale "$languageCode", defaulting to English');
+        }
+        return const AppConfig();
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error detecting device locale: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+      // Fallback to default English config
+      return const AppConfig();
+    }
   }
 
   Future<void> _initializeConfig() async {
+    // P0 FIX: Lock check - prevent concurrent initialization
+    if (_isInitializing) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [AppConfig] Init already in progress, waiting...');
+      }
+      await _initCompleter?.future;
+      return;
+    }
+
     try {
+      _isInitializing = true; // P0 FIX: Set lock
+
       if (kDebugMode) {
         debugPrint('📱 [AppConfig] Starting initialization (attempt ${_initRetryCount + 1})');
       }
@@ -97,10 +171,13 @@ class AppConfigNotifier extends Notifier<AppConfig> {
           debugPrint('✅ [AppConfig] Loaded saved configuration (initialOnboardingCompleted: ${savedConfig.initialOnboardingCompleted})');
         }
       } else {
-        // ✅ FIX: Cache default config too
-        _cachedConfig = state;
+        // 🌍 LOCALE FIX: Use device locale-aware default config
+        // This preserves the locale detected in build() method
+        final defaultConfig = _getDefaultConfigWithDeviceLocale();
+        state = defaultConfig;
+        _cachedConfig = defaultConfig;
         if (kDebugMode) {
-          debugPrint('📋 [AppConfig] No saved config, using defaults');
+          debugPrint('📋 [AppConfig] No saved config, using defaults with device locale: ${defaultConfig.languageCode}-${defaultConfig.countryCode}');
         }
       }
 
@@ -124,6 +201,8 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       if (!_initCompleter!.isCompleted) {
         _initCompleter?.completeError(e, stackTrace);
       }
+    } finally {
+      _isInitializing = false; // P0 FIX: Release lock
     }
   }
 

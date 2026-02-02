@@ -1,6 +1,6 @@
 # FitLog Pro - Documentation Index
 
-> **Last Updated**: 2026-01-23
+> **Last Updated**: 2026-02-02
 > **App Status**: Testing Phase (1 user)
 
 ---
@@ -14,6 +14,14 @@
 | [DEVELOPMENT_RULES.md](DEVELOPMENT_RULES.md) | Regole sviluppo e convenzioni |
 | [CODE_PATTERNS.md](CODE_PATTERNS.md) | Pattern di codice da seguire |
 | [DESIGN_GUIDELINES.md](DESIGN_GUIDELINES.md) | Design system e UI guidelines |
+
+---
+
+## Quality & Production
+
+| Documento | Descrizione |
+|-----------|-------------|
+| [PRODUCTION_READINESS.md](PRODUCTION_READINESS.md) | **🚀 Checklist Production-Ready** - Coerenza codebase, design, testing, security, DevOps |
 
 ---
 

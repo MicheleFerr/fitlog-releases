@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitLog Production Readiness Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .live-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #4caf50;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .live-indicator.offline {
+            background: #9e9e9e;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .version {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .sections {
+            display: grid;
+            gap: 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-badge {
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        .badge-complete {
+            background: #4caf50;
+            color: white;
+        }
+
+        .badge-partial {
+            background: #ff9800;
+            color: white;
+        }
+
+        .badge-incomplete {
+            background: #f44336;
+            color: white;
+        }
+
+        .badge-new {
+            background: #2196f3;
+            color: white;
+        }
+
+        .task-list {
+            display: none;
+        }
+
+        .task-list.expanded {
+            display: block;
+        }
+
+        .task {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 4px solid #e0e0e0;
+            background: #f9f9f9;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .task:hover {
+            background: #f0f0f0;
+        }
+
+        .task.completed {
+            border-left-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .task.in-progress {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+        }
+
+        .task.blocked {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+
+        .task-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .task-title {
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .task-status {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .status-todo {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .status-done {
+            background: #4caf50;
+            color: white;
+        }
+
+        .status-progress {
+            background: #ff9800;
+            color: white;
+        }
+
+        .status-blocked {
+            background: #f44336;
+            color: white;
+        }
+
+        .task-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-left: 30px;
+            line-height: 1.5;
+        }
+
+        .task-command {
+            font-family: 'Courier New', monospace;
+            background: #2c3e50;
+            color: #2ecc71;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-top: 8px;
+            margin-left: 30px;
+            font-size: 0.85rem;
+            overflow-x: auto;
+        }
+
+        .refresh-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+        }
+
+        .refresh-btn:active {
+            transform: translateY(0);
+        }
+
+        .collapse-icon {
+            transition: transform 0.3s;
+        }
+
+        .collapsed .collapse-icon {
+            transform: rotate(-90deg);
+        }
+
+        .legend {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .legend-items {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="live-indicator" id="live-indicator">
+                <div class="live-dot"></div>
+                <span>LIVE</span>
+            </div>
+            <h1>🚀 FitLog Production Readiness Dashboard</h1>
+            <p class="version">PRODUCTION_READINESS.md v2.0 | Ralph Loop Monitor</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="total-tasks">0</div>
+                <div class="stat-label">Total Tasks</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" style="color: #4caf50;" id="completed-tasks">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" style="color: #ff9800;" id="progress-tasks">0</div>
+                <div class="stat-label">In Progress</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" style="color: #f44336;" id="blocked-tasks">0</div>
+                <div class="stat-label">Blocked</div>
+            </div>
+            <div class="stat-card" style="grid-column: span 2;">
+                <div class="stat-label">Overall Progress</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%;">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4caf50;"></div>
+                    <span>Completed</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ff9800;"></div>
+                    <span>In Progress</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f44336;"></div>
+                    <span>Blocked</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #2196f3;"></div>
+                    <span>⭐ New in v2.0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sections" id="sections-container">
+            <!-- Sections will be dynamically loaded here -->
+        </div>
+
+        <button class="refresh-btn" onclick="refreshDashboard()">
+            🔄 Refresh Status
+        </button>
+    </div>
+
+    <script>
+        // Production Readiness Sections & Tasks
+        const sections = [
+            {
+                id: 1,
+                title: "Coerenza Codebase",
+                tasks: [
+                    {
+                        title: "Architettura definita e documentata",
+                        description: "Clean Architecture / MVVM applicata, layer separation rispettata",
+                        command: "cat docs/architecture/OVERVIEW.md",
+                        verify: "check_architecture"
+                    },
+                    {
+                        title: "Zero circular dependencies",
+                        description: "Verificare con flutter analyze",
+                        command: "flutter analyze",
+                        verify: "flutter_analyze"
+                    },
+                    {
+                        title: "Naming conventions rispettate",
+                        description: "PascalCase classi, snake_case file, camelCase variabili",
+                        command: "grep -r 'class [a-z]' lib/ --include='*.dart'",
+                        verify: "naming_conventions"
+                    },
+                    {
+                        title: "Zero TODO in main branch",
+                        description: "Tutti i TODO tracciati o rimossi",
+                        command: "grep -r 'TODO' lib/ --include='*.dart'",
+                        verify: "check_todos"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Coerenza Design + Accessibility",
+                isNew: true,
+                tasks: [
+                    {
+                        title: "Zero Icons.* usage",
+                        description: "Usare AppIcons.* invece di Icons.*",
+                        command: "grep -r 'Icons\\.' lib/features/ --include='*.dart'",
+                        verify: "check_icons"
+                    },
+                    {
+                        title: "Zero Colors.* usage",
+                        description: "Usare context.colors.* invece di Colors.*",
+                        command: "grep -r 'Colors\\.' lib/features/ --include='*.dart'",
+                        verify: "check_colors"
+                    },
+                    {
+                        title: "Zero hardcoded strings",
+                        description: "Usare context.l10n.* per tutti i testi",
+                        command: ".claude/scripts/find-hardcoded-strings.sh",
+                        verify: "check_hardcoded"
+                    },
+                    {
+                        title: "⭐ Contrast ratio WCAG 2.1 AA (≥4.5:1)",
+                        description: "Verificare contrast ratio su testo normale, ≥3:1 su UI elements",
+                        command: ".claude/scripts/accessibility-check.sh",
+                        verify: "check_contrast",
+                        isNew: true
+                    },
+                    {
+                        title: "⭐ Touch targets ≥44x44pt (iOS) / 48x48dp (Android)",
+                        description: "Verificare dimensioni minime elementi interattivi",
+                        command: "grep -n 'iconSize.*[0-9]' lib/ --include='*.dart'",
+                        verify: "check_touch_targets",
+                        isNew: true
+                    },
+                    {
+                        title: "⭐ Semantic labels completi",
+                        description: "Tutti gli elementi interattivi hanno Semantics",
+                        command: "grep -L 'Semantics' lib/features/**/*_screen.dart",
+                        verify: "check_semantics",
+                        isNew: true
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Testing & Quality",
+                tasks: [
+                    {
+                        title: "Test coverage ≥80%",
+                        description: "Coverage su business logic",
+                        command: "flutter test --coverage && genhtml coverage/lcov.info -o coverage/html",
+                        verify: "check_coverage"
+                    },
+                    {
+                        title: "All tests pass",
+                        description: "flutter test deve passare 100%",
+                        command: "flutter test",
+                        verify: "flutter_test"
+                    },
+                    {
+                        title: "Zero flutter analyze issues",
+                        description: "Analyzer senza errori",
+                        command: "flutter analyze",
+                        verify: "flutter_analyze"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Performance + Benchmarks",
+                isNew: true,
+                tasks: [
+                    {
+                        title: "⭐ Cold start <4s",
+                        description: "Misurato su device reale con Firebase+Hive",
+                        command: "flutter run --profile --trace-startup",
+                        verify: "check_cold_start",
+                        isNew: true
+                    },
+                    {
+                        title: "⭐ Memory idle <150MB",
+                        description: "Flutter + Firebase SDKs + Hive",
+                        command: "DevTools → Memory → Take snapshot",
+                        verify: "check_memory",
+                        isNew: true
+                    },
+                    {
+                        title: "⭐ Frame rate ≥58fps",
+                        description: "60fps ideale, 58fps accettabile",
+                        command: "DevTools → Performance → Record",
+                        verify: "check_fps",
+                        isNew: true
+                    },
+                    {
+                        title: "Zero performance anti-pattern",
+                        description: "No openBox() in loop, no batch operations missing",
+                        command: ".claude/scripts/performance-check.sh lib/",
+                        verify: "performance_check"
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Security + HealthKit/Health Connect",
+                isNew: true,
+                tasks: [
+                    {
+                        title: "Firestore rules deployed",
+                        description: "Security rules testate e deployed",
+                        command: "firebase deploy --only firestore:rules",
+                        verify: "firestore_rules"
+                    },
+                    {
+                        title: "⭐ HealthKit: NO advertising use",
+                        description: "Health data usato SOLO per fitness purposes",
+                        command: "grep -rn 'health\\|HealthKit' lib/ | grep -i 'analytics\\|ads'",
+                        verify: "healthkit_compliance",
+                        isNew: true
+                    },
+                    {
+                        title: "⭐ HealthKit: Purpose strings presenti",
+                        description: "NSHealthShareUsageDescription in Info.plist",
+                        command: "grep -A1 'NSHealthShareUsageDescription' ios/Runner/Info.plist",
+                        verify: "healthkit_purpose",
+                        isNew: true
+                    },
+                    {
+                        title: "⭐ Health Connect: Permissions dichiarate",
+                        description: "android.permission.health.* in AndroidManifest.xml",
+                        command: "grep 'android.permission.health' android/app/src/main/AndroidManifest.xml",
+                        verify: "health_connect_permissions",
+                        isNew: true
+                    }
+                ]
+            },
+            {
+                id: 6,
+                title: "DevOps + Disaster Recovery",
+                isNew: true,
+                tasks: [
+                    {
+                        title: "iOS build successo",
+                        description: "flutter build ios --release --no-codesign",
+                        command: "flutter build ios --release --no-codesign",
+                        verify: "ios_build"
+                    },
+                    {
+                        title: "Android build successo",
+                        description: "flutter build apk --release",
+                        command: "flutter build apk --release",
+                        verify: "android_build"
+                    },
+                    {
+                        title: "⭐ Firebase backups abilitati",
+                        description: "Firestore automatic daily backups",
+                        command: "Firebase Console → Firestore → Settings → Backups",
+                        verify: "firebase_backups",
+                        isNew: true
+                    },
+                    {
+                        title: "⭐ Recovery procedures documentate",
+                        description: "Procedure per 4 scenari comuni",
+                        command: "cat docs/PRODUCTION_READINESS.md | grep -A20 'Recovery Procedures'",
+                        verify: "recovery_docs",
+                        isNew: true
+                    }
+                ]
+            },
+            {
+                id: 7,
+                title: "Monitoring & Analytics",
+                tasks: [
+                    {
+                        title: "Crashlytics integrato",
+                        description: "Firebase Crashlytics configurato",
+                        command: "grep 'FirebaseCrashlytics' lib/main.dart",
+                        verify: "crashlytics"
+                    },
+                    {
+                        title: "Core events definiti",
+                        description: "Analytics events per funnel tracking",
+                        command: "grep 'logEvent' lib/ --include='*.dart' -r",
+                        verify: "analytics_events"
+                    }
+                ]
+            },
+            {
+                id: 8,
+                title: "Documentazione",
+                tasks: [
+                    {
+                        title: "README updated",
+                        description: "Setup instructions, architecture overview",
+                        command: "cat README.md",
+                        verify: "readme"
+                    },
+                    {
+                        title: "docs/ consistente",
+                        description: "Documentazione allineata al codice",
+                        command: "ls docs/",
+                        verify: "docs_consistent"
+                    }
+                ]
+            },
+            {
+                id: 9,
+                title: "⭐ Internationalization (NEW)",
+                isNew: true,
+                tasks: [
+                    {
+                        title: "⭐ app_en.arb == app_it.arb keys",
+                        description: "Stesse chiavi in entrambi i file",
+                        command: ".claude/scripts/l10n-check.sh",
+                        verify: "l10n_keys",
+                        isNew: true
+                    },
+                    {
+                        title: "⭐ Zero placeholder '[...]' non tradotti",
+                        description: "Tutte le traduzioni complete",
+                        command: "grep -n '\\[\\.\\.\\.\\]' lib/shared/presentation/l10n/app_*.arb",
+                        verify: "l10n_placeholders",
+                        isNew: true
+                    },
+                    {
+                        title: "⭐ Date/Number formatting locale-aware",
+                        description: "Usare intl package per formatting",
+                        command: "grep -r 'DateFormat\\|NumberFormat' lib/ --include='*.dart'",
+                        verify: "l10n_formatting",
+                        isNew: true
+                    }
+                ]
+            },
+            {
+                id: 10,
+                title: "Legal & Compliance",
+                tasks: [
+                    {
+                        title: "Privacy Policy presente",
+                        description: "Link in app e store listing",
+                        command: "grep -r 'privacy' lib/ --include='*.dart'",
+                        verify: "privacy_policy"
+                    },
+                    {
+                        title: "Licenses page configurata",
+                        description: "showLicensePage per open source licenses",
+                        command: "grep 'showLicensePage' lib/ --include='*.dart'",
+                        verify: "licenses_page"
+                    }
+                ]
+            },
+            {
+                id: 11,
+                title: "Go-Live Checklist",
+                tasks: [
+                    {
+                        title: "Beta testing completato",
+                        description: "TestFlight/Internal Testing con feedback",
+                        verify: "beta_testing"
+                    },
+                    {
+                        title: "Store listings preparati",
+                        description: "Screenshots, descriptions, keywords",
+                        verify: "store_listings"
+                    }
+                ]
+            }
+        ];
+
+        // Initialize dashboard
+        function initDashboard() {
+            const container = document.getElementById('sections-container');
+            container.innerHTML = '';
+
+            sections.forEach(section => {
+                const sectionEl = createSectionElement(section);
+                container.appendChild(sectionEl);
+            });
+
+            updateStats();
+        }
+
+        function createSectionElement(section) {
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'section';
+
+            const completed = section.tasks.filter(t => t.status === 'done').length;
+            const total = section.tasks.length;
+            const badgeClass = completed === total ? 'badge-complete' :
+                               completed > 0 ? 'badge-partial' : 'badge-incomplete';
+
+            sectionDiv.innerHTML = `
+                <div class="section-header" onclick="toggleSection(${section.id})">
+                    <div class="section-title">
+                        <span class="collapse-icon">▼</span>
+                        ${section.title}
+                        ${section.isNew ? '<span class="badge-new">⭐ v2.0</span>' : ''}
+                    </div>
+                    <span class="section-badge ${badgeClass}">${completed}/${total}</span>
+                </div>
+                <div class="task-list expanded" id="section-${section.id}">
+                    ${section.tasks.map(task => createTaskElement(task)).join('')}
+                </div>
+            `;
+
+            return sectionDiv;
+        }
+
+        function createTaskElement(task) {
+            const status = task.status || 'todo';
+            const statusClass = status === 'done' ? 'completed' :
+                               status === 'progress' ? 'in-progress' :
+                               status === 'blocked' ? 'blocked' : '';
+
+            const statusBadge = status === 'done' ? 'status-done' :
+                               status === 'progress' ? 'status-progress' :
+                               status === 'blocked' ? 'status-blocked' : 'status-todo';
+
+            const statusText = status === 'done' ? '✓ Done' :
+                              status === 'progress' ? '⟳ Progress' :
+                              status === 'blocked' ? '⚠ Blocked' : '☐ Todo';
+
+            const newBadge = task.isNew ? '<span class="badge-new" style="font-size: 0.7rem; margin-left: 5px;">v2.0</span>' : '';
+
+            return `
+                <div class="task ${statusClass}">
+                    <div class="task-header">
+                        <input type="checkbox" class="task-checkbox" ${status === 'done' ? 'checked' : ''}
+                               onchange="toggleTask(this)">
+                        <span class="task-title">${task.title}${newBadge}</span>
+                        <span class="task-status ${statusBadge}">${statusText}</span>
+                    </div>
+                    <div class="task-description">${task.description}</div>
+                    ${task.command ? `<div class="task-command">$ ${task.command}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function toggleSection(sectionId) {
+            const section = document.getElementById(`section-${sectionId}`);
+            const header = section.previousElementSibling;
+
+            section.classList.toggle('expanded');
+            header.classList.toggle('collapsed');
+        }
+
+        function toggleTask(checkbox) {
+            const task = checkbox.closest('.task');
+            if (checkbox.checked) {
+                task.classList.add('completed');
+                task.classList.remove('in-progress', 'blocked');
+            } else {
+                task.classList.remove('completed');
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            let total = 0;
+            let completed = 0;
+            let progress = 0;
+            let blocked = 0;
+
+            sections.forEach(section => {
+                total += section.tasks.length;
+                section.tasks.forEach(task => {
+                    if (task.status === 'done') completed++;
+                    else if (task.status === 'progress') progress++;
+                    else if (task.status === 'blocked') blocked++;
+                });
+            });
+
+            // Count checked checkboxes
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            completed = Array.from(checkboxes).filter(cb => cb.checked).length;
+
+            document.getElementById('total-tasks').textContent = total;
+            document.getElementById('completed-tasks').textContent = completed;
+            document.getElementById('progress-tasks').textContent = progress;
+            document.getElementById('blocked-tasks').textContent = blocked;
+
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+            const progressFill = document.getElementById('progress-fill');
+            progressFill.style.width = percentage + '%';
+            progressFill.textContent = percentage + '%';
+        }
+
+        function refreshDashboard() {
+            const liveIndicator = document.getElementById('live-indicator');
+
+            // Load status from status.json
+            fetch('status.json?' + Date.now()) // Cache busting
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Status loaded:', data);
+
+                    // Update live indicator
+                    liveIndicator.classList.remove('offline');
+
+                    // Update stats from real data
+                    if (data.stats) {
+                        // Mark tasks as done based on real checks
+                        updateTaskStatus('check_icons', data.stats.icons_check);
+                        updateTaskStatus('check_colors', data.stats.colors_check);
+                        updateTaskStatus('flutter_analyze', data.stats.analyze_check);
+                    }
+
+                    // Update iteration counter
+                    const versionEl = document.querySelector('.version');
+                    let versionText = 'PRODUCTION_READINESS.md v2.0';
+
+                    if (data.iteration) {
+                        versionText += ` | Iteration ${data.iteration}`;
+                    }
+
+                    if (data.phase) {
+                        versionText += ` | ${data.phase}`;
+                    }
+
+                    // Update last update time
+                    if (data.lastUpdate) {
+                        const date = new Date(data.lastUpdate);
+                        const time = date.toLocaleTimeString();
+                        const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+
+                        if (seconds < 60) {
+                            versionText += ` | Updated ${seconds}s ago`;
+                        } else if (seconds < 3600) {
+                            versionText += ` | Updated ${Math.floor(seconds/60)}m ago`;
+                        } else {
+                            versionText += ` | Updated ${time}`;
+                        }
+                    }
+
+                    versionEl.textContent = versionText;
+
+                    updateStats();
+                })
+                .catch(error => {
+                    console.log('Status file not available:', error);
+
+                    // Mark as offline if status.json not found
+                    liveIndicator.classList.add('offline');
+                    liveIndicator.querySelector('span').textContent = 'OFFLINE';
+
+                    updateStats();
+                });
+
+            // Visual feedback on manual refresh
+            const btn = document.querySelector('.refresh-btn');
+            btn.textContent = '✓ Refreshed!';
+            setTimeout(() => {
+                btn.textContent = '🔄 Refresh Status';
+            }, 1500);
+        }
+
+        function updateTaskStatus(taskVerify, status) {
+            // Find task checkbox by verify attribute and update
+            const tasks = document.querySelectorAll('.task');
+            tasks.forEach(task => {
+                const title = task.querySelector('.task-title').textContent.toLowerCase();
+
+                // Match task to status check
+                if (taskVerify === 'check_icons' && title.includes('icons.*')) {
+                    updateTaskVisually(task, status);
+                } else if (taskVerify === 'check_colors' && title.includes('colors.*')) {
+                    updateTaskVisually(task, status);
+                } else if (taskVerify === 'flutter_analyze' && title.includes('flutter analyze')) {
+                    updateTaskVisually(task, status);
+                }
+            });
+        }
+
+        function updateTaskVisually(task, status) {
+            const checkbox = task.querySelector('.task-checkbox');
+            const statusBadge = task.querySelector('.task-status');
+
+            if (status === 'done') {
+                checkbox.checked = true;
+                task.classList.add('completed');
+                task.classList.remove('in-progress', 'blocked');
+                statusBadge.className = 'task-status status-done';
+                statusBadge.textContent = '✓ Done';
+            } else if (status === 'progress') {
+                task.classList.add('in-progress');
+                task.classList.remove('completed', 'blocked');
+                statusBadge.className = 'task-status status-progress';
+                statusBadge.textContent = '⟳ Progress';
+            } else if (status === 'blocked') {
+                task.classList.add('blocked');
+                task.classList.remove('completed', 'in-progress');
+                statusBadge.className = 'task-status status-blocked';
+                statusBadge.textContent = '⚠ Blocked';
+            }
+        }
+
+        // Auto-refresh every 10 seconds
+        let autoRefreshInterval;
+
+        function startAutoRefresh() {
+            autoRefreshInterval = setInterval(() => {
+                refreshDashboard();
+            }, 10000); // 10 seconds
+
+            console.log('🔄 Auto-refresh enabled (every 10s)');
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                console.log('⏸ Auto-refresh disabled');
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initDashboard();
+            refreshDashboard(); // Initial load
+            startAutoRefresh(); // Start auto-refresh
+        });
+
+        // Stop auto-refresh when page hidden (save resources)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopAutoRefresh();
+            } else {
+                startAutoRefresh();
+            }
+        });
+    </script>
+</body>
+</html>

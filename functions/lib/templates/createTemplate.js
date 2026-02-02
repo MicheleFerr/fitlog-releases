@@ -7,9 +7,8 @@
  * to enforce template limits.
  *
  * **Quota Tiers**:
- * - Free: 4 private templates
- * - Premium: 20 private templates
- * - Pro: 999 private templates (effectively unlimited)
+ * - Free: 4 private templates, 2 public templates
+ * - Premium: 999 private/public templates (effectively unlimited)
  *
  * **Security Benefits**:
  * - Atomic quota check + creation (no race conditions)
@@ -47,13 +46,23 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTemplateQuota = exports.createTemplate = void 0;
 const https_1 = require("firebase-functions/v2/https");
@@ -72,12 +81,8 @@ const TEMPLATE_QUOTAS = {
         maxPublicTemplates: 2,
     },
     premium: {
-        maxPrivateTemplates: 20,
-        maxPublicTemplates: 10,
-    },
-    pro: {
-        maxPrivateTemplates: 999,
-        maxPublicTemplates: 50,
+        maxPrivateTemplates: 999, // Effectively unlimited
+        maxPublicTemplates: 999, // Effectively unlimited
     },
 };
 // ========================================
@@ -98,9 +103,9 @@ async function getUserAccountTier(userId) {
         }
         const data = userDoc.data();
         const tier = data === null || data === void 0 ? void 0 : data.accountTier;
-        // Validate tier is valid
+        // Validate tier is valid (pro tier removed — treat legacy 'pro' as 'premium')
         if (tier === 'premium' || tier === 'pro') {
-            return tier;
+            return 'premium';
         }
         return 'free';
     }
@@ -281,16 +286,15 @@ exports.createTemplate = (0, rateLimiterV1_1.withRateLimit)(async (request) => {
                 .doc(templateId);
             transaction.set(templateRef, templateData);
             // Update user's quota tracking
+            // Use set() with merge to handle new users whose document may not exist yet
             const userRef = admin.firestore().collection('users').doc(userId);
-            transaction.update(userRef, {
-                'templateQuota.usedPrivateTemplates': isPublic
-                    ? admin.firestore.FieldValue.increment(0)
-                    : admin.firestore.FieldValue.increment(1),
-                'templateQuota.usedPublicTemplates': isPublic
-                    ? admin.firestore.FieldValue.increment(1)
-                    : admin.firestore.FieldValue.increment(0),
-                'templateQuota.lastTemplateCreatedAt': now,
-            });
+            transaction.set(userRef, {
+                templateQuota: {
+                    usedPrivateTemplates: admin.firestore.FieldValue.increment(isPublic ? 0 : 1),
+                    usedPublicTemplates: admin.firestore.FieldValue.increment(isPublic ? 1 : 0),
+                    lastTemplateCreatedAt: now,
+                },
+            }, { merge: true });
         });
         console.log(`✅ Template ${templateId} created for user ${userId}`);
         // ========================================

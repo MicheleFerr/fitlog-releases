@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +15,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_temp
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/hybrid_exercise_activity_repository.dart';
-import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
@@ -481,6 +479,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     // 🔄 Exercise navigation support
     List<String>? exerciseNames, // All exercise names in workout
     int currentExerciseIndex = 0, // 0-indexed current exercise position
+    // ✅ FIX: Rest time for Watch optimistic timer
+    int? restTime, // Rest time in seconds for current exercise
     // 🔥 SUPERSET SUPPORT
     bool isSuperset = false,
     String? supersetName,
@@ -601,6 +601,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         // 🔄 Exercise navigation support
         exerciseNames: exerciseNames,
         currentExerciseIndex: currentExerciseIndex,
+        // ✅ FIX: Rest time for Watch optimistic timer
+        restTime: restTime,
         // 🔥 SUPERSET SUPPORT
         isSuperset: isSuperset,
         supersetName: supersetName,
@@ -719,6 +721,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // 🔄 Exercise navigation support
       exerciseNames: exerciseNames,
       currentExerciseIndex: currentExerciseIdx >= 0 ? currentExerciseIdx : 0,
+      // ✅ FIX: Rest time for Watch optimistic timer
+      restTime: currentExercise.restTime,
     );
   }
 
@@ -1639,7 +1643,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // Note: currentUser is guaranteed non-null here because of isAuthenticated check above
       try {
         final firestore = FirebaseFirestore.instance;
-        final userRef = firestore.collection('users').doc(currentUser!.uid);
+        final userRef = firestore.collection('users').doc(currentUser.uid);
 
         // CRITICAL FIX: Use transaction to prevent lost updates from concurrent workouts
         await firestore.runTransaction((transaction) async {
@@ -4080,31 +4084,6 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   }
 
   // Note: Notifier doesn't have dispose() - use ref.onDispose() in build() instead
-}
-
-// Workout history provider (for future implementation)
-final workoutHistoryProvider = NotifierProvider<WorkoutHistoryNotifier, List<Workout>>(WorkoutHistoryNotifier.new);
-
-class WorkoutHistoryNotifier extends Notifier<List<Workout>> {
-  @override
-  List<Workout> build() => [];
-
-  void addCompletedWorkout(Workout workout) {
-    if (workout.isCompleted) {
-      state = [workout, ...state];
-    }
-  }
-
-  void removeWorkout(String workoutId) {
-    state = state.where((w) => w.id != workoutId).toList();
-  }
-
-  List<Workout> getWorkoutsByDateRange(DateTime start, DateTime end) {
-    return state.where((workout) {
-      if (workout.startTime == null) return false;
-      return workout.startTime!.isAfter(start) && workout.startTime!.isBefore(end);
-    }).toList();
-  }
 }
 
 // Exercise suggestions provider (static exercise name database for autocomplete)

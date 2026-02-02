@@ -158,6 +158,26 @@ class HiveBoxNames {
   /// Cached notifications
   static const String cachedNotifications = 'cached_notifications';
 
+  /// Notification records (anti-spam tracking)
+  static const String notificationRecords = 'notification_records';
+
+  /// Notification stats (aggregate notification data)
+  static const String notificationStats = 'notification_stats';
+
+  // ═══════════════════════════════════════════════════════════
+  // 📅 SCHEDULING FEATURE
+  // ═══════════════════════════════════════════════════════════
+
+  /// Scheduled workouts (workout planning)
+  static const String scheduledWorkouts = 'scheduled_workouts';
+
+  // ═══════════════════════════════════════════════════════════
+  // 🏆 ACHIEVEMENTS FEATURE
+  // ═══════════════════════════════════════════════════════════
+
+  /// Achievements cache (badges, milestones)
+  static const String analyticsCache = 'analytics_cache';
+
   // ═══════════════════════════════════════════════════════════
   // ⚙️ SETTINGS & CONFIG
   // ═══════════════════════════════════════════════════════════
@@ -270,12 +290,19 @@ class HiveBoxNames {
         timerStorage,
         // Notifications
         cachedNotifications,
+        notificationRecords,
+        notificationStats,
+        // Scheduling
+        scheduledWorkouts,
+        // Achievements
+        analyticsCache,
         // Settings
         appConfig,
         appSettings,
         syncPreferences,
         feedbackSettings,
         weightSettings,
+        settingsBox,
         // Privacy
         userConsent,
         // Onboarding

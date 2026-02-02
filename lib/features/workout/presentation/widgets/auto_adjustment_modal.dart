@@ -156,7 +156,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: _clearSettings,
-                    child: Text(l10n.clear ?? 'Clear'),
+                    child: Text(l10n.clear),
                   ),
                 ),
                 const SizedBox(width: 16),

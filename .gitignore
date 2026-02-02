@@ -115,3 +115,4 @@ test_firestore_rules/package-lock.json
 functions/node_modules/
 firebase/functions/node_modules/
 scripts/node_modules/
+.aider*

@@ -17,7 +17,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:gymbro_flutter_new/core/data/repositories/base_hybrid_repository.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_model.dart';
+
 
 // Mock Firebase implementation for tests
 void setupFirebaseCoreMocks() {
@@ -56,9 +56,8 @@ class MockFirebaseAppPlatform extends FirebaseAppPlatform {
   @override
   bool get isAutomaticDataCollectionEnabled => false;
   
-  @override
   Stream<bool> get onAutomaticDataCollectionEnabledChanged => Stream.value(false);
-  
+
   @override
   Future<void> delete() async {}
   
@@ -160,9 +159,8 @@ class TestHybridRepository extends BaseHybridRepository<TestEntity> {
   }
 
   // Expose protected methods for testing
-  bool get testIsPremiumUser => _testUserProfile != null 
-      ? (_testUserProfile!.accountTier == AccountTier.premium || 
-         _testUserProfile!.accountTier == AccountTier.pro)
+  bool get testIsPremiumUser => _testUserProfile != null
+      ? (_testUserProfile!.accountTier == AccountTier.premium)
       : isPremiumUser;
   
   bool get testCanSyncToCloud => _testUserProfile != null
@@ -347,8 +345,8 @@ void main() {
         templateQuota: TemplateQuota.forTier(AccountTier.free),
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
-        preferences: const UserPreferences(),
-        stats: const UserStats(),
+        preferences: const {},
+        stats: const {},
       ));
 
       // Act & Assert
@@ -370,8 +368,8 @@ void main() {
         templateQuota: TemplateQuota.forTier(AccountTier.free),
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
-        preferences: const UserPreferences(),
-        stats: const UserStats(),
+        preferences: const {},
+        stats: const {},
       ));
 
       // Act & Assert
@@ -389,8 +387,8 @@ void main() {
         templateQuota: TemplateQuota.forTier(AccountTier.free),
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
-        preferences: const UserPreferences(),
-        stats: const UserStats(),
+        preferences: const {},
+        stats: const {},
       ));
 
       // Act & Assert
@@ -410,8 +408,8 @@ void main() {
         templateQuota: TemplateQuota.forTier(AccountTier.premium),
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
-        preferences: const UserPreferences(),
-        stats: const UserStats(),
+        preferences: const {},
+        stats: const {},
       ));
 
       // Act
@@ -433,8 +431,8 @@ void main() {
         templateQuota: TemplateQuota.forTier(AccountTier.premium),
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
-        preferences: const UserPreferences(),
-        stats: const UserStats(),
+        preferences: const {},
+        stats: const {},
       ));
 
       // Mock Firestore operations
@@ -473,8 +471,8 @@ void main() {
         templateQuota: TemplateQuota.forTier(AccountTier.free),
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
-        preferences: const UserPreferences(),
-        stats: const UserStats(),
+        preferences: const {},
+        stats: const {},
       ));
 
       expect(repository.testIsPremiumUser, false);
@@ -489,8 +487,8 @@ void main() {
         templateQuota: TemplateQuota.forTier(AccountTier.premium),
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
-        preferences: const UserPreferences(),
-        stats: const UserStats(),
+        preferences: const {},
+        stats: const {},
       ));
 
       expect(repository.testIsPremiumUser, true);
@@ -588,8 +586,8 @@ void main() {
         templateQuota: TemplateQuota.forTier(AccountTier.premium),
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
-        preferences: const UserPreferences(),
-        stats: const UserStats(),
+        preferences: const {},
+        stats: const {},
       ));
 
       // Act
@@ -641,8 +639,8 @@ void main() {
         templateQuota: TemplateQuota.forTier(AccountTier.free),
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
-        preferences: const UserPreferences(),
-        stats: const UserStats(),
+        preferences: const {},
+        stats: const {},
       ));
       expect(repository.testIsPremiumUser, false);
 
@@ -655,22 +653,22 @@ void main() {
         templateQuota: TemplateQuota.forTier(AccountTier.premium),
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
-        preferences: const UserPreferences(),
-        stats: const UserStats(),
+        preferences: const {},
+        stats: const {},
       ));
       expect(repository.testIsPremiumUser, true);
 
-      // Test Pro user (should also be considered premium)
+      // Test Premium user again with different data
       repository.setTestUserProfile(UserProfile(
         uid: 'user_3',
-        email: 'pro@test.com',
-        displayName: 'Pro User',
-        accountTier: AccountTier.pro,
-        templateQuota: TemplateQuota.forTier(AccountTier.pro),
+        email: 'premium2@test.com',
+        displayName: 'Premium User 2',
+        accountTier: AccountTier.premium,
+        templateQuota: TemplateQuota.forTier(AccountTier.premium),
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
-        preferences: const UserPreferences(),
-        stats: const UserStats(),
+        preferences: const {},
+        stats: const {},
       ));
       expect(repository.testIsPremiumUser, true);
     });

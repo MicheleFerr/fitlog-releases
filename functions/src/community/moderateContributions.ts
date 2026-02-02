@@ -161,8 +161,11 @@ export const approveContribution = onCall<ApproveContributionData>(async (reques
       );
     }
 
-    const contributionData = snapshot.data()!;
-    const contributorUserId = contributionData.userId as string;
+    const contributionData = snapshot.data();
+    if (!contributionData || !contributionData.userId || typeof contributionData.userId !== 'string') {
+      throw new HttpsError('internal', 'Invalid contribution data: missing userId');
+    }
+    const contributorUserId = contributionData.userId;
 
     // Check if already approved
     if (contributionData.status === 'approved') {
@@ -327,8 +330,11 @@ export const rejectContribution = onCall<RejectContributionData>(async (request)
       );
     }
 
-    const contributionData = snapshot.data()!;
-    const contributorUserId = contributionData.userId as string;
+    const contributionData = snapshot.data();
+    if (!contributionData || !contributionData.userId || typeof contributionData.userId !== 'string') {
+      throw new HttpsError('internal', 'Invalid contribution data: missing userId');
+    }
+    const contributorUserId = contributionData.userId;
 
     // ========================================
     // 5. Reject Contribution

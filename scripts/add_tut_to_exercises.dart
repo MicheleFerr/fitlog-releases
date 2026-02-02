@@ -57,7 +57,7 @@ void main() async {
     // SHOULDERS
     'military_press': '2-0-1-0',
     'overhead_press': '2-0-1-0',
-    'dumbbell_press': '2-0-2-0',
+    'shoulder_dumbbell_press': '2-0-2-0',
     'arnold_press': '2-0-2-0',
     'lateral_raise': '2-1-2-0', // Controllo per deltoidi
     'alzate_laterali': '2-1-2-0',

@@ -67,7 +67,6 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   // Widget keys (used for widget identification)
   final GlobalKey _searchBarKey = GlobalKey();
   final GlobalKey _filterButtonKey = GlobalKey();
-  final GlobalKey _quickFiltersKey = GlobalKey();
   final GlobalKey _exerciseCardKey = GlobalKey();
   final GlobalKey _addButtonKey = GlobalKey();
 
@@ -78,11 +77,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   final List<String> _selectedDifficulty = [];
   String? _selectedType;
 
-  bool _showFilters = false;
   bool _showSearch = true; // P1-3 FIX: Show search by default for faster logging
-  // Muscle groups filter removed - keeping equipment and difficulty only
-  bool _showDifficultyFilter = false;
-  bool _showEquipmentFilter = false;
 
   // 🔐 SECURITY: Fuzzy search state with proper debouncing
   late final Debouncer _searchDebouncer;
@@ -463,12 +458,54 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     });
   }
 
+  /// Get count of active filters
+  int _getActiveFilterCount() {
+    int count = 0;
+    if (_selectedDifficulty.isNotEmpty) count++;
+    if (_selectedEquipment.isNotEmpty) count++;
+    if (_selectedMuscleGroups.isNotEmpty) count++;
+    if (_selectedFocus.isNotEmpty) count++;
+    if (_selectedType != null) count++;
+    return count;
+  }
+
+  /// Show filter bottom sheet
+  Future<void> _showFilterBottomSheet() async {
+    final exercisesAsync = ref.read(jsonExerciseRepositoryProvider);
+    final exercises = exercisesAsync.value ?? [];
+
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
+      builder: (sheetContext) => _FilterBottomSheet(
+        exercises: exercises,
+        selectedDifficulty: _selectedDifficulty,
+        selectedEquipment: _selectedEquipment,
+        onApply: (difficulty, equipment) {
+          setState(() {
+            _selectedDifficulty.clear();
+            _selectedDifficulty.addAll(difficulty);
+            _selectedEquipment.clear();
+            _selectedEquipment.addAll(equipment);
+          });
+        },
+        onReset: () {
+          setState(() {
+            _clearAllFilters();
+          });
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Use fuzzy search for active queries, fallback to JSON repository for browsing
     final exercisesAsync = ref.watch(jsonExerciseRepositoryProvider);
     final l10n = context.l10n;
-    
+    final activeFilterCount = _getActiveFilterCount();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('${l10n.searchExercises} (${_selectedExercises.length})'),
@@ -493,11 +530,41 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               onPressed: widget.multiSelectMode ? _selectExercises : _addSelectedToWorkout,
               tooltip: widget.multiSelectMode ? 'Select Exercises' : l10n.addToWorkout,
             ),
-          IconButton(
-            key: _filterButtonKey,
-            icon: Icon(_showFilters ? AppIcons.filter : AppIcons.filterListOutlined),
-            onPressed: () => setState(() => _showFilters = !_showFilters),
-            tooltip: l10n.filters,
+          // Filter button with badge
+          Stack(
+            children: [
+              IconButton(
+                key: _filterButtonKey,
+                icon: const Icon(AppIcons.filterListOutlined),
+                onPressed: _showFilterBottomSheet,
+                tooltip: l10n.filters,
+              ),
+              if (activeFilterCount > 0)
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: context.colors.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: Text(
+                      '$activeFilterCount',
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: context.colors.onPrimary,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
           ),
         ],
       ),
@@ -552,61 +619,6 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   // Trigger fuzzy search
                   _performFuzzySearch(value);
                 },
-              ),
-            ),
-          ],
-
-          // Filters Section
-          if (_showFilters) ...[
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Divider(),
-                  const SizedBox(height: 8),
-                  Text(
-                    l10n.filters,
-                    style: context.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  
-                  // Quick Filters Row - Improved with smart categories
-                  SingleChildScrollView(
-                    key: _quickFiltersKey, // Tutorial target
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        _buildQuickFilter('Tutti', _clearAllFilters,
-                          isActive: _isAllFiltersEmpty()),
-                        const SizedBox(width: 8),
-                        ...ExerciseSearchService.quickFilters.map((filter) =>
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: _buildQuickFilterChip(
-                              label: filter['label'],
-                              icon: filter['icon'],
-                              onTap: () => _applySmartFilter(filter['query']),
-                              isActive: _searchQuery == filter['query'],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  
-                  exercisesAsync.when(
-                    data: (exercises) => _buildAdvancedFilters(exercises),
-                    loading: () => const SizedBox.shrink(),
-                    error: (_, __) => const SizedBox.shrink(),
-                  ),
-                  
-                  const SizedBox(height: 8),
-                  const Divider(),
-                ],
               ),
             ),
           ],
@@ -1139,16 +1151,6 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     );
   }
 
-  Widget _buildQuickFilter(String label, VoidCallback onTap, {required bool isActive}) {
-    return FilterChip(
-      label: Text(label),
-      selected: isActive,
-      onSelected: (_) => onTap(),
-      backgroundColor: context.colors.surface,
-      selectedColor: context.colors.primaryContainer,
-    );
-  }
-
   /// Normalize muscle codes to canonical form
   ///
   /// **SINGLE SOURCE OF TRUTH**: Delegates to MuscleAbbreviationMapper.
@@ -1156,152 +1158,6 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     return MuscleAbbreviationMapper.normalizeToCanonicalId(muscleCode);
   }
 
-  Widget _buildAdvancedFilters(List<Exercise> exercises) {
-    final l10n = context.l10n;
-
-    // Note: Muscle groups filter removed per user request
-    // Keeping only equipment and difficulty filters
-
-    final equipmentOptions = exercises
-        .map((e) => e.attrezzatura)
-        .toSet()
-        .toList()..sort();
-
-    final difficultyOptions = exercises
-        .map((e) => e.difficolta)
-        .toSet()
-        .toList()..sort();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Difficulty Filter (Collapsible)
-        InkWell(
-          onTap: () => setState(() => _showDifficultyFilter = !_showDifficultyFilter),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              children: [
-                Icon(
-                  _showDifficultyFilter ? AppIcons.expandMore : AppIcons.chevronRight,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  l10n.difficulty,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                if (_selectedDifficulty.isNotEmpty) ...[
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: context.colors.primary,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${_selectedDifficulty.length}',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: context.colors.onPrimary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ),
-        if (_showDifficultyFilter) ...[
-          const SizedBox(height: 4),
-          Wrap(
-            spacing: 8,
-            children: difficultyOptions.map((difficulty) {
-              final isSelected = _selectedDifficulty.contains(difficulty);
-              return FilterChip(
-                label: Text(difficulty),
-                selected: isSelected,
-                onSelected: (selected) {
-                  setState(() {
-                    if (selected) {
-                      _selectedDifficulty.add(difficulty);
-                    } else {
-                      _selectedDifficulty.remove(difficulty);
-                    }
-                  });
-                },
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 12),
-        ],
-
-        // Equipment Filter (Collapsible)
-        InkWell(
-          onTap: () => setState(() => _showEquipmentFilter = !_showEquipmentFilter),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              children: [
-                Icon(
-                  _showEquipmentFilter ? AppIcons.expandMore : AppIcons.chevronRight,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  l10n.equipment,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                if (_selectedEquipment.isNotEmpty) ...[
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: context.colors.primary,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${_selectedEquipment.length}',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: context.colors.onPrimary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ),
-        if (_showEquipmentFilter) ...[
-          const SizedBox(height: 4),
-          Wrap(
-            spacing: 8,
-            children: equipmentOptions.map((equipment) {
-              final isSelected = _selectedEquipment.contains(equipment);
-              return FilterChip(
-                label: Text(equipment),
-                selected: isSelected,
-                onSelected: (selected) {
-                  setState(() {
-                    if (selected) {
-                      _selectedEquipment.add(equipment);
-                    } else {
-                      _selectedEquipment.remove(equipment);
-                    }
-                  });
-                },
-              );
-            }).toList(),
-          ),
-        ],
-      ],
-    );
-  }
 
   Widget _buildExerciseLeading(Exercise exercise, bool isSelected) {
     if (isSelected) {
@@ -2033,28 +1889,6 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     ref.read(exerciseSearchQueryProvider.notifier).state = query;
   }
 
-  Widget _buildQuickFilterChip({
-    required String label,
-    required String icon,
-    required VoidCallback onTap,
-    required bool isActive,
-  }) {
-    return FilterChip(
-      avatar: Text(icon, style: context.textTheme.bodyMedium),
-      label: Text(label),
-      selected: isActive,
-      onSelected: (_) => onTap(),
-      selectedColor: context.colors.primaryContainer,
-      checkmarkColor: context.colors.primary,
-      labelStyle: context.textTheme.labelMedium?.copyWith(
-        fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-        color: isActive
-          ? context.colors.onPrimaryContainer
-          : context.colors.onSurfaceVariant,
-      ),
-    );
-  }
-
   void _addSelectedToWorkout() {
     if (_selectedExercises.isEmpty) return;
 
@@ -2108,7 +1942,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         if (!mounted) return;
         SnackBarService.showError(
           context,
-          context.l10n.someExercisesNotFound ?? 'Some exercises not found',
+          context.l10n.someExercisesNotFound,
         );
         return;
       }
@@ -2150,7 +1984,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       Navigator.of(context).pop();
       SnackBarService.showSuccess(
         context,
-        '✅ ${context.l10n.templateAddedToWorkout ?? "Template added to workout"}',
+        '✅ ${context.l10n.templateAddedToWorkout}',
       );
 
     } catch (e) {
@@ -2160,7 +1994,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       if (!mounted) return;
       SnackBarService.showError(
         context,
-        context.l10n.errorAddingTemplate ?? 'Error adding template',
+        context.l10n.errorAddingTemplate,
       );
     }
   }
@@ -2247,6 +2081,213 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       );
     }
   }
+}
 
+/// Filter Bottom Sheet Widget
+class _FilterBottomSheet extends StatefulWidget {
+  final List<Exercise> exercises;
+  final List<String> selectedDifficulty;
+  final List<String> selectedEquipment;
+  final Function(List<String> difficulty, List<String> equipment) onApply;
+  final VoidCallback onReset;
 
+  const _FilterBottomSheet({
+    required this.exercises,
+    required this.selectedDifficulty,
+    required this.selectedEquipment,
+    required this.onApply,
+    required this.onReset,
+  });
+
+  @override
+  State<_FilterBottomSheet> createState() => _FilterBottomSheetState();
+}
+
+class _FilterBottomSheetState extends State<_FilterBottomSheet> {
+  late List<String> _tempDifficulty;
+  late List<String> _tempEquipment;
+
+  @override
+  void initState() {
+    super.initState();
+    _tempDifficulty = List.from(widget.selectedDifficulty);
+    _tempEquipment = List.from(widget.selectedEquipment);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
+    final equipmentOptions = widget.exercises
+        .map((e) => e.attrezzatura)
+        .toSet()
+        .toList()
+      ..sort();
+
+    final difficultyOptions = widget.exercises
+        .map((e) => e.difficolta)
+        .toSet()
+        .toList()
+      ..sort();
+
+    return Container(
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Handle bar
+            Container(
+              margin: const EdgeInsets.only(top: 12),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+
+            // Header
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Icon(AppIcons.filterListOutlined, color: context.colors.primary),
+                  const SizedBox(width: 12),
+                  Text(
+                    l10n.filters,
+                    style: context.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Spacer(),
+                  TextButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        _tempDifficulty.clear();
+                        _tempEquipment.clear();
+                      });
+                    },
+                    icon: const Icon(AppIcons.clear),
+                    label: Text(l10n.reset),
+                  ),
+                ],
+              ),
+            ),
+
+            const Divider(height: 1),
+
+            // Filter content
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Difficulty Section
+                    Text(
+                      l10n.difficulty,
+                      style: context.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: difficultyOptions.map((difficulty) {
+                        final isSelected = _tempDifficulty.contains(difficulty);
+                        return FilterChip(
+                          label: Text(difficulty),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            setState(() {
+                              if (selected) {
+                                _tempDifficulty.add(difficulty);
+                              } else {
+                                _tempDifficulty.remove(difficulty);
+                              }
+                            });
+                          },
+                          backgroundColor: context.colors.surface,
+                          selectedColor: context.colors.primaryContainer,
+                        );
+                      }).toList(),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Equipment Section
+                    Text(
+                      l10n.equipment,
+                      style: context.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: equipmentOptions.map((equipment) {
+                        final isSelected = _tempEquipment.contains(equipment);
+                        return FilterChip(
+                          label: Text(equipment),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            setState(() {
+                              if (selected) {
+                                _tempEquipment.add(equipment);
+                              } else {
+                                _tempEquipment.remove(equipment);
+                              }
+                            });
+                          },
+                          backgroundColor: context.colors.surface,
+                          selectedColor: context.colors.primaryContainer,
+                        );
+                      }).toList(),
+                    ),
+
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
+            ),
+
+            // Action buttons
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        widget.onReset();
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(l10n.reset),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    flex: 2,
+                    child: FilledButton(
+                      onPressed: () {
+                        widget.onApply(_tempDifficulty, _tempEquipment);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(l10n.apply),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

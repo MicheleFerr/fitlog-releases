@@ -261,6 +261,27 @@ class FirebaseAnalyticsService implements IAnalyticsService {
     }
   }
 
+  /// 🔐 SECURITY: Stop and clear all active traces on logout
+  Future<void> clearOnLogout() async {
+    try {
+      for (final trace in _activeTraces.values) {
+        try {
+          await trace.stop();
+        } catch (_) {
+          // Trace may already be stopped
+        }
+      }
+      _activeTraces.clear();
+      if (kDebugMode) {
+        debugPrint('🔐 FirebaseAnalyticsService: cleared active traces on logout');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Error clearing analytics on logout: $e');
+      }
+    }
+  }
+
   @override
   Future<void> logNetworkRequest({
     required String url,

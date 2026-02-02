@@ -14,7 +14,10 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 /// Provider for the WorkoutSessionLAService singleton
 final workoutSessionLAServiceProvider = Provider<WorkoutSessionLAService>((ref) {
   final service = WorkoutSessionLAService();
-  service.initialize();
+  // Initialize service and handle errors
+  service.initialize().catchError((e, stack) {
+    debugPrint('[WorkoutSessionLA] Failed to initialize service: $e\n$stack');
+  });
   return service;
 });
 
@@ -68,7 +71,6 @@ class WorkoutSessionLAState {
 /// Notifier that manages the Live Activity lifecycle
 class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
   StreamSubscription<WorkoutSessionEvent>? _eventSubscription;
-  bool _wasInRestMode = false;
 
   /// Guard flag to prevent double transition when timer completes
   /// This prevents race condition where timer state changes fire twice
@@ -139,8 +141,6 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
       });
     }
 
-    // Track if we're entering rest mode
-    _wasInRestMode = state.mode == WorkoutSessionMode.rest;
   }
 
   /// Transition Live Activity back to exercise mode after rest timer ends

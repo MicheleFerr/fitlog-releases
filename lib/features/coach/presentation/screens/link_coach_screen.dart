@@ -337,16 +337,27 @@ class _LinkCoachScreenState extends ConsumerState<LinkCoachScreen> {
           .read(athleteActionsProvider.notifier)
           .linkViaCode(_currentCode);
 
-      if (id != null && mounted) {
-        SnackBarService.showSuccess(
-          context,
-          'Collegato con ${_foundCoach!.coachName}!',
-        );
-        Navigator.of(context).pop(true);
+      if (mounted) {
+        if (id != null) {
+          SnackBarService.showSuccess(
+            context,
+            context.l10n.linkedToCoach(_foundCoach!.coachName),
+          );
+          Navigator.of(context).pop(true);
+        } else {
+          SnackBarService.showError(
+            context,
+            context.l10n.somethingWentWrong,
+          );
+        }
       }
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(context, e.toString());
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+        SnackBarService.showError(
+          context,
+          errorMessage.isNotEmpty ? errorMessage : context.l10n.somethingWentWrong,
+        );
       }
     } finally {
       if (mounted) {

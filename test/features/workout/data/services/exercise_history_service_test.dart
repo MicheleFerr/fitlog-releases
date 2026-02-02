@@ -112,13 +112,11 @@ void main() {
         'Incomplete Workout',
         'Squat',
         [
-          const ExerciseSetModel(
+          ExerciseSetModel(
             id: 'set1',
             setNumber: 1,
             weight: 100.0,
             reps: 8,
-            volume: 800.0,
-            isCompleted: false, // Not marked as completed
             restTime: 60,
           ),
         ],
@@ -142,23 +140,21 @@ Future<void> _addTestWorkouts(Box<Map> box, String userId) async {
     'Test Workout 1',
     'Bench Press',
     [
-      const ExerciseSetModel(
+      ExerciseSetModel(
         id: 'set1',
         setNumber: 1,
         weight: 80.0,
         reps: 10,
-        volume: 800.0,
-        isCompleted: true,
         restTime: 60,
+        completedAt: DateTime.now(),
       ),
-      const ExerciseSetModel(
+      ExerciseSetModel(
         id: 'set2',
         setNumber: 2,
         weight: 80.0,
         reps: 8,
-        volume: 640.0,
-        isCompleted: true,
         restTime: 60,
+        completedAt: DateTime.now(),
       ),
     ],
   );
@@ -169,23 +165,21 @@ Future<void> _addTestWorkouts(Box<Map> box, String userId) async {
     'Test Workout 2',
     'Bench Press',
     [
-      const ExerciseSetModel(
+      ExerciseSetModel(
         id: 'set1',
         setNumber: 1,
         weight: 85.0,
         reps: 8,
-        volume: 680.0,
-        isCompleted: true,
         restTime: 60,
+        completedAt: DateTime.now(),
       ),
-      const ExerciseSetModel(
+      ExerciseSetModel(
         id: 'set2',
         setNumber: 2,
         weight: 85.0,
         reps: 6,
-        volume: 510.0,
-        isCompleted: true,
         restTime: 60,
+        completedAt: DateTime.now(),
       ),
     ],
     createdAt: DateTime.now().subtract(const Duration(days: 1)),
@@ -203,8 +197,6 @@ WorkoutModel _createTestWorkout(
   List<ExerciseSetModel> sets, {
   DateTime? createdAt,
 }) {
-  final totalVolume = sets.fold<double>(0.0, (sum, set) => sum + set.volume);
-  
   final exercise = ExerciseModel(
     id: 'exercise1',
     name: exerciseName,
@@ -213,8 +205,6 @@ WorkoutModel _createTestWorkout(
     sets: sets,
     restTime: 60,
     notes: '',
-    isCompleted: sets.any((s) => s.isCompleted),
-    totalVolume: totalVolume,
     createdAt: createdAt ?? DateTime.now(),
   );
   

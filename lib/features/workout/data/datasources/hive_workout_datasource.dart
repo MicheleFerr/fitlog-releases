@@ -1,4 +1,4 @@
-/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// 🏋️‍♂️ FitLog Pro - Flutter Fitness App
 /// 
 /// 📁 Layer: data/datasources
 /// 🎯 Feature: workout
@@ -11,7 +11,6 @@
 /// - Hive (local storage)
 /// - Data models
 /// - Domain entities
-library;
 
 import 'package:flutter/foundation.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -172,17 +171,18 @@ class HiveWorkoutDataSource {
     data['syncStatus'] = 'pending'; // pending, synced, conflict
 
     // DEBUG: Log first set's isCompleted value before saving
-    if (workout.exercises.isNotEmpty && workout.exercises[0].sets.isNotEmpty) {
-      final firstSet = workout.exercises[0].sets[0];
+    // ✅ FIX: Added null-safety checks to prevent crash on empty lists
+    if (workout.exercises.isNotEmpty && workout.exercises.first.sets.isNotEmpty) {
+      final firstSet = workout.exercises.first.sets.first;
       if (kDebugMode) {
         debugPrint('💾 [Hive] Saving workout "${workout.name}" - First set isCompleted: ${firstSet.isCompleted}');
       }
       final exercisesJson = data['exercises'] as List?;
       if (exercisesJson != null && exercisesJson.isNotEmpty) {
-        final firstExerciseJson = exercisesJson[0] as Map;
+        final firstExerciseJson = exercisesJson.first as Map;
         final setsJson = firstExerciseJson['sets'] as List?;
         if (setsJson != null && setsJson.isNotEmpty) {
-          final firstSetJson = setsJson[0] as Map;
+          final firstSetJson = setsJson.first as Map;
           if (kDebugMode) {
             debugPrint('💾 [Hive] First set JSON isCompleted: ${firstSetJson['isCompleted']}');
           }
@@ -408,9 +408,10 @@ class HiveWorkoutDataSource {
         totalSets += exercise.sets.length;
         
         // Count by category
+        // ✅ FIX: Changed default from ExerciseCategory.chest to ExerciseCategory.other
         final category = ExerciseCategory.values.firstWhere(
           (e) => e.name == exercise.category,
-          orElse: () => ExerciseCategory.chest,
+          orElse: () => ExerciseCategory.other,
         );
         exercisesByCategory[category] = (exercisesByCategory[category] ?? 0) + 1;
       }

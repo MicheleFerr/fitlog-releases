@@ -6,7 +6,6 @@
 /// Fix: Added !tutorialState.hasCompletedTutorial to condition
 library;
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -215,7 +214,7 @@ void main() {
       });
 
       final container = ProviderContainer();
-      final notifier = container.read(workoutTutorialProvider.notifier);
+      container.read(workoutTutorialProvider.notifier);
 
       // Wait for SharedPreferences to load
       await Future.delayed(const Duration(milliseconds: 100));
@@ -235,7 +234,7 @@ void main() {
       });
 
       final container = ProviderContainer();
-      final notifier = container.read(workoutTutorialProvider.notifier);
+      container.read(workoutTutorialProvider.notifier);
 
       // Wait longer for async state loading
       await Future.delayed(const Duration(milliseconds: 300));

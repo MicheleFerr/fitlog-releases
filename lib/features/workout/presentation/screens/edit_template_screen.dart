@@ -37,8 +37,6 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
   late List<ExerciseTemplate> _exercises;
   bool _isLoading = false;
   bool _hasChanges = false;
-  bool _isPublic = false;
-
   // Track which exercises are expanded
   final Map<int, bool> _expandedExercises = {};
 
@@ -49,7 +47,6 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
     _descriptionController =
         TextEditingController(text: widget.template.description);
     _exercises = List.from(widget.template.exercises);
-    _isPublic = widget.template.isPublic;
 
     // Start first exercise expanded for immediate feedback
     if (_exercises.isNotEmpty) {
@@ -1062,7 +1059,11 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
       setState(() => _isLoading = false);
 
       if (mounted) {
-        SnackBarService.showError(context, context.l10n.error);
+        final errorMsg = e.toString();
+        SnackBarService.showError(
+          context,
+          context.l10n.errorWithMessage(errorMsg),
+        );
       }
     }
   }

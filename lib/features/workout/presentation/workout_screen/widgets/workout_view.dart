@@ -82,7 +82,6 @@ class WorkoutView extends ConsumerStatefulWidget {
 
 class _WorkoutViewState extends ConsumerState<WorkoutView> {
   final GlobalKey _headerKey = GlobalKey();
-  double _headerHeight = 120.0; // Default estimate
 
   @override
   void initState() {
@@ -96,9 +95,7 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
     if (context != null) {
       final box = context.findRenderObject() as RenderBox?;
       if (box != null && mounted) {
-        setState(() {
-          _headerHeight = box.size.height;
-        });
+        // Header measurement available: box.size.height
       }
     }
   }

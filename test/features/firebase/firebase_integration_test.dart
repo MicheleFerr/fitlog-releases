@@ -350,11 +350,9 @@ class MockFirebaseService {
   }
   
   // Offline support simulation
-  bool _isOffline = false;
   final List<Map<String, dynamic>> _offlineQueue = [];
-  
+
   void goOffline() {
-    _isOffline = true;
     _logOperation(FirebaseOperation(
       type: OperationType.goOffline,
       timestamp: DateTime.now(),
@@ -362,7 +360,6 @@ class MockFirebaseService {
   }
   
   void goOnline() {
-    _isOffline = false;
     _syncOfflineQueue();
     _logOperation(FirebaseOperation(
       type: OperationType.goOnline,
@@ -372,7 +369,7 @@ class MockFirebaseService {
   
   void _syncOfflineQueue() {
     // Process offline queue
-    for (final operation in _offlineQueue) {
+    for (final _ in _offlineQueue) {
       // Process operation
     }
     _offlineQueue.clear();

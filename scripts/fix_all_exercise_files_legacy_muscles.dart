@@ -70,8 +70,6 @@ void main() async {
     for (final exercise in exercises) {
       if (exercise is! Map<String, dynamic>) continue;
 
-      var modified = false;
-
       // Fix focus (single string)
       if (exercise.containsKey('focus')) {
         final focus = exercise['focus'];
@@ -81,7 +79,7 @@ void main() async {
             exercise['focus'] = newFocus;
             stats[focus] = (stats[focus] ?? 0) + 1;
             fixedInFile++;
-            modified = true;
+
           }
         }
       }
@@ -96,7 +94,7 @@ void main() async {
             if (newMuscle != muscleStr) {
               stats[muscleStr] = (stats[muscleStr] ?? 0) + 1;
               fixedInFile++;
-              modified = true;
+  
             }
             return newMuscle;
           }).toList();

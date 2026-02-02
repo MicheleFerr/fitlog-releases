@@ -286,6 +286,30 @@ class DashboardStats {
 /// 🔐 USER ISOLATION: Cache key is now user-scoped to prevent data leakage
 /// when switching between accounts. Uses UserCacheKeyManager.
 class ProgressCacheRepository {
+  /// 🔐 SECURITY: Clear all static caches on logout to prevent data leakage
+  static void clearOnLogout() {
+    // Cancel all debounced timers
+    for (final timer in _debouncedInvalidations.values) {
+      timer.cancel();
+    }
+    _debouncedInvalidations.clear();
+
+    // Complete and clear all operation locks
+    for (final lock in _operationLocks.values) {
+      if (!lock.isCompleted) {
+        lock.completeError(Exception('Cleared on logout'));
+      }
+    }
+    _operationLocks.clear();
+
+    // Clear active calculations
+    _CacheStateManager._clearOnLogout();
+
+    if (kDebugMode) {
+      debugPrint('[ProgressCache] 🔐 Cleared all static caches on logout');
+    }
+  }
+
   ProgressCacheRepository(this._prefs) {
     _initCompleter = Completer<void>();
     _initialize();
@@ -928,6 +952,16 @@ final workoutStatsCalculatorProvider = Provider<WorkoutStatsCalculator>((ref) {
 /// Global state manager for cache operations
 class _CacheStateManager {
   static final Map<String, Completer<DashboardStats>> _activeCalculations = {};
+
+  /// 🔐 SECURITY: Clear active calculations on logout
+  static void _clearOnLogout() {
+    for (final completer in _activeCalculations.values) {
+      if (!completer.isCompleted) {
+        completer.completeError(Exception('Cleared on logout'));
+      }
+    }
+    _activeCalculations.clear();
+  }
 
   /// Ensure only one calculation per user at a time with debug logging
   static Future<DashboardStats> withSingleCalculation(

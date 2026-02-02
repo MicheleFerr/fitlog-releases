@@ -52,7 +52,6 @@ class _PdfExportOptionsDialogState extends ConsumerState<PdfExportOptionsDialog>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context);
 
     return AlertDialog(

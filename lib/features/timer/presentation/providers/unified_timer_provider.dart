@@ -1,5 +1,5 @@
 import 'dart:async'
-    show Timer, scheduleMicrotask, unawaited, Completer, TimeoutException;
+    show Timer, unawaited, Completer, TimeoutException;
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/services.dart';
@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_st
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_session_la_provider.dart';
+// ✅ FIX: Added explicit import for workoutSessionLAServiceProvider
 import 'package:gymbro_flutter_new/features/workout/data/services/workout_session_la_service.dart' show WorkoutSessionMode;
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
@@ -280,9 +281,27 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       final boxManager = ref.read(hiveBoxManagerProvider);
       _storage = await boxManager.openBox<Map>('timer_storage');
 
-      // Initialize audio player
-      _audioPlayer = AudioPlayer();
-      await _audioPlayer!.setPlayerMode(PlayerMode.lowLatency);
+      // FIX: Only initialize AudioPlayer on non-iOS platforms.
+      // iOS uses ONLY the native bridge for audio (see _playTimerAudio).
+      // Initializing AudioPlayer on iOS sets AVAudioSession category to .playback
+      // WITHOUT .mixWithOthers, which stops any background music the user is listening to.
+      if (!Platform.isIOS) {
+        // Configure global audio context BEFORE creating any player instance
+        // to ensure mixWithOthers is set and we don't steal audio focus.
+        AudioPlayer.global.setAudioContext(AudioContext(
+          iOS: AudioContextIOS(
+            category: AVAudioSessionCategory.ambient,
+            options: {AVAudioSessionOptions.mixWithOthers},
+          ),
+          android: AudioContextAndroid(
+            audioFocus: AndroidAudioFocus.none,
+            contentType: AndroidContentType.sonification,
+            usageType: AndroidUsageType.assistanceSonification,
+          ),
+        ));
+        _audioPlayer = AudioPlayer();
+        await _audioPlayer!.setPlayerMode(PlayerMode.lowLatency);
+      }
 
       // CRITICAL FIX: COMPLETELY DISABLE flutter_local_notifications on iOS
       // iOS uses ONLY native notifications to prevent duplicates and enable custom sounds
@@ -1479,7 +1498,6 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         }
 
         // Use localized titles and bodies instead of hardcoded NotificationService
-        String? notificationId;
         try {
           // FIX: Removed faulty delivery verification that caused duplicate notifications
           // The verification was returning false even when notification was delivered,

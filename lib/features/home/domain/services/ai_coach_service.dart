@@ -475,7 +475,6 @@ https://doi.org/10.1007/s40279-017-0713-y''',
     if (data.isEmpty) return insights;
 
     DateTime? lastWorkoutDate;
-    String lastWorkoutName = '';
 
     if (useWorkouts) {
       // Using Workout entities (preferred)
@@ -492,7 +491,6 @@ https://doi.org/10.1007/s40279-017-0713-y''',
 
       final lastWorkout = sortedWorkouts.first;
       lastWorkoutDate = (lastWorkout.endTime ?? lastWorkout.createdAt) as DateTime;
-      lastWorkoutName = lastWorkout.name as String;
     } else {
       // Fallback to ExerciseActivity
       final activities = data.cast<ExerciseActivity>();
@@ -509,7 +507,6 @@ https://doi.org/10.1007/s40279-017-0713-y''',
         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
       lastWorkoutDate = sortedActivities.first.createdAt;
-      lastWorkoutName = sortedActivities.first.exerciseName;
     }
 
     final hoursSinceLastWorkout = DateTime.now().difference(lastWorkoutDate).inHours;

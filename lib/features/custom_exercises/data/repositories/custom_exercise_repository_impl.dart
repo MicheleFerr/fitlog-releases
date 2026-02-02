@@ -65,9 +65,6 @@ class CustomExerciseRepositoryImpl
 
   // Cache user profile to reduce Firestore queries
   UserProfile? _cachedUserProfile;
-  DateTime? _profileCacheTime;
-  static const Duration _cacheValidity = Duration(hours: 1);
-
   /// Get current user ID
   String? get _currentUserId => _auth.currentUser?.uid;
 

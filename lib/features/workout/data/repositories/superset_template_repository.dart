@@ -22,8 +22,6 @@ class SupersetTemplateRepository {
 
   // 🔐 User-scoped cache keys
   String get _customTemplatesKey => userCacheKeys.supersetTemplatesCacheKey;
-  String get _predefinedLoadedKey =>
-      userCacheKeys.supersetPredefinedLoadedKey;
 
   /// Exercise lookup function that uses the injected repository
   Future<ExerciseLookupFunction?> get _lookupFunction async {

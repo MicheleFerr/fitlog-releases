@@ -89,9 +89,6 @@ class RateLimiter {
   /// Last refill timestamp
   DateTime _lastRefill;
 
-  /// Request queue for delayed operations
-  final List<Completer<bool>> _queue = [];
-
   /// Timer for automatic refills
   Timer? _refillTimer;
 

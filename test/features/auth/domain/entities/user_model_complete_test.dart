@@ -127,6 +127,7 @@ void main() {
         // Test con oggetti di tipo diverso
         expect(prefs == 'not a UserPreferences', false);
         expect(prefs == 123, false);
+        // ignore: unnecessary_null_comparison
         expect(prefs == null, false);
       });
 
@@ -177,6 +178,7 @@ void main() {
         // Test con oggetti di tipo diverso
         expect(stats == 'not a UserStats', false);
         expect(stats == 123, false);
+        // ignore: unnecessary_null_comparison
         expect(stats == null, false);
       });
 
@@ -206,6 +208,7 @@ void main() {
         // Test con oggetti di tipo diverso
         expect(user == 'not a UserModel', false);
         expect(user == 123, false);
+        // ignore: unnecessary_null_comparison
         expect(user == null, false);
       });
 

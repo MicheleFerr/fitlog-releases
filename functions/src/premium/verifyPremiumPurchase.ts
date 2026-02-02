@@ -105,7 +105,7 @@ export const verifyPremiumPurchase = onCall<PurchaseData>(async (request) => {
     // Update user profile with premium status
     const userRef = admin.firestore().collection('users').doc(userId);
     const updateData: Record<string, unknown> = {
-      accountTier: purchaseType === 'lifetime' ? 'pro' : 'premium',
+      accountTier: 'premium',
       premiumActivatedAt: admin.firestore.FieldValue.serverTimestamp(),
       lastPurchaseId: purchaseId,
       lastPurchasePlatform: platform,
@@ -289,7 +289,7 @@ export const checkExpiredSubscriptions = onSchedule('every 24 hours', async () =
   // Find users with expired premium
   const expiredUsers = await admin.firestore()
     .collection('users')
-    .where('accountTier', 'in', ['premium', 'pro'])
+    .where('accountTier', '==', 'premium')
     .where('premiumExpiresAt', '<', now)
     .get();
 

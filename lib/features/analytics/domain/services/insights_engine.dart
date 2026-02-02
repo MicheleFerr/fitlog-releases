@@ -391,14 +391,6 @@ class InsightsEngine {
     
     if (volumeProgression.isPlateau) {
       // Calculate specific suggestions
-      final avgWeight = activities.take(10)
-          .expand((a) => a.sets)
-          .where((s) => s.done)
-          .map((s) => double.tryParse(s.weight) ?? 0.0)
-          .where((w) => w > 0)
-          .fold(0.0, (sum, w) => sum + w) / 
-          math.max(1, activities.take(10).expand((a) => a.sets).where((s) => s.done).length);
-      
       insights.add(TrainingInsight(
         type: InsightType.info,
         priority: InsightPriority.low,
@@ -591,12 +583,6 @@ class InsightsEngine {
       final bestPR = lastWeekPRs.first;
       final prTypes = lastWeekPRs.map((pr) => pr.type.name).toSet();
       
-      String improvement = '';
-      if (bestPR.previousValue != null && bestPR.previousValue! > 0) {
-        final increase = ((bestPR.value - bestPR.previousValue!) / bestPR.previousValue! * 100);
-        improvement = increase.toStringAsFixed(1);
-      }
-      
       insights.add(TrainingInsight(
         type: InsightType.achievement,
         priority: InsightPriority.high,
@@ -675,13 +661,7 @@ class InsightsEngine {
         ));
       }
       
-      final overdeveloped = balance.overdeveloped;
-      if (overdeveloped != null) {
-        final currentVolume = balance.volumeDistribution[overdeveloped] ?? 0;
-        final excess = ((balance.imbalanceScores[overdeveloped]! - 1) * 100);
-        
-        // Removed - no longer giving training advice
-      }
+      // Removed - no longer giving training advice for overdeveloped muscles
     } else {
       // Calculate distribution details
       final topGroup = balance.volumeDistribution.entries
@@ -731,13 +711,6 @@ class InsightsEngine {
       final lastWeekVolume = previousWeek.fold(0.0, (sum, a) => 
           sum + VolumeCalculator.calculateTotalVolume(a.sets));
       
-      final avgEffort = lastWeek
-          .expand((a) => a.sets)
-          .where((s) => s.done)
-          .map((s) => s.effort)
-          .fold(0, (sum, e) => sum + e) / 
-          math.max(1, lastWeek.expand((a) => a.sets).where((s) => s.done).length);
-      
       // Show high volume/frequency as observation only
       if (lastWeek.length >= 6 || thisWeekVolume > lastWeekVolume * 1.3) {
         insights.add(TrainingInsight(
@@ -773,9 +746,6 @@ class InsightsEngine {
     for (final entry in muscleGroupDates.entries) {
       final hoursSinceTraining = DateTime.now().difference(entry.value).inHours;
       if (hoursSinceTraining < 48) {
-        final recoveryHours = _getRecoveryTime(entry.key);
-        final remainingHours = math.max(0, recoveryHours - hoursSinceTraining);
-        
         insights.add(TrainingInsight(
           type: InsightType.info,
           priority: InsightPriority.low,
@@ -796,10 +766,6 @@ class InsightsEngine {
     return insights;
   }
   
-  static int _getRecoveryTime(String muscleGroup) {
-    // Removed - recovery is individual
-    return 48; // Default fallback only for calculation
-  }
 
   static List<TrainingInsight> _generateMotivationalInsights(
     List<ExerciseActivity> activities,

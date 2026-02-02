@@ -66,9 +66,9 @@ class _MeasurementInputScreenState
   bool _isDraft = false;
   List<MetricType> _consentedMetrics = [];
 
-  /// Whether we're in single-metric mode (quick add from dashboard card)
-  bool get _isSingleMetricMode =>
-      widget.focusedMetric != null && widget.existingMeasurement == null;
+  /// Whether we're in single-metric mode (quick add/edit from dashboard card)
+  /// Shows only the focused metric field, not the full form
+  bool get _isSingleMetricMode => widget.focusedMetric != null;
 
   final _validator = MeasurementValidator();
 

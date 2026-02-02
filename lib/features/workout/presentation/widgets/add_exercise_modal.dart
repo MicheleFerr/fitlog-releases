@@ -916,7 +916,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                 }
               } else {
                 // Original behavior for single exercise tab
-                final result = await Navigator.of(context).push(
+                await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => ExerciseSearchScreen(
                       onExerciseAdded: widget.onExerciseAdded,
@@ -1153,7 +1153,6 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
         
         // Dynamic sets
         ...sets.asMap().entries.map((entry) {
-          final index = entry.key;
           final set = entry.value;
           return Padding(
             padding: const EdgeInsets.only(bottom: 8),

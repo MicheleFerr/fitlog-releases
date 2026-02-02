@@ -39,8 +39,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
   MuscleGroup? _selectedMuscle;
   MuscleGroup? _hoveredMuscle;
   bool _showComparison = false;
-  final bool _showHelp = false;
-  
+
   // Touch detection regions for accurate muscle selection
   final Map<MuscleGroup, Path> _muscleRegions = {};
   
@@ -909,7 +908,6 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
       // Partiamo da -π/2 (in alto) e procediamo in senso orario
       final anglePerSegment = 2 * math.pi / MuscleGroup.values.length;
       final startAngle = (i * anglePerSegment) - math.pi / 2;
-      final endAngle = ((i + 1) * anglePerSegment) - math.pi / 2;
       
       // Creiamo il Path per il segmento del muscolo
       final path = Path();

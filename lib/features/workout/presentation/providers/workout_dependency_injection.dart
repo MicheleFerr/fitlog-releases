@@ -117,22 +117,6 @@ final workoutStatsProvider = FutureProvider.autoDispose.family<WorkoutStats?, Wo
   );
 });
 
-/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
-/// Automatically disposes provider instances when widget is disposed
-final workoutHistoryProvider = FutureProvider.autoDispose.family<WorkoutHistory?, WorkoutHistoryParams>((ref, params) async {
-  final repository = ref.read(workoutRepositoryProvider);
-
-  final result = await repository.getWorkoutHistory(
-    page: params.page,
-    limit: params.limit,
-  );
-
-  return result.fold(
-    (failure) => null,
-    (history) => history,
-  );
-});
-
 /// Parameter classes for family providers
 class WorkoutStatsParams {
   

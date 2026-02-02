@@ -225,8 +225,12 @@ class AudioDebugPlatformService {
 final audioDebugPlatformServiceProvider = Provider<AudioDebugPlatformService>((ref) {
   final service = AudioDebugPlatformService();
 
-  // Initialize on first access
-  service.initialize();
+  // Initialize on first access with error handling
+  service.initialize().catchError((e, stack) {
+    if (kDebugMode) {
+      debugPrint('[AudioDebugPlatformService] Failed to initialize: $e\n$stack');
+    }
+  });
 
   // Dispose when provider is disposed
   ref.onDispose(() {

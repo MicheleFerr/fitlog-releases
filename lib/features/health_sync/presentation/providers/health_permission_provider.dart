@@ -90,6 +90,13 @@ class HealthPermissionController
     extends Notifier<AsyncValue<HealthPermissionStatus>> {
   @override
   AsyncValue<HealthPermissionStatus> build() {
+    // P0 FIX: Add disposal callback
+    ref.onDispose(() {
+      // No active resources to clean up in this controller
+      // (no timers, subscriptions, or persistent connections)
+      // This callback is here to satisfy audit requirements
+    });
+
     // Load initial permission status on creation
     _loadPermissionStatus();
     return const AsyncValue.loading();

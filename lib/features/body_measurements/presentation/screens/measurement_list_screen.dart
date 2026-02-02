@@ -2,6 +2,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/measurement.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
@@ -16,7 +17,6 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/metric_display.dart';
-import 'package:intl/intl.dart';
 
 /// MeasurementListScreen - Dashboard-style display of body measurements
 ///
@@ -146,8 +146,8 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         builder: (_) => MeasurementInputScreen(
           userId: widget.userId,
           existingMeasurement: existing,
-          // Single-metric mode when card has no data (quick add)
-          focusedMetric: existing == null ? metricType : null,
+          // Single-metric mode: always show only the tapped metric
+          focusedMetric: metricType,
         ),
       ),
     );
@@ -159,6 +159,9 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
 
   /// Import measurements from HealthKit (iOS only)
   Future<void> _importFromHealthKit() async {
+    // Debounce protection - prevent rapid taps
+    if (_isImporting) return;
+
     if (!Platform.isIOS) {
       SnackBarService.showInfo(
         context,
@@ -203,6 +206,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
       final permissionsGranted = permissionResult.fold(
         (failure) {
           if (!mounted) return false;
+          debugPrint('❌ [Import] Permission request failed: ${failure.message}');
           SnackBarService.showError(context, failure.message);
           return false;
         },
@@ -211,10 +215,8 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
 
       if (!permissionsGranted) {
         if (!mounted) return;
-        SnackBarService.showInfo(
-          context,
-          context.l10n.bodyMeasurementsHealthKitPermissionDenied,
-        );
+        // Show dialog with option to open settings
+        await _showPermissionDeniedDialog();
         setState(() => _isImporting = false);
         return;
       }
@@ -223,7 +225,259 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         userId: widget.userId,
         consentedMetrics: consentedMetrics,
         direction: SyncDirection.read,
-        startDate: DateTime.now().subtract(const Duration(days: 90)),
+        startDate: DateTime.now().subtract(const Duration(days: 365)),
+      );
+
+      syncResult.fold(
+        (failure) {
+          if (!mounted) return;
+          debugPrint('❌ [Import] Sync failed: ${failure.message}');
+          SnackBarService.showError(context, failure.message);
+        },
+        (result) async {
+          debugPrint('✅ [Import] Sync completed: ${result.readCount} read');
+          debugPrint('   importedMeasurements: ${result.importedMeasurements.length}');
+
+          // Edge case: No data found in Apple Health
+          if (result.importedMeasurements.isEmpty) {
+            if (!mounted) return;
+            SnackBarService.showInfo(
+              context,
+              context.l10n.bodyMeasurementsImportNoData,
+            );
+            return;
+          }
+
+          // Save imported measurements to local repository with validation
+          final measurementRepo = ref.read(measurementRepositoryProvider);
+          int savedCount = 0;
+          int skippedCount = 0;
+
+          for (final measurement in result.importedMeasurements) {
+            // Data validation - skip invalid values
+            if (!_isValidMeasurement(measurement)) {
+              debugPrint('   ⚠️ Invalid value skipped: ${measurement.metricType.name} = ${measurement.value}');
+              skippedCount++;
+              continue;
+            }
+
+            debugPrint('   Saving: ${measurement.metricType.name} = ${measurement.value} ${measurement.unit}');
+            final saveResult = await measurementRepo.addMeasurement(
+              measurement,
+              hasConsent: true, // Already verified consent above
+            );
+            saveResult.fold(
+              (failure) {
+                debugPrint('   ❌ Save failed: $failure');
+                skippedCount++;
+              },
+              (_) => savedCount++,
+            );
+          }
+          debugPrint('   ✅ Saved $savedCount/${result.importedMeasurements.length} measurements');
+
+          if (!mounted) return;
+
+          // Show appropriate message based on results
+          if (savedCount == 0 && skippedCount > 0) {
+            SnackBarService.showError(
+              context,
+              context.l10n.bodyMeasurementsInvalidValue,
+            );
+          } else if (skippedCount > 0) {
+            // Partial success
+            SnackBarService.showInfo(
+              context,
+              context.l10n.bodyMeasurementsImportPartialSuccess(savedCount, result.importedMeasurements.length),
+            );
+          } else {
+            // Full success
+            SnackBarService.showSuccess(
+              context,
+              context.l10n.bodyMeasurementsImportSuccess(savedCount),
+            );
+          }
+          _loadData();
+        },
+      );
+    } catch (e) {
+      debugPrint('❌ [Import] Unexpected error: $e');
+      if (mounted) {
+        SnackBarService.showError(
+          context,
+          context.l10n.bodyMeasurementsNetworkError,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isImporting = false);
+      }
+    }
+  }
+
+  /// Validate measurement value is within reasonable range
+  bool _isValidMeasurement(Measurement measurement) {
+    final value = measurement.value;
+
+    // Null or NaN check
+    if (value.isNaN || value.isInfinite) return false;
+
+    // Negative values are invalid for body measurements
+    if (value < 0) return false;
+
+    // Type-specific validation
+    switch (measurement.metricType) {
+      case MetricType.weight:
+        // Valid weight range: 1-500 kg
+        return value >= 1 && value <= 500;
+      case MetricType.height:
+        // Valid height range: 50-300 cm
+        return value >= 50 && value <= 300;
+      case MetricType.bodyFatPercentage:
+        // Valid body fat range: 1-70%
+        return value >= 1 && value <= 70;
+      case MetricType.bmi:
+        // Valid BMI range: 10-100
+        return value >= 10 && value <= 100;
+      case MetricType.leanMass:
+        // Valid lean mass range: 10-200 kg
+        return value >= 10 && value <= 200;
+      case MetricType.bodyTemperature:
+        // Valid temperature range: 30-45°C
+        return value >= 30 && value <= 45;
+      default:
+        // For circumferences and other metrics: 1-500 cm
+        return value >= 1 && value <= 500;
+    }
+  }
+
+  /// Show dialog when HealthKit permission is denied
+  Future<void> _showPermissionDeniedDialog() async {
+    final l10n = context.l10n;
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(AppIcons.warning, color: context.warningColor),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(l10n.bodyMeasurementsPermissionDeniedTitle),
+            ),
+          ],
+        ),
+        content: Text(l10n.bodyMeasurementsPermissionDeniedMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(l10n.bodyMeasurementsInputCancel),
+          ),
+          FilledButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              // Open iOS Settings for this app
+              await _openAppSettings();
+            },
+            child: Text(l10n.bodyMeasurementsOpenSettings),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Open device settings for this app
+  Future<void> _openAppSettings() async {
+    if (Platform.isIOS) {
+      // iOS: Open app-specific settings
+      final uri = Uri.parse('app-settings:');
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      }
+    } else if (Platform.isAndroid) {
+      // Android: Open app settings
+      final uri = Uri.parse('package:com.gymbro.fitlog');
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }
+    }
+  }
+
+  /// Platform-agnostic import from health platform (iOS HealthKit / Android Health Connect)
+  Future<void> _importFromHealthPlatform() async {
+    if (Platform.isIOS) {
+      await _importFromHealthKit();
+    } else if (Platform.isAndroid) {
+      await _importFromHealthConnect();
+    }
+  }
+
+  /// Platform-agnostic export to health platform
+  Future<void> _exportToHealthPlatform() async {
+    if (Platform.isIOS) {
+      await _exportToHealthKit();
+    } else if (Platform.isAndroid) {
+      await _exportToHealthConnect();
+    }
+  }
+
+  /// Import from Android Health Connect
+  Future<void> _importFromHealthConnect() async {
+    if (_isImporting) return;
+
+    setState(() => _isImporting = true);
+
+    try {
+      final healthKitService = ref.read(healthKitServiceProvider);
+
+      // Check if Health Connect is available
+      final isAvailable = await healthKitService.isAvailable();
+      if (!isAvailable) {
+        if (!mounted) return;
+        // Show dialog prompting to install Health Connect
+        await _showHealthConnectRequiredDialog();
+        setState(() => _isImporting = false);
+        return;
+      }
+
+      // Proceed with same flow as iOS (most logic is shared)
+      final consentRepo = ref.read(consentRepositoryProvider);
+      var consentResult = await consentRepo.getConsentedMetrics(widget.userId);
+      var consentedMetrics = consentResult.getOrElse((_) => <MetricType>[]);
+
+      if (consentedMetrics.isEmpty) {
+        if (!mounted) return;
+        final consentGranted = await _showHealthKitConsentDialog();
+        if (!consentGranted) {
+          if (mounted) setState(() => _isImporting = false);
+          return;
+        }
+        consentResult = await consentRepo.getConsentedMetrics(widget.userId);
+        consentedMetrics = consentResult.getOrElse((_) => <MetricType>[]);
+      }
+
+      final permissionResult = await healthKitService.requestPermissions(consentedMetrics);
+      final permissionsGranted = permissionResult.fold(
+        (failure) {
+          if (!mounted) return false;
+          SnackBarService.showError(context, failure.message);
+          return false;
+        },
+        (granted) => granted,
+      );
+
+      if (!permissionsGranted) {
+        if (!mounted) return;
+        await _showPermissionDeniedDialog();
+        if (mounted) setState(() => _isImporting = false);
+        return;
+      }
+
+      final syncResult = await healthKitService.syncMeasurements(
+        userId: widget.userId,
+        consentedMetrics: consentedMetrics,
+        direction: SyncDirection.read,
+        startDate: DateTime.now().subtract(const Duration(days: 365)),
       );
 
       syncResult.fold(
@@ -232,34 +486,171 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
           SnackBarService.showError(context, failure.message);
         },
         (result) async {
-          // Save imported measurements to local repository
-          if (result.importedMeasurements.isNotEmpty) {
-            final measurementRepo = ref.read(measurementRepositoryProvider);
-            for (final measurement in result.importedMeasurements) {
-              await measurementRepo.addMeasurement(
-                measurement,
-                hasConsent: true, // Already verified consent above
-              );
-            }
+          if (result.importedMeasurements.isEmpty) {
+            if (!mounted) return;
+            SnackBarService.showInfo(context, context.l10n.bodyMeasurementsImportNoData);
+            return;
           }
+
+          final measurementRepo = ref.read(measurementRepositoryProvider);
+          int savedCount = 0;
+          for (final measurement in result.importedMeasurements) {
+            if (!_isValidMeasurement(measurement)) continue;
+            final saveResult = await measurementRepo.addMeasurement(
+              measurement,
+              hasConsent: true,
+            );
+            saveResult.fold((_) {}, (_) => savedCount++);
+          }
+
           if (!mounted) return;
           SnackBarService.showSuccess(
             context,
-            context.l10n.bodyMeasurementsImportSuccess(result.readCount),
+            context.l10n.bodyMeasurementsImportSuccess(savedCount),
           );
           _loadData();
         },
       );
-    } finally {
+    } catch (e) {
       if (mounted) {
-        setState(() => _isImporting = false);
+        SnackBarService.showError(context, context.l10n.bodyMeasurementsNetworkError);
       }
+    } finally {
+      if (mounted) setState(() => _isImporting = false);
     }
+  }
+
+  /// Export to Android Health Connect
+  Future<void> _exportToHealthConnect() async {
+    if (_isImporting || _measurements.isEmpty) return;
+
+    setState(() => _isImporting = true);
+
+    try {
+      final healthKitService = ref.read(healthKitServiceProvider);
+
+      // Check if Health Connect is available
+      final isAvailable = await healthKitService.isAvailable();
+      if (!isAvailable) {
+        if (!mounted) return;
+        await _showHealthConnectRequiredDialog();
+        if (mounted) setState(() => _isImporting = false);
+        return;
+      }
+
+      // Same flow as iOS export
+      final consentRepo = ref.read(consentRepositoryProvider);
+      final consentResult = await consentRepo.getConsentedMetrics(widget.userId);
+      final consentedMetrics = consentResult.getOrElse((_) => <MetricType>[]);
+
+      if (consentedMetrics.isEmpty) {
+        if (!mounted) return;
+        SnackBarService.showError(context, context.l10n.bodyMeasurementsNoConsentedMetrics);
+        return;
+      }
+
+      final permissionResult = await healthKitService.requestPermissions(consentedMetrics);
+      final permissionsGranted = permissionResult.fold(
+        (failure) {
+          if (!mounted) return false;
+          SnackBarService.showError(context, failure.message);
+          return false;
+        },
+        (granted) => granted,
+      );
+
+      if (!permissionsGranted) {
+        if (!mounted) return;
+        await _showPermissionDeniedDialog();
+        return;
+      }
+
+      final validMeasurements = _measurements.where((m) => _isValidMeasurement(m)).toList();
+      final syncResult = await healthKitService.syncMeasurements(
+        userId: widget.userId,
+        consentedMetrics: consentedMetrics,
+        direction: SyncDirection.write,
+        startDate: DateTime.now().subtract(const Duration(days: 365)),
+        measurements: validMeasurements,
+      );
+
+      syncResult.fold(
+        (failure) {
+          if (!mounted) return;
+          SnackBarService.showError(context, failure.message);
+        },
+        (result) {
+          if (!mounted) return;
+          SnackBarService.showSuccess(
+            context,
+            context.l10n.bodyMeasurementsExportSuccess(result.writeCount),
+          );
+        },
+      );
+    } catch (e) {
+      if (mounted) {
+        SnackBarService.showError(context, context.l10n.bodyMeasurementsNetworkError);
+      }
+    } finally {
+      if (mounted) setState(() => _isImporting = false);
+    }
+  }
+
+  /// Show dialog when Health Connect is not installed (Android)
+  Future<void> _showHealthConnectRequiredDialog() async {
+    final l10n = context.l10n;
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(AppIcons.healthAndSafety, color: context.colors.primary),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(l10n.bodyMeasurementsPermissionDeniedTitle),
+            ),
+          ],
+        ),
+        content: Text(l10n.bodyMeasurementsHealthConnectRequired),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(l10n.bodyMeasurementsInputCancel),
+          ),
+          FilledButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              // Open Play Store to install Health Connect
+              final uri = Uri.parse(
+                'https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata',
+              );
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              }
+            },
+            child: Text(l10n.bodyMeasurementsInstallHealthConnect),
+          ),
+        ],
+      ),
+    );
   }
 
   /// Export measurements to HealthKit (iOS only)
   Future<void> _exportToHealthKit() async {
+    // Debounce protection
+    if (_isImporting) return;
+
     if (!Platform.isIOS) return;
+
+    // Edge case: No local measurements to export
+    if (_measurements.isEmpty) {
+      SnackBarService.showInfo(
+        context,
+        context.l10n.bodyMeasurementsListEmpty,
+      );
+      return;
+    }
 
     setState(() => _isImporting = true);
 
@@ -283,6 +674,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
       final permissionsGranted = permissionResult.fold(
         (failure) {
           if (!mounted) return false;
+          debugPrint('❌ [Export] Permission request failed: ${failure.message}');
           SnackBarService.showError(context, failure.message);
           return false;
         },
@@ -291,9 +683,20 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
 
       if (!permissionsGranted) {
         if (!mounted) return;
+        await _showPermissionDeniedDialog();
+        return;
+      }
+
+      // Filter only valid measurements before export
+      final validMeasurements = _measurements
+          .where((m) => _isValidMeasurement(m))
+          .toList();
+
+      if (validMeasurements.isEmpty) {
+        if (!mounted) return;
         SnackBarService.showInfo(
           context,
-          context.l10n.bodyMeasurementsHealthKitPermissionDenied,
+          context.l10n.bodyMeasurementsInvalidValue,
         );
         return;
       }
@@ -302,23 +705,40 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         userId: widget.userId,
         consentedMetrics: consentedMetrics,
         direction: SyncDirection.write,
-        startDate: DateTime.now().subtract(const Duration(days: 90)),
-        measurements: _measurements,
+        startDate: DateTime.now().subtract(const Duration(days: 365)),
+        measurements: validMeasurements,
       );
 
       syncResult.fold(
         (failure) {
           if (!mounted) return;
+          debugPrint('❌ [Export] Sync failed: ${failure.message}');
           SnackBarService.showError(context, failure.message);
         },
         (result) {
           if (!mounted) return;
-          SnackBarService.showSuccess(
-            context,
-            context.l10n.bodyMeasurementsExportSuccess(result.writeCount),
-          );
+          if (result.writeCount == 0) {
+            // No data was exported (possibly no supported metrics)
+            SnackBarService.showInfo(
+              context,
+              context.l10n.bodyMeasurementsImportNoData,
+            );
+          } else {
+            SnackBarService.showSuccess(
+              context,
+              context.l10n.bodyMeasurementsExportSuccess(result.writeCount),
+            );
+          }
         },
       );
+    } catch (e) {
+      debugPrint('❌ [Export] Unexpected error: $e');
+      if (mounted) {
+        SnackBarService.showError(
+          context,
+          context.l10n.bodyMeasurementsNetworkError,
+        );
+      }
     } finally {
       if (mounted) {
         setState(() => _isImporting = false);
@@ -491,72 +911,6 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
     };
   }
 
-  /// Handle delete action
-  Future<void> _onDelete(Measurement measurement) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text(context.l10n.bodyMeasurementsListDeleteConfirmTitle),
-        content: Text(context.l10n.bodyMeasurementsListDeleteConfirmMessage),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(context.l10n.bodyMeasurementsInputCancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: FilledButton.styleFrom(
-              backgroundColor: context.colors.error,
-            ),
-            child: Text(context.l10n.bodyMeasurementsListDelete),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed != true) return;
-
-    final measurementRepo = ref.read(measurementRepositoryProvider);
-    final result = await measurementRepo.deleteMeasurement(
-      measurementId: measurement.id,
-      userId: widget.userId,
-    );
-
-    result.fold(
-      (failure) {
-        if (!mounted) return;
-        SnackBarService.showError(
-          context,
-          context.l10n.bodyMeasurementsListDeleteError,
-        );
-      },
-      (_) {
-        if (!mounted) return;
-        SnackBarService.showSuccess(
-          context,
-          context.l10n.bodyMeasurementsListDeleteSuccess,
-        );
-        _loadData();
-      },
-    );
-  }
-
-  /// Handle edit action
-  void _onEdit(Measurement measurement) async {
-    final result = await Navigator.push<bool>(
-      context,
-      MaterialPageRoute(
-        builder: (_) => MeasurementInputScreen(
-          userId: widget.userId,
-          existingMeasurement: measurement,
-        ),
-      ),
-    );
-
-    if (result == true) {
-      await _loadData();
-    }
-  }
 
   String _getMetricLabel(MetricType metric) {
     switch (metric) {
@@ -647,25 +1001,14 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
     }
   }
 
-  String _formatDate(DateTime date) {
-    final now = DateTime.now();
-    final difference = now.difference(date);
-
-    if (difference.inDays == 0) {
-      return context.l10n.today;
-    } else if (difference.inDays == 1) {
-      return context.l10n.yesterday;
-    } else if (difference.inDays < 7) {
-      return DateFormat.EEEE(Localizations.localeOf(context).toString())
-          .format(date);
-    } else {
-      return DateFormat.yMd(Localizations.localeOf(context).toString())
-          .format(date);
-    }
-  }
-
   /// Compute trend text for a metric by comparing last two values
+  /// Metrics that don't change over time (no trend needed)
+  static const _noTrendMetrics = {MetricType.height};
+
   String? _getTrendText(MetricType metricType) {
+    // Height doesn't change - no trend needed
+    if (_noTrendMetrics.contains(metricType)) return null;
+
     final filtered = _measurements
         .where((m) => m.metricType == metricType)
         .toList()
@@ -680,6 +1023,9 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
   }
 
   TrendDirection? _getTrendDirection(MetricType metricType) {
+    // Height doesn't change - no trend needed
+    if (_noTrendMetrics.contains(metricType)) return null;
+
     final filtered = _measurements
         .where((m) => m.metricType == metricType)
         .toList()
@@ -712,8 +1058,8 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
               );
             },
           ),
-          // Apple Health sync menu (iOS only)
-          if (Platform.isIOS)
+          // Health sync menu (iOS + Android)
+          if (Platform.isIOS || Platform.isAndroid)
             _isImporting
                 ? const Padding(
                     padding: EdgeInsets.all(16),
@@ -724,9 +1070,9 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
                     tooltip: context.l10n.bodyMeasurementsSyncWithHealth,
                     onSelected: (action) {
                       if (action == 'import') {
-                        _importFromHealthKit();
+                        _importFromHealthPlatform();
                       } else if (action == 'export') {
-                        _exportToHealthKit();
+                        _exportToHealthPlatform();
                       }
                     },
                     itemBuilder: (context) => [
@@ -810,14 +1156,8 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
           }),
         ),
 
-        const SizedBox(height: 24),
-
-        // D) Recent history
-        if (_measurements.isNotEmpty) ...[
-          _buildSectionHeader(context.l10n.bodyMeasurementsRecentHistory),
-          const SizedBox(height: 8),
-          _buildRecentHistory(),
-        ],
+        // NOTE: Recent history section removed per user feedback
+        // Users prefer the metric cards dashboard over chronological list
       ],
     );
   }
@@ -920,144 +1260,4 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
     );
   }
 
-  Widget _buildRecentHistory() {
-    // Group measurements by date (show only last 20)
-    final recentMeasurements = _measurements.take(20).toList();
-    final groupedMeasurements = <DateTime, List<Measurement>>{};
-
-    for (final measurement in recentMeasurements) {
-      final date = DateTime(
-        measurement.timestamp.year,
-        measurement.timestamp.month,
-        measurement.timestamp.day,
-      );
-      groupedMeasurements.putIfAbsent(date, () => []).add(measurement);
-    }
-
-    final sortedDates = groupedMeasurements.keys.toList()
-      ..sort((a, b) => b.compareTo(a));
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: sortedDates.map((date) {
-        final measurements = groupedMeasurements[date]!;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 4, bottom: 8),
-              child: Text(
-                _formatDate(date),
-                style: context.textTheme.labelMedium?.copyWith(
-                  color: context.colors.onSurfaceVariant,
-                ),
-              ),
-            ),
-            ...measurements.map((measurement) {
-              return Card(
-                margin: const EdgeInsets.only(bottom: 8),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 4,
-                  ),
-                  leading: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: context.colors.primaryContainer,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                      _getMetricIcon(measurement.metricType),
-                      color: context.colors.onPrimaryContainer,
-                      size: 20,
-                    ),
-                  ),
-                  title: Text(
-                    _getMetricLabel(measurement.metricType),
-                    style: context.textTheme.bodyMedium,
-                  ),
-                  subtitle: Text(
-                    DateFormat.Hm(Localizations.localeOf(context).toString())
-                        .format(measurement.timestamp),
-                    style: context.textTheme.bodySmall,
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: measurement.value.toStringAsFixed(1),
-                              style: context.textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            TextSpan(
-                              text: ' ${measurement.unit}',
-                              style: context.textTheme.bodySmall?.copyWith(
-                                color: context.colors.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      PopupMenuButton<String>(
-                        icon: Icon(
-                          AppIcons.moreVert,
-                          size: 20,
-                          color: context.colors.onSurfaceVariant,
-                        ),
-                        onSelected: (action) {
-                          if (action == 'edit') {
-                            _onEdit(measurement);
-                          } else if (action == 'delete') {
-                            _onDelete(measurement);
-                          }
-                        },
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: 'edit',
-                            child: Row(
-                              children: [
-                                const Icon(AppIcons.edit, size: 20),
-                                const SizedBox(width: 8),
-                                Text(context.l10n.bodyMeasurementsListEdit),
-                              ],
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: 'delete',
-                            child: Row(
-                              children: [
-                                Icon(
-                                  AppIcons.delete,
-                                  size: 20,
-                                  color: context.colors.error,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  context.l10n.bodyMeasurementsListDelete,
-                                  style: context.textTheme.bodyMedium?.copyWith(
-                                    color: context.colors.error,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-            const SizedBox(height: 8),
-          ],
-        );
-      }).toList(),
-    );
-  }
 }

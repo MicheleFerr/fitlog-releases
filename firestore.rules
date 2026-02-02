@@ -20,6 +20,11 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.token.admin == true;
     }
 
+    // Safe email comparison - prevents null == null bypass for anonymous users
+    function emailMatches(docEmail) {
+      return request.auth.token.email != null && request.auth.token.email == docEmail;
+    }
+
     // ============================================================================
     // 🔐 GDPR-COMPLIANT BODY MEASUREMENTS HELPERS
     // ============================================================================
@@ -349,24 +354,24 @@ service cloud.firestore {
       allow create: if request.auth != null &&
         (request.auth.uid == request.resource.data.userId ||
          request.auth.uid == request.resource.data.athleteId ||
-         request.auth.token.email == request.resource.data.coachEmail);
+         emailMatches(request.resource.data.coachEmail));
       // Update: athlete or coach
       allow update: if request.auth != null &&
         (request.auth.uid == resource.data.userId ||
          request.auth.uid == resource.data.athleteId ||
-         request.auth.token.email == resource.data.coachEmail);
+         emailMatches(resource.data.coachEmail));
       // Delete: athlete or coach
       allow delete: if request.auth != null &&
         (resource.data.userId == request.auth.uid ||
          resource.data.athleteId == request.auth.uid ||
-         resource.data.coachEmail == request.auth.token.email);
+         emailMatches(resource.data.coachEmail));
     }
 
     // ============= COACH NOTIFICATIONS =============
     match /coachNotifications/{notificationId} {
       // Il coach può leggere le proprie notifiche usando l'email
       allow read: if request.auth != null &&
-        request.auth.token.email == resource.data.coachEmail;
+        emailMatches(resource.data.coachEmail);
 
       // Permettere list/query per le proprie notifiche
       allow list: if request.auth != null &&
@@ -381,18 +386,18 @@ service cloud.firestore {
 
       // Solo il coach destinatario può aggiornare (per marcare come letta)
       allow update: if request.auth != null &&
-        request.auth.token.email == resource.data.coachEmail;
+        emailMatches(resource.data.coachEmail);
 
       // Solo il coach può eliminare le proprie notifiche
       allow delete: if request.auth != null &&
-        request.auth.token.email == resource.data.coachEmail;
+        emailMatches(resource.data.coachEmail);
     }
 
     // ============= ATHLETE NOTIFICATIONS =============
     match /athleteNotifications/{notificationId} {
       // L'atleta può leggere le proprie notifiche usando l'email
       allow read: if request.auth != null &&
-        request.auth.token.email == resource.data.athleteEmail;
+        emailMatches(resource.data.athleteEmail);
 
       // Permettere list/query per le proprie notifiche
       allow list: if request.auth != null &&
@@ -407,11 +412,11 @@ service cloud.firestore {
 
       // Solo l'atleta destinatario può aggiornare (per marcare come letta)
       allow update: if request.auth != null &&
-        request.auth.token.email == resource.data.athleteEmail;
+        emailMatches(resource.data.athleteEmail);
 
       // Solo l'atleta può eliminare le proprie notifiche
       allow delete: if request.auth != null &&
-        request.auth.token.email == resource.data.athleteEmail;
+        emailMatches(resource.data.athleteEmail);
     }
 
     // ============= WORKOUT TEMPLATES (COACH) =============
@@ -519,8 +524,8 @@ service cloud.firestore {
       allow list: if request.auth != null;
       
       allow read: if request.auth != null && (
-        // Proprietario - AGGIUNTO IL CHECK SULL'EMAIL
-        request.auth.token.email == resource.data.email ||
+        // Proprietario - safe email comparison (prevents null==null bypass)
+        emailMatches(resource.data.email) ||
         request.auth.uid == resource.data.userId ||
         request.auth.uid == resource.data.uid ||
         // Coach con delega - supporta sia userId che email
@@ -538,13 +543,13 @@ service cloud.firestore {
         ))
       );
       
-      allow create: if request.auth != null && 
-        (request.auth.token.email == request.resource.data.email ||
+      allow create: if request.auth != null &&
+        (emailMatches(request.resource.data.email) ||
          request.auth.uid == request.resource.data.userId ||
          request.auth.uid == request.resource.data.uid);
-         
-      allow update, delete: if request.auth != null && 
-        (request.auth.token.email == resource.data.email ||
+
+      allow update, delete: if request.auth != null &&
+        (emailMatches(resource.data.email) ||
          request.auth.uid == resource.data.userId ||
          request.auth.uid == resource.data.uid);
     }
@@ -556,7 +561,7 @@ service cloud.firestore {
       
       allow read: if request.auth != null && (
         // Proprietario
-        request.auth.token.email == resource.data.email ||
+        emailMatches(resource.data.email) ||
         request.auth.uid == resource.data.userId ||
         request.auth.uid == resource.data.uid ||
         // Coach con delega
@@ -566,19 +571,19 @@ service cloud.firestore {
          get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true)
       );
 
-      allow create: if request.auth != null && 
-        (request.auth.token.email == request.resource.data.email ||
+      allow create: if request.auth != null &&
+        (emailMatches(request.resource.data.email) ||
          request.auth.uid == request.resource.data.userId ||
          request.auth.uid == request.resource.data.uid);
-      
+
       // MODIFICATO: ora permette update
-      allow update: if request.auth != null && 
-        (request.auth.token.email == resource.data.email ||
+      allow update: if request.auth != null &&
+        (emailMatches(resource.data.email) ||
          request.auth.uid == resource.data.uid ||
          request.auth.uid == resource.data.userId);
-      
-      allow delete: if request.auth != null && 
-        (request.auth.token.email == resource.data.email ||
+
+      allow delete: if request.auth != null &&
+        (emailMatches(resource.data.email) ||
          request.auth.uid == resource.data.uid ||
          request.auth.uid == resource.data.userId);
     }
@@ -590,7 +595,7 @@ service cloud.firestore {
       
       allow read: if request.auth != null && (
         // Proprietario
-        request.auth.token.email == resource.data.email ||
+        emailMatches(resource.data.email) ||
         request.auth.uid == resource.data.userId ||
         request.auth.uid == resource.data.uid ||
         // Coach con delega
@@ -600,12 +605,12 @@ service cloud.firestore {
          get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true)
       );
 
-      allow create: if request.auth != null && 
-        (request.auth.token.email == request.resource.data.email ||
+      allow create: if request.auth != null &&
+        (emailMatches(request.resource.data.email) ||
          request.auth.uid == request.resource.data.userId ||
          request.auth.uid == request.resource.data.uid);
-      allow update, delete: if request.auth != null && 
-        (request.auth.token.email == resource.data.email ||
+      allow update, delete: if request.auth != null &&
+        (emailMatches(resource.data.email) ||
          request.auth.uid == resource.data.uid ||
          request.auth.uid == resource.data.userId);
     }
@@ -617,7 +622,7 @@ service cloud.firestore {
       
       allow read: if request.auth != null && (
         // Proprietario
-        request.auth.token.email == resource.data.email ||
+        emailMatches(resource.data.email) ||
         request.auth.uid == resource.data.userId ||
         request.auth.uid == resource.data.uid ||
         // Coach con delega
@@ -627,19 +632,19 @@ service cloud.firestore {
          get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true)
       );
 
-      allow create: if request.auth != null && 
-        (request.auth.token.email == request.resource.data.email ||
+      allow create: if request.auth != null &&
+        (emailMatches(request.resource.data.email) ||
          request.auth.uid == request.resource.data.userId ||
          request.auth.uid == request.resource.data.uid);
-      
+
       // MODIFICATO: ora permette update
-      allow update: if request.auth != null && 
-        (request.auth.token.email == resource.data.email ||
+      allow update: if request.auth != null &&
+        (emailMatches(resource.data.email) ||
          request.auth.uid == resource.data.uid ||
          request.auth.uid == resource.data.userId);
-      
-      allow delete: if request.auth != null && 
-        (request.auth.token.email == resource.data.email ||
+
+      allow delete: if request.auth != null &&
+        (emailMatches(resource.data.email) ||
          request.auth.uid == resource.data.uid ||
          request.auth.uid == resource.data.userId);
     }
@@ -680,28 +685,28 @@ service cloud.firestore {
     // ============= SCHEDE (WORKOUT PLANS) =============
     match /schede/{schedaId} {
       allow read: if request.auth != null && (
-        request.auth.token.email == resource.data.utente ||
+        emailMatches(resource.data.utente) ||
         request.auth.uid == resource.data.userId ||
         (request.auth.token.email != null &&
          resource.data.utente != null &&
          exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.utente)))
       );
-      
-      allow create: if request.auth != null && 
-        (request.auth.token.email == request.resource.data.utente ||
+
+      allow create: if request.auth != null &&
+        (emailMatches(request.resource.data.utente) ||
          request.auth.uid == request.resource.data.userId);
-      
+
       allow update: if request.auth != null && (
-        request.auth.token.email == resource.data.utente ||
+        emailMatches(resource.data.utente) ||
         request.auth.uid == resource.data.userId ||
         (request.auth.token.email != null &&
          resource.data.utente != null &&
          exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.utente)) &&
          get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.utente)).data.permissions.canEditWorkout == true)
       );
-      
-      allow delete: if request.auth != null && 
-        (request.auth.token.email == resource.data.utente ||
+
+      allow delete: if request.auth != null &&
+        (emailMatches(resource.data.utente) ||
          request.auth.uid == resource.data.userId);
     }
 
@@ -711,6 +716,8 @@ service cloud.firestore {
       allow create: if request.auth != null && request.auth.uid == userId;
       allow update: if request.auth != null
         && request.auth.uid == userId
+        // Prevent client from self-promoting to premium (only Cloud Functions can change accountTier)
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['accountTier']))
         && (!('completedMin' in request.resource.data) ||
             request.resource.data.completedMin >= resource.data.completedMin)
         // Validate accountMode if being updated (must be solo, coach, or coached)
@@ -901,13 +908,13 @@ service cloud.firestore {
     }
 
     match /cardioSessions/{sessionId} {
-      allow read: if request.auth != null && 
+      allow read: if request.auth != null &&
         (request.auth.uid == resource.data.uid ||
-         request.auth.token.email == resource.data.email);
+         emailMatches(resource.data.email));
 
       allow create: if request.auth != null
         && (request.auth.uid == request.resource.data.uid ||
-            request.auth.token.email == request.resource.data.email)
+            emailMatches(request.resource.data.email))
         && request.resource.data.type in ['walk','run','hiit']
         && request.resource.data.duration is number
         && request.resource.data.mode in ['outdoor','indoor'];
@@ -929,16 +936,15 @@ service cloud.firestore {
     match /timings/{timingId} {
       allow read: if request.auth != null;
       allow create: if request.auth != null &&
-        (request.auth.token.email == request.resource.data.userEmail ||
+        (emailMatches(request.resource.data.userEmail) ||
          request.auth.uid == request.resource.data.userId ||
          request.auth.uid == request.resource.data.uid);
       allow update, delete: if false;
     }
 
     match /esercizi/{esercizioId} {
-      allow read: if true;
-      allow create, update, delete: if request.auth != null && 
-        request.auth.token.admin == true;
+      allow read: if request.auth != null;
+      allow create, update, delete: if isAdmin();
     }
 
     // ============= EXERCISE FEEDBACK SYSTEM =============
@@ -962,22 +968,22 @@ service cloud.firestore {
         !resource.data.approvals.hasAny([request.auth.uid]);
       
       // Solo admin può eliminare
-      allow delete: if request.auth != null && request.auth.token.admin == true;
+      allow delete: if isAdmin();
     }
 
     // ============= USER FEEDBACK STATS =============
     match /userFeedbackStats/{statsId} {
       // L'utente può leggere le proprie statistiche
-      allow read: if request.auth != null && 
-        (resource.data.userId == request.auth.uid || request.auth.token.admin == true);
-      
+      allow read: if isAuthenticated() &&
+        (resource.data.userId == request.auth.uid || isAdmin());
+
       // Sistema può creare/aggiornare (gestito dal service)
-      allow create: if request.auth != null;
-      allow update: if request.auth != null &&
-        (resource.data.userId == request.auth.uid || request.auth.token.admin == true);
-      
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() &&
+        (resource.data.userId == request.auth.uid || isAdmin());
+
       // Solo admin può eliminare
-      allow delete: if request.auth != null && request.auth.token.admin == true;
+      allow delete: if isAdmin();
     }
 
     // ============= EXERCISES DATABASE =============
@@ -986,37 +992,33 @@ service cloud.firestore {
       allow read: if request.auth != null;
 
       // Solo admin può creare, modificare o eliminare
-      allow create, update, delete: if request.auth != null &&
-        request.auth.token.admin == true;
+      allow create, update, delete: if isAdmin();
     }
 
     // ============= EXERCISES MASTER DATABASE =============
     // Master exercise database - read-only for authenticated users
     match /exercises_master/{exerciseId} {
       // All authenticated users can read exercises
-      allow read: if request.auth != null;
+      allow read: if isAuthenticated();
 
       // Only admin can write
-      allow write: if request.auth != null &&
-        request.auth.token.admin == true;
+      allow write: if isAdmin();
     }
 
     // ============= EXERCISES BY LOCALE =============
     // Localized exercise databases (exercises_it, exercises_en)
     match /exercises_it/{exerciseId} {
       // All authenticated users can read exercises
-      allow read: if request.auth != null;
+      allow read: if isAuthenticated();
       // Only admin can write
-      allow write: if request.auth != null &&
-        request.auth.token.admin == true;
+      allow write: if isAdmin();
     }
 
     match /exercises_en/{exerciseId} {
       // All authenticated users can read exercises
-      allow read: if request.auth != null;
+      allow read: if isAuthenticated();
       // Only admin can write
-      allow write: if request.auth != null &&
-        request.auth.token.admin == true;
+      allow write: if isAdmin();
     }
 
     // ============= EXERCISE PATCHES (USER CORRECTIONS) =============
@@ -1032,8 +1034,7 @@ service cloud.firestore {
       allow read: if isAuthenticated();
 
       // UPDATE: Only for status changes (approval/rejection) - admin only
-      allow update: if isAuthenticated()
-        && request.auth.token.admin == true
+      allow update: if isAdmin()
         && request.resource.data.userId == resource.data.userId
         && request.resource.data.exerciseId == resource.data.exerciseId
         && request.resource.data.fieldName == resource.data.fieldName;
@@ -1043,17 +1044,17 @@ service cloud.firestore {
     }
 
     match /attivitaEsercizi/{activityId} {
-      allow read: if request.auth != null && 
+      allow read: if request.auth != null &&
         (request.auth.uid == resource.data.userId ||
-         request.auth.token.email == resource.data.email ||
+         emailMatches(resource.data.email) ||
          request.auth.uid == resource.data.uid);
-      allow create: if request.auth != null && 
+      allow create: if request.auth != null &&
         (request.auth.uid == request.resource.data.userId ||
-         request.auth.token.email == request.resource.data.email ||
+         emailMatches(request.resource.data.email) ||
          request.auth.uid == request.resource.data.uid);
-      allow update, delete: if request.auth != null && 
+      allow update, delete: if request.auth != null &&
         (request.auth.uid == resource.data.userId ||
-         request.auth.token.email == resource.data.email ||
+         emailMatches(resource.data.email) ||
          request.auth.uid == resource.data.uid);
     }
 
@@ -1080,8 +1081,8 @@ service cloud.firestore {
       // Tutti gli utenti autenticati possono leggere per verificare limiti
       allow read: if request.auth != null;
       
-      // Solo il sistema può scrivere (tramite Cloud Functions o Admin SDK)
-      allow create, update: if request.auth != null;
+      // Solo admin può scrivere (tramite Cloud Functions o Admin SDK)
+      allow create, update: if isAdmin();
       
       // Non permettiamo eliminazione
       allow delete: if false;
@@ -1109,7 +1110,7 @@ service cloud.firestore {
       allow read: if request.auth != null && (
         // Proprietario
         request.auth.uid == resource.data.userId ||
-        request.auth.token.email == resource.data.email ||
+        emailMatches(resource.data.email) ||
         // Coach con delega
         (request.auth.token.email != null && (
           // Check con email dell'utente
@@ -1125,20 +1126,20 @@ service cloud.firestore {
         ))
       );
       
-      allow create: if request.auth != null && 
+      allow create: if request.auth != null &&
         (request.auth.uid == request.resource.data.userId ||
-         request.auth.token.email == request.resource.data.email);
-        
-      allow update, delete: if request.auth != null && 
+         emailMatches(request.resource.data.email));
+
+      allow update, delete: if request.auth != null &&
         (request.auth.uid == resource.data.userId ||
-         request.auth.token.email == resource.data.email);
+         emailMatches(resource.data.email));
     }
 
     // ============= WORKOUTS - MODIFICATO PER SUPPORTARE EMAIL =============
     match /workouts/{workoutId} {
       allow read: if request.auth != null && (
         request.auth.uid == resource.data.userId ||
-        request.auth.token.email == resource.data.email  // AGGIUNTO per supportare dati vecchi
+        emailMatches(resource.data.email)  // AGGIUNTO per supportare dati vecchi
       );
       allow create: if request.auth != null && 
         request.auth.uid == request.resource.data.userId;
@@ -1149,12 +1150,12 @@ service cloud.firestore {
     }
 
     match /workoutHistory/{historyId} {
-      allow read: if request.auth != null && 
-        (request.auth.token.email == resource.data.email ||
+      allow read: if request.auth != null &&
+        (emailMatches(resource.data.email) ||
          request.auth.uid == resource.data.userId ||
          request.auth.uid == resource.data.uid);
-      allow create: if request.auth != null && 
-        (request.auth.token.email == request.resource.data.email ||
+      allow create: if request.auth != null &&
+        (emailMatches(request.resource.data.email) ||
          request.auth.uid == request.resource.data.userId ||
          request.auth.uid == request.resource.data.uid);
       allow update: if false;
@@ -1163,7 +1164,7 @@ service cloud.firestore {
     // ============= COLLEZIONI LEGACY (con 's') =============
   match /dropSetsActivity/{activityId} {
     allow read: if request.auth != null && (
-      request.auth.token.email == resource.data.email ||
+      emailMatches(resource.data.email) ||
       request.auth.uid == resource.data.userId ||
       request.auth.uid == resource.data.uid
     );
@@ -1172,7 +1173,7 @@ service cloud.firestore {
 
   match /supersetsActivity/{activityId} {
     allow read: if request.auth != null && (
-      request.auth.token.email == resource.data.email ||
+      emailMatches(resource.data.email) ||
       request.auth.uid == resource.data.userId ||
       request.auth.uid == resource.data.uid
     );
@@ -1969,6 +1970,13 @@ service cloud.firestore {
       // DELETE: Not allowed (GDPR audit trail requirement)
       // Consent can be revoked via update (set state to 'denied')
       allow delete: if false;
+    }
+
+    // ========== CUSTOM EXERCISES (Top-Level Collection) ==========
+    // Path: /custom_exercises/{userId}/exercises/{exerciseId}
+    // Used by CloudSyncProvider for custom exercise sync
+    match /custom_exercises/{userId}/exercises/{exerciseId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
     // ========== BODY MEASUREMENTS (GDPR Article 32 - Security of Processing) ==========

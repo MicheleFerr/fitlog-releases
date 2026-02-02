@@ -339,7 +339,6 @@ void main() {
 
     group('toString', () {
       test('returns string representation', () {
-        final now = DateTime(2024, 1, 1);
         final user = UserModel(
           uid: 'test-uid',
           email: 'test@example.com',
@@ -362,7 +361,6 @@ void main() {
 
     group('equality', () {
       test('equal users are equal', () {
-        final now = DateTime(2024, 1, 1);
         final user1 = UserModel(
           uid: 'test-uid',
           email: 'test@example.com',

@@ -29,7 +29,6 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
   late Animation<double> _scaleAnimation;
   
   ProgressiveOverloadData? _currentWeekData;
-  ProgressiveOverloadData? _previousWeekData;
   
   @override
   void initState() {
@@ -83,14 +82,6 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
       );
     }
     
-    if (previousWeekActivities.isNotEmpty) {
-      _previousWeekData = _createWeekData(
-        previousWeekActivities,
-        previousWeekStart,
-        currentWeekStart.subtract(const Duration(days: 1)),
-        0, // No previous score needed for display
-      );
-    }
   }
 
   DateTime _getWeekStart(DateTime date) {

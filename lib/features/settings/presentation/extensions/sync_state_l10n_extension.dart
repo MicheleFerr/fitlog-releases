@@ -22,7 +22,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 extension CloudSyncStateL10n on CloudSyncState {
   /// Get localized status message based on current sync state
   String getLocalizedStatusMessage(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     // If syncing, show progress message
     if (isSyncing) {
@@ -56,7 +56,7 @@ extension CloudSyncStateL10n on CloudSyncState {
 
   /// Localize error messages from provider
   String _localizeError(BuildContext context, String errorMessage) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     // Map known error patterns to localized strings
     if (errorMessage.contains('not authenticated')) {
@@ -83,7 +83,7 @@ extension CloudSyncStateL10n on CloudSyncState {
 extension SyncProgressL10n on SyncProgress {
   /// Get localized message for current sync progress
   String getLocalizedMessage(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     // Map currentItem string to localization keys
     // Note: currentItem is set in provider with hardcoded English
@@ -132,7 +132,7 @@ extension SyncSummaryL10n on SyncSummary {
   /// Get localized summary message
   /// Example: "Synced 5 workouts, 3 templates, 10 exercises"
   String getLocalizedSummary(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final parts = <String>[];
 
     if (workoutsSynced > 0) {

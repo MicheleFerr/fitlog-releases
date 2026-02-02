@@ -316,27 +316,6 @@ class MaterialScrollItemWithNotifier extends StatelessWidget {
       // This means ExerciseListItem and ExerciseGifWidget DON'T rebuild on scroll
       child: child,
       builder: (context, scrollVelocity, preservedChild) {
-        // Calculate position bias - items further from center react more
-        final normalizedIndex = totalCount > 1 ? index / (totalCount - 1) : 0.5;
-        // ✅ DESIGN: Reduced center bias for more uniform, subtle effect
-        final centerBias = 1.0 + (normalizedIndex - 0.5).abs() * 0.3;
-
-        // Apply intensity multiplier to all effects
-        final intensity = effectIntensity;
-
-        // ✅ DESIGN: Very subtle rotation (max ~0.5 degrees) - was 0.05 (~3-4 degrees)
-        final tiltAngle = scrollVelocity * 0.012 * centerBias * intensity;
-
-        // ✅ DESIGN: Minimal vertical offset (max ~2px) - was 8px
-        final verticalOffset = scrollVelocity * 2 * centerBias * intensity;
-
-        // ✅ DESIGN: Almost imperceptible scale (0.995 - 1.0) - was 0.98
-        final scale = 1.0 - (scrollVelocity.abs() * 0.005 * intensity);
-
-        // ✅ DESIGN: Very slight horizontal shift - was 3
-        final horizontalOffset =
-            scrollVelocity * 1 * (normalizedIndex - 0.5) * intensity;
-
         // ✅ OPTIMIZATION: Skip transforms when velocity is effectively zero
         // This eliminates unnecessary transform calculations when list is idle
         // ✅ BUG FIX: DISABLED SCROLL EFFECTS TEMPORARILY
@@ -346,59 +325,6 @@ class MaterialScrollItemWithNotifier extends StatelessWidget {
         // TODO: Refactor to use AnimatedContainer or ImplicitlyAnimatedWidget pattern
         // which properly preserves child widgets across animations.
         return preservedChild!;
-
-        // Original threshold check (disabled):
-        // if (scrollVelocity.abs() < 0.05) {
-        //   return preservedChild!;
-        // }
-
-        // ✅ DESIGN: Faster, smoother animations with gentler curves
-        return TweenAnimationBuilder<double>(
-          tween: Tween(begin: 0, end: tiltAngle),
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOut,
-          builder: (context, animatedTilt, _) {
-            return TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0, end: verticalOffset),
-              duration: const Duration(milliseconds: 220),
-              curve: Curves.easeOut,
-              builder: (context, animatedVerticalOffset, _) {
-                return TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 1, end: scale),
-                  duration: const Duration(milliseconds: 180),
-                  curve: Curves.easeOut,
-                  builder: (context, animatedScale, _) {
-                    return TweenAnimationBuilder<double>(
-                      tween: Tween(begin: 0, end: horizontalOffset),
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeOut,
-                      builder: (context, animatedHorizontalOffset, child) {
-                        return Transform.scale(
-                          scale: animatedScale,
-                          child: Transform(
-                            transform: Matrix4.identity()
-                              ..setEntry(3, 2, 0.001) // Reduced perspective
-                              ..rotateX(animatedTilt),
-                            alignment: Alignment.center,
-                            child: Transform.translate(
-                              offset: Offset(
-                                animatedHorizontalOffset,
-                                animatedVerticalOffset,
-                              ),
-                              child: child,
-                            ),
-                          ),
-                        );
-                      },
-                      // ✅ CRITICAL: Pass preserved child to innermost builder
-                      child: preservedChild,
-                    );
-                  },
-                );
-              },
-            );
-          },
-        );
       },
     );
   }

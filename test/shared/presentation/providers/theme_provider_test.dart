@@ -6,8 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ThemeNotifier extends StateNotifier<ThemeMode> {
   ThemeNotifier() : super(ThemeMode.system);
   
-  static const String _themeKey = 'theme_mode';
-  
   // Get current theme mode
   ThemeMode get currentTheme => state;
   

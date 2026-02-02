@@ -449,8 +449,6 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
   }
   
   Widget _buildCustomWeightInput() {
-    final theme = Theme.of(context);
-    
     return Row(
       children: [
         Expanded(

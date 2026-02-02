@@ -314,7 +314,9 @@ class AthleteActionsNotifier extends StateNotifier<AsyncValue<void>> {
   /// Link to coach via code
   Future<String?> linkViaCode(String code) async {
     final user = _ref.read(firebaseUserProvider).valueOrNull;
-    if (user == null) return null;
+    if (user == null) {
+      throw Exception('User not authenticated');
+    }
 
     state = const AsyncValue.loading();
 
@@ -334,7 +336,7 @@ class AthleteActionsNotifier extends StateNotifier<AsyncValue<void>> {
       return id;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
-      return null;
+      rethrow;
     }
   }
 

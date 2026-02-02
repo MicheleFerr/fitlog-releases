@@ -9,14 +9,15 @@ library;
 
 import 'package:flutter/foundation.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification_type.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification_record.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification_config.dart';
 
 /// DataSource for storing and retrieving notification records using Hive.
 class NotificationStorageDatasource {
-  static const String _boxName = 'notification_records';
-  static const String _statsBoxName = 'notification_stats';
+  static const String _boxName = HiveBoxNames.notificationRecords;
+  static const String _statsBoxName = HiveBoxNames.notificationStats;
 
   Box<Map>? _recordsBox;
   Box<Map>? _statsBox;

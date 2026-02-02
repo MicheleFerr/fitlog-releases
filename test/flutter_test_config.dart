@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/animation.dart';
 import 'package:leak_tracker_flutter_testing/leak_tracker_flutter_testing.dart';
 
 /// Global test configuration for leak tracking

@@ -274,8 +274,6 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
   }
 
   Widget _buildExpandedFields(BuildContext context, ExerciseDropdownValues values) {
-    final l10n = context.l10n;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

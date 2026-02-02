@@ -71,7 +71,7 @@ void main() {
 
     test('should persist key across cipher retrievals', () async {
       // Arrange: Generate key
-      final firstCipher = await HiveEncryptionManager.getEncryptionCipher();
+      await HiveEncryptionManager.getEncryptionCipher();
 
       // Act: Delete cached cipher (simulate app restart)
       // Then get cipher again (should load from secure storage)

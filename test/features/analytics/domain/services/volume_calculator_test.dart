@@ -654,7 +654,6 @@ void main() {
 
   group('Integration Tests', () {
     test('should handle complete workout analysis workflow', () {
-      final now = DateTime.now();
       final activities = [
         createActivity(
           exerciseName: 'Bench Press',

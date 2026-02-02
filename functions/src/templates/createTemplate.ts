@@ -6,9 +6,8 @@
  * to enforce template limits.
  *
  * **Quota Tiers**:
- * - Free: 4 private templates
- * - Premium: 20 private templates
- * - Pro: 999 private templates (effectively unlimited)
+ * - Free: 4 private templates, 2 public templates
+ * - Premium: 999 private/public templates (effectively unlimited)
  *
  * **Security Benefits**:
  * - Atomic quota check + creation (no race conditions)
@@ -49,19 +48,15 @@ const TEMPLATE_QUOTAS = {
     maxPublicTemplates: 2,
   },
   premium: {
-    maxPrivateTemplates: 20,
-    maxPublicTemplates: 10,
-  },
-  pro: {
     maxPrivateTemplates: 999, // Effectively unlimited
-    maxPublicTemplates: 50,
+    maxPublicTemplates: 999,  // Effectively unlimited
   },
 };
 
 /**
  * Valid account tiers
  */
-type AccountTier = 'free' | 'premium' | 'pro';
+type AccountTier = 'free' | 'premium';
 
 /**
  * Template data structure
@@ -112,9 +107,9 @@ async function getUserAccountTier(userId: string): Promise<AccountTier> {
     const data = userDoc.data();
     const tier = data?.accountTier as string;
 
-    // Validate tier is valid
+    // Validate tier is valid (pro tier removed — treat legacy 'pro' as 'premium')
     if (tier === 'premium' || tier === 'pro') {
-      return tier;
+      return 'premium';
     }
 
     return 'free';
@@ -345,16 +340,15 @@ export const createTemplate = withRateLimit<CreateTemplateData>(
         transaction.set(templateRef, templateData);
 
         // Update user's quota tracking
+        // Use set() with merge to handle new users whose document may not exist yet
         const userRef = admin.firestore().collection('users').doc(userId);
-        transaction.update(userRef, {
-          'templateQuota.usedPrivateTemplates': isPublic
-            ? admin.firestore.FieldValue.increment(0)
-            : admin.firestore.FieldValue.increment(1),
-          'templateQuota.usedPublicTemplates': isPublic
-            ? admin.firestore.FieldValue.increment(1)
-            : admin.firestore.FieldValue.increment(0),
-          'templateQuota.lastTemplateCreatedAt': now,
-        });
+        transaction.set(userRef, {
+          templateQuota: {
+            usedPrivateTemplates: admin.firestore.FieldValue.increment(isPublic ? 0 : 1),
+            usedPublicTemplates: admin.firestore.FieldValue.increment(isPublic ? 1 : 0),
+            lastTemplateCreatedAt: now,
+          },
+        }, { merge: true });
       });
 
       console.log(`✅ Template ${templateId} created for user ${userId}`);

@@ -667,7 +667,7 @@ class FirebaseWorkoutTemplateRepository
       if (data['exercises'] != null) {
         final exercisesJson = data['exercises'] as List;
         for (int i = 0; i < exercisesJson.length; i++) {
-          final exJson = exercisesJson[i] as Map<String, dynamic>;
+          exercisesJson[i] as Map<String, dynamic>;
         }
       } else {
       }

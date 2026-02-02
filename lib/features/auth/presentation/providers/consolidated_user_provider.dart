@@ -35,10 +35,12 @@ library;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/features/custom_exercises/presentation/providers/custom_exercise_providers.dart';
 
 /// ============================================================================
 /// CACHING LAYER (from cached_user_provider.dart)
@@ -317,12 +319,10 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
         : currentProfile.templateQuota.remainingPrivate;
   }
 
-  /// Upgrade user tier
+  /// Upgrade user tier via Cloud Function (admin-only)
   Future<void> upgradeTier(AccountTier newTier) async {
-    // FIX: If local state is loading/null, read from stream provider which has data
     var currentProfile = state.valueOrNull;
     if (currentProfile == null) {
-      // Fallback: read from userProfileProvider (the stream that has data)
       currentProfile = ref.read(userProfileProvider).valueOrNull;
     }
 
@@ -330,29 +330,49 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
       return;
     }
 
-    final newQuota = TemplateQuota.forTier(
-      newTier,
-      usedPrivate: currentProfile.templateQuota.usedPrivateTemplates,
-      usedPublic: currentProfile.templateQuota.usedPublicTemplates,
-    );
-
-    final updatedProfile = currentProfile.copyWith(
-      accountTier: newTier,
-      templateQuota: newQuota,
-    );
-
     try {
-      await _firestore.collection('users').doc(currentProfile.uid).update({
-        'accountTier': newTier.name,
-        'templateQuota': newQuota.toJson(),
+      final callable = FirebaseFunctions.instance.httpsCallable(
+        'setAccountTier',
+        options: HttpsCallableOptions(timeout: const Duration(seconds: 30)),
+      );
+
+      await callable.call<dynamic>({
+        'targetUserId': currentProfile.uid,
+        'tier': newTier.name,
       });
 
-      // Update local state immediately
+      // Update local state immediately after Cloud Function succeeds
+      final newQuota = TemplateQuota.forTier(
+        newTier,
+        usedPrivate: currentProfile.templateQuota.usedPrivateTemplates,
+        usedPublic: currentProfile.templateQuota.usedPublicTemplates,
+      );
+
+      final updatedProfile = currentProfile.copyWith(
+        accountTier: newTier,
+        templateQuota: newQuota,
+      );
+
       state = AsyncValue.data(updatedProfile);
 
-      // Update cache with new profile (so userProfileProvider has fresh data)
       final cache = ref.read(userProfileCacheProvider);
       cache.set(currentProfile.uid, updatedProfile);
+
+      // Auto-sync custom exercises to Firestore when upgrading to Premium
+      if (newTier != AccountTier.free) {
+        try {
+          final repository = ref.read(customExerciseRepositoryProvider);
+          await repository.syncToCloud();
+          if (kDebugMode) {
+            debugPrint('✅ Auto-synced custom exercises after premium upgrade');
+          }
+        } catch (syncError) {
+          // Non-blocking: log but don't fail the upgrade
+          if (kDebugMode) {
+            debugPrint('⚠️ Custom exercises sync after upgrade failed: $syncError');
+          }
+        }
+      }
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     }

@@ -31,14 +31,25 @@ import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/h
 /// ```
 final healthSyncStatusProvider = FutureProvider.family<HealthSyncStatus, HealthDataType>(
   (ref, dataType) async {
-    final repository = ref.watch(healthRepositoryProvider);
+    // P0 FIX: Add proper error handling
+    try {
+      final repository = ref.watch(healthRepositoryProvider);
 
-    final result = await repository.getLastSyncStatus(dataType);
+      final result = await repository.getLastSyncStatus(dataType);
 
-    return result.fold(
-      (failure) => throw Exception(failure.toString()),
-      (status) => status,
-    );
+      return result.fold(
+        (failure) {
+          throw Exception('Failed to get sync status for ${dataType.name}: ${failure.toString()}');
+        },
+        (status) => status,
+      );
+    } catch (e, stackTrace) {
+      // Re-throw with context for better debugging
+      Error.throwWithStackTrace(
+        Exception('HealthSyncStatus error for ${dataType.name}: $e'),
+        stackTrace,
+      );
+    }
   },
 );
 
@@ -53,17 +64,28 @@ final healthSyncStatusProvider = FutureProvider.family<HealthSyncStatus, HealthD
 final healthSyncHistoryProvider =
     FutureProvider.family<List<HealthSyncStatus>, HealthDataType>(
   (ref, dataType) async {
-    final repository = ref.watch(healthRepositoryProvider);
+    // P0 FIX: Add proper error handling
+    try {
+      final repository = ref.watch(healthRepositoryProvider);
 
-    final result = await repository.getSyncHistory(
-      dataType: dataType,
-      since: DateTime.now().subtract(const Duration(days: 30)),
-    );
+      final result = await repository.getSyncHistory(
+        dataType: dataType,
+        since: DateTime.now().subtract(const Duration(days: 30)),
+      );
 
-    return result.fold(
-      (failure) => throw Exception(failure.toString()),
-      (history) => history,
-    );
+      return result.fold(
+        (failure) {
+          throw Exception('Failed to get sync history for ${dataType.name}: ${failure.toString()}');
+        },
+        (history) => history,
+      );
+    } catch (e, stackTrace) {
+      // Re-throw with context for better debugging
+      Error.throwWithStackTrace(
+        Exception('HealthSyncHistory error for ${dataType.name}: $e'),
+        stackTrace,
+      );
+    }
   },
 );
 
@@ -85,18 +107,29 @@ final healthSyncHistoryProvider =
 final bodyMeasurementsProvider =
     FutureProvider.family<List<BodyMeasurement>, HealthDataType>(
   (ref, dataType) async {
-    final repository = ref.watch(healthRepositoryProvider);
+    // P0 FIX: Add proper error handling
+    try {
+      final repository = ref.watch(healthRepositoryProvider);
 
-    final result = await repository.getMeasurements(
-      dataType: dataType,
-      startDate: DateTime.now().subtract(const Duration(days: 90)),
-      endDate: DateTime.now(),
-    );
+      final result = await repository.getMeasurements(
+        dataType: dataType,
+        startDate: DateTime.now().subtract(const Duration(days: 90)),
+        endDate: DateTime.now(),
+      );
 
-    return result.fold(
-      (failure) => throw Exception(failure.toString()),
-      (measurements) => measurements,
-    );
+      return result.fold(
+        (failure) {
+          throw Exception('Failed to get measurements for ${dataType.name}: ${failure.toString()}');
+        },
+        (measurements) => measurements,
+      );
+    } catch (e, stackTrace) {
+      // Re-throw with context for better debugging
+      Error.throwWithStackTrace(
+        Exception('BodyMeasurements error for ${dataType.name}: $e'),
+        stackTrace,
+      );
+    }
   },
 );
 

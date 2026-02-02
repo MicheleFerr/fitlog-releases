@@ -52,7 +52,7 @@ final recentActivityProvider = FutureProvider.autoDispose<DateTime?>((ref) async
 
     if (query.docs.isEmpty) {
       if (kDebugMode) {
-        debugPrint('⚠️ [RecentActivity] No workouts found for userId: ${currentUser!.uid}');
+        debugPrint('⚠️ [RecentActivity] No workouts found for userId: ${currentUser.uid}');
       }
       return null;
     }

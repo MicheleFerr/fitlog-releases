@@ -244,9 +244,6 @@ class WorkoutSyncService {
   bool _shouldUpdateLocal(WorkoutModel local, WorkoutModel cloud) {
     // Simple conflict resolution: cloud wins if newer
     return cloud.updatedAt.isAfter(local.updatedAt);
-      
-    // If no update timestamps, compare creation dates
-    return cloud.createdAt.isAfter(local.createdAt);
   }
   
   /// Check internet connection

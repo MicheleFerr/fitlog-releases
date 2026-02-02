@@ -14,6 +14,7 @@
 library;
 
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -54,9 +55,12 @@ final analyticsCacheServiceProvider = Provider<AnalyticsCacheService>((ref) {
   final boxManager = ref.watch(hiveBoxManagerProvider);
   final cacheService = AnalyticsCacheService(boxManager);
 
-  // Initialize cache service (async but fire-and-forget is OK here
-  // because the service handles re-initialization internally)
-  cacheService.initialize();
+  // Initialize cache service with error handling
+  cacheService.initialize().catchError((e, stack) {
+    if (kDebugMode) {
+      debugPrint('[AnalyticsCacheService] Failed to initialize: $e\n$stack');
+    }
+  });
 
   // Dispose on provider disposal (app termination)
   ref.onDispose(() {

@@ -211,7 +211,7 @@ void main() {
           .thenAnswer((_) async {});
 
       // Act
-      final result = await syncService.syncNow();
+      await syncService.syncNow();
 
       // Assert - Would pull if premium, but logic is validated
       expect(true, isTrue);

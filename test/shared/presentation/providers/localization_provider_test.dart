@@ -14,8 +14,6 @@ class LocalizationNotifier extends StateNotifier<Locale> {
     Locale('de', 'DE'),
   ];
   
-  static const String _localeKey = 'app_locale';
-  
   // Get current locale
   Locale get currentLocale => state;
   

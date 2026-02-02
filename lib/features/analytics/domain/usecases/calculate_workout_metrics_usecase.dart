@@ -101,8 +101,6 @@ class CalculateWorkoutMetricsUseCase {
   }
 
   WorkoutComparison _createComparisonFromWorkout(Workout comparisonWorkout) {
-    final comparisonMetrics = WorkoutMetrics.fromWorkout(comparisonWorkout);
-    
     return WorkoutComparison(
       comparisonId: comparisonWorkout.id,
       comparisonDate: comparisonWorkout.updatedAt,

@@ -735,12 +735,10 @@ class _AnimatedCounter extends StatefulWidget {
   const _AnimatedCounter({
     required this.value,
     required this.style,
-    this.duration = const Duration(milliseconds: 800),
   });
 
   final String value; // Can be "123", "12.5t", etc.
   final TextStyle? style;
-  final Duration duration;
 
   @override
   State<_AnimatedCounter> createState() => _AnimatedCounterState();
@@ -756,7 +754,7 @@ class _AnimatedCounterState extends State<_AnimatedCounter>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: widget.duration, vsync: this);
+    _controller = AnimationController(duration: const Duration(milliseconds: 800), vsync: this);
     _parseValueAndAnimate();
   }
 

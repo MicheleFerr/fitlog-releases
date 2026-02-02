@@ -89,8 +89,6 @@ class MeasurementRepositoryImpl with FirebaseErrorMapperMixin implements Measure
   final ConsentRepository _consentRepo;
   final MeasurementLocalDatasource _localDatasource;
   final EncryptionKeyManager _keyManager;
-  final Uuid _uuid;
-
   /// Collection name in Firestore
   static const String _collectionName = 'bodyMeasurements';
 
@@ -106,8 +104,23 @@ class MeasurementRepositoryImpl with FirebaseErrorMapperMixin implements Measure
   })  : _firestore = firestore,
         _consentRepo = consentRepo,
         _localDatasource = localDatasource,
-        _keyManager = keyManager,
-        _uuid = uuid ?? const Uuid();
+        _keyManager = keyManager;
+
+  /// Validate measurement value is within reasonable range
+  bool _isValidMeasurementValue(Measurement m) {
+    final value = m.value;
+    if (value.isNaN || value.isInfinite || value < 0) return false;
+
+    return switch (m.metricType) {
+      MetricType.weight => value >= 1 && value <= 500,
+      MetricType.height => value >= 50 && value <= 300, // cm
+      MetricType.bodyFatPercentage => value >= 1 && value <= 70,
+      MetricType.bmi => value >= 10 && value <= 100,
+      MetricType.leanMass => value >= 10 && value <= 200,
+      MetricType.bodyTemperature => value >= 30 && value <= 45,
+      _ => value >= 1 && value <= 500, // circumferences
+    };
+  }
 
   /// Get reference to user's measurements collection
   CollectionReference<Map<String, dynamic>> _getMeasurementsCollection(
@@ -281,12 +294,32 @@ class MeasurementRepositoryImpl with FirebaseErrorMapperMixin implements Measure
 
     return result.map((measurements) {
       final latestByType = <MetricType, Measurement>{};
+
       for (final m in measurements) {
+        // Skip invalid values (e.g., height < 50cm is impossible)
+        if (!_isValidMeasurementValue(m)) {
+          print('⚠️ [SKIP] Invalid ${m.metricType.name}: ${m.value} ${m.unit}');
+          continue;
+        }
+
         final existing = latestByType[m.metricType];
-        if (existing == null || m.timestamp.isAfter(existing.timestamp)) {
+        if (existing == null) {
           latestByType[m.metricType] = m;
+        } else if (m.timestamp.isAfter(existing.timestamp)) {
+          latestByType[m.metricType] = m;
+        } else if (m.timestamp == existing.timestamp) {
+          // Same timestamp: prefer valid value over invalid
+          // For height: prefer realistic value (closer to 100-220 range)
+          if (m.metricType == MetricType.height) {
+            final mValid = m.value >= 50 && m.value <= 250;
+            final existingValid = existing.value >= 50 && existing.value <= 250;
+            if (mValid && !existingValid) {
+              latestByType[m.metricType] = m;
+            }
+          }
         }
       }
+
       return latestByType;
     });
   }
@@ -580,7 +613,7 @@ class MeasurementRepositoryImpl with FirebaseErrorMapperMixin implements Measure
         // Base64 decode components
         final ciphertext = base64.decode(encrypted.encryptedData);
         final iv = base64.decode(encrypted.iv);
-        final tag = base64.decode(encrypted.tag);
+        base64.decode(encrypted.tag);
 
         // TODO: Implement full AES-256-GCM decryption with tag verification
         // For now, use simplified approach (matches encryption)

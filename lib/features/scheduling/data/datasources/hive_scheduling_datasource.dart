@@ -1,9 +1,10 @@
+import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
 import 'package:gymbro_flutter_new/features/scheduling/data/models/scheduled_workout_model.dart';
 import 'package:hive_ce/hive.dart';
 
 /// Local datasource for scheduled workouts using Hive
 class HiveSchedulingDatasource {
-  static const String boxName = 'scheduled_workouts';
+  static const String boxName = HiveBoxNames.scheduledWorkouts;
 
   /// Get or open the Hive box
   Future<Box<ScheduledWorkoutModel>> _getBox() async {

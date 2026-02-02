@@ -12,7 +12,6 @@ library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:gymbro_flutter_new/features/home/data/repositories/insight_feedback_repository.dart';
 import 'package:gymbro_flutter_new/features/home/domain/entities/insight_feedback.dart';
 import 'package:mocktail/mocktail.dart';

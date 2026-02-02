@@ -45,7 +45,8 @@ class LiveActivityHandler: NSObject {
         get { activityQueue.sync { _lastUpdateTime } }
         set { activityQueue.sync { _lastUpdateTime = newValue } }
     }
-    private let updateThrottleInterval: TimeInterval = 5.0  // 5 seconds for timers >= 60s
+    // WATCH-FIX: Reduced from 5s to 3s - Apple Watch may hide activities with infrequent updates
+    private let updateThrottleInterval: TimeInterval = 3.0  // 3 seconds for timers >= 60s
 
     private override init() {
         super.init()
@@ -233,8 +234,9 @@ class LiveActivityHandler: NSObject {
             do {
                 await endAllActivities(keepCurrent: false)
 
-                // Small delay to ensure cleanup is visible to user
-                try await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+                // WATCH-FIX: Increased delay to ensure iOS fully processes activity cleanup
+                // before creating a new one. 100ms was too short for Watch sync.
+                try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
 
                 // Now safely create the new activity after cleanup
                 await self.createNewLiveActivity(args, result: result)
@@ -424,6 +426,12 @@ class LiveActivityHandler: NSObject {
             let nsError = error as NSError
             let errorDescription = error.localizedDescription
 
+            // Collect diagnostic context for telemetry
+            let appState = UIApplication.shared.applicationState
+            let appStateStr = appState == .active ? "active" : appState == .background ? "background" : "inactive"
+            let isLowPowerMode = ProcessInfo.processInfo.isLowPowerModeEnabled
+            let activeActivitiesCount = Activity<GymBroTimerAttributes>.activities.count
+
             // Check for specific error conditions
             var errorCode = "START_FAILED"
             var errorMessage = "Failed to start Live Activity: \(errorDescription)"
@@ -449,15 +457,80 @@ class LiveActivityHandler: NSObject {
                     - Error: \(errorDescription)
                     - NSError Code: \(nsError.code)
                     - NSError Domain: \(nsError.domain)
+                    - App State: \(appStateStr)
+                    - Low Power Mode: \(isLowPowerMode)
+                    - Active Activities: \(activeActivitiesCount)
+                    - Activities Enabled: \(ActivityAuthorizationInfo().areActivitiesEnabled)
+                    - Frequent Updates Enabled: \(ActivityAuthorizationInfo().frequentPushesEnabled)
                     - This is often a temporary iOS restriction
                     - Timer will work but without Live Activity display
+                    - WATCH IMPACT: Live Activity will NOT appear on Apple Watch
                     """, category: .general)
+
+                // WATCH-FIX: Retry once after a short delay for transient visibility restrictions
+                // iOS sometimes restricts visibility briefly during state transitions
+                Logger.shared.debug("🔄 [VISIBILITY-RETRY] Attempting retry after 1s delay...", category: .general)
+                try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
+
+                // Check if restriction lifted
+                if ActivityAuthorizationInfo().areActivitiesEnabled {
+                    Logger.shared.debug("🔄 [VISIBILITY-RETRY] Activities still enabled, retrying creation...", category: .general)
+                    do {
+                        let retryActivity = try Activity<GymBroTimerAttributes>.request(
+                            attributes: GymBroTimerAttributes(
+                                exerciseName: args["exerciseName"] as? String ?? "",
+                                timerType: args["timerType"] as? String ?? "rest",
+                                workoutName: args["workoutName"] as? String
+                            ),
+                            content: ActivityContent<GymBroTimerAttributes.ContentState>(
+                                state: GymBroTimerAttributes.ContentState(
+                                    remainingSeconds: args["remainingSeconds"] as? Int ?? 0,
+                                    totalSeconds: args["totalSeconds"] as? Int ?? 0,
+                                    isRunning: args["isRunning"] as? Bool ?? false,
+                                    currentSet: args["currentSet"] as? Int ?? 1,
+                                    totalSets: args["totalSets"] as? Int ?? 1,
+                                    lastUpdated: Date(),
+                                    endDate: (args["isRunning"] as? Bool ?? false) ?
+                                        Date().addingTimeInterval(TimeInterval(args["remainingSeconds"] as? Int ?? 0)) : nil,
+                                    startDate: (args["isRunning"] as? Bool ?? false) ?
+                                        Date().addingTimeInterval(-TimeInterval((args["totalSeconds"] as? Int ?? 0) - (args["remainingSeconds"] as? Int ?? 0))) : nil
+                                ),
+                                staleDate: Date().addingTimeInterval(TimeInterval((args["remainingSeconds"] as? Int ?? 60) + 10))
+                            ),
+                            pushType: nil
+                        )
+                        self.currentActivity = retryActivity
+                        Logger.shared.debug("✅ [VISIBILITY-RETRY] Retry SUCCEEDED! Activity ID: \(retryActivity.id)", category: .general)
+
+                        // Schedule audio for retry activity too
+                        let remainingSecs = args["remainingSeconds"] as? Int ?? 0
+                        let soundName = args["soundName"] as? String ?? "sound"
+                        if (args["isRunning"] as? Bool ?? false) && remainingSecs > 0 {
+                            BackgroundAudioManager.shared.scheduleTimerAudio(
+                                duration: TimeInterval(remainingSecs),
+                                soundName: soundName,
+                                skipNotification: false
+                            )
+                        }
+
+                        await MainActor.run {
+                            result(retryActivity.id)
+                        }
+                        return
+                    } catch {
+                        Logger.shared.log(.warning, "⚠️ [VISIBILITY-RETRY] Retry also failed: \(error.localizedDescription)", category: .general)
+                        // Fall through to return original error
+                    }
+                }
             } else {
                 Logger.shared.log(.error, """
                     ❌ Failed to create Live Activity:
                     - Error: \(errorDescription)
                     - NSError Code: \(nsError.code)
                     - NSError Domain: \(nsError.domain)
+                    - App State: \(appStateStr)
+                    - Low Power Mode: \(isLowPowerMode)
+                    - Active Activities: \(activeActivitiesCount)
                     """, category: .general)
             }
 
@@ -467,7 +540,10 @@ class LiveActivityHandler: NSObject {
                 details: [
                     "nsErrorCode": nsError.code,
                     "nsErrorDomain": nsError.domain,
-                    "areActivitiesEnabled": ActivityAuthorizationInfo().areActivitiesEnabled
+                    "areActivitiesEnabled": ActivityAuthorizationInfo().areActivitiesEnabled,
+                    "appState": appStateStr,
+                    "isLowPowerMode": isLowPowerMode,
+                    "activeActivitiesCount": activeActivitiesCount
                 ]
             ))
         }
@@ -1364,10 +1440,11 @@ class LiveActivityHandler: NSObject {
     /// Throttling rules:
     /// 1. ALWAYS update on state changes (pause/resume) - immediate feedback critical
     /// 2. If remainingSeconds < 60: Update every second (user is watching closely)
-    /// 3. If remainingSeconds >= 60: Throttle to every 5 seconds (battery optimization)
+    /// 3. If remainingSeconds >= 60: Throttle to every 3 seconds (Watch-friendly)
+    /// 4. At key intervals (multiples of 30s): Always update for Watch sync
     ///
-    /// This reduces battery drain by 50-80% for longer timers while maintaining
-    /// smooth UX when user is actively watching the countdown.
+    /// WATCH-FIX: Reduced throttle from 5s to 3s. Apple Watch may consider activities
+    /// "stale" if updates are too infrequent, causing them to disappear from the lock screen.
     private func shouldUpdateLiveActivity(
         remainingSeconds: Int,
         isRunning: Bool,
@@ -1389,36 +1466,28 @@ class LiveActivityHandler: NSObject {
         // RULE 3: Under 60 seconds - update every second
         // User is likely watching the timer closely, wants smooth countdown
         if remainingSeconds < 60 {
+            return true
+        }
+
+        // RULE 4: At key sync points (multiples of 30s) - always update
+        // WATCH-FIX: Ensures Apple Watch stays in sync at regular intervals
+        if remainingSeconds % 30 == 0 {
             Logger.shared.log(.debug, """
-                ✅ [THROTTLE] Update allowed: Timer < 60s (\(remainingSeconds)s)
-                - User is likely watching, updating every second for smooth UX
+                ✅ [THROTTLE] Update allowed: Watch sync point (\(remainingSeconds)s)
                 """, category: .general)
             return true
         }
 
-        // RULE 4: Over 60 seconds - throttle to every 5 seconds for battery efficiency
-        // User has likely put phone in standby or is doing other things
+        // RULE 5: Over 60 seconds - throttle to every 3 seconds for Watch compatibility
+        // WATCH-FIX: Reduced from 5s to 3s to prevent Watch from hiding "stale" activities
         if let lastUpdate = lastUpdateTime {
             let timeSinceLastUpdate = Date().timeIntervalSince(lastUpdate)
 
             if timeSinceLastUpdate < updateThrottleInterval {
-                // Not enough time has passed, throttle this update
-                Logger.shared.log(.debug, """
-                    ⚡ [THROTTLE] Update throttled: Timer >= 60s (\(remainingSeconds)s)
-                    - Time since last: \(String(format: "%.1f", timeSinceLastUpdate))s
-                    - Threshold: \(updateThrottleInterval)s
-                    - Battery optimization active
-                    """, category: .general)
                 return false
             }
         }
 
-        // Enough time has passed OR this is the first update, allow it
-        Logger.shared.log(.debug, """
-            ✅ [THROTTLE] Update allowed: Timer >= 60s (\(remainingSeconds)s)
-            - Throttle interval passed (\(updateThrottleInterval)s)
-            - Battery-optimized update frequency
-            """, category: .general)
         return true
     }
 

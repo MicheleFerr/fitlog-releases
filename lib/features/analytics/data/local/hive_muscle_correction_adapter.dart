@@ -8,7 +8,7 @@
 ///
 /// **Purpose**: Enable Hive to store/retrieve MuscleCorrection objects
 ///
-/// **TypeId**: 10 (next available ID in Hive schema)
+/// **TypeId**: 80 (unique ID - 10 was colliding with WorkoutDraft)
 ///
 /// **Storage Location**: `HiveBoxManager.corrections` box
 ///
@@ -33,12 +33,12 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/muscle_cor
 
 /// Hive TypeAdapter for MuscleCorrection entity
 ///
-/// **TypeId 10**: Next available ID in Hive schema
-/// (0-9 reserved for other entities)
-@HiveType(typeId: 10)
+/// **TypeId 80**: Unique ID for MuscleCorrection adapter
+/// (10 was colliding with WorkoutDraft)
+@HiveType(typeId: 80)
 class HiveMuscleCorrectionAdapter extends TypeAdapter<Map<String, dynamic>> {
   @override
-  final int typeId = 10;
+  final int typeId = 80;
 
   @override
   Map<String, dynamic> read(BinaryReader reader) {

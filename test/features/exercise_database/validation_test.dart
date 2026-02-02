@@ -11,25 +11,6 @@ const _exerciseFiles = [
   'other.json',
 ];
 
-// Load test data from new folder structure
-Future<List<ExerciseModel>> _loadTestData() async {
-  const String baseFolder = 'assets/data/exercises'; // Italian folder
-  final List<ExerciseModel> allExercises = [];
-
-  for (final fileName in _exerciseFiles) {
-    try {
-      final String jsonData = await rootBundle.loadString('$baseFolder/$fileName');
-      final List<dynamic> jsonList = jsonDecode(jsonData) as List<dynamic>;
-      allExercises.addAll(
-        jsonList.map((e) => ExerciseModel.fromJson(e as Map<String, dynamic>)),
-      );
-    } catch (e) {
-      // File might not exist, skip silently
-    }
-  }
-
-  return allExercises;
-}
 
 /// Exercise model for validation testing
 class ExerciseModel {
@@ -248,7 +229,6 @@ void main() {
     test('✅ TEST 8: Sample exercises have valid structure', () {
       // Test first 10 exercises in detail
       for (var i = 0; i < exercises.length && i < 10; i++) {
-        final ex = exercises[i];
         final json = exerciseData[i] as Map<String, dynamic>;
 
         // Check all expected fields exist

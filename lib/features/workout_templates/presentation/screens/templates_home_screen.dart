@@ -1690,7 +1690,6 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   /// Preview a predefined superset template
   void _previewPredefinedSuperset(BuildContext context, SupersetTemplate template) {
     HapticFeedback.lightImpact();
-    final l10n = AppLocalizations.of(context);
 
     showModalBottomSheet<void>(
       context: context,
@@ -2386,56 +2385,6 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     }
   }
 
-  Widget _buildExerciseQuotaBar(BuildContext context, {required int used, required int max}) {
-    final isUnlimited = max >= 999;
-    final progress = isUnlimited ? 0.0 : (used / max).clamp(0.0, 1.0);
-    final l10n = AppLocalizations.of(context);
-
-    return Container(
-      margin: const EdgeInsets.all(AppSpacing.md),
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                l10n.customExercises,
-                style: context.textTheme.labelMedium?.copyWith(
-                  color: context.colors.onSurfaceVariant,
-                ),
-              ),
-              Text(
-                isUnlimited ? '$used' : '$used / $max',
-                style: context.textTheme.labelMedium?.copyWith(
-                  color: context.colors.tertiary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          if (!isUnlimited) ...[
-            const SizedBox(height: 8),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: progress,
-                backgroundColor: context.colors.surfaceContainerHigh,
-                valueColor: AlwaysStoppedAnimation(context.colors.tertiary),
-                minHeight: 6,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
   void _createNewExercise(BuildContext context) {
     final entitlements = ref.read(tierEntitlementsProvider);
     final exercisesAsync = ref.read(allCustomExercisesProvider);
@@ -2598,36 +2547,6 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     );
   }
 
-  void _viewPublicTemplate(BuildContext context, WorkoutTemplate template) {
-    context.push(AppRoutes.templateDetailPath, extra: template.id);
-  }
-
-  Future<void> _downloadTemplate(BuildContext context, WorkoutTemplate template) async {
-    final l10n = AppLocalizations.of(context);
-    HapticFeedback.mediumImpact();
-
-    final success = await ref.read(templateProvider.notifier)
-        .downloadTemplate(template.id);
-
-    if (success) {
-      SnackBarService.showSuccess(
-        context,
-        l10n.templateDownloaded(template.name),
-      );
-    } else {
-      SnackBarService.showError(
-        context,
-        l10n.failedToDownload,
-      );
-    }
-  }
-
-  void _showFilters(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => const TemplateFiltersSheet(),
-    );
-  }
 }
 
 // ============================================================================
@@ -2873,62 +2792,6 @@ class PublicTemplateCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _EmptyExercisesState extends StatelessWidget {
-  const _EmptyExercisesState({required this.onCreateTap});
-
-  final VoidCallback onCreateTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            decoration: BoxDecoration(
-              color: context.colors.surfaceContainerHighest,
-              shape: BoxShape.circle,
-            ),
-            child: SemanticIcon(
-              icon: AppIcons.workout,
-              semanticLabel: l10n.noExercisesYet,
-              size: AppIconSize.xxlarge,
-              color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          Text(
-            l10n.noExercisesYet,
-            style: context.textTheme.titleLarge?.copyWith(
-              color: context.colors.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            l10n.createCustomExercise,
-            style: context.textTheme.bodyMedium?.copyWith(
-              color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          FilledButton.icon(
-            onPressed: onCreateTap,
-            icon: SemanticIcon(
-              icon: AppIcons.add,
-              semanticLabel: l10n.createCustomExercise,
-            ),
-            label: Text(l10n.createCustomExercise),
-          ),
-        ],
       ),
     );
   }
@@ -3376,7 +3239,7 @@ class _CompactTemplateCard extends StatelessWidget {
                     const SizedBox(width: 4),
                     // Handle null/0 duration gracefully
                     Text(
-                      '${template.estimatedDuration ?? 0}\'',
+                      '${template.estimatedDuration}\'',
                       style: context.textTheme.labelSmall?.copyWith(
                         color: context.colors.onSurfaceVariant,
                       ),
@@ -3481,11 +3344,10 @@ class _CompactSupersetCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 // Difficulty badge
-                if (template.difficulty != null)
-                  _DifficultyBadge(
-                    difficulty: template.difficulty!.name,
-                    color: context.colors.secondary,
-                  ),
+                _DifficultyBadge(
+                  difficulty: template.difficulty.name,
+                  color: context.colors.secondary,
+                ),
                 const Spacer(),
                 // Use button
                 SizedBox(
@@ -3584,11 +3446,10 @@ class _CompactDropsetCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 // Difficulty badge
-                if (template.difficulty != null)
-                  _DifficultyBadge(
-                    difficulty: template.difficulty!.name,
-                    color: context.colors.tertiary,
-                  ),
+                _DifficultyBadge(
+                  difficulty: template.difficulty.name,
+                  color: context.colors.tertiary,
+                ),
                 const Spacer(),
                 // Use button
                 SizedBox(
@@ -3687,11 +3548,10 @@ class _CompactRestPauseCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 // Difficulty badge
-                if (template.difficulty != null)
-                  _DifficultyBadge(
-                    difficulty: template.difficulty!.name,
-                    color: context.colors.error,
-                  ),
+                _DifficultyBadge(
+                  difficulty: template.difficulty.name,
+                  color: context.colors.error,
+                ),
                 const Spacer(),
                 // Use button
                 SizedBox(
@@ -3747,93 +3607,6 @@ class _DifficultyBadge extends StatelessWidget {
 }
 
 /// Difficulty filter chip
-class _DifficultyChip extends StatelessWidget {
-  const _DifficultyChip({
-    required this.label,
-    this.icon,
-    this.isSelected = false,
-    required this.onTap,
-  });
-
-  final String label;
-  final IconData? icon;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return FilterChip(
-      selected: isSelected,
-      label: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (icon != null) ...[
-            Icon(icon, size: 16),
-            const SizedBox(width: 4),
-          ],
-          Text(label),
-        ],
-      ),
-      onSelected: (_) => onTap(),
-      showCheckmark: false,
-    );
-  }
-}
-
-/// Section header for template groups
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-  });
-
-  final String title;
-  final String subtitle;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(AppSpacing.sm),
-          decoration: BoxDecoration(
-            color: context.colors.secondaryContainer,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: SemanticIcon(
-            icon: icon,
-            semanticLabel: title,
-            size: AppIconSize.medium,
-            color: context.colors.onSecondaryContainer,
-          ),
-        ),
-        const SizedBox(width: AppSpacing.md),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                subtitle,
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: context.colors.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 /// Delegate for sticky category filter chips
 class _CategoryFilterDelegate extends SliverPersistentHeaderDelegate {
   _CategoryFilterDelegate({
@@ -3923,172 +3696,6 @@ class _CategoryFilterDelegate extends SliverPersistentHeaderDelegate {
               color: context.colors.outlineVariant.withValues(alpha: 0.5),
             ),
         ],
-      ),
-    );
-  }
-}
-
-/// Card for displaying a default template
-class _DefaultTemplateCard extends StatelessWidget {
-  const _DefaultTemplateCard({
-    required this.template,
-    required this.onTap,
-    required this.onUse,
-  });
-
-  final workout_template.WorkoutTemplate template;
-  final VoidCallback onTap;
-  final VoidCallback onUse;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header row
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          template.name,
-                          style: context.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          template.description,
-                          style: context.textTheme.bodySmall?.copyWith(
-                            color: context.colors.onSurfaceVariant,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                  FilledButton.tonal(
-                    onPressed: onUse,
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.md,
-                        vertical: AppSpacing.xs,
-                      ),
-                    ),
-                    child: Text(l10n.use),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: AppSpacing.sm),
-
-              // Stats row
-              Row(
-                children: [
-                  // Exercises count
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.sm,
-                      vertical: AppSpacing.xxs,
-                    ),
-                    decoration: BoxDecoration(
-                      color: context.colors.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SemanticIcon(
-                          icon: AppIcons.workout,
-                          semanticLabel: l10n.exercises,
-                          size: AppIconSize.tiny,
-                          color: context.colors.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${template.exercises.length} ${l10n.exercises}',
-                          style: context.textTheme.labelSmall?.copyWith(
-                            color: context.colors.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-
-                  // Duration
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.sm,
-                      vertical: AppSpacing.xxs,
-                    ),
-                    decoration: BoxDecoration(
-                      color: context.colors.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SemanticIcon(
-                          icon: AppIcons.timer,
-                          semanticLabel: l10n.duration,
-                          size: AppIconSize.tiny,
-                          color: context.colors.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '~${template.estimatedDuration}m',
-                          style: context.textTheme.labelSmall?.copyWith(
-                            color: context.colors.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const Spacer(),
-
-                  // Tags
-                  if (template.tags.isNotEmpty)
-                    Wrap(
-                      spacing: 4,
-                      children: template.tags.take(2).map((tag) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.xs,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: context.colors.primaryContainer.withValues(alpha: 0.5),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            tag,
-                            style: context.textTheme.labelSmall?.copyWith(
-                              color: context.colors.onPrimaryContainer,
-                              fontSize: 10,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                ],
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

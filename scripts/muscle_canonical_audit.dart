@@ -6,8 +6,6 @@
 /// - Proposes single source of truth
 library;
 
-import 'dart:io';
-
 void main() {
   print('🔍 Muscle Abbreviation Canonical Audit\n');
   print('=' * 70);

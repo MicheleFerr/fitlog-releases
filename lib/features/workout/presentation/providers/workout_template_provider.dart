@@ -6,10 +6,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_temp
     show WorkoutTemplate, ExerciseTemplate;
 import 'package:gymbro_flutter_new/features/workout/domain/entities/template_stats.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/workout_template_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/firebase_workout_template_repository.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_history_provider.dart';
+import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/services/template_cloud_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 
@@ -823,9 +822,7 @@ final templateStatsProvider = FutureProvider.autoDispose
           final templateWorkouts = workouts
               .where(
                 (workout) =>
-                    workout.templateId == templateId &&
-                    workout.status == WorkoutStatus.completed &&
-                    workout.duration != null,
+                    workout.templateId == templateId,
               )
               .toList();
 
@@ -836,12 +833,11 @@ final templateStatsProvider = FutureProvider.autoDispose
           // Sort by date (newest first) to get lastPerformed
           templateWorkouts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
           final lastPerformed =
-              templateWorkouts.first.startTime ??
-              templateWorkouts.first.createdAt;
+              templateWorkouts.first.startedAt;
 
           // Calculate average duration
           final totalMinutes = templateWorkouts
-              .map((w) => w.duration!.inMinutes)
+              .map((w) => w.duration.inMinutes)
               .fold<int>(0, (sum, minutes) => sum + minutes);
           final avgMinutes = totalMinutes ~/ templateWorkouts.length;
 
@@ -882,15 +878,13 @@ final allTemplateStatsProvider =
           final workoutsByTemplate = <String, List<_WorkoutData>>{};
 
           for (final workout in workouts) {
-            if (workout.templateId != null &&
-                workout.status == WorkoutStatus.completed &&
-                workout.duration != null) {
+            if (workout.templateId != null) {
               workoutsByTemplate
                   .putIfAbsent(workout.templateId!, () => [])
                   .add(
                     _WorkoutData(
-                      startTime: workout.startTime ?? workout.createdAt,
-                      durationMinutes: workout.duration!.inMinutes,
+                      startTime: workout.startedAt,
+                      durationMinutes: workout.duration.inMinutes,
                     ),
                   );
             }

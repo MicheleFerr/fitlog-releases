@@ -57,8 +57,9 @@ extension ScheduleStatusModelExtension on ScheduleStatusModel {
 }
 
 /// Hive model for ScheduledWorkout
-/// Using typeId 60 for the scheduling feature range (60-69)
-@HiveType(typeId: 60)
+/// Using typeId 62 for the scheduling feature range (60-69)
+/// (60 was colliding with TutorialState, 61 is ScheduleStatusModel)
+@HiveType(typeId: 62)
 class ScheduledWorkoutModel extends HiveObject {
   @HiveField(0)
   final String id;
