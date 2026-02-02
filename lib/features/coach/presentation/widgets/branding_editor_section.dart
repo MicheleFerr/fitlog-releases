@@ -12,6 +12,7 @@ import 'package:gymbro_flutter_new/features/coach/domain/entities/coach_branding
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Section for editing coach branding
 class BrandingEditorSection extends StatefulWidget {
@@ -308,10 +309,9 @@ class _BrandingEditorSectionState extends State<BrandingEditorSection> {
             FilledButton.icon(
               onPressed: _hasChanges && !_isSaving ? _save : null,
               icon: _isSaving
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
+                  ? const LoadingIndicator(
+                      size: 20,
+                      strokeWidth: 2,
                     )
                   : const Icon(AppIcons.save),
               label: Text(context.l10n.save),

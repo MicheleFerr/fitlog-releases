@@ -32,6 +32,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/shared/data/services/gif_cache_manager.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Circular avatar widget for exercise images
 ///
@@ -107,13 +108,10 @@ class ExerciseAvatar extends ConsumerWidget {
   /// Placeholder while loading
   Widget _buildPlaceholder(BuildContext context) {
     return Center(
-      child: SizedBox(
-        width: size * 0.4,
-        height: size * 0.4,
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
-        ),
+      child: LoadingIndicator(
+        size: size * 0.4,
+        strokeWidth: 2,
+        color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
       ),
     );
   }
