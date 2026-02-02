@@ -210,19 +210,24 @@ class _HealthSyncSettingsScreenState
 
           // Primary action button
           if (!isConnected)
+            // Accessibility: Connect button with dynamic semantic label
             SizedBox(
               width: double.infinity,
-              child: FilledButton.icon(
-                onPressed: _isConnecting ? null : _handleConnect,
-                icon: _isConnecting
-                    ? LoadingIndicator(
-                        size: 20,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      )
-                    : const Icon(AppIcons.link, size: 20),
-                label: Text(_isConnecting ? l10n.connecting : l10n.connect),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Semantics(
+                label: _isConnecting ? l10n.connecting : l10n.connect,
+                button: true,
+                child: FilledButton.icon(
+                  onPressed: _isConnecting ? null : _handleConnect,
+                  icon: _isConnecting
+                      ? LoadingIndicator(
+                          size: 20,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        )
+                      : const Icon(AppIcons.link, size: 20),
+                  label: Text(_isConnecting ? l10n.connecting : l10n.connect),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
                 ),
               ),
             ),
@@ -507,27 +512,37 @@ class _HealthSyncSettingsScreenState
             const SizedBox(height: 32),
 
             // Install button
+            // Accessibility: Install button with semantic label
             SizedBox(
               width: double.infinity,
-              child: FilledButton.icon(
-                onPressed: _handleInstallHealthConnect,
-                icon: const Icon(AppIcons.download, size: 20),
-                label: Text(l10n.healthConnectInstall),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Semantics(
+                label: l10n.healthConnectInstall,
+                button: true,
+                child: FilledButton.icon(
+                  onPressed: _handleInstallHealthConnect,
+                  icon: const Icon(AppIcons.download, size: 20),
+                  label: Text(l10n.healthConnectInstall),
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 16),
 
             // Refresh button
-            TextButton.icon(
-              onPressed: () {
-                // Refresh permission status to check if Health Connect was installed
-                ref.invalidate(healthPermissionStatusProvider);
-              },
-              icon: const Icon(AppIcons.refresh, size: 18),
-              label: Text(l10n.refresh),
+            // Accessibility: Refresh button with semantic label
+            Semantics(
+              label: l10n.refresh,
+              button: true,
+              child: TextButton.icon(
+                onPressed: () {
+                  // Refresh permission status to check if Health Connect was installed
+                  ref.invalidate(healthPermissionStatusProvider);
+                },
+                icon: const Icon(AppIcons.refresh, size: 18),
+                label: Text(l10n.refresh),
+              ),
             ),
           ],
         ),
