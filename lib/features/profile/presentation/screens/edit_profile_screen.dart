@@ -219,9 +219,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.editProfile),
+        // Accessibility: Back button with tooltip for screen readers
         leading: IconButton(
           icon: const Icon(AppIcons.arrowBackIos, size: AppIconSize.medium),
           onPressed: () => context.pop(),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
         ),
         actions: [
           if (_isLoading)
@@ -234,13 +236,18 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               ),
             )
           else
-            TextButton(
-              onPressed: _saveProfile,
-              child: Text(
-                context.l10n.save,
-                style: context.textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: context.colors.primary,
+            // Accessibility: Save button with semantic label for screen readers
+            Semantics(
+              label: context.l10n.save,
+              button: true,
+              child: TextButton(
+                onPressed: _saveProfile,
+                child: Text(
+                  context.l10n.save,
+                  style: context.textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colors.primary,
+                  ),
                 ),
               ),
             ),
