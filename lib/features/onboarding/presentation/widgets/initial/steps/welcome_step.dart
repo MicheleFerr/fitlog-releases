@@ -111,29 +111,33 @@ class _WelcomeStepState extends ConsumerState<WelcomeStep> {
             const Spacer(flex: 3),
 
             // CTA Button with gradient feel
+            // Accessibility: Semantic label for screen readers
             SizedBox(
               width: double.infinity,
-              child: FilledButton(
-                onPressed: () {
-                  ref
-                      .read(initialOnboardingNotifierProvider.notifier)
-                      .nextStep();
-                },
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 18,
-                    horizontal: 32,
+              child: Semantics(
+                label: context.l10n.initialOnboardingStart,
+                button: true,
+                child: FilledButton(
+                  onPressed: () {
+                    ref
+                        .read(initialOnboardingNotifierProvider.notifier)
+                        .nextStep();
+                  },
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 32,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 2,
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  elevation: 2,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      context.l10n.initialOnboardingStart,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        context.l10n.initialOnboardingStart,
                       style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
@@ -149,6 +153,7 @@ class _WelcomeStepState extends ConsumerState<WelcomeStep> {
                   ],
                 ),
               ),
+                ),
             ),
 
             const SizedBox(height: 48),

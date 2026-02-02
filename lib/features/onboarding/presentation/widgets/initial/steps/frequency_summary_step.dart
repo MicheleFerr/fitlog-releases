@@ -163,30 +163,34 @@ class FrequencySummaryStep extends ConsumerWidget {
           ],
 
           // Complete button
+          // Accessibility: Semantic label for screen readers
           SizedBox(
             width: double.infinity,
-            child: FilledButton(
-              onPressed: state.isCompleting || !state.isComplete
-                  ? null
-                  : onComplete,
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            child: Semantics(
+              label: context.l10n.initialOnboardingComplete,
+              button: true,
+              child: FilledButton(
+                onPressed: state.isCompleting || !state.isComplete
+                    ? null
+                    : onComplete,
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-              ),
-              child: state.isCompleting
-                  ? const LoadingIndicator(size: 24)
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          '\u{1F680}', // Rocket
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          context.l10n.initialOnboardingComplete,
+                child: state.isCompleting
+                    ? const LoadingIndicator(size: 24)
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            '\u{1F680}', // Rocket
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            context.l10n.initialOnboardingComplete,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -194,6 +198,7 @@ class FrequencySummaryStep extends ConsumerWidget {
                         ),
                       ],
                     ),
+              ),
             ),
           ),
 

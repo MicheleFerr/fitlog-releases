@@ -167,23 +167,28 @@ class _PersonalInfoStepState extends ConsumerState<PersonalInfoStep> {
           const Spacer(),
 
           // Continue button
+          // Accessibility: Semantic label for screen readers
           SizedBox(
             width: double.infinity,
-            child: FilledButton(
-              onPressed: state.canProceedFromStep(2)
-                  ? () => notifier.nextStep()
-                  : null,
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            child: Semantics(
+              label: context.l10n.initialOnboardingContinue,
+              button: true,
+              child: FilledButton(
+                onPressed: state.canProceedFromStep(2)
+                    ? () => notifier.nextStep()
+                    : null,
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-              ),
-              child: Text(
-                context.l10n.initialOnboardingContinue,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                child: Text(
+                  context.l10n.initialOnboardingContinue,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),

@@ -140,6 +140,7 @@ class _LinearProgressBar extends StatelessWidget {
           SizedBox(
             width: 40,
             height: 40,
+            // Accessibility: Back button with tooltip for screen readers
             child: onBack != null
                 ? IconButton(
                     onPressed: onBack,
@@ -149,6 +150,7 @@ class _LinearProgressBar extends StatelessWidget {
                       size: AppIconSize.small,
                     ),
                     padding: EdgeInsets.zero,
+                    tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                   )
                 : const SizedBox.shrink(),
           ),
