@@ -57,6 +57,7 @@ class AthleteDetailScreen extends ConsumerWidget {
               IconButton(
                 icon: const Icon(AppIcons.moreVert),
                 onPressed: () => _showAthleteOptions(context),
+                tooltip: context.l10n.moreOptions,
               ),
             ],
           ),
@@ -521,13 +522,17 @@ class _WorkoutListItem extends StatelessWidget {
       dateLabel = dateFormat.format(workout.completedAt);
     }
 
-    return Material(
-      color: context.colors.surfaceContainerLow,
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        onTap: onTap,
+    // Accessibility: Workout card with semantic label
+    return Semantics(
+      label: '${workout.name}, $dateLabel ${timeFormat.format(workout.completedAt)}, ${workout.durationMinutes} minutes',
+      button: true,
+      child: Material(
+        color: context.colors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(12),
-        child: Padding(
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
           padding: const EdgeInsets.all(AppSpacing.md),
           child: Row(
             children: [
