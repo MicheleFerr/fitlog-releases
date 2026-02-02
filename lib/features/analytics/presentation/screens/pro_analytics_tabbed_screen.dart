@@ -81,9 +81,11 @@ class _ProAnalyticsTabbedScreenState
 
     return Scaffold(
       appBar: AppBar(
+        // Accessibility: Back button with tooltip
         leading: IconButton(
           icon: const Icon(AppIcons.arrowBack, size: AppIconSize.medium),
           onPressed: () => context.pop(),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
         ),
         actions: [
           // Refresh button - clears cache and reloads analytics
@@ -289,22 +291,26 @@ class _ProAnalyticsTabbedScreenState
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
-            FilledButton.icon(
-              onPressed: () {
-                HapticFeedback.mediumImpact();
-                context.push(AppRoutes.premiumPath);
-              },
-              style: FilledButton.styleFrom(
-                backgroundColor: colorScheme.tertiary,
-                foregroundColor: colorScheme.onTertiary,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
+            // Accessibility: Upgrade button with semantic label
+            Semantics(
+              label: l10n.upgradeToPro,
+              button: true,
+              child: FilledButton.icon(
+                onPressed: () {
+                  HapticFeedback.mediumImpact();
+                  context.push(AppRoutes.premiumPath);
+                },
+                style: FilledButton.styleFrom(
+                  backgroundColor: colorScheme.tertiary,
+                  foregroundColor: colorScheme.onTertiary,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
                 ),
-              ),
-              icon: const Icon(AppIcons.premium, size: AppIconSize.small),
-              label: Text(
-                l10n.upgradeToPro,
+                icon: const Icon(AppIcons.premium, size: AppIconSize.small),
+                label: Text(
+                  l10n.upgradeToPro,
                 style: context.textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
