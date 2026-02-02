@@ -169,11 +169,11 @@ class ExerciseSyncService {
   /// Esegue sincronizzazione
   Future<SyncResult> _performSync({bool isManual = false}) async {
     // ignore: avoid_print
-    print('🔄 [SYNC] _performSync called (isManual: $isManual)');
+    debugPrint('🔄 [SYNC] _performSync called (isManual: $isManual)');
 
     if (_isSyncing) {
       // ignore: avoid_print
-      print('⚠️ [SYNC] Already syncing, skipping');
+      debugPrint('⚠️ [SYNC] Already syncing, skipping');
       return SyncResult(
         success: false,
         error: 'Sync already in progress',
@@ -202,11 +202,11 @@ class ExerciseSyncService {
       // 1. Controlla aggiornamenti disponibili
       final versionCheck = await _versionService.checkForUpdates();
       // ignore: avoid_print
-      print('🔍 [SYNC] Version check: hasUpdates=${versionCheck.hasUpdates}');
+      debugPrint('🔍 [SYNC] Version check: hasUpdates=${versionCheck.hasUpdates}');
 
       if (!versionCheck.hasUpdates && !isManual) {
         // ignore: avoid_print
-        print('✅ [SYNC] No updates available');
+        debugPrint('✅ [SYNC] No updates available');
         if (kDebugMode) {
           debugPrint('✅ No updates available');
         }
@@ -236,13 +236,13 @@ class ExerciseSyncService {
 
       // 2. Esegue aggiornamento
       // ignore: avoid_print
-      print('📥 [SYNC] Calling repository.checkAndApplyUpdates()...');
+      debugPrint('📥 [SYNC] Calling repository.checkAndApplyUpdates()...');
       if (kDebugMode) {
         debugPrint('📥 Applying updates...');
       }
       final updateSuccess = await _repository.checkAndApplyUpdates();
       // ignore: avoid_print
-      print(
+      debugPrint(
         '📥 [SYNC] repository.checkAndApplyUpdates() returned: $updateSuccess',
       );
 
@@ -253,7 +253,7 @@ class ExerciseSyncService {
       // 3. Verifica successo
       final finalVersionCheck = await _versionService.checkForUpdates();
       // ignore: avoid_print
-      print('✅ [SYNC] Final version check: ${finalVersionCheck.localVersion}');
+      debugPrint('✅ [SYNC] Final version check: ${finalVersionCheck.localVersion}');
 
       await _updateLastSyncTime();
       _retryCount = 0;
@@ -282,15 +282,15 @@ class ExerciseSyncService {
         );
       }
       // ignore: avoid_print
-      print(
+      debugPrint(
         '✅ [SYNC] Sync completed in ${DateTime.now().difference(startTime).inSeconds}s',
       );
       return result;
     } catch (e, stack) {
       // ignore: avoid_print
-      print('❌ [SYNC] _performSync FAILED: $e');
+      debugPrint('❌ [SYNC] _performSync FAILED: $e');
       // ignore: avoid_print
-      print('Stack: $stack');
+      debugPrint('Stack: $stack');
       if (kDebugMode) {
         debugPrint('❌ Sync failed: $e');
       }

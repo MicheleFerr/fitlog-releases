@@ -7,6 +7,7 @@
 /// Provider Riverpod per gestione esercizi con sistema ibrido
 library;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/hybrid_exercise_repository.dart';
@@ -88,17 +89,17 @@ final exerciseSyncServiceProvider = Provider<ExerciseSyncService>((ref) {
 /// DEVE essere watchato nell'app per avviare la sincronizzazione automatica
 final exerciseSyncInitProvider = FutureProvider<void>((ref) async {
   // ignore: avoid_print
-  print('🔄 [SYNC] Starting ExerciseSyncService initialization...');
+  debugPrint('🔄 [SYNC] Starting ExerciseSyncService initialization...');
   try {
     final syncService = ref.read(exerciseSyncServiceProvider);
     await syncService.initialize();
     // ignore: avoid_print
-    print('✅ [SYNC] ExerciseSyncService initialized successfully');
+    debugPrint('✅ [SYNC] ExerciseSyncService initialized successfully');
   } catch (e, stack) {
     // ignore: avoid_print
-    print('❌ [SYNC] ExerciseSyncService initialization failed: $e');
+    debugPrint('❌ [SYNC] ExerciseSyncService initialization failed: $e');
     // ignore: avoid_print
-    print('Stack: $stack');
+    debugPrint('Stack: $stack');
     rethrow;
   }
 });
