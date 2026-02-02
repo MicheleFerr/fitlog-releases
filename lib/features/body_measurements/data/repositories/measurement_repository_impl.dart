@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fpdart/fpdart.dart' hide State;
 import 'package:uuid/uuid.dart';
@@ -298,7 +299,7 @@ class MeasurementRepositoryImpl with FirebaseErrorMapperMixin implements Measure
       for (final m in measurements) {
         // Skip invalid values (e.g., height < 50cm is impossible)
         if (!_isValidMeasurementValue(m)) {
-          print('⚠️ [SKIP] Invalid ${m.metricType.name}: ${m.value} ${m.unit}');
+          debugPrint('⚠️ [SKIP] Invalid ${m.metricType.name}: ${m.value} ${m.unit}');
           continue;
         }
 
