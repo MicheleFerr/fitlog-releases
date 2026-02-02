@@ -120,7 +120,7 @@ class _PersonalizedContentCardState
                   spreadRadius: 2,
                 ),
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
+                  color: context.colors.shadow.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -131,7 +131,7 @@ class _PersonalizedContentCardState
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: context.colors.outline.withValues(alpha: 0.2),
                     width: 1,
                   ),
                 ),

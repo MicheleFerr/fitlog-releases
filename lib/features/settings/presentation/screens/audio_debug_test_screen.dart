@@ -158,7 +158,7 @@ class _QuickTestsTab extends ConsumerWidget {
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16),
                     backgroundColor: context.colors.primary,
-                    foregroundColor: Colors.white,
+                    foregroundColor: context.colors.onPrimary,
                   ),
                 ),
               ),
@@ -318,7 +318,7 @@ class _FullTestsTab extends ConsumerWidget {
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16),
                     backgroundColor: context.colors.error,
-                    foregroundColor: Colors.white,
+                    foregroundColor: context.colors.onPrimary,
                   ),
                 ),
               ),
