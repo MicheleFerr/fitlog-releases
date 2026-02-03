@@ -7,6 +7,8 @@
 /// Provides notification scheduler to the app.
 library;
 
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/services/notification_scheduler.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/services/notification_message_pool.dart';
@@ -59,7 +61,7 @@ final notificationSchedulerProvider = Provider<NotificationScheduler>((ref) {
 });
 
 /// Provider to track if notification system is initialized
-final notificationInitializedProvider = StateProvider<bool>((ref) => false);
+final notificationInitializedProvider = createStateProvider<bool>(false);
 
 /// Initialize the notification system.
 ///

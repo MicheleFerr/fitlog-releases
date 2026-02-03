@@ -1,4 +1,6 @@
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'dart:async';
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -4601,7 +4603,7 @@ final exerciseTemplatesProvider = Provider<Map<ExerciseCategory, List<String>>>(
 );
 
 // Exercise search provider
-final exerciseSearchProvider = StateProvider<String>((ref) => '');
+final exerciseSearchProvider = createStateProvider<String>('');
 
 final filteredExercisesProvider = Provider<List<String>>((ref) {
   final searchQuery = ref.watch(exerciseSearchProvider);
@@ -4614,12 +4616,12 @@ final filteredExercisesProvider = Provider<List<String>>((ref) {
 });
 
 // Selected exercise category for modal
-final selectedExerciseCategoryProvider = StateProvider<ExerciseCategory>((ref) {
+final selectedExerciseCategoryProvider = createStateProvider<ExerciseCategory>((ref) {
   return ExerciseCategory.chest;
 });
 
 // Selected exercise type for modal
-final selectedExerciseTypeProvider = StateProvider<ExerciseType>((ref) {
+final selectedExerciseTypeProvider = createStateProvider<ExerciseType>((ref) {
   return ExerciseType.single;
 });
 

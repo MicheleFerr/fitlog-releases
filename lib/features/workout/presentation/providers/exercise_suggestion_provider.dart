@@ -679,10 +679,10 @@ class ExerciseSuggestionsNotifier
 }
 */
 
-/// TEMPORARY: Disabled for Riverpod 3.x migration
+/// TEMPORARY: Disabled for Riverpod 3.x migration (StateProvider removed)
 /// TODO: Migrate to @riverpod codegen
 final exerciseSuggestionsProvider =
-    StateProvider.family.autoDispose<List<SmartSuggestion>, String>(
+    Provider.family.autoDispose<List<SmartSuggestion>, String>(
   (ref, exerciseId) => <SmartSuggestion>[],
 );
 

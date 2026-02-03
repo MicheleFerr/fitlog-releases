@@ -14,6 +14,8 @@
 /// - AutoDispose for memory efficiency
 library;
 
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/feedback/data/repositories/unified_feedback_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/feedback/domain/entities/unified_feedback.dart';
@@ -534,25 +536,25 @@ final feedbackErrorProvider = Provider.autoDispose<String?>((ref) {
 /// **Usage**: Admin dashboard filter dropdown
 /// **2025 UX**: Filter chips with immediate visual feedback
 final selectedFeedbackTypeProvider =
-    StateProvider.autoDispose<UnifiedFeedbackType?>((ref) => null);
+    createStateProviderAutoDispose<UnifiedFeedbackType?>((ref) => null);
 
 /// Selected feedback status filter
 ///
 /// **Usage**: Admin dashboard status filter
 final selectedFeedbackStatusProvider =
-    StateProvider.autoDispose<UnifiedFeedbackStatus?>((ref) => null);
+    createStateProviderAutoDispose<UnifiedFeedbackStatus?>((ref) => null);
 
 /// Selected feedback severity filter
 ///
 /// **Usage**: Admin dashboard severity filter
 final selectedFeedbackSeverityProvider =
-    StateProvider.autoDispose<FeedbackSeverity?>((ref) => null);
+    createStateProviderAutoDispose<FeedbackSeverity?>((ref) => null);
 
 /// Search query provider
 ///
 /// **Usage**: Admin dashboard search bar
 /// **2025 UX**: Real-time search with debouncing
-final feedbackSearchQueryProvider = StateProvider.autoDispose<String>((ref) {
+final feedbackSearchQueryProvider = createStateProviderAutoDispose<String>((ref) {
   return '';
 });
 

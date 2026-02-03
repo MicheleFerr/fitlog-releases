@@ -20,6 +20,8 @@
 /// ```
 library;
 
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/enums/exercise_view_mode.dart';
 
@@ -32,6 +34,6 @@ import 'package:gymbro_flutter_new/features/analytics/domain/enums/exercise_view
 /// **State Management**:
 /// - Read: `ref.watch(exerciseViewModeProvider)` (rebuild on change)
 /// - Update: `ref.read(exerciseViewModeProvider.notifier).state = newMode`
-final exerciseViewModeProvider = StateProvider<ExerciseViewMode>(
+final exerciseViewModeProvider = createStateProvider<ExerciseViewMode>(
   (ref) => ExerciseViewMode.detailed,
 );

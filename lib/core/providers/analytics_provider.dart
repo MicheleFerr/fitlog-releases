@@ -7,6 +7,8 @@
 /// Riverpod providers for analytics service
 library;
 
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/services/analytics/i_analytics_service.dart';
@@ -109,7 +111,7 @@ final analyticsServiceAsyncProvider = FutureProvider<IAnalyticsService>((ref) as
 ///   // Show loading or wait
 /// }
 /// ```
-final isAnalyticsInitializedProvider = StateProvider<bool>((ref) => false);
+final isAnalyticsInitializedProvider = createStateProvider<bool>(false);
 
 /// Helper to initialize analytics and update state
 ///

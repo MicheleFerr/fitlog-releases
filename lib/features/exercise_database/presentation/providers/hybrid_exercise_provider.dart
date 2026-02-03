@@ -7,6 +7,8 @@
 /// Provider Riverpod per gestione esercizi con sistema ibrido
 library;
 
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
@@ -206,10 +208,10 @@ final exerciseVersionWatchProvider =
 // ====================
 
 /// Provider per query di ricerca corrente
-final exerciseSearchQueryProvider = StateProvider<String>((ref) => '');
+final exerciseSearchQueryProvider = createStateProvider<String>('');
 
 /// Provider per filtri attivi
-final exerciseFiltersProvider = StateProvider<ExerciseFilters>(
+final exerciseFiltersProvider = createStateProvider<ExerciseFilters>(
   (ref) => const ExerciseFilters(),
 );
 

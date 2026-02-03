@@ -1,5 +1,7 @@
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'dart:io';
 
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -210,10 +212,10 @@ final photoUploadProvider =
     );
 
 /// Provider for selected photo (for detail view)
-final selectedPhotoProvider = StateProvider<ProgressPhoto?>((ref) => null);
+final selectedPhotoProvider = createStateProvider<ProgressPhoto?>(null);
 
 /// Provider for comparison mode
-final comparisonModeProvider = StateProvider<bool>((ref) => false);
+final comparisonModeProvider = createStateProvider<bool>(false);
 
 /// Provider for selected photos in comparison mode
 final comparisonPhotosProvider = StateProvider<List<ProgressPhoto>>(
@@ -221,7 +223,7 @@ final comparisonPhotosProvider = StateProvider<List<ProgressPhoto>>(
 );
 
 /// Provider for photo filter (by pose)
-final photoFilterPoseProvider = StateProvider<PhotoPose?>((ref) => null);
+final photoFilterPoseProvider = createStateProvider<PhotoPose?>(null);
 
 /// Filtered photos based on selected pose filter
 final filteredPhotosProvider =

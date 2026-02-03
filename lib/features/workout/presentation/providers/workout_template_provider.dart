@@ -1,4 +1,6 @@
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
@@ -141,7 +143,7 @@ final popularTemplatesProvider = FutureProvider.autoDispose<List<WorkoutTemplate
 });
 
 // Provider per ricerca template
-final templateSearchQueryProvider = StateProvider<String>((ref) => '');
+final templateSearchQueryProvider = createStateProvider<String>('');
 
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed

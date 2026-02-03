@@ -1,4 +1,6 @@
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/dropset_template.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/dropset_template_repository.dart';
@@ -48,7 +50,7 @@ final customDropsetTemplatesProvider =
     });
 
 // Search query state
-final dropsetTemplateSearchQueryProvider = StateProvider<String>((ref) => '');
+final dropsetTemplateSearchQueryProvider = createStateProvider<String>('');
 
 // Search results
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
@@ -66,7 +68,7 @@ final dropsetTemplateSearchResultsProvider =
 
 // Filter by difficulty
 final dropsetTemplateDifficultyFilterProvider =
-    StateProvider<DropsetDifficulty?>((ref) => null);
+    createStateProvider<DropsetDifficulty?>(null);
 
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final filteredDropsetTemplatesByDifficultyProvider =

@@ -1,4 +1,6 @@
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/contribution_filters.dart';
 import 'package:gymbro_flutter_new/features/community/data/repositories/community_repository.dart';
@@ -284,10 +286,10 @@ final exerciseStatsProvider = FutureProvider.autoDispose
 // ============================================================================
 
 // Provider 1: Search Query State
-final searchQueryProvider = StateProvider<String>((ref) => '');
+final searchQueryProvider = createStateProvider<String>('');
 
 // Provider 2: Active Filters State
-final activeFiltersProvider = StateProvider<ContributionFilters>((ref) {
+final activeFiltersProvider = createStateProvider<ContributionFilters>((ref) {
   return const ContributionFilters(); // Default empty filters
 });
 

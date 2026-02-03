@@ -1,4 +1,6 @@
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/rest_pause_template.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/rest_pause_template_repository.dart';
@@ -47,7 +49,7 @@ final customRestPauseTemplatesProvider =
     });
 
 // Search query state
-final restPauseTemplateSearchQueryProvider = StateProvider<String>((ref) => '');
+final restPauseTemplateSearchQueryProvider = createStateProvider<String>('');
 
 // Search results
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
@@ -65,7 +67,7 @@ final restPauseTemplateSearchResultsProvider =
 
 // Filter by difficulty
 final restPauseTemplateDifficultyFilterProvider =
-    StateProvider<RestPauseDifficulty?>((ref) => null);
+    createStateProvider<RestPauseDifficulty?>(null);
 
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final filteredRestPauseTemplatesByDifficultyProvider =

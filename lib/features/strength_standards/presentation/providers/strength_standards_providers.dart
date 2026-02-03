@@ -1,4 +1,6 @@
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'dart:io' show Platform;
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
@@ -350,14 +352,14 @@ final batchWeightSuggestionsProvider = FutureProvider.autoDispose
     });
 
 /// Whether weight suggestions feature is enabled
-final weightSuggestionsEnabledProvider = StateProvider<bool>((ref) {
+final weightSuggestionsEnabledProvider = createStateProvider<bool>((ref) {
   // Check if questionnaire is complete
   final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
   return questionnaire != null && questionnaire.isValid;
 });
 
 /// Whether to show weight suggestion prompts
-final showWeightSuggestionPromptsProvider = StateProvider<bool>((ref) {
+final showWeightSuggestionPromptsProvider = createStateProvider<bool>((ref) {
   return true; // Can be toggled in settings
 });
 

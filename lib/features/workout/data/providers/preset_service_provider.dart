@@ -13,6 +13,8 @@
 /// - Supports both sync and async initialization
 library;
 
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/i_preset_service.dart';
@@ -114,4 +116,4 @@ final presetServiceAsyncProvider = FutureProvider<IPresetService>((ref) async {
 /// Provider for checking if preset service is initialized
 ///
 /// Useful for app startup logic to ensure presets are ready
-final isPresetServiceInitializedProvider = StateProvider<bool>((ref) => false);
+final isPresetServiceInitializedProvider = createStateProvider<bool>(false);

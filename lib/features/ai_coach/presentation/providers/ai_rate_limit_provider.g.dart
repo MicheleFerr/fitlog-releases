@@ -36,7 +36,7 @@ final class AIRateLimitProvider
   AIRateLimit create() => AIRateLimit();
 }
 
-String _$aIRateLimitHash() => r'42fe7e205e0892906580648b5a58caf1dad6fb6a';
+String _$aIRateLimitHash() => r'b0163ecad02a2dbc0e6685c52a4ecc3d5e6ac32b';
 
 /// Rate limit provider
 

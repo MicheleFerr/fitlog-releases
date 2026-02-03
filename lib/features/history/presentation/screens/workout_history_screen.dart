@@ -10,6 +10,8 @@
 /// WorkoutHistoryScreen - Database completo e modificabile per allenamenti passati
 library;
 
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -37,12 +39,12 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 enum DateRangeOption { today, thisWeek, thisMonth, allTime }
 
 /// Provider for the selected date range filter
-final dateRangeFilterProvider = StateProvider<DateRangeOption>((ref) {
+final dateRangeFilterProvider = createStateProvider<DateRangeOption>((ref) {
   return DateRangeOption.allTime;
 });
 
 /// Provider for view settings (grouping, calendar view)
-final historyViewSettingsProvider = StateProvider<HistoryViewSettings>((ref) {
+final historyViewSettingsProvider = createStateProvider<HistoryViewSettings>((ref) {
   return const HistoryViewSettings();
 });
 
@@ -70,12 +72,12 @@ final expandedSectionsProvider = StateProvider<Set<String>>((ref) {
 });
 
 /// Provider for the selected date in calendar view
-final selectedCalendarDateProvider = StateProvider<DateTime>((ref) {
+final selectedCalendarDateProvider = createStateProvider<DateTime>((ref) {
   return DateTime.now();
 });
 
 /// Provider for the focused month in calendar view
-final focusedCalendarDateProvider = StateProvider<DateTime>((ref) {
+final focusedCalendarDateProvider = createStateProvider<DateTime>((ref) {
   return DateTime.now();
 });
 

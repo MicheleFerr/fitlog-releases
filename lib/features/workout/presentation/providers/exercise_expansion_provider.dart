@@ -35,9 +35,9 @@ class ExerciseExpansionState {
   }
 }
 
-/// TEMPORARY: Using StateProvider.family as workaround
+/// TEMPORARY: Using Provider.family as workaround (StateProvider removed in Riverpod 3.x)
 /// TODO: Migrate to @riverpod codegen for proper NotifierProvider.family support
 final exerciseExpansionProvider =
-    StateProvider.family.autoDispose<ExerciseExpansionState, String>(
+    Provider.family.autoDispose<ExerciseExpansionState, String>(
   (ref, exerciseId) => const ExerciseExpansionState(),
 );

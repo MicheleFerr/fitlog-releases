@@ -184,9 +184,9 @@ class AutoCollapseNotifier extends AutoDisposeFamilyNotifier<AutoCollapseState, 
 
 /// Provider for exercise auto-collapse state
 /// Family provider indexed by exercise ID
-/// TEMPORARY: Disabled for Riverpod 3.x migration
+/// TEMPORARY: Disabled for Riverpod 3.x migration (StateProvider removed)
 /// TODO: Migrate to @riverpod codegen
 final exerciseAutoCollapseProvider =
-    StateProvider.family.autoDispose<AutoCollapseState, String>(
+    Provider.family.autoDispose<AutoCollapseState, String>(
   (ref, exerciseId) => const AutoCollapseState(),
 );

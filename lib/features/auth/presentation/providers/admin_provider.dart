@@ -17,6 +17,8 @@
 /// Vedi: scripts/README_ADMIN_SETUP.md per documentazione completa
 library;
 
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -130,7 +132,7 @@ final showDebugSectionsProvider = Provider<bool>((ref) {
 });
 
 /// Provider for debug section collapsed state
-final debugSectionCollapsedProvider = StateProvider<bool>((ref) => true);
+final debugSectionCollapsedProvider = createStateProvider<bool>(true);
 
 /// Provider for individual debug sections collapsed state
 final debugSectionStatesProvider =

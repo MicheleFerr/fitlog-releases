@@ -1,4 +1,6 @@
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_template.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/superset_template_repository.dart';
@@ -91,7 +93,7 @@ final advancedSupersetTemplatesProvider =
     });
 
 // Search query state
-final supersetTemplateSearchQueryProvider = StateProvider<String>((ref) => '');
+final supersetTemplateSearchQueryProvider = createStateProvider<String>('');
 
 // Search results
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
@@ -109,7 +111,7 @@ final supersetTemplateSearchResultsProvider =
 
 // Filter by difficulty
 final supersetTemplateDifficultyFilterProvider =
-    StateProvider<TemplateDifficulty?>((ref) => null);
+    createStateProvider<TemplateDifficulty?>(null);
 
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final filteredSupersetTemplatesByDifficultyProvider =

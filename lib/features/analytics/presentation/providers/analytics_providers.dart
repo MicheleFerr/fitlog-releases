@@ -28,6 +28,8 @@
 /// ```
 library;
 
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/analytics_repository_impl.dart';
@@ -368,4 +370,4 @@ final cachedMuscleBalanceProvider =
 ///
 /// **Persistence**: In-memory only (resets on app restart)
 /// TODO: Persist to user preferences/Firestore for cross-device sync
-final weeklyWorkoutGoalProvider = StateProvider<int>((ref) => 5);
+final weeklyWorkoutGoalProvider = createStateProvider<int>(5);

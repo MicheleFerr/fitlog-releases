@@ -10,6 +10,8 @@
 /// Riverpod provider for workout history state management
 library;
 
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/history/domain/entities/sync_status.dart';
@@ -444,7 +446,7 @@ class WorkoutStats {
 }
 
 /// Provider for managing workout history filter state
-final workoutHistoryFilterProvider = StateProvider<WorkoutHistoryFilter>((ref) {
+final workoutHistoryFilterProvider = createStateProvider<WorkoutHistoryFilter>((ref) {
   return const WorkoutHistoryFilter();
 });
 

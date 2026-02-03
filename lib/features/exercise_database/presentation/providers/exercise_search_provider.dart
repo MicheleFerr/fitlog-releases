@@ -1,4 +1,6 @@
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/exercise_repository.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_template.dart';
@@ -6,15 +8,15 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/services/ex
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 // Search query state provider
-final exerciseSearchQueryProvider = StateProvider<String>((ref) => '');
+final exerciseSearchQueryProvider = createStateProvider<String>('');
 
 // Selected category filter provider
-final exerciseCategoryFilterProvider = StateProvider<ExerciseCategory?>(
+final exerciseCategoryFilterProvider = createStateProvider<ExerciseCategory?>(
   (ref) => null,
 );
 
 // Selected muscle group filter provider
-final exerciseMuscleGroupFilterProvider = StateProvider<String?>((ref) => null);
+final exerciseMuscleGroupFilterProvider = createStateProvider<String?>(null);
 
 // Exercise search results provider
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
