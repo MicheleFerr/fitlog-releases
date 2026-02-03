@@ -36,6 +36,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_sync_listener.dart';
+import 'package:gymbro_flutter_new/core/config/feature_flags.dart';
 
 /// Main shell widget containing bottom navigation and branch content
 ///
@@ -270,8 +271,8 @@ class _MainShellState extends ConsumerState<MainShell> {
   }
 }
 
-/// Material 3 NavigationBar with 4 destinations
-/// Home, Workout, Stats, Profile
+/// Material 3 NavigationBar with 5 destinations
+/// Home, Workout, Stats, Profile, AI Coach
 class _BottomNavigationBar extends StatelessWidget {
   const _BottomNavigationBar({
     required this.currentIndex,
@@ -311,6 +312,8 @@ class _BottomNavigationBar extends StatelessWidget {
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         animationDuration: const Duration(milliseconds: 200),
         destinations: [
+          // Note: AI Coach tab conditional rendering based on feature flag
+          // Design requirement: docs/AI_COACH_DESIGN.md lines 638-652
           // Home - outlined icon, color change on selection
           NavigationDestination(
             icon: Icon(
@@ -371,6 +374,23 @@ class _BottomNavigationBar extends StatelessWidget {
             label: context.l10n.profile,
             tooltip: context.l10n.profile,
           ),
+          // AI Coach - psychology icon, color change on selection
+          // Conditional rendering: only show if feature flag enabled
+          if (FeatureFlags.aiCoachEnabled)
+            NavigationDestination(
+              icon: Icon(
+                AppIcons.psychology,
+                size: AppIconSize.medium,
+                color: context.colors.onSurfaceVariant,
+              ),
+              selectedIcon: Icon(
+                AppIcons.psychology,
+                size: AppIconSize.medium,
+                color: context.colors.primary,
+              ),
+              label: context.l10n.aiCoach,
+              tooltip: context.l10n.aiCoach,
+            ),
         ],
       ),
     );

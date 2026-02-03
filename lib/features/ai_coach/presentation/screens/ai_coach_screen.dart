@@ -25,12 +25,12 @@ class AICoachScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final chatState = ref.watch(aiChatProvider);
-    final rateLimitAsync = ref.watch(aiRateLimitProvider);
+    final chatState = ref.watch(aIChatProvider);
+    final rateLimitAsync = ref.watch(aIRateLimitProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('AI Coach'),
+        title: Text(context.l10n.aiCoach),
         actions: [
           IconButton(
             icon: Icon(AppIcons.delete),
@@ -95,7 +95,7 @@ class AICoachScreen extends ConsumerWidget {
 
           // Input bar
           AIInputBar(
-            onSend: (text) => ref.read(aiChatProvider.notifier).sendMessage(text),
+            onSend: (text) => ref.read(aIChatProvider.notifier).sendMessage(text),
             isLoading: chatState.isLoading,
           ),
         ],
@@ -118,7 +118,7 @@ class AICoachScreen extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () {
-              ref.read(aiChatProvider.notifier).clearMessages();
+              ref.read(aIChatProvider.notifier).clearMessages();
               Navigator.pop(context);
             },
             child: Text('Cancella'),

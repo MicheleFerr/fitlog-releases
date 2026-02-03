@@ -40,6 +40,10 @@ abstract final class AppRoutes {
   static final GlobalKey<NavigatorState> profileNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'profile');
 
+  /// Navigator key for AI Coach branch
+  static final GlobalKey<NavigatorState> aiCoachNavigatorKey =
+      GlobalKey<NavigatorState>(debugLabel: 'ai-coach');
+
   /// Root navigator key
   static final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -244,11 +248,12 @@ abstract final class AppRoutes {
   // Branch Index Mapping (for StatefulShellRoute)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /// Branch index for each main tab (4 tabs: Home, Workout, Stats, Profile)
+  /// Branch index for each main tab (5 tabs: Home, Workout, Stats, Profile, AI Coach)
   static const int homeBranchIndex = 0;
   static const int workoutBranchIndex = 1;
   static const int statsBranchIndex = 2;
   static const int profileBranchIndex = 3;
+  static const int aiCoachBranchIndex = 4;
 
   /// Get branch index from route path
   static int? getBranchIndex(String path) {
@@ -263,6 +268,9 @@ abstract final class AppRoutes {
     }
     if (path.startsWith(profilePath)) {
       return profileBranchIndex;
+    }
+    if (path.startsWith(aiCoachPath)) {
+      return aiCoachBranchIndex;
     }
     return null; // Not a shell route
   }

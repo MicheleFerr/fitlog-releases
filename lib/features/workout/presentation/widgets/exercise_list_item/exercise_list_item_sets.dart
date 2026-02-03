@@ -244,10 +244,13 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                     children: [
                       // Add Set button (left)
                       Expanded(
-                        child: InkWell(
-                          onTap: () => _addNewSet(),
-                          borderRadius: BorderRadius.circular(8),
-                          child: Container(
+                        child: Semantics(
+                          label: context.l10n.addSet,
+                          button: true,
+                          child: InkWell(
+                            onTap: () => _addNewSet(),
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             decoration: BoxDecoration(
                               color: context.colors.primaryContainer.withValues(
@@ -284,16 +287,20 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                           ),
                         ),
                       ),
+                      ),
                       const SizedBox(width: 8),
                       // Collapse button (right) - no animation to prevent flash on scroll rebuild
                       Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            widget.onCollapseExercise();
-                            HapticFeedback.lightImpact();
-                          },
-                          borderRadius: BorderRadius.circular(8),
-                          child: Container(
+                        child: Semantics(
+                          label: context.l10n.collapseExercise,
+                          button: true,
+                          child: InkWell(
+                            onTap: () {
+                              widget.onCollapseExercise();
+                              HapticFeedback.lightImpact();
+                            },
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             decoration: BoxDecoration(
                               color: context.colors.secondaryContainer
@@ -329,13 +336,17 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                           ),
                         ),
                       ),
+                      ),
                     ],
                   )
-                : InkWell(
-                    key: const ValueKey('button_add_only'),
-                    onTap: () => _addNewSet(),
-                    borderRadius: BorderRadius.circular(8),
-                    child: Container(
+                : Semantics(
+                    label: context.l10n.addSet,
+                    button: true,
+                    child: InkWell(
+                      key: const ValueKey('button_add_only'),
+                      onTap: () => _addNewSet(),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
                         color: context.colors.primaryContainer.withValues(
@@ -368,6 +379,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                         ],
                       ),
                     ),
+                  ),
                   ),
           ),
         ),
@@ -476,17 +488,21 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         ],
       ),
       // ✅ IMPROVED UX: Larger row with visible action icons
-      child: GestureDetector(
-        onTap: () => _toggleSetCompletionWithFeedback(context, set),
-        child: Container(
-          // Apply tutorial key only to the first set (index 0)
-          key: index == 0 ? widget.tutorialFirstSetKey : null,
-          margin: EdgeInsets.only(bottom: displayMode.bottomMargin),
-          padding: EdgeInsets.symmetric(
-            horizontal: displayMode.horizontalPadding,
-            vertical: displayMode.verticalPadding,
-          ),
-          decoration: BoxDecoration(
+      child: Semantics(
+        label: 'Set ${index + 1}${isWarmup ? ' warmup' : ''}${set.isCompleted ? ' completed' : ''}',
+        hint: set.isCompleted ? 'Tap to mark as incomplete' : 'Tap to mark as complete',
+        button: true,
+        child: GestureDetector(
+          onTap: () => _toggleSetCompletionWithFeedback(context, set),
+          child: Container(
+            // Apply tutorial key only to the first set (index 0)
+            key: index == 0 ? widget.tutorialFirstSetKey : null,
+            margin: EdgeInsets.only(bottom: displayMode.bottomMargin),
+            padding: EdgeInsets.symmetric(
+              horizontal: displayMode.horizontalPadding,
+              vertical: displayMode.verticalPadding,
+            ),
+            decoration: BoxDecoration(
             color: isWarmup
                 ? context.warningContainer
                 : set.isCompleted
@@ -599,10 +615,13 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                     const SizedBox(width: 8),
                   ],
                   // Edit button (delete via swipe left)
-                  InkWell(
-                    onTap: () => _quickEditSet(context, set),
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
+                  Semantics(
+                    label: context.l10n.edit,
+                    button: true,
+                    child: InkWell(
+                      onTap: () => _quickEditSet(context, set),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: SemanticIcon(
                         icon: AppIcons.edit,
@@ -611,11 +630,13 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                         color: context.colors.primary,
                       ),
                     ),
+                    ),
                   ),
                 ],
               ),
             ],
           ),
+        ),
         ),
       ),
     );
@@ -1258,11 +1279,14 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         ],
 
         // Execute/Re-run button
-        GestureDetector(
-          onTap: () => widget.onExecuteDropSet(dropsetExercise),
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
+        Semantics(
+          label: context.l10n.executeDropset,
+          button: true,
+          child: GestureDetector(
+            onTap: () => widget.onExecuteDropSet(dropsetExercise),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
               color: allCompleted
                   ? context.colors.surfaceContainerHighest.withValues(
                       alpha: 0.5,
@@ -1313,16 +1337,20 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
               ],
             ),
           ),
+          ),
         ),
 
         // Add Stage button (only when dropset is completed)
         if (allCompleted) ...[
           const SizedBox(height: 8),
-          GestureDetector(
-            onTap: () => _onAddDropSetStage(context, dropsetExercise),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              decoration: BoxDecoration(
+          Semantics(
+            label: context.l10n.addDropsetStage,
+            button: true,
+            child: GestureDetector(
+              onTap: () => _onAddDropSetStage(context, dropsetExercise),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
                 color: context.colors.primaryContainer.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
@@ -1351,6 +1379,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
               ),
             ),
           ),
+        ),
         ],
       ],
     );
@@ -1589,59 +1618,63 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         ],
 
         // Execute/Re-run button
-        GestureDetector(
-          onTap: () => widget.onExecuteRestPause(restPauseExercise),
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: allCompleted
-                  ? context.colors.surfaceContainerHighest.withValues(
-                      alpha: 0.5,
-                    )
-                  : context.colors.tertiaryContainer.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
+        Semantics(
+          label: allCompleted ? context.l10n.rerunRestPause : context.l10n.executeRestPause,
+          button: true,
+          child: GestureDetector(
+            onTap: () => widget.onExecuteRestPause(restPauseExercise),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
                 color: allCompleted
-                    ? context.colors.outline.withValues(alpha: 0.3)
-                    : context.colors.tertiary.withValues(alpha: 0.5),
-                style: BorderStyle.solid,
-              ),
-            ),
-            child: Row(
-              children: [
-                SemanticIcon(
-                  icon: allCompleted
-                      ? AppIcons.refresh
-                      : AppIcons.playCircleOutline,
-                  semanticLabel: context.l10n.executeRestPause,
-                  size: AppIconSize.small,
+                    ? context.colors.surfaceContainerHighest.withValues(
+                        alpha: 0.5,
+                      )
+                    : context.colors.tertiaryContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
                   color: allCompleted
-                      ? context.colors.onSurfaceVariant
-                      : context.colors.tertiary,
+                      ? context.colors.outline.withValues(alpha: 0.3)
+                      : context.colors.tertiary.withValues(alpha: 0.5),
+                  style: BorderStyle.solid,
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    allCompleted
-                        ? context.l10n.rerunRestPause
-                        : context.l10n.executeRestPause,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: allCompleted
-                          ? context.colors.onSurfaceVariant
-                          : context.colors.tertiary,
-                      fontWeight: FontWeight.w600,
+              ),
+              child: Row(
+                children: [
+                  SemanticIcon(
+                    icon: allCompleted
+                        ? AppIcons.refresh
+                        : AppIcons.playCircleOutline,
+                    semanticLabel: context.l10n.executeRestPause,
+                    size: AppIconSize.small,
+                    color: allCompleted
+                        ? context.colors.onSurfaceVariant
+                        : context.colors.tertiary,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      allCompleted
+                          ? context.l10n.rerunRestPause
+                          : context.l10n.executeRestPause,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: allCompleted
+                            ? context.colors.onSurfaceVariant
+                            : context.colors.tertiary,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-                SemanticIcon(
-                  icon: AppIcons.forwardIos,
-                  semanticLabel: context.l10n.executeRestPause,
-                  size: AppIconSize.tiny,
-                  color: allCompleted
-                      ? context.colors.onSurfaceVariant
-                      : context.colors.tertiary,
-                ),
-              ],
+                  SemanticIcon(
+                    icon: AppIcons.forwardIos,
+                    semanticLabel: context.l10n.executeRestPause,
+                    size: AppIconSize.tiny,
+                    color: allCompleted
+                        ? context.colors.onSurfaceVariant
+                        : context.colors.tertiary,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -1649,36 +1682,40 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         // Add Set button (only when rest-pause has been executed)
         if (allCompleted) ...[
           const SizedBox(height: 8),
-          GestureDetector(
-            onTap: () => _onAddRestPauseSet(context, restPauseExercise),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              decoration: BoxDecoration(
-                color: context.colors.primaryContainer.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: context.colors.primary.withValues(alpha: 0.5),
-                  style: BorderStyle.solid,
+          Semantics(
+            label: context.l10n.addRestPauseSet,
+            button: true,
+            child: GestureDetector(
+              onTap: () => _onAddRestPauseSet(context, restPauseExercise),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  color: context.colors.primaryContainer.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: context.colors.primary.withValues(alpha: 0.5),
+                    style: BorderStyle.solid,
+                  ),
                 ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.add,
-                    semanticLabel: context.l10n.addRestPauseSet,
-                    size: AppIconSize.small,
-                    color: context.colors.primary,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    context.l10n.addRestPauseSet,
-                    style: context.textTheme.bodySmall?.copyWith(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SemanticIcon(
+                      icon: AppIcons.add,
+                      semanticLabel: context.l10n.addRestPauseSet,
+                      size: AppIconSize.small,
                       color: context.colors.primary,
-                      fontWeight: FontWeight.w600,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 8),
+                    Text(
+                      context.l10n.addRestPauseSet,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

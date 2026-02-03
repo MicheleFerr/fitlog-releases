@@ -127,12 +127,19 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
           ],
         ),
       ),
-      child: GestureDetector(
-        onTap: widget.isReorderMode ? null : widget.onTap,
-        onLongPress: widget.isReorderMode
-            ? null
-            : () => _showSupersetOptions(context),
-        child: DecoratedBox(
+      child: Semantics(
+        label: 'Superset',
+        hint: widget.isReorderMode ? null : 'Tap to expand, long press for options',
+        button: true,
+        child: GestureDetector(
+          onTap: widget.isReorderMode ? null : widget.onTap,
+          onLongPress: widget.isReorderMode
+              ? null
+              : () => _showSupersetOptions(context),
+          child: DecoratedBox(
+          ),
+        ),
+      ),
           decoration: BoxDecoration(
             color: context.colors.surfaceContainer,
             borderRadius: BorderRadius.circular(16),
@@ -179,9 +186,15 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
     required Color color,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
+    return Semantics(
+      label: label,
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+        ),
+      ),
+    );
         width: 60,
         height: 60,
         decoration: BoxDecoration(
@@ -238,17 +251,23 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
     final totalSets = widget.superset.supersetSets.length;
     final allCompleted = completedSets == totalSets;
 
-    return GestureDetector(
-      // ✅ FIX Issue 1: Only allow toggle when ALL sets are completed
-      onTap: _allSetsCompleted
-          ? () {
-              setState(() {
-                _manualExpandOverride = !_manualExpandOverride;
-              });
-              HapticFeedback.lightImpact();
-            }
-          : null,
-      behavior: HitTestBehavior.opaque,
+    return Semantics(
+      label: 'Superset header',
+      hint: _allSetsCompleted ? (_manualExpandOverride ? 'Tap to collapse' : 'Tap to expand') : null,
+      button: _allSetsCompleted,
+      child: GestureDetector(
+        // ✅ FIX Issue 1: Only allow toggle when ALL sets are completed
+        onTap: _allSetsCompleted
+            ? () {
+                setState(() {
+                  _manualExpandOverride = !_manualExpandOverride;
+                });
+                HapticFeedback.lightImpact();
+              }
+            : null,
+        behavior: HitTestBehavior.opaque,
+      ),
+    );
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: Row(
@@ -497,16 +516,22 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
     final isFullyCompleted = supersetSet.isFullyCompleted;
     final exercises = widget.superset.exercises;
 
-    return GestureDetector(
-      onTap: () {
-        if (!isFullyCompleted) {
-          _startSupersetRound(context, supersetSet);
-        } else {
-          _undoRoundCompletion(context, supersetSet);
-        }
-      },
-      // ✅ FIX: Use deferToChild so edit button can receive taps
-      behavior: HitTestBehavior.deferToChild,
+    return Semantics(
+      label: 'Superset round ${index + 1}${isFullyCompleted ? ' completed' : ''}',
+      hint: isFullyCompleted ? 'Tap to undo completion' : 'Tap to start round',
+      button: true,
+      child: GestureDetector(
+        onTap: () {
+          if (!isFullyCompleted) {
+            _startSupersetRound(context, supersetSet);
+          } else {
+            _undoRoundCompletion(context, supersetSet);
+          }
+        },
+        // ✅ FIX: Use deferToChild so edit button can receive taps
+        behavior: HitTestBehavior.deferToChild,
+      ),
+    );
       child: Container(
         margin: EdgeInsets.only(bottom: displayMode.bottomMargin),
         padding: EdgeInsets.symmetric(
@@ -592,12 +617,17 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                     ),
                   ),
                 // Edit button
-                InkWell(
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    _startSupersetRound(context, supersetSet);
-                  },
-                  borderRadius: BorderRadius.circular(8),
+                Semantics(
+                  label: l10n.edit,
+                  button: true,
+                  child: InkWell(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      _startSupersetRound(context, supersetSet);
+                    },
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: SemanticIcon(
@@ -687,9 +717,16 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
         // ✅ TUT chip (if enabled and available) - Unified design with tap action
         if (showTut) ...[
           const SizedBox(width: 4),
-          GestureDetector(
-            onTap: () => showTutInfoBottomSheet(context, exercise.tut!),
-            child: Container(
+          Semantics(
+            label: 'TUT ${exercise.tut}',
+            hint: 'Tap to view Time Under Tension information',
+            button: true,
+            child: GestureDetector(
+              onTap: () => showTutInfoBottomSheet(context, exercise.tut!),
+              child: Container(
+              ),
+            ),
+          ),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
                 color: context.colors.secondary.withValues(alpha: 0.15),

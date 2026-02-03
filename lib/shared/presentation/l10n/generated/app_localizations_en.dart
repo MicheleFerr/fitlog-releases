@@ -18,6 +18,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profile => 'Profile';
 
   @override
+  String get aiCoach => 'AI Coach';
+
+  @override
   String get welcome => 'Ready to train?';
 
   @override
@@ -2624,9 +2627,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get calories => 'Calories';
-
-  @override
-  String get aiCoach => 'AI Coach';
 
   @override
   String get aiCoachRecoveryInsights => 'Recovery Insights';

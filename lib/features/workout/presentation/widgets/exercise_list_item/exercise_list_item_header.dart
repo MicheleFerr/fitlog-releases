@@ -149,27 +149,31 @@ class ExerciseListItemHeader extends StatelessWidget {
   // This isolates the ref.watch for GIF provider, preventing header rebuilds
 
   Widget _buildExerciseNameRow(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        // Debug: trace exercise ID being passed to navigation
-        debugPrint('🏋️ [STRENGTH DEBUG] Navigation to exercise detail:');
-        debugPrint('   exercise.name: ${exercise.name}');
-        debugPrint('   exercise.id: ${exercise.id}');
-        debugPrint(
-          '   ID looks like UUID: ${exercise.id.contains('-') && exercise.id.length > 30}',
-        );
+    return Semantics(
+      label: '${exercise.name}',
+      hint: 'View exercise details',
+      button: true,
+      child: InkWell(
+        onTap: () {
+          // Debug: trace exercise ID being passed to navigation
+          debugPrint('🏋️ [STRENGTH DEBUG] Navigation to exercise detail:');
+          debugPrint('   exercise.name: ${exercise.name}');
+          debugPrint('   exercise.id: ${exercise.id}');
+          debugPrint(
+            '   ID looks like UUID: ${exercise.id.contains('-') && exercise.id.length > 30}',
+          );
 
-        context.pushNamed(
-          'workout-exercise-detail',
-          pathParameters: {'exerciseName': Uri.encodeComponent(exercise.name)},
-          queryParameters: {
-            'id': exercise
-                .id, // Pass exercise database ID for strength standards lookup
-          },
-        );
-      },
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
+          context.pushNamed(
+            'workout-exercise-detail',
+            pathParameters: {'exerciseName': Uri.encodeComponent(exercise.name)},
+            queryParameters: {
+              'id': exercise
+                  .id, // Pass exercise database ID for strength standards lookup
+            },
+          );
+        },
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 2),
         child: Row(
           children: [
@@ -194,6 +198,7 @@ class ExerciseListItemHeader extends StatelessWidget {
               color: context.colors.primary.withValues(alpha: 0.7),
             ),
           ],
+        ),
         ),
       ),
     );
@@ -271,10 +276,17 @@ class ExerciseListItemHeader extends StatelessWidget {
   }
 
   Widget _buildTimerBadge(BuildContext context) {
-    return InkWell(
-      onTap: onShowQuickTimerSettings,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
+    final restTimeStr = exercise.restTime != null
+        ? _formatRestTime(exercise.restTime!)
+        : 'Default';
+    return Semantics(
+      label: 'Rest timer: $restTimeStr',
+      hint: 'Tap to edit timer settings',
+      button: true,
+      child: InkWell(
+        onTap: onShowQuickTimerSettings,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: exercise.restTime != null
@@ -322,15 +334,20 @@ class ExerciseListItemHeader extends StatelessWidget {
             ),
           ],
         ),
+        ),
       ),
     );
   }
 
   Widget _buildCountdownBadge(BuildContext context) {
-    return InkWell(
-      onTap: onCancelAutoCollapse,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
+    return Semantics(
+      label: 'Auto-collapse countdown: ${autoCollapseState.countdown} seconds',
+      hint: 'Tap to cancel',
+      button: true,
+      child: InkWell(
+        onTap: onCancelAutoCollapse,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: context.colors.tertiaryContainer,
@@ -366,6 +383,7 @@ class ExerciseListItemHeader extends StatelessWidget {
             ),
           ],
         ),
+        ),
       ),
     );
   }
@@ -374,9 +392,13 @@ class ExerciseListItemHeader extends StatelessWidget {
     final tutText = exercise.tut ?? _getDefaultTut();
     final isDefault = exercise.tut == null;
 
-    return GestureDetector(
-      onTap: onShowTutExplanationModal,
-      child: Container(
+    return Semantics(
+      label: 'Time under tension: ${_formatTutDisplay(tutText)}',
+      hint: 'Tap for explanation',
+      button: true,
+      child: GestureDetector(
+        onTap: onShowTutExplanationModal,
+        child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           // ✅ Unified design: secondary color scheme for TUT chips
@@ -414,6 +436,7 @@ class ExerciseListItemHeader extends StatelessWidget {
             ),
           ],
         ),
+        ),
       ),
     );
   }
@@ -424,10 +447,20 @@ class ExerciseListItemHeader extends StatelessWidget {
     required Color color,
     required VoidCallback onTap,
   }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
+    // Determine label based on icon type
+    final String label = icon == AppIcons.info
+        ? 'Exercise information'
+        : icon == AppIcons.whatshot
+            ? 'Warmup sets'
+            : 'Injury prevention';
+
+    return Semantics(
+      label: label,
+      button: true,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.1),
@@ -439,6 +472,7 @@ class ExerciseListItemHeader extends StatelessWidget {
           semanticLabel: 'Quick action',
           size: AppIconSize.tiny,
           color: color,
+        ),
         ),
       ),
     );
@@ -479,13 +513,17 @@ class ExerciseListItemHeader extends StatelessWidget {
 
     return Material(
       color: context.colors.surface.withValues(alpha: 0),
-      child: InkWell(
-        onTap: () {
-          HapticFeedback.mediumImpact();
-          onShowExerciseHistory();
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Ink(
+      child: Semantics(
+        label: 'Last workout: ${weightStr}kg for $maxReps reps, $timeAgo',
+        hint: 'View exercise history',
+        button: true,
+        child: InkWell(
+          onTap: () {
+            HapticFeedback.mediumImpact();
+            onShowExerciseHistory();
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Ink(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             color: context.colors.primaryContainer.withValues(alpha: 0.3),
@@ -522,6 +560,7 @@ class ExerciseListItemHeader extends StatelessWidget {
               ),
             ],
           ),
+          ),
         ),
       ),
     );
@@ -556,13 +595,17 @@ class ExerciseListItemHeader extends StatelessWidget {
   Widget _buildAddNotesChip(BuildContext context) {
     return Material(
       color: context.colors.surface.withValues(alpha: 0),
-      child: InkWell(
-        onTap: () {
-          HapticFeedback.lightImpact();
-          onEditNotes();
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Ink(
+      child: Semantics(
+        label: context.l10n.notes,
+        hint: 'Add exercise notes',
+        button: true,
+        child: InkWell(
+          onTap: () {
+            HapticFeedback.lightImpact();
+            onEditNotes();
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Ink(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             color: context.colors.surfaceContainerHighest.withValues(
@@ -592,6 +635,7 @@ class ExerciseListItemHeader extends StatelessWidget {
               ),
             ],
           ),
+          ),
         ),
       ),
     );
@@ -606,13 +650,17 @@ class ExerciseListItemHeader extends StatelessWidget {
 
     return Material(
       color: context.colors.surface.withValues(alpha: 0),
-      child: InkWell(
-        onTap: () {
-          HapticFeedback.lightImpact();
-          onEditNotes();
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Ink(
+      child: Semantics(
+        label: context.l10n.formCues,
+        hint: preview,
+        button: true,
+        child: InkWell(
+          onTap: () {
+            HapticFeedback.lightImpact();
+            onEditNotes();
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Ink(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             color: context.colors.primaryContainer.withValues(alpha: 0.4),
@@ -645,6 +693,7 @@ class ExerciseListItemHeader extends StatelessWidget {
               ),
             ],
           ),
+          ),
         ),
       ),
     );
@@ -659,13 +708,17 @@ class ExerciseListItemHeader extends StatelessWidget {
 
     return Material(
       color: context.colors.surface.withValues(alpha: 0),
-      child: InkWell(
-        onTap: () {
-          HapticFeedback.lightImpact();
-          onEditNotes();
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Ink(
+      child: Semantics(
+        label: context.l10n.sessionNotes,
+        hint: preview,
+        button: true,
+        child: InkWell(
+          onTap: () {
+            HapticFeedback.lightImpact();
+            onEditNotes();
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Ink(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             color: context.colors.tertiaryContainer.withValues(alpha: 0.3),
@@ -696,6 +749,7 @@ class ExerciseListItemHeader extends StatelessWidget {
                 ),
               ),
             ],
+          ),
           ),
         ),
       ),
@@ -1144,13 +1198,17 @@ class _UpgradeIconInline extends ConsumerWidget {
       padding: const EdgeInsets.only(right: 8),
       child: Tooltip(
         message: context.l10n.upgradeExerciseTooltip,
-        child: InkWell(
-          onTap: () {
-            HapticFeedback.lightImpact();
-            onTap(candidate);
-          },
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
+        child: Semantics(
+          label: context.l10n.upgradeExerciseTooltip,
+          hint: 'Match score: ${(candidate.bestMatchScore * 100).toStringAsFixed(0)}%',
+          button: true,
+          child: InkWell(
+            onTap: () {
+              HapticFeedback.lightImpact();
+              onTap(candidate);
+            },
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             decoration: BoxDecoration(
               color: context.colors.primaryContainer,
@@ -1174,6 +1232,7 @@ class _UpgradeIconInline extends ConsumerWidget {
                   ),
                 ),
               ],
+            ),
             ),
           ),
         ),

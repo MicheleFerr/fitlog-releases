@@ -39,23 +39,27 @@ class FeedbackSettingsNotifier extends AsyncNotifier<FeedbackSettings> {
 
   /// Toggle haptic feedback on/off
   Future<void> toggleHaptic() async {
-    final currentState = state.valueOrNull;
-    if (currentState == null) return;
-
-    final updated = currentState.copyWith(
-      hapticEnabled: !currentState.hapticEnabled,
+    state.maybeWhen(
+      data: (currentState) async {
+        final updated = currentState.copyWith(
+          hapticEnabled: !currentState.hapticEnabled,
+        );
+        await _saveSettings(updated);
+      },
+      orElse: () {},
     );
-
-    await _saveSettings(updated);
   }
 
   /// Update haptic intensity
   Future<void> updateHapticIntensity(HapticIntensity intensity) async {
-    final currentState = state.valueOrNull;
-    if (currentState == null) return;
-
-    final updated = currentState.copyWith(
-      hapticIntensity: intensity,
+    state.maybeWhen(
+      data: (currentState) async {
+        final updated = currentState.copyWith(
+          hapticIntensity: intensity,
+        );
+        await _saveSettings(updated);
+      },
+      orElse: () {},
     );
 
     await _saveSettings(updated);

@@ -638,10 +638,14 @@ class _DeveloperToolItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: context.colors.surface.withValues(alpha: 0),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: AppBorderRadius.smRadius,
-        child: Container(
+      child: Semantics(
+        label: title,
+        hint: subtitle,
+        button: true,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: AppBorderRadius.smRadius,
+          child: Container(
           padding: const EdgeInsets.all(AppSpacing.md),
           decoration: BoxDecoration(
             color: context.colors.surfaceContainerHighest,
@@ -692,6 +696,7 @@ class _DeveloperToolItem extends StatelessWidget {
             ],
           ),
         ),
+      ),
       ),
     );
   }
@@ -803,14 +808,18 @@ class _AdminFeedbackCard extends StatelessWidget {
       ),
       child: Material(
         color: context.colors.surface.withValues(alpha: 0),
-        child: InkWell(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const ExerciseFeedbackScreen()),
-            );
-          },
-          borderRadius: AppBorderRadius.mdRadius,
-          child: Padding(
+        child: Semantics(
+          label: 'Exercise Feedback',
+          hint: context.l10n.manageExerciseReports,
+          button: true,
+          child: InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const ExerciseFeedbackScreen()),
+              );
+            },
+            borderRadius: AppBorderRadius.mdRadius,
+            child: Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
             child: Row(
               children: [
@@ -857,6 +866,7 @@ class _AdminFeedbackCard extends StatelessWidget {
               ],
             ),
           ),
+        ),
         ),
       ),
     );

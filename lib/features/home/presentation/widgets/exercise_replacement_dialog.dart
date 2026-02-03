@@ -93,12 +93,16 @@ class _ExerciseReplacementDialogState
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(
-                      AppIcons.close,
-                      color: colorScheme.onPrimaryContainer,
+                  Semantics(
+                    label: l10n.close,
+                    button: true,
+                    child: IconButton(
+                      icon: Icon(
+                        AppIcons.close,
+                        color: colorScheme.onPrimaryContainer,
+                      ),
+                      onPressed: () => Navigator.pop(context),
                     ),
-                    onPressed: () => Navigator.pop(context),
                   ),
                 ],
               ),
@@ -230,23 +234,31 @@ class _ExerciseReplacementDialogState
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(l10n.cancel),
+                  Semantics(
+                    label: l10n.cancel,
+                    button: true,
+                    child: TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(l10n.cancel),
+                    ),
                   ),
                   const SizedBox(width: 12),
-                  FilledButton(
-                    onPressed:
-                        selectedReplacement == null ||
-                            selectedTemplateIds.isEmpty
-                        ? null
-                        : () => Navigator.pop(context, {
-                            'replacement': selectedReplacement,
-                            'templateIds': selectedTemplateIds.toList(),
-                            'weightOption': weightOption,
-                          }),
-                    child: Text(
-                      l10n.applyToTemplates(selectedTemplateIds.length),
+                  Semantics(
+                    label: l10n.applyToTemplates(selectedTemplateIds.length),
+                    button: true,
+                    child: FilledButton(
+                      onPressed:
+                          selectedReplacement == null ||
+                              selectedTemplateIds.isEmpty
+                          ? null
+                          : () => Navigator.pop(context, {
+                              'replacement': selectedReplacement,
+                              'templateIds': selectedTemplateIds.toList(),
+                              'weightOption': weightOption,
+                            }),
+                      child: Text(
+                        l10n.applyToTemplates(selectedTemplateIds.length),
+                      ),
                     ),
                   ),
                 ],
@@ -267,10 +279,15 @@ class _ExerciseReplacementDialogState
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
-      child: InkWell(
-        onTap: () => setState(() => selectedReplacement = exercise),
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
+      child: Semantics(
+        label: '${exercise.nome}${isSelected ? ' selected' : ''}',
+        hint: isSelected ? 'Tap to deselect' : 'Tap to select as replacement',
+        button: true,
+        selected: isSelected,
+        child: InkWell(
+          onTap: () => setState(() => selectedReplacement = exercise),
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isSelected
@@ -325,6 +342,7 @@ class _ExerciseReplacementDialogState
             ],
           ),
         ),
+      ),
       ),
     );
   }

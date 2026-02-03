@@ -14,7 +14,7 @@ part 'ai_context_provider.g.dart';
 
 /// AI context provider - aggregates user data
 @riverpod
-Future<AIContext> aiContext(AiContextRef ref) async {
+Future<AIContext> aiContext(Ref ref) async {
   // TODO: Wire actual providers in post-MVP
   // This is a placeholder implementation
   //

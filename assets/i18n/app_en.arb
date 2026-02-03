@@ -12,6 +12,10 @@
   "@profile": {
     "description": "Profile tab label in bottom navigation"
   },
+  "aiCoach": "AI Coach",
+  "@aiCoach": {
+    "description": "AI Coach tab label in bottom navigation"
+  },
   "welcome": "Ready to train?",
   "@welcome": {
     "description": "Welcome message on the main screen"

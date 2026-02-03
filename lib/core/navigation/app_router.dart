@@ -5,7 +5,7 @@
 /// Type: GoRouter Configuration
 ///
 /// Complete router implementation using StatefulShellRoute for
-/// persistent bottom navigation with 4 branches.
+/// persistent bottom navigation with 5 branches.
 ///
 /// **Architecture** (2024/2025 Best Practices):
 /// ```
@@ -13,13 +13,15 @@
 ///   ├── Auth Routes (login, register) - outside shell
 ///   ├── StatefulShellRoute (MainShell)
 ///   │   ├── Branch 0: Home
-///   │   │   └── Sub-routes (community, ai-coach, etc.)
+///   │   │   └── Sub-routes (community, help, templates, etc.)
 ///   │   ├── Branch 1: Workout
 ///   │   │   └── Sub-routes (completion, exercises, history)
 ///   │   ├── Branch 2: Analytics
 ///   │   │   └── Sub-routes (overview, exercise-detail, progress)
-///   │   └── Branch 3: Settings
-///   │       └── Sub-routes (notifications, health-sync, debug)
+///   │   ├── Branch 3: Profile
+///   │   │   └── Sub-routes (settings, measurements, coach, etc.)
+///   │   └── Branch 4: AI Coach
+///   │       └── Chat interface with OpenRouter
 ///   └── Modal Routes (outside shell, full-screen)
 /// ```
 ///
@@ -108,6 +110,9 @@ import 'package:gymbro_flutter_new/tools/import_exercises_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/screens/unauthorized_screen.dart';
 import 'package:gymbro_flutter_new/shared/domain/auth/providers/security_providers.dart';
 
+// AI Coach
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/screens/ai_coach_screen.dart';
+
 // Web landing & mobile guard
 import 'package:gymbro_flutter_new/features/landing/presentation/web_landing_page.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/mobile_web_guard.dart';
@@ -116,7 +121,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/mobile_web_guard.
 ///
 /// Provides:
 /// - Auth-aware routing with redirect
-/// - 4-branch bottom navigation with state preservation
+/// - 5-branch bottom navigation with state preservation
 /// - Deep linking support
 /// - Error handling
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -256,7 +261,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
 
       // ─────────────────────────────────────────────────────────────────────
-      // MAIN SHELL (4-branch bottom navigation)
+      // MAIN SHELL (5-branch bottom navigation)
       // Wrapped with MobileWebGuard for mobile web detection
       // ─────────────────────────────────────────────────────────────────────
       StatefulShellRoute.indexedStack(
@@ -275,10 +280,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 name: AppRoutes.homeName,
                 builder: (context, state) => const MinimalHomeScreen(),
                 routes: [
-                  // Help Center (replaces AI Coach)
+                  // Help Center
                   GoRoute(
-                    path: 'ai-coach', // Keep same path for backwards compatibility
-                    name: AppRoutes.aiCoachName,
+                    path: 'help',
+                    name: 'help-center',
                     builder: (context, state) => const HelpCenterScreen(),
                   ),
                   // Community
@@ -586,6 +591,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     ],
                   ),
                 ],
+              ),
+            ],
+          ),
+
+          // ═════════════════════════════════════════════════════════════════
+          // BRANCH 4: AI COACH
+          // ═════════════════════════════════════════════════════════════════
+          StatefulShellBranch(
+            navigatorKey: AppRoutes.aiCoachNavigatorKey,
+            routes: [
+              GoRoute(
+                path: AppRoutes.aiCoachPath,
+                name: AppRoutes.aiCoachName,
+                builder: (context, state) => const AICoachScreen(),
               ),
             ],
           ),

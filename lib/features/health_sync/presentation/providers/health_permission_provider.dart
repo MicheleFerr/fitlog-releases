@@ -173,12 +173,15 @@ class HealthPermissionController
     await requestPermissions(dataTypes: [HealthDataType.workout]);
 
     // Check if workout was granted
-    final workoutResult = state.valueOrNull;
-    if (workoutResult != null &&
-        workoutResult.canSync(HealthDataType.workout)) {
-      // Step 2: Request body weight permission
-      await requestPermissions(dataTypes: [HealthDataType.bodyWeight]);
-    }
+    state.maybeWhen(
+      data: (workoutResult) {
+        if (workoutResult.canSync(HealthDataType.workout)) {
+          // Step 2: Request body weight permission
+          requestPermissions(dataTypes: [HealthDataType.bodyWeight]);
+        }
+      },
+      orElse: () {},
+    );
   }
 
   /// Android-specific: Opens Health Connect app settings.

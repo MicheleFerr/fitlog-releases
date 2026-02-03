@@ -7,13 +7,18 @@
 /// **Feature**: AI Coach
 library;
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:gymbro_flutter_new/core/config/environment_config.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/analytics_aggregator.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/repositories/ai_chat_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_coach_service_impl.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_tool_executor.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/ai_rate_limit_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
+import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
+import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
@@ -46,21 +51,33 @@ class AIChatState {
 
 /// AI Coach service provider
 @riverpod
-AICoachServiceImpl aiCoachService(AiCoachServiceRef ref) {
-  // TODO: Get API key from environment config
-  const apiKey = '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';
+AICoachServiceImpl aiCoachService(Ref ref) {
+  // Get API key from environment config (.env or --dart-define)
+  final apiKey = EnvironmentConfig.openRouterApiKey;
+
+  if (apiKey == null || apiKey.isEmpty) {
+    throw Exception(
+      'OPENROUTER_API_KEY not configured. Add to .env or use --dart-define',
+    );
+  }
 
   final chatRepository = AIChatRepositoryImpl(apiKey: apiKey);
+
+  // Wire real repositories for function calling and context aggregation
+  final analyticsRepo = ref.watch(analyticsRepositoryProvider);
+  final historyRepo = ref.watch(workoutHistoryRepositoryProvider);
+  final streakRepo = ref.watch(streakRepositoryProvider);
+
   final toolExecutor = AIToolExecutor(
-    analyticsRepo: null, // TODO: Wire actual repos in post-MVP
-    historyRepo: null,
-    recoveryRepo: null,
+    analyticsRepo: analyticsRepo,
+    historyRepo: historyRepo,
+    recoveryRepo: null, // TODO: Implement recovery repository (post-MVP)
   );
   final contextAggregator = AnalyticsAggregator(
-    analyticsRepo: null,
-    historyRepo: null,
-    recoveryRepo: null,
-    streakRepo: null,
+    analyticsRepo: analyticsRepo,
+    historyRepo: historyRepo,
+    recoveryRepo: null, // TODO: Implement recovery repository (post-MVP)
+    streakRepo: streakRepo,
   );
 
   return AICoachServiceImpl(
@@ -73,8 +90,21 @@ AICoachServiceImpl aiCoachService(AiCoachServiceRef ref) {
 /// AI Chat provider
 @riverpod
 class AIChat extends _$AIChat {
+  // Memory limit: keep last 10 messages (design requirement line 585)
+  static const int _maxMessages = 10;
+
   @override
   AIChatState build() {
+    // IMPORTANT: Prevent re-initialization when navigating away and back
+    // This keeps chat history in memory during the session
+    ref.keepAlive();
+
+    // Clean up chat history on provider disposal (design requirement line 600-603)
+    // Note: In Riverpod 3.0, use ref.onDispose() instead of @override dispose()
+    ref.onDispose(() {
+      state = AIChatState(messages: []);
+    });
+
     // Initialize with disclaimer message
     return AIChatState(
       messages: [_buildDisclaimerMessage()],
@@ -87,7 +117,7 @@ class AIChat extends _$AIChat {
 
     try {
       // 1. Check rate limit
-      final rateLimit = await ref.read(aiRateLimitProvider.future);
+      final rateLimit = await ref.read(aIRateLimitProvider.future);
       if (rateLimit.isBlocked) {
         state = state.copyWith(
           error: rateLimit.message,
@@ -125,13 +155,30 @@ class AIChat extends _$AIChat {
         toolCall: response.toolCall,
       );
 
+      // 5. Apply memory limit: keep last 10 messages (design requirement line 585)
+      final updatedMessages = [...state.messages, aiMessage];
+      final trimmedMessages = updatedMessages.length > _maxMessages
+          ? updatedMessages.sublist(updatedMessages.length - _maxMessages)
+          : updatedMessages;
+
       state = state.copyWith(
-        messages: [...state.messages, aiMessage],
+        messages: trimmedMessages,
         isLoading: false,
       );
 
-      // 5. Increment rate limit counter
-      await ref.read(aiRateLimitProvider.notifier).incrementUsage();
+      // 6. Track analytics (design requirement: docs/AI_COACH_DESIGN.md line 671-681)
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'ai_coach_message_sent',
+        parameters: {
+          'message_count': trimmedMessages.length,
+          'function_calls_used': response.toolCall != null ? 1 : 0,
+          'has_tool_call': response.toolCall != null,
+          'tool_name': response.toolCall?.name ?? 'none',
+        },
+      );
+
+      // 7. Increment rate limit counter
+      await ref.read(aIRateLimitProvider.notifier).incrementUsage();
     } catch (e, stackTrace) {
       await FirebaseCrashlytics.instance.recordError(
         e,

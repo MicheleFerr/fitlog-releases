@@ -373,14 +373,18 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
         children: [
           // Left arrow
           if (_canSwipePrevious)
-            GestureDetector(
-              onTap: _saveAndPrevious,
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Icon(
-                  AppIcons.arrowBackIos,
-                  size: 16,
-                  color: context.colors.primary,
+            Semantics(
+              label: 'Previous set',
+              button: true,
+              child: GestureDetector(
+                onTap: _saveAndPrevious,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(
+                    AppIcons.arrowBackIos,
+                    size: 16,
+                    color: context.colors.primary,
+                  ),
                 ),
               ),
             )
@@ -449,14 +453,18 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
 
           // Right arrow
           if (_canSwipeNext)
-            GestureDetector(
-              onTap: _saveAndNext,
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Icon(
-                  AppIcons.forwardIos,
-                  size: 16,
-                  color: context.colors.primary,
+            Semantics(
+              label: 'Next set',
+              button: true,
+              child: GestureDetector(
+                onTap: _saveAndNext,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(
+                    AppIcons.forwardIos,
+                    size: 16,
+                    color: context.colors.primary,
+                  ),
                 ),
               ),
             )
@@ -943,23 +951,31 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
           // Other sets: "Copia precedente"
           if (_isFirstSet && widget.onApplyToAll != null)
             Expanded(
-              child: OutlinedButton.icon(
-                onPressed: _applyToAll,
-                icon: const Icon(AppIcons.doneAll, size: 18),
-                label: Text(context.l10n.applyToAll),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Semantics(
+                label: context.l10n.applyToAll,
+                button: true,
+                child: OutlinedButton.icon(
+                  onPressed: _applyToAll,
+                  icon: const Icon(AppIcons.doneAll, size: 18),
+                  label: Text(context.l10n.applyToAll),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
                 ),
               ),
             )
           else if (!_isFirstSet && widget.previousSet != null)
             Expanded(
-              child: OutlinedButton.icon(
-                onPressed: _copyPrevious,
-                icon: const Icon(AppIcons.contentCopyRounded, size: 18),
-                label: Text(context.l10n.copyPrevious),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Semantics(
+                label: context.l10n.copyPrevious,
+                button: true,
+                child: OutlinedButton.icon(
+                  onPressed: _copyPrevious,
+                  icon: const Icon(AppIcons.contentCopyRounded, size: 18),
+                  label: Text(context.l10n.copyPrevious),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
                 ),
               ),
             ),

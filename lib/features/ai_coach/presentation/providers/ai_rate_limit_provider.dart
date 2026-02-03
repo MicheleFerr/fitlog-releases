@@ -25,8 +25,13 @@ class AIRateLimit extends _$AIRateLimit {
 
   @override
   Future<RateLimitResult> build() async {
+    // IMPORTANT: Prevent re-initialization and keep rate limit state
+    // across navigation (matches design requirement line 595)
+    ref.keepAlive();
+
     // Get current user
-    final user = ref.watch(currentUserProvider).valueOrNull;
+    final userAsync = ref.watch(currentUserProvider);
+    final user = userAsync.value;
     if (user == null) {
       return RateLimitResult.blocked(
         message: 'Devi effettuare il login per usare AI Coach.',

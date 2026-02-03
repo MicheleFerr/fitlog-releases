@@ -1249,12 +1249,8 @@ class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
     return processed;
   }
 
-  @override
-  void dispose() {
-    // Note: EventChannel subscriptions removed - they were unused
-    // State changes now handled entirely via MethodChannel callbacks
-    super.dispose();
-  }
+  // Note: Riverpod 3.0 no longer uses dispose() in Notifier classes
+  // Cleanup is handled automatically by Riverpod when the provider is disposed
 }
 
 /// Convenience getter for watch reachability

@@ -425,21 +425,24 @@ class _RpeSelectorBottomSheetState
         return Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 3),
-            child: GestureDetector(
-              onTap: () {
-                // ✅ NEW: Auto-confirm on tap (2-tap UX: tap set → tap RPE = done)
-                setState(() {
-                  _selectedRpe = rpe;
-                  _updateRir();
-                });
-                // Small delay for visual feedback, then auto-confirm
-                Future.delayed(const Duration(milliseconds: 150), () {
-                  if (mounted) {
-                    _autoConfirmWithRpe(rpe);
-                  }
-                });
-              },
-              child: AnimatedContainer(
+            child: Semantics(
+              label: useRir ? 'RIR $displayValue: ${_getRpeShortLabel(rpe)}' : 'RPE $displayValue: ${_getRpeShortLabel(rpe)}',
+              button: true,
+              child: GestureDetector(
+                onTap: () {
+                  // ✅ NEW: Auto-confirm on tap (2-tap UX: tap set → tap RPE = done)
+                  setState(() {
+                    _selectedRpe = rpe;
+                    _updateRir();
+                  });
+                  // Small delay for visual feedback, then auto-confirm
+                  Future.delayed(const Duration(milliseconds: 150), () {
+                    if (mounted) {
+                      _autoConfirmWithRpe(rpe);
+                    }
+                  });
+                },
+                child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 height: 75,
                 decoration: BoxDecoration(
@@ -772,25 +775,29 @@ class _RpeSelectorBottomSheetState
                     style: theme.textTheme.titleMedium,
                   ),
                   const SizedBox(width: 8),
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text(useRir ? l10n.rir : l10n.rpe),
-                          content: Text(
-                            useRir ? l10n.rirDescription : l10n.rpeDescription,
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: const Text('OK'),
+                  Semantics(
+                    label: useRir ? 'RIR information' : 'RPE information',
+                    hint: 'Tap to view explanation',
+                    button: true,
+                    child: GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text(useRir ? l10n.rir : l10n.rpe),
+                            content: Text(
+                              useRir ? l10n.rirDescription : l10n.rpeDescription,
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                    child: SemanticIcon(
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      child: SemanticIcon(
                       icon: AppIcons.info,
                       semanticLabel: 'Information',
                       size: AppIconSize.small,
@@ -904,8 +911,11 @@ class _RpeSelectorBottomSheetState
             children: [
               // ✅ Context-aware left button (Skip RPE / Cancel)
               Expanded(
-                child: OutlinedButton(
-                  onPressed: () {
+                child: Semantics(
+                  label: _originallyCompleted ? l10n.cancel : l10n.skipRpe,
+                  button: true,
+                  child: OutlinedButton(
+                    onPressed: () {
                     if (_originallyCompleted) {
                       // Set was already completed → "Cancel" button (safe exit)
                       Navigator.of(context).pop();
@@ -945,6 +955,7 @@ class _RpeSelectorBottomSheetState
                     ),
                   ),
                 ),
+                ),
               ),
               const SizedBox(width: 12),
               // Confirm button - Premium gradient
@@ -973,9 +984,16 @@ class _RpeSelectorBottomSheetState
                           ]
                         : [],
                   ),
-                  child: FilledButton(
-                    // ✅ Enable button if RPE selected OR user unchecked completion toggle (unmarca)
-                    onPressed: (_selectedRpe != null || !_isSetCompleted)
+                  child: Semantics(
+                    label: widget.isPartOfSuperset
+                        ? (_allExercisesCompleted()
+                              ? l10n.completeSet
+                              : '${l10n.save} (${_supersetCompleteData.length}/${widget.supersetExercises?.length ?? 0})')
+                        : l10n.confirmSet,
+                    button: true,
+                    child: FilledButton(
+                      // ✅ Enable button if RPE selected OR user unchecked completion toggle (unmarca)
+                      onPressed: (_selectedRpe != null || !_isSetCompleted)
                         ? () {
                             HapticFeedback.mediumImpact();
                             if (widget.isPartOfSuperset) {
@@ -1054,6 +1072,7 @@ class _RpeSelectorBottomSheetState
                         ),
                       ],
                     ),
+                  ),
                   ),
                 ),
               ),
@@ -1352,18 +1371,21 @@ class _RpeSelectorBottomSheetState
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Decrease weight
-                    InkWell(
-                      onTap: _actualWeight > 0
-                          ? () {
-                              HapticFeedback.lightImpact();
-                              setState(
-                                () => _actualWeight = (_actualWeight - 2.5)
-                                    .clamp(0, 999),
-                              );
-                            }
-                          : null,
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
+                    Semantics(
+                      label: 'Decrease weight by 2.5kg',
+                      button: true,
+                      child: InkWell(
+                        onTap: _actualWeight > 0
+                            ? () {
+                                HapticFeedback.lightImpact();
+                                setState(
+                                  () => _actualWeight = (_actualWeight - 2.5)
+                                      .clamp(0, 999),
+                                );
+                              }
+                            : null,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           color: colorScheme.errorContainer.withValues(
@@ -1413,13 +1435,16 @@ class _RpeSelectorBottomSheetState
                       ),
                     ),
                     // Increase weight
-                    InkWell(
-                      onTap: () {
-                        HapticFeedback.lightImpact();
-                        setState(() => _actualWeight += 2.5);
-                      },
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
+                    Semantics(
+                      label: 'Increase weight by 2.5kg',
+                      button: true,
+                      child: InkWell(
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          setState(() => _actualWeight += 2.5);
+                        },
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           color: colorScheme.primaryContainer.withValues(
@@ -1476,27 +1501,31 @@ class _RpeSelectorBottomSheetState
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Decrease reps
-                    InkWell(
-                      onTap: _actualReps > 0
-                          ? () {
-                              HapticFeedback.lightImpact();
-                              setState(() => _actualReps--);
-                            }
-                          : null,
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: colorScheme.errorContainer.withValues(
-                            alpha: 0.2,
+                    Semantics(
+                      label: 'Decrease reps by 1',
+                      button: true,
+                      child: InkWell(
+                        onTap: _actualReps > 0
+                            ? () {
+                                HapticFeedback.lightImpact();
+                                setState(() => _actualReps--);
+                              }
+                            : null,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: colorScheme.errorContainer.withValues(
+                              alpha: 0.2,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: SemanticIcon(
-                          icon: AppIcons.remove,
-                          semanticLabel: 'Remove',
-                          size: AppIconSize.small,
-                          color: colorScheme.error,
+                          child: SemanticIcon(
+                            icon: AppIcons.remove,
+                            semanticLabel: 'Remove',
+                            size: AppIconSize.small,
+                            color: colorScheme.error,
+                          ),
                         ),
                       ),
                     ),
@@ -1534,25 +1563,29 @@ class _RpeSelectorBottomSheetState
                       ),
                     ),
                     // Increase reps
-                    InkWell(
-                      onTap: () {
-                        HapticFeedback.lightImpact();
-                        setState(() => _actualReps++);
-                      },
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer.withValues(
-                            alpha: 0.3,
+                    Semantics(
+                      label: 'Increase reps by 1',
+                      button: true,
+                      child: InkWell(
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          setState(() => _actualReps++);
+                        },
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: colorScheme.primaryContainer.withValues(
+                              alpha: 0.3,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: SemanticIcon(
-                          icon: AppIcons.add,
-                          semanticLabel: 'Add',
-                          size: AppIconSize.small,
-                          color: colorScheme.primary,
+                          child: SemanticIcon(
+                            icon: AppIcons.add,
+                            semanticLabel: 'Add',
+                            size: AppIconSize.small,
+                            color: colorScheme.primary,
+                          ),
                         ),
                       ),
                     ),
@@ -1616,25 +1649,29 @@ class _RpeSelectorBottomSheetState
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Decrease reps
-              InkWell(
-                onTap: _actualReps > 1
-                    ? () {
-                        HapticFeedback.lightImpact();
-                        setState(() => _actualReps--);
-                      }
-                    : null,
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: colorScheme.errorContainer.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: SemanticIcon(
-                    icon: AppIcons.remove,
-                    semanticLabel: 'Remove',
-                    size: AppIconSize.medium,
-                    color: colorScheme.error,
+              Semantics(
+                label: 'Decrease reps by 1',
+                button: true,
+                child: InkWell(
+                  onTap: _actualReps > 1
+                      ? () {
+                          HapticFeedback.lightImpact();
+                          setState(() => _actualReps--);
+                        }
+                      : null,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: colorScheme.errorContainer.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: SemanticIcon(
+                      icon: AppIcons.remove,
+                      semanticLabel: 'Remove',
+                      size: AppIconSize.medium,
+                      color: colorScheme.error,
+                    ),
                   ),
                 ),
               ),
@@ -1663,25 +1700,29 @@ class _RpeSelectorBottomSheetState
                 ),
               ),
               // Increase reps
-              InkWell(
-                onTap: _actualReps < 50
-                    ? () {
-                        HapticFeedback.lightImpact();
-                        setState(() => _actualReps++);
-                      }
-                    : null,
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: colorScheme.primaryContainer.withValues(alpha: 0.4),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: SemanticIcon(
-                    icon: AppIcons.add,
-                    semanticLabel: 'Add',
-                    size: AppIconSize.medium,
-                    color: colorScheme.primary,
+              Semantics(
+                label: 'Increase reps by 1',
+                button: true,
+                child: InkWell(
+                  onTap: _actualReps < 50
+                      ? () {
+                          HapticFeedback.lightImpact();
+                          setState(() => _actualReps++);
+                        }
+                      : null,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primaryContainer.withValues(alpha: 0.4),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: SemanticIcon(
+                      icon: AppIcons.add,
+                      semanticLabel: 'Add',
+                      size: AppIconSize.medium,
+                      color: colorScheme.primary,
+                    ),
                   ),
                 ),
               ),
@@ -1746,27 +1787,31 @@ class _RpeSelectorBottomSheetState
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Decrease minutes
-                    InkWell(
-                      onTap: _actualMinutes > 0
-                          ? () {
-                              HapticFeedback.lightImpact();
-                              setState(() => _actualMinutes--);
-                            }
-                          : null,
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: colorScheme.errorContainer.withValues(
-                            alpha: 0.2,
+                    Semantics(
+                      label: 'Decrease minutes by 1',
+                      button: true,
+                      child: InkWell(
+                        onTap: _actualMinutes > 0
+                            ? () {
+                                HapticFeedback.lightImpact();
+                                setState(() => _actualMinutes--);
+                              }
+                            : null,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: colorScheme.errorContainer.withValues(
+                              alpha: 0.2,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: SemanticIcon(
-                          icon: AppIcons.remove,
-                          semanticLabel: 'Remove',
-                          size: AppIconSize.small,
-                          color: colorScheme.error,
+                          child: SemanticIcon(
+                            icon: AppIcons.remove,
+                            semanticLabel: 'Remove',
+                            size: AppIconSize.small,
+                            color: colorScheme.error,
+                          ),
                         ),
                       ),
                     ),
@@ -1802,27 +1847,31 @@ class _RpeSelectorBottomSheetState
                       ),
                     ),
                     // Increase minutes
-                    InkWell(
-                      onTap: _actualMinutes < 6
-                          ? () {
-                              HapticFeedback.lightImpact();
-                              setState(() => _actualMinutes++);
-                            }
-                          : null,
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer.withValues(
-                            alpha: 0.3,
+                    Semantics(
+                      label: 'Increase minutes by 1',
+                      button: true,
+                      child: InkWell(
+                        onTap: _actualMinutes < 6
+                            ? () {
+                                HapticFeedback.lightImpact();
+                                setState(() => _actualMinutes++);
+                              }
+                            : null,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: colorScheme.primaryContainer.withValues(
+                              alpha: 0.3,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: SemanticIcon(
-                          icon: AppIcons.add,
-                          semanticLabel: 'Add',
-                          size: AppIconSize.small,
-                          color: colorScheme.primary,
+                          child: SemanticIcon(
+                            icon: AppIcons.add,
+                            semanticLabel: 'Add',
+                            size: AppIconSize.small,
+                            color: colorScheme.primary,
+                          ),
                         ),
                       ),
                     ),
@@ -1867,30 +1916,34 @@ class _RpeSelectorBottomSheetState
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Decrease seconds
-                    InkWell(
-                      onTap: _actualSeconds > 0
-                          ? () {
-                              HapticFeedback.lightImpact();
-                              setState(
-                                () => _actualSeconds = (_actualSeconds - 5)
-                                    .clamp(0, 60),
-                              );
-                            }
-                          : null,
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: colorScheme.errorContainer.withValues(
-                            alpha: 0.2,
+                    Semantics(
+                      label: 'Decrease seconds by 5',
+                      button: true,
+                      child: InkWell(
+                        onTap: _actualSeconds > 0
+                            ? () {
+                                HapticFeedback.lightImpact();
+                                setState(
+                                  () => _actualSeconds = (_actualSeconds - 5)
+                                      .clamp(0, 60),
+                                );
+                              }
+                            : null,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: colorScheme.errorContainer.withValues(
+                              alpha: 0.2,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: SemanticIcon(
-                          icon: AppIcons.remove,
-                          semanticLabel: 'Remove',
-                          size: AppIconSize.small,
-                          color: colorScheme.error,
+                          child: SemanticIcon(
+                            icon: AppIcons.remove,
+                            semanticLabel: 'Remove',
+                            size: AppIconSize.small,
+                            color: colorScheme.error,
+                          ),
                         ),
                       ),
                     ),
@@ -1926,30 +1979,34 @@ class _RpeSelectorBottomSheetState
                       ),
                     ),
                     // Increase seconds
-                    InkWell(
-                      onTap: _actualSeconds < 60
-                          ? () {
-                              HapticFeedback.lightImpact();
-                              setState(
-                                () => _actualSeconds = (_actualSeconds + 5)
-                                    .clamp(0, 60),
-                              );
-                            }
-                          : null,
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer.withValues(
-                            alpha: 0.3,
+                    Semantics(
+                      label: 'Increase seconds by 5',
+                      button: true,
+                      child: InkWell(
+                        onTap: _actualSeconds < 60
+                            ? () {
+                                HapticFeedback.lightImpact();
+                                setState(
+                                  () => _actualSeconds = (_actualSeconds + 5)
+                                      .clamp(0, 60),
+                                );
+                              }
+                            : null,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: colorScheme.primaryContainer.withValues(
+                              alpha: 0.3,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: SemanticIcon(
-                          icon: AppIcons.add,
-                          semanticLabel: 'Add',
-                          size: AppIconSize.small,
-                          color: colorScheme.primary,
+                          child: SemanticIcon(
+                            icon: AppIcons.add,
+                            semanticLabel: 'Add',
+                            size: AppIconSize.small,
+                            color: colorScheme.primary,
+                          ),
                         ),
                       ),
                     ),

@@ -297,10 +297,13 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               child: Align(
                 alignment: Alignment.bottomCenter,
                 // ✅ NEW: Wrap in GestureDetector for swipe navigation
-                child: GestureDetector(
-                  onHorizontalDragEnd: _handleHorizontalSwipe,
-                  onVerticalDragEnd: _handleVerticalSwipe,
-                  child: Container(
+                child: Semantics(
+                  label: 'Quick edit overlay',
+                  hint: 'Swipe horizontally to navigate between sets, swipe down to close',
+                  child: GestureDetector(
+                    onHorizontalDragEnd: _handleHorizontalSwipe,
+                    onVerticalDragEnd: _handleVerticalSwipe,
+                    child: Container(
                     width: double.infinity,
                     margin: const EdgeInsets.all(16),
                     constraints: BoxConstraints(
@@ -1098,12 +1101,15 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                       );
                       final isFromLast3Days = data.date.isAfter(threeDaysAgo);
 
-                      return GestureDetector(
-                        onTap: () {
-                          HapticFeedback.lightImpact();
-                          _setWeight(weight);
-                        },
-                        child: AnimatedContainer(
+                      return Semantics(
+                        label: 'Select weight ${weight.toStringAsFixed(1)}kg',
+                        button: true,
+                        child: GestureDetector(
+                          onTap: () {
+                            HapticFeedback.lightImpact();
+                            _setWeight(weight);
+                          },
+                          child: AnimatedContainer(
                           duration: const Duration(milliseconds: 150),
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
@@ -1218,13 +1224,16 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             // ✅ COMPACT SINGLE-ROW LAYOUT
             return Material(
               color: context.colors.surface.withValues(alpha: 0),
-              child: InkWell(
-                onTap: () {
-                  HapticFeedback.mediumImpact();
-                  _applyLastWorkoutValues(lastWorkoutData);
-                },
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
+              child: Semantics(
+                label: 'Apply last workout values',
+                button: true,
+                child: InkWell(
+                  onTap: () {
+                    HapticFeedback.mediumImpact();
+                    _applyLastWorkoutValues(lastWorkoutData);
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 8,
@@ -1429,9 +1438,13 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     ThemeData theme,
     VoidCallback onTap,
   ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
+    return Semantics(
+      label: 'Switch to $label mode',
+      button: true,
+      selected: isSelected,
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
@@ -1498,9 +1511,15 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
 
     return Material(
       color: theme.colorScheme.surface.withValues(alpha: 0),
-      child: InkWell(
-        onTap: hasWeight ? () => _showPlateCalculator(context) : null,
-        borderRadius: BorderRadius.circular(8),
+      child: Semantics(
+        label: 'Plate calculator',
+        hint: hasWeight ? 'Calculate barbell plates for $_selectedWeight kg' : null,
+        button: true,
+        child: InkWell(
+          onTap: hasWeight ? () => _showPlateCalculator(context) : null,
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
@@ -1655,11 +1674,17 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   ) {
     return Material(
       color: theme.colorScheme.surface.withValues(alpha: 0),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Semantics(
+        label: 'Adjust weight $label kg',
+        button: true,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          ),
+        ),
+      ),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
@@ -1697,12 +1722,19 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         if (hasRemainingSets && widget.onApplyToRemaining != null) ...[
           Material(
             color: theme.colorScheme.surface.withValues(alpha: 0),
-            child: InkWell(
-              onTap: () {
-                setState(() => _applyToRemaining = !_applyToRemaining);
-                HapticFeedback.selectionClick();
-              },
-              borderRadius: BorderRadius.circular(12),
+            child: Semantics(
+              label: AppLocalizations.of(context).applyToRemainingNSets(remainingCount),
+              button: true,
+              selected: _applyToRemaining,
+              child: InkWell(
+                onTap: () {
+                  setState(() => _applyToRemaining = !_applyToRemaining);
+                  HapticFeedback.selectionClick();
+                },
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -1999,9 +2031,16 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             padding: const EdgeInsets.only(right: 8),
             child: Material(
               color: theme.colorScheme.surface.withValues(alpha: 0),
-              child: InkWell(
-                onTap: () => _switchToExercise(index),
-                borderRadius: BorderRadius.circular(16),
+              child: Semantics(
+                label: exerciseName,
+                button: true,
+                selected: isSelected,
+                child: InkWell(
+                  onTap: () => _switchToExercise(index),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            ),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,

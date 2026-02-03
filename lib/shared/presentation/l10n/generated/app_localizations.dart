@@ -116,6 +116,12 @@ abstract class AppLocalizations {
   /// **'Profile'**
   String get profile;
 
+  /// AI Coach section title
+  ///
+  /// In en, this message translates to:
+  /// **'AI Coach'**
+  String get aiCoach;
+
   /// Welcome message on the main screen
   ///
   /// In en, this message translates to:
@@ -4936,12 +4942,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Calories'**
   String get calories;
-
-  /// AI Coach section title
-  ///
-  /// In en, this message translates to:
-  /// **'AI Coach'**
-  String get aiCoach;
 
   /// AI Coach recovery insights setting title
   ///

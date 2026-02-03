@@ -129,34 +129,42 @@ class _ActiveWorkoutCard extends ConsumerWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          HapticFeedback.lightImpact();
-                          _showFinishConfirmation(context, ref);
-                        },
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: context.colors.primary,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppSpacing.xs,
+                      child: Semantics(
+                        label: context.l10n.finish,
+                        button: true,
+                        child: OutlinedButton(
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            _showFinishConfirmation(context, ref);
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: context.colors.primary,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.xs,
+                            ),
                           ),
+                          child: Text(context.l10n.finish),
                         ),
-                        child: Text(context.l10n.finish),
                       ),
                     ),
                     const SizedBox(width: AppSpacing.sm),
                     Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          HapticFeedback.lightImpact();
-                          _showDiscardConfirmation(context, ref);
-                        },
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: context.colors.error,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppSpacing.xs,
+                      child: Semantics(
+                        label: context.l10n.discard,
+                        button: true,
+                        child: OutlinedButton(
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            _showDiscardConfirmation(context, ref);
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: context.colors.error,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.xs,
+                            ),
                           ),
+                          child: Text(context.l10n.discard),
                         ),
-                        child: Text(context.l10n.discard),
                       ),
                     ),
                   ],
@@ -177,18 +185,26 @@ class _ActiveWorkoutCard extends ConsumerWidget {
         title: Text(context.l10n.completeWorkout),
         content: Text(context.l10n.saveWorkoutQuestion),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(context.l10n.cancel),
+          Semantics(
+            label: context.l10n.cancel,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(context.l10n.cancel),
+            ),
           ),
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              ref
-                  .read(currentWorkoutProvider.notifier)
-                  .completeWorkout(context);
-            },
-            child: Text(context.l10n.finish),
+          Semantics(
+            label: context.l10n.finish,
+            button: true,
+            child: FilledButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                ref
+                    .read(currentWorkoutProvider.notifier)
+                    .completeWorkout(context);
+              },
+              child: Text(context.l10n.finish),
+            ),
           ),
         ],
       ),
@@ -202,19 +218,27 @@ class _ActiveWorkoutCard extends ConsumerWidget {
         title: Text(context.l10n.discardWorkoutTitle),
         content: Text(context.l10n.discardWorkoutQuestion),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(context.l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              ref.read(currentWorkoutProvider.notifier).clearWorkout();
-            },
-            style: FilledButton.styleFrom(
-              backgroundColor: context.colors.error,
+          Semantics(
+            label: context.l10n.cancel,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(context.l10n.cancel),
             ),
-            child: Text(context.l10n.discard),
+          ),
+          Semantics(
+            label: context.l10n.discard,
+            button: true,
+            child: FilledButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                ref.read(currentWorkoutProvider.notifier).clearWorkout();
+              },
+              style: FilledButton.styleFrom(
+                backgroundColor: context.colors.error,
+              ),
+              child: Text(context.l10n.discard),
+            ),
           ),
         ],
       ),

@@ -97,12 +97,6 @@ class _WelcomeStepState extends ConsumerState<WelcomeStep> {
             ),
             const SizedBox(height: 20),
             _FeatureItem(
-              icon: AppIcons.tip,
-              text: context.l10n.initialOnboardingFeature2,
-              backgroundColor: context.colors.tertiary,
-            ),
-            const SizedBox(height: 20),
-            _FeatureItem(
               icon: AppIcons.analytics,
               text: context.l10n.initialOnboardingFeature3,
               backgroundColor: context.colors.secondary,
