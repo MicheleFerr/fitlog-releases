@@ -26,23 +26,24 @@ class AIToolExecutor {
   /// Execute a tool by name with given arguments
   ///
   /// Returns JSON-encoded string result
-  Future<String> execute({
+  Future<String> executeTool({
     required String toolName,
     required Map<String, dynamic> arguments,
+    required String userId,
   }) async {
     switch (toolName) {
       case 'get1RMHistory':
-        return await _get1RMHistory(arguments);
+        return await _get1RMHistory(arguments, userId);
       case 'getWeeklyVolume':
-        return await _getWeeklyVolume(arguments);
+        return await _getWeeklyVolume(arguments, userId);
       case 'analyzeMuscleBalance':
-        return await _analyzeMuscleBalance(arguments);
+        return await _analyzeMuscleBalance(arguments, userId);
       case 'getRecoveryData':
-        return await _getRecoveryData(arguments);
+        return await _getRecoveryData(arguments, userId);
       case 'suggestWorkout':
-        return await _suggestWorkout(arguments);
+        return await _suggestWorkout(arguments, userId);
       case 'compareToStandards':
-        return await _compareToStandards(arguments);
+        return await _compareToStandards(arguments, userId);
       default:
         throw Exception('Unknown tool: $toolName');
     }
@@ -50,10 +51,15 @@ class AIToolExecutor {
 
   // ========== Tool Implementations (Placeholders for MVP) ==========
 
-  Future<String> _get1RMHistory(Map<String, dynamic> args) async {
+  Future<String> _get1RMHistory(Map<String, dynamic> args, String userId) async {
     // Extract parameters
     final exerciseName = args['exerciseName'] as String?;
-    final weeksBack = (args['weeksBack'] as num?)?.toInt() ?? 12;
+
+    // Handle weeksBack as either num or String (robust JSON parsing)
+    final weeksBackRaw = args['weeksBack'];
+    final weeksBack = weeksBackRaw is num
+        ? weeksBackRaw.toInt()
+        : int.tryParse(weeksBackRaw?.toString() ?? '12') ?? 12;
 
     if (exerciseName == null || analyticsRepo == null) {
       return jsonEncode({
@@ -69,7 +75,7 @@ class AIToolExecutor {
     try {
       // Query sessions from analytics repository
       final result = await analyticsRepo.getSessionsByTimeframe(
-        userId: '', // TODO: Get from context
+        userId: userId,
         exerciseName: exerciseName,
         start: startDate,
         end: endDate,
@@ -119,10 +125,15 @@ class AIToolExecutor {
     }
   }
 
-  Future<String> _getWeeklyVolume(Map<String, dynamic> args) async {
+  Future<String> _getWeeklyVolume(Map<String, dynamic> args, String userId) async {
     // Extract parameters
     final muscleGroup = args['muscleGroup'] as String?;
-    final weeksBack = (args['weeksBack'] as num?)?.toInt() ?? 4;
+
+    // Handle weeksBack as either num or String (robust JSON parsing)
+    final weeksBackRaw = args['weeksBack'];
+    final weeksBack = weeksBackRaw is num
+        ? weeksBackRaw.toInt()
+        : int.tryParse(weeksBackRaw?.toString() ?? '4') ?? 4;
 
     if (analyticsRepo == null) {
       return jsonEncode({
@@ -161,7 +172,7 @@ class AIToolExecutor {
     }
   }
 
-  Future<String> _analyzeMuscleBalance(Map<String, dynamic> args) async {
+  Future<String> _analyzeMuscleBalance(Map<String, dynamic> args, String userId) async {
     // Extract parameters
     final muscleGroups = args['muscleGroups'] as List<dynamic>?;
 
@@ -194,7 +205,7 @@ class AIToolExecutor {
     }
   }
 
-  Future<String> _getRecoveryData(Map<String, dynamic> args) async {
+  Future<String> _getRecoveryData(Map<String, dynamic> args, String userId) async {
     // MVP: Recovery repository not implemented yet
     // Requires sleep/HRV data from HealthKit
     return jsonEncode({
@@ -206,7 +217,7 @@ class AIToolExecutor {
     });
   }
 
-  Future<String> _suggestWorkout(Map<String, dynamic> args) async {
+  Future<String> _suggestWorkout(Map<String, dynamic> args, String userId) async {
     // Extract parameters
     final muscleGroup = args['muscleGroup'] as String?;
     final difficulty = args['difficulty'] as String?;
@@ -239,11 +250,20 @@ class AIToolExecutor {
     }
   }
 
-  Future<String> _compareToStandards(Map<String, dynamic> args) async {
+  Future<String> _compareToStandards(Map<String, dynamic> args, String userId) async {
     // Extract parameters
     final lift = args['lift'] as String?;
-    final weight = (args['weight'] as num?)?.toDouble() ?? 0;
-    final bodyWeight = (args['bodyWeight'] as num?)?.toDouble() ?? 75;
+
+    // Handle numeric parameters as either num or String (robust JSON parsing)
+    final weightRaw = args['weight'];
+    final weight = weightRaw is num
+        ? weightRaw.toDouble()
+        : double.tryParse(weightRaw?.toString() ?? '0') ?? 0;
+
+    final bodyWeightRaw = args['bodyWeight'];
+    final bodyWeight = bodyWeightRaw is num
+        ? bodyWeightRaw.toDouble()
+        : double.tryParse(bodyWeightRaw?.toString() ?? '75') ?? 75;
 
     try {
       // MVP: Simplified strength standards (Symmetric Strength approximation)
