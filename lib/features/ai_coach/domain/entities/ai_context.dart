@@ -26,7 +26,7 @@ enum RecoveryStatus {
 
 /// Summary of a completed workout
 @freezed
-class WorkoutSummary with _$WorkoutSummary {
+sealed class WorkoutSummary with _$WorkoutSummary {
   const factory WorkoutSummary({
     required String id,
     required String name,
@@ -41,7 +41,7 @@ class WorkoutSummary with _$WorkoutSummary {
 
 /// AI context aggregated from user analytics
 @freezed
-class AIContext with _$AIContext {
+sealed class AIContext with _$AIContext {
   const factory AIContext({
     required int currentStreak,
     WorkoutSummary? lastWorkout,

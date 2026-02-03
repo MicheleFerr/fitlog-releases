@@ -35,5 +35,5 @@ import 'package:gymbro_flutter_new/features/analytics/domain/enums/exercise_view
 /// - Read: `ref.watch(exerciseViewModeProvider)` (rebuild on change)
 /// - Update: `ref.read(exerciseViewModeProvider.notifier).state = newMode`
 final exerciseViewModeProvider = createStateProvider<ExerciseViewMode>(
-  (ref) => ExerciseViewMode.detailed,
+  ExerciseViewMode.detailed,
 );

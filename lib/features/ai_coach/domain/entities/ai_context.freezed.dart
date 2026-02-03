@@ -119,10 +119,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _WorkoutSummary():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -181,10 +178,7 @@ return $default(_that.id,_that.name,_that.completedAt,_that.durationMinutes,_tha
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  DateTime completedAt,  int? durationMinutes,  int? exerciseCount)  $default,) {final _that = this;
 switch (_that) {
 case _WorkoutSummary():
-return $default(_that.id,_that.name,_that.completedAt,_that.durationMinutes,_that.exerciseCount);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.id,_that.name,_that.completedAt,_that.durationMinutes,_that.exerciseCount);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -406,10 +400,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _AIContext():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -468,10 +459,7 @@ return $default(_that.currentStreak,_that.lastWorkout,_that.top5OneRM,_that.reco
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int currentStreak,  WorkoutSummary? lastWorkout,  Map<String, int> top5OneRM,  RecoveryStatus recoveryStatus,  String userTier)  $default,) {final _that = this;
 switch (_that) {
 case _AIContext():
-return $default(_that.currentStreak,_that.lastWorkout,_that.top5OneRM,_that.recoveryStatus,_that.userTier);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.currentStreak,_that.lastWorkout,_that.top5OneRM,_that.recoveryStatus,_that.userTier);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

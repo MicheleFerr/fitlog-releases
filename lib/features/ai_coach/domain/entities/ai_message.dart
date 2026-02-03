@@ -29,7 +29,7 @@ enum MessageRole {
 
 /// Tool call made by the AI
 @freezed
-class AIToolCall with _$AIToolCall {
+sealed class AIToolCall with _$AIToolCall {
   const factory AIToolCall({
     required String name,
     required Map<String, dynamic> arguments,
@@ -42,7 +42,7 @@ class AIToolCall with _$AIToolCall {
 
 /// AI chat message
 @freezed
-class AIMessage with _$AIMessage {
+sealed class AIMessage with _$AIMessage {
   const factory AIMessage({
     required String id,
     required MessageRole role,

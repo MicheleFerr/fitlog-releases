@@ -61,7 +61,7 @@ final userFeedbackListProvider =
     });
 
 /// Notifier for submitting feedback
-class InsightFeedbackNotifier extends AutoDisposeNotifier<AsyncValue<void>> {
+class InsightFeedbackNotifier extends Notifier<AsyncValue<void>> {
   @override
   AsyncValue<void> build() => const AsyncValue.data(null);
 
@@ -150,7 +150,7 @@ class InsightFeedbackNotifier extends AutoDisposeNotifier<AsyncValue<void>> {
 
 /// Provider for the feedback notifier
 final insightFeedbackNotifierProvider =
-    AutoDisposeNotifierProvider<InsightFeedbackNotifier, AsyncValue<void>>(
+    NotifierProvider<InsightFeedbackNotifier, AsyncValue<void>>(
       InsightFeedbackNotifier.new,
     );
 

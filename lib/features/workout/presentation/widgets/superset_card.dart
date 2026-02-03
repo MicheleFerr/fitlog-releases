@@ -512,7 +512,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
     final exercises = widget.superset.exercises;
 
     return Semantics(
-      label: 'Superset round ${index + 1}${isFullyCompleted ? ' completed' : ''}',
+      label: 'Superset round $setNumber${isFullyCompleted ? ' completed' : ''}',
       hint: isFullyCompleted ? 'Tap to undo completion' : 'Tap to start round',
       button: true,
       child: GestureDetector(
@@ -525,10 +525,8 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
         },
         // ✅ FIX: Use deferToChild so edit button can receive taps
         behavior: HitTestBehavior.deferToChild,
-      ),
-    );
-      child: Container(
-        margin: EdgeInsets.only(bottom: displayMode.bottomMargin),
+        child: Container(
+          margin: EdgeInsets.only(bottom: displayMode.bottomMargin),
         padding: EdgeInsets.symmetric(
           horizontal: displayMode.horizontalPadding,
           vertical: displayMode.verticalPadding,
@@ -635,6 +633,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               ],
             ),
           ],
+        ),
         ),
       ),
     );

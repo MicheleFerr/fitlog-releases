@@ -25,7 +25,7 @@ enum RateLimitStatus {
 
 /// Result of rate limit check
 @freezed
-class RateLimitResult with _$RateLimitResult {
+sealed class RateLimitResult with _$RateLimitResult {
   const factory RateLimitResult({
     required RateLimitStatus status,
     required String message,
