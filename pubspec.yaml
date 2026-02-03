@@ -208,10 +208,11 @@ flutter:
     - assets/images/
     - assets/animations/
     - assets/i18n/
-    - docs/legal/PRIVACY_POLICY_IT.md
-    - docs/legal/PRIVACY_POLICY_EN.md
-    - docs/legal/TERMS_OF_SERVICE_IT.md
-    - docs/legal/TERMS_OF_SERVICE_EN.md
+    # Legal docs moved to separate bundle - not included in app assets
+    # - docs/legal/PRIVACY_POLICY_IT.md
+    # - docs/legal/PRIVACY_POLICY_EN.md
+    # - docs/legal/TERMS_OF_SERVICE_IT.md
+    # - docs/legal/TERMS_OF_SERVICE_EN.md
     - assets/data/
     - assets/data/exercises/
     - assets/data/exercises_en/
