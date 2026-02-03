@@ -83,17 +83,16 @@ enum TemplateTriggerSource {
 }
 
 /// Notifier for managing template tutorial state
-class TemplateTutorialNotifier extends StateNotifier<TemplateTutorialState> {
-  TemplateTutorialNotifier()
-    : super(
-        const TemplateTutorialState(
-          isActive: false,
-          currentStep: TemplateTutorialStep.templateName,
-          hasCompletedTutorial: false,
-          triggerSource: null,
-        ),
-      ) {
+class TemplateTutorialNotifier extends Notifier<TemplateTutorialState> {
+  @override
+  TemplateTutorialState build() {
     _loadState();
+    return const TemplateTutorialState(
+      isActive: false,
+      currentStep: TemplateTutorialStep.templateName,
+      hasCompletedTutorial: false,
+      triggerSource: null,
+    );
   }
 
   static const String _completedKey = 'template_tutorial_completed';
@@ -488,8 +487,8 @@ class _StepConfig {
 
 /// Provider for template tutorial state
 final templateTutorialProvider =
-    StateNotifierProvider<TemplateTutorialNotifier, TemplateTutorialState>(
-      (ref) => TemplateTutorialNotifier(),
+    NotifierProvider<TemplateTutorialNotifier, TemplateTutorialState>(
+      TemplateTutorialNotifier.new,
     );
 
 /// Provider to check if template tutorial is completed

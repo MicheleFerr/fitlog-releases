@@ -308,18 +308,17 @@ class OnboardingOrchestratorState {
 
 /// Central orchestrator for all onboarding tours
 class OnboardingOrchestrator
-    extends StateNotifier<OnboardingOrchestratorState> {
-  OnboardingOrchestrator()
-    : super(
-        const OnboardingOrchestratorState(
-          completedTours: {},
-          activeTour: null,
-          queuedTours: [],
-          isFirstLaunch: true,
-          totalWorkouts: 0,
-        ),
-      ) {
+    extends Notifier<OnboardingOrchestratorState> {
+  @override
+  OnboardingOrchestratorState build() {
     _loadState();
+    return const OnboardingOrchestratorState(
+      completedTours: {},
+      activeTour: null,
+      queuedTours: [],
+      isFirstLaunch: true,
+      totalWorkouts: 0,
+    );
   }
 
   static const String _firstLaunchKey = 'onboarding_first_launch';
@@ -546,8 +545,8 @@ class OnboardingOrchestrator
 
 /// Provider for the onboarding orchestrator
 final onboardingOrchestratorProvider =
-    StateNotifierProvider<OnboardingOrchestrator, OnboardingOrchestratorState>(
-      (ref) => OnboardingOrchestrator(),
+    NotifierProvider<OnboardingOrchestrator, OnboardingOrchestratorState>(
+      OnboardingOrchestrator.new,
     );
 
 /// Provider to check if a specific tour should be shown

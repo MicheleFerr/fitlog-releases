@@ -63,16 +63,15 @@ class HomeTourState {
 }
 
 /// Notifier for managing home tour state
-class HomeTourNotifier extends StateNotifier<HomeTourState> {
-  HomeTourNotifier()
-    : super(
-        const HomeTourState(
-          isActive: false,
-          currentStep: HomeTourStep.xpProgress,
-          hasCompletedTour: false,
-        ),
-      ) {
+class HomeTourNotifier extends Notifier<HomeTourState> {
+  @override
+  HomeTourState build() {
     _loadState();
+    return const HomeTourState(
+      isActive: false,
+      currentStep: HomeTourStep.xpProgress,
+      hasCompletedTour: false,
+    );
   }
 
   static const String _completedKey = 'home_tour_completed';
@@ -365,8 +364,8 @@ class _StepConfig {
 }
 
 /// Provider for home tour state
-final homeTourProvider = StateNotifierProvider<HomeTourNotifier, HomeTourState>(
-  (ref) => HomeTourNotifier(),
+final homeTourProvider = NotifierProvider<HomeTourNotifier, HomeTourState>(
+  HomeTourNotifier.new,
 );
 
 /// Provider to check if home tour is completed

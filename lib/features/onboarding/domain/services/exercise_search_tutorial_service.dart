@@ -62,16 +62,15 @@ class ExerciseSearchTutorialState {
 
 /// Notifier for managing exercise search tutorial
 class ExerciseSearchTutorialNotifier
-    extends StateNotifier<ExerciseSearchTutorialState> {
-  ExerciseSearchTutorialNotifier()
-    : super(
-        const ExerciseSearchTutorialState(
-          isActive: false,
-          currentStep: ExerciseSearchTutorialStep.searchBar,
-          hasCompletedTutorial: false,
-        ),
-      ) {
+    extends Notifier<ExerciseSearchTutorialState> {
+  @override
+  ExerciseSearchTutorialState build() {
     _loadState();
+    return const ExerciseSearchTutorialState(
+      isActive: false,
+      currentStep: ExerciseSearchTutorialStep.searchBar,
+      hasCompletedTutorial: false,
+    );
   }
 
   static const String _completedKey = 'exercise_search_tutorial_completed';
@@ -390,10 +389,10 @@ class _StepConfig {
 
 /// Provider for exercise search tutorial state
 final exerciseSearchTutorialProvider =
-    StateNotifierProvider<
+    NotifierProvider<
       ExerciseSearchTutorialNotifier,
       ExerciseSearchTutorialState
-    >((ref) => ExerciseSearchTutorialNotifier());
+    >(ExerciseSearchTutorialNotifier.new);
 
 /// Provider to check if tutorial is completed
 final exerciseSearchTutorialCompletedProvider = Provider<bool>((ref) {

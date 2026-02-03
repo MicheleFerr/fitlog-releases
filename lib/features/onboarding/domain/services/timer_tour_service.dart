@@ -64,17 +64,16 @@ class TimerTourState {
 }
 
 /// Notifier for managing timer tour state
-class TimerTourNotifier extends StateNotifier<TimerTourState> {
-  TimerTourNotifier()
-    : super(
-        const TimerTourState(
-          isActive: false,
-          currentStep: TimerTourStep.timerDisplay,
-          hasCompletedTour: false,
-          hasSeenTimerOnce: false,
-        ),
-      ) {
+class TimerTourNotifier extends Notifier<TimerTourState> {
+  @override
+  TimerTourState build() {
     _loadState();
+    return const TimerTourState(
+      isActive: false,
+      currentStep: TimerTourStep.timerDisplay,
+      hasCompletedTour: false,
+      hasSeenTimerOnce: false,
+    );
   }
 
   static const String _completedKey = 'timer_tour_completed';
@@ -367,8 +366,8 @@ class _StepConfig {
 
 /// Provider for timer tour state
 final timerTourProvider =
-    StateNotifierProvider<TimerTourNotifier, TimerTourState>(
-      (ref) => TimerTourNotifier(),
+    NotifierProvider<TimerTourNotifier, TimerTourState>(
+      TimerTourNotifier.new,
     );
 
 /// Provider to check if timer tour is completed

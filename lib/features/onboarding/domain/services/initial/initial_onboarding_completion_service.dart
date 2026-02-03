@@ -28,7 +28,11 @@ class InitialOnboardingCompletionService {
     try {
       // Get current user ID
       final userAsync = _ref.read(firebaseUserProvider);
-      final userId = userAsync.valueOrNull?.uid;
+      final userId = userAsync.when(
+        data: (user) => user?.uid,
+        loading: () => null,
+        error: (_, __) => null,
+      );
 
       if (userId == null) {
         throw Exception('User not authenticated');

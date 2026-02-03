@@ -77,25 +77,24 @@ class WorkoutTutorialState {
 }
 
 /// Notifier for managing interactive tutorial state
-class WorkoutTutorialNotifier extends StateNotifier<WorkoutTutorialState> {
+class WorkoutTutorialNotifier extends Notifier<WorkoutTutorialState> {
   // ✅ FIX: Static cache to survive provider rebuilds (background/foreground transitions)
   // This prevents tutorial from restarting when app resumes
   static WorkoutTutorialState? _cachedState;
 
-  WorkoutTutorialNotifier()
-    : super(
-        _cachedState ??
-            const WorkoutTutorialState(
-              isActive: false,
-              currentStep: WorkoutTutorialStep.addExercise,
-              hasCompletedTutorial: false,
-              hasStartedTutorial: false,
-            ),
-      ) {
+  @override
+  WorkoutTutorialState build() {
     // Load from SharedPreferences if no cache available
     if (_cachedState == null) {
       _loadState();
     }
+    return _cachedState ??
+        const WorkoutTutorialState(
+          isActive: false,
+          currentStep: WorkoutTutorialStep.addExercise,
+          hasCompletedTutorial: false,
+          hasStartedTutorial: false,
+        );
   }
 
   static const String _completedKey = 'workout_tutorial_completed';
@@ -459,9 +458,9 @@ class _StepConfig {
 
 /// Provider for the workout tutorial state
 final workoutTutorialProvider =
-    StateNotifierProvider<WorkoutTutorialNotifier, WorkoutTutorialState>((ref) {
-      return WorkoutTutorialNotifier();
-    });
+    NotifierProvider<WorkoutTutorialNotifier, WorkoutTutorialState>(
+      WorkoutTutorialNotifier.new,
+    );
 
 /// Provider for checking if tutorial is completed
 final workoutTutorialCompletedProvider = Provider<bool>((ref) {
