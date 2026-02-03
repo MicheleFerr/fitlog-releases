@@ -46,6 +46,7 @@ class WorkoutTutorialState {
     required this.currentStep,
     required this.hasCompletedTutorial,
     required this.hasStartedTutorial,
+    this.isPaused = false,
   });
 
   /// Whether the tutorial is currently running
@@ -61,17 +62,23 @@ class WorkoutTutorialState {
   /// This prevents the tutorial from auto-showing repeatedly if user dismisses it
   final bool hasStartedTutorial;
 
+  /// Whether tutorial is paused (e.g., during modal navigation)
+  /// When paused, overlay is hidden but state is preserved
+  final bool isPaused;
+
   WorkoutTutorialState copyWith({
     bool? isActive,
     WorkoutTutorialStep? currentStep,
     bool? hasCompletedTutorial,
     bool? hasStartedTutorial,
+    bool? isPaused,
   }) {
     return WorkoutTutorialState(
       isActive: isActive ?? this.isActive,
       currentStep: currentStep ?? this.currentStep,
       hasCompletedTutorial: hasCompletedTutorial ?? this.hasCompletedTutorial,
       hasStartedTutorial: hasStartedTutorial ?? this.hasStartedTutorial,
+      isPaused: isPaused ?? this.isPaused,
     );
   }
 }
@@ -135,6 +142,23 @@ class WorkoutTutorialNotifier extends Notifier<WorkoutTutorialState> {
     _currentTutorial?.finish();
     _currentTutorial = null;
     state = state.copyWith(isActive: false);
+    // ✅ FIX: Update cache after state change
+    _cachedState = state;
+  }
+
+  /// Pause the tutorial (e.g., when modal opens)
+  /// Preserves tutorial state but hides overlay
+  void pauseTutorial() {
+    _currentTutorial?.finish();
+    state = state.copyWith(isPaused: true);
+    // ✅ FIX: Update cache after state change
+    _cachedState = state;
+  }
+
+  /// Resume the tutorial after pause (e.g., when modal closes)
+  /// Re-shows the overlay at current step
+  void resumeTutorial() {
+    state = state.copyWith(isPaused: false);
     // ✅ FIX: Update cache after state change
     _cachedState = state;
   }

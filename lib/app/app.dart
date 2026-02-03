@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/notifications/presentation/providers
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_router.dart';
 import 'package:gymbro_flutter_new/features/splash/presentation/screens/animated_splash_screen.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_orchestrator.dart';
 
 /// Provider for async notification initialization
 final notificationInitProvider = FutureProvider<void>((ref) async {
@@ -29,9 +30,33 @@ final notificationInitProvider = FutureProvider<void>((ref) async {
   }
 });
 
+/// Notifier for tracking if animated splash has completed
+class AnimatedSplashNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  /// Mark splash as completed
+  void complete() {
+    state = true;
+  }
+}
+
 /// Provider to track if animated splash has completed
 /// Set to true after 3-second animation finishes
-final animatedSplashCompletedProvider = StateProvider<bool>((ref) => false);
+final animatedSplashCompletedProvider =
+    NotifierProvider<AnimatedSplashNotifier, bool>(
+      AnimatedSplashNotifier.new,
+    );
+
+/// Provider to handle app lifecycle events (background/foreground)
+/// P0 FIX: Reset onboarding session step counter when app resumes from background
+final appLifecycleProvider = Provider<void>((ref) {
+  // Initialize - on first build, reset session steps to prepare for new session
+  ref.read(onboardingOrchestratorProvider.notifier).resetSessionSteps();
+  if (kDebugMode) {
+    debugPrint('🔄 [APP] Initialized onboarding session on app startup');
+  }
+});
 
 class FitLogApp extends ConsumerWidget {
   const FitLogApp({super.key});
@@ -47,7 +72,7 @@ class FitLogApp extends ConsumerWidget {
         debugShowCheckedModeBanner: false,
         home: AnimatedSplashScreen(
           onComplete: () {
-            ref.read(animatedSplashCompletedProvider.notifier).state = true;
+            ref.read(animatedSplashCompletedProvider.notifier).complete();
           },
         ),
       );
@@ -104,6 +129,9 @@ class FitLogApp extends ConsumerWidget {
         }
       },
     );
+
+    // 🔄 APP LIFECYCLE: P0 FIX - Reset onboarding session steps on app resume
+    ref.watch(appLifecycleProvider);
 
     // 🔔 NOTIFICATIONS: Initialize notification system for retention reminders
     // This enables workout forgotten, inactivity, and insight notifications

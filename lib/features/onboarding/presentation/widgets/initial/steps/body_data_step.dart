@@ -325,7 +325,10 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
                 ),
                 textInputAction: TextInputAction.done,
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                  // Allow digits and max 1 decimal point
+                  // Pattern: optional digits, optional decimal, optional digits
+                  // Examples: 75, 75.5, .5 (invalid - requires at least one digit before dot)
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
                 ],
                 decoration: InputDecoration(
                   hintText: '75',
@@ -508,10 +511,17 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
       // 2. Check if bodyWeight permission was granted (we need this for import)
       final permissionState = ref.read(healthPermissionControllerProvider);
       final hasWeightPermission =
-          permissionState.valueOrNull?.canSync(HealthDataType.bodyWeight) ??
-          false;
+          permissionState.when(
+            data: (status) => status.canSync(HealthDataType.bodyWeight),
+            loading: () => false,
+            error: (_, __) => false,
+          );
       final hasWorkoutPermission =
-          permissionState.valueOrNull?.canSync(HealthDataType.workout) ?? false;
+          permissionState.when(
+            data: (status) => status.canSync(HealthDataType.workout),
+            loading: () => false,
+            error: (_, __) => false,
+          );
       debugPrint(
         '[HealthKit] Permissions granted - workout: $hasWorkoutPermission, bodyWeight: $hasWeightPermission',
       );
