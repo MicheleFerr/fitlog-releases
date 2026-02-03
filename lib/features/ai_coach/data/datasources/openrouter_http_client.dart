@@ -1,0 +1,105 @@
+/// OpenRouter HTTP Client
+///
+/// Direct HTTP client for OpenRouter API with full tool calling support.
+/// Used when the official SDK doesn't support required features.
+///
+/// **Layer**: Data - DataSource
+/// **Feature**: AI Coach
+library;
+
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
+/// OpenRouter API response
+class OpenRouterResponse {
+  final String? content;
+  final List<ToolCall> toolCalls;
+
+  const OpenRouterResponse({
+    this.content,
+    this.toolCalls = const [],
+  });
+
+  bool get hasToolCalls => toolCalls.isNotEmpty;
+}
+
+/// Tool call from AI
+class ToolCall {
+  final String id;
+  final String name;
+  final Map<String, dynamic> arguments;
+
+  const ToolCall({
+    required this.id,
+    required this.name,
+    required this.arguments,
+  });
+
+  factory ToolCall.fromJson(Map<String, dynamic> json) {
+    final function = json['function'] as Map<String, dynamic>? ?? {};
+    final argumentsString = function['arguments'] as String? ?? '{}';
+
+    return ToolCall(
+      id: json['id'] as String? ?? '',
+      name: function['name'] as String? ?? 'unknown',
+      arguments: jsonDecode(argumentsString) as Map<String, dynamic>,
+    );
+  }
+}
+
+/// HTTP client for OpenRouter API
+class OpenRouterHttpClient {
+  OpenRouterHttpClient({required this.apiKey});
+
+  final String apiKey;
+  static const String _baseUrl = 'https://openrouter.ai/api/v1';
+
+  /// Send chat completion request with optional tool calling
+  Future<OpenRouterResponse> chatCompletion({
+    required String model,
+    required List<Map<String, dynamic>> messages,
+    List<Map<String, dynamic>>? tools,
+    int maxTokens = 1000,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/chat/completions'),
+      headers: {
+        'Authorization': 'Bearer $apiKey',
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://fitlog.app', // Required by OpenRouter
+        'X-Title': 'FitLog AI Coach', // Optional: shows in OpenRouter dashboard
+      },
+      body: jsonEncode({
+        'model': model,
+        'messages': messages,
+        if (tools != null && tools.isNotEmpty) 'tools': tools,
+        if (tools != null && tools.isNotEmpty) 'tool_choice': 'auto',
+        'max_tokens': maxTokens,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception(
+        'OpenRouter API error ${response.statusCode}: ${response.body}',
+      );
+    }
+
+    final json = jsonDecode(response.body) as Map<String, dynamic>;
+    final choices = json['choices'] as List<dynamic>;
+    final firstChoice = choices.first as Map<String, dynamic>;
+    final message = firstChoice['message'] as Map<String, dynamic>;
+
+    // Check for tool calls
+    final toolCallsJson = message['tool_calls'] as List<dynamic>?;
+    final toolCalls = toolCallsJson
+            ?.map((tc) => ToolCall.fromJson(tc as Map<String, dynamic>))
+            .toList() ??
+        [];
+
+    return OpenRouterResponse(
+      content: message['content'] as String?,
+      toolCalls: toolCalls,
+    );
+  }
+}
