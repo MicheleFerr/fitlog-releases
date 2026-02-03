@@ -13,7 +13,6 @@ import 'package:gymbro_flutter_new/features/ai_coach/data/repositories/ai_chat_r
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_safety_keywords.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_system_prompt.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_tool_executor.dart';
-import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_context.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/services/ai_coach_service.dart';
 
@@ -30,12 +29,13 @@ class AICoachServiceImpl implements AICoachService {
   final AnalyticsAggregator contextAggregator;
 
   /// Mistral 7B Instruct (free model on OpenRouter)
-  static const String _model = 'mistralai/mistral-7b-instruct:free';
+  static const String _model = 'mistralai/mistral-7b-instruct';
 
   @override
   Future<AIServiceResponse> sendMessage({
     required String userMessage,
     required List<AIMessage> conversationHistory,
+    required String userId,
   }) async {
     try {
       // 1. Safety check - block medical keywords
@@ -45,7 +45,7 @@ class AICoachServiceImpl implements AICoachService {
       }
 
       // 2. Build message list
-      final messages = await _buildMessages(userMessage, conversationHistory);
+      final messages = await _buildMessages(userMessage, conversationHistory, userId);
 
       // 3. Call OpenRouter (tools not implemented in MVP)
       final response = await chatRepository.sendMessage(
@@ -75,9 +75,10 @@ class AICoachServiceImpl implements AICoachService {
   Future<List<Map<String, dynamic>>> _buildMessages(
     String userMsg,
     List<AIMessage> history,
+    String userId,
   ) async {
-    // Get base context (placeholder in MVP)
-    final context = await contextAggregator.aggregateContext(userId: 'test');
+    // Get base context with real user ID
+    final context = await contextAggregator.aggregateContext(userId: userId);
 
     return [
       // System prompt with user context

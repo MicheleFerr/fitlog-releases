@@ -15,11 +15,13 @@ abstract class AICoachService {
   ///
   /// [userMessage] - User's text message
   /// [conversationHistory] - Previous messages in conversation
+  /// [userId] - Current authenticated user ID for context aggregation
   ///
   /// Returns AI response with optional tool call
   Future<AIServiceResponse> sendMessage({
     required String userMessage,
     required List<AIMessage> conversationHistory,
+    required String userId,
   });
 }
 

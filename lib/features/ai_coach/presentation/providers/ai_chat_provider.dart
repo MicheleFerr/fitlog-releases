@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_tool_execu
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/ai_rate_limit_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -139,14 +140,27 @@ class AIChat extends _$AIChat {
         error: null,
       );
 
-      // 3. Call AI service
+      // 3. Get current user ID
+      final userAsync = await ref.read(currentUserProvider.future);
+      final userId = userAsync?.uid;
+
+      if (userId == null) {
+        state = state.copyWith(
+          isLoading: false,
+          error: 'Devi essere autenticato per usare l\'AI Coach',
+        );
+        return;
+      }
+
+      // 4. Call AI service with real user ID
       final service = ref.read(aiCoachServiceProvider);
       final response = await service.sendMessage(
         userMessage: text.trim(),
         conversationHistory: state.messages,
+        userId: userId,
       );
 
-      // 4. Add AI response
+      // 5. Add AI response
       final aiMessage = AIMessage(
         id: const Uuid().v4(),
         role: MessageRole.assistant,
@@ -155,7 +169,7 @@ class AIChat extends _$AIChat {
         toolCall: response.toolCall,
       );
 
-      // 5. Apply memory limit: keep last 10 messages (design requirement line 585)
+      // 6. Apply memory limit: keep last 10 messages (design requirement line 585)
       final updatedMessages = [...state.messages, aiMessage];
       final trimmedMessages = updatedMessages.length > _maxMessages
           ? updatedMessages.sublist(updatedMessages.length - _maxMessages)
@@ -166,7 +180,7 @@ class AIChat extends _$AIChat {
         isLoading: false,
       );
 
-      // 6. Track analytics (design requirement: docs/AI_COACH_DESIGN.md line 671-681)
+      // 7. Track analytics (design requirement: docs/AI_COACH_DESIGN.md line 671-681)
       await FirebaseAnalytics.instance.logEvent(
         name: 'ai_coach_message_sent',
         parameters: {
@@ -177,7 +191,7 @@ class AIChat extends _$AIChat {
         },
       );
 
-      // 7. Increment rate limit counter
+      // 8. Increment rate limit counter
       await ref.read(aIRateLimitProvider.notifier).incrementUsage();
     } catch (e, stackTrace) {
       await FirebaseCrashlytics.instance.recordError(
