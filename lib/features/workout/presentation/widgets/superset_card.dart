@@ -137,42 +137,40 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               ? null
               : () => _showSupersetOptions(context),
           child: DecoratedBox(
-          ),
-        ),
-      ),
-          decoration: BoxDecoration(
-            color: context.colors.surfaceContainer,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: context.colors.outlineVariant.withValues(alpha: 0.3),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: context.colors.shadow.withValues(alpha: 0.03),
-                blurRadius: 4,
-                offset: const Offset(0, 1),
+            decoration: BoxDecoration(
+              color: context.colors.surfaceContainer,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: context.colors.outlineVariant.withValues(alpha: 0.3),
+                width: 1,
               ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header del superset (compact)
-              _buildSupersetHeader(context, l10n),
-
-              // Sets section (collapsible)
-              if (_isExpanded) ...[
-                const Divider(height: 1),
-                _buildSupersetSets(context, l10n),
+              boxShadow: [
+                BoxShadow(
+                  color: context.colors.shadow.withValues(alpha: 0.03),
+                  blurRadius: 4,
+                  offset: const Offset(0, 1),
+                ),
               ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header del superset (compact)
+                _buildSupersetHeader(context, l10n),
 
-              // Note del superset (se presenti)
-              if (widget.superset.notes?.isNotEmpty == true && _isExpanded) ...[
-                const Divider(height: 1),
-                _buildNotesSection(context, l10n),
+                // Sets section (collapsible)
+                if (_isExpanded) ...[
+                  const Divider(height: 1),
+                  _buildSupersetSets(context, l10n),
+                ],
+
+                // Note del superset (se presenti)
+                if (widget.superset.notes?.isNotEmpty == true && _isExpanded) ...[
+                  const Divider(height: 1),
+                  _buildNotesSection(context, l10n),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
@@ -192,29 +190,27 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-        ),
-      ),
-    );
-        width: 60,
-        height: 60,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: context.colors.surface, size: 20),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: context.textTheme.labelSmall?.copyWith(
-                color: context.colors.surface,
-                fontWeight: FontWeight.w500,
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: context.colors.surface, size: 20),
+              const SizedBox(height: 2),
+              Text(
+                label,
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: context.colors.surface,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -266,9 +262,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               }
             : null,
         behavior: HitTestBehavior.opaque,
-      ),
-    );
-      child: Padding(
+        child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: Row(
           children: [
@@ -359,6 +353,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             ],
           ],
         ),
+      ),
       ),
     );
   }
@@ -626,15 +621,14 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                       _startSupersetRound(context, supersetSet);
                     },
                     borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: SemanticIcon(
-                      icon: AppIcons.edit,
-                      semanticLabel: l10n.edit,
-                      size: AppIconSize.small,
-                      color: context.colors.primary,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: SemanticIcon(
+                        icon: AppIcons.edit,
+                        semanticLabel: l10n.edit,
+                        size: AppIconSize.small,
+                        color: context.colors.primary,
+                      ),
                     ),
                   ),
                 ),

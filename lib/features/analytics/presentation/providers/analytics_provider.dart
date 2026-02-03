@@ -139,11 +139,10 @@ final historicalWorkoutsProvider = FutureProvider.autoDispose<List<Workout>>((
   try {
     // RIVERPOD FIX: Defer state modification to avoid "modifying other providers during build" error
     // Schedule setChecking() for next microtask to ensure provider initialization completes first
+    // TEMPORARY: Disabled state check for Riverpod 3.x migration
     // ignore: unawaited_futures
     Future.microtask(() {
-      if (ref.state.hasValue || ref.state.isLoading) {
-        syncNotifier.setChecking();
-      }
+      syncNotifier.setChecking();
     });
 
     // Set up progress callback for sync

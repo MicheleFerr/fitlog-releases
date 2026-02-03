@@ -212,7 +212,7 @@ final exerciseSearchQueryProvider = createStateProvider<String>('');
 
 /// Provider per filtri attivi
 final exerciseFiltersProvider = createStateProvider<ExerciseFilters>(
-  (ref) => const ExerciseFilters(),
+  const ExerciseFilters(),
 );
 
 /// Provider per esercizi filtrati e ricercati

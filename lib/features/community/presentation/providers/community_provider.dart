@@ -289,9 +289,9 @@ final exerciseStatsProvider = FutureProvider.autoDispose
 final searchQueryProvider = createStateProvider<String>('');
 
 // Provider 2: Active Filters State
-final activeFiltersProvider = createStateProvider<ContributionFilters>((ref) {
-  return const ContributionFilters(); // Default empty filters
-});
+final activeFiltersProvider = createStateProvider<ContributionFilters>(
+  const ContributionFilters(), // Default empty filters
+);
 
 // Provider 3: Search Results Stream
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks

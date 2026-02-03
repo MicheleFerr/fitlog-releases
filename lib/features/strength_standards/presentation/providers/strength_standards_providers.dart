@@ -352,16 +352,16 @@ final batchWeightSuggestionsProvider = FutureProvider.autoDispose
     });
 
 /// Whether weight suggestions feature is enabled
-final weightSuggestionsEnabledProvider = createStateProvider<bool>((ref) {
+final weightSuggestionsEnabledProvider = Provider<bool>((ref) {
   // Check if questionnaire is complete
   final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
   return questionnaire != null && questionnaire.isValid;
 });
 
 /// Whether to show weight suggestion prompts
-final showWeightSuggestionPromptsProvider = createStateProvider<bool>((ref) {
-  return true; // Can be toggled in settings
-});
+final showWeightSuggestionPromptsProvider = createStateProvider<bool>(
+  true, // Can be toggled in settings
+);
 
 // ============================================================================
 // PROVIDERS - FITNESS PROFILE AUTO-LOAD

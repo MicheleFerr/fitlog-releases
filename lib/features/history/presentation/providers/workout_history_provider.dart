@@ -446,9 +446,9 @@ class WorkoutStats {
 }
 
 /// Provider for managing workout history filter state
-final workoutHistoryFilterProvider = createStateProvider<WorkoutHistoryFilter>((ref) {
-  return const WorkoutHistoryFilter();
-});
+final workoutHistoryFilterProvider = createStateProvider<WorkoutHistoryFilter>(
+  const WorkoutHistoryFilter(),
+);
 
 /// Provider that combines filter and data
 final filteredWorkoutsProvider = Provider<List<WorkoutHistoryDetail>>((ref) {

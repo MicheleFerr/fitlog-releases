@@ -1522,48 +1522,47 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         child: InkWell(
           onTap: hasWeight ? () => _showPlateCalculator(context) : null,
           borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            gradient: hasWeight
-                ? LinearGradient(
-                    colors: [
-                      theme.colorScheme.secondary,
-                      theme.colorScheme.secondary.withValues(alpha: 0.8),
-                    ],
-                  )
-                : null,
-            color: !hasWeight
-                ? theme.colorScheme.surfaceContainerHighest
-                : null,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SemanticIcon(
-                icon: AppIcons.calculateRounded,
-                semanticLabel: 'Calculate rounded',
-                size: AppIconSize.tiny,
-                color: hasWeight
-                    ? theme.colorScheme.onSecondary
-                    : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-              ),
-              const SizedBox(width: 6),
-              Text(
-                'Plates', // Using simple English until localization key is added
-                style: theme.textTheme.labelMedium?.copyWith(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              gradient: hasWeight
+                  ? LinearGradient(
+                      colors: [
+                        theme.colorScheme.secondary,
+                        theme.colorScheme.secondary.withValues(alpha: 0.8),
+                      ],
+                    )
+                  : null,
+              color: !hasWeight
+                  ? theme.colorScheme.surfaceContainerHighest
+                  : null,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SemanticIcon(
+                  icon: AppIcons.calculateRounded,
+                  semanticLabel: 'Calculate rounded',
+                  size: AppIconSize.tiny,
                   color: hasWeight
                       ? theme.colorScheme.onSecondary
-                      : theme.colorScheme.onSurfaceVariant.withValues(
-                          alpha: 0.5,
-                        ),
-                  fontWeight: FontWeight.w600,
+                      : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                 ),
-              ),
-            ],
+                const SizedBox(width: 6),
+                Text(
+                  'Plates', // Using simple English until localization key is added
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: hasWeight
+                        ? theme.colorScheme.onSecondary
+                        : theme.colorScheme.onSurfaceVariant.withValues(
+                            alpha: 0.5,
+                          ),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -1686,19 +1685,17 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           borderRadius: BorderRadius.circular(8),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          ),
-        ),
-      ),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: color.withValues(alpha: 0.3)),
-          ),
-          child: Text(
-            label,
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: color,
-              fontWeight: FontWeight.bold,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: color.withValues(alpha: 0.3)),
+            ),
+            child: Text(
+              label,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: color,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
@@ -2070,9 +2067,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                ),
               ),
-            ),
-            ),
             ),
           );
         },

@@ -39,14 +39,14 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 enum DateRangeOption { today, thisWeek, thisMonth, allTime }
 
 /// Provider for the selected date range filter
-final dateRangeFilterProvider = createStateProvider<DateRangeOption>((ref) {
-  return DateRangeOption.allTime;
-});
+final dateRangeFilterProvider = createStateProvider<DateRangeOption>(
+  DateRangeOption.allTime,
+);
 
 /// Provider for view settings (grouping, calendar view)
-final historyViewSettingsProvider = createStateProvider<HistoryViewSettings>((ref) {
-  return const HistoryViewSettings();
-});
+final historyViewSettingsProvider = createStateProvider<HistoryViewSettings>(
+  const HistoryViewSettings(),
+);
 
 /// View settings for workout history
 class HistoryViewSettings {
@@ -67,19 +67,19 @@ class HistoryViewSettings {
 }
 
 /// Provider for tracking which sections are expanded
-final expandedSectionsProvider = StateProvider<Set<String>>((ref) {
-  return {}; // All collapsed by default, will expand first section
-});
+final expandedSectionsProvider = createStateProvider<Set<String>>(
+  {}, // All collapsed by default, will expand first section
+);
 
 /// Provider for the selected date in calendar view
-final selectedCalendarDateProvider = createStateProvider<DateTime>((ref) {
-  return DateTime.now();
-});
+final selectedCalendarDateProvider = createStateProvider<DateTime>(
+  DateTime.now(),
+);
 
 /// Provider for the focused month in calendar view
-final focusedCalendarDateProvider = createStateProvider<DateTime>((ref) {
-  return DateTime.now();
-});
+final focusedCalendarDateProvider = createStateProvider<DateTime>(
+  DateTime.now(),
+);
 
 /// Database completo e modificabile per la cronologia degli allenamenti
 class WorkoutHistoryScreen extends ConsumerStatefulWidget {

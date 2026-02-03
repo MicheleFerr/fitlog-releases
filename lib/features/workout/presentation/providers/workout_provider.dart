@@ -4616,14 +4616,14 @@ final filteredExercisesProvider = Provider<List<String>>((ref) {
 });
 
 // Selected exercise category for modal
-final selectedExerciseCategoryProvider = createStateProvider<ExerciseCategory>((ref) {
-  return ExerciseCategory.chest;
-});
+final selectedExerciseCategoryProvider = createStateProvider<ExerciseCategory>(
+  ExerciseCategory.chest,
+);
 
 // Selected exercise type for modal
-final selectedExerciseTypeProvider = createStateProvider<ExerciseType>((ref) {
-  return ExerciseType.single;
-});
+final selectedExerciseTypeProvider = createStateProvider<ExerciseType>(
+  ExerciseType.single,
+);
 
 /// Provider for fetching workouts from the last N days
 ///

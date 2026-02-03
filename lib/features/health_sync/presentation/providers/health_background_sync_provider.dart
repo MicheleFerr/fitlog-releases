@@ -43,7 +43,7 @@ class BackgroundSyncConfig {
 ///
 /// **Customizable**: User can change sync frequency in settings.
 final backgroundSyncConfigProvider = createStateProvider<BackgroundSyncConfig>(
-  (_) => const BackgroundSyncConfig(),
+  const BackgroundSyncConfig(),
 );
 
 // ============================================================

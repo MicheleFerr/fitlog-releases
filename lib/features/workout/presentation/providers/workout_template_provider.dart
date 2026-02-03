@@ -1,4 +1,3 @@
-import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -160,7 +159,7 @@ final templateSearchResultsProvider =
     });
 
 // Provider per filtri tag
-final templateTagFilterProvider = StateProvider<List<String>>((ref) => []);
+final templateTagFilterProvider = createStateProvider<List<String>>([]);
 
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed

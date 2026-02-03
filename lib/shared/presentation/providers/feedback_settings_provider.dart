@@ -61,8 +61,6 @@ class FeedbackSettingsNotifier extends AsyncNotifier<FeedbackSettings> {
       },
       orElse: () {},
     );
-
-    await _saveSettings(updated);
   }
 
   /// Reset to defaults

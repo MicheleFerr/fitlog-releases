@@ -6,8 +6,6 @@
 /// TODO: Migrate to @riverpod codegen for proper state management
 library;
 
-import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Creates a simple state notifier that mimics StateProvider behavior
@@ -51,10 +49,8 @@ NotifierProvider<_StateNotifier<T>, T> createStateProvider<T>(T initialValue) {
 /// // New (Riverpod 3.x with this helper):
 /// final myProvider = createStateProviderAutoDispose<bool>(false);
 /// ```
-AutoDisposeNotifierProvider<_StateNotifier<T>, T> createStateProviderAutoDispose<T>(
-  T initialValue,
-) {
-  return AutoDisposeNotifierProvider<_StateNotifier<T>, T>(
+createStateProviderAutoDispose<T>(T initialValue) {
+  return NotifierProvider.autoDispose<_StateNotifier<T>, T>(
     () => _StateNotifier(initialValue),
   );
 }

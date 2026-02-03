@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/achievement.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebration.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
@@ -59,8 +60,8 @@ final checkAndUnlockAchievementsUseCaseProvider =
 ///
 /// Holds current list of unlocked achievements for the active user.
 /// Updated after each unlock operation or on app startup.
-final unlockedAchievementsProvider = StateProvider<List<Achievement>>(
-  (ref) => [],
+final unlockedAchievementsProvider = createStateProvider<List<Achievement>>(
+  [],
 );
 
 /// State provider for newly detected PRs after workout completion
@@ -68,8 +69,8 @@ final unlockedAchievementsProvider = StateProvider<List<Achievement>>(
 /// Holds PRs detected in the most recent workout completion.
 /// UI can watch this to display PR celebration modal.
 /// Cleared after modal is shown or dismissed.
-final newlyDetectedPRsProvider = StateProvider<List<PRCelebration>>(
-  (ref) => [],
+final newlyDetectedPRsProvider = createStateProvider<List<PRCelebration>>(
+  [],
 );
 
 /// FutureProvider to load unlocked achievements for a user

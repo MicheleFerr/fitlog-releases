@@ -1,4 +1,3 @@
-import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
@@ -12,7 +11,7 @@ final exerciseSearchQueryProvider = createStateProvider<String>('');
 
 // Selected category filter provider
 final exerciseCategoryFilterProvider = createStateProvider<ExerciseCategory?>(
-  (ref) => null,
+  null,
 );
 
 // Selected muscle group filter provider

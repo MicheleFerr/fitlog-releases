@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_gif_provider.dart';
 
@@ -158,7 +159,7 @@ String _mapFieldName(String uiFieldName) {
 
 /// Provider per il caching dei dati merged
 final mergedExerciseDataCacheProvider =
-    StateProvider<Map<String, Map<String, dynamic>>>((ref) => {});
+    createStateProvider<Map<String, Map<String, dynamic>>>({});
 
 /// Provider ottimizzato con cache
 final cachedExerciseDataProvider =
@@ -175,9 +176,8 @@ final cachedExerciseDataProvider =
 
       // Altrimenti carica e metti in cache
       return ref.watch(exerciseDataProvider(exerciseName)).whenData((data) {
-        ref
-            .read(mergedExerciseDataCacheProvider.notifier)
-            .update((state) => {...state, exerciseName: data});
+        final notifier = ref.read(mergedExerciseDataCacheProvider.notifier);
+        notifier.state = {...notifier.state, exerciseName: data};
         return data;
       });
     });

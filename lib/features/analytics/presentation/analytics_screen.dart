@@ -49,7 +49,7 @@ enum SortBy {
 /// **Behavior**: Persistent within session (resets on screen exit)
 /// **Default**: false (hidden)
 final searchBarVisibilityProvider = createStateProviderAutoDispose<bool>(
-  (ref) => false,
+  false,
 );
 
 class AnalyticsScreen extends ConsumerWidget {

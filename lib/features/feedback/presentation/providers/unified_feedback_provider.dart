@@ -536,27 +536,27 @@ final feedbackErrorProvider = Provider.autoDispose<String?>((ref) {
 /// **Usage**: Admin dashboard filter dropdown
 /// **2025 UX**: Filter chips with immediate visual feedback
 final selectedFeedbackTypeProvider =
-    createStateProviderAutoDispose<UnifiedFeedbackType?>((ref) => null);
+    createStateProviderAutoDispose<UnifiedFeedbackType?>(null);
 
 /// Selected feedback status filter
 ///
 /// **Usage**: Admin dashboard status filter
 final selectedFeedbackStatusProvider =
-    createStateProviderAutoDispose<UnifiedFeedbackStatus?>((ref) => null);
+    createStateProviderAutoDispose<UnifiedFeedbackStatus?>(null);
 
 /// Selected feedback severity filter
 ///
 /// **Usage**: Admin dashboard severity filter
 final selectedFeedbackSeverityProvider =
-    createStateProviderAutoDispose<FeedbackSeverity?>((ref) => null);
+    createStateProviderAutoDispose<FeedbackSeverity?>(null);
 
 /// Search query provider
 ///
 /// **Usage**: Admin dashboard search bar
 /// **2025 UX**: Real-time search with debouncing
-final feedbackSearchQueryProvider = createStateProviderAutoDispose<String>((ref) {
-  return '';
-});
+final feedbackSearchQueryProvider = createStateProviderAutoDispose<String>(
+  '',
+);
 
 /// Filtered feedback provider (combines all filters)
 ///

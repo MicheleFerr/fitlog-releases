@@ -1,6 +1,4 @@
-import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'dart:io';
-
 import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -218,8 +216,8 @@ final selectedPhotoProvider = createStateProvider<ProgressPhoto?>(null);
 final comparisonModeProvider = createStateProvider<bool>(false);
 
 /// Provider for selected photos in comparison mode
-final comparisonPhotosProvider = StateProvider<List<ProgressPhoto>>(
-  (ref) => [],
+final comparisonPhotosProvider = createStateProvider<List<ProgressPhoto>>(
+  [],
 );
 
 /// Provider for photo filter (by pose)
@@ -391,7 +389,7 @@ class PhotoReminderNotifier extends Notifier<PhotoReminderState> {
     state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
-      final updated = await _repository.enableReminders(
+      final updated = await _repository!.enableReminders(
         frequency: frequency,
         hour: hour,
         minute: minute,
@@ -399,12 +397,12 @@ class PhotoReminderNotifier extends Notifier<PhotoReminderState> {
 
       // Schedule the notification
       final nextReminder = updated.calculateNextReminder(DateTime.now());
-      final notificationId = await _notificationService.schedulePhotoReminder(
+      final notificationId = await _notificationService!.schedulePhotoReminder(
         settings: updated.copyWith(nextReminderScheduled: nextReminder),
       );
 
       // Save notification ID and next reminder
-      final finalSettings = await _repository.updateSettings(
+      final finalSettings = await _repository!.updateSettings(
         (current) => current.copyWith(
           nextReminderScheduled: nextReminder,
           notificationId: notificationId,
@@ -430,9 +428,9 @@ class PhotoReminderNotifier extends Notifier<PhotoReminderState> {
 
     try {
       // Cancel any scheduled notification
-      await _notificationService.cancelReminder();
+      await _notificationService!.cancelReminder();
 
-      final updated = await _repository.disableReminders();
+      final updated = await _repository!.disableReminders();
 
       state = state.copyWith(settings: updated, isLoading: false);
     } catch (e) {
@@ -451,10 +449,10 @@ class PhotoReminderNotifier extends Notifier<PhotoReminderState> {
 
     try {
       // Cancel existing notification
-      await _notificationService.cancelReminder();
+      await _notificationService!.cancelReminder();
 
       // Update settings
-      var updated = await _repository.updateSettings(
+      var updated = await _repository!.updateSettings(
         (current) => current.copyWith(frequency: frequency),
       );
 
@@ -462,12 +460,12 @@ class PhotoReminderNotifier extends Notifier<PhotoReminderState> {
       final nextReminder = updated.calculateNextReminder(
         updated.lastReminderSent ?? DateTime.now(),
       );
-      final notificationId = await _notificationService.schedulePhotoReminder(
+      final notificationId = await _notificationService!.schedulePhotoReminder(
         settings: updated.copyWith(nextReminderScheduled: nextReminder),
       );
 
       // Save notification ID and next reminder
-      updated = await _repository.updateSettings(
+      updated = await _repository!.updateSettings(
         (current) => current.copyWith(
           nextReminderScheduled: nextReminder,
           notificationId: notificationId,
@@ -490,11 +488,11 @@ class PhotoReminderNotifier extends Notifier<PhotoReminderState> {
     try {
       // Cancel existing notification if enabled
       if (state.settings.isEnabled) {
-        await _notificationService.cancelReminder();
+        await _notificationService!.cancelReminder();
       }
 
       // Update settings
-      var updated = await _repository.updateSettings(
+      var updated = await _repository!.updateSettings(
         (current) =>
             current.copyWith(reminderHour: hour, reminderMinute: minute),
       );
@@ -504,11 +502,11 @@ class PhotoReminderNotifier extends Notifier<PhotoReminderState> {
         final nextReminder = updated.calculateNextReminder(
           updated.lastReminderSent ?? DateTime.now(),
         );
-        final notificationId = await _notificationService.schedulePhotoReminder(
+        final notificationId = await _notificationService!.schedulePhotoReminder(
           settings: updated.copyWith(nextReminderScheduled: nextReminder),
         );
 
-        updated = await _repository.updateSettings(
+        updated = await _repository!.updateSettings(
           (current) => current.copyWith(
             nextReminderScheduled: nextReminder,
             notificationId: notificationId,
@@ -528,8 +526,8 @@ class PhotoReminderNotifier extends Notifier<PhotoReminderState> {
   /// Record that the user took a photo (for anti-spam tracking)
   Future<void> recordPhotoTaken() async {
     // Reset ignore counter and potentially reschedule
-    await _repository.recordReminderOpened();
-    final updated = _repository.getSettings();
+    await _repository!.recordReminderOpened();
+    final updated = _repository!.getSettings();
     state = state.copyWith(settings: updated);
   }
 
