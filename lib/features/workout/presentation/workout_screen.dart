@@ -582,36 +582,48 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
           title: Text(l10n.keepWorkoutActive),
           content: Text(l10n.keepWorkoutActiveMessage),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(l10n.cancel),
+            Semantics(
+              label: l10n.cancel,
+              button: true,
+              child: TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(l10n.cancel),
+              ),
             ),
-            FilledButton.tonal(
-              onPressed: () async {
-                Navigator.of(context).pop();
-                // Force save and pause workout
-                final cacheService = ref.read(
-                  workoutTemplateCacheServiceProvider,
-                );
-                await cacheService.forceSave();
-                ref.read(currentWorkoutProvider.notifier).pauseWorkout();
-                if (context.mounted) {
-                  context.goNamed('home');
-                }
-              },
-              child: Text(l10n.yes),
+            Semantics(
+              label: l10n.yes,
+              button: true,
+              child: FilledButton.tonal(
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  // Force save and pause workout
+                  final cacheService = ref.read(
+                    workoutTemplateCacheServiceProvider,
+                  );
+                  await cacheService.forceSave();
+                  ref.read(currentWorkoutProvider.notifier).pauseWorkout();
+                  if (context.mounted) {
+                    context.goNamed('home');
+                  }
+                },
+                child: Text(l10n.yes),
+              ),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                ref
-                    .read(workoutScreenControllerProvider.notifier)
-                    .discardWorkout(context: context);
-              },
-              child: Text(
-                l10n.discard,
-                style: context.textTheme.labelLarge?.copyWith(
-                  color: context.colors.error,
+            Semantics(
+              label: l10n.discard,
+              button: true,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  ref
+                      .read(workoutScreenControllerProvider.notifier)
+                      .discardWorkout(context: context);
+                },
+                child: Text(
+                  l10n.discard,
+                  style: context.textTheme.labelLarge?.copyWith(
+                    color: context.colors.error,
+                  ),
                 ),
               ),
             ),
@@ -915,26 +927,34 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                     ],
                   ),
                   actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(
-                        _DeleteConfirmationResult(
-                          confirmed: false,
-                          dontAskAgain: false,
+                    Semantics(
+                      label: l10n.cancel,
+                      button: true,
+                      child: TextButton(
+                        onPressed: () => Navigator.of(context).pop(
+                          _DeleteConfirmationResult(
+                            confirmed: false,
+                            dontAskAgain: false,
+                          ),
                         ),
+                        child: Text(l10n.cancel),
                       ),
-                      child: Text(l10n.cancel),
                     ),
-                    FilledButton(
-                      onPressed: () => Navigator.of(context).pop(
-                        _DeleteConfirmationResult(
-                          confirmed: true,
-                          dontAskAgain: dontAskAgain,
+                    Semantics(
+                      label: l10n.delete,
+                      button: true,
+                      child: FilledButton(
+                        onPressed: () => Navigator.of(context).pop(
+                          _DeleteConfirmationResult(
+                            confirmed: true,
+                            dontAskAgain: dontAskAgain,
+                          ),
                         ),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: context.colors.error,
+                        ),
+                        child: Text(l10n.delete),
                       ),
-                      style: FilledButton.styleFrom(
-                        backgroundColor: context.colors.error,
-                      ),
-                      child: Text(l10n.delete),
                     ),
                   ],
                 );
@@ -1117,25 +1137,33 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
         title: Text(l10n.deleteTemplate),
         content: Text(l10n.deleteTemplateQuestion(template.name)),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(l10n.cancel),
+          Semantics(
+            label: l10n.cancel,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(l10n.cancel),
+            ),
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              ref
-                  .read(workoutTemplateNotifierProvider.notifier)
-                  .deleteTemplate(template.id);
-              SnackBarService.showSuccess(
-                context,
-                l10n.templateDeletedSuccessfully(template.name),
-              );
-            },
-            child: Text(
-              l10n.delete,
-              style: context.textTheme.labelLarge?.copyWith(
-                color: context.colors.error,
+          Semantics(
+            label: l10n.delete,
+            button: true,
+            child: TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                ref
+                    .read(workoutTemplateNotifierProvider.notifier)
+                    .deleteTemplate(template.id);
+                SnackBarService.showSuccess(
+                  context,
+                  l10n.templateDeletedSuccessfully(template.name),
+                );
+              },
+              child: Text(
+                l10n.delete,
+                style: context.textTheme.labelLarge?.copyWith(
+                  color: context.colors.error,
+                ),
               ),
             ),
           ),

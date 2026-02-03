@@ -269,6 +269,13 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: context.colors.primary,
+                    width: 2.0,
+                  ),
+                ),
               ),
               onChanged: (value) {
                 ref.read(templateSearchQueryProvider.notifier).state = value;
@@ -763,16 +770,24 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
         title: Text(l10n.startWorkout),
         content: Text('${l10n.startWorkout} "${template.name}"?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.cancel),
+          Semantics(
+            label: l10n.cancel,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.cancel),
+            ),
           ),
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _startWorkoutFromTemplate(template);
-            },
-            child: Text(l10n.startWorkout),
+          Semantics(
+            label: l10n.startWorkout,
+            button: true,
+            child: FilledButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _startWorkoutFromTemplate(template);
+              },
+              child: Text(l10n.startWorkout),
+            ),
           ),
         ],
       ),
@@ -913,11 +928,18 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
           dialogContext.l10n.workoutTemplateDeleteConfirm(template.name),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(dialogContext.l10n.workoutTemplateCancel),
+          Semantics(
+            label: dialogContext.l10n.workoutTemplateCancel,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(dialogContext.l10n.workoutTemplateCancel),
+            ),
           ),
-          FilledButton(
+          Semantics(
+            label: context.l10n.delete,
+            button: true,
+            child: FilledButton(
             onPressed: () async {
               // Chiudi il dialog di conferma
               Navigator.of(dialogContext).pop();
@@ -1009,6 +1031,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
               backgroundColor: dialogContext.colors.error,
             ),
             child: Text(context.l10n.delete),
+            ),
           ),
         ],
       ),
@@ -1060,26 +1083,34 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
               ],
             ),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(context.l10n.close),
+              Semantics(
+                label: context.l10n.close,
+                button: true,
+                child: TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(context.l10n.close),
+                ),
               ),
               if (FirebaseAuth.instance.currentUser != null &&
                   !firebaseState.isSyncing)
-                FilledButton(
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    await ref
-                        .read(firebaseTemplateNotifierProvider.notifier)
-                        .forcSync();
+                Semantics(
+                  label: context.l10n.syncNow,
+                  button: true,
+                  child: FilledButton(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      await ref
+                          .read(firebaseTemplateNotifierProvider.notifier)
+                          .forcSync();
 
-                    if (!context.mounted) return;
-                    SnackBarService.showSuccess(
-                      context,
-                      context.l10n.syncCompleted,
-                    );
-                  },
-                  child: Text(context.l10n.syncNow),
+                      if (!context.mounted) return;
+                      SnackBarService.showSuccess(
+                        context,
+                        context.l10n.syncCompleted,
+                      );
+                    },
+                    child: Text(context.l10n.syncNow),
+                  ),
                 ),
             ],
           );

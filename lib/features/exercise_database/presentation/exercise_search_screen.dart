@@ -644,6 +644,13 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: context.colors.primary,
+                      width: 2.0,
+                    ),
+                  ),
                   filled: true,
                   fillColor: context.colors.surface,
                 ),
@@ -1088,6 +1095,12 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 labelText: l10n.enterExerciseName,
                 hintText: 'es. Bulgarian Split Squat',
                 border: const OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: context.colors.primary,
+                    width: 2.0,
+                  ),
+                ),
                 prefixIcon: const SemanticIcon(
                   icon: AppIcons.edit,
                   semanticLabel: 'Edit',

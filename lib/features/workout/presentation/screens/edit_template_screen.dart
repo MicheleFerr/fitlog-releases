@@ -82,15 +82,20 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
               tooltip: context.l10n.templateViewMode,
             ),
             if (_hasChanges)
-              TextButton(
-                onPressed: _isLoading ? null : _saveTemplate,
-                child: _isLoading
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: LoadingIndicator(),
-                      )
-                    : Text(context.l10n.save),
+              Semantics(
+                label: context.l10n.save,
+                button: true,
+                enabled: !_isLoading,
+                child: TextButton(
+                  onPressed: _isLoading ? null : _saveTemplate,
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: LoadingIndicator(),
+                        )
+                      : Text(context.l10n.save),
+                ),
               ),
           ],
         ),
@@ -106,6 +111,12 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                     decoration: InputDecoration(
                       labelText: context.l10n.templateName,
                       border: const OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: context.colors.primary,
+                          width: 2.0,
+                        ),
+                      ),
                     ),
                     onChanged: (_) => _markAsChanged(),
                   ),
@@ -115,6 +126,12 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                     decoration: InputDecoration(
                       labelText: context.l10n.description,
                       border: const OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: context.colors.primary,
+                          width: 2.0,
+                        ),
+                      ),
                     ),
                     maxLines: 2,
                     onChanged: (_) => _markAsChanged(),

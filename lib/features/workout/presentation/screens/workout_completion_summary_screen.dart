@@ -280,7 +280,7 @@ class _WorkoutCompletionSummaryScreenState
                         icon: AppIcons.monitorWeightOutlined,
                         label: context.l10n.totalVolume,
                         value: '${totalVolume.toStringAsFixed(0)} kg',
-                        color: const Color(0xFF4CAF50), // Verde
+                        color: const Color(0xFF2E7D32), // Green 800 (WCAG AA compliant)
                       ),
                       const SizedBox(height: 16),
 
@@ -290,7 +290,7 @@ class _WorkoutCompletionSummaryScreenState
                           icon: AppIcons.speed,
                           label: context.l10n.averageRpe,
                           value: averageRpe.toStringAsFixed(1),
-                          color: const Color(0xFFFF9800), // Arancione
+                          color: const Color(0xFFE65100), // Orange 900 (WCAG AA compliant)
                         ),
                     ],
                   ),

@@ -260,6 +260,12 @@ class _ExerciseCustomizationScreenState
                 labelText: context.l10n.notesOptional,
                 hintText: context.l10n.notesHint,
                 border: const OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: context.colors.primary,
+                    width: 2.0,
+                  ),
+                ),
                 isDense: true,
               ),
               maxLines: 2,
@@ -863,16 +869,20 @@ class _ExerciseCustomizationScreenState
               // Confirm button
               SizedBox(
                 width: double.infinity,
-                child: FilledButton(
-                  onPressed: () {
-                    _updateSet(
-                      exerciseIndex,
-                      setIndex,
-                      setCustomization.copyWith(reps: selectedReps),
-                    );
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(AppLocalizations.of(context).confirm),
+                child: Semantics(
+                  label: AppLocalizations.of(context).confirm,
+                  button: true,
+                  child: FilledButton(
+                    onPressed: () {
+                      _updateSet(
+                        exerciseIndex,
+                        setIndex,
+                        setCustomization.copyWith(reps: selectedReps),
+                      );
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(AppLocalizations.of(context).confirm),
+                  ),
                 ),
               ),
             ],
@@ -990,16 +1000,20 @@ class _ExerciseCustomizationScreenState
               // Confirm button
               SizedBox(
                 width: double.infinity,
-                child: FilledButton(
-                  onPressed: () {
-                    _updateSet(
-                      exerciseIndex,
-                      setIndex,
-                      setCustomization.copyWith(seconds: selectedSeconds),
-                    );
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(AppLocalizations.of(context).confirm),
+                child: Semantics(
+                  label: AppLocalizations.of(context).confirm,
+                  button: true,
+                  child: FilledButton(
+                    onPressed: () {
+                      _updateSet(
+                        exerciseIndex,
+                        setIndex,
+                        setCustomization.copyWith(seconds: selectedSeconds),
+                      );
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(AppLocalizations.of(context).confirm),
+                  ),
                 ),
               ),
             ],
@@ -1367,35 +1381,39 @@ class _ExerciseCustomizationScreenState
                             selectedWeight,
                             unit,
                           ).map((jump) {
-                            return OutlinedButton(
-                              onPressed: () {
-                                final newWeight = WeightHelper.applyQuickJump(
-                                  currentWeight: selectedWeight,
-                                  jump: jump,
-                                  unit: unit,
-                                );
-                                setModalState(() => selectedWeight = newWeight);
-                                controller.animateToItem(
-                                  WeightHelper.weightToIndex(newWeight, unit),
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeInOut,
-                                );
-                                HapticFeedback.mediumImpact();
-                              },
-                              style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
+                            return Semantics(
+                              label: '${jump > 0 ? 'Add' : 'Remove'} ${jump.abs()} weight',
+                              button: true,
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  final newWeight = WeightHelper.applyQuickJump(
+                                    currentWeight: selectedWeight,
+                                    jump: jump,
+                                    unit: unit,
+                                  );
+                                  setModalState(() => selectedWeight = newWeight);
+                                  controller.animateToItem(
+                                    WeightHelper.weightToIndex(newWeight, unit),
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeInOut,
+                                  );
+                                  HapticFeedback.mediumImpact();
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  minimumSize: const Size(60, 36),
                                 ),
-                                minimumSize: const Size(60, 36),
-                              ),
-                              child: Text(
-                                jump > 0 ? '+$jump' : '$jump',
-                                style: theme.textTheme.labelMedium?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: jump > 0
-                                      ? theme.colorScheme.tertiary
-                                      : theme.colorScheme.error,
+                                child: Text(
+                                  jump > 0 ? '+$jump' : '$jump',
+                                  style: theme.textTheme.labelMedium?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: jump > 0
+                                        ? theme.colorScheme.tertiary
+                                        : theme.colorScheme.error,
+                                  ),
                                 ),
                               ),
                             );
@@ -1495,19 +1513,23 @@ class _ExerciseCustomizationScreenState
               // Confirm button
               SizedBox(
                 width: double.infinity,
-                child: FilledButton(
-                  onPressed: () {
-                    // Convert display weight back to kg for storage
-                    final weightInKg = selectedWeight.fromDisplayUnit(unit);
-                    _updateSet(
-                      exerciseIndex,
-                      setIndex,
-                      setCustomization.copyWith(weight: weightInKg),
-                    );
-                    Navigator.of(context).pop();
-                    HapticFeedback.mediumImpact();
-                  },
-                  child: Text(AppLocalizations.of(context).confirm),
+                child: Semantics(
+                  label: AppLocalizations.of(context).confirm,
+                  button: true,
+                  child: FilledButton(
+                    onPressed: () {
+                      // Convert display weight back to kg for storage
+                      final weightInKg = selectedWeight.fromDisplayUnit(unit);
+                      _updateSet(
+                        exerciseIndex,
+                        setIndex,
+                        setCustomization.copyWith(weight: weightInKg),
+                      );
+                      Navigator.of(context).pop();
+                      HapticFeedback.mediumImpact();
+                    },
+                    child: Text(AppLocalizations.of(context).confirm),
+                  ),
                 ),
               ),
             ],
