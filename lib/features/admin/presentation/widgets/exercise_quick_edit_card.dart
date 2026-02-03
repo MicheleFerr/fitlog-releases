@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/admin/data/services/database_manager
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ExerciseQuickEditCard extends ConsumerStatefulWidget {
   const ExerciseQuickEditCard({
@@ -81,13 +82,14 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          widget.exercise.imageUrl!,
+                        child: CachedNetworkImage(
+                          imageUrl: widget.exercise.imageUrl!,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Icon(
+                          errorWidget: (context, url, error) => Icon(
                             AppIcons.workout,
                             color: context.colors.onSurfaceVariant,
                           ),
+                          placeholder: (context, url) => const LoadingIndicator(size: 20),
                         ),
                       ),
                     ),
@@ -454,12 +456,12 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                widget.exercise.imageUrl!,
+              child: CachedNetworkImage(
+                imageUrl: widget.exercise.imageUrl!,
                 width: 40,
                 height: 40,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
+                errorWidget: (context, url, error) => Container(
                   width: 40,
                   height: 40,
                   color: context.colors.surface,
@@ -468,6 +470,11 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                     size: 20,
                     color: context.colors.onSurfaceVariant,
                   ),
+                ),
+                placeholder: (context, url) => const SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: LoadingIndicator(size: 16),
                 ),
               ),
             ),
@@ -562,10 +569,10 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
             // Image
             Container(
               constraints: const BoxConstraints(maxHeight: 400),
-              child: Image.network(
-                widget.exercise.imageUrl!,
+              child: CachedNetworkImage(
+                imageUrl: widget.exercise.imageUrl!,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) => SizedBox(
+                errorWidget: (context, url, error) => SizedBox(
                   height: 200,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -584,6 +591,10 @@ class _ExerciseQuickEditCardState extends ConsumerState<ExerciseQuickEditCard> {
                       ),
                     ],
                   ),
+                ),
+                placeholder: (context, url) => const SizedBox(
+                  height: 200,
+                  child: Center(child: LoadingIndicator()),
                 ),
               ),
             ),

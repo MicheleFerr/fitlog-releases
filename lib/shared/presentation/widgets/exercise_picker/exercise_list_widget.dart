@@ -9,6 +9,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/exercise_picker/exercise_picker_config.dart';
@@ -181,12 +182,12 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         radius: 20,
         child: ClipOval(
-          child: Image.network(
-            exercise.imageUrl!,
+          child: CachedNetworkImage(
+            imageUrl: exercise.imageUrl!,
             width: 40,
             height: 40,
             fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
+            errorWidget: (context, url, error) {
               // Fallback all'icona se l'immagine non carica
               return Container(
                 width: 40,
@@ -200,23 +201,14 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
                 ),
               );
             },
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Container(
-                width: 40,
-                height: 40,
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                child: Center(
-                  child: LoadingIndicator(
-                    size: 16,
-                    progress: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
-                ),
-              );
-            },
+            placeholder: (context, url) => Container(
+              width: 40,
+              height: 40,
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              child: const Center(
+                child: LoadingIndicator(size: 16),
+              ),
+            ),
           ),
         ),
       );

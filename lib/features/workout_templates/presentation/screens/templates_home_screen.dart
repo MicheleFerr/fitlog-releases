@@ -20,6 +20,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
@@ -2868,7 +2869,7 @@ class PublicTemplateCard extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     backgroundImage: template.authorPhotoUrl != null
-                        ? NetworkImage(template.authorPhotoUrl!)
+                        ? CachedNetworkImageProvider(template.authorPhotoUrl!)
                         : null,
                     child: template.authorPhotoUrl == null
                         ? SemanticIcon(

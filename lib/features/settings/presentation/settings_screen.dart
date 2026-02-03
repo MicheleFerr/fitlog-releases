@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show MethodChannel;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -194,7 +195,7 @@ class SettingsScreen extends ConsumerWidget {
                           children: [
                             CircleAvatar(
                               backgroundImage: user.photoURL != null
-                                  ? NetworkImage(user.photoURL!)
+                                  ? CachedNetworkImageProvider(user.photoURL!)
                                   : null,
                               child: user.photoURL == null
                                   ? const SemanticIcon(

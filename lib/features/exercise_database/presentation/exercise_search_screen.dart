@@ -27,6 +27,7 @@ import 'package:gymbro_flutter_new/features/custom_exercises/presentation/provid
 import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/custom_exercise.dart';
 import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
@@ -1252,12 +1253,12 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         backgroundColor: context.colors.surfaceContainerHighest,
         radius: 20,
         child: ClipOval(
-          child: Image.network(
-            exercise.imageUrl!,
+          child: CachedNetworkImage(
+            imageUrl: exercise.imageUrl!,
             width: 40,
             height: 40,
             fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
+            errorWidget: (context, url, error) {
               // Fallback all'icona se l'immagine non carica
               return Container(
                 width: 40,
@@ -1271,15 +1272,12 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 ),
               );
             },
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Container(
-                width: 40,
-                height: 40,
-                color: context.colors.surfaceContainerHighest,
-                child: const Center(child: LoadingIndicator(size: 16)),
-              );
-            },
+            placeholder: (context, url) => Container(
+              width: 40,
+              height: 40,
+              color: context.colors.surfaceContainerHighest,
+              child: const Center(child: LoadingIndicator(size: 16)),
+            ),
           ),
         ),
       );
