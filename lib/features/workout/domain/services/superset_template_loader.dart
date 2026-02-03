@@ -8,14 +8,56 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 typedef ExerciseLookupFunction = Future<Exercise?> Function(String exerciseId);
 
 /// Service for loading predefined superset templates from assets
+///
+/// ⚡ PERFORMANCE: Static cache prevents duplicate loads when multiple
+/// filter methods are called (loadForPersona, loadEvidenceBased, etc.)
 class SupersetTemplateLoader {
   static const String _templatesPath = 'assets/data/superset_templates.json';
 
+  /// Static cache to prevent duplicate asset loads
+  static List<SupersetTemplate>? _cache;
+
+  /// In-flight request to prevent concurrent loads
+  static Future<List<SupersetTemplate>>? _pending;
+
   /// Load all predefined templates from JSON file
   /// If [lookupExercise] is provided, populates exerciseNames with localized names
+  /// ⚡ CACHED: Returns cached data if available (without exercise name resolution)
   static Future<List<SupersetTemplate>> loadPredefinedTemplates({
     ExerciseLookupFunction? lookupExercise,
   }) async {
+    // Load base templates (cached)
+    List<SupersetTemplate> templates;
+
+    // Return cached data if available
+    if (_cache != null) {
+      templates = _cache!;
+    } else if (_pending != null) {
+      // If already loading, wait for it
+      templates = await _pending!;
+    } else {
+      // Start new load
+      _pending = _loadInternal();
+
+      try {
+        templates = await _pending!;
+        _cache = templates;
+      } finally {
+        _pending = null;
+      }
+    }
+
+    // If lookup function provided, resolve exercise names
+    // NOTE: This is NOT cached as it depends on current locale
+    if (lookupExercise != null) {
+      return _resolveExerciseNames(templates, lookupExercise);
+    }
+
+    return templates;
+  }
+
+  /// Internal method to actually load from assets
+  static Future<List<SupersetTemplate>> _loadInternal() async {
     try {
       final jsonString = await rootBundle.loadString(_templatesPath);
       final json = jsonDecode(jsonString) as Map<String, dynamic>;
@@ -25,11 +67,6 @@ class SupersetTemplateLoader {
           .map((t) => SupersetTemplate.fromJson(t as Map<String, dynamic>))
           .toList();
 
-      // If lookup function provided, resolve exercise names
-      if (lookupExercise != null) {
-        return _resolveExerciseNames(templates, lookupExercise);
-      }
-
       return templates;
     } catch (e) {
       throw Exception('Failed to load superset templates: $e');
@@ -37,6 +74,7 @@ class SupersetTemplateLoader {
   }
 
   /// Resolves exercise IDs to localized exercise names
+  /// ⚡ PERF FIX: Uses Future.wait() for parallel lookups instead of sequential
   static Future<List<SupersetTemplate>> _resolveExerciseNames(
     List<SupersetTemplate> templates,
     ExerciseLookupFunction lookupExercise,
@@ -44,13 +82,12 @@ class SupersetTemplateLoader {
     final resolvedTemplates = <SupersetTemplate>[];
 
     for (final template in templates) {
-      final exerciseNames = <String>[];
-
-      for (final exerciseId in template.exerciseIds) {
+      // ⚡ PERF: Lookup all exercises in parallel instead of sequentially
+      final exerciseNamesFutures = template.exerciseIds.map((exerciseId) async {
         try {
           final exercise = await lookupExercise(exerciseId);
           if (exercise != null) {
-            exerciseNames.add(exercise.nome);
+            return exercise.nome;
           } else {
             if (kDebugMode) {
               debugPrint(
@@ -58,20 +95,27 @@ class SupersetTemplateLoader {
               );
             }
             // Fallback: use the ID as name (better than empty)
-            exerciseNames.add(exerciseId.replaceAll('_', ' ').capitalize());
+            return exerciseId.replaceAll('_', ' ').capitalize();
           }
         } catch (e) {
           if (kDebugMode) {
             debugPrint('❌ SUPERSET LOADER: Error looking up $exerciseId: $e');
           }
-          exerciseNames.add(exerciseId.replaceAll('_', ' ').capitalize());
+          return exerciseId.replaceAll('_', ' ').capitalize();
         }
-      }
+      });
 
+      final exerciseNames = await Future.wait(exerciseNamesFutures);
       resolvedTemplates.add(template.copyWith(exerciseNames: exerciseNames));
     }
 
     return resolvedTemplates;
+  }
+
+  /// Clear cache (useful for testing)
+  static void clearCache() {
+    _cache = null;
+    _pending = null;
   }
 
   /// Load only templates for specific persona

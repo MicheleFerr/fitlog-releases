@@ -124,6 +124,11 @@ class ProfessionalBodyHeatmap extends StatefulWidget {
 }
 
 class _ProfessionalBodyHeatmapState extends State<ProfessionalBodyHeatmap> {
+  /// ⚡ PERFORMANCE: Static cache prevents re-parsing heavy SVG when widget rebuilds
+  static List<_MuscleData>? _cachedMuscles;
+  static Size? _cachedSvgSize;
+  static Future<void>? _pendingLoad;
+
   List<_MuscleData> _muscles = [];
   bool _isLoading = true;
   String? _error;
@@ -137,6 +142,39 @@ class _ProfessionalBodyHeatmapState extends State<ProfessionalBodyHeatmap> {
   }
 
   Future<void> _loadSvg() async {
+    // Return cached data if available
+    if (_cachedMuscles != null && _cachedSvgSize != null) {
+      setState(() {
+        _muscles = _cachedMuscles!;
+        _svgSize = _cachedSvgSize!;
+        _isLoading = false;
+      });
+      return;
+    }
+
+    // If already loading, wait for it
+    if (_pendingLoad != null) {
+      await _pendingLoad;
+      if (_cachedMuscles != null && _cachedSvgSize != null) {
+        setState(() {
+          _muscles = _cachedMuscles!;
+          _svgSize = _cachedSvgSize!;
+          _isLoading = false;
+        });
+      }
+      return;
+    }
+
+    // Start new load
+    _pendingLoad = _loadSvgInternal();
+    try {
+      await _pendingLoad;
+    } finally {
+      _pendingLoad = null;
+    }
+  }
+
+  Future<void> _loadSvgInternal() async {
     try {
       final svgString = await rootBundle.loadString(
         'packages/muscle_selector/assets/maps/human_body.svg',
@@ -179,16 +217,26 @@ class _ProfessionalBodyHeatmapState extends State<ProfessionalBodyHeatmap> {
         }
       }
 
-      setState(() {
-        _muscles = muscles;
-        _svgSize = Size(bounds?.width ?? 300, bounds?.height ?? 600);
-        _isLoading = false;
-      });
+      final svgSize = Size(bounds?.width ?? 300, bounds?.height ?? 600);
+
+      // Cache for future widget instances
+      _cachedMuscles = muscles;
+      _cachedSvgSize = svgSize;
+
+      if (mounted) {
+        setState(() {
+          _muscles = muscles;
+          _svgSize = svgSize;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _error = e.toString();
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _error = e.toString();
+          _isLoading = false;
+        });
+      }
     }
   }
 
