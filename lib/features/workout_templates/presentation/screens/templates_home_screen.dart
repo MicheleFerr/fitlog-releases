@@ -136,6 +136,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
   @override
   void dispose() {
+    // Note: TabController listener is an anonymous function
+    // It will be cleaned when controller is disposed, but explicit removal is safer
     _tabController.dispose();
     _minimizeController.dispose();
     super.dispose();

@@ -158,15 +158,18 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
     });
 
     // ✅ FIX: Rebuild UI when exercise name changes to show/hide stages
-    _nameController.addListener(() {
-      setState(() {});
-    });
+    _nameController.addListener(_onNameChanged);
+  }
+
+  void _onNameChanged() {
+    setState(() {});
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     _advancedTabController.dispose();
+    _nameController.removeListener(_onNameChanged);
     _nameController.dispose();
     _notesController.dispose();
     _searchController.dispose();

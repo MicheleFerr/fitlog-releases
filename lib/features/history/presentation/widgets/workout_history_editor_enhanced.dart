@@ -72,11 +72,14 @@ class _WorkoutHistoryEditorEnhancedState
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _nameController.removeListener(_onContentChanged);
     _nameController.dispose();
     _scrollController.dispose();
     _currentFocusNode?.dispose();
 
     for (final focusNode in _focusNodes.values) {
+      // Note: Focus node listeners are anonymous functions created in putIfAbsent
+      // They will be automatically cleaned when the node is disposed
       focusNode.dispose();
     }
     _focusNodes.clear();

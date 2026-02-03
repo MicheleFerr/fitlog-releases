@@ -187,6 +187,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
     _debounce?.cancel();
     _searchQuery.dispose();
     _searchController.dispose();
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
   }

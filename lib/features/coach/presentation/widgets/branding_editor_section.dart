@@ -105,6 +105,19 @@ class _BrandingEditorSectionState extends State<BrandingEditorSection> {
 
   @override
   void dispose() {
+    // Remove listeners before disposing
+    for (final controller in [
+      _businessNameController,
+      _taglineController,
+      _emailController,
+      _phoneController,
+      _websiteController,
+      _instagramController,
+      _footerTextController,
+    ]) {
+      controller.removeListener(_markChanged);
+    }
+
     _businessNameController.dispose();
     _taglineController.dispose();
     _emailController.dispose();
