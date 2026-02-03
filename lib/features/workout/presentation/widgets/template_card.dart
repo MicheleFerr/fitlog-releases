@@ -113,7 +113,7 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
       stats = widget.preloadedStats;
     } else {
       final statsAsync = ref.watch(templateStatsProvider(widget.template.id));
-      stats = statsAsync.valueOrNull;
+      stats = statsAsync.value;
     }
 
     return FadeTransition(

@@ -48,13 +48,15 @@ class MobileWebState {
 }
 
 /// Notifier for mobile web state
-class MobileWebNotifier extends StateNotifier<MobileWebState> {
-  MobileWebNotifier()
-      : super(const MobileWebState(
-          isMobileWeb: false,
-          hasSeenWarning: false,
-          userAgent: '',
-        ));
+class MobileWebNotifier extends Notifier<MobileWebState> {
+  @override
+  MobileWebState build() {
+    return const MobileWebState(
+      isMobileWeb: false,
+      hasSeenWarning: false,
+      userAgent: '',
+    );
+  }
 
   /// Update mobile detection based on screen width and user agent
   void updateDetection({
@@ -88,10 +90,9 @@ class MobileWebNotifier extends StateNotifier<MobileWebState> {
 }
 
 /// Provider for mobile web state with notifier
-final mobileWebProvider =
-    StateNotifierProvider<MobileWebNotifier, MobileWebState>((ref) {
-  return MobileWebNotifier();
-});
+final mobileWebProvider = NotifierProvider<MobileWebNotifier, MobileWebState>(
+  MobileWebNotifier.new,
+);
 
 /// Simple provider to check if should show mobile warning
 ///

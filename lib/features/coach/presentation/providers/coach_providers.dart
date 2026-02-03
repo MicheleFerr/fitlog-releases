@@ -39,33 +39,30 @@ final coachRepositoryProvider = Provider<CoachRepository>((ref) {
 final accountModeProvider = Provider<AccountMode>((ref) {
   // 🔧 PERF FIX: Use .select() to only rebuild when value changes
   final userProfile = ref.watch(
-    userProfileProvider.select((async) => async.valueOrNull),
+    userProfileProvider.select((async) => async.value),
   );
   if (userProfile == null) return AccountMode.solo;
 
   return userProfile.preferences.accountMode;
 });
 
-/// StateNotifier for managing account mode changes
-class AccountModeNotifier extends StateNotifier<AccountMode> {
-  AccountModeNotifier(this._ref) : super(AccountMode.solo) {
-    _init();
-  }
-
-  final Ref _ref;
-
-  void _init() {
-    final userProfile = _ref.read(userProfileProvider).valueOrNull;
+/// Notifier for managing account mode changes
+class AccountModeNotifier extends Notifier<AccountMode> {
+  @override
+  AccountMode build() {
+    // Initialize from user profile
+    final userProfile = ref.read(userProfileProvider).value;
     if (userProfile != null) {
-      state = userProfile.preferences.accountMode;
+      return userProfile.preferences.accountMode;
     }
+    return AccountMode.solo;
   }
 
   /// Change account mode
   ///
   /// Updates Firestore user preferences
   Future<void> setMode(AccountMode mode) async {
-    final user = _ref.read(firebaseUserProvider).valueOrNull;
+    final user = ref.read(firebaseUserProvider).value;
     if (user == null) return;
 
     // Update Firestore
@@ -78,14 +75,14 @@ class AccountModeNotifier extends StateNotifier<AccountMode> {
 
   /// Set to coach mode and generate code if needed
   Future<String?> enableCoachMode() async {
-    final user = _ref.read(firebaseUserProvider).valueOrNull;
+    final user = ref.read(firebaseUserProvider).value;
     if (user == null) return null;
 
     // Set mode
     await setMode(AccountMode.coach);
 
     // Generate coach code
-    final repository = _ref.read(coachRepositoryProvider);
+    final repository = ref.read(coachRepositoryProvider);
     final code = await repository.getOrCreateCoachCode(user.uid);
 
     return code;
@@ -103,10 +100,9 @@ class AccountModeNotifier extends StateNotifier<AccountMode> {
 }
 
 /// Provider for AccountModeNotifier
-final accountModeNotifierProvider =
-    StateNotifierProvider<AccountModeNotifier, AccountMode>((ref) {
-      return AccountModeNotifier(ref);
-    });
+final accountModeNotifierProvider = NotifierProvider<AccountModeNotifier, AccountMode>(
+  AccountModeNotifier.new,
+);
 
 // ============================================================
 // COACH CODE PROVIDER
@@ -121,7 +117,7 @@ final coachCodeProvider = FutureProvider.autoDispose<String?>((ref) async {
 
   // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
   final user = ref.watch(
-    firebaseUserProvider.select((async) => async.valueOrNull),
+    firebaseUserProvider.select((async) => async.value),
   );
   if (user == null) return null;
 
@@ -143,7 +139,7 @@ final athletesListProvider =
 
       // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
       final user = ref.watch(
-        firebaseUserProvider.select((async) => async.valueOrNull),
+        firebaseUserProvider.select((async) => async.value),
       );
       if (user?.email == null) return Stream.value([]);
 
@@ -155,7 +151,7 @@ final athletesListProvider =
 final activeAthletesCountProvider = Provider.autoDispose<int>((ref) {
   // 🔧 PERF FIX: Use .select() to only rebuild when athletes list changes
   final athletes = ref.watch(
-    athletesListProvider.select((async) => async.valueOrNull ?? []),
+    athletesListProvider.select((async) => async.value ?? []),
   );
   return athletes.where((a) => a.isActive).length;
 });
@@ -164,7 +160,7 @@ final activeAthletesCountProvider = Provider.autoDispose<int>((ref) {
 final pendingInvitationsCountProvider = Provider.autoDispose<int>((ref) {
   // 🔧 PERF FIX: Use .select() to only rebuild when athletes list changes
   final athletes = ref.watch(
-    athletesListProvider.select((async) => async.valueOrNull ?? []),
+    athletesListProvider.select((async) => async.value ?? []),
   );
   return athletes.where((a) => a.isPending).length;
 });
@@ -182,7 +178,7 @@ final myCoachProvider = StreamProvider.autoDispose<CoachRelationship?>((ref) {
 
   // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
   final user = ref.watch(
-    firebaseUserProvider.select((async) => async.valueOrNull),
+    firebaseUserProvider.select((async) => async.value),
   );
   if (user == null) return Stream.value(null);
 
@@ -193,7 +189,7 @@ final myCoachProvider = StreamProvider.autoDispose<CoachRelationship?>((ref) {
 /// Provider for coach name (convenience)
 final myCoachNameProvider = Provider.autoDispose<String?>((ref) {
   // 🔧 PERF FIX: Use .select() to only rebuild when coach value changes
-  final coach = ref.watch(myCoachProvider.select((async) => async.valueOrNull));
+  final coach = ref.watch(myCoachProvider.select((async) => async.value));
   return coach?.coachName;
 });
 
@@ -206,7 +202,7 @@ final athleteRelationshipProvider = FutureProvider.autoDispose
     .family<CoachRelationship?, String>((ref, athleteId) async {
       // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
       final user = ref.watch(
-        firebaseUserProvider.select((async) => async.valueOrNull),
+        firebaseUserProvider.select((async) => async.value),
       );
       if (user == null) return null;
 
@@ -232,20 +228,21 @@ final coachLookupProvider = FutureProvider.autoDispose
 // ============================================================
 
 /// Provider for coach actions (invite, remove, etc.)
-class CoachActionsNotifier extends StateNotifier<AsyncValue<void>> {
-  CoachActionsNotifier(this._ref) : super(const AsyncValue.data(null));
-
-  final Ref _ref;
+class CoachActionsNotifier extends Notifier<AsyncValue<void>> {
+  @override
+  AsyncValue<void> build() {
+    return const AsyncValue.data(null);
+  }
 
   /// Invite an athlete by email
   Future<String?> inviteAthlete(String athleteEmail) async {
-    final user = _ref.read(firebaseUserProvider).valueOrNull;
+    final user = ref.read(firebaseUserProvider).value;
     if (user == null) return null;
 
     state = const AsyncValue.loading();
 
     try {
-      final repository = _ref.read(coachRepositoryProvider);
+      final repository = ref.read(coachRepositoryProvider);
       final id = await repository.inviteAthlete(
         coachId: user.uid,
         coachEmail: user.email!,
@@ -265,7 +262,7 @@ class CoachActionsNotifier extends StateNotifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
 
     try {
-      final repository = _ref.read(coachRepositoryProvider);
+      final repository = ref.read(coachRepositoryProvider);
       await repository.removeAthlete(relationshipId);
       state = const AsyncValue.data(null);
     } catch (e, st) {
@@ -275,13 +272,13 @@ class CoachActionsNotifier extends StateNotifier<AsyncValue<void>> {
 
   /// Regenerate coach code
   Future<String?> regenerateCode() async {
-    final user = _ref.read(firebaseUserProvider).valueOrNull;
+    final user = ref.read(firebaseUserProvider).value;
     if (user == null) return null;
 
     state = const AsyncValue.loading();
 
     try {
-      final repository = _ref.read(coachRepositoryProvider);
+      final repository = ref.read(coachRepositoryProvider);
       final code = await repository.regenerateCoachCode(user.uid);
       state = const AsyncValue.data(null);
       return code;
@@ -293,24 +290,24 @@ class CoachActionsNotifier extends StateNotifier<AsyncValue<void>> {
 }
 
 /// Provider for coach actions
-final coachActionsProvider =
-    StateNotifierProvider<CoachActionsNotifier, AsyncValue<void>>((ref) {
-      return CoachActionsNotifier(ref);
-    });
+final coachActionsProvider = NotifierProvider<CoachActionsNotifier, AsyncValue<void>>(
+  CoachActionsNotifier.new,
+);
 
 // ============================================================
 // ATHLETE ACTIONS PROVIDER
 // ============================================================
 
 /// Provider for athlete actions (link, disconnect, etc.)
-class AthleteActionsNotifier extends StateNotifier<AsyncValue<void>> {
-  AthleteActionsNotifier(this._ref) : super(const AsyncValue.data(null));
-
-  final Ref _ref;
+class AthleteActionsNotifier extends Notifier<AsyncValue<void>> {
+  @override
+  AsyncValue<void> build() {
+    return const AsyncValue.data(null);
+  }
 
   /// Link to coach via code
   Future<String?> linkViaCode(String code) async {
-    final user = _ref.read(firebaseUserProvider).valueOrNull;
+    final user = ref.read(firebaseUserProvider).value;
     if (user == null) {
       throw Exception('User not authenticated');
     }
@@ -318,7 +315,7 @@ class AthleteActionsNotifier extends StateNotifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
 
     try {
-      final repository = _ref.read(coachRepositoryProvider);
+      final repository = ref.read(coachRepositoryProvider);
       final id = await repository.linkViaCode(
         athleteId: user.uid,
         athleteEmail: user.email!,
@@ -327,7 +324,7 @@ class AthleteActionsNotifier extends StateNotifier<AsyncValue<void>> {
       );
 
       // Switch to coached mode
-      await _ref.read(accountModeNotifierProvider.notifier).enableCoachedMode();
+      await ref.read(accountModeNotifierProvider.notifier).enableCoachedMode();
 
       state = const AsyncValue.data(null);
       return id;
@@ -342,11 +339,11 @@ class AthleteActionsNotifier extends StateNotifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
 
     try {
-      final repository = _ref.read(coachRepositoryProvider);
+      final repository = ref.read(coachRepositoryProvider);
       await repository.disconnectFromCoach(relationshipId);
 
       // Switch back to solo mode
-      await _ref.read(accountModeNotifierProvider.notifier).resetToSoloMode();
+      await ref.read(accountModeNotifierProvider.notifier).resetToSoloMode();
 
       state = const AsyncValue.data(null);
     } catch (e, st) {
@@ -356,10 +353,9 @@ class AthleteActionsNotifier extends StateNotifier<AsyncValue<void>> {
 }
 
 /// Provider for athlete actions
-final athleteActionsProvider =
-    StateNotifierProvider<AthleteActionsNotifier, AsyncValue<void>>((ref) {
-      return AthleteActionsNotifier(ref);
-    });
+final athleteActionsProvider = NotifierProvider<AthleteActionsNotifier, AsyncValue<void>>(
+  AthleteActionsNotifier.new,
+);
 
 // ============================================================
 // CONVENIENCE PROVIDERS
@@ -369,7 +365,7 @@ final athleteActionsProvider =
 final hasCompletedCoachOnboardingProvider = Provider.autoDispose<bool>((ref) {
   // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
   final userProfile = ref.watch(
-    userProfileProvider.select((async) => async.valueOrNull),
+    userProfileProvider.select((async) => async.value),
   );
   return userProfile?.preferences.hasCompletedCoachOnboarding ?? false;
 });
@@ -389,7 +385,7 @@ final isActivelyCoachedProvider = Provider.autoDispose<bool>((ref) {
   if (!mode.isCoached) return false;
 
   // 🔧 PERF FIX: Use .select() to only rebuild when coach value changes
-  final coach = ref.watch(myCoachProvider.select((async) => async.valueOrNull));
+  final coach = ref.watch(myCoachProvider.select((async) => async.value));
   return coach?.isActive ?? false;
 });
 
@@ -405,7 +401,7 @@ final athleteWorkoutsProvider = FutureProvider.autoDispose
     .family<List<AthleteWorkoutSummary>, String>((ref, athleteId) async {
       // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
       final user = ref.watch(
-        firebaseUserProvider.select((async) => async.valueOrNull),
+        firebaseUserProvider.select((async) => async.value),
       );
       if (user?.email == null) return [];
 
@@ -425,7 +421,7 @@ final athleteWeeklyStatsProvider = FutureProvider.autoDispose
     .family<AthleteWeeklyStats, String>((ref, athleteId) async {
       // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
       final user = ref.watch(
-        firebaseUserProvider.select((async) => async.valueOrNull),
+        firebaseUserProvider.select((async) => async.value),
       );
       if (user?.email == null) return const AthleteWeeklyStats.empty();
 
@@ -458,7 +454,7 @@ final coachTemplatesProvider = StreamProvider.autoDispose<List<CoachTemplate>>((
 
   // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
   final user = ref.watch(
-    firebaseUserProvider.select((async) => async.valueOrNull),
+    firebaseUserProvider.select((async) => async.value),
   );
   if (user == null) return Stream.value([]);
 
@@ -471,7 +467,7 @@ final assignedCoachTemplatesProvider =
     Provider.autoDispose<List<CoachTemplate>>((ref) {
       // 🔧 PERF FIX: Use .select() to only rebuild when templates list changes
       final templates = ref.watch(
-        coachTemplatesProvider.select((async) => async.valueOrNull ?? []),
+        coachTemplatesProvider.select((async) => async.value ?? []),
       );
       return templates.where((t) => t.hasAssignments).toList();
     });
@@ -490,10 +486,10 @@ final templateAssignmentsProvider = Provider.autoDispose
     .family<Map<String, bool>, String>((ref, templateId) {
       // 🔧 PERF FIX: Use .select() to only rebuild when data changes
       final athletes = ref.watch(
-        athletesListProvider.select((async) => async.valueOrNull ?? []),
+        athletesListProvider.select((async) => async.value ?? []),
       );
       final templates = ref.watch(
-        coachTemplatesProvider.select((async) => async.valueOrNull ?? []),
+        coachTemplatesProvider.select((async) => async.value ?? []),
       );
 
       final template = templates.where((t) => t.id == templateId).firstOrNull;
@@ -509,7 +505,7 @@ final templateAssignmentsProvider = Provider.autoDispose
 final coachTemplateCountProvider = Provider.autoDispose<int>((ref) {
   // 🔧 PERF FIX: Use .select() to only rebuild when templates list changes
   final templates = ref.watch(
-    coachTemplatesProvider.select((async) => async.valueOrNull ?? []),
+    coachTemplatesProvider.select((async) => async.value ?? []),
   );
   return templates.length;
 });
@@ -526,7 +522,7 @@ final assignedTemplatesProvider =
 
       // 🔧 PERF FIX: Use .select() to only rebuild when user value changes
       final user = ref.watch(
-        firebaseUserProvider.select((async) => async.valueOrNull),
+        firebaseUserProvider.select((async) => async.value),
       );
       if (user == null) return Stream.value([]);
 
@@ -538,7 +534,7 @@ final assignedTemplatesProvider =
 final assignedTemplateCountProvider = Provider.autoDispose<int>((ref) {
   // 🔧 PERF FIX: Use .select() to only rebuild when templates list changes
   final templates = ref.watch(
-    assignedTemplatesProvider.select((async) => async.valueOrNull ?? []),
+    assignedTemplatesProvider.select((async) => async.value ?? []),
   );
   return templates.length;
 });
@@ -555,20 +551,21 @@ final assignedTemplateDataProvider = FutureProvider.autoDispose
 // ============================================================
 
 /// Notifier for coach template actions
-class CoachTemplateActionsNotifier extends StateNotifier<AsyncValue<void>> {
-  CoachTemplateActionsNotifier(this._ref) : super(const AsyncValue.data(null));
-
-  final Ref _ref;
+class CoachTemplateActionsNotifier extends Notifier<AsyncValue<void>> {
+  @override
+  AsyncValue<void> build() {
+    return const AsyncValue.data(null);
+  }
 
   /// Create a new coach template
   Future<String?> createTemplate(CoachTemplate template) async {
-    final user = _ref.read(firebaseUserProvider).valueOrNull;
+    final user = ref.read(firebaseUserProvider).value;
     if (user == null) return null;
 
     state = const AsyncValue.loading();
 
     try {
-      final repository = _ref.read(coachTemplatesRepositoryProvider);
+      final repository = ref.read(coachTemplatesRepositoryProvider);
       final id = await repository.createTemplate(
         template.copyWith(coachId: user.uid),
       );
@@ -585,7 +582,7 @@ class CoachTemplateActionsNotifier extends StateNotifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
 
     try {
-      final repository = _ref.read(coachTemplatesRepositoryProvider);
+      final repository = ref.read(coachTemplatesRepositoryProvider);
       await repository.updateTemplate(template);
       state = const AsyncValue.data(null);
     } catch (e, st) {
@@ -598,7 +595,7 @@ class CoachTemplateActionsNotifier extends StateNotifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
 
     try {
-      final repository = _ref.read(coachTemplatesRepositoryProvider);
+      final repository = ref.read(coachTemplatesRepositoryProvider);
       await repository.deleteTemplate(templateId);
       state = const AsyncValue.data(null);
     } catch (e, st) {
@@ -611,13 +608,13 @@ class CoachTemplateActionsNotifier extends StateNotifier<AsyncValue<void>> {
     required String templateId,
     required List<String> athleteIds,
   }) async {
-    final user = _ref.read(firebaseUserProvider).valueOrNull;
+    final user = ref.read(firebaseUserProvider).value;
     if (user == null) return;
 
     state = const AsyncValue.loading();
 
     try {
-      final repository = _ref.read(coachTemplatesRepositoryProvider);
+      final repository = ref.read(coachTemplatesRepositoryProvider);
       await repository.assignTemplate(
         templateId: templateId,
         athleteIds: athleteIds,
@@ -635,13 +632,13 @@ class CoachTemplateActionsNotifier extends StateNotifier<AsyncValue<void>> {
     required String templateId,
     required List<String> athleteIds,
   }) async {
-    final user = _ref.read(firebaseUserProvider).valueOrNull;
+    final user = ref.read(firebaseUserProvider).value;
     if (user == null) return;
 
     state = const AsyncValue.loading();
 
     try {
-      final repository = _ref.read(coachTemplatesRepositoryProvider);
+      final repository = ref.read(coachTemplatesRepositoryProvider);
       await repository.updateAssignments(
         templateId: templateId,
         athleteIds: athleteIds,
@@ -656,9 +653,6 @@ class CoachTemplateActionsNotifier extends StateNotifier<AsyncValue<void>> {
 }
 
 /// Provider for coach template actions
-final coachTemplateActionsProvider =
-    StateNotifierProvider<CoachTemplateActionsNotifier, AsyncValue<void>>((
-      ref,
-    ) {
-      return CoachTemplateActionsNotifier(ref);
-    });
+final coachTemplateActionsProvider = NotifierProvider<CoachTemplateActionsNotifier, AsyncValue<void>>(
+  CoachTemplateActionsNotifier.new,
+);

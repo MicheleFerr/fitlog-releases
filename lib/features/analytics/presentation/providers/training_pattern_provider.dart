@@ -46,7 +46,7 @@ final trainingPatternProvider =
         return TrainingPatternResults.empty();
       }
 
-      final analyticsData = analyticsAsync.valueOrNull;
+      final analyticsData = analyticsAsync.value;
       if (analyticsData == null) {
         return TrainingPatternResults.empty();
       }

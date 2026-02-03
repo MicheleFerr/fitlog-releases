@@ -42,11 +42,16 @@ class ImportError extends ImportState {
 }
 
 /// Import notifier for managing import workflow
-class ImportNotifier extends StateNotifier<ImportState> {
-  ImportNotifier(this._repository) : super(const ImportInitial());
-
-  final ImportRepository _repository;
+class ImportNotifier extends Notifier<ImportState> {
   ImportParseResult? _currentParseResult;
+
+  late final ImportRepository _repository;
+
+  @override
+  ImportState build() {
+    _repository = ref.watch(importRepositoryProvider);
+    return const ImportInitial();
+  }
 
   /// Get current parse result for UI display
   ImportParseResult? get currentParseResult => _currentParseResult;
@@ -122,7 +127,7 @@ class ImportNotifier extends StateNotifier<ImportState> {
 
 /// Provider for import repository
 final importRepositoryProvider = Provider<ImportRepository>((ref) {
-  final exercises = ref.watch(allExercisesProvider).valueOrNull ?? [];
+  final exercises = ref.watch(allExercisesProvider).value ?? [];
   final workoutRepo = ref.watch(workoutRepositoryProvider);
 
   return ImportRepository(
@@ -132,11 +137,9 @@ final importRepositoryProvider = Provider<ImportRepository>((ref) {
 });
 
 /// Provider for import notifier
-final importNotifierProvider =
-    StateNotifierProvider<ImportNotifier, ImportState>((ref) {
-      final repository = ref.watch(importRepositoryProvider);
-      return ImportNotifier(repository);
-    });
+final importNotifierProvider = NotifierProvider<ImportNotifier, ImportState>(
+  ImportNotifier.new,
+);
 
 /// Provider for available source apps
 final importSourceAppsProvider = Provider<List<ImportSourceApp>>((ref) {

@@ -346,6 +346,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 ),
               ),
             ),
+            ),
           );
         },
       );
@@ -1161,7 +1162,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                             ),
                           ),
                         ),
-                      );
+                      ),
+                    );
                     },
                   ),
                 ),
@@ -1329,7 +1331,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                   ),
                 ),
               ),
-            );
+            ),
+          );
           },
           loading: () => const SizedBox.shrink(), // Don't show loading state
           error: (_, __) => const SizedBox.shrink(),
@@ -1462,6 +1465,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
           ),
         ),
+      ),
       ),
     );
   }
@@ -1732,10 +1736,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                   HapticFeedback.selectionClick();
                 },
                 borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-              child: Container(
+                child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 12,
@@ -1787,6 +1788,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 ),
               ),
             ),
+          ),
           ),
           const SizedBox(height: 12),
         ],
@@ -2038,10 +2040,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                 child: InkWell(
                   onTap: () => _switchToExercise(index),
                   borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-            ),
-                child: Container(
+                  child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 6,
@@ -2072,6 +2071,8 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                   ),
                 ),
               ),
+            ),
+            ),
             ),
           );
         },

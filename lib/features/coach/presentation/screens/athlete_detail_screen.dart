@@ -138,7 +138,7 @@ class AthleteDetailScreen extends ConsumerWidget {
   Future<void> _openChat(BuildContext context, WidgetRef ref) async {
     try {
       // Get current user (coach)
-      final currentUser = ref.read(currentUserProvider).valueOrNull;
+      final currentUser = ref.read(currentUserProvider).value;
       if (currentUser == null) {
         SnackBarService.showError(context, context.l10n.notAuthenticated);
         return;

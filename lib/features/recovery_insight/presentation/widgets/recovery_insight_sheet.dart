@@ -143,7 +143,7 @@ class _RecoveryInsightSheetState extends ConsumerState<RecoveryInsightSheet> {
                     context,
                     scrollController,
                     insight,
-                    sleepRecordsAsync.valueOrNull ?? [],
+                    sleepRecordsAsync.value ?? [],
                     isPro,
                   ),
                   loading: () => const Center(child: LoadingIndicator()),

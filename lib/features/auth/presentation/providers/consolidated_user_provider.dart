@@ -252,7 +252,7 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
 
   /// Update user profile
   Future<void> updateProfile(Map<String, dynamic> updates) async {
-    final currentProfile = state.valueOrNull;
+    final currentProfile = state.value;
     if (currentProfile == null) return;
 
     try {
@@ -268,7 +268,7 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
 
   /// Increment template count
   Future<void> incrementTemplateCount({required bool isPublic}) async {
-    final currentProfile = state.valueOrNull;
+    final currentProfile = state.value;
     if (currentProfile == null) return;
 
     final updatedProfile = currentProfile.incrementTemplateUsage(
@@ -288,7 +288,7 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
 
   /// Decrement template count
   Future<void> decrementTemplateCount({required bool isPublic}) async {
-    final currentProfile = state.valueOrNull;
+    final currentProfile = state.value;
     if (currentProfile == null) return;
 
     final updatedProfile = currentProfile.decrementTemplateUsage(
@@ -308,7 +308,7 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
 
   /// Check if user can save a template
   Future<bool> canSaveTemplate({required bool isPublic}) async {
-    final currentProfile = state.valueOrNull;
+    final currentProfile = state.value;
     if (currentProfile == null) return false;
 
     return isPublic
@@ -318,7 +318,7 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
 
   /// Get remaining quota
   int getRemainingQuota({required bool isPublic}) {
-    final currentProfile = state.valueOrNull;
+    final currentProfile = state.value;
     if (currentProfile == null) return 0;
 
     return isPublic
@@ -328,9 +328,9 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
 
   /// Upgrade user tier via Cloud Function (admin-only)
   Future<void> upgradeTier(AccountTier newTier) async {
-    var currentProfile = state.valueOrNull;
+    var currentProfile = state.value;
     if (currentProfile == null) {
-      currentProfile = ref.read(userProfileProvider).valueOrNull;
+      currentProfile = ref.read(userProfileProvider).value;
     }
 
     if (currentProfile == null) {
@@ -389,7 +389,7 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
 
   /// Sync template count from actual templates in database
   Future<void> syncTemplateCount() async {
-    final currentProfile = state.valueOrNull;
+    final currentProfile = state.value;
     if (currentProfile == null) return;
 
     try {
@@ -439,7 +439,7 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
     int? debugXP,
     bool clearAll = false,
   }) async {
-    final currentProfile = state.valueOrNull;
+    final currentProfile = state.value;
     if (currentProfile == null) return;
 
     // Only allow for admin users
@@ -504,7 +504,7 @@ final userProfileNotifierProvider =
 final isPremiumUserProvider = Provider<bool>((ref) {
   final accountTier = ref.watch(
     userProfileProvider.select(
-      (asyncValue) => asyncValue.valueOrNull?.accountTier,
+      (asyncValue) => asyncValue.value?.accountTier,
     ),
   );
 
@@ -517,7 +517,7 @@ final isPremiumUserProvider = Provider<bool>((ref) {
 final userDisplayNameProvider = Provider<String>((ref) {
   final displayName = ref.watch(
     userProfileProvider.select(
-      (asyncValue) => asyncValue.valueOrNull?.displayName,
+      (asyncValue) => asyncValue.value?.displayName,
     ),
   );
 
@@ -533,7 +533,7 @@ final userDisplayNameProvider = Provider<String>((ref) {
 final accountTierProvider = Provider<AccountTier>((ref) {
   // Get profile once
   final profile = ref.watch(
-    userProfileProvider.select((asyncValue) => asyncValue.valueOrNull),
+    userProfileProvider.select((asyncValue) => asyncValue.value),
   );
 
   // Check for persistent debug override (admin only)
@@ -551,7 +551,7 @@ final accountTierProvider = Provider<AccountTier>((ref) {
 final templateQuotaProvider = Provider<TemplateQuota>((ref) {
   final templateQuota = ref.watch(
     userProfileProvider.select(
-      (asyncValue) => asyncValue.valueOrNull?.templateQuota,
+      (asyncValue) => asyncValue.value?.templateQuota,
     ),
   );
 
@@ -564,7 +564,7 @@ final templateQuotaProvider = Provider<TemplateQuota>((ref) {
 final canSaveTemplateProvider = Provider.family<bool, bool>((ref, isPublic) {
   final templateQuota = ref.watch(
     userProfileNotifierProvider.select(
-      (asyncValue) => asyncValue.valueOrNull?.templateQuota,
+      (asyncValue) => asyncValue.value?.templateQuota,
     ),
   );
 
@@ -581,7 +581,7 @@ final remainingTemplateQuotaProvider = Provider.family<int, bool>((
 ) {
   final templateQuota = ref.watch(
     userProfileNotifierProvider.select(
-      (asyncValue) => asyncValue.valueOrNull?.templateQuota,
+      (asyncValue) => asyncValue.value?.templateQuota,
     ),
   );
 

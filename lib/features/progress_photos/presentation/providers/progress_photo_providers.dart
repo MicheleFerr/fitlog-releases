@@ -93,10 +93,14 @@ class PhotoUploadState {
 }
 
 /// Notifier for photo upload operations
-class PhotoUploadNotifier extends StateNotifier<PhotoUploadState> {
-  final ProgressPhotoRepository _repository;
+class PhotoUploadNotifier extends Notifier<PhotoUploadState> {
+  late final ProgressPhotoRepository _repository;
 
-  PhotoUploadNotifier(this._repository) : super(const PhotoUploadState());
+  @override
+  PhotoUploadState build() {
+    _repository = ref.watch(progressPhotoRepositoryProvider);
+    return const PhotoUploadState();
+  }
 
   /// Upload a new photo
   Future<ProgressPhoto?> uploadPhoto({
@@ -201,10 +205,9 @@ class PhotoUploadNotifier extends StateNotifier<PhotoUploadState> {
 
 /// Provider for photo upload notifier
 final photoUploadProvider =
-    StateNotifierProvider<PhotoUploadNotifier, PhotoUploadState>((ref) {
-      final repository = ref.watch(progressPhotoRepositoryProvider);
-      return PhotoUploadNotifier(repository);
-    });
+    NotifierProvider<PhotoUploadNotifier, PhotoUploadState>(
+      PhotoUploadNotifier.new,
+    );
 
 /// Provider for selected photo (for detail view)
 final selectedPhotoProvider = StateProvider<ProgressPhoto?>((ref) => null);
@@ -355,17 +358,27 @@ class PhotoReminderState {
 }
 
 /// Notifier for photo reminder management
-class PhotoReminderNotifier extends StateNotifier<PhotoReminderState> {
-  final PhotoReminderRepository _repository;
-  final PhotoReminderNotificationService _notificationService;
+class PhotoReminderNotifier extends Notifier<PhotoReminderState> {
+  PhotoReminderRepository? _repository;
+  PhotoReminderNotificationService? _notificationService;
 
-  PhotoReminderNotifier({
+  @override
+  PhotoReminderState build() {
+    // Note: This notifier should be created via photoReminderProviderAsync
+    // This build() is called by the NotifierProvider which throws
+    throw UnimplementedError('Use photoReminderProviderAsync for initialization');
+  }
+
+  // Manual initialization (used by FutureProvider)
+  void initialize({
     required PhotoReminderRepository repository,
     required PhotoReminderNotificationService notificationService,
     required PhotoReminderSettings initialSettings,
-  }) : _repository = repository,
-       _notificationService = notificationService,
-       super(PhotoReminderState(settings: initialSettings));
+  }) {
+    _repository = repository;
+    _notificationService = notificationService;
+    state = PhotoReminderState(settings: initialSettings);
+  }
 
   /// Enable reminders
   Future<void> enableReminders({
@@ -526,13 +539,9 @@ class PhotoReminderNotifier extends StateNotifier<PhotoReminderState> {
 
 /// Provider for photo reminder notifier
 final photoReminderProvider =
-    StateNotifierProvider<PhotoReminderNotifier, PhotoReminderState>((ref) {
-      // This will throw if accessed before async initialization
-      // Use photoReminderProviderAsync instead for initial setup
-      throw UnimplementedError(
-        'Use photoReminderProviderAsync for initial setup',
-      );
-    });
+    NotifierProvider<PhotoReminderNotifier, PhotoReminderState>(
+      PhotoReminderNotifier.new,
+    );
 
 /// Async provider for photo reminder notifier (handles initialization)
 final photoReminderProviderAsync = FutureProvider<PhotoReminderNotifier>((
@@ -544,9 +553,11 @@ final photoReminderProviderAsync = FutureProvider<PhotoReminderNotifier>((
   );
   final settings = repository.getSettings();
 
-  return PhotoReminderNotifier(
+  final notifier = PhotoReminderNotifier();
+  notifier.initialize(
     repository: repository,
     notificationService: notificationService,
     initialSettings: settings,
   );
+  return notifier;
 });

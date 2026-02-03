@@ -269,7 +269,7 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
   String? get _userId => _getUserId();
 
   String? _getUserId() {
-    return ref.watch(firebaseUserProvider).valueOrNull?.email;
+    return ref.watch(firebaseUserProvider).value?.email;
   }
 
   /// Load all analytics data

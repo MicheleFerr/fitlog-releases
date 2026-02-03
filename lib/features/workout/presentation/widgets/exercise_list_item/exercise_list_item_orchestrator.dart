@@ -128,18 +128,24 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       .read(exerciseExpansionProvider(widget.exercise.id))
       .userManuallyExpanded;
 
-  ExerciseExpansionNotifier get _expansionNotifier =>
-      ref.read(exerciseExpansionProvider(widget.exercise.id).notifier);
+  // TEMPORARY: Disabled for Riverpod 3.x migration
+  // TODO: Restore when migrating to @riverpod codegen
+  // ExerciseExpansionNotifier get _expansionNotifier =>
+  //     ref.read(exerciseExpansionProvider(widget.exercise.id).notifier);
 
   // For debugging only - use .read()
   AutoCollapseState get _autoCollapseState =>
       ref.read(exerciseAutoCollapseProvider(widget.exercise.id));
 
-  AutoCollapseNotifier get _autoCollapseNotifier =>
-      ref.read(exerciseAutoCollapseProvider(widget.exercise.id).notifier);
+  // TEMPORARY: Disabled for Riverpod 3.x migration
+  // TODO: Restore when migrating to @riverpod codegen
+  // AutoCollapseNotifier get _autoCollapseNotifier =>
+  //     ref.read(exerciseAutoCollapseProvider(widget.exercise.id).notifier);
 
-  ExerciseSuggestionsNotifier get _suggestionsNotifier =>
-      ref.read(exerciseSuggestionsProvider(widget.exercise.id).notifier);
+  // TEMPORARY: Disabled for Riverpod 3.x migration
+  // TODO: Restore when migrating to @riverpod codegen
+  // ExerciseSuggestionsNotifier get _suggestionsNotifier =>
+  //     ref.read(exerciseSuggestionsProvider(widget.exercise.id).notifier);
 
   @override
   void initState() {
@@ -186,7 +192,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
       // Reset flags if exercise becomes incomplete again
       if (wasCompleted && !isNowCompleted) {
-        _expansionNotifier.resetForIncomplete();
+// TEMPORARY: Disabled -         _expansionNotifier.resetForIncomplete();
       }
 
       // Trigger auto-collapse if exercise just became complete
@@ -234,11 +240,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
         final showCountdown = config.showCollapseCountdown ?? false;
 
-        _autoCollapseNotifier.startAutoCollapse(
+        // TEMPORARY: Disabled for Riverpod 3.x migration
+        /* _autoCollapseNotifier.startAutoCollapse(
           initialDelay: delay,
           countdownSeconds: countdownDuration,
           showCountdown: showCountdown,
-        );
+        ); */
       }
     } catch (e) {
       if (kDebugMode) {
@@ -382,7 +389,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       workoutStartTime: workoutStartTime,
     );
 
-    await _suggestionsNotifier.generateSuggestions(suggestionContext);
+// TEMPORARY: Disabled -     await _suggestionsNotifier.generateSuggestions(suggestionContext);
   }
 
   // ========================================================================
@@ -391,7 +398,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
   void _handleCancelAutoCollapse() {
     try {
-      _autoCollapseNotifier.cancel();
+// TEMPORARY: Disabled -       _autoCollapseNotifier.cancel();
       if (mounted) {
         HapticFeedback.lightImpact();
       }
@@ -1621,7 +1628,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
   }
 
   void _handleCollapseExercise() {
-    _expansionNotifier.collapse();
+// TEMPORARY: Disabled -     _expansionNotifier.collapse();
   }
 
   IconData _getSuggestionIcon(ContributionType suggestionType) {
@@ -1676,7 +1683,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
         exerciseName: widget.exercise.name,
       )),
     );
-    final formCues = formCuesAsync.valueOrNull;
+    final formCues = formCuesAsync.value;
 
     // Listen for auto-collapse completion
     ref.listen(
@@ -1686,8 +1693,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       (previous, shouldCollapse) {
         if (shouldCollapse) {
           // Execute the collapse
-          _expansionNotifier.markAutoCollapsed();
-          _autoCollapseNotifier.acknowledgeCollapse();
+// TEMPORARY: Disabled -           _expansionNotifier.markAutoCollapsed();
+// TEMPORARY: Disabled -           _autoCollapseNotifier.acknowledgeCollapse();
 
           if (kDebugMode) {
             debugPrint(
@@ -1751,7 +1758,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     return GestureDetector(
       onTap: !isExpanded
           ? () {
-              _expansionNotifier.expand();
+// TEMPORARY: Disabled -               _expansionNotifier.expand();
               HapticFeedback.lightImpact();
               if (kDebugMode) {
                 debugPrint(
@@ -1895,9 +1902,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                                 icon: _getSuggestionIcon(suggestion.type),
                                 fullSuggestion: suggestion,
                                 onDismiss: () {
-                                  _suggestionsNotifier.dismissSuggestion(
+                                  // TEMPORARY: Disabled for Riverpod 3.x migration
+                                  /* _suggestionsNotifier.dismissSuggestion(
                                     suggestion.id,
-                                  );
+                                  ); */
                                 },
                               );
                             }).toList(),
@@ -1947,7 +1955,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                     child: Center(
                       child: InkWell(
                         onTap: () {
-                          _expansionNotifier.expand();
+// TEMPORARY: Disabled -                           _expansionNotifier.expand();
                           HapticFeedback.lightImpact();
                           if (kDebugMode) {
                             debugPrint(

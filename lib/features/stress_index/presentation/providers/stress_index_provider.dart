@@ -162,16 +162,17 @@ final recentStressIndexStreamProvider =
 /// - Latest stress index result
 /// - Muscle recovery status
 /// - History of results
-class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
-  StressIndexNotifier(this._ref) : super(const AsyncValue.loading()) {
+class StressIndexNotifier extends Notifier<AsyncValue<StressIndexState>> {
+  @override
+  AsyncValue<StressIndexState> build() {
+    // Start async initialization
     _initialize();
+    return const AsyncValue.loading();
   }
-
-  final Ref _ref;
 
   Future<void> _initialize() async {
     try {
-      final repository = _ref.read(stressIndexRepositoryProvider);
+      final repository = ref.read(stressIndexRepositoryProvider);
       var recentResults = await repository.getRecent(days: 7);
 
       // Auto-backfill if no data exists
@@ -205,7 +206,7 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
   /// Internal backfill without updating state (used during init)
   Future<int> _backfillSilently() async {
     try {
-      final historyAsync = await _ref.read(workoutHistoryProvider.future);
+      final historyAsync = await ref.read(workoutHistoryProvider.future);
       final cutoff = DateTime.now().subtract(const Duration(days: 30));
       final recentWorkouts = historyAsync
           .where((w) => w.completedAt.isAfter(cutoff))
@@ -213,14 +214,14 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
 
       if (recentWorkouts.isEmpty) return 0;
 
-      final muscleMap = await _ref
+      final muscleMap = await ref
           .read(exerciseMuscleMapProvider.future)
           .catchError((_) => <String, ExerciseMuscleData>{});
 
       // 🏋️ Get user body weight for bodyweight exercise stress calculation
       final userBodyWeightKg = await _getUserBodyWeightKg();
 
-      final repository = _ref.read(stressIndexRepositoryProvider);
+      final repository = ref.read(stressIndexRepositoryProvider);
       int count = 0;
 
       for (final historyDetail in recentWorkouts) {
@@ -268,7 +269,7 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
   Future<StressIndexResult?> calculateAndSave(Workout workout) async {
     try {
       // Get exercise muscle map for accurate muscle tracking (primary + secondary)
-      final muscleMap = await _ref
+      final muscleMap = await ref
           .read(exerciseMuscleMapProvider.future)
           .catchError((_) => <String, ExerciseMuscleData>{});
 
@@ -283,11 +284,11 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
       );
 
       // Save to repository
-      final repository = _ref.read(stressIndexRepositoryProvider);
+      final repository = ref.read(stressIndexRepositoryProvider);
       await repository.save(result);
 
       // Update state
-      final currentState = state.valueOrNull ?? StressIndexState.empty();
+      final currentState = state.value ?? StressIndexState.empty();
       final updatedHistory = [result, ...currentState.history]
           .take(50) // Keep last 50 results
           .toList();
@@ -332,7 +333,7 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
 
     try {
       // Step 1: Clear all existing data
-      final repository = _ref.read(stressIndexRepositoryProvider);
+      final repository = ref.read(stressIndexRepositoryProvider);
       final clearedCount = await repository.clearAll();
 
       if (kDebugMode) {
@@ -355,7 +356,7 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
 
   /// Get stress index for a specific workout
   Future<StressIndexResult?> getForWorkout(String workoutId) async {
-    final repository = _ref.read(stressIndexRepositoryProvider);
+    final repository = ref.read(stressIndexRepositoryProvider);
     return repository.getForWorkout(workoutId);
   }
 
@@ -368,7 +369,7 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
   Future<int> backfillFromHistory({int days = 30}) async {
     try {
       // Get workout history
-      final historyAsync = await _ref.read(workoutHistoryProvider.future);
+      final historyAsync = await ref.read(workoutHistoryProvider.future);
 
       // Filter to workouts within date range
       final cutoff = DateTime.now().subtract(Duration(days: days));
@@ -384,14 +385,14 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
       }
 
       // Get exercise muscle map (primary + secondary)
-      final muscleMap = await _ref
+      final muscleMap = await ref
           .read(exerciseMuscleMapProvider.future)
           .catchError((_) => <String, ExerciseMuscleData>{});
 
       // 🏋️ Get user body weight for bodyweight exercise stress calculation
       final userBodyWeightKg = await _getUserBodyWeightKg();
 
-      final repository = _ref.read(stressIndexRepositoryProvider);
+      final repository = ref.read(stressIndexRepositoryProvider);
       int processedCount = 0;
 
       for (final historyDetail in recentWorkouts) {
@@ -469,7 +470,7 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
   /// Falls back to default 70kg in calculator if null.
   Future<double?> _getUserBodyWeightKg() async {
     try {
-      final weightMeasurements = await _ref.read(
+      final weightMeasurements = await ref.read(
         bodyMeasurementsProvider(HealthDataType.bodyWeight).future,
       );
       if (weightMeasurements.isNotEmpty) {
@@ -488,10 +489,10 @@ class StressIndexNotifier extends StateNotifier<AsyncValue<StressIndexState>> {
 
 /// Provider for StressIndexNotifier
 final stressIndexNotifierProvider =
-    StateNotifierProvider.autoDispose<
+    NotifierProvider.autoDispose<
       StressIndexNotifier,
       AsyncValue<StressIndexState>
-    >((ref) => StressIndexNotifier(ref));
+    >(StressIndexNotifier.new);
 
 // ====================
 // CONVENIENCE PROVIDERS
@@ -502,7 +503,7 @@ final latestStressIndexProvider = Provider.autoDispose<StressIndexResult?>((
   ref,
 ) {
   final state = ref.watch(stressIndexNotifierProvider);
-  return state.valueOrNull?.latestResult;
+  return state.value?.latestResult;
 });
 
 /// Provider for muscle recovery status map
@@ -510,13 +511,13 @@ final muscleRecoveryProvider = Provider.autoDispose<Map<String, dynamic>>((
   ref,
 ) {
   final state = ref.watch(stressIndexNotifierProvider);
-  return state.valueOrNull?.muscleRecovery ?? {};
+  return state.value?.muscleRecovery ?? {};
 });
 
 /// Provider for checking if stress index data is available
 final hasStressIndexDataProvider = Provider.autoDispose<bool>((ref) {
   final state = ref.watch(stressIndexNotifierProvider);
-  return state.valueOrNull?.hasData ?? false;
+  return state.value?.hasData ?? false;
 });
 
 // ====================
@@ -615,7 +616,7 @@ final sleepAwareStressDataProvider = FutureProvider.autoDispose<SleepAwareStress
 ) async {
   // Get stress index history
   final stressState = ref.watch(stressIndexNotifierProvider);
-  final history = stressState.valueOrNull?.history ?? [];
+  final history = stressState.value?.history ?? [];
 
   // Calculate raw FFM readiness
   final rawReadiness = StressIndexCalculator.getOverallReadinessFFM(history);
@@ -694,11 +695,11 @@ final sleepAwareStressDataProvider = FutureProvider.autoDispose<SleepAwareStress
 /// Higher = more stress, lower = more recovered
 final sleepAwareStressScoreProvider = Provider.autoDispose<double>((ref) {
   final dataAsync = ref.watch(sleepAwareStressDataProvider);
-  return dataAsync.valueOrNull?.stressScore ?? 0.0;
+  return dataAsync.value?.stressScore ?? 0.0;
 });
 
 /// Provider for checking if sleep is impacting recovery
 final hasSleepImpactProvider = Provider.autoDispose<bool>((ref) {
   final dataAsync = ref.watch(sleepAwareStressDataProvider);
-  return dataAsync.valueOrNull?.hasSleepImpact ?? false;
+  return dataAsync.value?.hasSleepImpact ?? false;
 });

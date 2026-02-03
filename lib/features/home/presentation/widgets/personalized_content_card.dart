@@ -75,8 +75,8 @@ class _PersonalizedContentCardState
     final customExercisesAsync = ref.watch(allCustomExercisesProvider);
     final entitlements = ref.watch(tierEntitlementsProvider);
 
-    final templateCount = templatesAsync.valueOrNull?.length ?? 0;
-    final exerciseCount = customExercisesAsync.valueOrNull?.length ?? 0;
+    final templateCount = templatesAsync.value?.length ?? 0;
+    final exerciseCount = customExercisesAsync.value?.length ?? 0;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),

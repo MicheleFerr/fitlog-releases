@@ -418,35 +418,35 @@ final sleepCorrelationProvider =
 /// Provider for recovery score only
 final recoveryScoreProvider = Provider.autoDispose<int>((ref) {
   final insightAsync = ref.watch(recoveryInsightProvider);
-  return insightAsync.valueOrNull?.score ?? 75;
+  return insightAsync.value?.score ?? 75;
 });
 
 /// Provider for recovery category
 final recoveryCategoryProvider = Provider.autoDispose<RecoveryCategory>((ref) {
   final insightAsync = ref.watch(recoveryInsightProvider);
-  return insightAsync.valueOrNull?.category ?? RecoveryCategory.good;
+  return insightAsync.value?.category ?? RecoveryCategory.good;
 });
 
 /// Provider for last night's sleep duration (formatted)
 final lastNightSleepProvider = Provider.autoDispose<String>((ref) {
   final insightAsync = ref.watch(recoveryInsightProvider);
-  return insightAsync.valueOrNull?.formattedLastNight ?? '--';
+  return insightAsync.value?.formattedLastNight ?? '--';
 });
 
 /// Provider for weekly average sleep (formatted)
 final weeklyAverageSleepProvider = Provider.autoDispose<String>((ref) {
   final insightAsync = ref.watch(recoveryInsightProvider);
-  return insightAsync.valueOrNull?.formattedWeeklyAverage ?? '--';
+  return insightAsync.value?.formattedWeeklyAverage ?? '--';
 });
 
 /// Provider to check if sleep data is available
 final hasSleepDataProvider = Provider.autoDispose<bool>((ref) {
   final insightAsync = ref.watch(recoveryInsightProvider);
-  return insightAsync.valueOrNull?.hasSleepData ?? false;
+  return insightAsync.value?.hasSleepData ?? false;
 });
 
 /// Provider for good sleep streak days
 final sleepStreakProvider = Provider.autoDispose<int>((ref) {
   final insightAsync = ref.watch(recoveryInsightProvider);
-  return insightAsync.valueOrNull?.streakDays ?? 0;
+  return insightAsync.value?.streakDays ?? 0;
 });

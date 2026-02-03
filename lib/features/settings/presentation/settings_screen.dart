@@ -371,7 +371,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget _buildAdminPremiumToggle(BuildContext context, WidgetRef ref) {
     // FIX: Read from userProfileProvider (stream with data), not notifier (may be loading)
     final profileAsync = ref.watch(userProfileProvider);
-    final profile = profileAsync.valueOrNull;
+    final profile = profileAsync.value;
     final accountTier = profile?.accountTier ?? AccountTier.free;
     final isPremium = accountTier != AccountTier.free;
 
@@ -1248,7 +1248,7 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: context.l10n.settingsDayCutoffHour,
               subtitle: context.l10n.settingsDayCutoffHourDesc(
-                ref.watch(userProfileProvider).valueOrNull?.dayCutoffHour ?? 4,
+                ref.watch(userProfileProvider).value?.dayCutoffHour ?? 4,
               ),
               leading: const SemanticIcon(
                 icon: AppIcons.schedule,
@@ -1977,7 +1977,7 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   void _showDayCutoffDialog(BuildContext context, WidgetRef ref) {
-    final currentProfile = ref.read(userProfileProvider).valueOrNull;
+    final currentProfile = ref.read(userProfileProvider).value;
     int selectedHour = currentProfile?.dayCutoffHour ?? 4;
 
     showDialog(

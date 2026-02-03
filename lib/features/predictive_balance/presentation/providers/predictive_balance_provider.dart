@@ -126,7 +126,7 @@ final thisWeekWorkoutsProvider = FutureProvider.autoDispose<List<Workout>>((
 ///
 /// **Usage**:
 /// ```dart
-/// final prediction = ref.watch(missingWorkoutProvider).valueOrNull;
+/// final prediction = ref.watch(missingWorkoutProvider).value;
 /// if (prediction != null) {
 ///   // Show "Complete ${prediction.displayName} to balance"
 /// }
@@ -229,7 +229,7 @@ final allMissingWorkoutsProvider =
 /// ```dart
 /// // In a neglected muscle card
 /// final wouldResolve = ref.watch(muscleWouldBeResolvedProvider('quadriceps'));
-/// if (wouldResolve.valueOrNull == true) {
+/// if (wouldResolve.value == true) {
 ///   // Show "Complete Leg Day to resolve ✓"
 /// }
 /// ```
@@ -266,7 +266,7 @@ final muscleWouldBeResolvedProvider = FutureProvider.autoDispose
 /// Returns a string like "Push → Pull → Legs (3 workouts/week)"
 /// or null if no pattern detected.
 final patternSummaryProvider = Provider.autoDispose<String?>((ref) {
-  final pattern = ref.watch(weeklyPatternProvider).valueOrNull;
+  final pattern = ref.watch(weeklyPatternProvider).value;
   if (pattern == null || !pattern.isValid) return null;
 
   return pattern.description;

@@ -20,7 +20,7 @@ const double kUpgradeMatchThreshold = 0.60;
 final upgradeMatchesMapProvider =
     Provider.autoDispose<Map<String, MergeCandidate>>((ref) {
       final candidatesAsync = ref.watch(mergeCandidatesProvider);
-      final candidates = candidatesAsync.valueOrNull ?? [];
+      final candidates = candidatesAsync.value ?? [];
 
       // Filtra per soglia 60% e crea mappa per lookup veloce
       final Map<String, MergeCandidate> matchesMap = {};

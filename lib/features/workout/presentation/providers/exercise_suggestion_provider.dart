@@ -252,8 +252,9 @@ class SmartSuggestion {
 }
 
 /// Notifier for exercise suggestions (Riverpod 2.0)
+/* TEMPORARY: Disabled for Riverpod 3.x migration - TODO: Migrate to @riverpod codegen
 class ExerciseSuggestionsNotifier
-    extends FamilyNotifier<List<SmartSuggestion>, String> {
+    extends AutoDisposeFamilyNotifier<List<SmartSuggestion>, String> {
   @override
   List<SmartSuggestion> build(String exerciseId) => [];
 
@@ -676,14 +677,14 @@ class ExerciseSuggestionsNotifier
     }
   }
 }
+*/
 
-/// Provider for exercise suggestions (family indexed by exercise ID) (Riverpod 2.0)
+/// TEMPORARY: Disabled for Riverpod 3.x migration
+/// TODO: Migrate to @riverpod codegen
 final exerciseSuggestionsProvider =
-    NotifierProvider.family<
-      ExerciseSuggestionsNotifier,
-      List<SmartSuggestion>,
-      String
-    >(ExerciseSuggestionsNotifier.new);
+    StateProvider.family.autoDispose<List<SmartSuggestion>, String>(
+  (ref, exerciseId) => <SmartSuggestion>[],
+);
 
 /// Helper provider to determine user level based on contribution count
 final userLevelProvider = Provider<UserLevel>((ref) {

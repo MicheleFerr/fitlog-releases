@@ -42,7 +42,7 @@ class _WeeklyStatsBottomSheetContent extends ConsumerWidget {
 
     // Filter workouts for this week
     final thisWeekWorkouts =
-        workoutsAsync.valueOrNull?.where((w) {
+        workoutsAsync.value?.where((w) {
           final workoutDate = DateTime(
             w.completedAt.year,
             w.completedAt.month,

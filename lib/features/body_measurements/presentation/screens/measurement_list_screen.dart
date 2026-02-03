@@ -764,7 +764,6 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             );
           }
         },
-        ),
       );
     } catch (e) {
       debugPrint('❌ [Export] Unexpected error: $e');

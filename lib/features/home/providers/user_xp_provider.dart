@@ -303,7 +303,7 @@ final totalUserXPProvider = Provider<int>((ref) {
 final userTierProvider = Provider<UserTier>((ref) {
   // Check for persistent debug override in user profile (admin only)
   if (kDebugMode) {
-    final profile = ref.watch(userProfileProvider).valueOrNull;
+    final profile = ref.watch(userProfileProvider).value;
     if (profile?.debugTierOverride != null) {
       return profile!.debugTierOverride!;
     }

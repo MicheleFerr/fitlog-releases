@@ -306,7 +306,7 @@ class ExercisePreferencesRepository implements IExercisePreferencesRepository {
 /// **Dependencies**: firebaseUserProvider (for userId)
 final exercisePreferencesRepositoryProvider =
     Provider.autoDispose<ExercisePreferencesRepository?>((ref) {
-      final user = ref.watch(firebaseUserProvider).valueOrNull;
+      final user = ref.watch(firebaseUserProvider).value;
 
       if (user == null) return null;
 

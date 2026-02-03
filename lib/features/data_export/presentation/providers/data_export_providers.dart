@@ -73,10 +73,14 @@ class DataExportState {
 }
 
 /// Notifier for data export operations
-class DataExportNotifier extends StateNotifier<DataExportState> {
-  DataExportNotifier(this._service) : super(DataExportState.initial());
+class DataExportNotifier extends Notifier<DataExportState> {
+  late final DataExportService _service;
 
-  final DataExportService _service;
+  @override
+  DataExportState build() {
+    _service = ref.watch(dataExportServiceProvider);
+    return DataExportState.initial();
+  }
 
   /// Start data export with given request
   Future<void> startExport(ExportRequest request) async {
@@ -114,10 +118,9 @@ class DataExportNotifier extends StateNotifier<DataExportState> {
 
 /// Provider for data export notifier
 final dataExportProvider =
-    StateNotifierProvider<DataExportNotifier, DataExportState>((ref) {
-      final service = ref.watch(dataExportServiceProvider);
-      return DataExportNotifier(service);
-    });
+    NotifierProvider<DataExportNotifier, DataExportState>(
+      DataExportNotifier.new,
+    );
 
 /// Provider for checking if user can export (must be authenticated)
 final canExportProvider = Provider<bool>((ref) {

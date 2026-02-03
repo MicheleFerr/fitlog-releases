@@ -45,7 +45,7 @@ class WeightSettingsNotifier extends AsyncNotifier<WeightSettings> {
 
   /// Update default increment
   Future<void> updateDefaultIncrement(double value) async {
-    final currentState = state.valueOrNull;
+    final currentState = state.value;
     if (currentState == null) return;
 
     final updated = currentState.copyWith(
@@ -57,7 +57,7 @@ class WeightSettingsNotifier extends AsyncNotifier<WeightSettings> {
 
   /// Update custom increment
   Future<void> updateCustomIncrement(double value) async {
-    final currentState = state.valueOrNull;
+    final currentState = state.value;
     if (currentState == null) return;
 
     final updated = currentState.copyWith(
@@ -69,7 +69,7 @@ class WeightSettingsNotifier extends AsyncNotifier<WeightSettings> {
 
   /// Toggle use custom increment
   Future<void> toggleUseCustom() async {
-    final currentState = state.valueOrNull;
+    final currentState = state.value;
     if (currentState == null) return;
 
     final updated = currentState.copyWith(
@@ -81,7 +81,7 @@ class WeightSettingsNotifier extends AsyncNotifier<WeightSettings> {
 
   /// Update available plates
   Future<void> updateAvailablePlates(List<PlateOption> plates) async {
-    final currentState = state.valueOrNull;
+    final currentState = state.value;
     if (currentState == null) return;
 
     final updated = currentState.copyWith(

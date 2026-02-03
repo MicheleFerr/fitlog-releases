@@ -190,7 +190,7 @@ final personalCalibrationProvider =
     FutureProvider.autoDispose<PersonalCalibration>((ref) async {
       // Get current user ID
       final userAsync = ref.watch(firebaseUserProvider);
-      final userId = userAsync.valueOrNull?.uid ?? 'anonymous';
+      final userId = userAsync.value?.uid ?? 'anonymous';
 
       // Get user questionnaire if available
       final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
@@ -262,7 +262,7 @@ final exerciseDefinitionMapProvider =
 final muscleRecoveryHistoryProvider =
     FutureProvider.autoDispose<Map<String, MuscleRecoveryHistory>>((ref) async {
       final stressState = ref.watch(stressIndexNotifierProvider);
-      final history = stressState.valueOrNull?.history ?? [];
+      final history = stressState.value?.history ?? [];
 
       final muscleHistory = <String, MuscleRecoveryHistory>{};
 
@@ -324,7 +324,7 @@ final templateSuggestionProvider =
         // Get current stress level
         final stressState = ref.watch(stressIndexNotifierProvider);
         final currentStress =
-            stressState.valueOrNull?.latestResult?.displayScore ?? 0;
+            stressState.value?.latestResult?.displayScore ?? 0;
 
         // Get HealthKit data for today
         final healthData = await ref.watch(healthDataSnapshotProvider.future);
@@ -373,7 +373,7 @@ final bestTemplateProvider = Provider.autoDispose<TemplateStressAnalysis?>((
 ) {
   // 🔧 PERF FIX: Use .select() to only rebuild when analyses change
   final analyses = ref.watch(
-    templateSuggestionProvider.select((async) => async.valueOrNull),
+    templateSuggestionProvider.select((async) => async.value),
   );
 
   if (analyses == null || analyses.isEmpty) return null;
@@ -387,7 +387,7 @@ final optimalTemplatesProvider =
     Provider.autoDispose<List<TemplateStressAnalysis>>((ref) {
       // 🔧 PERF FIX: Use .select() to only rebuild when analyses change
       final analyses = ref.watch(
-        templateSuggestionProvider.select((async) => async.valueOrNull ?? []),
+        templateSuggestionProvider.select((async) => async.value ?? []),
       );
 
       return analyses
@@ -400,7 +400,7 @@ final templatesToAvoidProvider =
     Provider.autoDispose<List<TemplateStressAnalysis>>((ref) {
       // 🔧 PERF FIX: Use .select() to only rebuild when analyses change
       final analyses = ref.watch(
-        templateSuggestionProvider.select((async) => async.valueOrNull ?? []),
+        templateSuggestionProvider.select((async) => async.value ?? []),
       );
 
       return analyses
@@ -412,7 +412,7 @@ final templatesToAvoidProvider =
 final hasTemplateSuggestionDataProvider = Provider.autoDispose<bool>((ref) {
   // 🔧 PERF FIX: Use .select() to only rebuild when analyses change
   final analyses = ref.watch(
-    templateSuggestionProvider.select((async) => async.valueOrNull),
+    templateSuggestionProvider.select((async) => async.value),
   );
   return analyses != null && analyses.isNotEmpty;
 });
@@ -423,7 +423,7 @@ final calibrationQualityProvider = Provider.autoDispose<CalibrationQuality>((
 ) {
   // 🔧 PERF FIX: Use .select() to only rebuild when calibration changes
   final calibration = ref.watch(
-    personalCalibrationProvider.select((async) => async.valueOrNull),
+    personalCalibrationProvider.select((async) => async.value),
   );
   return calibration?.quality ?? CalibrationQuality.poor;
 });
@@ -459,7 +459,7 @@ final stressInsightProvider = FutureProvider.autoDispose<StressInsight>((
     final sleepAwareData = await sleepAwareDataFuture;
 
     // Get stress history for FFM calculation
-    final history = stressState.valueOrNull?.history ?? [];
+    final history = stressState.value?.history ?? [];
 
     // 🔧 FIX: Use SLEEP-AWARE FFM-based calculation
     // Combines training fatigue + sleep quality for complete recovery picture
@@ -564,7 +564,7 @@ final recoveryRecommendationProvider =
     Provider.autoDispose<RecoveryRecommendation>((ref) {
       // 🔧 PERF FIX: Use .select() to only rebuild when insight changes
       final insight = ref.watch(
-        stressInsightProvider.select((async) => async.valueOrNull),
+        stressInsightProvider.select((async) => async.value),
       );
       return insight?.recommendation ?? RecoveryRecommendation.readyHard;
     });
@@ -573,7 +573,7 @@ final recoveryRecommendationProvider =
 final predictedStressTomorrowProvider = Provider.autoDispose<int>((ref) {
   // 🔧 PERF FIX: Use .select() to only rebuild when insight changes
   final insight = ref.watch(
-    stressInsightProvider.select((async) => async.valueOrNull),
+    stressInsightProvider.select((async) => async.value),
   );
   return insight?.displayPredicted ?? 0;
 });
@@ -582,7 +582,7 @@ final predictedStressTomorrowProvider = Provider.autoDispose<int>((ref) {
 final stressRationaleProvider = Provider.autoDispose<String>((ref) {
   // 🔧 PERF FIX: Use .select() to only rebuild when insight changes
   final insight = ref.watch(
-    stressInsightProvider.select((async) => async.valueOrNull),
+    stressInsightProvider.select((async) => async.value),
   );
   return insight?.rationale ?? '';
 });
@@ -591,7 +591,7 @@ final stressRationaleProvider = Provider.autoDispose<String>((ref) {
 final canTrainTomorrowProvider = Provider.autoDispose<bool>((ref) {
   // 🔧 PERF FIX: Use .select() to only rebuild when insight changes
   final insight = ref.watch(
-    stressInsightProvider.select((async) => async.valueOrNull),
+    stressInsightProvider.select((async) => async.value),
   );
   return insight?.canTrainTomorrow ?? true;
 });

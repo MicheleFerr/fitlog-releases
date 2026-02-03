@@ -526,7 +526,7 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
   /// Check if user can sync (premium or admin)
   bool get canSync {
     final profileAsync = ref.read(userProfileProvider);
-    final profile = profileAsync.valueOrNull;
+    final profile = profileAsync.value;
     if (profile == null) return false;
 
     // ========================================

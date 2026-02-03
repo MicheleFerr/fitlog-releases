@@ -28,7 +28,7 @@ class ConversationsListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final conversationsAsync = ref.watch(conversationsProvider);
-    final currentUser = ref.watch(currentUserProvider).valueOrNull;
+    final currentUser = ref.watch(currentUserProvider).value;
     final currentUserId = currentUser?.uid ?? '';
 
     return Scaffold(

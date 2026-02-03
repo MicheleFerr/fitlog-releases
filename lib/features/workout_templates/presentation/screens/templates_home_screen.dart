@@ -298,7 +298,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                                     final defaultCount = ref.watch(
                                       defaultTemplatesProvider.select(
                                         (state) =>
-                                            state.valueOrNull?.length ?? 30,
+                                            state.value?.length ?? 30,
                                       ),
                                     );
                                     return _buildAnimatedMetricCard(
@@ -494,7 +494,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   ) {
     // 🚀 OPTIMIZATION: Batch load all template stats in one pass
     final allStatsAsync = ref.watch(allTemplateStatsProvider);
-    final allStats = allStatsAsync.valueOrNull ?? {};
+    final allStats = allStatsAsync.value ?? {};
 
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
@@ -1266,8 +1266,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       );
     }
 
-    final customTemplates = customAsync.valueOrNull ?? [];
-    final predefinedTemplates = predefinedAsync.valueOrNull ?? [];
+    final customTemplates = customAsync.value ?? [];
+    final predefinedTemplates = predefinedAsync.value ?? [];
 
     // If no templates at all, show nothing
     if (customTemplates.isEmpty && predefinedTemplates.isEmpty) {
@@ -1600,7 +1600,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     // ═══════════════════════════════════════════════════════════════════════
     final entitlements = ref.read(tierEntitlementsProvider);
     final existingTemplates =
-        ref.read(customWorkoutTemplatesProvider).valueOrNull ?? [];
+        ref.read(customWorkoutTemplatesProvider).value ?? [];
     final currentCount = existingTemplates.length;
 
     if (!entitlements.canSaveTemplate(currentCount)) {
@@ -1840,7 +1840,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     // Check quota
     final entitlements = ref.read(tierEntitlementsProvider);
     final existing =
-        ref.read(customSupersetTemplatesProvider).valueOrNull ?? [];
+        ref.read(customSupersetTemplatesProvider).value ?? [];
     if (existing.length >= entitlements.maxCustomSupersets) {
       if (context.mounted) {
         SnackBarService.showWarning(context, l10n.quotaExceeded);
@@ -1923,7 +1923,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
     // Check quota
     final entitlements = ref.read(tierEntitlementsProvider);
-    final existing = ref.read(customDropsetTemplatesProvider).valueOrNull ?? [];
+    final existing = ref.read(customDropsetTemplatesProvider).value ?? [];
     if (existing.length >= entitlements.maxCustomDropsets) {
       if (context.mounted) {
         SnackBarService.showWarning(context, l10n.quotaExceeded);
@@ -2007,7 +2007,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     // Check quota
     final entitlements = ref.read(tierEntitlementsProvider);
     final existing =
-        ref.read(customRestPauseTemplatesProvider).valueOrNull ?? [];
+        ref.read(customRestPauseTemplatesProvider).value ?? [];
     if (existing.length >= entitlements.maxCustomRestPause) {
       if (context.mounted) {
         SnackBarService.showWarning(context, l10n.quotaExceeded);
@@ -2100,10 +2100,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     )
                     .toList(),
               ),
-              onViewAll: (customExercisesAsync.valueOrNull?.length ?? 0) > 3
+              onViewAll: (customExercisesAsync.value?.length ?? 0) > 3
                   ? () => _showAllCustomExercises(context)
                   : null,
-              count: customExercisesAsync.valueOrNull?.length ?? 0,
+              count: customExercisesAsync.value?.length ?? 0,
             ),
           ),
 
@@ -2129,10 +2129,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     )
                     .toList(),
               ),
-              onViewAll: (supersetTemplatesAsync.valueOrNull?.length ?? 0) > 3
+              onViewAll: (supersetTemplatesAsync.value?.length ?? 0) > 3
                   ? () => _showAllSupersetTemplates(context)
                   : null,
-              count: supersetTemplatesAsync.valueOrNull?.length ?? 0,
+              count: supersetTemplatesAsync.value?.length ?? 0,
             ),
           ),
 
@@ -2158,10 +2158,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     )
                     .toList(),
               ),
-              onViewAll: (dropsetTemplatesAsync.valueOrNull?.length ?? 0) > 3
+              onViewAll: (dropsetTemplatesAsync.value?.length ?? 0) > 3
                   ? () => _showAllDropsetTemplates(context)
                   : null,
-              count: dropsetTemplatesAsync.valueOrNull?.length ?? 0,
+              count: dropsetTemplatesAsync.value?.length ?? 0,
             ),
           ),
 
@@ -2187,10 +2187,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     )
                     .toList(),
               ),
-              onViewAll: (restPauseTemplatesAsync.valueOrNull?.length ?? 0) > 3
+              onViewAll: (restPauseTemplatesAsync.value?.length ?? 0) > 3
                   ? () => _showAllRestPauseTemplates(context)
                   : null,
-              count: restPauseTemplatesAsync.valueOrNull?.length ?? 0,
+              count: restPauseTemplatesAsync.value?.length ?? 0,
             ),
           ),
 
@@ -2560,7 +2560,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   void _createNewExercise(BuildContext context) {
     final entitlements = ref.read(tierEntitlementsProvider);
     final exercisesAsync = ref.read(allCustomExercisesProvider);
-    final exerciseCount = exercisesAsync.valueOrNull?.length ?? 0;
+    final exerciseCount = exercisesAsync.value?.length ?? 0;
     final l10n = AppLocalizations.of(context);
 
     if (!entitlements.canCreateCustomSingleExercise(exerciseCount)) {
@@ -3108,7 +3108,7 @@ class _WorkoutTemplateCard extends ConsumerWidget {
       stats = preloadedStats;
     } else {
       final statsAsync = ref.watch(templateStatsProvider(template.id));
-      stats = statsAsync.valueOrNull;
+      stats = statsAsync.value;
     }
 
     return GestureDetector(

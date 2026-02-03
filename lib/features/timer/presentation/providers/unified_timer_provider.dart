@@ -310,7 +310,8 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
                 usageType: AndroidUsageType.assistanceSonification,
             ),
           ),
-        );
+        ),
+      );
         _audioPlayer = AudioPlayer();
         await _audioPlayer!.setPlayerMode(PlayerMode.lowLatency);
       }

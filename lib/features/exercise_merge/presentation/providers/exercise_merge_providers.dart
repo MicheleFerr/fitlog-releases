@@ -48,7 +48,7 @@ final mergeCandidatesProvider =
 
       // Get exercise history
       final historyAsync = ref.watch(exerciseHistoryStreamProvider(userId));
-      final exerciseHistories = historyAsync.valueOrNull ?? [];
+      final exerciseHistories = historyAsync.value ?? [];
 
       if (exerciseHistories.isEmpty) {
         return [];
@@ -56,7 +56,7 @@ final mergeCandidatesProvider =
 
       // Get database exercises
       final databaseExercisesAsync = ref.watch(allExercisesProvider);
-      final databaseExercises = databaseExercisesAsync.valueOrNull ?? [];
+      final databaseExercises = databaseExercisesAsync.value ?? [];
 
       if (databaseExercises.isEmpty) {
         return [];
@@ -72,14 +72,14 @@ final mergeCandidatesProvider =
 /// Provider per conteggio candidati (per widget home)
 final mergeCandidatesCountProvider = Provider.autoDispose<int>((ref) {
   final candidatesAsync = ref.watch(mergeCandidatesProvider);
-  return candidatesAsync.valueOrNull?.length ?? 0;
+  return candidatesAsync.value?.length ?? 0;
 });
 
 /// Provider per solo candidati high quality (>75% match)
 final highQualityMergeCandidatesProvider =
     Provider.autoDispose<List<MergeCandidate>>((ref) {
       final candidatesAsync = ref.watch(mergeCandidatesProvider);
-      final candidates = candidatesAsync.valueOrNull ?? [];
+      final candidates = candidatesAsync.value ?? [];
       return ExerciseMergeService.filterHighQualityCandidates(candidates);
     });
 
@@ -102,11 +102,11 @@ final mergePreviewProvider = FutureProvider.autoDispose
 
       // Get exercise histories
       final historyAsync = ref.watch(exerciseHistoryStreamProvider(userId));
-      final exerciseHistories = historyAsync.valueOrNull ?? [];
+      final exerciseHistories = historyAsync.value ?? [];
 
       // Get database exercises
       final databaseExercisesAsync = ref.watch(allExercisesProvider);
-      final databaseExercises = databaseExercisesAsync.valueOrNull ?? [];
+      final databaseExercises = databaseExercisesAsync.value ?? [];
 
       // Find target exercise
       final targetExercise = databaseExercises.firstWhere(
@@ -116,7 +116,7 @@ final mergePreviewProvider = FutureProvider.autoDispose
 
       // Get templates
       final templatesAsync = ref.watch(allWorkoutTemplatesProvider);
-      final templates = templatesAsync.valueOrNull ?? [];
+      final templates = templatesAsync.value ?? [];
 
       return ExerciseMergeService.generateMergePreview(
         sourceExerciseName: params.sourceExerciseName,
@@ -169,10 +169,11 @@ class MergeProgress {
 }
 
 /// Notifier per gestire l'esecuzione del merge con progresso
-class MergeExecutionNotifier extends StateNotifier<MergeProgress> {
-  MergeExecutionNotifier(this._ref) : super(const MergeProgress());
-
-  final Ref _ref;
+class MergeExecutionNotifier extends Notifier<MergeProgress> {
+  @override
+  MergeProgress build() {
+    return const MergeProgress();
+  }
 
   /// Esegue il merge con tracking del progresso
   Future<bool> executeMerge({
@@ -188,7 +189,7 @@ class MergeExecutionNotifier extends StateNotifier<MergeProgress> {
     );
 
     try {
-      final userId = _ref.read(currentUserIdProvider);
+      final userId = ref.read(currentUserIdProvider);
       if (userId == null) {
         state = const MergeProgress(
           state: MergeState.error,
@@ -197,7 +198,7 @@ class MergeExecutionNotifier extends StateNotifier<MergeProgress> {
         return false;
       }
 
-      final repository = _ref.read(exerciseMergeRepositoryProvider);
+      final repository = ref.read(exerciseMergeRepositoryProvider);
 
       // Callback per aggiornare il progresso
       void onProgress(double progress, String step) {
@@ -229,7 +230,7 @@ class MergeExecutionNotifier extends StateNotifier<MergeProgress> {
           );
 
           // Invalida cache per refresh dei dati
-          _ref.invalidate(exerciseHistoryStreamProvider(userId));
+          ref.invalidate(exerciseHistoryStreamProvider(userId));
 
           // Piccola pausa per permettere la propagazione
           await Future<void>.delayed(const Duration(milliseconds: 300));
@@ -240,7 +241,7 @@ class MergeExecutionNotifier extends StateNotifier<MergeProgress> {
           );
 
           // Invalida candidati merge
-          _ref.invalidate(mergeCandidatesProvider);
+          ref.invalidate(mergeCandidatesProvider);
 
           // Attendi che i nuovi dati siano effettivamente disponibili
           // IMPORTANTE: Dobbiamo aspettare che LO STREAM abbia emesso,
@@ -260,10 +261,10 @@ class MergeExecutionNotifier extends StateNotifier<MergeProgress> {
             // Controlla che ENTRAMBI siano pronti:
             // 1. Lo stream deve aver emesso dati (non loading)
             // 2. I candidates devono avere un valore
-            final historyState = _ref.read(
+            final historyState = ref.read(
               exerciseHistoryStreamProvider(userId),
             );
-            final candidatesState = _ref.read(mergeCandidatesProvider);
+            final candidatesState = ref.read(mergeCandidatesProvider);
 
             // Stream pronto E candidates pronto
             final streamReady = historyState.hasValue || historyState.hasError;
@@ -299,8 +300,6 @@ class MergeExecutionNotifier extends StateNotifier<MergeProgress> {
 
 /// Provider per notifier esecuzione merge
 final mergeExecutionProvider =
-    StateNotifierProvider.autoDispose<MergeExecutionNotifier, MergeProgress>((
-      ref,
-    ) {
-      return MergeExecutionNotifier(ref);
-    });
+    NotifierProvider.autoDispose<MergeExecutionNotifier, MergeProgress>(
+  MergeExecutionNotifier.new,
+);

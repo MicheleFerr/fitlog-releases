@@ -123,7 +123,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     final prefill = ref.read(
       exerciseWeightPrefillProvider(widget.exercise.name),
     );
-    final prefillValue = prefill.valueOrNull;
+    final prefillValue = prefill.value;
     if (prefillValue == null) return false;
     return (set.weight! - prefillValue.weight).abs() < 0.01;
   }
@@ -933,7 +933,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     // Suggested weight from prefill provider
     final prefill = ref
         .read(exerciseWeightPrefillProvider(widget.exercise.name))
-        .valueOrNull;
+        .value;
     final suggestedSource = prefill != null
         ? _prefillSourceLabel(prefill.source)
         : null;

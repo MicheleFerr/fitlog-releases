@@ -739,7 +739,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     // Watch ALL custom exercises (including expired) and merge with catalog
     // UX FIX: Show all custom exercises so users can see/renew expired ones
     final customExercisesAsync = ref.watch(allCustomExercisesProvider);
-    final customExercises = customExercisesAsync.valueOrNull ?? [];
+    final customExercises = customExercisesAsync.value ?? [];
 
     // Check if user has unlimited exercises (Premium/Platinum)
     final entitlements = ref.watch(tierEntitlementsProvider);

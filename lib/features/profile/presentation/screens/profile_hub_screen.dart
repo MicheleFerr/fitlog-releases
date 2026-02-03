@@ -119,7 +119,7 @@ class _MetricRingsSection extends ConsumerWidget {
     final streakWeeksAsync = ref.watch(streakWeeksProgressProvider);
 
     final weeklyVolume =
-        weeklyVolumeAsync.valueOrNull ??
+        weeklyVolumeAsync.value ??
         const WeeklyVolumeProgress(
           currentKg: 0,
           goalKg: null,
@@ -128,7 +128,7 @@ class _MetricRingsSection extends ConsumerWidget {
         );
 
     final streakWeeks =
-        streakWeeksAsync.valueOrNull ??
+        streakWeeksAsync.value ??
         const StreakWeeksProgress(
           current: 0,
           goal: 4,

@@ -724,37 +724,35 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             child: GestureDetector(
               onTap: () => showTutInfoBottomSheet(context, exercise.tut!),
               child: Container(
-              ),
-            ),
-          ),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: context.colors.secondary.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: context.colors.secondary.withValues(alpha: 0.4),
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.timer,
-                    semanticLabel: 'TUT',
-                    size: 12, // Compact size for superset row
-                    color: context.colors.secondary,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: context.colors.secondary.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: context.colors.secondary.withValues(alpha: 0.4),
+                    width: 1,
                   ),
-                  const SizedBox(width: 3),
-                  Text(
-                    exercise.tut!,
-                    style: context.textTheme.labelSmall?.copyWith(
-                      fontSize: 10, // Slightly smaller for superset row
-                      fontWeight: FontWeight.w600,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SemanticIcon(
+                      icon: AppIcons.timer,
+                      semanticLabel: 'TUT',
+                      size: 12, // Compact size for superset row
                       color: context.colors.secondary,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 3),
+                    Text(
+                      exercise.tut!,
+                      style: context.textTheme.labelSmall?.copyWith(
+                        fontSize: 10, // Slightly smaller for superset row
+                        fontWeight: FontWeight.w600,
+                        color: context.colors.secondary,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

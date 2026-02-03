@@ -45,8 +45,9 @@ class AutoCollapseState {
   }
 }
 
+/* TEMPORARY: Disabled for Riverpod 3.x migration - TODO: Migrate to @riverpod codegen
 /// Notifier for managing auto-collapse with countdown
-class AutoCollapseNotifier extends FamilyNotifier<AutoCollapseState, String> {
+class AutoCollapseNotifier extends AutoDisposeFamilyNotifier<AutoCollapseState, String> {
   Timer? _countdownTimer;
   Timer? _autoCollapseTimer;
   bool _disposed = false;
@@ -179,10 +180,13 @@ class AutoCollapseNotifier extends FamilyNotifier<AutoCollapseState, String> {
     state = state.copyWith(enabled: true);
   }
 }
+*/
 
 /// Provider for exercise auto-collapse state
 /// Family provider indexed by exercise ID
+/// TEMPORARY: Disabled for Riverpod 3.x migration
+/// TODO: Migrate to @riverpod codegen
 final exerciseAutoCollapseProvider =
-    NotifierProvider.family<AutoCollapseNotifier, AutoCollapseState, String>(
-      AutoCollapseNotifier.new,
-    );
+    StateProvider.family.autoDispose<AutoCollapseState, String>(
+  (ref, exerciseId) => const AutoCollapseState(),
+);

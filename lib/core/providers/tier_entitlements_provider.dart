@@ -29,7 +29,7 @@ final tierEntitlementsProvider = Provider<TierEntitlements>((ref) {
   final userTier = ref.watch(userTierProvider);
   final accountTier = ref.watch(
     userProfileProvider.select((profile) =>
-      profile.valueOrNull?.accountTier ?? AccountTier.free
+      profile.value?.accountTier ?? AccountTier.free
     ),
   );
   return TierEntitlements.consolidated(

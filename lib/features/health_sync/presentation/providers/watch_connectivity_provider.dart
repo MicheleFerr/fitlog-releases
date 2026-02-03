@@ -129,11 +129,9 @@ class WatchConnectivityData {
 
 /// Provider for Watch connectivity state
 final watchConnectivityProvider =
-    StateNotifierProvider<WatchConnectivityNotifier, WatchConnectivityData>((
-      ref,
-    ) {
-      return WatchConnectivityNotifier();
-    });
+    NotifierProvider<WatchConnectivityNotifier, WatchConnectivityData>(
+      WatchConnectivityNotifier.new,
+    );
 
 /// Callback for when Watch completes a set
 /// - effort: Optional effort value (RPE 6-10 or RIR 0-4)
@@ -271,9 +269,11 @@ typedef OnRestPauseCompletedFromWatch =
     });
 
 /// Notifier that manages Apple Watch connectivity
-class WatchConnectivityNotifier extends StateNotifier<WatchConnectivityData> {
-  WatchConnectivityNotifier() : super(const WatchConnectivityData.checking()) {
+class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
+  @override
+  WatchConnectivityData build() {
     _initialize();
+    return const WatchConnectivityData.checking();
   }
 
   // Method channel for iOS Watch Connectivity

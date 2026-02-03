@@ -113,7 +113,7 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
     });
 
     // Developer FAB visible only for ferrara-michele@hotmail.it
-    final currentUser = ref.watch(currentUserProvider).valueOrNull;
+    final currentUser = ref.watch(currentUserProvider).value;
     final isDeveloper = currentUser?.email == 'ferrara-michele@hotmail.it';
 
     return Scaffold(

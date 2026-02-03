@@ -340,7 +340,7 @@ final cachedMuscleBalanceProvider =
     ) {
       // 🔧 PERF FIX: Watch only the value, not loading/error state
       final exerciseMuscleMap = ref.watch(
-        exerciseMuscleMapProvider.select((async) => async.valueOrNull),
+        exerciseMuscleMapProvider.select((async) => async.value),
       );
 
       // Calculate balance metrics (expensive operation - now cached)

@@ -81,7 +81,7 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
             // During merge, show last known data (or empty state)
             _buildMainContent(
               context,
-              candidatesAsync.valueOrNull ?? _lastCandidates,
+              candidatesAsync.value ?? _lastCandidates,
             )
           else
             candidatesAsync.when(

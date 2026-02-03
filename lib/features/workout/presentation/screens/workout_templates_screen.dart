@@ -509,7 +509,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
   Widget _buildSupersetSection({
     required String title,
     required IconData icon,
-    required AutoDisposeFutureProvider<List<SupersetTemplate>> provider,
+    required FutureProvider<List<SupersetTemplate>> provider,
   }) {
     final templatesAsync = ref.watch(provider);
 
@@ -613,7 +613,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
     // 🚀 OPTIMIZATION: Batch load all template stats in one pass
     // Instead of N provider calls (one per card), we make 1 call
     final allStatsAsync = ref.watch(allTemplateStatsProvider);
-    final allStats = allStatsAsync.valueOrNull ?? {};
+    final allStats = allStatsAsync.value ?? {};
 
     // Vertical ListView with fixed 200px item height for performance
     return ListView.builder(

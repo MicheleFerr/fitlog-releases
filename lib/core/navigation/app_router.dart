@@ -710,7 +710,7 @@ class _MeasurementListWrapperState
 
   Future<void> _checkConsent() async {
     final userAsync = ref.read(firebaseUserProvider);
-    final user = userAsync.valueOrNull;
+    final user = userAsync.value;
     if (user == null) {
       setState(() {
         _isCheckingConsent = false;

@@ -55,7 +55,7 @@ class SwipeableTemplateCard extends ConsumerWidget {
         ? ref.watch(templateNeedsRefreshProvider(template.id))
         : const AsyncValue<bool>.data(false);
 
-    final needsRefresh = needsRefreshAsync.valueOrNull ?? false;
+    final needsRefresh = needsRefreshAsync.value ?? false;
 
     // Calculate extent ratio based on number of left actions
     final hasSchedule = onSchedule != null;

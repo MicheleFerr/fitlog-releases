@@ -213,7 +213,7 @@ class _ExerciseMappingWidgetState extends ConsumerState<ExerciseMappingWidget> {
     BuildContext context,
     UnmappedExercise unmapped,
   ) async {
-    final exercises = ref.read(allExercisesProvider).valueOrNull ?? [];
+    final exercises = ref.read(allExercisesProvider).value ?? [];
 
     final selectedId = await showModalBottomSheet<String>(
       context: context,

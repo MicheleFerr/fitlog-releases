@@ -110,13 +110,16 @@ class ActivityRingsData {
 
 /// Provider for Activity Rings data
 final activityRingsProvider =
-    StateNotifierProvider<ActivityRingsNotifier, ActivityRingsData>((ref) {
-      return ActivityRingsNotifier();
-    });
+    NotifierProvider<ActivityRingsNotifier, ActivityRingsData>(
+      ActivityRingsNotifier.new,
+    );
 
 /// Notifier that manages Activity Rings state
-class ActivityRingsNotifier extends StateNotifier<ActivityRingsData> {
-  ActivityRingsNotifier() : super(const ActivityRingsData.empty());
+class ActivityRingsNotifier extends Notifier<ActivityRingsData> {
+  @override
+  ActivityRingsData build() {
+    return const ActivityRingsData.empty();
+  }
 
   // Native method channel for iOS (HKActivitySummary with REAL goals)
   static const _iosChannel = MethodChannel('com.gymbro/healthkit_activity');

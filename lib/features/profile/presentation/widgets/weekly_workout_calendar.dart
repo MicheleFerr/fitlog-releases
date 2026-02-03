@@ -35,7 +35,7 @@ class WeeklyWorkoutCalendar extends ConsumerWidget {
 
     // Get workout dates from history
     final workoutDates =
-        workoutsAsync.valueOrNull
+        workoutsAsync.value
             ?.map(
               (w) => DateTime(
                 w.completedAt.year,

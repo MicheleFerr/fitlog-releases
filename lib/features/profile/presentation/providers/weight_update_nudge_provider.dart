@@ -159,7 +159,7 @@ class WeightUpdateNudgeNotifier extends AsyncNotifier<WeightNudgeState> {
 
     await prefs.setInt(_keyLastDismissed, now.millisecondsSinceEpoch);
 
-    final currentState = state.valueOrNull ?? WeightNudgeState.hidden;
+    final currentState = state.value ?? WeightNudgeState.hidden;
     state = AsyncValue.data(
       currentState.copyWith(shouldShowNudge: false, isDismissed: true),
     );
@@ -175,11 +175,11 @@ class WeightUpdateNudgeNotifier extends AsyncNotifier<WeightNudgeState> {
 /// Quick access provider for whether to show the nudge
 final shouldShowWeightNudgeProvider = Provider<bool>((ref) {
   final nudgeState = ref.watch(weightUpdateNudgeProvider);
-  return nudgeState.valueOrNull?.shouldShowNudge ?? false;
+  return nudgeState.value?.shouldShowNudge ?? false;
 });
 
 /// Provider for days since last weight update
 final daysSinceWeightUpdateProvider = Provider<int>((ref) {
   final nudgeState = ref.watch(weightUpdateNudgeProvider);
-  return nudgeState.valueOrNull?.daysSinceLastUpdate ?? 0;
+  return nudgeState.value?.daysSinceLastUpdate ?? 0;
 });

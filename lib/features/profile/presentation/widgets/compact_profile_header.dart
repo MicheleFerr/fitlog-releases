@@ -59,10 +59,10 @@ class CompactProfileHeader extends ConsumerWidget {
     final tierProgress = currentTier.progressToNext(totalXP);
 
     // Get streak
-    final streak = streakAsync.valueOrNull?.currentStreak ?? 0;
+    final streak = streakAsync.value?.currentStreak ?? 0;
 
     // Get total workouts from progress provider
-    final totalWorkouts = totalWorkoutsAsync.valueOrNull ?? 0;
+    final totalWorkouts = totalWorkoutsAsync.value ?? 0;
 
     return SafeArea(
       bottom: false,

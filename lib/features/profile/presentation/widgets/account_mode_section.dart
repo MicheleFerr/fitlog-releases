@@ -33,7 +33,7 @@ class AccountModeSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentMode = ref.watch(accountModeProvider);
-    final myCoach = ref.watch(myCoachProvider).valueOrNull;
+    final myCoach = ref.watch(myCoachProvider).value;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),

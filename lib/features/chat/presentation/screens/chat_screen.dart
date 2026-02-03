@@ -67,7 +67,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final conversationAsync = ref.watch(
       conversationProvider(widget.conversationId),
     );
-    final currentUser = ref.watch(currentUserProvider).valueOrNull;
+    final currentUser = ref.watch(currentUserProvider).value;
     final currentUserId = currentUser?.uid ?? '';
 
     return Scaffold(

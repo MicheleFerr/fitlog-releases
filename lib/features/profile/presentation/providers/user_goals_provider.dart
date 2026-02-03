@@ -147,7 +147,7 @@ class UserGoalsNotifier extends AsyncNotifier<UserGoals> {
 
   /// Update workouts per week goal
   Future<void> setWorkoutsPerWeek(int value) async {
-    final currentGoals = state.valueOrNull ?? UserGoals.empty;
+    final currentGoals = state.value ?? UserGoals.empty;
     final newGoals = currentGoals.copyWith(workoutsPerWeek: value.clamp(1, 7));
 
     state = const AsyncValue.loading();
@@ -159,7 +159,7 @@ class UserGoalsNotifier extends AsyncNotifier<UserGoals> {
 
   /// Update weekly volume target
   Future<void> setWeeklyVolumeTarget(double? value) async {
-    final currentGoals = state.valueOrNull ?? UserGoals.empty;
+    final currentGoals = state.value ?? UserGoals.empty;
     final newGoals = value == null
         ? currentGoals.copyWith(clearVolumeTarget: true)
         : currentGoals.copyWith(weeklyVolumeTargetKg: value);
@@ -173,7 +173,7 @@ class UserGoalsNotifier extends AsyncNotifier<UserGoals> {
 
   /// Update streak weeks goal
   Future<void> setStreakWeeksGoal(int value) async {
-    final currentGoals = state.valueOrNull ?? UserGoals.empty;
+    final currentGoals = state.value ?? UserGoals.empty;
     final newGoals = currentGoals.copyWith(streakWeeksGoal: value.clamp(1, 52));
 
     state = const AsyncValue.loading();
@@ -201,8 +201,8 @@ final weeklyWorkoutProgressProvider =
       final goalsAsync = ref.watch(userGoalsProvider);
       final workoutsAsync = ref.watch(workoutHistoryProvider);
 
-      final goals = goalsAsync.valueOrNull ?? UserGoals.empty;
-      final workouts = workoutsAsync.valueOrNull ?? [];
+      final goals = goalsAsync.value ?? UserGoals.empty;
+      final workouts = workoutsAsync.value ?? [];
 
       // Calculate current week boundaries (Monday to Sunday)
       final now = DateTime.now();
@@ -241,8 +241,8 @@ final weeklyVolumeProgressProvider =
       final goalsAsync = ref.watch(userGoalsProvider);
       final workoutsAsync = ref.watch(workoutHistoryProvider);
 
-      final goals = goalsAsync.valueOrNull ?? UserGoals.empty;
-      final workouts = workoutsAsync.valueOrNull ?? [];
+      final goals = goalsAsync.value ?? UserGoals.empty;
+      final workouts = workoutsAsync.value ?? [];
 
       // Calculate current week boundaries (Monday to Sunday)
       final now = DateTime.now();
@@ -289,8 +289,8 @@ final streakWeeksProgressProvider =
       final goalsAsync = ref.watch(userGoalsProvider);
       final workoutsAsync = ref.watch(workoutHistoryProvider);
 
-      final goals = goalsAsync.valueOrNull ?? UserGoals.empty;
-      final workouts = workoutsAsync.valueOrNull ?? [];
+      final goals = goalsAsync.value ?? UserGoals.empty;
+      final workouts = workoutsAsync.value ?? [];
 
       if (workouts.isEmpty) {
         return StreakWeeksProgress(
@@ -353,7 +353,7 @@ final streakWeeksProgressProvider =
 final workoutsPerWeekGoalProvider = Provider<int>((ref) {
   final workoutsPerWeek = ref.watch(
     userGoalsProvider.select(
-      (asyncValue) => asyncValue.valueOrNull?.workoutsPerWeek,
+      (asyncValue) => asyncValue.value?.workoutsPerWeek,
     ),
   );
   return workoutsPerWeek ?? 2;
@@ -364,7 +364,7 @@ final workoutsPerWeekGoalProvider = Provider<int>((ref) {
 final weeklyVolumeTargetProvider = Provider<double?>((ref) {
   return ref.watch(
     userGoalsProvider.select(
-      (asyncValue) => asyncValue.valueOrNull?.weeklyVolumeTargetKg,
+      (asyncValue) => asyncValue.value?.weeklyVolumeTargetKg,
     ),
   );
 });

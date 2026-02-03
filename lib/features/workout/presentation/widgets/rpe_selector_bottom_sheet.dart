@@ -511,7 +511,8 @@ class _RpeSelectorBottomSheetState
               ),
             ),
           ),
-        );
+        ),
+      );
       }),
     );
   }
@@ -804,6 +805,7 @@ class _RpeSelectorBottomSheetState
                       color: colorScheme.primary,
                     ),
                   ),
+                ),
                 ],
               ),
               const SizedBox(height: 2),
@@ -1386,18 +1388,19 @@ class _RpeSelectorBottomSheetState
                             : null,
                         borderRadius: BorderRadius.circular(8),
                         child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: colorScheme.errorContainer.withValues(
-                            alpha: 0.2,
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: colorScheme.errorContainer.withValues(
+                              alpha: 0.2,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: SemanticIcon(
-                          icon: AppIcons.remove,
-                          semanticLabel: 'Remove',
-                          size: AppIconSize.small,
-                          color: colorScheme.error,
+                          child: SemanticIcon(
+                            icon: AppIcons.remove,
+                            semanticLabel: 'Remove',
+                            size: AppIconSize.small,
+                            color: colorScheme.error,
+                          ),
                         ),
                       ),
                     ),
@@ -1460,6 +1463,7 @@ class _RpeSelectorBottomSheetState
                         ),
                       ),
                     ),
+                  ),
                   ],
                 ),
               ],

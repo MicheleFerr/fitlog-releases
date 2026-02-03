@@ -93,7 +93,7 @@ class _QuickActionsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final unreadCountAsync = ref.watch(totalUnreadCountProvider);
-    final unreadCount = unreadCountAsync.valueOrNull ?? 0;
+    final unreadCount = unreadCountAsync.value ?? 0;
 
     return Column(
       children: [

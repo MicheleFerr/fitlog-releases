@@ -218,7 +218,7 @@ class _ProAnalyticsTabbedScreenState
 
           // Get exercise muscle map for weighted distribution (70% primary, 30% secondary)
           final exerciseMuscleMapAsync = ref.watch(exerciseMuscleMapProvider);
-          final exerciseMuscleMap = exerciseMuscleMapAsync.valueOrNull;
+          final exerciseMuscleMap = exerciseMuscleMapAsync.value;
 
           return TabBarView(
             controller: _tabController,

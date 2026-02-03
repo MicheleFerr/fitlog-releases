@@ -1723,7 +1723,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
           // Get current streak from progress provider
           final streakAsync = ref.read(currentStreakProvider);
-          final streakDays = streakAsync.valueOrNull ?? 0;
+          final streakDays = streakAsync.value ?? 0;
 
           // Award XP through central provider
           final xpAwarded = await ref

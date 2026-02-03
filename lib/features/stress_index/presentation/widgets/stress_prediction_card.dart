@@ -333,7 +333,7 @@ class _StressPredictionContent extends StatelessWidget {
         return Consumer(
           builder: (consumerContext, ref, _) {
             final stressState = ref.watch(stressIndexNotifierProvider);
-            final history = stressState.valueOrNull?.history ?? [];
+            final history = stressState.value?.history ?? [];
             final latestResult = history.isNotEmpty ? history.first : null;
 
             return DraggableScrollableSheet(
