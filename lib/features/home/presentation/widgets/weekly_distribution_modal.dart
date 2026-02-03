@@ -1,4 +1,6 @@
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_border_radius.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -52,11 +54,11 @@ class WeeklyDistributionModal extends ConsumerWidget {
 
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(AppSpacing.sm),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
@@ -105,7 +107,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
 
             // Stats Cards
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Row(
                 children: [
                   Expanded(
@@ -136,12 +138,12 @@ class WeeklyDistributionModal extends ConsumerWidget {
             SizedBox(
               height: 300,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                 child: Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(AppSpacing.md),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surface,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: AppBorderRadius.mdRadius,
                     border: Border.all(
                       color: theme.colorScheme.outline.withValues(alpha: 0.2),
                     ),
@@ -166,7 +168,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
                               touchTooltipData: BarTouchTooltipData(
                                 getTooltipColor: (group) =>
                                     theme.colorScheme.inverseSurface,
-                                tooltipPadding: const EdgeInsets.all(8),
+                                tooltipPadding: const EdgeInsets.all(AppSpacing.xs),
                                 tooltipMargin: 8,
                                 getTooltipItem: (group, groupIndex, rod, rodIndex) {
                                   final day = _getDayName(groupIndex, l10n);
@@ -207,7 +209,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
                                   showTitles: true,
                                   getTitlesWidget: (value, meta) {
                                     return Padding(
-                                      padding: const EdgeInsets.only(top: 8),
+                                      padding: const EdgeInsets.only(top: AppSpacing.xs),
                                       child: Text(
                                         _getDayShort(value.toInt(), l10n),
                                         style: theme.textTheme.labelSmall
@@ -311,12 +313,12 @@ class WeeklyDistributionModal extends ConsumerWidget {
 
             // Info Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: AppBorderRadius.smRadius,
                   border: Border.all(
                     color: theme.colorScheme.primary.withValues(alpha: 0.2),
                   ),
@@ -417,14 +419,14 @@ class _StatCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [color.withValues(alpha: 0.1), color.withValues(alpha: 0.05)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppBorderRadius.smRadius,
         border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Column(

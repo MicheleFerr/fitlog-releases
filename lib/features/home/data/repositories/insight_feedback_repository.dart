@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -65,10 +66,10 @@ class InsightFeedbackRepository with FirebaseErrorMapperMixin {
           );
 
           // Submit to unified repository (fire and forget, don't block)
-          // ignore: unawaited_futures
-          _unifiedRepository
-              .submitFeedback(unifiedFeedback)
-              .then(
+          unawaited(
+            _unifiedRepository
+                .submitFeedback(unifiedFeedback)
+                .then(
                 (result) => result.fold(
                   (failure) {
                     // Log error but don't throw (backward compatibility)
@@ -81,6 +82,7 @@ class InsightFeedbackRepository with FirebaseErrorMapperMixin {
                   (_) {
                     // Success - no action needed
                   },
+                ),
                 ),
               );
         }

@@ -221,6 +221,13 @@ class OnboardingTourManager extends ChangeNotifier {
       // Add a small delay to let scroll animation complete
       await Future.delayed(const Duration(milliseconds: 100));
 
+      // Verify context is still valid after async gaps
+      if (!targetContext.mounted) {
+        _isTransitioning = false;
+        notifyListeners();
+        return;
+      }
+
       // Get the global bounds of the target widget
       _currentSpotlightBounds = targetContext.globalPaintBounds;
 

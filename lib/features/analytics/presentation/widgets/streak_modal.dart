@@ -26,6 +26,7 @@
 /// ```
 library;
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -1025,6 +1026,7 @@ class _StreakModalState extends State<StreakModal> {
       await file.writeAsBytes(byteData.buffer.asUint8List());
 
       // Share the file
+      if (!context.mounted) return;
       await Share.shareXFiles([
         XFile(file.path),
       ], text: context.l10n.shareStreakDescription);
@@ -1062,10 +1064,11 @@ class _StreakModalState extends State<StreakModal> {
           ),
           FilledButton.icon(
             onPressed: () async {
-              HapticFeedback.lightImpact();
+              unawaited(HapticFeedback.lightImpact());
               Navigator.pop(dialogContext);
               // Give time for dialog to close before capturing screenshot
               await Future.delayed(const Duration(milliseconds: 300));
+              if (!context.mounted) return;
               await _shareStreak(context);
             },
             icon: const SemanticIcon(
@@ -1208,9 +1211,10 @@ class _StreakModalState extends State<StreakModal> {
             const SizedBox(height: 16),
             InkWell(
               onTap: () {
-                HapticFeedback.lightImpact();
+                unawaited(HapticFeedback.lightImpact());
                 Navigator.pop(dialogContext);
                 Future.delayed(const Duration(milliseconds: 200), () {
+                  if (!context.mounted) return;
                   _showColorPicker(context);
                 });
               },
@@ -1226,9 +1230,10 @@ class _StreakModalState extends State<StreakModal> {
             const SizedBox(height: 12),
             InkWell(
               onTap: () {
-                HapticFeedback.lightImpact();
+                unawaited(HapticFeedback.lightImpact());
                 Navigator.pop(dialogContext);
                 Future.delayed(const Duration(milliseconds: 200), () {
+                  if (!context.mounted) return;
                   _showDefaultViewSelector(context);
                 });
               },

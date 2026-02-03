@@ -7,6 +7,7 @@
 /// **Feature**: Coach
 library;
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -155,9 +156,11 @@ class AthleteDetailScreen extends ConsumerWidget {
 
       // Navigate to chat
       if (context.mounted) {
-        context.pushNamed(
+        unawaited(
+          context.pushNamed(
           AppRoutes.chatName,
           pathParameters: {'conversationId': conversation.id},
+          ),
         );
       }
     } catch (e) {

@@ -1571,7 +1571,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       return; // Silently ignore if already saving
     }
 
-    HapticFeedback.mediumImpact();
+    unawaited(HapticFeedback.mediumImpact());
     final l10n = AppLocalizations.of(context);
 
     // ═══════════════════════════════════════════════════════════════════════
@@ -1677,7 +1677,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       // ═══════════════════════════════════════════════════════════════════
       // BEST PRACTICE 2025: Success haptic + View action in snackbar
       // ═══════════════════════════════════════════════════════════════════
-      HapticFeedback.heavyImpact(); // Success feedback
+      unawaited(HapticFeedback.heavyImpact()); // Success feedback
 
       if (mounted && context.mounted) {
         SnackBarService.dismiss(context);
@@ -1699,7 +1699,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       // ═══════════════════════════════════════════════════════════════════
       // EDGE CASE 7: Handle specific error types
       // ═══════════════════════════════════════════════════════════════════
-      HapticFeedback.vibrate(); // Error feedback
+      unawaited(HapticFeedback.vibrate()); // Error feedback
 
       if (mounted && context.mounted) {
         SnackBarService.dismiss(context);
@@ -1825,7 +1825,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   ) async {
     if (_isSaving) return;
 
-    HapticFeedback.mediumImpact();
+    unawaited(HapticFeedback.mediumImpact());
     final l10n = AppLocalizations.of(context);
 
     // Check user logged in
@@ -1862,13 +1862,13 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           .read(supersetTemplateNotifierProvider.notifier)
           .saveCustomTemplate(customTemplate);
 
-      HapticFeedback.heavyImpact();
+      unawaited(HapticFeedback.heavyImpact());
 
       if (mounted && context.mounted) {
         SnackBarService.showSuccess(context, l10n.templateAddedToLibrary);
       }
     } catch (e) {
-      HapticFeedback.vibrate();
+      unawaited(HapticFeedback.vibrate());
       if (mounted && context.mounted) {
         SnackBarService.showError(context, l10n.errorSavingTemplate);
       }
@@ -1909,7 +1909,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   ) async {
     if (_isSaving) return;
 
-    HapticFeedback.mediumImpact();
+    unawaited(HapticFeedback.mediumImpact());
     final l10n = AppLocalizations.of(context);
 
     // Check user logged in
@@ -1945,13 +1945,13 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           .read(dropsetTemplateNotifierProvider.notifier)
           .saveCustomTemplate(customTemplate);
 
-      HapticFeedback.heavyImpact();
+      unawaited(HapticFeedback.heavyImpact());
 
       if (mounted && context.mounted) {
         SnackBarService.showSuccess(context, l10n.templateAddedToLibrary);
       }
     } catch (e) {
-      HapticFeedback.vibrate();
+      unawaited(HapticFeedback.vibrate());
       if (mounted && context.mounted) {
         SnackBarService.showError(context, l10n.errorSavingTemplate);
       }
@@ -1992,7 +1992,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   ) async {
     if (_isSaving) return;
 
-    HapticFeedback.mediumImpact();
+    unawaited(HapticFeedback.mediumImpact());
     final l10n = AppLocalizations.of(context);
 
     // Check user logged in
@@ -2029,13 +2029,13 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           .read(restPauseTemplateNotifierProvider.notifier)
           .saveCustomTemplate(customTemplate);
 
-      HapticFeedback.heavyImpact();
+      unawaited(HapticFeedback.heavyImpact());
 
       if (mounted && context.mounted) {
         SnackBarService.showSuccess(context, l10n.templateAddedToLibrary);
       }
     } catch (e) {
-      HapticFeedback.vibrate();
+      unawaited(HapticFeedback.vibrate());
       if (mounted && context.mounted) {
         SnackBarService.showError(context, l10n.errorSavingTemplate);
       }

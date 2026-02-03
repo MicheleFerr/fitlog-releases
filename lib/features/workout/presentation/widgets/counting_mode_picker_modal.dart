@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
@@ -57,7 +58,7 @@ class CountingModePickerModal extends StatefulWidget {
     String? exerciseName,
     bool showSaveAsDefault = true,
   }) async {
-    HapticFeedback.mediumImpact();
+    unawaited(HapticFeedback.mediumImpact());
     return showModalBottomSheet<CountingModePickerResult>(
       context: context,
       isScrollControlled: true,

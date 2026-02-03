@@ -33,13 +33,16 @@ class ExerciseWikiCardCompact extends ConsumerWidget {
         ),
         child: Material(
           color: context.colors.surface.withValues(alpha: 0),
-          child: InkWell(
-            onTap: () {
-              HapticFeedback.lightImpact();
-              context.push('/community');
-            },
-            borderRadius: BorderRadius.circular(AppSpacing.md),
-            child: Padding(
+          child: Semantics(
+            label: context.l10n.exerciseWiki,
+            button: true,
+            child: InkWell(
+              onTap: () {
+                HapticFeedback.lightImpact();
+                context.push('/community');
+              },
+              borderRadius: BorderRadius.circular(AppSpacing.md),
+              child: Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
               child: Row(
                 children: [
@@ -169,6 +172,7 @@ class ExerciseWikiCardCompact extends ConsumerWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }

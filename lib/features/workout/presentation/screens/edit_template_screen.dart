@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -941,6 +942,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                 roundIndex,
                                 newWeight,
                               );
+                              if (!context.mounted) return;
                               Navigator.pop(context);
                             }
                           },
@@ -971,6 +973,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                 roundIndex,
                                 newReps,
                               );
+                              if (!context.mounted) return;
                               Navigator.pop(context);
                             }
                           },

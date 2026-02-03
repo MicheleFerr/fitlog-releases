@@ -1,4 +1,6 @@
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_border_radius.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -34,7 +36,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
             Container(
               width: 40,
               height: 4,
-              margin: const EdgeInsets.only(top: 12),
+              margin: const EdgeInsets.only(top: AppSpacing.sm),
               decoration: BoxDecoration(
                 color: colorScheme.outline.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(2),
@@ -43,7 +45,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
 
             // Header
             Padding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(AppSpacing.xl),
               child: Row(
                 children: [
                   Icon(AppIcons.history, color: colorScheme.primary, size: 28),
@@ -77,7 +79,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                 loading: () => const Center(child: LoadingIndicator()),
                 error: (error, _) => Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: const EdgeInsets.all(AppSpacing.xl),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -113,7 +115,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
     ColorScheme colorScheme,
   ) {
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(AppSpacing.xl),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -145,10 +147,10 @@ class FeedbackHistoryModal extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
                   color: context.colors.success.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: AppBorderRadius.mdRadius,
                 ),
                 child: Icon(
                   AppIcons.thumbUpOutlined,
@@ -158,10 +160,10 @@ class FeedbackHistoryModal extends ConsumerWidget {
               ),
               const SizedBox(width: 24),
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
                   color: context.colors.error.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: AppBorderRadius.mdRadius,
                 ),
                 child: Icon(
                   AppIcons.thumbDownOutlined,
@@ -186,7 +188,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
   ) {
     return ListView.builder(
       controller: scrollController,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
       itemCount: feedbackList.length,
       itemBuilder: (context, index) {
         final feedback = feedbackList[index];
@@ -218,11 +220,11 @@ class FeedbackHistoryModal extends ConsumerWidget {
         insightTypeDisplay[0].toUpperCase() + insightTypeDisplay.substring(1);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: cardColor.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppBorderRadius.mdRadius,
         border: Border.all(color: cardColor.withValues(alpha: 0.3), width: 1),
       ),
       child: Column(
@@ -236,7 +238,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                 height: 40,
                 decoration: BoxDecoration(
                   color: cardColor.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: AppBorderRadius.lgRadius,
                 ),
                 child: Icon(
                   isHelpful ? AppIcons.thumbUp : AppIcons.thumbDown,
@@ -272,10 +274,10 @@ class FeedbackHistoryModal extends ConsumerWidget {
 
           // Insight type
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 6),
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: AppBorderRadius.xsRadius,
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -297,10 +299,10 @@ class FeedbackHistoryModal extends ConsumerWidget {
           if (feedback.comment != null && feedback.comment!.isNotEmpty) ...[
             const SizedBox(height: 12),
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(AppSpacing.sm),
               decoration: BoxDecoration(
                 color: colorScheme.surface.withValues(alpha: 0.8),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: AppBorderRadius.xsRadius,
               ),
               child: Text(
                 feedback.comment!,

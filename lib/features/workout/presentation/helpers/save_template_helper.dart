@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -42,8 +44,10 @@ class SaveTemplateHelper {
 
     // Check if quota exceeded
     if (usedTemplates >= maxTemplates) {
-      showDialog(
-        context: context,
+      if (!context.mounted) return;
+      unawaited(
+        showDialog(
+          context: context,
         builder: (context) => AlertDialog(
           title: Text(context.l10n.templateQuotaExceeded),
           content: Column(
@@ -81,6 +85,7 @@ class SaveTemplateHelper {
             ),
           ],
         ),
+        ),
       );
       return;
     }
@@ -88,7 +93,9 @@ class SaveTemplateHelper {
     final nameController = TextEditingController(text: currentWorkout.name);
     final descriptionController = TextEditingController();
 
-    showDialog(
+    if (!context.mounted) return;
+    unawaited(
+      showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Row(
@@ -253,6 +260,7 @@ class SaveTemplateHelper {
                     );
 
                 // Mostra successo
+                if (!context.mounted) return;
                 SnackBarService.showCustom(
                   context,
                   message: '✅ ${context.l10n.templateSavedSuccessfully(name)}',
@@ -261,6 +269,7 @@ class SaveTemplateHelper {
                   onAction: () => context.push('/templates'),
                 );
               } catch (e) {
+                if (!context.mounted) return;
                 SnackBarService.dismiss(context);
 
                 // Check if it's a quota error
@@ -268,9 +277,10 @@ class SaveTemplateHelper {
                 final isQuotaError = errorMessage.contains('quota exceeded');
 
                 if (isQuotaError) {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
+                  unawaited(
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
                       title: Text(context.l10n.limitReached),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -304,8 +314,10 @@ class SaveTemplateHelper {
                         ),
                       ],
                     ),
+                    ),
                   );
                 } else {
+                  if (!context.mounted) return;
                   SnackBarService.showError(
                     context,
                     context.l10n.savingErrorMessage(
@@ -322,6 +334,7 @@ class SaveTemplateHelper {
             label: Text(context.l10n.saveToFirebase),
           ),
         ],
+      ),
       ),
     );
   }

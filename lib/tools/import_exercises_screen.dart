@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/tools/firebase_exercise_importer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -170,9 +171,10 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
       if (mounted) {
         final l10n = context.l10n;
         final parentNavigator = Navigator.of(context);
-        showDialog(
-          context: context,
-          builder: (dialogContext) => AlertDialog(
+        unawaited(
+          showDialog(
+            context: context,
+            builder: (dialogContext) => AlertDialog(
             title: Text(l10n.importSuccessTitle),
             content: Text(l10n.importExercisesSuccessMessage),
             actions: [
@@ -185,6 +187,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
               ),
             ],
           ),
+          ),
         );
       }
     } catch (e) {
@@ -196,9 +199,10 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
       // Show error dialog
       if (mounted) {
         final l10n = context.l10n;
-        showDialog(
-          context: context,
-          builder: (dialogContext) => AlertDialog(
+        unawaited(
+          showDialog(
+            context: context,
+            builder: (dialogContext) => AlertDialog(
             title: Text(l10n.importFailedTitle),
             content: Text(l10n.error),
             actions: [
@@ -207,6 +211,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
                 child: Text(l10n.ok),
               ),
             ],
+          ),
           ),
         );
       }

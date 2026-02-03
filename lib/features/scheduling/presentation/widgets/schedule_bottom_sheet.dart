@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -86,7 +87,7 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
     if (_state.selectedDates.isEmpty) return;
 
     setState(() => _isLoading = true);
-    HapticFeedback.mediumImpact();
+    unawaited(HapticFeedback.mediumImpact());
 
     try {
       await ref

@@ -84,7 +84,7 @@ class MutexWrapper {
 
     // Start processing if not already running
     if (!_isLocked) {
-      _processQueue();
+      unawaited(_processQueue());
     }
 
     return completer.future;

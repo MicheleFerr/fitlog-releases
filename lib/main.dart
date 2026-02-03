@@ -341,7 +341,7 @@ void main() async {
     final requestConfiguration = RequestConfiguration(
       testDeviceIds: ['847b72988c2f5c8ba2c308cf222ace2c'],
     );
-    MobileAds.instance.updateRequestConfiguration(requestConfiguration);
+    unawaited(MobileAds.instance.updateRequestConfiguration(requestConfiguration));
     debugPrint('📱 AdMob test device configured: 847b72988c2f5c8ba2c308cf222ace2c');
   }
   await MobileAds.instance.initialize();

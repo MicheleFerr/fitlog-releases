@@ -1,4 +1,6 @@
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_border_radius.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -87,11 +89,11 @@ class VolumeDetailsModal extends ConsumerWidget {
 
             // Header
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(AppSpacing.sm),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
@@ -139,9 +141,9 @@ class VolumeDetailsModal extends ConsumerWidget {
 
             // Main Stats
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Container(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(AppSpacing.lg),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -151,7 +153,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: AppBorderRadius.mdRadius,
                   border: Border.all(
                     color: theme.colorScheme.primary.withValues(alpha: 0.3),
                     width: 2,
@@ -225,7 +227,7 @@ class VolumeDetailsModal extends ConsumerWidget {
 
             // Quick Stats
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Row(
                 children: [
                   Expanded(
@@ -258,12 +260,12 @@ class VolumeDetailsModal extends ConsumerWidget {
             SizedBox(
               height: 350,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                 child: Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(AppSpacing.md),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surface,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: AppBorderRadius.mdRadius,
                     border: Border.all(
                       color: theme.colorScheme.outline.withValues(alpha: 0.2),
                     ),
@@ -289,7 +291,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                               color: theme.colorScheme.primary.withValues(
                                 alpha: 0.1,
                               ),
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: AppBorderRadius.xsRadius,
                             ),
                             child: Text(
                               '${l10n.last} 30 ${l10n.days}',
@@ -340,7 +342,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                                       final date =
                                           sortedData[value.toInt()].key;
                                       return Padding(
-                                        padding: const EdgeInsets.only(top: 8),
+                                        padding: const EdgeInsets.only(top: AppSpacing.xs),
                                         child: Text(
                                           '${date.day}',
                                           style: theme.textTheme.labelSmall
@@ -437,7 +439,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                               touchTooltipData: LineTouchTooltipData(
                                 getTooltipColor: (touchedSpot) =>
                                     theme.colorScheme.inverseSurface,
-                                tooltipPadding: const EdgeInsets.all(8),
+                                tooltipPadding: const EdgeInsets.all(AppSpacing.xs),
                                 getTooltipItems: (touchedSpots) {
                                   return touchedSpots.map((spot) {
                                     final date = sortedData[spot.x.toInt()].key;
@@ -467,12 +469,12 @@ class VolumeDetailsModal extends ConsumerWidget {
 
             // Info Box
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.tertiary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: AppBorderRadius.smRadius,
                   border: Border.all(
                     color: theme.colorScheme.tertiary.withValues(alpha: 0.2),
                   ),
@@ -560,10 +562,10 @@ class _QuickStatCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppBorderRadius.smRadius,
         border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Column(

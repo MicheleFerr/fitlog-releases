@@ -18,6 +18,7 @@
 /// - Button fallback for accessibility
 library;
 
+import 'dart:async';
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -401,7 +402,7 @@ class _RepZoneSuggestionDeckState extends ConsumerState<RepZoneSuggestionDeck> {
       widget.onExerciseAdded?.call(alternative.exerciseId);
 
       // Advance to next card
-      _controller.swipeRight();
+      unawaited(_controller.swipeRight());
 
       if (mounted) {
         SnackBarService.showSuccess(

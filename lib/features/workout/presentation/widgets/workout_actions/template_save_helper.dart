@@ -8,6 +8,7 @@
 /// 📱 Platform: iOS/Android/Universal
 library;
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -37,6 +38,8 @@ class TemplateSaveHelper {
       final tierMaxTemplates = ref.read(maxTemplatesProvider);
       final quotaInfo = await _checkUserQuota(tierMaxTemplates);
 
+      if (!context.mounted) return;
+
       if (quotaInfo.isExceeded) {
         _showQuotaExceededDialog(context, quotaInfo);
         return;
@@ -44,6 +47,7 @@ class TemplateSaveHelper {
 
       _showSaveDialog(context, ref, currentWorkout, quotaInfo);
     } catch (e) {
+      if (!context.mounted) return;
       _showErrorSnackBar(context, e.toString());
     }
   }
@@ -352,6 +356,8 @@ class TemplateSaveHelper {
             tags: [],
           );
 
+      if (!context.mounted) return;
+
       // Show success
       SnackBarService.showCustom(
         context,
@@ -361,6 +367,7 @@ class TemplateSaveHelper {
         onAction: () => context.push('/templates'),
       );
     } catch (e) {
+      if (!context.mounted) return;
       _handleSaveError(context, e);
     }
   }
@@ -444,9 +451,10 @@ class TemplateSaveHelper {
 
     if (!context.mounted) return;
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
+    unawaited(
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context).updateTemplate),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -519,6 +527,7 @@ class TemplateSaveHelper {
             label: Text(AppLocalizations.of(context).save),
           ),
         ],
+      ),
       ),
     );
   }

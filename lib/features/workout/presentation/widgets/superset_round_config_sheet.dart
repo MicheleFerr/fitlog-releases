@@ -330,7 +330,7 @@ class _SupersetRoundConfigSheetState
             onPressed: () async {
               if (_hasUnsavedChanges) {
                 final shouldPop = await _onWillPop();
-                if (shouldPop && context.mounted) {
+                if (shouldPop && mounted) {
                   Navigator.of(context).pop();
                 }
               } else {

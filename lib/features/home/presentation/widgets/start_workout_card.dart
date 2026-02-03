@@ -61,13 +61,16 @@ class _ActiveWorkoutCard extends ConsumerWidget {
       ),
       child: Material(
         color: context.colors.surface.withValues(alpha: 0),
-        child: InkWell(
-          onTap: () {
-            HapticFeedback.mediumImpact();
-            context.push('/workout');
-          },
-          borderRadius: BorderRadius.circular(AppSpacing.md),
-          child: Padding(
+        child: Semantics(
+          label: context.l10n.resumeWorkout,
+          button: true,
+          child: InkWell(
+            onTap: () {
+              HapticFeedback.mediumImpact();
+              context.push('/workout');
+            },
+            borderRadius: BorderRadius.circular(AppSpacing.md),
+            child: Padding(
             padding: AppSpacing.card,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,6 +166,7 @@ class _ActiveWorkoutCard extends ConsumerWidget {
           ),
         ),
       ),
+    ),
     );
   }
 

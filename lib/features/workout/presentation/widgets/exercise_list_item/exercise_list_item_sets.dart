@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -402,7 +403,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           closeOnCancel: true,
           confirmDismiss: () async {
             // Esegui toggle e poi ritorna false per NON rimuovere la riga
-            HapticFeedback.mediumImpact();
+            unawaited(HapticFeedback.mediumImpact());
             _toggleWarmupSet(set, index);
             return false; // NON dismissare, solo toggle
           },
@@ -442,7 +443,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           },
           closeOnCancel: true,
           confirmDismiss: () async {
-            HapticFeedback.heavyImpact();
+            unawaited(HapticFeedback.heavyImpact());
             final confirmed = await _showDeleteConfirmation(
               context,
               set,

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
@@ -564,7 +565,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
       ref.invalidate(customWorkoutTemplatesProvider);
 
       // Feedback di successo
-      HapticFeedback.lightImpact();
+      unawaited(HapticFeedback.lightImpact());
 
       if (mounted) {
         Navigator.of(context).pop();

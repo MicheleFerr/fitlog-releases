@@ -1027,7 +1027,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
         }
       }
 
-      HapticFeedback.mediumImpact();
+      unawaited(HapticFeedback.mediumImpact());
       SnackBarService.showSuccess(context, context.l10n.supersetCreated);
     }
   }
@@ -1049,7 +1049,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       affectedWorkoutsCount: affectedItems.total,
     );
 
-    if (result != null && mounted) {
+    if (!context.mounted) return;
+
+    if (result != null) {
       // Update exercise with new metadata from target exercise
       final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
 
@@ -1073,7 +1075,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
         }
       }
 
-      HapticFeedback.mediumImpact();
+      if (!context.mounted) return;
+      unawaited(HapticFeedback.mediumImpact());
+      // ignore: use_build_context_synchronously
       SnackBarService.showSuccess(context, context.l10n.exerciseUpgraded);
     }
   }
@@ -1121,7 +1125,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
       // Show confirmation
       if (mounted) {
-        HapticFeedback.mediumImpact();
+        unawaited(HapticFeedback.mediumImpact());
         final message = result.saveAsDefault
             ? context.l10n.countingModeChangedAndSaved
             : context.l10n.countingModeChanged;

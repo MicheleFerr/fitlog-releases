@@ -708,9 +708,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
         // Pre-fill sets with suggested weight/reps (non-blocking, 2s timeout)
         final exerciseToAdd = await _applyWeightPrefill(exercise);
 
-        ref
-            .read(workoutScreenControllerProvider.notifier)
-            .addExercise(exerciseToAdd);
+        unawaited(
+          ref
+              .read(workoutScreenControllerProvider.notifier)
+              .addExercise(exerciseToAdd),
+        );
         // Note: Navigator.pop() is called by AddExerciseModal after this callback
         // Do NOT call pop() here - it would cause double-pop and black screen!
 
@@ -795,9 +797,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
     // Skip confirmation if user has opted out
     if (config.skipExerciseDeleteConfirmation) {
-      ref
-          .read(workoutScreenControllerProvider.notifier)
-          .removeExercise(exerciseId);
+      unawaited(
+        ref
+            .read(workoutScreenControllerProvider.notifier)
+            .removeExercise(exerciseId),
+      );
       return;
     }
 
@@ -813,18 +817,22 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     if (result == null) return; // Dialog dismissed
 
     if (result.confirmed) {
-      ref
-          .read(workoutScreenControllerProvider.notifier)
-          .removeExercise(exerciseId);
+      unawaited(
+        ref
+            .read(workoutScreenControllerProvider.notifier)
+            .removeExercise(exerciseId),
+      );
 
       // Save preference if "Don't ask again" was checked
       if (result.dontAskAgain) {
         final currentConfig = ref.read(appConfigProvider);
-        ref
-            .read(appConfigProvider.notifier)
-            .updateConfig(
-              currentConfig.copyWith(skipExerciseDeleteConfirmation: true),
-            );
+        unawaited(
+          ref
+              .read(appConfigProvider.notifier)
+              .updateConfig(
+                currentConfig.copyWith(skipExerciseDeleteConfirmation: true),
+              ),
+        );
       }
     }
   }

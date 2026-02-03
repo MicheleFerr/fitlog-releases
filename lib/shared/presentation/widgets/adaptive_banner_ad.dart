@@ -59,6 +59,8 @@ class _AdaptiveBannerAdState extends ConsumerState<AdaptiveBannerAd> {
     final consentService = ConsentService();
     final canRequest = await consentService.canRequestAds();
 
+    if (!mounted) return;
+
     if (!canRequest) {
       if (kDebugMode) {
         debugPrint('⚠️ Cannot request banner ads - consent not granted');
@@ -72,10 +74,11 @@ class _AdaptiveBannerAdState extends ConsumerState<AdaptiveBannerAd> {
     }
 
     // Get adaptive banner size
+    final width = MediaQuery.of(context).size.width.truncate();
     final AnchoredAdaptiveBannerAdSize? size =
-        await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-      MediaQuery.of(context).size.width.truncate(),
-    );
+        await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(width);
+
+    if (!mounted) return;
 
     if (size == null) {
       if (kDebugMode) {

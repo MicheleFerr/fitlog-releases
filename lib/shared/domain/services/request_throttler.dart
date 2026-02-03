@@ -411,7 +411,7 @@ class RequestQueue {
       }
     });
 
-    _processQueue();
+    unawaited(_processQueue());
 
     return completer.future;
   }
@@ -426,10 +426,12 @@ class RequestQueue {
       _timestamps.add(DateTime.now());
 
       // Execute request (don't await - run concurrently)
-      action().whenComplete(() {
-        _active--;
-        _processQueue(); // Process next in queue
-      });
+      unawaited(
+        action().whenComplete(() {
+          _active--;
+          unawaited(_processQueue()); // Process next in queue
+        }),
+      );
     }
 
     // Clean up old timestamps (older than 1 minute)

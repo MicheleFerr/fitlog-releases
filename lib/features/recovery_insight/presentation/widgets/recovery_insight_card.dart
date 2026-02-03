@@ -10,6 +10,7 @@
 /// **Tap Action**: Opens RecoveryInsightSheet with full details
 library;
 
+import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -147,7 +148,7 @@ class _RecoveryInsightCardState extends ConsumerState<RecoveryInsightCard>
   }
 
   Future<void> _requestHealthKitPermissions(BuildContext context) async {
-    HapticFeedback.mediumImpact();
+    unawaited(HapticFeedback.mediumImpact());
 
     if (!Platform.isIOS) {
       SnackBarService.showInfo(context, context.l10n.healthKitOnlyiOS);
@@ -175,7 +176,7 @@ class _RecoveryInsightCardState extends ConsumerState<RecoveryInsightCard>
   }
 
   Future<void> _showRecoverySheet(BuildContext context) async {
-    HapticFeedback.lightImpact();
+    unawaited(HapticFeedback.lightImpact());
 
     // Use RecoveryInsightSheet.show() directly - it has its own DraggableScrollableSheet
     // Don't use ModalService.showBottomSheet which would create a double sheet

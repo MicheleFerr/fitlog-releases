@@ -301,16 +301,20 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       final analytics = ref.read(analyticsServiceProvider);
       final tracker = WorkoutEventTracker(analytics);
 
-      tracker.trackWorkoutStarted(
+      unawaited(
+        tracker.trackWorkoutStarted(
         workoutId: workout.id,
         workoutType: 'strength', // Default type
         workoutName: workout.name,
         source: 'template',
         templateId: workoutTemplate.id,
+        ),
       );
 
       // Attiva wakelock se abilitato nelle impostazioni
-      ref.read(screenWakelockProvider.notifier).startWakelock();
+      unawaited(
+        ref.read(screenWakelockProvider.notifier).startWakelock(),
+      );
 
       // ⌚ Notify Apple Watch about workout start
       _notifyWatchWorkoutStarted();
@@ -320,7 +324,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         debugPrint(
           '[WorkoutProvider] 📱 Starting LA for template workout: ${state!.name}',
         );
-        ref.read(workoutSessionLAProvider.notifier).startLiveActivity(state!);
+        unawaited(
+          ref.read(workoutSessionLAProvider.notifier).startLiveActivity(state!),
+        );
       }
 
       // Incrementa il contatore di utilizzo del template
@@ -615,8 +621,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           '   - 🔥 SUPERSET: $supersetName, Ex $currentExerciseInSuperset/$totalExercisesInSuperset, Round $supersetRound/$totalSupersetRounds',
         );
       }
-      watchNotifier.notifyWorkoutStarted(
-        exerciseName: exerciseName,
+      unawaited(
+        watchNotifier.notifyWorkoutStarted(
+          exerciseName: exerciseName,
         currentSet: currentSet,
         totalSets: totalSets,
         targetWeight: targetWeight,
@@ -641,6 +648,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         totalExercisesInSuperset: totalExercisesInSuperset,
         supersetRound: supersetRound,
         totalSupersetRounds: totalSupersetRounds,
+        ),
       );
       debugPrint(
         '⌚ [FLUTTER DEBUG] ✅ notifyWorkoutStarted called successfully',
@@ -651,8 +659,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           '⌚ [FLUTTER DEBUG] 🔥 SUPERSET Update: $supersetName, Ex $currentExerciseInSuperset/$totalExercisesInSuperset, Round $supersetRound/$totalSupersetRounds',
         );
       }
-      watchNotifier.sendWorkoutUpdate(
-        exerciseName: exerciseName,
+      unawaited(
+        watchNotifier.sendWorkoutUpdate(
+          exerciseName: exerciseName,
         currentSet: currentSet,
         totalSets: totalSets,
         targetWeight: targetWeight,
@@ -679,6 +688,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         totalExercisesInSuperset: totalExercisesInSuperset,
         supersetRound: supersetRound,
         totalSupersetRounds: totalSupersetRounds,
+        ),
       );
     }
   }
@@ -1454,7 +1464,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         }
 
         // 📢 UI Feedback: Show "Workout saved locally" toast
-        if (context != null) {
+        if (context != null && context.mounted) {
           SyncStatusToast.showWorkoutSavedLocally(context);
         }
 
@@ -1759,7 +1769,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         }
 
         // 📢 UI Feedback: Show CRITICAL error toast with retry/export options
-        if (context != null) {
+        if (context != null && context.mounted) {
           SyncStatusToast.showLocalSaveFailed(
             context,
             onRetry: () {
@@ -1814,7 +1824,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           );
         }
         // Show success toast for local-only save
-        if (context != null) {
+        if (context != null && context.mounted) {
           SyncStatusToast.showWorkoutCompletedWithMotivation(context);
         }
         return; // Skip all Firebase operations
@@ -1871,7 +1881,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
         // 📢 UI Feedback: Show final success toast with motivation
         // Local save complete + cloud sync queued = workout saved successfully
-        if (context != null) {
+        if (context != null && context.mounted) {
           SyncStatusToast.showWorkoutCompletedWithMotivation(context);
         }
       } catch (batchError) {
@@ -1884,7 +1894,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
         // 📢 UI Feedback: Show warning that cloud sync failed to queue
         // But workout is safe locally
-        if (context != null) {
+        if (context != null && context.mounted) {
           SyncStatusToast.showCloudSyncQueued(context);
         }
 
@@ -2019,9 +2029,11 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // }
 
       // 8. Navigate to workout completion summary screen (if context available)
-      if (context != null) {
+      if (context != null && context.mounted) {
         // Use pushNamed to navigate to summary screen
-        context.pushNamed('workout-completion-summary', extra: workout);
+        unawaited(
+          context.pushNamed('workout-completion-summary', extra: workout),
+        );
 
         if (kDebugMode) {
           debugLog(

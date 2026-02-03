@@ -175,10 +175,14 @@ class _TemplateCard extends ConsumerWidget {
         ),
         child: Material(
           color: Colors.transparent,
-          child: InkWell(
-            onTap: () => _startWorkoutFromTemplate(context, ref),
-            borderRadius: BorderRadius.circular(12),
-            child: Padding(
+          child: Semantics(
+            label: 'Start workout from $name template',
+            hint: '$exerciseCount exercises, estimated $estimatedDuration minutes',
+            button: true,
+            child: InkWell(
+              onTap: () => _startWorkoutFromTemplate(context, ref),
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,6 +240,7 @@ class _TemplateCard extends ConsumerWidget {
           ),
         ),
       ),
+    ),
     );
   }
 

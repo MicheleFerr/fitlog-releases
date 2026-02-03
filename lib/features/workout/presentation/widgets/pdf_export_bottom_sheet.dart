@@ -4,6 +4,7 @@
 /// Sostituisce la dialog precedente con un design più moderno.
 library;
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -356,7 +357,7 @@ class _PdfExportBottomSheetState extends ConsumerState<PdfExportBottomSheet> {
   }
 
   Future<void> _onConfirm() async {
-    HapticFeedback.mediumImpact();
+    unawaited(HapticFeedback.mediumImpact());
 
     // Save preference if requested
     if (_rememberChoice) {

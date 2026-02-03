@@ -208,7 +208,7 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
         ],
       ),
     ).then((confirmed) {
-      if (confirmed == true) {
+      if (confirmed == true && mounted) {
         Navigator.pop(context);
       }
     });

@@ -16,6 +16,10 @@ analyzer:
     - build/**
     - "**/*.g.dart"
     - "**/*.freezed.dart"
+    # Exclude utility scripts from strict linting (print statements are OK here)
+    - scripts/**
+    - assets/data/scripts/**
+    # Note: test/ folder keeps linting but print() in tests is acceptable for debugging
 
 linter:
   # The lint rules applied to this project can be customized in the
@@ -34,6 +38,7 @@ linter:
     
     # Internationalization rules to prevent hardcoded strings
     prefer_single_quotes: true
+    # Enforce avoid_print in production code (scripts/ and assets/data/scripts/ are excluded above)
     avoid_print: true
     
     # Additional strict rules for better code quality

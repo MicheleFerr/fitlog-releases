@@ -9,6 +9,7 @@
 /// - Progressive disclosure of advanced options
 library;
 
+import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -551,12 +552,13 @@ class _HealthSyncSettingsScreenState
   }
 
   Future<void> _handleInstallHealthConnect() async {
-    HapticFeedback.mediumImpact();
+    unawaited(HapticFeedback.mediumImpact());
 
     final repository = ref.read(healthRepositoryProvider);
     final result = await repository.installHealthConnect();
 
-    result.fold(
+    unawaited(
+      result.fold(
       (failure) {
         if (mounted) {
           SnackBarService.showError(context, failure.message);
@@ -567,6 +569,7 @@ class _HealthSyncSettingsScreenState
           SnackBarService.showInfo(context, context.l10n.healthConnectInstall);
         }
       },
+      ),
     );
   }
 
@@ -575,7 +578,7 @@ class _HealthSyncSettingsScreenState
   // ============================================================
 
   Future<void> _handleConnect() async {
-    HapticFeedback.mediumImpact();
+    unawaited(HapticFeedback.mediumImpact());
     setState(() => _isConnecting = true);
 
     try {
@@ -603,7 +606,7 @@ class _HealthSyncSettingsScreenState
     HealthDataType dataType,
     bool value,
   ) async {
-    HapticFeedback.lightImpact();
+    unawaited(HapticFeedback.lightImpact());
 
     if (!value) {
       // Cannot revoke from app - must do in iOS Settings
@@ -619,7 +622,7 @@ class _HealthSyncSettingsScreenState
   }
 
   Future<void> _handleBackgroundSyncToggle(bool value) async {
-    HapticFeedback.lightImpact();
+    unawaited(HapticFeedback.lightImpact());
 
     final controller = ref.read(
       healthBackgroundSyncControllerProvider.notifier,

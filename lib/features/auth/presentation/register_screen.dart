@@ -403,6 +403,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(
+                  color: colorScheme.primary,
+                  width: 2.0,
+                ),
+              ),
             ),
             textInputAction: TextInputAction.next,
             validator: (value) {
@@ -426,6 +433,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
               prefixIcon: const Icon(AppIcons.email),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(
+                  color: colorScheme.primary,
+                  width: 2.0,
+                ),
               ),
             ),
             keyboardType: TextInputType.emailAddress,
@@ -453,6 +467,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
               prefixIcon: const Icon(AppIcons.lock),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(
+                  color: colorScheme.primary,
+                  width: 2.0,
+                ),
               ),
               suffixIcon: IconButton(
                 icon: Icon(
@@ -490,6 +511,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
               prefixIcon: const Icon(AppIcons.lockOutline),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(
+                  color: colorScheme.primary,
+                  width: 2.0,
+                ),
               ),
               suffixIcon: IconButton(
                 icon: Icon(

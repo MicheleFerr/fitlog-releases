@@ -108,9 +108,13 @@ class _ExerciseCustomizationScreenState
           },
         ),
         actions: [
-          FilledButton.tonal(
-            onPressed: _addAllToWorkout,
-            child: Text(l10n.addAll),
+          Semantics(
+            label: l10n.addAll,
+            button: true,
+            child: FilledButton.tonal(
+              onPressed: _addAllToWorkout,
+              child: Text(l10n.addAll),
+            ),
           ),
           const SizedBox(width: 8),
         ],
@@ -707,10 +711,13 @@ class _ExerciseCustomizationScreenState
     required Color color,
     required VoidCallback onTap,
   }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
+    return Semantics(
+      label: '$label: $value',
+      button: true,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
@@ -744,6 +751,7 @@ class _ExerciseCustomizationScreenState
           ],
         ),
       ),
+    ),
     );
   }
 
@@ -1137,25 +1145,28 @@ class _ExerciseCustomizationScreenState
                                   color: context.colors.surface.withValues(
                                     alpha: 0,
                                   ),
-                                  child: InkWell(
-                                    onTap: () {
-                                      setModalState(
-                                        () => selectedWeight = displayWeight,
-                                      );
-                                      controller.animateToItem(
-                                        WeightHelper.weightToIndex(
-                                          displayWeight,
-                                          unit,
-                                        ),
-                                        duration: const Duration(
-                                          milliseconds: 300,
-                                        ),
-                                        curve: Curves.easeInOut,
-                                      );
-                                      HapticFeedback.mediumImpact();
-                                    },
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Container(
+                                  child: Semantics(
+                                    label: 'Select weight $displayWeight $unit',
+                                    button: true,
+                                    child: InkWell(
+                                      onTap: () {
+                                        setModalState(
+                                          () => selectedWeight = displayWeight,
+                                        );
+                                        controller.animateToItem(
+                                          WeightHelper.weightToIndex(
+                                            displayWeight,
+                                            unit,
+                                          ),
+                                          duration: const Duration(
+                                            milliseconds: 300,
+                                          ),
+                                          curve: Curves.easeInOut,
+                                        );
+                                        HapticFeedback.mediumImpact();
+                                      },
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Container(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 12,
                                         vertical: 8,
@@ -1237,6 +1248,7 @@ class _ExerciseCustomizationScreenState
                                       ),
                                     ),
                                   ),
+                                ),
                                 );
                               },
                             ),

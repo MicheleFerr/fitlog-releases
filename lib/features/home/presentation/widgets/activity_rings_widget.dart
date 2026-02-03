@@ -78,11 +78,16 @@ class _ActivityRingsWidgetState extends ConsumerState<ActivityRingsWidget> {
   Widget build(BuildContext context) {
     final data = ref.watch(activityRingsProvider);
 
-    return GestureDetector(
-      onTap:
-          widget.onTap ??
-          () => ref.read(activityRingsProvider.notifier).fetchActivityData(),
-      child: Card(
+    return Semantics(
+      label: data.hasData
+          ? 'Activity rings: Move ${data.moveCalories.toInt()} of ${data.moveGoal.toInt()} calories, Exercise ${data.exerciseMinutes} of ${data.exerciseGoal} minutes, Stand ${data.standHours} of ${data.standGoal} hours'
+          : 'Activity rings',
+      button: true,
+      child: GestureDetector(
+        onTap:
+            widget.onTap ??
+            () => ref.read(activityRingsProvider.notifier).fetchActivityData(),
+        child: Card(
         elevation: 0,
         color: context.colors.surfaceContainerLow,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -195,6 +200,7 @@ class _ActivityRingsWidgetState extends ConsumerState<ActivityRingsWidget> {
           ),
         ),
       ),
+    ),
     );
   }
 
@@ -240,9 +246,13 @@ class _ActivityRingsWidgetState extends ConsumerState<ActivityRingsWidget> {
   Widget _buildErrorState(BuildContext context, String message) {
     final isNoData = _timedOut || message.contains('No activity');
 
-    return GestureDetector(
-      onTap: () => _openFitnessApp(),
-      child: SizedBox(
+    return Semantics(
+      label: isNoData ? context.l10n.openFitnessApp : 'Connect to HealthKit',
+      hint: isNoData ? context.l10n.tapToSyncActivityData : context.l10n.tapToRetry,
+      button: true,
+      child: GestureDetector(
+        onTap: () => _openFitnessApp(),
+        child: SizedBox(
         height: widget.size,
         child: Center(
           child: Column(
@@ -274,6 +284,7 @@ class _ActivityRingsWidgetState extends ConsumerState<ActivityRingsWidget> {
           ),
         ),
       ),
+    ),
     );
   }
 

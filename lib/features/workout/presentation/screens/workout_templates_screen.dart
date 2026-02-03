@@ -1073,6 +1073,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                         .read(firebaseTemplateNotifierProvider.notifier)
                         .forcSync();
 
+                    if (!context.mounted) return;
                     SnackBarService.showSuccess(
                       context,
                       context.l10n.syncCompleted,

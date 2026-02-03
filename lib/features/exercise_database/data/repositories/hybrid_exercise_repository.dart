@@ -95,7 +95,7 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
         _syncStatusController.add(SyncStatus.success);
 
         // Avvia sync in background se necessario
-        _syncInBackground();
+        unawaited(_syncInBackground());
 
         return cachedExercises;
       }

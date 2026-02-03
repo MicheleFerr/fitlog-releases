@@ -10,6 +10,7 @@
 /// 5. Confirm import
 library;
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
@@ -434,6 +435,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
 
       final file = result.files.first;
       if (file.bytes == null) {
+        if (!mounted) return;
         _showError(context.l10n.couldNotReadFile);
         return;
       }

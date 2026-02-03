@@ -116,14 +116,22 @@ class _WorkoutCompletionSummaryScreenState
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(context.l10n.maybeLater),
+          Semantics(
+            label: context.l10n.maybeLater,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(context.l10n.maybeLater),
+            ),
           ),
-          FilledButton.icon(
-            onPressed: () => Navigator.pop(context, true),
-            icon: const Icon(AppIcons.healthAndSafety),
-            label: Text(context.l10n.connectHealthKit),
+          Semantics(
+            label: context.l10n.connectHealthKit,
+            button: true,
+            child: FilledButton.icon(
+              onPressed: () => Navigator.pop(context, true),
+              icon: const Icon(AppIcons.healthAndSafety),
+              label: Text(context.l10n.connectHealthKit),
+            ),
           ),
         ],
       ),
@@ -309,12 +317,16 @@ class _WorkoutCompletionSummaryScreenState
                   const SizedBox(height: 12),
 
                   // Done Button
-                  OutlinedButton(
-                    onPressed: () {
-                      // Torna alla home
-                      context.go('/');
-                    },
-                    child: Text(context.l10n.done),
+                  Semantics(
+                    label: context.l10n.done,
+                    button: true,
+                    child: OutlinedButton(
+                      onPressed: () {
+                        // Torna alla home
+                        context.go('/');
+                      },
+                      child: Text(context.l10n.done),
+                    ),
                   ),
                 ],
               ),

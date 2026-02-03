@@ -75,10 +75,14 @@ class WeightUpdateNudgeCard extends ConsumerWidget {
           child: Material(
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(16),
-            child: InkWell(
-              onTap: () => _navigateToProfile(context),
-              borderRadius: BorderRadius.circular(16),
-              child: Padding(
+            child: Semantics(
+              label: l10n.weightUpdateNudgeTitle,
+              hint: l10n.weightUpdateNudgeSubtitle(daysSinceUpdate),
+              button: true,
+              child: InkWell(
+                onTap: () => _navigateToProfile(context),
+                borderRadius: BorderRadius.circular(16),
+                child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
@@ -135,6 +139,7 @@ class WeightUpdateNudgeCard extends ConsumerWidget {
           ),
         ),
       ),
+    ),
     );
   }
 

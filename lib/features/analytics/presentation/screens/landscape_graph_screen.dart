@@ -139,6 +139,7 @@ class _LandscapeGraphScreenState extends ConsumerState<LandscapeGraphScreen> {
 
       // Calculate share origin for iOS popover positioning
       // Use center of screen as origin for share sheet
+      if (!mounted) return;
       final screenSize = MediaQuery.of(context).size;
       final sharePositionOrigin = Rect.fromCenter(
         center: Offset(screenSize.width / 2, screenSize.height / 2),

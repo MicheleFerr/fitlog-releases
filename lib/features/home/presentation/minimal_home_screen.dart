@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_border_radius.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
@@ -144,7 +146,10 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
             backgroundColor: context.colors.surface,
             surfaceTintColor: context.colors.surface.withValues(alpha: 0),
             flexibleSpace: FlexibleSpaceBar(
-              titlePadding: const EdgeInsets.only(left: 16, bottom: 12),
+              titlePadding: const EdgeInsets.only(
+                left: AppSpacing.md,
+                bottom: AppSpacing.sm,
+              ),
               title: Row(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -184,7 +189,7 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
 
           // Main Content
           SliverPadding(
-            padding: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.only(top: AppSpacing.xs),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 // 0. Personalized Greeting with Motivational Quote
@@ -335,7 +340,10 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
               Container(
                 width: 4,
                 height: 52,
-                margin: const EdgeInsets.only(right: 12, top: 2),
+                margin: const EdgeInsets.only(
+                  right: AppSpacing.sm,
+                  top: 2, // Kept for gradient alignment
+                ),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
@@ -398,7 +406,10 @@ class _DeveloperToolsSheet extends ConsumerWidget {
           children: [
             // Handle bar (fixed)
             Padding(
-              padding: const EdgeInsets.only(top: 16, bottom: 8),
+              padding: const EdgeInsets.only(
+                top: AppSpacing.md,
+                bottom: AppSpacing.xs,
+              ),
               child: Center(
                 child: Container(
                   width: 40,
@@ -554,6 +565,7 @@ class _DeveloperToolsSheet extends ConsumerWidget {
                           _,
                         ) {
                           ref.read(homeTourProvider.notifier).startTour();
+                          if (!context.mounted) return;
                           SnackBarService.showSuccess(
                             context,
                             'Home Tour starting...',
@@ -628,20 +640,20 @@ class _DeveloperToolItem extends StatelessWidget {
       color: context.colors.surface.withValues(alpha: 0),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppBorderRadius.smRadius,
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.md),
           decoration: BoxDecoration(
             color: context.colors.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: AppBorderRadius.smRadius,
           ),
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppSpacing.sm),
                 decoration: BoxDecoration(
                   color: context.colors.tertiary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: AppBorderRadius.smRadius,
                 ),
                 child: SemanticIcon(
                   icon: icon,
@@ -719,7 +731,10 @@ class _AnimatedProBadgeState extends State<_AnimatedProBadge>
   @override
   Widget build(BuildContext context) {
     final badge = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.xs,
+        vertical: 2, // Small vertical padding for badge
+      ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -727,7 +742,7 @@ class _AnimatedProBadgeState extends State<_AnimatedProBadge>
             context.colors.primary.withValues(alpha: 0.8),
           ],
         ),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: AppBorderRadius.xsRadius,
       ),
       child: Text(
         'PRO',
@@ -784,7 +799,7 @@ class _AdminFeedbackCard extends StatelessWidget {
             context.colors.tertiary.withValues(alpha: 0.7),
           ],
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppBorderRadius.mdRadius,
       ),
       child: Material(
         color: context.colors.surface.withValues(alpha: 0),
@@ -794,16 +809,16 @@ class _AdminFeedbackCard extends StatelessWidget {
               MaterialPageRoute(builder: (_) => const ExerciseFeedbackScreen()),
             );
           },
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: AppBorderRadius.mdRadius,
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSpacing.md),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(AppSpacing.sm),
                   decoration: BoxDecoration(
                     color: context.colors.surface.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: AppBorderRadius.smRadius,
                   ),
                   child: SemanticIcon(
                     icon: AppIcons.flagCircle,

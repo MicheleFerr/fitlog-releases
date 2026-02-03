@@ -256,9 +256,13 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(context.l10n.cancel),
+          Semantics(
+            label: context.l10n.cancel,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(context.l10n.cancel),
+            ),
           ),
           TextButton.icon(
             onPressed: () => Navigator.of(context).pop('decrement'),
@@ -349,7 +353,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       );
 
       // Reload stats in background (no await to not block UI)
-      _loadUsageStats();
+      unawaited(_loadUsageStats());
     } catch (e) {
       if (kDebugMode) {
         debugPrint('⚠️ Error tracking exercise selection: $e');
@@ -534,25 +538,36 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         ),
         actions: [
           if (_selectedExercises.isNotEmpty)
-            IconButton(
-              icon: Icon(
-                widget.multiSelectMode ? AppIcons.check : AppIcons.add,
-              ),
-              onPressed: widget.multiSelectMode
-                  ? _selectExercises
-                  : _addSelectedToWorkout,
-              tooltip: widget.multiSelectMode
+            Semantics(
+              label: widget.multiSelectMode
                   ? 'Select Exercises'
                   : l10n.addToWorkout,
+              button: true,
+              enabled: true,
+              child: IconButton(
+                icon: Icon(
+                  widget.multiSelectMode ? AppIcons.check : AppIcons.add,
+                ),
+                onPressed: widget.multiSelectMode
+                    ? _selectExercises
+                    : _addSelectedToWorkout,
+                tooltip: widget.multiSelectMode
+                    ? 'Select Exercises'
+                    : l10n.addToWorkout,
+              ),
             ),
           // Filter button with badge
           Stack(
             children: [
-              IconButton(
-                key: _filterButtonKey,
-                icon: const Icon(AppIcons.filterListOutlined),
-                onPressed: _showFilterBottomSheet,
-                tooltip: l10n.filters,
+              Semantics(
+                label: l10n.filters,
+                button: true,
+                child: IconButton(
+                  key: _filterButtonKey,
+                  icon: const Icon(AppIcons.filterListOutlined),
+                  onPressed: _showFilterBottomSheet,
+                  tooltip: l10n.filters,
+                ),
               ),
               if (activeFilterCount > 0)
                 Positioned(
@@ -1083,9 +1098,13 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(l10n.cancel),
+          Semantics(
+            label: l10n.cancel,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(l10n.cancel),
+            ),
           ),
           FilledButton.icon(
             onPressed: () {
@@ -1186,9 +1205,13 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           const SizedBox(height: 16),
           Text('${l10n.errorLoadingData}: $error'),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () => ref.refresh(jsonExerciseRepositoryProvider),
-            child: Text(l10n.retry),
+          Semantics(
+            label: l10n.retry,
+            button: true,
+            child: ElevatedButton(
+              onPressed: () => ref.refresh(jsonExerciseRepositoryProvider),
+              child: Text(l10n.retry),
+            ),
           ),
         ],
       ),
@@ -1330,11 +1353,15 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               children: [
                 // Create variant button for catalog exercises
                 if (!isCustom && !widget.selectionMode)
-                  IconButton(
-                    icon: const Icon(AppIcons.copy),
-                    tooltip: context.l10n.createVariant,
-                    onPressed: () => _showCreateVariantSheet(context, exercise),
-                    iconSize: 20,
+                  Semantics(
+                    label: context.l10n.createVariant,
+                    button: true,
+                    child: IconButton(
+                      icon: const Icon(AppIcons.copy),
+                      tooltip: context.l10n.createVariant,
+                      onPressed: () => _showCreateVariantSheet(context, exercise),
+                      iconSize: 20,
+                    ),
                   ),
                 const SizedBox(width: 8),
                 // Selection indicator
@@ -1568,16 +1595,20 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             children: [
               // Negative feedback button (only if not selected)
               if (!isSelected && !widget.selectionMode)
-                InkWell(
-                  onTap: () => _handleNegativeFeedback(exercise),
-                  borderRadius: BorderRadius.circular(16),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: SemanticIcon(
-                      icon: AppIcons.close,
-                      semanticLabel: 'Close',
-                      size: AppIconSize.tiny,
-                      color: context.colors.error.withValues(alpha: 0.7),
+                Semantics(
+                  label: 'Hide exercise',
+                  button: true,
+                  child: InkWell(
+                    onTap: () => _handleNegativeFeedback(exercise),
+                    borderRadius: BorderRadius.circular(16),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: SemanticIcon(
+                        icon: AppIcons.close,
+                        semanticLabel: 'Close',
+                        size: AppIconSize.tiny,
+                        color: context.colors.error.withValues(alpha: 0.7),
+                      ),
                     ),
                   ),
                 ),
@@ -1652,9 +1683,13 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 24),
-        TextButton(
-          onPressed: _clearAllFilters,
-          child: Text(l10n.clearAllFilters),
+        Semantics(
+          label: l10n.clearAllFilters,
+          button: true,
+          child: TextButton(
+            onPressed: _clearAllFilters,
+            child: Text(l10n.clearAllFilters),
+          ),
         ),
         const SizedBox(height: 24),
         _buildMissingExerciseWidget(),
@@ -1774,9 +1809,12 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     }
 
     // Temporary or Expired badge
-    return GestureDetector(
-      onTap: () => _showExerciseStatusSheet(customExercise),
-      child: Row(
+    return Semantics(
+      label: 'Exercise status: $badgeText',
+      button: true,
+      child: GestureDetector(
+        onTap: () => _showExerciseStatusSheet(customExercise),
+        child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text('⚡', style: context.textTheme.titleMedium),
@@ -1805,6 +1843,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           ),
         ],
       ),
+    ),
     );
   }
 
@@ -1887,11 +1926,15 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             const SizedBox(height: 8),
 
             // Cancel
-            TextButton(
-              onPressed: () => Navigator.pop(sheetContext),
-              child: Text(l10n.cancel),
-              style: TextButton.styleFrom(
-                minimumSize: const Size(double.infinity, 40),
+            Semantics(
+              label: l10n.cancel,
+              button: true,
+              child: TextButton(
+                onPressed: () => Navigator.pop(sheetContext),
+                child: Text(l10n.cancel),
+                style: TextButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 40),
+                ),
               ),
             ),
           ],
@@ -2136,7 +2179,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       },
     );
 
-    if (result != null && mounted) {
+    if (result != null && mounted && context.mounted) {
       SnackBarService.showSuccess(
         context,
         '${result.nome} ${context.l10n.addedSuccessfully}',
@@ -2160,7 +2203,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       },
     );
 
-    if (result != null && mounted) {
+    if (result != null && mounted && context.mounted) {
       SnackBarService.showSuccess(
         context,
         '${result.nome} ${context.l10n.addedSuccessfully}',
@@ -2247,15 +2290,19 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                     ),
                   ),
                   const Spacer(),
-                  TextButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        _tempDifficulty.clear();
-                        _tempEquipment.clear();
-                      });
-                    },
-                    icon: const Icon(AppIcons.clear),
-                    label: Text(l10n.reset),
+                  Semantics(
+                    label: l10n.reset,
+                    button: true,
+                    child: TextButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          _tempDifficulty.clear();
+                          _tempEquipment.clear();
+                        });
+                      },
+                      icon: const Icon(AppIcons.clear),
+                      label: Text(l10n.reset),
+                    ),
                   ),
                 ],
               ),

@@ -7,6 +7,7 @@
 /// Schermata principale Database Manager per gestione completa esercizi
 library;
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -698,10 +699,11 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
 
     // Show loading dialog
     if (context.mounted) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (ctx) => AlertDialog(
+      unawaited(
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (ctx) => AlertDialog(
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -715,6 +717,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
               ),
             ],
           ),
+        ),
         ),
       );
     }
@@ -822,9 +825,10 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
 
       // Show error
       if (context.mounted) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
+        unawaited(
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
             title: Row(
               children: [
                 Icon(AppIcons.error, color: context.colors.error),
@@ -839,6 +843,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                 child: Text(l10n.ok),
               ),
             ],
+          ),
           ),
         );
       }

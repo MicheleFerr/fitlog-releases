@@ -1,4 +1,5 @@
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -221,12 +222,13 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         startDate: DateTime.now().subtract(const Duration(days: 365)),
       );
 
-      syncResult.fold(
-        (failure) {
-          if (!mounted) return;
-          debugPrint('❌ [Import] Sync failed: ${failure.message}');
-          SnackBarService.showError(context, failure.message);
-        },
+      unawaited(
+        syncResult.fold(
+          (failure) {
+            if (!mounted) return;
+            debugPrint('❌ [Import] Sync failed: ${failure.message}');
+            SnackBarService.showError(context, failure.message);
+          },
         (result) async {
           debugPrint('✅ [Import] Sync completed: ${result.readCount} read');
           debugPrint(
@@ -298,8 +300,9 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
               context.l10n.bodyMeasurementsImportSuccess(savedCount),
             );
           }
-          _loadData();
+          unawaited(_loadData());
         },
+        ),
       );
     } catch (e) {
       debugPrint('❌ [Import] Unexpected error: $e');
@@ -488,11 +491,12 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         startDate: DateTime.now().subtract(const Duration(days: 365)),
       );
 
-      syncResult.fold(
-        (failure) {
-          if (!mounted) return;
-          SnackBarService.showError(context, failure.message);
-        },
+      unawaited(
+        syncResult.fold(
+          (failure) {
+            if (!mounted) return;
+            SnackBarService.showError(context, failure.message);
+          },
         (result) async {
           if (result.importedMeasurements.isEmpty) {
             if (!mounted) return;
@@ -519,8 +523,9 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             context,
             context.l10n.bodyMeasurementsImportSuccess(savedCount),
           );
-          _loadData();
+          unawaited(_loadData());
         },
+        ),
       );
     } catch (e) {
       if (mounted) {
@@ -759,6 +764,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             );
           }
         },
+        ),
       );
     } catch (e) {
       debugPrint('❌ [Export] Unexpected error: $e');

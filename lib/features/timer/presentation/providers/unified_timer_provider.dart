@@ -297,16 +297,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       if (!Platform.isIOS) {
         // Configure global audio context BEFORE creating any player instance
         // to ensure mixWithOthers is set and we don't steal audio focus.
-        AudioPlayer.global.setAudioContext(
-          AudioContext(
-            iOS: AudioContextIOS(
-              category: AVAudioSessionCategory.ambient,
-              options: {AVAudioSessionOptions.mixWithOthers},
-            ),
-            android: AudioContextAndroid(
-              audioFocus: AndroidAudioFocus.none,
-              contentType: AndroidContentType.sonification,
-              usageType: AndroidUsageType.assistanceSonification,
+        unawaited(
+          AudioPlayer.global.setAudioContext(
+            AudioContext(
+              iOS: AudioContextIOS(
+                category: AVAudioSessionCategory.ambient,
+                options: {AVAudioSessionOptions.mixWithOthers},
+              ),
+              android: AudioContextAndroid(
+                audioFocus: AndroidAudioFocus.none,
+                contentType: AndroidContentType.sonification,
+                usageType: AndroidUsageType.assistanceSonification,
             ),
           ),
         );
@@ -502,9 +503,11 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
       // ⌚ Notify Apple Watch about rest timer start
       if (Platform.isIOS && type == TimerType.rest) {
-        ref
-            .read(watchConnectivityProvider.notifier)
-            .sendRestTimerStarted(durationSeconds);
+        unawaited(
+          ref
+              .read(watchConnectivityProvider.notifier)
+              .sendRestTimerStarted(durationSeconds),
+        );
         if (kDebugMode) {
           debugPrint(
             '⌚ [WATCH] Rest timer started notification sent: ${durationSeconds}s',
@@ -570,9 +573,11 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
       // ⌚ Notify Apple Watch about rest timer pause
       if (Platform.isIOS && state?.type == TimerType.rest) {
-        ref
-            .read(watchConnectivityProvider.notifier)
-            .sendRestTimerPaused(state!.remainingSeconds);
+        unawaited(
+          ref
+              .read(watchConnectivityProvider.notifier)
+              .sendRestTimerPaused(state!.remainingSeconds),
+        );
         if (kDebugMode) {
           debugPrint(
             '⌚ [WATCH] Rest timer paused notification sent: ${state!.remainingSeconds}s remaining',
@@ -637,9 +642,11 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
       // ⌚ Notify Apple Watch about rest timer resume
       if (Platform.isIOS && state?.type == TimerType.rest) {
-        ref
-            .read(watchConnectivityProvider.notifier)
-            .sendRestTimerResumed(state!.remainingSeconds);
+        unawaited(
+          ref
+              .read(watchConnectivityProvider.notifier)
+              .sendRestTimerResumed(state!.remainingSeconds),
+        );
         if (kDebugMode) {
           debugPrint(
             '⌚ [WATCH] Rest timer resumed notification sent: ${state!.remainingSeconds}s remaining',
@@ -879,7 +886,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
       // ⌚ Notify Apple Watch that rest was skipped
       if (Platform.isIOS && state!.type == TimerType.rest) {
-        ref.read(watchConnectivityProvider.notifier).sendRestTimerSkipped();
+        unawaited(
+          ref.read(watchConnectivityProvider.notifier).sendRestTimerSkipped(),
+        );
         if (kDebugMode) {
           debugPrint('⌚ [WATCH] Rest timer skipped notification sent');
         }

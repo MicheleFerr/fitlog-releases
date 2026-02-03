@@ -14,6 +14,7 @@
 /// - Tinder-style swipe cards or classic list view
 library;
 
+import 'dart:async';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -252,11 +253,12 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
     debugPrint(
       '🔍 [REP_ZONE_TAB] exerciseHistories: ${widget.exerciseHistories.length}',
     );
-    HapticFeedback.mediumImpact();
+    unawaited(HapticFeedback.mediumImpact());
 
     // Show loading dialog
     if (!mounted) return;
-    showDialog<void>(
+    unawaited(
+      showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (context) => Center(
@@ -278,6 +280,7 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
             ],
           ),
         ),
+      ),
       ),
     );
     debugPrint('🔍 [REP_ZONE_TAB] Loading dialog shown');

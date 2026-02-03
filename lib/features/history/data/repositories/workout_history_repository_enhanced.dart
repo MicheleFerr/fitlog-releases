@@ -334,7 +334,7 @@ class WorkoutHistoryRepositoryEnhanced {
 
     // 🔄 Migrate legacy keys to new format (background, non-blocking)
     if (legacyKeysToMigrate.isNotEmpty) {
-      _migrateLegacyKeys(legacyKeysToMigrate, userId);
+      unawaited(_migrateLegacyKeys(legacyKeysToMigrate, userId));
     }
 
     // Sort by completion date (newest first)

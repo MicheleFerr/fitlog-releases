@@ -238,24 +238,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         SizedBox(
           width: double.infinity,
           height: 56,
-          child: FilledButton.icon(
-            onPressed: authController.isLoading ? null : _signInWithGoogle,
-            icon: authController.isLoading
-                ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: LoadingIndicator(),
-                  )
-                : const Icon(AppIcons.gMobiledata, size: 24),
-            label: Text(
-              context.l10n.signInWithGoogle,
-              style: context.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
+          child: Semantics(
+            label: context.l10n.signInWithGoogle,
+            child: FilledButton.icon(
+              onPressed: authController.isLoading ? null : _signInWithGoogle,
+              icon: authController.isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: LoadingIndicator(),
+                    )
+                  : const Icon(AppIcons.gMobiledata, size: 24),
+              label: Text(
+                context.l10n.signInWithGoogle,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            style: FilledButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+              style: FilledButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
             ),
           ),
@@ -268,26 +271,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           SizedBox(
             width: double.infinity,
             height: 56,
-            child: FilledButton.icon(
-              onPressed: authController.isLoading ? null : _signInWithApple,
-              style: FilledButton.styleFrom(
-                backgroundColor: colorScheme.onSurface,
-                foregroundColor: colorScheme.surface,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+            child: Semantics(
+              label: context.l10n.signInWithApple,
+              child: FilledButton.icon(
+                onPressed: authController.isLoading ? null : _signInWithApple,
+                style: FilledButton.styleFrom(
+                  backgroundColor: colorScheme.onSurface,
+                  foregroundColor: colorScheme.surface,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
-              ),
-              icon: authController.isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: LoadingIndicator(),
-                    )
-                  : const Icon(AppIcons.apple),
-              label: Text(
-                context.l10n.signInWithApple,
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
+                icon: authController.isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: LoadingIndicator(),
+                      )
+                    : const Icon(AppIcons.apple),
+                label: Text(
+                  context.l10n.signInWithApple,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
@@ -318,20 +324,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         SizedBox(
           width: double.infinity,
           height: 56,
-          child: OutlinedButton.icon(
-            onPressed: () => setState(() => _showLoginForm = true),
-            icon: Icon(AppIcons.email, color: colorScheme.primary),
-            label: Text(
-              context.l10n.signInWithEmail,
-              style: context.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: colorScheme.primary,
+          child: Semantics(
+            label: context.l10n.signInWithEmail,
+            child: OutlinedButton.icon(
+              onPressed: () => setState(() => _showLoginForm = true),
+              icon: Icon(AppIcons.email, color: colorScheme.primary),
+              label: Text(
+                context.l10n.signInWithEmail,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: colorScheme.primary,
+                ),
               ),
-            ),
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: colorScheme.primary),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: colorScheme.primary),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
             ),
           ),
@@ -343,20 +352,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         SizedBox(
           width: double.infinity,
           height: 56,
-          child: OutlinedButton.icon(
-            onPressed: () => context.pushNamed('register'),
-            icon: Icon(AppIcons.personAdd, color: colorScheme.secondary),
-            label: Text(
-              context.l10n.signUpButton,
-              style: context.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: colorScheme.secondary,
+          child: Semantics(
+            label: context.l10n.signUpButton,
+            child: OutlinedButton.icon(
+              onPressed: () => context.pushNamed('register'),
+              icon: Icon(AppIcons.personAdd, color: colorScheme.secondary),
+              label: Text(
+                context.l10n.signUpButton,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: colorScheme.secondary,
+                ),
               ),
-            ),
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: colorScheme.secondary),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: colorScheme.secondary),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
             ),
           ),
@@ -387,22 +399,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         SizedBox(
           width: double.infinity,
           height: 56,
-          child: TextButton.icon(
-            onPressed: () => _signInAnonymously(),
-            icon: Icon(
-              AppIcons.visibilityOff,
-              color: colorScheme.onSurfaceVariant,
-            ),
-            label: Text(
-              context.l10n.tryWithoutAccount,
-              style: context.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w500,
+          child: Semantics(
+            label: context.l10n.tryWithoutAccount,
+            child: TextButton.icon(
+              onPressed: () => _signInAnonymously(),
+              icon: Icon(
+                AppIcons.visibilityOff,
                 color: colorScheme.onSurfaceVariant,
               ),
-            ),
-            style: TextButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+              label: Text(
+                context.l10n.tryWithoutAccount,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
             ),
           ),
@@ -444,6 +459,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(
+                  color: colorScheme.primary,
+                  width: 2.0,
+                ),
+              ),
             ),
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
@@ -470,6 +492,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
               prefixIcon: const Icon(AppIcons.lock),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(
+                  color: colorScheme.primary,
+                  width: 2.0,
+                ),
               ),
               suffixIcon: IconButton(
                 icon: Icon(

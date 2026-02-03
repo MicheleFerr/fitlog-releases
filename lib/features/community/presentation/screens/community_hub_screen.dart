@@ -7,6 +7,7 @@
 /// - Kudos/voting system for engagement
 library;
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -491,7 +492,7 @@ class _ContributionFeedCard extends ConsumerWidget {
     BuildContext context,
     bool isUpvote,
   ) async {
-    HapticFeedback.lightImpact();
+    unawaited(HapticFeedback.lightImpact());
     try {
       await ref
           .read(contributionSubmissionProvider.notifier)

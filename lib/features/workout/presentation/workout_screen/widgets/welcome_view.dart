@@ -86,10 +86,14 @@ class WelcomeView extends ConsumerWidget {
     return Material(
       color: context.colors.surface.withValues(alpha: 0),
       borderRadius: BorderRadius.circular(16),
-      child: InkWell(
-        onTap: onQuickStart,
-        borderRadius: BorderRadius.circular(16),
-        child: Ink(
+      child: Semantics(
+        label: context.l10n.startNow,
+        hint: context.l10n.startImmediately,
+        button: true,
+        child: InkWell(
+          onTap: onQuickStart,
+          borderRadius: BorderRadius.circular(16),
+          child: Ink(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             gradient: LinearGradient(
@@ -173,6 +177,7 @@ class WelcomeView extends ConsumerWidget {
           ),
         ),
       ),
+    ),
     );
   }
 

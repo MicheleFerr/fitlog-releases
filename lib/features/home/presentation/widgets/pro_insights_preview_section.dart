@@ -29,6 +29,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_border_radius.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
@@ -68,12 +69,16 @@ class ProInsightsPreviewSection extends ConsumerWidget {
               const SizedBox(height: AppSpacing.sm),
 
               // Main content card
-              GestureDetector(
-                onTap: () => _navigateToProAnalytics(context),
-                child: Container(
+              Semantics(
+                label: l10n.proInsights,
+                hint: l10n.viewDetails,
+                button: true,
+                child: GestureDetector(
+                  onTap: () => _navigateToProAnalytics(context),
+                  child: Container(
                   decoration: BoxDecoration(
                     color: colorScheme.surfaceContainerLow,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: AppBorderRadius.lgRadius,
                     border: Border.all(
                       color: colorScheme.tertiary.withValues(alpha: 0.2),
                       width: 1.5,
@@ -90,7 +95,7 @@ class ProInsightsPreviewSection extends ConsumerWidget {
                     children: [
                       // Row 1: Muscle Map (large preview)
                       Padding(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(AppSpacing.md),
                         child: _MuscleMapPreview(histories: histories),
                       ),
 
@@ -104,7 +109,7 @@ class ProInsightsPreviewSection extends ConsumerWidget {
 
                       // Row 2: Volume Radar + Stress Index side by side
                       Padding(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(AppSpacing.md),
                         child: Row(
                           children: [
                             Expanded(
@@ -126,7 +131,7 @@ class ProInsightsPreviewSection extends ConsumerWidget {
 
                       // Row 3: Rep Zones Bar
                       Padding(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(AppSpacing.md),
                         child: _RepZonesBarPreview(histories: histories),
                       ),
 
@@ -136,6 +141,7 @@ class ProInsightsPreviewSection extends ConsumerWidget {
                   ),
                 ),
               ),
+            ),
             ],
           ),
         );
@@ -165,7 +171,7 @@ class ProInsightsPreviewSection extends ConsumerWidget {
                 colorScheme.tertiary.withValues(alpha: 0.7),
               ],
             ),
-            borderRadius: BorderRadius.circular(AppSpacing.xs),
+            borderRadius: AppBorderRadius.xsRadius,
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -476,7 +482,7 @@ class _MuscleBar extends StatelessWidget {
         const SizedBox(width: AppSpacing.xs),
         Expanded(
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: AppBorderRadius.xsRadius,
             child: LinearProgressIndicator(
               value: value.clamp(0.0, 1.0),
               backgroundColor: colorScheme.surfaceContainerHighest,
@@ -512,7 +518,7 @@ class _VolumeRadarPreview extends ConsumerWidget {
       padding: const EdgeInsets.all(AppSpacing.xs),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppBorderRadius.smRadius,
       ),
       child: Column(
         children: [
@@ -669,7 +675,7 @@ class _StressIndexPreview extends ConsumerWidget {
           padding: const EdgeInsets.all(AppSpacing.xs),
           decoration: BoxDecoration(
             color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: AppBorderRadius.smRadius,
           ),
           child: Column(
             children: [
@@ -755,7 +761,7 @@ class _StressIndexPreview extends ConsumerWidget {
       padding: const EdgeInsets.all(AppSpacing.xs),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppBorderRadius.smRadius,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -826,7 +832,7 @@ class _RepZonesBarPreview extends StatelessWidget {
 
         // Stacked bar
         ClipRRect(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: AppBorderRadius.xsRadius,
           child: SizedBox(
             height: 24,
             child: Row(

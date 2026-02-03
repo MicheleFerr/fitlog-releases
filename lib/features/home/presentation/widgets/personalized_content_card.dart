@@ -80,18 +80,21 @@ class _PersonalizedContentCardState
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-      child: GestureDetector(
-        onTapDown: (_) {
-          // Light haptic feedback - standard tier (DESIGN_GUIDELINES.md)
-          HapticFeedback.lightImpact();
-          _scaleController.forward();
-        },
-        onTapUp: (_) {
-          _scaleController.reverse();
-          _openPersonalizedContent(context);
-        },
-        onTapCancel: () => _scaleController.reverse(),
-        child: AnimatedBuilder(
+      child: Semantics(
+        label: context.l10n.templates,
+        button: true,
+        child: GestureDetector(
+          onTapDown: (_) {
+            // Light haptic feedback - standard tier (DESIGN_GUIDELINES.md)
+            HapticFeedback.lightImpact();
+            _scaleController.forward();
+          },
+          onTapUp: (_) {
+            _scaleController.reverse();
+            _openPersonalizedContent(context);
+          },
+          onTapCancel: () => _scaleController.reverse(),
+          child: AnimatedBuilder(
           animation: _scaleAnimation,
           builder: (context, child) {
             return Transform.scale(
@@ -221,6 +224,7 @@ class _PersonalizedContentCardState
           },
         ),
       ),
+    ),
     );
   }
 

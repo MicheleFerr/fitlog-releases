@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/core/utils/persistent_logger.dart';
@@ -135,6 +136,7 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
                   metadata: {'screen': 'DebugLogsScreen', 'action': 'test_log'},
                 );
                 // Show confirmation to user
+                if (!context.mounted) return;
                 SnackBarService.showSuccess(
                   context,
                   'VooLogger test message sent! Check console/DevTools.',

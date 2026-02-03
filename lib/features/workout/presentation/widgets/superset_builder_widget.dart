@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -443,7 +444,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
         // Reset configuration when exercises change
         _configuration = null;
       });
-      HapticFeedback.mediumImpact();
+      unawaited(HapticFeedback.mediumImpact());
     }
   }
 
@@ -458,7 +459,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
       setState(() {
         _configuration = result;
       });
-      HapticFeedback.mediumImpact();
+      unawaited(HapticFeedback.mediumImpact());
 
       // ✅ NEW: Auto-create superset immediately after configuration
       // No need to scroll and click "Crea Superset" anymore!
