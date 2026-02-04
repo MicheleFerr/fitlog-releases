@@ -30,6 +30,15 @@ import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout
 
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
+// ═══════════════════════════════════════════════════════════════════════════
+// 🚧 MVP FEATURE FLAGS
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Coach feature (Solo/Coach/Coached modes)
+/// Disabled until Coach Agreement legal docs are ready
+/// TODO: Enable when fitlogpro.it/legal/coach-agreement-*.html are published
+const bool _coachFeatureEnabled = false;
+
 /// Profile hub screen - Apple Fitness+ style design
 ///
 /// Features:
@@ -76,9 +85,12 @@ class _ProfileHubContent extends ConsumerWidget {
           ),
 
           // Account mode section (Solo/Coach/Coached)
-          const SliverToBoxAdapter(child: SizedBox(height: 16)),
-          const SliverToBoxAdapter(child: AccountModeSection()),
-          const SliverToBoxAdapter(child: SizedBox(height: 16)),
+          // 🚧 MVP: Disabled until Coach Agreement legal docs ready
+          if (_coachFeatureEnabled) ...[
+            const SliverToBoxAdapter(child: SizedBox(height: 16)),
+            const SliverToBoxAdapter(child: AccountModeSection()),
+            const SliverToBoxAdapter(child: SizedBox(height: 16)),
+          ],
 
           // Metric ring cards
           SliverToBoxAdapter(child: _MetricRingsSection()),

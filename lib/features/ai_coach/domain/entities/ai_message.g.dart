@@ -29,6 +29,11 @@ _AIMessage _$AIMessageFromJson(Map<String, dynamic> json) => _AIMessage(
       : AIToolCall.fromJson(json['toolCall'] as Map<String, dynamic>),
   isTyping: json['isTyping'] as bool? ?? false,
   error: json['error'] as String?,
+  suggestions:
+      (json['suggestions'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$AIMessageToJson(_AIMessage instance) =>
@@ -40,6 +45,7 @@ Map<String, dynamic> _$AIMessageToJson(_AIMessage instance) =>
       'toolCall': instance.toolCall?.toJson(),
       'isTyping': instance.isTyping,
       'error': instance.error,
+      'suggestions': instance.suggestions,
     };
 
 const _$MessageRoleEnumMap = {

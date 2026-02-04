@@ -11,8 +11,6 @@ library;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
-import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 
@@ -74,7 +72,7 @@ class SuggestionContext {
   final int totalSets;
   final double? minWeight;
   final double? maxWeight;
-  final List<CommunityContribution> existingContributions;
+  final List<dynamic> existingContributions; // Removed: CommunityContribution
   final UserLevel userLevel;
   final int userContributionCount;
   final int exerciseHistoryCount; // How many times user did this exercise

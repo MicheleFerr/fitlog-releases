@@ -125,16 +125,6 @@ class HiveBoxNames {
   static const String historyViewSettings = 'history_view_settings';
 
   // ═══════════════════════════════════════════════════════════
-  // 💬 COMMUNITY FEATURE
-  // ═══════════════════════════════════════════════════════════
-
-  /// Community votes cache
-  static const String communityVotes = 'community_votes';
-
-  /// Community stats cache
-  static const String communityStats = 'community_stats';
-
-  // ═══════════════════════════════════════════════════════════
   // 📊 STRENGTH STANDARDS FEATURE
   // ═══════════════════════════════════════════════════════════
 
@@ -280,9 +270,6 @@ class HiveBoxNames {
         historySyncQueue,
         historyMetadata,
         historyViewSettings,
-        // Community
-        communityVotes,
-        communityStats,
         // Strength Standards
         fitnessProfile,
         medicalClearance,

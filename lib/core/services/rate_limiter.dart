@@ -40,11 +40,6 @@ class CooldownLimiter {
     'password_reset': const Duration(seconds: 60), // Max 1/minuto
     'email_verification': const Duration(seconds: 120), // Max 1/2 minuti
 
-    // 👥 Community operations
-    'community_contribution': const Duration(seconds: 30),
-    'exercise_report': const Duration(seconds: 30),
-    'feedback_submission': const Duration(seconds: 30),
-
     // 👤 Profile operations
     'profile_update': const Duration(seconds: 10),
 

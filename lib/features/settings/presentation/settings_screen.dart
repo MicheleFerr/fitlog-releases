@@ -664,20 +664,6 @@ class SettingsScreen extends ConsumerWidget {
                     },
                     contentPadding: EdgeInsets.zero,
                   ),
-                  // Hide Community
-                  CheckboxListTile(
-                    title: Text(context.l10n.ghostModeHideCommunity),
-                    value: config.hideCommunity,
-                    onChanged: (value) {
-                      ref
-                          .read(ghostModeProvider.notifier)
-                          .updateConfigField(
-                            'hideCommunity',
-                            value: value ?? true,
-                          );
-                    },
-                    contentPadding: EdgeInsets.zero,
-                  ),
                   // Hide Comparisons
                   CheckboxListTile(
                     title: Text(context.l10n.ghostModeHideComparisons),

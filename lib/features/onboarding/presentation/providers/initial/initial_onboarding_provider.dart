@@ -294,11 +294,12 @@ class InitialOnboardingNotifier extends Notifier<InitialOnboardingState> {
   // ============================================================
 
   /// Mark onboarding as completing (for loading state)
+  /// Keep spinner visible until router redirects to home
   void startCompletion() {
     state = state.copyWith(isCompleting: true, clearError: true);
   }
 
-  /// Set completion error
+  /// Set completion error (resets isCompleting to allow retry)
   void setError(String message) {
     state = state.copyWith(isCompleting: false, errorMessage: message);
   }

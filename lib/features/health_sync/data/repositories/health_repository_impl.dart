@@ -191,6 +191,70 @@ class HealthRepositoryImpl
   }
 
   @override
+  Future<Either<Failure, void>> syncHeight({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    return handleFirebaseVoidOperation(() async {
+      // 1. Check permission (runtime verification)
+      final permissionResult = await checkPermissionStatus();
+      final permissionStatus = permissionResult.getOrElse(
+        (failure) => throw Exception('Permission check failed'),
+      );
+
+      if (!permissionStatus.canSync(HealthDataType.height)) {
+        throw Exception('Height sync permission not granted');
+      }
+
+      // 2. Update sync status to "syncing"
+      await _localDatasource.saveSyncStatus(
+        HealthSyncStatus(
+          dataType: HealthDataType.height,
+          lastSyncTime: DateTime.now(),
+          lastResult: SyncResult.syncing,
+        ),
+      );
+
+      try {
+        // 3. Fetch height from remote datasource (HealthKit/Health Connect)
+        final measurements = await _remoteDatasource.fetchHeight(
+          startDate: startDate,
+          endDate: endDate,
+        );
+
+        // 4. Save measurements to local cache
+        await _localDatasource.saveMeasurements(measurements);
+
+        // 5. Update sync status to "success"
+        await _localDatasource.saveSyncStatus(
+          HealthSyncStatus(
+            dataType: HealthDataType.height,
+            lastSyncTime: DateTime.now(),
+            lastResult: SyncResult.success,
+            retryCount: 0, // Reset retry count on success
+          ),
+        );
+      } catch (e) {
+        // Update sync status to "error"
+        final currentStatus = await _localDatasource.getSyncStatus(
+          HealthDataType.height,
+        );
+
+        await _localDatasource.saveSyncStatus(
+          HealthSyncStatus(
+            dataType: HealthDataType.height,
+            lastSyncTime: DateTime.now(),
+            lastResult: SyncResult.error,
+            retryCount: (currentStatus?.retryCount ?? 0) + 1,
+            errorMessage: e.toString(),
+          ),
+        );
+        rethrow;
+      }
+    }, operationName: 'syncHeight');
+  }
+
+  @override
   Future<Either<Failure, void>> writeBodyWeight(
     BodyMeasurement measurement,
   ) async {

@@ -29,6 +29,9 @@ class WorkoutTemplate {
     this.category,
     this.defaultAutoAdjustmentType,
     this.defaultApreProtocol,
+    this.isAnonymous = false,
+    this.forkedFromTemplateId,
+    this.originalAuthorName,
   }) : id = id ?? const Uuid().v4(),
        exercises = exercises ?? [],
        tags = tags ?? [],
@@ -102,6 +105,9 @@ class WorkoutTemplate {
       defaultApreProtocol: json['defaultApreProtocol'] is int
           ? json['defaultApreProtocol']
           : null,
+      isAnonymous: json['isAnonymous'] is bool ? json['isAnonymous'] : false,
+      forkedFromTemplateId: json['forkedFromTemplateId']?.toString(),
+      originalAuthorName: json['originalAuthorName']?.toString(),
     );
   }
   final String id;
@@ -131,6 +137,13 @@ class WorkoutTemplate {
   final AutoAdjustmentType? defaultAutoAdjustmentType; // APRE o RPE
   final int? defaultApreProtocol;
 
+  // GDPR: Pubblicazione anonima
+  final bool isAnonymous;
+
+  // Fork attribution
+  final String? forkedFromTemplateId;
+  final String? originalAuthorName;
+
   WorkoutTemplate copyWith({
     String? id,
     String? name,
@@ -152,6 +165,9 @@ class WorkoutTemplate {
     String? category,
     AutoAdjustmentType? defaultAutoAdjustmentType,
     int? defaultApreProtocol,
+    bool? isAnonymous,
+    String? forkedFromTemplateId,
+    String? originalAuthorName,
   }) {
     return WorkoutTemplate(
       id: id ?? this.id,
@@ -176,6 +192,9 @@ class WorkoutTemplate {
       defaultAutoAdjustmentType:
           defaultAutoAdjustmentType ?? this.defaultAutoAdjustmentType,
       defaultApreProtocol: defaultApreProtocol ?? this.defaultApreProtocol,
+      isAnonymous: isAnonymous ?? this.isAnonymous,
+      forkedFromTemplateId: forkedFromTemplateId ?? this.forkedFromTemplateId,
+      originalAuthorName: originalAuthorName ?? this.originalAuthorName,
     );
   }
 
@@ -207,6 +226,9 @@ class WorkoutTemplate {
       'category': category,
       'defaultAutoAdjustmentType': defaultAutoAdjustmentType?.name,
       'defaultApreProtocol': defaultApreProtocol,
+      'isAnonymous': isAnonymous,
+      if (forkedFromTemplateId != null) 'forkedFromTemplateId': forkedFromTemplateId,
+      if (originalAuthorName != null) 'originalAuthorName': originalAuthorName,
     };
   }
 

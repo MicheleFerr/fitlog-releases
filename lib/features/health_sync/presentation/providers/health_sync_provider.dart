@@ -222,6 +222,28 @@ class HealthSyncController extends Notifier<AsyncValue<void>> {
     );
   }
 
+  /// Syncs height measurements from HealthKit/Health Connect (last year).
+  ///
+  /// **Permission Required**: User must have granted height sync permission.
+  ///
+  /// **Date Range**: Last 365 days (height rarely changes).
+  ///
+  /// **Returns**: Success or failure via AsyncValue state.
+  Future<void> syncHeight() async {
+    state = const AsyncValue.loading();
+
+    final result = await _repository.syncHeight(
+      startDate: DateTime.now().subtract(const Duration(days: 365)),
+      endDate: DateTime.now(),
+    );
+
+    state = result.fold(
+      (failure) =>
+          AsyncValue.error(Exception(failure.toString()), StackTrace.current),
+      (_) => const AsyncValue.data(null),
+    );
+  }
+
   /// Writes a single body weight measurement to HealthKit/Health Connect.
   ///
   /// **Instant Sync**: Called when user manually enters weight in FitLog.

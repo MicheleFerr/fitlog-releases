@@ -12,6 +12,10 @@ enum HealthDataType {
   /// MVP - Phase 1
   bodyWeight,
 
+  /// Body height measurements in meters or cm
+  /// MVP - Phase 1.1 (added for onboarding import)
+  height,
+
   /// Body fat percentage
   /// Phase 2
   bodyFat,
@@ -47,6 +51,8 @@ extension HealthDataTypeExtension on HealthDataType {
         return 'healthDataTypeWorkout';
       case HealthDataType.bodyWeight:
         return 'healthDataTypeBodyWeight';
+      case HealthDataType.height:
+        return 'healthDataTypeHeight';
       case HealthDataType.bodyFat:
         return 'healthDataTypeBodyFat';
       case HealthDataType.leanMass:
@@ -62,7 +68,9 @@ extension HealthDataTypeExtension on HealthDataType {
 
   /// Returns true if this data type is part of the MVP (Phase 1)
   bool get isMvp {
-    return this == HealthDataType.workout || this == HealthDataType.bodyWeight;
+    return this == HealthDataType.workout ||
+        this == HealthDataType.bodyWeight ||
+        this == HealthDataType.height;
   }
 
   /// Returns the phase number when this feature will be implemented
@@ -70,6 +78,7 @@ extension HealthDataTypeExtension on HealthDataType {
     switch (this) {
       case HealthDataType.workout:
       case HealthDataType.bodyWeight:
+      case HealthDataType.height:
         return 1; // MVP
       case HealthDataType.bodyFat:
       case HealthDataType.leanMass:

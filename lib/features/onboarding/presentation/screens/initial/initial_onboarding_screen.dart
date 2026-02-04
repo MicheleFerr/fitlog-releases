@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/initial/initial_onboarding_completion_service.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/initial/initial_onboarding_provider.dart';
@@ -36,6 +36,10 @@ class InitialOnboardingScreen extends ConsumerStatefulWidget {
 
 class _InitialOnboardingScreenState
     extends ConsumerState<InitialOnboardingScreen> {
+  // CRITICAL: Local flag to prevent multiple completion calls
+  // Riverpod state updates are async, so we need immediate synchronous protection
+  bool _isHandlingCompletion = false;
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(initialOnboardingNotifierProvider);
@@ -79,25 +83,46 @@ class _InitialOnboardingScreenState
   }
 
   Future<void> _handleComplete() async {
+    // RELEASE MODE DEBUG: Always print (remove if blocks)
+    print('🔵 [Onboarding] _handleComplete called');
+    print('   - _isHandlingCompletion (local): $_isHandlingCompletion');
+
+    // CRITICAL: Synchronous check with local flag (Riverpod state is async)
+    if (_isHandlingCompletion) {
+      print('⚠️ [Onboarding] Already handling completion - BLOCKED');
+      return;
+    }
+
+    // Set local flag IMMEDIATELY (synchronous, before any await)
+    _isHandlingCompletion = true;
+
     final notifier = ref.read(initialOnboardingNotifierProvider.notifier);
     final state = ref.read(initialOnboardingNotifierProvider);
     final completionService = ref.read(
       initialOnboardingCompletionServiceProvider,
     );
 
+    print('   - isCompleting (state): ${state.isCompleting}');
+    print('   - isComplete (state): ${state.isComplete}');
+
     // Get onboarding data
     final data = state.toOnboardingData();
     if (data == null) {
+      print('❌ [Onboarding] Data incomplete - cannot proceed');
       notifier.setError('Dati incompleti');
       return;
     }
 
-    // Start completion
+    // Start completion (shows spinner, disables button)
+    print('🔄 [Onboarding] Starting completion...');
     notifier.startCompletion();
 
     try {
-      // Save all data
+      // Save all data - this will set initialOnboardingCompleted = true
+      print('💾 [Onboarding] Saving data...');
       await completionService.complete(data);
+
+      print('✅ [Onboarding] Data saved successfully');
 
       // Trigger callback if provided
       widget.onComplete?.call();
@@ -105,11 +130,43 @@ class _InitialOnboardingScreenState
       // Start home tour - will show automatically when Home renders
       ref.read(homeTourProvider.notifier).startTour();
 
-      // Navigate to Home - home tour will start automatically
+      // CRITICAL FIX: Wait for Riverpod state to propagate to router provider
+      // The router's redirect closure captures initialOnboardingCompleted at creation time.
+      // We need to wait for:
+      // 1. AppConfig state change to propagate
+      // 2. Router provider to rebuild with new state
+      // 3. New router instance to be installed in widget tree
+      print('🏠 [Onboarding] Waiting for state propagation...');
+
+      // Wait for next frame to ensure state is propagated
+      await Future.delayed(const Duration(milliseconds: 150));
+
       if (mounted) {
-        context.goNamed(AppRoutes.homeName);
+        // Force router to rebuild by invalidating and re-reading
+        print('🔄 [Onboarding] Invalidating router provider...');
+        ref.invalidate(appRouterProvider);
+
+        // Wait another frame for the new router to be created
+        await Future.delayed(const Duration(milliseconds: 50));
+
+        if (mounted) {
+          // Now get the fresh router with updated state
+          final router = ref.read(appRouterProvider);
+          // Navigate to choice screen (guide me vs explore)
+          print('🎯 [Onboarding] Navigating to choice screen...');
+          router.go(AppRoutes.onboardingChoicePath);
+          print('✅ [Onboarding] Navigation to choice screen triggered');
+        }
       }
-    } catch (e) {
+
+      // Keep spinner visible until navigation completes
+      // DO NOT reset isCompleting flag here - let the new screen build
+    } catch (e, stack) {
+      // Reset both flags on error to allow retry
+      _isHandlingCompletion = false;
+
+      print('❌ [Onboarding] Error during completion: $e');
+      print('Stack: $stack');
       notifier.setError('Errore durante il salvataggio: $e');
     }
   }

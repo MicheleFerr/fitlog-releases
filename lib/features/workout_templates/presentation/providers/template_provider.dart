@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/wo
 import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/template_repository.dart';
 import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/data/services/consent_service.dart';
 
 // State class
 class TemplateState {
@@ -155,6 +156,16 @@ class TemplateNotifier extends Notifier<TemplateState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
+      // GDPR: Check social consent before publishing public templates
+      if (template.visibility == TemplateVisibility.public &&
+          !template.isAnonymous) {
+        final hasConsent = await ConsentService().hasSocialConsent();
+        if (!hasConsent) {
+          state = state.copyWith(isLoading: false);
+          throw Exception('social_consent_required');
+        }
+      }
+
       // ✅ FIXED: Use consolidated tier entitlements (UserTier + AccountTier)
       final entitlements = ref.read(tierEntitlementsProvider);
 

@@ -926,6 +926,10 @@ class WorkoutAnalyticsRepositoryImpl
     return {
       'userId': userId,
       'workoutId': metrics.workoutId,
+      'workoutName': metrics.workoutName,
+      'workoutDate': metrics.workoutDate != null
+          ? Timestamp.fromDate(metrics.workoutDate!)
+          : null,
       'calculatedAt': Timestamp.fromDate(metrics.calculatedAt),
       'totalVolume': metrics.totalVolume,
       'workingSetsVolume': metrics.workingSetsVolume,
@@ -955,6 +959,10 @@ class WorkoutAnalyticsRepositoryImpl
   WorkoutMetrics _workoutMetricsFromFirestore(Map<String, dynamic> data) {
     return WorkoutMetrics(
       workoutId: data['workoutId'] ?? '',
+      workoutName: data['workoutName'],
+      workoutDate: data['workoutDate'] != null
+          ? (data['workoutDate'] as Timestamp).toDate()
+          : null,
       calculatedAt: (data['calculatedAt'] as Timestamp).toDate(),
       totalVolume: (data['totalVolume'] as num?)?.toDouble() ?? 0,
       workingSetsVolume: (data['workingSetsVolume'] as num?)?.toDouble() ?? 0,
@@ -984,6 +992,8 @@ class WorkoutAnalyticsRepositoryImpl
   Map<String, dynamic> _workoutMetricsToMap(WorkoutMetrics metrics) {
     return {
       'workoutId': metrics.workoutId,
+      'workoutName': metrics.workoutName,
+      'workoutDate': metrics.workoutDate?.toIso8601String(),
       'calculatedAt': metrics.calculatedAt.toIso8601String(),
       'totalVolume': metrics.totalVolume,
       'completedSets': metrics.completedSets,
@@ -998,6 +1008,10 @@ class WorkoutAnalyticsRepositoryImpl
   WorkoutMetrics _workoutMetricsFromMap(Map<String, dynamic> data) {
     return WorkoutMetrics(
       workoutId: data['workoutId'] ?? '',
+      workoutName: data['workoutName'],
+      workoutDate: data['workoutDate'] != null
+          ? DateTime.parse(data['workoutDate'])
+          : null,
       calculatedAt: DateTime.parse(
         data['calculatedAt'] ?? DateTime.now().toIso8601String(),
       ),

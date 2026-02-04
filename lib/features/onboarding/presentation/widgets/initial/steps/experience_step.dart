@@ -14,7 +14,7 @@ class ExperienceStep extends ConsumerWidget {
     final state = ref.watch(initialOnboardingNotifierProvider);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

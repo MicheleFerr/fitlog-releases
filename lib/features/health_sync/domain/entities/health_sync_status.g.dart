@@ -29,6 +29,7 @@ Map<String, dynamic> _$HealthSyncStatusToJson(_HealthSyncStatus instance) =>
 const _$HealthDataTypeEnumMap = {
   HealthDataType.workout: 'workout',
   HealthDataType.bodyWeight: 'bodyWeight',
+  HealthDataType.height: 'height',
   HealthDataType.bodyFat: 'bodyFat',
   HealthDataType.leanMass: 'leanMass',
   HealthDataType.heartRate: 'heartRate',

@@ -17,9 +17,11 @@ import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_tool_execu
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/ai_rate_limit_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak_provider.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/measurement_repository_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
@@ -69,15 +71,19 @@ AICoachServiceImpl aiCoachService(Ref ref) {
   final historyRepo = ref.watch(workoutHistoryRepositoryProvider);
   final streakRepo = ref.watch(streakRepositoryProvider);
 
+  final workoutAnalyticsRepo = ref.watch(workoutAnalyticsRepositoryProvider);
+  final measurementRepo = ref.watch(measurementRepositoryProvider);
+
   final toolExecutor = AIToolExecutor(
     analyticsRepo: analyticsRepo,
     historyRepo: historyRepo,
-    recoveryRepo: null, // TODO: Implement recovery repository (post-MVP)
+    workoutAnalyticsRepo: workoutAnalyticsRepo,
+    streakRepo: streakRepo,
+    measurementRepo: measurementRepo,
   );
   final contextAggregator = AnalyticsAggregator(
     analyticsRepo: analyticsRepo,
     historyRepo: historyRepo,
-    recoveryRepo: null, // TODO: Implement recovery repository (post-MVP)
     streakRepo: streakRepo,
   );
 
@@ -99,12 +105,6 @@ class AIChat extends _$AIChat {
     // IMPORTANT: Prevent re-initialization when navigating away and back
     // This keeps chat history in memory during the session
     ref.keepAlive();
-
-    // Clean up chat history on provider disposal (design requirement line 600-603)
-    // Note: In Riverpod 3.0, use ref.onDispose() instead of @override dispose()
-    ref.onDispose(() {
-      state = AIChatState(messages: []);
-    });
 
     // Initialize with disclaimer message
     return AIChatState(
@@ -167,6 +167,7 @@ class AIChat extends _$AIChat {
         content: response.content,
         timestamp: DateTime.now(),
         toolCall: response.toolCall,
+        suggestions: response.suggestions ?? [],
       );
 
       // 6. Apply memory limit: keep last 10 messages (design requirement line 585)

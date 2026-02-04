@@ -122,6 +122,21 @@ abstract class IHealthRepository {
     required DateTime endDate,
   });
 
+  /// Syncs height data from health platform to FitLog.
+  ///
+  /// Import-only sync (height rarely changes):
+  /// 1. Fetch height from HealthKit/Health Connect
+  /// 2. Save to local cache
+  ///
+  /// Returns:
+  /// - Right: void (success)
+  /// - Left: [PermissionDeniedFailure] if not authorized
+  /// - Left: [ServerFailure] if sync fails
+  Future<Either<Failure, void>> syncHeight({
+    required DateTime startDate,
+    required DateTime endDate,
+  });
+
   /// Writes a single body weight measurement to health platform.
   ///
   /// Instant sync: Called when user manually enters weight in FitLog.

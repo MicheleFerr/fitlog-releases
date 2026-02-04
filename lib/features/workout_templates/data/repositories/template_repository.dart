@@ -60,12 +60,21 @@ class TemplateRepository {
     );
 
     final doc = _templatesCollection.doc();
+
+    // GDPR: Anonymize author info if isAnonymous is true
+    final authorName = template.isAnonymous
+        ? 'Utente Anonimo'
+        : _auth.currentUser?.displayName;
+    final authorPhotoUrl = template.isAnonymous
+        ? null
+        : _auth.currentUser?.photoURL;
+
     final newTemplate = template.copyWith(
       id: doc.id,
       userId: userId,
       createdAt: DateTime.now(),
-      authorName: _auth.currentUser?.displayName,
-      authorPhotoUrl: _auth.currentUser?.photoURL,
+      authorName: authorName,
+      authorPhotoUrl: authorPhotoUrl,
     );
 
     await doc.set(newTemplate.toJson());
@@ -160,17 +169,21 @@ class TemplateRepository {
       templateDoc.data() as Map<String, dynamic>,
     );
 
-    // Crea una copia privata per l'utente
+    // Crea una copia privata con fork attribution
     final userCopy = template.copyWith(
       id: '', // Verrà generato nuovo ID
       userId: userId,
       visibility: TemplateVisibility.private,
-      name: '${template.name} (Copy)',
+      name: template.name, // Senza "(Copy)" — l'utente personalizza
       createdAt: DateTime.now(),
       downloadCount: 0,
       likeCount: 0,
       reviewCount: 0,
       averageRating: 0.0,
+      isAnonymous: false,
+      // Fork attribution
+      forkedFromTemplateId: template.id,
+      originalAuthorName: template.authorName ?? 'Sconosciuto',
     );
 
     await createTemplate(

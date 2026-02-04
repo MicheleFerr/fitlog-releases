@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/body_measurement.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_permission_status.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
@@ -27,6 +28,7 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
   final _weightController = TextEditingController();
   final _weightFocusNode = FocusNode();
   bool _isImportingFromHealth = false;
+  bool _showInfoTooltip = false;
 
   @override
   void initState() {
@@ -221,241 +223,234 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
       config: _buildKeyboardActionsConfig(context),
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 24),
+        child: Column(
+          children: [
+            // Scrollable content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 24),
 
-              // Title
-              Text(
-                context.l10n.initialOnboardingBodyMeasurementsTitle,
-                style: context.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: context.colors.onSurface,
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              // Subtitle
-              Text(
-                context.l10n.initialOnboardingBodyMeasurementsSubtitle,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colors.onSurface.withValues(alpha: 0.7),
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // Height section
-              Text(
-                context.l10n.initialOnboardingHeightLabel,
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: context.colors.onSurface,
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Height value display
-              Center(
-                child: Text(
-                  '${heightCm.round()} ${context.l10n.initialOnboardingHeightCm}',
-                  style: context.textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: context.colors.primary,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Height slider
-              SliderTheme(
-                data: SliderThemeData(
-                  trackHeight: 6,
-                  thumbShape: const RoundSliderThumbShape(
-                    enabledThumbRadius: 12,
-                  ),
-                  overlayShape: const RoundSliderOverlayShape(
-                    overlayRadius: 24,
-                  ),
-                  activeTrackColor: context.colors.primary,
-                  inactiveTrackColor: context.colors.primary.withValues(
-                    alpha: 0.2,
-                  ),
-                  thumbColor: context.colors.primary,
-                  overlayColor: context.colors.primary.withValues(alpha: 0.2),
-                ),
-                child: Slider(
-                  value: heightCm,
-                  min: 140,
-                  max: 220,
-                  divisions: 80,
-                  onChanged: (value) {
-                    ref
-                        .read(initialOnboardingNotifierProvider.notifier)
-                        .setHeight(value);
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // Weight section
-              Text(
-                context.l10n.initialOnboardingWeightLabel,
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: context.colors.onSurface,
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Weight text field
-              TextField(
-                controller: _weightController,
-                focusNode: _weightFocusNode,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-                textInputAction: TextInputAction.done,
-                inputFormatters: [
-                  // Allow digits and max 1 decimal point
-                  // Pattern: optional digits, optional decimal, optional digits
-                  // Examples: 75, 75.5, .5 (invalid - requires at least one digit before dot)
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
-                ],
-                decoration: InputDecoration(
-                  hintText: '75',
-                  suffixText: 'kg',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 20,
-                  ),
-                ),
-                onChanged: (value) {
-                  final weight = double.tryParse(value);
-                  if (weight != null) {
-                    ref
-                        .read(initialOnboardingNotifierProvider.notifier)
-                        .setBodyweight(weight);
-                  }
-                },
-                onSubmitted: (_) => FocusScope.of(context).unfocus(),
-              ),
-
-              const SizedBox(height: 24),
-
-              // HealthKit import card (iOS/macOS only)
-              if (Platform.isIOS || Platform.isMacOS)
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: context.colors.outline.withValues(alpha: 0.3),
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        AppIcons.healthAndSafety,
-                        size: 32,
-                        color: context.colors.primary,
+                    // Title
+                    Text(
+                      context.l10n.initialOnboardingBodyMeasurementsTitle,
+                      style: context.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: context.colors.onSurface,
                       ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    // Subtitle with info tooltip
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            context.l10n.initialOnboardingBodyMeasurementsSubtitle,
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: context.colors.onSurface.withValues(alpha: 0.7),
+                            ),
+                          ),
+                        ),
+                        // Info tooltip button
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _showInfoTooltip = !_showInfoTooltip;
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: context.colors.surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Icon(
+                              AppIcons.infoOutline,
+                              size: 18,
+                              color: context.colors.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Expandable info tooltip
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      child: _showInfoTooltip
+                          ? Container(
+                              margin: const EdgeInsets.only(top: 12),
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: context.colors.surfaceContainerHighest,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                context.l10n.initialOnboardingBodyInfo,
+                                style: context.textTheme.bodySmall?.copyWith(
+                                  color: context.colors.onSurface.withValues(
+                                    alpha: 0.7,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    // Height section
+                    Text(
+                      context.l10n.initialOnboardingHeightLabel,
+                      style: context.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: context.colors.onSurface,
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Height value display (larger, more prominent)
+                    Center(
+                      child: Text(
+                        '${heightCm.round()} ${context.l10n.initialOnboardingHeightCm}',
+                        style: context.textTheme.displayLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: context.colors.primary,
+                          fontSize: 56,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Centimeter-style ruler slider
+                    _CentimeterRulerSlider(
+                      value: heightCm,
+                      onChanged: (value) {
+                        ref
+                            .read(initialOnboardingNotifierProvider.notifier)
+                            .setHeight(value);
+                      },
+                    ),
+
+                    const SizedBox(height: 40),
+
+                    // Weight section
+                    Text(
+                      context.l10n.initialOnboardingWeightLabel,
+                      style: context.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: context.colors.onSurface,
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Weight text field
+                    TextField(
+                      controller: _weightController,
+                      focusNode: _weightFocusNode,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      textInputAction: TextInputAction.done,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
+                      ],
+                      decoration: InputDecoration(
+                        hintText: '75',
+                        suffixText: 'kg',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 20,
+                        ),
+                      ),
+                      onChanged: (value) {
+                        final weight = double.tryParse(value);
+                        if (weight != null) {
+                          ref
+                              .read(initialOnboardingNotifierProvider.notifier)
+                              .setBodyweight(weight);
+                        }
+                      },
+                      onSubmitted: (_) => FocusScope.of(context).unfocus(),
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    // HealthKit import card (iOS/macOS only) - separated
+                    if (Platform.isIOS || Platform.isMacOS)
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: context.colors.outline.withValues(alpha: 0.3),
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
                           children: [
-                            Text(
-                              context.l10n.initialOnboardingImportHealthKit,
-                              style: context.textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w600,
+                            Icon(
+                              AppIcons.healthAndSafety,
+                              size: 32,
+                              color: context.colors.primary,
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Text(
+                                context.l10n.initialOnboardingImportHealthKit,
+                                style: context.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
+                            const SizedBox(width: 8),
+                            if (_isImportingFromHealth)
+                              const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: LoadingIndicator(size: 20),
+                              )
+                            else
+                              FilledButton.tonal(
+                                onPressed: _importFromHealthKit,
+                                style: FilledButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Text(context.l10n.importAction),
+                              ),
                           ],
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      if (_isImportingFromHealth)
-                        const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: LoadingIndicator(size: 20),
-                        )
-                      else
-                        // Accessibility: Import button with semantic label
-                        Semantics(
-                          label: context.l10n.importAction,
-                          button: true,
-                          child: FilledButton.tonal(
-                            onPressed: _importFromHealthKit,
-                            style: FilledButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: Text(context.l10n.importAction),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
 
-              const Spacer(),
-
-              // Info text
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: context.colors.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      AppIcons.infoOutline,
-                      size: 20,
-                      color: context.colors.onSurface.withValues(alpha: 0.7),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        context.l10n.initialOnboardingBodyInfo,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: context.colors.onSurface.withValues(
-                            alpha: 0.7,
-                          ),
-                        ),
-                      ),
-                    ),
+                    const SizedBox(height: 24),
                   ],
                 ),
               ),
+            ),
 
-              const SizedBox(height: 16),
-
-              // Continue button
-              // Accessibility: Continue button with semantic label
-              SizedBox(
-                width: double.infinity,
-                child: Semantics(
-                  label: context.l10n.initialOnboardingContinue,
-                  button: true,
+            // Continue button - fixed at bottom
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(32, 0, 32, 16),
+                child: SizedBox(
+                  width: double.infinity,
                   child: FilledButton(
                     onPressed: state.canProceedFromStep(3)
                         ? () => ref
@@ -478,10 +473,8 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
                   ),
                 ),
               ),
-
-              const SizedBox(height: 32),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -490,20 +483,24 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
   Future<void> _importFromHealthKit() async {
     if (!mounted) return;
 
-    debugPrint('[HealthKit] Starting weight import...');
+    debugPrint('[HealthKit] Starting weight + height import...');
     setState(() => _isImportingFromHealth = true);
 
     try {
-      // 1. Request ALL essential permissions (workout + bodyWeight)
+      // 1. Request ALL essential permissions (workout + bodyWeight + height)
       // This way user grants everything the app needs in one dialog
       debugPrint(
-        '[HealthKit] Requesting essential permissions (workout + bodyWeight)...',
+        '[HealthKit] Requesting essential permissions (workout + bodyWeight + height)...',
       );
       final permissionController = ref.read(
         healthPermissionControllerProvider.notifier,
       );
       await permissionController.requestPermissions(
-        dataTypes: [HealthDataType.workout, HealthDataType.bodyWeight],
+        dataTypes: [
+          HealthDataType.workout,
+          HealthDataType.bodyWeight,
+          HealthDataType.height,
+        ],
       );
 
       if (!mounted) return;
@@ -516,6 +513,12 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
             loading: () => false,
             error: (_, __) => false,
           );
+      final hasHeightPermission =
+          permissionState.when(
+            data: (status) => status.canSync(HealthDataType.height),
+            loading: () => false,
+            error: (_, __) => false,
+          );
       final hasWorkoutPermission =
           permissionState.when(
             data: (status) => status.canSync(HealthDataType.workout),
@@ -523,85 +526,134 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
             error: (_, __) => false,
           );
       debugPrint(
-        '[HealthKit] Permissions granted - workout: $hasWorkoutPermission, bodyWeight: $hasWeightPermission',
+        '[HealthKit] Permissions granted - workout: $hasWorkoutPermission, '
+        'bodyWeight: $hasWeightPermission, height: $hasHeightPermission',
       );
 
-      if (!hasWeightPermission) {
+      // Need at least one of weight/height permission to proceed
+      if (!hasWeightPermission && !hasHeightPermission) {
         // Permission denied - show dialog with option to open Settings
-        debugPrint('[HealthKit] Weight permission denied, showing dialog...');
+        debugPrint('[HealthKit] Both weight and height permissions denied, showing dialog...');
         if (mounted) {
           await _showPermissionDeniedDialog();
         }
         return;
       }
 
-      // 3. Sync body weight from HealthKit
-      debugPrint('[HealthKit] Syncing weight data from HealthKit...');
       final syncController = ref.read(healthSyncControllerProvider.notifier);
-      await syncController.syncBodyWeight();
-      debugPrint('[HealthKit] Sync completed');
-
-      if (!mounted) return;
-
-      // 4. Get cached measurements
-      debugPrint('[HealthKit] Fetching cached measurements (last 90 days)...');
       final repository = ref.read(healthRepositoryProvider);
-      final result = await repository.getMeasurements(
-        dataType: HealthDataType.bodyWeight,
-        startDate: DateTime.now().subtract(const Duration(days: 90)),
-        endDate: DateTime.now(),
-      );
+      final notifier = ref.read(initialOnboardingNotifierProvider.notifier);
+
+      bool importedWeight = false;
+      bool importedHeight = false;
+
+      // 3. Sync and import body weight from HealthKit (if permission granted)
+      if (hasWeightPermission) {
+        debugPrint('[HealthKit] Syncing weight data from HealthKit...');
+        await syncController.syncBodyWeight();
+
+        if (!mounted) return;
+
+        debugPrint('[HealthKit] Fetching cached weight measurements (last 90 days)...');
+        final weightResult = await repository.getMeasurements(
+          dataType: HealthDataType.bodyWeight,
+          startDate: DateTime.now().subtract(const Duration(days: 90)),
+          endDate: DateTime.now(),
+        );
+
+        weightResult.fold(
+          (failure) {
+            debugPrint('[HealthKit] ERROR: Failed to fetch weight - $failure');
+          },
+          (measurements) {
+            debugPrint('[HealthKit] Found ${measurements.length} weight measurements');
+
+            if (measurements.isNotEmpty) {
+              final latestWeight = measurements.first;
+              final weightKg = latestWeight.value;
+              debugPrint(
+                '[HealthKit] Latest weight: ${weightKg.toStringAsFixed(1)} kg '
+                '(recorded: ${latestWeight.recordedAt})',
+              );
+
+              _weightController.text = weightKg.toStringAsFixed(0);
+              notifier.setBodyweight(weightKg);
+              importedWeight = true;
+              debugPrint('[HealthKit] Weight updated in onboarding state');
+            }
+          },
+        );
+      }
 
       if (!mounted) return;
 
-      result.fold(
-        (failure) {
-          // Failed to fetch measurements
-          debugPrint('[HealthKit] ERROR: Failed to fetch - $failure');
-          SnackBarService.showError(
-            context,
-            context.l10n.initialOnboardingHealthKitError,
-          );
-        },
-        (measurements) {
-          debugPrint('[HealthKit] Found ${measurements.length} measurements');
+      // 4. Sync and import height from HealthKit (if permission granted)
+      if (hasHeightPermission) {
+        debugPrint('[HealthKit] Syncing height data from HealthKit...');
+        await syncController.syncHeight();
 
-          if (measurements.isEmpty) {
-            // No weight data found in HealthKit
-            debugPrint('[HealthKit] No weight data found in HealthKit');
-            SnackBarService.showInfo(
-              context,
-              context.l10n.initialOnboardingHealthKitNoWeightData,
-            );
-            return;
-          }
+        if (!mounted) return;
 
-          // Get the most recent measurement (sorted by date, most recent first)
-          final latestWeight = measurements.first;
-          final weightKg = latestWeight.value;
-          debugPrint(
-            '[HealthKit] Latest weight: ${weightKg.toStringAsFixed(1)} kg '
-            '(recorded: ${latestWeight.recordedAt})',
-          );
+        debugPrint('[HealthKit] Fetching cached height measurements (last 365 days)...');
+        final heightResult = await repository.getMeasurements(
+          dataType: HealthDataType.height,
+          startDate: DateTime.now().subtract(const Duration(days: 365)),
+          endDate: DateTime.now(),
+        );
 
-          // Update the text field
-          _weightController.text = weightKg.toStringAsFixed(0);
+        heightResult.fold(
+          (failure) {
+            debugPrint('[HealthKit] ERROR: Failed to fetch height - $failure');
+          },
+          (measurements) {
+            debugPrint('[HealthKit] Found ${measurements.length} height measurements');
 
-          // Update the onboarding state
-          ref
-              .read(initialOnboardingNotifierProvider.notifier)
-              .setBodyweight(weightKg);
-          debugPrint('[HealthKit] Weight updated in onboarding state');
+            if (measurements.isNotEmpty) {
+              final latestHeight = measurements.first;
+              // Height from HealthKit is in meters, convert to cm
+              final heightCm = latestHeight.toCentimeters();
+              debugPrint(
+                '[HealthKit] Latest height: ${heightCm.toStringAsFixed(1)} cm '
+                '(recorded: ${latestHeight.recordedAt})',
+              );
 
-          // Show success message
-          SnackBarService.showSuccess(
-            context,
-            context.l10n.initialOnboardingHealthKitSuccess(
-              weightKg.toStringAsFixed(1),
-            ),
-          );
-        },
-      );
+              notifier.setHeight(heightCm);
+              importedHeight = true;
+              debugPrint('[HealthKit] Height updated in onboarding state');
+            }
+          },
+        );
+      }
+
+      if (!mounted) return;
+
+      // 5. Show appropriate success/info message
+      if (importedWeight && importedHeight) {
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.initialOnboardingHealthKitSuccessBoth,
+        );
+      } else if (importedWeight) {
+        final state = ref.read(initialOnboardingNotifierProvider);
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.initialOnboardingHealthKitSuccess(
+            state.bodyweightKg?.toStringAsFixed(1) ?? '',
+          ),
+        );
+      } else if (importedHeight) {
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.initialOnboardingHealthKitSuccessHeight,
+        );
+      } else {
+        // No data found
+        debugPrint('[HealthKit] No weight or height data found in HealthKit');
+        SnackBarService.showInfo(
+          context,
+          context.l10n.initialOnboardingHealthKitNoData,
+        );
+      }
     } catch (e, stackTrace) {
       // Unexpected error
       debugPrint('[HealthKit] EXCEPTION: $e');
@@ -650,3 +702,115 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
     );
   }
 }
+
+/// iOS-style horizontal picker wheel for height selection
+class _CentimeterRulerSlider extends StatefulWidget {
+  const _CentimeterRulerSlider({
+    required this.value,
+    required this.onChanged,
+  });
+
+  final double value;
+  final ValueChanged<double> onChanged;
+
+  @override
+  State<_CentimeterRulerSlider> createState() => _CentimeterRulerSliderState();
+}
+
+class _CentimeterRulerSliderState extends State<_CentimeterRulerSlider> {
+  late FixedExtentScrollController _scrollController;
+  static const double _minHeight = 140.0;
+  static const double _maxHeight = 220.0;
+
+  @override
+  void initState() {
+    super.initState();
+    final initialIndex = (widget.value - _minHeight).round();
+    _scrollController = FixedExtentScrollController(initialItem: initialIndex);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final totalItems = (_maxHeight - _minHeight).toInt() + 1;
+
+    return Container(
+      height: 120,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+      ),
+      child: Stack(
+        children: [
+          // Selection highlight in center
+          Center(
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                color: context.colors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: context.colors.primary.withValues(alpha: 0.3),
+                  width: 2,
+                ),
+              ),
+            ),
+          ),
+
+          // Horizontal wheel picker
+          RotatedBox(
+            quarterTurns: 3, // Rotate to make vertical picker horizontal
+            child: ListWheelScrollView.useDelegate(
+              controller: _scrollController,
+              itemExtent: 60, // Height of each item
+              diameterRatio: 1.5, // Less curvature for subtle 3D effect
+              perspective: 0.003, // Subtle perspective
+              physics: const FixedExtentScrollPhysics(),
+              onSelectedItemChanged: (index) {
+                final newValue = _minHeight + index;
+                widget.onChanged(newValue);
+              },
+              childDelegate: ListWheelChildBuilderDelegate(
+                builder: (context, index) {
+                  if (index < 0 || index >= totalItems) return null;
+
+                  final value = _minHeight + index;
+                  final isSelected = (value - widget.value).abs() < 0.5;
+                  final isMajor = value.toInt() % 5 == 0;
+
+                  return RotatedBox(
+                    quarterTurns: 1, // Rotate back to horizontal
+                    child: Center(
+                      child: AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 200),
+                        style: context.textTheme.titleLarge!.copyWith(
+                          fontSize: isSelected ? 28 : (isMajor ? 20 : 16),
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : (isMajor ? FontWeight.w600 : FontWeight.normal),
+                          color: isSelected
+                              ? context.colors.primary
+                              : context.colors.onSurface.withValues(
+                                  alpha: isMajor ? 0.8 : 0.4,
+                                ),
+                        ),
+                        child: Text('${value.toInt()}'),
+                      ),
+                    ),
+                  );
+                },
+                childCount: totalItems,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

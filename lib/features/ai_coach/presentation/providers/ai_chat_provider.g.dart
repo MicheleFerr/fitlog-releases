@@ -58,7 +58,7 @@ final class AiCoachServiceProvider
   }
 }
 
-String _$aiCoachServiceHash() => r'534f7922165685d043dc1b239829519aac0be5f4';
+String _$aiCoachServiceHash() => r'7bde04c66431014de9cc2c36941242947d44e586';
 
 /// AI Chat provider
 
@@ -95,7 +95,7 @@ final class AIChatProvider extends $NotifierProvider<AIChat, AIChatState> {
   }
 }
 
-String _$aIChatHash() => r'42a8fc942945be838e1b5086223272996e598690';
+String _$aIChatHash() => r'69eb70230eb42d8f551d9b5a5af7e7f4c68550fa';
 
 /// AI Chat provider
 

@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -261,6 +263,65 @@ class ConsentService {
     } catch (e) {
       debugPrint('⚠️ Error resetting crash counter: $e');
     }
+  }
+
+  // ============================================================================
+  // SOCIAL CONSENT (Profile visibility for public templates)
+  // ============================================================================
+
+  /// Check if user has granted social consent (profile visible on public templates)
+  ///
+  /// Reads from Firestore: users/{uid}/consents/social
+  Future<bool> hasSocialConsent() async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid == null) return false;
+
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('consents')
+          .doc('social')
+          .get();
+
+      if (!doc.exists) return false;
+      return doc.data()?['granted'] == true;
+    } catch (e) {
+      debugPrint('Error checking social consent: $e');
+      return false;
+    }
+  }
+
+  /// Grant social consent (user agrees to show profile on public templates)
+  Future<void> grantSocialConsent() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('consents')
+        .doc('social')
+        .set({
+      'granted': true,
+      'grantedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  /// Revoke social consent
+  Future<void> revokeSocialConsent() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('consents')
+        .doc('social')
+        .set({
+      'granted': false,
+      'revokedAt': FieldValue.serverTimestamp(),
+    });
   }
 
   // ============================================================================

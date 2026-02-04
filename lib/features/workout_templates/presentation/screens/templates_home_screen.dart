@@ -27,6 +27,7 @@ import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/wo
 import 'package:gymbro_flutter_new/features/workout/domain/entities/template_stats.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/providers/template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart'
     as workout_template;
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_quota_indicator.dart';
@@ -61,9 +62,14 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/super
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/dropset_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/rest_pause_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/advanced_template_creation_modals.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_gdpr_dialogs.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/templates_tour_service.dart';
 
 class TemplatesHomeScreen extends ConsumerStatefulWidget {
-  const TemplatesHomeScreen({super.key});
+  const TemplatesHomeScreen({super.key, this.showTour = false});
+
+  /// Whether to show the guided tour when screen opens
+  final bool showTour;
 
   @override
   ConsumerState<TemplatesHomeScreen> createState() =>
@@ -79,6 +85,13 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   // EDGE CASE: Prevent double-tap during save operation
   // ═══════════════════════════════════════════════════════════════════════════
   bool _isSaving = false;
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Tour GlobalKeys for guided onboarding
+  // ═══════════════════════════════════════════════════════════════════════════
+  final _myTemplatesTabKey = GlobalKey();
+  final _discoverTabKey = GlobalKey();
+  final _createButtonKey = GlobalKey();
 
   // Auto-minimize animation state
   bool _isMetricsMinimized = false;
@@ -131,6 +144,41 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
         _minimizeController.forward();
         setState(() => _isMetricsMinimized = true);
       }
+    });
+
+    // Start tour if requested (after frame to ensure keys are attached)
+    if (widget.showTour) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _startGuidedTour();
+      });
+    }
+  }
+
+  /// Start the guided tour for templates screen
+  void _startGuidedTour() {
+    if (!mounted) return;
+
+    final tourNotifier = ref.read(templatesTourProvider.notifier);
+    tourNotifier.startTour();
+
+    // Small delay to ensure all widgets are rendered
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (!mounted) return;
+
+      tourNotifier.showTour(
+        context: context,
+        targetKeys: {
+          TemplatesTourStep.myTemplates: _myTemplatesTabKey,
+          TemplatesTourStep.discover: _discoverTabKey,
+          TemplatesTourStep.createButton: _createButtonKey,
+        },
+        onComplete: () {
+          debugPrint('[TemplatesTour] Tour completed');
+        },
+        onSkip: () {
+          debugPrint('[TemplatesTour] Tour skipped');
+        },
+      );
     });
   }
 
@@ -338,9 +386,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                       fontWeight: FontWeight.bold,
                     ),
                     tabs: [
-                      Tab(text: l10n.myTemplates),
+                      Tab(key: _myTemplatesTabKey, text: l10n.myTemplates),
                       Tab(text: l10n.exercises),
-                      Tab(text: l10n.discover),
+                      Tab(key: _discoverTabKey, text: l10n.discover),
                     ],
                   ),
                   backgroundColor: context.colors.surface,
@@ -364,6 +412,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           // Draggable FAB with PiP functionality - on My Templates and Exercises tabs
           if (_tabController.index == 0 || _tabController.index == 1)
             DraggableActionButton(
+              key: _tabController.index == 0 ? _createButtonKey : null,
               onPressed: () => _tabController.index == 0
                   ? _createNewTemplate(context)
                   : _showAdvancedTemplateTypeSelector(context),
@@ -517,6 +566,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 _openWorkoutTemplate(context, template), // Menu → Start workout
             onDuplicate: () => _duplicateTemplate(context, template),
             onShare: () => _shareTemplate(context, template),
+            onMakePublic: () => _makeTemplatePublic(context, template),
             onDelete: () => _deleteWorkoutTemplate(context, template),
             preloadedStats: allStats[template.id], // Pass pre-calculated stats
           );
@@ -555,12 +605,49 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              subtitle: Text(
-                template.description.isNotEmpty
-                    ? template.description
-                    : l10n.noDescription,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    template.description.isNotEmpty
+                        ? template.description
+                        : l10n.noDescription,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (template.forkedFromTemplateId != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SemanticIcon(
+                            icon: AppIcons.copy,
+                            semanticLabel: l10n.templateForkedFrom(
+                              template.originalAuthorName ?? '',
+                            ),
+                            size: AppIconSize.tiny,
+                            color: context.colors.tertiary,
+                          ),
+                          const SizedBox(width: AppSpacing.xs),
+                          Flexible(
+                            child: Text(
+                              l10n.templateForkedFrom(
+                                template.originalAuthorName ?? l10n.anonymous,
+                              ),
+                              style: context.textTheme.labelSmall?.copyWith(
+                                color: context.colors.tertiary,
+                                fontStyle: FontStyle.italic,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
               trailing: PopupMenuButton<String>(
                 onSelected: (value) {
@@ -568,6 +655,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   if (value == 'duplicate')
                     _duplicateTemplate(context, template);
                   if (value == 'share') _shareTemplate(context, template);
+                  if (value == 'make_public')
+                    _makeTemplatePublic(context, template);
                   if (value == 'delete')
                     _deleteWorkoutTemplate(context, template);
                 },
@@ -630,45 +719,21 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                       ],
                     ),
                   ),
-                  // Make Public option (future feature - disabled)
+                  // Make Public option
                   PopupMenuItem<String>(
                     value: 'make_public',
-                    enabled: false,
                     child: Row(
                       children: [
                         SemanticIcon(
                           icon: AppIcons.public,
                           semanticLabel: l10n.makePublic,
                           size: AppIconSize.small,
-                          color: context.colors.onSurfaceVariant.withValues(
-                            alpha: 0.5,
-                          ),
+                          color: context.colors.onSurface,
                         ),
                         const SizedBox(width: AppSpacing.sm),
                         Text(
                           l10n.makePublic,
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: context.colors.onSurfaceVariant.withValues(
-                              alpha: 0.5,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.xs,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: context.colors.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            'Soon',
-                            style: context.textTheme.labelSmall?.copyWith(
-                              color: context.colors.onSurfaceVariant,
-                            ),
-                          ),
+                          style: context.textTheme.bodyMedium,
                         ),
                       ],
                     ),
@@ -901,6 +966,54 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       }
       if (context.mounted) {
         SnackBarService.showError(context, l10n.errorSharingPdf);
+      }
+    }
+  }
+
+  Future<void> _makeTemplatePublic(
+    BuildContext context,
+    workout_template.WorkoutTemplate template,
+  ) async {
+    final result = await showSocialConsentDialog(context: context);
+
+    if (!context.mounted) return;
+
+    final isAnonymous = result == SocialConsentResult.publishAnonymous;
+    if (result == SocialConsentResult.cancelled) return;
+
+    try {
+      final userId = ref.read(currentUserIdProvider);
+      final notifier = ref.read(templateProvider.notifier);
+
+      // Convert internal template exercises to community format
+      final communityExercises = template.exercises
+          .map((e) => Exercise.fromJson(e.toJson()))
+          .toList();
+
+      // Convert internal template to community template for publishing
+      final communityTemplate = CommunityWorkoutTemplate(
+        id: '',
+        userId: userId ?? '',
+        name: template.name,
+        description: template.description,
+        exercises: communityExercises,
+        visibility: TemplateVisibility.public,
+        isAnonymous: isAnonymous,
+        createdAt: DateTime.now(),
+      );
+
+      await notifier.createTemplate(communityTemplate);
+
+      if (context.mounted) {
+        final l10n = AppLocalizations.of(context);
+        SnackBarService.showSuccess(context, l10n.templatePublished);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        SnackBarService.showError(
+          context,
+          AppLocalizations.of(context).errorGeneric,
+        );
       }
     }
   }
@@ -2847,11 +2960,13 @@ class PublicTemplateCard extends StatelessWidget {
     required this.template,
     required this.onTap,
     required this.onDownload,
+    this.onReport,
   });
 
   final WorkoutTemplate template;
   final VoidCallback onTap;
   final VoidCallback onDownload;
+  final VoidCallback? onReport;
 
   @override
   Widget build(BuildContext context) {
@@ -2910,6 +3025,39 @@ class PublicTemplateCard extends StatelessWidget {
                       backgroundColor: context.colors.primaryContainer,
                     ),
                   ),
+                  if (onReport != null)
+                    PopupMenuButton<String>(
+                      icon: SemanticIcon(
+                        icon: AppIcons.moreVert,
+                        semanticLabel: l10n.more,
+                        size: AppIconSize.small,
+                      ),
+                      onSelected: (value) {
+                        if (value == 'report') onReport!();
+                      },
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: 'report',
+                          child: Row(
+                            children: [
+                              SemanticIcon(
+                                icon: AppIcons.flag,
+                                semanticLabel: l10n.templateReportAction,
+                                size: AppIconSize.small,
+                                color: context.colors.error,
+                              ),
+                              const SizedBox(width: AppSpacing.sm),
+                              Text(
+                                l10n.templateReportAction,
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: context.colors.error,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                 ],
               ),
               if (template.description != null) ...[
@@ -2919,6 +3067,36 @@ class PublicTemplateCard extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: context.textTheme.bodyMedium,
+                ),
+              ],
+              // Fork attribution
+              if (template.forkedFromTemplateId != null) ...[
+                const SizedBox(height: AppSpacing.xs),
+                Row(
+                  children: [
+                    SemanticIcon(
+                      icon: AppIcons.copy,
+                      semanticLabel: l10n.templateForkedFrom(
+                        template.originalAuthorName ?? '',
+                      ),
+                      size: AppIconSize.tiny,
+                      color: context.colors.tertiary,
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Flexible(
+                      child: Text(
+                        l10n.templateForkedFrom(
+                          template.originalAuthorName ?? l10n.anonymous,
+                        ),
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: context.colors.tertiary,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
               ],
               const SizedBox(height: AppSpacing.sm),
@@ -2969,6 +3147,35 @@ class PublicTemplateCard extends StatelessWidget {
                     style: context.textTheme.bodySmall,
                   ),
                 ],
+              ),
+              // UGC disclaimer for public templates
+              const SizedBox(height: AppSpacing.sm),
+              Container(
+                padding: const EdgeInsets.all(AppSpacing.sm),
+                decoration: BoxDecoration(
+                  color: context.colors.warningContainer.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SemanticIcon(
+                      icon: AppIcons.infoOutline,
+                      semanticLabel: l10n.templateUgcDisclaimer,
+                      size: AppIconSize.tiny,
+                      color: context.colors.onWarningContainer,
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Expanded(
+                      child: Text(
+                        l10n.templateUgcDisclaimer,
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: context.colors.onWarningContainer,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -3088,6 +3295,7 @@ class _WorkoutTemplateCard extends ConsumerWidget {
     required this.onDuplicate,
     required this.onShare,
     required this.onDelete,
+    this.onMakePublic,
     this.preloadedStats,
   });
 
@@ -3097,6 +3305,7 @@ class _WorkoutTemplateCard extends ConsumerWidget {
   final VoidCallback onDuplicate; // Duplicates template
   final VoidCallback onShare; // Shares template
   final VoidCallback onDelete;
+  final VoidCallback? onMakePublic; // Make template public
 
   /// Pre-calculated stats from parent (optimization: avoids N provider calls)
   final TemplateStats? preloadedStats;
@@ -3163,6 +3372,7 @@ class _WorkoutTemplateCard extends ConsumerWidget {
                       if (value == 'start') onStartWorkout();
                       if (value == 'duplicate') onDuplicate();
                       if (value == 'share') onShare();
+                      if (value == 'make_public') onMakePublic?.call();
                       if (value == 'delete') onDelete();
                     },
                     itemBuilder: (context) => [
@@ -3227,44 +3437,21 @@ class _WorkoutTemplateCard extends ConsumerWidget {
                           ],
                         ),
                       ),
-                      // Make Public option (future feature - disabled)
+                      // Make Public option
                       PopupMenuItem(
                         value: 'make_public',
-                        enabled: false, // Disabled for now
                         child: Row(
                           children: [
                             SemanticIcon(
                               icon: AppIcons.public,
                               semanticLabel: l10n.makePublic,
                               size: AppIconSize.small,
-                              color: context.colors.onSurfaceVariant.withValues(
-                                alpha: 0.5,
-                              ),
+                              color: context.colors.onSurface,
                             ),
                             const SizedBox(width: AppSpacing.sm),
                             Text(
                               l10n.makePublic,
-                              style: context.textTheme.bodyMedium?.copyWith(
-                                color: context.colors.onSurfaceVariant
-                                    .withValues(alpha: 0.5),
-                              ),
-                            ),
-                            const Spacer(),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.xs,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: context.colors.surfaceContainerHighest,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                'Soon',
-                                style: context.textTheme.labelSmall?.copyWith(
-                                  color: context.colors.onSurfaceVariant,
-                                ),
-                              ),
+                              style: context.textTheme.bodyMedium,
                             ),
                           ],
                         ),
@@ -3309,6 +3496,38 @@ class _WorkoutTemplateCard extends ConsumerWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
+
+            // Fork attribution badge
+            if (template.forkedFromTemplateId != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                child: Row(
+                  children: [
+                    SemanticIcon(
+                      icon: AppIcons.copy,
+                      semanticLabel: l10n.templateForkedFrom(
+                        template.originalAuthorName ?? '',
+                      ),
+                      size: AppIconSize.tiny,
+                      color: context.colors.tertiary,
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Flexible(
+                      child: Text(
+                        l10n.templateForkedFrom(
+                          template.originalAuthorName ?? l10n.anonymous,
+                        ),
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: context.colors.tertiary,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
             const Spacer(),
 

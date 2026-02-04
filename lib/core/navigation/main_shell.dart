@@ -38,6 +38,9 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_sync_listener.dart';
 import 'package:gymbro_flutter_new/core/config/feature_flags.dart';
 
+/// Global key for bottom navigation bar - used by home tour
+final bottomNavKeyProvider = Provider<GlobalKey>((ref) => GlobalKey());
+
 /// Main shell widget containing bottom navigation and branch content
 ///
 /// Uses [StatefulNavigationShell] to preserve branch state when switching tabs.
@@ -134,6 +137,7 @@ class _MainShellState extends ConsumerState<MainShell> {
         ),
       ),
       bottomNavigationBar: _BottomNavigationBar(
+        navKey: ref.watch(bottomNavKeyProvider),
         currentIndex: currentIndex,
         onDestinationSelected: (index) =>
             _onDestinationSelected(context, index),
@@ -277,10 +281,12 @@ class _BottomNavigationBar extends StatelessWidget {
   const _BottomNavigationBar({
     required this.currentIndex,
     required this.onDestinationSelected,
+    this.navKey,
   });
 
   final int currentIndex;
   final ValueChanged<int> onDestinationSelected;
+  final GlobalKey? navKey;
 
   @override
   Widget build(BuildContext context) {
@@ -300,6 +306,7 @@ class _BottomNavigationBar extends StatelessWidget {
         ),
       ),
       child: NavigationBar(
+        key: navKey,
         selectedIndex: currentIndex,
         onDestinationSelected: onDestinationSelected,
         // Material 3 styling - iOS standard 64px height

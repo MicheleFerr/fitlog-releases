@@ -21,10 +21,10 @@ void main() {
     }) {
       return ProviderScope(
         overrides: [
-          aiChatProvider.overrideWith((ref) => _FakeChatNotifier(chatState)),
+          aIChatProvider.overrideWith(() => _FakeChatNotifier(chatState)),
           if (rateLimitResult != null)
-            aiRateLimitProvider.overrideWith(
-              (ref) => _FakeRateLimitNotifier(rateLimitResult),
+            aIRateLimitProvider.overrideWith(
+              () => _FakeRateLimitNotifier(rateLimitResult),
             ),
         ],
         child: MaterialApp(
@@ -67,6 +67,9 @@ void main() {
       );
 
       expect(find.byType(AITypingIndicator), findsOneWidget);
+
+      // Pump past staggered Future.delayed timers in AITypingIndicator
+      await tester.pump(const Duration(milliseconds: 500));
     });
 
     testWidgets('hides typing indicator when not loading',
@@ -183,6 +186,9 @@ void main() {
 
       final inputBar = tester.widget<AIInputBar>(find.byType(AIInputBar));
       expect(inputBar.isLoading, true);
+
+      // Pump past staggered Future.delayed timers in AITypingIndicator
+      await tester.pump(const Duration(milliseconds: 500));
     });
 
     testWidgets('shows error message when error present',
@@ -229,25 +235,27 @@ void main() {
 }
 
 /// Fake chat notifier for testing
-class _FakeChatNotifier extends Notifier<AIChatState> {
+class _FakeChatNotifier extends AIChat {
   _FakeChatNotifier(this._state);
 
-  AIChatState _state;
+  final AIChatState _state;
 
   @override
   AIChatState build() => _state;
 
+  @override
   Future<void> sendMessage(String text) async {
     // No-op for testing
   }
 
+  @override
   void clearMessages() {
     // No-op for testing
   }
 }
 
 /// Fake rate limit notifier for testing
-class _FakeRateLimitNotifier extends AsyncNotifier<RateLimitResult> {
+class _FakeRateLimitNotifier extends AIRateLimit {
   _FakeRateLimitNotifier(this._result);
 
   final RateLimitResult _result;
@@ -257,6 +265,7 @@ class _FakeRateLimitNotifier extends AsyncNotifier<RateLimitResult> {
     return _result;
   }
 
+  @override
   Future<void> incrementUsage() async {
     // No-op for testing
   }

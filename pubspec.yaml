@@ -50,6 +50,7 @@ dependencies:
 
   # AI Coach (2026-02-03)
   openrouter_api: ^1.0.0  # Official OpenRouter SDK for Mistral 7B
+  http: ^1.2.0  # HTTP client for OpenRouter function calling (SDK doesn't support tools yet)
   limit: ^1.0.0  # Token bucket rate limiting with Hive persistence
   flutter_markdown: ^0.7.0  # Markdown rendering in AI chat bubbles
 

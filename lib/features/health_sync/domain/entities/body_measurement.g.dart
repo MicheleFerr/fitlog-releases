@@ -30,11 +30,14 @@ const _$MeasurementUnitEnumMap = {
   MeasurementUnit.percent: 'percent',
   MeasurementUnit.minutes: 'minutes',
   MeasurementUnit.bpm: 'bpm',
+  MeasurementUnit.meters: 'meters',
+  MeasurementUnit.centimeters: 'centimeters',
 };
 
 const _$HealthDataTypeEnumMap = {
   HealthDataType.workout: 'workout',
   HealthDataType.bodyWeight: 'bodyWeight',
+  HealthDataType.height: 'height',
   HealthDataType.bodyFat: 'bodyFat',
   HealthDataType.leanMass: 'leanMass',
   HealthDataType.heartRate: 'heartRate',

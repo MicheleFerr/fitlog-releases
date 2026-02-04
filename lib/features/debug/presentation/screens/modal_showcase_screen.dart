@@ -51,10 +51,6 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscl
 // Modal imports - NEW LOW PRIORITY (Onboarding & Settings)
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/tour_bottom_sheet.dart';
 
-// Modal imports - NEW LOW PRIORITY (Community)
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/community_advice_modal.dart';
-import 'package:gymbro_flutter_new/features/community/presentation/widgets/filters_modal.dart';
-
 // Services & Data
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/debug/presentation/data/demo_modal_data.dart';
@@ -386,23 +382,6 @@ class ModalShowcaseScreen extends ConsumerWidget {
           const SizedBox(height: 24),
 
           // LOW PRIORITY - Community Features
-          _CategorySection(
-            title: 'Community Features (LOW)',
-            icon: AppIcons.people,
-            items: [
-              _ModalItem(
-                name: 'Community Advice Modal',
-                description: 'Community advice for exercise',
-                onTap: () => _showCommunityAdviceModal(context),
-              ),
-              _ModalItem(
-                name: 'Filters Modal',
-                description: 'Filter community content',
-                onTap: () => _showFiltersModal(context),
-              ),
-            ],
-          ),
-
           const SizedBox(height: 100), // Bottom padding
         ],
       ),
@@ -878,20 +857,6 @@ class ModalShowcaseScreen extends ConsumerWidget {
   // ═══════════════════════════════════════════════════════════════════════════
   // LOW PRIORITY - Community Features Modals (NEW)
   // ═══════════════════════════════════════════════════════════════════════════
-
-  void _showCommunityAdviceModal(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) =>
-          CommunityAdviceModal(exercise: DemoModalData.demoExercise),
-    );
-  }
-
-  void _showFiltersModal(BuildContext context) {
-    FiltersModal.show(context);
-  }
 
   // ModalService Examples
   void _showConfirmationExample(BuildContext context) {

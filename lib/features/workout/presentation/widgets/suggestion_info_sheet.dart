@@ -6,7 +6,6 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';

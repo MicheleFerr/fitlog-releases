@@ -56,6 +56,12 @@ enum MeasurementUnit {
 
   /// Beats per minute (for heart rate - Phase 2)
   bpm,
+
+  /// Meters (for height from HealthKit)
+  meters,
+
+  /// Centimeters (for height display)
+  centimeters,
 }
 
 /// Extension methods for [BodyMeasurement]
@@ -76,6 +82,8 @@ extension BodyMeasurementExtension on BodyMeasurement {
       case MeasurementUnit.percent:
       case MeasurementUnit.minutes:
       case MeasurementUnit.bpm:
+      case MeasurementUnit.meters:
+      case MeasurementUnit.centimeters:
         throw UnsupportedError('Cannot convert ${unit.name} to kilograms');
     }
   }
@@ -96,7 +104,31 @@ extension BodyMeasurementExtension on BodyMeasurement {
       case MeasurementUnit.percent:
       case MeasurementUnit.minutes:
       case MeasurementUnit.bpm:
+      case MeasurementUnit.meters:
+      case MeasurementUnit.centimeters:
         throw UnsupportedError('Cannot convert ${unit.name} to pounds');
+    }
+  }
+
+  /// Converts the measurement value to centimeters (if height-related).
+  ///
+  /// Conversion rates:
+  /// - 1 m = 100 cm
+  /// - Already cm → returns value as-is
+  ///
+  /// Throws [UnsupportedError] if unit is not height-related
+  double toCentimeters() {
+    switch (unit) {
+      case MeasurementUnit.meters:
+        return value * 100; // Convert m → cm
+      case MeasurementUnit.centimeters:
+        return value; // Already in cm
+      case MeasurementUnit.kilograms:
+      case MeasurementUnit.pounds:
+      case MeasurementUnit.percent:
+      case MeasurementUnit.minutes:
+      case MeasurementUnit.bpm:
+        throw UnsupportedError('Cannot convert ${unit.name} to centimeters');
     }
   }
 
@@ -121,6 +153,10 @@ extension BodyMeasurementExtension on BodyMeasurement {
         return 'unitMinutes'; // "min"
       case MeasurementUnit.bpm:
         return 'unitBpm'; // "bpm"
+      case MeasurementUnit.meters:
+        return 'unitMeters'; // "m"
+      case MeasurementUnit.centimeters:
+        return 'unitCentimeters'; // "cm"
     }
   }
 }

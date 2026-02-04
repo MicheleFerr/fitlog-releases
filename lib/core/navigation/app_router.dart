@@ -50,9 +50,9 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 // Home branch
 import 'package:gymbro_flutter_new/features/home/presentation/minimal_home_screen.dart';
 import 'package:gymbro_flutter_new/features/help_center/presentation/screens/help_center_screen.dart';
-import 'package:gymbro_flutter_new/features/community/presentation/screens/community_hub_screen.dart';
 // NOTE: GlobalOnboardingScreen removed - replaced by spotlight tutorial
 import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/initial/initial_onboarding_screen.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/onboarding_choice_screen.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/screens/templates_home_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
@@ -134,6 +134,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     appConfigProvider.select((c) => c.initialOnboardingCompleted),
   );
 
+  print('🔧 [Router] Provider building/rebuilding');
+  print('   - authState: $authState');
+  print('   - initialOnboardingCompleted: $initialOnboardingCompleted');
+
   return GoRouter(
     navigatorKey: AppRoutes.rootNavigatorKey,
     initialLocation: AppRoutes.homePath,
@@ -149,8 +153,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           state.fullPath == AppRoutes.initialOnboardingPath;
       final currentPath = state.fullPath ?? state.path ?? '/';
 
+      // RELEASE MODE DEBUG: Always print
+      print('🔄 [Router] Redirect check:');
+      print('   - currentPath: $currentPath');
+      print('   - isLoggedIn: $isLoggedIn');
+      print('   - initialOnboardingCompleted: $initialOnboardingCompleted');
+      print('   - isOnInitialOnboarding: $isOnInitialOnboarding');
+
       // Wait for auth to initialize
       if (authState == AuthState.loading) {
+        print('⏳ [Router] Auth loading - waiting');
         return null;
       }
 
@@ -161,6 +173,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       // Not logged in and not on auth pages → redirect to login
       if (!isLoggedIn && !isLoggingIn) {
+        print('🔐 [Router] Not logged in - redirect to login');
         return AppRoutes.loginPath;
       }
 
@@ -168,18 +181,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       if (isLoggedIn && isLoggingIn) {
         // Check if initial onboarding is completed
         if (!initialOnboardingCompleted) {
+          print('🚀 [Router] From auth to onboarding');
           return AppRoutes.initialOnboardingPath;
         }
+        print('🏠 [Router] From auth to home');
         return AppRoutes.homePath;
       }
 
       // Logged in but initial onboarding not completed
       // Redirect to initial onboarding (unless already there)
       if (isLoggedIn && !initialOnboardingCompleted && !isOnInitialOnboarding) {
-        if (kDebugMode) {
-          debugPrint('🚀 [Router] Redirecting to initial onboarding');
-        }
+        print('🚀 [Router] Redirecting to initial onboarding');
         return AppRoutes.initialOnboardingPath;
+      }
+
+      // Logged in and onboarding completed but still on onboarding screen
+      // Redirect to home (reverse of above check)
+      if (isLoggedIn && initialOnboardingCompleted && isOnInitialOnboarding) {
+        print('✅ [Router] ONBOARDING COMPLETED - REDIRECT TO HOME!');
+        return AppRoutes.homePath;
       }
 
       // RBAC check
@@ -207,6 +227,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         }
       }
 
+      print('🔄 [Router] No redirect matched - staying on: $currentPath');
       return null;
     },
     // ═══════════════════════════════════════════════════════════════════════
@@ -261,6 +282,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
 
       // ─────────────────────────────────────────────────────────────────────
+      // ONBOARDING CHOICE (guide me vs explore)
+      // ─────────────────────────────────────────────────────────────────────
+      GoRoute(
+        path: AppRoutes.onboardingChoicePath,
+        name: AppRoutes.onboardingChoiceName,
+        parentNavigatorKey: AppRoutes.rootNavigatorKey,
+        builder: (context, state) => const OnboardingChoiceScreen(),
+      ),
+
+      // ─────────────────────────────────────────────────────────────────────
       // MAIN SHELL (5-branch bottom navigation)
       // Wrapped with MobileWebGuard for mobile web detection
       // ─────────────────────────────────────────────────────────────────────
@@ -286,12 +317,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     name: 'help-center',
                     builder: (context, state) => const HelpCenterScreen(),
                   ),
-                  // Community
-                  GoRoute(
-                    path: 'community',
-                    name: AppRoutes.communityName,
-                    builder: (context, state) => const CommunityHubScreen(),
-                  ),
                   // NOTE: Old slide-based onboarding removed
                   // Replaced by spotlight tutorial in WorkoutScreen
                   // Routine placeholder
@@ -305,7 +330,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'templates',
                     name: AppRoutes.templatesName,
-                    builder: (context, state) => const TemplatesHomeScreen(),
+                    builder: (context, state) {
+                      final showTour = state.uri.queryParameters['showTour'] == 'true';
+                      return TemplatesHomeScreen(showTour: showTour);
+                    },
                     routes: [
                       // Template detail (view mode)
                       GoRoute(

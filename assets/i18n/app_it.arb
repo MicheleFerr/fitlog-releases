@@ -3,7 +3,7 @@
   "appTitle": "FitLog Pro",
   "home": "Home",
   "profile": "Profilo",
-  "aiCoach": "Coach AI",
+  "aiCoach": "AI Coach",
   "welcome": "Pronto per allenarti?",
   "motivationalQuote0": "Ogni ripetizione conta.",
   "motivationalQuote1": "Più forte di ieri.",
@@ -931,7 +931,6 @@
   "workoutPaused": "IN PAUSA",
   "duration": "Durata",
   "calories": "Calorie",
-  "aiCoach": "AI Coach",
   "aiCoachRecoveryInsights": "Insights di Recupero",
   "aiCoachRecoveryInsightsDesc": "Monitora prontezza, recupero muscolare e rischio sovrallenamento",
   "showPR": "Mostra PR",
@@ -979,6 +978,14 @@
   "aiCoachDetailed": "Approfondimenti AI Coach",
   "aiCoachModalPlaceholder": "Insights intelligenti in arrivo! Il tuo AI Coach analizzerà i tuoi pattern di allenamento e fornirà raccomandazioni personalizzate.",
   "aiCoachDisclaimer": "Questi sono consigli generali basati sui tuoi dati di allenamento. Consulta sempre un professionista del fitness qualificato prima di apportare modifiche significative al tuo programma di allenamento.",
+  "aiCoachDisclaimerTitle": "Importante: AI Coach",
+  "aiCoachDisclaimerSubtitle": "AI Coach fornisce suggerimenti GENERALI basati sui tuoi dati.",
+  "aiCoachDisclaimerNotTrainer": "NON è un personal trainer certificato",
+  "aiCoachDisclaimerNotDoctor": "NON è un medico o nutrizionista",
+  "aiCoachDisclaimerNoDiagnosis": "NON fornisce diagnosi o prescrizioni",
+  "aiCoachDisclaimerConsultPro": "Consulta SEMPRE professionisti qualificati per decisioni sulla tua salute.",
+  "aiCoachDisclaimerMayContainErrors": "Le risposte possono contenere errori. Verifica sempre con fonti affidabili.",
+  "aiCoachDisclaimerUnderstand": "Ho capito, continua",
   "aiBadge": "AI",
   "badgeCritical": "CRITICO",
   "badgeWarning": "ATTENZIONE",
@@ -1061,9 +1068,6 @@
   "iAcceptThe": "Accetto i ",
   "andThe": " e la ",
   "tosCheckboxHint": "Richiesto per creare account",
-  "community": "Community",
-  "communityComingSoonTitle": "Funzionalità Community in Arrivo",
-  "communityComingSoonDescription": "Stiamo lavorando per creare una fantastica funzionalità community dove potrai connetterti con altri atleti, condividere i tuoi progressi e imparare gli uni dagli altri. Resta sintonizzato!",
   "generalInformation": "Informazioni Generali",
   "technicalNotesAndTut": "Note Tecniche & TuT",
   "warmupAndPreparation": "Riscaldamento & Preparazione",
@@ -1716,7 +1720,6 @@
   "manageExercises": "Gestisci Esercizi",
   "manageExercisesDescription": "Aggiungi, modifica, rimuovi esercizi",
   "reviewCorrections": "Rivedi Correzioni",
-  "reviewCorrectionsDescription": "Approva o rifiuta suggerimenti della community",
   "userAnalytics": "Analisi Utenti",
   "userAnalyticsDescription": "Visualizza statistiche di utilizzo e tendenze",
   "databaseBackup": "Backup Database",
@@ -1727,7 +1730,6 @@
   "loadingActivity": "Caricamento attività recenti...",
   "errorLoadingActivity": "Errore nel caricamento attività",
   "noRecentActivity": "Nessuna Attività Recente",
-  "noRecentActivityDescription": "Le correzioni della community e le attività admin appariranno qui.",
   "allRecentActivity": "Tutte le Attività Recenti",
   "suggestedCorrection": "Correzione suggerita",
   "approvedCorrection": "Correzione approvata",
@@ -1740,10 +1742,8 @@
   "viewFullHistory": "Vedi Cronologia Completa",
   "adminInfo": "Informazioni Admin",
   "welcomeAdmin": "Benvenuto, Admin!",
-  "adminDashboardDescription": "Gestisci il sistema FitLog Pro e controlla i contributi della community",
   "systemStatistics": "Statistiche Sistema",
   "firebaseDatabase": "Database Cloud",
-  "communityActivity": "Attività Community",
   "recentActivity": "Attività Recenti",
   "versionControl": "Controllo Versioni",
   "versionControlDescription": "Gestisci versioni app",
@@ -1759,11 +1759,8 @@
   "secureAdminAccess": "Accesso Admin Sicuro",
   "systemOverview": "Panoramica Sistema",
   "firebaseManagement": "Gestione Cloud",
-  "adminInfoDescription": "Pannello admin per gestione sistema e controllo community",
   "exerciseManagement": "Gestione Esercizi",
   "exerciseManagementDescription": "Aggiungi, modifica e organizza database esercizi",
-  "communityCorrections": "Correzioni Community",
-  "communityCorrectionsDescription": "Rivedi e approva correzioni inviate dalla community",
   "fixMissingData": "Correggi Dati Mancanti",
   "fixMissingDataDescription": "Identifica e aggiungi esercizi mancanti al database",
   "correction": "Correzione",
@@ -1849,18 +1846,6 @@
   "@shareAdviceWithCommunity": {
     "description": "Text for chip to share advice with community"
   },
-  "communityAdvice": "Consigli dalla Community",
-  "@communityAdvice": {
-    "description": "Menu option to view community advice for exercise"
-  },
-  "communityContributions": "Contributi Community",
-  "@communityContributions": {
-    "description": "Admin section title for managing community contributions"
-  },
-  "reviewContributionsDescription": "Gestisci i contributi della community",
-  "@reviewContributionsDescription": {
-    "description": "Description for community contributions admin action"
-  },
   "peopleFoundHelpful": "{count} {count, plural, =0{persone} =1{persona} other{persone}} hanno trovato utile questo consiglio",
   "@peopleFoundHelpful": {
     "description": "Text showing how many people found a contribution helpful",
@@ -1882,10 +1867,6 @@
   "contributionSubmittedSuccess": "✅ Contributo inviato! In attesa di approvazione",
   "@contributionSubmittedSuccess": {
     "description": "Success message after submission"
-  },
-  "thankYouForContributing": "Grazie per aver aiutato la community!",
-  "@thankYouForContributing": {
-    "description": "Thank you message for community contributions"
   },
   "startWorkoutWithTemplate": "Inizia allenamento con questo template",
   "editTemplateSubtitle": "Modifica esercizi e serie",
@@ -2080,8 +2061,6 @@
   "templateOnboardingNameTitle": "Qui inserisci il nome della scheda",
   "templateOnboardingDescriptionTitle": "Questa è una descrizione di cosa comprende la scheda",
   "templateOnboardingDescriptionSubtitle": "Opzionale - ti aiuta a ricordare di cosa tratta questa scheda",
-  "templateOnboardingTagsTitle": "Tag per il riconoscimento nella community",
-  "templateOnboardingTagsSubtitle": "Seleziona i tag che descrivono il tuo template per aiutare gli altri a trovarlo nella community",
   "templateOnboardingRestTimerTitle": "Timer di recupero di default per tutti gli esercizi",
   "templateOnboardingRestTimerSubtitle": "Quando aggiungi un nuovo esercizio senza impostare manualmente il timer, verrà applicato questo timer di default",
   "templateOnboardingNext": "Avanti",
@@ -2180,9 +2159,6 @@
   "exerciseDetailsTitle": "Dettagli Esercizio",
   "exerciseDetailsDescription": "Mostra note e statistiche dettagliate",
   "exerciseDetailsTooltip": "Visualizza informazioni complete sull'esercizio incluse note personali, statistiche di progresso e insights sulle performance.",
-  "communitySuggestionsTitle": "Suggerimenti Community",
-  "communitySuggestionsDescription": "Mostra consigli dalla community",
-  "communitySuggestionsTooltip": "Ricevi consigli utili e suggerimenti da altri atleti esperti per ogni esercizio.",
   "tutInfoTitle": "Informazioni TUT",
   "tutInfoDescription": "Visualizza info Time Under Tension",
   "tutInfoTooltip": "Mostra il tempo (es. 3-1-2-0) per controllare la velocità dell'esercizio e massimizzare l'impegno muscolare.",
@@ -8178,11 +8154,6 @@
     "description": "From quick wins migration - 3 occurrences",
     "context": "Found in: Text(\n                'You\\'re Premium!',\n                style: theme.textTheme.headlineMedium?.copyWith(, Text(\n                'You\\'re Premium!',\n                style: theme.textTheme.headlineLarge?.copyWith("
   },
-  "communityAccess": "Community Access",
-  "@communityAccess": {
-    "description": "From quick wins migration - 3 occurrences",
-    "context": "Found in: icon: AppIcons.peopleRounded,\n        title: 'Community Access',\n        description: 'Connect with other athletes',, context,\n                      'Community Access',\n                      'Full Access',"
-  },
   "shoulderPress": "Shoulder Press",
   "@shoulderPress": {
     "description": "From quick wins migration - 3 occurrences",
@@ -8694,9 +8665,6 @@
   "neverLoseYourData": "Non perdere mai i tuoi dati",
   "@neverLoseYourData": {
     "description": "Auto backup feature description"
-  },
-  "@community": {
-    "description": "Community feature title"
   },
   "shareDiscoverWorkouts": "Condividi e scopri allenamenti",
   "@shareDiscoverWorkouts": {
@@ -13926,10 +13894,6 @@
   "@welcomeToCommunity": {
     "description": "Titolo benvenuto onboarding community"
   },
-  "communityDescription": "Condividi le tue conoscenze, aiuta gli altri a migliorare e guadagna XP contribuendo alla community fitness.",
-  "@communityDescription": {
-    "description": "Descrizione onboarding community"
-  },
   "whatYouCanDo": "Cosa puoi fare",
   "@whatYouCanDo": {
     "description": "Intestazione sezione azioni community"
@@ -14988,10 +14952,6 @@
         "type": "int"
       }
     }
-  },
-  "exerciseWiki": "Wiki Esercizi",
-  "@exerciseWiki": {
-    "description": "Nome feature wiki esercizi"
   },
   "tipsToReviewCount": "{count} consigli da revisionare",
   "@tipsToReviewCount": {
@@ -19505,7 +19465,6 @@
   "ghostModeHideXP": "Nascondi XP e progressi livello",
   "ghostModeHideTier": "Nascondi badge tier",
   "ghostModeHideStreak": "Nascondi contatore streak",
-  "ghostModeHideCommunity": "Nascondi funzioni community",
   "ghostModeHideComparisons": "Nascondi confronti forza",
   "ghostModeHideAnimations": "Nascondi animazioni XP",
   "tooltipPR": "Record Personale",
@@ -19955,5 +19914,208 @@
   "copyLogsToClipboard": "Copia log negli appunti",
   "clearLogs": "Cancella log",
   "runAllTests": "Esegui tutti i test",
-  "runningTests": "Esecuzione test..."
+  "runningTests": "Esecuzione test...",
+  "onboardingChoiceTitle": "Profilo Completato!",
+  "@onboardingChoiceTitle": {
+    "description": "Title shown after completing initial onboarding"
+  },
+  "onboardingChoiceSubtitle": "Come vuoi iniziare?",
+  "@onboardingChoiceSubtitle": {
+    "description": "Subtitle asking user choice"
+  },
+  "onboardingChoiceGuided": "Guidami",
+  "@onboardingChoiceGuided": {
+    "description": "Option for guided wizard"
+  },
+  "onboardingChoiceGuidedDescription": "Crea la tua prima routine di allenamento passo dopo passo",
+  "@onboardingChoiceGuidedDescription": {
+    "description": "Description for guided option"
+  },
+  "onboardingChoiceExplore": "Esploro da solo",
+  "@onboardingChoiceExplore": {
+    "description": "Option to explore freely"
+  },
+  "onboardingChoiceExploreDescription": "Scopri l'app al tuo ritmo",
+  "@onboardingChoiceExploreDescription": {
+    "description": "Description for explore option"
+  },
+  "templateWizardReminderTitle": "Crea la Tua Prima Routine",
+  "@templateWizardReminderTitle": {
+    "description": "Reminder card title"
+  },
+  "templateWizardReminderDescription": "Una routine di allenamento personalizzata ti aspetta. Vuoi crearla ora?",
+  "@templateWizardReminderDescription": {
+    "description": "Reminder card description"
+  },
+  "templateWizardReminderAction": "Inizia Wizard",
+  "@templateWizardReminderAction": {
+    "description": "Start wizard button"
+  },
+  "templateWizardReminderDismiss": "Più tardi",
+  "@templateWizardReminderDismiss": {
+    "description": "Dismiss button"
+  },
+  "tourMyTemplatesTitle": "Le Mie Schede",
+  "@tourMyTemplatesTitle": {
+    "description": "Home tour step for templates"
+  },
+  "tourMyTemplatesDescription": "Accesso rapido a Routine di Allenamento, Esercizi Personalizzati e Template Preimpostati. Crea nuovi allenamenti qui!",
+  "@tourMyTemplatesDescription": {
+    "description": "Description for templates tour step"
+  },
+  "initialOnboardingHealthKitSuccessBoth": "Peso e altezza importati da HealthKit",
+  "@initialOnboardingHealthKitSuccessBoth": {
+    "description": "Success message when both values imported"
+  },
+  "initialOnboardingHealthKitSuccessHeight": "Altezza importata da HealthKit",
+  "@initialOnboardingHealthKitSuccessHeight": {
+    "description": "Success message when only height imported"
+  },
+  "initialOnboardingHealthKitNoData": "Nessun dato salute trovato",
+  "@initialOnboardingHealthKitNoData": {
+    "description": "Message when no HealthKit data available"
+  },
+  "orChooseNew": "oppure scegli nuovo",
+  "@orChooseNew": {
+    "description": "Divider text for new option"
+  },
+  "stepRequired": "Richiesto",
+  "@stepRequired": {
+    "description": "Required step indicator"
+  },
+  "stepRecommended": "Consigliato",
+  "@stepRecommended": {
+    "description": "Recommended step indicator"
+  },
+  "stepOptional": "Opzionale",
+  "@stepOptional": {
+    "description": "Optional step indicator"
+  },
+  "useLastSettings": "Usa impostazioni precedenti",
+  "@useLastSettings": {
+    "description": "Button to use previous workout settings"
+  },
+  "any": "Qualsiasi",
+  "@any": {
+    "description": "Generic any option"
+  },
+  "textCopied": "Testo copiato",
+  "@textCopied": {
+    "description": "Snackbar message when text is copied"
+  },
+  "clearConversation": "Cancella conversazione",
+  "@clearConversation": {
+    "description": "Clear conversation button"
+  },
+  "clearConversationConfirm": "Sei sicuro di voler cancellare questa conversazione?",
+  "@clearConversationConfirm": {
+    "description": "Confirmation message for clearing conversation"
+  },
+  "socialConsentTitle": "Condividi Template",
+  "@socialConsentTitle": {
+    "description": "Title for social sharing consent dialog"
+  },
+  "socialConsentMessage": "Condividendo questo template, accetti che sarà visibile ad altri utenti",
+  "@socialConsentMessage": {
+    "description": "Consent message for social sharing"
+  },
+  "socialConsentRevocable": "Puoi rimuovere il tuo template in qualsiasi momento",
+  "@socialConsentRevocable": {
+    "description": "Note about revocability"
+  },
+  "socialConsentCancel": "Annulla",
+  "@socialConsentCancel": {
+    "description": "Cancel button"
+  },
+  "socialConsentAnonymous": "Condividi Anonimamente",
+  "@socialConsentAnonymous": {
+    "description": "Share anonymously button"
+  },
+  "socialConsentAgree": "Condividi con Nome",
+  "@socialConsentAgree": {
+    "description": "Share with name button"
+  },
+  "templatePublished": "Template pubblicato",
+  "@templatePublished": {
+    "description": "Message when template is published"
+  },
+  "templateReportAction": "Segnala",
+  "@templateReportAction": {
+    "description": "Report action button"
+  },
+  "templateReportTitle": "Segnala Template",
+  "@templateReportTitle": {
+    "description": "Report dialog title"
+  },
+  "templateReportReasonLabel": "Motivo",
+  "@templateReportReasonLabel": {
+    "description": "Report reason label"
+  },
+  "templateReportReasonSpam": "Spam",
+  "@templateReportReasonSpam": {
+    "description": "Spam report reason"
+  },
+  "templateReportReasonInappropriate": "Contenuto inappropriato",
+  "@templateReportReasonInappropriate": {
+    "description": "Inappropriate content report reason"
+  },
+  "templateReportReasonMisleading": "Informazioni fuorvianti",
+  "@templateReportReasonMisleading": {
+    "description": "Misleading info report reason"
+  },
+  "templateReportReasonCopyright": "Violazione copyright",
+  "@templateReportReasonCopyright": {
+    "description": "Copyright violation report reason"
+  },
+  "templateReportReasonOther": "Altro",
+  "@templateReportReasonOther": {
+    "description": "Other report reason"
+  },
+  "templateReportDetailsLabel": "Dettagli",
+  "@templateReportDetailsLabel": {
+    "description": "Details field label"
+  },
+  "templateReportDetailsHint": "Fornisci dettagli aggiuntivi (opzionale)",
+  "@templateReportDetailsHint": {
+    "description": "Details field hint"
+  },
+  "templateReportSubmit": "Invia Segnalazione",
+  "@templateReportSubmit": {
+    "description": "Submit report button"
+  },
+  "templateReportSuccess": "Segnalazione inviata. Grazie per aiutarci a mantenere la community sicura.",
+  "@templateReportSuccess": {
+    "description": "Success message after report"
+  },
+  "templateReportAlreadyReported": "Hai già segnalato questo template",
+  "@templateReportAlreadyReported": {
+    "description": "Message when template already reported"
+  },
+  "templateUgcDisclaimer": "I template sono creati dagli utenti. Usa cautela.",
+  "@templateUgcDisclaimer": {
+    "description": "User generated content disclaimer"
+  },
+  "templateForkedFrom": "Derivato da {author}",
+  "@templateForkedFrom": {
+    "description": "Shows original author of forked template",
+    "placeholders": {
+      "author": {}
+    }
+  },
+  "tourDiscoverTitle": "Scopri Schede",
+  "@tourDiscoverTitle": {
+    "description": "Tour step: Discover tab title"
+  },
+  "tourDiscoverDescription": "Esplora schede create dalla community. Trova ispirazione per il tuo prossimo allenamento.",
+  "@tourDiscoverDescription": {
+    "description": "Tour step: Discover tab description"
+  },
+  "tourCreateTemplateTitle": "Crea Nuova Scheda",
+  "@tourCreateTemplateTitle": {
+    "description": "Tour step: Create button title"
+  },
+  "tourCreateTemplateDescription": "Tocca qui per creare la tua scheda personalizzata. Parti da zero o usa un preset.",
+  "@tourCreateTemplateDescription": {
+    "description": "Tour step: Create button description"
+  }
 }

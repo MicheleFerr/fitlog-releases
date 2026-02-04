@@ -94,6 +94,13 @@ abstract class CommunityWorkoutTemplate with _$CommunityWorkoutTemplate {
 
     // Muscoli target
     @Default([]) List<String> targetMuscles,
+
+    // GDPR: Pubblicazione anonima
+    @Default(false) bool isAnonymous,
+
+    // Fork attribution
+    String? forkedFromTemplateId,
+    String? originalAuthorName,
   }) = _CommunityWorkoutTemplate;
 
   factory CommunityWorkoutTemplate.fromJson(Map<String, dynamic> json) =>

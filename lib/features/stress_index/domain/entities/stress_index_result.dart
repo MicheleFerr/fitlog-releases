@@ -43,6 +43,13 @@ abstract class StressIndexResult with _$StressIndexResult {
     /// Workout ID this belongs to
     required String workoutId,
 
+    /// Workout name (for display in UI)
+    String? workoutName,
+
+    /// Actual workout date (when workout was performed)
+    /// Used for "cronologia recente" instead of calculatedAt
+    DateTime? workoutDate,
+
     /// Calculation timestamp
     required DateTime calculatedAt,
 

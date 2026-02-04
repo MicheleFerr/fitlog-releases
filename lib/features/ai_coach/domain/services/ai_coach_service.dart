@@ -33,8 +33,12 @@ class AIServiceResponse {
   /// Optional tool call made by AI
   final AIToolCall? toolCall;
 
+  /// Exercise name suggestions when a tool search didn't find exact match
+  final List<String>? suggestions;
+
   const AIServiceResponse({
     required this.content,
     this.toolCall,
+    this.suggestions,
   });
 }

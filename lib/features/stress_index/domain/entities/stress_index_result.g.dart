@@ -18,6 +18,10 @@ _StressIndexResult _$StressIndexResultFromJson(Map<String, dynamic> json) =>
       totalSets: (json['totalSets'] as num).toInt(),
       setsWithRpe: (json['setsWithRpe'] as num).toInt(),
       workoutId: json['workoutId'] as String,
+      workoutName: json['workoutName'] as String?,
+      workoutDate: json['workoutDate'] == null
+          ? null
+          : DateTime.parse(json['workoutDate'] as String),
       calculatedAt: DateTime.parse(json['calculatedAt'] as String),
       rawScore: (json['rawScore'] as num).toDouble(),
     );
@@ -33,6 +37,8 @@ Map<String, dynamic> _$StressIndexResultToJson(_StressIndexResult instance) =>
       'totalSets': instance.totalSets,
       'setsWithRpe': instance.setsWithRpe,
       'workoutId': instance.workoutId,
+      'workoutName': instance.workoutName,
+      'workoutDate': instance.workoutDate?.toIso8601String(),
       'calculatedAt': instance.calculatedAt.toIso8601String(),
       'rawScore': instance.rawScore,
     };

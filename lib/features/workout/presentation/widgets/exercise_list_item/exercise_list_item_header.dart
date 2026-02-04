@@ -53,7 +53,6 @@ class ExerciseListItemHeader extends StatelessWidget {
     required this.onShowExerciseReplacement,
     required this.onDuplicateExercise,
     required this.onShowDeleteConfirmation,
-    required this.onShowCommunityAdvice,
     required this.onShowCountingModePicker,
     required this.onAddWarmupSets,
     required this.onEditNotes,
@@ -85,7 +84,6 @@ class ExerciseListItemHeader extends StatelessWidget {
   final VoidCallback onShowExerciseReplacement;
   final VoidCallback onDuplicateExercise;
   final VoidCallback onShowDeleteConfirmation;
-  final VoidCallback onShowCommunityAdvice;
   final VoidCallback onShowCountingModePicker;
   final VoidCallback onAddWarmupSets;
   final VoidCallback onEditNotes;
@@ -758,7 +756,6 @@ class ExerciseListItemHeader extends StatelessWidget {
 
   Widget _buildPopupMenu(BuildContext context) {
     final showAdvanced = config.showAdvancedMenu ?? isProMode;
-    final showCommunity = config.showCommunitySuggestions ?? isProMode;
     final showInsights = config.showExerciseInsights ?? isProMode;
 
     return PopupMenuButton<String>(
@@ -782,9 +779,6 @@ class ExerciseListItemHeader extends StatelessWidget {
             break;
           case 'insight':
             onShowExerciseHistory();
-            break;
-          case 'community_advice':
-            onShowCommunityAdvice();
             break;
           case 'change_counting_mode':
             onShowCountingModePicker();
@@ -999,25 +993,6 @@ class ExerciseListItemHeader extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(context.l10n.exerciseListInsight),
-                ],
-              ),
-            ),
-          ],
-
-          // Community advice - conditional
-          if (showCommunity) ...[
-            const PopupMenuDivider(),
-            PopupMenuItem(
-              value: 'community_advice',
-              child: Row(
-                children: [
-                  const SemanticIcon(
-                    icon: AppIcons.tip,
-                    semanticLabel: 'Tips',
-                    size: AppIconSize.small,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(context.l10n.communityAdvice),
                 ],
               ),
             ),

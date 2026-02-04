@@ -83,9 +83,16 @@ class UnifiedFeedbackRepositoryImpl
 
     // 3. Create Firestore document with error handling via mixin
     return handleFirebaseOperation(() async {
-      final docRef = _feedbackCollection.doc(feedback.id);
+      // Generate new ID if empty, otherwise use provided ID
+      final docRef = feedback.id.isEmpty
+          ? _feedbackCollection.doc() // Auto-generate ID
+          : _feedbackCollection.doc(feedback.id);
+
+      // Add generated ID to the JSON data
+      feedbackJson['id'] = docRef.id;
+
       await docRef.set(feedbackJson);
-      return feedback.id;
+      return docRef.id;
     }, operationName: 'submitFeedback');
   }
 

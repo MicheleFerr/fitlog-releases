@@ -2824,6 +2824,35 @@ class AppLocalizationsIt extends AppLocalizations {
       'Questi sono consigli generali basati sui tuoi dati di allenamento. Consulta sempre un professionista del fitness qualificato prima di apportare modifiche significative al tuo programma di allenamento.';
 
   @override
+  String get aiCoachDisclaimerTitle => 'Importante: AI Coach';
+
+  @override
+  String get aiCoachDisclaimerSubtitle =>
+      'AI Coach fornisce suggerimenti GENERALI basati sui tuoi dati.';
+
+  @override
+  String get aiCoachDisclaimerNotTrainer =>
+      'NON è un personal trainer certificato';
+
+  @override
+  String get aiCoachDisclaimerNotDoctor => 'NON è un medico o nutrizionista';
+
+  @override
+  String get aiCoachDisclaimerNoDiagnosis =>
+      'NON fornisce diagnosi o prescrizioni';
+
+  @override
+  String get aiCoachDisclaimerConsultPro =>
+      'Consulta SEMPRE professionisti qualificati per decisioni sulla tua salute.';
+
+  @override
+  String get aiCoachDisclaimerMayContainErrors =>
+      'Le risposte possono contenere errori. Verifica sempre con fonti affidabili.';
+
+  @override
+  String get aiCoachDisclaimerUnderstand => 'Ho capito, continua';
+
+  @override
   String get aiBadge => 'AI';
 
   @override
@@ -3110,16 +3139,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get tosCheckboxHint => 'Richiesto per creare account';
-
-  @override
-  String get community => 'Community';
-
-  @override
-  String get communityComingSoonTitle => 'Funzionalità Community in Arrivo';
-
-  @override
-  String get communityComingSoonDescription =>
-      'Stiamo lavorando per creare una fantastica funzionalità community dove potrai connetterti con altri atleti, condividere i tuoi progressi e imparare gli uni dagli altri. Resta sintonizzato!';
 
   @override
   String get generalInformation => 'Informazioni Generali';
@@ -4859,10 +4878,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get reviewCorrections => 'Rivedi Correzioni';
 
   @override
-  String get reviewCorrectionsDescription =>
-      'Approva o rifiuta suggerimenti della community';
-
-  @override
   String get userAnalytics => 'Analisi Utenti';
 
   @override
@@ -4894,10 +4909,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get noRecentActivity => 'Nessuna Attività Recente';
-
-  @override
-  String get noRecentActivityDescription =>
-      'Le correzioni della community e le attività admin appariranno qui.';
 
   @override
   String get allRecentActivity => 'Tutte le Attività Recenti';
@@ -4940,17 +4951,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get welcomeAdmin => 'Benvenuto, Admin!';
 
   @override
-  String get adminDashboardDescription =>
-      'Gestisci il sistema FitLog Pro e controlla i contributi della community';
-
-  @override
   String get systemStatistics => 'Statistiche Sistema';
 
   @override
   String get firebaseDatabase => 'Database Cloud';
-
-  @override
-  String get communityActivity => 'Attività Community';
 
   @override
   String get recentActivity => 'Attività Recenti';
@@ -4998,22 +5002,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get firebaseManagement => 'Gestione Cloud';
 
   @override
-  String get adminInfoDescription =>
-      'Pannello admin per gestione sistema e controllo community';
-
-  @override
   String get exerciseManagement => 'Gestione Esercizi';
 
   @override
   String get exerciseManagementDescription =>
       'Aggiungi, modifica e organizza database esercizi';
-
-  @override
-  String get communityCorrections => 'Correzioni Community';
-
-  @override
-  String get communityCorrectionsDescription =>
-      'Rivedi e approva correzioni inviate dalla community';
 
   @override
   String get fixMissingData => 'Correggi Dati Mancanti';
@@ -5293,16 +5286,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get shareAdviceWithCommunity => 'Condividi un consiglio';
 
   @override
-  String get communityAdvice => 'Consigli dalla Community';
-
-  @override
-  String get communityContributions => 'Contributi Community';
-
-  @override
-  String get reviewContributionsDescription =>
-      'Gestisci i contributi della community';
-
-  @override
   String peopleFoundHelpful(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -5324,9 +5307,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get contributionSubmittedSuccess =>
       '✅ Contributo inviato! In attesa di approvazione';
-
-  @override
-  String get thankYouForContributing => 'Grazie per aver aiutato la community!';
 
   @override
   String get startWorkoutWithTemplate =>
@@ -5652,14 +5632,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get templateOnboardingDescriptionSubtitle =>
       'Opzionale - ti aiuta a ricordare di cosa tratta questa scheda';
-
-  @override
-  String get templateOnboardingTagsTitle =>
-      'Tag per il riconoscimento nella community';
-
-  @override
-  String get templateOnboardingTagsSubtitle =>
-      'Seleziona i tag che descrivono il tuo template per aiutare gli altri a trovarlo nella community';
 
   @override
   String get templateOnboardingRestTimerTitle =>
@@ -6000,17 +5972,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get exerciseDetailsTooltip =>
       'Visualizza informazioni complete sull\'esercizio incluse note personali, statistiche di progresso e insights sulle performance.';
-
-  @override
-  String get communitySuggestionsTitle => 'Suggerimenti Community';
-
-  @override
-  String get communitySuggestionsDescription =>
-      'Mostra consigli dalla community';
-
-  @override
-  String get communitySuggestionsTooltip =>
-      'Ricevi consigli utili e suggerimenti da altri atleti esperti per ogni esercizio.';
 
   @override
   String get tutInfoTitle => 'Informazioni TUT';
@@ -16217,9 +16178,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get youRePremium => 'You\\\'re Premium!';
 
   @override
-  String get communityAccess => 'Community Access';
-
-  @override
   String get shoulderPress => 'Shoulder Press';
 
   @override
@@ -20722,10 +20680,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get welcomeToCommunity => 'Benvenuto nella Community!';
 
   @override
-  String get communityDescription =>
-      'Condividi le tue conoscenze, aiuta gli altri a migliorare e guadagna XP contribuendo alla community fitness.';
-
-  @override
   String get whatYouCanDo => 'Cosa puoi fare';
 
   @override
@@ -21474,9 +21428,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String repsWithCount(int count) {
     return '$count reps';
   }
-
-  @override
-  String get exerciseWiki => 'Wiki Esercizi';
 
   @override
   String tipsToReviewCount(int count) {
@@ -26345,9 +26296,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ghostModeHideStreak => 'Nascondi contatore streak';
 
   @override
-  String get ghostModeHideCommunity => 'Nascondi funzioni community';
-
-  @override
   String get ghostModeHideComparisons => 'Nascondi confronti forza';
 
   @override
@@ -26785,4 +26733,170 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get runningTests => 'Esecuzione test...';
+
+  @override
+  String get onboardingChoiceTitle => 'Profilo Completato!';
+
+  @override
+  String get onboardingChoiceSubtitle => 'Come vuoi iniziare?';
+
+  @override
+  String get onboardingChoiceGuided => 'Guidami';
+
+  @override
+  String get onboardingChoiceGuidedDescription =>
+      'Crea la tua prima routine di allenamento passo dopo passo';
+
+  @override
+  String get onboardingChoiceExplore => 'Esploro da solo';
+
+  @override
+  String get onboardingChoiceExploreDescription => 'Scopri l\'app al tuo ritmo';
+
+  @override
+  String get templateWizardReminderTitle => 'Crea la Tua Prima Routine';
+
+  @override
+  String get templateWizardReminderDescription =>
+      'Una routine di allenamento personalizzata ti aspetta. Vuoi crearla ora?';
+
+  @override
+  String get templateWizardReminderAction => 'Inizia Wizard';
+
+  @override
+  String get templateWizardReminderDismiss => 'Più tardi';
+
+  @override
+  String get tourMyTemplatesTitle => 'Le Mie Schede';
+
+  @override
+  String get tourMyTemplatesDescription =>
+      'Accesso rapido a Routine di Allenamento, Esercizi Personalizzati e Template Preimpostati. Crea nuovi allenamenti qui!';
+
+  @override
+  String get initialOnboardingHealthKitSuccessBoth =>
+      'Peso e altezza importati da HealthKit';
+
+  @override
+  String get initialOnboardingHealthKitSuccessHeight =>
+      'Altezza importata da HealthKit';
+
+  @override
+  String get initialOnboardingHealthKitNoData => 'Nessun dato salute trovato';
+
+  @override
+  String get orChooseNew => 'oppure scegli nuovo';
+
+  @override
+  String get stepRequired => 'Richiesto';
+
+  @override
+  String get stepRecommended => 'Consigliato';
+
+  @override
+  String get stepOptional => 'Opzionale';
+
+  @override
+  String get useLastSettings => 'Usa impostazioni precedenti';
+
+  @override
+  String get any => 'Qualsiasi';
+
+  @override
+  String get textCopied => 'Testo copiato';
+
+  @override
+  String get clearConversation => 'Cancella conversazione';
+
+  @override
+  String get clearConversationConfirm =>
+      'Sei sicuro di voler cancellare questa conversazione?';
+
+  @override
+  String get socialConsentTitle => 'Condividi Template';
+
+  @override
+  String get socialConsentMessage =>
+      'Condividendo questo template, accetti che sarà visibile ad altri utenti';
+
+  @override
+  String get socialConsentRevocable =>
+      'Puoi rimuovere il tuo template in qualsiasi momento';
+
+  @override
+  String get socialConsentCancel => 'Annulla';
+
+  @override
+  String get socialConsentAnonymous => 'Condividi Anonimamente';
+
+  @override
+  String get socialConsentAgree => 'Condividi con Nome';
+
+  @override
+  String get templatePublished => 'Template pubblicato';
+
+  @override
+  String get templateReportAction => 'Segnala';
+
+  @override
+  String get templateReportTitle => 'Segnala Template';
+
+  @override
+  String get templateReportReasonLabel => 'Motivo';
+
+  @override
+  String get templateReportReasonSpam => 'Spam';
+
+  @override
+  String get templateReportReasonInappropriate => 'Contenuto inappropriato';
+
+  @override
+  String get templateReportReasonMisleading => 'Informazioni fuorvianti';
+
+  @override
+  String get templateReportReasonCopyright => 'Violazione copyright';
+
+  @override
+  String get templateReportReasonOther => 'Altro';
+
+  @override
+  String get templateReportDetailsLabel => 'Dettagli';
+
+  @override
+  String get templateReportDetailsHint =>
+      'Fornisci dettagli aggiuntivi (opzionale)';
+
+  @override
+  String get templateReportSubmit => 'Invia Segnalazione';
+
+  @override
+  String get templateReportSuccess =>
+      'Segnalazione inviata. Grazie per aiutarci a mantenere la community sicura.';
+
+  @override
+  String get templateReportAlreadyReported =>
+      'Hai già segnalato questo template';
+
+  @override
+  String get templateUgcDisclaimer =>
+      'I template sono creati dagli utenti. Usa cautela.';
+
+  @override
+  String templateForkedFrom(Object author) {
+    return 'Derivato da $author';
+  }
+
+  @override
+  String get tourDiscoverTitle => 'Scopri Schede';
+
+  @override
+  String get tourDiscoverDescription =>
+      'Esplora schede create dalla community. Trova ispirazione per il tuo prossimo allenamento.';
+
+  @override
+  String get tourCreateTemplateTitle => 'Crea Nuova Scheda';
+
+  @override
+  String get tourCreateTemplateDescription =>
+      'Tocca qui per creare la tua scheda personalizzata. Parti da zero o usa un preset.';
 }

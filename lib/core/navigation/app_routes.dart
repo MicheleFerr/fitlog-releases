@@ -143,9 +143,6 @@ abstract final class AppRoutes {
   static const String aiCoachPath = '/ai-coach';
   static const String aiCoachName = 'ai-coach';
 
-  static const String communityPath = '/community';
-  static const String communityName = 'community';
-
   static const String routinePath = '/routine';
   static const String routineName = 'routine';
 
@@ -158,6 +155,10 @@ abstract final class AppRoutes {
   /// Initial onboarding (first-time user setup) - outside shell
   static const String initialOnboardingPath = '/initial-onboarding';
   static const String initialOnboardingName = 'initial-onboarding';
+
+  /// Onboarding choice screen (guide me vs explore) - outside shell
+  static const String onboardingChoicePath = '/onboarding-choice';
+  static const String onboardingChoiceName = 'onboarding-choice';
 
   static const String adminPath = '/admin';
   static const String adminName = 'admin';

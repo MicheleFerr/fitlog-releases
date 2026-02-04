@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gymbro_flutter_new/core/navigation/main_shell.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/start_workout_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/personalized_content_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/xp_progress_bar.dart';
-import 'package:gymbro_flutter_new/features/home/presentation/widgets/exercise_wiki_card_compact.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/motivational_quote_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
@@ -29,6 +29,7 @@ import 'package:gymbro_flutter_new/features/stress_index/presentation/widgets/te
 import 'package:gymbro_flutter_new/features/stress_index/presentation/widgets/stress_prediction_card.dart';
 import 'package:gymbro_flutter_new/features/exercise_merge/presentation/widgets/merge_suggestion_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/weight_update_nudge_card.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/widgets/template_wizard_reminder_card.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/workout_tutorial_service.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_provider.dart';
@@ -46,7 +47,6 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_prov
 /// - TemplateSuggestionCard: AI-powered workout recommendation
 /// - StartWorkoutCard: Hero CTA
 /// - PersonalizedContentCard: Access to templates + custom exercises
-/// - ExerciseWikiCardCompact: Exercise wiki contributions
 class MinimalHomeScreen extends ConsumerStatefulWidget {
   const MinimalHomeScreen({super.key});
 
@@ -55,12 +55,9 @@ class MinimalHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
-  // GlobalKeys for Home Tour targets (5 essential steps - P0-1 fix)
+  // GlobalKeys for Home Tour targets (3 steps - UX 2025)
   final _xpProgressKey = GlobalKey();
-  final _startWorkoutKey = GlobalKey();
-  final _templatesCarouselKey = GlobalKey();
-  final _templateSuggestionKey = GlobalKey();
-  final _settingsButtonKey = GlobalKey();
+  final _myTemplatesKey = GlobalKey();
 
   @override
   void initState() {
@@ -84,9 +81,10 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
     tourNotifier.showTour(
       context: context,
       targetKeys: {
-        // UX 2025: Only 2 steps - XP and AI suggestions need explanation
+        // UX 2025: 3 essential steps
         HomeTourStep.xpProgress: _xpProgressKey,
-        HomeTourStep.templateSuggestion: _templateSuggestionKey,
+        HomeTourStep.myTemplates: _myTemplatesKey,
+        HomeTourStep.aiCoachIntro: ref.read(bottomNavKeyProvider),
       },
       onComplete: () {
         debugPrint('✅ [HomeTour] Tour completed!');
@@ -174,7 +172,6 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
             ),
             actions: [
               IconButton(
-                key: _settingsButtonKey,
                 onPressed: () => showSettingsBottomSheet(context),
                 icon: SemanticIcon(
                   icon: AppIcons.settingsOutlined,
@@ -218,6 +215,10 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                 const WeightUpdateNudgeCard(),
                 const SizedBox(height: 16),
 
+                // 0.80 Template Wizard Reminder (for users who skipped wizard)
+                const TemplateWizardReminderCard(),
+                const SizedBox(height: 16),
+
                 // 0.85 Pro Insights Preview (CTA for Pro Analytics)
                 const RepaintBoundary(child: ProInsightsPreviewSection()),
                 const SizedBox(height: 16),
@@ -236,9 +237,8 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                 const SizedBox(height: 20),
 
                 // 0.95 Template Suggestion (AI-powered workout recommendation)
-                RepaintBoundary(
-                  key: _templateSuggestionKey,
-                  child: const TemplateSuggestionCard(),
+                const RepaintBoundary(
+                  child: TemplateSuggestionCard(),
                 ),
                 const SizedBox(height: 16),
 
@@ -247,24 +247,18 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                 const SizedBox(height: 20),
 
                 // 1. Start Workout Card (Hero)
-                RepaintBoundary(
-                  key: _startWorkoutKey,
-                  child: const StartWorkoutCard(),
+                const RepaintBoundary(
+                  child: StartWorkoutCard(),
                 ),
                 const SizedBox(height: 24),
 
                 // 2. Personalized Content (Templates + Custom Exercises)
+                // 🎯 Tour Step 2: "Le mie schede"
                 RepaintBoundary(
-                  key: _templatesCarouselKey,
+                  key: _myTemplatesKey,
                   child: const PersonalizedContentCard(),
                 ),
                 const SizedBox(height: 24),
-
-                // 3. Exercise Wiki Card (Hidden in Ghost Mode - Community)
-                if (!ref.watch(shouldHideCommunityProvider)) ...[
-                  const RepaintBoundary(child: ExerciseWikiCardCompact()),
-                  const SizedBox(height: 24),
-                ],
 
                 // Admin feedback card - 🔧 PERF FIX: Isolated in Consumer
                 Consumer(

@@ -106,6 +106,59 @@ class AuthController extends Notifier<AsyncValue<void>> {
 
   AuthService get _authService => ref.watch(authServiceProvider);
 
+  /// 🔧 FIX: Check if user has completed onboarding and reset local flag if not
+  ///
+  /// Called after successful login to ensure new users see onboarding even
+  /// if another user had already completed it on this device.
+  Future<void> _checkAndResetOnboardingForNewUser(String uid) async {
+    try {
+      // Get user document from Firestore
+      final userDoc = await _authService.getUserDocument(uid);
+
+      if (!userDoc.exists) {
+        // New user without document - definitely needs onboarding
+        if (kDebugMode) {
+          debugPrint(
+            '[Auth] 🆕 New user (no document) - resetting onboarding flag',
+          );
+        }
+        await ref
+            .read(appConfigProvider.notifier)
+            .resetInitialOnboardingForNewUser();
+        return;
+      }
+
+      // Check if user has completed onboarding
+      final data = userDoc.data() as Map<String, dynamic>?;
+      final hasCompletedOnboarding = data?['onboardingCompleted'] == true;
+
+      if (!hasCompletedOnboarding) {
+        // User exists but hasn't completed onboarding
+        if (kDebugMode) {
+          debugPrint(
+            '[Auth] 🔄 User exists but onboarding not completed - resetting flag',
+          );
+        }
+        await ref
+            .read(appConfigProvider.notifier)
+            .resetInitialOnboardingForNewUser();
+      } else {
+        if (kDebugMode) {
+          debugPrint('[Auth] ✅ User has completed onboarding');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[Auth] ⚠️ Error checking onboarding status: $e');
+      }
+      // On error, reset to be safe - better to show onboarding twice
+      // than to skip it for a new user
+      await ref
+          .read(appConfigProvider.notifier)
+          .resetInitialOnboardingForNewUser();
+    }
+  }
+
   // Register with Email and Password
   Future<void> registerWithEmailAndPassword({
     required String email,
@@ -115,11 +168,17 @@ class AuthController extends Notifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
 
     try {
-      await _authService.registerWithEmailAndPassword(
+      final credential = await _authService.registerWithEmailAndPassword(
         email: email,
         password: password,
         displayName: displayName,
       );
+
+      // 🔧 FIX: New users always need onboarding - reset local flag
+      if (credential?.user != null) {
+        await _checkAndResetOnboardingForNewUser(credential!.user!.uid);
+      }
+
       state = const AsyncValue.data(null);
     } catch (e, stackTrace) {
       state = AsyncValue.error(e, stackTrace);
@@ -138,6 +197,13 @@ class AuthController extends Notifier<AsyncValue<void>> {
         email: email,
         password: password,
       );
+
+      // 🔧 FIX: Check and reset onboarding for new users
+      final currentUser = _authService.currentUser;
+      if (currentUser != null) {
+        await _checkAndResetOnboardingForNewUser(currentUser.uid);
+      }
+
       state = const AsyncValue.data(null);
     } catch (e, stackTrace) {
       state = AsyncValue.error(e, stackTrace);
@@ -149,7 +215,13 @@ class AuthController extends Notifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
 
     try {
-      await _authService.signInWithGoogle();
+      final credential = await _authService.signInWithGoogle();
+
+      // 🔧 FIX: Check and reset onboarding for new users
+      if (credential?.user != null) {
+        await _checkAndResetOnboardingForNewUser(credential!.user!.uid);
+      }
+
       state = const AsyncValue.data(null);
     } catch (e, stackTrace) {
       state = AsyncValue.error(e, stackTrace);
@@ -161,7 +233,13 @@ class AuthController extends Notifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
 
     try {
-      await _authService.signInWithApple();
+      final credential = await _authService.signInWithApple();
+
+      // 🔧 FIX: Check and reset onboarding for new users
+      if (credential?.user != null) {
+        await _checkAndResetOnboardingForNewUser(credential!.user!.uid);
+      }
+
       state = const AsyncValue.data(null);
     } catch (e, stackTrace) {
       state = AsyncValue.error(e, stackTrace);
@@ -173,7 +251,13 @@ class AuthController extends Notifier<AsyncValue<void>> {
     state = const AsyncValue.loading();
 
     try {
-      await _authService.signInAnonymously();
+      final credential = await _authService.signInAnonymously();
+
+      // 🔧 FIX: Check and reset onboarding for new users (guests always need onboarding)
+      if (credential?.user != null) {
+        await _checkAndResetOnboardingForNewUser(credential!.user!.uid);
+      }
+
       state = const AsyncValue.data(null);
     } catch (e, stackTrace) {
       state = AsyncValue.error(e, stackTrace);

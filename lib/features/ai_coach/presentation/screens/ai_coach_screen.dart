@@ -2,6 +2,7 @@
 ///
 /// Main chat interface for AI Coach feature.
 /// Displays messages, typing indicator, input bar, and rate limit warnings.
+/// Auto-scrolls on new messages for better UX.
 ///
 /// **Layer**: Presentation - Screen
 /// **Feature**: AI Coach
@@ -16,26 +17,120 @@ import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/ai_inp
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/ai_message_bubble.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/ai_rate_limit_banner.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/ai_typing_indicator.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/ai_coach_disclaimer_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// AI Coach chat screen
-class AICoachScreen extends ConsumerWidget {
+class AICoachScreen extends ConsumerStatefulWidget {
   const AICoachScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AICoachScreen> createState() => _AICoachScreenState();
+}
+
+class _AICoachScreenState extends ConsumerState<AICoachScreen> {
+  final ScrollController _scrollController = ScrollController();
+  int _previousMessageCount = 0;
+  bool _disclaimerChecked = false;
+  bool _disclaimerAccepted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkDisclaimer();
+  }
+
+  /// Check and show disclaimer on first access
+  Future<void> _checkDisclaimer() async {
+    // Check if already accepted (cached)
+    final accepted = await AICoachDisclaimerDialog.hasAccepted();
+    if (mounted) {
+      setState(() {
+        _disclaimerChecked = true;
+        _disclaimerAccepted = accepted;
+      });
+
+      // Show dialog if not yet accepted
+      if (!accepted) {
+        // Wait for build to complete before showing dialog
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          if (mounted) {
+            final result = await AICoachDisclaimerDialog.show(context);
+            if (mounted) {
+              if (result) {
+                setState(() => _disclaimerAccepted = true);
+              } else {
+                // User cancelled - go back
+                Navigator.of(context).pop();
+              }
+            }
+          }
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (_scrollController.hasClients) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Show loading while checking disclaimer
+    if (!_disclaimerChecked) {
+      return Scaffold(
+        appBar: AppBar(title: Text(context.l10n.aiCoach)),
+        body: const Center(child: LoadingIndicator()),
+      );
+    }
+
+    // Show empty state if disclaimer not accepted (will pop shortly)
+    if (!_disclaimerAccepted) {
+      return Scaffold(
+        appBar: AppBar(title: Text(context.l10n.aiCoach)),
+        body: const SizedBox.shrink(),
+      );
+    }
+
     final chatState = ref.watch(aIChatProvider);
     final rateLimitAsync = ref.watch(aIRateLimitProvider);
+
+    // Auto-scroll when new messages arrive
+    if (chatState.messages.length > _previousMessageCount) {
+      _previousMessageCount = chatState.messages.length;
+      _scrollToBottom();
+    }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.aiCoach),
         actions: [
           IconButton(
-            icon: Icon(AppIcons.delete),
-            onPressed: () => _showClearDialog(context, ref),
-            tooltip: 'Cancella conversazione',
+            icon: SemanticIcon.button(
+              icon: AppIcons.delete,
+              semanticLabel: context.l10n.delete,
+            ),
+            onPressed: () => _showClearDialog(context),
+            tooltip: context.l10n.clearConversation,
           ),
         ],
       ),
@@ -59,19 +154,25 @@ class AICoachScreen extends ConsumerWidget {
           // Messages list
           Expanded(
             child: ListView.builder(
-              reverse: false,
+              controller: _scrollController,
               itemCount: chatState.messages.length,
               itemBuilder: (context, index) {
                 final message = chatState.messages[index];
 
                 // Don't show system messages (disclaimer is special)
-                if (message.role == MessageRole.system && message.id != 'disclaimer') {
+                if (message.role == MessageRole.system &&
+                    message.id != 'disclaimer') {
                   return const SizedBox.shrink();
                 }
 
                 return AIMessageBubble(
                   message: message,
                   isFromUser: message.role == MessageRole.user,
+                  onSuggestionTap: (exercise) {
+                    ref
+                        .read(aIChatProvider.notifier)
+                        .sendMessage('Qual e il mio massimale su $exercise?');
+                  },
                 );
               },
             ),
@@ -95,7 +196,10 @@ class AICoachScreen extends ConsumerWidget {
 
           // Input bar
           AIInputBar(
-            onSend: (text) => ref.read(aIChatProvider.notifier).sendMessage(text),
+            onSend: (text) {
+              ref.read(aIChatProvider.notifier).sendMessage(text);
+              _scrollToBottom();
+            },
             isLoading: chatState.isLoading,
           ),
         ],
@@ -103,25 +207,25 @@ class AICoachScreen extends ConsumerWidget {
     );
   }
 
-  void _showClearDialog(BuildContext context, WidgetRef ref) {
+  void _showClearDialog(BuildContext context) {
+    final l10n = context.l10n;
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Cancella conversazione'),
-        content: Text(
-          'Vuoi cancellare tutti i messaggi? Questa azione non può essere annullata.',
-        ),
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.clearConversation),
+        content: Text(l10n.clearConversationConfirm),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Annulla'),
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () {
               ref.read(aIChatProvider.notifier).clearMessages();
-              Navigator.pop(context);
+              Navigator.pop(dialogContext);
             },
-            child: Text('Cancella'),
+            child: Text(l10n.delete),
           ),
         ],
       ),

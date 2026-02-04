@@ -108,10 +108,11 @@ class InitialOnboardingCompletionService {
 
   /// Mark onboarding as completed in AppConfig
   Future<void> _markOnboardingCompleted() async {
+    print('🔧 [CompletionService] Marking onboarding as completed...');
     final appConfigNotifier = _ref.read(appConfigProvider.notifier);
     await appConfigNotifier.setInitialOnboardingCompleted(true);
 
-    debugPrint('✅ Marked initial onboarding as completed');
+    print('✅ [CompletionService] Marked initial onboarding as completed');
   }
 
   /// Sync data to Firestore in background

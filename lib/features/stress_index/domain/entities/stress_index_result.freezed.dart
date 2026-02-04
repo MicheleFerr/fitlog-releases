@@ -25,7 +25,10 @@ mixin _$StressIndexResult {
  Map<String, MuscleStressData> get muscleBreakdown;/// Total sets analyzed
  int get totalSets;/// Sets with RPE data
  int get setsWithRpe;/// Workout ID this belongs to
- String get workoutId;/// Calculation timestamp
+ String get workoutId;/// Workout name (for display in UI)
+ String? get workoutName;/// Actual workout date (when workout was performed)
+/// Used for "cronologia recente" instead of calculatedAt
+ DateTime? get workoutDate;/// Calculation timestamp
  DateTime get calculatedAt;/// Raw score before logarithmic conversion
  double get rawScore;
 /// Create a copy of StressIndexResult
@@ -40,16 +43,16 @@ $StressIndexResultCopyWith<StressIndexResult> get copyWith => _$StressIndexResul
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StressIndexResult&&(identical(other.primaryScore, primaryScore) || other.primaryScore == primaryScore)&&(identical(other.fallbackScore, fallbackScore) || other.fallbackScore == fallbackScore)&&(identical(other.confidence, confidence) || other.confidence == confidence)&&const DeepCollectionEquality().equals(other.muscleBreakdown, muscleBreakdown)&&(identical(other.totalSets, totalSets) || other.totalSets == totalSets)&&(identical(other.setsWithRpe, setsWithRpe) || other.setsWithRpe == setsWithRpe)&&(identical(other.workoutId, workoutId) || other.workoutId == workoutId)&&(identical(other.calculatedAt, calculatedAt) || other.calculatedAt == calculatedAt)&&(identical(other.rawScore, rawScore) || other.rawScore == rawScore));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StressIndexResult&&(identical(other.primaryScore, primaryScore) || other.primaryScore == primaryScore)&&(identical(other.fallbackScore, fallbackScore) || other.fallbackScore == fallbackScore)&&(identical(other.confidence, confidence) || other.confidence == confidence)&&const DeepCollectionEquality().equals(other.muscleBreakdown, muscleBreakdown)&&(identical(other.totalSets, totalSets) || other.totalSets == totalSets)&&(identical(other.setsWithRpe, setsWithRpe) || other.setsWithRpe == setsWithRpe)&&(identical(other.workoutId, workoutId) || other.workoutId == workoutId)&&(identical(other.workoutName, workoutName) || other.workoutName == workoutName)&&(identical(other.workoutDate, workoutDate) || other.workoutDate == workoutDate)&&(identical(other.calculatedAt, calculatedAt) || other.calculatedAt == calculatedAt)&&(identical(other.rawScore, rawScore) || other.rawScore == rawScore));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,primaryScore,fallbackScore,confidence,const DeepCollectionEquality().hash(muscleBreakdown),totalSets,setsWithRpe,workoutId,calculatedAt,rawScore);
+int get hashCode => Object.hash(runtimeType,primaryScore,fallbackScore,confidence,const DeepCollectionEquality().hash(muscleBreakdown),totalSets,setsWithRpe,workoutId,workoutName,workoutDate,calculatedAt,rawScore);
 
 @override
 String toString() {
-  return 'StressIndexResult(primaryScore: $primaryScore, fallbackScore: $fallbackScore, confidence: $confidence, muscleBreakdown: $muscleBreakdown, totalSets: $totalSets, setsWithRpe: $setsWithRpe, workoutId: $workoutId, calculatedAt: $calculatedAt, rawScore: $rawScore)';
+  return 'StressIndexResult(primaryScore: $primaryScore, fallbackScore: $fallbackScore, confidence: $confidence, muscleBreakdown: $muscleBreakdown, totalSets: $totalSets, setsWithRpe: $setsWithRpe, workoutId: $workoutId, workoutName: $workoutName, workoutDate: $workoutDate, calculatedAt: $calculatedAt, rawScore: $rawScore)';
 }
 
 
@@ -60,7 +63,7 @@ abstract mixin class $StressIndexResultCopyWith<$Res>  {
   factory $StressIndexResultCopyWith(StressIndexResult value, $Res Function(StressIndexResult) _then) = _$StressIndexResultCopyWithImpl;
 @useResult
 $Res call({
- double primaryScore, double fallbackScore, double confidence, Map<String, MuscleStressData> muscleBreakdown, int totalSets, int setsWithRpe, String workoutId, DateTime calculatedAt, double rawScore
+ double primaryScore, double fallbackScore, double confidence, Map<String, MuscleStressData> muscleBreakdown, int totalSets, int setsWithRpe, String workoutId, String? workoutName, DateTime? workoutDate, DateTime calculatedAt, double rawScore
 });
 
 
@@ -77,7 +80,7 @@ class _$StressIndexResultCopyWithImpl<$Res>
 
 /// Create a copy of StressIndexResult
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? primaryScore = null,Object? fallbackScore = null,Object? confidence = null,Object? muscleBreakdown = null,Object? totalSets = null,Object? setsWithRpe = null,Object? workoutId = null,Object? calculatedAt = null,Object? rawScore = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? primaryScore = null,Object? fallbackScore = null,Object? confidence = null,Object? muscleBreakdown = null,Object? totalSets = null,Object? setsWithRpe = null,Object? workoutId = null,Object? workoutName = freezed,Object? workoutDate = freezed,Object? calculatedAt = null,Object? rawScore = null,}) {
   return _then(_self.copyWith(
 primaryScore: null == primaryScore ? _self.primaryScore : primaryScore // ignore: cast_nullable_to_non_nullable
 as double,fallbackScore: null == fallbackScore ? _self.fallbackScore : fallbackScore // ignore: cast_nullable_to_non_nullable
@@ -86,7 +89,9 @@ as double,muscleBreakdown: null == muscleBreakdown ? _self.muscleBreakdown : mus
 as Map<String, MuscleStressData>,totalSets: null == totalSets ? _self.totalSets : totalSets // ignore: cast_nullable_to_non_nullable
 as int,setsWithRpe: null == setsWithRpe ? _self.setsWithRpe : setsWithRpe // ignore: cast_nullable_to_non_nullable
 as int,workoutId: null == workoutId ? _self.workoutId : workoutId // ignore: cast_nullable_to_non_nullable
-as String,calculatedAt: null == calculatedAt ? _self.calculatedAt : calculatedAt // ignore: cast_nullable_to_non_nullable
+as String,workoutName: freezed == workoutName ? _self.workoutName : workoutName // ignore: cast_nullable_to_non_nullable
+as String?,workoutDate: freezed == workoutDate ? _self.workoutDate : workoutDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,calculatedAt: null == calculatedAt ? _self.calculatedAt : calculatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,rawScore: null == rawScore ? _self.rawScore : rawScore // ignore: cast_nullable_to_non_nullable
 as double,
   ));
@@ -173,10 +178,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double primaryScore,  double fallbackScore,  double confidence,  Map<String, MuscleStressData> muscleBreakdown,  int totalSets,  int setsWithRpe,  String workoutId,  DateTime calculatedAt,  double rawScore)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double primaryScore,  double fallbackScore,  double confidence,  Map<String, MuscleStressData> muscleBreakdown,  int totalSets,  int setsWithRpe,  String workoutId,  String? workoutName,  DateTime? workoutDate,  DateTime calculatedAt,  double rawScore)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StressIndexResult() when $default != null:
-return $default(_that.primaryScore,_that.fallbackScore,_that.confidence,_that.muscleBreakdown,_that.totalSets,_that.setsWithRpe,_that.workoutId,_that.calculatedAt,_that.rawScore);case _:
+return $default(_that.primaryScore,_that.fallbackScore,_that.confidence,_that.muscleBreakdown,_that.totalSets,_that.setsWithRpe,_that.workoutId,_that.workoutName,_that.workoutDate,_that.calculatedAt,_that.rawScore);case _:
   return orElse();
 
 }
@@ -194,10 +199,10 @@ return $default(_that.primaryScore,_that.fallbackScore,_that.confidence,_that.mu
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double primaryScore,  double fallbackScore,  double confidence,  Map<String, MuscleStressData> muscleBreakdown,  int totalSets,  int setsWithRpe,  String workoutId,  DateTime calculatedAt,  double rawScore)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double primaryScore,  double fallbackScore,  double confidence,  Map<String, MuscleStressData> muscleBreakdown,  int totalSets,  int setsWithRpe,  String workoutId,  String? workoutName,  DateTime? workoutDate,  DateTime calculatedAt,  double rawScore)  $default,) {final _that = this;
 switch (_that) {
 case _StressIndexResult():
-return $default(_that.primaryScore,_that.fallbackScore,_that.confidence,_that.muscleBreakdown,_that.totalSets,_that.setsWithRpe,_that.workoutId,_that.calculatedAt,_that.rawScore);case _:
+return $default(_that.primaryScore,_that.fallbackScore,_that.confidence,_that.muscleBreakdown,_that.totalSets,_that.setsWithRpe,_that.workoutId,_that.workoutName,_that.workoutDate,_that.calculatedAt,_that.rawScore);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -214,10 +219,10 @@ return $default(_that.primaryScore,_that.fallbackScore,_that.confidence,_that.mu
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double primaryScore,  double fallbackScore,  double confidence,  Map<String, MuscleStressData> muscleBreakdown,  int totalSets,  int setsWithRpe,  String workoutId,  DateTime calculatedAt,  double rawScore)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double primaryScore,  double fallbackScore,  double confidence,  Map<String, MuscleStressData> muscleBreakdown,  int totalSets,  int setsWithRpe,  String workoutId,  String? workoutName,  DateTime? workoutDate,  DateTime calculatedAt,  double rawScore)?  $default,) {final _that = this;
 switch (_that) {
 case _StressIndexResult() when $default != null:
-return $default(_that.primaryScore,_that.fallbackScore,_that.confidence,_that.muscleBreakdown,_that.totalSets,_that.setsWithRpe,_that.workoutId,_that.calculatedAt,_that.rawScore);case _:
+return $default(_that.primaryScore,_that.fallbackScore,_that.confidence,_that.muscleBreakdown,_that.totalSets,_that.setsWithRpe,_that.workoutId,_that.workoutName,_that.workoutDate,_that.calculatedAt,_that.rawScore);case _:
   return null;
 
 }
@@ -229,7 +234,7 @@ return $default(_that.primaryScore,_that.fallbackScore,_that.confidence,_that.mu
 @JsonSerializable()
 
 class _StressIndexResult extends StressIndexResult {
-  const _StressIndexResult({required this.primaryScore, required this.fallbackScore, required this.confidence, required final  Map<String, MuscleStressData> muscleBreakdown, required this.totalSets, required this.setsWithRpe, required this.workoutId, required this.calculatedAt, required this.rawScore}): _muscleBreakdown = muscleBreakdown,super._();
+  const _StressIndexResult({required this.primaryScore, required this.fallbackScore, required this.confidence, required final  Map<String, MuscleStressData> muscleBreakdown, required this.totalSets, required this.setsWithRpe, required this.workoutId, this.workoutName, this.workoutDate, required this.calculatedAt, required this.rawScore}): _muscleBreakdown = muscleBreakdown,super._();
   factory _StressIndexResult.fromJson(Map<String, dynamic> json) => _$StressIndexResultFromJson(json);
 
 /// Primary stress score (0-100, logarithmic)
@@ -256,6 +261,11 @@ class _StressIndexResult extends StressIndexResult {
 @override final  int setsWithRpe;
 /// Workout ID this belongs to
 @override final  String workoutId;
+/// Workout name (for display in UI)
+@override final  String? workoutName;
+/// Actual workout date (when workout was performed)
+/// Used for "cronologia recente" instead of calculatedAt
+@override final  DateTime? workoutDate;
 /// Calculation timestamp
 @override final  DateTime calculatedAt;
 /// Raw score before logarithmic conversion
@@ -274,16 +284,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StressIndexResult&&(identical(other.primaryScore, primaryScore) || other.primaryScore == primaryScore)&&(identical(other.fallbackScore, fallbackScore) || other.fallbackScore == fallbackScore)&&(identical(other.confidence, confidence) || other.confidence == confidence)&&const DeepCollectionEquality().equals(other._muscleBreakdown, _muscleBreakdown)&&(identical(other.totalSets, totalSets) || other.totalSets == totalSets)&&(identical(other.setsWithRpe, setsWithRpe) || other.setsWithRpe == setsWithRpe)&&(identical(other.workoutId, workoutId) || other.workoutId == workoutId)&&(identical(other.calculatedAt, calculatedAt) || other.calculatedAt == calculatedAt)&&(identical(other.rawScore, rawScore) || other.rawScore == rawScore));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StressIndexResult&&(identical(other.primaryScore, primaryScore) || other.primaryScore == primaryScore)&&(identical(other.fallbackScore, fallbackScore) || other.fallbackScore == fallbackScore)&&(identical(other.confidence, confidence) || other.confidence == confidence)&&const DeepCollectionEquality().equals(other._muscleBreakdown, _muscleBreakdown)&&(identical(other.totalSets, totalSets) || other.totalSets == totalSets)&&(identical(other.setsWithRpe, setsWithRpe) || other.setsWithRpe == setsWithRpe)&&(identical(other.workoutId, workoutId) || other.workoutId == workoutId)&&(identical(other.workoutName, workoutName) || other.workoutName == workoutName)&&(identical(other.workoutDate, workoutDate) || other.workoutDate == workoutDate)&&(identical(other.calculatedAt, calculatedAt) || other.calculatedAt == calculatedAt)&&(identical(other.rawScore, rawScore) || other.rawScore == rawScore));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,primaryScore,fallbackScore,confidence,const DeepCollectionEquality().hash(_muscleBreakdown),totalSets,setsWithRpe,workoutId,calculatedAt,rawScore);
+int get hashCode => Object.hash(runtimeType,primaryScore,fallbackScore,confidence,const DeepCollectionEquality().hash(_muscleBreakdown),totalSets,setsWithRpe,workoutId,workoutName,workoutDate,calculatedAt,rawScore);
 
 @override
 String toString() {
-  return 'StressIndexResult(primaryScore: $primaryScore, fallbackScore: $fallbackScore, confidence: $confidence, muscleBreakdown: $muscleBreakdown, totalSets: $totalSets, setsWithRpe: $setsWithRpe, workoutId: $workoutId, calculatedAt: $calculatedAt, rawScore: $rawScore)';
+  return 'StressIndexResult(primaryScore: $primaryScore, fallbackScore: $fallbackScore, confidence: $confidence, muscleBreakdown: $muscleBreakdown, totalSets: $totalSets, setsWithRpe: $setsWithRpe, workoutId: $workoutId, workoutName: $workoutName, workoutDate: $workoutDate, calculatedAt: $calculatedAt, rawScore: $rawScore)';
 }
 
 
@@ -294,7 +304,7 @@ abstract mixin class _$StressIndexResultCopyWith<$Res> implements $StressIndexRe
   factory _$StressIndexResultCopyWith(_StressIndexResult value, $Res Function(_StressIndexResult) _then) = __$StressIndexResultCopyWithImpl;
 @override @useResult
 $Res call({
- double primaryScore, double fallbackScore, double confidence, Map<String, MuscleStressData> muscleBreakdown, int totalSets, int setsWithRpe, String workoutId, DateTime calculatedAt, double rawScore
+ double primaryScore, double fallbackScore, double confidence, Map<String, MuscleStressData> muscleBreakdown, int totalSets, int setsWithRpe, String workoutId, String? workoutName, DateTime? workoutDate, DateTime calculatedAt, double rawScore
 });
 
 
@@ -311,7 +321,7 @@ class __$StressIndexResultCopyWithImpl<$Res>
 
 /// Create a copy of StressIndexResult
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? primaryScore = null,Object? fallbackScore = null,Object? confidence = null,Object? muscleBreakdown = null,Object? totalSets = null,Object? setsWithRpe = null,Object? workoutId = null,Object? calculatedAt = null,Object? rawScore = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? primaryScore = null,Object? fallbackScore = null,Object? confidence = null,Object? muscleBreakdown = null,Object? totalSets = null,Object? setsWithRpe = null,Object? workoutId = null,Object? workoutName = freezed,Object? workoutDate = freezed,Object? calculatedAt = null,Object? rawScore = null,}) {
   return _then(_StressIndexResult(
 primaryScore: null == primaryScore ? _self.primaryScore : primaryScore // ignore: cast_nullable_to_non_nullable
 as double,fallbackScore: null == fallbackScore ? _self.fallbackScore : fallbackScore // ignore: cast_nullable_to_non_nullable
@@ -320,7 +330,9 @@ as double,muscleBreakdown: null == muscleBreakdown ? _self._muscleBreakdown : mu
 as Map<String, MuscleStressData>,totalSets: null == totalSets ? _self.totalSets : totalSets // ignore: cast_nullable_to_non_nullable
 as int,setsWithRpe: null == setsWithRpe ? _self.setsWithRpe : setsWithRpe // ignore: cast_nullable_to_non_nullable
 as int,workoutId: null == workoutId ? _self.workoutId : workoutId // ignore: cast_nullable_to_non_nullable
-as String,calculatedAt: null == calculatedAt ? _self.calculatedAt : calculatedAt // ignore: cast_nullable_to_non_nullable
+as String,workoutName: freezed == workoutName ? _self.workoutName : workoutName // ignore: cast_nullable_to_non_nullable
+as String?,workoutDate: freezed == workoutDate ? _self.workoutDate : workoutDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,calculatedAt: null == calculatedAt ? _self.calculatedAt : calculatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,rawScore: null == rawScore ? _self.rawScore : rawScore // ignore: cast_nullable_to_non_nullable
 as double,
   ));

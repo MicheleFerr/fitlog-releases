@@ -240,6 +240,30 @@ class StressIndexTab extends ConsumerWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      // BUG FIX #1: Show workout name
+                      if (result.workoutName != null) ...[
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(
+                              AppIcons.fitnessCenter,
+                              size: AppIconSize.tiny,
+                              color: context.colors.onSurfaceVariant,
+                            ),
+                            const SizedBox(width: 4),
+                            Flexible(
+                              child: Text(
+                                result.workoutName!,
+                                style: context.textTheme.bodySmall?.copyWith(
+                                  color: context.colors.onSurfaceVariant,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                       const SizedBox(height: 8),
                       Text(
                         _getStressDescription(context, result.stressLevel),
@@ -506,7 +530,8 @@ class StressIndexTab extends ConsumerWidget {
   Widget _buildHistoryRow(BuildContext context, StressIndexResult result) {
     final score = result.displayScore;
     final color = _getScoreColor(context, score);
-    final date = result.calculatedAt;
+    // BUG FIX #2: Use workoutDate instead of calculatedAt for accurate history
+    final date = result.workoutDate ?? result.calculatedAt;
     final dateText = _formatDate(context, date);
 
     return Padding(
@@ -542,6 +567,17 @@ class StressIndexTab extends ConsumerWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
+                // Show workout name if available
+                if (result.workoutName != null)
+                  Text(
+                    result.workoutName!,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 Text(
                   dateText,
                   style: context.textTheme.bodySmall?.copyWith(

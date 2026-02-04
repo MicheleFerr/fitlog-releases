@@ -51,6 +51,7 @@ sealed class AIMessage with _$AIMessage {
     AIToolCall? toolCall,
     @Default(false) bool isTyping,
     String? error,
+    @Default([]) List<String> suggestions,
   }) = _AIMessage;
 
   const AIMessage._();

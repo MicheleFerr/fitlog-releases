@@ -245,6 +245,8 @@ class StressIndexNotifier extends Notifier<AsyncValue<StressIndexState>> {
           totalSets: result.totalSets,
           setsWithRpe: result.setsWithRpe,
           workoutId: result.workoutId,
+          workoutName: result.workoutName,
+          workoutDate: result.workoutDate,
           calculatedAt: historyDetail.completedAt,
           rawScore: result.rawScore,
         );
@@ -426,6 +428,8 @@ class StressIndexNotifier extends Notifier<AsyncValue<StressIndexState>> {
           totalSets: result.totalSets,
           setsWithRpe: result.setsWithRpe,
           workoutId: result.workoutId,
+          workoutName: result.workoutName,
+          workoutDate: result.workoutDate,
           calculatedAt: historyDetail.completedAt, // Use original workout date
           rawScore: result.rawScore,
         );

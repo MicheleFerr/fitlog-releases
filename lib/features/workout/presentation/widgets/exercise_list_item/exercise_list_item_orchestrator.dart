@@ -16,20 +16,15 @@ import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart'
     show showTutInfoBottomSheet;
-import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
-import 'package:gymbro_flutter_new/features/community/presentation/providers/exercise_data_provider.dart';
-import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_expansion_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_autocollapse_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/community_advice_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item/exercise_list_item_header.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item/exercise_list_item_sets.dart';
-import 'package:gymbro_flutter_new/features/community/presentation/widgets/smart_suggestion_chip.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_history_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/counting_mode_picker_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_time_picker_modal.dart';
@@ -997,18 +992,6 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     }
   }
 
-  void _handleShowCommunityAdvice() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: context.colors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => CommunityAdviceModal(exercise: widget.exercise),
-    );
-  }
-
   /// Opens SupersetLinkModal to create a superset starting from this exercise
   void _handleCreateSuperset() async {
     // Get workout exercises (excluding current exercise)
@@ -1828,7 +1811,6 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                     onShowExerciseReplacement: _handleShowExerciseReplacement,
                     onDuplicateExercise: _handleDuplicateExercise,
                     onShowDeleteConfirmation: _handleShowDeleteConfirmation,
-                    onShowCommunityAdvice: _handleShowCommunityAdvice,
                     onShowCountingModePicker: _handleShowCountingModePicker,
                     onAddWarmupSets: _handleAddWarmupSets,
                     onEditNotes: _handleEditNotes,

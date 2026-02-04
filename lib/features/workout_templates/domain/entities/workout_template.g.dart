@@ -48,6 +48,9 @@ _CommunityWorkoutTemplate _$CommunityWorkoutTemplateFromJson(
           ?.map((e) => e as String)
           .toList() ??
       const [],
+  isAnonymous: json['isAnonymous'] as bool? ?? false,
+  forkedFromTemplateId: json['forkedFromTemplateId'] as String?,
+  originalAuthorName: json['originalAuthorName'] as String?,
 );
 
 Map<String, dynamic> _$CommunityWorkoutTemplateToJson(
@@ -74,6 +77,9 @@ Map<String, dynamic> _$CommunityWorkoutTemplateToJson(
   'difficultyLevel': instance.difficultyLevel,
   'requiredEquipment': instance.requiredEquipment,
   'targetMuscles': instance.targetMuscles,
+  'isAnonymous': instance.isAnonymous,
+  'forkedFromTemplateId': instance.forkedFromTemplateId,
+  'originalAuthorName': instance.originalAuthorName,
 };
 
 const _$TemplateCategoryEnumMap = {

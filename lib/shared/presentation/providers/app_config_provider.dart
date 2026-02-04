@@ -17,6 +17,13 @@ class AppConfigNotifier extends Notifier<AppConfig> {
   static const String _boxName = 'app_config';
   Box<AppConfig>? _configBox;
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🔧 DEBUG FLAG: Force onboarding to show on every app start
+  // Set to TRUE to always see onboarding (for testing/development)
+  // Set to FALSE for production behavior
+  // ═══════════════════════════════════════════════════════════════════════════
+  static const bool _forceOnboardingDebug = false; // Set to true to force onboarding for testing
+
   // CRITICAL: Initialization tracking
   bool _isInitialized = false;
   bool _isDisposed = false;
@@ -37,6 +44,46 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     _cachedConfig = null;
     if (kDebugMode) {
       debugPrint('[AppConfig] 🔐 Cleared static cache on logout');
+    }
+  }
+
+  /// 🔧 Pre-load the config cache from main.dart
+  /// This is called BEFORE the ProviderScope is created, ensuring the router
+  /// sees the correct initialOnboardingCompleted value immediately.
+  static void preloadCache(AppConfig config) {
+    _cachedConfig = config;
+    if (kDebugMode) {
+      debugPrint('[AppConfig] 🔧 Pre-loaded cache (initialOnboardingCompleted: ${config.initialOnboardingCompleted})');
+    }
+  }
+
+  /// 🔧 FIX: Reset onboarding flag for new users logging in
+  ///
+  /// Called after login when we detect the user hasn't completed onboarding.
+  /// This fixes the issue where a new user logging in on a device where
+  /// another user had already completed onboarding wouldn't see onboarding.
+  Future<void> resetInitialOnboardingForNewUser() async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      // Clear static cache to force fresh read
+      _cachedConfig = null;
+
+      // Reset the onboarding completed flag
+      state = state.copyWith(initialOnboardingCompleted: false);
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint(
+          '[AppConfig] 🔄 Reset initialOnboardingCompleted for new user',
+        );
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('[AppConfig] ❌ Error resetting onboarding for new user: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
     }
   }
 
@@ -71,6 +118,12 @@ class AppConfigNotifier extends Notifier<AppConfig> {
         }
       }
     });
+
+    // 🔧 DEBUG: Force onboarding on every app start (for testing)
+    if (_forceOnboardingDebug) {
+      _cachedConfig = null; // Clear cache to force reload
+      debugPrint('🔧 [AppConfig] DEBUG MODE: Forcing onboarding (cache cleared)');
+    }
 
     // ✅ FIX: Return cached config if available (prevents onboarding restart)
     if (_cachedConfig != null) {
@@ -164,11 +217,19 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       final savedConfig = _configBox!.get('config');
 
       if (savedConfig != null) {
-        state = savedConfig;
-        // ✅ FIX: Update cache with loaded config
-        _cachedConfig = savedConfig;
-        if (kDebugMode) {
-          debugPrint('✅ [AppConfig] Loaded saved configuration (initialOnboardingCompleted: ${savedConfig.initialOnboardingCompleted})');
+        // 🔧 DEBUG: Force onboarding to always show (for testing)
+        if (_forceOnboardingDebug) {
+          final debugConfig = savedConfig.copyWith(initialOnboardingCompleted: false);
+          state = debugConfig;
+          _cachedConfig = debugConfig;
+          debugPrint('🔧 [AppConfig] DEBUG MODE: Forced initialOnboardingCompleted = false');
+        } else {
+          state = savedConfig;
+          // ✅ FIX: Update cache with loaded config
+          _cachedConfig = savedConfig;
+          if (kDebugMode) {
+            debugPrint('✅ [AppConfig] Loaded saved configuration (initialOnboardingCompleted: ${savedConfig.initialOnboardingCompleted})');
+          }
         }
       } else {
         // 🌍 LOCALE FIX: Use device locale-aware default config
@@ -663,20 +724,22 @@ class AppConfigNotifier extends Notifier<AppConfig> {
   // Initial Onboarding settings
   Future<void> setInitialOnboardingCompleted(bool completed) async {
     try {
+      print('🔧 [AppConfig] setInitialOnboardingCompleted called with: $completed');
       await _ensureInitialized();
-      if (_isDisposed) return;
+      if (_isDisposed) {
+        print('⚠️ [AppConfig] Provider disposed - cannot set onboarding completed');
+        return;
+      }
 
+      print('🔧 [AppConfig] Current state.initialOnboardingCompleted: ${state.initialOnboardingCompleted}');
       state = state.copyWith(initialOnboardingCompleted: completed);
-      await _saveConfig();
+      print('✅ [AppConfig] State updated to: ${state.initialOnboardingCompleted}');
 
-      if (kDebugMode) {
-        debugPrint('✅ [AppConfig] Initial onboarding completed set to: $completed');
-      }
+      await _saveConfig();
+      print('💾 [AppConfig] Config saved to Hive');
     } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [AppConfig] Error setting initial onboarding completed: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
-      }
+      print('❌ [AppConfig] Error setting initial onboarding completed: $e');
+      print('📍 Stack trace: $stackTrace');
     }
   }
 

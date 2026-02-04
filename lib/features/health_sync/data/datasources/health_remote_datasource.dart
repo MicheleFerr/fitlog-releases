@@ -146,6 +146,35 @@ abstract class IHealthRemoteDatasource {
   Future<void> writeBodyWeight(BodyMeasurement measurement);
 
   // ============================================================
+  // HEIGHT SYNC
+  // ============================================================
+
+  /// Fetches height measurements from health platform.
+  ///
+  /// iOS: Queries HealthKit for HKQuantityTypeIdentifierHeight samples.
+  /// Android: Queries Health Connect for HeightRecord.
+  ///
+  /// Returns list of [BodyMeasurement] with:
+  /// - Value in meters (from health package)
+  /// - Timestamp (recordedAt)
+  /// - Source ('HealthKit' or 'Health Connect')
+  ///
+  /// Example:
+  /// ```dart
+  /// final heights = await datasource.fetchHeight(
+  ///   startDate: DateTime.now().subtract(Duration(days: 365)),
+  ///   endDate: DateTime.now(),
+  /// );
+  ///
+  /// // heights[0] = BodyMeasurement(value: 1.75, unit: meters, recordedAt: ...)
+  /// // Convert to cm: 1.75 * 100 = 175 cm
+  /// ```
+  Future<List<BodyMeasurement>> fetchHeight({
+    required DateTime startDate,
+    required DateTime endDate,
+  });
+
+  // ============================================================
   // WORKOUT WRITE
   // ============================================================
 
@@ -246,6 +275,8 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
         return health_pkg.HealthDataType.WORKOUT;
       case HealthDataType.bodyWeight:
         return health_pkg.HealthDataType.WEIGHT;
+      case HealthDataType.height:
+        return health_pkg.HealthDataType.HEIGHT;
       case HealthDataType.bodyFat:
         return health_pkg.HealthDataType.BODY_FAT_PERCENTAGE;
       case HealthDataType.leanMass:
@@ -288,11 +319,12 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
     // Bidirectional sync: Request read + write permissions
     // Workout: Read + Write (export to Apple Fitness / Activity rings)
     // Body weight: Read + Write (bidirectional sync)
+    // Height: Read only (import for onboarding)
     final permissions = dataTypes.map((dt) {
       if (dt == HealthDataType.bodyWeight || dt == HealthDataType.workout) {
         return health_pkg.HealthDataAccess.READ_WRITE; // Bidirectional sync
       }
-      return health_pkg.HealthDataAccess.READ; // Read-only for other types
+      return health_pkg.HealthDataAccess.READ; // Read-only for other types (including height)
     }).toList();
 
     if (kDebugMode) {
@@ -626,6 +658,47 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
     if (!success) {
       throw Exception('Failed to write body weight to health platform');
     }
+  }
+
+  // ============================================================
+  // HEIGHT SYNC IMPLEMENTATION
+  // ============================================================
+
+  @override
+  Future<List<BodyMeasurement>> fetchHeight({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    // Ensure health package is configured before fetching data
+    await _ensureConfigured();
+
+    const healthType = health_pkg.HealthDataType.HEIGHT;
+
+    final heightData = await _health.getHealthDataFromTypes(
+      types: [healthType],
+      startTime: startDate,
+      endTime: endDate,
+    );
+
+    // Map HealthDataPoint to BodyMeasurement
+    // health package v13+ returns NumericHealthValue, not raw num
+    // Height is returned in meters from HealthKit
+    final measurements = heightData.map((dataPoint) {
+      final healthValue = dataPoint.value;
+      final heightValue = healthValue is health_pkg.NumericHealthValue
+          ? healthValue.numericValue.toDouble()
+          : 0.0;
+
+      return BodyMeasurement(
+        value: heightValue, // meters from health package
+        unit: MeasurementUnit.meters,
+        recordedAt: dataPoint.dateFrom,
+        dataType: HealthDataType.height,
+        source: Platform.isIOS ? 'HealthKit' : 'Health Connect',
+      );
+    }).toList();
+
+    return measurements;
   }
 
   // ============================================================

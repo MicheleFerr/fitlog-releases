@@ -346,6 +346,9 @@ class AuthService with RateLimiterMixin {
 
   /// Delete all Firestore data for a user (GDPR Art. 17)
   Future<void> _deleteAllFirestoreData(String uid) async {
+    // GDPR: Anonymize public content BEFORE deleting user data
+    await _anonymizePublicContent(uid);
+
     final userDocRef = _firestore.collection('users').doc(uid);
 
     // List of all known subcollections to delete
@@ -371,6 +374,71 @@ class AuthService with RateLimiterMixin {
 
     // Delete the main user document
     await userDocRef.delete();
+  }
+
+  /// Anonymize public content when user deletes account
+  ///
+  /// Instead of deleting public templates (which other users may have downloaded),
+  /// we anonymize the author info to comply with GDPR while preserving content.
+  Future<void> _anonymizePublicContent(String uid) async {
+    try {
+      // 1. Anonymize public templates
+      final publicTemplates = await _firestore
+          .collection('workoutTemplates')
+          .where('userId', isEqualTo: uid)
+          .where('visibility', isEqualTo: 'public')
+          .get();
+
+      for (final doc in publicTemplates.docs) {
+        await doc.reference.update({
+          'authorName': 'Utente Eliminato',
+          'authorPhotoUrl': null,
+          'userId': 'deleted_$uid',
+        });
+      }
+
+      // 2. Anonymize reviews
+      final reviews = await _firestore
+          .collection('template_reviews')
+          .where('userId', isEqualTo: uid)
+          .get();
+
+      for (final doc in reviews.docs) {
+        await doc.reference.update({
+          'userId': 'deleted_$uid',
+          'userName': 'Utente Eliminato',
+          'userPhotoUrl': null,
+        });
+      }
+
+      // 3. Anonymize comments
+      final comments = await _firestore
+          .collection('template_comments')
+          .where('userId', isEqualTo: uid)
+          .get();
+
+      for (final doc in comments.docs) {
+        await doc.reference.update({
+          'userId': 'deleted_$uid',
+          'userName': 'Utente Eliminato',
+          'userPhotoUrl': null,
+        });
+      }
+
+      if (kDebugMode) {
+        debugPrint(
+          '✅ Anonymized public content: '
+          '${publicTemplates.docs.length} templates, '
+          '${reviews.docs.length} reviews, '
+          '${comments.docs.length} comments',
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ Error anonymizing public content: $e');
+      }
+      // Don't block account deletion if anonymization fails
+    }
   }
 
   /// Helper to delete all documents in a collection

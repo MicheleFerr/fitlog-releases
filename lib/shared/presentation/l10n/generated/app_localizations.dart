@@ -5249,6 +5249,54 @@ abstract class AppLocalizations {
   /// **'These are general recommendations based on your training data. Always consult with a qualified fitness professional before making significant changes to your training program.'**
   String get aiCoachDisclaimer;
 
+  /// Title for AI Coach disclaimer dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Important: AI Coach'**
+  String get aiCoachDisclaimerTitle;
+
+  /// Subtitle for AI Coach disclaimer dialog
+  ///
+  /// In en, this message translates to:
+  /// **'AI Coach provides GENERAL suggestions based on your data.'**
+  String get aiCoachDisclaimerSubtitle;
+
+  /// Disclaimer point - not a trainer
+  ///
+  /// In en, this message translates to:
+  /// **'It is NOT a certified personal trainer'**
+  String get aiCoachDisclaimerNotTrainer;
+
+  /// Disclaimer point - not a doctor
+  ///
+  /// In en, this message translates to:
+  /// **'It is NOT a doctor or nutritionist'**
+  String get aiCoachDisclaimerNotDoctor;
+
+  /// Disclaimer point - no diagnosis
+  ///
+  /// In en, this message translates to:
+  /// **'It does NOT provide diagnoses or prescriptions'**
+  String get aiCoachDisclaimerNoDiagnosis;
+
+  /// Disclaimer - consult professionals
+  ///
+  /// In en, this message translates to:
+  /// **'ALWAYS consult qualified professionals for decisions about your health.'**
+  String get aiCoachDisclaimerConsultPro;
+
+  /// Disclaimer - may contain errors
+  ///
+  /// In en, this message translates to:
+  /// **'Responses may contain errors. Always verify with reliable sources.'**
+  String get aiCoachDisclaimerMayContainErrors;
+
+  /// Button text to accept AI Coach disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'I understand, continue'**
+  String get aiCoachDisclaimerUnderstand;
+
   /// AI badge text shown in AI Coach card header
   ///
   /// In en, this message translates to:
@@ -5740,24 +5788,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Required to create account'**
   String get tosCheckboxHint;
-
-  /// Community section title
-  ///
-  /// In en, this message translates to:
-  /// **'Community'**
-  String get community;
-
-  /// Community feature coming soon dialog title
-  ///
-  /// In en, this message translates to:
-  /// **'Community Feature Coming Soon'**
-  String get communityComingSoonTitle;
-
-  /// Community feature coming soon dialog description
-  ///
-  /// In en, this message translates to:
-  /// **'We\'re working on building an amazing community feature where you can connect with other athletes, share your progress, and learn from each other. Stay tuned!'**
-  String get communityComingSoonDescription;
 
   /// General information section title
   ///
@@ -8921,12 +8951,6 @@ abstract class AppLocalizations {
   /// **'Review Corrections'**
   String get reviewCorrections;
 
-  /// Review corrections action description
-  ///
-  /// In en, this message translates to:
-  /// **'Review community exercise corrections'**
-  String get reviewCorrectionsDescription;
-
   /// User analytics action title
   ///
   /// In en, this message translates to:
@@ -8986,12 +9010,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No Recent Activity'**
   String get noRecentActivity;
-
-  /// No recent activity description
-  ///
-  /// In en, this message translates to:
-  /// **'Community corrections and activities will appear here'**
-  String get noRecentActivityDescription;
 
   /// All recent activity dialog title
   ///
@@ -9065,12 +9083,6 @@ abstract class AppLocalizations {
   /// **'Welcome, Admin!'**
   String get welcomeAdmin;
 
-  /// Admin dashboard description
-  ///
-  /// In en, this message translates to:
-  /// **'Manage the FitLog Pro system and review community contributions'**
-  String get adminDashboardDescription;
-
   /// System stats section title
   ///
   /// In en, this message translates to:
@@ -9082,12 +9094,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cloud Database'**
   String get firebaseDatabase;
-
-  /// Community activity section title
-  ///
-  /// In en, this message translates to:
-  /// **'Community Activity'**
-  String get communityActivity;
 
   /// Recent activity section title
   ///
@@ -9179,12 +9185,6 @@ abstract class AppLocalizations {
   /// **'Cloud Management'**
   String get firebaseManagement;
 
-  /// Admin info description text
-  ///
-  /// In en, this message translates to:
-  /// **'Admin panel for system management and community oversight'**
-  String get adminInfoDescription;
-
   /// Exercise management title
   ///
   /// In en, this message translates to:
@@ -9196,18 +9196,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add, edit, and organize exercise database'**
   String get exerciseManagementDescription;
-
-  /// Community corrections title
-  ///
-  /// In en, this message translates to:
-  /// **'Community Corrections'**
-  String get communityCorrections;
-
-  /// Community corrections description
-  ///
-  /// In en, this message translates to:
-  /// **'Review and approve community-submitted exercise corrections'**
-  String get communityCorrectionsDescription;
 
   /// Button to fix missing exercises in database
   ///
@@ -9719,24 +9707,6 @@ abstract class AppLocalizations {
   /// **'Share an advice'**
   String get shareAdviceWithCommunity;
 
-  /// Menu option to view community advice for exercise
-  ///
-  /// In en, this message translates to:
-  /// **'Community Advice'**
-  String get communityAdvice;
-
-  /// Admin section title for managing community contributions
-  ///
-  /// In en, this message translates to:
-  /// **'Community Contributions'**
-  String get communityContributions;
-
-  /// Description for community contributions admin action
-  ///
-  /// In en, this message translates to:
-  /// **'Review and manage community contributions'**
-  String get reviewContributionsDescription;
-
   /// Text showing how many people found a contribution helpful
   ///
   /// In en, this message translates to:
@@ -9760,12 +9730,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'✅ Contribution submitted! Awaiting approval'**
   String get contributionSubmittedSuccess;
-
-  /// Thank you message for community contributions
-  ///
-  /// In en, this message translates to:
-  /// **'Thank you for helping the community!'**
-  String get thankYouForContributing;
 
   /// Start workout menu item subtitle
   ///
@@ -10348,18 +10312,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Optional - helps you remember what this plan is about'**
   String get templateOnboardingDescriptionSubtitle;
-
-  /// Template onboarding step 3 - tags
-  ///
-  /// In en, this message translates to:
-  /// **'Tags for community recognition'**
-  String get templateOnboardingTagsTitle;
-
-  /// Template onboarding step 3 - tags subtitle
-  ///
-  /// In en, this message translates to:
-  /// **'Select tags that describe your template to help others find it in the community'**
-  String get templateOnboardingTagsSubtitle;
 
   /// Template onboarding step 4 - rest timer
   ///
@@ -10954,24 +10906,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Display comprehensive exercise information including personal notes, progress statistics, and performance insights.'**
   String get exerciseDetailsTooltip;
-
-  /// Community suggestions toggle title
-  ///
-  /// In en, this message translates to:
-  /// **'Community Suggestions'**
-  String get communitySuggestionsTitle;
-
-  /// Community suggestions toggle description
-  ///
-  /// In en, this message translates to:
-  /// **'Show tips from the community'**
-  String get communitySuggestionsDescription;
-
-  /// Community suggestions tooltip
-  ///
-  /// In en, this message translates to:
-  /// **'Get helpful advice and tips from other experienced athletes for each exercise.'**
-  String get communitySuggestionsTooltip;
 
   /// TUT info toggle title
   ///
@@ -28671,12 +28605,6 @@ abstract class AppLocalizations {
   /// From quick wins migration - 3 occurrences
   ///
   /// In en, this message translates to:
-  /// **'Community Access'**
-  String get communityAccess;
-
-  /// From quick wins migration - 3 occurrences
-  ///
-  /// In en, this message translates to:
   /// **'Shoulder Press'**
   String get shoulderPress;
 
@@ -36780,12 +36708,6 @@ abstract class AppLocalizations {
   /// **'Welcome to the Community!'**
   String get welcomeToCommunity;
 
-  /// Community onboarding description
-  ///
-  /// In en, this message translates to:
-  /// **'Share your knowledge, help others improve, and earn XP by contributing to the fitness community.'**
-  String get communityDescription;
-
   /// Section header for community actions
   ///
   /// In en, this message translates to:
@@ -38027,12 +37949,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} reps'**
   String repsWithCount(int count);
-
-  /// Exercise wiki feature name
-  ///
-  /// In en, this message translates to:
-  /// **'Exercise Wiki'**
-  String get exerciseWiki;
 
   /// Number of community tips pending review
   ///
@@ -46652,12 +46568,6 @@ abstract class AppLocalizations {
   /// **'Hide streak counter'**
   String get ghostModeHideStreak;
 
-  /// No description provided for @ghostModeHideCommunity.
-  ///
-  /// In en, this message translates to:
-  /// **'Hide community features'**
-  String get ghostModeHideCommunity;
-
   /// No description provided for @ghostModeHideComparisons.
   ///
   /// In en, this message translates to:
@@ -47473,6 +47383,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Running Tests...'**
   String get runningTests;
+
+  /// Title shown after initial onboarding completion
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Complete!'**
+  String get onboardingChoiceTitle;
+
+  /// Subtitle asking user preference for getting started
+  ///
+  /// In en, this message translates to:
+  /// **'How would you like to start?'**
+  String get onboardingChoiceSubtitle;
+
+  /// Option to start guided template creation wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Guide me'**
+  String get onboardingChoiceGuided;
+
+  /// Description for guided wizard option
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first workout routine step by step'**
+  String get onboardingChoiceGuidedDescription;
+
+  /// Option to skip wizard and explore the app
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ll explore'**
+  String get onboardingChoiceExplore;
+
+  /// Description for explore option
+  ///
+  /// In en, this message translates to:
+  /// **'Discover the app at your own pace'**
+  String get onboardingChoiceExploreDescription;
+
+  /// Title for template wizard reminder card on home
+  ///
+  /// In en, this message translates to:
+  /// **'Create Your First Routine'**
+  String get templateWizardReminderTitle;
+
+  /// Description for template wizard reminder card
+  ///
+  /// In en, this message translates to:
+  /// **'A personalized workout routine is waiting for you. Want to create it now?'**
+  String get templateWizardReminderDescription;
+
+  /// Action button for template wizard reminder
+  ///
+  /// In en, this message translates to:
+  /// **'Start Wizard'**
+  String get templateWizardReminderAction;
+
+  /// Dismiss button for template wizard reminder
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get templateWizardReminderDismiss;
+
+  /// Home tour step 2 title - My Templates card
+  ///
+  /// In en, this message translates to:
+  /// **'My Templates'**
+  String get tourMyTemplatesTitle;
+
+  /// Home tour step 2 description - My Templates card
+  ///
+  /// In en, this message translates to:
+  /// **'Quick access to Workout Routines, Custom Exercises, and Preset Templates. Create new workouts here!'**
+  String get tourMyTemplatesDescription;
+
+  /// Success message when both values imported
+  ///
+  /// In en, this message translates to:
+  /// **'Weight and height imported from HealthKit'**
+  String get initialOnboardingHealthKitSuccessBoth;
+
+  /// Success message when only height imported
+  ///
+  /// In en, this message translates to:
+  /// **'Height imported from HealthKit'**
+  String get initialOnboardingHealthKitSuccessHeight;
+
+  /// Message when no HealthKit data available
+  ///
+  /// In en, this message translates to:
+  /// **'No health data found'**
+  String get initialOnboardingHealthKitNoData;
+
+  /// Divider text for new option
+  ///
+  /// In en, this message translates to:
+  /// **'or choose new'**
+  String get orChooseNew;
+
+  /// Required step indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get stepRequired;
+
+  /// Recommended step indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended'**
+  String get stepRecommended;
+
+  /// Optional step indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get stepOptional;
+
+  /// Button to use previous workout settings
+  ///
+  /// In en, this message translates to:
+  /// **'Use last settings'**
+  String get useLastSettings;
+
+  /// Generic any option
+  ///
+  /// In en, this message translates to:
+  /// **'Any'**
+  String get any;
+
+  /// Snackbar message when text is copied
+  ///
+  /// In en, this message translates to:
+  /// **'Text copied'**
+  String get textCopied;
+
+  /// Clear conversation button
+  ///
+  /// In en, this message translates to:
+  /// **'Clear conversation'**
+  String get clearConversation;
+
+  /// Confirmation message for clearing conversation
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to clear this conversation?'**
+  String get clearConversationConfirm;
+
+  /// Title for social sharing consent dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Share Template'**
+  String get socialConsentTitle;
+
+  /// Consent message for social sharing
+  ///
+  /// In en, this message translates to:
+  /// **'By sharing this template, you agree that it will be visible to other users'**
+  String get socialConsentMessage;
+
+  /// Note about revocability
+  ///
+  /// In en, this message translates to:
+  /// **'You can remove your template at any time'**
+  String get socialConsentRevocable;
+
+  /// Cancel button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get socialConsentCancel;
+
+  /// Share anonymously button
+  ///
+  /// In en, this message translates to:
+  /// **'Share Anonymously'**
+  String get socialConsentAnonymous;
+
+  /// Share with name button
+  ///
+  /// In en, this message translates to:
+  /// **'Share with Name'**
+  String get socialConsentAgree;
+
+  /// Message when template is published
+  ///
+  /// In en, this message translates to:
+  /// **'Template published'**
+  String get templatePublished;
+
+  /// Report action button
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get templateReportAction;
+
+  /// Report dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Report Template'**
+  String get templateReportTitle;
+
+  /// Report reason label
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get templateReportReasonLabel;
+
+  /// Spam report reason
+  ///
+  /// In en, this message translates to:
+  /// **'Spam'**
+  String get templateReportReasonSpam;
+
+  /// Inappropriate content report reason
+  ///
+  /// In en, this message translates to:
+  /// **'Inappropriate content'**
+  String get templateReportReasonInappropriate;
+
+  /// Misleading info report reason
+  ///
+  /// In en, this message translates to:
+  /// **'Misleading information'**
+  String get templateReportReasonMisleading;
+
+  /// Copyright violation report reason
+  ///
+  /// In en, this message translates to:
+  /// **'Copyright violation'**
+  String get templateReportReasonCopyright;
+
+  /// Other report reason
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get templateReportReasonOther;
+
+  /// Details field label
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get templateReportDetailsLabel;
+
+  /// Details field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide additional details (optional)'**
+  String get templateReportDetailsHint;
+
+  /// Submit report button
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Report'**
+  String get templateReportSubmit;
+
+  /// Success message after report
+  ///
+  /// In en, this message translates to:
+  /// **'Report submitted. Thank you for helping keep our community safe.'**
+  String get templateReportSuccess;
+
+  /// Message when template already reported
+  ///
+  /// In en, this message translates to:
+  /// **'You have already reported this template'**
+  String get templateReportAlreadyReported;
+
+  /// User generated content disclaimer
+  ///
+  /// In en, this message translates to:
+  /// **'Templates are created by users. Exercise caution.'**
+  String get templateUgcDisclaimer;
+
+  /// Shows original author of forked template
+  ///
+  /// In en, this message translates to:
+  /// **'Forked from {author}'**
+  String templateForkedFrom(Object author);
+
+  /// Tour step: Discover tab title
+  ///
+  /// In en, this message translates to:
+  /// **'Discover Templates'**
+  String get tourDiscoverTitle;
+
+  /// Tour step: Discover tab description
+  ///
+  /// In en, this message translates to:
+  /// **'Browse templates created by the community. Find inspiration for your next workout.'**
+  String get tourDiscoverDescription;
+
+  /// Tour step: Create button title
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Template'**
+  String get tourCreateTemplateTitle;
+
+  /// Tour step: Create button description
+  ///
+  /// In en, this message translates to:
+  /// **'Tap here to create your own custom workout template. Build it from scratch or use a preset.'**
+  String get tourCreateTemplateDescription;
 }
 
 class _AppLocalizationsDelegate

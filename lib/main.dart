@@ -43,6 +43,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_draf
 import 'package:gymbro_flutter_new/features/workout/data/models/user_exercise_preferences.dart'; // 📝 Form Cues for exercises
 import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/custom_exercise.dart'; // 🏋️ Custom Exercises
 import 'package:gymbro_flutter_new/features/scheduling/data/models/scheduled_workout_model.dart'; // 📅 Scheduled Workouts
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart'; // 🔧 Pre-load AppConfig
 
 void main() async {
   // 🚀 SPLASH: Preserve native splash screen during initialization
@@ -357,6 +358,14 @@ void main() async {
   // Initialize SharedPreferences for notification settings v2.0
   final sharedPreferences = await SharedPreferences.getInstance();
 
+  // ========================================
+  // 🔧 CRITICAL FIX: Pre-load AppConfig from Hive BEFORE app starts
+  // ========================================
+  // This prevents the router from seeing initialOnboardingCompleted=false
+  // before Hive has finished loading the actual config.
+  // Without this, users who completed onboarding would see it again.
+  await _preloadAppConfig();
+
   // 🚀 SPLASH: Remove splash screen now that initialization is complete
   FlutterNativeSplash.remove();
 
@@ -488,5 +497,34 @@ Future<void> _openBox<T>(String boxName) async {
         // Continue execution even if recovery fails
       }
     }
+  }
+}
+
+/// Pre-load AppConfig from Hive to populate the static cache
+/// This ensures the router sees the correct initialOnboardingCompleted value
+/// BEFORE making redirect decisions.
+Future<void> _preloadAppConfig() async {
+  try {
+    final boxManager = HiveBoxManagerEnhanced();
+    final configBox = await boxManager.openBox<AppConfig>('app_config');
+    final savedConfig = configBox.get('config');
+
+    if (savedConfig != null) {
+      // Pre-populate the static cache in AppConfigNotifier
+      AppConfigNotifier.preloadCache(savedConfig);
+      if (kDebugMode) {
+        debugPrint('✅ [main] Pre-loaded AppConfig (initialOnboardingCompleted: ${savedConfig.initialOnboardingCompleted})');
+      }
+    } else {
+      if (kDebugMode) {
+        debugPrint('ℹ️ [main] No saved AppConfig found (new user)');
+      }
+    }
+  } catch (e, stackTrace) {
+    if (kDebugMode) {
+      debugPrint('⚠️ [main] Failed to pre-load AppConfig: $e');
+      debugPrint('📍 Stack trace: $stackTrace');
+    }
+    // Continue - AppConfigNotifier will handle initialization
   }
 }

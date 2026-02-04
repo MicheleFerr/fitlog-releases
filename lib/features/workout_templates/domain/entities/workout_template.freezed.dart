@@ -27,7 +27,9 @@ mixin _$CommunityWorkoutTemplate {
  String? get difficultyLevel;// beginner, intermediate, advanced, expert
 // Equipment necessario
  List<String> get requiredEquipment;// Muscoli target
- List<String> get targetMuscles;
+ List<String> get targetMuscles;// GDPR: Pubblicazione anonima
+ bool get isAnonymous;// Fork attribution
+ String? get forkedFromTemplateId; String? get originalAuthorName;
 /// Create a copy of CommunityWorkoutTemplate
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -40,16 +42,16 @@ $CommunityWorkoutTemplateCopyWith<CommunityWorkoutTemplate> get copyWith => _$Co
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityWorkoutTemplate&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.exercises, exercises)&&(identical(other.category, category) || other.category == category)&&(identical(other.visibility, visibility) || other.visibility == visibility)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.downloadCount, downloadCount) || other.downloadCount == downloadCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.reviewCount, reviewCount) || other.reviewCount == reviewCount)&&(identical(other.averageRating, averageRating) || other.averageRating == averageRating)&&(identical(other.authorName, authorName) || other.authorName == authorName)&&(identical(other.authorPhotoUrl, authorPhotoUrl) || other.authorPhotoUrl == authorPhotoUrl)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.folderId, folderId) || other.folderId == folderId)&&(identical(other.estimatedDurationMinutes, estimatedDurationMinutes) || other.estimatedDurationMinutes == estimatedDurationMinutes)&&(identical(other.difficultyLevel, difficultyLevel) || other.difficultyLevel == difficultyLevel)&&const DeepCollectionEquality().equals(other.requiredEquipment, requiredEquipment)&&const DeepCollectionEquality().equals(other.targetMuscles, targetMuscles));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityWorkoutTemplate&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.exercises, exercises)&&(identical(other.category, category) || other.category == category)&&(identical(other.visibility, visibility) || other.visibility == visibility)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.downloadCount, downloadCount) || other.downloadCount == downloadCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.reviewCount, reviewCount) || other.reviewCount == reviewCount)&&(identical(other.averageRating, averageRating) || other.averageRating == averageRating)&&(identical(other.authorName, authorName) || other.authorName == authorName)&&(identical(other.authorPhotoUrl, authorPhotoUrl) || other.authorPhotoUrl == authorPhotoUrl)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.folderId, folderId) || other.folderId == folderId)&&(identical(other.estimatedDurationMinutes, estimatedDurationMinutes) || other.estimatedDurationMinutes == estimatedDurationMinutes)&&(identical(other.difficultyLevel, difficultyLevel) || other.difficultyLevel == difficultyLevel)&&const DeepCollectionEquality().equals(other.requiredEquipment, requiredEquipment)&&const DeepCollectionEquality().equals(other.targetMuscles, targetMuscles)&&(identical(other.isAnonymous, isAnonymous) || other.isAnonymous == isAnonymous)&&(identical(other.forkedFromTemplateId, forkedFromTemplateId) || other.forkedFromTemplateId == forkedFromTemplateId)&&(identical(other.originalAuthorName, originalAuthorName) || other.originalAuthorName == originalAuthorName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,userId,name,description,const DeepCollectionEquality().hash(exercises),category,visibility,createdAt,updatedAt,downloadCount,likeCount,reviewCount,averageRating,authorName,authorPhotoUrl,const DeepCollectionEquality().hash(tags),folderId,estimatedDurationMinutes,difficultyLevel,const DeepCollectionEquality().hash(requiredEquipment),const DeepCollectionEquality().hash(targetMuscles)]);
+int get hashCode => Object.hashAll([runtimeType,id,userId,name,description,const DeepCollectionEquality().hash(exercises),category,visibility,createdAt,updatedAt,downloadCount,likeCount,reviewCount,averageRating,authorName,authorPhotoUrl,const DeepCollectionEquality().hash(tags),folderId,estimatedDurationMinutes,difficultyLevel,const DeepCollectionEquality().hash(requiredEquipment),const DeepCollectionEquality().hash(targetMuscles),isAnonymous,forkedFromTemplateId,originalAuthorName]);
 
 @override
 String toString() {
-  return 'CommunityWorkoutTemplate(id: $id, userId: $userId, name: $name, description: $description, exercises: $exercises, category: $category, visibility: $visibility, createdAt: $createdAt, updatedAt: $updatedAt, downloadCount: $downloadCount, likeCount: $likeCount, reviewCount: $reviewCount, averageRating: $averageRating, authorName: $authorName, authorPhotoUrl: $authorPhotoUrl, tags: $tags, folderId: $folderId, estimatedDurationMinutes: $estimatedDurationMinutes, difficultyLevel: $difficultyLevel, requiredEquipment: $requiredEquipment, targetMuscles: $targetMuscles)';
+  return 'CommunityWorkoutTemplate(id: $id, userId: $userId, name: $name, description: $description, exercises: $exercises, category: $category, visibility: $visibility, createdAt: $createdAt, updatedAt: $updatedAt, downloadCount: $downloadCount, likeCount: $likeCount, reviewCount: $reviewCount, averageRating: $averageRating, authorName: $authorName, authorPhotoUrl: $authorPhotoUrl, tags: $tags, folderId: $folderId, estimatedDurationMinutes: $estimatedDurationMinutes, difficultyLevel: $difficultyLevel, requiredEquipment: $requiredEquipment, targetMuscles: $targetMuscles, isAnonymous: $isAnonymous, forkedFromTemplateId: $forkedFromTemplateId, originalAuthorName: $originalAuthorName)';
 }
 
 
@@ -60,7 +62,7 @@ abstract mixin class $CommunityWorkoutTemplateCopyWith<$Res>  {
   factory $CommunityWorkoutTemplateCopyWith(CommunityWorkoutTemplate value, $Res Function(CommunityWorkoutTemplate) _then) = _$CommunityWorkoutTemplateCopyWithImpl;
 @useResult
 $Res call({
- String id, String userId, String name, String? description, List<Exercise> exercises, TemplateCategory category, TemplateVisibility visibility, DateTime createdAt, DateTime? updatedAt, int downloadCount, int likeCount, int reviewCount, double averageRating, String? authorName, String? authorPhotoUrl, List<String> tags, String? folderId, int? estimatedDurationMinutes, String? difficultyLevel, List<String> requiredEquipment, List<String> targetMuscles
+ String id, String userId, String name, String? description, List<Exercise> exercises, TemplateCategory category, TemplateVisibility visibility, DateTime createdAt, DateTime? updatedAt, int downloadCount, int likeCount, int reviewCount, double averageRating, String? authorName, String? authorPhotoUrl, List<String> tags, String? folderId, int? estimatedDurationMinutes, String? difficultyLevel, List<String> requiredEquipment, List<String> targetMuscles, bool isAnonymous, String? forkedFromTemplateId, String? originalAuthorName
 });
 
 
@@ -77,7 +79,7 @@ class _$CommunityWorkoutTemplateCopyWithImpl<$Res>
 
 /// Create a copy of CommunityWorkoutTemplate
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? name = null,Object? description = freezed,Object? exercises = null,Object? category = null,Object? visibility = null,Object? createdAt = null,Object? updatedAt = freezed,Object? downloadCount = null,Object? likeCount = null,Object? reviewCount = null,Object? averageRating = null,Object? authorName = freezed,Object? authorPhotoUrl = freezed,Object? tags = null,Object? folderId = freezed,Object? estimatedDurationMinutes = freezed,Object? difficultyLevel = freezed,Object? requiredEquipment = null,Object? targetMuscles = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? name = null,Object? description = freezed,Object? exercises = null,Object? category = null,Object? visibility = null,Object? createdAt = null,Object? updatedAt = freezed,Object? downloadCount = null,Object? likeCount = null,Object? reviewCount = null,Object? averageRating = null,Object? authorName = freezed,Object? authorPhotoUrl = freezed,Object? tags = null,Object? folderId = freezed,Object? estimatedDurationMinutes = freezed,Object? difficultyLevel = freezed,Object? requiredEquipment = null,Object? targetMuscles = null,Object? isAnonymous = null,Object? forkedFromTemplateId = freezed,Object? originalAuthorName = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
@@ -100,7 +102,10 @@ as String?,estimatedDurationMinutes: freezed == estimatedDurationMinutes ? _self
 as int?,difficultyLevel: freezed == difficultyLevel ? _self.difficultyLevel : difficultyLevel // ignore: cast_nullable_to_non_nullable
 as String?,requiredEquipment: null == requiredEquipment ? _self.requiredEquipment : requiredEquipment // ignore: cast_nullable_to_non_nullable
 as List<String>,targetMuscles: null == targetMuscles ? _self.targetMuscles : targetMuscles // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,isAnonymous: null == isAnonymous ? _self.isAnonymous : isAnonymous // ignore: cast_nullable_to_non_nullable
+as bool,forkedFromTemplateId: freezed == forkedFromTemplateId ? _self.forkedFromTemplateId : forkedFromTemplateId // ignore: cast_nullable_to_non_nullable
+as String?,originalAuthorName: freezed == originalAuthorName ? _self.originalAuthorName : originalAuthorName // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -185,10 +190,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  String name,  String? description,  List<Exercise> exercises,  TemplateCategory category,  TemplateVisibility visibility,  DateTime createdAt,  DateTime? updatedAt,  int downloadCount,  int likeCount,  int reviewCount,  double averageRating,  String? authorName,  String? authorPhotoUrl,  List<String> tags,  String? folderId,  int? estimatedDurationMinutes,  String? difficultyLevel,  List<String> requiredEquipment,  List<String> targetMuscles)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  String name,  String? description,  List<Exercise> exercises,  TemplateCategory category,  TemplateVisibility visibility,  DateTime createdAt,  DateTime? updatedAt,  int downloadCount,  int likeCount,  int reviewCount,  double averageRating,  String? authorName,  String? authorPhotoUrl,  List<String> tags,  String? folderId,  int? estimatedDurationMinutes,  String? difficultyLevel,  List<String> requiredEquipment,  List<String> targetMuscles,  bool isAnonymous,  String? forkedFromTemplateId,  String? originalAuthorName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CommunityWorkoutTemplate() when $default != null:
-return $default(_that.id,_that.userId,_that.name,_that.description,_that.exercises,_that.category,_that.visibility,_that.createdAt,_that.updatedAt,_that.downloadCount,_that.likeCount,_that.reviewCount,_that.averageRating,_that.authorName,_that.authorPhotoUrl,_that.tags,_that.folderId,_that.estimatedDurationMinutes,_that.difficultyLevel,_that.requiredEquipment,_that.targetMuscles);case _:
+return $default(_that.id,_that.userId,_that.name,_that.description,_that.exercises,_that.category,_that.visibility,_that.createdAt,_that.updatedAt,_that.downloadCount,_that.likeCount,_that.reviewCount,_that.averageRating,_that.authorName,_that.authorPhotoUrl,_that.tags,_that.folderId,_that.estimatedDurationMinutes,_that.difficultyLevel,_that.requiredEquipment,_that.targetMuscles,_that.isAnonymous,_that.forkedFromTemplateId,_that.originalAuthorName);case _:
   return orElse();
 
 }
@@ -206,10 +211,10 @@ return $default(_that.id,_that.userId,_that.name,_that.description,_that.exercis
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  String name,  String? description,  List<Exercise> exercises,  TemplateCategory category,  TemplateVisibility visibility,  DateTime createdAt,  DateTime? updatedAt,  int downloadCount,  int likeCount,  int reviewCount,  double averageRating,  String? authorName,  String? authorPhotoUrl,  List<String> tags,  String? folderId,  int? estimatedDurationMinutes,  String? difficultyLevel,  List<String> requiredEquipment,  List<String> targetMuscles)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  String name,  String? description,  List<Exercise> exercises,  TemplateCategory category,  TemplateVisibility visibility,  DateTime createdAt,  DateTime? updatedAt,  int downloadCount,  int likeCount,  int reviewCount,  double averageRating,  String? authorName,  String? authorPhotoUrl,  List<String> tags,  String? folderId,  int? estimatedDurationMinutes,  String? difficultyLevel,  List<String> requiredEquipment,  List<String> targetMuscles,  bool isAnonymous,  String? forkedFromTemplateId,  String? originalAuthorName)  $default,) {final _that = this;
 switch (_that) {
 case _CommunityWorkoutTemplate():
-return $default(_that.id,_that.userId,_that.name,_that.description,_that.exercises,_that.category,_that.visibility,_that.createdAt,_that.updatedAt,_that.downloadCount,_that.likeCount,_that.reviewCount,_that.averageRating,_that.authorName,_that.authorPhotoUrl,_that.tags,_that.folderId,_that.estimatedDurationMinutes,_that.difficultyLevel,_that.requiredEquipment,_that.targetMuscles);case _:
+return $default(_that.id,_that.userId,_that.name,_that.description,_that.exercises,_that.category,_that.visibility,_that.createdAt,_that.updatedAt,_that.downloadCount,_that.likeCount,_that.reviewCount,_that.averageRating,_that.authorName,_that.authorPhotoUrl,_that.tags,_that.folderId,_that.estimatedDurationMinutes,_that.difficultyLevel,_that.requiredEquipment,_that.targetMuscles,_that.isAnonymous,_that.forkedFromTemplateId,_that.originalAuthorName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -226,10 +231,10 @@ return $default(_that.id,_that.userId,_that.name,_that.description,_that.exercis
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  String name,  String? description,  List<Exercise> exercises,  TemplateCategory category,  TemplateVisibility visibility,  DateTime createdAt,  DateTime? updatedAt,  int downloadCount,  int likeCount,  int reviewCount,  double averageRating,  String? authorName,  String? authorPhotoUrl,  List<String> tags,  String? folderId,  int? estimatedDurationMinutes,  String? difficultyLevel,  List<String> requiredEquipment,  List<String> targetMuscles)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  String name,  String? description,  List<Exercise> exercises,  TemplateCategory category,  TemplateVisibility visibility,  DateTime createdAt,  DateTime? updatedAt,  int downloadCount,  int likeCount,  int reviewCount,  double averageRating,  String? authorName,  String? authorPhotoUrl,  List<String> tags,  String? folderId,  int? estimatedDurationMinutes,  String? difficultyLevel,  List<String> requiredEquipment,  List<String> targetMuscles,  bool isAnonymous,  String? forkedFromTemplateId,  String? originalAuthorName)?  $default,) {final _that = this;
 switch (_that) {
 case _CommunityWorkoutTemplate() when $default != null:
-return $default(_that.id,_that.userId,_that.name,_that.description,_that.exercises,_that.category,_that.visibility,_that.createdAt,_that.updatedAt,_that.downloadCount,_that.likeCount,_that.reviewCount,_that.averageRating,_that.authorName,_that.authorPhotoUrl,_that.tags,_that.folderId,_that.estimatedDurationMinutes,_that.difficultyLevel,_that.requiredEquipment,_that.targetMuscles);case _:
+return $default(_that.id,_that.userId,_that.name,_that.description,_that.exercises,_that.category,_that.visibility,_that.createdAt,_that.updatedAt,_that.downloadCount,_that.likeCount,_that.reviewCount,_that.averageRating,_that.authorName,_that.authorPhotoUrl,_that.tags,_that.folderId,_that.estimatedDurationMinutes,_that.difficultyLevel,_that.requiredEquipment,_that.targetMuscles,_that.isAnonymous,_that.forkedFromTemplateId,_that.originalAuthorName);case _:
   return null;
 
 }
@@ -241,7 +246,7 @@ return $default(_that.id,_that.userId,_that.name,_that.description,_that.exercis
 @JsonSerializable()
 
 class _CommunityWorkoutTemplate implements CommunityWorkoutTemplate {
-  const _CommunityWorkoutTemplate({required this.id, required this.userId, required this.name, this.description, required final  List<Exercise> exercises, this.category = TemplateCategory.custom, this.visibility = TemplateVisibility.private, required this.createdAt, this.updatedAt, this.downloadCount = 0, this.likeCount = 0, this.reviewCount = 0, this.averageRating = 0.0, this.authorName, this.authorPhotoUrl, final  List<String> tags = const [], this.folderId, this.estimatedDurationMinutes, this.difficultyLevel, final  List<String> requiredEquipment = const [], final  List<String> targetMuscles = const []}): _exercises = exercises,_tags = tags,_requiredEquipment = requiredEquipment,_targetMuscles = targetMuscles;
+  const _CommunityWorkoutTemplate({required this.id, required this.userId, required this.name, this.description, required final  List<Exercise> exercises, this.category = TemplateCategory.custom, this.visibility = TemplateVisibility.private, required this.createdAt, this.updatedAt, this.downloadCount = 0, this.likeCount = 0, this.reviewCount = 0, this.averageRating = 0.0, this.authorName, this.authorPhotoUrl, final  List<String> tags = const [], this.folderId, this.estimatedDurationMinutes, this.difficultyLevel, final  List<String> requiredEquipment = const [], final  List<String> targetMuscles = const [], this.isAnonymous = false, this.forkedFromTemplateId, this.originalAuthorName}): _exercises = exercises,_tags = tags,_requiredEquipment = requiredEquipment,_targetMuscles = targetMuscles;
   factory _CommunityWorkoutTemplate.fromJson(Map<String, dynamic> json) => _$CommunityWorkoutTemplateFromJson(json);
 
 @override final  String id;
@@ -305,6 +310,11 @@ class _CommunityWorkoutTemplate implements CommunityWorkoutTemplate {
   return EqualUnmodifiableListView(_targetMuscles);
 }
 
+// GDPR: Pubblicazione anonima
+@override@JsonKey() final  bool isAnonymous;
+// Fork attribution
+@override final  String? forkedFromTemplateId;
+@override final  String? originalAuthorName;
 
 /// Create a copy of CommunityWorkoutTemplate
 /// with the given fields replaced by the non-null parameter values.
@@ -319,16 +329,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommunityWorkoutTemplate&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._exercises, _exercises)&&(identical(other.category, category) || other.category == category)&&(identical(other.visibility, visibility) || other.visibility == visibility)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.downloadCount, downloadCount) || other.downloadCount == downloadCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.reviewCount, reviewCount) || other.reviewCount == reviewCount)&&(identical(other.averageRating, averageRating) || other.averageRating == averageRating)&&(identical(other.authorName, authorName) || other.authorName == authorName)&&(identical(other.authorPhotoUrl, authorPhotoUrl) || other.authorPhotoUrl == authorPhotoUrl)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.folderId, folderId) || other.folderId == folderId)&&(identical(other.estimatedDurationMinutes, estimatedDurationMinutes) || other.estimatedDurationMinutes == estimatedDurationMinutes)&&(identical(other.difficultyLevel, difficultyLevel) || other.difficultyLevel == difficultyLevel)&&const DeepCollectionEquality().equals(other._requiredEquipment, _requiredEquipment)&&const DeepCollectionEquality().equals(other._targetMuscles, _targetMuscles));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommunityWorkoutTemplate&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._exercises, _exercises)&&(identical(other.category, category) || other.category == category)&&(identical(other.visibility, visibility) || other.visibility == visibility)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.downloadCount, downloadCount) || other.downloadCount == downloadCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.reviewCount, reviewCount) || other.reviewCount == reviewCount)&&(identical(other.averageRating, averageRating) || other.averageRating == averageRating)&&(identical(other.authorName, authorName) || other.authorName == authorName)&&(identical(other.authorPhotoUrl, authorPhotoUrl) || other.authorPhotoUrl == authorPhotoUrl)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.folderId, folderId) || other.folderId == folderId)&&(identical(other.estimatedDurationMinutes, estimatedDurationMinutes) || other.estimatedDurationMinutes == estimatedDurationMinutes)&&(identical(other.difficultyLevel, difficultyLevel) || other.difficultyLevel == difficultyLevel)&&const DeepCollectionEquality().equals(other._requiredEquipment, _requiredEquipment)&&const DeepCollectionEquality().equals(other._targetMuscles, _targetMuscles)&&(identical(other.isAnonymous, isAnonymous) || other.isAnonymous == isAnonymous)&&(identical(other.forkedFromTemplateId, forkedFromTemplateId) || other.forkedFromTemplateId == forkedFromTemplateId)&&(identical(other.originalAuthorName, originalAuthorName) || other.originalAuthorName == originalAuthorName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,userId,name,description,const DeepCollectionEquality().hash(_exercises),category,visibility,createdAt,updatedAt,downloadCount,likeCount,reviewCount,averageRating,authorName,authorPhotoUrl,const DeepCollectionEquality().hash(_tags),folderId,estimatedDurationMinutes,difficultyLevel,const DeepCollectionEquality().hash(_requiredEquipment),const DeepCollectionEquality().hash(_targetMuscles)]);
+int get hashCode => Object.hashAll([runtimeType,id,userId,name,description,const DeepCollectionEquality().hash(_exercises),category,visibility,createdAt,updatedAt,downloadCount,likeCount,reviewCount,averageRating,authorName,authorPhotoUrl,const DeepCollectionEquality().hash(_tags),folderId,estimatedDurationMinutes,difficultyLevel,const DeepCollectionEquality().hash(_requiredEquipment),const DeepCollectionEquality().hash(_targetMuscles),isAnonymous,forkedFromTemplateId,originalAuthorName]);
 
 @override
 String toString() {
-  return 'CommunityWorkoutTemplate(id: $id, userId: $userId, name: $name, description: $description, exercises: $exercises, category: $category, visibility: $visibility, createdAt: $createdAt, updatedAt: $updatedAt, downloadCount: $downloadCount, likeCount: $likeCount, reviewCount: $reviewCount, averageRating: $averageRating, authorName: $authorName, authorPhotoUrl: $authorPhotoUrl, tags: $tags, folderId: $folderId, estimatedDurationMinutes: $estimatedDurationMinutes, difficultyLevel: $difficultyLevel, requiredEquipment: $requiredEquipment, targetMuscles: $targetMuscles)';
+  return 'CommunityWorkoutTemplate(id: $id, userId: $userId, name: $name, description: $description, exercises: $exercises, category: $category, visibility: $visibility, createdAt: $createdAt, updatedAt: $updatedAt, downloadCount: $downloadCount, likeCount: $likeCount, reviewCount: $reviewCount, averageRating: $averageRating, authorName: $authorName, authorPhotoUrl: $authorPhotoUrl, tags: $tags, folderId: $folderId, estimatedDurationMinutes: $estimatedDurationMinutes, difficultyLevel: $difficultyLevel, requiredEquipment: $requiredEquipment, targetMuscles: $targetMuscles, isAnonymous: $isAnonymous, forkedFromTemplateId: $forkedFromTemplateId, originalAuthorName: $originalAuthorName)';
 }
 
 
@@ -339,7 +349,7 @@ abstract mixin class _$CommunityWorkoutTemplateCopyWith<$Res> implements $Commun
   factory _$CommunityWorkoutTemplateCopyWith(_CommunityWorkoutTemplate value, $Res Function(_CommunityWorkoutTemplate) _then) = __$CommunityWorkoutTemplateCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String userId, String name, String? description, List<Exercise> exercises, TemplateCategory category, TemplateVisibility visibility, DateTime createdAt, DateTime? updatedAt, int downloadCount, int likeCount, int reviewCount, double averageRating, String? authorName, String? authorPhotoUrl, List<String> tags, String? folderId, int? estimatedDurationMinutes, String? difficultyLevel, List<String> requiredEquipment, List<String> targetMuscles
+ String id, String userId, String name, String? description, List<Exercise> exercises, TemplateCategory category, TemplateVisibility visibility, DateTime createdAt, DateTime? updatedAt, int downloadCount, int likeCount, int reviewCount, double averageRating, String? authorName, String? authorPhotoUrl, List<String> tags, String? folderId, int? estimatedDurationMinutes, String? difficultyLevel, List<String> requiredEquipment, List<String> targetMuscles, bool isAnonymous, String? forkedFromTemplateId, String? originalAuthorName
 });
 
 
@@ -356,7 +366,7 @@ class __$CommunityWorkoutTemplateCopyWithImpl<$Res>
 
 /// Create a copy of CommunityWorkoutTemplate
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? name = null,Object? description = freezed,Object? exercises = null,Object? category = null,Object? visibility = null,Object? createdAt = null,Object? updatedAt = freezed,Object? downloadCount = null,Object? likeCount = null,Object? reviewCount = null,Object? averageRating = null,Object? authorName = freezed,Object? authorPhotoUrl = freezed,Object? tags = null,Object? folderId = freezed,Object? estimatedDurationMinutes = freezed,Object? difficultyLevel = freezed,Object? requiredEquipment = null,Object? targetMuscles = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? name = null,Object? description = freezed,Object? exercises = null,Object? category = null,Object? visibility = null,Object? createdAt = null,Object? updatedAt = freezed,Object? downloadCount = null,Object? likeCount = null,Object? reviewCount = null,Object? averageRating = null,Object? authorName = freezed,Object? authorPhotoUrl = freezed,Object? tags = null,Object? folderId = freezed,Object? estimatedDurationMinutes = freezed,Object? difficultyLevel = freezed,Object? requiredEquipment = null,Object? targetMuscles = null,Object? isAnonymous = null,Object? forkedFromTemplateId = freezed,Object? originalAuthorName = freezed,}) {
   return _then(_CommunityWorkoutTemplate(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
@@ -379,7 +389,10 @@ as String?,estimatedDurationMinutes: freezed == estimatedDurationMinutes ? _self
 as int?,difficultyLevel: freezed == difficultyLevel ? _self.difficultyLevel : difficultyLevel // ignore: cast_nullable_to_non_nullable
 as String?,requiredEquipment: null == requiredEquipment ? _self._requiredEquipment : requiredEquipment // ignore: cast_nullable_to_non_nullable
 as List<String>,targetMuscles: null == targetMuscles ? _self._targetMuscles : targetMuscles // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,isAnonymous: null == isAnonymous ? _self.isAnonymous : isAnonymous // ignore: cast_nullable_to_non_nullable
+as bool,forkedFromTemplateId: freezed == forkedFromTemplateId ? _self.forkedFromTemplateId : forkedFromTemplateId // ignore: cast_nullable_to_non_nullable
+as String?,originalAuthorName: freezed == originalAuthorName ? _self.originalAuthorName : originalAuthorName // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

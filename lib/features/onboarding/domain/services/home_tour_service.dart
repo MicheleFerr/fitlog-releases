@@ -15,18 +15,16 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 /// Home tour steps in order (matching MinimalHomeScreen layout)
-/// UX 2025: Reduced to 2 essential steps - others are intuitive standard patterns
+/// UX 2025: 3 essential steps - XP, Templates, AI Coach
 enum HomeTourStep {
   /// Step 1: XP Progress Bar - gamification needs explanation
   xpProgress,
 
-  /// Step 2: Template Suggestion - AI recommendation not obvious
-  templateSuggestion,
+  /// Step 2: My Templates - quick access to workout templates
+  myTemplates,
 
-  // REMOVED - intuitive standard patterns:
-  // - startWorkout: FAB is universal mobile pattern
-  // - templatesCarousel: cards are self-explanatory
-  // - settings: gear icon is universal
+  /// Step 3: AI Coach - personal AI assistant
+  aiCoachIntro,
 
   /// Tour completed
   completed,
@@ -221,7 +219,7 @@ class HomeTourNotifier extends Notifier<HomeTourState> {
                     children: [
                       // Step indicator
                       Text(
-                        '${_getStepNumber(step)}/2',
+                        '${_getStepNumber(step)}/3',
                         style: textTheme.labelSmall?.copyWith(
                           color: colors.primary,
                           fontWeight: FontWeight.bold,
@@ -270,7 +268,7 @@ class HomeTourNotifier extends Notifier<HomeTourState> {
                               controller.next();
                             },
                             child: Text(
-                              step == HomeTourStep.templateSuggestion
+                              step == HomeTourStep.aiCoachIntro
                                   ? l10n.tutorialGotIt
                                   : l10n.tutorialNext,
                             ),
@@ -331,10 +329,17 @@ class HomeTourNotifier extends Notifier<HomeTourState> {
           contentAlign: ContentAlign.bottom,
           radius: 12,
         );
-      case HomeTourStep.templateSuggestion:
+      case HomeTourStep.myTemplates:
         return _StepConfig(
-          title: l10n.tourTemplateSuggestionTitle,
-          message: l10n.tourTemplateSuggestionDescription,
+          title: l10n.tourMyTemplatesTitle,
+          message: l10n.tourMyTemplatesDescription,
+          contentAlign: ContentAlign.top,
+          radius: 16,
+        );
+      case HomeTourStep.aiCoachIntro:
+        return _StepConfig(
+          title: l10n.tourAiCoachTitle,
+          message: l10n.tourAiCoachDescription,
           contentAlign: ContentAlign.top,
           radius: 16,
         );

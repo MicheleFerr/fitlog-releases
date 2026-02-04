@@ -167,6 +167,15 @@ class AppIcons {
   /// 👎 Thumbs down
   static const IconData thumbDown = Icons.thumb_down;
 
+  /// 👍 Thumbs up (filled)
+  static const IconData thumbUpFilled = Icons.thumb_up;
+
+  /// 👎 Thumbs down (filled)
+  static const IconData thumbDownFilled = Icons.thumb_down;
+
+  /// 🤖 Smart toy / AI
+  static const IconData smartToy = Icons.smart_toy;
+
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // ❌ UI CONTROLS & NAVIGATION
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

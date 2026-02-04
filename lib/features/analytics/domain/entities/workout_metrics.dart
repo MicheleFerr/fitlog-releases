@@ -19,6 +19,8 @@ import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 class WorkoutMetrics {
   const WorkoutMetrics({
     required this.workoutId,
+    this.workoutName,
+    this.workoutDate,
     required this.calculatedAt,
     required this.totalVolume,
     required this.workingSetsVolume,
@@ -104,6 +106,8 @@ class WorkoutMetrics {
 
     return WorkoutMetrics(
       workoutId: workout.id,
+      workoutName: workout.name,
+      workoutDate: workout.endTime ?? workout.createdAt,
       calculatedAt: now,
       totalVolume: totalVolume,
       workingSetsVolume: workingSetsVolume,
@@ -127,6 +131,8 @@ class WorkoutMetrics {
     );
   }
   final String workoutId;
+  final String? workoutName;
+  final DateTime? workoutDate;
   final DateTime calculatedAt;
 
   // Volume Metrics
@@ -214,6 +220,8 @@ class WorkoutMetrics {
   }
 
   WorkoutMetrics copyWith({
+    String? workoutName,
+    DateTime? workoutDate,
     DateTime? calculatedAt,
     double? totalVolume,
     double? workingSetsVolume,
@@ -239,6 +247,8 @@ class WorkoutMetrics {
   }) {
     return WorkoutMetrics(
       workoutId: workoutId,
+      workoutName: workoutName ?? this.workoutName,
+      workoutDate: workoutDate ?? this.workoutDate,
       calculatedAt: calculatedAt ?? this.calculatedAt,
       totalVolume: totalVolume ?? this.totalVolume,
       workingSetsVolume: workingSetsVolume ?? this.workingSetsVolume,
@@ -329,6 +339,8 @@ class WorkoutMetrics {
   Map<String, dynamic> toJson() {
     return {
       'workoutId': workoutId,
+      'workoutName': workoutName,
+      'workoutDate': workoutDate?.toIso8601String(),
       'calculatedAt': calculatedAt.toIso8601String(),
       'totalVolume': totalVolume,
       'workingSetsVolume': workingSetsVolume,
@@ -366,6 +378,10 @@ class WorkoutMetrics {
     // Simplified version
     return WorkoutMetrics(
       workoutId: json['workoutId'] ?? '',
+      workoutName: json['workoutName'],
+      workoutDate: json['workoutDate'] != null
+          ? DateTime.parse(json['workoutDate'])
+          : null,
       calculatedAt: DateTime.parse(json['calculatedAt']),
       totalVolume: (json['totalVolume'] ?? 0).toDouble(),
       workingSetsVolume: (json['workingSetsVolume'] ?? 0).toDouble(),

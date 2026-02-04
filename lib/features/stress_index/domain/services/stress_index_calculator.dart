@@ -197,6 +197,8 @@ class StressIndexCalculator {
       totalSets: totalSets,
       setsWithRpe: setsWithRpe,
       workoutId: workout.id,
+      workoutName: workout.name,
+      workoutDate: workout.endTime ?? workout.createdAt,
       calculatedAt: DateTime.now(),
       rawScore: rawScoreWithRpe,
     );
