@@ -75,24 +75,23 @@ class UnifiedFeedbackRepositoryImpl
       );
     }
 
-    // 2. Create sanitized feedback data for Firestore
-    // Note: We modify the JSON representation rather than the entity itself
-    final feedbackJson = feedback.toJson();
+    // 2. Generate Firestore document ID if empty (MUST happen before toJson for rules validation)
+    // Firestore rules require the 'id' field to be present and non-empty
+    final documentId = feedback.id.isEmpty
+        ? _feedbackCollection.doc().id // Generate new ID
+        : feedback.id;
+
+    // 3. Create sanitized feedback data for Firestore
+    // Create new feedback with generated ID to ensure Firestore rules pass validation
+    final feedbackWithId = feedback.copyWith(id: documentId);
+    final feedbackJson = feedbackWithId.toJson();
     feedbackJson['message'] =
         sanitizedMessage; // 🔐 SECURITY: Replace with sanitized message
 
-    // 3. Create Firestore document with error handling via mixin
+    // 4. Create Firestore document with error handling via mixin
     return handleFirebaseOperation(() async {
-      // Generate new ID if empty, otherwise use provided ID
-      final docRef = feedback.id.isEmpty
-          ? _feedbackCollection.doc() // Auto-generate ID
-          : _feedbackCollection.doc(feedback.id);
-
-      // Add generated ID to the JSON data
-      feedbackJson['id'] = docRef.id;
-
-      await docRef.set(feedbackJson);
-      return docRef.id;
+      await _feedbackCollection.doc(documentId).set(feedbackJson);
+      return documentId;
     }, operationName: 'submitFeedback');
   }
 

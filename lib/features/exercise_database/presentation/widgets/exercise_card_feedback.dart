@@ -41,241 +41,21 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
   ConsumerState<ExerciseFeedbackButton> createState() =>
       _ExerciseFeedbackButtonState();
 
-  /// Static method to show feedback dialog programmatically
+  /// Static method to show feedback via modern BottomSheetModal
   static Future<void> showFeedbackDialog(
     BuildContext context, {
     required String exerciseId,
     required String exerciseName,
     required String version,
   }) async {
-    final messageController = TextEditingController();
-    String selectedType = 'SUGGESTION';
-    bool isSubmitting = false;
-
-    return showDialog(
+    await showModalBottomSheet<void>(
       context: context,
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Text(context.l10n.reportProblem),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Informazioni esercizio
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        exerciseName,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'v$version',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // Tipo di segnalazione
-                Text(
-                  context.l10n.reportType,
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                DropdownButtonFormField<String>(
-                  initialValue: selectedType,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 12,
-                    ),
-                  ),
-                  items: [
-                    DropdownMenuItem(
-                      value: 'BUG',
-                      child: Text('🐛 ${context.l10n.feedbackTypeBug}'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'SUGGESTION',
-                      child: Text('💡 ${context.l10n.feedbackTypeSuggestion}'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'TYPO',
-                      child: Text('📝 ${context.l10n.feedbackTypeTypo}'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'OTHER',
-                      child: Text('❓ ${context.l10n.feedbackTypeOther}'),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      selectedType = value ?? 'SUGGESTION';
-                    });
-                  },
-                ),
-                const SizedBox(height: 16),
-
-                // Messaggio
-                Text(
-                  context.l10n.describeProblem,
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: messageController,
-                  maxLines: 4,
-                  minLines: 3,
-                  decoration: InputDecoration(
-                    hintText: context.l10n.describeProblemHint,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    contentPadding: const EdgeInsets.all(12),
-                  ),
-                  textInputAction: TextInputAction.newline,
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: isSubmitting
-                  ? null
-                  : () {
-                      Navigator.of(context).pop();
-                      messageController.dispose();
-                    },
-              child: Text(context.l10n.cancel),
-            ),
-            ElevatedButton.icon(
-              onPressed: isSubmitting
-                  ? null
-                  : () async {
-                      final message = messageController.text.trim();
-
-                      if (message.isEmpty) {
-                        SnackBarService.showError(
-                          context,
-                          context.l10n.feedbackRequired,
-                        );
-                        return;
-                      }
-
-                      setState(() {
-                        isSubmitting = true;
-                      });
-
-                      try {
-                        final user = FirebaseAuth.instance.currentUser;
-                        if (user == null) {
-                          SnackBarService.showError(
-                            context,
-                            context.l10n.errorAuthenticationRequired,
-                          );
-                          return;
-                        }
-
-                        // Get unified feedback repository from Riverpod container
-                        final container = ProviderScope.containerOf(context);
-                        final repository = container.read(
-                          unifiedFeedbackRepositoryProvider,
-                        );
-
-                        // Create unified feedback with exercise metadata
-                        final feedback = UnifiedFeedback(
-                          id: '', // Auto-generated by repository
-                          userId: user.uid,
-                          type: UnifiedFeedbackType.exercise,
-                          status: UnifiedFeedbackStatus.open,
-                          severity: FeedbackSeverity.medium,
-                          message: message,
-                          createdAt: DateTime.now(),
-                          metadata: {
-                            'exerciseId': exerciseId,
-                            'exerciseName': exerciseName,
-                            'version': version,
-                            'feedbackType':
-                                selectedType, // BUG, SUGGESTION, TYPO, OTHER
-                            'userEmail': user.email ?? '',
-                          },
-                          adminNotes: null,
-                          resolvedAt: null,
-                          updatedAt: null,
-                        );
-
-                        // Submit via unified repository
-                        final result = await repository.submitFeedback(
-                          feedback,
-                        );
-
-                        if (context.mounted) {
-                          result.fold(
-                            (failure) {
-                              SnackBarService.showError(
-                                context,
-                                context.l10n.error,
-                              );
-                            },
-                            (feedbackId) {
-                              Navigator.of(context).pop();
-                              SnackBarService.showSuccess(
-                                context,
-                                context.l10n.feedbackSentSuccess,
-                              );
-                            },
-                          );
-                        }
-                      } catch (e) {
-                        if (context.mounted) {
-                          SnackBarService.showError(
-                            context,
-                            context.l10n.feedbackSentError,
-                          );
-                        }
-                        debugPrint('❌ Error submitting feedback: $e');
-                      } finally {
-                        messageController.dispose();
-                        if (context.mounted) {
-                          setState(() {
-                            isSubmitting = false;
-                          });
-                        }
-                      }
-                    },
-              icon: isSubmitting
-                  ? const LoadingIndicator(size: 16)
-                  : const SemanticIcon(
-                      icon: AppIcons.send,
-                      semanticLabel: 'Send',
-                    ),
-              label: Text(context.l10n.send),
-            ),
-          ],
-        ),
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => _ExerciseFeedbackBottomSheet(
+        exerciseId: exerciseId,
+        exerciseName: exerciseName,
+        version: version,
       ),
     );
   }
@@ -492,14 +272,18 @@ class _ExerciseFeedbackButtonState
 
       // Submit via unified repository (Riverpod)
       final repository = ref.read(unifiedFeedbackRepositoryProvider);
+      debugPrint('📤 Submitting feedback: userId=${feedback.userId}, type=${feedback.type}, severity=${feedback.severity}');
+
       final result = await repository.submitFeedback(feedback);
 
       if (mounted) {
         result.fold(
           (failure) {
+            debugPrint('❌ Feedback submission failed: ${failure.message}');
             SnackBarService.showError(context, context.l10n.feedbackSentError);
           },
           (feedbackId) {
+            debugPrint('✅ Feedback submitted successfully with ID: $feedbackId');
             Navigator.of(context).pop();
             SnackBarService.showSuccess(
               context,
@@ -514,11 +298,11 @@ class _ExerciseFeedbackButtonState
           },
         );
       }
-    } catch (e) {
+    } catch (e, stack) {
       if (mounted) {
         SnackBarService.showError(context, context.l10n.feedbackSentError);
       }
-      debugPrint('❌ Error submitting feedback: $e');
+      debugPrint('❌ Error submitting feedback: $e\n$stack');
     } finally {
       if (mounted) {
         setState(() {
@@ -526,5 +310,327 @@ class _ExerciseFeedbackButtonState
         });
       }
     }
+  }
+}
+
+/// Modern BottomSheetModal for exercise feedback
+class _ExerciseFeedbackBottomSheet extends ConsumerStatefulWidget {
+  const _ExerciseFeedbackBottomSheet({
+    required this.exerciseId,
+    required this.exerciseName,
+    required this.version,
+  });
+
+  final String exerciseId;
+  final String exerciseName;
+  final String version;
+
+  @override
+  ConsumerState<_ExerciseFeedbackBottomSheet> createState() =>
+      _ExerciseFeedbackBottomSheetState();
+}
+
+class _ExerciseFeedbackBottomSheetState
+    extends ConsumerState<_ExerciseFeedbackBottomSheet> {
+  late TextEditingController _messageController;
+  String _selectedType = 'SUGGESTION';
+  bool _isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _messageController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submitFeedback() async {
+    final message = _messageController.text.trim();
+
+    // Validazione
+    if (message.isEmpty) {
+      SnackBarService.showError(context, context.l10n.feedbackRequired);
+      return;
+    }
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        if (mounted) {
+          SnackBarService.showError(
+            context,
+            context.l10n.errorAuthenticationRequired,
+          );
+        }
+        return;
+      }
+
+      // Create unified feedback with exercise metadata
+      final feedback = UnifiedFeedback(
+        id: '', // Auto-generated by repository
+        userId: user.uid,
+        type: UnifiedFeedbackType.exercise,
+        status: UnifiedFeedbackStatus.open,
+        severity: FeedbackSeverity.medium,
+        message: message,
+        createdAt: DateTime.now(),
+        metadata: {
+          'exerciseId': widget.exerciseId,
+          'exerciseName': widget.exerciseName,
+          'version': widget.version,
+          'feedbackType': _selectedType, // BUG, SUGGESTION, TYPO, OTHER
+          'userEmail': user.email ?? '',
+        },
+        adminNotes: null,
+        resolvedAt: null,
+        updatedAt: null,
+      );
+
+      // Submit via unified repository (Riverpod)
+      final repository = ref.read(unifiedFeedbackRepositoryProvider);
+      debugPrint('📤 Submitting feedback: userId=${feedback.userId}, type=${feedback.type}, severity=${feedback.severity}');
+
+      final result = await repository.submitFeedback(feedback);
+
+      if (mounted) {
+        result.fold(
+          (failure) {
+            debugPrint('❌ Feedback submission failed: ${failure.message}');
+            SnackBarService.showError(context, context.l10n.feedbackSentError);
+          },
+          (feedbackId) {
+            debugPrint('✅ Feedback submitted successfully with ID: $feedbackId');
+            Navigator.of(context).pop();
+            SnackBarService.showSuccess(
+              context,
+              context.l10n.feedbackSentSuccess,
+            );
+          },
+        );
+      }
+    } catch (e, stack) {
+      if (mounted) {
+        SnackBarService.showError(context, context.l10n.feedbackSentError);
+      }
+      debugPrint('❌ Error submitting feedback: $e\n$stack');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: SingleChildScrollView(
+        child: ColoredBox(
+          color: context.colors.surface,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Drag handle + Title
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Column(
+                  children: [
+                    // Visual drag handle
+                    Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: context.colors.outlineVariant,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        context.l10n.reportProblem,
+                        style: context.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Content
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Informazioni esercizio
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: context.colors.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: context.colors.outlineVariant,
+                          width: 1,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.exerciseName,
+                            style: context.textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'v${widget.version}',
+                            style: context.textTheme.labelSmall?.copyWith(
+                              color: context.colors.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Tipo di segnalazione
+                    Text(
+                      context.l10n.feedbackType,
+                      style: context.textTheme.labelMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<String>(
+                      initialValue: _selectedType,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 12,
+                        ),
+                        filled: true,
+                        fillColor: context.colors.surfaceContainer,
+                      ),
+                      items: [
+                        DropdownMenuItem(
+                          value: 'BUG',
+                          child: Text(context.l10n.feedbackBug),
+                        ),
+                        DropdownMenuItem(
+                          value: 'SUGGESTION',
+                          child: Text(context.l10n.feedbackSuggestion),
+                        ),
+                        DropdownMenuItem(
+                          value: 'TYPO',
+                          child: Text(context.l10n.feedbackTypo),
+                        ),
+                        DropdownMenuItem(
+                          value: 'OTHER',
+                          child: Text(context.l10n.feedbackOther),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedType = value ?? 'SUGGESTION';
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Messaggio
+                    Text(
+                      context.l10n.describeProblem,
+                      style: context.textTheme.labelMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _messageController,
+                      maxLines: 4,
+                      minLines: 3,
+                      enabled: !_isSubmitting,
+                      decoration: InputDecoration(
+                        hintText: context.l10n.describeProblem,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        contentPadding: const EdgeInsets.all(12),
+                        filled: true,
+                        fillColor: context.colors.surfaceContainer,
+                      ),
+                      textInputAction: TextInputAction.newline,
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
+
+              // Actions (bottom sticky)
+              Container(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: context.colors.outlineVariant,
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: _isSubmitting
+                            ? null
+                            : () => Navigator.of(context).pop(),
+                        child: Text(context.l10n.cancelFeedback),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _isSubmitting ? null : _submitFeedback,
+                        icon: _isSubmitting
+                            ? LoadingIndicator(
+                                size: 16,
+                                color: context.colors.onPrimary,
+                              )
+                            : const SemanticIcon(
+                                icon: AppIcons.send,
+                                semanticLabel: 'Send',
+                              ),
+                        label: Text(context.l10n.sendFeedback),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
