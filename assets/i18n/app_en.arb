@@ -1779,6 +1779,14 @@
   "@workout": {
     "description": "Workout section header"
   },
+  "workoutShareGenerating": "Generating image...",
+  "@workoutShareGenerating": {
+    "description": "Message shown while generating share image"
+  },
+  "workoutShareError": "Could not generate image",
+  "@workoutShareError": {
+    "description": "Error message when share image generation fails"
+  },
   "autoStartTimer": "Auto-start Timer",
   "@autoStartTimer": {
     "description": "Auto-start timer setting"

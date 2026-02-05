@@ -39,6 +39,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/watch_connectivity_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/services/workout_share_service.dart';
 
 // Sub-component imports
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen/widgets/welcome_view.dart';
@@ -383,8 +384,47 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                 ),
               )
             else ...[
+              // Workout name with share icon (tappable)
+              Flexible(
+                child: GestureDetector(
+                  onTap: () => _shareWorkoutProgress(context, workout),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primaryContainer.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            workout.name,
+                            style: context.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: colorScheme.onSurface,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(
+                          AppIcons.share,
+                          size: 18,
+                          color: colorScheme.primary,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               // HR Badge from Apple Watch (only when connected and valid)
-              if (hasValidHR)
+              if (hasValidHR) ...[
+                const SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
@@ -412,10 +452,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                       ),
                     ],
                   ),
-                )
-              else
-                // Fallback: mostra titolo se non c'è HR
-                Text(l10n.workout),
+                ),
+              ],
             ],
           ],
         ),
@@ -600,6 +638,46 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
         ),
       ],
     );
+  }
+
+  // ========================================================================
+  // WORKOUT SHARING
+  // ========================================================================
+
+  /// Share current workout progress as an image
+  Future<void> _shareWorkoutProgress(
+    BuildContext context,
+    Workout workout,
+  ) async {
+    final l10n = AppLocalizations.of(context);
+
+    // Get user name from Firebase
+    final user = FirebaseAuth.instance.currentUser;
+    final userName = user?.displayName ?? user?.email?.split('@').first ?? 'Atleta';
+
+    // Calculate elapsed duration
+    final elapsedDuration = workout.startTime != null
+        ? DateTime.now().difference(workout.startTime!)
+        : Duration.zero;
+
+    // Get share button position for iPad
+    final shareButtonRect = context.globalPaintBounds;
+
+    // Show loading indicator
+    SnackBarService.showInfo(context, l10n.workoutShareGenerating);
+
+    // Generate and share
+    final success = await WorkoutShareService.shareWorkout(
+      context: context,
+      workout: workout,
+      userName: userName,
+      elapsedDuration: elapsedDuration,
+      shareButtonRect: shareButtonRect,
+    );
+
+    if (!success && context.mounted) {
+      SnackBarService.showError(context, l10n.workoutShareError);
+    }
   }
 
   // ========================================================================

@@ -2719,6 +2719,18 @@ abstract class AppLocalizations {
   /// **'Workout'**
   String get workout;
 
+  /// Message shown while generating share image
+  ///
+  /// In en, this message translates to:
+  /// **'Generating image...'**
+  String get workoutShareGenerating;
+
+  /// Error message when share image generation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not generate image'**
+  String get workoutShareError;
+
   /// Auto-start timer setting
   ///
   /// In en, this message translates to:

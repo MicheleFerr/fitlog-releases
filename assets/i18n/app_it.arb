@@ -571,6 +571,8 @@
   "fontSizeLarge": "Grande",
   "accentColor": "Colore Accento",
   "workout": "Allenamento",
+  "workoutShareGenerating": "Generazione immagine...",
+  "workoutShareError": "Impossibile generare immagine",
   "autoStartTimer": "Timer Automatico",
   "autoStartTimerDesc": "Avvia automaticamente il timer dopo ogni serie",
   "defaultRestTime": "Riposo Predefinito",

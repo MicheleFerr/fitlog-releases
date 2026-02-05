@@ -1430,6 +1430,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workout => 'Workout';
 
   @override
+  String get workoutShareGenerating => 'Generating image...';
+
+  @override
+  String get workoutShareError => 'Could not generate image';
+
+  @override
   String get autoStartTimer => 'Auto-start Timer';
 
   @override

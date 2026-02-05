@@ -1441,6 +1441,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get workout => 'Allenamento';
 
   @override
+  String get workoutShareGenerating => 'Generazione immagine...';
+
+  @override
+  String get workoutShareError => 'Impossibile generare immagine';
+
+  @override
   String get autoStartTimer => 'Timer Automatico';
 
   @override
