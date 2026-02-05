@@ -243,13 +243,36 @@ class AICoachServiceImpl implements AICoachService {
   /// Some models leak raw JSON tool call objects into the text response.
   /// This strips them so the user sees only natural language.
   String _sanitizeResponse(String response) {
-    // Remove JSON objects that look like tool call leaks
-    // Pattern: {"type":"function",...} or {"name":"...", "parameters":...}
-    final jsonPattern = RegExp(
-      r'\{[^{}]*"(?:type|name|function|parameters)"[^{}]*\}',
-      caseSensitive: false,
-    );
-    var cleaned = response.replaceAll(jsonPattern, '').trim();
+    var cleaned = response;
+
+    // Remove "erta raa" artifact that sometimes appears before tool calls
+    cleaned = cleaned.replaceAll(RegExp(r'erta\s+raa'), '').trim();
+
+    // Remove JSON tool call blocks with nested objects
+    // More robust pattern that handles nested braces
+    cleaned = cleaned.replaceAll(
+      RegExp(
+        r'\{\s*"(?:name|type|function)"[^}]*\{[^}]*\}[^}]*\}',
+        caseSensitive: false,
+        multiLine: true,
+      ),
+      '',
+    ).trim();
+
+    // Fallback: remove any remaining simple JSON objects
+    cleaned = cleaned.replaceAll(
+      RegExp(
+        r'\{[^{}]*"(?:type|name|function|parameters)"[^{}]*\}',
+        caseSensitive: false,
+      ),
+      '',
+    ).trim();
+
+    // Remove markdown code blocks containing JSON (```json ... ```)
+    cleaned = cleaned.replaceAll(
+      RegExp(r'```json[\s\S]*?```', caseSensitive: false),
+      '',
+    ).trim();
 
     // Remove __TOOL_CALLS__ markers that might leak through
     cleaned = cleaned.replaceAll(RegExp(r'__TOOL_CALLS__:.*'), '').trim();

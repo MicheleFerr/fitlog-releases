@@ -143,11 +143,42 @@ class _AIMessageBubbleState extends State<AIMessageBubble> {
     });
   }
 
+  /// Remove any leaked JSON tool calls from message content
+  String _filterToolCallArtifacts(String content) {
+    var filtered = content;
+
+    // Remove "erta raa" artifacts
+    filtered = filtered.replaceAll(RegExp(r'erta\s+raa[^}]*'), '').trim();
+
+    // Remove JSON blocks (both code fences and plain JSON)
+    filtered = filtered.replaceAll(
+      RegExp(r'```json[\s\S]*?```', caseSensitive: false),
+      '',
+    ).trim();
+    filtered = filtered.replaceAll(
+      RegExp(
+        r'\{\s*"(?:name|type|function|parameters)"[\s\S]*?\}',
+        caseSensitive: false,
+      ),
+      '',
+    ).trim();
+
+    // Collapse excessive whitespace
+    filtered = filtered.replaceAll(RegExp(r'\n{3,}'), '\n\n');
+
+    return filtered;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final processedContent = widget.isFromUser
+    var processedContent = widget.isFromUser
         ? widget.message.content
         : _processContentForExerciseLinks(widget.message.content);
+
+    // Extra safety: filter tool call artifacts from AI messages
+    if (!widget.isFromUser) {
+      processedContent = _filterToolCallArtifacts(processedContent);
+    }
 
     return GestureDetector(
       onLongPress: widget.isFromUser
