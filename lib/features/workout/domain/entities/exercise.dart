@@ -116,6 +116,7 @@ class Exercise {
     List<ExerciseSet>? sets,
     this.notes,
     this.restTime,
+    this.restAfterExercise,
     this.tut,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -186,6 +187,9 @@ class Exercise {
       restTime: json['restTime'] is num
           ? (json['restTime'] as num).toInt()
           : null,
+      restAfterExercise: json['restAfterExercise'] is num
+          ? (json['restAfterExercise'] as num).toInt()
+          : null,
       tut: json['tut'] as String?,
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'] as String)
@@ -228,6 +232,12 @@ class Exercise {
   final List<ExerciseSet> sets;
   final String? notes;
   final int? restTime; // Rest time in seconds for this specific exercise
+
+  /// Rest time in seconds AFTER completing all sets of this exercise.
+  /// Used for rest between exercises (not between sets).
+  /// null = use global default from WorkoutPreferences.
+  final int? restAfterExercise;
+
   final String? tut; // Time Under Tension (e.g., "3-1-2-0")
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -272,6 +282,8 @@ class Exercise {
     String? notes,
     int? restTime,
     bool clearRestTime = false, // ✅ FIX: Allow clearing restTime to null
+    int? restAfterExercise,
+    bool clearRestAfterExercise = false,
     String? tut,
     DateTime? updatedAt,
     AutoAdjustmentType? autoAdjustmentType,
@@ -295,6 +307,9 @@ class Exercise {
       sets: sets ?? this.sets,
       notes: notes ?? this.notes,
       restTime: clearRestTime ? null : (restTime ?? this.restTime), // ✅ FIX
+      restAfterExercise: clearRestAfterExercise
+          ? null
+          : (restAfterExercise ?? this.restAfterExercise),
       tut: tut ?? this.tut,
       createdAt: createdAt,
       updatedAt: updatedAt ?? DateTime.now(),
@@ -323,6 +338,7 @@ class Exercise {
       'sets': sets.map((set) => set.toJson()).toList(),
       'notes': notes,
       'restTime': restTime,
+      'restAfterExercise': restAfterExercise,
       'tut': tut,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
@@ -781,6 +797,7 @@ class SupersetExercise extends Exercise {
     List<SupersetSet>? supersetSets,
     super.notes,
     super.restTime,
+    super.restAfterExercise,
     super.tut,
     // Advanced fields from base Exercise
     super.autoAdjustmentType,
@@ -829,6 +846,9 @@ class SupersetExercise extends Exercise {
       restTime: json['restTime'] is num
           ? (json['restTime'] as num).toInt()
           : null,
+      restAfterExercise: json['restAfterExercise'] is num
+          ? (json['restAfterExercise'] as num).toInt()
+          : null,
       // Advanced fields
       autoAdjustmentType: json['autoAdjustmentType'] != null
           ? AutoAdjustmentType.values.firstWhere(
@@ -876,6 +896,8 @@ class SupersetExercise extends Exercise {
     String? notes,
     int? restTime,
     bool clearRestTime = false, // ✅ FIX: Allow clearing restTime to null
+    int? restAfterExercise,
+    bool clearRestAfterExercise = false,
     String? tut,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -901,6 +923,9 @@ class SupersetExercise extends Exercise {
       supersetSets: supersetSets ?? this.supersetSets,
       notes: notes ?? this.notes,
       restTime: clearRestTime ? null : (restTime ?? this.restTime),
+      restAfterExercise: clearRestAfterExercise
+          ? null
+          : (restAfterExercise ?? this.restAfterExercise),
       autoAdjustmentType: autoAdjustmentType ?? this.autoAdjustmentType,
       calculated1RM: calculated1RM ?? this.calculated1RM,
       calculated3RM: calculated3RM ?? this.calculated3RM,
@@ -1021,6 +1046,7 @@ class SupersetExercise extends Exercise {
       'category': category.name,
       'notes': notes,
       'restTime': restTime,
+      'restAfterExercise': restAfterExercise,
       'tut': tut,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
@@ -1053,6 +1079,7 @@ class DropSetExercise extends Exercise {
     required List<DropSetStage> stages,
     super.notes,
     super.restTime,
+    super.restAfterExercise,
     super.tut,
     // Advanced fields from base Exercise
     super.autoAdjustmentType,
@@ -1088,6 +1115,9 @@ class DropSetExercise extends Exercise {
       notes: json['notes'] as String?,
       restTime: json['restTime'] is num
           ? (json['restTime'] as num).toInt()
+          : null,
+      restAfterExercise: json['restAfterExercise'] is num
+          ? (json['restAfterExercise'] as num).toInt()
           : null,
       tut: json['tut'] as String?,
       // Advanced fields
@@ -1133,6 +1163,8 @@ class DropSetExercise extends Exercise {
     String? notes,
     int? restTime,
     bool clearRestTime = false,
+    int? restAfterExercise,
+    bool clearRestAfterExercise = false,
     String? tut,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -1156,6 +1188,9 @@ class DropSetExercise extends Exercise {
       stages: stages ?? this.stages,
       notes: notes ?? this.notes,
       restTime: clearRestTime ? null : (restTime ?? this.restTime),
+      restAfterExercise: clearRestAfterExercise
+          ? null
+          : (restAfterExercise ?? this.restAfterExercise),
       tut: tut ?? this.tut,
       autoAdjustmentType: autoAdjustmentType ?? this.autoAdjustmentType,
       calculated1RM: calculated1RM ?? this.calculated1RM,
@@ -1205,6 +1240,7 @@ class DropSetExercise extends Exercise {
       'category': category.name,
       'notes': notes,
       'restTime': restTime,
+      'restAfterExercise': restAfterExercise,
       'tut': tut,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
@@ -1312,6 +1348,7 @@ class RestPauseExercise extends Exercise {
     required this.restPauseSets,
     super.notes,
     super.restTime,
+    super.restAfterExercise,
     super.tut,
     // Advanced fields from base Exercise
     super.autoAdjustmentType,
@@ -1348,6 +1385,9 @@ class RestPauseExercise extends Exercise {
       notes: json['notes'] as String?,
       restTime: json['restTime'] is num
           ? (json['restTime'] as num).toInt()
+          : null,
+      restAfterExercise: json['restAfterExercise'] is num
+          ? (json['restAfterExercise'] as num).toInt()
           : null,
       tut: json['tut'] as String?,
       // Advanced fields
@@ -1397,6 +1437,8 @@ class RestPauseExercise extends Exercise {
     String? notes,
     int? restTime,
     bool clearRestTime = false,
+    int? restAfterExercise,
+    bool clearRestAfterExercise = false,
     String? tut,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -1422,6 +1464,9 @@ class RestPauseExercise extends Exercise {
       restPauseSets: restPauseSets ?? this.restPauseSets,
       notes: notes ?? this.notes,
       restTime: clearRestTime ? null : (restTime ?? this.restTime),
+      restAfterExercise: clearRestAfterExercise
+          ? null
+          : (restAfterExercise ?? this.restAfterExercise),
       tut: tut ?? this.tut,
       autoAdjustmentType: autoAdjustmentType ?? this.autoAdjustmentType,
       calculated1RM: calculated1RM ?? this.calculated1RM,
@@ -1471,6 +1516,7 @@ class RestPauseExercise extends Exercise {
       'category': category.name,
       'notes': notes,
       'restTime': restTime,
+      'restAfterExercise': restAfterExercise,
       'tut': tut,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
