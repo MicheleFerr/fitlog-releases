@@ -1,0 +1,253 @@
+[
+  {
+    "id": "paper_001_rpe_validity_2022",
+    "title": "Convergent Validity of Ratings of Perceived Exertion During Resistance Exercise in Healthy Participants: A Systematic Review and Meta-Analysis",
+    "authors": [
+      "John W D Lea",
+      "Jamie M O'Driscoll",
+      "Sabina Hulbert",
+      "James Scales",
+      "Jonathan D Wiles"
+    ],
+    "year": 2022,
+    "doi": "10.1186/s40798-021-00386-8",
+    "abstract": "This meta-analysis assessed RPE validity during resistance exercise using relationships with exercise intensity, heart rate, blood lactate, blood pressure, and electromyography. One hundred eighteen studies were qualitatively synthesized; seventy-five studies were meta-analyzed. The overall weighted mean validity coefficient was large (r=0.88; 95% CI 0.84–0.91). Greater workload ranges, isometric muscle actions, and workload or repetition time manipulation showed highest validity coefficients. Sex, age, training status, RPE scale, and outcome measure showed no significant effects. RPE provides a valid measure of resistance exercise intensity comparable to aerobic exercise findings.",
+    "summary": "Meta-analysis of 118 studies validating RPE as a reliable tool for monitoring resistance training intensity (r=0.88 validity coefficient).",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8742800/",
+    "license": "CC-BY 4.0",
+    "categories": [
+      "rpe",
+      "autoregulation",
+      "training-intensity",
+      "monitoring"
+    ],
+    "keywords": [
+      "RPE",
+      "rate of perceived exertion",
+      "resistance training",
+      "training intensity",
+      "autoregulation",
+      "monitoring"
+    ],
+    "metadata": {
+      "journal": "Sports Medicine - Open",
+      "volume": null,
+      "issue": null,
+      "pages": null,
+      "pmcid": "PMC8742800"
+    }
+  },
+  {
+    "id": "paper_002_rest_intervals_2024",
+    "title": "Give it a rest: a systematic review with Bayesian meta-analysis on the effect of inter-set rest interval duration on muscle hypertrophy",
+    "authors": [
+      "Alec Singer",
+      "Milo Wolf",
+      "Leonardo Generoso",
+      "Elizabeth Arias",
+      "Kenneth Delcastillo",
+      "Edwin Echevarria",
+      "Amaris Martinez",
+      "Patroklos Androulakis Korakakis",
+      "Martin C Refalo",
+      "Paul A Swinton",
+      "Brad J Schoenfeld"
+    ],
+    "year": 2024,
+    "doi": "10.3389/fspor.2024.1429789",
+    "abstract": "The study systematically searched for randomized trials comparing different inter-set rest durations and their effects on lean/muscle mass in healthy adults. Bayesian meta-analyses of 19 measurements from 9 studies revealed substantial overlap of standardized mean differences across the different inter-set rest periods with considerable heterogeneity. Findings indicated modest advantages for longer rest intervals (>60 seconds) in limb muscles, while whole-body measures favored shorter durations marginally. Results suggest potential benefits exceed 90 seconds are unlikely.",
+    "summary": "Bayesian meta-analysis showing modest hypertrophy benefits for rest intervals >60s in limb muscles, but no clear advantage beyond 90 seconds.",
+    "url": "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2024.1429789/full",
+    "license": "CC-BY",
+    "categories": [
+      "rest-intervals",
+      "hypertrophy",
+      "recovery",
+      "programming"
+    ],
+    "keywords": [
+      "rest intervals",
+      "inter-set rest",
+      "muscle hypertrophy",
+      "recovery",
+      "meta-analysis",
+      "Bayesian"
+    ],
+    "metadata": {
+      "journal": "Frontiers in Sports and Active Living",
+      "volume": null,
+      "issue": null,
+      "pages": null,
+      "pmcid": "PMC11349676"
+    }
+  },
+  {
+    "id": "paper_003_training_variables_2022",
+    "title": "Resistance Training Variables for Optimization of Muscle Hypertrophy: An Umbrella Review",
+    "authors": [
+      "Roberto Bernárdez-Vázquez",
+      "Javier Raya-González",
+      "Daniel Castillo",
+      "Marco Beato"
+    ],
+    "year": 2022,
+    "doi": "10.3389/fspor.2022.949021",
+    "abstract": "This umbrella review examined how different resistance training variables affect muscle growth. Analyzing 14 meta-analyses covering 178 primary studies and 4,784 participants, researchers found that volume, intensity, and contraction type significantly influence hypertrophy, while exercise order and training time showed minimal direct effects. The review provides evidence-based guidance for optimizing training variables to maximize muscle growth.",
+    "summary": "Umbrella review of 14 meta-analyses identifying volume, intensity, and contraction type as key variables for muscle hypertrophy optimization.",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9302196/",
+    "license": "CC-BY",
+    "categories": [
+      "hypertrophy",
+      "volume",
+      "intensity",
+      "training-variables"
+    ],
+    "keywords": [
+      "muscle hypertrophy",
+      "training volume",
+      "training intensity",
+      "resistance training",
+      "contraction type",
+      "exercise variables"
+    ],
+    "metadata": {
+      "journal": "Frontiers in Sports and Active Living",
+      "volume": null,
+      "issue": null,
+      "pages": null,
+      "pmcid": "PMC9302196"
+    }
+  },
+  {
+    "id": "paper_004_protein_intake_2022",
+    "title": "Systematic review and meta-analysis of protein intake to support muscle mass and function in healthy adults",
+    "authors": [
+      "Everson A Nunes",
+      "Lauren Colenso-Semple",
+      "Sean R McKellar",
+      "Thomas Yau",
+      "Muhammad Usman Ali",
+      "Donna Fitzpatrick-Lewis",
+      "Diana Sherifali",
+      "Claire Gaudichon",
+      "Daniel Tomé",
+      "Philip J Atherton",
+      "Maria Camprubi Robles",
+      "Sandra Naranjo-Modad",
+      "Michelle Braun",
+      "Francesco Landi",
+      "Stuart M Phillips"
+    ],
+    "year": 2022,
+    "doi": "10.1002/jcsm.12922",
+    "abstract": "This meta-analysis of 74 randomized controlled trials examines whether increased protein consumption enhances lean body mass, muscle strength, and physical function in healthy adults. The findings indicate additional protein ingestion results in small additional gains in LBM and lower body muscle strength gains in healthy adults enrolled in resistance exercise training, with minimal effects on handgrip strength or functional performance tests. Optimal intake appears to be around 1.6 g/kg/day for most adults engaged in resistance training.",
+    "summary": "Meta-analysis of 74 RCTs showing protein intake ~1.6 g/kg/day optimizes muscle gains during resistance training.",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8978023/",
+    "license": "CC-BY-NC-ND 4.0",
+    "categories": [
+      "nutrition",
+      "protein",
+      "hypertrophy",
+      "recovery"
+    ],
+    "keywords": [
+      "protein intake",
+      "muscle protein synthesis",
+      "resistance training",
+      "lean body mass",
+      "strength",
+      "nutrition"
+    ],
+    "metadata": {
+      "journal": "Journal of Cachexia, Sarcopenia and Muscle",
+      "volume": null,
+      "issue": null,
+      "pages": null
+    }
+  },
+  {
+    "id": "paper_005_deload_2024",
+    "title": "Gaining more from doing less? The effects of a one-week deload period during supervised resistance training on muscular adaptations",
+    "authors": [
+      "Max Coleman",
+      "Ryan Burke",
+      "Francesca Augustin",
+      "Alec Piñero",
+      "Jaime Maldonado",
+      "James P Fisher",
+      "Michael Israetel",
+      "Patroklos Androulakis Korakakis",
+      "Paul Swinton",
+      "Douglas Oberlin",
+      "Brad J Schoenfeld"
+    ],
+    "year": 2024,
+    "doi": "10.7717/peerj.16777",
+    "abstract": "This research examined whether a single week of training cessation at mid-program enhanced muscle growth compared to continuous training over nine weeks. Findings revealed comparable increases in muscle size between groups, though the continuous training group showed superior strength gains. The results suggest that achieving an overreaching or overtraining state from resistance training alone is unlikely over relatively short training periods with ecologically valid protocols.",
+    "summary": "Study showing deload week produces similar hypertrophy but lower strength gains compared to continuous training over 9 weeks.",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10809978/",
+    "license": "CC-BY 4.0",
+    "categories": [
+      "deload",
+      "recovery",
+      "programming",
+      "fatigue"
+    ],
+    "keywords": [
+      "deload",
+      "recovery",
+      "fatigue management",
+      "training cessation",
+      "muscle adaptations",
+      "periodization"
+    ],
+    "metadata": {
+      "journal": "PeerJ",
+      "volume": null,
+      "issue": null,
+      "pages": null,
+      "pmcid": "PMC10809978"
+    }
+  },
+  {
+    "id": "paper_006_vbt_2022",
+    "title": "Velocity-Based Resistance Training on 1-RM, Jump and Sprint Performance: A Systematic Review of Clinical Trials",
+    "authors": [
+      "Mateo Baena-Marín",
+      "Andrés Rojas-Jaramillo",
+      "Jhonatan González-Santamaría",
+      "David Rodríguez-Rosell",
+      "Jorge L Petro",
+      "Richard B Kreider",
+      "Diego A Bonilla"
+    ],
+    "year": 2022,
+    "doi": "10.3390/sports10010008",
+    "abstract": "This systematic review examined 22 randomized clinical trials evaluating velocity-based resistance training's effects on maximum strength, jumping, and sprinting. The methodology proved effective for improving these performance variables while potentially requiring lower training volumes and fatigue compared to traditional approaches. VBT allows for real-time adjustment of training loads based on movement velocity, providing a more individualized and autoregulated approach to resistance training.",
+    "summary": "Systematic review of 22 RCTs showing velocity-based training improves strength and power with lower volumes and fatigue.",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8822898/",
+    "license": "CC-BY 4.0",
+    "categories": [
+      "velocity-based-training",
+      "autoregulation",
+      "strength",
+      "power"
+    ],
+    "keywords": [
+      "velocity-based training",
+      "VBT",
+      "movement velocity",
+      "autoregulation",
+      "1RM",
+      "power",
+      "sprint"
+    ],
+    "metadata": {
+      "journal": "Sports (Basel)",
+      "volume": null,
+      "issue": null,
+      "pages": null,
+      "pmcid": "PMC8822898"
+    }
+  }
+]
