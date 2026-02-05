@@ -48,6 +48,8 @@ sealed class AIContext with _$AIContext {
     required Map<String, int> top5OneRM,
     required RecoveryStatus recoveryStatus,
     required String userTier,
+    String? experienceLevel, // 'beginner', 'some', 'experienced', 'athlete'
+    String? fitnessGoal, // 'muscle', 'strength', 'endurance', etc.
   }) = _AIContext;
 
   const AIContext._();
@@ -71,6 +73,14 @@ sealed class AIContext with _$AIContext {
     });
 
     buffer.writeln('- Recovery: ${recoveryStatus.name.toUpperCase()}');
+
+    // Add experience level and fitness goal for tone adaptation
+    if (experienceLevel != null) {
+      buffer.writeln('- Experience: $experienceLevel');
+    }
+    if (fitnessGoal != null) {
+      buffer.writeln('- Goal: $fitnessGoal');
+    }
 
     return buffer.toString();
   }

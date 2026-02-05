@@ -58,7 +58,7 @@ final class AiCoachServiceProvider
   }
 }
 
-String _$aiCoachServiceHash() => r'7bde04c66431014de9cc2c36941242947d44e586';
+String _$aiCoachServiceHash() => r'77bc12071ba4f993d58efcfdf98c9065ce8fae24';
 
 /// AI Chat provider
 

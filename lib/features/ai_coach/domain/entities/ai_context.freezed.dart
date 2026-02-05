@@ -284,7 +284,8 @@ as int?,
 /// @nodoc
 mixin _$AIContext {
 
- int get currentStreak; WorkoutSummary? get lastWorkout; Map<String, int> get top5OneRM; RecoveryStatus get recoveryStatus; String get userTier;
+ int get currentStreak; WorkoutSummary? get lastWorkout; Map<String, int> get top5OneRM; RecoveryStatus get recoveryStatus; String get userTier; String? get experienceLevel;// 'beginner', 'some', 'experienced', 'athlete'
+ String? get fitnessGoal;
 /// Create a copy of AIContext
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -297,16 +298,16 @@ $AIContextCopyWith<AIContext> get copyWith => _$AIContextCopyWithImpl<AIContext>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AIContext&&(identical(other.currentStreak, currentStreak) || other.currentStreak == currentStreak)&&(identical(other.lastWorkout, lastWorkout) || other.lastWorkout == lastWorkout)&&const DeepCollectionEquality().equals(other.top5OneRM, top5OneRM)&&(identical(other.recoveryStatus, recoveryStatus) || other.recoveryStatus == recoveryStatus)&&(identical(other.userTier, userTier) || other.userTier == userTier));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AIContext&&(identical(other.currentStreak, currentStreak) || other.currentStreak == currentStreak)&&(identical(other.lastWorkout, lastWorkout) || other.lastWorkout == lastWorkout)&&const DeepCollectionEquality().equals(other.top5OneRM, top5OneRM)&&(identical(other.recoveryStatus, recoveryStatus) || other.recoveryStatus == recoveryStatus)&&(identical(other.userTier, userTier) || other.userTier == userTier)&&(identical(other.experienceLevel, experienceLevel) || other.experienceLevel == experienceLevel)&&(identical(other.fitnessGoal, fitnessGoal) || other.fitnessGoal == fitnessGoal));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,currentStreak,lastWorkout,const DeepCollectionEquality().hash(top5OneRM),recoveryStatus,userTier);
+int get hashCode => Object.hash(runtimeType,currentStreak,lastWorkout,const DeepCollectionEquality().hash(top5OneRM),recoveryStatus,userTier,experienceLevel,fitnessGoal);
 
 @override
 String toString() {
-  return 'AIContext(currentStreak: $currentStreak, lastWorkout: $lastWorkout, top5OneRM: $top5OneRM, recoveryStatus: $recoveryStatus, userTier: $userTier)';
+  return 'AIContext(currentStreak: $currentStreak, lastWorkout: $lastWorkout, top5OneRM: $top5OneRM, recoveryStatus: $recoveryStatus, userTier: $userTier, experienceLevel: $experienceLevel, fitnessGoal: $fitnessGoal)';
 }
 
 
@@ -317,7 +318,7 @@ abstract mixin class $AIContextCopyWith<$Res>  {
   factory $AIContextCopyWith(AIContext value, $Res Function(AIContext) _then) = _$AIContextCopyWithImpl;
 @useResult
 $Res call({
- int currentStreak, WorkoutSummary? lastWorkout, Map<String, int> top5OneRM, RecoveryStatus recoveryStatus, String userTier
+ int currentStreak, WorkoutSummary? lastWorkout, Map<String, int> top5OneRM, RecoveryStatus recoveryStatus, String userTier, String? experienceLevel, String? fitnessGoal
 });
 
 
@@ -334,14 +335,16 @@ class _$AIContextCopyWithImpl<$Res>
 
 /// Create a copy of AIContext
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? currentStreak = null,Object? lastWorkout = freezed,Object? top5OneRM = null,Object? recoveryStatus = null,Object? userTier = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? currentStreak = null,Object? lastWorkout = freezed,Object? top5OneRM = null,Object? recoveryStatus = null,Object? userTier = null,Object? experienceLevel = freezed,Object? fitnessGoal = freezed,}) {
   return _then(_self.copyWith(
 currentStreak: null == currentStreak ? _self.currentStreak : currentStreak // ignore: cast_nullable_to_non_nullable
 as int,lastWorkout: freezed == lastWorkout ? _self.lastWorkout : lastWorkout // ignore: cast_nullable_to_non_nullable
 as WorkoutSummary?,top5OneRM: null == top5OneRM ? _self.top5OneRM : top5OneRM // ignore: cast_nullable_to_non_nullable
 as Map<String, int>,recoveryStatus: null == recoveryStatus ? _self.recoveryStatus : recoveryStatus // ignore: cast_nullable_to_non_nullable
 as RecoveryStatus,userTier: null == userTier ? _self.userTier : userTier // ignore: cast_nullable_to_non_nullable
-as String,
+as String,experienceLevel: freezed == experienceLevel ? _self.experienceLevel : experienceLevel // ignore: cast_nullable_to_non_nullable
+as String?,fitnessGoal: freezed == fitnessGoal ? _self.fitnessGoal : fitnessGoal // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 /// Create a copy of AIContext
@@ -435,10 +438,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int currentStreak,  WorkoutSummary? lastWorkout,  Map<String, int> top5OneRM,  RecoveryStatus recoveryStatus,  String userTier)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int currentStreak,  WorkoutSummary? lastWorkout,  Map<String, int> top5OneRM,  RecoveryStatus recoveryStatus,  String userTier,  String? experienceLevel,  String? fitnessGoal)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AIContext() when $default != null:
-return $default(_that.currentStreak,_that.lastWorkout,_that.top5OneRM,_that.recoveryStatus,_that.userTier);case _:
+return $default(_that.currentStreak,_that.lastWorkout,_that.top5OneRM,_that.recoveryStatus,_that.userTier,_that.experienceLevel,_that.fitnessGoal);case _:
   return orElse();
 
 }
@@ -456,10 +459,10 @@ return $default(_that.currentStreak,_that.lastWorkout,_that.top5OneRM,_that.reco
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int currentStreak,  WorkoutSummary? lastWorkout,  Map<String, int> top5OneRM,  RecoveryStatus recoveryStatus,  String userTier)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int currentStreak,  WorkoutSummary? lastWorkout,  Map<String, int> top5OneRM,  RecoveryStatus recoveryStatus,  String userTier,  String? experienceLevel,  String? fitnessGoal)  $default,) {final _that = this;
 switch (_that) {
 case _AIContext():
-return $default(_that.currentStreak,_that.lastWorkout,_that.top5OneRM,_that.recoveryStatus,_that.userTier);}
+return $default(_that.currentStreak,_that.lastWorkout,_that.top5OneRM,_that.recoveryStatus,_that.userTier,_that.experienceLevel,_that.fitnessGoal);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -473,10 +476,10 @@ return $default(_that.currentStreak,_that.lastWorkout,_that.top5OneRM,_that.reco
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int currentStreak,  WorkoutSummary? lastWorkout,  Map<String, int> top5OneRM,  RecoveryStatus recoveryStatus,  String userTier)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int currentStreak,  WorkoutSummary? lastWorkout,  Map<String, int> top5OneRM,  RecoveryStatus recoveryStatus,  String userTier,  String? experienceLevel,  String? fitnessGoal)?  $default,) {final _that = this;
 switch (_that) {
 case _AIContext() when $default != null:
-return $default(_that.currentStreak,_that.lastWorkout,_that.top5OneRM,_that.recoveryStatus,_that.userTier);case _:
+return $default(_that.currentStreak,_that.lastWorkout,_that.top5OneRM,_that.recoveryStatus,_that.userTier,_that.experienceLevel,_that.fitnessGoal);case _:
   return null;
 
 }
@@ -488,7 +491,7 @@ return $default(_that.currentStreak,_that.lastWorkout,_that.top5OneRM,_that.reco
 @JsonSerializable()
 
 class _AIContext extends AIContext {
-  const _AIContext({required this.currentStreak, this.lastWorkout, required final  Map<String, int> top5OneRM, required this.recoveryStatus, required this.userTier}): _top5OneRM = top5OneRM,super._();
+  const _AIContext({required this.currentStreak, this.lastWorkout, required final  Map<String, int> top5OneRM, required this.recoveryStatus, required this.userTier, this.experienceLevel, this.fitnessGoal}): _top5OneRM = top5OneRM,super._();
   factory _AIContext.fromJson(Map<String, dynamic> json) => _$AIContextFromJson(json);
 
 @override final  int currentStreak;
@@ -502,6 +505,9 @@ class _AIContext extends AIContext {
 
 @override final  RecoveryStatus recoveryStatus;
 @override final  String userTier;
+@override final  String? experienceLevel;
+// 'beginner', 'some', 'experienced', 'athlete'
+@override final  String? fitnessGoal;
 
 /// Create a copy of AIContext
 /// with the given fields replaced by the non-null parameter values.
@@ -516,16 +522,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AIContext&&(identical(other.currentStreak, currentStreak) || other.currentStreak == currentStreak)&&(identical(other.lastWorkout, lastWorkout) || other.lastWorkout == lastWorkout)&&const DeepCollectionEquality().equals(other._top5OneRM, _top5OneRM)&&(identical(other.recoveryStatus, recoveryStatus) || other.recoveryStatus == recoveryStatus)&&(identical(other.userTier, userTier) || other.userTier == userTier));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AIContext&&(identical(other.currentStreak, currentStreak) || other.currentStreak == currentStreak)&&(identical(other.lastWorkout, lastWorkout) || other.lastWorkout == lastWorkout)&&const DeepCollectionEquality().equals(other._top5OneRM, _top5OneRM)&&(identical(other.recoveryStatus, recoveryStatus) || other.recoveryStatus == recoveryStatus)&&(identical(other.userTier, userTier) || other.userTier == userTier)&&(identical(other.experienceLevel, experienceLevel) || other.experienceLevel == experienceLevel)&&(identical(other.fitnessGoal, fitnessGoal) || other.fitnessGoal == fitnessGoal));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,currentStreak,lastWorkout,const DeepCollectionEquality().hash(_top5OneRM),recoveryStatus,userTier);
+int get hashCode => Object.hash(runtimeType,currentStreak,lastWorkout,const DeepCollectionEquality().hash(_top5OneRM),recoveryStatus,userTier,experienceLevel,fitnessGoal);
 
 @override
 String toString() {
-  return 'AIContext(currentStreak: $currentStreak, lastWorkout: $lastWorkout, top5OneRM: $top5OneRM, recoveryStatus: $recoveryStatus, userTier: $userTier)';
+  return 'AIContext(currentStreak: $currentStreak, lastWorkout: $lastWorkout, top5OneRM: $top5OneRM, recoveryStatus: $recoveryStatus, userTier: $userTier, experienceLevel: $experienceLevel, fitnessGoal: $fitnessGoal)';
 }
 
 
@@ -536,7 +542,7 @@ abstract mixin class _$AIContextCopyWith<$Res> implements $AIContextCopyWith<$Re
   factory _$AIContextCopyWith(_AIContext value, $Res Function(_AIContext) _then) = __$AIContextCopyWithImpl;
 @override @useResult
 $Res call({
- int currentStreak, WorkoutSummary? lastWorkout, Map<String, int> top5OneRM, RecoveryStatus recoveryStatus, String userTier
+ int currentStreak, WorkoutSummary? lastWorkout, Map<String, int> top5OneRM, RecoveryStatus recoveryStatus, String userTier, String? experienceLevel, String? fitnessGoal
 });
 
 
@@ -553,14 +559,16 @@ class __$AIContextCopyWithImpl<$Res>
 
 /// Create a copy of AIContext
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? currentStreak = null,Object? lastWorkout = freezed,Object? top5OneRM = null,Object? recoveryStatus = null,Object? userTier = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? currentStreak = null,Object? lastWorkout = freezed,Object? top5OneRM = null,Object? recoveryStatus = null,Object? userTier = null,Object? experienceLevel = freezed,Object? fitnessGoal = freezed,}) {
   return _then(_AIContext(
 currentStreak: null == currentStreak ? _self.currentStreak : currentStreak // ignore: cast_nullable_to_non_nullable
 as int,lastWorkout: freezed == lastWorkout ? _self.lastWorkout : lastWorkout // ignore: cast_nullable_to_non_nullable
 as WorkoutSummary?,top5OneRM: null == top5OneRM ? _self._top5OneRM : top5OneRM // ignore: cast_nullable_to_non_nullable
 as Map<String, int>,recoveryStatus: null == recoveryStatus ? _self.recoveryStatus : recoveryStatus // ignore: cast_nullable_to_non_nullable
 as RecoveryStatus,userTier: null == userTier ? _self.userTier : userTier // ignore: cast_nullable_to_non_nullable
-as String,
+as String,experienceLevel: freezed == experienceLevel ? _self.experienceLevel : experienceLevel // ignore: cast_nullable_to_non_nullable
+as String?,fitnessGoal: freezed == fitnessGoal ? _self.fitnessGoal : fitnessGoal // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

@@ -32,6 +32,8 @@ _AIContext _$AIContextFromJson(Map<String, dynamic> json) => _AIContext(
   top5OneRM: Map<String, int>.from(json['top5OneRM'] as Map),
   recoveryStatus: $enumDecode(_$RecoveryStatusEnumMap, json['recoveryStatus']),
   userTier: json['userTier'] as String,
+  experienceLevel: json['experienceLevel'] as String?,
+  fitnessGoal: json['fitnessGoal'] as String?,
 );
 
 Map<String, dynamic> _$AIContextToJson(_AIContext instance) =>
@@ -41,6 +43,8 @@ Map<String, dynamic> _$AIContextToJson(_AIContext instance) =>
       'top5OneRM': instance.top5OneRM,
       'recoveryStatus': _$RecoveryStatusEnumMap[instance.recoveryStatus]!,
       'userTier': instance.userTier,
+      'experienceLevel': instance.experienceLevel,
+      'fitnessGoal': instance.fitnessGoal,
     };
 
 const _$RecoveryStatusEnumMap = {
