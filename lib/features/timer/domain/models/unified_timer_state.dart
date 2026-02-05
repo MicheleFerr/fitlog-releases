@@ -371,11 +371,27 @@ class UnifiedTimerState {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is UnifiedTimerState && other.id == id;
+    if (other is! UnifiedTimerState) return false;
+    // CRITICAL: Compare all fields that affect UI rendering
+    // Previously only compared id, which caused Riverpod to think
+    // states were equal even when remainingSeconds changed,
+    // preventing UI updates.
+    return other.id == id &&
+        other.remainingSeconds == remainingSeconds &&
+        other.status == status &&
+        other.tickCount == tickCount &&
+        other.audioPlayed == audioPlayed &&
+        other.liveActivityActive == liveActivityActive &&
+        other.totalDurationSeconds == totalDurationSeconds;
   }
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => Object.hash(
+        id,
+        remainingSeconds,
+        status,
+        tickCount,
+      );
 
   @override
   String toString() {
@@ -388,4 +404,10 @@ class UnifiedTimerState {
 // Re-export enums for compatibility
 enum TimerStatus { idle, running, paused, completed }
 
-enum TimerType { rest, workout, warmup, cooldown }
+enum TimerType {
+  rest, // Rest between sets
+  workout, // Active workout timer
+  warmup, // Warmup countdown
+  cooldown, // Cooldown period
+  interExercise, // Rest between exercises (after last set)
+}
