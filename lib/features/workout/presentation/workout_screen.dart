@@ -24,11 +24,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exe
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/pdf_export_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/context_gathering_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/scheduling/presentation/widgets/schedule_bottom_sheet.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/helpers/save_template_helper.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_actions/template_save_helper.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:flutter/foundation.dart';
@@ -92,7 +89,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   final GlobalKey _addExerciseFABKey = GlobalKey();
   final GlobalKey _completeWorkoutButtonKey = GlobalKey();
   final GlobalKey _reorderButtonKey = GlobalKey();
-  final GlobalKey _settingsButtonKey = GlobalKey();
   final GlobalKey _firstSetRowKey = GlobalKey();
   final GlobalKey _exerciseMenuKey = GlobalKey();
 
@@ -102,7 +98,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     WorkoutTutorialStep.tapSet: _firstSetRowKey,
     WorkoutTutorialStep.exerciseMenu: _exerciseMenuKey,
     WorkoutTutorialStep.reorder: _reorderButtonKey,
-    WorkoutTutorialStep.settings: _settingsButtonKey,
     WorkoutTutorialStep.finish: _completeWorkoutButtonKey,
   };
 
@@ -485,17 +480,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
               ),
             ),
 
-          // Settings menu (only if not in reorder mode and not during active workout)
-          if (!state.isReorderMode && !isActive)
-            IconButton(
-              key: _settingsButtonKey,
-              icon: SemanticIcon(
-                icon: AppIcons.moreVert,
-                size: AppIconSize.medium,
-                semanticLabel: l10n.settings,
-              ),
-              onPressed: () => _showSettingsMenu(context),
-            ),
+          // Settings menu disabled during active workout
+          // (Settings are available in global Settings > Appearance Preview)
         ],
       ),
       body: WorkoutView(
@@ -1262,144 +1248,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     }
   }
 
-  // ========================================================================
-  // SETTINGS MENU
-  // ========================================================================
-
-  /// Show settings menu bottom sheet
-  void _showSettingsMenu(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: context.colors.surface.withValues(alpha: 0),
-      builder: (context) => DecoratedBox(
-        decoration: BoxDecoration(
-          color: context.colors.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle bar
-              Container(
-                margin: const EdgeInsets.only(top: AppSpacing.sm),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              // Customize workout
-              ListTile(
-                leading: SemanticIcon(
-                  icon: AppIcons.tune,
-                  size: AppIconSize.medium,
-                  semanticLabel: l10n.customizeWorkout,
-                ),
-                title: Text(l10n.customizeWorkout),
-                subtitle: Text(l10n.rpeTimerAndMore),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  _showWorkoutCustomization(context);
-                },
-              ),
-              // Save as template
-              ListTile(
-                leading: SemanticIcon(
-                  icon: AppIcons.save,
-                  size: AppIconSize.medium,
-                  semanticLabel: l10n.saveAsTemplate,
-                ),
-                title: Text(l10n.saveAsTemplate),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  _saveCurrentWorkoutAsTemplate(context);
-                },
-              ),
-              // Update template - only show if workout was started from a template
-              Builder(
-                builder: (context) {
-                  final currentWorkout = ref.read(currentWorkoutProvider);
-                  if (currentWorkout?.templateId == null) {
-                    return const SizedBox.shrink();
-                  }
-                  return ListTile(
-                    leading: SemanticIcon(
-                      icon: AppIcons.refresh,
-                      size: AppIconSize.medium,
-                      semanticLabel: l10n.updateTemplate,
-                      color: context.colors.primary,
-                    ),
-                    title: Text(l10n.updateTemplate),
-                    subtitle: Text(l10n.updateTemplateDescription),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      TemplateSaveHelper.showUpdateTemplateDialog(
-                        context,
-                        ref,
-                        currentWorkout!.templateId!,
-                      );
-                    },
-                  );
-                },
-              ),
-              // Start tutorial
-              ListTile(
-                leading: SemanticIcon(
-                  icon: AppIcons.help,
-                  size: AppIconSize.medium,
-                  semanticLabel: l10n.tutorialWelcomeTitle,
-                ),
-                title: Text(l10n.tutorialWelcomeTitle),
-                subtitle: Text(l10n.tutorialWelcomeMessage),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  _startWorkoutTutorial();
-                },
-              ),
-              const Divider(height: 1),
-              // Discard workout
-              ListTile(
-                leading: SemanticIcon(
-                  icon: AppIcons.delete,
-                  size: AppIconSize.medium,
-                  semanticLabel: l10n.deleteWorkout,
-                  color: context.colors.error,
-                ),
-                title: Text(
-                  l10n.deleteWorkout,
-                  style: context.textTheme.bodyLarge?.copyWith(
-                    color: context.colors.error,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  _handleBackNavigation(context);
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Save current workout as template
-  void _saveCurrentWorkoutAsTemplate(BuildContext context) {
-    final currentWorkout = ref.read(currentWorkoutProvider);
-    if (currentWorkout == null) return;
-
-    SaveTemplateHelper.showSaveAsTemplateDialog(context, ref);
-  }
-
-  /// Show workout customization modal
-  void _showWorkoutCustomization(BuildContext context) {
-    WorkoutCustomizationModalV3.show(context);
-  }
-
   /// Start the workout tutorial from the beginning
   Future<void> _startWorkoutTutorial() async {
     // Start the interactive tutorial
@@ -1469,8 +1317,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       case WorkoutTutorialStep.exerciseMenu:
         return WorkoutTutorialStep.reorder;
       case WorkoutTutorialStep.reorder:
-        return WorkoutTutorialStep.settings;
-      case WorkoutTutorialStep.settings:
         return WorkoutTutorialStep.finish;
       case WorkoutTutorialStep.finish:
         return null; // Tutorial complete

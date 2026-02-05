@@ -29,10 +29,7 @@ enum WorkoutTutorialStep {
   /// Step 4: Show the reorder button
   reorder,
 
-  /// Step 5: Show the settings menu
-  settings,
-
-  /// Step 6: Show the finish button
+  /// Step 5: Show the finish button
   finish,
 
   /// Tutorial completed
@@ -325,14 +322,6 @@ class WorkoutTutorialNotifier extends Notifier<WorkoutTutorialState> {
         return _StepConfig(
           title: l10n.tutorialReorderTitle,
           message: l10n.tutorialReorderMessage,
-          shape: ShapeLightFocus.Circle,
-          radius: 8,
-          contentAlign: ContentAlign.bottom,
-        );
-      case WorkoutTutorialStep.settings:
-        return _StepConfig(
-          title: l10n.tutorialSettingsTitle,
-          message: l10n.tutorialSettingsMessage,
           shape: ShapeLightFocus.Circle,
           radius: 8,
           contentAlign: ContentAlign.bottom,
