@@ -12,6 +12,7 @@ import 'package:gymbro_flutter_new/features/workout/data/repositories/firebase_w
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/services/template_cloud_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/data/services/template_cloud_sync_service.dart';
 
 // Repository provider - Firebase se utente autenticato, altrimenti locale
 final workoutTemplateRepositoryProvider = Provider<dynamic>((ref) {
@@ -1005,3 +1006,88 @@ final templateQuotaProvider = FutureProvider.autoDispose<TemplateQuotaInfo>((
 
   return TemplateCloudService.getTemplateQuota();
 });
+
+/// 🔄 Provider che traccia i template in sync con exponential backoff
+///
+/// Restituisce la lista dei template in attesa di sincronizzazione con il cloud.
+/// Si aggiorna periodicamente per riflettere i cambiamenti dello stato di sync.
+final pendingTemplateSyncProvider = FutureProvider.autoDispose<List<PendingTemplateSyncInfo>>((
+  ref,
+) async {
+  // Watch auth stream - invalidate when user changes
+  final userAsync = ref.watch(currentUserProvider);
+
+  if (userAsync.value == null) {
+    // Not authenticated - no pending syncs
+    return [];
+  }
+
+  // Aggiorna ogni 5 secondi (in sync con il timer del TemplateCloudSyncService)
+  await Future.delayed(const Duration(seconds: 5));
+
+  // Recupera i template in sync dal service
+  final pendingTemplates = TemplateCloudSyncService.getAllPending();
+
+  if (kDebugMode) {
+    debugPrint(
+      '🔄 [SYNC] Found ${pendingTemplates.length} pending templates for sync',
+    );
+  }
+
+  // Converte in info readability per la UI
+  return pendingTemplates
+      .map((p) => PendingTemplateSyncInfo(
+            templateId: p.templateId,
+            templateName: p.templateData['name'] as String? ?? 'Unknown',
+            attemptCount: p.attemptCount,
+            maxAttempts: 5,
+            lastError: p.lastError,
+            nextRetryTime: p.nextRetryTime,
+          ))
+      .toList();
+});
+
+/// Info di un template in attesa di sincronizzazione (per UI)
+class PendingTemplateSyncInfo {
+  PendingTemplateSyncInfo({
+    required this.templateId,
+    required this.templateName,
+    required this.attemptCount,
+    required this.maxAttempts,
+    this.lastError,
+    this.nextRetryTime,
+  });
+
+  final String templateId;
+  final String templateName;
+  final int attemptCount;
+  final int maxAttempts;
+  final String? lastError;
+  final DateTime? nextRetryTime;
+
+  /// Tempo rimanente prima del prossimo retry
+  Duration? get timeUntilNextRetry {
+    if (nextRetryTime == null) return null;
+    final remaining = nextRetryTime!.difference(DateTime.now());
+    return remaining.isNegative ? Duration.zero : remaining;
+  }
+
+  /// Percentuale di completamento dei retry (0-100)
+  int get retryProgress => ((attemptCount / maxAttempts) * 100).toInt();
+
+  /// Messaggio leggibile dello stato
+  String get statusMessage {
+    if (attemptCount >= maxAttempts) {
+      return 'Sincronizzazione non riuscita dopo 5 tentativi';
+    }
+
+    if (timeUntilNextRetry != null) {
+      final seconds = timeUntilNextRetry!.inSeconds;
+      if (seconds > 0) {
+        return 'Prossimo tentativo fra ${seconds}s';
+      }
+    }
+
+    return 'Tentativo $attemptCount di $maxAttempts';
+  }
+}
