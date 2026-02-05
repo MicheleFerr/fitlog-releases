@@ -26662,4 +26662,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get progressChart => '📊 Progress Chart';
+
+  @override
+  String get scientificSources => 'Scientific Sources';
 }

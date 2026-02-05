@@ -26918,4 +26918,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get progressChart => '📊 Grafico di Progresso';
+
+  @override
+  String get scientificSources => 'Fonti Scientifiche';
 }

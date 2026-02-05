@@ -112,6 +112,7 @@ import 'package:gymbro_flutter_new/shared/domain/auth/providers/security_provide
 
 // AI Coach
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/screens/ai_coach_screen.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/screens/documents_attribution_screen.dart';
 
 // Web landing & mobile guard
 import 'package:gymbro_flutter_new/features/landing/presentation/web_landing_page.dart';
@@ -633,6 +634,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path: AppRoutes.aiCoachPath,
                 name: AppRoutes.aiCoachName,
                 builder: (context, state) => const AICoachScreen(),
+                routes: [
+                  // Documents attribution (legal/GDPR compliance)
+                  GoRoute(
+                    path: 'documents/attribution',
+                    name: AppRoutes.aiCoachDocumentsAttributionName,
+                    builder: (context, state) => const DocumentsAttributionScreen(),
+                  ),
+                ],
               ),
             ],
           ),

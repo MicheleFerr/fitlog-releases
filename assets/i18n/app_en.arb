@@ -32681,5 +32681,9 @@
   "progressChart": "📊 Progress Chart",
   "@progressChart": {
     "description": "Label for the progress chart placeholder in preview"
+  },
+  "scientificSources": "Scientific Sources",
+  "@scientificSources": {
+    "description": "Title for AI Coach documents attribution screen"
   }
 }

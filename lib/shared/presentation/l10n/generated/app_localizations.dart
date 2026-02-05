@@ -47719,6 +47719,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'📊 Progress Chart'**
   String get progressChart;
+
+  /// Title for AI Coach documents attribution screen
+  ///
+  /// In en, this message translates to:
+  /// **'Scientific Sources'**
+  String get scientificSources;
 }
 
 class _AppLocalizationsDelegate

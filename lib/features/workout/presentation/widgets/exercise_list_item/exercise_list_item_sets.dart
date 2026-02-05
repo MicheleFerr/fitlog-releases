@@ -83,6 +83,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   // inside _buildSetDetailsForMode() which was executed for EVERY set on EVERY rebuild.
   late ExerciseCountingMode _cachedCountingMode;
 
+  // ✅ TUT: Track if user has started the first set (for explicit start button)
+  bool _firstSetManuallyStarted = false;
+
   @override
   void initState() {
     super.initState();
@@ -90,24 +93,42 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         ExerciseCountingModeService.getModeFromWorkoutExercise(widget.exercise);
 
     // ✅ FIX: Start duration tracking for the first incomplete set
-    // This ensures tracking starts immediately when exercise is shown
+    // Only auto-initialize if setDurationTracking is OFF (no manual start needed)
     _initializeDurationTracking();
   }
 
   /// Initialize duration tracking for the first incomplete set
+  /// When setDurationTracking is ON, we wait for the manual "Start Set" button
+  /// When setDurationTracking is OFF, tracking starts automatically
   void _initializeDurationTracking() {
-    // Find first incomplete non-warmup set
-    final firstIncompleteSet = widget.exercise.sets.firstWhere(
-      (s) => !s.isCompleted && !s.isWarmup,
-      orElse: () => widget.exercise.sets.first,
-    );
+    // Use post-frame callback to ensure ref is available
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
 
-    // Only start tracking if there's an incomplete set
-    if (!firstIncompleteSet.isCompleted) {
-      // Use post-frame callback to ensure ref is available
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
+      final config = ref.read(appConfigProvider);
+      final setDurationTracking = config.setDurationTracking ?? false;
 
+      // If setDurationTracking is ON, wait for manual start button
+      // Don't auto-initialize tracking for the first set
+      if (setDurationTracking && !_firstSetManuallyStarted) {
+        if (kDebugMode) {
+          debugPrint(
+            '⏱️ [TUT] Waiting for manual start button (setDurationTracking=ON)',
+          );
+        }
+        return;
+      }
+
+      // Find first incomplete non-warmup set
+      final firstIncompleteSet = widget.exercise.sets.firstWhere(
+        (s) => !s.isCompleted && !s.isWarmup,
+        orElse: () => widget.exercise.sets.isNotEmpty
+            ? widget.exercise.sets.first
+            : ExerciseSet(setNumber: 1),
+      );
+
+      // Only start tracking if there's an incomplete set
+      if (!firstIncompleteSet.isCompleted) {
         final durationTracker = ref.read(setDurationTrackerProvider);
 
         // Check if tracking is already started for this set
@@ -129,8 +150,34 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             );
           }
         }
-      });
+      }
+    });
+  }
+
+  /// ✅ TUT: Handle manual start of first set
+  void _onStartFirstSet() {
+    setState(() {
+      _firstSetManuallyStarted = true;
+    });
+
+    // Find first incomplete non-warmup set
+    final firstIncompleteSet = widget.exercise.sets.firstWhere(
+      (s) => !s.isCompleted && !s.isWarmup,
+      orElse: () => widget.exercise.sets.first,
+    );
+
+    final durationTracker = ref.read(setDurationTrackerProvider);
+    durationTracker.startSet(widget.exercise.id, firstIncompleteSet.setNumber);
+
+    if (kDebugMode) {
+      debugPrint(
+        '⏱️ [TUT] Manual start for set ${firstIncompleteSet.setNumber} '
+        '(exercise: ${widget.exercise.id})',
+      );
     }
+
+    // Haptic feedback
+    HapticFeedback.mediumImpact();
   }
 
   @override
@@ -143,6 +190,15 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           ExerciseCountingModeService.getModeFromWorkoutExercise(
             widget.exercise,
           );
+    }
+
+    // ✅ FIX: Re-initialize tracking if exercise ID changed (new exercise)
+    // or if sets were added (handle adding new sets during workout)
+    if (oldWidget.exercise.id != widget.exercise.id) {
+      _initializeDurationTracking();
+    } else if (widget.exercise.sets.length > oldWidget.exercise.sets.length) {
+      // New sets were added - ensure tracking is active for first incomplete
+      _initializeDurationTracking();
     }
   }
 
@@ -255,6 +311,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           ],
         ),
         const SizedBox(height: 8),
+        // ✅ TUT: Show "Start Set" button when setDurationTracking is ON
+        // and user hasn't started the first set yet
+        _buildStartSetButtonIfNeeded(context, config),
         ...widget.exercise.sets.asMap().entries.map(
           (entry) => _buildSetItem(context, entry.key, entry.value, config),
         ),
@@ -1277,6 +1336,69 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         );
       }
     }
+  }
+
+  /// ✅ TUT: Build "Start Set" button when setDurationTracking is enabled
+  ///
+  /// Shows a prominent button before the first incomplete set to let the user
+  /// explicitly start tracking the set duration. This provides accurate TUT
+  /// measurements as tracking only begins when the user is truly ready.
+  Widget _buildStartSetButtonIfNeeded(BuildContext context, AppConfig config) {
+    final setDurationTracking = config.setDurationTracking ?? false;
+
+    // Don't show if tracking is disabled
+    if (!setDurationTracking) {
+      return const SizedBox.shrink();
+    }
+
+    // Don't show if user already started
+    if (_firstSetManuallyStarted) {
+      return const SizedBox.shrink();
+    }
+
+    // Don't show if all sets are completed
+    final hasIncompleteSet = widget.exercise.sets.any((s) => !s.isCompleted);
+    if (!hasIncompleteSet) {
+      return const SizedBox.shrink();
+    }
+
+    // Check if there's already a start time (e.g., from rest timer)
+    final firstIncompleteSet = widget.exercise.sets.firstWhere(
+      (s) => !s.isCompleted && !s.isWarmup,
+      orElse: () => widget.exercise.sets.firstWhere(
+        (s) => !s.isCompleted,
+        orElse: () => widget.exercise.sets.first,
+      ),
+    );
+
+    final durationTracker = ref.read(setDurationTrackerProvider);
+    final existingStartTime = durationTracker.getSetStartTime(
+      widget.exercise.id,
+      firstIncompleteSet.setNumber,
+    );
+
+    // If tracking already started (e.g., from rest timer), don't show button
+    if (existingStartTime != null) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: FilledButton.icon(
+        onPressed: _onStartFirstSet,
+        icon: const SemanticIcon(
+          icon: AppIcons.playArrow,
+          semanticLabel: 'Start',
+          size: AppIconSize.small,
+        ),
+        label: Text(context.l10n.startSet),
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(double.infinity, 48),
+          backgroundColor: context.colors.secondary,
+          foregroundColor: context.colors.onSecondary,
+        ),
+      ),
+    );
   }
 
   /// Build the set duration chip showing tracked TUT

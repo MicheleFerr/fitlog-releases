@@ -20135,5 +20135,9 @@
   "progressChart": "📊 Grafico di Progresso",
   "@progressChart": {
     "description": "Label for the progress chart placeholder in preview"
+  },
+  "scientificSources": "Fonti Scientifiche",
+  "@scientificSources": {
+    "description": "Title for AI Coach documents attribution screen"
   }
 }

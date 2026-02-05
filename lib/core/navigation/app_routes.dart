@@ -143,6 +143,9 @@ abstract final class AppRoutes {
   static const String aiCoachPath = '/ai-coach';
   static const String aiCoachName = 'ai-coach';
 
+  static const String aiCoachDocumentsAttributionPath = '/ai-coach/documents/attribution';
+  static const String aiCoachDocumentsAttributionName = 'ai-coach-documents-attribution';
+
   static const String routinePath = '/routine';
   static const String routineName = 'routine';
 
