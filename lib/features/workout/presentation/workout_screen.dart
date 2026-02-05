@@ -26,6 +26,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_s
 import 'package:gymbro_flutter_new/features/scheduling/presentation/widgets/schedule_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:flutter/foundation.dart';
@@ -130,15 +131,27 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     // This handles the "distracted user" who gets interrupted by a phone call
     if (state == AppLifecycleState.resumed) {
       final tutorialState = ref.read(workoutTutorialProvider);
-      // BUG FIX: Don't re-show tutorial if user has already completed it
-      // This prevents tutorial from appearing during active workouts
+      final currentWorkout = ref.read(currentWorkoutProvider);
+
+      // Check if workout has exercises
+      final hasExercises =
+          currentWorkout != null && currentWorkout.exercises.isNotEmpty;
+
+      // BUG FIX: Don't re-show tutorial if:
+      // - User has already completed it
+      // - Workout has exercises (tutorial should only show for empty workouts)
+      // This prevents tutorial from appearing during active workouts with content
       if (tutorialState.isActive &&
           !tutorialState.hasCompletedTutorial &&
+          !hasExercises &&
           mounted) {
         // Re-show the current tutorial step after UI settles
         Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted) _showCurrentTutorialStep();
         });
+      } else if (tutorialState.isActive && hasExercises) {
+        // Stop tutorial if workout now has exercises
+        ref.read(workoutTutorialProvider.notifier).stopTutorial();
       }
     }
   }
@@ -161,24 +174,54 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   Future<void> _showFirstWorkoutWelcomeIfNeeded() async {
     if (!mounted) return;
 
+    // Wait a bit for UI to settle and for template to load exercises
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    if (!mounted) return;
+
     final tutorialState = ref.read(workoutTutorialProvider);
     final currentWorkout = ref.read(currentWorkoutProvider);
+
+    // Check if workout has exercises (either added manually or from template)
+    final hasExercises =
+        currentWorkout != null && currentWorkout.exercises.isNotEmpty;
+    final isFromTemplate = currentWorkout?.templateId != null;
+
+    // FIX: If tutorial is active but workout has exercises (e.g., loaded from template),
+    // stop the tutorial to avoid showing it over content
+    if (tutorialState.isActive && (hasExercises || isFromTemplate)) {
+      if (kDebugMode) {
+        debugPrint(
+          '📚 [Tutorial] Stopping active tutorial - hasExercises: $hasExercises, fromTemplate: $isFromTemplate',
+        );
+      }
+      ref.read(workoutTutorialProvider.notifier).stopTutorial();
+      return;
+    }
+
+    // Early exit if tutorial already started or completed
+    if (tutorialState.hasStartedTutorial || tutorialState.isActive) {
+      return;
+    }
 
     // Start spotlight tutorial if:
     // 1. Tutorial not started yet (first time)
     // 2. Tutorial not currently active
     // 3. Workout has no exercises yet (empty state - good time to learn)
+    // 4. Workout is not from a template (templates have pre-defined exercises)
     // Note: Once tutorial is started, it won't auto-show again even if dismissed
     // User can manually restart it from settings menu
-    if (!tutorialState.hasStartedTutorial &&
-        !tutorialState.isActive &&
-        (currentWorkout == null || currentWorkout.exercises.isEmpty)) {
-      // Wait a bit for UI to settle
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      if (mounted) {
-        await _startWorkoutTutorial();
+    if (hasExercises || isFromTemplate) {
+      if (kDebugMode) {
+        debugPrint(
+          '📚 [Tutorial] Skipping - hasExercises: $hasExercises, fromTemplate: $isFromTemplate',
+        );
       }
+      return;
+    }
+
+    if (mounted) {
+      await _startWorkoutTutorial();
     }
   }
 
@@ -480,8 +523,16 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
               ),
             ),
 
-          // Settings menu disabled during active workout
-          // (Settings are available in global Settings > Appearance Preview)
+          // Settings menu for workout customization (RPE, set duration, etc.)
+          if (!state.isReorderMode)
+            IconButton(
+              icon: SemanticIcon(
+                icon: AppIcons.moreVert,
+                size: AppIconSize.medium,
+                semanticLabel: l10n.settings,
+              ),
+              onPressed: () => WorkoutCustomizationModalV3.show(context),
+            ),
         ],
       ),
       body: WorkoutView(
