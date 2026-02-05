@@ -88,6 +88,49 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     super.initState();
     _cachedCountingMode =
         ExerciseCountingModeService.getModeFromWorkoutExercise(widget.exercise);
+
+    // ✅ FIX: Start duration tracking for the first incomplete set
+    // This ensures tracking starts immediately when exercise is shown
+    _initializeDurationTracking();
+  }
+
+  /// Initialize duration tracking for the first incomplete set
+  void _initializeDurationTracking() {
+    // Find first incomplete non-warmup set
+    final firstIncompleteSet = widget.exercise.sets.firstWhere(
+      (s) => !s.isCompleted && !s.isWarmup,
+      orElse: () => widget.exercise.sets.first,
+    );
+
+    // Only start tracking if there's an incomplete set
+    if (!firstIncompleteSet.isCompleted) {
+      // Use post-frame callback to ensure ref is available
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+
+        final durationTracker = ref.read(setDurationTrackerProvider);
+
+        // Check if tracking is already started for this set
+        final existingStartTime = durationTracker.getSetStartTime(
+          widget.exercise.id,
+          firstIncompleteSet.setNumber,
+        );
+
+        if (existingStartTime == null) {
+          durationTracker.startSet(
+            widget.exercise.id,
+            firstIncompleteSet.setNumber,
+          );
+
+          if (kDebugMode) {
+            debugPrint(
+              '⏱️ [TUT FIX] Initialized tracking for first incomplete set '
+              '${firstIncompleteSet.setNumber} (exercise: ${widget.exercise.id})',
+            );
+          }
+        }
+      });
+    }
   }
 
   @override
@@ -604,6 +647,13 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Set duration indicator (when setDurationTracking enabled)
+                  if (set.isCompleted &&
+                      set.setDurationMillis != null &&
+                      (config.setDurationTracking ?? false)) ...[
+                    _buildSetDurationChip(set.setDurationMillis!),
+                    const SizedBox(width: 8),
+                  ],
                   // Completion checkmark
                   if (set.isCompleted) ...[
                     SemanticIcon(
@@ -1103,6 +1153,10 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           widget.onStartRestTimer(context, updatedSet);
         }
 
+        // ✅ FIX: Start duration tracking for NEXT set immediately
+        // This ensures accurate tracking even if user doesn't use the rest timer
+        _startTrackingNextSet(set.setNumber);
+
         // Show feedback
         if (isWarmupSet) {
           SnackBarService.showCustom(
@@ -1153,6 +1207,10 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
 
           // Start rest timer
           widget.onStartRestTimer(context, updatedSet);
+
+          // ✅ FIX: Start duration tracking for NEXT set immediately
+          // This ensures accurate tracking even if user doesn't use the rest timer
+          _startTrackingNextSet(set.setNumber);
         },
       );
     } else {
@@ -1195,6 +1253,69 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   bool _areAllSetsCompleted() {
     if (widget.exercise.sets.isEmpty) return false;
     return widget.exercise.sets.every((set) => set.isCompleted);
+  }
+
+  /// ✅ FIX: Start duration tracking for the next set
+  ///
+  /// This ensures accurate tracking even if the user doesn't use the rest timer.
+  /// Called after completing a set to immediately start tracking the next one.
+  void _startTrackingNextSet(int completedSetNumber) {
+    final nextSetNumber = completedSetNumber + 1;
+
+    // Check if there's a next set to track
+    final hasNextSet = widget.exercise.sets.any(
+      (s) => s.setNumber == nextSetNumber && !s.isCompleted,
+    );
+
+    if (hasNextSet) {
+      final durationTracker = ref.read(setDurationTrackerProvider);
+      durationTracker.startSet(widget.exercise.id, nextSetNumber);
+
+      if (kDebugMode) {
+        debugPrint(
+          '⏱️ [TUT FIX] Started tracking for next set $nextSetNumber (exercise: ${widget.exercise.id})',
+        );
+      }
+    }
+  }
+
+  /// Build the set duration chip showing tracked TUT
+  /// Displays milliseconds as seconds with 1 decimal (e.g., "12.3s")
+  Widget _buildSetDurationChip(double durationMillis) {
+    final seconds = durationMillis / 1000;
+    final displayText = seconds < 10
+        ? '${seconds.toStringAsFixed(1)}s'
+        : '${seconds.toStringAsFixed(0)}s';
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: context.colors.secondaryContainer.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: context.colors.secondary.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SemanticIcon(
+            icon: AppIcons.timer,
+            semanticLabel: 'Duration',
+            size: AppIconSize.tiny,
+            color: context.colors.secondary,
+          ),
+          const SizedBox(width: 2),
+          Text(
+            displayText,
+            style: context.textTheme.labelSmall?.copyWith(
+              color: context.colors.secondary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   /// Format duration in seconds to human readable format
