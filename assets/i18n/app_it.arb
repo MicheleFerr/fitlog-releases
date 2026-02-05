@@ -3422,8 +3422,10 @@
   "settingsUpdateProfile": "Aggiorna Profilo",
   "settingsAccentColor": "Colore Accento",
   "settingsFontSize": "Dimensione Carattere",
+  "settingsFontSizeExtraSmall": "Extra Piccolo",
   "settingsFontSizeSmall": "Piccolo",
   "settingsFontSizeNormal": "Normale",
+  "settingsFontSizeMediumLarge": "Medio Grande",
   "settingsFontSizeLarge": "Grande",
   "settingsWorkoutTitle": "Allenamento",
   "settingsAutoStartTimer": "Timer Automatico",
@@ -20117,5 +20119,21 @@
   "tourCreateTemplateDescription": "Tocca qui per creare la tua scheda personalizzata. Parti da zero o usa un preset.",
   "@tourCreateTemplateDescription": {
     "description": "Tour step: Create button description"
+  },
+  "appearancePreview": "Anteprima Aspetto",
+  "@appearancePreview": {
+    "description": "Title for the appearance preview modal"
+  },
+  "appearancePreviewSubtitle": "Vedi come appare la tua scheda con le diverse impostazioni",
+  "@appearancePreviewSubtitle": {
+    "description": "Subtitle for the appearance preview setting"
+  },
+  "appearanceOptions": "Opzioni di Visualizzazione",
+  "@appearanceOptions": {
+    "description": "Section title for appearance toggle options"
+  },
+  "progressChart": "📊 Grafico di Progresso",
+  "@progressChart": {
+    "description": "Label for the progress chart placeholder in preview"
   }
 }

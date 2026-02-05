@@ -31,6 +31,7 @@ import 'package:gymbro_flutter_new/features/data_export/presentation/widgets/dat
 import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/legal_document_screen.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/appearance_preview_modal.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -504,6 +505,25 @@ class SettingsScreen extends ConsumerWidget {
 
             const Divider(),
 
+            // Appearance Preview (live preview of exercise card)
+            ListTile(
+              title: Text(context.l10n.appearancePreview),
+              subtitle: Text(context.l10n.appearancePreviewSubtitle),
+              leading: SemanticIcon(
+                icon: AppIcons.eye,
+                semanticLabel: 'Preview appearance',
+                size: AppIconSize.medium,
+              ),
+              trailing: const SemanticIcon(
+                icon: AppIcons.chevronRight,
+                semanticLabel: 'Chevron right',
+              ),
+              onTap: () => AppearancePreviewModal.show(context),
+              contentPadding: EdgeInsets.zero,
+            ),
+
+            const Divider(),
+
             // Font Size (with live preview text)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -546,8 +566,9 @@ class SettingsScreen extends ConsumerWidget {
                 Slider(
                   value: config.fontSize,
                   min: 0.8,
-                  max: 1.2,
+                  max: 1.1,
                   divisions: 4,
+                  label: _getFontSizeLabel(config.fontSize),
                   onChanged: (value) {
                     ref.read(appConfigProvider.notifier).setFontSize(value);
                   },
@@ -2299,9 +2320,16 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   String _getFontSizeText(BuildContext context, double fontSize) {
-    if (fontSize < 0.9) return context.l10n.settingsFontSizeSmall;
-    if (fontSize > 1.1) return context.l10n.settingsFontSizeLarge;
-    return context.l10n.settingsFontSizeNormal;
+    if (fontSize < 0.85) return context.l10n.settingsFontSizeExtraSmall;
+    if (fontSize < 0.95) return context.l10n.settingsFontSizeSmall;
+    if (fontSize < 1.025) return context.l10n.settingsFontSizeNormal;
+    if (fontSize < 1.075) return context.l10n.settingsFontSizeMediumLarge;
+    return context.l10n.settingsFontSizeLarge;
+  }
+
+  String _getFontSizeLabel(double fontSize) {
+    // Return the exact value for slider label
+    return fontSize.toStringAsFixed(2);
   }
 
   String _getLanguageText(String code) {

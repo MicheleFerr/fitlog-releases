@@ -410,10 +410,10 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       await _ensureInitialized();
       if (_isDisposed) return;
 
-      // Input validation
-      if (fontSize < 0.8 || fontSize > 1.2) {
+      // Input validation - now supporting 5 steps: 0.8, 0.9, 1.0, 1.05, 1.1
+      if (fontSize < 0.8 || fontSize > 1.1) {
         if (kDebugMode) {
-          debugPrint('⚠️ [AppConfig] Invalid font size: $fontSize (must be 0.8-1.2)');
+          debugPrint('⚠️ [AppConfig] Invalid font size: $fontSize (must be 0.8-1.1)');
         }
         return;
       }
@@ -997,7 +997,7 @@ final fontSizeProvider = Provider<double>((ref) {
 });
 
 /// Provides the unified interface size (font + layout)
-/// Returns InterfaceSize.standard if not set (backward compatibility)
+/// Returns InterfaceSize.medium if not set (backward compatibility)
 final interfaceSizeProvider = Provider<InterfaceSize>((ref) {
   final config = ref.watch(appConfigProvider);
   return config.interfaceSize ?? InterfaceSize.fromFontSize(config.fontSize);

@@ -485,8 +485,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
               ),
             ),
 
-          // Settings menu (only if not in reorder mode)
-          if (!state.isReorderMode)
+          // Settings menu (only if not in reorder mode and not during active workout)
+          if (!state.isReorderMode && !isActive)
             IconButton(
               key: _settingsButtonKey,
               icon: SemanticIcon(

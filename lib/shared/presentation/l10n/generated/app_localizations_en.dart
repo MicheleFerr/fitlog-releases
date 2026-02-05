@@ -9518,10 +9518,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsFontSize => 'Font Size';
 
   @override
+  String get settingsFontSizeExtraSmall => 'Extra Small';
+
+  @override
   String get settingsFontSizeSmall => 'Small';
 
   @override
   String get settingsFontSizeNormal => 'Normal';
+
+  @override
+  String get settingsFontSizeMediumLarge => 'Medium Large';
 
   @override
   String get settingsFontSizeLarge => 'Large';
@@ -26643,4 +26649,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tourCreateTemplateDescription =>
       'Tap here to create your own custom workout template. Build it from scratch or use a preset.';
+
+  @override
+  String get appearancePreview => 'Appearance Preview';
+
+  @override
+  String get appearancePreviewSubtitle =>
+      'See how your exercise cards look with different settings';
+
+  @override
+  String get appearanceOptions => 'Display Options';
+
+  @override
+  String get progressChart => '📊 Progress Chart';
 }

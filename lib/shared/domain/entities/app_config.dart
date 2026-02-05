@@ -505,8 +505,8 @@ class AppConfigPresets {
   /// - Simplified animations
   /// - Sound/vibration enabled
   static const AppConfig simpleModeConfig = AppConfig(
-    interfaceSize: InterfaceSize.large, // Large text + comfortable spacing
-    fontSize: 1.2, // Kept for backward compatibility
+    interfaceSize: InterfaceSize.large, // Large text + comfortable spacing (1.1x)
+    fontSize: 1.1, // Kept for backward compatibility (updated to max value)
     simpleMode: true,
     simplifiedAnimations: true,
     showIntensityTechniques: false, // Hide dropsets, rest-pause etc

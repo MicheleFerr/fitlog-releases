@@ -11371,17 +11371,25 @@
   "@settingsFontSize": {
     "description": "Font size label"
   },
+  "settingsFontSizeExtraSmall": "Extra Small",
+  "@settingsFontSizeExtraSmall": {
+    "description": "Extra small font (0.8x)"
+  },
   "settingsFontSizeSmall": "Small",
   "@settingsFontSizeSmall": {
-    "description": "Small font"
+    "description": "Small font (0.9x)"
   },
   "settingsFontSizeNormal": "Normal",
   "@settingsFontSizeNormal": {
-    "description": "Normal font"
+    "description": "Normal font (1.0x)"
+  },
+  "settingsFontSizeMediumLarge": "Medium Large",
+  "@settingsFontSizeMediumLarge": {
+    "description": "Medium large font (1.05x)"
   },
   "settingsFontSizeLarge": "Large",
   "@settingsFontSizeLarge": {
-    "description": "Large font"
+    "description": "Large font (1.1x)"
   },
   "settingsWorkoutTitle": "Workout",
   "@settingsWorkoutTitle": {
@@ -32657,5 +32665,21 @@
   "tourCreateTemplateDescription": "Tap here to create your own custom workout template. Build it from scratch or use a preset.",
   "@tourCreateTemplateDescription": {
     "description": "Tour step: Create button description"
+  },
+  "appearancePreview": "Appearance Preview",
+  "@appearancePreview": {
+    "description": "Title for the appearance preview modal"
+  },
+  "appearancePreviewSubtitle": "See how your exercise cards look with different settings",
+  "@appearancePreviewSubtitle": {
+    "description": "Subtitle for the appearance preview setting"
+  },
+  "appearanceOptions": "Display Options",
+  "@appearanceOptions": {
+    "description": "Section title for appearance toggle options"
+  },
+  "progressChart": "📊 Progress Chart",
+  "@progressChart": {
+    "description": "Label for the progress chart placeholder in preview"
   }
 }

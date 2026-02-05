@@ -17012,19 +17012,31 @@ abstract class AppLocalizations {
   /// **'Font Size'**
   String get settingsFontSize;
 
-  /// Small font
+  /// Extra small font (0.8x)
+  ///
+  /// In en, this message translates to:
+  /// **'Extra Small'**
+  String get settingsFontSizeExtraSmall;
+
+  /// Small font (0.9x)
   ///
   /// In en, this message translates to:
   /// **'Small'**
   String get settingsFontSizeSmall;
 
-  /// Normal font
+  /// Normal font (1.0x)
   ///
   /// In en, this message translates to:
   /// **'Normal'**
   String get settingsFontSizeNormal;
 
-  /// Large font
+  /// Medium large font (1.05x)
+  ///
+  /// In en, this message translates to:
+  /// **'Medium Large'**
+  String get settingsFontSizeMediumLarge;
+
+  /// Large font (1.1x)
   ///
   /// In en, this message translates to:
   /// **'Large'**
@@ -47683,6 +47695,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap here to create your own custom workout template. Build it from scratch or use a preset.'**
   String get tourCreateTemplateDescription;
+
+  /// Title for the appearance preview modal
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance Preview'**
+  String get appearancePreview;
+
+  /// Subtitle for the appearance preview setting
+  ///
+  /// In en, this message translates to:
+  /// **'See how your exercise cards look with different settings'**
+  String get appearancePreviewSubtitle;
+
+  /// Section title for appearance toggle options
+  ///
+  /// In en, this message translates to:
+  /// **'Display Options'**
+  String get appearanceOptions;
+
+  /// Label for the progress chart placeholder in preview
+  ///
+  /// In en, this message translates to:
+  /// **'📊 Progress Chart'**
+  String get progressChart;
 }
 
 class _AppLocalizationsDelegate

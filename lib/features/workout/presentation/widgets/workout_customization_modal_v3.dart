@@ -9,7 +9,6 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_display_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/interface_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -100,13 +99,8 @@ class _WorkoutCustomizationModalV3State
     _interfaceSize =
         config.interfaceSize ?? InterfaceSize.fromFontSize(config.fontSize);
 
-    // Sync set display mode with interface size on init
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final displayMode = _interfaceSize.setRowMode == 'compact'
-          ? SetDisplayMode.compact
-          : SetDisplayMode.comfortable;
-      ref.read(setDisplayProvider.notifier).setMode(displayMode);
-    });
+    // Note: SetDisplayMode is now always derived from InterfaceSize.setRowMode
+    // No separate sync needed - this happens automatically in the widgets
 
     // ✅ Store initial values for change tracking
     _initialAutoRestTimer = _autoRestTimer;
@@ -652,16 +646,24 @@ class _WorkoutCustomizationModalV3State
                 SegmentedButton<InterfaceSize>(
                   segments: [
                     ButtonSegment(
-                      value: InterfaceSize.compact,
-                      label: Text(context.l10n.compact),
+                      value: InterfaceSize.extraSmall,
+                      label: Text(context.l10n.settingsFontSizeExtraSmall),
                     ),
                     ButtonSegment(
-                      value: InterfaceSize.standard,
-                      label: Text(context.l10n.standard),
+                      value: InterfaceSize.small,
+                      label: Text(context.l10n.settingsFontSizeSmall),
+                    ),
+                    ButtonSegment(
+                      value: InterfaceSize.medium,
+                      label: Text(context.l10n.settingsFontSizeNormal),
+                    ),
+                    ButtonSegment(
+                      value: InterfaceSize.mediumLarge,
+                      label: Text(context.l10n.settingsFontSizeMediumLarge),
                     ),
                     ButtonSegment(
                       value: InterfaceSize.large,
-                      label: Text(context.l10n.large),
+                      label: Text(context.l10n.settingsFontSizeLarge),
                     ),
                   ],
                   selected: {_interfaceSize},
@@ -670,16 +672,11 @@ class _WorkoutCustomizationModalV3State
                     final newSize = selected.first;
                     setState(() => _interfaceSize = newSize);
 
-                    // Save interface size
+                    // Save interface size - SetDisplayMode will automatically
+                    // derive from the new InterfaceSize.setRowMode
                     ref
                         .read(appConfigProvider.notifier)
                         .setInterfaceSize(newSize);
-
-                    // Sync set display mode with interface size
-                    final displayMode = newSize.setRowMode == 'compact'
-                        ? SetDisplayMode.compact
-                        : SetDisplayMode.comfortable;
-                    ref.read(setDisplayProvider.notifier).setMode(displayMode);
                   },
                   style: const ButtonStyle(
                     visualDensity: VisualDensity.compact,

@@ -16,33 +16,53 @@ part 'interface_size.g.dart';
 /// - Roberto (Busy): ✅ More efficient - no time wasted on 2 toggles
 @HiveType(typeId: 100)
 enum InterfaceSize {
-  /// Compact interface: small text + tight spacing
+  /// Extra small: 0.8x (compact)
   /// - Font scale: 0.8x
   /// - Set row mode: compact
-  /// - Use case: Power users who want to see more data on screen
+  /// - Use case: Power users who want maximum density
   @HiveField(0)
-  compact(
+  extraSmall(
     fontSize: 0.8,
     setRowMode: 'compact',
   ),
 
-  /// Standard interface: medium text + comfortable spacing (default)
+  /// Small: 0.9x (compact)
+  /// - Font scale: 0.9x
+  /// - Set row mode: compact
+  /// - Use case: Power users wanting slightly more readability
+  @HiveField(3)
+  small(
+    fontSize: 0.9,
+    setRowMode: 'compact',
+  ),
+
+  /// Medium: 1.0x (comfortable, default)
   /// - Font scale: 1.0x
   /// - Set row mode: comfortable
   /// - Use case: Most users, balanced readability and density
   @HiveField(1)
-  standard(
+  medium(
     fontSize: 1.0,
     setRowMode: 'comfortable',
   ),
 
-  /// Large interface: big text + extra spacing
-  /// - Font scale: 1.2x
+  /// Medium Large: 1.05x (comfortable)
+  /// - Font scale: 1.05x
+  /// - Set row mode: comfortable
+  /// - Use case: Users who want slightly larger text
+  @HiveField(4)
+  mediumLarge(
+    fontSize: 1.05,
+    setRowMode: 'comfortable',
+  ),
+
+  /// Large: 1.1x (comfortable)
+  /// - Font scale: 1.1x
   /// - Set row mode: comfortable
   /// - Use case: Users who prefer larger text for better readability
   @HiveField(2)
   large(
-    fontSize: 1.2,
+    fontSize: 1.1,
     setRowMode: 'comfortable',
   );
 
@@ -61,8 +81,10 @@ enum InterfaceSize {
   /// Convert from fontSize value to InterfaceSize enum
   /// Used for backward compatibility when loading old configs
   static InterfaceSize fromFontSize(double fontSize) {
-    if (fontSize <= 0.85) return InterfaceSize.compact;
-    if (fontSize <= 1.05) return InterfaceSize.standard;
+    if (fontSize <= 0.85) return InterfaceSize.extraSmall;
+    if (fontSize <= 0.95) return InterfaceSize.small;
+    if (fontSize <= 1.025) return InterfaceSize.medium;
+    if (fontSize <= 1.075) return InterfaceSize.mediumLarge;
     return InterfaceSize.large;
   }
 
@@ -73,7 +95,7 @@ enum InterfaceSize {
   static InterfaceSize fromJson(String json) {
     return InterfaceSize.values.firstWhere(
       (e) => e.name == json,
-      orElse: () => InterfaceSize.standard,
+      orElse: () => InterfaceSize.medium,
     );
   }
 }

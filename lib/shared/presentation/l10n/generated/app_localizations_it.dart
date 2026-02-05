@@ -9603,10 +9603,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settingsFontSize => 'Dimensione Carattere';
 
   @override
+  String get settingsFontSizeExtraSmall => 'Extra Piccolo';
+
+  @override
   String get settingsFontSizeSmall => 'Piccolo';
 
   @override
   String get settingsFontSizeNormal => 'Normale';
+
+  @override
+  String get settingsFontSizeMediumLarge => 'Medio Grande';
 
   @override
   String get settingsFontSizeLarge => 'Grande';
@@ -26899,4 +26905,17 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get tourCreateTemplateDescription =>
       'Tocca qui per creare la tua scheda personalizzata. Parti da zero o usa un preset.';
+
+  @override
+  String get appearancePreview => 'Anteprima Aspetto';
+
+  @override
+  String get appearancePreviewSubtitle =>
+      'Vedi come appare la tua scheda con le diverse impostazioni';
+
+  @override
+  String get appearanceOptions => 'Opzioni di Visualizzazione';
+
+  @override
+  String get progressChart => '📊 Grafico di Progresso';
 }
