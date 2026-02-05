@@ -97,9 +97,9 @@ class SuggestionContext {
   bool get hasWeightJump =>
       maxWeight != null && minWeight != null && maxWeight! > minWeight! * 2;
   bool get hasExistingTips =>
-      existingContributions.any((c) => c.type == ContributionType.tip);
+      existingContributions.any((c) => c.type == 'tip');
   bool get hasExistingWarnings =>
-      existingContributions.any((c) => c.type == ContributionType.warning);
+      existingContributions.any((c) => c.type == 'warning');
 
   /// Determine user's APP experience level (how well they know the app)
   AppExperienceLevel get appExperienceLevel {
@@ -222,7 +222,7 @@ class SmartSuggestion {
   });
   final String id;
   final String text;
-  final ContributionType type;
+  final String type;
   final String contextType;
   final int priority; // 0-100, higher = more important
   final DateTime createdAt;
@@ -231,7 +231,7 @@ class SmartSuggestion {
   SmartSuggestion copyWith({
     String? id,
     String? text,
-    ContributionType? type,
+    String? type,
     String? contextType,
     int? priority,
     DateTime? createdAt,
@@ -346,7 +346,7 @@ class ExerciseSuggestionsNotifier
           id: 'discover_technique_notes',
           text:
               '💡 Sai che puoi visualizzare le note tecniche dell\'esercizio?',
-          type: ContributionType.tip,
+          type: 'tip',
           contextType: 'app_feature',
           priority: 90,
           createdAt: DateTime.now(),
@@ -362,7 +362,7 @@ class ExerciseSuggestionsNotifier
           id: 'discover_warmup',
           text:
               '🔥 Suggerimento: aggiungi serie di riscaldamento prima di iniziare',
-          type: ContributionType.tip,
+          type: 'tip',
           contextType: 'app_feature',
           priority: 85,
           createdAt: DateTime.now(),
@@ -376,7 +376,7 @@ class ExerciseSuggestionsNotifier
       SmartSuggestion(
         id: 'discover_rest_timer',
         text: '⏱️ Puoi impostare un timer automatico tra le serie',
-        type: ContributionType.tip,
+        type: 'tip',
         contextType: 'app_feature',
         priority: 80,
         createdAt: DateTime.now(),
@@ -389,7 +389,7 @@ class ExerciseSuggestionsNotifier
       SmartSuggestion(
         id: 'discover_rpe',
         text: '📊 Prova a tracciare RPE per misurare la fatica percepita',
-        type: ContributionType.tip,
+        type: 'tip',
         contextType: 'app_feature',
         priority: 60,
         createdAt: DateTime.now(),
@@ -410,7 +410,7 @@ class ExerciseSuggestionsNotifier
           id: 'weight_jump_safety',
           text:
               '⚠️ Salto di peso rilevato - fai attenzione alla tecnica e forma',
-          type: ContributionType.warning,
+          type: 'warning',
           contextType: 'weight_progression',
           priority: 85,
           createdAt: DateTime.now(),
@@ -426,7 +426,7 @@ class ExerciseSuggestionsNotifier
         SmartSuggestion(
           id: 'pr_beginner',
           text: '🎉 Nuovo record personale! Continua così!',
-          type: ContributionType.tip,
+          type: 'tip',
           contextType: 'achievement',
           priority: 75,
           createdAt: DateTime.now(),
@@ -450,7 +450,7 @@ class ExerciseSuggestionsNotifier
         SmartSuggestion(
           id: 'weight_jump_warning',
           text: '⚠️ Salto di peso rilevato - fai attenzione alla tecnica',
-          type: ContributionType.warning,
+          type: 'warning',
           contextType: 'weight_progression',
           priority: 85,
           createdAt: DateTime.now(),
@@ -466,7 +466,7 @@ class ExerciseSuggestionsNotifier
         SmartSuggestion(
           id: 'pr_celebration',
           text: '🎉 Nuovo record personale! Ottimo lavoro!',
-          type: ContributionType.tip,
+          type: 'tip',
           contextType: 'achievement',
           priority: 75,
           createdAt: DateTime.now(),
@@ -482,7 +482,7 @@ class ExerciseSuggestionsNotifier
           id: 'technique_variation',
           text:
               '💪 Pattern ripetizioni variabile - tecnica drop set o piramidale?',
-          type: ContributionType.technique,
+          type: 'technique',
           contextType: 'rep_variation',
           priority: 60,
           createdAt: DateTime.now(),
@@ -505,7 +505,7 @@ class ExerciseSuggestionsNotifier
         context.exerciseData != null &&
         context.isCompleted) {
       final hasCorrectionType = context.existingContributions.any(
-        (c) => c.type == ContributionType.correction,
+        (c) => c.type == 'correction',
       );
 
       if (!hasCorrectionType) {
@@ -516,7 +516,7 @@ class ExerciseSuggestionsNotifier
               id: 'verify_muscles',
               text:
                   '📝 I muscoli target sono corretti? (${muscles.join(", ")})',
-              type: ContributionType.correction,
+              type: 'correction',
               contextType: 'muscle_groups',
               priority: 95,
               createdAt: DateTime.now(),
@@ -528,7 +528,7 @@ class ExerciseSuggestionsNotifier
             SmartSuggestion(
               id: 'add_muscles',
               text: '📝 Aggiungi i muscoli target per questo esercizio',
-              type: ContributionType.correction,
+              type: 'correction',
               contextType: 'muscle_groups',
               priority: 95,
               createdAt: DateTime.now(),
@@ -544,7 +544,7 @@ class ExerciseSuggestionsNotifier
         context.isCompleted &&
         context.exerciseData != null) {
       final hasTechniqueContribution = context.existingContributions.any(
-        (c) => c.type == ContributionType.technique,
+        (c) => c.type == 'technique',
       );
 
       if (!hasTechniqueContribution) {
@@ -553,7 +553,7 @@ class ExerciseSuggestionsNotifier
             id: 'verify_technique',
             text:
                 '🔧 La tecnica descritta è accurata? Suggerisci miglioramenti',
-            type: ContributionType.correction,
+            type: 'correction',
             contextType: 'exercise_technique',
             priority: 85,
             createdAt: DateTime.now(),
@@ -569,7 +569,7 @@ class ExerciseSuggestionsNotifier
         SmartSuggestion(
           id: 'weight_jump_warning',
           text: '⚠️ Salto di peso rilevato - aggiungi un avviso sicurezza?',
-          type: ContributionType.warning,
+          type: 'warning',
           contextType: 'weight_progression',
           priority: 80,
           createdAt: DateTime.now(),
@@ -584,7 +584,7 @@ class ExerciseSuggestionsNotifier
         SmartSuggestion(
           id: 'add_safety_warning',
           text: '⚠️ Aggiungi avvertimenti di sicurezza se ne conosci',
-          type: ContributionType.warning,
+          type: 'warning',
           contextType: 'safety_info',
           priority: 70,
           createdAt: DateTime.now(),
@@ -600,7 +600,7 @@ class ExerciseSuggestionsNotifier
         SmartSuggestion(
           id: 'pr_celebration',
           text: '🎉 Nuovo record! La tecnica usata è stata buona?',
-          type: ContributionType.technique,
+          type: 'technique',
           contextType: 'achievement',
           priority: 65,
           createdAt: DateTime.now(),
@@ -685,18 +685,19 @@ final exerciseSuggestionsProvider =
 );
 
 /// Helper provider to determine user level based on contribution count
-final userLevelProvider = Provider<UserLevel>((ref) {
-  final stats = ref.watch(userContributionStatsProvider);
-
-  return stats.when(
-    data: (stats) {
-      final count = stats.totalContributions;
-      if (count >= 201) return UserLevel.master;
-      if (count >= 51) return UserLevel.expert;
-      if (count >= 11) return UserLevel.contributor;
-      return UserLevel.rookie;
-    },
-    loading: () => UserLevel.rookie,
-    error: (_, __) => UserLevel.rookie,
-  );
-});
+/// DISABLED: userContributionStatsProvider not implemented
+// final userLevelProvider = Provider<UserLevel>((ref) {
+//   final stats = ref.watch(userContributionStatsProvider);
+//
+//   return stats.when(
+//     data: (stats) {
+//       final count = stats.totalContributions;
+//       if (count >= 201) return UserLevel.master;
+//       if (count >= 51) return UserLevel.expert;
+//       if (count >= 11) return UserLevel.contributor;
+//       return UserLevel.rookie;
+//     },
+//     loading: () => UserLevel.rookie,
+//     error: (_, __) => UserLevel.rookie,
+//   );
+// });

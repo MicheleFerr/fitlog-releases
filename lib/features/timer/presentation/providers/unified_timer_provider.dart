@@ -1028,10 +1028,23 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     }
 
     // Update timer state with new remaining time
+    final oldRemainingSeconds = state!.remainingSeconds;
     state = state!.copyWith(
       remainingSeconds: newRemainingSeconds,
       tickCount: _internalTickCount,
     );
+
+    // ✅ FIX(riverpod-3.x): Explicitly notify Riverpod watchers of state change
+    // In Riverpod 3.x, .select() watchers need explicit notification when state changes
+    // This ensures UI updates happen every second instead of only on external rebuilds
+    if (oldRemainingSeconds != newRemainingSeconds) {
+      // Invalidate self to notify all watchers that state has changed
+      ref.invalidateSelf();
+
+      if (kDebugMode) {
+        debugPrint('⏱️ [TIMER TICK] State notified: ${state!.remainingSeconds}s (was $oldRemainingSeconds)');
+      }
+    }
 
     // CRITICAL: Handle completion IMMEDIATELY and SYNCHRONOUSLY
     if (state!.isCompleted && !state!.audioPlayed) {
