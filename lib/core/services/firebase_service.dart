@@ -1,14 +1,14 @@
 /// Firebase Service
 ///
 /// Provides Firebase-related utilities and configurations.
-/// Constructs Cloud Functions base URL from Firebase project settings.
+/// Constructs API base URLs for backend services.
 ///
 /// **Layer**: Core - Services
 library;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../config/environment_config.dart';
+import 'package:gymbro_flutter_new/core/config/environment_config.dart';
 
 /// Firebase service for accessing Firebase utilities
 class FirebaseService {
@@ -18,26 +18,27 @@ class FirebaseService {
   static final FirebaseService _instance = FirebaseService._();
   factory FirebaseService() => _instance;
 
-  /// Get Cloud Functions base URL based on current environment
+  /// Get backend API base URL
   ///
-  /// **Production**: https://us-central1-{projectId}.cloudfunctions.net
-  /// **Emulator**: http://localhost:5001/{projectId}/us-central1
+  /// **Production**: https://fitlogpro.it (Next.js on Vercel)
+  /// **Development**: http://localhost:3000 (local Next.js dev server)
   ///
-  /// Uses iOS project ID as default (same for both platforms in FitLog)
+  /// This URL is used for:
+  /// - AI Coach document sync API
+  /// - Other public API endpoints
   String get functionsBaseUrl {
-    final projectId = EnvironmentConfig.firebaseProjectIdIOS;
-
-    if (kDebugMode && _useEmulator) {
-      // Use Firebase emulator for local development
-      return 'http://localhost:5001/$projectId/us-central1';
+    if (kDebugMode && _useLocalBackend) {
+      // Use local Next.js dev server for development
+      return 'http://localhost:3000';
     }
 
-    // Production Cloud Functions URL (US region)
-    return 'https://us-central1-$projectId.cloudfunctions.net';
+    // Production backend (Next.js on Vercel)
+    return 'https://fitlogpro.it';
   }
 
-  /// Check if using Firebase emulator (can be overridden for testing)
-  bool get _useEmulator => false; // Set to true to use local emulator
+  /// Check if using local backend (can be overridden for testing)
+  /// Set to true when running website locally with `npm run dev`
+  bool get _useLocalBackend => false;
 
   /// Get project ID for current platform
   String get projectId => EnvironmentConfig.firebaseProjectIdIOS;
