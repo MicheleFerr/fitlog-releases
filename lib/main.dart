@@ -45,6 +45,9 @@ import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/cus
 import 'package:gymbro_flutter_new/features/scheduling/data/models/scheduled_workout_model.dart'; // 📅 Scheduled Workouts
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart'; // 🔧 Pre-load AppConfig
 import 'package:gymbro_flutter_new/features/workout/data/services/template_cloud_sync_service.dart'; // 🔄 Template Cloud Sync with exponential backoff
+import 'package:gymbro_flutter_new/features/ai_coach/data/models/scientific_paper_model.dart'; // 🤖 AI Coach Documents
+import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/document_local_datasource.dart'; // 🤖 AI Coach Document Cache
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/document_sync_provider.dart'; // 🤖 AI Coach Document Sync
 
 void main() async {
   // 🚀 SPLASH: Preserve native splash screen during initialization
@@ -211,6 +214,11 @@ void main() async {
     Hive.registerAdapter(ScheduledWorkoutModelAdapter());
   }
 
+  // 🤖 AI Coach Documents adapter for scientific papers cache
+  if (!Hive.isAdapterRegistered(ScientificPaperModelAdapter().typeId)) {
+    Hive.registerAdapter(ScientificPaperModelAdapter());
+  }
+
   // ✅ CRITICAL FIX: Initialize HiveBoxManagerEnhanced with pre-opened critical boxes
   // This pre-opens: user_consents, privacy (app_config opened on-demand by AppConfigNotifier)
   // Must be called AFTER adapter registration, BEFORE any service uses boxes
@@ -324,6 +332,16 @@ void main() async {
   if (kDebugMode) {
     final hasConsent = await PrivacyManager.hasProvidedConsent();
     debugPrint('📊 Privacy: User consent provided: $hasConsent');
+  }
+
+  // 🤖 AI COACH: Initialize Document Local DataSource for offline caching
+  // This ensures Hive boxes for scientific papers are opened before sync
+  // ✅ NOW SAFE: Hive is initialized and adapter registered
+  final documentLocalDataSource = DocumentLocalDataSource();
+  await documentLocalDataSource.initialize();
+
+  if (kDebugMode) {
+    debugPrint('🤖 AI Coach: Document cache initialized');
   }
 
   // Enable Firestore offline persistence for better performance and offline support
