@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/shared/data/repositories/rate_limited_firesto
 import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 import 'package:gymbro_flutter_new/core/data/mixins/firebase_error_mapper_mixin.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/services/template_cloud_service.dart';
+import 'package:gymbro_flutter_new/features/workout/data/services/template_cloud_sync_service.dart';
 
 /// 🔒 RATE LIMITING: All Firestore operations are rate-limited to prevent quota exhaustion
 /// Repository Firebase per template workout con sync offline
@@ -431,8 +432,49 @@ class FirebaseWorkoutTemplateRepository
         if (kDebugMode) {
           debugPrint('❌ Cloud save failed: $e');
         }
-        // Agenda per sync futuro
-        await _markForSync(template.id);
+
+        // 🔄 EXPONENTIAL BACKOFF RETRY: Add to cloud sync service for automatic retry
+        // with exponential backoff: 3s, 6s, 12s, 24s, 48s
+        // Convert ExerciseTemplate to Exercise format for cloud sync
+        final exercisesForSync = template.exercises.map((exTemplate) {
+          return {
+            'id': exTemplate.exerciseId,
+            'name': exTemplate.exerciseName,
+            'category': exTemplate.category,
+            'type': exTemplate.type,
+            'sets': exTemplate.sets
+                .map((setTemplate) => {
+                      'id': 'set_${setTemplate.setNumber}',
+                      'setNumber': setTemplate.setNumber,
+                      'weight': setTemplate.targetWeight ?? 0,
+                      'reps': setTemplate.targetReps,
+                      'notes': setTemplate.notes,
+                    })
+                .toList(),
+            'notes': exTemplate.notes,
+            'restTime': exTemplate.restTime,
+          };
+        }).toList();
+
+        final templateData = {
+          'name': template.name,
+          'description': template.description,
+          'exercises': exercisesForSync,
+          'tags': template.tags,
+          'isPublic': template.isPublic,
+        };
+
+        await TemplateCloudSyncService.addPendingTemplate(
+          template.id,
+          templateData,
+        );
+
+        if (kDebugMode) {
+          debugPrint(
+            '⏳ Template ${template.id} marked for automatic retry (exponential backoff)',
+          );
+        }
+
         rethrow; // Propagate error so UI shows feedback
       }
     }
@@ -915,6 +957,10 @@ class FirebaseWorkoutTemplateRepository
   /// Processare sync in sospeso
   /// 🔐 Uses user-scoped keys for pending sync/deletion
   ///
+  /// ✅ UPDATED: Now delegates to TemplateCloudSyncService for exponential backoff retry
+  /// with attempt tracking (3s, 6s, 12s, 24s, 48s delays).
+  /// Old pending sync entries are processed here for backward compatibility.
+  ///
   /// Uses [FirebaseErrorMapperMixin] for standardized error handling.
   Future<void> processPendingSync() async {
     if (_auth.currentUser == null) return;
@@ -923,7 +969,11 @@ class FirebaseWorkoutTemplateRepository
     final syncKey = userCacheKeys.pendingSyncKey;
     final deletionKey = userCacheKeys.pendingDeletionKey;
 
-    // Sync template pendenti
+    // ✅ NEW: Process pending templates via TemplateCloudSyncService
+    // This handles exponential backoff and attempt tracking
+    await TemplateCloudSyncService.syncPending();
+
+    // Legacy: Process old pending sync entries (for backward compatibility)
     final pendingSync = prefs.getStringList(syncKey) ?? [];
     for (final templateId in pendingSync) {
       final templates = await _getTemplatesFromCache();

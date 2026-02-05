@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/features/scheduling/presentation/providers/sc
 import 'package:gymbro_flutter_new/features/settings/presentation/providers/cloud_sync_provider.dart';
 import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/workout_session_la_service.dart';
+import 'package:gymbro_flutter_new/features/workout/data/services/template_cloud_sync_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/firebase_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_auto_save_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_replacement_modal.dart';
@@ -340,9 +341,14 @@ class AuthController extends Notifier<AsyncValue<void>> {
       // iOS Live Activity session
       await WorkoutSessionLAService().resetOnLogout();
 
+      // 🔄 Template Cloud Sync Service (pending template queue for retry)
+      // Clear all pending templates and stop periodic sync on logout
+      await TemplateCloudSyncService.clearAll();
+      TemplateCloudSyncService.dispose();
+
       if (kDebugMode) {
         debugPrint(
-          '[Auth] ✅ Cleared singleton services (usage tracker, progress cache, LA service)',
+          '[Auth] ✅ Cleared singleton services (usage tracker, progress cache, LA service, template sync)',
         );
       }
     } catch (e) {

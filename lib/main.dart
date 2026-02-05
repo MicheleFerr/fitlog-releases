@@ -44,6 +44,7 @@ import 'package:gymbro_flutter_new/features/workout/data/models/user_exercise_pr
 import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/custom_exercise.dart'; // 🏋️ Custom Exercises
 import 'package:gymbro_flutter_new/features/scheduling/data/models/scheduled_workout_model.dart'; // 📅 Scheduled Workouts
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart'; // 🔧 Pre-load AppConfig
+import 'package:gymbro_flutter_new/features/workout/data/services/template_cloud_sync_service.dart'; // 🔄 Template Cloud Sync with exponential backoff
 
 void main() async {
   // 🚀 SPLASH: Preserve native splash screen during initialization
@@ -430,6 +431,13 @@ Future<void> _initializeStorage() async {
     _safeInitialize(
       'ExerciseUsageTracker',
       () => ExerciseUsageTracker().initialize(),
+    ),
+
+    // 🔄 Template Cloud Sync Service with exponential backoff retry logic
+    // Enables automatic retry of failed Cloud Function calls: 3s, 6s, 12s, 24s, 48s
+    _safeInitialize(
+      'TemplateCloudSyncService',
+      () => TemplateCloudSyncService.initialize(),
     ),
 
     // Removed: ExerciseFuzzyMatcher - overengineered, simple token matching is sufficient

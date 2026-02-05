@@ -318,10 +318,52 @@ class SaveTemplateHelper {
                   );
                 } else {
                   if (!context.mounted) return;
-                  SnackBarService.showError(
-                    context,
-                    context.l10n.savingErrorMessage(
-                      errorMessage.replaceAll('Exception: ', ''),
+                  // 🔧 FIX: Show explicit error dialog (not just snackbar)
+                  // This prevents users thinking template was saved when it wasn't
+                  unawaited(
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Salvataggio fallito'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SemanticIcon(
+                              icon: AppIcons.error,
+                              semanticLabel: 'Error',
+                              size: AppIconSize.xxlarge,
+                              color: context.colors.error,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              errorMessage.replaceAll('Exception: ', ''),
+                              style: context.textTheme.bodyMedium,
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: context.colors.errorContainer,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                'Il template NON è stato salvato. Riprova.',
+                                style: context.textTheme.labelSmall?.copyWith(
+                                  color: context.colors.error,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text(context.l10n.ok),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 }
