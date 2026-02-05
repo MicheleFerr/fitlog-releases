@@ -322,6 +322,7 @@ class _ShareExerciseItem extends StatelessWidget {
 }
 
 /// Footer with FitLog Pro branding
+/// Logo on the left, "Generato da FitLog Pro" on the right
 class _ShareFooter extends StatelessWidget {
   const _ShareFooter({
     required this.primaryColor,
@@ -334,39 +335,28 @@ class _ShareFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  AppIcons.workout,
-                  color: primaryColor,
-                  size: 20,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  'FitLog Pro',
-                  style: TextStyle(
-                    color: primaryColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 2),
-            Text(
-              'Generata da FitLog Pro',
-              style: TextStyle(
-                color: mutedColor,
-                fontSize: 10,
-              ),
-            ),
-          ],
+        // Logo on the left
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.asset(
+            'assets/images/splash_logo.png',
+            width: 40,
+            height: 40,
+            fit: BoxFit.contain,
+          ),
+        ),
+
+        // "Generato da FitLog Pro" on the right
+        Text(
+          'Generato da FitLog Pro',
+          style: TextStyle(
+            color: mutedColor,
+            fontSize: 11,
+            fontStyle: FontStyle.italic,
+          ),
         ),
       ],
     );
