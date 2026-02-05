@@ -13,7 +13,7 @@ part 'scientific_paper.freezed.dart';
 
 /// Represents a scientific paper with metadata and abstract
 @freezed
-class ScientificPaper with _$ScientificPaper {
+sealed class ScientificPaper with _$ScientificPaper {
   const factory ScientificPaper({
     required String id,
     required String title,

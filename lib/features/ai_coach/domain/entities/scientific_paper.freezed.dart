@@ -128,10 +128,7 @@ return $default(_that);case _:
 final _that = this;
 switch (_that) {
 case _ScientificPaper():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -190,10 +187,7 @@ return $default(_that.id,_that.title,_that.authors,_that.year,_that.doi,_that.ab
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  List<String> authors,  int year,  String doi,  String abstract,  String summary,  String url,  String license,  List<String> categories,  List<String> keywords,  DateTime uploadedAt,  DateTime updatedAt,  bool active,  Map<String, dynamic>? metadata)  $default,) {final _that = this;
 switch (_that) {
 case _ScientificPaper():
-return $default(_that.id,_that.title,_that.authors,_that.year,_that.doi,_that.abstract,_that.summary,_that.url,_that.license,_that.categories,_that.keywords,_that.uploadedAt,_that.updatedAt,_that.active,_that.metadata);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return $default(_that.id,_that.title,_that.authors,_that.year,_that.doi,_that.abstract,_that.summary,_that.url,_that.license,_that.categories,_that.keywords,_that.uploadedAt,_that.updatedAt,_that.active,_that.metadata);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///

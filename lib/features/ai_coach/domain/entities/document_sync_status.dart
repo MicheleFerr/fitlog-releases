@@ -13,7 +13,7 @@ part 'document_sync_status.freezed.dart';
 
 /// Represents the synchronization status of AI Coach documents
 @freezed
-class DocumentSyncStatus with _$DocumentSyncStatus {
+sealed class DocumentSyncStatus with _$DocumentSyncStatus {
   const factory DocumentSyncStatus({
     required String localVersion, // Current cached version
     required String remoteVersion, // Latest remote version

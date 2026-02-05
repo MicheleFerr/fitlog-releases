@@ -324,15 +324,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       exerciseHistoryCount = 0;
     }
 
-    final contributionsAsync = ref.read(
-      exerciseContributionsProvider(widget.exercise.name),
-    );
-    final contributions = contributionsAsync.value ?? [];
-
-    final userLevel = ref.read(userLevelProvider);
-
-    final userStatsAsync = ref.read(userContributionStatsProvider);
-    final userStats = userStatsAsync.value;
+    // TEMPORARY: Community contributions feature disabled
+    // TODO: Re-enable when community contributions are implemented
+    const contributions = <dynamic>[];
+    const userLevel = UserLevel.rookie;
+    const userContributionCount = 0;
 
     final currentWorkout = ref.read(currentWorkoutProvider);
     final workoutExercises = currentWorkout?.exercises ?? [];
@@ -372,7 +368,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       exerciseHistoryCount: exerciseHistoryCount,
       existingContributions: contributions,
       userLevel: userLevel,
-      userContributionCount: userStats?.totalContributions ?? 0,
+      userContributionCount: userContributionCount,
       accountAgeInDays: accountAgeInDays,
       totalWorkoutsCompleted: totalWorkoutsCompleted,
       averageWorkoutVolume: averageWorkoutVolume,
@@ -462,25 +458,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     showTutInfoBottomSheet(context, tutValue);
   }
 
-  /// ⚡ PERFORMANCE: Uses cached exerciseDataProvider which uses exercisesDatabaseProvider
+  /// ⚡ PERFORMANCE: Uses cached exercisesDatabaseProvider
   /// JSON is loaded ONCE and cached for entire session - no repeated file loads
   Future<Map<String, dynamic>?> _loadExerciseDataFromJson() async {
-    try {
-      // exerciseDataProvider uses exercisesDatabaseProvider (cached JSON)
-      final mergedData = await ref.read(
-        exerciseDataProvider(widget.exercise.name).future,
-      );
-
-      if (mergedData.isNotEmpty) {
-        return mergedData;
-      }
-    } catch (_) {
-      // Silently fall through to cached database lookup
-    }
-
     if (!mounted) return null;
 
-    // ⚡ Fallback: Use cached database directly (no JSON reload)
+    // ⚡ Use cached database directly
     try {
       final exercises = await ref.read(exercisesDatabaseProvider.future);
       final exerciseName = widget.exercise.name.toLowerCase();
@@ -1614,20 +1597,22 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 // TEMPORARY: Disabled -     _expansionNotifier.collapse();
   }
 
-  IconData _getSuggestionIcon(ContributionType suggestionType) {
+  IconData _getSuggestionIcon(String suggestionType) {
     switch (suggestionType) {
-      case ContributionType.technique:
+      case 'technique':
         return AppIcons.edit;
-      case ContributionType.warning:
+      case 'warning':
         return AppIcons.warning;
-      case ContributionType.tip:
+      case 'tip':
         return AppIcons.lightbulb;
-      case ContributionType.variant:
+      case 'variant':
         return AppIcons.sync;
-      case ContributionType.correction:
+      case 'correction':
         return AppIcons.checkCircle;
-      case ContributionType.translation:
+      case 'translation':
         return AppIcons.translate;
+      default:
+        return AppIcons.info;
     }
   }
 
@@ -1980,6 +1965,38 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Temporary widget for showing smart suggestions
+/// TODO: Move to dedicated file when community contributions feature is implemented
+class SmartSuggestionChip extends StatelessWidget {
+  const SmartSuggestionChip({
+    super.key,
+    required this.suggestion,
+    required this.icon,
+    required this.fullSuggestion,
+    required this.onDismiss,
+  });
+
+  final String suggestion;
+  final IconData icon;
+  final SmartSuggestion fullSuggestion;
+  final VoidCallback onDismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionChip(
+      avatar: Icon(icon, size: AppIconSize.small),
+      label: Text(
+        suggestion,
+        style: context.textTheme.bodySmall,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+      onPressed: onDismiss,
+      backgroundColor: context.colors.surfaceContainerHighest,
     );
   }
 }

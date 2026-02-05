@@ -22,6 +22,8 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
+import 'package:go_router/go_router.dart';
 
 /// AI Coach chat screen
 class AICoachScreen extends ConsumerStatefulWidget {
@@ -131,6 +133,29 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
             ),
             onPressed: () => _showClearDialog(context),
             tooltip: context.l10n.clearConversation,
+          ),
+          PopupMenuButton<String>(
+            icon: SemanticIcon.button(
+              icon: AppIcons.moreVert,
+              semanticLabel: 'More options',
+            ),
+            onSelected: (value) {
+              if (value == 'sources') {
+                context.goNamed(AppRoutes.aiCoachDocumentsAttributionName);
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'sources',
+                child: Row(
+                  children: [
+                    const Icon(AppIcons.science, size: 20),
+                    const SizedBox(width: 12),
+                    Text(context.l10n.scientificSources),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
