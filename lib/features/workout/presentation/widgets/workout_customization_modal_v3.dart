@@ -1,9 +1,11 @@
 /// Workout Customization Modal V5 - Simplified
 ///
-/// Streamlined from 18 toggles to ~10 with clear organization:
-/// - Comportamento: Core workout behavior (3 toggles)
+/// Streamlined modal with clear organization:
 /// - Tracciamento: RPE system with sub-options (collapsible)
 /// - Aspetto: Visual customization (collapsible)
+///
+/// Note: Core behavior settings (auto rest timer, auto collapse, sound, custom timers)
+/// are always enabled and not configurable by the user.
 library;
 
 import 'package:flutter/material.dart';
@@ -37,12 +39,6 @@ class WorkoutCustomizationModalV3 extends ConsumerStatefulWidget {
 
 class _WorkoutCustomizationModalV3State
     extends ConsumerState<WorkoutCustomizationModalV3> {
-  // === COMPORTAMENTO ===
-  late bool _autoRestTimer;
-  late bool _autoCollapseCompleted;
-  late bool _soundEnabled;
-  late bool _showCustomTimers;
-
   // === TRACCIAMENTO ===
   late bool _rpeTracking;
   late bool _autoAdjustWeightFromRpe;
@@ -57,10 +53,6 @@ class _WorkoutCustomizationModalV3State
   late InterfaceSize _interfaceSize;
 
   // ✅ Initial values for change tracking (feedback on close)
-  late bool _initialAutoRestTimer;
-  late bool _initialAutoCollapseCompleted;
-  late bool _initialSoundEnabled;
-  late bool _initialShowCustomTimers;
   late bool _initialRpeTracking;
   late bool _initialAutoAdjustWeightFromRpe;
   late bool _initialAutoAdjustRestFromRpe;
@@ -75,12 +67,6 @@ class _WorkoutCustomizationModalV3State
   void initState() {
     super.initState();
     final config = ref.read(appConfigProvider);
-
-    // Comportamento
-    _autoRestTimer = config.autoRestTimer ?? true;
-    _autoCollapseCompleted = config.autoCollapseCompleted ?? false;
-    _soundEnabled = config.soundEnabled;
-    _showCustomTimers = config.showCustomTimers ?? false;
 
     // Tracciamento
     _rpeTracking = config.rpeTracking ?? false;
@@ -99,14 +85,7 @@ class _WorkoutCustomizationModalV3State
     _interfaceSize =
         config.interfaceSize ?? InterfaceSize.fromFontSize(config.fontSize);
 
-    // Note: SetDisplayMode is now always derived from InterfaceSize.setRowMode
-    // No separate sync needed - this happens automatically in the widgets
-
     // ✅ Store initial values for change tracking
-    _initialAutoRestTimer = _autoRestTimer;
-    _initialAutoCollapseCompleted = _autoCollapseCompleted;
-    _initialSoundEnabled = _soundEnabled;
-    _initialShowCustomTimers = _showCustomTimers;
     _initialRpeTracking = _rpeTracking;
     _initialAutoAdjustWeightFromRpe = _autoAdjustWeightFromRpe;
     _initialAutoAdjustRestFromRpe = _autoAdjustRestFromRpe;
@@ -121,10 +100,6 @@ class _WorkoutCustomizationModalV3State
   /// ✅ Calculate number of changes made in this session
   int _countChanges() {
     int changes = 0;
-    if (_autoRestTimer != _initialAutoRestTimer) changes++;
-    if (_autoCollapseCompleted != _initialAutoCollapseCompleted) changes++;
-    if (_soundEnabled != _initialSoundEnabled) changes++;
-    if (_showCustomTimers != _initialShowCustomTimers) changes++;
     if (_rpeTracking != _initialRpeTracking) changes++;
     if (_autoAdjustWeightFromRpe != _initialAutoAdjustWeightFromRpe) changes++;
     if (_autoAdjustRestFromRpe != _initialAutoAdjustRestFromRpe) changes++;
@@ -214,67 +189,6 @@ class _WorkoutCustomizationModalV3State
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   children: [
                     const SizedBox(height: 8),
-
-                    // === COMPORTAMENTO ===
-                    _buildSectionCard(
-                      context,
-                      icon: AppIcons.playCircle,
-                      title: context.l10n.behaviorSection,
-                      color: context.colors.primary,
-                      children: [
-                        _buildToggleRow(
-                          context,
-                          icon: AppIcons.timer,
-                          title: context.l10n.autoRestTimerTitle,
-                          subtitle: context.l10n.autoRestTimerSubtitle,
-                          value: _autoRestTimer,
-                          onChanged: (v) {
-                            setState(() => _autoRestTimer = v);
-                            _saveAll();
-                          },
-                        ),
-                        _buildDivider(),
-                        _buildToggleRow(
-                          context,
-                          icon: AppIcons.unfoldLess,
-                          title: context.l10n.autoCollapseTitle,
-                          subtitle: context.l10n.autoCollapseSubtitle,
-                          value: _autoCollapseCompleted,
-                          onChanged: (v) {
-                            setState(() => _autoCollapseCompleted = v);
-                            _saveAll();
-                          },
-                        ),
-                        _buildDivider(),
-                        _buildToggleRow(
-                          context,
-                          icon: _soundEnabled
-                              ? AppIcons.volumeUp
-                              : AppIcons.volumeOff,
-                          title: context.l10n.soundVibrationTitle,
-                          subtitle: context.l10n.soundVibrationSubtitle,
-                          value: _soundEnabled,
-                          onChanged: (v) {
-                            setState(() => _soundEnabled = v);
-                            _saveAll();
-                          },
-                        ),
-                        _buildDivider(),
-                        _buildToggleRow(
-                          context,
-                          icon: AppIcons.hourglassEmpty,
-                          title: context.l10n.restTimeOnCardTitle,
-                          subtitle: context.l10n.restTimeOnCardSubtitle,
-                          value: _showCustomTimers,
-                          onChanged: (v) {
-                            setState(() => _showCustomTimers = v);
-                            _saveAll();
-                          },
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 12),
 
                     // === TRACCIAMENTO AVANZATO ===
                     _buildExpandableSection(
@@ -456,59 +370,6 @@ class _WorkoutCustomizationModalV3State
   }
 
   // === BUILDERS ===
-
-  Widget _buildSectionCard(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required Color color,
-    required List<Widget> children,
-  }) {
-    final theme = Theme.of(context);
-
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(icon, color: color, size: 20),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Content
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: Column(children: children),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildExpandableSection(
     BuildContext context, {
@@ -704,11 +565,12 @@ class _WorkoutCustomizationModalV3State
 
   void _saveAll() {
     // Save workout settings
+    // Note: autoRestTimer, autoCollapseCompleted are always enabled (hardcoded)
     ref
         .read(appConfigProvider.notifier)
         .updateWorkoutSettings(
-          autoRestTimer: _autoRestTimer,
-          autoCollapseCompleted: _autoCollapseCompleted,
+          autoRestTimer: true, // Always enabled
+          autoCollapseCompleted: true, // Always enabled
           rpeTracking: _rpeTracking,
           autoAdjustWeightFromRpe: _autoAdjustWeightFromRpe,
           autoAdjustRestFromRpe: _autoAdjustRestFromRpe,
@@ -717,19 +579,21 @@ class _WorkoutCustomizationModalV3State
         );
 
     // Save display settings
+    // Note: showCustomTimers is always enabled (hardcoded)
     ref
         .read(appConfigProvider.notifier)
         .updateDisplaySettings(
           showExerciseNotes: _showExerciseNotes,
           showExerciseInsights: _showExerciseInsights,
-          showCustomTimers: _showCustomTimers,
+          showCustomTimers: true, // Always enabled
           // Unified quick icons - set all 3 to same value
           showQuickInfoIcon: _showQuickIcons,
           showWarmupIcon: _showQuickIcons,
           showPreventionIcon: _showQuickIcons,
         );
 
-    // Save sound setting
-    ref.read(appConfigProvider.notifier).setSoundEnabled(_soundEnabled);
+    // Sound is always enabled (hardcoded)
+    ref.read(appConfigProvider.notifier).setSoundEnabled(true);
   }
 }
+
