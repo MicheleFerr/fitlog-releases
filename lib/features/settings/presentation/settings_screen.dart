@@ -510,7 +510,7 @@ class SettingsScreen extends ConsumerWidget {
               title: Text(context.l10n.appearancePreview),
               subtitle: Text(context.l10n.appearancePreviewSubtitle),
               leading: SemanticIcon(
-                icon: AppIcons.eye,
+                icon: AppIcons.preview,
                 semanticLabel: 'Preview appearance',
                 size: AppIconSize.medium,
               ),
