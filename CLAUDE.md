@@ -315,6 +315,7 @@ Se vengono trovati warning, valutare e fixare prima di considerare la task compl
 | Argomento | File |
 |-----------|------|
 | Entry point | [`docs/INDEX.md`](docs/INDEX.md) |
+| **Template Cloud Sync** | [`docs/TEMPLATE_CLOUD_SYNC_DOCUMENTATION.md`](docs/TEMPLATE_CLOUD_SYNC_DOCUMENTATION.md) ⭐ |
 | User Personas | [`docs/USER_PERSONAS.md`](docs/USER_PERSONAS.md) |
 | Architettura | [`docs/architecture/OVERVIEW.md`](docs/architecture/OVERVIEW.md) |
 | Regole sviluppo | [`docs/DEVELOPMENT_RULES.md`](docs/DEVELOPMENT_RULES.md) |

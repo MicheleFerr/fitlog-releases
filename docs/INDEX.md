@@ -26,6 +26,11 @@
 
 ### Feature Documentation
 
+#### Template Cloud Sync (✅ New - 2026-02-05)
+| Document | Purpose |
+|----------|---------|
+| [`TEMPLATE_CLOUD_SYNC_DOCUMENTATION.md`](TEMPLATE_CLOUD_SYNC_DOCUMENTATION.md) | Exponential backoff retry system for Cloud Function failures (13/17 tests passing) |
+
 #### Onboarding System (✅ Just Completed)
 | Document | Purpose |
 |----------|---------|
@@ -93,6 +98,7 @@ Includes:
 
 | Feature | Status | Key Files | Documentation |
 |---------|--------|-----------|-----------------|
+| **Template Cloud Sync** | ✅ Complete | `lib/features/workout/data/services/` | [`TEMPLATE_CLOUD_SYNC_DOCUMENTATION.md`](TEMPLATE_CLOUD_SYNC_DOCUMENTATION.md) |
 | **Onboarding** | ✅ Complete | `lib/features/onboarding/` | [`ONBOARDING_COMPLETE_REFERENCE.md`](ONBOARDING_COMPLETE_REFERENCE.md) |
 | **Workouts** | 🟢 Active | `lib/features/workout/` | See code + tests |
 | **Analytics** | 🟢 Active | `lib/features/analytics/` | See code + tests |
