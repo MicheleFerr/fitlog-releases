@@ -23,6 +23,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/rpe_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/progress_badge.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_counting_mode_service.dart';
 
@@ -1465,7 +1466,6 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     final completedStages = stages.where((s) => s.isCompleted).toList();
     final allCompleted =
         completedStages.length == stages.length && stages.isNotEmpty;
-    final hasCompletedStages = completedStages.isNotEmpty;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1490,31 +1490,14 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                 color: context.colors.primary,
               ),
             ),
-            // ✅ COERENZA: Mostra sempre il progress badge (come Single Exercise)
-            // Usa semantic colors da ColorSchemeExtensions per coerenza
+            // ✅ FASE 5: Usa ProgressBadge widget per consistenza
             if (stages.isNotEmpty) ...[
               const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: allCompleted
-                      ? context.colors.exerciseCompletedContainer
-                      : hasCompletedStages
-                          ? context.colors.exerciseInProgressContainer
-                          : context.colors.exercisePendingContainer,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  '${completedStages.length}/${stages.length}',
-                  style: context.textTheme.labelSmall?.copyWith(
-                    color: allCompleted
-                        ? context.colors.exerciseCompleted
-                        : hasCompletedStages
-                            ? context.colors.exerciseInProgress
-                            : context.colors.exercisePending,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              ProgressBadge(
+                completed: completedStages.length,
+                total: stages.length,
+                showAsComplete: allCompleted,
+                compact: true,
               ),
             ],
             const Spacer(),
@@ -2073,51 +2056,25 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                 ),
               ),
             ),
-            // ✅ COERENZA: Mostra SEMPRE il progress verso target (come Single Exercise)
-            // Questo permette a Marco (principiante) di vedere l'obiettivo PRIMA di eseguire
-            // Usa semantic colors da ColorSchemeExtensions per coerenza
+            // ✅ FASE 5: Usa ProgressBadge widget per consistenza
             const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: totalReps >= restPauseExercise.targetReps
-                    ? context.colors.exerciseCompletedContainer
-                    : hasCompletedSets
-                        ? context.colors.exerciseInProgressContainer
-                        : context.colors.exercisePendingContainer,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                '$totalReps/${restPauseExercise.targetReps} reps',
-                style: context.textTheme.labelSmall?.copyWith(
-                  color: totalReps >= restPauseExercise.targetReps
-                      ? context.colors.exerciseCompleted
-                      : hasCompletedSets
-                          ? context.colors.exerciseInProgress
-                          : context.colors.exercisePending,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            ProgressBadge(
+              completed: totalReps,
+              total: restPauseExercise.targetReps,
+              suffix: 'reps',
+              showAsComplete: totalReps >= restPauseExercise.targetReps,
             ),
           ],
         ),
         const SizedBox(height: 8),
 
-        // ✅ COERENZA: Mostra progress bar verso target (feedback visivo per Sofia)
-        // Usa semantic colors per coerenza con altri tipi esercizio
+        // ✅ FASE 5: Usa ProgressBadgeWithBar per progress visivo
         if (restPauseExercise.targetReps > 0) ...[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: (totalReps / restPauseExercise.targetReps).clamp(0.0, 1.0),
-              backgroundColor: context.colors.exercisePendingContainer,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                totalReps >= restPauseExercise.targetReps
-                    ? context.colors.exerciseCompleted
-                    : context.colors.exerciseActive,
-              ),
-              minHeight: 6,
-            ),
+          ProgressBadgeWithBar(
+            current: totalReps,
+            target: restPauseExercise.targetReps,
+            suffix: 'reps',
+            barHeight: 6,
           ),
           const SizedBox(height: 8),
         ],
