@@ -329,8 +329,8 @@ class AppIcons {
   /// 🔍 Search off
   static const IconData searchOff = Icons.search_off;
 
-  /// 🎛️ Filter
-  static const IconData filter = Icons.filter;
+  /// 🎛️ Filter (imbuto classico)
+  static const IconData filter = Icons.filter_alt;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // ⚙️ SETTINGS & ADMIN

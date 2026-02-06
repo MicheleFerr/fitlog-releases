@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_fullscreen.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_card_feedback.dart';
@@ -11,7 +13,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// 🚀 TIER-1: Modal condiviso per opzioni esercizio sia per single che superset
-class ExerciseOptionsModal extends StatelessWidget {
+class ExerciseOptionsModal extends ConsumerWidget {
   const ExerciseOptionsModal({
     super.key,
     required this.exercise,
@@ -35,7 +37,11 @@ class ExerciseOptionsModal extends StatelessWidget {
   final String languageCode;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Get the exercise database version (e.g., "2.0.8")
+    final dbVersionAsync = ref.watch(exerciseVersionInfoProvider);
+    final dbVersion = dbVersionAsync.asData?.value ?? '1.0.0';
+
     return DraggableScrollableSheet(
       initialChildSize: 0.5,
       minChildSize: 0.3,
@@ -306,12 +312,12 @@ class ExerciseOptionsModal extends StatelessWidget {
                     ),
                     onTap: () {
                       Navigator.pop(context);
-                      // Show feedback dialog
+                      // Show feedback dialog with database version
                       ExerciseFeedbackButton.showFeedbackDialog(
                         context,
                         exerciseId: exercise.id,
                         exerciseName: exercise.name,
-                        version: '1.0.0',
+                        version: dbVersion,
                       );
                     },
                   ),

@@ -8,6 +8,8 @@
 /// Shows contextual hints as user completes actions.
 library;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,6 +88,11 @@ class WorkoutTutorialNotifier extends Notifier<WorkoutTutorialState> {
   // This prevents tutorial from restarting when app resumes
   static WorkoutTutorialState? _cachedState;
 
+  // ✅ FIX: Track when state has been loaded from SharedPreferences
+  // This prevents race condition where tutorial starts before prefs are loaded
+  static bool _isLoaded = false;
+  static Completer<void>? _loadCompleter;
+
   @override
   WorkoutTutorialState build() {
     // Load from SharedPreferences if no cache available
@@ -105,16 +112,39 @@ class WorkoutTutorialNotifier extends Notifier<WorkoutTutorialState> {
   static const String _startedKey = 'workout_tutorial_started';
   TutorialCoachMark? _currentTutorial;
 
+  /// Whether the state has been loaded from SharedPreferences
+  /// Use this to prevent race conditions when checking tutorial state
+  bool get isLoaded => _isLoaded;
+
+  /// Wait for state to be loaded from SharedPreferences
+  /// Call this before checking hasStartedTutorial or hasCompletedTutorial
+  Future<void> waitForLoad() async {
+    if (_isLoaded) return;
+    if (_loadCompleter != null) {
+      await _loadCompleter!.future;
+    }
+  }
+
   Future<void> _loadState() async {
-    final prefs = await SharedPreferences.getInstance();
-    final completed = prefs.getBool(_completedKey) ?? false;
-    final started = prefs.getBool(_startedKey) ?? false;
-    state = state.copyWith(
-      hasCompletedTutorial: completed,
-      hasStartedTutorial: started,
-    );
-    // ✅ FIX: Update cache after loading from SharedPreferences
-    _cachedState = state;
+    // Prevent multiple concurrent loads
+    if (_loadCompleter != null) return;
+    _loadCompleter = Completer<void>();
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final completed = prefs.getBool(_completedKey) ?? false;
+      final started = prefs.getBool(_startedKey) ?? false;
+      state = state.copyWith(
+        hasCompletedTutorial: completed,
+        hasStartedTutorial: started,
+      );
+      // ✅ FIX: Update cache after loading from SharedPreferences
+      _cachedState = state;
+      _isLoaded = true;
+    } finally {
+      _loadCompleter?.complete();
+      _loadCompleter = null;
+    }
   }
 
   /// Start the interactive tutorial

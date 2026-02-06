@@ -1,39 +1,31 @@
 import 'dart:async' show unawaited;
 import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
-import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
+
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// Provider per gestire lo stato dello schermo always on durante l'allenamento
+///
+/// Usa [keepScreenAwakeProvider] (AppConfig) come fonte di verità per l'impostazione.
+/// Questo provider gestisce solo l'attivazione/disattivazione effettiva del wakelock.
 final screenWakelockProvider =
-    NotifierProvider<ScreenWakelockNotifier, ScreenWakelockState>(
+    NotifierProvider<ScreenWakelockNotifier, bool>(
       ScreenWakelockNotifier.new,
     );
 
-class ScreenWakelockState {
-  const ScreenWakelockState({required this.isEnabled, required this.isActive});
-  final bool isEnabled;
-  final bool isActive;
-
-  ScreenWakelockState copyWith({bool? isEnabled, bool? isActive}) {
-    return ScreenWakelockState(
-      isEnabled: isEnabled ?? this.isEnabled,
-      isActive: isActive ?? this.isActive,
-    );
-  }
-}
-
-class ScreenWakelockNotifier extends Notifier<ScreenWakelockState> {
+/// Notifier che gestisce il wakelock dello schermo.
+///
+/// Lo state [bool] indica se il wakelock è attualmente ATTIVO (non se è abilitato).
+/// L'impostazione "abilitato" viene letta da [keepScreenAwakeProvider].
+class ScreenWakelockNotifier extends Notifier<bool> {
   @override
-  ScreenWakelockState build() {
-    _loadPreference();
-
+  bool build() {
     // Set up cleanup on dispose
     ref.onDispose(() {
       // CRITICAL: Ensure wakelock is disabled even if dispose is synchronous
       // Using unawaited to explicitly mark that we don't await the Future
-      if (state.isActive) {
+      if (state) {
         unawaited(
           WakelockPlus.disable().catchError((error) {
             if (kDebugMode) {
@@ -48,48 +40,41 @@ class ScreenWakelockNotifier extends Notifier<ScreenWakelockState> {
       }
     });
 
-    return const ScreenWakelockState(isEnabled: false, isActive: false);
+    // Initial state: wakelock not active
+    return false;
   }
 
-  // 🔐 User-scoped cache key
-  String get _prefsKey =>
-      userCacheKeys.userScopedKey('workout_screen_always_on');
-
-  Future<void> _loadPreference() async {
-    final prefs = await SharedPreferences.getInstance();
-    final isEnabled = prefs.getBool(_prefsKey) ?? false;
-    state = state.copyWith(isEnabled: isEnabled);
-  }
-
-  Future<void> toggleEnabled() async {
-    final newValue = !state.isEnabled;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_prefsKey, newValue);
-
-    state = state.copyWith(isEnabled: newValue);
-
-    // Se disabilitato e attualmente attivo, disattiva wakelock
-    if (!newValue && state.isActive) {
-      await stopWakelock();
-    }
-  }
-
+  /// Attiva il wakelock se l'impostazione in AppConfig è abilitata.
   Future<void> startWakelock() async {
-    if (state.isEnabled) {
+    // Leggi l'impostazione da AppConfig (fonte di verità unica)
+    final isEnabled = ref.read(keepScreenAwakeProvider);
+
+    if (isEnabled) {
       try {
         await WakelockPlus.enable();
-        state = state.copyWith(isActive: true);
+        state = true;
+        if (kDebugMode) {
+          debugPrint('✅ [Wakelock] Screen wakelock enabled');
+        }
       } catch (e) {
         // Log error but don't crash the app
         debugPrint('⚠️ [Wakelock] Error enabling wakelock: $e');
       }
+    } else {
+      if (kDebugMode) {
+        debugPrint('ℹ️ [Wakelock] Wakelock not enabled (disabled in settings)');
+      }
     }
   }
 
+  /// Disattiva il wakelock.
   Future<void> stopWakelock() async {
     try {
       await WakelockPlus.disable();
-      state = state.copyWith(isActive: false);
+      state = false;
+      if (kDebugMode) {
+        debugPrint('✅ [Wakelock] Screen wakelock disabled');
+      }
     } catch (e) {
       // Log error but don't crash the app
       debugPrint('⚠️ [Wakelock] Error disabling wakelock: $e');

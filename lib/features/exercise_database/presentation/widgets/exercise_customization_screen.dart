@@ -213,8 +213,18 @@ class _ExerciseCustomizationScreenState
 
             const SizedBox(height: 16),
 
-            // ✅ NUOVO: Counting Mode Selector
+            // ✅ Counting Mode Selector
             _buildCountingModeSelector(customization, exerciseIndex),
+
+            const SizedBox(height: 16),
+
+            // Rest Timer Picker (between sets)
+            _buildRestTimerPicker(customization, exerciseIndex),
+
+            const SizedBox(height: 12),
+
+            // Rest After Exercise Picker (between exercises)
+            _buildRestAfterExercisePicker(customization, exerciseIndex),
 
             const SizedBox(height: 16),
 
@@ -284,100 +294,566 @@ class _ExerciseCustomizationScreenState
     );
   }
 
-  // ✅ MIGLIORATO: Counting Mode Selector Widget (HIG-compliant)
+  // ✅ Counting Mode Selector - Design coerente con picker buttons dei set
   Widget _buildCountingModeSelector(
     ExerciseCustomization customization,
     int exerciseIndex,
   ) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
 
-    return SegmentedButton<ExerciseCountingMode>(
-      segments: [
-        ButtonSegment<ExerciseCountingMode>(
-          value: ExerciseCountingMode.weighted,
-          label: Text(
-            '${l10n.weight} × ${l10n.reps}',
-            style: theme.textTheme.labelSmall?.copyWith(
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          icon: const SemanticIcon(
+    return Row(
+      children: [
+        Expanded(
+          child: _buildCountingModeButton(
+            label: '${l10n.weight} × ${l10n.reps}',
             icon: AppIcons.fitnessCenter,
-            semanticLabel: 'Fitness center',
-            size: AppIconSize.tiny,
+            isSelected: customization.countingMode == ExerciseCountingMode.weighted,
+            onTap: () => _changeCountingMode(exerciseIndex, ExerciseCountingMode.weighted),
           ),
         ),
-        ButtonSegment<ExerciseCountingMode>(
-          value: ExerciseCountingMode.reps,
-          label: Text(
-            l10n.reps,
-            style: theme.textTheme.labelSmall?.copyWith(
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          icon: const SemanticIcon(
+        const SizedBox(width: 8),
+        Expanded(
+          child: _buildCountingModeButton(
+            label: l10n.reps,
             icon: AppIcons.repeat,
-            semanticLabel: 'Repeat',
-            size: AppIconSize.tiny,
+            isSelected: customization.countingMode == ExerciseCountingMode.reps,
+            onTap: () => _changeCountingMode(exerciseIndex, ExerciseCountingMode.reps),
           ),
         ),
-        ButtonSegment<ExerciseCountingMode>(
-          value: ExerciseCountingMode.time,
-          label: Text(
-            l10n.duration,
-            style: theme.textTheme.labelSmall?.copyWith(
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          icon: const SemanticIcon(
+        const SizedBox(width: 8),
+        Expanded(
+          child: _buildCountingModeButton(
+            label: l10n.duration,
             icon: AppIcons.timer,
-            semanticLabel: 'Timer',
-            size: AppIconSize.tiny,
+            isSelected: customization.countingMode == ExerciseCountingMode.time,
+            onTap: () => _changeCountingMode(exerciseIndex, ExerciseCountingMode.time),
           ),
         ),
       ],
-      selected: {customization.countingMode},
-      onSelectionChanged: (Set<ExerciseCountingMode> newSelection) {
-        _changeCountingMode(exerciseIndex, newSelection.first);
-      },
-      style: ButtonStyle(
-        visualDensity: VisualDensity.compact,
-        padding: WidgetStateProperty.all(
-          const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+    );
+  }
+
+  /// Singolo bottone per counting mode - stile coerente con picker buttons
+  Widget _buildCountingModeButton({
+    required String label,
+    required IconData icon,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+    final color = isSelected
+        ? theme.colorScheme.primary
+        : theme.colorScheme.onSurfaceVariant;
+
+    return Semantics(
+      label: label,
+      button: true,
+      selected: isSelected,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? theme.colorScheme.primaryContainer.withValues(alpha: 0.4)
+                : theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: isSelected
+                  ? theme.colorScheme.primary.withValues(alpha: 0.6)
+                  : theme.colorScheme.outline.withValues(alpha: 0.3),
+              width: isSelected ? 1.5 : 1,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 14, color: color),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  label,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontSize: 11,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                    color: color,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
-        side: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) {
-            return BorderSide(
-              color: theme.colorScheme.primary.withValues(alpha: 0.5),
-              width: 1.5,
-            );
-          }
-          return BorderSide(
-            color: theme.colorScheme.outline.withValues(alpha: 0.2),
-            width: 1,
-          );
-        }),
-        backgroundColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) {
-            return theme.colorScheme.primaryContainer.withValues(alpha: 0.3);
-          }
-          return theme.colorScheme.surface;
-        }),
-        foregroundColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) {
-            return theme.colorScheme.onPrimaryContainer;
-          }
-          return theme.colorScheme.onSurfaceVariant;
-        }),
       ),
     );
   }
 
-  // ✅ NUOVO: Change Counting Mode Handler
+  /// Rest Timer Picker - tempo di riposo tra i set
+  Widget _buildRestTimerPicker(
+    ExerciseCustomization customization,
+    int exerciseIndex,
+  ) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+    final hasCustomRestTime = customization.restTime != null;
+    final displayValue = hasCustomRestTime
+        ? _formatRestTime(customization.restTime!)
+        : l10n.automatic;
+
+    return Row(
+      children: [
+        Expanded(
+          child: Semantics(
+            label: '${l10n.restTimer}: $displayValue',
+            button: true,
+            child: InkWell(
+              onTap: () => _showRestTimePicker(exerciseIndex, customization),
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: theme.colorScheme.tertiary.withValues(alpha: 0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      AppIcons.timerOutlined,
+                      size: 18,
+                      color: theme.colorScheme.tertiary,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.restTimer,
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            displayValue,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: hasCustomRestTime
+                                  ? theme.colorScheme.tertiary
+                                  : theme.colorScheme.onSurfaceVariant,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (hasCustomRestTime)
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _customizations[exerciseIndex] =
+                                _customizations[exerciseIndex].copyWith(
+                              clearRestTime: true,
+                            );
+                          });
+                        },
+                        icon: Icon(
+                          AppIcons.close,
+                          size: 18,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        tooltip: l10n.reset,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Formatta il rest time in formato leggibile (es. "1m 30s")
+  String _formatRestTime(int seconds) {
+    final minutes = seconds ~/ 60;
+    final remainingSeconds = seconds % 60;
+    if (minutes > 0 && remainingSeconds > 0) {
+      return '${minutes}m ${remainingSeconds}s';
+    } else if (minutes > 0) {
+      return '${minutes}m';
+    }
+    return '${seconds}s';
+  }
+
+  /// Show rest time picker dialog
+  void _showRestTimePicker(int exerciseIndex, ExerciseCustomization customization) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+    int selectedSeconds = customization.restTime ?? 90; // Default 90s
+    final controller = FixedExtentScrollController(
+      initialItem: (selectedSeconds / 5).round() - 1,
+    );
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => Container(
+          height: 380,
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              // Handle bar
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              // Title
+              Text(
+                l10n.restTimer,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Quick select buttons (common rest times)
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [30, 60, 90, 120, 180].map((seconds) {
+                  final isSelected = selectedSeconds == seconds;
+                  return FilterChip(
+                    label: Text(_formatRestTime(seconds)),
+                    selected: isSelected,
+                    onSelected: (_) {
+                      setModalState(() => selectedSeconds = seconds);
+                      controller.animateToItem(
+                        (seconds / 5).round() - 1,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    backgroundColor: theme.colorScheme.surface,
+                    selectedColor: theme.colorScheme.tertiaryContainer,
+                    labelStyle: theme.textTheme.labelMedium?.copyWith(
+                      color: isSelected
+                          ? theme.colorScheme.onTertiaryContainer
+                          : theme.colorScheme.onSurface,
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  );
+                }).toList(),
+              ),
+
+              const SizedBox(height: 16),
+              // Picker (5s increments, 5s to 5min)
+              Expanded(
+                child: ListWheelScrollView.useDelegate(
+                  controller: controller,
+                  itemExtent: 50,
+                  perspective: 0.005,
+                  diameterRatio: 1.2,
+                  physics: const FixedExtentScrollPhysics(),
+                  childDelegate: ListWheelChildBuilderDelegate(
+                    childCount: 60, // 5s to 300s (5min)
+                    builder: (context, index) {
+                      final seconds = (index + 1) * 5;
+                      final isSelected = seconds == selectedSeconds;
+                      return Center(
+                        child: Text(
+                          _formatRestTime(seconds),
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            color: isSelected
+                                ? theme.colorScheme.tertiary
+                                : theme.colorScheme.onSurface,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  onSelectedItemChanged: (index) {
+                    setModalState(() => selectedSeconds = (index + 1) * 5);
+                  },
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Confirm button
+              SizedBox(
+                width: double.infinity,
+                child: Semantics(
+                  label: l10n.confirm,
+                  button: true,
+                  child: FilledButton(
+                    onPressed: () {
+                      setState(() {
+                        _customizations[exerciseIndex] =
+                            _customizations[exerciseIndex].copyWith(
+                          restTime: selectedSeconds,
+                        );
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(l10n.confirm),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Rest After Exercise Picker - tempo di riposo DOPO l'esercizio (tra esercizi)
+  Widget _buildRestAfterExercisePicker(
+    ExerciseCustomization customization,
+    int exerciseIndex,
+  ) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+    final hasCustomRestAfter = customization.restAfterExercise != null;
+    final displayValue = hasCustomRestAfter
+        ? _formatRestTime(customization.restAfterExercise!)
+        : l10n.automatic;
+
+    return Row(
+      children: [
+        Expanded(
+          child: Semantics(
+            label: '${l10n.restBetweenExercises}: $displayValue',
+            button: true,
+            child: InkWell(
+              onTap: () =>
+                  _showRestAfterExercisePicker(exerciseIndex, customization),
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: theme.colorScheme.secondary.withValues(alpha: 0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      AppIcons.skipNext,
+                      size: 18,
+                      color: theme.colorScheme.secondary,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.restBetweenExercises,
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            displayValue,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: hasCustomRestAfter
+                                  ? theme.colorScheme.secondary
+                                  : theme.colorScheme.onSurfaceVariant,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (hasCustomRestAfter)
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _customizations[exerciseIndex] =
+                                _customizations[exerciseIndex].copyWith(
+                              clearRestAfterExercise: true,
+                            );
+                          });
+                        },
+                        icon: Icon(
+                          AppIcons.close,
+                          size: 18,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        tooltip: l10n.reset,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Show rest after exercise picker dialog
+  void _showRestAfterExercisePicker(
+    int exerciseIndex,
+    ExerciseCustomization customization,
+  ) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+    // Get global default from config
+    final appConfig = ref.read(appConfigProvider);
+    int selectedSeconds =
+        customization.restAfterExercise ?? appConfig.defaultRestBetweenExercises;
+    final controller = FixedExtentScrollController(
+      initialItem: (selectedSeconds / 5).round() - 1,
+    );
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => Container(
+          height: 380,
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              // Handle bar
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              // Title
+              Text(
+                l10n.restBetweenExercises,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Quick select buttons (common rest times)
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [60, 90, 120, 180, 240].map((seconds) {
+                  final isSelected = selectedSeconds == seconds;
+                  return FilterChip(
+                    label: Text(_formatRestTime(seconds)),
+                    selected: isSelected,
+                    onSelected: (_) {
+                      setModalState(() => selectedSeconds = seconds);
+                      controller.animateToItem(
+                        (seconds / 5).round() - 1,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    backgroundColor: theme.colorScheme.surface,
+                    selectedColor: theme.colorScheme.secondaryContainer,
+                    labelStyle: theme.textTheme.labelMedium?.copyWith(
+                      color: isSelected
+                          ? theme.colorScheme.onSecondaryContainer
+                          : theme.colorScheme.onSurface,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  );
+                }).toList(),
+              ),
+
+              const SizedBox(height: 16),
+              // Picker (5s increments, 5s to 5min)
+              Expanded(
+                child: ListWheelScrollView.useDelegate(
+                  controller: controller,
+                  itemExtent: 50,
+                  perspective: 0.005,
+                  diameterRatio: 1.2,
+                  physics: const FixedExtentScrollPhysics(),
+                  childDelegate: ListWheelChildBuilderDelegate(
+                    childCount: 60, // 5s to 300s (5min)
+                    builder: (context, index) {
+                      final seconds = (index + 1) * 5;
+                      final isSelected = seconds == selectedSeconds;
+                      return Center(
+                        child: Text(
+                          _formatRestTime(seconds),
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            color: isSelected
+                                ? theme.colorScheme.secondary
+                                : theme.colorScheme.onSurface,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  onSelectedItemChanged: (index) {
+                    setModalState(() => selectedSeconds = (index + 1) * 5);
+                  },
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Confirm button
+              SizedBox(
+                width: double.infinity,
+                child: Semantics(
+                  label: l10n.confirm,
+                  button: true,
+                  child: FilledButton(
+                    onPressed: () {
+                      setState(() {
+                        _customizations[exerciseIndex] =
+                            _customizations[exerciseIndex].copyWith(
+                          restAfterExercise: selectedSeconds,
+                        );
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(l10n.confirm),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Change Counting Mode Handler
   void _changeCountingMode(int exerciseIndex, ExerciseCountingMode newMode) {
     if (kDebugMode) {
       debugPrint(
@@ -677,12 +1153,13 @@ class _ExerciseCustomizationScreenState
       sets,
     );
 
-    // ✅ NUOVO: Override notes AND counting mode
+    // Override notes, counting mode, rest time, and rest after exercise
     final result = exercise.copyWith(
-      notes:
-          customization.notes, // Note utente separate - non usare noteTecniche
-      countingMode:
-          customization.countingMode, // ✅ NUOVO: Include counting mode
+      notes: customization.notes,
+      countingMode: customization.countingMode,
+      restTime: customization.restTime, // Custom rest time (null = use default)
+      restAfterExercise:
+          customization.restAfterExercise, // Rest after exercise (null = use global)
     );
     if (kDebugMode) {
       debugPrint(
@@ -709,7 +1186,7 @@ class _ExerciseCustomizationScreenState
     ExerciseDetailsModal.show(context, exercise);
   }
 
-  /// ✅ Picker button widget (same as superset_builder_widget)
+  /// ✅ Picker button widget - stile uniforme con counting mode selector
   Widget _buildPickerButton({
     required String label,
     required String value,
@@ -717,6 +1194,8 @@ class _ExerciseCustomizationScreenState
     required Color color,
     required VoidCallback onTap,
   }) {
+    final theme = Theme.of(context);
+
     return Semantics(
       label: '$label: $value',
       button: true,
@@ -724,50 +1203,65 @@ class _ExerciseCustomizationScreenState
         onTap: onTap,
         borderRadius: BorderRadius.circular(8),
         child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color.withValues(alpha: 0.3)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, size: 12, color: color),
-                const SizedBox(width: 4),
-                Text(
-                  label,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    fontSize: 10,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: color.withValues(alpha: 0.3),
+              width: 1,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Header: icona + label
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(icon, size: 14, color: color),
+                  const SizedBox(width: 6),
+                  Text(
+                    label,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 2),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: color,
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 4),
+              // Valore principale
+              Text(
+                value,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: color,
+                  fontSize: 15,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 
-  /// ✅ Show reps picker dialog with quick select buttons
+  /// Show reps picker dialog with quick select buttons and quick actions
   void _showRepsPicker(
     int exerciseIndex,
     int setIndex,
     SetCustomization setCustomization,
   ) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+    final sets = _customizations[exerciseIndex].sets;
+    final isFirstSet = setIndex == 0;
+    final isLastSet = setIndex == sets.length - 1;
+    final hasMultipleSets = sets.length > 1;
+
     int selectedReps = setCustomization.reps;
     final controller = FixedExtentScrollController(
       initialItem: selectedReps - 1,
@@ -775,9 +1269,10 @@ class _ExerciseCustomizationScreenState
 
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Container(
-          height: 350,
+          height: MediaQuery.of(context).size.height * 0.55,
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
@@ -791,20 +1286,32 @@ class _ExerciseCustomizationScreenState
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              // Title
-              Text(
-                AppLocalizations.of(context).reps,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+              // Title with current value
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10n.reps,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '$selectedReps',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.secondary,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
 
-              // ✅ Quick select buttons
+              // Quick select buttons
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: [5, 8, 10, 12, 15].map((reps) {
+                children: [5, 8, 10, 12, 15, 20].map((reps) {
                   final isSelected = selectedReps == reps;
                   return FilterChip(
                     label: Text('$reps'),
@@ -823,15 +1330,65 @@ class _ExerciseCustomizationScreenState
                       color: isSelected
                           ? theme.colorScheme.onSecondaryContainer
                           : theme.colorScheme.onSurface,
-                      fontWeight: isSelected
-                          ? FontWeight.bold
-                          : FontWeight.normal,
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                     ),
                   );
                 }).toList(),
               ),
 
-              const SizedBox(height: 16),
+              // Quick Actions (only if multiple sets)
+              if (hasMultipleSets) ...[
+                const SizedBox(height: 12),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      // Apply to all
+                      _buildQuickActionChip(
+                        label: l10n.applyToAll,
+                        icon: AppIcons.selectAll,
+                        onTap: () {
+                          _applyRepsToAllSets(exerciseIndex, selectedReps);
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                      // Copy from previous (if not first set)
+                      if (!isFirstSet)
+                        _buildQuickActionChip(
+                          label: l10n.copyFromPrevious,
+                          icon: AppIcons.contentCopyRounded,
+                          onTap: () {
+                            final prevReps = sets[setIndex - 1].reps;
+                            setModalState(() => selectedReps = prevReps);
+                            controller.animateToItem(
+                              prevReps - 1,
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.easeInOut,
+                            );
+                          },
+                        ),
+                      if (!isFirstSet) const SizedBox(width: 8),
+                      // Apply to following (if not last set)
+                      if (!isLastSet)
+                        _buildQuickActionChip(
+                          label: l10n.following,
+                          icon: AppIcons.arrowForward,
+                          onTap: () {
+                            _applyRepsToFollowingSets(
+                              exerciseIndex,
+                              setIndex,
+                              selectedReps,
+                            );
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+
+              const SizedBox(height: 12),
               // Picker
               Expanded(
                 child: ListWheelScrollView.useDelegate(
@@ -870,7 +1427,7 @@ class _ExerciseCustomizationScreenState
               SizedBox(
                 width: double.infinity,
                 child: Semantics(
-                  label: AppLocalizations.of(context).confirm,
+                  label: l10n.confirm,
                   button: true,
                   child: FilledButton(
                     onPressed: () {
@@ -881,7 +1438,7 @@ class _ExerciseCustomizationScreenState
                       );
                       Navigator.of(context).pop();
                     },
-                    child: Text(AppLocalizations.of(context).confirm),
+                    child: Text(l10n.confirm),
                   ),
                 ),
               ),
@@ -890,6 +1447,61 @@ class _ExerciseCustomizationScreenState
         ),
       ),
     );
+  }
+
+  /// Quick action chip for reps picker
+  Widget _buildQuickActionChip({
+    required String label,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+    return ActionChip(
+      avatar: Icon(icon, size: 16),
+      label: Text(label),
+      onPressed: onTap,
+      backgroundColor: theme.colorScheme.surfaceContainerHighest,
+      labelStyle: theme.textTheme.labelSmall?.copyWith(
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+
+  /// Apply reps to all sets of an exercise
+  void _applyRepsToAllSets(int exerciseIndex, int reps) {
+    setState(() {
+      final currentSets = _customizations[exerciseIndex].sets;
+      final updatedSets = currentSets.map((set) {
+        return set.copyWith(reps: reps);
+      }).toList();
+
+      _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
+        sets: updatedSets,
+      );
+    });
+
+    SnackBarService.showSuccess(
+      context,
+      context.l10n.applyToAll,
+    );
+  }
+
+  /// Apply reps to following sets (from setIndex onwards)
+  void _applyRepsToFollowingSets(int exerciseIndex, int fromSetIndex, int reps) {
+    setState(() {
+      final currentSets = List<SetCustomization>.from(
+        _customizations[exerciseIndex].sets,
+      );
+
+      // Update current and all following sets
+      for (int i = fromSetIndex; i < currentSets.length; i++) {
+        currentSets[i] = currentSets[i].copyWith(reps: reps);
+      }
+
+      _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
+        sets: currentSets,
+      );
+    });
   }
 
   /// ✅ NUOVO: Show duration picker dialog with quick select buttons
@@ -1546,24 +2158,36 @@ class ExerciseCustomization {
     required this.exercise,
     required this.sets,
     this.notes,
-    required this.countingMode, // ✅ NUOVO: Counting mode dell'esercizio
+    required this.countingMode,
+    this.restTime, // Rest time in seconds between sets
+    this.restAfterExercise, // Rest time in seconds AFTER completing this exercise
   });
   final Exercise exercise;
   final List<SetCustomization> sets;
   final String? notes;
-  final ExerciseCountingMode countingMode; // ✅ NUOVO
+  final ExerciseCountingMode countingMode;
+  final int? restTime; // Rest time in seconds (null = use default)
+  final int? restAfterExercise; // Rest time AFTER exercise (null = use global default)
 
   ExerciseCustomization copyWith({
     Exercise? exercise,
     List<SetCustomization>? sets,
     String? notes,
-    ExerciseCountingMode? countingMode, // ✅ NUOVO
+    ExerciseCountingMode? countingMode,
+    int? restTime,
+    bool clearRestTime = false,
+    int? restAfterExercise,
+    bool clearRestAfterExercise = false,
   }) {
     return ExerciseCustomization(
       exercise: exercise ?? this.exercise,
       sets: sets ?? this.sets,
       notes: notes ?? this.notes,
-      countingMode: countingMode ?? this.countingMode, // ✅ NUOVO
+      countingMode: countingMode ?? this.countingMode,
+      restTime: clearRestTime ? null : (restTime ?? this.restTime),
+      restAfterExercise: clearRestAfterExercise
+          ? null
+          : (restAfterExercise ?? this.restAfterExercise),
     );
   }
 }

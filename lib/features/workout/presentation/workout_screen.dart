@@ -175,8 +175,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   Future<void> _showFirstWorkoutWelcomeIfNeeded() async {
     if (!mounted) return;
 
+    // ✅ FIX: Wait for tutorial state to be loaded from SharedPreferences
+    // This prevents race condition where tutorial starts before prefs are loaded
+    await ref.read(workoutTutorialProvider.notifier).waitForLoad();
+
+    if (!mounted) return;
+
     // Wait a bit for UI to settle and for template to load exercises
-    await Future.delayed(const Duration(milliseconds: 800));
+    await Future.delayed(const Duration(milliseconds: 500));
 
     if (!mounted) return;
 

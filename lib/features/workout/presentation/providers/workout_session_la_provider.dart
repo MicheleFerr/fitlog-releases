@@ -118,18 +118,25 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
     UnifiedTimerState? previous,
     UnifiedTimerState? next,
   ) {
-    // Check if timer just completed (was active, now completed or null)
+    // CRITICAL FIX: Don't trigger transition if state became null
+    // null state means timer was replaced/cancelled, NOT completed normally
+    // We only want to transition when timer actually reaches 0
+    if (next == null) {
+      return;
+    }
+
+    // Check if timer just completed (was active, now completed)
     final wasActive = previous?.isActive == true;
-    final isNowInactive = next == null || next.isCompleted;
+    final isNowCompleted = next.isCompleted;
 
     // Only log when there's an actual transition (not every tick)
-    if (wasActive && isNowInactive) {
+    if (wasActive && isNowCompleted) {
       debugPrint(
-        '[WorkoutSessionLA] 🔄 Timer TRANSITION detected: wasActive=$wasActive, isNowInactive=$isNowInactive, mode=${state.mode}, isTransitioning=$_isTransitioningToExercise',
+        '[WorkoutSessionLA] 🔄 Timer TRANSITION detected: wasActive=$wasActive, isNowCompleted=$isNowCompleted, mode=${state.mode}, isTransitioning=$_isTransitioningToExercise',
       );
     }
 
-    if (wasActive && isNowInactive && state.mode == WorkoutSessionMode.rest) {
+    if (wasActive && isNowCompleted && state.mode == WorkoutSessionMode.rest) {
       // GUARD: Prevent double transition due to rapid state changes
       if (_isTransitioningToExercise) {
         debugPrint(

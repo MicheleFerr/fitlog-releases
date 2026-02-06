@@ -219,6 +219,30 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
   String get _storageKey => userCacheKeys.userScopedKey('unified_timer_state');
   Box<Map>? _storage;
 
+  /// 🔧 FIX: Ensure storage box is open before I/O operations
+  /// This prevents "Box has already been closed" errors when the provider
+  /// is recreated or when hot reload causes the box to be closed.
+  Future<bool> _ensureStorageOpen() async {
+    if (_storage != null && _storage!.isOpen) {
+      return true;
+    }
+
+    // Box is closed or null - try to reopen
+    try {
+      final boxManager = ref.read(hiveBoxManagerProvider);
+      _storage = await boxManager.openBox<Map>('timer_storage');
+      if (kDebugMode) {
+        debugPrint('🔧 [UnifiedTimer] Reopened closed timer_storage box');
+      }
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [UnifiedTimer] Failed to reopen timer_storage: $e');
+      }
+      return false;
+    }
+  }
+
   /// CRITICAL FIX: Async initialization method that properly completes initialization
   Future<void> _initializeAsync() async {
     try {
@@ -1028,22 +1052,16 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     }
 
     // Update timer state with new remaining time
-    final oldRemainingSeconds = state!.remainingSeconds;
+    // NOTE: In Riverpod, setting state = newState automatically notifies all watchers,
+    // including .select() watchers. No need for ref.invalidateSelf() which would
+    // cause the provider to rebuild and lose timer state.
     state = state!.copyWith(
       remainingSeconds: newRemainingSeconds,
       tickCount: _internalTickCount,
     );
 
-    // ✅ FIX(riverpod-3.x): Explicitly notify Riverpod watchers of state change
-    // In Riverpod 3.x, .select() watchers need explicit notification when state changes
-    // This ensures UI updates happen every second instead of only on external rebuilds
-    if (oldRemainingSeconds != newRemainingSeconds) {
-      // Invalidate self to notify all watchers that state has changed
-      ref.invalidateSelf();
-
-      if (kDebugMode) {
-        debugPrint('⏱️ [TIMER TICK] State notified: ${state!.remainingSeconds}s (was $oldRemainingSeconds)');
-      }
+    if (kDebugMode && _internalTickCount % 10 == 0) {
+      debugPrint('⏱️ [TIMER TICK] ${state!.remainingSeconds}s remaining');
     }
 
     // CRITICAL: Handle completion IMMEDIATELY and SYNCHRONOUSLY
@@ -1578,6 +1596,11 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
   /// Setup additional protection for long timers
   Future<void> _setupLongTimerProtection() async {
+    // 🔧 FIX: Ensure box is open before writing checkpoint
+    if (!await _ensureStorageOpen()) {
+      return;
+    }
+
     // Save checkpoint for recovery
     final checkpoint = {
       'startTime': DateTime.now().toIso8601String(),
@@ -1914,6 +1937,14 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
   /// Restore timer state from storage with corruption protection
   Future<void> _restoreState() async {
     try {
+      // 🔧 FIX: Ensure box is open before reading
+      if (!await _ensureStorageOpen()) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [UnifiedTimer] Cannot restore state - storage unavailable');
+        }
+        return;
+      }
+
       final stored = _storage?.get(_storageKey);
       if (stored != null) {
         // VALIDATION: Ensure stored data integrity before restoration
@@ -2024,6 +2055,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     } catch (e) {
       // Try emergency backup state recovery
       try {
+        // 🔧 FIX: Try to reopen storage before emergency recovery
+        await _ensureStorageOpen();
+
         final emergencyStored = _storage?.get('${_storageKey}_emergency');
 
         if (emergencyStored != null) {
@@ -2081,7 +2115,15 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
   /// Perform the actual state save operation
   Future<void> _performActualSave() async {
-    if (_pendingSaveData == null || _stateWriteInProgress || _storage == null) {
+    if (_pendingSaveData == null || _stateWriteInProgress) {
+      return;
+    }
+
+    // 🔧 FIX: Ensure box is open before writing
+    if (!await _ensureStorageOpen()) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [UnifiedTimer] Cannot save state - storage unavailable');
+      }
       return;
     }
 
@@ -2147,6 +2189,10 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
   /// Clear saved state
   Future<void> _clearState() async {
     try {
+      // 🔧 FIX: Ensure box is open before deleting
+      if (!await _ensureStorageOpen()) {
+        return;
+      }
       await _storage?.delete(_storageKey);
     } catch (e, stackTrace) {
       debugPrint('⚠️ [UnifiedTimer] Error: $e');

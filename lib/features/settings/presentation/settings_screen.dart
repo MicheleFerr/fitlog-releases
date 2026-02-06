@@ -753,7 +753,7 @@ class SettingsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
 
-            // Default Rest Time
+            // Default Rest Time (between sets)
             _buildSettingTile(
               context,
               title: context.l10n.settingsDefaultRestTime,
@@ -764,6 +764,24 @@ class SettingsScreen extends ConsumerWidget {
               ),
               onTap: () =>
                   _showRestTimeDialog(context, ref, config.defaultRestTime),
+            ),
+
+            const Divider(),
+
+            // Default Rest Between Exercises
+            _buildSettingTile(
+              context,
+              title: context.l10n.restBetweenExercises,
+              subtitle: '${config.defaultRestBetweenExercises}s',
+              leading: const SemanticIcon(
+                icon: AppIcons.skipNext,
+                semanticLabel: 'Rest between exercises',
+              ),
+              onTap: () => _showRestBetweenExercisesDialog(
+                context,
+                ref,
+                config.defaultRestBetweenExercises,
+              ),
             ),
           ],
         ),
@@ -1974,6 +1992,55 @@ class SettingsScreen extends ConsumerWidget {
                 ref
                     .read(appConfigProvider.notifier)
                     .setDefaultRestTime(selectedTime);
+                Navigator.pop(context);
+              },
+              child: Text(context.l10n.save),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showRestBetweenExercisesDialog(
+    BuildContext context,
+    WidgetRef ref,
+    int currentTime,
+  ) {
+    int selectedTime = currentTime;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text(context.l10n.restBetweenExercises),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('${selectedTime}s'),
+              Slider(
+                value: selectedTime.toDouble(),
+                min: 30,
+                max: 300,
+                divisions: 27,
+                onChanged: (value) {
+                  setState(() {
+                    selectedTime = value.round();
+                  });
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(context.l10n.cancel),
+            ),
+            FilledButton(
+              onPressed: () {
+                ref
+                    .read(appConfigProvider.notifier)
+                    .setDefaultRestBetweenExercises(selectedTime);
                 Navigator.pop(context);
               },
               child: Text(context.l10n.save),

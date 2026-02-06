@@ -10,6 +10,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/exercise_picker/exercise_picker_config.dart';
@@ -55,6 +56,36 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
     }
   }
 
+  /// Soglia minima per fuzzy match (0-100)
+  static const int _fuzzyThreshold = 70;
+
+  /// Verifica se una query matcha un testo usando fuzzy matching
+  bool _fuzzyMatch(String query, String text) {
+    // Prima prova match esatto (più veloce)
+    if (text.toLowerCase().contains(query)) {
+      return true;
+    }
+    // Poi prova fuzzy match per typos
+    final queryTokens = query.split(RegExp(r'\s+')).where((t) => t.length >= 2);
+    if (queryTokens.isEmpty) return false;
+
+    final textLower = text.toLowerCase();
+    for (final token in queryTokens) {
+      if (textLower.contains(token)) continue;
+
+      final textWords = textLower.split(RegExp(r'\s+'));
+      bool tokenFound = false;
+      for (final word in textWords) {
+        if (ratio(token, word) >= _fuzzyThreshold) {
+          tokenFound = true;
+          break;
+        }
+      }
+      if (!tokenFound) return false;
+    }
+    return true;
+  }
+
   void _filterExercises() {
     final query = widget.searchQuery.toLowerCase();
 
@@ -62,10 +93,11 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
       if (query.isEmpty) {
         _filteredExercises = widget.exercises;
       } else {
+        // Usa fuzzy matching invece di contains() semplice
         _filteredExercises = widget.exercises.where((exercise) {
-          return exercise.nome.toLowerCase().contains(query) ||
-              exercise.focusDisplayName.toLowerCase().contains(query) ||
-              exercise.attrezzatura.toLowerCase().contains(query);
+          return _fuzzyMatch(query, exercise.nome) ||
+              _fuzzyMatch(query, exercise.focusDisplayName) ||
+              _fuzzyMatch(query, exercise.attrezzatura);
         }).toList();
       }
     });

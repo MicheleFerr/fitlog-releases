@@ -57,6 +57,11 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
     final remainingProgress = ref.watch(
       unifiedTimerProvider.select((state) => state?.remainingProgress ?? 0.0),
     );
+    // Watch timer type for inter-exercise display
+    final timerType = ref.watch(
+      unifiedTimerProvider.select((state) => state?.type ?? TimerType.rest),
+    );
+    final isInterExercise = timerType == TimerType.interExercise;
     // Only watch the timerSound field from config, not entire config
     final timerSound = ref.watch(appConfigProvider.select((c) => c.timerSound));
 
@@ -107,6 +112,7 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
             isRunning,
             isPaused,
             remainingSeconds,
+            isInterExercise: isInterExercise,
           ),
           borderRadius: BorderRadius.circular(widget.compact ? 10 : 12),
           border: Border.all(
@@ -116,6 +122,7 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
               isRunning,
               isPaused,
               remainingSeconds,
+              isInterExercise: isInterExercise,
             ),
             width: 1,
           ),
@@ -123,11 +130,13 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Icona timer
+            // Icona timer (skipNext per inter-exercise)
             Icon(
-              isRunning
-                  ? AppIcons.timer
-                  : (isPaused ? AppIcons.pause : AppIcons.timer),
+              isInterExercise
+                  ? AppIcons.skipNext
+                  : (isRunning
+                      ? AppIcons.timer
+                      : (isPaused ? AppIcons.pause : AppIcons.timer)),
               size: widget.compact ? AppIconSize.tiny : AppIconSize.small,
               color: _getTextColor(
                 context,
@@ -135,6 +144,7 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
                 isRunning,
                 isPaused,
                 remainingSeconds,
+                isInterExercise: isInterExercise,
               ),
             ),
             SizedBox(width: widget.compact ? 4 : 6),
@@ -161,6 +171,7 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
                 remainingProgress,
                 isRunning,
                 isPaused,
+                isInterExercise: isInterExercise,
               ),
           ],
         ),
@@ -175,8 +186,9 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
     int remainingSeconds,
     double progress,
     bool isRunning,
-    bool isPaused,
-  ) {
+    bool isPaused, {
+    bool isInterExercise = false,
+  }) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -193,6 +205,7 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
               isRunning,
               isPaused,
               remainingSeconds,
+              isInterExercise: isInterExercise,
             ),
           ),
         ),
@@ -207,7 +220,11 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
               value: progress,
               backgroundColor: context.colors.surfaceContainerHighest,
               valueColor: AlwaysStoppedAnimation<Color>(
-                _getProgressColor(context, remainingSeconds),
+                _getProgressColor(
+                  context,
+                  remainingSeconds,
+                  isInterExercise: isInterExercise,
+                ),
               ),
             ),
           ),
@@ -248,8 +265,9 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
     bool isIdle,
     bool isRunning,
     bool isPaused,
-    int remainingSeconds,
-  ) {
+    int remainingSeconds, {
+    bool isInterExercise = false,
+  }) {
     if (isIdle) {
       return context.colors.surfaceContainerHighest.withValues(alpha: 0.8);
     }
@@ -262,7 +280,10 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
       } else if (remainingSeconds <= 15) {
         return context.colors.tertiaryContainer.withValues(alpha: 0.5);
       }
-      return context.colors.primaryContainer.withValues(alpha: 0.5);
+      // Use tertiary container for inter-exercise timer
+      return isInterExercise
+          ? context.colors.tertiaryContainer.withValues(alpha: 0.5)
+          : context.colors.primaryContainer.withValues(alpha: 0.5);
     }
     return context.colors.surfaceContainerHighest;
   }
@@ -273,8 +294,9 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
     bool isIdle,
     bool isRunning,
     bool isPaused,
-    int remainingSeconds,
-  ) {
+    int remainingSeconds, {
+    bool isInterExercise = false,
+  }) {
     if (isIdle) {
       return context.colors.outline.withValues(alpha: 0.3);
     }
@@ -285,6 +307,7 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
       return _getProgressColor(
         context,
         remainingSeconds,
+        isInterExercise: isInterExercise,
       ).withValues(alpha: 0.5);
     }
     return context.colors.outline.withValues(alpha: 0.3);
@@ -296,8 +319,9 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
     bool isIdle,
     bool isRunning,
     bool isPaused,
-    int remainingSeconds,
-  ) {
+    int remainingSeconds, {
+    bool isInterExercise = false,
+  }) {
     if (isIdle) {
       return context.colors.onSurfaceVariant;
     }
@@ -305,18 +329,27 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
       return context.colors.secondary;
     }
     if (isRunning) {
-      return _getProgressColor(context, remainingSeconds);
+      return _getProgressColor(
+        context,
+        remainingSeconds,
+        isInterExercise: isInterExercise,
+      );
     }
     return context.colors.onSurface;
   }
 
-  Color _getProgressColor(BuildContext context, int remainingSeconds) {
+  Color _getProgressColor(
+    BuildContext context,
+    int remainingSeconds, {
+    bool isInterExercise = false,
+  }) {
     if (remainingSeconds <= 5) {
       return context.colors.error;
     } else if (remainingSeconds <= 15) {
       return context.colors.tertiary;
     }
-    return context.colors.primary;
+    // Use tertiary color for inter-exercise timer to distinguish it
+    return isInterExercise ? context.colors.tertiary : context.colors.primary;
   }
 
   String _formatTime(int seconds) {

@@ -1,12 +1,13 @@
-/// Servizio di ricerca esercizi V2 - Semplice e funzionante
+/// Servizio di ricerca esercizi V3 - Con Fuzzy Search
 ///
 /// Caratteristiche:
+/// - Fuzzy matching: "distenzioni" trova "distensioni" (typo tolerance)
 /// - Order-agnostic: "Leg Curl" trova "Curl Sdraiato Leg"
 /// - Token-based matching: cerca tutti i token della query
-/// - Nessun isolate complesso (performance ok per 1500 esercizi)
 /// - Sinonimi per categorie (push, pull, gambe, etc.)
 library;
 
+import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -82,7 +83,13 @@ class ExerciseSearchService {
     return _orderAgnosticSearch(queryLower);
   }
 
-  /// Ricerca order-agnostic: "Leg Curl" trova "Curl Sdraiato Leg"
+  /// Soglia minima per fuzzy match (0-100)
+  /// 70 = permette ~30% di errori (es: "distenzioni" → "distensioni")
+  static const int _fuzzyThreshold = 70;
+
+  /// Ricerca order-agnostic con fuzzy matching
+  /// "Leg Curl" trova "Curl Sdraiato Leg"
+  /// "distenzioni" trova "distensioni" (typo tolerance)
   List<ExerciseTemplate> _orderAgnosticSearch(String query) {
     final queryTokens = _normalizeAndTokenize(query);
     if (queryTokens.isEmpty) return [];
@@ -95,48 +102,58 @@ class ExerciseSearchService {
       final nameTokens = normalizedNome.split(RegExp(r'\s+'));
 
       // Calcola score basato su quanti token della query matchano
-      double score = 0;
+      double totalScore = 0;
       int matchedTokens = 0;
 
       for (final qt in queryTokens) {
-        bool found = false;
+        int bestMatchScore = 0;
 
-        // Check se token query è contenuto in qualche token del nome
+        // Trova il miglior match fuzzy tra i token del nome
         for (final nt in nameTokens) {
-          if (nt.contains(qt) || qt.contains(nt)) {
-            found = true;
-            // Bonus per match esatto
-            if (nt == qt) {
-              score += 1.5;
-            } else if (nt.startsWith(qt) || qt.startsWith(nt)) {
-              score += 1.2;
-            } else {
-              score += 1.0;
-            }
+          // 1. Check match esatto o substring (veloce)
+          if (nt == qt) {
+            bestMatchScore = 100;
             break;
+          } else if (nt.contains(qt) || qt.contains(nt)) {
+            final substringScore = nt.startsWith(qt) || qt.startsWith(nt) ? 95 : 90;
+            if (substringScore > bestMatchScore) {
+              bestMatchScore = substringScore;
+            }
+          } else {
+            // 2. Fuzzy match per typos (es: distenzioni → distensioni)
+            final fuzzyScore = ratio(qt, nt);
+            if (fuzzyScore > bestMatchScore) {
+              bestMatchScore = fuzzyScore;
+            }
           }
         }
 
-        if (found) matchedTokens++;
+        // Token matcha se supera la soglia
+        if (bestMatchScore >= _fuzzyThreshold) {
+          matchedTokens++;
+          totalScore += bestMatchScore / 100.0;
+        }
       }
 
-      // Skip se non tutti i token matchano
+      // Skip se non tutti i token matchano (con tolleranza fuzzy)
       if (matchedTokens < queryTokens.length) continue;
 
       // Normalizza score
-      final normalizedScore = score / (queryTokens.length * 1.5);
+      final normalizedScore = totalScore / queryTokens.length;
 
       // Bonus per nome che inizia con il primo token della query
+      double finalScore = normalizedScore;
       if (nameTokens.isNotEmpty && queryTokens.isNotEmpty) {
-        if (nameTokens.first.startsWith(queryTokens.first)) {
-          score *= 1.1;
+        final firstTokenMatch = ratio(nameTokens.first, queryTokens.first);
+        if (firstTokenMatch >= 80) {
+          finalScore *= 1.1;
         }
       }
 
       scoredResults.add(
         _ScoredExercise(
           data: exerciseData,
-          score: normalizedScore.clamp(0.0, 1.0),
+          score: finalScore.clamp(0.0, 1.0),
         ),
       );
     }

@@ -619,6 +619,39 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     }
   }
 
+  Future<void> setDefaultRestBetweenExercises(int seconds) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      // Input validation
+      if (seconds < 0 || seconds > 600) {
+        if (kDebugMode) {
+          debugPrint(
+            '⚠️ [AppConfig] Invalid rest between exercises: $seconds (must be 0-600)',
+          );
+        }
+        return;
+      }
+
+      state = state.copyWith(defaultRestBetweenExercises: seconds);
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint(
+          '✅ [AppConfig] Default rest between exercises set to: ${seconds}s',
+        );
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint(
+          '❌ [AppConfig] Error setting default rest between exercises: $e',
+        );
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
   Future<void> setAutoStartTimer(bool autoStart) async {
     try {
       await _ensureInitialized();
