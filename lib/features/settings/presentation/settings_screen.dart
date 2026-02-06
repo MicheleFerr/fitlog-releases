@@ -32,6 +32,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_prov
 import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/legal_document_screen.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/appearance_preview_modal.dart';
+import 'package:gymbro_flutter_new/features/settings/presentation/widgets/settings_search_delegate.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -59,6 +60,15 @@ class SettingsScreen extends ConsumerWidget {
             }
           },
         ),
+        actions: [
+          IconButton(
+            icon: const SemanticIcon(
+              icon: AppIcons.search,
+              semanticLabel: 'Search settings',
+            ),
+            onPressed: () => _openSearch(context, ref, config, l10n),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -85,48 +95,32 @@ class SettingsScreen extends ConsumerWidget {
             _buildAppearanceSection(context, ref, config),
             const SizedBox(height: 24),
 
-            // Ghost Mode (Privacy & Focus)
-            _buildGhostModeSection(context, ref),
+            // Workout (merged: rest times + sounds + vibrations + screen)
+            _buildWorkoutSection(context, ref, config),
             const SizedBox(height: 24),
 
-            // Workout Essentials (NEW)
-            _buildWorkoutEssentialsSection(context, ref, config),
-            const SizedBox(height: 24),
-
-            // Feedback & Display (Sounds, Vibrations, Screen)
-            _buildFeedbackDisplaySection(context, ref, config),
-            const SizedBox(height: 24),
-
-            // Data & Backup
-            _buildDataBackupSection(context),
-            const SizedBox(height: 24),
-
-            // Health Sync (Apple Health / Health Connect)
-            _buildHealthSyncSection(context),
-            const SizedBox(height: 24),
-
-            // Units & Language
+            // Units & Language (initial setup, then rarely changed)
             _buildUnitsLanguageSection(context, ref, config),
             const SizedBox(height: 24),
 
-            // Tutorial & Help
-            _buildTutorialHelpSection(context, ref),
+            // Data & Sync (merged: health sync + import/export)
+            _buildDataSection(context, ref),
             const SizedBox(height: 24),
 
-            // Advanced Settings (power users)
-            _buildAdvancedSettingsSection(context, ref, config),
-            const SizedBox(height: 24),
-
-            // Premium (Coming Soon)
+            // Premium (CTA - important visibility)
             _buildPremiumSection(context),
             const SizedBox(height: 24),
 
-            // Account Actions
-            _buildAccountSection(context, ref),
+            // Help & Info (merged: tutorials + about + credits)
+            _buildHelpSection(context, ref),
             const SizedBox(height: 24),
 
-            // About & Credits
-            _buildAboutCreditsSection(context),
+            // Advanced Settings (collapsed by default - power users)
+            _buildAdvancedSettingsSection(context, ref, config),
+            const SizedBox(height: 24),
+
+            // Account Actions (at bottom for safety - destructive actions)
+            _buildAccountSection(context, ref),
 
             // DEBUG: Migration tool (ferrara-michele only)
             if (currentUser.value?.email?.toString().contains(
@@ -581,148 +575,10 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildGhostModeSection(BuildContext context, WidgetRef ref) {
-    final ghostState = ref.watch(ghostModeProvider);
-    final isEnabled = ghostState.isEnabled;
-    final config = ghostState.config;
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              children: [
-                SemanticIcon(
-                  icon: AppIcons.visibilityOff,
-                  semanticLabel: context.l10n.ghostModeSection,
-                  size: AppIconSize.medium,
-                  color: context.colors.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  context.l10n.ghostModeSection,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Ghost Mode Toggle
-            SwitchListTile(
-              title: Text(context.l10n.ghostModeTitle),
-              subtitle: Text(context.l10n.ghostModeDescription),
-              value: isEnabled,
-              onChanged: (value) async {
-                await ref.read(ghostModeProvider.notifier).setEnabled(value);
-                if (context.mounted) {
-                  SnackBarService.showInfo(
-                    context,
-                    value
-                        ? context.l10n.ghostModeEnabled
-                        : context.l10n.ghostModeDisabled,
-                  );
-                }
-              },
-              secondary: SemanticIcon(
-                icon: isEnabled ? AppIcons.visibilityOff : AppIcons.visibility,
-                semanticLabel: isEnabled ? 'Hidden' : 'Visible',
-                size: AppIconSize.medium,
-              ),
-              contentPadding: EdgeInsets.zero,
-            ),
-
-            // Customization options (only when enabled)
-            if (isEnabled) ...[
-              const Divider(),
-              ExpansionTile(
-                title: Text(context.l10n.ghostModeCustomize),
-                tilePadding: EdgeInsets.zero,
-                children: [
-                  // Hide XP Progress
-                  CheckboxListTile(
-                    title: Text(context.l10n.ghostModeHideXP),
-                    value: config.hideXPProgress,
-                    onChanged: (value) {
-                      ref
-                          .read(ghostModeProvider.notifier)
-                          .updateConfigField(
-                            'hideXPProgress',
-                            value: value ?? true,
-                          );
-                    },
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  // Hide Tier Badge
-                  CheckboxListTile(
-                    title: Text(context.l10n.ghostModeHideTier),
-                    value: config.hideTierBadge,
-                    onChanged: (value) {
-                      ref
-                          .read(ghostModeProvider.notifier)
-                          .updateConfigField(
-                            'hideTierBadge',
-                            value: value ?? true,
-                          );
-                    },
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  // Hide Streak
-                  CheckboxListTile(
-                    title: Text(context.l10n.ghostModeHideStreak),
-                    value: config.hideStreak,
-                    onChanged: (value) {
-                      ref
-                          .read(ghostModeProvider.notifier)
-                          .updateConfigField(
-                            'hideStreak',
-                            value: value ?? false,
-                          );
-                    },
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  // Hide Comparisons
-                  CheckboxListTile(
-                    title: Text(context.l10n.ghostModeHideComparisons),
-                    value: config.hideStrengthComparisons,
-                    onChanged: (value) {
-                      ref
-                          .read(ghostModeProvider.notifier)
-                          .updateConfigField(
-                            'hideStrengthComparisons',
-                            value: value ?? true,
-                          );
-                    },
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  // Hide Animations
-                  CheckboxListTile(
-                    title: Text(context.l10n.ghostModeHideAnimations),
-                    value: config.hideXPAnimations,
-                    onChanged: (value) {
-                      ref
-                          .read(ghostModeProvider.notifier)
-                          .updateConfigField(
-                            'hideXPAnimations',
-                            value: value ?? true,
-                          );
-                    },
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                ],
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWorkoutEssentialsSection(
+  /// Unified Workout section combining:
+  /// - Workout Essentials (rest times)
+  /// - Feedback & Display (sounds, vibrations, screen)
+  Widget _buildWorkoutSection(
     BuildContext context,
     WidgetRef ref,
     AppConfig config,
@@ -738,13 +594,13 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 SemanticIcon(
                   icon: AppIcons.workout,
-                  semanticLabel: 'Workout essentials',
+                  semanticLabel: 'Workout settings',
                   size: AppIconSize.medium,
                   color: context.colors.primary,
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  context.l10n.settingsWorkoutEssentials,
+                  context.l10n.settingsWorkout,
                   style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -783,42 +639,8 @@ class SettingsScreen extends ConsumerWidget {
                 config.defaultRestBetweenExercises,
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  Widget _buildFeedbackDisplaySection(
-    BuildContext context,
-    WidgetRef ref,
-    AppConfig config,
-  ) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              children: [
-                SemanticIcon(
-                  icon: AppIcons.notifications,
-                  semanticLabel: 'Feedback settings',
-                  size: AppIconSize.medium,
-                  color: context.colors.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  context.l10n.settingsFeedbackDisplay,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
+            const Divider(),
 
             // Sound toggle
             _buildSwitchTile(
@@ -838,10 +660,11 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
 
-            const Divider(),
-
-            // Timer sound selection
-            _buildTimerSoundSelector(context, ref, config),
+            // Timer sound selection (only if sounds enabled)
+            if (config.soundEnabled) ...[
+              const Divider(),
+              _buildTimerSoundSelector(context, ref, config),
+            ],
 
             const Divider(),
 
@@ -888,7 +711,10 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDataBackupSection(BuildContext context) {
+  /// Unified Data section combining:
+  /// - Data & Backup (import/export)
+  /// - Health Sync
+  Widget _buildDataSection(BuildContext context, WidgetRef ref) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -900,7 +726,7 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 SemanticIcon(
                   icon: AppIcons.storage,
-                  semanticLabel: context.l10n.dataBackup,
+                  semanticLabel: 'Data',
                   size: AppIconSize.medium,
                   color: context.colors.primary,
                 ),
@@ -914,6 +740,20 @@ class SettingsScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 16),
+
+            // Health Sync Settings
+            _buildSettingTile(
+              context,
+              title: context.l10n.healthSyncSettings,
+              subtitle: context.l10n.healthSyncSettingsDesc,
+              leading: const SemanticIcon(
+                icon: AppIcons.favorite,
+                semanticLabel: 'Health',
+              ),
+              onTap: () => context.pushNamed('health-sync'),
+            ),
+
+            const Divider(),
 
             // Import Data from other apps
             _buildSettingTile(
@@ -939,98 +779,6 @@ class SettingsScreen extends ConsumerWidget {
                 semanticLabel: 'Export',
               ),
               onTap: () => _showExportDataSheet(context),
-            ),
-
-            const Divider(),
-
-            // Reset All Analytics (Cache + Stress Index)
-            Consumer(
-              builder: (context, ref, _) {
-                final stressState = ref.watch(stressIndexNotifierProvider);
-                final isLoading = stressState.isLoading;
-
-                return _buildSettingTile(
-                  context,
-                  title: context.l10n.recalculateStressIndex,
-                  subtitle: isLoading
-                      ? context.l10n.recalculatingStressIndex
-                      : context.l10n.recalculateStressIndexDesc,
-                  leading: isLoading
-                      ? const LoadingIndicator(size: 24)
-                      : const SemanticIcon(
-                          icon: AppIcons.refresh,
-                          semanticLabel: 'Recalculate',
-                        ),
-                  onTap: isLoading
-                      ? null
-                      : () async {
-                          // Step 1: Clear analytics cache (forces recalculation of all views)
-                          final cacheService = ref.read(
-                            analyticsCacheServiceProvider,
-                          );
-                          await cacheService.clear();
-
-                          // Step 2: Recalculate stress index with new EMG ratios
-                          // Use 365 days to recalculate all historical data
-                          final result = await ref
-                              .read(stressIndexNotifierProvider.notifier)
-                              .clearAndRecalculate(days: 365);
-
-                          if (context.mounted) {
-                            SnackBarService.showSuccess(
-                              context,
-                              context.l10n.stressIndexRecalculatedSuccess(
-                                result.$2,
-                              ),
-                            );
-                          }
-                        },
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHealthSyncSection(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              children: [
-                SemanticIcon(
-                  icon: AppIcons.sync,
-                  semanticLabel: 'Health Sync',
-                  size: AppIconSize.medium,
-                  color: context.colors.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  context.l10n.healthSyncSettings,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Health Sync Settings Link
-            _buildSettingTile(
-              context,
-              title: context.l10n.healthSyncSettings,
-              subtitle: context.l10n.healthSyncSettingsDesc,
-              leading: const SemanticIcon(
-                icon: AppIcons.favorite,
-                semanticLabel: 'Health',
-              ),
-              onTap: () => context.pushNamed('health-sync'),
             ),
           ],
         ),
@@ -1101,7 +849,10 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildTutorialHelpSection(BuildContext context, WidgetRef ref) {
+  /// Unified Help section combining:
+  /// - Tutorial & Help
+  /// - About & Credits
+  Widget _buildHelpSection(BuildContext context, WidgetRef ref) {
     final tutorialsEnabled = ref.watch(tutorialsEnabledProvider);
 
     return Card(
@@ -1151,7 +902,7 @@ class SettingsScreen extends ConsumerWidget {
 
             const Divider(),
 
-            // Help Center
+            // Help Center (AI Coach)
             _buildSettingTile(
               context,
               title: context.l10n.helpCenter,
@@ -1163,6 +914,64 @@ class SettingsScreen extends ConsumerWidget {
                 color: context.colors.primary,
               ),
               onTap: () => context.pushNamed('ai-coach'),
+            ),
+
+            const Divider(),
+
+            // Privacy Policy
+            _buildSettingTile(
+              context,
+              title: context.l10n.privacyPolicy,
+              subtitle: context.l10n.privacyPolicyDesc,
+              leading: const SemanticIcon(
+                icon: AppIcons.shield,
+                semanticLabel: 'Privacy',
+              ),
+              onTap: () => LegalDocumentScreen.showPrivacyPolicy(context),
+            ),
+
+            const Divider(),
+
+            // Open Source Licenses
+            _buildSettingTile(
+              context,
+              title: context.l10n.openSourceLicenses,
+              subtitle: context.l10n.openSourceLicensesDesc,
+              leading: const SemanticIcon(
+                icon: AppIcons.code,
+                semanticLabel: 'Licenses',
+              ),
+              onTap: () => showLicensePage(
+                context: context,
+                applicationName: 'FitLog Pro',
+                applicationLegalese: context.l10n.madeWithLove,
+              ),
+            ),
+
+            const Divider(),
+
+            // Exercise Images Credit (ExerciseDB)
+            _buildSettingTile(
+              context,
+              title: context.l10n.exerciseImagesCredit,
+              subtitle: context.l10n.exerciseImagesCreditDesc,
+              leading: const SemanticIcon(
+                icon: AppIcons.workout,
+                semanticLabel: 'Exercise images',
+              ),
+              onTap: () => _showExerciseDbAttributionDialog(context),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Made with love footer
+            Center(
+              child: Text(
+                context.l10n.madeWithLove,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
             ),
           ],
         ),
@@ -1231,101 +1040,181 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
+  /// Advanced settings section with ExpansionTile (collapsed by default)
+  /// Includes: Ghost Mode, Day Cutoff, Effort Scale, Recalculate, Reset Tutorials
   Widget _buildAdvancedSettingsSection(
     BuildContext context,
     WidgetRef ref,
     AppConfig config,
   ) {
+    final ghostState = ref.watch(ghostModeProvider);
+    final ghostEnabled = ghostState.isEnabled;
+    final ghostConfig = ghostState.config;
+    final dayCutoffHour =
+        ref.watch(userProfileProvider).value?.dayCutoffHour ?? 4;
+
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      child: Theme(
+        // Remove ExpansionTile dividers
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          leading: SemanticIcon(
+            icon: AppIcons.tune,
+            semanticLabel: 'Advanced settings',
+            size: AppIconSize.medium,
+            color: context.colors.primary,
+          ),
+          title: Text(
+            context.l10n.settingsAdvancedTitle,
+            style: context.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Text(
+            context.l10n.settingsAdvancedDesc,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+          initiallyExpanded: false,
           children: [
-            // Header
-            Row(
-              children: [
-                SemanticIcon(
-                  icon: AppIcons.tune,
-                  semanticLabel: 'Advanced settings',
-                  size: AppIconSize.medium,
-                  color: context.colors.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  context.l10n.settingsAdvancedTitle,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  const Divider(),
+
+                  // Ghost Mode Toggle
+                  SwitchListTile(
+                    title: Row(
+                      children: [
+                        Expanded(child: Text(context.l10n.ghostModeTitle)),
+                        _buildInfoTooltip(
+                          context,
+                          context.l10n.ghostModeTooltip,
+                        ),
+                      ],
+                    ),
+                    subtitle: Text(context.l10n.ghostModeDescription),
+                    value: ghostEnabled,
+                    onChanged: (value) async {
+                      await ref
+                          .read(ghostModeProvider.notifier)
+                          .setEnabled(value);
+                      if (context.mounted) {
+                        SnackBarService.showInfo(
+                          context,
+                          value
+                              ? context.l10n.ghostModeEnabled
+                              : context.l10n.ghostModeDisabled,
+                        );
+                      }
+                    },
+                    secondary: SemanticIcon(
+                      icon: ghostEnabled
+                          ? AppIcons.visibilityOff
+                          : AppIcons.visibility,
+                      semanticLabel: ghostEnabled ? 'Hidden' : 'Visible',
+                      size: AppIconSize.medium,
+                    ),
+                    contentPadding: EdgeInsets.zero,
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              context.l10n.settingsAdvancedDesc,
-              style: context.textTheme.bodySmall?.copyWith(
-                color: context.colors.onSurfaceVariant,
+
+                  // Ghost Mode Customization (only when enabled)
+                  if (ghostEnabled)
+                    _buildGhostModeCustomization(context, ref, ghostConfig),
+
+                  const Divider(),
+
+                  // Day Cutoff Hour
+                  _buildSettingTile(
+                    context,
+                    title: context.l10n.settingsDayCutoffHour,
+                    subtitle:
+                        context.l10n.settingsDayCutoffHourDesc(dayCutoffHour),
+                    leading: const SemanticIcon(
+                      icon: AppIcons.schedule,
+                      semanticLabel: 'Schedule',
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildInfoTooltip(
+                          context,
+                          context.l10n.dayCutoffTooltip,
+                        ),
+                        const SizedBox(width: 8),
+                        const SemanticIcon(
+                          icon: AppIcons.chevronRight,
+                          semanticLabel: 'Edit',
+                        ),
+                      ],
+                    ),
+                    onTap: () => _showDayCutoffDialog(context, ref),
+                  ),
+
+                  const Divider(),
+
+                  // Effort Scale (RPE vs RIR)
+                  _buildSettingTile(
+                    context,
+                    title: context.l10n.effortScale,
+                    subtitle: config.effortScale == 'rpe'
+                        ? context.l10n.rpeScale
+                        : context.l10n.rirScale,
+                    leading: const SemanticIcon(
+                      icon: AppIcons.speed,
+                      semanticLabel: 'Effort scale',
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildInfoTooltip(
+                          context,
+                          context.l10n.effortScaleTooltip,
+                        ),
+                        const SizedBox(width: 8),
+                        const SemanticIcon(
+                          icon: AppIcons.chevronRight,
+                          semanticLabel: 'Edit',
+                        ),
+                      ],
+                    ),
+                    onTap: () =>
+                        _showEffortScaleDialog(context, ref, config.effortScale),
+                  ),
+
+                  const Divider(),
+
+                  // Recalculate Stress Index
+                  _buildSettingTile(
+                    context,
+                    title: context.l10n.recalculateStressIndex,
+                    subtitle: context.l10n.recalculateStressIndexDesc,
+                    leading: const SemanticIcon(
+                      icon: AppIcons.refresh,
+                      semanticLabel: 'Recalculate',
+                    ),
+                    onTap: () => _recalculateStressIndex(context, ref),
+                  ),
+
+                  const Divider(),
+
+                  // Reset Tutorials
+                  _buildSettingTile(
+                    context,
+                    title: context.l10n.resetTutorials,
+                    subtitle: context.l10n.resetTutorialsDesc,
+                    leading: const SemanticIcon(
+                      icon: AppIcons.school,
+                      semanticLabel: 'Reset tutorials',
+                    ),
+                    onTap: () => _showResetTutorialsDialog(context, ref),
+                  ),
+
+                  const SizedBox(height: 16),
+                ],
               ),
-            ),
-            const SizedBox(height: 16),
-
-            // Day Cutoff Hour
-            _buildSettingTile(
-              context,
-              title: context.l10n.settingsDayCutoffHour,
-              subtitle: context.l10n.settingsDayCutoffHourDesc(
-                ref.watch(userProfileProvider).value?.dayCutoffHour ?? 4,
-              ),
-              leading: const SemanticIcon(
-                icon: AppIcons.schedule,
-                semanticLabel: 'Schedule',
-              ),
-              onTap: () => _showDayCutoffDialog(context, ref),
-            ),
-
-            const Divider(),
-
-            // Effort Scale (RPE vs RIR)
-            _buildSettingTile(
-              context,
-              title: context.l10n.effortScale,
-              subtitle: config.effortScale == 'rpe'
-                  ? context.l10n.rpeScale
-                  : context.l10n.rirScale,
-              leading: const SemanticIcon(
-                icon: AppIcons.speed,
-                semanticLabel: 'Effort scale',
-              ),
-              onTap: () =>
-                  _showEffortScaleDialog(context, ref, config.effortScale),
-            ),
-
-            const Divider(),
-
-            // Recalculate Stress Index
-            _buildSettingTile(
-              context,
-              title: context.l10n.recalculateStressIndex,
-              subtitle: context.l10n.recalculateStressIndexDesc,
-              leading: const SemanticIcon(
-                icon: AppIcons.refresh,
-                semanticLabel: 'Recalculate',
-              ),
-              onTap: () => _recalculateStressIndex(context, ref),
-            ),
-
-            const Divider(),
-
-            // Reset Tutorials
-            _buildSettingTile(
-              context,
-              title: context.l10n.resetTutorials,
-              subtitle: context.l10n.resetTutorialsDesc,
-              leading: const SemanticIcon(
-                icon: AppIcons.school,
-                semanticLabel: 'Reset tutorials',
-              ),
-              onTap: () => _showResetTutorialsDialog(context, ref),
             ),
           ],
         ),
@@ -1333,90 +1222,77 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildAboutCreditsSection(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              children: [
-                SemanticIcon(
-                  icon: AppIcons.infoOutline,
-                  semanticLabel: context.l10n.aboutCredits,
-                  size: AppIconSize.medium,
-                  color: context.colors.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  context.l10n.aboutCredits,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Exercise Images Credit (ExerciseDB)
-            _buildSettingTile(
-              context,
-              title: context.l10n.exerciseImagesCredit,
-              subtitle: context.l10n.exerciseImagesCreditDesc,
-              leading: const SemanticIcon(
-                icon: AppIcons.workout,
-                semanticLabel: 'Exercise images',
-              ),
-              onTap: () => _showExerciseDbAttributionDialog(context),
-            ),
-
-            const Divider(),
-
-            // Privacy Policy
-            _buildSettingTile(
-              context,
-              title: context.l10n.privacyPolicy,
-              subtitle: context.l10n.privacyPolicyDesc,
-              leading: const SemanticIcon(
-                icon: AppIcons.shield,
-                semanticLabel: 'Privacy',
-              ),
-              onTap: () => LegalDocumentScreen.showPrivacyPolicy(context),
-            ),
-
-            const Divider(),
-
-            // Open Source Licenses
-            _buildSettingTile(
-              context,
-              title: context.l10n.openSourceLicenses,
-              subtitle: context.l10n.openSourceLicensesDesc,
-              leading: const SemanticIcon(
-                icon: AppIcons.code,
-                semanticLabel: 'Licenses',
-              ),
-              onTap: () => showLicensePage(
-                context: context,
-                applicationName: 'FitLog Pro',
-                applicationLegalese: context.l10n.madeWithLove,
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Made with love footer
-            Center(
-              child: Text(
-                context.l10n.madeWithLove,
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: context.colors.onSurfaceVariant,
-                ),
-              ),
-            ),
-          ],
-        ),
+  /// Ghost Mode customization options (shown when Ghost Mode is enabled)
+  Widget _buildGhostModeCustomization(
+    BuildContext context,
+    WidgetRef ref,
+    dynamic config,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16),
+      child: Column(
+        children: [
+          CheckboxListTile(
+            title: Text(context.l10n.ghostModeHideXP),
+            value: config.hideXPProgress,
+            onChanged: (value) {
+              ref.read(ghostModeProvider.notifier).updateConfigField(
+                    'hideXPProgress',
+                    value: value ?? true,
+                  );
+            },
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+          ),
+          CheckboxListTile(
+            title: Text(context.l10n.ghostModeHideTier),
+            value: config.hideTierBadge,
+            onChanged: (value) {
+              ref.read(ghostModeProvider.notifier).updateConfigField(
+                    'hideTierBadge',
+                    value: value ?? true,
+                  );
+            },
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+          ),
+          CheckboxListTile(
+            title: Text(context.l10n.ghostModeHideStreak),
+            value: config.hideStreak,
+            onChanged: (value) {
+              ref.read(ghostModeProvider.notifier).updateConfigField(
+                    'hideStreak',
+                    value: value ?? false,
+                  );
+            },
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+          ),
+          CheckboxListTile(
+            title: Text(context.l10n.ghostModeHideComparisons),
+            value: config.hideStrengthComparisons,
+            onChanged: (value) {
+              ref.read(ghostModeProvider.notifier).updateConfigField(
+                    'hideStrengthComparisons',
+                    value: value ?? true,
+                  );
+            },
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+          ),
+          CheckboxListTile(
+            title: Text(context.l10n.ghostModeHideAnimations),
+            value: config.hideXPAnimations,
+            onChanged: (value) {
+              ref.read(ghostModeProvider.notifier).updateConfigField(
+                    'hideXPAnimations',
+                    value: value ?? true,
+                  );
+            },
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+          ),
+        ],
       ),
     );
   }
@@ -1593,6 +1469,21 @@ class SettingsScreen extends ConsumerWidget {
       onChanged: onChanged,
       secondary: leading,
       contentPadding: EdgeInsets.zero,
+    );
+  }
+
+  /// Info tooltip for technical terms (RPE, RIR, Ghost Mode, etc.)
+  Widget _buildInfoTooltip(BuildContext context, String message) {
+    return Tooltip(
+      message: message,
+      triggerMode: TooltipTriggerMode.tap,
+      showDuration: const Duration(seconds: 5),
+      child: SemanticIcon(
+        icon: AppIcons.info,
+        semanticLabel: 'Info',
+        size: AppIconSize.small,
+        color: context.colors.onSurfaceVariant,
+      ),
     );
   }
 
@@ -1794,6 +1685,74 @@ class SettingsScreen extends ConsumerWidget {
         context.l10n.stressIndexRecalculatedSuccess(result.$2),
       );
     }
+  }
+
+  // Search
+  void _openSearch(
+    BuildContext context,
+    WidgetRef ref,
+    AppConfig config,
+    AppLocalizations l10n,
+  ) {
+    final items = [
+      SettingsSearchItem(
+        title: l10n.theme,
+        section: l10n.appearance,
+        keywords: ['dark', 'light', 'system', 'tema', 'scuro', 'chiaro'],
+        onTap: () => _showThemeDialog(context, ref, config.themeMode),
+      ),
+      SettingsSearchItem(
+        title: l10n.settingsSounds,
+        section: l10n.settingsWorkout,
+        keywords: ['audio', 'suoni', 'mute', 'volume'],
+        onTap: () {
+          ref
+              .read(appConfigProvider.notifier)
+              .setSoundEnabled(!config.soundEnabled);
+        },
+      ),
+      SettingsSearchItem(
+        title: l10n.language,
+        section: l10n.settingsUnitsLanguage,
+        keywords: ['italiano', 'english', 'lingua'],
+        onTap: () =>
+            _showLanguageDialog(context, ref, config.locale.languageCode),
+      ),
+      SettingsSearchItem(
+        title: l10n.settingsDefaultRestTime,
+        section: l10n.settingsWorkout,
+        keywords: ['timer', 'riposo', 'rest', 'pausa'],
+        onTap: () => _showRestTimeDialog(context, ref, config.defaultRestTime),
+      ),
+      SettingsSearchItem(
+        title: l10n.ghostModeTitle,
+        section: l10n.settingsAdvanced,
+        keywords: ['privacy', 'hide', 'nascondi', 'xp', 'tier'],
+        onTap: () {}, // Opens advanced section
+      ),
+      SettingsSearchItem(
+        title: l10n.exportData,
+        section: l10n.dataBackup,
+        keywords: ['gdpr', 'download', 'backup', 'csv', 'json'],
+        onTap: () => _showExportDataSheet(context),
+      ),
+      SettingsSearchItem(
+        title: l10n.settingsHealthAppSync,
+        section: l10n.dataBackup,
+        keywords: ['apple', 'health', 'connect', 'sync', 'sincronizza'],
+        onTap: () => context.pushNamed('health-sync-settings'),
+      ),
+    ];
+
+    showSearch(
+      context: context,
+      delegate: SettingsSearchDelegate(
+        items: items,
+        searchHint: l10n.settingsSearchHint,
+        emptySearchMessage: l10n.settingsSearchEmpty,
+        noResultsMessage: l10n.settingsSearchNoResults,
+      ),
+    );
   }
 
   // Dialog Methods

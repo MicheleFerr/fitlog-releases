@@ -30705,19 +30705,19 @@ abstract class AppLocalizations {
   /// Title for day cutoff hour setting
   ///
   /// In en, this message translates to:
-  /// **'Day Cutoff Hour'**
+  /// **'New day starts at'**
   String get settingsDayCutoffHour;
 
   /// Subtitle for day cutoff hour setting
   ///
   /// In en, this message translates to:
-  /// **'Workouts after {hour}:00 count as \'today\''**
+  /// **'Your fitness day resets at {hour}:00. Late workouts count toward previous day.'**
   String settingsDayCutoffHourDesc(int hour);
 
   /// Title for day cutoff hour dialog
   ///
   /// In en, this message translates to:
-  /// **'Day Cutoff Hour'**
+  /// **'New day starts at'**
   String get settingsDayCutoffHourDialog;
 
   /// Display value for selected hour
@@ -47737,6 +47737,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scientific Sources'**
   String get scientificSources;
+
+  /// Tooltip explaining RPE and RIR effort scales
+  ///
+  /// In en, this message translates to:
+  /// **'RPE (Rate of Perceived Exertion): How hard 1-10. RIR (Reps in Reserve): How many reps left before failure.'**
+  String get effortScaleTooltip;
+
+  /// Tooltip explaining Ghost Mode feature
+  ///
+  /// In en, this message translates to:
+  /// **'Hides competitive elements like XP, tiers, and comparisons for a distraction-free workout experience.'**
+  String get ghostModeTooltip;
+
+  /// Tooltip explaining Day Cutoff Hour feature
+  ///
+  /// In en, this message translates to:
+  /// **'When your \'fitness day\' resets. Late-night workouts (after midnight) can count toward the previous day.'**
+  String get dayCutoffTooltip;
+
+  /// Short label for keep screen awake toggle in quick settings
+  ///
+  /// In en, this message translates to:
+  /// **'Screen always on'**
+  String get keepScreenAwakeShort;
+
+  /// Short label for default rest time in quick settings
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Time'**
+  String get defaultRestTimeShort;
+
+  /// Title for rest time picker
+  ///
+  /// In en, this message translates to:
+  /// **'Select Rest Time'**
+  String get selectRestTime;
+
+  /// Hint for settings search field
+  ///
+  /// In en, this message translates to:
+  /// **'Search settings...'**
+  String get settingsSearchHint;
+
+  /// Message when search field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Type to search settings'**
+  String get settingsSearchEmpty;
+
+  /// Message when no search results found
+  ///
+  /// In en, this message translates to:
+  /// **'No settings found for'**
+  String get settingsSearchNoResults;
 }
 
 class _AppLocalizationsDelegate

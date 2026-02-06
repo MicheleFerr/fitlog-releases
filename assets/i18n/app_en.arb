@@ -20799,11 +20799,11 @@
   "settingsTextSize": "Text Size",
   "settingsTextSizePreview": "Sample Text ({size})",
   "settingsWorkoutEssentials": "Workout",
-  "settingsDayCutoffHour": "Day Cutoff Hour",
+  "settingsDayCutoffHour": "New day starts at",
   "@settingsDayCutoffHour": {
     "description": "Title for day cutoff hour setting"
   },
-  "settingsDayCutoffHourDesc": "Workouts after {hour}:00 count as 'today'",
+  "settingsDayCutoffHourDesc": "Your fitness day resets at {hour}:00. Late workouts count toward previous day.",
   "@settingsDayCutoffHourDesc": {
     "description": "Subtitle for day cutoff hour setting",
     "placeholders": {
@@ -20812,7 +20812,7 @@
       }
     }
   },
-  "settingsDayCutoffHourDialog": "Day Cutoff Hour",
+  "settingsDayCutoffHourDialog": "New day starts at",
   "@settingsDayCutoffHourDialog": {
     "description": "Title for day cutoff hour dialog"
   },
@@ -32693,5 +32693,41 @@
   "scientificSources": "Scientific Sources",
   "@scientificSources": {
     "description": "Title for AI Coach documents attribution screen"
+  },
+  "effortScaleTooltip": "RPE (Rate of Perceived Exertion): How hard 1-10. RIR (Reps in Reserve): How many reps left before failure.",
+  "@effortScaleTooltip": {
+    "description": "Tooltip explaining RPE and RIR effort scales"
+  },
+  "ghostModeTooltip": "Hides competitive elements like XP, tiers, and comparisons for a distraction-free workout experience.",
+  "@ghostModeTooltip": {
+    "description": "Tooltip explaining Ghost Mode feature"
+  },
+  "dayCutoffTooltip": "When your 'fitness day' resets. Late-night workouts (after midnight) can count toward the previous day.",
+  "@dayCutoffTooltip": {
+    "description": "Tooltip explaining Day Cutoff Hour feature"
+  },
+  "keepScreenAwakeShort": "Screen always on",
+  "@keepScreenAwakeShort": {
+    "description": "Short label for keep screen awake toggle in quick settings"
+  },
+  "defaultRestTimeShort": "Rest Time",
+  "@defaultRestTimeShort": {
+    "description": "Short label for default rest time in quick settings"
+  },
+  "selectRestTime": "Select Rest Time",
+  "@selectRestTime": {
+    "description": "Title for rest time picker"
+  },
+  "settingsSearchHint": "Search settings...",
+  "@settingsSearchHint": {
+    "description": "Hint for settings search field"
+  },
+  "settingsSearchEmpty": "Type to search settings",
+  "@settingsSearchEmpty": {
+    "description": "Message when search field is empty"
+  },
+  "settingsSearchNoResults": "No settings found for",
+  "@settingsSearchNoResults": {
+    "description": "Message when no search results found"
   }
 }

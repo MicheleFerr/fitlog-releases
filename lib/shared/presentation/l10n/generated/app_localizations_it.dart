@@ -17336,15 +17336,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settingsWorkoutEssentials => 'Allenamento';
 
   @override
-  String get settingsDayCutoffHour => 'Orario Limite Giornata';
+  String get settingsDayCutoffHour => 'Il nuovo giorno inizia alle';
 
   @override
   String settingsDayCutoffHourDesc(int hour) {
-    return 'Allenamenti dopo le $hour:00 contano come \'oggi\'';
+    return 'Il tuo giorno fitness si azzera alle $hour:00. Gli allenamenti notturni contano per il giorno prima.';
   }
 
   @override
-  String get settingsDayCutoffHourDialog => 'Orario Limite Giornata';
+  String get settingsDayCutoffHourDialog => 'Il nuovo giorno inizia alle';
 
   @override
   String settingsDayCutoffHourValue(int hour) {
@@ -26927,4 +26927,34 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get scientificSources => 'Fonti Scientifiche';
+
+  @override
+  String get effortScaleTooltip =>
+      'RPE (Rate of Perceived Exertion): Quanto è duro 1-10. RIR (Reps in Reserve): Quante ripetizioni restano prima del cedimento.';
+
+  @override
+  String get ghostModeTooltip =>
+      'Nasconde elementi competitivi come XP, tier e confronti per un\'esperienza di allenamento senza distrazioni.';
+
+  @override
+  String get dayCutoffTooltip =>
+      'Quando il tuo \'giorno fitness\' si resetta. Gli allenamenti notturni (dopo mezzanotte) possono contare per il giorno precedente.';
+
+  @override
+  String get keepScreenAwakeShort => 'Schermo sempre acceso';
+
+  @override
+  String get defaultRestTimeShort => 'Tempo Riposo';
+
+  @override
+  String get selectRestTime => 'Seleziona Tempo Riposo';
+
+  @override
+  String get settingsSearchHint => 'Cerca impostazioni...';
+
+  @override
+  String get settingsSearchEmpty => 'Digita per cercare';
+
+  @override
+  String get settingsSearchNoResults => 'Nessuna impostazione trovata per';
 }

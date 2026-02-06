@@ -102,6 +102,44 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
               ),
             ),
 
+            const Divider(height: 16),
+
+            // Sound toggle
+            _SettingsToggleTile(
+              icon: config.soundEnabled ? AppIcons.volumeUp : AppIcons.volumeOff,
+              title: context.l10n.settingsSounds,
+              value: config.soundEnabled,
+              onChanged: (value) {
+                ref.read(appConfigProvider.notifier).setSoundEnabled(value);
+              },
+            ),
+
+            // Keep Screen Awake toggle
+            _SettingsToggleTile(
+              icon: config.keepScreenAwakeDuringWorkout
+                  ? AppIcons.screenLockPortrait
+                  : AppIcons.phoneAndroid,
+              title: context.l10n.keepScreenAwakeShort,
+              value: config.keepScreenAwakeDuringWorkout,
+              onChanged: (value) {
+                ref
+                    .read(appConfigProvider.notifier)
+                    .setKeepScreenAwakeDuringWorkout(value);
+              },
+            ),
+
+            // Rest Time
+            _SettingsTile(
+              icon: AppIcons.timer,
+              title: context.l10n.defaultRestTimeShort,
+              subtitle: '${config.defaultRestTime}s',
+              onTap: () => _showRestTimeQuickPicker(
+                context,
+                ref,
+                config.defaultRestTime,
+              ),
+            ),
+
             const Divider(height: 32),
 
             // All settings button
@@ -196,6 +234,24 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
       ),
     );
   }
+
+  void _showRestTimeQuickPicker(
+    BuildContext context,
+    WidgetRef ref,
+    int currentValue,
+  ) {
+    HapticFeedback.lightImpact();
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => _RestTimeQuickPicker(
+        currentValue: currentValue,
+        onSelect: (value) {
+          ref.read(appConfigProvider.notifier).setDefaultRestTime(value);
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
 }
 
 /// Individual settings tile
@@ -242,6 +298,43 @@ class _SettingsTile extends StatelessWidget {
       onTap: () {
         HapticFeedback.lightImpact();
         onTap();
+      },
+    );
+  }
+}
+
+/// Toggle settings tile with switch
+class _SettingsToggleTile extends StatelessWidget {
+  const _SettingsToggleTile({
+    required this.icon,
+    required this.title,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final IconData icon;
+  final String title;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return SwitchListTile(
+      secondary: Icon(
+        icon,
+        size: AppIconSize.medium,
+        color: context.colors.onSurfaceVariant,
+      ),
+      title: Text(
+        title,
+        style: context.textTheme.bodyLarge?.copyWith(
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      value: value,
+      onChanged: (val) {
+        HapticFeedback.lightImpact();
+        onChanged(val);
       },
     );
   }
@@ -321,6 +414,62 @@ class _LanguageOption extends StatelessWidget {
         HapticFeedback.lightImpact();
         onTap();
       },
+    );
+  }
+}
+
+/// Quick picker for rest time
+class _RestTimeQuickPicker extends StatelessWidget {
+  const _RestTimeQuickPicker({
+    required this.currentValue,
+    required this.onSelect,
+  });
+
+  final int currentValue;
+  final void Function(int) onSelect;
+
+  static const _presets = [30, 60, 90, 120, 180, 240, 300];
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 16),
+          Text(
+            context.l10n.selectRestTime,
+            style: context.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.center,
+              children: _presets.map((seconds) {
+                final isSelected = seconds == currentValue;
+                final label = seconds >= 60
+                    ? '${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}'
+                    : '${seconds}s';
+
+                return ChoiceChip(
+                  label: Text(label),
+                  selected: isSelected,
+                  onSelected: (_) {
+                    HapticFeedback.lightImpact();
+                    onSelect(seconds);
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 24),
+        ],
+      ),
     );
   }
 }

@@ -9035,9 +9035,9 @@
   "settingsTextSize": "Dimensione Testo",
   "settingsTextSizePreview": "Testo di esempio ({size})",
   "settingsWorkoutEssentials": "Allenamento",
-  "settingsDayCutoffHour": "Orario Limite Giornata",
-  "settingsDayCutoffHourDesc": "Allenamenti dopo le {hour}:00 contano come 'oggi'",
-  "settingsDayCutoffHourDialog": "Orario Limite Giornata",
+  "settingsDayCutoffHour": "Il nuovo giorno inizia alle",
+  "settingsDayCutoffHourDesc": "Il tuo giorno fitness si azzera alle {hour}:00. Gli allenamenti notturni contano per il giorno prima.",
+  "settingsDayCutoffHourDialog": "Il nuovo giorno inizia alle",
   "settingsDayCutoffHourValue": "{hour}:00",
   "settingsDayCutoffHourHint": "Gli allenamenti completati dopo quest'orario conteranno come 'oggi'. Utile per lavoratori a turni o sessioni notturne.",
   "settingsDayCutoffHourUpdated": "Orario limite aggiornato alle {hour}:00",
@@ -20141,5 +20141,41 @@
   "scientificSources": "Fonti Scientifiche",
   "@scientificSources": {
     "description": "Title for AI Coach documents attribution screen"
+  },
+  "effortScaleTooltip": "RPE (Rate of Perceived Exertion): Quanto è duro 1-10. RIR (Reps in Reserve): Quante ripetizioni restano prima del cedimento.",
+  "@effortScaleTooltip": {
+    "description": "Tooltip explaining RPE and RIR effort scales"
+  },
+  "ghostModeTooltip": "Nasconde elementi competitivi come XP, tier e confronti per un'esperienza di allenamento senza distrazioni.",
+  "@ghostModeTooltip": {
+    "description": "Tooltip explaining Ghost Mode feature"
+  },
+  "dayCutoffTooltip": "Quando il tuo 'giorno fitness' si resetta. Gli allenamenti notturni (dopo mezzanotte) possono contare per il giorno precedente.",
+  "@dayCutoffTooltip": {
+    "description": "Tooltip explaining Day Cutoff Hour feature"
+  },
+  "keepScreenAwakeShort": "Schermo sempre acceso",
+  "@keepScreenAwakeShort": {
+    "description": "Short label for keep screen awake toggle in quick settings"
+  },
+  "defaultRestTimeShort": "Tempo Riposo",
+  "@defaultRestTimeShort": {
+    "description": "Short label for default rest time in quick settings"
+  },
+  "selectRestTime": "Seleziona Tempo Riposo",
+  "@selectRestTime": {
+    "description": "Title for rest time picker"
+  },
+  "settingsSearchHint": "Cerca impostazioni...",
+  "@settingsSearchHint": {
+    "description": "Hint for settings search field"
+  },
+  "settingsSearchEmpty": "Digita per cercare",
+  "@settingsSearchEmpty": {
+    "description": "Message when search field is empty"
+  },
+  "settingsSearchNoResults": "Nessuna impostazione trovata per",
+  "@settingsSearchNoResults": {
+    "description": "Message when no search results found"
   }
 }

@@ -17166,15 +17166,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsWorkoutEssentials => 'Workout';
 
   @override
-  String get settingsDayCutoffHour => 'Day Cutoff Hour';
+  String get settingsDayCutoffHour => 'New day starts at';
 
   @override
   String settingsDayCutoffHourDesc(int hour) {
-    return 'Workouts after $hour:00 count as \'today\'';
+    return 'Your fitness day resets at $hour:00. Late workouts count toward previous day.';
   }
 
   @override
-  String get settingsDayCutoffHourDialog => 'Day Cutoff Hour';
+  String get settingsDayCutoffHourDialog => 'New day starts at';
 
   @override
   String settingsDayCutoffHourValue(int hour) {
@@ -26671,4 +26671,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scientificSources => 'Scientific Sources';
+
+  @override
+  String get effortScaleTooltip =>
+      'RPE (Rate of Perceived Exertion): How hard 1-10. RIR (Reps in Reserve): How many reps left before failure.';
+
+  @override
+  String get ghostModeTooltip =>
+      'Hides competitive elements like XP, tiers, and comparisons for a distraction-free workout experience.';
+
+  @override
+  String get dayCutoffTooltip =>
+      'When your \'fitness day\' resets. Late-night workouts (after midnight) can count toward the previous day.';
+
+  @override
+  String get keepScreenAwakeShort => 'Screen always on';
+
+  @override
+  String get defaultRestTimeShort => 'Rest Time';
+
+  @override
+  String get selectRestTime => 'Select Rest Time';
+
+  @override
+  String get settingsSearchHint => 'Search settings...';
+
+  @override
+  String get settingsSearchEmpty => 'Type to search settings';
+
+  @override
+  String get settingsSearchNoResults => 'No settings found for';
 }
