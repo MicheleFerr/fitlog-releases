@@ -2231,6 +2231,11 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           'cooldownComplete',
           fallback: 'Cooldown Complete',
         );
+      case TimerType.interExercise:
+        return _getLocalizedString(
+          'restBetweenExercisesComplete',
+          fallback: 'Ready for Next Exercise',
+        );
     }
   }
 
