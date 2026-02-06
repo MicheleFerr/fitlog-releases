@@ -3276,7 +3276,42 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         totalSets: currentSuperset.supersetSets.length,
       );
     } else {
-      debugPrint('⌚🔥 [FLUTTER] 🏁 Superset completed! No more rounds.');
+      debugPrint('⌚🔥 [FLUTTER] 🏁 Superset completed! Checking for next exercise...');
+
+      // Start inter-exercise timer if there's a next exercise
+      final nextExercise = _getNextIncompleteExercise(state!, currentSuperset);
+      if (nextExercise != null) {
+        final interExerciseRest = _resolveInterExerciseRest(currentSuperset);
+        final nextExerciseTotalSets = _getExerciseTotalSets(nextExercise);
+
+        debugPrint(
+          '⏰ [TIMER] 🏋️ Starting INTER-EXERCISE timer after superset: ${interExerciseRest}s before ${nextExercise.name}',
+        );
+
+        ref
+            .read(unifiedTimerProvider.notifier)
+            .startTimer(
+              durationSeconds: interExerciseRest,
+              type: TimerType.interExercise,
+              exerciseName: nextExercise.name,
+              currentSet: 1,
+              totalSets: nextExerciseTotalSets,
+              exerciseId: nextExercise.id,
+            );
+
+        // 📱 iOS: Transition Live Activity
+        if (Platform.isIOS) {
+          ref
+              .read(workoutSessionLAProvider.notifier)
+              .transitionToRest(
+                restDurationSeconds: interExerciseRest,
+                nextExercise: nextExercise,
+                nextSetIndex: 1,
+              );
+        }
+      } else {
+        debugPrint('⌚🔥 [FLUTTER] 🏁 Last exercise completed - workout finished!');
+      }
     }
   }
 
@@ -3398,15 +3433,44 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     _updateLiveActivityIfActive();
 
     // Dropset stages are typically done without rest between them
-    // (the "drop" is immediate), but we can start rest after the LAST stage
-    if (isLastStage && currentDropset.restTime != null) {
-      final timerActions = ref.read(tier1TimerActionsProvider);
-      timerActions.startExerciseRest(
-        seconds: currentDropset.restTime!,
-        exerciseName: currentDropset.name,
-        currentSet: 1,
-        totalSets: 1,
-      );
+    // (the "drop" is immediate), but we check for inter-exercise timer after LAST stage
+    if (isLastStage) {
+      debugPrint('⌚🔥 [FLUTTER] 🏁 Dropset completed! Checking for next exercise...');
+
+      // Start inter-exercise timer if there's a next exercise
+      final nextExercise = _getNextIncompleteExercise(state!, currentDropset);
+      if (nextExercise != null) {
+        final interExerciseRest = _resolveInterExerciseRest(currentDropset);
+        final nextExerciseTotalSets = _getExerciseTotalSets(nextExercise);
+
+        debugPrint(
+          '⏰ [TIMER] 🏋️ Starting INTER-EXERCISE timer after dropset: ${interExerciseRest}s before ${nextExercise.name}',
+        );
+
+        ref
+            .read(unifiedTimerProvider.notifier)
+            .startTimer(
+              durationSeconds: interExerciseRest,
+              type: TimerType.interExercise,
+              exerciseName: nextExercise.name,
+              currentSet: 1,
+              totalSets: nextExerciseTotalSets,
+              exerciseId: nextExercise.id,
+            );
+
+        // 📱 iOS: Transition Live Activity
+        if (Platform.isIOS) {
+          ref
+              .read(workoutSessionLAProvider.notifier)
+              .transitionToRest(
+                restDurationSeconds: interExerciseRest,
+                nextExercise: nextExercise,
+                nextSetIndex: 1,
+              );
+        }
+      } else {
+        debugPrint('⌚🔥 [FLUTTER] 🏁 Last exercise completed - workout finished!');
+      }
     }
   }
 
@@ -3741,15 +3805,41 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     // 📱 Sync Live Activity (iOS)
     _updateLiveActivityIfActive();
 
-    // Start rest timer after completing rest-pause
-    if (currentRestPause.restTime != null) {
-      final timerActions = ref.read(tier1TimerActionsProvider);
-      timerActions.startExerciseRest(
-        seconds: currentRestPause.restTime!,
-        exerciseName: currentRestPause.name,
-        currentSet: 1,
-        totalSets: 1,
+    // Start inter-exercise timer if there's a next exercise
+    debugPrint('⌚🔥 [FLUTTER] 🏁 Rest-Pause completed! Checking for next exercise...');
+
+    final nextExercise = _getNextIncompleteExercise(state!, currentRestPause);
+    if (nextExercise != null) {
+      final interExerciseRest = _resolveInterExerciseRest(currentRestPause);
+      final nextExerciseTotalSets = _getExerciseTotalSets(nextExercise);
+
+      debugPrint(
+        '⏰ [TIMER] 🏋️ Starting INTER-EXERCISE timer after rest-pause: ${interExerciseRest}s before ${nextExercise.name}',
       );
+
+      ref
+          .read(unifiedTimerProvider.notifier)
+          .startTimer(
+            durationSeconds: interExerciseRest,
+            type: TimerType.interExercise,
+            exerciseName: nextExercise.name,
+            currentSet: 1,
+            totalSets: nextExerciseTotalSets,
+            exerciseId: nextExercise.id,
+          );
+
+      // 📱 iOS: Transition Live Activity
+      if (Platform.isIOS) {
+        ref
+            .read(workoutSessionLAProvider.notifier)
+            .transitionToRest(
+              restDurationSeconds: interExerciseRest,
+              nextExercise: nextExercise,
+              nextSetIndex: 1,
+            );
+      }
+    } else {
+      debugPrint('⌚🔥 [FLUTTER] 🏁 Last exercise completed - workout finished!');
     }
   }
 
