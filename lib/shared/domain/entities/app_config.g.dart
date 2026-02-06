@@ -77,13 +77,16 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
           ? true
           : fields[51] as bool,
       interfaceSize: fields[52] as InterfaceSize?,
+      defaultRestBetweenExercises: fields[53] == null
+          ? 90
+          : (fields[53] as num).toInt(),
     );
   }
 
   @override
   void write(BinaryWriter writer, AppConfig obj) {
     writer
-      ..writeByte(52)
+      ..writeByte(53)
       ..writeByte(0)
       ..write(obj.languageCode)
       ..writeByte(1)
@@ -187,7 +190,9 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       ..writeByte(51)
       ..write(obj.keepScreenAwakeDuringWorkout)
       ..writeByte(52)
-      ..write(obj.interfaceSize);
+      ..write(obj.interfaceSize)
+      ..writeByte(53)
+      ..write(obj.defaultRestBetweenExercises);
   }
 
   @override

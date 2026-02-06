@@ -61,6 +61,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.simpleMode = false, // Simple mode for elderly/accessibility users (P2-2)
     this.keepScreenAwakeDuringWorkout = true, // Keep screen on during workout by default
     this.interfaceSize, // Unified interface size (font + layout), null = use fontSize for backward compat
+    this.defaultRestBetweenExercises = 90, // Default rest between exercises (inter-exercise timer)
   });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) {
@@ -107,6 +108,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       simpleMode: json['simpleMode'] ?? false,
       keepScreenAwakeDuringWorkout: json['keepScreenAwakeDuringWorkout'] ?? true,
       interfaceSize: interfaceSize,
+      defaultRestBetweenExercises: json['defaultRestBetweenExercises'] ?? 90,
     );
   }
   @HiveField(0)
@@ -271,6 +273,9 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
   @HiveField(52)
   final InterfaceSize? interfaceSize; // Unified interface size control (font + layout)
 
+  @HiveField(53)
+  final int defaultRestBetweenExercises; // Default rest between exercises in seconds
+
   Locale get locale => Locale(languageCode, countryCode);
 
   AppConfig copyWith({
@@ -326,6 +331,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     bool? simpleMode,
     bool? keepScreenAwakeDuringWorkout,
     InterfaceSize? interfaceSize,
+    int? defaultRestBetweenExercises,
   }) {
     return AppConfig(
       languageCode: languageCode ?? this.languageCode,
@@ -380,6 +386,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       simpleMode: simpleMode ?? this.simpleMode,
       keepScreenAwakeDuringWorkout: keepScreenAwakeDuringWorkout ?? this.keepScreenAwakeDuringWorkout,
       interfaceSize: interfaceSize ?? this.interfaceSize,
+      defaultRestBetweenExercises: defaultRestBetweenExercises ?? this.defaultRestBetweenExercises,
     );
   }
 
@@ -412,6 +419,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       'simpleMode': simpleMode,
       'keepScreenAwakeDuringWorkout': keepScreenAwakeDuringWorkout,
       'interfaceSize': interfaceSize?.toJson(),
+      'defaultRestBetweenExercises': defaultRestBetweenExercises,
     };
   }
 
