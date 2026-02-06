@@ -39,4 +39,35 @@ extension ColorSchemeExtensions on ColorScheme {
 
   /// onSurface with 26% opacity
   Color get onSurface26 => onSurface.withValues(alpha: 0.26);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // EXERCISE CARD SEMANTIC COLORS
+  // Coerenza visiva tra Single, Superset, Dropset, RestPause
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Colore per set/stage/round completato (tutti i tipi esercizio)
+  /// Usa success per indicare completamento positivo
+  Color get exerciseCompleted => success;
+
+  /// Container color per elementi completati
+  Color get exerciseCompletedContainer => success.withValues(alpha: 0.1);
+
+  /// Colore per set/stage/round attivo (in corso)
+  /// Usa tertiary per esercizi speciali (superset, dropset, rest-pause)
+  Color get exerciseActive => tertiary;
+
+  /// Container color per elementi attivi
+  Color get exerciseActiveContainer => tertiary.withValues(alpha: 0.15);
+
+  /// Colore per set/stage/round pending (non ancora iniziato)
+  Color get exercisePending => onSurfaceVariant;
+
+  /// Container color per elementi pending
+  Color get exercisePendingContainer => surfaceContainerHighest;
+
+  /// Colore per progress parziale (alcuni completati, non tutti)
+  Color get exerciseInProgress => warning;
+
+  /// Container per progress parziale
+  Color get exerciseInProgressContainer => warning.withValues(alpha: 0.1);
 }

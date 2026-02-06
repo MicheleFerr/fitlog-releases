@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_sel
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_dropset_stage_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_rest_pause_set_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_expansion_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_weight_prefill_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_display_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
@@ -1478,29 +1479,47 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            if (hasCompletedStages) ...[
+            const SizedBox(width: 4),
+            // Info button for dropset explanation (helps beginners like Marco)
+            GestureDetector(
+              onTap: () => _showDropsetInfoDialog(context),
+              child: SemanticIcon(
+                icon: AppIcons.infoOutline,
+                semanticLabel: context.l10n.dropsetInfoTitle,
+                size: AppIconSize.tiny,
+                color: context.colors.primary,
+              ),
+            ),
+            // ✅ COERENZA: Mostra sempre il progress badge (come Single Exercise)
+            // Usa semantic colors da ColorSchemeExtensions per coerenza
+            if (stages.isNotEmpty) ...[
               const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: allCompleted
-                      ? context.colors.success.withValues(alpha: 0.1)
-                      : context.colors.warning.withValues(alpha: 0.1),
+                      ? context.colors.exerciseCompletedContainer
+                      : hasCompletedStages
+                          ? context.colors.exerciseInProgressContainer
+                          : context.colors.exercisePendingContainer,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   '${completedStages.length}/${stages.length}',
                   style: context.textTheme.labelSmall?.copyWith(
                     color: allCompleted
-                        ? context.colors.success
-                        : context.colors.warning,
+                        ? context.colors.exerciseCompleted
+                        : hasCompletedStages
+                            ? context.colors.exerciseInProgress
+                            : context.colors.exercisePending,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ],
             const Spacer(),
-            if (hasCompletedStages)
+            // ✅ COERENZA: Mostra sempre l'header colonne (come Single Exercise)
+            if (stages.isNotEmpty)
               Text(
                 'Weight × Reps',
                 style: context.textTheme.labelSmall?.copyWith(
@@ -1511,14 +1530,23 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         ),
         const SizedBox(height: 8),
 
-        // Show stages if any are completed
-        if (hasCompletedStages) ...[
+        // ✅ COERENZA: Mostra SEMPRE gli stages (come Single Exercise mostra sempre i sets)
+        // Questo permette a Marco (principiante) di vedere cosa aspettarsi PRIMA di eseguire
+        if (stages.isNotEmpty) ...[
           ...stages.asMap().entries.map((entry) {
             final index = entry.key;
             final stage = entry.value;
             return _buildDropSetStageRow(context, index, stage, stages);
           }),
           const SizedBox(height: 8),
+
+          // ✅ Task 3: Volume Summary with trend indicator
+          if (allCompleted)
+            _buildDropSetVolumeSummary(
+              context,
+              dropsetExercise,
+              completedStages,
+            ),
         ],
 
         // Execute/Re-run button
@@ -1628,6 +1656,77 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     );
   }
 
+  /// Show informational dialog explaining what a dropset is
+  /// Helps beginners (like Marco persona) understand the technique
+  void _showDropsetInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Row(
+          children: [
+            SemanticIcon(
+              icon: AppIcons.info,
+              semanticLabel: context.l10n.dropsetInfoTitle,
+              size: AppIconSize.small,
+              color: context.colors.primary,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                context.l10n.dropsetInfoTitle,
+                style: context.textTheme.titleMedium,
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              context.l10n.dropsetInfoDescription,
+              style: context.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: context.colors.primaryContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.lightbulbOutline,
+                    semanticLabel: 'Tip',
+                    size: AppIconSize.small,
+                    color: context.colors.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      context.l10n.dropsetInfoTip,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.onSurface,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(context.l10n.gotIt),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// Handle adding a new stage to a completed dropset
   Future<void> _onAddDropSetStage(
     BuildContext context,
@@ -1666,7 +1765,136 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     }
   }
 
-  /// Build a single dropset stage row
+  /// Build volume summary with trend indicator (Task 3)
+  /// Shows total volume and comparison with previous dropset if available
+  Widget _buildDropSetVolumeSummary(
+    BuildContext context,
+    DropSetExercise dropsetExercise,
+    List<DropSetStage> completedStages,
+  ) {
+    // Calculate total volume (weight × reps for each stage)
+    final totalVolume = completedStages.fold<double>(
+      0.0,
+      (sum, stage) => sum + (stage.weight * stage.effectiveReps),
+    );
+
+    // Get previous dropset volume from history (if available)
+    final previousVolume = ref.watch(
+      previousDropsetVolumeProvider(dropsetExercise.name),
+    );
+
+    return previousVolume.when(
+      data: (prevVol) {
+        // Calculate trend
+        final ({IconData icon, Color color, String label})? trend;
+        if (prevVol != null && prevVol > 0) {
+          final diff = totalVolume - prevVol;
+          final percentChange = (diff / prevVol * 100).abs();
+          if (diff > 0) {
+            trend = (
+              icon: AppIcons.trendUp,
+              color: context.colors.success,
+              label: '+${percentChange.toStringAsFixed(0)}%',
+            );
+          } else if (diff < 0) {
+            trend = (
+              icon: AppIcons.trendDown,
+              color: context.colors.error,
+              label: '-${percentChange.toStringAsFixed(0)}%',
+            );
+          } else {
+            trend = (
+              icon: AppIcons.horizontalRule,
+              color: context.colors.onSurfaceVariant,
+              label: '=',
+            );
+          }
+        } else {
+          trend = null;
+        }
+
+        return Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: context.colors.primaryContainer.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: context.colors.primary.withValues(alpha: 0.3),
+            ),
+          ),
+          child: Row(
+            children: [
+              // Volume icon
+              SemanticIcon(
+                icon: AppIcons.analytics,
+                semanticLabel: context.l10n.totalVolume,
+                size: AppIconSize.small,
+                color: context.colors.primary,
+              ),
+              const SizedBox(width: 8),
+              // Volume value
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.totalVolume,
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                    Text(
+                      '${totalVolume.toStringAsFixed(0)} kg',
+                      style: context.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: context.colors.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Trend indicator (if available)
+              if (trend != null) ...[
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: trend.color.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SemanticIcon(
+                        icon: trend.icon,
+                        semanticLabel: trend.label,
+                        size: AppIconSize.tiny,
+                        color: trend.color,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        trend.label,
+                        style: context.textTheme.labelMedium?.copyWith(
+                          color: trend.color,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+    );
+  }
+
+  /// Build a single dropset stage row with completion animation
   Widget _buildDropSetStageRow(
     BuildContext context,
     int index,
@@ -1686,7 +1914,10 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       }
     }
 
-    return Container(
+    // ✅ UX: AnimatedContainer for smooth transitions (Task 2)
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOutCubic,
       margin: const EdgeInsets.only(bottom: 6),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
@@ -1702,8 +1933,10 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       ),
       child: Row(
         children: [
-          // Stage number
-          Container(
+          // Stage number with animated checkmark
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOutCubic,
             width: 24,
             height: 24,
             decoration: BoxDecoration(
@@ -1714,11 +1947,21 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             ),
             child: Center(
               child: isCompleted
-                  ? SemanticIcon(
-                      icon: AppIcons.complete,
-                      semanticLabel: 'Completed',
-                      size: AppIconSize.tiny,
-                      color: context.colors.success,
+                  // ✅ Animated scale on checkmark for completion feedback
+                  ? TweenAnimationBuilder<double>(
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.elasticOut,
+                      tween: Tween(begin: 0.0, end: 1.0),
+                      builder: (context, scale, child) => Transform.scale(
+                        scale: scale,
+                        child: child,
+                      ),
+                      child: SemanticIcon(
+                        icon: AppIcons.complete,
+                        semanticLabel: 'Completed',
+                        size: AppIconSize.tiny,
+                        color: context.colors.success,
+                      ),
                     )
                   : Text(
                       '${index + 1}',
@@ -1798,7 +2041,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   ) {
     final sets = restPauseExercise.restPauseSets;
     final completedSets = sets.where((s) => s.isCompleted).toList();
-    final allCompleted = completedSets.isNotEmpty;
+    // Use isCompleted which checks if ALL sets are completed
+    final allCompleted = restPauseExercise.isCompleted;
     final hasCompletedSets = completedSets.isNotEmpty;
     final totalReps = completedSets.fold(0, (sum, s) => sum + s.effectiveReps);
 
@@ -1829,26 +2073,54 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                 ),
               ),
             ),
-            if (hasCompletedSets) ...[
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: context.colors.success.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  '$totalReps/${restPauseExercise.targetReps} reps',
-                  style: context.textTheme.labelSmall?.copyWith(
-                    color: context.colors.success,
-                    fontWeight: FontWeight.bold,
-                  ),
+            // ✅ COERENZA: Mostra SEMPRE il progress verso target (come Single Exercise)
+            // Questo permette a Marco (principiante) di vedere l'obiettivo PRIMA di eseguire
+            // Usa semantic colors da ColorSchemeExtensions per coerenza
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: totalReps >= restPauseExercise.targetReps
+                    ? context.colors.exerciseCompletedContainer
+                    : hasCompletedSets
+                        ? context.colors.exerciseInProgressContainer
+                        : context.colors.exercisePendingContainer,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                '$totalReps/${restPauseExercise.targetReps} reps',
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: totalReps >= restPauseExercise.targetReps
+                      ? context.colors.exerciseCompleted
+                      : hasCompletedSets
+                          ? context.colors.exerciseInProgress
+                          : context.colors.exercisePending,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ],
+            ),
           ],
         ),
         const SizedBox(height: 8),
+
+        // ✅ COERENZA: Mostra progress bar verso target (feedback visivo per Sofia)
+        // Usa semantic colors per coerenza con altri tipi esercizio
+        if (restPauseExercise.targetReps > 0) ...[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: (totalReps / restPauseExercise.targetReps).clamp(0.0, 1.0),
+              backgroundColor: context.colors.exercisePendingContainer,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                totalReps >= restPauseExercise.targetReps
+                    ? context.colors.exerciseCompleted
+                    : context.colors.exerciseActive,
+              ),
+              minHeight: 6,
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
 
         // Show sets if any are completed
         if (hasCompletedSets) ...[
@@ -2052,15 +2324,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
 
     if (newSet != null && mounted) {
       final updatedSets = [...sets, newSet];
-      final updatedExercise = RestPauseExercise(
-        id: restPauseExercise.id,
-        name: restPauseExercise.name,
-        category: restPauseExercise.category,
-        weight: restPauseExercise.weight,
-        targetReps: restPauseExercise.targetReps,
+      // Using copyWith() to preserve all fields (restAfterExercise, tut, advanced fields)
+      final updatedExercise = restPauseExercise.copyWith(
         restPauseSets: updatedSets,
-        notes: restPauseExercise.notes,
-        restTime: restPauseExercise.restTime,
       );
 
       widget.onExerciseUpdate(updatedExercise);
