@@ -39,6 +39,8 @@ import 'package:gymbro_flutter_new/shared/presentation/services/haptic_feedback_
 // ⏱️ Unified Timer for rest timer auto-start
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
+// 🏋️ TimerType enum for inter-exercise timer
+import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
 // 🔄 Firestore Batch Writer for optimized cloud sync
 import 'package:gymbro_flutter_new/shared/data/services/firestore_batch_writer.dart';
 // 📸 Snapshot Sync Service for differential cloud sync
@@ -4174,11 +4176,46 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
                 );
           }
         } else {
-          if (kDebugMode) {
-            debugLog(
-              LogCategory.workout,
-              '⏰ [AUTO-TIMER] Last set completed - no timer started',
+          // Last set of this exercise - check for inter-exercise timer
+          final nextExercise = _getNextIncompleteExercise(state!, targetExercise!);
+
+          if (nextExercise != null) {
+            // Start inter-exercise rest timer
+            final interExerciseRest = _resolveInterExerciseRest(targetExercise!);
+            final nextExerciseTotalSets = _getExerciseTotalSets(nextExercise);
+
+            debugPrint(
+              '⏰ [TIMER] 🏋️ Starting INTER-EXERCISE timer: ${interExerciseRest}s before ${nextExercise.name}',
             );
+
+            ref
+                .read(unifiedTimerProvider.notifier)
+                .startTimer(
+                  durationSeconds: interExerciseRest,
+                  type: TimerType.interExercise,
+                  exerciseName: nextExercise.name,
+                  currentSet: 1,
+                  totalSets: nextExerciseTotalSets,
+                  exerciseId: nextExercise.id,
+                );
+
+            // 📱 iOS 17+: Transition Live Activity to inter-exercise rest mode
+            if (Platform.isIOS) {
+              ref
+                  .read(workoutSessionLAProvider.notifier)
+                  .transitionToRest(
+                    restDurationSeconds: interExerciseRest,
+                    nextExercise: nextExercise,
+                    nextSetIndex: 1,
+                  );
+            }
+          } else {
+            if (kDebugMode) {
+              debugLog(
+                LogCategory.workout,
+                '⏰ [AUTO-TIMER] Last exercise completed - workout finished!',
+              );
+            }
           }
         }
       }
@@ -4590,6 +4627,52 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       case PRType.duration:
         return domain_pr.PRType.time; // Map duration → time
     }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // INTER-EXERCISE REST TIMER HELPERS
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /// Finds the next exercise with incomplete sets after the given exercise.
+  /// Returns null if current exercise is the last one or all following are complete.
+  Exercise? _getNextIncompleteExercise(Workout workout, Exercise current) {
+    final currentIndex = workout.exercises.indexWhere((e) => e.id == current.id);
+    if (currentIndex == -1) return null;
+
+    for (int i = currentIndex + 1; i < workout.exercises.length; i++) {
+      final exercise = workout.exercises[i];
+      if (!exercise.isCompleted) {
+        return exercise;
+      }
+    }
+    return null;
+  }
+
+  /// Resolves the rest time between exercises with priority:
+  /// 1. Exercise.restAfterExercise (if set)
+  /// 2. AppConfig.defaultRestBetweenExercises
+  /// 3. 90 seconds (hardcoded fallback)
+  int _resolveInterExerciseRest(Exercise exercise) {
+    // 1. Exercise-specific override
+    if (exercise.restAfterExercise != null) {
+      return exercise.restAfterExercise!;
+    }
+
+    // 2. Global default from config
+    final appConfig = ref.read(appConfigProvider);
+    return appConfig.defaultRestBetweenExercises;
+  }
+
+  /// Gets total sets count for any exercise type (polymorphic)
+  int _getExerciseTotalSets(Exercise exercise) {
+    if (exercise is SupersetExercise) {
+      return exercise.supersetSets.length;
+    } else if (exercise is DropSetExercise) {
+      return exercise.stages.length;
+    } else if (exercise is RestPauseExercise) {
+      return exercise.restPauseSets.length;
+    }
+    return exercise.sets.length;
   }
 
   // Note: Notifier doesn't have dispose() - use ref.onDispose() in build() instead
