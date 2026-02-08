@@ -33,15 +33,15 @@ class TimerStarted extends TutorialEvent {
 /// Triggered when workout screen is opened.
 /// Carries exerciseCount for conditional logic.
 class WorkoutOpened extends TutorialEvent {
-  final int exerciseCount;
   const WorkoutOpened({required this.exerciseCount});
+  final int exerciseCount;
 }
 
 /// Triggered when a workout is completed.
 /// Carries totalWorkouts for conditional logic (e.g., first workout).
 class WorkoutCompleted extends TutorialEvent {
-  final int totalWorkouts;
   const WorkoutCompleted({required this.totalWorkouts});
+  final int totalWorkouts;
 }
 
 // ============ EXERCISE EVENTS ============
@@ -49,8 +49,8 @@ class WorkoutCompleted extends TutorialEvent {
 /// Triggered when user long-presses on an exercise card.
 /// Shows: "Exercise management" tutorial (reorder, delete, etc.)
 class ExerciseLongPressed extends TutorialEvent {
-  final int exerciseIndex;
   const ExerciseLongPressed({required this.exerciseIndex});
+  final int exerciseIndex;
 }
 
 // ============ ANALYTICS EVENTS ============
@@ -74,9 +74,9 @@ class TemplateMenuOpened extends TutorialEvent {
 /// Triggered when user selects an advanced technique.
 /// Shows: "Advanced techniques" tutorial (superset, dropset, rest-pause)
 class AdvancedTechniqueSelected extends TutorialEvent {
+  const AdvancedTechniqueSelected({required this.technique});
   /// The technique type: 'superset', 'dropset', 'restpause'
   final String technique;
-  const AdvancedTechniqueSelected({required this.technique});
 }
 
 /// Triggered when user opens the superset builder.

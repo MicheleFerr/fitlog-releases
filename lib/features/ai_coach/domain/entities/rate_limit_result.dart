@@ -32,17 +32,6 @@ sealed class RateLimitResult with _$RateLimitResult {
     @Default(0) int waitSeconds,
   }) = _RateLimitResult;
 
-  const RateLimitResult._();
-
-  /// Whether the request is allowed
-  bool get isAllowed => status == RateLimitStatus.allowed;
-
-  /// Whether the request is throttled (warning)
-  bool get isThrottled => status == RateLimitStatus.throttled;
-
-  /// Whether the request is blocked
-  bool get isBlocked => status == RateLimitStatus.blocked;
-
   /// Factory for allowed request
   factory RateLimitResult.allowed() => const RateLimitResult(
         status: RateLimitStatus.allowed,
@@ -65,4 +54,15 @@ sealed class RateLimitResult with _$RateLimitResult {
         message: message,
         waitSeconds: waitSeconds,
       );
+
+  const RateLimitResult._();
+
+  /// Whether the request is allowed
+  bool get isAllowed => status == RateLimitStatus.allowed;
+
+  /// Whether the request is throttled (warning)
+  bool get isThrottled => status == RateLimitStatus.throttled;
+
+  /// Whether the request is blocked
+  bool get isBlocked => status == RateLimitStatus.blocked;
 }

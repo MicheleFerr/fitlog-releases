@@ -13,6 +13,11 @@ import 'package:timezone/timezone.dart' as tz;
 /// - Anti-spam: auto-disable after consecutive ignores
 /// - Recommended frequency: 4-5 weeks (Hevy research)
 class PhotoReminderNotificationService {
+
+  PhotoReminderNotificationService({
+    FlutterLocalNotificationsPlugin? notificationsPlugin,
+  }) : _notificationsPlugin =
+           notificationsPlugin ?? FlutterLocalNotificationsPlugin();
   final FlutterLocalNotificationsPlugin _notificationsPlugin;
 
   /// Notification channel ID for photo reminders
@@ -57,11 +62,6 @@ class PhotoReminderNotificationService {
           'Numbers tell one story, photos tell another. Which story are you writing today?',
     },
   ];
-
-  PhotoReminderNotificationService({
-    FlutterLocalNotificationsPlugin? notificationsPlugin,
-  }) : _notificationsPlugin =
-           notificationsPlugin ?? FlutterLocalNotificationsPlugin();
 
   /// Initialize the notification channel (call on app startup)
   Future<void> initialize() async {
@@ -180,8 +180,8 @@ class PhotoReminderNotificationService {
         message['title']!,
         message['body']!,
         tzScheduledDateTime,
-        NotificationDetails(
-          android: const AndroidNotificationDetails(
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
             channelId,
             channelName,
             channelDescription: channelDescription,
@@ -189,7 +189,7 @@ class PhotoReminderNotificationService {
             priority: Priority.defaultPriority,
             icon: '@mipmap/ic_launcher',
           ),
-          iOS: const DarwinNotificationDetails(
+          iOS: DarwinNotificationDetails(
             presentAlert: true,
             presentBadge: true,
             presentSound: true,

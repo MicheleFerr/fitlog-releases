@@ -43,7 +43,9 @@ abstract class SupersetTemplate with _$SupersetTemplate {
     required int rounds,
     required String repsRange,
     required int restAfterRound,
-    required int restBetween,
+
+    /// Rest time after completing the full superset (before next exercise)
+    required int restAfterSuperset,
     required TemplateDifficulty difficulty,
     required int estimatedTimeMinutes,
     required String scientificBasis,

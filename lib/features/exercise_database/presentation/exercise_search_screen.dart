@@ -80,7 +80,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   final GlobalKey _addButtonKey = GlobalKey();
 
   String _searchQuery = '';
-  List<String> _selectedFocus = [];
+  final List<String> _selectedFocus = [];
   final List<String> _selectedMuscleGroups = [];
   List<String> _selectedEquipment = [];
   String? _selectedType;
@@ -1980,10 +1980,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               button: true,
               child: TextButton(
                 onPressed: () => Navigator.pop(sheetContext),
-                child: Text(l10n.cancel),
                 style: TextButton.styleFrom(
                   minimumSize: const Size(double.infinity, 40),
                 ),
+                child: Text(l10n.cancel),
               ),
             ),
           ],
@@ -2139,7 +2139,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         name: template.name,
         exercises: selectedExercises,
         rounds: rounds,
-        restBetweenExercises: template.restBetween,
+        restBetweenExercises: template.restAfterSuperset,
         restAfterRound: template.restAfterRound,
       );
 
@@ -2262,10 +2262,6 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 
 /// Filter Bottom Sheet Widget - Solo attrezzatura
 class _FilterBottomSheet extends StatefulWidget {
-  final List<Exercise> exercises;
-  final List<String> selectedEquipment;
-  final Function(List<String> equipment) onApply;
-  final VoidCallback onReset;
 
   const _FilterBottomSheet({
     required this.exercises,
@@ -2273,6 +2269,10 @@ class _FilterBottomSheet extends StatefulWidget {
     required this.onApply,
     required this.onReset,
   });
+  final List<Exercise> exercises;
+  final List<String> selectedEquipment;
+  final Function(List<String> equipment) onApply;
+  final VoidCallback onReset;
 
   @override
   State<_FilterBottomSheet> createState() => _FilterBottomSheetState();
@@ -2299,7 +2299,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
             .toList()
           ..sort();
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

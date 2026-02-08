@@ -525,8 +525,9 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
   bool _isStateValid() {
     // Check consistency rules
     if (state.isCompleted && !state.hasSeenGlobalOnboarding) return false;
-    if (state.hasSeenGlobalOnboarding && state.completedSteps.isEmpty)
+    if (state.hasSeenGlobalOnboarding && state.completedSteps.isEmpty) {
       return false;
+    }
     if (state.currentStep >= OnboardingState.totalSteps) return false;
     if (state.currentStep < 0) return false;
     return true;

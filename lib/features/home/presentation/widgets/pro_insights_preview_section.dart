@@ -75,7 +75,7 @@ class ProInsightsPreviewSection extends ConsumerWidget {
                 button: true,
                 child: GestureDetector(
                   onTap: () => _navigateToProAnalytics(context),
-                  child: Container(
+                  child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: colorScheme.surfaceContainerLow,
                     borderRadius: AppBorderRadius.lgRadius,

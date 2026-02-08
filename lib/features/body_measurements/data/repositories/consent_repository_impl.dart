@@ -65,6 +65,9 @@ import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 class ConsentRepositoryImpl
     with FirebaseErrorMapperMixin
     implements ConsentRepository {
+
+  ConsentRepositoryImpl(this._firestore, {Uuid? uuid})
+    : _uuid = uuid ?? const Uuid();
   /// Collection name in Firestore
   static const String _collectionName = 'userConsents';
 
@@ -75,9 +78,6 @@ class ConsentRepositoryImpl
 
   final FirebaseFirestore _firestore;
   final Uuid _uuid;
-
-  ConsentRepositoryImpl(this._firestore, {Uuid? uuid})
-    : _uuid = uuid ?? const Uuid();
 
   /// Get reference to user's consent document
   DocumentReference<Map<String, dynamic>> _getConsentDoc(String userId) {

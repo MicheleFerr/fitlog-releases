@@ -166,7 +166,7 @@ class AnalyticsMigrationService {
             SecureLogger.debug(
               'Sample workout structure',
               data: {
-                'keys': workoutData.keys.join(", "),
+                'keys': workoutData.keys.join(', '),
                 'exercisesType':
                     workoutData['exercises']?.runtimeType.toString() ?? 'null',
                 'exerciseCount': workoutData['exercises'] is List
@@ -478,7 +478,7 @@ class AnalyticsMigrationService {
         'Writing exercises to Firestore',
         data: {
           'exerciseCount': exerciseSessionsMap.length,
-          'exercises': exerciseSessionsMap.keys.join(", "),
+          'exercises': exerciseSessionsMap.keys.join(', '),
         },
       );
 

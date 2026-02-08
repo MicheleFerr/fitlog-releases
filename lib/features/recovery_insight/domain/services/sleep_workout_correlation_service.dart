@@ -135,8 +135,9 @@ class SleepWorkoutCorrelationService {
 
       // Find previous night's sleep
       final workoutDate = workout.completedAt;
-      if (workoutDate == null)
+      if (workoutDate == null) {
         continue; // Skip workouts without completion date
+      }
       final previousNight = _findPreviousNightSleep(sleepHistory, workoutDate);
 
       if (previousNight != null) {

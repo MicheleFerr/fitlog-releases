@@ -36,7 +36,6 @@ extension ScheduleStatusExtension on ScheduleStatus {
 /// Represents a workout scheduled for a specific date
 @freezed
 abstract class ScheduledWorkout with _$ScheduledWorkout {
-  const ScheduledWorkout._();
 
   const factory ScheduledWorkout({
     /// Unique identifier
@@ -69,6 +68,31 @@ abstract class ScheduledWorkout with _$ScheduledWorkout {
     /// ID of the notification scheduled for this workout (for cancellation)
     String? notificationId,
   }) = _ScheduledWorkout;
+
+  /// Create a new ScheduledWorkout with current date/time as createdAt
+  factory ScheduledWorkout.create({
+    required String id,
+    required String templateId,
+    required String templateName,
+    required DateTime scheduledDate,
+    required TimeOfDay reminderTime,
+  }) {
+    return ScheduledWorkout(
+      id: id,
+      templateId: templateId,
+      templateName: templateName,
+      scheduledDate: DateTime(
+        scheduledDate.year,
+        scheduledDate.month,
+        scheduledDate.day,
+      ),
+      reminderHour: reminderTime.hour,
+      reminderMinute: reminderTime.minute,
+      status: ScheduleStatus.pending,
+      createdAt: DateTime.now(),
+    );
+  }
+  const ScheduledWorkout._();
 
   factory ScheduledWorkout.fromJson(Map<String, dynamic> json) =>
       _$ScheduledWorkoutFromJson(json);
@@ -119,29 +143,5 @@ abstract class ScheduledWorkout with _$ScheduledWorkout {
     final hour = reminderHour.toString().padLeft(2, '0');
     final minute = reminderMinute.toString().padLeft(2, '0');
     return '$hour:$minute';
-  }
-
-  /// Create a new ScheduledWorkout with current date/time as createdAt
-  factory ScheduledWorkout.create({
-    required String id,
-    required String templateId,
-    required String templateName,
-    required DateTime scheduledDate,
-    required TimeOfDay reminderTime,
-  }) {
-    return ScheduledWorkout(
-      id: id,
-      templateId: templateId,
-      templateName: templateName,
-      scheduledDate: DateTime(
-        scheduledDate.year,
-        scheduledDate.month,
-        scheduledDate.day,
-      ),
-      reminderHour: reminderTime.hour,
-      reminderMinute: reminderTime.minute,
-      status: ScheduleStatus.pending,
-      createdAt: DateTime.now(),
-    );
   }
 }

@@ -14,7 +14,7 @@ void main() {
     }) {
       return PatternPrediction(
         missing: missing ??
-            WorkoutFingerprint(
+            const WorkoutFingerprint(
               id: 'legs1',
               templateName: 'Leg Day',
               dominantMuscles: ['quadriceps', 'hamstrings', 'glutes'],
@@ -47,7 +47,7 @@ void main() {
 
       test('should use fingerprint category when no template names', () {
         final prediction = createPrediction(
-          missing: WorkoutFingerprint(
+          missing: const WorkoutFingerprint(
             id: 'legs1',
             dominantMuscles: ['quadriceps', 'hamstrings', 'glutes'],
             category: WorkoutCategory.legs,

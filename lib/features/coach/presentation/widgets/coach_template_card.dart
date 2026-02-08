@@ -142,7 +142,7 @@ class CoachTemplateCard extends StatelessWidget {
                   if (onAssign != null)
                     TextButton.icon(
                       onPressed: onAssign,
-                      icon: Icon(AppIcons.personAdd, size: AppIconSize.small),
+                      icon: const Icon(AppIcons.personAdd, size: AppIconSize.small),
                       label: Text(context.l10n.assignTemplate),
                       style: TextButton.styleFrom(
                         visualDensity: VisualDensity.compact,

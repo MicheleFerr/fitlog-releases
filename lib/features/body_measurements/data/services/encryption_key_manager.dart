@@ -48,11 +48,6 @@ import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 /// }
 /// ```
 class EncryptionKeyManager {
-  final FlutterSecureStorage _secureStorage;
-  final Duration _rotationInterval;
-
-  /// Default rotation interval: 90 days (GDPR best practice)
-  static const Duration defaultRotationInterval = Duration(days: 90);
 
   EncryptionKeyManager({
     FlutterSecureStorage? secureStorage,
@@ -72,6 +67,11 @@ class EncryptionKeyManager {
              ),
            ),
        _rotationInterval = rotationInterval ?? defaultRotationInterval;
+  final FlutterSecureStorage _secureStorage;
+  final Duration _rotationInterval;
+
+  /// Default rotation interval: 90 days (GDPR best practice)
+  static const Duration defaultRotationInterval = Duration(days: 90);
 
   /// Generate new encryption key for user
   ///
@@ -527,6 +527,31 @@ class EncryptionKeyManager {
 /// Contains information ABOUT the key, not the key itself.
 /// Safe to store unencrypted, safe to log (no sensitive data).
 class EncryptionKeyData {
+
+  const EncryptionKeyData({
+    required this.userId,
+    required this.version,
+    required this.generatedAt,
+    required this.rotationScheduled,
+    required this.algorithm,
+    this.lastRotated,
+    this.keyDerivationFunction,
+  });
+
+  /// Create from JSON
+  factory EncryptionKeyData.fromJson(Map<String, dynamic> json) {
+    return EncryptionKeyData(
+      userId: json['userId'] as String,
+      version: json['version'] as int,
+      generatedAt: DateTime.parse(json['generatedAt'] as String),
+      lastRotated: json['lastRotated'] != null
+          ? DateTime.parse(json['lastRotated'] as String)
+          : null,
+      rotationScheduled: DateTime.parse(json['rotationScheduled'] as String),
+      algorithm: json['algorithm'] as String,
+      keyDerivationFunction: json['keyDerivationFunction'] as String?,
+    );
+  }
   /// User ID (Firebase Auth UID)
   final String userId;
 
@@ -547,16 +572,6 @@ class EncryptionKeyData {
 
   /// Key derivation function (if password-based)
   final String? keyDerivationFunction;
-
-  const EncryptionKeyData({
-    required this.userId,
-    required this.version,
-    required this.generatedAt,
-    required this.rotationScheduled,
-    required this.algorithm,
-    this.lastRotated,
-    this.keyDerivationFunction,
-  });
 
   /// Create copy with updated fields
   EncryptionKeyData copyWith({
@@ -591,21 +606,6 @@ class EncryptionKeyData {
       'algorithm': algorithm,
       'keyDerivationFunction': keyDerivationFunction,
     };
-  }
-
-  /// Create from JSON
-  factory EncryptionKeyData.fromJson(Map<String, dynamic> json) {
-    return EncryptionKeyData(
-      userId: json['userId'] as String,
-      version: json['version'] as int,
-      generatedAt: DateTime.parse(json['generatedAt'] as String),
-      lastRotated: json['lastRotated'] != null
-          ? DateTime.parse(json['lastRotated'] as String)
-          : null,
-      rotationScheduled: DateTime.parse(json['rotationScheduled'] as String),
-      algorithm: json['algorithm'] as String,
-      keyDerivationFunction: json['keyDerivationFunction'] as String?,
-    );
   }
 
   @override

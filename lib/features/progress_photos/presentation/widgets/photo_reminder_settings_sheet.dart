@@ -31,7 +31,7 @@ class _PhotoReminderSettingsSheetState
   Widget build(BuildContext context) {
     final reminderAsync = ref.watch(photoReminderProviderAsync);
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

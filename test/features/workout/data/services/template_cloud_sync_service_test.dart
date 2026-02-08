@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/template_cloud_sync_service.dart';
 
@@ -127,7 +126,7 @@ void main() {
 
     group('TemplateCloudSyncService', () {
       test('addPendingTemplate and getPendingSync work correctly', () async {
-        final templateId = 'test-template-1';
+        const templateId = 'test-template-1';
         final templateData = {
           'name': 'Test Template',
           'description': 'Description',
@@ -227,7 +226,7 @@ void main() {
 
     group('Persistence', () {
       test('pending templates in-memory list is managed correctly', () async {
-        final templateId = 'persist-test-1';
+        const templateId = 'persist-test-1';
         final templateData = {
           'name': 'Persist Test',
           'exercises': [

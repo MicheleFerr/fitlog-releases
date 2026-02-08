@@ -282,21 +282,21 @@ class ConsentAlreadyExistsFailure extends ConsentFailure {
 
 /// Invalid consent version (downgrade attempt)
 class InvalidVersionFailure extends ConsentFailure {
-  final int currentVersion;
-  final int attemptedVersion;
 
   const InvalidVersionFailure({
     required this.currentVersion,
     required this.attemptedVersion,
   });
+  final int currentVersion;
+  final int attemptedVersion;
 }
 
 /// Firebase operation failed (network, permissions, etc.)
 class FirebaseConsentFailure extends ConsentFailure {
-  final String message;
-  final String? code;
 
   const FirebaseConsentFailure({required this.message, this.code});
+  final String message;
+  final String? code;
 }
 
 /// Rate limit exceeded (too many consent changes)
@@ -304,11 +304,11 @@ class FirebaseConsentFailure extends ConsentFailure {
 /// **GDPR Article 32**: Rate limiting prevents abuse.
 /// Max 10 consent changes per day per user.
 class RateLimitExceededFailure extends ConsentFailure {
-  final int limitPerDay;
-  final int currentCount;
 
   const RateLimitExceededFailure({
     required this.limitPerDay,
     required this.currentCount,
   });
+  final int limitPerDay;
+  final int currentCount;
 }

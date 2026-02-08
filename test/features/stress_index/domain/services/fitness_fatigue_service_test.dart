@@ -2,6 +2,7 @@
 ///
 /// Tests the FFM implementation for recovery prediction.
 /// Validates exponential decay, muscle weighting, and edge cases.
+library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/muscle_stress_data.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/stress_index_result.dart';

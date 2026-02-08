@@ -82,11 +82,11 @@ class _AddRestPauseSetModalState extends State<AddRestPauseSetModal> {
 
     final lastReps = widget.completedSets.last.effectiveReps;
     // Suggest decreasing reps for rest-pause
-    return [
+    return {
       (lastReps * 0.75).round().clamp(1, lastReps),
       (lastReps * 0.5).round().clamp(1, lastReps),
       (lastReps * 0.25).round().clamp(1, lastReps - 1),
-    ].toSet().toList(); // Remove duplicates
+    }.toList(); // Remove duplicates
   }
 
   int get totalRepsCompleted =>
@@ -369,10 +369,10 @@ class _AddRestPauseSetModalState extends State<AddRestPauseSetModal> {
                                 style: context.textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   suffixText: 'reps',
-                                  border: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.symmetric(
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 16,
                                   ),
@@ -404,10 +404,10 @@ class _AddRestPauseSetModalState extends State<AddRestPauseSetModal> {
                                 style: context.textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   suffixText: 's',
-                                  border: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.symmetric(
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 16,
                                   ),

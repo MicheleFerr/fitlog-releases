@@ -20,6 +20,7 @@
 /// 4. Test edge cases (Premium + 0 XP, etc.)
 ///
 /// @see lib/core/auth/admin_status_provider.dart
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

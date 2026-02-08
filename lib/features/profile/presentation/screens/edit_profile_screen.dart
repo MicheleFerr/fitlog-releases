@@ -359,7 +359,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
             // Gender
             DropdownButtonFormField<String>(
-              value: _selectedGender,
+              initialValue: _selectedGender,
               decoration: InputDecoration(
                 labelText: context.l10n.gender,
                 prefixIcon: const Icon(AppIcons.person),

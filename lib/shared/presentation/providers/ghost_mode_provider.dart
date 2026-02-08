@@ -16,6 +16,15 @@ class GhostModeConfig {
     this.hideXPAnimations = true,
   });
 
+  factory GhostModeConfig.fromJson(Map<String, dynamic> json) => GhostModeConfig(
+        hideXPProgress: json['hideXPProgress'] as bool? ?? true,
+        hideTierBadge: json['hideTierBadge'] as bool? ?? true,
+        hideStreak: json['hideStreak'] as bool? ?? false,
+        hideCommunity: json['hideCommunity'] as bool? ?? true,
+        hideStrengthComparisons: json['hideStrengthComparisons'] as bool? ?? true,
+        hideXPAnimations: json['hideXPAnimations'] as bool? ?? true,
+      );
+
   /// Nasconde la barra XP e progressi livello nella Home
   final bool hideXPProgress;
 
@@ -61,15 +70,6 @@ class GhostModeConfig {
         'hideStrengthComparisons': hideStrengthComparisons,
         'hideXPAnimations': hideXPAnimations,
       };
-
-  factory GhostModeConfig.fromJson(Map<String, dynamic> json) => GhostModeConfig(
-        hideXPProgress: json['hideXPProgress'] as bool? ?? true,
-        hideTierBadge: json['hideTierBadge'] as bool? ?? true,
-        hideStreak: json['hideStreak'] as bool? ?? false,
-        hideCommunity: json['hideCommunity'] as bool? ?? true,
-        hideStrengthComparisons: json['hideStrengthComparisons'] as bool? ?? true,
-        hideXPAnimations: json['hideXPAnimations'] as bool? ?? true,
-      );
 }
 
 /// State for Ghost Mode

@@ -219,8 +219,9 @@ class DetectPersonalRecordsUseCase {
     final estimated1RM = OneRMCalculator.calculateAverage(weight, actualReps);
     final currentRecord = existingPRs[PRType.oneRM];
 
-    if (currentRecord != null && estimated1RM <= currentRecord.value)
+    if (currentRecord != null && estimated1RM <= currentRecord.value) {
       return null;
+    }
 
     return PersonalRecordAchieved(
       exerciseId: exercise.id,
@@ -251,8 +252,9 @@ class DetectPersonalRecordsUseCase {
     final totalVolume = completedSets.fold(0.0, (sum, set) => sum + set.volume);
     final currentRecord = existingPRs[PRType.volume];
 
-    if (currentRecord != null && totalVolume <= currentRecord.value)
+    if (currentRecord != null && totalVolume <= currentRecord.value) {
       return null;
+    }
 
     return PersonalRecordAchieved(
       exerciseId: exercise.id,
@@ -284,8 +286,9 @@ class DetectPersonalRecordsUseCase {
     if (completedSets <= 0) return null;
 
     final currentRecord = existingPRs[PRType.totalSets];
-    if (currentRecord != null && completedSets <= currentRecord.value)
+    if (currentRecord != null && completedSets <= currentRecord.value) {
       return null;
+    }
 
     return PersonalRecordAchieved(
       exerciseId: exercise.id,

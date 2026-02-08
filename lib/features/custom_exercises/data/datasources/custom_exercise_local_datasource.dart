@@ -159,7 +159,7 @@ class CustomExerciseLocalDatasource {
       final exercises = <CustomExercise>[];
 
       // 🔒 FIX: Only iterate keys belonging to current user
-      final userPrefix = 'custom_exercise_';
+      const userPrefix = 'custom_exercise_';
       final userSuffix = '_$currentUserId';
 
       for (final key in _box!.keys) {
@@ -340,7 +340,7 @@ class CustomExerciseLocalDatasource {
       final expired = <CustomExercise>[];
 
       // 🔒 FIX: Only iterate keys belonging to current user
-      final userPrefix = 'custom_exercise_';
+      const userPrefix = 'custom_exercise_';
       final userSuffix = '_$currentUserId';
 
       for (final key in _box!.keys) {
@@ -384,7 +384,7 @@ class CustomExerciseLocalDatasource {
       final variants = <CustomExercise>[];
 
       // 🔒 FIX: Only iterate keys belonging to current user
-      final userPrefix = 'custom_exercise_';
+      const userPrefix = 'custom_exercise_';
       final userSuffix = '_$currentUserId';
 
       for (final key in _box!.keys) {

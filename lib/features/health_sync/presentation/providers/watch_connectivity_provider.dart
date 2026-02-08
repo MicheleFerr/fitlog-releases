@@ -890,6 +890,18 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
     int totalExercisesInSuperset = 0,
     int supersetRound = 0,
     int totalSupersetRounds = 0,
+    // 🔥 DROPSET SUPPORT
+    bool isDropset = false,
+    List<Map<String, dynamic>>? dropsetStages,
+    int currentDropsetStage = 0,
+    int totalDropsetStages = 0,
+    // 🔥 REST-PAUSE SUPPORT
+    bool isRestPause = false,
+    double? restPauseWeight,
+    int? restPauseTargetReps,
+    List<Map<String, dynamic>>? restPauseSets,
+    int currentRestPauseSet = 0,
+    int totalRestPauseSets = 0,
   }) async {
     // 🔍 DEBUG: Log entry and state check (using debugPrint for release mode visibility)
     debugPrint('⌚ [PROVIDER DEBUG] notifyWorkoutStarted called');
@@ -942,6 +954,18 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
         'totalExercisesInSuperset': totalExercisesInSuperset,
         'supersetRound': supersetRound,
         'totalSupersetRounds': totalSupersetRounds,
+        // 🔥 DROPSET SUPPORT
+        'isDropset': isDropset,
+        'dropsetStages': dropsetStages ?? [],
+        'currentDropsetStage': currentDropsetStage,
+        'totalDropsetStages': totalDropsetStages,
+        // 🔥 REST-PAUSE SUPPORT
+        'isRestPause': isRestPause,
+        'restPauseWeight': restPauseWeight ?? 0.0,
+        'restPauseTargetReps': restPauseTargetReps ?? 0,
+        'restPauseSets': restPauseSets ?? [],
+        'currentRestPauseSet': currentRestPauseSet,
+        'totalRestPauseSets': totalRestPauseSets,
       });
 
       debugPrint('⌚ [PROVIDER DEBUG] ✅ invokeMethod completed successfully');
@@ -1021,6 +1045,18 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
     int totalExercisesInSuperset = 0,
     int supersetRound = 0,
     int totalSupersetRounds = 0,
+    // 🔥 DROPSET SUPPORT
+    bool isDropset = false,
+    List<Map<String, dynamic>>? dropsetStages,
+    int currentDropsetStage = 0,
+    int totalDropsetStages = 0,
+    // 🔥 REST-PAUSE SUPPORT
+    bool isRestPause = false,
+    double? restPauseWeight,
+    int? restPauseTargetReps,
+    List<Map<String, dynamic>>? restPauseSets,
+    int currentRestPauseSet = 0,
+    int totalRestPauseSets = 0,
   }) async {
     if (!Platform.isIOS) return;
 
@@ -1055,8 +1091,28 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
         'totalExercisesInSuperset': totalExercisesInSuperset,
         'supersetRound': supersetRound,
         'totalSupersetRounds': totalSupersetRounds,
+        // 🔥 DROPSET SUPPORT
+        'isDropset': isDropset,
+        'dropsetStages': dropsetStages ?? [],
+        'currentDropsetStage': currentDropsetStage,
+        'totalDropsetStages': totalDropsetStages,
+        // 🔥 REST-PAUSE SUPPORT
+        'isRestPause': isRestPause,
+        'restPauseWeight': restPauseWeight ?? 0.0,
+        'restPauseTargetReps': restPauseTargetReps ?? 0,
+        'restPauseSets': restPauseSets ?? [],
+        'currentRestPauseSet': currentRestPauseSet,
+        'totalRestPauseSets': totalRestPauseSets,
       });
-      if (isSuperset) {
+      if (isDropset) {
+        debugPrint(
+          '⌚ Sent DROPSET update: $exerciseName (Stage $currentDropsetStage/$totalDropsetStages)',
+        );
+      } else if (isRestPause) {
+        debugPrint(
+          '⌚ Sent REST-PAUSE update: $exerciseName (Set $currentRestPauseSet/$totalRestPauseSets)',
+        );
+      } else if (isSuperset) {
         debugPrint(
           '⌚ Sent SUPERSET update: $supersetName - $exerciseName (Ex $currentExerciseInSuperset/$totalExercisesInSuperset, Round $supersetRound/$totalSupersetRounds)',
         );

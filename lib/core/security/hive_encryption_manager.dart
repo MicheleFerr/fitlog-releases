@@ -1,36 +1,35 @@
-/**
- * 🔐 SECURITY: Hive Encryption Manager
- *
- * Provides AES-256 encryption for Hive boxes containing sensitive user data.
- *
- * **Security Benefits**:
- * - Uses flutter_secure_storage for key management (iOS Keychain / Android Keystore)
- * - 256-bit AES encryption (NIST-approved standard)
- * - Keys stored in hardware-backed secure storage (when available)
- * - Automatic key generation on first use
- * - GDPR Article 32 compliance (Security of Processing)
- *
- * **Usage**:
- * ```dart
- * final cipher = await HiveEncryptionManager.getEncryptionCipher();
- * final box = await Hive.openBox('sensitive_data', encryptionCipher: cipher);
- * ```
- *
- * **What Gets Encrypted**:
- * - GDPR consent data (user_consents box)
- * - Privacy settings (privacy box)
- * - User preferences (app_config box)
- * - User profile cache (user_profile_cache box)
- *
- * **Security Properties**:
- * - Key length: 256 bits (32 bytes)
- * - Algorithm: AES-256 in CBC mode
- * - Key storage: iOS Keychain (encrypted) / Android Keystore (hardware-backed)
- * - Protection: Cannot be extracted even with root access on Android 6.0+
- *
- * @see https://pub.dev/packages/flutter_secure_storage
- * @see https://docs.hivedb.dev/#/custom-objects/crypto
- */
+/// 🔐 SECURITY: Hive Encryption Manager
+///
+/// Provides AES-256 encryption for Hive boxes containing sensitive user data.
+///
+/// **Security Benefits**:
+/// - Uses flutter_secure_storage for key management (iOS Keychain / Android Keystore)
+/// - 256-bit AES encryption (NIST-approved standard)
+/// - Keys stored in hardware-backed secure storage (when available)
+/// - Automatic key generation on first use
+/// - GDPR Article 32 compliance (Security of Processing)
+///
+/// **Usage**:
+/// ```dart
+/// final cipher = await HiveEncryptionManager.getEncryptionCipher();
+/// final box = await Hive.openBox('sensitive_data', encryptionCipher: cipher);
+/// ```
+///
+/// **What Gets Encrypted**:
+/// - GDPR consent data (user_consents box)
+/// - Privacy settings (privacy box)
+/// - User preferences (app_config box)
+/// - User profile cache (user_profile_cache box)
+///
+/// **Security Properties**:
+/// - Key length: 256 bits (32 bytes)
+/// - Algorithm: AES-256 in CBC mode
+/// - Key storage: iOS Keychain (encrypted) / Android Keystore (hardware-backed)
+/// - Protection: Cannot be extracted even with root access on Android 6.0+
+///
+/// @see https://pub.dev/packages/flutter_secure_storage
+/// @see https://docs.hivedb.dev/#/custom-objects/crypto
+library;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

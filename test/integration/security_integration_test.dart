@@ -119,7 +119,7 @@ void main() {
       test('Verify isCurrentUserAdmin() returns false for unauthenticated users', () async {
         // Mock scenario: No authenticated user
         // In real implementation, this would return false (fail-safe default)
-        final isAdmin = false; // Simulated result when user == null
+        const isAdmin = false; // Simulated result when user == null
 
         expect(isAdmin, false, reason: 'Unauthenticated users must NOT be admin');
       });

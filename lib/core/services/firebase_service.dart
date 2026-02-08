@@ -12,11 +12,11 @@ import 'package:gymbro_flutter_new/core/config/environment_config.dart';
 
 /// Firebase service for accessing Firebase utilities
 class FirebaseService {
+  factory FirebaseService() => _instance;
   FirebaseService._();
 
   /// Singleton instance
   static final FirebaseService _instance = FirebaseService._();
-  factory FirebaseService() => _instance;
 
   /// Get backend API base URL
   ///

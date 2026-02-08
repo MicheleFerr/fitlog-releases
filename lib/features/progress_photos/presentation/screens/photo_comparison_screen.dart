@@ -715,9 +715,9 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
 
 /// Custom clipper for before/after slider effect
 class _SliderClipper extends CustomClipper<Rect> {
-  final double position;
 
   _SliderClipper(this.position);
+  final double position;
 
   @override
   Rect getClip(Size size) {

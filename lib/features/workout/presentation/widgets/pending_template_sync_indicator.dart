@@ -11,7 +11,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 /// Visualizza un banner informativo quando ci sono template in attesa di sincronizzazione
 /// con il cloud. Mostra il numero di template, i tentativi e il tempo al prossimo retry.
 class PendingTemplateSyncIndicator extends ConsumerWidget {
-  const PendingTemplateSyncIndicator({Key? key}) : super(key: key);
+  const PendingTemplateSyncIndicator({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -218,8 +218,8 @@ class PendingTemplateSyncIndicator extends ConsumerWidget {
 class TemplateSyncStatusBadge extends ConsumerWidget {
   const TemplateSyncStatusBadge({
     required this.templateId,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String templateId;
 

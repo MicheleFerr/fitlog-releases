@@ -33,8 +33,9 @@ final alternativeExercisesProvider = FutureProvider.autoDispose
 
       // Filter exercises by same category, excluding current exercise
       final alternatives = allExercises.where((ex) {
-        if (ex.nome == currentExerciseName)
+        if (ex.nome == currentExerciseName) {
           return false; // Exclude current exercise
+        }
         if (ex.focus.isEmpty) return false; // Skip exercises without focus
 
         final exCategory = ExerciseConverter.mapFocusToCategory(ex.focus);

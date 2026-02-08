@@ -83,7 +83,7 @@ abstract class BaseHiveTypeAdapterDatasource<T extends HiveObject> {
   Future<fpdart.Either<LocalStorageFailure, void>> initialize() async {
     try {
       if (isInitialized) {
-        return fpdart.Right(null);
+        return const fpdart.Right(null);
       }
 
       if (useLazyBox) {
@@ -92,7 +92,7 @@ abstract class BaseHiveTypeAdapterDatasource<T extends HiveObject> {
         _box = await Hive.openBox<T>(boxName);
       }
 
-      return fpdart.Right(null);
+      return const fpdart.Right(null);
     } catch (e) {
       return fpdart.Left(HiveFailure(
         message: 'Failed to initialize Hive box: $boxName',
@@ -111,7 +111,7 @@ abstract class BaseHiveTypeAdapterDatasource<T extends HiveObject> {
         await _box!.close();
         _box = null;
       }
-      return fpdart.Right(null);
+      return const fpdart.Right(null);
     } catch (e) {
       return fpdart.Left(HiveFailure(
         message: 'Failed to close Hive box: $boxName',
@@ -135,7 +135,7 @@ abstract class BaseHiveTypeAdapterDatasource<T extends HiveObject> {
         await _box!.put(key, item);
       }
 
-      return fpdart.Right(null);
+      return const fpdart.Right(null);
     } catch (e) {
       return fpdart.Left(HiveFailure(
         message: 'Failed to save item',
@@ -160,7 +160,7 @@ abstract class BaseHiveTypeAdapterDatasource<T extends HiveObject> {
         await _box!.putAll(entries);
       }
 
-      return fpdart.Right(null);
+      return const fpdart.Right(null);
     } catch (e) {
       return fpdart.Left(HiveFailure(
         message: 'Failed to save ${items.length} items',
@@ -181,7 +181,7 @@ abstract class BaseHiveTypeAdapterDatasource<T extends HiveObject> {
         item = _box!.get(key);
       }
 
-      if (item == null) return fpdart.Right(null);
+      if (item == null) return const fpdart.Right(null);
 
       return fpdart.Right(isActive(item) ? item : null);
     } catch (e) {
@@ -238,7 +238,7 @@ abstract class BaseHiveTypeAdapterDatasource<T extends HiveObject> {
         await _box!.delete(key);
       }
 
-      return fpdart.Right(null);
+      return const fpdart.Right(null);
     } catch (e) {
       return fpdart.Left(HiveFailure(
         message: 'Failed to delete item with key: $key',
@@ -298,7 +298,7 @@ abstract class BaseHiveTypeAdapterDatasource<T extends HiveObject> {
         await _box!.clear();
       }
 
-      return fpdart.Right(null);
+      return const fpdart.Right(null);
     } catch (e) {
       return fpdart.Left(HiveFailure(
         message: 'Failed to clear all items',

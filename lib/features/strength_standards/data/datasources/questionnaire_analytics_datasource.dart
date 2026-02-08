@@ -311,10 +311,12 @@ class QuestionnaireAnalyticsDataSource {
 
     final difference = recentAvg - olderAvg;
 
-    if (difference < -2.0)
+    if (difference < -2.0) {
       return AccuracyTrend.improving; // Error decreased by >2%
-    if (difference > 2.0)
+    }
+    if (difference > 2.0) {
       return AccuracyTrend.worsening; // Error increased by >2%
+    }
     return AccuracyTrend.stable;
   }
 

@@ -61,6 +61,35 @@ extension ScheduleStatusModelExtension on ScheduleStatusModel {
 /// (60 was colliding with TutorialState, 61 is ScheduleStatusModel)
 @HiveType(typeId: 62)
 class ScheduledWorkoutModel extends HiveObject {
+
+  ScheduledWorkoutModel({
+    required this.id,
+    required this.templateId,
+    required this.templateName,
+    required this.scheduledDate,
+    required this.reminderHour,
+    required this.reminderMinute,
+    required this.status,
+    this.completedAt,
+    this.createdAt,
+    this.notificationId,
+  });
+
+  /// Create from domain entity
+  factory ScheduledWorkoutModel.fromEntity(ScheduledWorkout entity) {
+    return ScheduledWorkoutModel(
+      id: entity.id,
+      templateId: entity.templateId,
+      templateName: entity.templateName,
+      scheduledDate: entity.scheduledDate,
+      reminderHour: entity.reminderHour,
+      reminderMinute: entity.reminderMinute,
+      status: ScheduleStatusModelExtension.fromEntity(entity.status),
+      completedAt: entity.completedAt,
+      createdAt: entity.createdAt,
+      notificationId: entity.notificationId,
+    );
+  }
   @HiveField(0)
   final String id;
 
@@ -91,19 +120,6 @@ class ScheduledWorkoutModel extends HiveObject {
   @HiveField(9)
   final String? notificationId;
 
-  ScheduledWorkoutModel({
-    required this.id,
-    required this.templateId,
-    required this.templateName,
-    required this.scheduledDate,
-    required this.reminderHour,
-    required this.reminderMinute,
-    required this.status,
-    this.completedAt,
-    this.createdAt,
-    this.notificationId,
-  });
-
   /// Convert to domain entity
   ScheduledWorkout toEntity() {
     return ScheduledWorkout(
@@ -117,22 +133,6 @@ class ScheduledWorkoutModel extends HiveObject {
       completedAt: completedAt,
       createdAt: createdAt,
       notificationId: notificationId,
-    );
-  }
-
-  /// Create from domain entity
-  factory ScheduledWorkoutModel.fromEntity(ScheduledWorkout entity) {
-    return ScheduledWorkoutModel(
-      id: entity.id,
-      templateId: entity.templateId,
-      templateName: entity.templateName,
-      scheduledDate: entity.scheduledDate,
-      reminderHour: entity.reminderHour,
-      reminderMinute: entity.reminderMinute,
-      status: ScheduleStatusModelExtension.fromEntity(entity.status),
-      completedAt: entity.completedAt,
-      createdAt: entity.createdAt,
-      notificationId: entity.notificationId,
     );
   }
 

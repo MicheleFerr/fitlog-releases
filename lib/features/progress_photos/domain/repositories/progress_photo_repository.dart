@@ -159,27 +159,27 @@ sealed class PhotoRepositoryFailure {
 
 /// Network error (no internet, timeout, etc.)
 class NetworkFailure extends PhotoRepositoryFailure {
-  final String message;
   const NetworkFailure(this.message);
+  final String message;
 }
 
 /// Firebase Storage error
 class StorageFailure extends PhotoRepositoryFailure {
+  const StorageFailure(this.message, {this.code});
   final String message;
   final String? code;
-  const StorageFailure(this.message, {this.code});
 }
 
 /// Firestore error
 class DatabaseFailure extends PhotoRepositoryFailure {
-  final String message;
   const DatabaseFailure(this.message);
+  final String message;
 }
 
 /// Photo not found
 class NotFoundFailure extends PhotoRepositoryFailure {
-  final String photoId;
   const NotFoundFailure(this.photoId);
+  final String photoId;
 }
 
 /// Permission denied (trying to access another user's photo)
@@ -189,30 +189,26 @@ class PermissionDeniedFailure extends PhotoRepositoryFailure {
 
 /// Image compression failed
 class CompressionFailure extends PhotoRepositoryFailure {
-  final String message;
   const CompressionFailure(this.message);
+  final String message;
 }
 
 /// Storage quota exceeded
 class QuotaExceededFailure extends PhotoRepositoryFailure {
+  const QuotaExceededFailure(this.currentBytes, this.maxBytes);
   final int currentBytes;
   final int maxBytes;
-  const QuotaExceededFailure(this.currentBytes, this.maxBytes);
 }
 
 /// Unknown error
 class UnknownFailure extends PhotoRepositoryFailure {
+  const UnknownFailure(this.message, {this.error});
   final String message;
   final Object? error;
-  const UnknownFailure(this.message, {this.error});
 }
 
 /// PhotoStorageStats - Storage usage statistics
 class PhotoStorageStats {
-  final int totalPhotos;
-  final int totalBytes;
-  final int thumbnailBytes;
-  final int fullPhotoBytes;
 
   const PhotoStorageStats({
     required this.totalPhotos,
@@ -220,6 +216,10 @@ class PhotoStorageStats {
     required this.thumbnailBytes,
     required this.fullPhotoBytes,
   });
+  final int totalPhotos;
+  final int totalBytes;
+  final int thumbnailBytes;
+  final int fullPhotoBytes;
 
   /// Human-readable total size
   String get formattedSize {

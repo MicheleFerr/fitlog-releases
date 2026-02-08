@@ -73,8 +73,8 @@ class SupersetConverter {
       name: config.name,
       exercises: workoutExercises,
       supersetSets: supersetSets,
-      notes: 'Rest between exercises: ${config.restBetweenExercises}s',
       restTime: config.restAfterRound,
+      restAfterExercise: config.restBetweenExercises, // Timer inter-exercise dopo superset completo
     );
   }
 

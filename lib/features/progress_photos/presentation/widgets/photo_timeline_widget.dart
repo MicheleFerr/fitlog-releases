@@ -193,11 +193,11 @@ class _TimelineItem extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: photo.thumbnailUrl,
                     fit: BoxFit.cover,
-                    placeholder: (_, __) => Container(
+                    placeholder: (_, __) => ColoredBox(
                       color: context.colors.surfaceContainer,
                       child: const Center(child: LoadingIndicator(size: 24)),
                     ),
-                    errorWidget: (_, __, ___) => Container(
+                    errorWidget: (_, __, ___) => ColoredBox(
                       color: context.colors.errorContainer,
                       child: Icon(AppIcons.error, color: context.colors.error),
                     ),

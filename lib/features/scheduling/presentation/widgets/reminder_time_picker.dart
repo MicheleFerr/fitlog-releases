@@ -52,17 +52,17 @@ extension ReminderTimePresetExtension on ReminderTimePreset {
 /// - Custom option with time picker
 /// - Visual feedback with icons and colors
 class ReminderTimePicker extends StatefulWidget {
-  /// Currently selected time
-  final TimeOfDay selectedTime;
-
-  /// Callback when time is changed
-  final ValueChanged<TimeOfDay> onTimeChanged;
 
   const ReminderTimePicker({
     super.key,
     required this.selectedTime,
     required this.onTimeChanged,
   });
+  /// Currently selected time
+  final TimeOfDay selectedTime;
+
+  /// Callback when time is changed
+  final ValueChanged<TimeOfDay> onTimeChanged;
 
   @override
   State<ReminderTimePicker> createState() => _ReminderTimePickerState();
@@ -280,11 +280,6 @@ class _ReminderTimePickerState extends State<ReminderTimePicker> {
 
 /// Individual preset chip widget
 class _PresetChip extends StatelessWidget {
-  final ReminderTimePreset preset;
-  final String label;
-  final String subtitle;
-  final bool isSelected;
-  final VoidCallback onTap;
 
   const _PresetChip({
     required this.preset,
@@ -293,6 +288,11 @@ class _PresetChip extends StatelessWidget {
     required this.isSelected,
     required this.onTap,
   });
+  final ReminderTimePreset preset;
+  final String label;
+  final String subtitle;
+  final bool isSelected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {

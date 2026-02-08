@@ -189,8 +189,9 @@ class SpotlightPositioningUtil {
     if (bounds.isEmpty) return false;
     if (bounds.width <= 0 || bounds.height <= 0) return false;
     if (bounds.left < 0 || bounds.top < 0) return false;
-    if (bounds.right > screenSize.width * 1.5)
+    if (bounds.right > screenSize.width * 1.5) {
       return false; // Allow slight overflow
+    }
     if (bounds.bottom > screenSize.height * 1.5) return false;
 
     return true;

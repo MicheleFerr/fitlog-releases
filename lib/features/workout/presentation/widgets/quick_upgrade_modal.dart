@@ -88,7 +88,7 @@ class _QuickUpgradeModalState extends ConsumerState<QuickUpgradeModal> {
     final colorScheme = context.colors;
     final textTheme = context.textTheme;
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),

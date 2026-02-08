@@ -5,10 +5,10 @@ import 'package:gymbro_flutter_new/features/scheduling/domain/repositories/sched
 
 /// Implementation of SchedulingRepository using Hive for local storage
 class SchedulingRepositoryImpl implements SchedulingRepository {
-  final HiveSchedulingDatasource _datasource;
 
   SchedulingRepositoryImpl({HiveSchedulingDatasource? datasource})
     : _datasource = datasource ?? HiveSchedulingDatasource();
+  final HiveSchedulingDatasource _datasource;
 
   @override
   Future<List<ScheduledWorkout>> getScheduledWorkouts() async {

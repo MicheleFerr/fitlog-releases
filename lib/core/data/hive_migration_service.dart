@@ -1,36 +1,35 @@
-/**
- * 🔐 SECURITY: Hive Box Migration Service
- *
- * Migrates existing unencrypted Hive boxes to encrypted versions using AES-256.
- *
- * **Use Cases**:
- * - One-time migration on app update (v1.0 → v1.1 security patch)
- * - Per-box migration when adding encryption to existing boxes
- * - Encryption key rotation (decrypt with old key, re-encrypt with new key)
- *
- * **Migration Flow**:
- * 1. Open unencrypted box
- * 2. Read all data to memory
- * 3. Close and delete unencrypted box from disk
- * 4. Reopen box with encryption
- * 5. Write data back to encrypted box
- * 6. Mark migration as complete (SharedPreferences flag)
- *
- * **Safety Guarantees**:
- * - Idempotent: Safe to run multiple times (checks if already encrypted)
- * - Atomic: If migration fails, old box is restored
- * - Backup: Creates .backup file before deletion
- * - Rollback: Can restore from backup on failure
- *
- * **Tested Boxes** (4 sensitive boxes):
- * - user_consents (GDPR consent data)
- * - privacy (privacy settings)
- * - app_config (user preferences)
- * - user_profile_cache (email, displayName)
- *
- * @see HiveEncryptionManager for key management
- * @see HiveBoxManager for box lifecycle
- */
+/// 🔐 SECURITY: Hive Box Migration Service
+///
+/// Migrates existing unencrypted Hive boxes to encrypted versions using AES-256.
+///
+/// **Use Cases**:
+/// - One-time migration on app update (v1.0 → v1.1 security patch)
+/// - Per-box migration when adding encryption to existing boxes
+/// - Encryption key rotation (decrypt with old key, re-encrypt with new key)
+///
+/// **Migration Flow**:
+/// 1. Open unencrypted box
+/// 2. Read all data to memory
+/// 3. Close and delete unencrypted box from disk
+/// 4. Reopen box with encryption
+/// 5. Write data back to encrypted box
+/// 6. Mark migration as complete (SharedPreferences flag)
+///
+/// **Safety Guarantees**:
+/// - Idempotent: Safe to run multiple times (checks if already encrypted)
+/// - Atomic: If migration fails, old box is restored
+/// - Backup: Creates .backup file before deletion
+/// - Rollback: Can restore from backup on failure
+///
+/// **Tested Boxes** (4 sensitive boxes):
+/// - user_consents (GDPR consent data)
+/// - privacy (privacy settings)
+/// - app_config (user preferences)
+/// - user_profile_cache (email, displayName)
+///
+/// @see HiveEncryptionManager for key management
+/// @see HiveBoxManager for box lifecycle
+library;
 
 import 'package:flutter/foundation.dart';
 import 'package:hive_ce/hive.dart';

@@ -562,6 +562,19 @@ class SleepAwareStressData {
     required this.hasSleepData,
   });
 
+  /// Create default state when no data available
+  factory SleepAwareStressData.noData() {
+    return const SleepAwareStressData(
+      rawReadiness: 100.0,
+      adjustedReadiness: 100.0,
+      sleepHours: StressIndexConstants.defaultSleepHours,
+      consecutiveBadNights: 0,
+      sleepModifier: 1.0,
+      sleepCategory: SleepQualityCategory.optimal,
+      hasSleepData: false,
+    );
+  }
+
   /// FFM-based readiness without sleep adjustment (0-100+)
   final double rawReadiness;
 
@@ -592,19 +605,6 @@ class SleepAwareStressData {
 
   /// Whether sleep is significantly impacting recovery (>5% impact)
   bool get hasSleepImpact => sleepImpact.abs() > 5;
-
-  /// Create default state when no data available
-  factory SleepAwareStressData.noData() {
-    return const SleepAwareStressData(
-      rawReadiness: 100.0,
-      adjustedReadiness: 100.0,
-      sleepHours: StressIndexConstants.defaultSleepHours,
-      consecutiveBadNights: 0,
-      sleepModifier: 1.0,
-      sleepCategory: SleepQualityCategory.optimal,
-      hasSleepData: false,
-    );
-  }
 }
 
 /// Provider for sleep-aware stress data

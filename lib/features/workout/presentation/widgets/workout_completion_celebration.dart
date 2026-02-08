@@ -543,7 +543,10 @@ class _WorkoutCompletionCelebrationState
 
   Widget _buildExerciseDetail(BuildContext context, Exercise exercise) {
     final colorScheme = context.colors;
-    final config = ref.watch(appConfigProvider);
+    // PERFORMANCE FIX: Selective watching for only used field
+    final measurementUnit = ref.watch(
+      appConfigProvider.select((c) => c.measurementUnit),
+    );
     final useRir = ref.watch(useRirModeProvider);
     final completedSets = exercise.sets.where((s) => s.isCompleted).toList();
 
@@ -614,7 +617,7 @@ class _WorkoutCompletionCelebrationState
                     SizedBox(
                       width: 60,
                       child: Text(
-                        '${set.weight?.toStringAsFixed(1) ?? "-"} ${config.measurementUnit}',
+                        '${set.weight?.toStringAsFixed(1) ?? "-"} $measurementUnit',
                         style: context.textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.w500,
                         ),

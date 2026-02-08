@@ -151,8 +151,9 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
 
   String _formatWeight(double weight) {
     if (weight % 1 == 0) return '${weight.toInt()}';
-    if ((weight * 2) % 1 == 0)
+    if ((weight * 2) % 1 == 0) {
       return weight.toStringAsFixed(1); // .5 increments
+    }
     return weight.toStringAsFixed(2); // .25 increments
   }
 

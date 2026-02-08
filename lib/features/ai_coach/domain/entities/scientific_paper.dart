@@ -39,7 +39,7 @@ sealed class ScientificPaper with _$ScientificPaper {
   String formatCitation() {
     final authorsStr = authors.length > 3
         ? '${authors.take(3).join(", ")} et al.'
-        : authors.join(", ");
+        : authors.join(', ');
     return '$authorsStr ($year)';
   }
 

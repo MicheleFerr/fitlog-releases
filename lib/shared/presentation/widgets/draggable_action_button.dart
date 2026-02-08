@@ -577,7 +577,7 @@ class _ExpandableExerciseMenuState extends State<_ExpandableExerciseMenu> {
               ),
               title: Text(context.l10n.addSingleExercise),
               subtitle: Text(context.l10n.addSingleExerciseHint),
-              trailing: Icon(AppIcons.chevronRight),
+              trailing: const Icon(AppIcons.chevronRight),
               onTap: () {
                 Navigator.of(context).pop();
                 widget.onSingleExercise();
@@ -605,7 +605,7 @@ class _ExpandableExerciseMenuState extends State<_ExpandableExerciseMenu> {
                     ),
                   ),
                   title: Text(option.label),
-                  trailing: Icon(AppIcons.chevronRight),
+                  trailing: const Icon(AppIcons.chevronRight),
                   onTap: () {
                     Navigator.of(context).pop();
                     option.onTap();

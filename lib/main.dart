@@ -47,7 +47,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/features/workout/data/services/template_cloud_sync_service.dart'; // 🔄 Template Cloud Sync with exponential backoff
 import 'package:gymbro_flutter_new/features/ai_coach/data/models/scientific_paper_model.dart'; // 🤖 AI Coach Documents
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/document_local_datasource.dart'; // 🤖 AI Coach Document Cache
-import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/document_sync_provider.dart'; // 🤖 AI Coach Document Sync
+// 🤖 AI Coach Document Sync
 
 void main() async {
   // 🚀 SPLASH: Preserve native splash screen during initialization

@@ -264,6 +264,14 @@ abstract class MeasurementRepository {
 
 /// SyncResult - Result of health platform synchronization
 class SyncResult {
+
+  const SyncResult({
+    required this.readCount,
+    required this.writeCount,
+    required this.conflictCount,
+    required this.syncedAt,
+    this.importedMeasurements = const [],
+  });
   /// Number of measurements read from health platform
   final int readCount;
 
@@ -278,14 +286,6 @@ class SyncResult {
 
   /// Measurements imported from health platform (for persistence by caller)
   final List<Measurement> importedMeasurements;
-
-  const SyncResult({
-    required this.readCount,
-    required this.writeCount,
-    required this.conflictCount,
-    required this.syncedAt,
-    this.importedMeasurements = const [],
-  });
 }
 
 /// SyncDirection - Direction of health platform synchronization
@@ -302,6 +302,13 @@ enum SyncDirection {
 
 /// SyncConflict - Represents a conflict between device and cloud data
 class SyncConflict {
+
+  const SyncConflict({
+    required this.id,
+    required this.deviceVersion,
+    required this.cloudVersion,
+    required this.detectedAt,
+  });
   /// Unique conflict ID
   final String id;
 
@@ -313,13 +320,6 @@ class SyncConflict {
 
   /// When conflict was detected
   final DateTime detectedAt;
-
-  const SyncConflict({
-    required this.id,
-    required this.deviceVersion,
-    required this.cloudVersion,
-    required this.detectedAt,
-  });
 }
 
 /// ConflictResolution - How to resolve a sync conflict
@@ -341,38 +341,38 @@ sealed class MeasurementFailure {
 
 /// User hasn't consented to track this metric type
 class ConsentRequiredFailure extends MeasurementFailure {
-  final MetricType metricType;
   const ConsentRequiredFailure(this.metricType);
+  final MetricType metricType;
 }
 
 /// Measurement value outside valid range
 class ValidationFailure extends MeasurementFailure {
-  final String message;
   const ValidationFailure(this.message);
+  final String message;
 }
 
 /// Local or cloud storage error
 class StorageFailure extends MeasurementFailure {
+  const StorageFailure({required this.message, this.error});
   final String message;
   final Object? error;
-  const StorageFailure({required this.message, this.error});
 }
 
 /// Measurement not found
 class MeasurementNotFoundFailure extends MeasurementFailure {
-  final String measurementId;
   const MeasurementNotFoundFailure(this.measurementId);
+  final String measurementId;
 }
 
 /// Sync conflict between device and cloud
 class SyncConflictFailure extends MeasurementFailure {
-  final String message;
   const SyncConflictFailure(this.message);
+  final String message;
 }
 
 /// Health platform (HealthKit/Health Connect) error
 class HealthPlatformFailure extends MeasurementFailure {
+  const HealthPlatformFailure({required this.message, this.error});
   final String message;
   final Object? error;
-  const HealthPlatformFailure({required this.message, this.error});
 }

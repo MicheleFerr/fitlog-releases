@@ -2,6 +2,7 @@
 ///
 /// Tests consolidation logic (UserTier + AccountTier) for all limit types.
 /// Verifies that Premium/Pro users get 999 unlimited regardless of XP tier.
+library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

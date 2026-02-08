@@ -11,12 +11,10 @@ library;
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:synchronized/synchronized.dart';
-import '../../domain/repositories/document_repository.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/repositories/document_repository.dart';
 
 /// Background sync service with singleton pattern (PERFORMANCE)
 class DocumentSyncService {
-  // Singleton instance
-  static DocumentSyncService? _instance;
 
   /// Factory constructor for singleton
   factory DocumentSyncService({required DocumentRepository repository}) {
@@ -24,6 +22,8 @@ class DocumentSyncService {
   }
 
   DocumentSyncService._(this._repository);
+  // Singleton instance
+  static DocumentSyncService? _instance;
 
   final DocumentRepository _repository;
   final _lock = Lock(); // Prevent concurrent syncs (PERFORMANCE)

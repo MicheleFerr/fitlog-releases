@@ -62,6 +62,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.keepScreenAwakeDuringWorkout = true, // Keep screen on during workout by default
     this.interfaceSize, // Unified interface size (font + layout), null = use fontSize for backward compat
     this.defaultRestBetweenExercises = 90, // Default rest between exercises (inter-exercise timer)
+    this.hasSeenRestPauseTutorial = false, // First-time Rest-Pause tutorial flag
   });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) {
@@ -109,6 +110,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       keepScreenAwakeDuringWorkout: json['keepScreenAwakeDuringWorkout'] ?? true,
       interfaceSize: interfaceSize,
       defaultRestBetweenExercises: json['defaultRestBetweenExercises'] ?? 90,
+      hasSeenRestPauseTutorial: json['hasSeenRestPauseTutorial'] ?? false,
     );
   }
   @HiveField(0)
@@ -276,6 +278,9 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
   @HiveField(53)
   final int defaultRestBetweenExercises; // Default rest between exercises in seconds
 
+  @HiveField(54)
+  final bool hasSeenRestPauseTutorial; // Has seen Rest-Pause tutorial
+
   Locale get locale => Locale(languageCode, countryCode);
 
   AppConfig copyWith({
@@ -332,6 +337,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     bool? keepScreenAwakeDuringWorkout,
     InterfaceSize? interfaceSize,
     int? defaultRestBetweenExercises,
+    bool? hasSeenRestPauseTutorial,
   }) {
     return AppConfig(
       languageCode: languageCode ?? this.languageCode,
@@ -387,6 +393,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       keepScreenAwakeDuringWorkout: keepScreenAwakeDuringWorkout ?? this.keepScreenAwakeDuringWorkout,
       interfaceSize: interfaceSize ?? this.interfaceSize,
       defaultRestBetweenExercises: defaultRestBetweenExercises ?? this.defaultRestBetweenExercises,
+      hasSeenRestPauseTutorial: hasSeenRestPauseTutorial ?? this.hasSeenRestPauseTutorial,
     );
   }
 
@@ -420,6 +427,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       'keepScreenAwakeDuringWorkout': keepScreenAwakeDuringWorkout,
       'interfaceSize': interfaceSize?.toJson(),
       'defaultRestBetweenExercises': defaultRestBetweenExercises,
+      'hasSeenRestPauseTutorial': hasSeenRestPauseTutorial,
     };
   }
 

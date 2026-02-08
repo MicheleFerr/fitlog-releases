@@ -82,11 +82,11 @@ class _PhotoDetailModalState extends ConsumerState<PhotoDetailModal> {
                       child: CachedNetworkImage(
                         imageUrl: widget.photo.photoUrl,
                         fit: BoxFit.contain,
-                        placeholder: (_, __) => Container(
+                        placeholder: (_, __) => ColoredBox(
                           color: context.colors.surfaceContainer,
                           child: const Center(child: LoadingIndicator()),
                         ),
-                        errorWidget: (_, __, ___) => Container(
+                        errorWidget: (_, __, ___) => ColoredBox(
                           color: context.colors.errorContainer,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,

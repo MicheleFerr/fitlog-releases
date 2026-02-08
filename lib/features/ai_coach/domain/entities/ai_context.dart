@@ -52,6 +52,9 @@ sealed class AIContext with _$AIContext {
     String? fitnessGoal, // 'muscle', 'strength', 'endurance', etc.
   }) = _AIContext;
 
+  factory AIContext.fromJson(Map<String, dynamic> json) =>
+      _$AIContextFromJson(json);
+
   const AIContext._();
 
   /// Convert context to natural language for AI system prompt
@@ -84,7 +87,4 @@ sealed class AIContext with _$AIContext {
 
     return buffer.toString();
   }
-
-  factory AIContext.fromJson(Map<String, dynamic> json) =>
-      _$AIContextFromJson(json);
 }

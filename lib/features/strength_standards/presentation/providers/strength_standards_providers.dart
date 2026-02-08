@@ -1,6 +1,5 @@
 import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'dart:io' show Platform;
-import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';

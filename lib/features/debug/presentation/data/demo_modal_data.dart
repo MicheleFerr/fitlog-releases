@@ -433,8 +433,8 @@ class DemoModalData {
     return exercise_db.ExerciseDefinition(
       id: 'bench_press_001',
       nome: 'Panca Piana con Bilanciere',
-      focus: ['PETTO', 'TRICIPITI'],
-      muscoliSecondari: ['DELTOIDI ANTERIORI', 'CORE'],
+      focus: const ['PETTO', 'TRICIPITI'],
+      muscoliSecondari: const ['DELTOIDI ANTERIORI', 'CORE'],
       difficolta: 'Intermedio',
       tipoEsercizio: 'Compound',
       attrezzatura: 'Bilanciere',
@@ -454,7 +454,7 @@ class DemoModalData {
           'Face pull con elastico (15 reps) | '
           'Push-up leggeri (10 reps) | '
           'Band pull-aparts (15 reps)',
-      aliases: ['panca', 'bench press', 'BP', 'flat bench'],
+      aliases: const ['panca', 'bench press', 'BP', 'flat bench'],
     );
   }
 
@@ -463,8 +463,8 @@ class DemoModalData {
     return exercise_db.ExerciseDefinition(
       id: 'deadlift_001',
       nome: 'Stacco da Terra',
-      focus: ['DORSALI', 'GLUTEI', 'FEMORALI'],
-      muscoliSecondari: ['CORE', 'TRAPEZI', 'AVAMBRACCI'],
+      focus: const ['DORSALI', 'GLUTEI', 'FEMORALI'],
+      muscoliSecondari: const ['CORE', 'TRAPEZI', 'AVAMBRACCI'],
       difficolta: 'Avanzato',
       tipoEsercizio: 'Compound',
       attrezzatura: 'Bilanciere',
@@ -484,7 +484,7 @@ class DemoModalData {
           'Glute bridges (15 reps) | '
           'Good mornings con elastico (12 reps) | '
           'Dead bugs (10 per lato)',
-      aliases: ['stacco', 'deadlift', 'DL', 'conventional deadlift'],
+      aliases: const ['stacco', 'deadlift', 'DL', 'conventional deadlift'],
     );
   }
 

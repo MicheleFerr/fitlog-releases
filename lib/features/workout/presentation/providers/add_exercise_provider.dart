@@ -1,5 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_usage_tracker.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_usage_model.dart';
 
 // Exercise sets management for the modal
 class ExerciseSetNotifier extends Notifier<List<ExerciseSet>> {
@@ -83,3 +86,15 @@ final supersetExercisesProvider =
     NotifierProvider<SupersetExercisesNotifier, List<Exercise>>(
       SupersetExercisesNotifier.new,
     );
+
+/// P0: Provider for recently used exercises in AddExerciseModal
+/// Returns the 5 most recently used exercises for quick one-tap selection
+/// Uses ExerciseUsageTracker which persists usage data locally
+final recentExercisesForModalProvider =
+    FutureProvider.autoDispose<List<ExerciseUsageModel>>((ref) async {
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+  if (userId == null) return [];
+
+  final tracker = ExerciseUsageTracker();
+  return tracker.getRecentlyUsedExercises(limit: 5);
+});

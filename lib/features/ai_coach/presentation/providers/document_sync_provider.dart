@@ -10,14 +10,14 @@ library;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import '../../domain/entities/scientific_paper.dart';
-import '../../domain/entities/document_sync_status.dart';
-import '../../domain/repositories/document_repository.dart';
-import '../../data/repositories/document_repository_impl.dart';
-import '../../data/datasources/document_local_datasource.dart';
-import '../../data/datasources/document_remote_datasource.dart';
-import '../../data/services/document_sync_service.dart';
-import '../../../../core/services/firebase_service.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/scientific_paper.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/document_sync_status.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/repositories/document_repository.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/repositories/document_repository_impl.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/document_local_datasource.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/document_remote_datasource.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/services/document_sync_service.dart';
+import 'package:gymbro_flutter_new/core/services/firebase_service.dart';
 
 /// Provider for local datasource
 final _documentLocalDataSourceProvider = Provider<DocumentLocalDataSource>((ref) {

@@ -330,9 +330,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
             AudioContext(
               iOS: AudioContextIOS(
                 category: AVAudioSessionCategory.ambient,
-                options: {AVAudioSessionOptions.mixWithOthers},
+                options: const {AVAudioSessionOptions.mixWithOthers},
               ),
-              android: AudioContextAndroid(
+              android: const AudioContextAndroid(
                 audioFocus: AndroidAudioFocus.none,
                 contentType: AndroidContentType.sonification,
                 usageType: AndroidUsageType.assistanceSonification,

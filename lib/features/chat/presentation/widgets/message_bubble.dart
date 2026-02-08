@@ -119,7 +119,7 @@ class MessageBubble extends StatelessWidget {
           child: CachedNetworkImage(
             imageUrl: metadata.imageUrl,
             fit: BoxFit.cover,
-            placeholder: (_, __) => Container(
+            placeholder: (_, __) => ColoredBox(
               color: context.colors.surfaceContainerHighest,
               child: Center(
                 child: Icon(
@@ -129,7 +129,7 @@ class MessageBubble extends StatelessWidget {
                 ),
               ),
             ),
-            errorWidget: (_, __, ___) => Container(
+            errorWidget: (_, __, ___) => ColoredBox(
               color: context.colors.errorContainer,
               child: Center(
                 child: Icon(

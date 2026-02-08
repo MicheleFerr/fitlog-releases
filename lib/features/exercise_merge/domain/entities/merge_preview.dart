@@ -68,18 +68,6 @@ class MergeResult {
     this.errorMessage,
   });
 
-  /// Merge completato con successo
-  final bool success;
-
-  /// Numero di sessioni aggiornate
-  final int sessionsUpdated;
-
-  /// Numero di template aggiornati
-  final int templatesUpdated;
-
-  /// Messaggio di errore (se fallito)
-  final String? errorMessage;
-
   /// Factory per successo
   factory MergeResult.success({
     required int sessionsUpdated,
@@ -97,4 +85,16 @@ class MergeResult {
     templatesUpdated: 0,
     errorMessage: message,
   );
+
+  /// Merge completato con successo
+  final bool success;
+
+  /// Numero di sessioni aggiornate
+  final int sessionsUpdated;
+
+  /// Numero di template aggiornati
+  final int templatesUpdated;
+
+  /// Messaggio di errore (se fallito)
+  final String? errorMessage;
 }

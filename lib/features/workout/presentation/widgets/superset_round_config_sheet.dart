@@ -8,7 +8,10 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/minimal
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 
 /// Round-based superset configuration sheet.
 ///
@@ -76,25 +79,82 @@ class _SupersetRoundConfigSheetState
   int _currentRoundIndex = 0;
   late List<_RoundConfig> _rounds;
   bool _hasUnsavedChanges = false;
+  bool _isLoadingWeights = true;
+
+  // Track which exercises have suggested weights from history
+  final Set<String> _exercisesWithSuggestedWeight = {};
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
-    _initializeRounds();
+    _initializeRoundsWithSuggestions();
   }
 
-  void _initializeRounds() {
+  /// Get suggested weight from exercise history
+  /// Returns last used weight for this exercise, or default 20kg
+  Future<double> _getSuggestedWeight(String exerciseName) async {
+    try {
+      final service = ref.read(workoutHistoryServiceProvider);
+      final lastActivity = await service.getLastActivityByExercise(
+        exerciseName: exerciseName,
+      );
+
+      if (lastActivity != null && lastActivity.sets.isNotEmpty) {
+        // Get max weight from last session (weight is stored as String)
+        double maxWeight = 0;
+        for (final s in lastActivity.sets) {
+          final weight = double.tryParse(s.weight) ?? 0;
+          if (weight > maxWeight) maxWeight = weight;
+        }
+
+        if (maxWeight > 0) return maxWeight;
+      }
+    } catch (e) {
+      // Fallback to default silently
+    }
+    return 20.0; // Default
+  }
+
+  Future<void> _initializeRoundsWithSuggestions() async {
     final initial = widget.initialConfiguration;
+
     if (initial != null && initial.rounds.isNotEmpty) {
+      // Use existing configuration
       _rounds = initial.rounds
           .map((r) => _RoundConfig.fromSupersetRound(r, widget.exercises))
           .toList();
     } else {
+      // Fetch suggested weights for each exercise from history
+      final Map<String, double> suggestedWeights = {};
+
+      for (final exercise in widget.exercises) {
+        final suggestedWeight = await _getSuggestedWeight(exercise.nome);
+        suggestedWeights[exercise.id] = suggestedWeight;
+
+        // Track if weight came from history (not default 20kg)
+        if (suggestedWeight != 20.0) {
+          _exercisesWithSuggestedWeight.add(exercise.id);
+        }
+      }
+
       _rounds = List.generate(
         widget.initialRounds,
-        (i) => _RoundConfig.defaultFor(widget.exercises, i + 1),
+        (i) => _RoundConfig(
+          roundNumber: i + 1,
+          exercises: {
+            for (final ex in widget.exercises)
+              ex.id: _CellConfig(
+                weight: suggestedWeights[ex.id] ?? 20.0,
+                reps: 12,
+              ),
+          },
+        ),
       );
+    }
+
+    if (mounted) {
+      setState(() => _isLoadingWeights = false);
     }
   }
 
@@ -294,25 +354,30 @@ class _SupersetRoundConfigSheetState
             _buildHeader(),
             _buildRoundIndicator(),
             Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: _rounds.length,
-                onPageChanged: (index) {
-                  setState(() => _currentRoundIndex = index);
-                  HapticFeedback.selectionClick();
-                },
-                itemBuilder: (context, roundIndex) {
-                  return _RoundPage(
-                    key: ValueKey('round_$roundIndex'),
-                    exercises: widget.exercises,
-                    roundConfig: _rounds[roundIndex],
-                    onExerciseTap: (exercise) =>
-                        _openPicker(exercise, roundIndex),
-                  );
-                },
-              ),
+              child: _isLoadingWeights
+                  ? const Center(child: LoadingIndicator())
+                  : PageView.builder(
+                      controller: _pageController,
+                      itemCount: _rounds.length,
+                      onPageChanged: (index) {
+                        setState(() => _currentRoundIndex = index);
+                        HapticFeedback.selectionClick();
+                      },
+                      itemBuilder: (context, roundIndex) {
+                        return _RoundPage(
+                          key: ValueKey('round_$roundIndex'),
+                          exercises: widget.exercises,
+                          roundConfig: _rounds[roundIndex],
+                          exercisesWithSuggestedWeight:
+                              _exercisesWithSuggestedWeight,
+                          onExerciseTap: (exercise) =>
+                              _openPicker(exercise, roundIndex),
+                        );
+                      },
+                    ),
             ),
             _buildQuickActions(),
+            _buildSummarySection(),
             _buildConfirmButton(),
             SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
           ],
@@ -427,6 +492,57 @@ class _SupersetRoundConfigSheetState
     );
   }
 
+  Widget _buildSummarySection() {
+    // Calculate totals
+    int totalSets = 0;
+    double totalVolume = 0;
+
+    for (final round in _rounds) {
+      for (final config in round.exercises.values) {
+        totalSets++;
+        totalVolume += config.weight * config.reps;
+      }
+    }
+
+    final exerciseCount = widget.exercises.length;
+    // ~1.5 min per set including rest
+    final estimatedMinutes = (_rounds.length * exerciseCount * 1.5).ceil();
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _SummaryItem(
+            icon: AppIcons.repeat,
+            value: '${_rounds.length}',
+            label: context.l10n.rounds,
+          ),
+          _SummaryItem(
+            icon: AppIcons.exercise,
+            value: '$totalSets',
+            label: context.l10n.sets,
+          ),
+          _SummaryItem(
+            icon: AppIcons.weight,
+            value: '${(totalVolume / 1000).toStringAsFixed(1)}t',
+            label: context.l10n.totalVolume,
+          ),
+          _SummaryItem(
+            icon: AppIcons.timer,
+            value: '~$estimatedMinutes',
+            label: 'min',
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildConfirmButton() {
     final isValid = _isConfigurationValid;
 
@@ -481,11 +597,13 @@ class _RoundPage extends StatelessWidget {
     required this.exercises,
     required this.roundConfig,
     required this.onExerciseTap,
+    this.exercisesWithSuggestedWeight = const {},
   });
 
   final List<ExerciseDefinition> exercises;
   final _RoundConfig roundConfig;
   final void Function(ExerciseDefinition) onExerciseTap;
+  final Set<String> exercisesWithSuggestedWeight;
 
   @override
   Widget build(BuildContext context) {
@@ -497,12 +615,15 @@ class _RoundPage extends StatelessWidget {
         final config =
             roundConfig.exercises[exercise.id] ??
             const _CellConfig(weight: 20, reps: 12);
+        final hasSuggestedWeight =
+            exercisesWithSuggestedWeight.contains(exercise.id);
 
         return _ExerciseCard(
           key: ValueKey('${exercise.id}_${roundConfig.roundNumber}'),
           exercise: exercise,
           config: config,
           index: index + 1,
+          hasSuggestedWeight: hasSuggestedWeight,
           onTap: () => onExerciseTap(exercise),
         );
       },
@@ -517,12 +638,14 @@ class _ExerciseCard extends StatelessWidget {
     required this.config,
     required this.index,
     required this.onTap,
+    this.hasSuggestedWeight = false,
   });
 
   final ExerciseDefinition exercise;
   final _CellConfig config;
   final int index;
   final VoidCallback onTap;
+  final bool hasSuggestedWeight;
 
   @override
   Widget build(BuildContext context) {
@@ -581,6 +704,14 @@ class _ExerciseCard extends StatelessWidget {
                         style: context.textTheme.bodySmall?.copyWith(
                           color: context.colors.error,
                         ),
+                      )
+                    else if (hasSuggestedWeight)
+                      Text(
+                        context.l10n.lastUsedWeight,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.primary.withValues(alpha: 0.7),
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
                   ],
                 ),
@@ -625,17 +756,8 @@ class _ExerciseCard extends StatelessWidget {
 // ===========================================================================
 
 class _RoundConfig {
-  final int roundNumber;
-  final Map<String, _CellConfig> exercises;
 
   const _RoundConfig({required this.roundNumber, required this.exercises});
-
-  _RoundConfig copyWithExercise(String exerciseId, _CellConfig config) {
-    return _RoundConfig(
-      roundNumber: roundNumber,
-      exercises: {...exercises, exerciseId: config},
-    );
-  }
 
   factory _RoundConfig.fromSupersetRound(
     SupersetRound round,
@@ -664,13 +786,58 @@ class _RoundConfig {
       },
     );
   }
+  final int roundNumber;
+  final Map<String, _CellConfig> exercises;
+
+  _RoundConfig copyWithExercise(String exerciseId, _CellConfig config) {
+    return _RoundConfig(
+      roundNumber: roundNumber,
+      exercises: {...exercises, exerciseId: config},
+    );
+  }
 }
 
 class _CellConfig {
+
+  const _CellConfig({required this.weight, required this.reps});
   final double weight;
   final int reps;
 
-  const _CellConfig({required this.weight, required this.reps});
-
   bool get isValid => weight > 0 && reps > 0;
+}
+
+/// Summary item widget for displaying superset stats
+class _SummaryItem extends StatelessWidget {
+  const _SummaryItem({
+    required this.icon,
+    required this.value,
+    required this.label,
+  });
+
+  final IconData icon;
+  final String value;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: AppIconSize.small, color: context.colors.primary),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: context.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          label,
+          style: context.textTheme.bodySmall?.copyWith(
+            color: context.colors.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
 }

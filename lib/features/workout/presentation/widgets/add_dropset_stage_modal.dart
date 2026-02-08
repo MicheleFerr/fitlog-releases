@@ -288,10 +288,10 @@ class _AddDropsetStageModalState extends State<AddDropsetStageModal> {
                                 style: context.textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   suffixText: 'kg',
-                                  border: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.symmetric(
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 16,
                                   ),
@@ -323,10 +323,10 @@ class _AddDropsetStageModalState extends State<AddDropsetStageModal> {
                                 style: context.textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   suffixText: 'reps',
-                                  border: const OutlineInputBorder(),
-                                  contentPadding: const EdgeInsets.symmetric(
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 16,
                                   ),

@@ -65,10 +65,6 @@ final photoStorageStatsProvider =
 
 /// State for photo upload
 class PhotoUploadState {
-  final bool isUploading;
-  final double progress;
-  final String? errorMessage;
-  final ProgressPhoto? uploadedPhoto;
 
   const PhotoUploadState({
     this.isUploading = false,
@@ -76,6 +72,10 @@ class PhotoUploadState {
     this.errorMessage,
     this.uploadedPhoto,
   });
+  final bool isUploading;
+  final double progress;
+  final String? errorMessage;
+  final ProgressPhoto? uploadedPhoto;
 
   PhotoUploadState copyWith({
     bool? isUploading,
@@ -330,10 +330,6 @@ final photoReminderSettingsProvider = FutureProvider<PhotoReminderSettings>((
 
 /// State for photo reminder management
 class PhotoReminderState {
-  final PhotoReminderSettings settings;
-  final bool isLoading;
-  final String? errorMessage;
-  final bool justEnabled;
 
   const PhotoReminderState({
     required this.settings,
@@ -341,6 +337,10 @@ class PhotoReminderState {
     this.errorMessage,
     this.justEnabled = false,
   });
+  final PhotoReminderSettings settings;
+  final bool isLoading;
+  final String? errorMessage;
+  final bool justEnabled;
 
   PhotoReminderState copyWith({
     PhotoReminderSettings? settings,

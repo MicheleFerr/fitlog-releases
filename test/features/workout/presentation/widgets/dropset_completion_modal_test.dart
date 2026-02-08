@@ -270,18 +270,18 @@ void main() {
     });
 
     test('new stage weight calculation based on previous stage', () {
-      final lastStageWeight = 80.0;
+      const lastStageWeight = 80.0;
 
       // Simulate -5kg drop suggestion
-      final suggestedWeight = lastStageWeight - 5.0;
+      const suggestedWeight = lastStageWeight - 5.0;
       expect(suggestedWeight, 75.0);
 
       // Simulate -10kg drop
-      final biggerDrop = lastStageWeight - 10.0;
+      const biggerDrop = lastStageWeight - 10.0;
       expect(biggerDrop, 70.0);
 
       // Ensure weight doesn't go below 0
-      final smallWeight = 2.5;
+      const smallWeight = 2.5;
       final clampedWeight = (smallWeight - 5.0).clamp(0.0, double.infinity);
       expect(clampedWeight, 0.0);
     });

@@ -9,10 +9,8 @@
 /// Manages intelligent community suggestions with priority scoring
 library;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 
 /// User level based on community contributions
 enum UserLevel {

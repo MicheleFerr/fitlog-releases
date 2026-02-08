@@ -15,21 +15,21 @@ void main() {
       return WeeklyPattern(
         cycle: cycle ??
             [
-              WorkoutFingerprint(
+              const WorkoutFingerprint(
                 id: 'push1',
                 templateName: 'Push',
                 dominantMuscles: ['chest', 'shoulders', 'triceps'],
                 category: WorkoutCategory.push,
                 totalVolume: 5000.0,
               ),
-              WorkoutFingerprint(
+              const WorkoutFingerprint(
                 id: 'pull1',
                 templateName: 'Pull',
                 dominantMuscles: ['back', 'biceps'],
                 category: WorkoutCategory.pull,
                 totalVolume: 4500.0,
               ),
-              WorkoutFingerprint(
+              const WorkoutFingerprint(
                 id: 'legs1',
                 templateName: 'Legs',
                 dominantMuscles: ['quadriceps', 'hamstrings', 'glutes'],
@@ -97,7 +97,7 @@ void main() {
 
       test('should return 1 for single item cycle', () {
         final pattern = createPattern(cycle: [
-          WorkoutFingerprint(
+          const WorkoutFingerprint(
             id: 'push1',
             dominantMuscles: ['chest', 'shoulders'],
             category: WorkoutCategory.push,
@@ -155,13 +155,13 @@ void main() {
 
       test('should deduplicate muscles', () {
         final pattern = createPattern(cycle: [
-          WorkoutFingerprint(
+          const WorkoutFingerprint(
             id: 'push1',
             dominantMuscles: ['chest', 'shoulders', 'triceps'],
             category: WorkoutCategory.push,
             totalVolume: 5000.0,
           ),
-          WorkoutFingerprint(
+          const WorkoutFingerprint(
             id: 'upper1',
             dominantMuscles: ['chest', 'back', 'shoulders'],
             category: WorkoutCategory.upper,
@@ -192,7 +192,7 @@ void main() {
 
       test('should work with single workout cycle', () {
         final pattern = createPattern(cycle: [
-          WorkoutFingerprint(
+          const WorkoutFingerprint(
             id: 'push1',
             templateName: 'Push Day',
             dominantMuscles: ['chest', 'shoulders'],
@@ -206,13 +206,13 @@ void main() {
 
       test('should use category name when template name is missing', () {
         final pattern = createPattern(cycle: [
-          WorkoutFingerprint(
+          const WorkoutFingerprint(
             id: 'push1',
             dominantMuscles: ['chest', 'shoulders'],
             category: WorkoutCategory.push,
             totalVolume: 5000.0,
           ),
-          WorkoutFingerprint(
+          const WorkoutFingerprint(
             id: 'pull1',
             dominantMuscles: ['back', 'biceps'],
             category: WorkoutCategory.pull,

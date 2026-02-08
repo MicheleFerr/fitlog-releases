@@ -24,14 +24,14 @@ import 'package:url_launcher/url_launcher.dart';
 /// - Categories/keywords
 /// - Expandable abstract
 class ScientificPaperCard extends StatefulWidget {
-  final ScientificPaper paper;
-  final bool initiallyExpanded;
 
   const ScientificPaperCard({
     super.key,
     required this.paper,
     this.initiallyExpanded = false,
   });
+  final ScientificPaper paper;
+  final bool initiallyExpanded;
 
   @override
   State<ScientificPaperCard> createState() => _ScientificPaperCardState();

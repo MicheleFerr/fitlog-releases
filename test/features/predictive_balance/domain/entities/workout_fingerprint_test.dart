@@ -5,7 +5,7 @@ void main() {
   group('WorkoutFingerprint', () {
     group('matches', () {
       test('should match when template names are the same', () {
-        final fp1 = WorkoutFingerprint(
+        const fp1 = WorkoutFingerprint(
           id: 'test1',
           templateName: 'Push Day',
           dominantMuscles: ['chest', 'shoulders', 'triceps'],
@@ -13,7 +13,7 @@ void main() {
           totalVolume: 5000.0,
         );
 
-        final fp2 = WorkoutFingerprint(
+        const fp2 = WorkoutFingerprint(
           id: 'test2',
           templateName: 'Push Day',
           dominantMuscles: ['back', 'biceps'],
@@ -25,7 +25,7 @@ void main() {
       });
 
       test('should not match when template names are empty', () {
-        final fp1 = WorkoutFingerprint(
+        const fp1 = WorkoutFingerprint(
           id: 'test1',
           templateName: '',
           dominantMuscles: ['chest', 'shoulders', 'triceps'],
@@ -33,7 +33,7 @@ void main() {
           totalVolume: 5000.0,
         );
 
-        final fp2 = WorkoutFingerprint(
+        const fp2 = WorkoutFingerprint(
           id: 'test2',
           templateName: '',
           dominantMuscles: ['back', 'biceps'],
@@ -46,14 +46,14 @@ void main() {
       });
 
       test('should match when categories are the same (excluding other)', () {
-        final fp1 = WorkoutFingerprint(
+        const fp1 = WorkoutFingerprint(
           id: 'test1',
           dominantMuscles: ['chest', 'shoulders', 'triceps'],
           category: WorkoutCategory.push,
           totalVolume: 5000.0,
         );
 
-        final fp2 = WorkoutFingerprint(
+        const fp2 = WorkoutFingerprint(
           id: 'test2',
           dominantMuscles: ['chest', 'shoulders'],
           category: WorkoutCategory.push,
@@ -64,14 +64,14 @@ void main() {
       });
 
       test('should not match when both categories are "other"', () {
-        final fp1 = WorkoutFingerprint(
+        const fp1 = WorkoutFingerprint(
           id: 'test1',
           dominantMuscles: ['core'],
           category: WorkoutCategory.other,
           totalVolume: 1000.0,
         );
 
-        final fp2 = WorkoutFingerprint(
+        const fp2 = WorkoutFingerprint(
           id: 'test2',
           dominantMuscles: ['forearms'],
           category: WorkoutCategory.other,
@@ -83,14 +83,14 @@ void main() {
       });
 
       test('should match when 2 out of 3 dominant muscles overlap', () {
-        final fp1 = WorkoutFingerprint(
+        const fp1 = WorkoutFingerprint(
           id: 'test1',
           dominantMuscles: ['chest', 'shoulders', 'triceps'],
           category: WorkoutCategory.other,
           totalVolume: 5000.0,
         );
 
-        final fp2 = WorkoutFingerprint(
+        const fp2 = WorkoutFingerprint(
           id: 'test2',
           dominantMuscles: ['chest', 'shoulders', 'back'],
           category: WorkoutCategory.other,
@@ -102,14 +102,14 @@ void main() {
       });
 
       test('should not match when only 1 dominant muscle overlaps', () {
-        final fp1 = WorkoutFingerprint(
+        const fp1 = WorkoutFingerprint(
           id: 'test1',
           dominantMuscles: ['chest', 'shoulders', 'triceps'],
           category: WorkoutCategory.other,
           totalVolume: 5000.0,
         );
 
-        final fp2 = WorkoutFingerprint(
+        const fp2 = WorkoutFingerprint(
           id: 'test2',
           dominantMuscles: ['chest', 'back', 'biceps'],
           category: WorkoutCategory.other,
@@ -121,14 +121,14 @@ void main() {
       });
 
       test('should not match when no muscles overlap', () {
-        final fp1 = WorkoutFingerprint(
+        const fp1 = WorkoutFingerprint(
           id: 'test1',
           dominantMuscles: ['chest', 'shoulders', 'triceps'],
           category: WorkoutCategory.other,
           totalVolume: 5000.0,
         );
 
-        final fp2 = WorkoutFingerprint(
+        const fp2 = WorkoutFingerprint(
           id: 'test2',
           dominantMuscles: ['quadriceps', 'hamstrings', 'glutes'],
           category: WorkoutCategory.other,
@@ -141,7 +141,7 @@ void main() {
 
     group('displayName', () {
       test('should return templateName when available', () {
-        final fp = WorkoutFingerprint(
+        const fp = WorkoutFingerprint(
           id: 'test1',
           templateName: 'Push Day',
           dominantMuscles: ['chest', 'shoulders', 'triceps'],
@@ -153,7 +153,7 @@ void main() {
       });
 
       test('should return category name when templateName is null', () {
-        final fp = WorkoutFingerprint(
+        const fp = WorkoutFingerprint(
           id: 'test1',
           dominantMuscles: ['chest', 'shoulders', 'triceps'],
           category: WorkoutCategory.push,
@@ -164,7 +164,7 @@ void main() {
       });
 
       test('should return category name when templateName is empty', () {
-        final fp = WorkoutFingerprint(
+        const fp = WorkoutFingerprint(
           id: 'test1',
           templateName: '',
           dominantMuscles: ['chest', 'shoulders', 'triceps'],

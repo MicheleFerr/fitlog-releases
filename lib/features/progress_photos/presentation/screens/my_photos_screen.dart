@@ -343,11 +343,11 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
               CachedNetworkImage(
                 imageUrl: photo.thumbnailUrl,
                 fit: BoxFit.cover,
-                placeholder: (_, __) => Container(
+                placeholder: (_, __) => ColoredBox(
                   color: context.colors.surfaceContainer,
                   child: const Center(child: LoadingIndicator(size: 20)),
                 ),
-                errorWidget: (_, __, ___) => Container(
+                errorWidget: (_, __, ___) => ColoredBox(
                   color: context.colors.errorContainer,
                   child: Icon(AppIcons.error, color: context.colors.error),
                 ),
@@ -522,11 +522,6 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
 
 /// Result from photo capture sheet
 class PhotoCaptureResult {
-  final File imageFile;
-  final PhotoPose pose;
-  final DateTime? takenAt;
-  final String? notes;
-  final double? weightKg;
 
   PhotoCaptureResult({
     required this.imageFile,
@@ -535,4 +530,9 @@ class PhotoCaptureResult {
     this.notes,
     this.weightKg,
   });
+  final File imageFile;
+  final PhotoPose pose;
+  final DateTime? takenAt;
+  final String? notes;
+  final double? weightKg;
 }

@@ -481,11 +481,13 @@ class _TemplateShareSheetContentState
       // Technique chips
       if (_options.showTechniqueChips) {
         final techniques = <String>[];
-        if (exercise.type == ExerciseType.superset)
+        if (exercise.type == ExerciseType.superset) {
           techniques.add('🔗 Superset');
+        }
         if (exercise.type == ExerciseType.dropset) techniques.add('⬇️ Dropset');
-        if (exercise.type == ExerciseType.restPause)
+        if (exercise.type == ExerciseType.restPause) {
           techniques.add('⏸️ Rest-Pause');
+        }
         if (techniques.isNotEmpty) {
           buffer.write(' ${techniques.join(' ')}');
         }

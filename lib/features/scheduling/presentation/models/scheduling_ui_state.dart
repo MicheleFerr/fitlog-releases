@@ -6,7 +6,6 @@ part 'scheduling_ui_state.freezed.dart';
 /// UI state for the schedule bottom sheet
 @freezed
 abstract class ScheduleBottomSheetState with _$ScheduleBottomSheetState {
-  const ScheduleBottomSheetState._();
 
   const factory ScheduleBottomSheetState({
     /// Currently selected dates for scheduling
@@ -27,6 +26,7 @@ abstract class ScheduleBottomSheetState with _$ScheduleBottomSheetState {
     /// Success message after successful scheduling
     String? successMessage,
   }) = _ScheduleBottomSheetState;
+  const ScheduleBottomSheetState._();
 
   /// Get reminder time as TimeOfDay
   TimeOfDay get reminderTime =>

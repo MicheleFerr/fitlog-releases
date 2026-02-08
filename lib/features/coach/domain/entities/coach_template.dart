@@ -77,6 +77,28 @@ abstract class CoachTemplate with _$CoachTemplate {
     String? coachNotes,
   }) = _CoachTemplate;
 
+  /// Create from a WorkoutTemplate
+  factory CoachTemplate.fromWorkoutTemplate({
+    required WorkoutTemplate template,
+    required String coachId,
+  }) {
+    return CoachTemplate(
+      id: template.id,
+      coachId: coachId,
+      name: template.name,
+      description: template.description,
+      exercises: template.exercises,
+      estimatedDuration: template.estimatedDuration,
+      tags: template.tags,
+      difficulty: template.difficulty,
+      createdAt: template.createdAt,
+      updatedAt: template.updatedAt,
+    );
+  }
+
+  factory CoachTemplate.fromJson(Map<String, dynamic> json) =>
+      _$CoachTemplateFromJson(json);
+
   const CoachTemplate._();
 
   /// Number of athletes this template is assigned to
@@ -104,26 +126,4 @@ abstract class CoachTemplate with _$CoachTemplate {
       difficulty: difficulty,
     );
   }
-
-  /// Create from a WorkoutTemplate
-  factory CoachTemplate.fromWorkoutTemplate({
-    required WorkoutTemplate template,
-    required String coachId,
-  }) {
-    return CoachTemplate(
-      id: template.id,
-      coachId: coachId,
-      name: template.name,
-      description: template.description,
-      exercises: template.exercises,
-      estimatedDuration: template.estimatedDuration,
-      tags: template.tags,
-      difficulty: template.difficulty,
-      createdAt: template.createdAt,
-      updatedAt: template.updatedAt,
-    );
-  }
-
-  factory CoachTemplate.fromJson(Map<String, dynamic> json) =>
-      _$CoachTemplateFromJson(json);
 }

@@ -7,15 +7,15 @@ void main() {
     group('DropSet conversion', () {
       test('should convert ExerciseTemplate with dropset type to DropSetExercise', () {
         // Arrange: Create a template with dropset type and stages as SetTemplates
-        final template = ExerciseTemplate(
+        const template = ExerciseTemplate(
           exerciseId: 'dropset_1',
           exerciseName: 'Bicep Curl - Drop Set',
           category: ExerciseCategory.arms,
           type: ExerciseType.dropset,
           sets: [
-            const SetTemplate(setNumber: 1, targetWeight: 20, targetReps: 8),
-            const SetTemplate(setNumber: 2, targetWeight: 15, targetReps: 10),
-            const SetTemplate(setNumber: 3, targetWeight: 10, targetReps: 12),
+            SetTemplate(setNumber: 1, targetWeight: 20, targetReps: 8),
+            SetTemplate(setNumber: 2, targetWeight: 15, targetReps: 10),
+            SetTemplate(setNumber: 3, targetWeight: 10, targetReps: 12),
           ],
           notes: 'Test dropset',
           restTime: 90,
@@ -46,14 +46,14 @@ void main() {
       });
 
       test('should handle dropset with null weights using defaults', () {
-        final template = ExerciseTemplate(
+        const template = ExerciseTemplate(
           exerciseId: 'dropset_2',
           exerciseName: 'Test Dropset',
           category: ExerciseCategory.chest,
           type: ExerciseType.dropset,
           sets: [
-            const SetTemplate(setNumber: 1, targetReps: 10), // No weight
-            const SetTemplate(setNumber: 2, targetReps: 12),
+            SetTemplate(setNumber: 1, targetReps: 10), // No weight
+            SetTemplate(setNumber: 2, targetReps: 12),
           ],
         );
 
@@ -69,15 +69,15 @@ void main() {
     group('RestPause conversion', () {
       test('should convert ExerciseTemplate with restPause type to RestPauseExercise', () {
         // Arrange
-        final template = ExerciseTemplate(
+        const template = ExerciseTemplate(
           exerciseId: 'restpause_1',
           exerciseName: 'Bench Press - Rest-Pause',
           category: ExerciseCategory.chest,
           type: ExerciseType.restPause,
           sets: [
-            const SetTemplate(setNumber: 1, targetWeight: 80, targetReps: 8, restSeconds: 20),
-            const SetTemplate(setNumber: 2, targetWeight: 80, targetReps: 5, restSeconds: 20),
-            const SetTemplate(setNumber: 3, targetWeight: 80, targetReps: 3, restSeconds: 20),
+            SetTemplate(setNumber: 1, targetWeight: 80, targetReps: 8, restSeconds: 20),
+            SetTemplate(setNumber: 2, targetWeight: 80, targetReps: 5, restSeconds: 20),
+            SetTemplate(setNumber: 3, targetWeight: 80, targetReps: 3, restSeconds: 20),
           ],
           notes: 'Heavy rest-pause',
           restTime: 180,
@@ -104,14 +104,14 @@ void main() {
       });
 
       test('should use default restSeconds when not provided', () {
-        final template = ExerciseTemplate(
+        const template = ExerciseTemplate(
           exerciseId: 'restpause_2',
           exerciseName: 'Test Rest-Pause',
           category: ExerciseCategory.back,
           type: ExerciseType.restPause,
           sets: [
-            const SetTemplate(setNumber: 1, targetWeight: 50, targetReps: 10),
-            const SetTemplate(setNumber: 2, targetReps: 6),
+            SetTemplate(setNumber: 1, targetWeight: 50, targetReps: 10),
+            SetTemplate(setNumber: 2, targetReps: 6),
           ],
         );
 
@@ -202,15 +202,15 @@ void main() {
 
     group('Normal exercise conversion (regression)', () {
       test('should still convert normal exercises correctly', () {
-        final template = ExerciseTemplate(
+        const template = ExerciseTemplate(
           exerciseId: 'normal_1',
           exerciseName: 'Squat',
           category: ExerciseCategory.legs,
           type: ExerciseType.single,
           sets: [
-            const SetTemplate(setNumber: 1, targetWeight: 100, targetReps: 5),
-            const SetTemplate(setNumber: 2, targetWeight: 100, targetReps: 5),
-            const SetTemplate(setNumber: 3, targetWeight: 100, targetReps: 5),
+            SetTemplate(setNumber: 1, targetWeight: 100, targetReps: 5),
+            SetTemplate(setNumber: 2, targetWeight: 100, targetReps: 5),
+            SetTemplate(setNumber: 3, targetWeight: 100, targetReps: 5),
           ],
         );
 

@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../../shared/presentation/extensions/build_context_extensions.dart';
-import '../../../../shared/presentation/theme/app_icons.dart';
-import '../../../../shared/presentation/theme/color_scheme_extensions.dart';
-import '../../../../shared/presentation/widgets/loading_indicator.dart';
-import '../../domain/services/audio_debug_test_service.dart';
-import '../providers/audio_debug_test_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/features/settings/domain/services/audio_debug_test_service.dart';
+import 'package:gymbro_flutter_new/features/settings/presentation/providers/audio_debug_test_provider.dart';
 
 /// 🔬 Audio Debug Test Screen
 /// Automated testing UI for timer audio bugs
@@ -42,7 +41,7 @@ class _AudioDebugTestScreenState extends ConsumerState<AudioDebugTestScreen>
       appBar: AppBar(
         title: Row(
           children: [
-            Icon(AppIcons.bugReport, size: 20),
+            const Icon(AppIcons.bugReport, size: 20),
             const SizedBox(width: 8),
             Text(context.l10n.audioDebugTests),
           ],
@@ -175,13 +174,13 @@ class _QuickTestsTab extends ConsumerWidget {
                 const SizedBox(width: 12),
                 IconButton.filledTonal(
                   onPressed: () => _showResults(context, ref, isQuick: true),
-                  icon: Icon(AppIcons.list),
+                  icon: const Icon(AppIcons.list),
                   tooltip: context.l10n.viewResults,
                 ),
                 const SizedBox(width: 8),
                 IconButton.filledTonal(
                   onPressed: () => _exportResults(context, ref, isQuick: true),
-                  icon: Icon(AppIcons.share),
+                  icon: const Icon(AppIcons.share),
                   tooltip: context.l10n.exportResults,
                 ),
               ],
@@ -345,22 +344,22 @@ class _FullTestsTab extends ConsumerWidget {
               if (state.fullResults != null) ...[
                 const SizedBox(width: 12),
                 IconButton.filledTonal(
-                  onPressed: () => _QuickTestsTab()._showResults(
+                  onPressed: () => const _QuickTestsTab()._showResults(
                     context,
                     ref,
                     isQuick: false,
                   ),
-                  icon: Icon(AppIcons.list),
+                  icon: const Icon(AppIcons.list),
                   tooltip: context.l10n.viewResults,
                 ),
                 const SizedBox(width: 8),
                 IconButton.filledTonal(
-                  onPressed: () => _QuickTestsTab()._exportResults(
+                  onPressed: () => const _QuickTestsTab()._exportResults(
                     context,
                     ref,
                     isQuick: false,
                   ),
-                  icon: Icon(AppIcons.share),
+                  icon: const Icon(AppIcons.share),
                   tooltip: context.l10n.exportResults,
                 ),
               ],
@@ -380,12 +379,6 @@ class _FullTestsTab extends ConsumerWidget {
 // Widgets
 
 class _InfoCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final String duration;
-  final String testCount;
-  final IconData icon;
-  final Color color;
 
   const _InfoCard({
     required this.title,
@@ -395,6 +388,12 @@ class _InfoCard extends StatelessWidget {
     required this.icon,
     required this.color,
   });
+  final String title;
+  final String description;
+  final String duration;
+  final String testCount;
+  final IconData icon;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -442,15 +441,15 @@ class _InfoCard extends StatelessWidget {
 }
 
 class _InfoChip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
 
   const _InfoChip({
     required this.icon,
     required this.label,
     required this.color,
   });
+  final IconData icon;
+  final String label;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -479,13 +478,6 @@ class _InfoChip extends StatelessWidget {
 }
 
 class _TestCaseCard extends StatelessWidget {
-  final String testId;
-  final String title;
-  final String description;
-  final IconData icon;
-  final String expectedResult;
-  final bool isHighlighted;
-  final TestResult? result;
 
   const _TestCaseCard({
     required this.testId,
@@ -496,6 +488,13 @@ class _TestCaseCard extends StatelessWidget {
     this.isHighlighted = false,
     this.result,
   });
+  final String testId;
+  final String title;
+  final String description;
+  final IconData icon;
+  final String expectedResult;
+  final bool isHighlighted;
+  final TestResult? result;
 
   @override
   Widget build(BuildContext context) {
@@ -580,9 +579,9 @@ class _TestCaseCard extends StatelessWidget {
 }
 
 class _ResultBadge extends StatelessWidget {
-  final TestResult result;
 
   const _ResultBadge({required this.result});
+  final TestResult result;
 
   @override
   Widget build(BuildContext context) {
@@ -615,9 +614,9 @@ class _ResultBadge extends StatelessWidget {
 }
 
 class _ProgressCard extends StatelessWidget {
-  final TestProgress progress;
 
   const _ProgressCard({required this.progress});
+  final TestProgress progress;
 
   @override
   Widget build(BuildContext context) {
@@ -665,9 +664,9 @@ class _ProgressCard extends StatelessWidget {
 }
 
 class _ResultsSummaryCard extends StatelessWidget {
-  final QuickTestResults results;
 
   const _ResultsSummaryCard({required this.results});
+  final QuickTestResults results;
 
   @override
   Widget build(BuildContext context) {
@@ -737,15 +736,15 @@ class _ResultsSummaryCard extends StatelessWidget {
 }
 
 class _StatChip extends StatelessWidget {
-  final String label;
-  final String value;
-  final Color color;
 
   const _StatChip({
     required this.label,
     required this.value,
     required this.color,
   });
+  final String label;
+  final String value;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -779,14 +778,14 @@ class _TestMatrixPreview extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _TestMatrixRow('TC-1', 'Foreground 30s'),
-            _TestMatrixRow('TC-2', 'Background 90s NO LA'),
-            _TestMatrixRow('TC-3', 'Background 90s WITH LA'),
-            _TestMatrixRow('TC-4', 'Foreground + Spotify'),
-            _TestMatrixRow('TC-5', 'Background + Spotify'),
-            _TestMatrixRow('TC-6', 'Foreground 10s rapid'),
-            _TestMatrixRow('TC-7', 'Rapid succession'),
-            _TestMatrixRow('TC-8', 'Background 120s'),
+            const _TestMatrixRow('TC-1', 'Foreground 30s'),
+            const _TestMatrixRow('TC-2', 'Background 90s NO LA'),
+            const _TestMatrixRow('TC-3', 'Background 90s WITH LA'),
+            const _TestMatrixRow('TC-4', 'Foreground + Spotify'),
+            const _TestMatrixRow('TC-5', 'Background + Spotify'),
+            const _TestMatrixRow('TC-6', 'Foreground 10s rapid'),
+            const _TestMatrixRow('TC-7', 'Rapid succession'),
+            const _TestMatrixRow('TC-8', 'Background 120s'),
             const SizedBox(height: 8),
             Text(
               '× 5 runs each = 40 tests total',
@@ -803,10 +802,10 @@ class _TestMatrixPreview extends StatelessWidget {
 }
 
 class _TestMatrixRow extends StatelessWidget {
-  final String id;
-  final String name;
 
   const _TestMatrixRow(this.id, this.name);
+  final String id;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -832,9 +831,9 @@ class _TestMatrixRow extends StatelessWidget {
 }
 
 class _ResultsDialog extends StatelessWidget {
-  final QuickTestResults results;
 
   const _ResultsDialog({required this.results});
+  final QuickTestResults results;
 
   @override
   Widget build(BuildContext context) {
@@ -860,7 +859,7 @@ class _ResultsDialog extends StatelessWidget {
               Navigator.pop(context);
               Share.share(results.summary);
             },
-            icon: Icon(AppIcons.share),
+            icon: const Icon(AppIcons.share),
             label: Text(context.l10n.share),
           ),
         ),

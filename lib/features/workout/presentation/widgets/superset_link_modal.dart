@@ -10,7 +10,9 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_round_config_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Modal for quickly creating a superset by linking exercises.
 /// Accessible from exercise menu → "Create Superset"
@@ -201,6 +203,77 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
     }
   }
 
+  /// Show informational dialog explaining what a superset is
+  /// Helps beginners (like Marco persona) understand the technique
+  void _showSupersetInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Row(
+          children: [
+            SemanticIcon(
+              icon: AppIcons.info,
+              semanticLabel: context.l10n.supersetInfoTitle,
+              size: AppIconSize.small,
+              color: context.colors.primary,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                context.l10n.supersetInfoTitle,
+                style: context.textTheme.titleMedium,
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              context.l10n.supersetInfoDescription,
+              style: context.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: context.colors.primaryContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.lightbulbOutline,
+                    semanticLabel: 'Tip',
+                    size: AppIconSize.small,
+                    color: context.colors.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      context.l10n.supersetInfoTip,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.onSurface,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(context.l10n.gotIt),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -261,6 +334,16 @@ class _SupersetLinkModalState extends ConsumerState<SupersetLinkModal> {
                 context.l10n.createSuperset,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(width: 4),
+              // Info button for superset explanation (helps Marco persona)
+              GestureDetector(
+                onTap: () => _showSupersetInfoDialog(context),
+                child: Icon(
+                  AppIcons.infoOutline,
+                  size: AppIconSize.small,
+                  color: theme.colorScheme.primary,
                 ),
               ),
             ],

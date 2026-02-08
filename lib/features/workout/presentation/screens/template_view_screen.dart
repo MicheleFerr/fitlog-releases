@@ -460,7 +460,7 @@ class _ExerciseViewTile extends StatelessWidget {
   Widget _buildDropSetDisplay(BuildContext context, List<SetTemplate> sets) {
     final parts = sets.map((s) {
       final weight = s.targetWeight != null
-          ? '${_formatWeight(s.targetWeight!)}'
+          ? _formatWeight(s.targetWeight!)
           : '?';
       final reps = s.targetReps != null ? '×${s.targetReps}' : '';
       return '$weight$reps';

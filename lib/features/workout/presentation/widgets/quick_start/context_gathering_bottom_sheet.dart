@@ -708,7 +708,7 @@ class _ContextGatheringBottomSheetState
         Center(
           child: TextButton.icon(
             onPressed: _onDemographicsSkipped,
-            icon: Icon(AppIcons.skipNext, size: AppIconSize.small),
+            icon: const Icon(AppIcons.skipNext, size: AppIconSize.small),
             label: Text(context.l10n.contextSkipForNow),
           ),
         ),

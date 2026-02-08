@@ -9,18 +9,6 @@ enum WorkoutSessionMode { exercise, rest, rpe }
 
 /// Represents the current state of a workout session
 class WorkoutSessionState {
-  final WorkoutSessionMode mode;
-  final String exerciseName;
-  final int currentSet;
-  final int totalSets;
-  final double weight;
-  final int targetReps;
-  final int completedExercises;
-  final int totalExercises;
-  final DateTime workoutStartDate;
-  final int restRemainingSeconds;
-  final int? selectedRPE;
-  final bool rpeEnabled;
 
   const WorkoutSessionState({
     required this.mode,
@@ -58,14 +46,22 @@ class WorkoutSessionState {
       rpeEnabled: map['rpeEnabled'] as bool? ?? false,
     );
   }
+  final WorkoutSessionMode mode;
+  final String exerciseName;
+  final int currentSet;
+  final int totalSets;
+  final double weight;
+  final int targetReps;
+  final int completedExercises;
+  final int totalExercises;
+  final DateTime workoutStartDate;
+  final int restRemainingSeconds;
+  final int? selectedRPE;
+  final bool rpeEnabled;
 }
 
 /// Event data from Live Activity interactions
 class WorkoutSessionEvent {
-  final String eventType;
-  final String activityId;
-  final DateTime timestamp;
-  final Map<String, dynamic> data;
 
   const WorkoutSessionEvent({
     required this.eventType,
@@ -84,6 +80,10 @@ class WorkoutSessionEvent {
       data: Map<String, dynamic>.from(map),
     );
   }
+  final String eventType;
+  final String activityId;
+  final DateTime timestamp;
+  final Map<String, dynamic> data;
 
   // Event type helpers
   bool get isCompleteSet => eventType == 'complete_set';
@@ -106,10 +106,10 @@ class WorkoutSessionEvent {
 /// This service communicates with the native iOS WorkoutSessionManager
 /// to control a single persistent Live Activity throughout the workout.
 class WorkoutSessionLAService {
-  static final WorkoutSessionLAService _instance =
-      WorkoutSessionLAService._internal();
   factory WorkoutSessionLAService() => _instance;
   WorkoutSessionLAService._internal();
+  static final WorkoutSessionLAService _instance =
+      WorkoutSessionLAService._internal();
 
   static const _channel = MethodChannel('com.gymbro.timer/workout_session');
 

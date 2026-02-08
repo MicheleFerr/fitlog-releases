@@ -57,7 +57,7 @@ void main() {
             conversationHistory: any(named: 'conversationHistory'),
             userId: any(named: 'userId'),
           )).thenAnswer(
-        (_) async => AIServiceResponse(content: 'AI response'),
+        (_) async => const AIServiceResponse(content: 'AI response'),
       );
 
       final notifier = container.read(aIChatProvider.notifier);
@@ -122,7 +122,7 @@ void main() {
         (_) async {
           // Simulate delay
           await Future.delayed(const Duration(milliseconds: 100));
-          return AIServiceResponse(content: 'AI response');
+          return const AIServiceResponse(content: 'AI response');
         },
       );
 
@@ -154,7 +154,7 @@ void main() {
             conversationHistory: any(named: 'conversationHistory'),
             userId: any(named: 'userId'),
           )).thenAnswer(
-        (_) async => AIServiceResponse(content: 'AI response'),
+        (_) async => const AIServiceResponse(content: 'AI response'),
       );
 
       final notifier = container.read(aIChatProvider.notifier);

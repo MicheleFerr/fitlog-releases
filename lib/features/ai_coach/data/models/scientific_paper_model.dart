@@ -14,6 +14,64 @@ part 'scientific_paper_model.g.dart';
 
 @HiveType(typeId: 10)
 class ScientificPaperModel extends HiveObject {
+
+  ScientificPaperModel({
+    required this.id,
+    required this.title,
+    required this.authors,
+    required this.year,
+    required this.doi,
+    required this.abstract,
+    required this.summary,
+    required this.url,
+    required this.license,
+    required this.categories,
+    required this.keywords,
+    required this.uploadedAt,
+    required this.updatedAt,
+    required this.active,
+    this.metadata = const {},
+  });
+
+  /// Create from domain entity
+  factory ScientificPaperModel.fromDomain(ScientificPaper paper) =>
+      ScientificPaperModel(
+        id: paper.id,
+        title: paper.title,
+        authors: paper.authors,
+        year: paper.year,
+        doi: paper.doi,
+        abstract: paper.abstract,
+        summary: paper.summary,
+        url: paper.url,
+        license: paper.license,
+        categories: paper.categories,
+        keywords: paper.keywords,
+        uploadedAt: paper.uploadedAt,
+        updatedAt: paper.updatedAt,
+        active: paper.active,
+        metadata: paper.metadata ?? {},
+      );
+
+  /// Convert from JSON (from API response)
+  factory ScientificPaperModel.fromJson(Map<String, dynamic> json) =>
+      ScientificPaperModel(
+        id: json['id'] as String,
+        title: json['title'] as String,
+        authors: List<String>.from(json['authors'] as List),
+        year: json['year'] as int,
+        doi: json['doi'] as String,
+        abstract: json['abstract'] as String,
+        summary: json['summary'] as String,
+        url: json['url'] as String,
+        license: json['license'] as String,
+        categories: List<String>.from(json['categories'] as List),
+        keywords: List<String>.from(json['keywords'] as List),
+        uploadedAt: DateTime.parse(json['uploadedAt'] as String),
+        updatedAt: DateTime.parse(json['updatedAt'] as String),
+        active: json['active'] as bool,
+        metadata: json['metadata'] as Map<dynamic, dynamic>? ?? {},
+      );
   @HiveField(0)
   final String id;
 
@@ -59,24 +117,6 @@ class ScientificPaperModel extends HiveObject {
   @HiveField(14)
   final Map<dynamic, dynamic> metadata;
 
-  ScientificPaperModel({
-    required this.id,
-    required this.title,
-    required this.authors,
-    required this.year,
-    required this.doi,
-    required this.abstract,
-    required this.summary,
-    required this.url,
-    required this.license,
-    required this.categories,
-    required this.keywords,
-    required this.uploadedAt,
-    required this.updatedAt,
-    required this.active,
-    this.metadata = const {},
-  });
-
   /// Convert to domain entity
   ScientificPaper toDomain() => ScientificPaper(
         id: id,
@@ -94,46 +134,6 @@ class ScientificPaperModel extends HiveObject {
         updatedAt: updatedAt,
         active: active,
         metadata: metadata.isEmpty ? null : Map<String, dynamic>.from(metadata),
-      );
-
-  /// Create from domain entity
-  factory ScientificPaperModel.fromDomain(ScientificPaper paper) =>
-      ScientificPaperModel(
-        id: paper.id,
-        title: paper.title,
-        authors: paper.authors,
-        year: paper.year,
-        doi: paper.doi,
-        abstract: paper.abstract,
-        summary: paper.summary,
-        url: paper.url,
-        license: paper.license,
-        categories: paper.categories,
-        keywords: paper.keywords,
-        uploadedAt: paper.uploadedAt,
-        updatedAt: paper.updatedAt,
-        active: paper.active,
-        metadata: paper.metadata ?? {},
-      );
-
-  /// Convert from JSON (from API response)
-  factory ScientificPaperModel.fromJson(Map<String, dynamic> json) =>
-      ScientificPaperModel(
-        id: json['id'] as String,
-        title: json['title'] as String,
-        authors: List<String>.from(json['authors'] as List),
-        year: json['year'] as int,
-        doi: json['doi'] as String,
-        abstract: json['abstract'] as String,
-        summary: json['summary'] as String,
-        url: json['url'] as String,
-        license: json['license'] as String,
-        categories: List<String>.from(json['categories'] as List),
-        keywords: List<String>.from(json['keywords'] as List),
-        uploadedAt: DateTime.parse(json['uploadedAt'] as String),
-        updatedAt: DateTime.parse(json['updatedAt'] as String),
-        active: json['active'] as bool,
-        metadata: json['metadata'] as Map<dynamic, dynamic>? ?? {},
       );
 
   /// Convert to JSON (for API requests)
@@ -159,10 +159,6 @@ class ScientificPaperModel extends HiveObject {
 /// Simple metadata for document sync status
 /// Stored as Map in Hive (no type adapter needed)
 class DocumentMetadata {
-  final String version;
-  final String hash;
-  final DateTime lastSyncAt;
-  final int documentsCount;
 
   DocumentMetadata({
     required this.version,
@@ -170,14 +166,6 @@ class DocumentMetadata {
     required this.lastSyncAt,
     required this.documentsCount,
   });
-
-  /// Convert to Map for Hive storage
-  Map<String, dynamic> toMap() => {
-        'version': version,
-        'hash': hash,
-        'lastSyncAt': lastSyncAt.toIso8601String(),
-        'documentsCount': documentsCount,
-      };
 
   /// Create from Map from Hive storage
   factory DocumentMetadata.fromMap(Map<String, dynamic> map) =>
@@ -187,4 +175,16 @@ class DocumentMetadata {
         lastSyncAt: DateTime.parse(map['lastSyncAt'] as String),
         documentsCount: map['documentsCount'] as int,
       );
+  final String version;
+  final String hash;
+  final DateTime lastSyncAt;
+  final int documentsCount;
+
+  /// Convert to Map for Hive storage
+  Map<String, dynamic> toMap() => {
+        'version': version,
+        'hash': hash,
+        'lastSyncAt': lastSyncAt.toIso8601String(),
+        'documentsCount': documentsCount,
+      };
 }

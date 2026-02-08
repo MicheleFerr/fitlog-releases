@@ -256,8 +256,9 @@ final recentWeightsWithDetailsProvider = FutureProvider.family.autoDispose<List<
         uniqueWeights[weight] = data;
         seenWeights.add(weight);
 
-        if (uniqueWeights.length >= 8)
+        if (uniqueWeights.length >= 8) {
           break; // Increased limit to 8 unique weights
+        }
       }
     }
 
@@ -1371,8 +1372,9 @@ final recentWeightsWithDetailsFromWorkoutsProvider = FutureProvider.family
             uniqueWeights[weight] = data;
             seenWeights.add(weight);
 
-            if (uniqueWeights.length >= 8)
+            if (uniqueWeights.length >= 8) {
               break; // Increased limit to 8 unique weights
+            }
           }
         }
 
@@ -1616,6 +1618,81 @@ final setProgressProvider = FutureProvider.family
         if (kDebugMode) {
           debugPrint('❌ setProgressProvider error: $e');
           debugPrint('Stack: $stack');
+        }
+        return null;
+      }
+    });
+
+// ============================================================================
+// DROPSET VOLUME COMPARISON PROVIDER (Task 3)
+// ============================================================================
+
+/// Provider to get the previous dropset volume for comparison
+/// Returns the total volume (weight × reps) from the last completed dropset
+/// of the same exercise name
+final previousDropsetVolumeProvider = FutureProvider.autoDispose
+    .family<double?, String>((ref, exerciseName) async {
+      try {
+        // Clean exercise name for comparison (remove " - Drop Set" suffix if present)
+        final cleanName = exerciseName.replaceAll(RegExp(r'\s*-\s*Drop Set$'), '');
+
+        if (cleanName.trim().isEmpty) {
+          return null;
+        }
+
+        // Get history grouped by date
+        final historyGrouped = await ref.watch(
+          exerciseHistoryDataGroupedProvider(cleanName).future,
+        );
+
+        if (historyGrouped.isEmpty) {
+          return null;
+        }
+
+        // Get all history entries sorted by date descending
+        final allEntries = <ExerciseHistoryData>[];
+        for (final dayHistory in historyGrouped.values) {
+          allEntries.addAll(dayHistory);
+        }
+        allEntries.sort((a, b) => b.date.compareTo(a.date));
+
+        // Skip today's entries (we want previous, not current)
+        final today = DateTime.now();
+        final previousEntries = allEntries.where((e) =>
+            e.date.year != today.year ||
+            e.date.month != today.month ||
+            e.date.day != today.day).toList();
+
+        if (previousEntries.isEmpty) {
+          return null;
+        }
+
+        // Calculate volume from previous session (same day entries)
+        final prevDate = previousEntries.first.date;
+        final sameDayEntries = previousEntries.where((e) =>
+            e.date.year == prevDate.year &&
+            e.date.month == prevDate.month &&
+            e.date.day == prevDate.day).toList();
+
+        // Sum up volume (weight × reps for each entry)
+        double totalVolume = 0.0;
+        for (final entry in sameDayEntries) {
+          if (entry.weight != null && entry.reps != null) {
+            totalVolume += entry.weight! * entry.reps!;
+          }
+        }
+
+        if (kDebugMode) {
+          debugPrint(
+            '📊 [DropsetVolume] Previous volume for "$cleanName": $totalVolume kg '
+            '(from ${sameDayEntries.length} entries on $prevDate)',
+          );
+        }
+
+        return totalVolume > 0 ? totalVolume : null;
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('❌ previousDropsetVolumeProvider error: $e');
         }
         return null;
       }

@@ -146,15 +146,15 @@ class PhotoCompressionService {
 
 /// CompressionResult - Result of image compression
 class CompressionResult {
-  final Uint8List compressedBytes;
-  final int originalSize;
-  final int compressedSize;
 
   CompressionResult({
     required this.compressedBytes,
     required this.originalSize,
     required this.compressedSize,
   });
+  final Uint8List compressedBytes;
+  final int originalSize;
+  final int compressedSize;
 
   /// Bytes saved by compression
   int get bytesSaved => originalSize - compressedSize;
@@ -184,13 +184,6 @@ class CompressionResult {
 
 /// CompressedPhotoFiles - Compressed photo and thumbnail files
 class CompressedPhotoFiles {
-  final File fullPhoto;
-  final File thumbnail;
-  final Uint8List fullPhotoBytes;
-  final Uint8List thumbnailBytes;
-  final int originalSize;
-  final int compressedSize;
-  final int thumbnailSize;
 
   CompressedPhotoFiles({
     required this.fullPhoto,
@@ -201,6 +194,13 @@ class CompressedPhotoFiles {
     required this.compressedSize,
     required this.thumbnailSize,
   });
+  final File fullPhoto;
+  final File thumbnail;
+  final Uint8List fullPhotoBytes;
+  final Uint8List thumbnailBytes;
+  final int originalSize;
+  final int compressedSize;
+  final int thumbnailSize;
 
   /// Total size of both files
   int get totalSize => compressedSize + thumbnailSize;
@@ -218,9 +218,9 @@ class CompressedPhotoFiles {
 
 /// CompressionException - Thrown when compression fails
 class CompressionException implements Exception {
-  final String message;
 
   CompressionException(this.message);
+  final String message;
 
   @override
   String toString() => 'CompressionException: $message';

@@ -816,6 +816,6 @@ class ExerciseContributionWeighted {
     if (rawSets == weightedSets.round()) {
       return '$rawSets sets';
     }
-    return '${weightedSets.toStringAsFixed(1)} sets (${rawSets} raw)';
+    return '${weightedSets.toStringAsFixed(1)} sets ($rawSets raw)';
   }
 }

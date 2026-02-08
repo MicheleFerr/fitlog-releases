@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:math';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fpdart/fpdart.dart' hide State;
@@ -89,16 +88,6 @@ import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart'
 class MeasurementRepositoryImpl
     with FirebaseErrorMapperMixin
     implements MeasurementRepository {
-  final FirebaseFirestore _firestore;
-  final ConsentRepository _consentRepo;
-  final MeasurementLocalDatasource _localDatasource;
-  final EncryptionKeyManager _keyManager;
-
-  /// Collection name in Firestore
-  static const String _collectionName = 'bodyMeasurements';
-
-  /// Subcollection for measurements
-  static const String _measurementsSubcollection = 'measurements';
 
   MeasurementRepositoryImpl({
     required FirebaseFirestore firestore,
@@ -110,6 +99,16 @@ class MeasurementRepositoryImpl
        _consentRepo = consentRepo,
        _localDatasource = localDatasource,
        _keyManager = keyManager;
+  final FirebaseFirestore _firestore;
+  final ConsentRepository _consentRepo;
+  final MeasurementLocalDatasource _localDatasource;
+  final EncryptionKeyManager _keyManager;
+
+  /// Collection name in Firestore
+  static const String _collectionName = 'bodyMeasurements';
+
+  /// Subcollection for measurements
+  static const String _measurementsSubcollection = 'measurements';
 
   /// Validate measurement value is within reasonable range
   bool _isValidMeasurementValue(Measurement m) {

@@ -1,6 +1,5 @@
 import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'dart:async';
-import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -4274,7 +4273,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     );
 
     debugPrint(
-      '⌚ [FLUTTER] ✅ Copied ${previousSet.weight}kg × ${previousSet.reps} from set ${firstIncompleteIndex} to set ${firstIncompleteIndex + 1}',
+      '⌚ [FLUTTER] ✅ Copied ${previousSet.weight}kg × ${previousSet.reps} from set $firstIncompleteIndex to set ${firstIncompleteIndex + 1}',
     );
 
     // Auto-save

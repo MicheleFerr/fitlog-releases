@@ -17,6 +17,24 @@ class ExerciseModel {
     this.attivazionePre,
   });
 
+  factory ExerciseModel.fromEntity(Exercise exercise) {
+    return ExerciseModel(
+      id: exercise.id,
+      nome: exercise.nome,
+      focus: exercise.focus.join(', '),
+      imageUrl: exercise.imageUrl,
+      muscoliSecondari: exercise.muscoliSecondari.join(', '),
+      difficolta: exercise.difficolta,
+      tipoEsercizio: exercise.tipoEsercizio,
+      attrezzatura: exercise.attrezzatura,
+      patternMovimento: exercise.patternMovimento,
+      rangeRipetizioni: exercise.rangeRipetizioni,
+      noteTecniche: exercise.noteTecniche,
+      mobilitaPre: exercise.mobilitaPre,
+      attivazionePre: exercise.attivazionePre,
+    );
+  }
+
   factory ExerciseModel.fromJson(Map<String, dynamic> json) {
     return ExerciseModel(
       id: json['id'] ?? '',
@@ -48,24 +66,6 @@ class ExerciseModel {
     if (value is String) return value;
     if (value is List) return value.join(', ');
     return value.toString();
-  }
-
-  factory ExerciseModel.fromEntity(Exercise exercise) {
-    return ExerciseModel(
-      id: exercise.id,
-      nome: exercise.nome,
-      focus: exercise.focus.join(', '),
-      imageUrl: exercise.imageUrl,
-      muscoliSecondari: exercise.muscoliSecondari.join(', '),
-      difficolta: exercise.difficolta,
-      tipoEsercizio: exercise.tipoEsercizio,
-      attrezzatura: exercise.attrezzatura,
-      patternMovimento: exercise.patternMovimento,
-      rangeRipetizioni: exercise.rangeRipetizioni,
-      noteTecniche: exercise.noteTecniche,
-      mobilitaPre: exercise.mobilitaPre,
-      attivazionePre: exercise.attivazionePre,
-    );
   }
   final String id;
   final String nome;

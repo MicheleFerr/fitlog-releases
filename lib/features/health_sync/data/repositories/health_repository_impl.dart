@@ -23,14 +23,14 @@ import 'package:gymbro_flutter_new/core/data/mixins/firebase_error_mapper_mixin.
 class HealthRepositoryImpl
     with FirebaseErrorMapperMixin
     implements IHealthRepository {
-  final IHealthLocalDatasource _localDatasource;
-  final IHealthRemoteDatasource _remoteDatasource;
 
   HealthRepositoryImpl({
     required IHealthLocalDatasource localDatasource,
     required IHealthRemoteDatasource remoteDatasource,
   }) : _localDatasource = localDatasource,
        _remoteDatasource = remoteDatasource;
+  final IHealthLocalDatasource _localDatasource;
+  final IHealthRemoteDatasource _remoteDatasource;
 
   // ============================================================
   // PERMISSION MANAGEMENT

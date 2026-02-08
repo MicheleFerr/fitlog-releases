@@ -51,7 +51,7 @@ class _PdfExportBottomSheetState extends ConsumerState<PdfExportBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -342,7 +342,7 @@ class _PdfExportBottomSheetState extends ConsumerState<PdfExportBottomSheet> {
           flex: 2,
           child: FilledButton.icon(
             onPressed: _onConfirm,
-            icon: Icon(AppIcons.pictureAsPdf, size: 20),
+            icon: const Icon(AppIcons.pictureAsPdf, size: 20),
             label: Text(context.l10n.exportPdf),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),

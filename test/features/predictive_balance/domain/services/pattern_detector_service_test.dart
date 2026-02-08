@@ -55,43 +55,43 @@ void main() {
     // Helper to create muscle map
     Map<String, ExerciseMuscleData> createMuscleMap() {
       return {
-        'Bench Press': ExerciseMuscleData(
+        'Bench Press': const ExerciseMuscleData(
           primary: ['PETT'],
           secondary: ['DELT', 'TRIC'],
         ),
-        'Shoulder Press': ExerciseMuscleData(
+        'Shoulder Press': const ExerciseMuscleData(
           primary: ['DELT'],
           secondary: ['TRIC'],
         ),
-        'Tricep Extension': ExerciseMuscleData(
+        'Tricep Extension': const ExerciseMuscleData(
           primary: ['TRIC'],
           secondary: [],
         ),
-        'Pull-up': ExerciseMuscleData(
+        'Pull-up': const ExerciseMuscleData(
           primary: ['DORSO'],
           secondary: ['BIC'],
         ),
-        'Barbell Row': ExerciseMuscleData(
+        'Barbell Row': const ExerciseMuscleData(
           primary: ['DORSO'],
           secondary: ['BIC'],
         ),
-        'Bicep Curl': ExerciseMuscleData(
+        'Bicep Curl': const ExerciseMuscleData(
           primary: ['BIC'],
           secondary: [],
         ),
-        'Squat': ExerciseMuscleData(
+        'Squat': const ExerciseMuscleData(
           primary: ['QUAD'],
           secondary: ['GLUT'],
         ),
-        'Leg Press': ExerciseMuscleData(
+        'Leg Press': const ExerciseMuscleData(
           primary: ['QUAD'],
           secondary: ['GLUT', 'FEMORALI'],
         ),
-        'Romanian Deadlift': ExerciseMuscleData(
+        'Romanian Deadlift': const ExerciseMuscleData(
           primary: ['FEMORALI'],
           secondary: ['GLUT'],
         ),
-        'Deadlift': ExerciseMuscleData(
+        'Deadlift': const ExerciseMuscleData(
           primary: ['DORSO', 'FEMORALI'],
           secondary: ['GLUT', 'QUAD'],
         ),

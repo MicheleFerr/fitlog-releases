@@ -11,6 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// - Simple key-value structure
 /// - Fast access for notification scheduling
 class PhotoReminderRepository {
+
+  PhotoReminderRepository({required SharedPreferences prefs}) : _prefs = prefs;
   final SharedPreferences _prefs;
 
   /// Key for storing reminder settings
@@ -18,8 +20,6 @@ class PhotoReminderRepository {
 
   /// Key for storing reminder history
   static const String _historyKey = 'photo_reminder_history';
-
-  PhotoReminderRepository({required SharedPreferences prefs}) : _prefs = prefs;
 
   /// Get current reminder settings
   PhotoReminderSettings getSettings() {

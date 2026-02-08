@@ -265,13 +265,14 @@ class NotificationService {
           '🍎 iOS: Using ONLY native notification channel to prevent duplicates',
         );
 
+        // PERFORMANCE FIX: Add timeout to prevent hang on iOS init issues
         await _nativeChannel.invokeMethod('sendNotification', {
           'title': title,
           'body': body,
           'sound': customSoundFile ?? 'sound',
           'categoryIdentifier': 'TIMER_COMPLETE',
           'isBackground': _isAppInBackground,
-        });
+        }).timeout(const Duration(seconds: 5));
 
         DebugLogger.log(
           LogCategory.notification,
@@ -507,6 +508,7 @@ class NotificationService {
             '🍎 iOS: Using ONLY native channel for scheduled notification',
           );
 
+          // PERFORMANCE FIX: Add timeout to prevent hang on iOS init issues
           await _nativeChannel.invokeMethod('scheduleNotification', {
             'title': title,
             'body': body,
@@ -514,7 +516,7 @@ class NotificationService {
             'delaySeconds': delay.inSeconds,
             'categoryIdentifier': 'TIMER_COMPLETE',
             'notificationId': 100,
-          });
+          }).timeout(const Duration(seconds: 5));
 
           DebugLogger.log(
             LogCategory.notification,
@@ -594,7 +596,7 @@ class NotificationService {
         try {
           await _nativeChannel.invokeMethod('cancelNotification', {
             'notificationId': 100,
-          });
+          }).timeout(const Duration(seconds: 5));
           DebugLogger.log(
             LogCategory.notification,
             '✅ Native iOS scheduled notification cancelled',

@@ -652,13 +652,16 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               trailing: PopupMenuButton<String>(
                 onSelected: (value) {
                   if (value == 'start') _openWorkoutTemplate(context, template);
-                  if (value == 'duplicate')
+                  if (value == 'duplicate') {
                     _duplicateTemplate(context, template);
+                  }
                   if (value == 'share') _shareTemplate(context, template);
-                  if (value == 'make_public')
+                  if (value == 'make_public') {
                     _makeTemplatePublic(context, template);
-                  if (value == 'delete')
+                  }
+                  if (value == 'delete') {
                     _deleteWorkoutTemplate(context, template);
+                  }
                 },
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   // Start Workout option (primary action in menu)
@@ -1078,7 +1081,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   HapticFeedback.selectionClick();
                   setState(() => _discoverSubTabIndex = selected.first);
                 },
-                style: ButtonStyle(
+                style: const ButtonStyle(
                   visualDensity: VisualDensity.compact,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
@@ -4053,7 +4056,7 @@ class _CategoryFilterDelegate extends SliverPersistentHeaderDelegate {
       (key: 'specialty', label: l10n.specialty, icon: AppIcons.star),
     ];
 
-    return Container(
+    return ColoredBox(
       color: context.colors.surface,
       child: Column(
         children: [
@@ -4133,7 +4136,7 @@ class _DefaultTemplatePreviewSheet extends StatelessWidget {
       minChildSize: 0.5,
       maxChildSize: 0.95,
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: context.colors.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -4721,7 +4724,7 @@ class _PredefinedSupersetPreviewSheet extends StatelessWidget {
       minChildSize: 0.4,
       maxChildSize: 0.9,
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: context.colors.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -4938,7 +4941,7 @@ class _PredefinedDropsetPreviewSheet extends StatelessWidget {
       minChildSize: 0.4,
       maxChildSize: 0.9,
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: context.colors.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -5155,7 +5158,7 @@ class _PredefinedRestPausePreviewSheet extends StatelessWidget {
       minChildSize: 0.4,
       maxChildSize: 0.9,
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: context.colors.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

@@ -329,9 +329,7 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
   /// Upgrade user tier via Cloud Function (admin-only)
   Future<void> upgradeTier(AccountTier newTier) async {
     var currentProfile = state.value;
-    if (currentProfile == null) {
-      currentProfile = ref.read(userProfileProvider).value;
-    }
+    currentProfile ??= ref.read(userProfileProvider).value;
 
     if (currentProfile == null) {
       return;

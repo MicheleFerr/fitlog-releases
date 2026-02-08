@@ -286,6 +286,11 @@ class DashboardStats {
 /// 🔐 USER ISOLATION: Cache key is now user-scoped to prevent data leakage
 /// when switching between accounts. Uses UserCacheKeyManager.
 class ProgressCacheRepository {
+
+  ProgressCacheRepository(this._prefs) {
+    _initCompleter = Completer<void>();
+    _initialize();
+  }
   /// 🔐 SECURITY: Clear all static caches on logout to prevent data leakage
   static void clearOnLogout() {
     // Cancel all debounced timers
@@ -308,11 +313,6 @@ class ProgressCacheRepository {
     if (kDebugMode) {
       debugPrint('[ProgressCache] 🔐 Cleared all static caches on logout');
     }
-  }
-
-  ProgressCacheRepository(this._prefs) {
-    _initCompleter = Completer<void>();
-    _initialize();
   }
 
   // 🔐 User-scoped cache key via UserCacheKeyManager

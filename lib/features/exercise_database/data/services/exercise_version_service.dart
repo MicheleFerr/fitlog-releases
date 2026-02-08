@@ -15,10 +15,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 class ExerciseVersionService {
-  /// Singleton pattern per evitare inizializzazioni multiple all'avvio
-  /// FIX: Ogni nuova istanza apriva 1 box Hive ridondante (visto 4x all'avvio)
-  static ExerciseVersionService? _instance;
-  static bool _staticInitialized = false;
 
   factory ExerciseVersionService({
     FirebaseFirestore? firestore,
@@ -32,6 +28,10 @@ class ExerciseVersionService {
   }
 
   ExerciseVersionService._internal(this._firestore, this._boxManager);
+  /// Singleton pattern per evitare inizializzazioni multiple all'avvio
+  /// FIX: Ogni nuova istanza apriva 1 box Hive ridondante (visto 4x all'avvio)
+  static ExerciseVersionService? _instance;
+  static bool _staticInitialized = false;
 
   /// Reset singleton (solo per test)
   @visibleForTesting

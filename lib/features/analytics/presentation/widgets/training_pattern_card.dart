@@ -35,6 +35,14 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Card displaying a detected training pattern with collapsible details
 class TrainingPatternCard extends StatefulWidget {
+
+  const TrainingPatternCard({
+    super.key,
+    required this.pattern,
+    this.onTap,
+    this.initiallyExpanded = false,
+    this.onDismiss,
+  });
   /// The pattern to display
   final TrainingPattern pattern;
 
@@ -46,14 +54,6 @@ class TrainingPatternCard extends StatefulWidget {
 
   /// Optional callback when pattern is dismissed
   final VoidCallback? onDismiss;
-
-  const TrainingPatternCard({
-    super.key,
-    required this.pattern,
-    this.onTap,
-    this.initiallyExpanded = false,
-    this.onDismiss,
-  });
 
   @override
   State<TrainingPatternCard> createState() => _TrainingPatternCardState();
@@ -567,13 +567,6 @@ class _TrainingPatternCardState extends State<TrainingPatternCard>
 
 /// Configuration for severity-based colors
 class _SeverityConfig {
-  final Color backgroundColor;
-  final Color borderColor;
-  final Color iconBackgroundColor;
-  final Color iconColor;
-  final Color titleColor;
-  final Color descriptionColor;
-  final Color shadowColor;
 
   const _SeverityConfig({
     required this.backgroundColor,
@@ -584,10 +577,24 @@ class _SeverityConfig {
     required this.descriptionColor,
     required this.shadowColor,
   });
+  final Color backgroundColor;
+  final Color borderColor;
+  final Color iconBackgroundColor;
+  final Color iconColor;
+  final Color titleColor;
+  final Color descriptionColor;
+  final Color shadowColor;
 }
 
 /// Widget for displaying multiple training patterns
 class TrainingPatternsList extends StatelessWidget {
+
+  const TrainingPatternsList({
+    super.key,
+    required this.results,
+    this.maxPatterns = 2,
+    this.warningsOnly = false,
+  });
   /// The pattern results to display
   final TrainingPatternResults results;
 
@@ -596,13 +603,6 @@ class TrainingPatternsList extends StatelessWidget {
 
   /// Whether to show only warnings
   final bool warningsOnly;
-
-  const TrainingPatternsList({
-    super.key,
-    required this.results,
-    this.maxPatterns = 2,
-    this.warningsOnly = false,
-  });
 
   @override
   Widget build(BuildContext context) {

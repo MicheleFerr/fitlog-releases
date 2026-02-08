@@ -83,22 +83,6 @@ abstract class ChatMessage with _$ChatMessage {
     @Default(false) bool isDeleted,
   }) = _ChatMessage;
 
-  /// Private constructor for instance methods
-  const ChatMessage._();
-
-  /// Check if message is from current user
-  bool isFromMe(String myUserId) => senderId == myUserId;
-
-  /// Check if message has been read
-  bool get isRead => readAt != null;
-
-  /// Check if message has workout link
-  bool get hasWorkoutLink =>
-      type == MessageType.workoutLink && workoutMetadata != null;
-
-  /// Check if message has image
-  bool get hasImage => type == MessageType.image && imageMetadata != null;
-
   /// Create from Firestore document
   factory ChatMessage.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
@@ -162,6 +146,25 @@ abstract class ChatMessage with _$ChatMessage {
     );
   }
 
+  factory ChatMessage.fromJson(Map<String, dynamic> json) =>
+      _$ChatMessageFromJson(json);
+
+  /// Private constructor for instance methods
+  const ChatMessage._();
+
+  /// Check if message is from current user
+  bool isFromMe(String myUserId) => senderId == myUserId;
+
+  /// Check if message has been read
+  bool get isRead => readAt != null;
+
+  /// Check if message has workout link
+  bool get hasWorkoutLink =>
+      type == MessageType.workoutLink && workoutMetadata != null;
+
+  /// Check if message has image
+  bool get hasImage => type == MessageType.image && imageMetadata != null;
+
   /// Convert to Firestore map
   Map<String, dynamic> toFirestore() {
     return {
@@ -195,7 +198,4 @@ abstract class ChatMessage with _$ChatMessage {
       'isDeleted': isDeleted,
     };
   }
-
-  factory ChatMessage.fromJson(Map<String, dynamic> json) =>
-      _$ChatMessageFromJson(json);
 }

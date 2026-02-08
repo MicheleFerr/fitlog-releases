@@ -30,15 +30,15 @@ part 'ai_chat_provider.g.dart';
 
 /// Chat state
 class AIChatState {
-  final List<AIMessage> messages;
-  final bool isLoading;
-  final String? error;
 
   const AIChatState({
     required this.messages,
     this.isLoading = false,
     this.error,
   });
+  final List<AIMessage> messages;
+  final bool isLoading;
+  final String? error;
 
   AIChatState copyWith({
     List<AIMessage>? messages,

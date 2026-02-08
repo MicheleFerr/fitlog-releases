@@ -1,32 +1,31 @@
-/**
- * 🔐 SECURITY: Client-Side Request Throttling
- *
- * Prevents excessive API calls and complements server-side rate limiting.
- *
- * **Features**:
- * - Debouncing: Delay execution until quiet period (search, input)
- * - Throttling: Limit execution frequency (scroll, analytics)
- * - Retry-After handling: Respect server rate limit headers
- * - Memory efficient: Auto-cleanup of expired throttles
- *
- * **Usage**:
- * ```dart
- * // Debounce search input (500ms delay)
- * final searchDebouncer = Debouncer(duration: Duration(milliseconds: 500));
- * searchDebouncer.run(() => performSearch(query));
- *
- * // Throttle analytics events (1 per second max)
- * final analyticsThrottler = Throttler(duration: Duration(seconds: 1));
- * analyticsThrottler.run(() => trackEvent(event));
- *
- * // Handle server rate limit (resource-exhausted error)
- * final rateLimitHandler = RateLimitHandler();
- * await rateLimitHandler.executeWithRetry(
- *   () => callCloudFunction(),
- *   onRateLimited: (retryAfter) => showSnackBar('Too many requests'),
- * );
- * ```
- */
+/// 🔐 SECURITY: Client-Side Request Throttling
+///
+/// Prevents excessive API calls and complements server-side rate limiting.
+///
+/// **Features**:
+/// - Debouncing: Delay execution until quiet period (search, input)
+/// - Throttling: Limit execution frequency (scroll, analytics)
+/// - Retry-After handling: Respect server rate limit headers
+/// - Memory efficient: Auto-cleanup of expired throttles
+///
+/// **Usage**:
+/// ```dart
+/// // Debounce search input (500ms delay)
+/// final searchDebouncer = Debouncer(duration: Duration(milliseconds: 500));
+/// searchDebouncer.run(() => performSearch(query));
+///
+/// // Throttle analytics events (1 per second max)
+/// final analyticsThrottler = Throttler(duration: Duration(seconds: 1));
+/// analyticsThrottler.run(() => trackEvent(event));
+///
+/// // Handle server rate limit (resource-exhausted error)
+/// final rateLimitHandler = RateLimitHandler();
+/// await rateLimitHandler.executeWithRetry(
+///   () => callCloudFunction(),
+///   onRateLimited: (retryAfter) => showSnackBar('Too many requests'),
+/// );
+/// ```
+library;
 
 import 'dart:async';
 import 'package:flutter/foundation.dart';

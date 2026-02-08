@@ -56,6 +56,24 @@ final class AudioSessionManager: AudioSessionManaging {
     
     private init() {
         Logger.shared.log(.info, "AudioSessionManager initialized")
+
+        // ✅ FIX 2.6: Add observer to invalidate validation cache on audio interruption
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(audioSessionInterrupted),
+            name: AVAudioSession.interruptionNotification,
+            object: nil
+        )
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc private func audioSessionInterrupted(_ notification: Notification) {
+        Logger.shared.log(.info, "🔊 Audio session interrupted - invalidating validation cache")
+        lastValidationResult = nil
+        lastValidationTime = nil
     }
     
     // MARK: - Public Methods

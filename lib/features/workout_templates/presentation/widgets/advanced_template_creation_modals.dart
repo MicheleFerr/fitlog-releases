@@ -84,7 +84,7 @@ class _SupersetTemplateCreationModalState
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -387,7 +387,7 @@ class _SupersetTemplateCreationModalState
       rounds: int.tryParse(_roundsController.text) ?? 3,
       repsRange: _repsController.text.trim(),
       restAfterRound: int.tryParse(_restAfterRoundController.text) ?? 90,
-      restBetween: int.tryParse(_restBetweenController.text) ?? 0,
+      restAfterSuperset: int.tryParse(_restBetweenController.text) ?? 0,
       difficulty: _selectedDifficulty,
       estimatedTimeMinutes: _calculateEstimatedTime(),
       scientificBasis: 'Custom template created by user',
@@ -556,7 +556,7 @@ class _DropsetTemplateCreationModalState
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -1020,7 +1020,7 @@ class _RestPauseTemplateCreationModalState
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

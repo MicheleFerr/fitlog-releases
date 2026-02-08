@@ -249,7 +249,7 @@ void main() {
       ];
 
       final muscleMap = {
-        'bench press': ExerciseMuscleData(
+        'bench press': const ExerciseMuscleData(
           primary: ['chest'],
           secondary: ['triceps'],
         ),
@@ -297,7 +297,7 @@ void main() {
         ),
       ];
 
-      final coverage = TemplateCoverageResult(
+      const coverage = TemplateCoverageResult(
         muscleScores: {
           'chest': TemplateMuscleScore(
             muscleName: 'chest',
@@ -327,7 +327,7 @@ void main() {
         ),
       ];
 
-      final coverage = TemplateCoverageResult(
+      const coverage = TemplateCoverageResult(
         muscleScores: {
           'chest': TemplateMuscleScore(
             muscleName: 'chest',
@@ -357,7 +357,7 @@ void main() {
         ),
       ];
 
-      final coverage = TemplateCoverageResult(
+      const coverage = TemplateCoverageResult(
         muscleScores: {
           'chest': TemplateMuscleScore(
             muscleName: 'chest',
@@ -413,7 +413,7 @@ void main() {
         createSuggestion(name: 'Lat Pulldown', targetMuscle: 'back'),
       ];
 
-      final coverage = TemplateCoverageResult(
+      const coverage = TemplateCoverageResult(
         muscleScores: {},
         exerciseToTemplates: {
           'bench press': ['Push Day'],
@@ -436,7 +436,7 @@ void main() {
         createSuggestion(name: 'Lat Pulldown', targetMuscle: 'back'),
       ];
 
-      final coverage = TemplateCoverageResult(
+      const coverage = TemplateCoverageResult(
         muscleScores: {},
         exerciseToTemplates: {
           'bench press': ['Push Day'],
@@ -496,7 +496,7 @@ void main() {
         ),
       ];
 
-      final coverage = TemplateCoverageResult(
+      const coverage = TemplateCoverageResult(
         muscleScores: {
           'chest': TemplateMuscleScore(
             muscleName: 'chest',
@@ -529,7 +529,7 @@ void main() {
         ),
       ];
 
-      final coverage = TemplateCoverageResult(
+      const coverage = TemplateCoverageResult(
         muscleScores: {
           'chest': TemplateMuscleScore(
             muscleName: 'chest',
@@ -553,7 +553,7 @@ void main() {
 
   group('TemplateCoverageResult', () {
     test('isExercisePlanned should be case-insensitive', () {
-      final coverage = TemplateCoverageResult(
+      const coverage = TemplateCoverageResult(
         muscleScores: {},
         exerciseToTemplates: {
           'bench press': ['Push Day'],
@@ -570,7 +570,7 @@ void main() {
   group('TemplateMuscleScore', () {
     test('should calculate coverage score correctly', () {
       // High coverage: 3 templates, 5 exercises
-      final highScore = TemplateMuscleScore(
+      const highScore = TemplateMuscleScore(
         muscleName: 'chest',
         templateCount: 3,
         totalExercises: 5,
@@ -583,7 +583,7 @@ void main() {
       expect(highScore.isWellCovered, isTrue);
 
       // Low coverage: 1 template, 1 exercise
-      final lowScore = TemplateMuscleScore(
+      const lowScore = TemplateMuscleScore(
         muscleName: 'back',
         templateCount: 1,
         totalExercises: 1,
@@ -604,7 +604,7 @@ void main() {
         severity: NeglectSeverity.high,
       );
 
-      final coverage = TemplateMuscleScore(
+      const coverage = TemplateMuscleScore(
         muscleName: 'chest',
         templateCount: 2,
         totalExercises: 4,

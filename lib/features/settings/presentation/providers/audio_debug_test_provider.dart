@@ -11,7 +11,7 @@ library;
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart';
-import '../../domain/services/audio_debug_test_service.dart';
+import 'package:gymbro_flutter_new/features/settings/domain/services/audio_debug_test_service.dart';
 
 /// Audio debug test state
 class AudioDebugTestState {

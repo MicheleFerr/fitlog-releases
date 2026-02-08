@@ -5,6 +5,15 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Multi-select calendar widget for scheduling workouts
 class MultiSelectCalendar extends StatelessWidget {
+
+  const MultiSelectCalendar({
+    super.key,
+    required this.selectedDates,
+    required this.onSelectionChanged,
+    this.disabledDates,
+    this.minDate,
+    this.maxDate,
+  });
   /// Currently selected dates
   final List<DateTime> selectedDates;
 
@@ -19,15 +28,6 @@ class MultiSelectCalendar extends StatelessWidget {
 
   /// Maximum selectable date (defaults to 90 days from now)
   final DateTime? maxDate;
-
-  const MultiSelectCalendar({
-    super.key,
-    required this.selectedDates,
-    required this.onSelectionChanged,
-    this.disabledDates,
-    this.minDate,
-    this.maxDate,
-  });
 
   @override
   Widget build(BuildContext context) {

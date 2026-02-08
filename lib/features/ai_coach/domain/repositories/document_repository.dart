@@ -8,8 +8,8 @@
 library;
 
 import 'package:fpdart/fpdart.dart';
-import '../entities/scientific_paper.dart';
-import '../entities/document_sync_status.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/scientific_paper.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/document_sync_status.dart';
 
 /// Repository interface for AI Coach documents
 abstract class DocumentRepository {

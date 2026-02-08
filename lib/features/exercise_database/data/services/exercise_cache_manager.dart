@@ -16,10 +16,6 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/models/exerci
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 class ExerciseCacheManager {
-  /// Singleton pattern per evitare inizializzazioni multiple all'avvio
-  /// FIX: Ogni nuova istanza apriva 3 box Hive ridondanti (visto 4x all'avvio)
-  static ExerciseCacheManager? _instance;
-  static bool _staticInitialized = false;
 
   factory ExerciseCacheManager([HiveBoxManagerEnhanced? boxManager]) {
     _instance ??= ExerciseCacheManager._internal(
@@ -29,6 +25,10 @@ class ExerciseCacheManager {
   }
 
   ExerciseCacheManager._internal(this._boxManager);
+  /// Singleton pattern per evitare inizializzazioni multiple all'avvio
+  /// FIX: Ogni nuova istanza apriva 3 box Hive ridondanti (visto 4x all'avvio)
+  static ExerciseCacheManager? _instance;
+  static bool _staticInitialized = false;
 
   /// Reset singleton (solo per test)
   @visibleForTesting

@@ -1,16 +1,15 @@
-/**
- * 🔐 SECURITY TESTS: Hive Migration Service
- *
- * Validates safe migration from unencrypted to encrypted Hive boxes
- *
- * Test Coverage:
- * - Single box migration
- * - Batch migration (all sensitive boxes)
- * - Idempotency (safe to run multiple times)
- * - Data integrity (no data loss during migration)
- * - Encryption detection
- * - Rollback functionality
- */
+/// 🔐 SECURITY TESTS: Hive Migration Service
+///
+/// Validates safe migration from unencrypted to encrypted Hive boxes
+///
+/// Test Coverage:
+/// - Single box migration
+/// - Batch migration (all sensitive boxes)
+/// - Idempotency (safe to run multiple times)
+/// - Data integrity (no data loss during migration)
+/// - Encryption detection
+/// - Rollback functionality
+library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive.dart';

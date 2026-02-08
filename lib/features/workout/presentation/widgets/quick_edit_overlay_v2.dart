@@ -428,7 +428,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               Expanded(
                 child: Text(
                   widget.isSuperset
-                      ? 'Quick Edit Superset' // TODO: Add localization key
+                      ? context.l10n.quickEditSuperset
                       : (widget.exerciseName ??
                             'Quick Edit Set ${widget.exerciseSet?.setNumber ?? ""}'),
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -890,7 +890,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             ),
             const SizedBox(width: 4),
             Text(
-              'Duration', // TODO: Add localization
+              context.l10n.duration,
               style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.tertiary,
                 fontWeight: FontWeight.w600,

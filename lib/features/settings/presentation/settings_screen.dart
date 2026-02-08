@@ -341,7 +341,7 @@ class SettingsScreen extends ConsumerWidget {
                                 icon: AppIcons.refresh,
                                 semanticLabel: 'Reset',
                               ),
-                              label: Text('🧪 Reset Exercise DB'),
+                              label: const Text('🧪 Reset Exercise DB'),
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: context.colors.warning,
                               ),
@@ -503,7 +503,7 @@ class SettingsScreen extends ConsumerWidget {
             ListTile(
               title: Text(context.l10n.appearancePreview),
               subtitle: Text(context.l10n.appearancePreviewSubtitle),
-              leading: SemanticIcon(
+              leading: const SemanticIcon(
                 icon: AppIcons.preview,
                 semanticLabel: 'Preview appearance',
                 size: AppIconSize.medium,
@@ -679,7 +679,7 @@ class SettingsScreen extends ConsumerWidget {
                     .read(appConfigProvider.notifier)
                     .setVibrationsEnabled(value);
               },
-              leading: SemanticIcon(
+              leading: const SemanticIcon(
                 icon: AppIcons.vibration,
                 semanticLabel: 'Vibration',
                 size: AppIconSize.medium,

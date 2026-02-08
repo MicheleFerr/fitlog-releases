@@ -9,8 +9,9 @@ class ExerciseCompatibilityService {
 
   /// Calculate compatibility percentage between two exercises
   static double calculateCompatibility(Exercise exercise1, Exercise exercise2) {
-    if (exercise1.name == exercise2.name)
+    if (exercise1.name == exercise2.name) {
       return 0.0; // Don't suggest the same exercise
+    }
 
     double score = 0.0;
 

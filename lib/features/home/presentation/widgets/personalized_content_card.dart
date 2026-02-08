@@ -99,7 +99,7 @@ class _PersonalizedContentCardState
           builder: (context, child) {
             return Transform.scale(
               scale: _scaleAnimation.value,
-              child: Container(
+              child: DecoratedBox(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(24),
                   gradient: RadialGradient(
@@ -126,7 +126,7 @@ class _PersonalizedContentCardState
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(24),
-                  child: Container(
+                  child: DecoratedBox(
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: context.colors.outline.withValues(alpha: 0.2),

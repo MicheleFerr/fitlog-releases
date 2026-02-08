@@ -112,7 +112,7 @@ void main() {
         'Incomplete Workout',
         'Squat',
         [
-          ExerciseSetModel(
+          const ExerciseSetModel(
             id: 'set1',
             setNumber: 1,
             weight: 100.0,

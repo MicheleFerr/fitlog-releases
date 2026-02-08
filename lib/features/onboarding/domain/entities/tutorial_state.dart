@@ -24,6 +24,45 @@ class TutorialState {
     this.tutorialsEnabled = true,
   });
 
+  // ============ FACTORY & COPYWIDTH ============
+
+  /// Create initial empty state.
+  factory TutorialState.initial() => const TutorialState();
+
+  /// Create from Set/Map for convenience (converts to Lists internally).
+  factory TutorialState.fromSets({
+    Set<String> seenTutorials = const {},
+    Set<String> dismissedHints = const {},
+    Map<String, DateTime> lastDismissTime = const {},
+    int totalWorkouts = 0,
+    DateTime? firstWorkoutDate,
+    bool tutorialsEnabled = true,
+  }) {
+    return TutorialState(
+      seenTutorialsList: seenTutorials.toList(),
+      dismissedHintsList: dismissedHints.toList(),
+      lastDismissTimeList: lastDismissTime.entries
+          .map((e) => '${e.key}:${e.value.toIso8601String()}')
+          .toList(),
+      totalWorkouts: totalWorkouts,
+      firstWorkoutDate: firstWorkoutDate,
+      tutorialsEnabled: tutorialsEnabled,
+    );
+  }
+
+  factory TutorialState.fromJson(Map<String, dynamic> json) {
+    return TutorialState(
+      seenTutorialsList: List<String>.from(json['seenTutorials'] ?? []),
+      dismissedHintsList: List<String>.from(json['dismissedHints'] ?? []),
+      lastDismissTimeList: List<String>.from(json['lastDismissTime'] ?? []),
+      totalWorkouts: json['totalWorkouts'] ?? 0,
+      firstWorkoutDate: json['firstWorkoutDate'] != null
+          ? DateTime.parse(json['firstWorkoutDate'] as String)
+          : null,
+      tutorialsEnabled: json['tutorialsEnabled'] ?? true,
+    );
+  }
+
   /// List of tutorial IDs that have been shown to the user.
   /// Examples: 'logging_set', 'rest_timer', 'analytics_intro'
   /// Use [seenTutorials] getter for Set-like access.
@@ -102,32 +141,6 @@ class TutorialState {
   /// Check if user has completed at least one workout.
   bool get hasCompletedFirstWorkout => totalWorkouts > 0;
 
-  // ============ FACTORY & COPYWIDTH ============
-
-  /// Create initial empty state.
-  factory TutorialState.initial() => const TutorialState();
-
-  /// Create from Set/Map for convenience (converts to Lists internally).
-  factory TutorialState.fromSets({
-    Set<String> seenTutorials = const {},
-    Set<String> dismissedHints = const {},
-    Map<String, DateTime> lastDismissTime = const {},
-    int totalWorkouts = 0,
-    DateTime? firstWorkoutDate,
-    bool tutorialsEnabled = true,
-  }) {
-    return TutorialState(
-      seenTutorialsList: seenTutorials.toList(),
-      dismissedHintsList: dismissedHints.toList(),
-      lastDismissTimeList: lastDismissTime.entries
-          .map((e) => '${e.key}:${e.value.toIso8601String()}')
-          .toList(),
-      totalWorkouts: totalWorkouts,
-      firstWorkoutDate: firstWorkoutDate,
-      tutorialsEnabled: tutorialsEnabled,
-    );
-  }
-
   /// Create a copy with updated fields.
   /// Accepts both List and Set types for convenience.
   TutorialState copyWith({
@@ -188,19 +201,6 @@ class TutorialState {
       'firstWorkoutDate': firstWorkoutDate?.toIso8601String(),
       'tutorialsEnabled': tutorialsEnabled,
     };
-  }
-
-  factory TutorialState.fromJson(Map<String, dynamic> json) {
-    return TutorialState(
-      seenTutorialsList: List<String>.from(json['seenTutorials'] ?? []),
-      dismissedHintsList: List<String>.from(json['dismissedHints'] ?? []),
-      lastDismissTimeList: List<String>.from(json['lastDismissTime'] ?? []),
-      totalWorkouts: json['totalWorkouts'] ?? 0,
-      firstWorkoutDate: json['firstWorkoutDate'] != null
-          ? DateTime.parse(json['firstWorkoutDate'] as String)
-          : null,
-      tutorialsEnabled: json['tutorialsEnabled'] ?? true,
-    );
   }
 
   // ============ EQUALITY & TOSTRING ============

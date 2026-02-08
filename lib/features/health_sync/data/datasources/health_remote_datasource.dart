@@ -230,11 +230,11 @@ abstract class IHealthRemoteDatasource {
 
 /// Implementation of [IHealthRemoteDatasource] using the `health` package.
 class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
-  final health_pkg.Health _health;
-  bool _isConfigured = false;
 
   HealthRemoteDatasourceImpl({health_pkg.Health? health})
     : _health = health ?? health_pkg.Health();
+  final health_pkg.Health _health;
+  bool _isConfigured = false;
 
   /// Ensures the health package is configured before use.
   ///

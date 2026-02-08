@@ -85,8 +85,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   // inside _buildSetDetailsForMode() which was executed for EVERY set on EVERY rebuild.
   late ExerciseCountingMode _cachedCountingMode;
 
-  // ✅ TUT: Track if user has started the first set (for explicit start button)
-  bool _firstSetManuallyStarted = false;
+  // NOTE: _firstSetManuallyStarted removed - we now use setStartedAt from the set itself
+  // This makes the state persistent across widget rebuilds
 
   @override
   void initState() {
@@ -110,17 +110,6 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       final config = ref.read(appConfigProvider);
       final setDurationTracking = config.setDurationTracking ?? false;
 
-      // If setDurationTracking is ON, wait for manual start button
-      // Don't auto-initialize tracking for the first set
-      if (setDurationTracking && !_firstSetManuallyStarted) {
-        if (kDebugMode) {
-          debugPrint(
-            '⏱️ [TUT] Waiting for manual start button (setDurationTracking=ON)',
-          );
-        }
-        return;
-      }
-
       // Find first incomplete non-warmup set
       final firstIncompleteSet = widget.exercise.sets.firstWhere(
         (s) => !s.isCompleted && !s.isWarmup,
@@ -128,6 +117,18 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             ? widget.exercise.sets.first
             : ExerciseSet(setNumber: 1),
       );
+
+      // If setDurationTracking is ON, wait for manual start button
+      // Check if set already has setStartedAt (user already pressed Start)
+      final setAlreadyStarted = firstIncompleteSet.setStartedAt != null;
+      if (setDurationTracking && !setAlreadyStarted) {
+        if (kDebugMode) {
+          debugPrint(
+            '⏱️ [TUT] Waiting for manual start button (setDurationTracking=ON)',
+          );
+        }
+        return;
+      }
 
       // Only start tracking if there's an incomplete set
       if (!firstIncompleteSet.isCompleted) {
@@ -140,16 +141,29 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         );
 
         if (existingStartTime == null) {
-          durationTracker.startSet(
-            widget.exercise.id,
-            firstIncompleteSet.setNumber,
-          );
-
-          if (kDebugMode) {
-            debugPrint(
-              '⏱️ [TUT FIX] Initialized tracking for first incomplete set '
-              '${firstIncompleteSet.setNumber} (exercise: ${widget.exercise.id})',
+          // If set has setStartedAt, use it (persisted from previous session)
+          if (firstIncompleteSet.setStartedAt != null) {
+            durationTracker.setStartTime(
+              widget.exercise.id,
+              firstIncompleteSet.setNumber,
+              firstIncompleteSet.setStartedAt!,
             );
+            if (kDebugMode) {
+              debugPrint(
+                '⏱️ [TUT] Restored start time from set: ${firstIncompleteSet.setStartedAt}',
+              );
+            }
+          } else {
+            durationTracker.startSet(
+              widget.exercise.id,
+              firstIncompleteSet.setNumber,
+            );
+            if (kDebugMode) {
+              debugPrint(
+                '⏱️ [TUT FIX] Initialized tracking for first incomplete set '
+                '${firstIncompleteSet.setNumber} (exercise: ${widget.exercise.id})',
+              );
+            }
           }
         }
       }
@@ -157,24 +171,48 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   }
 
   /// ✅ TUT: Handle manual start of first set
+  /// Now saves setStartedAt directly to the set for persistence
   void _onStartFirstSet() {
-    setState(() {
-      _firstSetManuallyStarted = true;
-    });
-
     // Find first incomplete non-warmup set
-    final firstIncompleteSet = widget.exercise.sets.firstWhere(
+    final firstIncompleteSetIndex = widget.exercise.sets.indexWhere(
       (s) => !s.isCompleted && !s.isWarmup,
-      orElse: () => widget.exercise.sets.first,
     );
 
+    if (firstIncompleteSetIndex == -1) {
+      // Fallback to first set if no incomplete non-warmup set found
+      if (widget.exercise.sets.isEmpty) return;
+    }
+
+    final setIndex = firstIncompleteSetIndex != -1
+        ? firstIncompleteSetIndex
+        : 0;
+    final firstIncompleteSet = widget.exercise.sets[setIndex];
+
+    final startTime = DateTime.now();
+
+    // ✅ FIX: Save setStartedAt directly to the set for persistence
+    final updatedSet = firstIncompleteSet.copyWith(
+      setStartedAt: startTime,
+    );
+
+    // Update the exercise with the modified set
+    final updatedSets = List<ExerciseSet>.from(widget.exercise.sets);
+    updatedSets[setIndex] = updatedSet;
+    final updatedExercise = widget.exercise.copyWith(sets: updatedSets);
+    widget.onExerciseUpdate(updatedExercise);
+
+    // Also update the tracker for in-memory calculations
     final durationTracker = ref.read(setDurationTrackerProvider);
-    durationTracker.startSet(widget.exercise.id, firstIncompleteSet.setNumber);
+    durationTracker.setStartTime(
+      widget.exercise.id,
+      firstIncompleteSet.setNumber,
+      startTime,
+    );
 
     if (kDebugMode) {
       debugPrint(
         '⏱️ [TUT] Manual start for set ${firstIncompleteSet.setNumber} '
-        '(exercise: ${widget.exercise.id})',
+        '(exercise: ${widget.exercise.id}) - saved setStartedAt: $startTime',
       );
     }
 
@@ -1130,11 +1168,21 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         if (!isWarmupSet) {
           final durationTracker = ref.read(setDurationTrackerProvider);
 
-          // Check if we have a start time for this set
-          existingStartTime = durationTracker.getSetStartTime(
-            widget.exercise.id,
-            set.setNumber,
-          );
+          // ✅ FIX: First check if set already has setStartedAt (persistent, source of truth)
+          if (set.setStartedAt != null) {
+            existingStartTime = set.setStartedAt;
+            if (kDebugMode) {
+              debugPrint(
+                '⏱️ [TUT] Using setStartedAt from set: $existingStartTime',
+              );
+            }
+          } else {
+            // Check if we have a start time in the tracker (in-memory)
+            existingStartTime = durationTracker.getSetStartTime(
+              widget.exercise.id,
+              set.setNumber,
+            );
+          }
 
           // If no start time, calculate one based on previous sets
           if (existingStartTime == null) {
@@ -1345,16 +1393,14 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   /// Shows a prominent button before the first incomplete set to let the user
   /// explicitly start tracking the set duration. This provides accurate TUT
   /// measurements as tracking only begins when the user is truly ready.
+  ///
+  /// ✅ FIX: Now uses setStartedAt from the set itself (persistent) instead of
+  /// a local widget state variable that would be lost on rebuild.
   Widget _buildStartSetButtonIfNeeded(BuildContext context, AppConfig config) {
     final setDurationTracking = config.setDurationTracking ?? false;
 
     // Don't show if tracking is disabled
     if (!setDurationTracking) {
-      return const SizedBox.shrink();
-    }
-
-    // Don't show if user already started
-    if (_firstSetManuallyStarted) {
       return const SizedBox.shrink();
     }
 
@@ -1364,7 +1410,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       return const SizedBox.shrink();
     }
 
-    // Check if there's already a start time (e.g., from rest timer)
+    // Find first incomplete non-warmup set
     final firstIncompleteSet = widget.exercise.sets.firstWhere(
       (s) => !s.isCompleted && !s.isWarmup,
       orElse: () => widget.exercise.sets.firstWhere(
@@ -1373,13 +1419,20 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       ),
     );
 
+    // ✅ FIX: Check if set already has setStartedAt (persistent, survives rebuild)
+    // This is the source of truth - not the in-memory tracker
+    if (firstIncompleteSet.setStartedAt != null) {
+      return const SizedBox.shrink();
+    }
+
+    // Also check in-memory tracker for backward compatibility
     final durationTracker = ref.read(setDurationTrackerProvider);
     final existingStartTime = durationTracker.getSetStartTime(
       widget.exercise.id,
       firstIncompleteSet.setNumber,
     );
 
-    // If tracking already started (e.g., from rest timer), don't show button
+    // If tracking already started in memory (e.g., from rest timer), don't show button
     if (existingStartTime != null) {
       return const SizedBox.shrink();
     }

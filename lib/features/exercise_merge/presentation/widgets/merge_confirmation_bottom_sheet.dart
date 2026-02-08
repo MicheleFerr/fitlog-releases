@@ -46,7 +46,7 @@ class MergeConfirmationBottomSheet extends ConsumerWidget {
     final mergeProgress = ref.watch(mergeExecutionProvider);
     final isLoading = mergeProgress.state == MergeState.loading;
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),

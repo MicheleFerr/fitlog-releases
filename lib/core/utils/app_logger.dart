@@ -1,43 +1,42 @@
-/**
- * 🔐 SECURITY: Conditional Logger
- *
- * Provides safe logging with automatic kDebugMode guards and log levels.
- *
- * **Security Benefits**:
- * - Logs NEVER appear in production (automatic kDebugMode check)
- * - No need for manual if (kDebugMode) wrappers
- * - Consistent logging format across the app
- * - Log levels for filtering (debug, info, warning, error)
- * - Zero performance overhead in release builds (compiler optimization)
- *
- * **Usage**:
- * ```dart
- * import 'package:gymbro_flutter_new/core/utils/app_logger.dart';
- *
- * AppLogger.debug('Debug message');
- * AppLogger.info('Info message');
- * AppLogger.warning('Warning message');
- * AppLogger.error('Error message');
- * ```
- *
- * **Migration from debugPrint**:
- * ```dart
- * // OLD (manual guard):
- * if (kDebugMode) {
- *   debugPrint('message');
- * }
- *
- * // NEW (automatic guard):
- * AppLogger.debug('message');
- * ```
- *
- * **Performance**:
- * - In release builds: All logging code is removed by tree-shaking
- * - In debug builds: Same performance as debugPrint
- * - No string interpolation overhead in release (dead code elimination)
- *
- * @see https://api.flutter.dev/flutter/foundation/kDebugMode-constant.html
- */
+/// 🔐 SECURITY: Conditional Logger
+///
+/// Provides safe logging with automatic kDebugMode guards and log levels.
+///
+/// **Security Benefits**:
+/// - Logs NEVER appear in production (automatic kDebugMode check)
+/// - No need for manual if (kDebugMode) wrappers
+/// - Consistent logging format across the app
+/// - Log levels for filtering (debug, info, warning, error)
+/// - Zero performance overhead in release builds (compiler optimization)
+///
+/// **Usage**:
+/// ```dart
+/// import 'package:gymbro_flutter_new/core/utils/app_logger.dart';
+///
+/// AppLogger.debug('Debug message');
+/// AppLogger.info('Info message');
+/// AppLogger.warning('Warning message');
+/// AppLogger.error('Error message');
+/// ```
+///
+/// **Migration from debugPrint**:
+/// ```dart
+/// // OLD (manual guard):
+/// if (kDebugMode) {
+///   debugPrint('message');
+/// }
+///
+/// // NEW (automatic guard):
+/// AppLogger.debug('message');
+/// ```
+///
+/// **Performance**:
+/// - In release builds: All logging code is removed by tree-shaking
+/// - In debug builds: Same performance as debugPrint
+/// - No string interpolation overhead in release (dead code elimination)
+///
+/// @see https://api.flutter.dev/flutter/foundation/kDebugMode-constant.html
+library;
 
 import 'package:flutter/foundation.dart';
 

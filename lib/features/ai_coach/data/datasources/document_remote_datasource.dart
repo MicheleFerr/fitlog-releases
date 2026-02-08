@@ -10,18 +10,18 @@ library;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
-import '../models/scientific_paper_model.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/models/scientific_paper_model.dart';
 
 /// Remote data source for AI Coach documents using Firebase API
 class DocumentRemoteDataSource {
-  final http.Client _client;
-  final String _baseUrl;
 
   DocumentRemoteDataSource({
     required http.Client client,
     required String baseUrl,
   })  : _client = client,
         _baseUrl = baseUrl;
+  final http.Client _client;
+  final String _baseUrl;
 
   /// Check for updates (compare versions)
   /// Returns metadata with list of documents to add/remove

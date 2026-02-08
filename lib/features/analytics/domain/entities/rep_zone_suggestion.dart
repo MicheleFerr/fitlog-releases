@@ -269,6 +269,30 @@ class RepZoneSuggestion {
     this.daysSinceLastDone,
   });
 
+  /// Create from ExerciseSuggestion with zone info
+  factory RepZoneSuggestion.fromExerciseSuggestion({
+    required ExerciseSuggestion suggestion,
+    required RepZone targetZone,
+    required String targetTemplate,
+    required String targetTemplateId,
+    required String reasonKey,
+  }) {
+    return RepZoneSuggestion(
+      exerciseId: suggestion.exerciseId,
+      exerciseName: suggestion.exerciseName,
+      targetZone: targetZone,
+      targetTemplate: targetTemplate,
+      targetTemplateId: targetTemplateId,
+      recommendedSets: targetZone.recommendedSets,
+      recommendedReps: targetZone.recommendedReps,
+      recommendedRestSeconds: targetZone.recommendedRestSeconds,
+      difficulty: suggestion.difficulty,
+      equipment: suggestion.equipment,
+      reasonKey: reasonKey,
+      countingMode: suggestion.countingMode,
+    );
+  }
+
   /// Exercise ID from database
   final String exerciseId;
 
@@ -333,30 +357,6 @@ class RepZoneSuggestion {
 
   /// Days since user last performed this exercise (null = never)
   final int? daysSinceLastDone;
-
-  /// Create from ExerciseSuggestion with zone info
-  factory RepZoneSuggestion.fromExerciseSuggestion({
-    required ExerciseSuggestion suggestion,
-    required RepZone targetZone,
-    required String targetTemplate,
-    required String targetTemplateId,
-    required String reasonKey,
-  }) {
-    return RepZoneSuggestion(
-      exerciseId: suggestion.exerciseId,
-      exerciseName: suggestion.exerciseName,
-      targetZone: targetZone,
-      targetTemplate: targetTemplate,
-      targetTemplateId: targetTemplateId,
-      recommendedSets: targetZone.recommendedSets,
-      recommendedReps: targetZone.recommendedReps,
-      recommendedRestSeconds: targetZone.recommendedRestSeconds,
-      difficulty: suggestion.difficulty,
-      equipment: suggestion.equipment,
-      reasonKey: reasonKey,
-      countingMode: suggestion.countingMode,
-    );
-  }
 
   /// Create a copy with updated fields
   RepZoneSuggestion copyWith({

@@ -47,12 +47,6 @@ class CreateTemplateResult {
     this.error,
   });
 
-  final bool success;
-  final String templateId;
-  final String templateName;
-  final TemplateQuotaInfo quota;
-  final String? error;
-
   factory CreateTemplateResult.fromResponse(Map<String, dynamic> data) {
     // Firebase Cloud Functions return _Map<Object?, Object?>, need to convert
     final templateData = data['template'] != null
@@ -79,6 +73,12 @@ class CreateTemplateResult {
       error: errorMessage,
     );
   }
+
+  final bool success;
+  final String templateId;
+  final String templateName;
+  final TemplateQuotaInfo quota;
+  final String? error;
 }
 
 /// Template quota information
@@ -92,26 +92,6 @@ class TemplateQuotaInfo {
     required this.publicMax,
     required this.publicRemaining,
   });
-
-  final String accountTier;
-  final int privateUsed;
-  final int privateMax;
-  final int privateRemaining;
-  final int publicUsed;
-  final int publicMax;
-  final int publicRemaining;
-
-  /// Check if user can create more private templates
-  bool get canCreatePrivate => privateRemaining > 0;
-
-  /// Check if user can create more public templates
-  bool get canCreatePublic => publicRemaining > 0;
-
-  /// Check if user is at quota limit
-  bool get isAtLimit => !canCreatePrivate && !canCreatePublic;
-
-  /// Check if user is close to private template limit (<=2 remaining)
-  bool get isNearPrivateLimit => privateRemaining <= 2 && privateRemaining > 0;
 
   factory TemplateQuotaInfo.fromResponse(Map<String, dynamic> data) {
     // Firebase Cloud Functions return _Map<Object?, Object?>, need to convert
@@ -151,6 +131,26 @@ class TemplateQuotaInfo {
       publicRemaining: 2,
     );
   }
+
+  final String accountTier;
+  final int privateUsed;
+  final int privateMax;
+  final int privateRemaining;
+  final int publicUsed;
+  final int publicMax;
+  final int publicRemaining;
+
+  /// Check if user can create more private templates
+  bool get canCreatePrivate => privateRemaining > 0;
+
+  /// Check if user can create more public templates
+  bool get canCreatePublic => publicRemaining > 0;
+
+  /// Check if user is at quota limit
+  bool get isAtLimit => !canCreatePrivate && !canCreatePublic;
+
+  /// Check if user is close to private template limit (<=2 remaining)
+  bool get isNearPrivateLimit => privateRemaining <= 2 && privateRemaining > 0;
 }
 
 /// Template quota exception for quota-related errors

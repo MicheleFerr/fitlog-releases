@@ -9,7 +9,7 @@ library;
 
 import 'package:flutter/foundation.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
-import '../models/scientific_paper_model.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/models/scientific_paper_model.dart';
 
 /// Box names for Hive storage
 const String documentsBoxName = 'ai_coach_documents';

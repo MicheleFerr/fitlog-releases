@@ -298,7 +298,7 @@ class _HealthSyncSettingsScreenState
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(16),
@@ -563,11 +563,13 @@ class _HealthSyncSettingsScreenState
         if (mounted) {
           SnackBarService.showError(context, failure.message);
         }
+        return null;
       },
       (_) {
         if (mounted) {
           SnackBarService.showInfo(context, context.l10n.healthConnectInstall);
         }
+        return null;
       },
       ),
     );

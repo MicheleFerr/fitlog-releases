@@ -35,6 +35,12 @@ abstract class AICoachService {
 
 /// Response from AI service
 class AIServiceResponse {
+
+  const AIServiceResponse({
+    required this.content,
+    this.toolCall,
+    this.suggestions,
+  });
   /// AI-generated text content
   final String content;
 
@@ -43,10 +49,4 @@ class AIServiceResponse {
 
   /// Exercise name suggestions when a tool search didn't find exact match
   final List<String>? suggestions;
-
-  const AIServiceResponse({
-    required this.content,
-    this.toolCall,
-    this.suggestions,
-  });
 }

@@ -78,7 +78,7 @@ class WorkoutShareCard extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Footer with branding
-          _ShareFooter(
+          const _ShareFooter(
             primaryColor: primaryColor,
             mutedColor: mutedColor,
           ),

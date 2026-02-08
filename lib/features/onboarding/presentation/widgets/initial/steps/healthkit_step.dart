@@ -147,7 +147,7 @@ class HealthKitStep extends ConsumerWidget {
               onPressed: state.selectedHealthTypes.isNotEmpty
                   ? () => _connectHealthKit(context, ref)
                   : null,
-              icon: Icon(AppIcons.healthAndSafety),
+              icon: const Icon(AppIcons.healthAndSafety),
               label: Text(
                 context.l10n.initialOnboardingHealthKitConnect,
                 style: const TextStyle(

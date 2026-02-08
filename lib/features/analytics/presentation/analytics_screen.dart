@@ -1,7 +1,6 @@
 import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'dart:async';
 
-import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

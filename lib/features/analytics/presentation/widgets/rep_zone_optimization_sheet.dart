@@ -57,7 +57,7 @@ class _RepZoneOptimizationSheetState
     final colorScheme = context.colors;
     final l10n = context.l10n;
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),

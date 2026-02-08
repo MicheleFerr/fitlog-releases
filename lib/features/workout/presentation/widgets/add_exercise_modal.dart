@@ -15,6 +15,15 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_usage_tracker.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_usage_model.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/data/repositories/dropset_template_repository.dart';
+import 'package:gymbro_flutter_new/features/workout/data/repositories/rest_pause_template_repository.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/dropset_template.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/rest_pause_template.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 
 class AddExerciseModal extends ConsumerStatefulWidget {
   const AddExerciseModal({
@@ -83,17 +92,19 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
   bool _isAdvancedToggleCompacted = false;
 
   // DropSet state
+  // ✅ UX: Realistic default values (not intimidating 100kg)
+  // These will be updated when user selects an exercise
   final List<DropSetStageData> _dropsetStages = [
     DropSetStageData(
-      weightController: TextEditingController(text: '100'),
+      weightController: TextEditingController(text: '30'),
       repsController: TextEditingController(text: '8'),
     ),
     DropSetStageData(
-      weightController: TextEditingController(text: '80'),
+      weightController: TextEditingController(text: '24'),
       repsController: TextEditingController(text: '10'),
     ),
     DropSetStageData(
-      weightController: TextEditingController(text: '60'),
+      weightController: TextEditingController(text: '18'),
       repsController: TextEditingController(text: '12'),
     ),
   ];
@@ -301,8 +312,380 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // P0: Recent exercises section for quick one-tap selection
+          _buildRecentExercisesSection(),
           // Exercise search and selection with custom exercise form
           _buildExerciseSearchSection(),
+        ],
+      ),
+    );
+  }
+
+  /// P0: Build horizontal chips with recently used exercises
+  /// Allows one-tap addition to workout (UX for Chiara, Roberto personas)
+  Widget _buildRecentExercisesSection() {
+    final recentExercisesAsync = ref.watch(recentExercisesForModalProvider);
+
+    return recentExercisesAsync.when(
+      data: (recentExercises) {
+        if (recentExercises.isEmpty) return const SizedBox.shrink();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  AppIcons.history,
+                  size: 16,
+                  color: context.colors.onSurfaceVariant,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  context.l10n.recentExercises,
+                  style: context.textTheme.labelMedium?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 36,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: recentExercises.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 8),
+                itemBuilder: (context, index) {
+                  final exercise = recentExercises[index];
+                  return ActionChip(
+                    label: Text(
+                      exercise.exerciseName,
+                      style: context.textTheme.labelMedium,
+                    ),
+                    onPressed: () => _addRecentExerciseToWorkout(exercise),
+                    backgroundColor: context.colors.surfaceContainerHighest,
+                    side: BorderSide.none,
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+    );
+  }
+
+  /// P0: Add a recent exercise directly to the workout
+  void _addRecentExerciseToWorkout(ExerciseUsageModel recentExercise) {
+    // Create a simple Exercise with default sets
+    final exercise = Exercise(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: recentExercise.exerciseName,
+      type: ExerciseType.single,
+      category: ExerciseCategory.other, // Default, can be refined later
+      sets: [
+        ExerciseSet(setNumber: 1, weight: 0, reps: 10),
+        ExerciseSet(setNumber: 2, weight: 0, reps: 10),
+        ExerciseSet(setNumber: 3, weight: 0, reps: 10),
+      ],
+    );
+
+    // Increment usage tracking
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+      ExerciseUsageTracker().incrementUsage(
+        exerciseId: recentExercise.exerciseId,
+        exerciseName: recentExercise.exerciseName,
+        userId: userId,
+      );
+    }
+
+    // Add to workout
+    if (widget.onExerciseAdded != null) {
+      widget.onExerciseAdded!(exercise);
+    } else {
+      ref.read(currentWorkoutProvider.notifier).addExercise(exercise);
+    }
+
+    // Close modal and show success
+    Navigator.of(context).pop();
+    SnackBarService.showSuccess(
+      context,
+      context.l10n.exerciseAddedToWorkout(recentExercise.exerciseName),
+    );
+  }
+
+  /// P3: Build last weight badge for DropSet/RestPause
+  /// Shows "Ultima volta: XX kg" when user has previous data for this exercise
+  Widget _buildLastWeightBadge(String exerciseName) {
+    return Consumer(
+      builder: (context, ref, _) {
+        final lastDataAsync = ref.watch(lastExerciseDataProvider(exerciseName));
+
+        return lastDataAsync.when(
+          data: (data) {
+            if (data.weight == null) return const SizedBox.shrink();
+
+            return Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: context.colors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: context.colors.primary.withValues(alpha: 0.3),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      AppIcons.history,
+                      size: 16,
+                      color: context.colors.primary,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      context.l10n.lastTimeWeight(data.weight!.toStringAsFixed(1)),
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.primary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
+        );
+      },
+    );
+  }
+
+  /// P4: Build DropSet preview card
+  /// Shows how the exercise will appear in the workout
+  Widget _buildDropSetPreview() {
+    final exerciseName =
+        _selectedDropSetExercise?.nome ?? _nameController.text.trim();
+    if (exerciseName.isEmpty) return const SizedBox.shrink();
+
+    // Collect valid stages for preview
+    final validStages = <String>[];
+    for (final stage in _dropsetStages) {
+      final weight = double.tryParse(stage.weightController.text);
+      if (weight != null && weight > 0) {
+        validStages.add('${weight.toStringAsFixed(0)}kg');
+      }
+    }
+
+    if (validStages.length < 2) return const SizedBox.shrink();
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: context.colors.outline.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            children: [
+              Icon(
+                AppIcons.preview,
+                size: 16,
+                color: context.colors.onSurfaceVariant,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                context.l10n.preview,
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+
+          // Exercise name with icon
+          Row(
+            children: [
+              Icon(
+                AppIcons.trendDown,
+                size: 20,
+                color: context.colors.primary,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  exerciseName,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              // Drops badge
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: context.colors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  context.l10n.dropSetBadge(validStages.length),
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.colors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+
+          // Weight sequence
+          Text(
+            validStages.join(' → '),
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// P4: Build RestPause preview card
+  /// Shows how the exercise will appear in the workout
+  Widget _buildRestPausePreview() {
+    final exerciseName =
+        _selectedRestPauseExercise?.nome ?? _nameController.text.trim();
+    if (exerciseName.isEmpty) return const SizedBox.shrink();
+
+    final weight = double.tryParse(_restPauseWeightController.text);
+    final targetReps = int.tryParse(_restPauseTargetRepsController.text);
+    final restSeconds = int.tryParse(_restPauseRestSecondsController.text) ?? 15;
+
+    if (weight == null || weight <= 0) return const SizedBox.shrink();
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: context.colors.outline.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            children: [
+              Icon(
+                AppIcons.preview,
+                size: 16,
+                color: context.colors.onSurfaceVariant,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                context.l10n.preview,
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+
+          // Exercise name with icon
+          Row(
+            children: [
+              Icon(
+                AppIcons.pauseCircle,
+                size: 20,
+                color: context.colors.tertiary,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  exerciseName,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              // Target reps badge
+              if (targetReps != null && targetReps > 0)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: context.colors.tertiary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    '$targetReps reps',
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: context.colors.tertiary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 8),
+
+          // Weight and rest info
+          Row(
+            children: [
+              Text(
+                '${weight.toStringAsFixed(1)} kg',
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Icon(
+                AppIcons.pause,
+                size: 14,
+                color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                '${restSeconds}s',
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -467,6 +850,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
                 ),
               ),
             ),
+            // P3: Last weight badge
+            _buildLastWeightBadge(_selectedDropSetExercise!.nome),
           ],
           const SizedBox(height: 20),
 
@@ -498,7 +883,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
                             ? context.l10n.stageMedium
                             : index == 2
                             ? context.l10n.stageLight
-                            : '${context.l10n.dropsetStage(index + 1)}';
+                            : context.l10n.dropsetStage(index + 1);
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8),
                           child: _buildDropSetStage(stageLabel, index),
@@ -549,6 +934,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
                       ),
                       const SizedBox(height: 24),
 
+                      // P4: DropSet preview card
+                      _buildDropSetPreview(),
+
                       // Add to workout button
                       SizedBox(
                         width: double.infinity,
@@ -560,6 +948,21 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
                           label: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             child: Text(context.l10n.createDropset),
+                          ),
+                        ),
+                      ),
+                      // P1: Save as Template button
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: _canCreateDropSet()
+                              ? _showSaveDropsetTemplateDialog
+                              : null,
+                          icon: const Icon(AppIcons.template),
+                          label: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Text(context.l10n.saveAsTemplate),
                           ),
                         ),
                       ),
@@ -731,6 +1134,8 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
                 ),
               ),
             ),
+            // P3: Last weight badge
+            _buildLastWeightBadge(_selectedRestPauseExercise!.nome),
           ],
           const SizedBox(height: 20),
 
@@ -826,6 +1231,9 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
                       ),
                       const SizedBox(height: 24),
 
+                      // P4: RestPause preview card
+                      _buildRestPausePreview(),
+
                       // Add to workout button
                       SizedBox(
                         width: double.infinity,
@@ -837,6 +1245,21 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
                           label: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             child: Text(context.l10n.createRestPause),
+                          ),
+                        ),
+                      ),
+                      // P1: Save as Template button
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: _canCreateRestPause()
+                              ? _showSaveRestPauseTemplateDialog
+                              : null,
+                          icon: const Icon(AppIcons.template),
+                          label: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Text(context.l10n.saveAsTemplate),
                           ),
                         ),
                       ),
@@ -1008,7 +1431,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
               color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
             ),
             title: Text(
-              'Non trovi l\'esercizio? Creane uno personalizzato',
+              context.l10n.cantFindExercise,
               style: TextStyle(
                 fontSize: 14,
                 color: context.colors.onSurfaceVariant.withValues(alpha: 0.8),
@@ -1469,6 +1892,27 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
         exercise.focus,
       );
       ref.read(selectedExerciseCategoryProvider.notifier).state = category;
+
+      // ✅ UX: Suggest appropriate weights based on exercise type
+      // Helps beginners (Marco persona) with realistic starting values
+      final suggestedWeights = DropSetWeightSuggester.getSuggestedWeights(
+        tipoEsercizio: exercise.tipoEsercizio,
+        focus: exercise.focus,
+      );
+
+      // Update stage controllers with suggested values
+      if (_dropsetStages.isNotEmpty) {
+        _dropsetStages[0].weightController.text =
+            suggestedWeights.stage1.toStringAsFixed(0);
+      }
+      if (_dropsetStages.length > 1) {
+        _dropsetStages[1].weightController.text =
+            suggestedWeights.stage2.toStringAsFixed(0);
+      }
+      if (_dropsetStages.length > 2) {
+        _dropsetStages[2].weightController.text =
+            suggestedWeights.stage3.toStringAsFixed(0);
+      }
     });
   }
 
@@ -1484,6 +1928,253 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
       ref.read(selectedExerciseCategoryProvider.notifier).state = category;
     });
   }
+
+  // ===========================================================================
+  // P1: Save as Template functionality for DropSet/RestPause
+  // ===========================================================================
+
+  /// Show dialog to save current DropSet configuration as template
+  Future<void> _showSaveDropsetTemplateDialog() async {
+    final templateNameController = TextEditingController();
+    final templateNotesController = TextEditingController();
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(context.l10n.saveAsTemplate),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: templateNameController,
+              decoration: InputDecoration(
+                labelText: context.l10n.templateName,
+                prefixIcon: const Icon(AppIcons.template),
+              ),
+              autofocus: true,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: templateNotesController,
+              decoration: InputDecoration(
+                labelText: context.l10n.notesOptional,
+                prefixIcon: const Icon(AppIcons.note),
+              ),
+              maxLines: 2,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(context.l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(context.l10n.save),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true && templateNameController.text.trim().isNotEmpty) {
+      await _saveDropsetTemplate(
+        templateNameController.text.trim(),
+        templateNotesController.text.trim(),
+      );
+    }
+
+    templateNameController.dispose();
+    templateNotesController.dispose();
+  }
+
+  /// Save current DropSet configuration as a custom template
+  Future<void> _saveDropsetTemplate(String name, String notes) async {
+    try {
+      final entitlements = ref.read(tierEntitlementsProvider);
+      final maxCustomDropsets = entitlements.maxCustomDropsets;
+
+      // Check current count
+      final repository = DropsetTemplateRepository();
+      final currentTemplates = await repository.getCustomTemplates();
+
+      if (currentTemplates.length >= maxCustomDropsets) {
+        if (mounted) {
+          SnackBarService.showError(
+            context,
+            context.l10n.templateLimitReached(maxCustomDropsets),
+          );
+        }
+        return;
+      }
+
+      // Get exercise name
+      final exerciseName =
+          _selectedDropSetExercise?.nome ?? _nameController.text.trim();
+
+      // Calculate drop percentage from stages
+      int dropPercentage = 20; // Default
+      if (_dropsetStages.length >= 2) {
+        final w1 = double.tryParse(_dropsetStages[0].weightController.text) ?? 0;
+        final w2 = double.tryParse(_dropsetStages[1].weightController.text) ?? 0;
+        if (w1 > 0 && w2 > 0) {
+          dropPercentage = ((1 - w2 / w1) * 100).round();
+        }
+      }
+
+      // Create template from current state
+      final template = DropsetTemplate(
+        id: 'custom_${DateTime.now().millisecondsSinceEpoch}',
+        name: name,
+        exerciseName: exerciseName,
+        drops: _dropsetStages.length,
+        initialReps: _dropsetStages.isNotEmpty
+            ? _dropsetStages[0].repsController.text
+            : '8',
+        dropPercentage: dropPercentage,
+        restBetweenDrops: 0, // Dropsets typically have no rest
+        totalSets: 1,
+        restBetweenSets: 120,
+        difficulty: DropsetDifficulty.intermediate,
+        estimatedTimeMinutes: _dropsetStages.length * 2,
+        scientificBasis: 'Custom template',
+        notes: notes.isNotEmpty ? notes : null,
+        isCustom: true,
+        createdAt: DateTime.now(),
+      );
+
+      await repository.saveCustomTemplate(
+        template,
+        maxCustomDropsets: maxCustomDropsets,
+      );
+
+      if (mounted) {
+        SnackBarService.showSuccess(context, context.l10n.templateSaved);
+      }
+    } catch (e) {
+      if (mounted) {
+        SnackBarService.showError(context, context.l10n.templateSaveError);
+      }
+    }
+  }
+
+  /// Show dialog to save current RestPause configuration as template
+  Future<void> _showSaveRestPauseTemplateDialog() async {
+    final templateNameController = TextEditingController();
+    final templateNotesController = TextEditingController();
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(context.l10n.saveAsTemplate),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: templateNameController,
+              decoration: InputDecoration(
+                labelText: context.l10n.templateName,
+                prefixIcon: const Icon(AppIcons.template),
+              ),
+              autofocus: true,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: templateNotesController,
+              decoration: InputDecoration(
+                labelText: context.l10n.notesOptional,
+                prefixIcon: const Icon(AppIcons.note),
+              ),
+              maxLines: 2,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(context.l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(context.l10n.save),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true && templateNameController.text.trim().isNotEmpty) {
+      await _saveRestPauseTemplate(
+        templateNameController.text.trim(),
+        templateNotesController.text.trim(),
+      );
+    }
+
+    templateNameController.dispose();
+    templateNotesController.dispose();
+  }
+
+  /// Save current RestPause configuration as a custom template
+  Future<void> _saveRestPauseTemplate(String name, String notes) async {
+    try {
+      final entitlements = ref.read(tierEntitlementsProvider);
+      final maxCustomRestPause = entitlements.maxCustomRestPause;
+
+      // Check current count
+      final repository = RestPauseTemplateRepository();
+      final currentTemplates = await repository.getCustomTemplates();
+
+      if (currentTemplates.length >= maxCustomRestPause) {
+        if (mounted) {
+          SnackBarService.showError(
+            context,
+            context.l10n.templateLimitReached(maxCustomRestPause),
+          );
+        }
+        return;
+      }
+
+      // Get exercise name
+      final exerciseName =
+          _selectedRestPauseExercise?.nome ?? _nameController.text.trim();
+
+      final restSeconds =
+          int.tryParse(_restPauseRestSecondsController.text) ?? 15;
+      final targetReps =
+          int.tryParse(_restPauseTargetRepsController.text) ?? 20;
+
+      // Create template from current state
+      final template = RestPauseTemplate(
+        id: 'custom_${DateTime.now().millisecondsSinceEpoch}',
+        name: name,
+        exerciseName: exerciseName,
+        initialReps: targetReps.toString(),
+        clusters: 3,
+        clusterReps: '3-5',
+        pauseDuration: restSeconds,
+        totalSets: 1,
+        restBetweenSets: 180,
+        difficulty: RestPauseDifficulty.intermediate,
+        estimatedTimeMinutes: 5,
+        scientificBasis: 'Custom template',
+        notes: notes.isNotEmpty ? notes : null,
+        isCustom: true,
+        createdAt: DateTime.now(),
+      );
+
+      await repository.saveCustomTemplate(
+        template,
+        maxCustomRestPause: maxCustomRestPause,
+      );
+
+      if (mounted) {
+        SnackBarService.showSuccess(context, context.l10n.templateSaved);
+      }
+    } catch (e) {
+      if (mounted) {
+        SnackBarService.showError(context, context.l10n.templateSaveError);
+      }
+    }
+  }
 }
 
 // Helper class to manage DropSet stage controllers
@@ -1494,4 +2185,83 @@ class DropSetStageData {
   });
   final TextEditingController weightController;
   final TextEditingController repsController;
+}
+
+/// Helper class to suggest appropriate weights for dropsets based on exercise type
+/// Helps beginners (Marco persona) with realistic starting values
+class DropSetWeightSuggester {
+  /// Get suggested weights for dropset stages based on exercise characteristics
+  ///
+  /// Returns a tuple of (stage1, stage2, stage3) weights
+  /// Logic:
+  /// - Compound exercises (squat, deadlift, bench): higher weights
+  /// - Isolation exercises (curls, raises): lower weights
+  /// - Adjusted by muscle group size (legs/back > arms/shoulders)
+  static ({double stage1, double stage2, double stage3}) getSuggestedWeights({
+    required String tipoEsercizio,
+    required List<String> focus,
+    double dropPercentage = 0.20, // 20% drop between stages
+  }) {
+    // Base weight depends on exercise type
+    double baseWeight;
+
+    final isCompound = tipoEsercizio.toLowerCase() == 'compound';
+    final focusLower = focus.map((f) => f.toLowerCase()).toList();
+
+    // Determine base weight from muscle group
+    if (_isLargeMuscleGroup(focusLower)) {
+      // Legs, Back, Chest → heavier base
+      baseWeight = isCompound ? 60.0 : 30.0;
+    } else if (_isMediumMuscleGroup(focusLower)) {
+      // Shoulders → medium base
+      baseWeight = isCompound ? 40.0 : 20.0;
+    } else {
+      // Arms, Abs → lighter base
+      baseWeight = isCompound ? 30.0 : 15.0;
+    }
+
+    // Calculate stages with 20% drop
+    final stage1 = baseWeight;
+    final stage2 = (baseWeight * (1 - dropPercentage)).roundToDouble();
+    final stage3 = (baseWeight * (1 - dropPercentage * 2)).roundToDouble();
+
+    return (stage1: stage1, stage2: stage2, stage3: stage3);
+  }
+
+  static bool _isLargeMuscleGroup(List<String> focus) {
+    const largeGroups = [
+      'quadriceps',
+      'quad',
+      'hamstrings',
+      'glutes',
+      'glutei',
+      'gambe',
+      'legs',
+      'back',
+      'dorso',
+      'lat',
+      'dorsali',
+      'schiena',
+      'chest',
+      'petto',
+      'pettorali',
+    ];
+    return focus.any(
+      (f) => largeGroups.any((g) => f.contains(g)),
+    );
+  }
+
+  static bool _isMediumMuscleGroup(List<String> focus) {
+    const mediumGroups = [
+      'shoulder',
+      'spalle',
+      'deltoidi',
+      'delt',
+      'trap',
+      'trapezio',
+    ];
+    return focus.any(
+      (f) => mediumGroups.any((g) => f.contains(g)),
+    );
+  }
 }

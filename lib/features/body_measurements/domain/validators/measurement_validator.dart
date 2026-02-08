@@ -1,5 +1,5 @@
-import '../entities/measurement.dart';
-import '../entities/metric_type.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/measurement.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
 import 'dart:math' as math;
 
 /// MeasurementValidator - Domain validation logic for measurements
@@ -422,11 +422,6 @@ class MeasurementValidator {
 
 /// ValidationResult - Result of validation operation
 class ValidationResult {
-  /// Whether validation passed
-  final bool isValid;
-
-  /// Error message if validation failed (null if valid)
-  final String? errorMessage;
 
   const ValidationResult._({required this.isValid, this.errorMessage});
 
@@ -439,6 +434,11 @@ class ValidationResult {
   factory ValidationResult.invalid(String errorMessage) {
     return ValidationResult._(isValid: false, errorMessage: errorMessage);
   }
+  /// Whether validation passed
+  final bool isValid;
+
+  /// Error message if validation failed (null if valid)
+  final String? errorMessage;
 
   @override
   String toString() {
@@ -449,6 +449,13 @@ class ValidationResult {
 
 /// OutlierStats - Statistical data for outlier detection
 class OutlierStats {
+
+  const OutlierStats({
+    required this.mean,
+    required this.stdDev,
+    required this.zScore,
+    required this.isOutlier,
+  });
   /// Mean (average) value from historical measurements
   final double mean;
 
@@ -460,11 +467,4 @@ class OutlierStats {
 
   /// Whether this measurement is an outlier (>3 std dev)
   final bool isOutlier;
-
-  const OutlierStats({
-    required this.mean,
-    required this.stdDev,
-    required this.zScore,
-    required this.isOutlier,
-  });
 }

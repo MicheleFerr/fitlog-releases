@@ -45,6 +45,39 @@ abstract class ChatConversation with _$ChatConversation {
     required DateTime updatedAt,
   }) = _ChatConversation;
 
+  /// Create from Firestore document
+  factory ChatConversation.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+
+    return ChatConversation(
+      id: doc.id,
+      coachId: data['coachId'] as String? ?? '',
+      athleteId: data['athleteId'] as String? ?? '',
+      coachName: data['coachName'] as String? ?? '',
+      athleteName: data['athleteName'] as String? ?? '',
+      lastMessage: data['lastMessage'] as String?,
+      lastMessageAt: data['lastMessageAt'] is Timestamp
+          ? (data['lastMessageAt'] as Timestamp).toDate()
+          : data['lastMessageAt'] != null
+          ? DateTime.tryParse(data['lastMessageAt'] as String? ?? '')
+          : null,
+      lastMessageSenderId: data['lastMessageSenderId'] as String?,
+      coachUnreadCount: data['coachUnreadCount'] as int? ?? 0,
+      athleteUnreadCount: data['athleteUnreadCount'] as int? ?? 0,
+      createdAt: data['createdAt'] is Timestamp
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.tryParse(data['createdAt'] as String? ?? '') ??
+                DateTime.now(),
+      updatedAt: data['updatedAt'] is Timestamp
+          ? (data['updatedAt'] as Timestamp).toDate()
+          : DateTime.tryParse(data['updatedAt'] as String? ?? '') ??
+                DateTime.now(),
+    );
+  }
+
+  factory ChatConversation.fromJson(Map<String, dynamic> json) =>
+      _$ChatConversationFromJson(json);
+
   /// Private constructor for instance methods
   const ChatConversation._();
 
@@ -92,36 +125,6 @@ abstract class ChatConversation with _$ChatConversation {
     return (parts[0], parts[1]);
   }
 
-  /// Create from Firestore document
-  factory ChatConversation.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-
-    return ChatConversation(
-      id: doc.id,
-      coachId: data['coachId'] as String? ?? '',
-      athleteId: data['athleteId'] as String? ?? '',
-      coachName: data['coachName'] as String? ?? '',
-      athleteName: data['athleteName'] as String? ?? '',
-      lastMessage: data['lastMessage'] as String?,
-      lastMessageAt: data['lastMessageAt'] is Timestamp
-          ? (data['lastMessageAt'] as Timestamp).toDate()
-          : data['lastMessageAt'] != null
-          ? DateTime.tryParse(data['lastMessageAt'] as String? ?? '')
-          : null,
-      lastMessageSenderId: data['lastMessageSenderId'] as String?,
-      coachUnreadCount: data['coachUnreadCount'] as int? ?? 0,
-      athleteUnreadCount: data['athleteUnreadCount'] as int? ?? 0,
-      createdAt: data['createdAt'] is Timestamp
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.tryParse(data['createdAt'] as String? ?? '') ??
-                DateTime.now(),
-      updatedAt: data['updatedAt'] is Timestamp
-          ? (data['updatedAt'] as Timestamp).toDate()
-          : DateTime.tryParse(data['updatedAt'] as String? ?? '') ??
-                DateTime.now(),
-    );
-  }
-
   /// Convert to Firestore map
   Map<String, dynamic> toFirestore() {
     return {
@@ -140,7 +143,4 @@ abstract class ChatConversation with _$ChatConversation {
       'updatedAt': Timestamp.fromDate(updatedAt),
     };
   }
-
-  factory ChatConversation.fromJson(Map<String, dynamic> json) =>
-      _$ChatConversationFromJson(json);
 }

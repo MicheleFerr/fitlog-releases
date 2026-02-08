@@ -221,17 +221,17 @@ sealed class LocalStorageFailure {
 
 /// Measurement not found in local storage
 class MeasurementNotFoundFailure extends LocalStorageFailure {
-  final String measurementId;
 
   const MeasurementNotFoundFailure(this.measurementId);
+  final String measurementId;
 }
 
 /// Hive database operation failed
 class HiveFailure extends LocalStorageFailure {
-  final String message;
-  final Object? error;
 
   const HiveFailure({required this.message, this.error});
+  final String message;
+  final Object? error;
 }
 
 /// Hive box not initialized (call initialize() first)
@@ -241,7 +241,7 @@ class HiveNotInitializedFailure extends LocalStorageFailure {
 
 /// Encryption/decryption failed during storage operation
 class EncryptionStorageFailure extends LocalStorageFailure {
-  final String message;
 
   const EncryptionStorageFailure(this.message);
+  final String message;
 }

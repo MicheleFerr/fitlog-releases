@@ -9,7 +9,7 @@
 - **New Developer?** → Start with [`CLAUDE.md`](../CLAUDE.md) (project rules) then [`CODE_PATTERNS.md`](CODE_PATTERNS.md)
 - **Working on Onboarding?** → [`ONBOARDING_COMPLETE_REFERENCE.md`](ONBOARDING_COMPLETE_REFERENCE.md)
 - **Implementing Features?** → [`DEVELOPMENT_RULES.md`](DEVELOPMENT_RULES.md)
-- **Debugging?** → [`CLAUDE.md`](../CLAUDE.md#debugging) + git log
+- **Debugging?** → [`DEBUG_AUDIT_ACTION_PLAN.md`](DEBUG_AUDIT_ACTION_PLAN.md) + [`CLAUDE.md`](../CLAUDE.md#debugging)
 
 ---
 
@@ -32,6 +32,11 @@
 | [`AI_COACH_DOCUMENTS_SYSTEM_DESIGN.md`](AI_COACH_DOCUMENTS_SYSTEM_DESIGN.md) | Backend design - Admin panel + Firebase + API endpoints | Web Developer |
 | [`AI_COACH_DOCUMENTS_FLUTTER_DESIGN.md`](AI_COACH_DOCUMENTS_FLUTTER_DESIGN.md) | Flutter implementation - Sync service + Hive cache + AI integration | Flutter Developer |
 | [`AI_COACH_DOCUMENTS_IMPLEMENTATION.md`](AI_COACH_DOCUMENTS_IMPLEMENTATION.md) | **Implementation Report** - Backend API + Flutter layers + Delta sync | All developers |
+
+#### Debug Audit (✅ New - 2026-02-08)
+| Document | Purpose |
+|----------|---------|
+| [`DEBUG_AUDIT_ACTION_PLAN.md`](DEBUG_AUDIT_ACTION_PLAN.md) | **FULL CODEBASE AUDIT** - 23 critical issues, prioritized action plan, checklist esecuzione |
 
 #### Template Cloud Sync (✅ New - 2026-02-05)
 | Document | Purpose |

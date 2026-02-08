@@ -54,6 +54,9 @@ sealed class AIMessage with _$AIMessage {
     @Default([]) List<String> suggestions,
   }) = _AIMessage;
 
+  factory AIMessage.fromJson(Map<String, dynamic> json) =>
+      _$AIMessageFromJson(json);
+
   const AIMessage._();
 
   /// Whether this message should be visible in the UI
@@ -61,7 +64,4 @@ sealed class AIMessage with _$AIMessage {
 
   /// Whether this message contains a tool call
   bool get hasToolCall => toolCall != null;
-
-  factory AIMessage.fromJson(Map<String, dynamic> json) =>
-      _$AIMessageFromJson(json);
 }

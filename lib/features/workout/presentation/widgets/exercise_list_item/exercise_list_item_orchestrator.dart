@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_autocollapse_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/haptic_feedback_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -212,10 +213,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
   }
 
   bool _areAllSetsCompleted() {
-    if (widget.exercise.sets.isEmpty) {
-      return false;
-    }
-    return widget.exercise.sets.every((set) => set.isCompleted);
+    // Use the isCompleted getter which handles all exercise types:
+    // - RestPauseExercise: checks restPauseSets
+    // - DropSetExercise: checks stages
+    // - SupersetExercise: checks supersetSets
+    // - Regular Exercise: checks sets
+    return widget.exercise.isCompleted;
   }
 
   void _autoCollapseIfCompleted() {
@@ -1434,8 +1437,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     // Notify parent of the update
     widget.onExerciseUpdate?.call(updatedExercise);
 
-    // Haptic feedback for stage completion (fire-and-forget)
-    unawaited(HapticFeedback.mediumImpact());
+    // ✅ Haptic feedback for stage completion using centralized service
+    // Respects user preferences for haptic intensity
+    HapticFeedbackService.setCompletion(ref);
 
     // Check if there are more stages
     final nextStageIndex = stageIndex + 1;
@@ -1537,6 +1541,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       if (shouldRerun != true || !mounted) return;
     }
 
+    // Check if we're resuming from paused state
+    final existingIncompleteSets = restPauseExercise.restPauseSets
+        .where((s) => s.isCompleted)
+        .toList();
+    final hasPartialProgress = existingIncompleteSets.isNotEmpty && !allCompleted;
+
+    // Check if user has seen Rest-Pause tutorial
+    final config = ref.read(appConfigProvider);
+    final showTutorial = !config.hasSeenRestPauseTutorial;
+
     // Show execution modal
     final result = await RestPauseExecutionModal.show(
       context: context,
@@ -1544,29 +1558,51 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       weight: restPauseExercise.weight,
       targetReps: restPauseExercise.targetReps,
       restPauseSets: restPauseExercise.restPauseSets,
+      resumeFromSets: hasPartialProgress ? existingIncompleteSets : null,
+      showTutorialOnFirstUse: showTutorial,
+      onTutorialSeen: () {
+        ref.read(appConfigProvider.notifier).setHasSeenRestPauseTutorial(true);
+      },
     );
 
     // User cancelled
     if (result == null || !mounted) return;
 
     // Update the exercise with completed sets and RPE
+    // Using copyWith() to preserve all fields (restAfterExercise, tut, advanced fields)
     final updatedSets = result.completedSets.map((set) {
       return set.copyWith(rpe: result.rpe);
     }).toList();
 
-    final updatedExercise = RestPauseExercise(
-      id: restPauseExercise.id,
-      name: restPauseExercise.name,
-      category: restPauseExercise.category,
-      weight: restPauseExercise.weight,
-      targetReps: restPauseExercise.targetReps,
+    final updatedExercise = restPauseExercise.copyWith(
       restPauseSets: updatedSets,
-      notes: restPauseExercise.notes,
-      restTime: restPauseExercise.restTime,
     );
 
     // Notify parent of the update
     widget.onExerciseUpdate?.call(updatedExercise);
+
+    // Handle paused state - save progress but don't start rest timer
+    if (result.isPaused) {
+      if (kDebugMode) {
+        debugPrint(
+          '⏸️ [RestPause] Paused with ${result.completedSets.length} sets, '
+          'total ${result.completedSets.fold(0, (sum, s) => sum + s.effectiveReps)} reps',
+        );
+      }
+      // Show paused snackbar
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(context.l10n.pauseAndContinueLater),
+            action: SnackBarAction(
+              label: context.l10n.resumeRestPause,
+              onPressed: () => _handleExecuteRestPause(updatedExercise),
+            ),
+          ),
+        );
+      }
+      return;
+    }
 
     // Haptic feedback for completion
     unawaited(HapticFeedback.heavyImpact());
@@ -1625,12 +1661,21 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     // ✅ Required when using AutomaticKeepAliveClientMixin
     super.build(context);
 
-    // ✅ REACTIVITY FIX: Use ref.watch to respond immediately to config changes
-    // Previously used ref.read to avoid rebuilds, but this prevented immediate toggle reactivity.
-    // Config changes are rare during workout (only when user opens settings modal),
-    // so the rebuild cost is acceptable for better UX.
-    // To minimize rebuilds, we could use .select() for specific fields if performance becomes an issue.
-    final config = ref.watch(appConfigProvider);
+    // ✅ PERFORMANCE FIX: Selective watching for only used config fields
+    // Previously watched entire appConfigProvider causing unnecessary rebuilds.
+    // Now we watch only the 4 specific fields used in this widget.
+    final autoCollapseCompleted = ref.watch(
+      appConfigProvider.select((c) => c.autoCollapseCompleted ?? false),
+    );
+    final showCollapseCountdown = ref.watch(
+      appConfigProvider.select((c) => c.showCollapseCountdown ?? false),
+    );
+    final autoAdjustRestFromRpe = ref.watch(
+      appConfigProvider.select((c) => c.autoAdjustRestFromRpe ?? false),
+    );
+    final hasSeenRestPauseTutorial = ref.watch(
+      appConfigProvider.select((c) => c.hasSeenRestPauseTutorial),
+    );
 
     // ✅ PERFORMANCE FIX: Watch ONLY the specific properties needed for rendering
     // Previously, getters with ref.watch were causing rebuild chains when accessed.

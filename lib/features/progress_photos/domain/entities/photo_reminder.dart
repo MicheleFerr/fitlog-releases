@@ -57,7 +57,6 @@ extension PhotoReminderFrequencyExtension on PhotoReminderFrequency {
 /// User's photo reminder preferences
 @freezed
 abstract class PhotoReminderSettings with _$PhotoReminderSettings {
-  const PhotoReminderSettings._();
 
   const factory PhotoReminderSettings({
     /// Whether reminders are enabled
@@ -97,6 +96,19 @@ abstract class PhotoReminderSettings with _$PhotoReminderSettings {
     @Default(false) bool disabledByAntiSpam,
   }) = _PhotoReminderSettings;
 
+  /// Create default settings (disabled by default - opt-in)
+  factory PhotoReminderSettings.defaults() => const PhotoReminderSettings();
+
+  /// Create enabled settings with recommended frequency
+  factory PhotoReminderSettings.recommended({int hour = 9, int minute = 0}) =>
+      PhotoReminderSettings(
+        isEnabled: true,
+        frequency: PhotoReminderFrequency.monthly,
+        reminderHour: hour,
+        reminderMinute: minute,
+      );
+  const PhotoReminderSettings._();
+
   factory PhotoReminderSettings.fromJson(Map<String, dynamic> json) =>
       _$PhotoReminderSettingsFromJson(json);
 
@@ -132,24 +144,11 @@ abstract class PhotoReminderSettings with _$PhotoReminderSettings {
     final minute = reminderMinute.toString().padLeft(2, '0');
     return '$hour:$minute';
   }
-
-  /// Create default settings (disabled by default - opt-in)
-  factory PhotoReminderSettings.defaults() => const PhotoReminderSettings();
-
-  /// Create enabled settings with recommended frequency
-  factory PhotoReminderSettings.recommended({int hour = 9, int minute = 0}) =>
-      PhotoReminderSettings(
-        isEnabled: true,
-        frequency: PhotoReminderFrequency.monthly,
-        reminderHour: hour,
-        reminderMinute: minute,
-      );
 }
 
 /// Record of a sent photo reminder for tracking
 @freezed
 abstract class PhotoReminderRecord with _$PhotoReminderRecord {
-  const PhotoReminderRecord._();
 
   const factory PhotoReminderRecord({
     /// Unique identifier
@@ -170,6 +169,7 @@ abstract class PhotoReminderRecord with _$PhotoReminderRecord {
     /// Whether this reminder was canceled before delivery
     @Default(false) bool wasCanceled,
   }) = _PhotoReminderRecord;
+  const PhotoReminderRecord._();
 
   factory PhotoReminderRecord.fromJson(Map<String, dynamic> json) =>
       _$PhotoReminderRecordFromJson(json);

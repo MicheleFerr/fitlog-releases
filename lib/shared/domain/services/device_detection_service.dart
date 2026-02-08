@@ -14,11 +14,11 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 /// Used primarily for web to determine if user is on mobile browser
 /// and should be redirected to app stores.
 class DeviceDetectionService {
-  static DeviceDetectionService? _instance;
 
   factory DeviceDetectionService() => _instance ??= DeviceDetectionService._();
 
   DeviceDetectionService._();
+  static DeviceDetectionService? _instance;
 
   /// Check if running on web platform
   bool get isWeb => kIsWeb;

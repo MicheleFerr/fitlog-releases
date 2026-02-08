@@ -21,6 +21,9 @@ class RestPauseExecutionModal extends StatefulWidget {
     required this.targetReps,
     required this.restPauseSets,
     this.defaultRestSeconds = 15,
+    this.resumeFromSets,
+    this.showTutorialOnFirstUse = false,
+    this.onTutorialSeen,
   });
 
   final String exerciseName;
@@ -28,6 +31,9 @@ class RestPauseExecutionModal extends StatefulWidget {
   final int targetReps;
   final List<RestPauseSet> restPauseSets;
   final int defaultRestSeconds;
+  final List<RestPauseSet>? resumeFromSets;
+  final bool showTutorialOnFirstUse;
+  final VoidCallback? onTutorialSeen;
 
   @override
   State<RestPauseExecutionModal> createState() =>
@@ -41,6 +47,9 @@ class RestPauseExecutionModal extends StatefulWidget {
     required int targetReps,
     required List<RestPauseSet> restPauseSets,
     int defaultRestSeconds = 15,
+    List<RestPauseSet>? resumeFromSets,
+    bool showTutorialOnFirstUse = false,
+    VoidCallback? onTutorialSeen,
   }) {
     return showModalBottomSheet<RestPauseExecutionResult>(
       context: context,
@@ -56,6 +65,9 @@ class RestPauseExecutionModal extends StatefulWidget {
         targetReps: targetReps,
         restPauseSets: restPauseSets,
         defaultRestSeconds: defaultRestSeconds,
+        resumeFromSets: resumeFromSets,
+        showTutorialOnFirstUse: showTutorialOnFirstUse,
+        onTutorialSeen: onTutorialSeen,
       ),
     );
   }
@@ -63,10 +75,15 @@ class RestPauseExecutionModal extends StatefulWidget {
 
 /// Result of rest-pause execution
 class RestPauseExecutionResult {
-  RestPauseExecutionResult({required this.completedSets, required this.rpe});
+  RestPauseExecutionResult({
+    required this.completedSets,
+    required this.rpe,
+    this.isPaused = false,
+  });
 
   final List<RestPauseSet> completedSets;
   final int? rpe;
+  final bool isPaused;
 }
 
 enum _ExecutionPhase {
@@ -80,6 +97,7 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
     with SafeSetStateMixin {
   final List<RestPauseSet> _completedSets = [];
   final TextEditingController _repsController = TextEditingController();
+  final Stopwatch _executionStopwatch = Stopwatch();
 
   _ExecutionPhase _phase = _ExecutionPhase.ready;
   int _currentSetIndex = 0;
@@ -94,14 +112,31 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
   @override
   void initState() {
     super.initState();
-    // Pre-fill with target reps for guidance
     _repsController.text = '';
+    _executionStopwatch.start();
+
+    // Resume from paused state if provided
+    if (widget.resumeFromSets != null && widget.resumeFromSets!.isNotEmpty) {
+      _completedSets.addAll(widget.resumeFromSets!);
+      _currentSetIndex = _completedSets.length;
+    }
+
+    // Show tutorial on first use
+    if (widget.showTutorialOnFirstUse) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _showHelpDialog();
+          widget.onTutorialSeen?.call();
+        }
+      });
+    }
   }
 
   @override
   void dispose() {
     _restTimer?.cancel();
     _repsController.dispose();
+    _executionStopwatch.stop();
     super.dispose();
   }
 
@@ -140,6 +175,30 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
     }
   }
 
+  void _applyQuickReps(int reps) {
+    _repsController.text = reps.toString();
+    _logReps();
+  }
+
+  List<int> _calculateQuickSuggestions() {
+    final repsRemaining = widget.targetReps - _totalRepsCompleted;
+    if (_completedSets.isEmpty) {
+      // First set: suggest typical starting values
+      return [8, 6, 5];
+    }
+    final lastReps = _completedSets.last.effectiveReps;
+    // Decreasing pattern typical of rest-pause
+    final suggestions = <int>{
+      (lastReps * 0.75).round().clamp(1, lastReps - 1),
+      (lastReps * 0.5).round().clamp(1, lastReps - 1),
+      repsRemaining.clamp(1, 10),
+    };
+    // Remove duplicates and sort descending
+    final list = suggestions.where((r) => r > 0).toList()
+      ..sort((a, b) => b.compareTo(a));
+    return list.take(3).toList();
+  }
+
   void _startRest() {
     setState(() {
       _phase = _ExecutionPhase.resting;
@@ -161,6 +220,13 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
     });
   }
 
+  void _adjustRestTimer(int delta) {
+    setState(() {
+      _restSecondsRemaining = (_restSecondsRemaining + delta).clamp(5, 60);
+    });
+    HapticFeedback.selectionClick();
+  }
+
   void _skipRest() {
     _restTimer?.cancel();
     setState(() {
@@ -169,6 +235,7 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
   }
 
   void _showCompletion() {
+    _executionStopwatch.stop();
     setState(() {
       _phase = _ExecutionPhase.completed;
     });
@@ -191,27 +258,81 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
   }
 
   void _cancelExecution() {
-    showDialog<bool>(
+    showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(context.l10n.cancelRestPause),
-        content: Text(context.l10n.cancelRestPauseMessage),
+        title: Text(context.l10n.pauseOrCancel),
+        content: Text(context.l10n.pauseOrCancelMessage),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(context.l10n.no),
+            onPressed: () => Navigator.pop(context, 'cancel'),
+            child: Text(context.l10n.cancelWorkout),
           ),
           FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(context.l10n.yes),
+            onPressed: () => Navigator.pop(context, 'pause'),
+            child: Text(context.l10n.pauseAndContinueLater),
           ),
         ],
       ),
-    ).then((confirmed) {
-      if (confirmed == true && mounted) {
+    ).then((result) {
+      if (!mounted) return;
+      if (result == 'cancel') {
         Navigator.pop(context);
+      } else if (result == 'pause') {
+        // Return partial result with isPaused flag
+        final partialResult = RestPauseExecutionResult(
+          completedSets: _completedSets,
+          rpe: null,
+          isPaused: true,
+        );
+        Navigator.pop(context, partialResult);
       }
     });
+  }
+
+  void _showHelpDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(AppIcons.info, color: context.colors.primary),
+            const SizedBox(width: 8),
+            Expanded(child: Text(context.l10n.restPauseHelpTitle)),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Text(
+            context.l10n.restPauseHelpBody,
+            style: context.textTheme.bodyMedium,
+          ),
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(context.l10n.ok),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDuration(Duration duration) {
+    final minutes = duration.inMinutes;
+    final seconds = duration.inSeconds % 60;
+    return '${minutes}m ${seconds}s';
+  }
+
+  double _calculateVolume() {
+    return widget.weight * _totalRepsCompleted;
+  }
+
+  int _calculateIntensityBoost() {
+    // Rest-pause typically provides 20-30% more volume than traditional sets
+    // Calculate based on additional sets beyond the first
+    if (_completedSets.length <= 1) return 0;
+    final extraSets = _completedSets.length - 1;
+    return (extraSets * 15).clamp(0, 50);
   }
 
   @override
@@ -311,6 +432,12 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
                   ],
                 ),
               ),
+              // Help button
+              IconButton(
+                onPressed: _showHelpDialog,
+                icon: const Icon(AppIcons.help),
+                tooltip: context.l10n.restPauseHelpTitle,
+              ),
               IconButton(
                 onPressed: _cancelExecution,
                 icon: const Icon(AppIcons.close),
@@ -352,18 +479,69 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
             ],
           ),
           const SizedBox(height: 8),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 8,
-              backgroundColor: context.colors.outline.withValues(alpha: 0.2),
-              valueColor: AlwaysStoppedAnimation(
-                _targetReached
-                    ? context.colors.success
-                    : context.colors.primary,
+          // Progress bar with milestones
+          _buildProgressBarWithMilestones(context, progress),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProgressBarWithMilestones(
+    BuildContext context,
+    double progress,
+  ) {
+    final milestones = [0.25, 0.5, 0.75, 1.0];
+    final progressColor =
+        _targetReached ? context.colors.success : context.colors.primary;
+    final backgroundColor = context.colors.outline.withValues(alpha: 0.2);
+
+    return SizedBox(
+      height: 16,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Background bar
+          Container(
+            height: 8,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          // Progress bar
+          Align(
+            alignment: Alignment.centerLeft,
+            child: FractionallySizedBox(
+              widthFactor: progress,
+              child: Container(
+                height: 8,
+                decoration: BoxDecoration(
+                  color: progressColor,
+                  borderRadius: BorderRadius.circular(4),
+                ),
               ),
             ),
+          ),
+          // Milestone markers
+          Row(
+            children: milestones.map((milestone) {
+              final isReached = progress >= milestone;
+              return Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    width: 3,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: isReached
+                          ? context.colors.onPrimary
+                          : context.colors.outline.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(1.5),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
           ),
         ],
       ),
@@ -408,12 +586,29 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
-                context.l10n.restPauseGoToFailure,
-                style: context.textTheme.bodyLarge?.copyWith(
-                  color: context.colors.onSurfaceVariant,
-                ),
-                textAlign: TextAlign.center,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: Text(
+                      context.l10n.restPauseGoToFailure,
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Tooltip(
+                    message: context.l10n.goToFailureHelp,
+                    child: Icon(
+                      AppIcons.info,
+                      size: 18,
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
               ),
               if (repsNeeded > 0) ...[
                 const SizedBox(height: 4),
@@ -479,6 +674,44 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
                   color: context.colors.onSurfaceVariant,
                 ),
               ),
+              const SizedBox(height: 16),
+              // Timer adjustment controls
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton.filled(
+                    onPressed: _restSecondsRemaining > 5
+                        ? () => _adjustRestTimer(-5)
+                        : null,
+                    icon: const Icon(AppIcons.remove),
+                    style: IconButton.styleFrom(
+                      backgroundColor:
+                          context.colors.tertiary.withValues(alpha: 0.2),
+                      foregroundColor: context.colors.tertiary,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      context.l10n.adjustTimer,
+                      style: context.textTheme.labelMedium?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                  IconButton.filled(
+                    onPressed: _restSecondsRemaining < 60
+                        ? () => _adjustRestTimer(5)
+                        : null,
+                    icon: const Icon(AppIcons.add),
+                    style: IconButton.styleFrom(
+                      backgroundColor:
+                          context.colors.tertiary.withValues(alpha: 0.2),
+                      foregroundColor: context.colors.tertiary,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -492,6 +725,8 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
   }
 
   Widget _buildLoggingPhase(BuildContext context) {
+    final suggestions = _calculateQuickSuggestions();
+
     return Column(
       children: [
         Text(
@@ -500,7 +735,50 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
             fontWeight: FontWeight.w600,
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
+        // Quick rep selection chips
+        if (suggestions.isNotEmpty) ...[
+          Text(
+            context.l10n.quickRepSelection,
+            style: context.textTheme.labelSmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 12,
+            runSpacing: 8,
+            alignment: WrapAlignment.center,
+            children: suggestions.map((reps) {
+              return ActionChip(
+                label: Text(
+                  '$reps',
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () => _applyQuickReps(reps),
+                backgroundColor:
+                    context.colors.primaryContainer.withValues(alpha: 0.5),
+                side: BorderSide(
+                  color: context.colors.primary.withValues(alpha: 0.3),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '— or —',
+            style: context.textTheme.labelSmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
         SizedBox(
           width: 120,
           child: TextField(
@@ -512,10 +790,10 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
             style: context.textTheme.displaySmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: '0',
-              border: const OutlineInputBorder(),
-              contentPadding: const EdgeInsets.symmetric(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 20,
               ),
@@ -578,6 +856,9 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
             ],
           ),
         ),
+        const SizedBox(height: 16),
+        // Stats summary
+        _buildStatsRow(context),
         const SizedBox(height: 24),
         // RPE Selection
         Text(
@@ -597,6 +878,83 @@ class _RestPauseExecutionModalState extends State<RestPauseExecutionModal>
               context.l10n.complete,
               style: context.textTheme.titleMedium,
             ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatsRow(BuildContext context) {
+    final volume = _calculateVolume();
+    final duration = _executionStopwatch.elapsed;
+    final intensityBoost = _calculateIntensityBoost();
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: context.colors.primaryContainer.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildStatItem(
+            context,
+            icon: AppIcons.fitnessCenter,
+            label: context.l10n.totalVolume,
+            value: '${volume.toStringAsFixed(0)} kg',
+          ),
+          Container(
+            width: 1,
+            height: 40,
+            color: context.colors.outline.withValues(alpha: 0.3),
+          ),
+          _buildStatItem(
+            context,
+            icon: AppIcons.timer,
+            label: context.l10n.timeUnderTension,
+            value: _formatDuration(duration),
+          ),
+          if (intensityBoost > 0) ...[
+            Container(
+              width: 1,
+              height: 40,
+              color: context.colors.outline.withValues(alpha: 0.3),
+            ),
+            _buildStatItem(
+              context,
+              icon: AppIcons.trendingUp,
+              label: context.l10n.intensityBoost,
+              value: '+$intensityBoost%',
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatItem(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 20, color: context.colors.primary),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: context.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: context.colors.primary,
+          ),
+        ),
+        Text(
+          label,
+          style: context.textTheme.labelSmall?.copyWith(
+            color: context.colors.onSurfaceVariant,
           ),
         ),
       ],

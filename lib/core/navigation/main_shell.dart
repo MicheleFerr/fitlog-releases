@@ -223,9 +223,8 @@ class _MainShellState extends ConsumerState<MainShell> {
     );
 
     if (confirmed == true && context.mounted) {
-      // Clear workout and navigate to home
+      // Clear workout (user stays on current screen)
       ref.read(currentWorkoutProvider.notifier).clearWorkout();
-      context.go('/');
       return true;
     }
 

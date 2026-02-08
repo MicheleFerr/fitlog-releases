@@ -8,6 +8,11 @@ import 'package:timezone/timezone.dart' as tz;
 
 /// Service for scheduling workout reminder notifications
 class SchedulingNotificationService {
+
+  SchedulingNotificationService({
+    FlutterLocalNotificationsPlugin? notificationsPlugin,
+  }) : _notificationsPlugin =
+           notificationsPlugin ?? FlutterLocalNotificationsPlugin();
   final FlutterLocalNotificationsPlugin _notificationsPlugin;
 
   /// Notification channel ID for scheduled workout reminders
@@ -22,11 +27,6 @@ class SchedulingNotificationService {
 
   /// Base notification ID for scheduled workouts (using high range to avoid conflicts)
   static const int _baseNotificationId = 100000;
-
-  SchedulingNotificationService({
-    FlutterLocalNotificationsPlugin? notificationsPlugin,
-  }) : _notificationsPlugin =
-           notificationsPlugin ?? FlutterLocalNotificationsPlugin();
 
   /// Initialize the notification channel (call on app startup)
   Future<void> initialize() async {
@@ -148,7 +148,7 @@ class SchedulingNotificationService {
             priority: Priority.high,
             icon: '@mipmap/ic_launcher',
           ),
-          iOS: const DarwinNotificationDetails(
+          iOS: DarwinNotificationDetails(
             presentAlert: true,
             presentBadge: true,
             presentSound: true,

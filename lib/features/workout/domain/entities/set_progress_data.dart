@@ -7,7 +7,6 @@ part 'set_progress_data.g.dart';
 /// Used to display progress arrows (green/red) in set rows.
 @freezed
 abstract class SetProgressData with _$SetProgressData {
-  const SetProgressData._();
 
   const factory SetProgressData({
     /// Current weight being lifted
@@ -31,6 +30,7 @@ abstract class SetProgressData with _$SetProgressData {
     /// Exercise name for reference
     required String exerciseName,
   }) = _SetProgressData;
+  const SetProgressData._();
 
   factory SetProgressData.fromJson(Map<String, dynamic> json) =>
       _$SetProgressDataFromJson(json);

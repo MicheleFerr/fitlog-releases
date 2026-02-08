@@ -19,6 +19,7 @@ class _StateNotifier<T> extends Notifier<T> {
 
   /// Update the state (mimics StateProvider.state setter)
   // ignore: avoid_setters_without_getters
+  @override
   set state(T value) => super.state = value;
 }
 
@@ -49,7 +50,7 @@ NotifierProvider<_StateNotifier<T>, T> createStateProvider<T>(T initialValue) {
 /// // New (Riverpod 3.x with this helper):
 /// final myProvider = createStateProviderAutoDispose<bool>(false);
 /// ```
-createStateProviderAutoDispose<T>(T initialValue) {
+NotifierProvider<_StateNotifier<T>, T> createStateProviderAutoDispose<T>(T initialValue) {
   return NotifierProvider.autoDispose<_StateNotifier<T>, T>(
     () => _StateNotifier(initialValue),
   );

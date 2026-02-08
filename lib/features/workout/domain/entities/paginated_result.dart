@@ -34,6 +34,33 @@ class PaginatedResult<T> {
     this.totalCount,
   });
 
+  /// Creates an empty result (no items, no more pages).
+  factory PaginatedResult.empty() =>
+      PaginatedResult<T>(items: [], hasMore: false);
+
+  /// Creates a result from a list with automatic hasMore detection.
+  ///
+  /// [items] - The items fetched
+  /// [requestedPageSize] - The page size that was requested
+  /// [lastDocument] - The last document for cursor
+  ///
+  /// If items.length > requestedPageSize, hasMore is true and
+  /// only the first requestedPageSize items are kept.
+  factory PaginatedResult.fromList({
+    required List<T> items,
+    required int requestedPageSize,
+    DocumentSnapshot? lastDocument,
+  }) {
+    final hasMore = items.length > requestedPageSize;
+    final trimmedItems = hasMore ? items.sublist(0, requestedPageSize) : items;
+
+    return PaginatedResult<T>(
+      items: trimmedItems,
+      hasMore: hasMore,
+      lastDocument: lastDocument,
+    );
+  }
+
   /// The list of items for the current page.
   final List<T> items;
 
@@ -60,33 +87,6 @@ class PaginatedResult<T> {
       hasMore: hasMore ?? this.hasMore,
       lastDocument: lastDocument ?? this.lastDocument,
       totalCount: totalCount ?? this.totalCount,
-    );
-  }
-
-  /// Creates an empty result (no items, no more pages).
-  factory PaginatedResult.empty() =>
-      PaginatedResult<T>(items: [], hasMore: false);
-
-  /// Creates a result from a list with automatic hasMore detection.
-  ///
-  /// [items] - The items fetched
-  /// [requestedPageSize] - The page size that was requested
-  /// [lastDocument] - The last document for cursor
-  ///
-  /// If items.length > requestedPageSize, hasMore is true and
-  /// only the first requestedPageSize items are kept.
-  factory PaginatedResult.fromList({
-    required List<T> items,
-    required int requestedPageSize,
-    DocumentSnapshot? lastDocument,
-  }) {
-    final hasMore = items.length > requestedPageSize;
-    final trimmedItems = hasMore ? items.sublist(0, requestedPageSize) : items;
-
-    return PaginatedResult<T>(
-      items: trimmedItems,
-      hasMore: hasMore,
-      lastDocument: lastDocument,
     );
   }
 
@@ -119,6 +119,12 @@ class PaginatedState<T> {
     this.lastDocument,
   });
 
+  /// Initial loading state.
+  factory PaginatedState.initial() => const PaginatedState();
+
+  /// Loading state (initial load).
+  factory PaginatedState.loading() => const PaginatedState(isLoading: true);
+
   /// All items loaded so far (accumulated across pages).
   final List<T> items;
 
@@ -136,12 +142,6 @@ class PaginatedState<T> {
 
   /// Cursor for next page.
   final DocumentSnapshot? lastDocument;
-
-  /// Initial loading state.
-  factory PaginatedState.initial() => const PaginatedState();
-
-  /// Loading state (initial load).
-  factory PaginatedState.loading() => const PaginatedState(isLoading: true);
 
   /// Creates a copy with optional field overrides.
   PaginatedState<T> copyWith({

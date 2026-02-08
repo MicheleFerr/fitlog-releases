@@ -6,6 +6,7 @@
 /// - Muscle stress distribution
 /// - Confidence calculation
 /// - Logarithmic scaling
+library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/constants/stress_index_constants.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/stress_index_result.dart';

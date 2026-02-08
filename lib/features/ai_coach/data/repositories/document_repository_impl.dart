@@ -9,23 +9,23 @@ library;
 
 import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
-import '../../domain/entities/scientific_paper.dart';
-import '../../domain/entities/document_sync_status.dart';
-import '../../domain/repositories/document_repository.dart';
-import '../datasources/document_local_datasource.dart';
-import '../datasources/document_remote_datasource.dart';
-import '../models/scientific_paper_model.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/scientific_paper.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/document_sync_status.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/repositories/document_repository.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/document_local_datasource.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/document_remote_datasource.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/models/scientific_paper_model.dart';
 
 /// Repository implementation for AI Coach documents
 class DocumentRepositoryImpl implements DocumentRepository {
-  final DocumentLocalDataSource _localDataSource;
-  final DocumentRemoteDataSource _remoteDataSource;
 
   DocumentRepositoryImpl({
     required DocumentLocalDataSource localDataSource,
     required DocumentRemoteDataSource remoteDataSource,
   })  : _localDataSource = localDataSource,
         _remoteDataSource = remoteDataSource;
+  final DocumentLocalDataSource _localDataSource;
+  final DocumentRemoteDataSource _remoteDataSource;
 
   @override
   Future<Either<String, List<ScientificPaper>>> getCachedDocuments() async {
@@ -65,7 +65,7 @@ class DocumentRepositoryImpl implements DocumentRepository {
       final models = await _localDataSource.search(query);
       final papers = models.map((m) => m.toDomain()).toList();
       debugPrint(
-        '[DOCUMENT_REPO] ✅ Search "${query}" returned ${papers.length} results',
+        '[DOCUMENT_REPO] ✅ Search "$query" returned ${papers.length} results',
       );
       return right(papers);
     } catch (e) {

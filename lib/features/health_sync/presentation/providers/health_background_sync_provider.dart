@@ -1,6 +1,5 @@
 import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'dart:io';
-import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_sync_status.dart';

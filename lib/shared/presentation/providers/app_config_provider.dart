@@ -776,6 +776,26 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     }
   }
 
+  // Rest-Pause tutorial flag
+  Future<void> setHasSeenRestPauseTutorial(bool seen) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      state = state.copyWith(hasSeenRestPauseTutorial: seen);
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint('✅ [AppConfig] Rest-Pause tutorial seen set to: $seen');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error setting Rest-Pause tutorial seen: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
   // Reset to defaults
   Future<void> resetToDefaults() async {
     try {

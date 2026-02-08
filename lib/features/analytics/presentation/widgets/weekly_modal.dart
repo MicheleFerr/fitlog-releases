@@ -95,14 +95,18 @@ class _WeeklyModalState extends State<WeeklyModal> {
 
   /// Get motivational message
   String _getMotivationalMessage(BuildContext context) {
-    if (widget.weeklyWorkouts >= _weeklyGoal)
+    if (widget.weeklyWorkouts >= _weeklyGoal) {
       return context.l10n.weeklyConsistencyExcellent;
-    if (widget.weeklyWorkouts >= _weeklyGoal - 1)
+    }
+    if (widget.weeklyWorkouts >= _weeklyGoal - 1) {
       return context.l10n.weeklyConsistencyAlmost;
-    if (widget.weeklyWorkouts >= _weeklyGoal - 2)
+    }
+    if (widget.weeklyWorkouts >= _weeklyGoal - 2) {
       return context.l10n.weeklyConsistencyGood;
-    if (widget.weeklyWorkouts >= 2)
+    }
+    if (widget.weeklyWorkouts >= 2) {
       return context.l10n.weeklyConsistencyOnTrack;
+    }
     return context.l10n.weeklyConsistencyStart;
   }
 

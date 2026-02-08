@@ -270,7 +270,7 @@ class SupersetTemplatePreviewSheet extends ConsumerWidget {
                     ),
                     _ConfigRow(
                       label: context.l10n.restBetweenExercises,
-                      value: '${template.restBetween}s',
+                      value: '${template.restAfterSuperset}s',
                     ),
                     _ConfigRow(
                       label: context.l10n.restAfterRound,

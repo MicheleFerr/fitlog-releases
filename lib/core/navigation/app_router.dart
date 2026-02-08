@@ -135,9 +135,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     appConfigProvider.select((c) => c.initialOnboardingCompleted),
   );
 
-  print('🔧 [Router] Provider building/rebuilding');
-  print('   - authState: $authState');
-  print('   - initialOnboardingCompleted: $initialOnboardingCompleted');
+  debugPrint('🔧 [Router] Provider building/rebuilding');
+  debugPrint('   - authState: $authState');
+  debugPrint('   - initialOnboardingCompleted: $initialOnboardingCompleted');
 
   return GoRouter(
     navigatorKey: AppRoutes.rootNavigatorKey,
@@ -155,15 +155,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final currentPath = state.fullPath ?? state.path ?? '/';
 
       // RELEASE MODE DEBUG: Always print
-      print('🔄 [Router] Redirect check:');
-      print('   - currentPath: $currentPath');
-      print('   - isLoggedIn: $isLoggedIn');
-      print('   - initialOnboardingCompleted: $initialOnboardingCompleted');
-      print('   - isOnInitialOnboarding: $isOnInitialOnboarding');
+      debugPrint('🔄 [Router] Redirect check:');
+      debugPrint('   - currentPath: $currentPath');
+      debugPrint('   - isLoggedIn: $isLoggedIn');
+      debugPrint('   - initialOnboardingCompleted: $initialOnboardingCompleted');
+      debugPrint('   - isOnInitialOnboarding: $isOnInitialOnboarding');
 
       // Wait for auth to initialize
       if (authState == AuthState.loading) {
-        print('⏳ [Router] Auth loading - waiting');
+        debugPrint('⏳ [Router] Auth loading - waiting');
         return null;
       }
 
@@ -174,7 +174,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       // Not logged in and not on auth pages → redirect to login
       if (!isLoggedIn && !isLoggingIn) {
-        print('🔐 [Router] Not logged in - redirect to login');
+        debugPrint('🔐 [Router] Not logged in - redirect to login');
         return AppRoutes.loginPath;
       }
 
@@ -182,24 +182,24 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       if (isLoggedIn && isLoggingIn) {
         // Check if initial onboarding is completed
         if (!initialOnboardingCompleted) {
-          print('🚀 [Router] From auth to onboarding');
+          debugPrint('🚀 [Router] From auth to onboarding');
           return AppRoutes.initialOnboardingPath;
         }
-        print('🏠 [Router] From auth to home');
+        debugPrint('🏠 [Router] From auth to home');
         return AppRoutes.homePath;
       }
 
       // Logged in but initial onboarding not completed
       // Redirect to initial onboarding (unless already there)
       if (isLoggedIn && !initialOnboardingCompleted && !isOnInitialOnboarding) {
-        print('🚀 [Router] Redirecting to initial onboarding');
+        debugPrint('🚀 [Router] Redirecting to initial onboarding');
         return AppRoutes.initialOnboardingPath;
       }
 
       // Logged in and onboarding completed but still on onboarding screen
       // Redirect to home (reverse of above check)
       if (isLoggedIn && initialOnboardingCompleted && isOnInitialOnboarding) {
-        print('✅ [Router] ONBOARDING COMPLETED - REDIRECT TO HOME!');
+        debugPrint('✅ [Router] ONBOARDING COMPLETED - REDIRECT TO HOME!');
         return AppRoutes.homePath;
       }
 
@@ -228,7 +228,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         }
       }
 
-      print('🔄 [Router] No redirect matched - staying on: $currentPath');
+      debugPrint('🔄 [Router] No redirect matched - staying on: $currentPath');
       return null;
     },
     // ═══════════════════════════════════════════════════════════════════════

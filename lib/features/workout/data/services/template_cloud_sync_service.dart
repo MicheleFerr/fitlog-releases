@@ -26,6 +26,21 @@ class PendingTemplateSync {
     this.nextRetryTime,
   });
 
+  factory PendingTemplateSync.fromJson(Map<String, dynamic> json) =>
+      PendingTemplateSync(
+        templateId: json['templateId'] as String,
+        templateData: Map<String, dynamic>.from(json['templateData'] as Map),
+        createdAt: DateTime.parse(json['createdAt'] as String),
+        attemptCount: json['attemptCount'] as int? ?? 0,
+        lastAttemptTime: json['lastAttemptTime'] != null
+            ? DateTime.parse(json['lastAttemptTime'] as String)
+            : null,
+        lastError: json['lastError'] as String?,
+        nextRetryTime: json['nextRetryTime'] != null
+            ? DateTime.parse(json['nextRetryTime'] as String)
+            : null,
+      );
+
   final String templateId;
   final Map<String, dynamic> templateData;
   final DateTime createdAt;
@@ -61,21 +76,6 @@ class PendingTemplateSync {
         'lastError': lastError,
         'nextRetryTime': nextRetryTime?.toIso8601String(),
       };
-
-  factory PendingTemplateSync.fromJson(Map<String, dynamic> json) =>
-      PendingTemplateSync(
-        templateId: json['templateId'] as String,
-        templateData: Map<String, dynamic>.from(json['templateData'] as Map),
-        createdAt: DateTime.parse(json['createdAt'] as String),
-        attemptCount: json['attemptCount'] as int? ?? 0,
-        lastAttemptTime: json['lastAttemptTime'] != null
-            ? DateTime.parse(json['lastAttemptTime'] as String)
-            : null,
-        lastError: json['lastError'] as String?,
-        nextRetryTime: json['nextRetryTime'] != null
-            ? DateTime.parse(json['nextRetryTime'] as String)
-            : null,
-      );
 }
 
 /// Service to handle cloud sync for templates with retry logic

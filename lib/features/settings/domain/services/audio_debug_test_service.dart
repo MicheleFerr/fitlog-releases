@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../data/services/audio_debug_platform_service.dart';
+import 'package:gymbro_flutter_new/features/settings/data/services/audio_debug_platform_service.dart';
 
 /// Service for automated audio debugging tests
 /// Executes systematic tests to detect timer audio bugs
@@ -108,7 +108,7 @@ class AudioDebugTestService {
 
     // Test A: Foreground timer (baseline)
     onProgress(
-      TestProgress(
+      const TestProgress(
         currentTest: 1,
         totalTests: 3,
         testName: 'Test A: Foreground Timer (30s)',
@@ -120,7 +120,7 @@ class AudioDebugTestService {
 
     // Test B: Background NO Live Activity
     onProgress(
-      TestProgress(
+      const TestProgress(
         currentTest: 2,
         totalTests: 3,
         testName: 'Test B: Background Timer NO LA (90s)',
@@ -132,7 +132,7 @@ class AudioDebugTestService {
 
     // Test C: Background WITH Live Activity
     onProgress(
-      TestProgress(
+      const TestProgress(
         currentTest: 3,
         totalTests: 3,
         testName: 'Test C: Background WITH LA (90s)',
@@ -212,7 +212,7 @@ class AudioDebugTestService {
 
     // Test matrix
     final testCases = [
-      TestCase(
+      const TestCase(
         id: 'TC-1',
         name: 'Foreground 30s, LA inactive',
         duration: Duration(seconds: 30),
@@ -220,7 +220,7 @@ class AudioDebugTestService {
         liveActivityEnabled: false,
         otherAudio: false,
       ),
-      TestCase(
+      const TestCase(
         id: 'TC-2',
         name: 'Background 90s, LA inactive',
         duration: Duration(seconds: 90),
@@ -228,7 +228,7 @@ class AudioDebugTestService {
         liveActivityEnabled: false,
         otherAudio: false,
       ),
-      TestCase(
+      const TestCase(
         id: 'TC-3',
         name: 'Background 90s, LA ACTIVE',
         duration: Duration(seconds: 90),
@@ -236,7 +236,7 @@ class AudioDebugTestService {
         liveActivityEnabled: true,
         otherAudio: false,
       ),
-      TestCase(
+      const TestCase(
         id: 'TC-4',
         name: 'Foreground 30s + Spotify',
         duration: Duration(seconds: 30),
@@ -244,7 +244,7 @@ class AudioDebugTestService {
         liveActivityEnabled: true,
         otherAudio: true,
       ),
-      TestCase(
+      const TestCase(
         id: 'TC-5',
         name: 'Background 90s + Spotify',
         duration: Duration(seconds: 90),
@@ -252,7 +252,7 @@ class AudioDebugTestService {
         liveActivityEnabled: true,
         otherAudio: true,
       ),
-      TestCase(
+      const TestCase(
         id: 'TC-6',
         name: 'Foreground 10s rapid',
         duration: Duration(seconds: 10),
@@ -260,7 +260,7 @@ class AudioDebugTestService {
         liveActivityEnabled: false,
         otherAudio: false,
       ),
-      TestCase(
+      const TestCase(
         id: 'TC-7',
         name: 'Rapid succession (10s + 10s)',
         duration: Duration(seconds: 10),
@@ -269,7 +269,7 @@ class AudioDebugTestService {
         otherAudio: false,
         isRapid: true,
       ),
-      TestCase(
+      const TestCase(
         id: 'TC-8',
         name: 'Background 120s, LA ACTIVE',
         duration: Duration(seconds: 120),
@@ -468,13 +468,6 @@ enum AppState { foreground, background }
 enum BugType { none, doublePlay, noSound, raceCondition }
 
 class TestCase {
-  final String id;
-  final String name;
-  final Duration duration;
-  final AppState appState;
-  final bool liveActivityEnabled;
-  final bool otherAudio;
-  final bool isRapid;
 
   const TestCase({
     required this.id,
@@ -485,22 +478,16 @@ class TestCase {
     this.otherAudio = false,
     this.isRapid = false,
   });
+  final String id;
+  final String name;
+  final Duration duration;
+  final AppState appState;
+  final bool liveActivityEnabled;
+  final bool otherAudio;
+  final bool isRapid;
 }
 
 class TestResult {
-  final String testId;
-  final String testName;
-  final Duration duration;
-  final int expectedSounds;
-  final int actualSounds;
-  final String traceId;
-  final TestStatus status;
-  final AppState appState;
-  final bool liveActivityEnabled;
-  final DateTime startTime;
-  final DateTime? endTime;
-  final int? runNumber;
-  final String? errorMessage;
 
   const TestResult({
     required this.testId,
@@ -517,6 +504,43 @@ class TestResult {
     this.runNumber,
     this.errorMessage,
   });
+
+  factory TestResult.fromJson(Map<String, dynamic> json) {
+    return TestResult(
+      testId: json['testId'] as String,
+      testName: json['testName'] as String,
+      duration: Duration(seconds: json['duration'] as int),
+      expectedSounds: json['expectedSounds'] as int,
+      actualSounds: json['actualSounds'] as int,
+      traceId: json['traceId'] as String,
+      status: TestStatus.values.firstWhere(
+        (e) => e.toString() == json['status'],
+      ),
+      appState: AppState.values.firstWhere(
+        (e) => e.toString() == json['appState'],
+      ),
+      liveActivityEnabled: json['liveActivityEnabled'] as bool,
+      startTime: DateTime.parse(json['startTime'] as String),
+      endTime: json['endTime'] != null
+          ? DateTime.parse(json['endTime'] as String)
+          : null,
+      runNumber: json['runNumber'] as int?,
+      errorMessage: json['errorMessage'] as String?,
+    );
+  }
+  final String testId;
+  final String testName;
+  final Duration duration;
+  final int expectedSounds;
+  final int actualSounds;
+  final String traceId;
+  final TestStatus status;
+  final AppState appState;
+  final bool liveActivityEnabled;
+  final DateTime startTime;
+  final DateTime? endTime;
+  final int? runNumber;
+  final String? errorMessage;
 
   bool get isPassed =>
       actualSounds == expectedSounds && status == TestStatus.completed;
@@ -568,38 +592,9 @@ class TestResult {
       'errorMessage': errorMessage,
     };
   }
-
-  factory TestResult.fromJson(Map<String, dynamic> json) {
-    return TestResult(
-      testId: json['testId'] as String,
-      testName: json['testName'] as String,
-      duration: Duration(seconds: json['duration'] as int),
-      expectedSounds: json['expectedSounds'] as int,
-      actualSounds: json['actualSounds'] as int,
-      traceId: json['traceId'] as String,
-      status: TestStatus.values.firstWhere(
-        (e) => e.toString() == json['status'],
-      ),
-      appState: AppState.values.firstWhere(
-        (e) => e.toString() == json['appState'],
-      ),
-      liveActivityEnabled: json['liveActivityEnabled'] as bool,
-      startTime: DateTime.parse(json['startTime'] as String),
-      endTime: json['endTime'] != null
-          ? DateTime.parse(json['endTime'] as String)
-          : null,
-      runNumber: json['runNumber'] as int?,
-      errorMessage: json['errorMessage'] as String?,
-    );
-  }
 }
 
 class TestProgress {
-  final int currentTest;
-  final int totalTests;
-  final String testName;
-  final TestStatus status;
-  final double? progress;
 
   const TestProgress({
     required this.currentTest,
@@ -608,20 +603,35 @@ class TestProgress {
     required this.status,
     this.progress,
   });
+  final int currentTest;
+  final int totalTests;
+  final String testName;
+  final TestStatus status;
+  final double? progress;
 
   double get percentage => currentTest / totalTests;
 }
 
 class QuickTestResults {
-  final List<TestResult> tests;
-  final DateTime startTime;
-  final DateTime endTime;
 
   const QuickTestResults({
     required this.tests,
     required this.startTime,
     required this.endTime,
   });
+
+  factory QuickTestResults.fromJson(Map<String, dynamic> json) {
+    return QuickTestResults(
+      tests: (json['tests'] as List)
+          .map((t) => TestResult.fromJson(t as Map<String, dynamic>))
+          .toList(),
+      startTime: DateTime.parse(json['startTime'] as String),
+      endTime: DateTime.parse(json['endTime'] as String),
+    );
+  }
+  final List<TestResult> tests;
+  final DateTime startTime;
+  final DateTime endTime;
 
   int get passedTests => tests.where((t) => t.isPassed).length;
   int get totalTests => tests.length;
@@ -671,20 +681,9 @@ class QuickTestResults {
       'endTime': endTime.toIso8601String(),
     };
   }
-
-  factory QuickTestResults.fromJson(Map<String, dynamic> json) {
-    return QuickTestResults(
-      tests: (json['tests'] as List)
-          .map((t) => TestResult.fromJson(t as Map<String, dynamic>))
-          .toList(),
-      startTime: DateTime.parse(json['startTime'] as String),
-      endTime: DateTime.parse(json['endTime'] as String),
-    );
-  }
 }
 
 class FullTestResults extends QuickTestResults {
-  final List<TestCase> testCases;
 
   const FullTestResults({
     required super.tests,
@@ -692,6 +691,7 @@ class FullTestResults extends QuickTestResults {
     required super.endTime,
     required this.testCases,
   });
+  final List<TestCase> testCases;
 
   Map<String, List<TestResult>> get resultsByTestCase {
     final map = <String, List<TestResult>>{};

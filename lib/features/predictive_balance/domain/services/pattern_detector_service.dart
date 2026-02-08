@@ -60,7 +60,7 @@ class PatternDetectorService {
     required Map<String, ExerciseMuscleData> muscleMap,
   }) {
     // 1. Filter last N weeks of completed workouts
-    final cutoff = DateTime.now().subtract(Duration(days: weeksToAnalyze * 7));
+    final cutoff = DateTime.now().subtract(const Duration(days: weeksToAnalyze * 7));
     final recent = history
         .where(
           (w) =>

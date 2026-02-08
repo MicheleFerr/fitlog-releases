@@ -49,7 +49,7 @@ class WeightUpdateNudgeCard extends ConsumerWidget {
           context,
           Alignment.centerRight,
         ),
-        child: Container(
+        child: DecoratedBox(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             gradient: LinearGradient(

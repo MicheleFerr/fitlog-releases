@@ -48,6 +48,9 @@ abstract class AssignedTemplate with _$AssignedTemplate {
     int? estimatedDuration,
   }) = _AssignedTemplate;
 
+  factory AssignedTemplate.fromJson(Map<String, dynamic> json) =>
+      _$AssignedTemplateFromJson(json);
+
   const AssignedTemplate._();
 
   /// Whether this assignment has local notes
@@ -58,7 +61,4 @@ abstract class AssignedTemplate with _$AssignedTemplate {
     final daysSinceSync = DateTime.now().difference(lastSyncedAt).inDays;
     return daysSinceSync > 1;
   }
-
-  factory AssignedTemplate.fromJson(Map<String, dynamic> json) =>
-      _$AssignedTemplateFromJson(json);
 }

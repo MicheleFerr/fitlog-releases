@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'metric_type.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
 
 part 'measurement.freezed.dart';
 part 'measurement.g.dart';

@@ -35,12 +35,6 @@ final workoutSessionLAProvider =
 
 /// State class for the Live Activity
 class WorkoutSessionLAState {
-  final bool isActive;
-  final String? activityId;
-  final WorkoutSessionMode mode;
-  final String? currentExerciseName;
-  final int currentSetIndex;
-  final int totalSets;
 
   const WorkoutSessionLAState({
     this.isActive = false,
@@ -50,6 +44,12 @@ class WorkoutSessionLAState {
     this.currentSetIndex = 1,
     this.totalSets = 1,
   });
+  final bool isActive;
+  final String? activityId;
+  final WorkoutSessionMode mode;
+  final String? currentExerciseName;
+  final int currentSetIndex;
+  final int totalSets;
 
   WorkoutSessionLAState copyWith({
     bool? isActive,

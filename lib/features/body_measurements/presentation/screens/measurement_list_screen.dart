@@ -228,6 +228,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             if (!mounted) return;
             debugPrint('❌ [Import] Sync failed: ${failure.message}');
             SnackBarService.showError(context, failure.message);
+            return null;
           },
         (result) async {
           debugPrint('✅ [Import] Sync completed: ${result.readCount} read');
@@ -496,6 +497,7 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
           (failure) {
             if (!mounted) return;
             SnackBarService.showError(context, failure.message);
+            return null;
           },
         (result) async {
           if (result.importedMeasurements.isEmpty) {

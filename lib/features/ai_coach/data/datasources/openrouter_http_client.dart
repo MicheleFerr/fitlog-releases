@@ -13,22 +13,19 @@ import 'package:http/http.dart' as http;
 
 /// OpenRouter API response
 class OpenRouterResponse {
-  final String? content;
-  final List<ToolCall> toolCalls;
 
   const OpenRouterResponse({
     this.content,
     this.toolCalls = const [],
   });
+  final String? content;
+  final List<ToolCall> toolCalls;
 
   bool get hasToolCalls => toolCalls.isNotEmpty;
 }
 
 /// Tool call from AI
 class ToolCall {
-  final String id;
-  final String name;
-  final Map<String, dynamic> arguments;
 
   const ToolCall({
     required this.id,
@@ -46,6 +43,9 @@ class ToolCall {
       arguments: jsonDecode(argumentsString) as Map<String, dynamic>,
     );
   }
+  final String id;
+  final String name;
+  final Map<String, dynamic> arguments;
 }
 
 /// HTTP client for OpenRouter API

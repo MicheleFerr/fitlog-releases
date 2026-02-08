@@ -135,11 +135,17 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
           // Indicatore stato sync
           Consumer(
             builder: (context, ref, child) {
-              final user = ref.watch(authStateProvider).value;
-              if (user != null) {
-                final syncStatus = ref.watch(syncStatusProvider);
-                final firebaseState = ref.watch(
-                  firebaseTemplateNotifierProvider,
+              // PERFORMANCE FIX: Selective watching to reduce rebuilds
+              final userId = ref.watch(
+                authStateProvider.select((s) => s.value?.uid),
+              );
+              if (userId != null) {
+                // Only watch isSyncing state, not entire object
+                final isSyncing = ref.watch(
+                  syncStatusProvider.select((s) => s.isSyncing),
+                );
+                final firebaseIsSyncing = ref.watch(
+                  firebaseTemplateNotifierProvider.select((s) => s.isSyncing),
                 );
 
                 return Semantics(
@@ -154,7 +160,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                           icon: AppIcons.cloud,
                           semanticLabel: 'Cloud',
                         ),
-                        if (firebaseState.isSyncing)
+                        if (firebaseIsSyncing)
                           Positioned(
                             right: 0,
                             top: 0,
@@ -215,9 +221,9 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 semanticLabel: 'List',
               ),
             ),
-            Tab(
+            const Tab(
               text: 'Superset',
-              icon: const SemanticIcon(
+              icon: SemanticIcon(
                 icon: AppIcons.link,
                 semanticLabel: 'Link',
               ),

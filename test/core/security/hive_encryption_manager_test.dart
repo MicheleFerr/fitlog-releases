@@ -1,16 +1,15 @@
-/**
- * 🔐 SECURITY TESTS: Hive Encryption Manager
- *
- * Validates AES-256 encryption for Hive boxes
- *
- * Test Coverage:
- * - Key generation (256-bit, secure random)
- * - Key storage (FlutterSecureStorage)
- * - Key retrieval and caching
- * - Cipher creation
- * - Key rotation
- * - Key deletion
- */
+/// 🔐 SECURITY TESTS: Hive Encryption Manager
+///
+/// Validates AES-256 encryption for Hive boxes
+///
+/// Test Coverage:
+/// - Key generation (256-bit, secure random)
+/// - Key storage (FlutterSecureStorage)
+/// - Key retrieval and caching
+/// - Cipher creation
+/// - Key rotation
+/// - Key deletion
+library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

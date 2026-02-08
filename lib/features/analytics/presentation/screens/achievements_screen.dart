@@ -28,7 +28,7 @@ class AchievementsScreen extends ConsumerWidget {
         title: Text(context.l10n.achievements),
         // Accessibility: Back button with tooltip
         leading: IconButton(
-          icon: Icon(AppIcons.arrowBack, size: AppIconSize.medium),
+          icon: const Icon(AppIcons.arrowBack, size: AppIconSize.medium),
           onPressed: () => Navigator.of(context).pop(),
           tooltip: MaterialLocalizations.of(context).backButtonTooltip,
         ),
@@ -97,14 +97,14 @@ class _AchievementsGrid extends StatelessWidget {
         // Badge categories
         _BadgeCategory(
           title: context.l10n.personalRecords,
-          badges: [BadgeType.firstPR, BadgeType.oneRepMonarch],
+          badges: const [BadgeType.firstPR, BadgeType.oneRepMonarch],
           unlockedBadges: unlockedAchievements,
         ),
         const SizedBox(height: 24),
 
         _BadgeCategory(
           title: context.l10n.streaks,
-          badges: [
+          badges: const [
             BadgeType.streakMaster7,
             BadgeType.streakMaster14,
             BadgeType.streakMaster30,
@@ -115,7 +115,7 @@ class _AchievementsGrid extends StatelessWidget {
 
         _BadgeCategory(
           title: context.l10n.volumeMilestones,
-          badges: [
+          badges: const [
             BadgeType.volumeLegend10k,
             BadgeType.volumeLegend50k,
             BadgeType.volumeLegend100k,
@@ -126,7 +126,7 @@ class _AchievementsGrid extends StatelessWidget {
 
         _BadgeCategory(
           title: context.l10n.workoutCount,
-          badges: [
+          badges: const [
             BadgeType.workoutCompletionist50,
             BadgeType.workoutCompletionist100,
             BadgeType.workoutCompletionist500,
@@ -137,7 +137,7 @@ class _AchievementsGrid extends StatelessWidget {
 
         _BadgeCategory(
           title: context.l10n.special,
-          badges: [BadgeType.balancedBuilder, BadgeType.consistencyChampion],
+          badges: const [BadgeType.balancedBuilder, BadgeType.consistencyChampion],
           unlockedBadges: unlockedAchievements,
         ),
       ],

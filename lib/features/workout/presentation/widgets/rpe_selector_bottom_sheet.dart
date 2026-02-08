@@ -1089,8 +1089,9 @@ class _RpeSelectorBottomSheetState
   // RPE Autoregulation Helper Methods
   bool _shouldShowRPESuggestion() {
     if (widget.exercise == null) return false;
-    if (widget.exercise!.autoAdjustmentType != AutoAdjustmentType.rpe)
+    if (widget.exercise!.autoAdjustmentType != AutoAdjustmentType.rpe) {
       return false;
+    }
     if (_selectedRpe == null) return false;
 
     // Check if we have valid RPE targets

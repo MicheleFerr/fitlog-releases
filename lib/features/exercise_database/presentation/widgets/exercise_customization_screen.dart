@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/minimal_set_edit_sheet.dart';
 
 class ExerciseCustomizationScreen extends ConsumerStatefulWidget {
   // 🔥 FIX: Add callback parameter
@@ -947,34 +948,18 @@ class _ExerciseCustomizationScreenState
 
         const SizedBox(width: 12),
 
-        // ✅ MODIFICATO: Mostra campi in base al counting mode
-        if (countingMode == ExerciseCountingMode.weighted) ...[
-          // Weight Picker Button (solo per weighted)
+        // ✅ MODIFICATO: Pulsante combinato Peso × Reps che apre MinimalSetEditSheet
+        if (countingMode == ExerciseCountingMode.weighted)
           Expanded(
-            child: _buildPickerButton(
-              label: AppLocalizations.of(context).weight,
-              value: setCustomization.weight == 0
-                  ? '-'
-                  : setCustomization.weight.toStringAsFixed(1),
-              icon: AppIcons.fitnessCenter,
-              color: Theme.of(context).colorScheme.primary,
-              onTap: () =>
-                  _showWeightPicker(exerciseIndex, setIndex, setCustomization),
+            child: _buildCombinedWeightRepsButton(
+              exerciseIndex: exerciseIndex,
+              setIndex: setIndex,
+              setCustomization: setCustomization,
             ),
           ),
-          const SizedBox(width: 8),
-          Text(
-            '×',
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(width: 8),
-        ],
 
-        // Reps Picker Button (per weighted e reps)
-        if (countingMode == ExerciseCountingMode.weighted ||
-            countingMode == ExerciseCountingMode.reps)
+        // Reps Picker Button (solo per reps mode - senza peso)
+        if (countingMode == ExerciseCountingMode.reps)
           Expanded(
             child: _buildPickerButton(
               label: AppLocalizations.of(context).reps,
@@ -1100,12 +1085,14 @@ class _ExerciseCustomizationScreenState
 
       // 🔥 FIX: Use callback if available, otherwise fallback to provider
       if (widget.onExerciseAdded != null) {
-        if (kDebugMode)
+        if (kDebugMode) {
           debugPrint('🔍 [CustomizationScreen] Using CALLBACK onExerciseAdded');
+        }
         widget.onExerciseAdded!(workoutExercise);
       } else {
-        if (kDebugMode)
+        if (kDebugMode) {
           debugPrint('🔍 [CustomizationScreen] Using PROVIDER addExercise');
+        }
         ref.read(currentWorkoutProvider.notifier).addExercise(workoutExercise);
       }
     }
@@ -1247,6 +1234,252 @@ class _ExerciseCustomizationScreenState
         ),
       ),
     );
+  }
+
+  /// ✅ NUOVO: Pulsante combinato Peso × Reps che apre MinimalSetEditSheet
+  Widget _buildCombinedWeightRepsButton({
+    required int exerciseIndex,
+    required int setIndex,
+    required SetCustomization setCustomization,
+  }) {
+    final theme = Theme.of(context);
+    final weightDisplay = setCustomization.weight == 0
+        ? '-'
+        : setCustomization.weight.toStringAsFixed(1);
+
+    return Semantics(
+      label:
+          '${AppLocalizations.of(context).weight}: $weightDisplay, ${AppLocalizations.of(context).reps}: ${setCustomization.reps}',
+      button: true,
+      child: InkWell(
+        onTap: () => _showWeightRepsPicker(
+          exerciseIndex,
+          setIndex,
+          setCustomization,
+        ),
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: theme.colorScheme.primary.withValues(alpha: 0.3),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Peso
+              Column(
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        AppIcons.fitnessCenter,
+                        size: 14,
+                        color: theme.colorScheme.primary,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        AppLocalizations.of(context).weight,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    weightDisplay,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.primary,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+              // Separatore ×
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  '×',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              // Reps
+              Column(
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        AppIcons.repeat,
+                        size: 14,
+                        color: theme.colorScheme.secondary,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        AppLocalizations.of(context).reps,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    '${setCustomization.reps}',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.secondary,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// ✅ NUOVO: Apre MinimalSetEditSheet per modificare peso e reps insieme
+  void _showWeightRepsPicker(
+    int exerciseIndex,
+    int setIndex,
+    SetCustomization setCustomization,
+  ) {
+    final sets = _customizations[exerciseIndex].sets;
+    final weightUnit = ref.read(measurementUnitProvider);
+
+    // Converti SetCustomization in ExerciseSet temporaneo
+    final exerciseSet = WorkoutExercise.ExerciseSet(
+      setNumber: setCustomization.setNumber,
+      weight: setCustomization.weight,
+      reps: setCustomization.reps,
+    );
+
+    // Converti tutti i set per la navigazione
+    final allSets = sets
+        .map(
+          (s) => WorkoutExercise.ExerciseSet(
+            setNumber: s.setNumber,
+            weight: s.weight,
+            reps: s.reps,
+          ),
+        )
+        .toList();
+
+    // Set precedente per "Copia precedente"
+    final previousSet = setIndex > 0
+        ? WorkoutExercise.ExerciseSet(
+            setNumber: sets[setIndex - 1].setNumber,
+            weight: sets[setIndex - 1].weight,
+            reps: sets[setIndex - 1].reps,
+          )
+        : null;
+
+    context.showMinimalSetEditSheet(
+      exerciseSet: exerciseSet,
+      currentSetIndex: setIndex,
+      totalSets: sets.length,
+      measurementUnit: weightUnit,
+      previousSet: previousSet,
+      allSets: allSets,
+      onSave: (updatedSet) {
+        _updateSetFromMinimalSheet(exerciseIndex, setIndex, updatedSet);
+      },
+      onSaveAndNext: setIndex < sets.length - 1
+          ? (updatedSet) {
+              _updateSetFromMinimalSheet(exerciseIndex, setIndex, updatedSet);
+              // Apri il prossimo set
+              Future.delayed(const Duration(milliseconds: 100), () {
+                if (mounted) {
+                  _showWeightRepsPicker(
+                    exerciseIndex,
+                    setIndex + 1,
+                    _customizations[exerciseIndex].sets[setIndex + 1],
+                  );
+                }
+              });
+            }
+          : null,
+      onSaveAndPrevious: setIndex > 0
+          ? (updatedSet) {
+              _updateSetFromMinimalSheet(exerciseIndex, setIndex, updatedSet);
+              // Apri il set precedente
+              Future.delayed(const Duration(milliseconds: 100), () {
+                if (mounted) {
+                  _showWeightRepsPicker(
+                    exerciseIndex,
+                    setIndex - 1,
+                    _customizations[exerciseIndex].sets[setIndex - 1],
+                  );
+                }
+              });
+            }
+          : null,
+      onApplyToAll: setIndex == 0
+          ? (updatedSet) {
+              _applyToAllSetsFromMinimalSheet(exerciseIndex, updatedSet);
+            }
+          : null,
+      onCopyPrevious: setIndex > 0
+          ? (updatedSet) {
+              // Copia già gestita dal MinimalSetEditSheet
+              _updateSetFromMinimalSheet(exerciseIndex, setIndex, updatedSet);
+            }
+          : null,
+    );
+  }
+
+  /// Aggiorna un set dal MinimalSetEditSheet
+  void _updateSetFromMinimalSheet(
+    int exerciseIndex,
+    int setIndex,
+    WorkoutExercise.ExerciseSet updatedSet,
+  ) {
+    setState(() {
+      final currentSets = List<SetCustomization>.from(
+        _customizations[exerciseIndex].sets,
+      );
+      currentSets[setIndex] = currentSets[setIndex].copyWith(
+        weight: updatedSet.weight ?? 0,
+        reps: updatedSet.reps ?? 10,
+      );
+      _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
+        sets: currentSets,
+      );
+    });
+  }
+
+  /// Applica peso e reps a tutti i set
+  void _applyToAllSetsFromMinimalSheet(
+    int exerciseIndex,
+    WorkoutExercise.ExerciseSet updatedSet,
+  ) {
+    setState(() {
+      final currentSets = List<SetCustomization>.from(
+        _customizations[exerciseIndex].sets,
+      );
+      for (int i = 0; i < currentSets.length; i++) {
+        currentSets[i] = currentSets[i].copyWith(
+          weight: updatedSet.weight ?? 0,
+          reps: updatedSet.reps ?? 10,
+        );
+      }
+      _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
+        sets: currentSets,
+      );
+    });
   }
 
   /// Show reps picker dialog with quick select buttons and quick actions

@@ -80,13 +80,14 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       defaultRestBetweenExercises: fields[53] == null
           ? 90
           : (fields[53] as num).toInt(),
+      hasSeenRestPauseTutorial: fields[54] == null ? false : fields[54] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, AppConfig obj) {
     writer
-      ..writeByte(53)
+      ..writeByte(54)
       ..writeByte(0)
       ..write(obj.languageCode)
       ..writeByte(1)
@@ -192,7 +193,9 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       ..writeByte(52)
       ..write(obj.interfaceSize)
       ..writeByte(53)
-      ..write(obj.defaultRestBetweenExercises);
+      ..write(obj.defaultRestBetweenExercises)
+      ..writeByte(54)
+      ..write(obj.hasSeenRestPauseTutorial);
   }
 
   @override

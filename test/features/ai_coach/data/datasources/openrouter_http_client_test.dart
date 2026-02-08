@@ -123,10 +123,10 @@ void main() {
 
     test('should detect tool calls presence', () {
       // Arrange
-      final response = OpenRouterResponse(
+      const response = OpenRouterResponse(
         content: null,
         toolCalls: [
-          const ToolCall(
+          ToolCall(
             id: 'call_1',
             name: 'test',
             arguments: {},

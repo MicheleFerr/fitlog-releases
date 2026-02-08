@@ -59,7 +59,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         createTestWidget(
-          chatState: AIChatState(
+          chatState: const AIChatState(
             messages: [],
             isLoading: true,
           ),
@@ -76,7 +76,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         createTestWidget(
-          chatState: AIChatState(
+          chatState: const AIChatState(
             messages: [],
             isLoading: false,
           ),
@@ -118,7 +118,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         createTestWidget(
-          chatState: AIChatState(messages: []),
+          chatState: const AIChatState(messages: []),
           rateLimitResult: RateLimitResult.throttled(
             message: '⚠️ Solo 2 messaggi rimasti!',
             waitSeconds: 0,
@@ -136,7 +136,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         createTestWidget(
-          chatState: AIChatState(messages: []),
+          chatState: const AIChatState(messages: []),
           rateLimitResult: RateLimitResult.blocked(
             message: 'Limite giornaliero raggiunto',
           ),
@@ -153,7 +153,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         createTestWidget(
-          chatState: AIChatState(messages: []),
+          chatState: const AIChatState(messages: []),
           rateLimitResult: RateLimitResult.allowed(),
         ),
       );
@@ -166,7 +166,7 @@ void main() {
     testWidgets('shows input bar', (WidgetTester tester) async {
       await tester.pumpWidget(
         createTestWidget(
-          chatState: AIChatState(messages: []),
+          chatState: const AIChatState(messages: []),
         ),
       );
 
@@ -177,7 +177,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         createTestWidget(
-          chatState: AIChatState(
+          chatState: const AIChatState(
             messages: [],
             isLoading: true,
           ),
@@ -195,7 +195,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         createTestWidget(
-          chatState: AIChatState(
+          chatState: const AIChatState(
             messages: [],
             error: 'Network error occurred',
           ),
@@ -209,7 +209,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         createTestWidget(
-          chatState: AIChatState(messages: []),
+          chatState: const AIChatState(messages: []),
         ),
       );
 

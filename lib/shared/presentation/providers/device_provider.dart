@@ -24,15 +24,15 @@ final isWebProvider = Provider<bool>((ref) {
 
 /// State class for mobile web detection
 class MobileWebState {
-  final bool isMobileWeb;
-  final bool hasSeenWarning;
-  final String userAgent;
 
   const MobileWebState({
     required this.isMobileWeb,
     required this.hasSeenWarning,
     required this.userAgent,
   });
+  final bool isMobileWeb;
+  final bool hasSeenWarning;
+  final String userAgent;
 
   MobileWebState copyWith({
     bool? isMobileWeb,

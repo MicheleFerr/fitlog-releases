@@ -148,7 +148,7 @@ class ExerciseListItemHeader extends StatelessWidget {
 
   Widget _buildExerciseNameRow(BuildContext context) {
     return Semantics(
-      label: '${exercise.name}',
+      label: exercise.name,
       hint: 'View exercise details',
       button: true,
       child: InkWell(
