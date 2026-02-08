@@ -10,6 +10,7 @@ library;
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/analytics_repository.dart';
@@ -127,8 +128,8 @@ class AIToolExecutor {
 
       return result.fold(
         (failure) async {
-          // Exercise not found -> search for suggestions
-          debugPrint('[AI_TOOL] Exercise "$exerciseName" not found, searching suggestions...');
+          // Exercise not found -> try case-insensitive match first
+          debugPrint('[AI_TOOL] Exercise "$exerciseName" not found, trying case-insensitive match...');
           final searchResult = await analyticsRepo.searchExercises(
             userId: userId,
             query: exerciseName,
@@ -139,7 +140,54 @@ class AIToolExecutor {
               'error': 'Exercise "$exerciseName" not found in your data',
               'toolName': 'get1RMHistory',
             }),
-            (matches) {
+            (matches) async {
+              // Phase 2 Optimization: Auto-match case-insensitive exact matches
+              // E.g., "Panca piana" should match "Panca Piana" without extra AI round-trip
+              final normalizedSearch = exerciseName.toLowerCase().trim();
+              final caseInsensitiveMatch = matches.firstWhereOrNull(
+                (e) => e.exerciseName.toLowerCase().trim() == normalizedSearch,
+              );
+
+              if (caseInsensitiveMatch != null) {
+                debugPrint('[AI_TOOL] 📦 Found case-insensitive match: "${caseInsensitiveMatch.exerciseName}"');
+                // Retry with correct name
+                final retryResult = await analyticsRepo.getExerciseHistoryByName(
+                  userId: userId,
+                  exerciseName: caseInsensitiveMatch.exerciseName,
+                );
+
+                return retryResult.fold(
+                  (retryFailure) => jsonEncode({
+                    'error': 'Exercise "${caseInsensitiveMatch.exerciseName}" found but data unavailable',
+                    'toolName': 'get1RMHistory',
+                  }),
+                  (exerciseHistory) {
+                    final endDate = DateTime.now();
+                    final startDate = endDate.subtract(Duration(days: weeksBack * 7));
+                    final filteredSessions = exerciseHistory.getSessionsByTimeframe(startDate, endDate);
+
+                    final history = filteredSessions.map((session) {
+                      return {
+                        'date': session.date.toIso8601String(),
+                        'estimated1RM': session.highestEstimated1RM.toStringAsFixed(1),
+                        'maxWeight': session.maxWeight.toStringAsFixed(1),
+                        'totalVolume': session.totalVolume.toStringAsFixed(0),
+                      };
+                    }).toList();
+
+                    return jsonEncode({
+                      'exerciseName': exerciseHistory.exerciseName,
+                      'muscleGroup': exerciseHistory.muscleGroup,
+                      'weeksBack': weeksBack,
+                      'history': history,
+                      'count': history.length,
+                      'personalRecord': exerciseHistory.personalRecord.toStringAsFixed(1),
+                    });
+                  },
+                );
+              }
+
+              // No case-insensitive match found - return suggestions
               final suggestionNames = matches
                   .map((e) => e.exerciseName)
                   .take(5)

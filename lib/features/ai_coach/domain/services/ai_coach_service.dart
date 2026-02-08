@@ -23,6 +23,14 @@ abstract class AICoachService {
     required List<AIMessage> conversationHistory,
     required String userId,
   });
+
+  /// Invalidate the context cache
+  ///
+  /// Call this after significant user actions that change context:
+  /// - Completing a workout
+  /// - Adding body measurements
+  /// - Updating user profile
+  void invalidateContextCache();
 }
 
 /// Response from AI service

@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_safety_key
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_system_prompt.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_tool_definitions.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_tool_executor.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_context.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/services/ai_coach_service.dart';
 
@@ -31,6 +32,13 @@ class AICoachServiceImpl implements AICoachService {
   final AIChatRepositoryImpl chatRepository;
   final AIToolExecutor toolExecutor;
   final AnalyticsAggregator contextAggregator;
+
+  // === Context Cache (Phase 2 Optimization) ===
+  // Caches context for 5 minutes to avoid redundant Firebase calls
+  AIContext? _cachedContext;
+  DateTime? _contextCachedAt;
+  String? _cachedUserId;
+  static const _contextCacheDuration = Duration(minutes: 5);
 
   /// Meta Llama 3.3 70B Instruct
   /// - Native Italian support (multilingual)
@@ -80,14 +88,22 @@ class AICoachServiceImpl implements AICoachService {
           : [systemMessage, ...conversationMessages]; // Reuse system message, no duplication
 
         // Filter tools based on user message (optimization: reduce tokens)
-        final relevantTools = _selectRelevantTools(userMessage);
-        debugPrint('[AI_COACH_SERVICE] 📋 Using ${relevantTools.length} relevant tools (of ${aiToolDefinitions.length})');
+        // CRITICAL: After 2 iterations, REMOVE tools to force a text response
+        final relevantTools = iterations >= 2
+            ? <Map<String, dynamic>>[] // No tools = force text response
+            : _selectRelevantTools(userMessage);
+
+        if (iterations >= 2) {
+          debugPrint('[AI_COACH_SERVICE] ⚠️ Iteration $iterations: Forcing text response (no tools)');
+        } else {
+          debugPrint('[AI_COACH_SERVICE] 📋 Using ${relevantTools.length} relevant tools (of ${aiToolDefinitions.length})');
+        }
 
         // Call OpenRouter with filtered tool definitions
         final response = await chatRepository.sendMessage(
           model: _model,
           messages: requestMessages,
-          tools: relevantTools,
+          tools: relevantTools.isNotEmpty ? relevantTools : null,
         );
 
         debugPrint('[AI_COACH_SERVICE] 📨 Got response: ${response.substring(0, response.length > 100 ? 100 : response.length)}...');
@@ -156,6 +172,7 @@ class AICoachServiceImpl implements AICoachService {
               .join('\n');
 
           // Update conversation messages (without system prompt)
+          // CRITICAL: Use proper tool response format + explicit instruction to respond
           conversationMessages = [
             ...conversationMessages,
             {
@@ -164,7 +181,11 @@ class AICoachServiceImpl implements AICoachService {
             },
             {
               'role': 'user',
-              'content': 'Tool results:\n$toolResultsMessage',
+              'content': '''Tool results:
+$toolResultsMessage
+
+---
+ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utente basandoti su questi risultati. NON richiedere altri tool. Rispondi direttamente.''',
             },
           ];
 
@@ -208,14 +229,54 @@ class AICoachServiceImpl implements AICoachService {
     }
   }
 
+  /// Get context with caching (Phase 2 Optimization)
+  ///
+  /// Caches context for 5 minutes to avoid redundant Firebase calls.
+  /// Invalidates cache if userId changes or cache expires.
+  Future<AIContext> _getContext(String userId) async {
+    final now = DateTime.now();
+
+    // Check if cache is valid
+    final cacheValid = _cachedContext != null &&
+        _contextCachedAt != null &&
+        _cachedUserId == userId &&
+        now.difference(_contextCachedAt!) < _contextCacheDuration;
+
+    if (cacheValid) {
+      debugPrint('[AI_COACH] 📦 Using cached context (age: ${now.difference(_contextCachedAt!).inSeconds}s)');
+      return _cachedContext!;
+    }
+
+    // Fetch fresh context
+    debugPrint('[AI_COACH] 🔄 Fetching fresh context');
+    _cachedContext = await contextAggregator.aggregateContext(userId: userId);
+    _contextCachedAt = now;
+    _cachedUserId = userId;
+    return _cachedContext!;
+  }
+
+  /// Invalidate context cache
+  ///
+  /// Call this after significant user actions like:
+  /// - Completing a workout
+  /// - Adding body measurements
+  /// - Updating profile
+  @override
+  void invalidateContextCache() {
+    _cachedContext = null;
+    _contextCachedAt = null;
+    _cachedUserId = null;
+    debugPrint('[AI_COACH] 🗑️ Context cache invalidated');
+  }
+
   /// Build messages for OpenRouter API
   Future<List<Map<String, dynamic>>> _buildMessages(
     String userMsg,
     List<AIMessage> history,
     String userId,
   ) async {
-    // Get base context with real user ID
-    final context = await contextAggregator.aggregateContext(userId: userId);
+    // Get base context with caching (Phase 2 Optimization)
+    final context = await _getContext(userId);
 
     return [
       // System prompt with user context
