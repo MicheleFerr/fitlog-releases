@@ -33,6 +33,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superse
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_template_preview_sheet.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/superset_template_event_tracker.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
+import 'package:uuid/uuid.dart';
 
 class WorkoutTemplatesScreen extends ConsumerStatefulWidget {
   const WorkoutTemplatesScreen({super.key});
@@ -140,13 +141,16 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 authStateProvider.select((s) => s.value?.uid),
               );
               if (userId != null) {
-                // Only watch isSyncing state, not entire object
-                final isSyncing = ref.watch(
-                  syncStatusProvider.select((s) => s.isSyncing),
-                );
+                // Only watch specific states to reduce rebuilds
                 final firebaseIsSyncing = ref.watch(
                   firebaseTemplateNotifierProvider.select((s) => s.isSyncing),
                 );
+                final hasOfflineChanges = ref.watch(
+                  firebaseTemplateNotifierProvider
+                      .select((s) => s.hasOfflineChanges),
+                );
+                // syncStatusProvider returns a String with readable status
+                final syncStatus = ref.watch(syncStatusProvider);
 
                 return Semantics(
                   label: l10n.syncStatus,
@@ -173,7 +177,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                               ),
                             ),
                           ),
-                        if (firebaseState.hasOfflineChanges)
+                        if (hasOfflineChanges)
                           Positioned(
                             right: 0,
                             top: 0,
@@ -690,10 +694,13 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
 
   void _duplicateTemplate(WorkoutTemplate template) async {
     try {
-      // Create a duplicate with "(Copia)" suffix
+      // Create a duplicate with "(Copia)" suffix and NEW ID
+      // BUG FIX: Without new ID, the original template would be overwritten
       final duplicatedTemplate = template.copyWith(
+        id: const Uuid().v4(), // ✅ Generate new unique ID
         name: '${template.name} (Copia)',
         isCustom: true,
+        usageCount: 0, // Reset usage count for the copy
         updatedAt: DateTime.now(),
       );
 
