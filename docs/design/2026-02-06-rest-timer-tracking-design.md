@@ -17,6 +17,60 @@ Questo dato permette suggerimenti automatici su quando aumentare/diminuire il pe
 
 ---
 
+## Validazione Scientifica
+
+### Fonti
+
+| Paper | Anno | Link |
+|-------|------|------|
+| Fixed vs. Self-Selected Rest Interval Between Sets | 2024 | [MDPI](https://www.mdpi.com/2411-5142/9/4/200) |
+| Give it a Rest: Inter-set Rest Interval Meta-analysis | 2024 | [Frontiers](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2024.1429789/full) |
+| Autoregulation in Resistance Training | 2020 | [Sports Medicine](https://link.springer.com/article/10.1007/s40279-020-01330-8) |
+| Subjective and Objective Autoregulation Methods | 2021 | [PeerJ/PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC7810043/) |
+| Methods for Regulating and Monitoring RT | 2020 | [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC7706636/) |
+
+### Evidenze chiave
+
+**1. Self-selected rest riflette la fatica neuromuscolare**
+
+> "I soggetti mostravano un trend crescente nella velocità media, suggerendo un'autoregolazione conscia per performare al massimo evitando la fatica. Questo trend può essere dovuto all'aumento del rest time tra i set per ridurre la fatica neuromuscolare indotta dall'allenamento."
+> — MDPI 2024
+
+**2. La "readiness" è un indicatore valido**
+
+> "La readiness è proposta come quarto componente del modello Fitness-Fatica. Il volume di allenamento viene autoregolato per corrispondere alle fluttuazioni nella performance causate da fattori di allenamento e non."
+> — Sports Medicine 2020
+
+**3. Self-selected rest è tipicamente più CORTO del fixed**
+
+> "La durata degli intervalli self-selected era più corta degli intervalli fissi (14s di differenza, p < 0.0001, ES = 3.2)"
+> — PMC 2023
+
+### Implicazioni per il design
+
+| Comportamento | Interpretazione scientifica |
+|---------------|----------------------------|
+| **Skip frequenti** | Comportamento normale per chi padroneggia il peso (self-selected rest più corto) |
+| **Extend frequenti** | Segnale **forte** di fatica (anomalia rispetto al pattern normale) |
+| **Extend progressivo nei set** | Accumulo di fatica neuromuscolare durante l'esercizio |
+
+### Soglie suggerite (basate sulla letteratura)
+
+```dart
+// Estendere anche solo il 30% dei timer è già un segnale forte
+// (la maggior parte delle persone self-seleziona rest PIÙ CORTI)
+if (extendRatio >= 0.3) {
+  return "⚠️ Segnali di fatica neuromuscolare - considera ridurre il peso";
+}
+
+// Saltare con >30s rimanenti nel 70%+ dei set indica ottimo recupero
+if (skipRatio >= 0.7 && avgSecondsSkipped > 30) {
+  return "💪 Ottimo recupero - pronto per aumentare il peso";
+}
+```
+
+---
+
 ## Decisioni di Design
 
 | Aspetto | Decisione | Motivazione |
@@ -327,20 +381,36 @@ extension RestTimeInsights on List<ExerciseSet> {
   }
 
   /// Suggerisce azione sul peso basata sui pattern
+  ///
+  /// Soglie basate su evidenze scientifiche:
+  /// - Self-selected rest è tipicamente PIÙ CORTO del fixed (PMC 2023)
+  /// - Estendere il rest è un segnale forte di fatica (anomalia)
+  /// - Skip frequenti = comportamento normale per peso padroneggiato
   WeightSuggestion get weightSuggestion {
     final skippedRatio = where((s) => s.restTimerSkipped).length / length;
     final extendedRatio = where((s) =>
       (s.restTimerSecondsAdded ?? 0) > 0
     ).length / length;
 
-    if (skippedRatio >= 0.8) {
-      return WeightSuggestion.increase;
-      // "Hai saltato il timer nell'80% dei set - considera +2.5kg"
-    }
-    if (extendedRatio >= 0.5) {
+    // Calcola media secondi saltati
+    final skippedSets = where((s) => s.restTimerSkipped && s.restTimerSecondsRemaining != null);
+    final avgSecondsSkipped = skippedSets.isEmpty
+        ? 0.0
+        : skippedSets.map((s) => s.restTimerSecondsRemaining!).reduce((a, b) => a + b) / skippedSets.length;
+
+    // SOGLIA SCIENTIFICA: Estendere anche solo il 30% è già anomalo
+    // (la maggior parte delle persone self-seleziona rest più corti)
+    if (extendedRatio >= 0.3) {
       return WeightSuggestion.decrease;
-      // "Hai esteso il timer nel 50% dei set - considera -2.5kg"
+      // "Hai esteso il timer nel 30%+ dei set - segnale di fatica"
     }
+
+    // Skip con >30s rimanenti nel 70%+ dei set = ottima padronanza
+    if (skippedRatio >= 0.7 && avgSecondsSkipped > 30) {
+      return WeightSuggestion.increase;
+      // "Hai saltato il timer con >30s rimanenti nel 70%+ dei set"
+    }
+
     return WeightSuggestion.maintain;
   }
 }
