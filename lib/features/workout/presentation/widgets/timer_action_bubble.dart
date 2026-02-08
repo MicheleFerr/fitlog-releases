@@ -112,21 +112,23 @@ class _TimerActionBubbleState extends ConsumerState<TimerActionBubble>
     final bubbleY =
         widget.anchorPosition.dy + widget.anchorSize.height + gap + triangleHeight;
 
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return Opacity(
-          opacity: _fadeAnimation.value,
-          child: Transform.scale(
-            scale: _scaleAnimation.value,
-            alignment: Alignment.topCenter,
-            child: child,
-          ),
-        );
-      },
-      child: Positioned(
-        left: bubbleX,
-        top: bubbleY,
+    // IMPORTANT: Positioned must be direct child of Stack (in OverlayEntry)
+    // Animations go INSIDE Positioned, not wrapping it
+    return Positioned(
+      left: bubbleX,
+      top: bubbleY,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return Opacity(
+            opacity: _fadeAnimation.value,
+            child: Transform.scale(
+              scale: _scaleAnimation.value,
+              alignment: Alignment.topCenter,
+              child: child,
+            ),
+          );
+        },
         child: Material(
           color: Colors.transparent,
           child: Column(
