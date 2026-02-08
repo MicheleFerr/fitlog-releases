@@ -21,6 +21,9 @@ export 'package:gymbro_flutter_new/features/home/domain/services/ai_coach_servic
 final aiCoachInsightsProvider = FutureProvider.autoDispose<List<AIInsight>>((
   ref,
 ) async {
+  // FIX: keepAlive to prevent expensive re-fetching on widget rebuilds
+  ref.keepAlive();
+
   // Watch auth stream - provider will invalidate when user changes
   final userAsync = ref.watch(currentUserProvider);
   final currentUser = userAsync.value;

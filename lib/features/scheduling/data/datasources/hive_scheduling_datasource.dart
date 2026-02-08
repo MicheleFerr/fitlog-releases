@@ -110,9 +110,8 @@ class HiveSchedulingDatasource {
         .map((model) => model.id)
         .toList();
 
-    for (final key in keysToDelete) {
-      await box.delete(key);
-    }
+    // PERFORMANCE FIX: Single batch delete instead of sequential deletes
+    await box.deleteAll(keysToDelete);
   }
 
   /// Check if a date already has a scheduled workout for the given template

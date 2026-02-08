@@ -25,7 +25,15 @@ struct TimerNotificationStrings {
 @available(iOS 16.1, *)
 class LiveActivityHandler: NSObject {
     static let shared = LiveActivityHandler()
-    private var currentActivity: Activity<GymBroTimerAttributes>?
+
+    // CRITICAL FIX: Thread-safe currentActivity access (prevents race condition crashes)
+    // See DEBUG_AUDIT_ACTION_PLAN.md Fix 1.7
+    private var _currentActivity: Activity<GymBroTimerAttributes>?
+    private var currentActivity: Activity<GymBroTimerAttributes>? {
+        get { activityQueue.sync { _currentActivity } }
+        set { activityQueue.sync { _currentActivity = newValue } }
+    }
+
     // CRITICAL FIX: Thread-safe state management
     private let activityQueue = DispatchQueue(label: "com.gymbro.liveactivity.state", qos: .userInitiated)
     private var scheduledNotificationId: String?  // Track scheduled notification for cancellation

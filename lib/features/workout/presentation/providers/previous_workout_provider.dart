@@ -7,8 +7,12 @@ import 'package:flutter/foundation.dart';
 /// Provider per recuperare l'ultimo workout completato di un template specifico
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
+/// 🔧 PERFORMANCE FIX: Added keepAlive to prevent expensive Firestore queries on rebuild
 final previousWorkoutFromTemplateProvider = FutureProvider.autoDispose
     .family<Workout?, String>((ref, templateId) async {
+      // FIX: keepAlive to cache Firestore results during session
+      ref.keepAlive();
+
       final userId = FirebaseAuth.instance.currentUser?.uid;
       if (userId == null) return null;
 

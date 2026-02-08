@@ -39,6 +39,9 @@ class PlateauData {
 final plateauDetectionProvider = FutureProvider.autoDispose<List<PlateauData>>((
   ref,
 ) async {
+  // FIX: keepAlive to prevent expensive re-fetching on widget rebuilds
+  ref.keepAlive();
+
   final userAsync = ref.watch(currentUserProvider);
   final currentUser = userAsync.value;
 

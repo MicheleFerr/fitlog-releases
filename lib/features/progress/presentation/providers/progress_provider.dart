@@ -27,7 +27,11 @@ final progressDataProvider = FutureProvider.autoDispose<ProgressData?>((
 /// Provider per le statistiche rapide mostrate nella home
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 /// Automatically disposes provider instances when widget is disposed
+/// 🔧 PERFORMANCE FIX: Added keepAlive to cache stats during session
 final quickStatsProvider = FutureProvider.autoDispose<QuickStats?>((ref) async {
+  // FIX: keepAlive to prevent re-computation on widget rebuilds
+  ref.keepAlive();
+
   final progressData = await ref.watch(progressDataProvider.future);
   return progressData?.quickStats;
 });

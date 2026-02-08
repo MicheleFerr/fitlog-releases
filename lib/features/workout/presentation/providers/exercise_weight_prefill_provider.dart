@@ -51,8 +51,12 @@ class WeightPrefill {
 ///
 /// The key is the **exercise name** (not id), because
 /// [ExerciseHistoryService] matches by name.
+/// 🔧 PERFORMANCE FIX: Added keepAlive to cache prefill calculations
 final exerciseWeightPrefillProvider = FutureProvider.autoDispose
     .family<WeightPrefill?, String>((ref, exerciseName) async {
+      // FIX: keepAlive to cache weight calculations during session
+      ref.keepAlive();
+
       // ── 1. History ──────────────────────────────────────────────────────────
       final userId = ref.read(currentUserIdProvider);
       if (userId != null) {

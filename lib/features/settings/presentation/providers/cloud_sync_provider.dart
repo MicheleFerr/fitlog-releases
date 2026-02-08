@@ -262,7 +262,8 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         debugPrint('📥 Found ${snapshot.docs.length} workouts in cloud');
       }
 
-      int synced = 0;
+      // PERFORMANCE FIX: Batch operation instead of sequential puts
+      final entries = <String, Map<dynamic, dynamic>>{};
       for (final doc in snapshot.docs) {
         final data = Map<String, dynamic>.from(doc.data());
         data['id'] = doc.id; // Ensure ID is included
@@ -270,28 +271,27 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         // Convert Timestamps to ISO strings for Hive storage
         _convertTimestampsToStrings(data);
 
-        // Save to local storage
+        // Prepare batch entry
         final key = '${userId}_${doc.id}';
-        await box.put(key, data);
-        synced++;
-
-        // Update progress
-        if (synced % 10 == 0) {
-          state = state.copyWith(
-            progress: SyncProgress(
-              currentItem:
-                  'Syncing workouts... ($synced/${snapshot.docs.length})',
-              totalItems: snapshot.docs.length,
-              syncedItems: synced,
-            ),
-          );
-        }
+        entries[key] = data;
       }
+
+      // Single batch I/O operation
+      await box.putAll(entries);
+
+      // Update progress after batch
+      state = state.copyWith(
+        progress: SyncProgress(
+          currentItem: 'Synced ${entries.length} workouts',
+          totalItems: snapshot.docs.length,
+          syncedItems: entries.length,
+        ),
+      );
 
       if (kDebugMode) {
-        debugPrint('✅ Synced $synced workouts to local storage');
+        debugPrint('✅ Synced ${entries.length} workouts to local storage');
       }
-      return synced;
+      return entries.length;
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to sync workouts: $e');
@@ -325,7 +325,8 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         debugPrint('📥 Found ${allTemplates.length} templates in cloud');
       }
 
-      int synced = 0;
+      // PERFORMANCE FIX: Batch operation instead of sequential puts
+      final entries = <String, Map<dynamic, dynamic>>{};
       for (final doc in allTemplates) {
         final data = Map<String, dynamic>.from(doc.data());
         data['id'] = doc.id;
@@ -333,16 +334,17 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         // Convert Timestamps to ISO strings for Hive storage
         _convertTimestampsToStrings(data);
 
-        // Save to local storage
-        final key = doc.id;
-        await box.put(key, data);
-        synced++;
+        // Prepare batch entry
+        entries[doc.id] = data;
       }
 
+      // Single batch I/O operation
+      await box.putAll(entries);
+
       if (kDebugMode) {
-        debugPrint('✅ Synced $synced templates to local storage');
+        debugPrint('✅ Synced ${entries.length} templates to local storage');
       }
-      return synced;
+      return entries.length;
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to sync templates: $e');
@@ -369,7 +371,8 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         );
       }
 
-      int synced = 0;
+      // PERFORMANCE FIX: Batch operation instead of sequential puts
+      final entries = <String, Map<dynamic, dynamic>>{};
       for (final doc in snapshot.docs) {
         final data = Map<String, dynamic>.from(doc.data());
         data['id'] = doc.id;
@@ -377,16 +380,18 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         // Convert Timestamps to ISO strings for Hive storage (recursive)
         _convertTimestampsToStrings(data);
 
-        // Save to local storage
+        // Prepare batch entry
         final key = '${userId}_${doc.id}';
-        await box.put(key, data);
-        synced++;
+        entries[key] = data;
       }
 
+      // Single batch I/O operation
+      await box.putAll(entries);
+
       if (kDebugMode) {
-        debugPrint('✅ Synced $synced exercises to local storage');
+        debugPrint('✅ Synced ${entries.length} exercises to local storage');
       }
-      return synced;
+      return entries.length;
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to sync exercises: $e');
@@ -417,7 +422,8 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         );
       }
 
-      int synced = 0;
+      // PERFORMANCE FIX: Batch operation instead of sequential puts
+      final entries = <String, Map<dynamic, dynamic>>{};
       for (final doc in snapshot.docs) {
         final data = Map<String, dynamic>.from(doc.data());
         data['id'] = doc.id;
@@ -425,16 +431,18 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         // Convert Timestamps to ISO strings for Hive storage (recursive)
         _convertTimestampsToStrings(data);
 
-        // Save to local storage
+        // Prepare batch entry
         final key = '${userId}_${doc.id}';
-        await box.put(key, data);
-        synced++;
+        entries[key] = data;
       }
 
+      // Single batch I/O operation
+      await box.putAll(entries);
+
       if (kDebugMode) {
-        debugPrint('✅ Synced $synced personal records to local storage');
+        debugPrint('✅ Synced ${entries.length} personal records to local storage');
       }
-      return synced;
+      return entries.length;
     } catch (e) {
       if (kDebugMode) {
         debugPrint('❌ Failed to sync personal records: $e');
@@ -468,10 +476,8 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
           final settingsBox = await _boxManager.openBox('app_settings');
           final settings = data['settings'] as Map<String, dynamic>;
 
-          // Save each setting
-          for (final entry in settings.entries) {
-            await settingsBox.put(entry.key, entry.value);
-          }
+          // PERFORMANCE FIX: Single batch I/O operation
+          await settingsBox.putAll(settings);
         }
 
         if (kDebugMode) {
