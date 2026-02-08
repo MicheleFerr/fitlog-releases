@@ -206,6 +206,7 @@ class ExerciseModel {
     required this.category,
     required this.sets,
     this.restTime,
+    this.restAfterExercise,
     this.tut,
     this.notes,
     required this.createdAt,
@@ -274,6 +275,7 @@ class ExerciseModel {
           .map((set) => ExerciseSetModel.fromDomain(set))
           .toList(),
       restTime: exercise.restTime,
+      restAfterExercise: exercise.restAfterExercise,
       tut: exercise.tut,
       notes: exercise.notes,
       createdAt: exercise.createdAt,
@@ -410,6 +412,7 @@ class ExerciseModel {
       sets: sets,
       // Support both field names: 'restTime' (templates) and 'restTimeSeconds' (legacy)
       restTime: (data['restTime'] as int?) ?? (data['restTimeSeconds'] as int?),
+      restAfterExercise: data['restAfterExercise'] as int?,
       tut: data['tut'] as String?,
       notes: notes,
       createdAt: _parseDateTime(data['createdAt']) ?? DateTime.now(),
@@ -444,6 +447,7 @@ class ExerciseModel {
   final String category;
   final List<ExerciseSetModel> sets;
   final int? restTime;
+  final int? restAfterExercise;
   final String? tut;
   final String? notes;
   final DateTime createdAt;
@@ -525,6 +529,7 @@ class ExerciseModel {
             .toList(),
         notes: notes,
         restTime: restTime,
+        restAfterExercise: restAfterExercise,
         tut: tut,
         // Advanced fields
         autoAdjustmentType: autoAdjType,
@@ -548,6 +553,7 @@ class ExerciseModel {
         stages: dropSetStages!.map((s) => DropSetStage.fromJson(s)).toList(),
         notes: notes,
         restTime: restTime,
+        restAfterExercise: restAfterExercise,
         tut: tut,
         // Advanced fields
         autoAdjustmentType: autoAdjType,
@@ -575,6 +581,7 @@ class ExerciseModel {
             .toList(),
         notes: notes,
         restTime: restTime,
+        restAfterExercise: restAfterExercise,
         tut: tut,
         // Advanced fields
         autoAdjustmentType: autoAdjType,
@@ -600,6 +607,7 @@ class ExerciseModel {
       category: exerciseCategory,
       sets: sets.map((setModel) => setModel.toDomain()).toList(),
       restTime: restTime,
+      restAfterExercise: restAfterExercise,
       tut: tut,
       notes: notes,
       createdAt: createdAt,
@@ -627,6 +635,7 @@ class ExerciseModel {
       'category': category,
       'sets': sets.map((e) => e.toJson()).toList(),
       'restTimeSeconds': restTime,
+      'restAfterExercise': restAfterExercise,
       'tut': tut,
       'notes': notes,
       'createdAt': createdAt.toIso8601String(),
@@ -671,6 +680,7 @@ class ExerciseModel {
     String? category,
     List<ExerciseSetModel>? sets,
     int? restTime,
+    int? restAfterExercise,
     String? tut,
     String? notes,
     DateTime? createdAt,
@@ -701,6 +711,7 @@ class ExerciseModel {
       category: category ?? this.category,
       sets: sets ?? this.sets,
       restTime: restTime ?? this.restTime,
+      restAfterExercise: restAfterExercise ?? this.restAfterExercise,
       tut: tut ?? this.tut,
       notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
@@ -745,6 +756,11 @@ class ExerciseSetModel {
     this.isWarmup = false,
     this.seconds,
     this.distance, // ✅ Added for cardio support
+    // ✅ Rest Timer Tracking
+    this.restTimerSkipped = false,
+    this.restTimerSecondsRemaining,
+    this.restTimerSecondsAdded,
+    this.actualRestSeconds,
   });
 
   factory ExerciseSetModel.fromDomain(ExerciseSet exerciseSet) {
@@ -763,6 +779,11 @@ class ExerciseSetModel {
       isWarmup: exerciseSet.isWarmup,
       seconds: exerciseSet.seconds,
       distance: exerciseSet.distance, // ✅ Added
+      // ✅ Rest Timer Tracking
+      restTimerSkipped: exerciseSet.restTimerSkipped,
+      restTimerSecondsRemaining: exerciseSet.restTimerSecondsRemaining,
+      restTimerSecondsAdded: exerciseSet.restTimerSecondsAdded,
+      actualRestSeconds: exerciseSet.actualRestSeconds,
     );
   }
 
@@ -817,6 +838,11 @@ class ExerciseSetModel {
       isWarmup: data['isWarmup'] as bool? ?? false,
       seconds: data['seconds'] as int?,
       distance: (data['distance'] as num?)?.toDouble(), // ✅ Added
+      // ✅ Rest Timer Tracking
+      restTimerSkipped: data['restTimerSkipped'] as bool? ?? false,
+      restTimerSecondsRemaining: data['restTimerSecondsRemaining'] as int?,
+      restTimerSecondsAdded: data['restTimerSecondsAdded'] as int?,
+      actualRestSeconds: data['actualRestSeconds'] as int?,
     );
   }
   final String id;
@@ -834,6 +860,11 @@ class ExerciseSetModel {
   final bool isWarmup;
   final int? seconds;
   final double? distance; // ✅ Added for cardio support
+  // ✅ Rest Timer Tracking
+  final bool restTimerSkipped;
+  final int? restTimerSecondsRemaining;
+  final int? restTimerSecondsAdded;
+  final int? actualRestSeconds;
 
   /// Whether this set has been completed (calculated from completedAt)
   bool get isCompleted => completedAt != null;
@@ -860,6 +891,11 @@ class ExerciseSetModel {
       seconds: seconds,
       distance: distance, // ✅ Added
       restTime: restTime, // ✅ FIX: Added missing restTime
+      // ✅ Rest Timer Tracking
+      restTimerSkipped: restTimerSkipped,
+      restTimerSecondsRemaining: restTimerSecondsRemaining,
+      restTimerSecondsAdded: restTimerSecondsAdded,
+      actualRestSeconds: actualRestSeconds,
     );
   }
 
@@ -880,6 +916,11 @@ class ExerciseSetModel {
       'isWarmup': isWarmup,
       'seconds': seconds,
       'distance': distance, // ✅ Added
+      // ✅ Rest Timer Tracking
+      'restTimerSkipped': restTimerSkipped,
+      if (restTimerSecondsRemaining != null) 'restTimerSecondsRemaining': restTimerSecondsRemaining,
+      if (restTimerSecondsAdded != null) 'restTimerSecondsAdded': restTimerSecondsAdded,
+      if (actualRestSeconds != null) 'actualRestSeconds': actualRestSeconds,
     };
   }
 
@@ -899,6 +940,11 @@ class ExerciseSetModel {
     bool? isWarmup,
     int? seconds,
     double? distance, // ✅ Added
+    // ✅ Rest Timer Tracking
+    bool? restTimerSkipped,
+    int? restTimerSecondsRemaining,
+    int? restTimerSecondsAdded,
+    int? actualRestSeconds,
   }) {
     return ExerciseSetModel(
       id: id ?? this.id,
@@ -915,6 +961,11 @@ class ExerciseSetModel {
       isWarmup: isWarmup ?? this.isWarmup,
       seconds: seconds ?? this.seconds,
       distance: distance ?? this.distance, // ✅ Added
+      // ✅ Rest Timer Tracking
+      restTimerSkipped: restTimerSkipped ?? this.restTimerSkipped,
+      restTimerSecondsRemaining: restTimerSecondsRemaining ?? this.restTimerSecondsRemaining,
+      restTimerSecondsAdded: restTimerSecondsAdded ?? this.restTimerSecondsAdded,
+      actualRestSeconds: actualRestSeconds ?? this.actualRestSeconds,
     );
   }
 }

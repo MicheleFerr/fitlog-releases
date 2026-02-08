@@ -1763,7 +1763,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get thisWeek => 'This Week';
 
   @override
-  String get totalVolume => 'Total volume';
+  String get totalVolume => 'Total Volume';
 
   @override
   String get consistency => 'Consistency';
@@ -9108,6 +9108,17 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get dropsetInfoTitle => 'What is a Drop Set?';
+
+  @override
+  String get dropsetInfoDescription =>
+      'A drop set is an advanced technique where you:\n\n1. Start with a heavier weight\n2. Perform reps until fatigue\n3. Immediately reduce weight (10-30%)\n4. Continue without rest\n\nThis maximizes muscle exhaustion in a single extended set.';
+
+  @override
+  String get dropsetInfoTip =>
+      'Tip: Drop sets are best for intermediate/advanced lifters looking to break plateaus.';
+
+  @override
   String dropsetStage(int number) {
     return 'Stage $number';
   }
@@ -9241,6 +9252,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quickRepSelection => 'Quick Selection';
+
+  @override
+  String get restPauseHelpTitle => 'What is Rest-Pause?';
+
+  @override
+  String get restPauseHelpBody =>
+      'Rest-Pause is an advanced intensity technique that extends a set beyond normal failure.\n\n1. Perform reps until you can\'t do another with good form\n2. Rest 10-15 seconds (keeping tension)\n3. Perform more reps to failure\n4. Repeat until you reach your target reps\n\nThis technique maximizes muscle recruitment and growth stimulus in less time.';
+
+  @override
+  String get goToFailureHelp =>
+      'Continue until you can\'t complete another rep with good form';
+
+  @override
+  String get pauseOrCancel => 'Pause or Cancel?';
+
+  @override
+  String get pauseOrCancelMessage =>
+      'You can pause and continue later, or cancel and lose progress.';
+
+  @override
+  String get pauseAndContinueLater => 'Pause & Continue Later';
+
+  @override
+  String get cancelWorkout => 'Cancel Workout';
+
+  @override
+  String get resumeRestPause => 'Resume Rest-Pause';
+
+  @override
+  String get timeUnderTension => 'Time';
+
+  @override
+  String get intensityBoost => 'Intensity';
+
+  @override
+  String get adjustTimer => 'Adjust Timer';
 
   @override
   String restPauseSets(int count) {
@@ -18393,6 +18440,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recentExercises => 'Recent Exercises';
 
   @override
+  String lastTimeWeight(String weight) {
+    return 'Last time: $weight kg';
+  }
+
+  @override
+  String get templateSaveError => 'Failed to save template';
+
+  @override
   String get addToFavorites => 'Add to favorites';
 
   @override
@@ -21756,6 +21811,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get preview => 'Preview';
+
+  @override
+  String dropSetBadge(int count) {
+    return '$count drops';
+  }
 
   @override
   String get copiedToClipboard => 'Copied to clipboard';
@@ -26701,4 +26761,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsSearchNoResults => 'No settings found for';
+
+  @override
+  String get supersetInfoTitle => 'What is a Superset?';
+
+  @override
+  String get supersetInfoDescription =>
+      'A superset is when you perform two or more exercises back-to-back with minimal rest between them. This saves time and increases workout intensity.';
+
+  @override
+  String get supersetInfoTip =>
+      'Pair opposing muscle groups (like chest and back) for best results - one muscle rests while the other works!';
+
+  @override
+  String get lastUsedWeight => 'Based on last workout';
+
+  @override
+  String get timerActionPause => 'Pause';
+
+  @override
+  String get timerActionExtend => '+30s';
+
+  @override
+  String get timerActionSkip => 'Skip';
 }

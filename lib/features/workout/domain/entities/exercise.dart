@@ -396,6 +396,11 @@ class ExerciseSet {
     this.setStartedAt, // ✅ Nuovo
     this.isWarmup = false, // ✅ Nuovo (default false)
     this.restTime, // ✅ Rest time for this set
+    // ✅ Rest Timer Tracking fields
+    this.restTimerSkipped = false,
+    this.restTimerSecondsRemaining,
+    this.restTimerSecondsAdded,
+    this.actualRestSeconds,
   }) : id = id ?? const Uuid().v4();
 
   factory ExerciseSet.fromJson(Map<String, dynamic> json) {
@@ -423,6 +428,11 @@ class ExerciseSet {
           : null,
       isWarmup: json['isWarmup'] ?? false, // ✅ Nuovo
       restTime: json['restTime'] as int?, // ✅ Rest time in seconds
+      // ✅ Rest Timer Tracking fields
+      restTimerSkipped: json['restTimerSkipped'] as bool? ?? false,
+      restTimerSecondsRemaining: json['restTimerSecondsRemaining'] as int?,
+      restTimerSecondsAdded: json['restTimerSecondsAdded'] as int?,
+      actualRestSeconds: json['actualRestSeconds'] as int?,
     );
   }
   final String id;
@@ -443,6 +453,25 @@ class ExerciseSet {
   final bool isWarmup; // ✅ Indica se è un set di riscaldamento
   final int? restTime;
 
+  // ✅ Rest Timer Tracking fields
+  /// Timer di recupero saltato prima di questo set?
+  /// true = utente ha premuto "Salta" prima che il timer finisse
+  final bool restTimerSkipped;
+
+  /// Secondi rimanenti quando il timer è stato saltato
+  /// Esempio: timer 90s, saltato a 45s → restTimerSecondsRemaining = 45
+  /// null se timer completato normalmente o non saltato
+  final int? restTimerSecondsRemaining;
+
+  /// Secondi totali aggiunti al timer durante il recupero
+  /// Esempio: premuto +30s due volte → restTimerSecondsAdded = 60
+  /// null o 0 se nessuna estensione
+  final int? restTimerSecondsAdded;
+
+  /// Tempo di recupero effettivo in secondi
+  /// Calcolato: configuredRestTime - secondsRemaining + secondsAdded
+  final int? actualRestSeconds;
+
   ExerciseSet copyWith({
     String? id, // ✅ FIX: Added id parameter
     int? setNumber,
@@ -459,6 +488,11 @@ class ExerciseSet {
     DateTime? setStartedAt, // ✅ Nuovo
     bool? isWarmup, // ✅ Nuovo
     int? restTime, // ✅ Rest time
+    // ✅ Rest Timer Tracking
+    bool? restTimerSkipped,
+    int? restTimerSecondsRemaining,
+    int? restTimerSecondsAdded,
+    int? actualRestSeconds,
   }) {
     return ExerciseSet(
       id: id ?? this.id, // ✅ FIX: Preserve id
@@ -476,6 +510,11 @@ class ExerciseSet {
       setDurationMillis: setDurationMillis ?? this.setDurationMillis, // ✅ Nuovo
       setStartedAt: setStartedAt ?? this.setStartedAt, // ✅ Nuovo
       isWarmup: isWarmup ?? this.isWarmup, // ✅ Nuovo
+      // ✅ Rest Timer Tracking
+      restTimerSkipped: restTimerSkipped ?? this.restTimerSkipped,
+      restTimerSecondsRemaining: restTimerSecondsRemaining ?? this.restTimerSecondsRemaining,
+      restTimerSecondsAdded: restTimerSecondsAdded ?? this.restTimerSecondsAdded,
+      actualRestSeconds: actualRestSeconds ?? this.actualRestSeconds,
     );
   }
 
@@ -496,6 +535,11 @@ class ExerciseSet {
       'setStartedAt': setStartedAt?.toIso8601String(), // ✅ Nuovo
       'isWarmup': isWarmup, // ✅ Nuovo
       if (restTime != null) 'restTime': restTime, // ✅ Rest time in seconds
+      // ✅ Rest Timer Tracking
+      'restTimerSkipped': restTimerSkipped,
+      if (restTimerSecondsRemaining != null) 'restTimerSecondsRemaining': restTimerSecondsRemaining,
+      if (restTimerSecondsAdded != null) 'restTimerSecondsAdded': restTimerSecondsAdded,
+      if (actualRestSeconds != null) 'actualRestSeconds': actualRestSeconds,
     };
   }
 

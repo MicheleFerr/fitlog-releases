@@ -175,6 +175,10 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
   // Duration tracking
   String? _currentExerciseId;
 
+  // ✅ Rest Timer Tracking: ID del set completato che precede questo rest timer
+  // Usato per aggiornare il set con i dati del rest timer quando completa/skip
+  String? _completedSetId;
+
   // PERFORMANCE OPTIMIZATION: UI update throttling
   DateTime? _lastUIUpdate;
   int _internalTickCount = 0;
@@ -403,6 +407,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     String? workoutId,
     String? exerciseId, // Added for duration tracking
     String? customSound,
+    String? completedSetId, // ✅ Rest Timer Tracking: ID del set appena completato
   }) async {
     try {
       // CRITICAL FIX: Ensure initialization is complete before timer operations
@@ -460,7 +465,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
       // Store exercise ID for duration tracking
       _currentExerciseId = exerciseId;
-      // Timer started with exerciseId: $exerciseId
+      // ✅ Rest Timer Tracking: Store completed set ID for updating when timer ends
+      _completedSetId = completedSetId;
+      // Timer started with exerciseId: $exerciseId, completedSetId: $completedSetId
 
       // DEBUG: Log what custom sound is being set
       if (kDebugMode) {
@@ -795,11 +802,14 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       // Add the extra seconds to both remaining and total duration
       final newRemainingSeconds = state!.remainingSeconds + seconds;
       final newTotalDurationSeconds = state!.totalDurationSeconds + seconds;
+      // ✅ Rest Timer Tracking: accumulate seconds added
+      final newSecondsAdded = state!.secondsAdded + seconds;
 
       state = state!.copyWith(
         remainingSeconds: newRemainingSeconds,
         totalDurationSeconds: newTotalDurationSeconds,
         endTime: state!.endTime?.add(Duration(seconds: seconds)),
+        secondsAdded: newSecondsAdded, // ✅ Track cumulative added time
       );
 
       // CRITICAL FIX: Update _cachedEndTime to match the new endTime
@@ -808,7 +818,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       _cachedEndTime = state!.endTime;
 
       debugPrint(
-        '[UnifiedTimer] ✅ Time added: newRemaining=${newRemainingSeconds}s, newTotal=${newTotalDurationSeconds}s, cachedEndTime updated',
+        '[UnifiedTimer] ✅ Time added: newRemaining=${newRemainingSeconds}s, newTotal=${newTotalDurationSeconds}s, secondsAdded=${newSecondsAdded}s, cachedEndTime updated',
       );
 
       // Sync to Live Activity + Watch
@@ -974,6 +984,34 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           if (state!.liveActivityActive) {
             await _updateLiveActivity();
             await _stopLiveActivity();
+          }
+        }
+      }
+
+      // ✅ Rest Timer Tracking: Update the completed set with rest timer data (skipped)
+      if (_currentExerciseId != null && _completedSetId != null) {
+        try {
+          // Calculate actual rest time from the original duration minus remaining
+          final configuredDuration = state!.totalDurationSeconds - state!.secondsAdded;
+          final actualRestSeconds = configuredDuration - state!.remainingSeconds;
+
+          ref.read(currentWorkoutProvider.notifier).updateSetRestTimerData(
+            exerciseId: _currentExerciseId!,
+            setId: _completedSetId!,
+            restTimerSkipped: true, // Timer was skipped
+            restTimerSecondsRemaining: state!.remainingSeconds > 0 ? state!.remainingSeconds : null,
+            restTimerSecondsAdded: state!.secondsAdded > 0 ? state!.secondsAdded : null,
+            actualRestSeconds: actualRestSeconds > 0 ? actualRestSeconds : 0,
+          );
+
+          if (kDebugMode) {
+            debugPrint(
+              '⏱️ [REST-TIMER] Set $_completedSetId updated: skipped=true, remaining=${state!.remainingSeconds}s, added=${state!.secondsAdded}s, actual=${actualRestSeconds}s',
+            );
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint('❌ [REST-TIMER] Error updating set rest timer data: $e');
           }
         }
       }
@@ -1256,6 +1294,33 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           debugPrint(
             '⚠️ [TIMER COMPLETION] Missing exerciseId or currentSet for duration tracking',
           );
+        }
+      }
+
+      // ✅ Rest Timer Tracking: Update the completed set with rest timer data
+      if (_currentExerciseId != null && _completedSetId != null && state != null) {
+        try {
+          // Calculate actual rest time: totalDuration - 0 (completed) + secondsAdded
+          final actualRestSeconds = state!.totalDurationSeconds;
+
+          ref.read(currentWorkoutProvider.notifier).updateSetRestTimerData(
+            exerciseId: _currentExerciseId!,
+            setId: _completedSetId!,
+            restTimerSkipped: false, // Timer completed normally
+            restTimerSecondsRemaining: null, // null = not skipped
+            restTimerSecondsAdded: state!.secondsAdded > 0 ? state!.secondsAdded : null,
+            actualRestSeconds: actualRestSeconds,
+          );
+
+          if (kDebugMode) {
+            debugPrint(
+              '⏱️ [REST-TIMER] Set $_completedSetId updated: skipped=false, added=${state!.secondsAdded}s, actual=${actualRestSeconds}s',
+            );
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint('❌ [REST-TIMER] Error updating set rest timer data: $e');
+          }
         }
       }
 

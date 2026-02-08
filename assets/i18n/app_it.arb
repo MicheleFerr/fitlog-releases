@@ -3314,6 +3314,9 @@
   "deleteTemplateAction": "Elimina Template",
   "removePermanently": "Rimuovi definitivamente",
   "dropsetStages": "{count} stadi",
+  "dropsetInfoTitle": "Cos'è un Drop Set?",
+  "dropsetInfoDescription": "Un drop set è una tecnica avanzata in cui:\n\n1. Inizi con un peso più alto\n2. Esegui ripetizioni fino a fatica\n3. Riduci immediatamente il peso (10-30%)\n4. Continui senza riposo\n\nQuesto massimizza l'esaurimento muscolare in un singolo set esteso.",
+  "dropsetInfoTip": "Consiglio: I drop set sono ideali per atleti intermedi/avanzati che vogliono superare i plateau.",
   "dropsetStage": "Stadio {number}",
   "dropsetGetReady": "Preparati a ridurre il peso!",
   "dropsetNoRest": "Nessun riposo! Riduci il peso e vai di nuovo!",
@@ -3348,6 +3351,18 @@
   "restPauseAlreadyCompleted": "Questo rest-pause è già stato completato. Vuoi ripeterlo?",
   "addRestPauseSet": "Aggiungi Set Extra",
   "quickRepSelection": "Selezione Rapida",
+  "restPauseHelpTitle": "Cos'è il Rest-Pause?",
+  "restPauseHelpBody": "Il Rest-Pause è una tecnica avanzata di intensità che estende un set oltre il cedimento normale.\n\n1. Esegui ripetizioni finché non puoi farne un'altra con forma corretta\n2. Riposa 10-15 secondi (mantenendo tensione)\n3. Esegui altre reps fino a cedimento\n4. Ripeti fino a raggiungere il target di reps\n\nQuesta tecnica massimizza il reclutamento muscolare e lo stimolo di crescita in meno tempo.",
+  "goToFailureHelp": "Continua finché non riesci a completare un'altra rep con forma corretta",
+  "pauseOrCancel": "Pausa o Annulla?",
+  "pauseOrCancelMessage": "Puoi mettere in pausa e continuare dopo, o annullare e perdere i progressi.",
+  "pauseAndContinueLater": "Pausa e Continua Dopo",
+  "cancelWorkout": "Annulla Allenamento",
+  "resumeRestPause": "Riprendi Rest-Pause",
+  "totalVolume": "Volume",
+  "timeUnderTension": "Tempo",
+  "intensityBoost": "Intensità",
+  "adjustTimer": "Regola Timer",
   "restPauseSets": "{count, plural, =1{1 set} other{{count} set}}",
   "keepWorkoutActiveContent": "Vuoi tornare alla Home e mantenere il tuo allenamento attivo in background?\\n\\nPotrai tornare a continuare l'allenamento in qualsiasi momento.",
   "deleteTemplateQuestion": "Sei sicuro di voler eliminare \"{name}\"?",
@@ -10795,6 +10810,20 @@
   "@recentExercises": {
     "description": "Intestazione sezione per accesso rapido agli esercizi recenti/frequenti"
   },
+  "lastTimeWeight": "Ultima volta: {weight} kg",
+  "@lastTimeWeight": {
+    "description": "Badge che mostra l'ultimo peso usato per questo esercizio",
+    "placeholders": {
+      "weight": {
+        "type": "String",
+        "example": "80.0"
+      }
+    }
+  },
+  "templateSaveError": "Errore nel salvataggio del template",
+  "@templateSaveError": {
+    "description": "Messaggio di errore quando il salvataggio del template fallisce"
+  },
   "addToFavorites": "Aggiungi ai preferiti",
   "@addToFavorites": {
     "description": "Etichetta pulsante per segnare esercizio come preferito"
@@ -15682,6 +15711,16 @@
   "@preview": {
     "description": "Label for preview section"
   },
+  "dropSetBadge": "{count} drop",
+  "@dropSetBadge": {
+    "description": "Badge che mostra il numero di stage del drop set",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
   "copiedToClipboard": "Copiato negli appunti",
   "@copiedToClipboard": {
     "description": "Success message when content is copied"
@@ -20177,5 +20216,37 @@
   "settingsSearchNoResults": "Nessuna impostazione trovata per",
   "@settingsSearchNoResults": {
     "description": "Message when no search results found"
+  },
+  "supersetInfoTitle": "Cos'è un Superset?",
+  "@supersetInfoTitle": {
+    "description": "Title for superset info dialog"
+  },
+  "supersetInfoDescription": "Un superset consiste nell'eseguire due o più esercizi consecutivamente con riposo minimo tra di essi. Risparmia tempo e aumenta l'intensità dell'allenamento.",
+  "@supersetInfoDescription": {
+    "description": "Description explaining what a superset is"
+  },
+  "supersetInfoTip": "Abbina gruppi muscolari opposti (come petto e schiena) per risultati migliori - un muscolo riposa mentre l'altro lavora!",
+  "@supersetInfoTip": {
+    "description": "Pro tip about superset usage"
+  },
+  "lastUsedWeight": "Basato sull'ultimo allenamento",
+  "@lastUsedWeight": {
+    "description": "Hint showing weight is from exercise history"
+  },
+  "totalVolume": "Volume Totale",
+  "@totalVolume": {
+    "description": "Label for total volume in summary"
+  },
+  "timerActionPause": "Pausa",
+  "@timerActionPause": {
+    "description": "Timer action bubble - pause button"
+  },
+  "timerActionExtend": "+30s",
+  "@timerActionExtend": {
+    "description": "Timer action bubble - extend button"
+  },
+  "timerActionSkip": "Salta",
+  "@timerActionSkip": {
+    "description": "Timer action bubble - skip button"
   }
 }

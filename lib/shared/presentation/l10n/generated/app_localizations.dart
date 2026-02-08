@@ -3361,10 +3361,10 @@ abstract class AppLocalizations {
   /// **'This Week'**
   String get thisWeek;
 
-  /// Total volume summary label
+  /// Label for total volume in summary
   ///
   /// In en, this message translates to:
-  /// **'Total volume'**
+  /// **'Total Volume'**
   String get totalVolume;
 
   /// Label for consistency metric
@@ -16334,6 +16334,24 @@ abstract class AppLocalizations {
   /// **'{count} stages'**
   String dropsetStages(int count);
 
+  /// Title for dropset info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'What is a Drop Set?'**
+  String get dropsetInfoTitle;
+
+  /// Description explaining what a dropset is
+  ///
+  /// In en, this message translates to:
+  /// **'A drop set is an advanced technique where you:\n\n1. Start with a heavier weight\n2. Perform reps until fatigue\n3. Immediately reduce weight (10-30%)\n4. Continue without rest\n\nThis maximizes muscle exhaustion in a single extended set.'**
+  String get dropsetInfoDescription;
+
+  /// Pro tip about dropset usage
+  ///
+  /// In en, this message translates to:
+  /// **'Tip: Drop sets are best for intermediate/advanced lifters looking to break plateaus.'**
+  String get dropsetInfoTip;
+
   /// Dropset stage number
   ///
   /// In en, this message translates to:
@@ -16567,6 +16585,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Quick Selection'**
   String get quickRepSelection;
+
+  /// Title for rest-pause help dialog
+  ///
+  /// In en, this message translates to:
+  /// **'What is Rest-Pause?'**
+  String get restPauseHelpTitle;
+
+  /// Body text explaining rest-pause technique
+  ///
+  /// In en, this message translates to:
+  /// **'Rest-Pause is an advanced intensity technique that extends a set beyond normal failure.\n\n1. Perform reps until you can\'t do another with good form\n2. Rest 10-15 seconds (keeping tension)\n3. Perform more reps to failure\n4. Repeat until you reach your target reps\n\nThis technique maximizes muscle recruitment and growth stimulus in less time.'**
+  String get restPauseHelpBody;
+
+  /// Tooltip explaining go to failure
+  ///
+  /// In en, this message translates to:
+  /// **'Continue until you can\'t complete another rep with good form'**
+  String get goToFailureHelp;
+
+  /// Title for pause/cancel dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Pause or Cancel?'**
+  String get pauseOrCancel;
+
+  /// Message for pause/cancel dialog
+  ///
+  /// In en, this message translates to:
+  /// **'You can pause and continue later, or cancel and lose progress.'**
+  String get pauseOrCancelMessage;
+
+  /// Button to pause rest-pause
+  ///
+  /// In en, this message translates to:
+  /// **'Pause & Continue Later'**
+  String get pauseAndContinueLater;
+
+  /// Button to cancel workout
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Workout'**
+  String get cancelWorkout;
+
+  /// Button to resume paused rest-pause
+  ///
+  /// In en, this message translates to:
+  /// **'Resume Rest-Pause'**
+  String get resumeRestPause;
+
+  /// Label for time under tension
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get timeUnderTension;
+
+  /// Label for intensity boost percentage
+  ///
+  /// In en, this message translates to:
+  /// **'Intensity'**
+  String get intensityBoost;
+
+  /// Label for timer adjustment controls
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust Timer'**
+  String get adjustTimer;
 
   /// Rest-pause set count
   ///
@@ -32970,6 +33054,18 @@ abstract class AppLocalizations {
   /// **'Recent Exercises'**
   String get recentExercises;
 
+  /// Badge showing the last weight used for this exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Last time: {weight} kg'**
+  String lastTimeWeight(String weight);
+
+  /// Error message when template save fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save template'**
+  String get templateSaveError;
+
   /// Button label to mark exercise as favorite
   ///
   /// In en, this message translates to:
@@ -38855,6 +38951,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Preview'**
   String get preview;
+
+  /// Badge showing number of drop set stages
+  ///
+  /// In en, this message translates to:
+  /// **'{count} drops'**
+  String dropSetBadge(int count);
 
   /// Success message when content is copied
   ///
@@ -47791,6 +47893,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No settings found for'**
   String get settingsSearchNoResults;
+
+  /// Title for superset info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'What is a Superset?'**
+  String get supersetInfoTitle;
+
+  /// Description explaining what a superset is
+  ///
+  /// In en, this message translates to:
+  /// **'A superset is when you perform two or more exercises back-to-back with minimal rest between them. This saves time and increases workout intensity.'**
+  String get supersetInfoDescription;
+
+  /// Pro tip about superset usage
+  ///
+  /// In en, this message translates to:
+  /// **'Pair opposing muscle groups (like chest and back) for best results - one muscle rests while the other works!'**
+  String get supersetInfoTip;
+
+  /// Hint showing weight is from exercise history
+  ///
+  /// In en, this message translates to:
+  /// **'Based on last workout'**
+  String get lastUsedWeight;
+
+  /// Timer action bubble - pause button
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get timerActionPause;
+
+  /// Timer action bubble - extend button
+  ///
+  /// In en, this message translates to:
+  /// **'+30s'**
+  String get timerActionExtend;
+
+  /// Timer action bubble - skip button
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get timerActionSkip;
 }
 
 class _AppLocalizationsDelegate

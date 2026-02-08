@@ -547,6 +547,18 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     int totalExercisesInSuperset = 0,
     int supersetRound = 0,
     int totalSupersetRounds = 0,
+    // 🔥 DROPSET SUPPORT
+    bool isDropset = false,
+    List<Map<String, dynamic>>? dropsetStages,
+    int currentDropsetStage = 0,
+    int totalDropsetStages = 0,
+    // 🔥 REST-PAUSE SUPPORT
+    bool isRestPause = false,
+    double? restPauseWeight,
+    int? restPauseTargetReps,
+    List<Map<String, dynamic>>? restPauseSets,
+    int currentRestPauseSet = 0,
+    int totalRestPauseSets = 0,
   }) async {
     final watchNotifier = ref.read(watchConnectivityProvider.notifier);
     final prefsRepo = ref.read(userExercisePreferencesRepositoryProvider);
@@ -652,6 +664,18 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         totalExercisesInSuperset: totalExercisesInSuperset,
         supersetRound: supersetRound,
         totalSupersetRounds: totalSupersetRounds,
+        // 🔥 DROPSET SUPPORT
+        isDropset: isDropset,
+        dropsetStages: dropsetStages,
+        currentDropsetStage: currentDropsetStage,
+        totalDropsetStages: totalDropsetStages,
+        // 🔥 REST-PAUSE SUPPORT
+        isRestPause: isRestPause,
+        restPauseWeight: restPauseWeight,
+        restPauseTargetReps: restPauseTargetReps,
+        restPauseSets: restPauseSets,
+        currentRestPauseSet: currentRestPauseSet,
+        totalRestPauseSets: totalRestPauseSets,
         ),
       );
       debugPrint(
@@ -661,6 +685,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       if (isSuperset) {
         debugPrint(
           '⌚ [FLUTTER DEBUG] 🔥 SUPERSET Update: $supersetName, Ex $currentExerciseInSuperset/$totalExercisesInSuperset, Round $supersetRound/$totalSupersetRounds',
+        );
+      } else if (isDropset) {
+        debugPrint(
+          '⌚ [FLUTTER DEBUG] 🔥 DROPSET Update: $exerciseName, Stage $currentDropsetStage/$totalDropsetStages',
+        );
+      } else if (isRestPause) {
+        debugPrint(
+          '⌚ [FLUTTER DEBUG] 🔥 REST-PAUSE Update: $exerciseName, Set $currentRestPauseSet/$totalRestPauseSets',
         );
       }
       unawaited(
@@ -692,6 +724,18 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         totalExercisesInSuperset: totalExercisesInSuperset,
         supersetRound: supersetRound,
         totalSupersetRounds: totalSupersetRounds,
+        // 🔥 DROPSET SUPPORT
+        isDropset: isDropset,
+        dropsetStages: dropsetStages,
+        currentDropsetStage: currentDropsetStage,
+        totalDropsetStages: totalDropsetStages,
+        // 🔥 REST-PAUSE SUPPORT
+        isRestPause: isRestPause,
+        restPauseWeight: restPauseWeight,
+        restPauseTargetReps: restPauseTargetReps,
+        restPauseSets: restPauseSets,
+        currentRestPauseSet: currentRestPauseSet,
+        totalRestPauseSets: totalRestPauseSets,
         ),
       );
     }
@@ -710,12 +754,24 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     // Get locale for Watch UI strings
     final locale = ref.read(localeProvider).languageCode;
 
-    // 🔥 Find current exercise - handle both regular and superset exercises
+    // 🔥 Find current exercise - handle all exercise types (regular, superset, dropset, rest-pause)
     Exercise? currentExercise;
     for (final exercise in workout.exercises) {
       if (exercise is SupersetExercise) {
         // For superset: check if any round is incomplete
         if (exercise.supersetSets.any((s) => !s.isCompleted)) {
+          currentExercise = exercise;
+          break;
+        }
+      } else if (exercise is DropSetExercise) {
+        // 🔥 FIX: For dropset: check if any STAGE is incomplete (not sets!)
+        if (exercise.stages.any((s) => !s.isCompleted)) {
+          currentExercise = exercise;
+          break;
+        }
+      } else if (exercise is RestPauseExercise) {
+        // 🔥 FIX: For rest-pause: check if any REST-PAUSE SET is incomplete
+        if (exercise.restPauseSets.any((s) => !s.isCompleted)) {
           currentExercise = exercise;
           break;
         }
@@ -728,10 +784,16 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       }
     }
 
-    // Calculate total completed sets (including superset rounds)
+    // Calculate total completed sets (including superset rounds, dropset stages, rest-pause sets)
     final completedSets = workout.exercises.fold<int>(0, (total, e) {
       if (e is SupersetExercise) {
         return total + e.supersetSets.where((s) => s.isCompleted).length;
+      } else if (e is DropSetExercise) {
+        // 🔥 FIX: Count completed STAGES for dropset
+        return total + e.stages.where((s) => s.isCompleted).length;
+      } else if (e is RestPauseExercise) {
+        // 🔥 FIX: Count completed REST-PAUSE SETS
+        return total + e.restPauseSets.where((s) => s.isCompleted).length;
       }
       return total + e.sets.where((s) => s.isCompleted).length;
     });
@@ -742,6 +804,30 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     if (currentExercise is SupersetExercise) {
       _handleSupersetWatchUpdate(
         superset: currentExercise,
+        completedSets: completedSets,
+        rpeTrackingEnabled: rpeTrackingEnabled,
+        effortScale: effortScale,
+        locale: locale,
+      );
+      return;
+    }
+
+    // 🔥 DROPSET HANDLING
+    if (currentExercise is DropSetExercise) {
+      _handleDropSetWatchUpdate(
+        dropset: currentExercise,
+        completedSets: completedSets,
+        rpeTrackingEnabled: rpeTrackingEnabled,
+        effortScale: effortScale,
+        locale: locale,
+      );
+      return;
+    }
+
+    // 🔥 REST-PAUSE HANDLING
+    if (currentExercise is RestPauseExercise) {
+      _handleRestPauseWatchUpdate(
+        restPause: currentExercise,
         completedSets: completedSets,
         rpeTrackingEnabled: rpeTrackingEnabled,
         effortScale: effortScale,
@@ -982,6 +1068,140 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       totalExercisesInSuperset: superset.exercises.length,
       supersetRound: 1, // Start at first round
       totalSupersetRounds: totalRounds,
+    );
+  }
+
+  /// 🔥 Handle dropset-specific Watch update
+  void _handleDropSetWatchUpdate({
+    required DropSetExercise dropset,
+    required int completedSets,
+    required bool rpeTrackingEnabled,
+    required String effortScale,
+    required String locale,
+  }) {
+    // Find current stage (first incomplete)
+    final currentStageIndex = dropset.stages.indexWhere(
+      (s) => !s.isCompleted,
+    );
+    if (currentStageIndex < 0) return;
+
+    final currentStage = dropset.stages[currentStageIndex];
+    final totalStages = dropset.stages.length;
+
+    // Stages completed in this dropset
+    final stagesCompletedInDropset = dropset.stages
+        .where((s) => s.isCompleted)
+        .length;
+
+    // Build stages data for Watch
+    final dropsetStagesData = dropset.stages.asMap().entries.map((entry) {
+      final stage = entry.value;
+      return {
+        'weight': stage.weight,
+        'reps': stage.reps,
+        'actualReps': stage.actualReps,
+        'isCompleted': stage.isCompleted,
+      };
+    }).toList();
+
+    debugPrint('⌚ [FLUTTER DEBUG] 🔥 DROPSET Watch Update:');
+    debugPrint('   - Dropset: ${dropset.name}');
+    debugPrint('   - Current Stage: ${currentStageIndex + 1}/$totalStages');
+    debugPrint('   - Stage Weight: ${currentStage.weight}kg × ${currentStage.reps} reps');
+
+    // Send update with dropset info
+    _getFormCuesAndNotifyWatch(
+      exerciseName: dropset.name,
+      exerciseId: dropset.id,
+      currentSet: currentStageIndex + 1, // Use stage as "set" for Watch display
+      totalSets: totalStages,
+      targetWeight: currentStage.weight,
+      targetReps: currentStage.reps,
+      setsCompleted: completedSets,
+      setsCompletedInExercise: stagesCompletedInDropset,
+      lastCompletedReps: currentStageIndex > 0
+          ? dropset.stages[currentStageIndex - 1].actualReps
+          : null,
+      rpeTrackingEnabled: rpeTrackingEnabled,
+      effortScale: effortScale,
+      locale: locale,
+      tut: dropset.tut ?? '2-1-2-0', // Dropset default TUT
+      isStartup: false,
+      allSets: [], // Dropset uses stages, not allSets
+      restTime: dropset.restTime,
+      // 🔥 DROPSET SUPPORT
+      isDropset: true,
+      dropsetStages: dropsetStagesData,
+      currentDropsetStage: currentStageIndex + 1, // 1-indexed for display
+      totalDropsetStages: totalStages,
+    );
+  }
+
+  /// 🔥 Handle rest-pause-specific Watch update
+  void _handleRestPauseWatchUpdate({
+    required RestPauseExercise restPause,
+    required int completedSets,
+    required bool rpeTrackingEnabled,
+    required String effortScale,
+    required String locale,
+  }) {
+    // Find current mini-set (first incomplete)
+    final currentSetIndex = restPause.restPauseSets.indexWhere(
+      (s) => !s.isCompleted,
+    );
+    if (currentSetIndex < 0) return;
+
+    final currentSet = restPause.restPauseSets[currentSetIndex];
+    final totalSets = restPause.restPauseSets.length;
+
+    // Sets completed in this rest-pause
+    final setsCompletedInRestPause = restPause.restPauseSets
+        .where((s) => s.isCompleted)
+        .length;
+
+    // Build sets data for Watch
+    final restPauseSetsData = restPause.restPauseSets.asMap().entries.map((entry) {
+      final set = entry.value;
+      return {
+        'reps': set.reps,
+        'actualReps': set.actualReps,
+        'restSeconds': set.restSeconds,
+        'isCompleted': set.isCompleted,
+      };
+    }).toList();
+
+    debugPrint('⌚ [FLUTTER DEBUG] 🔥 REST-PAUSE Watch Update:');
+    debugPrint('   - Rest-Pause: ${restPause.name}');
+    debugPrint('   - Current Set: ${currentSetIndex + 1}/$totalSets');
+    debugPrint('   - Weight: ${restPause.weight}kg, Target Reps: ${restPause.targetReps}');
+
+    // Send update with rest-pause info
+    _getFormCuesAndNotifyWatch(
+      exerciseName: restPause.name,
+      exerciseId: restPause.id,
+      currentSet: currentSetIndex + 1, // Use mini-set as "set" for Watch display
+      totalSets: totalSets,
+      targetWeight: restPause.weight,
+      targetReps: currentSet.reps,
+      setsCompleted: completedSets,
+      setsCompletedInExercise: setsCompletedInRestPause,
+      lastCompletedReps: currentSetIndex > 0
+          ? restPause.restPauseSets[currentSetIndex - 1].actualReps
+          : null,
+      rpeTrackingEnabled: rpeTrackingEnabled,
+      effortScale: effortScale,
+      locale: locale,
+      tut: restPause.tut ?? '2-1-2-1', // Rest-pause default TUT
+      isStartup: false,
+      allSets: [], // Rest-pause uses restPauseSets, not allSets
+      restTime: restPause.restTime,
+      // 🔥 REST-PAUSE SUPPORT
+      isRestPause: true,
+      restPauseWeight: restPause.weight,
+      restPauseTargetReps: restPause.targetReps,
+      restPauseSets: restPauseSetsData,
+      currentRestPauseSet: currentSetIndex + 1, // 1-indexed for display
+      totalRestPauseSets: totalSets,
     );
   }
 
@@ -3528,14 +3748,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       return stage;
     }).toList();
 
-    // Create updated exercise
-    final updatedExercise = DropSetExercise(
-      id: currentDropset.id,
-      name: currentDropset.name,
-      category: currentDropset.category,
+    // Create updated exercise using copyWith to preserve all fields
+    final updatedExercise = currentDropset.copyWith(
       stages: updatedStages,
-      notes: currentDropset.notes,
-      restTime: currentDropset.restTime,
     );
 
     // Update workout state
@@ -3650,16 +3865,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       completedAt: DateTime.now(),
     );
 
-    // Create updated exercise
-    final updatedExercise = RestPauseExercise(
-      id: currentRestPause.id,
-      name: currentRestPause.name,
-      category: currentRestPause.category,
-      weight: currentRestPause.weight,
-      targetReps: currentRestPause.targetReps,
+    // Create updated exercise using copyWith to preserve all fields
+    final updatedExercise = currentRestPause.copyWith(
       restPauseSets: updatedSets,
-      notes: currentRestPause.notes,
-      restTime: currentRestPause.restTime,
     );
 
     // Update workout state
@@ -3774,16 +3982,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       return set;
     }).toList();
 
-    // Create updated exercise
-    final updatedExercise = RestPauseExercise(
-      id: currentRestPause.id,
-      name: currentRestPause.name,
-      category: currentRestPause.category,
-      weight: currentRestPause.weight,
-      targetReps: currentRestPause.targetReps,
+    // Create updated exercise using copyWith to preserve all fields
+    final updatedExercise = currentRestPause.copyWith(
       restPauseSets: updatedSets,
-      notes: currentRestPause.notes,
-      restTime: currentRestPause.restTime,
     );
 
     // Update workout state
@@ -4246,6 +4447,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
                 currentSet: nextSetNumber,
                 totalSets: totalSets,
                 exerciseId: targetExercise!.id,
+                completedSetId: setId, // ✅ Rest Timer Tracking: pass completed set ID
               );
 
           debugPrint('⏰ [TIMER] ✅ Timer start called!');
@@ -4287,6 +4489,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
                   currentSet: 1,
                   totalSets: nextExerciseTotalSets,
                   exerciseId: nextExercise.id,
+                  completedSetId: setId, // ✅ Rest Timer Tracking: pass completed set ID
                 );
 
             // 📱 iOS 17+: Transition Live Activity to inter-exercise rest mode
@@ -4358,6 +4561,58 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
       }
       // Don't rethrow - silently fail to avoid disrupting user experience
+    }
+  }
+
+  /// ✅ Rest Timer Tracking: Update a completed set with rest timer data
+  /// Called by unified_timer_provider when the rest timer completes or is skipped
+  void updateSetRestTimerData({
+    required String exerciseId,
+    required String setId,
+    required bool restTimerSkipped,
+    int? restTimerSecondsRemaining,
+    int? restTimerSecondsAdded,
+    int? actualRestSeconds,
+  }) {
+    if (state == null) return;
+
+    try {
+      final updatedExercises = state!.exercises.map((exercise) {
+        if (exercise.id == exerciseId) {
+          final updatedSets = exercise.sets.map((set) {
+            if (set.id == setId) {
+              return set.copyWith(
+                restTimerSkipped: restTimerSkipped,
+                restTimerSecondsRemaining: restTimerSecondsRemaining,
+                restTimerSecondsAdded: restTimerSecondsAdded,
+                actualRestSeconds: actualRestSeconds,
+              );
+            }
+            return set;
+          }).toList();
+          return exercise.copyWith(sets: updatedSets);
+        }
+        return exercise;
+      }).toList();
+
+      state = state!.copyWith(exercises: updatedExercises);
+
+      if (kDebugMode) {
+        debugPrint(
+          '⏱️ [REST-TIMER] Updated set $setId: skipped=$restTimerSkipped, remaining=${restTimerSecondsRemaining}s, added=${restTimerSecondsAdded}s, actual=${actualRestSeconds}s',
+        );
+      }
+
+      // 💾 Auto-save modifications
+      _autoSaveIfNeeded();
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error updating set rest timer data: $e',
+        );
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
+      }
     }
   }
 

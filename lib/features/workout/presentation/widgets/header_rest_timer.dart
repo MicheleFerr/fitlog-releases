@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/timer_action_bubble.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -32,6 +33,9 @@ class HeaderRestTimer extends ConsumerStatefulWidget {
 }
 
 class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
+  /// Key per ottenere la posizione del timer (per il bubble)
+  final GlobalKey _timerKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     // 🔧 PERF FIX: Use .select() to only rebuild when specific fields change
@@ -83,13 +87,12 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
         HapticFeedback.mediumImpact();
         if (isIdle) {
           _showTimerModal(context, timerSound);
-        } else if (isRunning) {
-          ref.read(unifiedTimerProvider.notifier).pauseTimer();
-        } else if (isPaused) {
-          ref.read(unifiedTimerProvider.notifier).resumeTimer();
+        } else if (isRunning || isPaused) {
+          // Mostra bubble con azioni: Pausa/Riprendi, +30s, Salta
+          showTimerActionBubble(context: context, timerKey: _timerKey);
         }
       },
-      // Long press to skip timer
+      // Long press to skip timer - kept as shortcut
       // NOTE: Previously wrapped in Tooltip, but Tooltip intercepts long-press
       // on mobile to show its message, preventing our onLongPress from firing.
       // Removed Tooltip - haptic feedback + visual reset is sufficient UX.
@@ -100,6 +103,7 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
         }
       },
       child: AnimatedContainer(
+        key: _timerKey,
         duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(
           horizontal: widget.compact ? 8 : 10,

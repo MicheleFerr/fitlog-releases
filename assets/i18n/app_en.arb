@@ -10792,6 +10792,18 @@
       }
     }
   },
+  "dropsetInfoTitle": "What is a Drop Set?",
+  "@dropsetInfoTitle": {
+    "description": "Title for dropset info dialog"
+  },
+  "dropsetInfoDescription": "A drop set is an advanced technique where you:\n\n1. Start with a heavier weight\n2. Perform reps until fatigue\n3. Immediately reduce weight (10-30%)\n4. Continue without rest\n\nThis maximizes muscle exhaustion in a single extended set.",
+  "@dropsetInfoDescription": {
+    "description": "Description explaining what a dropset is"
+  },
+  "dropsetInfoTip": "Tip: Drop sets are best for intermediate/advanced lifters looking to break plateaus.",
+  "@dropsetInfoTip": {
+    "description": "Pro tip about dropset usage"
+  },
   "dropsetStage": "Stage {number}",
   "@dropsetStage": {
     "description": "Dropset stage number",
@@ -10988,6 +11000,54 @@
   "quickRepSelection": "Quick Selection",
   "@quickRepSelection": {
     "description": "Label for quick rep selection chips"
+  },
+  "restPauseHelpTitle": "What is Rest-Pause?",
+  "@restPauseHelpTitle": {
+    "description": "Title for rest-pause help dialog"
+  },
+  "restPauseHelpBody": "Rest-Pause is an advanced intensity technique that extends a set beyond normal failure.\n\n1. Perform reps until you can't do another with good form\n2. Rest 10-15 seconds (keeping tension)\n3. Perform more reps to failure\n4. Repeat until you reach your target reps\n\nThis technique maximizes muscle recruitment and growth stimulus in less time.",
+  "@restPauseHelpBody": {
+    "description": "Body text explaining rest-pause technique"
+  },
+  "goToFailureHelp": "Continue until you can't complete another rep with good form",
+  "@goToFailureHelp": {
+    "description": "Tooltip explaining go to failure"
+  },
+  "pauseOrCancel": "Pause or Cancel?",
+  "@pauseOrCancel": {
+    "description": "Title for pause/cancel dialog"
+  },
+  "pauseOrCancelMessage": "You can pause and continue later, or cancel and lose progress.",
+  "@pauseOrCancelMessage": {
+    "description": "Message for pause/cancel dialog"
+  },
+  "pauseAndContinueLater": "Pause & Continue Later",
+  "@pauseAndContinueLater": {
+    "description": "Button to pause rest-pause"
+  },
+  "cancelWorkout": "Cancel Workout",
+  "@cancelWorkout": {
+    "description": "Button to cancel workout"
+  },
+  "resumeRestPause": "Resume Rest-Pause",
+  "@resumeRestPause": {
+    "description": "Button to resume paused rest-pause"
+  },
+  "totalVolume": "Volume",
+  "@totalVolume": {
+    "description": "Label for total volume stat"
+  },
+  "timeUnderTension": "Time",
+  "@timeUnderTension": {
+    "description": "Label for time under tension"
+  },
+  "intensityBoost": "Intensity",
+  "@intensityBoost": {
+    "description": "Label for intensity boost percentage"
+  },
+  "adjustTimer": "Adjust Timer",
+  "@adjustTimer": {
+    "description": "Label for timer adjustment controls"
   },
   "restPauseSets": "{count, plural, =1{1 set} other{{count} sets}}",
   "@restPauseSets": {
@@ -22425,6 +22485,20 @@
   "@recentExercises": {
     "description": "Section header for quick access to recent/frequent exercises"
   },
+  "lastTimeWeight": "Last time: {weight} kg",
+  "@lastTimeWeight": {
+    "description": "Badge showing the last weight used for this exercise",
+    "placeholders": {
+      "weight": {
+        "type": "String",
+        "example": "80.0"
+      }
+    }
+  },
+  "templateSaveError": "Failed to save template",
+  "@templateSaveError": {
+    "description": "Error message when template save fails"
+  },
   "addToFavorites": "Add to favorites",
   "@addToFavorites": {
     "description": "Button label to mark exercise as favorite"
@@ -26985,6 +27059,16 @@
   "preview": "Preview",
   "@preview": {
     "description": "Label for preview section"
+  },
+  "dropSetBadge": "{count} drops",
+  "@dropSetBadge": {
+    "description": "Badge showing number of drop set stages",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
   },
   "copiedToClipboard": "Copied to clipboard",
   "@copiedToClipboard": {
@@ -32729,5 +32813,37 @@
   "settingsSearchNoResults": "No settings found for",
   "@settingsSearchNoResults": {
     "description": "Message when no search results found"
+  },
+  "supersetInfoTitle": "What is a Superset?",
+  "@supersetInfoTitle": {
+    "description": "Title for superset info dialog"
+  },
+  "supersetInfoDescription": "A superset is when you perform two or more exercises back-to-back with minimal rest between them. This saves time and increases workout intensity.",
+  "@supersetInfoDescription": {
+    "description": "Description explaining what a superset is"
+  },
+  "supersetInfoTip": "Pair opposing muscle groups (like chest and back) for best results - one muscle rests while the other works!",
+  "@supersetInfoTip": {
+    "description": "Pro tip about superset usage"
+  },
+  "lastUsedWeight": "Based on last workout",
+  "@lastUsedWeight": {
+    "description": "Hint showing weight is from exercise history"
+  },
+  "totalVolume": "Total Volume",
+  "@totalVolume": {
+    "description": "Label for total volume in summary"
+  },
+  "timerActionPause": "Pause",
+  "@timerActionPause": {
+    "description": "Timer action bubble - pause button"
+  },
+  "timerActionExtend": "+30s",
+  "@timerActionExtend": {
+    "description": "Timer action bubble - extend button"
+  },
+  "timerActionSkip": "Skip",
+  "@timerActionSkip": {
+    "description": "Timer action bubble - skip button"
   }
 }

@@ -28,6 +28,7 @@ class UnifiedTimerState {
     this.tickCount = 0,
     List<DateTime>? pauseHistory,
     this.lastBackgroundTime,
+    this.secondsAdded = 0, // ✅ Rest Timer Tracking
   }) : id = id ?? const Uuid().v4(),
        remainingSeconds = remainingSeconds ?? totalDurationSeconds,
        createdAt = createdAt ?? DateTime.now(),
@@ -73,6 +74,7 @@ class UnifiedTimerState {
       lastBackgroundTime: json['lastBackgroundTime'] != null
           ? DateTime.parse(json['lastBackgroundTime'] as String)
           : null,
+      secondsAdded: json['secondsAdded'] as int? ?? 0, // ✅ Rest Timer Tracking
     );
   }
   final String id;
@@ -107,6 +109,11 @@ class UnifiedTimerState {
 
   // Background sync state
   final DateTime? lastBackgroundTime;
+
+  // ✅ Rest Timer Tracking
+  /// Contatore dei secondi aggiunti durante questo timer (via +30s button)
+  /// Reset a 0 quando il timer viene avviato
+  final int secondsAdded;
 
   // Computed properties
   double get progress => totalDurationSeconds > 0
@@ -248,6 +255,7 @@ class UnifiedTimerState {
       liveActivityId: null,
       tickCount: 0,
       pauseHistory: <DateTime>[],
+      secondsAdded: 0, // ✅ Reset seconds added
     );
   }
 
@@ -308,6 +316,7 @@ class UnifiedTimerState {
     int? tickCount,
     List<DateTime>? pauseHistory,
     DateTime? lastBackgroundTime,
+    int? secondsAdded, // ✅ Rest Timer Tracking
   }) {
     return UnifiedTimerState(
       id: id ?? this.id,
@@ -335,6 +344,7 @@ class UnifiedTimerState {
       tickCount: tickCount ?? this.tickCount,
       pauseHistory: pauseHistory ?? this.pauseHistory,
       lastBackgroundTime: lastBackgroundTime ?? this.lastBackgroundTime,
+      secondsAdded: secondsAdded ?? this.secondsAdded, // ✅ Rest Timer Tracking
     );
   }
 
@@ -365,6 +375,7 @@ class UnifiedTimerState {
       'tickCount': tickCount,
       'pauseHistory': pauseHistory.map((e) => e.toIso8601String()).toList(),
       'lastBackgroundTime': lastBackgroundTime?.toIso8601String(),
+      'secondsAdded': secondsAdded, // ✅ Rest Timer Tracking
     };
   }
 
