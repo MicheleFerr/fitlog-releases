@@ -15781,6 +15781,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quickEdit => 'Quick Edit';
 
   @override
+  String get quickEditSuperset => 'Quick Edit Superset';
+
+  @override
   String get rpe610 => 'RPE (6-10)';
 
   @override
@@ -26784,4 +26787,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timerActionSkip => 'Skip';
+
+  @override
+  String get aiCoachInputHint => 'Ask your AI Coach...';
+
+  @override
+  String get aiCoachSuggestionsTitle => 'Try asking:';
+
+  @override
+  String get aiCoachSuggestion1 => 'What should I train today?';
+
+  @override
+  String get aiCoachSuggestion2 => 'How is my bench press progressing?';
+
+  @override
+  String get aiCoachSuggestion3 => 'How many workouts did I do this week?';
 }

@@ -8,7 +8,9 @@
 library;
 
 import 'package:flutter/foundation.dart';
+import 'package:fpdart/fpdart.dart' hide State;
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_context.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/analytics_repository.dart';
 import 'package:gymbro_flutter_new/features/history/data/repositories/workout_history_repository_enhanced.dart';
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
@@ -33,22 +35,26 @@ class AnalyticsAggregator {
     debugPrint('[AI_COACH] 🔍 Starting context aggregation for user: $userId');
 
     try {
-      // Fetch real data from repositories
-      debugPrint('[AI_COACH] 📊 Fetching streak...');
-      final streak = await getCurrentStreak(userId);
-      debugPrint('[AI_COACH] ✅ Streak: $streak days');
+      // Fetch all data in PARALLEL for better performance
+      debugPrint('[AI_COACH] 📊 Fetching all context data in parallel...');
 
-      debugPrint('[AI_COACH] 📝 Fetching last workout...');
-      final lastWorkout = await getLastWorkout(userId);
-      debugPrint('[AI_COACH] ✅ Last workout: ${lastWorkout?.name ?? "none"}');
+      final results = await Future.wait([
+        getCurrentStreak(userId),
+        getLastWorkout(userId),
+        getTop5OneRM(userId),
+        getRecoveryStatus(userId),
+      ]);
 
-      debugPrint('[AI_COACH] 💪 Fetching top 5 1RM...');
-      final top5 = await getTop5OneRM(userId);
-      debugPrint('[AI_COACH] ✅ Top 5 1RM: ${top5.length} exercises');
+      final streak = results[0] as int;
+      final lastWorkout = results[1] as WorkoutSummary?;
+      final top5 = results[2] as Map<String, int>;
+      final recovery = results[3] as RecoveryStatus;
 
-      debugPrint('[AI_COACH] 🏃 Fetching recovery status...');
-      final recovery = await getRecoveryStatus(userId);
-      debugPrint('[AI_COACH] ✅ Recovery: ${recovery.name}');
+      debugPrint('[AI_COACH] ✅ Parallel fetch complete:');
+      debugPrint('[AI_COACH]   - Streak: $streak days');
+      debugPrint('[AI_COACH]   - Last workout: ${lastWorkout?.name ?? "none"}');
+      debugPrint('[AI_COACH]   - Top 5 1RM: ${top5.length} exercises');
+      debugPrint('[AI_COACH]   - Recovery: ${recovery.name}');
 
       final context = AIContext(
         currentStreak: streak,
@@ -85,8 +91,14 @@ class AnalyticsAggregator {
       // We need to get the first value from the stream
       final exerciseHistoryStream = analyticsRepo.getExerciseHistory(userId);
 
-      // Get first emit (cached or real-time)
-      final firstResult = await exerciseHistoryStream.first;
+      // Get first emit with timeout to prevent indefinite blocking
+      final firstResult = await exerciseHistoryStream.first.timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          debugPrint('[AI_COACH] ⚠️ Timeout waiting for exercise history');
+          return const Right(<ExerciseHistory>[]);
+        },
+      );
 
       // Handle Either result
       return firstResult.fold(

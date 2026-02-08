@@ -8,6 +8,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
@@ -53,6 +54,7 @@ class _AIInputBarState extends State<AIInputBar> {
 
   void _handleSend() {
     if (_hasText && !widget.isLoading) {
+      HapticFeedback.lightImpact();
       widget.onSend(_controller.text);
       _controller.clear();
     }
@@ -86,7 +88,7 @@ class _AIInputBarState extends State<AIInputBar> {
                 maxLines: null,
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
-                  hintText: 'Chiedi al tuo AI Coach...',
+                  hintText: context.l10n.aiCoachInputHint,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
                   ),

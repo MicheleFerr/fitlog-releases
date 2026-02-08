@@ -28140,6 +28140,12 @@ abstract class AppLocalizations {
   /// **'Quick Edit'**
   String get quickEdit;
 
+  /// Title for quick edit overlay when editing a superset
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Edit Superset'**
+  String get quickEditSuperset;
+
   /// From quick wins migration - 1 occurrences
   ///
   /// In en, this message translates to:
@@ -47935,6 +47941,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Skip'**
   String get timerActionSkip;
+
+  /// Placeholder text for AI Coach input field
+  ///
+  /// In en, this message translates to:
+  /// **'Ask your AI Coach...'**
+  String get aiCoachInputHint;
+
+  /// Title above suggestion chips in AI Coach
+  ///
+  /// In en, this message translates to:
+  /// **'Try asking:'**
+  String get aiCoachSuggestionsTitle;
+
+  /// First AI Coach suggestion chip
+  ///
+  /// In en, this message translates to:
+  /// **'What should I train today?'**
+  String get aiCoachSuggestion1;
+
+  /// Second AI Coach suggestion chip
+  ///
+  /// In en, this message translates to:
+  /// **'How is my bench press progressing?'**
+  String get aiCoachSuggestion2;
+
+  /// Third AI Coach suggestion chip
+  ///
+  /// In en, this message translates to:
+  /// **'How many workouts did I do this week?'**
+  String get aiCoachSuggestion3;
 }
 
 class _AppLocalizationsDelegate

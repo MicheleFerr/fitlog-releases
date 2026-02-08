@@ -15936,6 +15936,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get quickEdit => 'Modifica Veloce';
 
   @override
+  String get quickEditSuperset => 'Modifica Veloce Superset';
+
+  @override
   String get rpe610 => 'RPE (6-10)';
 
   @override
@@ -27040,4 +27043,20 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get timerActionSkip => 'Salta';
+
+  @override
+  String get aiCoachInputHint => 'Chiedi al tuo AI Coach...';
+
+  @override
+  String get aiCoachSuggestionsTitle => 'Prova a chiedere:';
+
+  @override
+  String get aiCoachSuggestion1 => 'Cosa alleno oggi?';
+
+  @override
+  String get aiCoachSuggestion2 => 'Come sta andando la mia panca?';
+
+  @override
+  String get aiCoachSuggestion3 =>
+      'Quanti allenamenti ho fatto questa settimana?';
 }

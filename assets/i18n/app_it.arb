@@ -1622,6 +1622,7 @@
   "newPR": "🏆 Nuovo Record!",
   "quickAdd": "Aggiunta Veloce",
   "quickEdit": "Modifica Veloce",
+  "quickEditSuperset": "Modifica Veloce Superset",
   "quickLog": "Log Veloce",
   "previousWorkout": "Allenamento Precedente",
   "repeatWorkout": "Ripeti Allenamento",
@@ -20248,5 +20249,25 @@
   "timerActionSkip": "Salta",
   "@timerActionSkip": {
     "description": "Timer action bubble - skip button"
+  },
+  "aiCoachInputHint": "Chiedi al tuo AI Coach...",
+  "@aiCoachInputHint": {
+    "description": "Placeholder text for AI Coach input field"
+  },
+  "aiCoachSuggestionsTitle": "Prova a chiedere:",
+  "@aiCoachSuggestionsTitle": {
+    "description": "Title above suggestion chips in AI Coach"
+  },
+  "aiCoachSuggestion1": "Cosa alleno oggi?",
+  "@aiCoachSuggestion1": {
+    "description": "First AI Coach suggestion chip"
+  },
+  "aiCoachSuggestion2": "Come sta andando la mia panca?",
+  "@aiCoachSuggestion2": {
+    "description": "Second AI Coach suggestion chip"
+  },
+  "aiCoachSuggestion3": "Quanti allenamenti ho fatto questa settimana?",
+  "@aiCoachSuggestion3": {
+    "description": "Third AI Coach suggestion chip"
   }
 }

@@ -19497,6 +19497,10 @@
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/onboarding/presentation/widgets/steps/06_execute_set_step.dart"
   },
+  "quickEditSuperset": "Quick Edit Superset",
+  "@quickEditSuperset": {
+    "description": "Title for quick edit overlay when editing a superset"
+  },
   "rpe610": "RPE (6-10)",
   "@rpe610": {
     "description": "From quick wins migration - 1 occurrences",
@@ -32845,5 +32849,25 @@
   "timerActionSkip": "Skip",
   "@timerActionSkip": {
     "description": "Timer action bubble - skip button"
+  },
+  "aiCoachInputHint": "Ask your AI Coach...",
+  "@aiCoachInputHint": {
+    "description": "Placeholder text for AI Coach input field"
+  },
+  "aiCoachSuggestionsTitle": "Try asking:",
+  "@aiCoachSuggestionsTitle": {
+    "description": "Title above suggestion chips in AI Coach"
+  },
+  "aiCoachSuggestion1": "What should I train today?",
+  "@aiCoachSuggestion1": {
+    "description": "First AI Coach suggestion chip"
+  },
+  "aiCoachSuggestion2": "How is my bench press progressing?",
+  "@aiCoachSuggestion2": {
+    "description": "Second AI Coach suggestion chip"
+  },
+  "aiCoachSuggestion3": "How many workouts did I do this week?",
+  "@aiCoachSuggestion3": {
+    "description": "Third AI Coach suggestion chip"
   }
 }

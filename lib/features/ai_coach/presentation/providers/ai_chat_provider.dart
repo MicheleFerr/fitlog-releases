@@ -9,6 +9,7 @@ library;
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/core/config/environment_config.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/analytics_aggregator.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/repositories/ai_chat_repository_impl.dart';
@@ -100,6 +101,9 @@ class AIChat extends _$AIChat {
   // Memory limit: keep last 10 messages (design requirement line 585)
   static const int _maxMessages = 10;
 
+  // Lock to prevent concurrent message sends
+  bool _isSending = false;
+
   @override
   AIChatState build() {
     // IMPORTANT: Prevent re-initialization when navigating away and back
@@ -115,6 +119,13 @@ class AIChat extends _$AIChat {
   /// Send a message to the AI Coach
   Future<void> sendMessage(String text) async {
     if (text.trim().isEmpty) return;
+
+    // Prevent concurrent sends (race condition protection)
+    if (_isSending) {
+      debugPrint('[AI_CHAT] ⚠️ Message send already in progress, ignoring');
+      return;
+    }
+    _isSending = true;
 
     try {
       // 1. Check rate limit
@@ -205,6 +216,8 @@ class AIChat extends _$AIChat {
         isLoading: false,
         error: 'Errore durante l\'invio del messaggio. Riprova.',
       );
+    } finally {
+      _isSending = false;
     }
   }
 

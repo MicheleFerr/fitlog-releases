@@ -38,6 +38,7 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
   int _previousMessageCount = 0;
   bool _disclaimerChecked = false;
   bool _disclaimerAccepted = false;
+  String? _lastFailedMessage;
 
   @override
   void initState() {
@@ -178,50 +179,77 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
 
           // Messages list
           Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: chatState.messages.length,
-              itemBuilder: (context, index) {
-                final message = chatState.messages[index];
+            child: Column(
+              children: [
+                // Show suggestions when chat is empty (only disclaimer)
+                if (chatState.messages.length <= 1)
+                  _buildSuggestionChips(context),
 
-                // Don't show system messages (disclaimer is special)
-                if (message.role == MessageRole.system &&
-                    message.id != 'disclaimer') {
-                  return const SizedBox.shrink();
-                }
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: chatState.messages.length,
+                    itemBuilder: (context, index) {
+                      final message = chatState.messages[index];
 
-                return AIMessageBubble(
-                  message: message,
-                  isFromUser: message.role == MessageRole.user,
-                  onSuggestionTap: (exercise) {
-                    ref
-                        .read(aIChatProvider.notifier)
-                        .sendMessage('Qual e il mio massimale su $exercise?');
-                  },
-                );
-              },
+                      // Don't show system messages (disclaimer is special)
+                      if (message.role == MessageRole.system &&
+                          message.id != 'disclaimer') {
+                        return const SizedBox.shrink();
+                      }
+
+                      return AIMessageBubble(
+                        message: message,
+                        isFromUser: message.role == MessageRole.user,
+                        onSuggestionTap: (exercise) {
+                          ref
+                              .read(aIChatProvider.notifier)
+                              .sendMessage('Qual e il mio massimale su $exercise?');
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
 
           // Typing indicator
           if (chatState.isLoading) const AITypingIndicator(),
 
-          // Error message
+          // Error message with retry button
           if (chatState.error != null)
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Text(
-                chatState.error!,
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: context.colors.error,
-                ),
-                textAlign: TextAlign.center,
+              child: Column(
+                children: [
+                  Text(
+                    chatState.error!,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.error,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  if (_lastFailedMessage != null) ...[
+                    const SizedBox(height: 8),
+                    TextButton.icon(
+                      onPressed: () {
+                        final message = _lastFailedMessage!;
+                        ref.read(aIChatProvider.notifier).sendMessage(message);
+                        _scrollToBottom();
+                      },
+                      icon: const Icon(AppIcons.refresh),
+                      label: Text(context.l10n.retry),
+                    ),
+                  ],
+                ],
               ),
             ),
 
           // Input bar
           AIInputBar(
             onSend: (text) {
+              setState(() => _lastFailedMessage = text);
               ref.read(aIChatProvider.notifier).sendMessage(text);
               _scrollToBottom();
             },
@@ -251,6 +279,46 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
               Navigator.pop(dialogContext);
             },
             child: Text(l10n.delete),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSuggestionChips(BuildContext context) {
+    final suggestions = [
+      context.l10n.aiCoachSuggestion1,
+      context.l10n.aiCoachSuggestion2,
+      context.l10n.aiCoachSuggestion3,
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 8,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.l10n.aiCoachSuggestionsTitle,
+            style: context.textTheme.labelMedium?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: suggestions.map((suggestion) {
+              return ActionChip(
+                label: Text(suggestion),
+                onPressed: () {
+                  ref.read(aIChatProvider.notifier).sendMessage(suggestion);
+                  _scrollToBottom();
+                },
+              );
+            }).toList(),
           ),
         ],
       ),
