@@ -18,11 +18,13 @@ import 'package:gymbro_flutter_new/features/analytics/domain/repositories/workou
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
 import 'package:gymbro_flutter_new/features/history/data/repositories/workout_history_repository_enhanced.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_search_service.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_template.dart';
 import 'package:gymbro_flutter_new/features/streak/data/repositories/streak_repository.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/repositories/measurement_repository.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/measurement.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/template_repository.dart';
+import 'package:flutter/widgets.dart' show Locale;
 import 'package:uuid/uuid.dart';
 
 /// Executes AI function calls and returns results
@@ -34,6 +36,7 @@ class AIToolExecutor {
     required this.streakRepo,
     this.measurementRepo,
     this.templateRepo,
+    this.locale,
     ExerciseSearchService? exerciseSearchService,
   }) : exerciseSearchService = exerciseSearchService ?? ExerciseSearchService();
 
@@ -44,6 +47,9 @@ class AIToolExecutor {
   final MeasurementRepository? measurementRepo;
   final TemplateRepository? templateRepo;
   final ExerciseSearchService exerciseSearchService;
+
+  /// User's locale for localized exercise names
+  final Locale? locale;
 
   /// Normalize string from AI (handles unicode escapes like \u00b0 → °)
   ///
@@ -97,6 +103,8 @@ class AIToolExecutor {
         return await _addBodyMeasurement(arguments, userId);
       case 'getUserTemplates':
         return await _getUserTemplates(arguments, userId);
+      case 'getTemplateDetails':
+        return await _getTemplateDetails(arguments, userId);
       case 'searchExercises':
         return await _searchExercises(arguments, userId);
       case 'getAccessoryExercises':
@@ -497,15 +505,15 @@ class AIToolExecutor {
 
   String _getRecoveryRecommendation(int workoutsLast7Days, int daysSinceLastWorkout) {
     if (daysSinceLastWorkout >= 4) {
-      return 'Long rest period - ready for intense training';
+      return 'Lungo periodo di riposo - pronto per allenamento intenso';
     }
     if (workoutsLast7Days >= 6) {
-      return 'High training frequency - consider a rest day';
+      return 'Frequenza alta - considera un giorno di riposo';
     }
     if (workoutsLast7Days >= 4) {
-      return 'Good training frequency - moderate intensity recommended';
+      return 'Frequenza buona - intensità moderata consigliata';
     }
-    return 'Low-moderate frequency - can increase intensity';
+    return 'Frequenza bassa-moderata - puoi aumentare intensità';
   }
 
   Future<String> _suggestWorkout(Map<String, dynamic> args, String userId) async {
@@ -531,16 +539,16 @@ class AIToolExecutor {
       String intensity;
 
       if (recoveryStatus == 'red') {
-        suggestedFocus = 'rest or light cardio';
-        intensity = 'very light';
+        suggestedFocus = 'riposo o cardio leggero';
+        intensity = 'molto leggera';
       } else if (recoveryStatus == 'amber') {
         // Use user-specified target if provided, otherwise underTrained
         suggestedFocus = targetMuscle ?? underTrained ?? 'full body';
-        intensity = difficulty ?? 'moderate';
+        intensity = difficulty ?? 'moderata';
       } else {
         // Use user-specified target if provided, otherwise underTrained
         suggestedFocus = targetMuscle ?? underTrained ?? 'full body';
-        intensity = difficulty ?? (daysSinceLastWorkout >= 3 ? 'high' : 'moderate-high');
+        intensity = difficulty ?? (daysSinceLastWorkout >= 3 ? 'alta' : 'moderata-alta');
       }
 
       return jsonEncode({
@@ -594,15 +602,15 @@ class AIToolExecutor {
       String level;
 
       if (ratio < 0.5) {
-        level = 'Untrained';
+        level = 'Non allenato';
       } else if (ratio < 1.0) {
-        level = 'Beginner';
+        level = 'Principiante';
       } else if (ratio < 1.5) {
-        level = 'Novice';
+        level = 'Novizio';
       } else if (ratio < 2.0) {
-        level = 'Intermediate';
+        level = 'Intermedio';
       } else if (ratio < 2.5) {
-        level = 'Advanced';
+        level = 'Avanzato';
       } else {
         level = 'Elite';
       }
@@ -884,25 +892,28 @@ class AIToolExecutor {
         _ => '8-12',
       };
 
-      // 3. Search exercises from database
-      final searchQueries = _getSearchQueriesForMuscleGroup(muscleGroup, equipment);
+      // 3. Search exercises from database using muscle group
+      // This uses the JSON 'focus' field for anatomically correct results
+      final allResults = await exerciseSearchService.searchExercises(muscleGroup, locale);
 
-      final exercises = <Map<String, dynamic>>[];
-      for (final query in searchQueries.take(exerciseCount)) {
-        final results = await exerciseSearchService.searchExercises(query);
-        if (results.isNotEmpty) {
-          final ex = results.first;
-          exercises.add({
-            'name': ex.name,
-            'category': ex.category.name,
-            'sets': setsPerExercise,
-            'reps': repsRange,
-            'restSeconds': _getRestForDifficulty(difficulty),
-          });
-        }
-      }
+      // 4. Filter by equipment if specified
+      final filteredResults = _filterByEquipment(allResults, equipment);
 
-      // 4. Calculate estimated duration
+      // 5. Select diverse exercises (avoid duplicates and similar names)
+      final selectedExercises = _selectDiverseExercises(filteredResults, exerciseCount);
+
+      final exercises = selectedExercises.map((ex) {
+        return {
+          'name': ex.name,
+          'category': ex.category.name,
+          'muscles': ex.muscleGroups.take(2).toList(),
+          'sets': setsPerExercise,
+          'reps': repsRange,
+          'restSeconds': _getRestForDifficulty(difficulty),
+        };
+      }).toList();
+
+      // 6. Calculate estimated duration
       final estimatedMinutes = exercises.length * setsPerExercise * 2; // ~2 min per set
 
       return jsonEncode({
@@ -930,31 +941,81 @@ class AIToolExecutor {
     }
   }
 
-  /// Maps muscle group to search queries for exercise database
-  List<String> _getSearchQueriesForMuscleGroup(String muscleGroup, String equipment) {
-    final baseQueries = switch (muscleGroup) {
-      'chest' => ['panca piana', 'croci', 'chest press', 'piegamenti', 'dips'],
-      'back' => ['lat machine', 'rematore', 'pull up', 'pulley', 'stacco'],
-      'legs' => ['squat', 'leg press', 'leg curl', 'affondi', 'leg extension', 'stacco rumeno'],
-      'shoulders' => ['military press', 'alzate laterali', 'facepull', 'arnold press'],
-      'arms' => ['curl bicipiti', 'french press', 'hammer curl', 'pushdown tricipiti'],
-      'push' => ['panca piana', 'military press', 'chest press', 'dips', 'alzate laterali'],
-      'pull' => ['lat machine', 'rematore', 'curl', 'facepull', 'pull up'],
-      'upper' => ['panca piana', 'military press', 'lat machine', 'rematore', 'curl', 'french press'],
-      'lower' => ['squat', 'leg press', 'stacco rumeno', 'affondi', 'leg curl', 'leg extension'],
-      'full_body' => ['squat', 'panca piana', 'stacco', 'military press', 'rematore', 'curl'],
-      _ => ['squat', 'panca', 'stacco', 'military press', 'rematore'],
+  /// Filter exercises by equipment type
+  List<ExerciseDefinitionTemplate> _filterByEquipment(List<ExerciseDefinitionTemplate> exercises, String equipment) {
+    if (equipment == 'all') return exercises;
+
+    final equipmentKeywords = switch (equipment) {
+      'bodyweight' || 'home' => ['corpo libero', 'bodyweight', 'nessuna', 'body weight'],
+      'dumbbell' => ['manubri', 'dumbbell', 'manubrio'],
+      'barbell' => ['bilanciere', 'barbell'],
+      'cables' => ['cavi', 'cable', 'pulley'],
+      _ => <String>[],
     };
 
-    // Filter by equipment if specified
-    if (equipment == 'bodyweight' || equipment == 'home') {
-      return ['piegamenti', 'squat corpo libero', 'affondi', 'plank', 'dips', 'pull up'];
-    }
-    if (equipment == 'dumbbell') {
-      return ['curl manubri', 'panca manubri', 'alzate laterali', 'affondi manubri', 'rematore manubrio', 'goblet squat'];
+    if (equipmentKeywords.isEmpty) return exercises;
+
+    return exercises.where((ex) {
+      final equipmentStr = ex.equipment.join(' ').toLowerCase();
+      return equipmentKeywords.any((kw) => equipmentStr.contains(kw));
+    }).toList();
+  }
+
+  /// Select diverse exercises avoiding similar names
+  List<ExerciseDefinitionTemplate> _selectDiverseExercises(
+    List<ExerciseDefinitionTemplate> exercises,
+    int count,
+  ) {
+    if (exercises.length <= count) return exercises;
+
+    final selected = <ExerciseDefinitionTemplate>[];
+    final usedBaseNames = <String>{};
+
+    for (final ex in exercises) {
+      if (selected.length >= count) break;
+
+      // Extract base name (first 2 words) to detect similar exercises
+      final baseName = ex.name.toLowerCase().split(' ').take(2).join(' ');
+
+      // Skip if we already have a similar exercise
+      if (usedBaseNames.any((used) =>
+          used.contains(baseName) ||
+          baseName.contains(used) ||
+          _areSimilarNames(used, baseName))) {
+        continue;
+      }
+
+      selected.add(ex);
+      usedBaseNames.add(baseName);
     }
 
-    return baseQueries;
+    // If we couldn't get enough diverse exercises, fill with remaining
+    if (selected.length < count) {
+      for (final ex in exercises) {
+        if (selected.length >= count) break;
+        if (!selected.contains(ex)) {
+          selected.add(ex);
+        }
+      }
+    }
+
+    return selected;
+  }
+
+  /// Check if two base names are similar (fuzzy match)
+  bool _areSimilarNames(String a, String b) {
+    if (a == b) return true;
+    if (a.isEmpty || b.isEmpty) return false;
+
+    // Check if one contains the other
+    if (a.contains(b) || b.contains(a)) return true;
+
+    // Check word overlap
+    final wordsA = a.split(' ').toSet();
+    final wordsB = b.split(' ').toSet();
+    final overlap = wordsA.intersection(wordsB).length;
+
+    return overlap >= 1 && (overlap / wordsA.length > 0.5 || overlap / wordsB.length > 0.5);
   }
 
   /// Generate a descriptive template name
@@ -1339,6 +1400,92 @@ class AIToolExecutor {
     }
   }
 
+  Future<String> _getTemplateDetails(Map<String, dynamic> args, String userId) async {
+    if (templateRepo == null) {
+      return jsonEncode({'error': 'Template repository non disponibile'});
+    }
+
+    final templateName = args['templateName'] as String?;
+    if (templateName == null || templateName.isEmpty) {
+      return jsonEncode({'error': 'Nome template richiesto'});
+    }
+
+    try {
+      final templates = await templateRepo!.getUserTemplates();
+      if (templates.isEmpty) {
+        return jsonEncode({
+          'error': 'Nessun template salvato',
+          'suggestion': 'Crea prima un template di allenamento',
+        });
+      }
+
+      // Find template by name (case-insensitive, partial match)
+      final searchName = templateName.toLowerCase();
+      final matchingTemplate = templates.firstWhereOrNull(
+        (t) => t.name.toLowerCase().contains(searchName) ||
+               searchName.contains(t.name.toLowerCase()),
+      );
+
+      if (matchingTemplate == null) {
+        // Return available templates for suggestion
+        final availableNames = templates.map((t) => t.name).take(5).toList();
+        return jsonEncode({
+          'error': 'Template "$templateName" non trovato',
+          'availableTemplates': availableNames,
+          'suggestion': 'Prova con uno di questi nomi: ${availableNames.join(", ")}',
+        });
+      }
+
+      // Build detailed exercise list
+      final exerciseDetails = matchingTemplate.exercises.map((ex) {
+        // Get default sets info if available
+        final setsCount = ex.sets.length;
+        final repsInfo = setsCount > 0
+            ? ex.sets.map((s) => s.reps).whereType<int>().toList()
+            : <int>[];
+        final avgReps = repsInfo.isNotEmpty
+            ? (repsInfo.reduce((a, b) => a + b) / repsInfo.length).round()
+            : null;
+
+        return {
+          'name': ex.name,
+          'category': ex.category.name,
+          'sets': setsCount,
+          'reps': avgReps ?? 'non configurato',
+          'restSeconds': ex.restTime ?? 'non configurato',
+          'notes': ex.notes,
+        };
+      }).toList();
+
+      // Calculate estimated duration
+      final totalSets = matchingTemplate.exercises.fold<int>(
+        0,
+        (sum, ex) => sum + ex.sets.length,
+      );
+      final estimatedMinutes = totalSets * 2; // ~2 min per set
+
+      return jsonEncode({
+        'templateName': matchingTemplate.name,
+        'category': matchingTemplate.category.name,
+        'difficulty': matchingTemplate.difficultyLevel ?? 'non specificato',
+        'targetMuscles': matchingTemplate.targetMuscles,
+        'exerciseCount': matchingTemplate.exercises.length,
+        'totalSets': totalSets,
+        'estimatedDuration': matchingTemplate.estimatedDurationMinutes ?? estimatedMinutes,
+        'exercises': exerciseDetails,
+        'description': matchingTemplate.description,
+        'requiredEquipment': matchingTemplate.requiredEquipment,
+      });
+    } catch (e, st) {
+      await FirebaseCrashlytics.instance.recordError(
+        e,
+        st,
+        reason: 'getTemplateDetails failed',
+      );
+      return jsonEncode({'error': '$e'});
+    }
+  }
+
   // ========== Exercise Search ==========
 
   Future<String> _searchExercises(Map<String, dynamic> args, String userId) async {
@@ -1351,7 +1498,7 @@ class AIToolExecutor {
     final limit = (limitRaw is num ? limitRaw.toInt() : 10).clamp(1, 20);
 
     try {
-      final results = await exerciseSearchService.searchExercises(query);
+      final results = await exerciseSearchService.searchExercises(query, locale);
       if (results.isEmpty) {
         return jsonEncode({'message': 'Nessun esercizio trovato per "$query"'});
       }
@@ -1399,7 +1546,7 @@ class AIToolExecutor {
 
     try {
       // 1. Search for the main exercise to get its muscle groups
-      final mainResults = await exerciseSearchService.searchExercises(exerciseName);
+      final mainResults = await exerciseSearchService.searchExercises(exerciseName, locale);
 
       if (mainResults.isEmpty) {
         return jsonEncode({
@@ -1422,7 +1569,7 @@ class AIToolExecutor {
 
       // 2. Search for exercises with the same primary muscle group
       final primaryMuscle = targetMuscles.first;
-      final accessoryResults = await exerciseSearchService.searchExercises(primaryMuscle);
+      final accessoryResults = await exerciseSearchService.searchExercises(primaryMuscle, locale);
 
       if (accessoryResults.isEmpty) {
         return jsonEncode({
@@ -1434,16 +1581,30 @@ class AIToolExecutor {
         });
       }
 
-      // 3. Filter out the main exercise itself and limit results
-      final accessories = accessoryResults
-          .where((ex) => ex.name.toLowerCase() != mainExercise.name.toLowerCase())
-          .take(limit)
-          .map((ex) => {
-            'name': ex.name,
-            'muscles': ex.muscleGroups.take(3).toList(),
-            'equipment': ex.equipment.isNotEmpty ? ex.equipment.first : 'Nessuna',
-          })
-          .toList();
+      // 3. Filter out the main exercise and similar variants
+      final filteredResults = accessoryResults.where((ex) {
+        final exNameLower = ex.name.toLowerCase();
+        final mainNameLower = mainExercise.name.toLowerCase();
+
+        // Skip the main exercise itself
+        if (exNameLower == mainNameLower) return false;
+
+        // Skip very similar names (variants of same exercise)
+        if (_areSimilarNames(exNameLower, mainNameLower)) return false;
+
+        return true;
+      }).toList();
+
+      // 4. Select diverse exercises to avoid duplicates like "Panca Dumbbell" + "Panca Barbell"
+      final diverseAccessories = _selectDiverseExercises(filteredResults, limit);
+
+      final accessories = diverseAccessories.map((ex) {
+        return {
+          'name': ex.name,
+          'muscles': ex.muscleGroups.take(3).toList(),
+          'equipment': ex.equipment.isNotEmpty ? ex.equipment.first : 'Nessuna',
+        };
+      }).toList();
 
       return jsonEncode({
         'mainExercise': mainExercise.name,

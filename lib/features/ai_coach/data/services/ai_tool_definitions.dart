@@ -347,6 +347,29 @@ const List<Map<String, dynamic>> aiToolDefinitions = [
       },
     },
   },
+  {
+    'type': 'function',
+    'function': {
+      'name': 'getTemplateDetails',
+      'description':
+          'Get full details of a specific workout template including all exercises, '
+          'sets, reps, rest times, and target muscles. '
+          'MANDATORY: Use this when user asks about a specific template (e.g., "Is template X good for Y?", '
+          '"What exercises are in template Z?", "Analyze my Push Day template"). '
+          'Returns complete exercise list with workout structure.',
+      'parameters': {
+        'type': 'object',
+        'properties': {
+          'templateName': {
+            'type': 'string',
+            'description':
+                'Name of the template to retrieve (case-insensitive, partial match supported)',
+          },
+        },
+        'required': ['templateName'],
+      },
+    },
+  },
   // ========== Exercise Search ==========
   {
     'type': 'function',
