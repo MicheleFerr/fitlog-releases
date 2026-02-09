@@ -18,10 +18,15 @@ class AIInputBar extends StatefulWidget {
   const AIInputBar({
     super.key,
     required this.onSend,
+    this.onTextChanged,
     this.isLoading = false,
   });
 
   final void Function(String text) onSend;
+
+  /// Called when input text changes (for smart suggestions)
+  final void Function(String text)? onTextChanged;
+
   final bool isLoading;
 
   @override
@@ -50,6 +55,8 @@ class _AIInputBarState extends State<AIInputBar> {
     if (hasText != _hasText) {
       setState(() => _hasText = hasText);
     }
+    // Notify parent for smart suggestions
+    widget.onTextChanged?.call(_controller.text);
   }
 
   void _handleSend() {
