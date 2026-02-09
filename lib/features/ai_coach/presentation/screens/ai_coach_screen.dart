@@ -8,6 +8,7 @@
 /// **Feature**: AI Coach
 library;
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
@@ -280,6 +281,14 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
 
   /// Handle suggestion selection
   void _onSuggestionSelected(String fullQuestion) {
+    // Track analytics
+    FirebaseAnalytics.instance.logEvent(
+      name: 'ai_coach_suggestion_selected',
+      parameters: {
+        'question_length': fullQuestion.length,
+      },
+    );
+
     // Clear suggestions
     ref.read(exerciseSuggestionsProvider.notifier).clear();
 
