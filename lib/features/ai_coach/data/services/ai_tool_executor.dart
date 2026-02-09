@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/features/streak/data/repositories/streak_repo
 import 'package:gymbro_flutter_new/features/body_measurements/domain/repositories/measurement_repository.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/measurement.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/template_repository.dart';
 import 'package:uuid/uuid.dart';
 
 /// Executes AI function calls and returns results
@@ -32,6 +33,7 @@ class AIToolExecutor {
     required this.workoutAnalyticsRepo,
     required this.streakRepo,
     this.measurementRepo,
+    this.templateRepo,
     ExerciseSearchService? exerciseSearchService,
   }) : exerciseSearchService = exerciseSearchService ?? ExerciseSearchService();
 
@@ -40,6 +42,7 @@ class AIToolExecutor {
   final WorkoutAnalyticsRepository workoutAnalyticsRepo;
   final StreakRepository streakRepo;
   final MeasurementRepository? measurementRepo;
+  final TemplateRepository? templateRepo;
   final ExerciseSearchService exerciseSearchService;
 
   /// Normalize string from AI (handles unicode escapes like \u00b0 → °)
@@ -92,6 +95,12 @@ class AIToolExecutor {
         return await _getBodyProgress(arguments, userId);
       case 'addBodyMeasurement':
         return await _addBodyMeasurement(arguments, userId);
+      case 'getUserTemplates':
+        return await _getUserTemplates(arguments, userId);
+      case 'searchExercises':
+        return await _searchExercises(arguments, userId);
+      case 'getAccessoryExercises':
+        return await _getAccessoryExercises(arguments, userId);
       default:
         throw Exception('Unknown tool: $toolName');
     }
@@ -141,15 +150,42 @@ class AIToolExecutor {
               'toolName': 'get1RMHistory',
             }),
             (matches) async {
-              // Phase 2 Optimization: Auto-match case-insensitive exact matches
-              // E.g., "Panca piana" should match "Panca Piana" without extra AI round-trip
+              // Phase 2 Optimization: Smart matching with preference for exercises with data
+              // 1. Try exact case-insensitive match
+              // 2. If multiple matches, prefer ones with recent sessions
+              // 3. If query is partial (e.g., "panca"), find best match containing it
               final normalizedSearch = exerciseName.toLowerCase().trim();
-              final caseInsensitiveMatch = matches.firstWhereOrNull(
-                (e) => e.exerciseName.toLowerCase().trim() == normalizedSearch,
-              );
 
-              if (caseInsensitiveMatch != null) {
-                debugPrint('[AI_TOOL] 📦 Found case-insensitive match: "${caseInsensitiveMatch.exerciseName}"');
+              // Sort matches: prefer those with sessions, then by name similarity
+              final sortedMatches = [...matches]..sort((a, b) {
+                final aHasSessions = a.sessions.isNotEmpty;
+                final bHasSessions = b.sessions.isNotEmpty;
+
+                // Prefer exercises with sessions
+                if (aHasSessions && !bHasSessions) return -1;
+                if (!aHasSessions && bHasSessions) return 1;
+
+                // Among those with sessions, prefer exact name match
+                final aExact = a.exerciseName.toLowerCase().trim() == normalizedSearch;
+                final bExact = b.exerciseName.toLowerCase().trim() == normalizedSearch;
+                if (aExact && !bExact) return -1;
+                if (!aExact && bExact) return 1;
+
+                // Prefer exercises with more recent sessions
+                if (aHasSessions && bHasSessions) {
+                  final aLatest = a.sessions.map((s) => s.date).reduce((a, b) => a.isAfter(b) ? a : b);
+                  final bLatest = b.sessions.map((s) => s.date).reduce((a, b) => a.isAfter(b) ? a : b);
+                  return bLatest.compareTo(aLatest); // Most recent first
+                }
+
+                return 0;
+              });
+
+              // Take best match (with sessions and most relevant)
+              final caseInsensitiveMatch = sortedMatches.firstOrNull;
+
+              if (caseInsensitiveMatch != null && caseInsensitiveMatch.sessions.isNotEmpty) {
+                debugPrint('[AI_TOOL] 📦 Found best match: "${caseInsensitiveMatch.exerciseName}" (${caseInsensitiveMatch.sessions.length} sessions)');
                 // Retry with correct name
                 final retryResult = await analyticsRepo.getExerciseHistoryByName(
                   userId: userId,
@@ -1254,5 +1290,181 @@ class AIToolExecutor {
 
       _ => null,
     };
+  }
+
+  // ========== User Templates ==========
+
+  Future<String> _getUserTemplates(Map<String, dynamic> args, String userId) async {
+    if (templateRepo == null) {
+      return jsonEncode({'error': 'Template repository not available'});
+    }
+
+    try {
+      final templates = await templateRepo!.getUserTemplates();
+      if (templates.isEmpty) {
+        return jsonEncode({'message': 'Nessun template salvato', 'count': 0});
+      }
+
+      final category = args['category'] as String?;
+
+      // Filter by category if provided
+      final filtered = category != null
+          ? templates.where((t) =>
+              t.category.name.toLowerCase() == category.toLowerCase()).toList()
+          : templates;
+
+      if (filtered.isEmpty && category != null) {
+        return jsonEncode({
+          'message': 'Nessun template trovato per categoria "$category"',
+          'availableCategories': templates.map((t) => t.category.name).toSet().toList(),
+          'count': 0,
+        });
+      }
+
+      final templateList = filtered.take(10).map((t) => {
+        'name': t.name,
+        'category': t.category.name,
+        'exerciseCount': t.exercises.length,
+        'targetMuscles': t.targetMuscles.take(3).toList(),
+      }).toList();
+
+      return jsonEncode({
+        'templates': templateList,
+        'count': templates.length,
+        'showing': templateList.length,
+      });
+    } catch (e, st) {
+      await FirebaseCrashlytics.instance.recordError(e, st, reason: 'getUserTemplates failed');
+      return jsonEncode({'error': '$e'});
+    }
+  }
+
+  // ========== Exercise Search ==========
+
+  Future<String> _searchExercises(Map<String, dynamic> args, String userId) async {
+    final query = args['query'] as String?;
+    if (query == null || query.isEmpty) {
+      return jsonEncode({'error': 'Missing query parameter'});
+    }
+
+    final limitRaw = args['limit'];
+    final limit = (limitRaw is num ? limitRaw.toInt() : 10).clamp(1, 20);
+
+    try {
+      final results = await exerciseSearchService.searchExercises(query);
+      if (results.isEmpty) {
+        return jsonEncode({'message': 'Nessun esercizio trovato per "$query"'});
+      }
+
+      final exercises = results.take(limit).map((ex) => {
+        'name': ex.name,
+        'muscles': ex.muscleGroups.take(3).toList(),
+        'equipment': ex.equipment.isNotEmpty ? ex.equipment.first : 'Nessuna',
+      }).toList();
+
+      return jsonEncode({
+        'exercises': exercises,
+        'count': results.length,
+        'showing': exercises.length,
+      });
+    } catch (e, st) {
+      await FirebaseCrashlytics.instance.recordError(e, st, reason: 'searchExercises failed');
+      return jsonEncode({'error': '$e'});
+    }
+  }
+
+  // ========== Accessory Exercises ==========
+
+  /// Get accessory exercises that target the same muscle groups as the main exercise.
+  ///
+  /// This ensures anatomically correct suggestions:
+  /// - Bench press (chest) → chest exercises (dips, cable crossover)
+  /// - Squat (legs) → leg exercises (leg press, lunges)
+  /// - NEVER suggests leg exercises for chest lifts or vice versa
+  Future<String> _getAccessoryExercises(
+    Map<String, dynamic> args,
+    String userId,
+  ) async {
+    final rawExerciseName = args['exerciseName'] as String?;
+    if (rawExerciseName == null || rawExerciseName.isEmpty) {
+      return jsonEncode({
+        'error': 'Missing exerciseName parameter',
+        'toolName': 'getAccessoryExercises',
+      });
+    }
+
+    final exerciseName = _normalizeString(rawExerciseName);
+    final limitRaw = args['limit'];
+    final limit = (limitRaw is num ? limitRaw.toInt() : 8).clamp(1, 15);
+
+    try {
+      // 1. Search for the main exercise to get its muscle groups
+      final mainResults = await exerciseSearchService.searchExercises(exerciseName);
+
+      if (mainResults.isEmpty) {
+        return jsonEncode({
+          'error': 'Esercizio "$exerciseName" non trovato nel database',
+          'suggestion': 'Prova con un nome diverso o più specifico',
+          'toolName': 'getAccessoryExercises',
+        });
+      }
+
+      // Get the best matching exercise
+      final mainExercise = mainResults.first;
+      final targetMuscles = mainExercise.muscleGroups;
+
+      if (targetMuscles.isEmpty) {
+        return jsonEncode({
+          'error': 'Muscoli target non definiti per "$exerciseName"',
+          'toolName': 'getAccessoryExercises',
+        });
+      }
+
+      // 2. Search for exercises with the same primary muscle group
+      final primaryMuscle = targetMuscles.first;
+      final accessoryResults = await exerciseSearchService.searchExercises(primaryMuscle);
+
+      if (accessoryResults.isEmpty) {
+        return jsonEncode({
+          'mainExercise': mainExercise.name,
+          'targetMuscles': targetMuscles,
+          'accessories': <Map<String, dynamic>>[],
+          'message': 'Nessun esercizio accessorio trovato per $primaryMuscle',
+          'toolName': 'getAccessoryExercises',
+        });
+      }
+
+      // 3. Filter out the main exercise itself and limit results
+      final accessories = accessoryResults
+          .where((ex) => ex.name.toLowerCase() != mainExercise.name.toLowerCase())
+          .take(limit)
+          .map((ex) => {
+            'name': ex.name,
+            'muscles': ex.muscleGroups.take(3).toList(),
+            'equipment': ex.equipment.isNotEmpty ? ex.equipment.first : 'Nessuna',
+          })
+          .toList();
+
+      return jsonEncode({
+        'mainExercise': mainExercise.name,
+        'targetMuscles': targetMuscles,
+        'primaryMuscle': primaryMuscle,
+        'accessories': accessories,
+        'count': accessories.length,
+        'note': 'Tutti gli accessori lavorano gli stessi muscoli del principale',
+        'toolName': 'getAccessoryExercises',
+      });
+    } catch (e, st) {
+      await FirebaseCrashlytics.instance.recordError(
+        e,
+        st,
+        reason: 'AI Coach tool execution failed: getAccessoryExercises',
+      );
+
+      return jsonEncode({
+        'error': 'Exception: $e',
+        'toolName': 'getAccessoryExercises',
+      });
+    }
   }
 }

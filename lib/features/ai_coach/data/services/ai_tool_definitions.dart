@@ -326,4 +326,82 @@ const List<Map<String, dynamic>> aiToolDefinitions = [
       },
     },
   },
+  // ========== User Templates ==========
+  {
+    'type': 'function',
+    'function': {
+      'name': 'getUserTemplates',
+      'description':
+          'Get the user\'s saved workout templates. Returns template names, '
+          'target muscles, exercise count, and category. '
+          'Use when suggesting workouts to reference user\'s existing templates.',
+      'parameters': {
+        'type': 'object',
+        'properties': {
+          'category': {
+            'type': 'string',
+            'description': 'Optional filter: strength, hypertrophy, cardio, etc.',
+          },
+        },
+        'required': [],
+      },
+    },
+  },
+  // ========== Exercise Search ==========
+  {
+    'type': 'function',
+    'function': {
+      'name': 'searchExercises',
+      'description':
+          'Search exercises from database (2327+ exercises). '
+          'Supports fuzzy matching. Use for exercise alternatives or specifics.',
+      'parameters': {
+        'type': 'object',
+        'properties': {
+          'query': {
+            'type': 'string',
+            'description': 'Exercise name or keyword (e.g., "panca", "squat")',
+          },
+          'muscleGroup': {
+            'type': 'string',
+            'description': 'Optional: chest, back, legs, shoulders, arms, core',
+          },
+          'limit': {
+            'type': 'integer',
+            'description': 'Max results (default: 10, max: 20)',
+            'default': 10,
+          },
+        },
+        'required': ['query'],
+      },
+    },
+  },
+  // ========== Accessory Exercises ==========
+  {
+    'type': 'function',
+    'function': {
+      'name': 'getAccessoryExercises',
+      'description':
+          'Get accessory/support exercises that target the SAME muscle groups as a main lift. '
+          'MANDATORY: Use this tool before suggesting accessory exercises to ensure anatomical correctness. '
+          'Example: For "Panca piana" (chest), returns chest exercises like dips, cable crossover, incline press. '
+          'NEVER suggest leg exercises for upper body lifts or vice versa.',
+      'parameters': {
+        'type': 'object',
+        'properties': {
+          'exerciseName': {
+            'type': 'string',
+            'description':
+                'Name of the main exercise (e.g., "Panca piana", "Squat", "Stacco")',
+          },
+          'limit': {
+            'type': 'integer',
+            'description': 'Max accessory exercises to return (default: 8)',
+            'default': 8,
+          },
+        },
+        'required': ['exerciseName'],
+      },
+    },
+  },
 ];
