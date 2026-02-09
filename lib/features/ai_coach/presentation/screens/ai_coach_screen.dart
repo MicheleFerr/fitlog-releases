@@ -18,6 +18,8 @@ import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/ai_mes
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/ai_rate_limit_banner.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/ai_typing_indicator.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/ai_coach_disclaimer_dialog.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/exercise_suggestions_provider.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/smart_suggestions_overlay.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
@@ -246,18 +248,46 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
               ),
             ),
 
-          // Input bar
-          AIInputBar(
-            onSend: (text) {
-              setState(() => _lastFailedMessage = text);
-              ref.read(aIChatProvider.notifier).sendMessage(text);
-              _scrollToBottom();
-            },
-            isLoading: chatState.isLoading,
+          // Smart suggestions overlay + Input bar
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SmartSuggestionsOverlay(
+                onSelect: _onSuggestionSelected,
+              ),
+              AIInputBar(
+                onSend: (text) {
+                  // Clear suggestions when sending
+                  ref.read(exerciseSuggestionsProvider.notifier).clear();
+                  setState(() => _lastFailedMessage = text);
+                  ref.read(aIChatProvider.notifier).sendMessage(text);
+                  _scrollToBottom();
+                },
+                onTextChanged: _onInputTextChanged,
+                isLoading: chatState.isLoading,
+              ),
+            ],
           ),
         ],
       ),
     );
+  }
+
+  /// Handle input text changes for smart suggestions
+  void _onInputTextChanged(String text) {
+    ref.read(exerciseSuggestionsProvider.notifier).updateQuery(text);
+  }
+
+  /// Handle suggestion selection
+  void _onSuggestionSelected(String fullQuestion) {
+    // Clear suggestions
+    ref.read(exerciseSuggestionsProvider.notifier).clear();
+
+    // Send message
+    ref.read(aIChatProvider.notifier).sendMessage(fullQuestion);
+
+    // Scroll to bottom
+    _scrollToBottom();
   }
 
   void _showClearDialog(BuildContext context) {
