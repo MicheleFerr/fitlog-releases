@@ -15,9 +15,11 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_theme.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_manager_screen.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/screens/audio_debug_test_screen.dart';
+import 'package:gymbro_flutter_new/features/settings/presentation/screens/equipment_profiles_screen.dart';
 import 'package:gymbro_flutter_new/features/debug/presentation/screens/tier_limits_test_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/migration_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
@@ -32,13 +34,122 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_prov
 import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/legal_document_screen.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/appearance_preview_modal.dart';
-import 'package:gymbro_flutter_new/features/settings/presentation/widgets/settings_search_delegate.dart';
+import 'package:gymbro_flutter_new/features/settings/presentation/widgets/exercise_card_settings_section.dart';
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  bool _isSearching = false;
+  String _searchQuery = '';
+  final _searchController = TextEditingController();
+  final _searchFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
+
+  /// Fuzzy match: returns true if query matches text with tolerance for typos
+  bool _fuzzyMatch(String text, String query) {
+    if (query.isEmpty) return true;
+
+    final normalizedText = _normalize(text);
+    final normalizedQuery = _normalize(query);
+
+    // Exact contains match
+    if (normalizedText.contains(normalizedQuery)) return true;
+
+    // Subsequence match (letters in order)
+    if (_isSubsequence(normalizedQuery, normalizedText)) return true;
+
+    // Levenshtein distance for short queries (typo tolerance)
+    if (normalizedQuery.length <= 6) {
+      // Check each word in text
+      for (final word in normalizedText.split(RegExp(r'\s+'))) {
+        if (_levenshteinDistance(word, normalizedQuery) <= 2) return true;
+      }
+    }
+
+    return false;
+  }
+
+  /// Normalize text: lowercase, remove accents
+  String _normalize(String text) {
+    return text
+        .toLowerCase()
+        .replaceAll('à', 'a')
+        .replaceAll('è', 'e')
+        .replaceAll('é', 'e')
+        .replaceAll('ì', 'i')
+        .replaceAll('ò', 'o')
+        .replaceAll('ù', 'u');
+  }
+
+  /// Check if query chars appear in text in order
+  bool _isSubsequence(String query, String text) {
+    var queryIndex = 0;
+    for (var i = 0; i < text.length && queryIndex < query.length; i++) {
+      if (text[i] == query[queryIndex]) queryIndex++;
+    }
+    return queryIndex == query.length;
+  }
+
+  /// Levenshtein edit distance
+  int _levenshteinDistance(String a, String b) {
+    if (a.isEmpty) return b.length;
+    if (b.isEmpty) return a.length;
+
+    final matrix = List.generate(
+      a.length + 1,
+      (i) => List.generate(b.length + 1, (j) => i == 0 ? j : (j == 0 ? i : 0)),
+    );
+
+    for (var i = 1; i <= a.length; i++) {
+      for (var j = 1; j <= b.length; j++) {
+        final cost = a[i - 1] == b[j - 1] ? 0 : 1;
+        matrix[i][j] = [
+          matrix[i - 1][j] + 1,
+          matrix[i][j - 1] + 1,
+          matrix[i - 1][j - 1] + cost,
+        ].reduce((a, b) => a < b ? a : b);
+      }
+    }
+    return matrix[a.length][b.length];
+  }
+
+  /// Check if a section matches the search query
+  bool _sectionMatches(List<String> keywords) {
+    if (_searchQuery.isEmpty) return true;
+    return keywords.any((keyword) => _fuzzyMatch(keyword, _searchQuery));
+  }
+
+  void _startSearch() {
+    setState(() {
+      _isSearching = true;
+    });
+    // Focus the search field after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _searchFocusNode.requestFocus();
+    });
+  }
+
+  void _stopSearch() {
+    setState(() {
+      _isSearching = false;
+      _searchQuery = '';
+      _searchController.clear();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final config = ref.watch(appConfigProvider);
     final currentUser = ref.watch(firebaseUserProvider);
     final l10n = context.l10n;
@@ -46,14 +157,33 @@ class SettingsScreen extends ConsumerWidget {
     // Auto-load fitness profile when user is authenticated
     ref.watch(fitnessProfileAutoLoadProvider);
 
+    // Section keywords for filtering
+    final sectionKeywords = _buildSectionKeywords(l10n);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.settingsTitle),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                focusNode: _searchFocusNode,
+                decoration: InputDecoration(
+                  hintText: l10n.settingsSearchHint,
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(
+                    color: context.colors.onSurface.withValues(alpha: 0.5),
+                  ),
+                ),
+                style: context.textTheme.titleMedium,
+                onChanged: (value) => setState(() => _searchQuery = value),
+              )
+            : Text(l10n.settingsTitle),
         backgroundColor: context.colors.surfaceContainerHighest,
         leading: IconButton(
           icon: const SemanticIcon(icon: AppIcons.back, semanticLabel: 'Back'),
           onPressed: () {
-            if (Navigator.of(context).canPop()) {
+            if (_isSearching) {
+              _stopSearch();
+            } else if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
             } else {
               context.go('/');
@@ -61,13 +191,22 @@ class SettingsScreen extends ConsumerWidget {
           },
         ),
         actions: [
-          IconButton(
-            icon: const SemanticIcon(
-              icon: AppIcons.search,
-              semanticLabel: 'Search settings',
+          if (_isSearching)
+            IconButton(
+              icon: const SemanticIcon(
+                icon: AppIcons.close,
+                semanticLabel: 'Close search',
+              ),
+              onPressed: _stopSearch,
+            )
+          else
+            IconButton(
+              icon: const SemanticIcon(
+                icon: AppIcons.search,
+                semanticLabel: 'Search settings',
+              ),
+              onPressed: _startSearch,
             ),
-            onPressed: () => _openSearch(context, ref, config, l10n),
-          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -75,58 +214,79 @@ class SettingsScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // DISABLED: Fitness Benchmark Hero Card
-            // Reason: GDPR compliance - medical questionnaire data
-            // Date: 2025-01-21
-            // _buildFitnessBenchmarkCard(context, ref),
-            // const SizedBox(height: 24),
+            // Show "no results" message if searching and nothing matches
+            if (_searchQuery.isNotEmpty && !_anyMatches(sectionKeywords))
+              _buildNoResultsMessage(context, l10n),
 
             // User Info Section
-            _buildUserInfoSection(context, ref, currentUser),
-            const SizedBox(height: 24),
-
-            // DISABLED: Fitness Profile Section
-            // Reason: GDPR compliance - medical questionnaire data
-            // Date: 2025-01-21
-            // _buildFitnessProfileSection(context, ref),
-            // const SizedBox(height: 24),
+            if (_sectionMatches(sectionKeywords['account']!)) ...[
+              _buildUserInfoSection(context, ref, currentUser),
+              const SizedBox(height: 24),
+            ],
 
             // Appearance Settings
-            _buildAppearanceSection(context, ref, config),
-            const SizedBox(height: 24),
+            if (_sectionMatches(sectionKeywords['appearance']!)) ...[
+              _buildAppearanceSection(context, ref, config),
+              const SizedBox(height: 24),
+            ],
 
             // Workout (merged: rest times + sounds + vibrations + screen)
-            _buildWorkoutSection(context, ref, config),
-            const SizedBox(height: 24),
+            if (_sectionMatches(sectionKeywords['workout']!)) ...[
+              _buildWorkoutSection(context, ref, config),
+              const SizedBox(height: 24),
+            ],
+
+            // Exercise Card Settings (GIF size, density, toggles, footer)
+            if (_sectionMatches(sectionKeywords['exerciseCard']!)) ...[
+              const Card(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: ExerciseCardSettingsSection(),
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
 
             // Units & Language (initial setup, then rarely changed)
-            _buildUnitsLanguageSection(context, ref, config),
-            const SizedBox(height: 24),
+            if (_sectionMatches(sectionKeywords['unitsLanguage']!)) ...[
+              _buildUnitsLanguageSection(context, ref, config),
+              const SizedBox(height: 24),
+            ],
 
             // Data & Sync (merged: health sync + import/export)
-            _buildDataSection(context, ref),
-            const SizedBox(height: 24),
+            if (_sectionMatches(sectionKeywords['data']!)) ...[
+              _buildDataSection(context, ref),
+              const SizedBox(height: 24),
+            ],
 
             // Premium (CTA - important visibility)
-            _buildPremiumSection(context),
-            const SizedBox(height: 24),
+            if (_sectionMatches(sectionKeywords['premium']!)) ...[
+              _buildPremiumSection(context),
+              const SizedBox(height: 24),
+            ],
 
             // Help & Info (merged: tutorials + about + credits)
-            _buildHelpSection(context, ref),
-            const SizedBox(height: 24),
+            if (_sectionMatches(sectionKeywords['help']!)) ...[
+              _buildHelpSection(context, ref),
+              const SizedBox(height: 24),
+            ],
 
             // Advanced Settings (collapsed by default - power users)
-            _buildAdvancedSettingsSection(context, ref, config),
-            const SizedBox(height: 24),
+            if (_sectionMatches(sectionKeywords['advanced']!)) ...[
+              _buildAdvancedSettingsSection(context, ref, config),
+              const SizedBox(height: 24),
+            ],
 
             // Account Actions (at bottom for safety - destructive actions)
-            _buildAccountSection(context, ref),
+            if (_sectionMatches(sectionKeywords['accountActions']!))
+              _buildAccountSection(context, ref),
 
             // DEBUG: Migration tool (ferrara-michele only)
             if (currentUser.value?.email?.toString().contains(
-                  'ferrara-michele',
-                ) ==
-                true)
+                      'ferrara-michele',
+                    ) ==
+                    true &&
+                _sectionMatches(sectionKeywords['debug']!))
               Padding(
                 padding: const EdgeInsets.only(top: 24),
                 child: Center(
@@ -146,6 +306,183 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build keyword map for all sections
+  Map<String, List<String>> _buildSectionKeywords(AppLocalizations l10n) {
+    return {
+      'account': [
+        'account',
+        'profilo',
+        'profile',
+        'utente',
+        'user',
+        'email',
+        'admin',
+        l10n.account,
+      ],
+      'appearance': [
+        'aspetto',
+        'appearance',
+        'tema',
+        'theme',
+        'dark',
+        'light',
+        'scuro',
+        'chiaro',
+        'system',
+        'colori',
+        'colors',
+        l10n.appearance,
+        l10n.theme,
+      ],
+      'workout': [
+        'allenamento',
+        'workout',
+        'riposo',
+        'rest',
+        'timer',
+        'pausa',
+        'suoni',
+        'sounds',
+        'audio',
+        'vibrazione',
+        'vibration',
+        'schermo',
+        'screen',
+        l10n.settingsWorkout,
+        l10n.settingsSounds,
+        l10n.settingsDefaultRestTime,
+      ],
+      'exerciseCard': [
+        'esercizio',
+        'exercise',
+        'card',
+        'scheda',
+        'gif',
+        'animazione',
+        'animation',
+        'densita',
+        'density',
+        'compatto',
+        'compact',
+      ],
+      'unitsLanguage': [
+        'unita',
+        'units',
+        'lingua',
+        'language',
+        'italiano',
+        'english',
+        'kg',
+        'lbs',
+        'metric',
+        'imperial',
+        l10n.settingsUnitsLanguage,
+        l10n.language,
+      ],
+      'data': [
+        'dati',
+        'data',
+        'backup',
+        'export',
+        'import',
+        'sync',
+        'sincronizza',
+        'health',
+        'salute',
+        'apple',
+        'gdpr',
+        'csv',
+        'json',
+        l10n.dataBackup,
+        l10n.exportData,
+      ],
+      'premium': [
+        'premium',
+        'pro',
+        'abbonamento',
+        'subscription',
+        'upgrade',
+        'acquista',
+        'buy',
+      ],
+      'help': [
+        'aiuto',
+        'help',
+        'tutorial',
+        'guida',
+        'guide',
+        'info',
+        'informazioni',
+        'about',
+        'crediti',
+        'credits',
+        'versione',
+        'version',
+      ],
+      'advanced': [
+        'avanzate',
+        'advanced',
+        'ghost',
+        'privacy',
+        'nascondi',
+        'hide',
+        'xp',
+        'tier',
+        'debug',
+        l10n.settingsAdvanced,
+        l10n.ghostModeTitle,
+      ],
+      'accountActions': [
+        'logout',
+        'esci',
+        'disconnetti',
+        'elimina',
+        'delete',
+        'cancella',
+        'account',
+      ],
+      'debug': [
+        'debug',
+        'migrazione',
+        'migration',
+        'test',
+        'admin',
+      ],
+    };
+  }
+
+  /// Check if any section matches the current query
+  bool _anyMatches(Map<String, List<String>> sectionKeywords) {
+    return sectionKeywords.values.any((keywords) => _sectionMatches(keywords));
+  }
+
+  /// Build "no results" message widget
+  Widget _buildNoResultsMessage(BuildContext context, AppLocalizations l10n) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 48),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              AppIcons.searchOff,
+              size: 48,
+              color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '${l10n.settingsSearchNoResults} "$_searchQuery"',
+              style: context.textTheme.bodyLarge?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       ),
@@ -499,6 +836,32 @@ class SettingsScreen extends ConsumerWidget {
 
             const Divider(),
 
+            // Primary Color Selection
+            ListTile(
+              title: Text(context.l10n.primaryColor),
+              subtitle: Text(_getColorDisplayName(context, config.primaryColor)),
+              leading: Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: _getColorFromHex(config.primaryColor),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: context.colors.outline,
+                    width: 1,
+                  ),
+                ),
+              ),
+              trailing: const SemanticIcon(
+                icon: AppIcons.chevronRight,
+                semanticLabel: 'Chevron right',
+              ),
+              onTap: () => _showColorPickerDialog(context, ref, config.primaryColor),
+              contentPadding: EdgeInsets.zero,
+            ),
+
+            const Divider(),
+
             // Appearance Preview (live preview of exercise card)
             ListTile(
               title: Text(context.l10n.appearancePreview),
@@ -703,6 +1066,25 @@ class SettingsScreen extends ConsumerWidget {
                 icon: AppIcons.screenLockPortrait,
                 semanticLabel: 'Screen lock',
                 size: AppIconSize.medium,
+              ),
+            ),
+
+            const Divider(),
+
+            // Equipment Profiles
+            _buildSettingTile(
+              context,
+              title: context.l10n.equipmentProfiles,
+              subtitle: context.l10n.equipmentProfilesDescription,
+              leading: const SemanticIcon(
+                icon: AppIcons.location,
+                semanticLabel: 'Equipment profiles',
+                size: AppIconSize.medium,
+              ),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const EquipmentProfilesScreen(),
+                ),
               ),
             ),
           ],
@@ -1687,74 +2069,6 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
-  // Search
-  void _openSearch(
-    BuildContext context,
-    WidgetRef ref,
-    AppConfig config,
-    AppLocalizations l10n,
-  ) {
-    final items = [
-      SettingsSearchItem(
-        title: l10n.theme,
-        section: l10n.appearance,
-        keywords: ['dark', 'light', 'system', 'tema', 'scuro', 'chiaro'],
-        onTap: () => _showThemeDialog(context, ref, config.themeMode),
-      ),
-      SettingsSearchItem(
-        title: l10n.settingsSounds,
-        section: l10n.settingsWorkout,
-        keywords: ['audio', 'suoni', 'mute', 'volume'],
-        onTap: () {
-          ref
-              .read(appConfigProvider.notifier)
-              .setSoundEnabled(!config.soundEnabled);
-        },
-      ),
-      SettingsSearchItem(
-        title: l10n.language,
-        section: l10n.settingsUnitsLanguage,
-        keywords: ['italiano', 'english', 'lingua'],
-        onTap: () =>
-            _showLanguageDialog(context, ref, config.locale.languageCode),
-      ),
-      SettingsSearchItem(
-        title: l10n.settingsDefaultRestTime,
-        section: l10n.settingsWorkout,
-        keywords: ['timer', 'riposo', 'rest', 'pausa'],
-        onTap: () => _showRestTimeDialog(context, ref, config.defaultRestTime),
-      ),
-      SettingsSearchItem(
-        title: l10n.ghostModeTitle,
-        section: l10n.settingsAdvanced,
-        keywords: ['privacy', 'hide', 'nascondi', 'xp', 'tier'],
-        onTap: () {}, // Opens advanced section
-      ),
-      SettingsSearchItem(
-        title: l10n.exportData,
-        section: l10n.dataBackup,
-        keywords: ['gdpr', 'download', 'backup', 'csv', 'json'],
-        onTap: () => _showExportDataSheet(context),
-      ),
-      SettingsSearchItem(
-        title: l10n.settingsHealthAppSync,
-        section: l10n.dataBackup,
-        keywords: ['apple', 'health', 'connect', 'sync', 'sincronizza'],
-        onTap: () => context.pushNamed('health-sync-settings'),
-      ),
-    ];
-
-    showSearch(
-      context: context,
-      delegate: SettingsSearchDelegate(
-        items: items,
-        searchHint: l10n.settingsSearchHint,
-        emptySearchMessage: l10n.settingsSearchEmpty,
-        noResultsMessage: l10n.settingsSearchNoResults,
-      ),
-    );
-  }
-
   // Dialog Methods
   void _showThemeDialog(
     BuildContext context,
@@ -2366,5 +2680,131 @@ class SettingsScreen extends ConsumerWidget {
       default:
         return 'English';
     }
+  }
+
+  /// Get color from hex string (stored in AppConfig.primaryColor)
+  Color _getColorFromHex(String hexColor) {
+    // Check if it's a named color first
+    final namedColor = AppTheme.themeColors[hexColor.toLowerCase()];
+    if (namedColor != null) return namedColor;
+
+    // Otherwise parse as hex
+    try {
+      final hex = hexColor.replaceAll('#', '');
+      return Color(int.parse('FF$hex', radix: 16));
+    } catch (_) {
+      return AppTheme.themeColors['blue']!;
+    }
+  }
+
+  /// Get display name for color
+  String _getColorDisplayName(BuildContext context, String colorKey) {
+    // Try to get from themeColors map first (might be stored as color name)
+    final colorName = colorKey.toLowerCase();
+    switch (colorName) {
+      case 'blue':
+      case '2196f3':
+        return context.l10n.colorBlue;
+      case 'red':
+      case 'f44336':
+        return context.l10n.colorRed;
+      case 'green':
+      case '4caf50':
+        return context.l10n.colorGreen;
+      case 'purple':
+      case '9c27b0':
+        return context.l10n.colorPurple;
+      case 'orange':
+      case 'ff9800':
+        return context.l10n.colorOrange;
+      case 'teal':
+      case '009688':
+        return context.l10n.colorTeal;
+      case 'pink':
+      case 'e91e63':
+        return context.l10n.colorPink;
+      default:
+        return context.l10n.colorBlue;
+    }
+  }
+
+  /// Show color picker dialog
+  void _showColorPickerDialog(
+    BuildContext context,
+    WidgetRef ref,
+    String currentColor,
+  ) {
+    final colors = AppTheme.themeColors.entries.toList();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(context.l10n.choosePrimaryColor),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: colors.map((entry) {
+              final colorName = entry.key;
+              final color = entry.value;
+              final colorHex = (color.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0');
+              final isSelected = currentColor.toLowerCase() == colorName ||
+                  currentColor.toLowerCase() == colorHex;
+
+              return ListTile(
+                leading: Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                    border: isSelected
+                        ? Border.all(
+                            color: context.colors.onSurface,
+                            width: 3,
+                          )
+                        : null,
+                    boxShadow: [
+                      BoxShadow(
+                        color: color.withValues(alpha: 0.4),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: isSelected
+                      ? const SemanticIcon(
+                          icon: AppIcons.check,
+                          semanticLabel: 'Selected',
+                          size: 18,
+                          color: Colors.white,
+                        )
+                      : null,
+                ),
+                title: Text(
+                  _getColorDisplayName(context, colorName),
+                  style: context.textTheme.bodyLarge?.copyWith(
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+                onTap: () {
+                  ref.read(appConfigProvider.notifier).setPrimaryColor(colorName);
+                  Navigator.pop(context);
+                  SnackBarService.showSuccess(
+                    context,
+                    '${context.l10n.primaryColor}: ${_getColorDisplayName(context, colorName)}',
+                  );
+                },
+              );
+            }).toList(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(context.l10n.cancel),
+          ),
+        ],
+      ),
+    );
   }
 }

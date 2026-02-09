@@ -18706,6 +18706,10 @@
   "@addNote": {
     "description": "Pulsante per aggiungere nota all'atleta"
   },
+  "tapToAddNotes": "Tocca per aggiungere note...",
+  "@tapToAddNotes": {
+    "description": "Testo placeholder per note vuote nel footer esercizio"
+  },
   "removeAthlete": "Rimuovi Atleta",
   "@removeAthlete": {
     "description": "Pulsante per rimuovere atleta dal roster del coach"
@@ -19450,6 +19454,7 @@
   "suggestWeightSubtitle": "Basato su RPE del set precedente",
   "adjustRestTitle": "Regola riposo",
   "adjustRestSubtitle": "Più tempo se RPE alto",
+  "restTimeAdjusted": "Riposo regolato",
   "setDurationTitle": "Durata esecuzione set",
   "setDurationSubtitle": "Traccia tempo sotto tensione",
   "appearanceSection": "Aspetto",
@@ -20400,5 +20405,226 @@
   "resetToDefaults": "Ripristina Predefiniti",
   "@resetToDefaults": {
     "description": "Button to restore default settings"
+  },
+  "equipmentProfiles": "Profili Attrezzatura",
+  "@equipmentProfiles": {
+    "description": "Title for gym equipment profiles screen"
+  },
+  "equipmentProfilesDescription": "Gestisci configurazioni attrezzatura palestra",
+  "@equipmentProfilesDescription": {
+    "description": "Description for equipment profiles"
+  },
+  "newProfile": "Nuovo Profilo...",
+  "@newProfile": {
+    "description": "Button to create new profile"
+  },
+  "manageProfiles": "Gestisci Profili",
+  "@manageProfiles": {
+    "description": "Button to open profiles management"
+  },
+  "defaultProfile": "Default",
+  "@defaultProfile": {
+    "description": "Label for default profile"
+  },
+  "createProfile": "Crea Profilo",
+  "@createProfile": {
+    "description": "Button to create profile"
+  },
+  "editProfile": "Modifica Profilo",
+  "@editProfile": {
+    "description": "Title for edit profile screen"
+  },
+  "deleteProfile": "Elimina Profilo",
+  "@deleteProfile": {
+    "description": "Button to delete profile"
+  },
+  "deleteProfileConfirm": "Sei sicuro di voler eliminare questo profilo?",
+  "@deleteProfileConfirm": {
+    "description": "Confirmation message for profile deletion"
+  },
+  "profileName": "Nome Profilo",
+  "@profileName": {
+    "description": "Label for profile name field"
+  },
+  "profileNameHint": "es. Palestra Casa, Palestra Ufficio",
+  "@profileNameHint": {
+    "description": "Hint for profile name input"
+  },
+  "defaultBarbell": "Bilanciere Default",
+  "@defaultBarbell": {
+    "description": "Label for default barbell selection"
+  },
+  "availablePlatesTitle": "Dischi Disponibili",
+  "@availablePlatesTitle": {
+    "description": "Title for available plates section"
+  },
+  "availablePlatesDescription": "Seleziona i dischi disponibili in questa palestra",
+  "@availablePlatesDescription": {
+    "description": "Description for plate selection"
+  },
+  "setAsDefault": "Imposta come profilo default",
+  "@setAsDefault": {
+    "description": "Checkbox label for default profile"
+  },
+  "currentConfiguration": "Configurazione attuale",
+  "@currentConfiguration": {
+    "description": "Label showing current config"
+  },
+  "saveProfile": "Salva Profilo",
+  "@saveProfile": {
+    "description": "Button to save profile"
+  },
+  "selectAllPlates": "Seleziona Tutti",
+  "@selectAllPlates": {
+    "description": "Button to select all plates"
+  },
+  "standardSet": "Set Standard",
+  "@standardSet": {
+    "description": "Button for standard plate set"
+  },
+  "deselectAllPlates": "Deseleziona Tutti",
+  "@deselectAllPlates": {
+    "description": "Button to deselect all plates"
+  },
+  "plateExcluded": "{plate}kg escluso temporaneamente",
+  "@plateExcluded": {
+    "description": "Message when plate is excluded",
+    "placeholders": {
+      "plate": {
+        "type": "double"
+      }
+    }
+  },
+  "restoreAllPlates": "Ripristina tutti i dischi",
+  "@restoreAllPlates": {
+    "description": "Button to restore excluded plates"
+  },
+  "cannotReachWeight": "Non posso raggiungere esattamente {weight}kg",
+  "@cannotReachWeight": {
+    "description": "Message when exact weight is not achievable",
+    "placeholders": {
+      "weight": {
+        "type": "double"
+      }
+    }
+  },
+  "availableAlternatives": "Alternative disponibili",
+  "@availableAlternatives": {
+    "description": "Title for weight alternatives section"
+  },
+  "useThisWeight": "Usa questo peso",
+  "@useThisWeight": {
+    "description": "Button to apply alternative weight"
+  },
+  "keepOriginal": "Mantieni {weight}kg",
+  "@keepOriginal": {
+    "description": "Button to keep original weight",
+    "placeholders": {
+      "weight": {
+        "type": "double"
+      }
+    }
+  },
+  "perSideBreakdown": "Per lato: {breakdown}",
+  "@perSideBreakdown": {
+    "description": "Breakdown of plates per side",
+    "placeholders": {
+      "breakdown": {
+        "type": "String"
+      }
+    }
+  },
+  "profileCreated": "Profilo \"{name}\" creato",
+  "@profileCreated": {
+    "description": "Success message for profile creation",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "profileUpdated": "Profilo aggiornato",
+  "@profileUpdated": {
+    "description": "Success message for profile update"
+  },
+  "profileDeleted": "Profilo eliminato",
+  "@profileDeleted": {
+    "description": "Success message for profile deletion"
+  },
+  "quickCreateTip": "Suggerimento: puoi creare profili anche direttamente dal calcolatore dischi",
+  "@quickCreateTip": {
+    "description": "Tip about quick profile creation"
+  },
+  "other": "Altro",
+  "@other": {
+    "description": "Label for other/more options"
+  },
+  "selectBarbellWeight": "Seleziona il peso del bilanciere predefinito:",
+  "@selectBarbellWeight": {
+    "description": "Instruction for selecting barbell weight"
+  },
+  "defaultProfileDescription": "Questo profilo verrà selezionato automaticamente quando apri il calcolatore dischi",
+  "@defaultProfileDescription": {
+    "description": "Description for default profile option"
+  },
+  "selectAtLeastOnePlate": "Seleziona almeno un disco",
+  "@selectAtLeastOnePlate": {
+    "description": "Validation error for plate selection"
+  },
+  "deleteProfileConfirmation": "Sei sicuro di voler eliminare il profilo \"{profileName}\"?",
+  "@deleteProfileConfirmation": {
+    "description": "Confirmation dialog for profile deletion",
+    "placeholders": {
+      "profileName": {
+        "type": "String",
+        "example": "Palestra Casa"
+      }
+    }
+  },
+  "platesExcludedWarning": "{count, plural, =1{1 disco temporaneamente escluso} other{{count} dischi temporaneamente esclusi}}",
+  "@platesExcludedWarning": {
+    "description": "Warning message when plates are excluded",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "resetExclusions": "Ripristina tutti",
+  "@resetExclusions": {
+    "description": "Button to reset all plate exclusions"
+  },
+  "cannotReachExactWeight": "Non riesco a raggiungere esattamente {weight}kg",
+  "@cannotReachExactWeight": {
+    "description": "Warning when exact weight cannot be achieved",
+    "placeholders": {
+      "weight": {
+        "type": "double",
+        "example": "100"
+      }
+    }
+  },
+  "alternativesAvailable": "Alternative disponibili:",
+  "@alternativesAvailable": {
+    "description": "Header for weight alternatives section"
+  },
+  "keepTargetWeight": "Mantieni {weight}kg obiettivo",
+  "@keepTargetWeight": {
+    "description": "Button to keep original target weight",
+    "placeholders": {
+      "weight": {
+        "type": "double",
+        "example": "100"
+      }
+    }
+  },
+  "lighter": "più leggero",
+  "@lighter": {
+    "description": "Label indicating weight is lighter than target"
+  },
+  "heavier": "più pesante",
+  "@heavier": {
+    "description": "Label indicating weight is heavier than target"
   }
 }

@@ -30873,6 +30873,10 @@
   "@addNote": {
     "description": "Button to add note to athlete"
   },
+  "tapToAddNotes": "Tap to add notes...",
+  "@tapToAddNotes": {
+    "description": "Placeholder text for empty notes in exercise footer"
+  },
   "removeAthlete": "Remove Athlete",
   "@removeAthlete": {
     "description": "Button to remove athlete from coach roster"
@@ -31985,6 +31989,10 @@
   "suggestWeightSubtitle": "Based on previous set RPE",
   "adjustRestTitle": "Adjust rest",
   "adjustRestSubtitle": "More time if high RPE",
+  "restTimeAdjusted": "Rest time adjusted",
+  "@restTimeAdjusted": {
+    "description": "Feedback shown when rest time is auto-adjusted based on RPE"
+  },
   "setDurationTitle": "Set execution time",
   "setDurationSubtitle": "Track time under tension",
   "appearanceSection": "Appearance",
@@ -33030,5 +33038,226 @@
   "resetToDefaults": "Reset to Defaults",
   "@resetToDefaults": {
     "description": "Button to restore default settings"
+  },
+  "equipmentProfiles": "Equipment Profiles",
+  "@equipmentProfiles": {
+    "description": "Title for gym equipment profiles screen"
+  },
+  "equipmentProfilesDescription": "Manage gym equipment configurations",
+  "@equipmentProfilesDescription": {
+    "description": "Description for equipment profiles"
+  },
+  "newProfile": "New Profile...",
+  "@newProfile": {
+    "description": "Button to create new profile"
+  },
+  "manageProfiles": "Manage Profiles",
+  "@manageProfiles": {
+    "description": "Button to open profiles management"
+  },
+  "defaultProfile": "Default",
+  "@defaultProfile": {
+    "description": "Label for default profile"
+  },
+  "createProfile": "Create Profile",
+  "@createProfile": {
+    "description": "Button to create profile"
+  },
+  "editProfile": "Edit Profile",
+  "@editProfile": {
+    "description": "Title for edit profile screen"
+  },
+  "deleteProfile": "Delete Profile",
+  "@deleteProfile": {
+    "description": "Button to delete profile"
+  },
+  "deleteProfileConfirm": "Are you sure you want to delete this profile?",
+  "@deleteProfileConfirm": {
+    "description": "Confirmation message for profile deletion"
+  },
+  "profileName": "Profile Name",
+  "@profileName": {
+    "description": "Label for profile name field"
+  },
+  "profileNameHint": "e.g. Home Gym, Office Gym",
+  "@profileNameHint": {
+    "description": "Hint for profile name input"
+  },
+  "defaultBarbell": "Default Barbell",
+  "@defaultBarbell": {
+    "description": "Label for default barbell selection"
+  },
+  "availablePlatesTitle": "Available Plates",
+  "@availablePlatesTitle": {
+    "description": "Title for available plates section"
+  },
+  "availablePlatesDescription": "Select plates available at this gym",
+  "@availablePlatesDescription": {
+    "description": "Description for plate selection"
+  },
+  "setAsDefault": "Set as default profile",
+  "@setAsDefault": {
+    "description": "Checkbox label for default profile"
+  },
+  "currentConfiguration": "Current configuration",
+  "@currentConfiguration": {
+    "description": "Label showing current config"
+  },
+  "saveProfile": "Save Profile",
+  "@saveProfile": {
+    "description": "Button to save profile"
+  },
+  "selectAllPlates": "Select All",
+  "@selectAllPlates": {
+    "description": "Button to select all plates"
+  },
+  "standardSet": "Standard Set",
+  "@standardSet": {
+    "description": "Button for standard plate set"
+  },
+  "deselectAllPlates": "Deselect All",
+  "@deselectAllPlates": {
+    "description": "Button to deselect all plates"
+  },
+  "plateExcluded": "{plate}kg excluded temporarily",
+  "@plateExcluded": {
+    "description": "Message when plate is excluded",
+    "placeholders": {
+      "plate": {
+        "type": "double"
+      }
+    }
+  },
+  "restoreAllPlates": "Restore all plates",
+  "@restoreAllPlates": {
+    "description": "Button to restore excluded plates"
+  },
+  "cannotReachWeight": "Cannot reach exactly {weight}kg",
+  "@cannotReachWeight": {
+    "description": "Message when exact weight is not achievable",
+    "placeholders": {
+      "weight": {
+        "type": "double"
+      }
+    }
+  },
+  "availableAlternatives": "Available alternatives",
+  "@availableAlternatives": {
+    "description": "Title for weight alternatives section"
+  },
+  "useThisWeight": "Use this weight",
+  "@useThisWeight": {
+    "description": "Button to apply alternative weight"
+  },
+  "keepOriginal": "Keep {weight}kg",
+  "@keepOriginal": {
+    "description": "Button to keep original weight",
+    "placeholders": {
+      "weight": {
+        "type": "double"
+      }
+    }
+  },
+  "perSideBreakdown": "Per side: {breakdown}",
+  "@perSideBreakdown": {
+    "description": "Breakdown of plates per side",
+    "placeholders": {
+      "breakdown": {
+        "type": "String"
+      }
+    }
+  },
+  "profileCreated": "Profile \"{name}\" created",
+  "@profileCreated": {
+    "description": "Success message for profile creation",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "profileUpdated": "Profile updated",
+  "@profileUpdated": {
+    "description": "Success message for profile update"
+  },
+  "profileDeleted": "Profile deleted",
+  "@profileDeleted": {
+    "description": "Success message for profile deletion"
+  },
+  "quickCreateTip": "Tip: You can also create profiles directly from the plate calculator",
+  "@quickCreateTip": {
+    "description": "Tip about quick profile creation"
+  },
+  "other": "Other",
+  "@other": {
+    "description": "Label for other/more options"
+  },
+  "selectBarbellWeight": "Select the default barbell weight:",
+  "@selectBarbellWeight": {
+    "description": "Instruction for selecting barbell weight"
+  },
+  "defaultProfileDescription": "This profile will be automatically selected when you open the plate calculator",
+  "@defaultProfileDescription": {
+    "description": "Description for default profile option"
+  },
+  "selectAtLeastOnePlate": "Please select at least one plate",
+  "@selectAtLeastOnePlate": {
+    "description": "Validation error for plate selection"
+  },
+  "deleteProfileConfirmation": "Are you sure you want to delete the profile \"{profileName}\"?",
+  "@deleteProfileConfirmation": {
+    "description": "Confirmation dialog for profile deletion",
+    "placeholders": {
+      "profileName": {
+        "type": "String",
+        "example": "Home Gym"
+      }
+    }
+  },
+  "platesExcludedWarning": "{count, plural, =1{1 plate temporarily excluded} other{{count} plates temporarily excluded}}",
+  "@platesExcludedWarning": {
+    "description": "Warning message when plates are excluded",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "resetExclusions": "Reset all",
+  "@resetExclusions": {
+    "description": "Button to reset all plate exclusions"
+  },
+  "cannotReachExactWeight": "Cannot reach exactly {weight}kg",
+  "@cannotReachExactWeight": {
+    "description": "Warning when exact weight cannot be achieved",
+    "placeholders": {
+      "weight": {
+        "type": "double",
+        "example": "100"
+      }
+    }
+  },
+  "alternativesAvailable": "Available alternatives:",
+  "@alternativesAvailable": {
+    "description": "Header for weight alternatives section"
+  },
+  "keepTargetWeight": "Keep {weight}kg target",
+  "@keepTargetWeight": {
+    "description": "Button to keep original target weight",
+    "placeholders": {
+      "weight": {
+        "type": "double",
+        "example": "100"
+      }
+    }
+  },
+  "lighter": "lighter",
+  "@lighter": {
+    "description": "Label indicating weight is lighter than target"
+  },
+  "heavier": "heavier",
+  "@heavier": {
+    "description": "Label indicating weight is heavier than target"
   }
 }

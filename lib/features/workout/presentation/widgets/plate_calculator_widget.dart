@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/barbell_selector_widget.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/barbell_quick_selector.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/plate_exclusion_chips.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/gym_equipment_profiles_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -56,7 +59,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
     }
   }
 
-  void _calculatePlates() {
+  void _calculatePlates({Set<double>? excludedPlates}) {
     _plateCounts.clear();
 
     if (_targetWeight <= 0) return;
@@ -73,8 +76,15 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
     // Calculate weight per side
     double weightPerSide = remainingWeight / 2;
 
+    // Filter out excluded plates
+    final activePlates = excludedPlates != null && excludedPlates.isNotEmpty
+        ? availablePlates.where((p) => !excludedPlates.contains(p)).toList()
+        : availablePlates;
+
+    if (activePlates.isEmpty) return;
+
     // Greedy algorithm to find minimum plates
-    for (double plate in availablePlates) {
+    for (double plate in activePlates) {
       final int count = (weightPerSide / plate).floor();
       if (count > 0) {
         _plateCounts[plate] = count;
@@ -83,8 +93,8 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
     }
 
     // Handle remaining weight with smallest plate
-    if (weightPerSide > 0.01) {
-      final double smallestPlate = availablePlates.last;
+    if (weightPerSide > 0.01 && activePlates.isNotEmpty) {
+      final double smallestPlate = activePlates.last;
       _plateCounts[smallestPlate] = (_plateCounts[smallestPlate] ?? 0) + 1;
     }
   }
@@ -92,10 +102,14 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final excludedPlates = ref.watch(excludedPlatesProvider);
+
+    // Recalculate when exclusions change
+    _calculatePlates(excludedPlates: excludedPlates);
 
     return Column(
       children: [
-        // Header with barbell selector
+        // Header with weight display
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
@@ -141,27 +155,37 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                   ],
                 ),
               ),
-              OutlinedButton.icon(
-                onPressed: () => _showBarbellSelector(context),
-                icon: Icon(
-                  _barbellWeight != null
-                      ? AppIcons.fitnessCenter
-                      : AppIcons.block,
-                  size: 16,
-                ),
-                label: Text(
-                  _barbellWeight != null
-                      ? '${_barbellWeight}kg'
-                      : AppLocalizations.of(context).selectBarbellButton,
-                  style: const TextStyle(fontSize: 12),
-                ),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        // Quick barbell selector (inline chips)
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 4, bottom: 8),
+                child: Text(
+                  AppLocalizations.of(context).barbell,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
                   ),
-                  visualDensity: VisualDensity.compact,
                 ),
+              ),
+              BarbellQuickSelector(
+                selectedWeight: _barbellWeight,
+                onWeightSelected: (weight) {
+                  setState(() {
+                    _barbellWeight = weight;
+                    _calculatePlates(excludedPlates: excludedPlates);
+                  });
+                },
+                onOtherTapped: () => _showBarbellSelector(context),
               ),
             ],
           ),
@@ -268,6 +292,17 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
                 }),
             ],
           ),
+        ),
+
+        const SizedBox(height: 16),
+
+        // Plate exclusion chips (temporary exclusions)
+        PlateExclusionChips(
+          availablePlates: availablePlates,
+          onExclusionChanged: () {
+            // Trigger rebuild - the calculation is already done in build()
+            setState(() {});
+          },
         ),
 
         const SizedBox(height: 16),

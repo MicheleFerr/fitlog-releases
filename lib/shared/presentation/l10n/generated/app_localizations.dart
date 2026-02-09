@@ -6815,7 +6815,7 @@ abstract class AppLocalizations {
   /// **'Cardio'**
   String get cardio;
 
-  /// Other exercise category
+  /// Label for other/more options
   ///
   /// In en, this message translates to:
   /// **'Other'**
@@ -16148,11 +16148,11 @@ abstract class AppLocalizations {
   /// **'Keep original and create a copy with changes'**
   String get saveAsNewTemplateDescription;
 
-  /// Option to keep original template unchanged
+  /// Button to keep original weight
   ///
   /// In en, this message translates to:
-  /// **'Don\'t Save Changes'**
-  String get keepOriginal;
+  /// **'Keep {weight}kg'**
+  String keepOriginal(double weight);
 
   /// Description for keep original option
   ///
@@ -19536,10 +19536,10 @@ abstract class AppLocalizations {
   /// **'Available Plates'**
   String get availablePlates;
 
-  /// Available plates section description
+  /// Description for plate selection
   ///
   /// In en, this message translates to:
-  /// **'Plates available in your gym'**
+  /// **'Select plates available at this gym'**
   String get availablePlatesDescription;
 
   /// Toggle to use custom increment
@@ -25032,7 +25032,7 @@ abstract class AppLocalizations {
   /// **'Duplicate workout'**
   String get duplicateWorkout;
 
-  /// Button to edit user profile
+  /// Title for edit profile screen
   ///
   /// In en, this message translates to:
   /// **'Edit Profile'**
@@ -35568,7 +35568,7 @@ abstract class AppLocalizations {
   /// **'Average RIR'**
   String get averageRir;
 
-  /// Equipment profiles screen title
+  /// Title for gym equipment profiles screen
   ///
   /// In en, this message translates to:
   /// **'Equipment Profiles'**
@@ -37608,7 +37608,7 @@ abstract class AppLocalizations {
   /// **'High training variability makes pattern detection difficult. Consistent data collection enables better performance analysis.'**
   String get patternInconsistentScience;
 
-  /// Message shown when profile is updated successfully
+  /// Success message for profile update
   ///
   /// In en, this message translates to:
   /// **'Profile updated'**
@@ -44699,7 +44699,7 @@ abstract class AppLocalizations {
   /// Button to create profile
   ///
   /// In en, this message translates to:
-  /// **'Create profile'**
+  /// **'Create Profile'**
   String get createProfile;
 
   /// Header for athlete weekly compliance card
@@ -44719,6 +44719,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add Note'**
   String get addNote;
+
+  /// Placeholder text for empty notes in exercise footer
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to add notes...'**
+  String get tapToAddNotes;
 
   /// Button to remove athlete from coach roster
   ///
@@ -46514,6 +46520,12 @@ abstract class AppLocalizations {
   /// **'More time if high RPE'**
   String get adjustRestSubtitle;
 
+  /// Feedback shown when rest time is auto-adjusted based on RPE
+  ///
+  /// In en, this message translates to:
+  /// **'Rest time adjusted'**
+  String get restTimeAdjusted;
+
   /// No description provided for @setDurationTitle.
   ///
   /// In en, this message translates to:
@@ -48187,6 +48199,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Efficient'**
   String get presetEfficient;
+
+  /// Description for equipment profiles
+  ///
+  /// In en, this message translates to:
+  /// **'Manage gym equipment configurations'**
+  String get equipmentProfilesDescription;
+
+  /// Button to create new profile
+  ///
+  /// In en, this message translates to:
+  /// **'New Profile...'**
+  String get newProfile;
+
+  /// Button to open profiles management
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Profiles'**
+  String get manageProfiles;
+
+  /// Label for default profile
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get defaultProfile;
+
+  /// Button to delete profile
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Profile'**
+  String get deleteProfile;
+
+  /// Confirmation message for profile deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this profile?'**
+  String get deleteProfileConfirm;
+
+  /// Label for profile name field
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Name'**
+  String get profileName;
+
+  /// Hint for profile name input
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Home Gym, Office Gym'**
+  String get profileNameHint;
+
+  /// Label for default barbell selection
+  ///
+  /// In en, this message translates to:
+  /// **'Default Barbell'**
+  String get defaultBarbell;
+
+  /// Title for available plates section
+  ///
+  /// In en, this message translates to:
+  /// **'Available Plates'**
+  String get availablePlatesTitle;
+
+  /// Checkbox label for default profile
+  ///
+  /// In en, this message translates to:
+  /// **'Set as default profile'**
+  String get setAsDefault;
+
+  /// Label showing current config
+  ///
+  /// In en, this message translates to:
+  /// **'Current configuration'**
+  String get currentConfiguration;
+
+  /// Button to save profile
+  ///
+  /// In en, this message translates to:
+  /// **'Save Profile'**
+  String get saveProfile;
+
+  /// Button to select all plates
+  ///
+  /// In en, this message translates to:
+  /// **'Select All'**
+  String get selectAllPlates;
+
+  /// Button for standard plate set
+  ///
+  /// In en, this message translates to:
+  /// **'Standard Set'**
+  String get standardSet;
+
+  /// Button to deselect all plates
+  ///
+  /// In en, this message translates to:
+  /// **'Deselect All'**
+  String get deselectAllPlates;
+
+  /// Message when plate is excluded
+  ///
+  /// In en, this message translates to:
+  /// **'{plate}kg excluded temporarily'**
+  String plateExcluded(double plate);
+
+  /// Button to restore excluded plates
+  ///
+  /// In en, this message translates to:
+  /// **'Restore all plates'**
+  String get restoreAllPlates;
+
+  /// Message when exact weight is not achievable
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot reach exactly {weight}kg'**
+  String cannotReachWeight(double weight);
+
+  /// Title for weight alternatives section
+  ///
+  /// In en, this message translates to:
+  /// **'Available alternatives'**
+  String get availableAlternatives;
+
+  /// Button to apply alternative weight
+  ///
+  /// In en, this message translates to:
+  /// **'Use this weight'**
+  String get useThisWeight;
+
+  /// Breakdown of plates per side
+  ///
+  /// In en, this message translates to:
+  /// **'Per side: {breakdown}'**
+  String perSideBreakdown(String breakdown);
+
+  /// Success message for profile creation
+  ///
+  /// In en, this message translates to:
+  /// **'Profile \"{name}\" created'**
+  String profileCreated(String name);
+
+  /// Success message for profile deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Profile deleted'**
+  String get profileDeleted;
+
+  /// Tip about quick profile creation
+  ///
+  /// In en, this message translates to:
+  /// **'Tip: You can also create profiles directly from the plate calculator'**
+  String get quickCreateTip;
+
+  /// Instruction for selecting barbell weight
+  ///
+  /// In en, this message translates to:
+  /// **'Select the default barbell weight:'**
+  String get selectBarbellWeight;
+
+  /// Description for default profile option
+  ///
+  /// In en, this message translates to:
+  /// **'This profile will be automatically selected when you open the plate calculator'**
+  String get defaultProfileDescription;
+
+  /// Validation error for plate selection
+  ///
+  /// In en, this message translates to:
+  /// **'Please select at least one plate'**
+  String get selectAtLeastOnePlate;
+
+  /// Confirmation dialog for profile deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete the profile \"{profileName}\"?'**
+  String deleteProfileConfirmation(String profileName);
+
+  /// Warning message when plates are excluded
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 plate temporarily excluded} other{{count} plates temporarily excluded}}'**
+  String platesExcludedWarning(int count);
+
+  /// Button to reset all plate exclusions
+  ///
+  /// In en, this message translates to:
+  /// **'Reset all'**
+  String get resetExclusions;
+
+  /// Warning when exact weight cannot be achieved
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot reach exactly {weight}kg'**
+  String cannotReachExactWeight(double weight);
+
+  /// Header for weight alternatives section
+  ///
+  /// In en, this message translates to:
+  /// **'Available alternatives:'**
+  String get alternativesAvailable;
+
+  /// Button to keep original target weight
+  ///
+  /// In en, this message translates to:
+  /// **'Keep {weight}kg target'**
+  String keepTargetWeight(double weight);
+
+  /// Label indicating weight is lighter than target
+  ///
+  /// In en, this message translates to:
+  /// **'lighter'**
+  String get lighter;
+
+  /// Label indicating weight is heavier than target
+  ///
+  /// In en, this message translates to:
+  /// **'heavier'**
+  String get heavier;
 }
 
 class _AppLocalizationsDelegate

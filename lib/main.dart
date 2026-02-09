@@ -48,6 +48,8 @@ import 'package:gymbro_flutter_new/features/workout/data/services/template_cloud
 import 'package:gymbro_flutter_new/features/ai_coach/data/models/scientific_paper_model.dart'; // 🤖 AI Coach Documents
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/document_local_datasource.dart'; // 🤖 AI Coach Document Cache
 // 🤖 AI Coach Document Sync
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise_card_settings.dart'; // 🎨 Exercise Card Settings
+import 'package:gymbro_flutter_new/features/workout/domain/entities/gym_equipment_profile.dart'; // 🏋️ Gym Equipment Profiles
 
 void main() async {
   // 🚀 SPLASH: Preserve native splash screen during initialization
@@ -217,6 +219,25 @@ void main() async {
   // 🤖 AI Coach Documents adapter for scientific papers cache
   if (!Hive.isAdapterRegistered(ScientificPaperModelAdapter().typeId)) {
     Hive.registerAdapter(ScientificPaperModelAdapter());
+  }
+
+  // 🎨 Exercise Card Settings adapters
+  if (!Hive.isAdapterRegistered(ExerciseGifSizeAdapter().typeId)) {
+    Hive.registerAdapter(ExerciseGifSizeAdapter());
+  }
+  if (!Hive.isAdapterRegistered(ExerciseCardDensityAdapter().typeId)) {
+    Hive.registerAdapter(ExerciseCardDensityAdapter());
+  }
+  if (!Hive.isAdapterRegistered(ExerciseFooterElementAdapter().typeId)) {
+    Hive.registerAdapter(ExerciseFooterElementAdapter());
+  }
+  if (!Hive.isAdapterRegistered(ExerciseCardSettingsAdapter().typeId)) {
+    Hive.registerAdapter(ExerciseCardSettingsAdapter());
+  }
+
+  // 🏋️ Gym Equipment Profiles adapter for plate calculator
+  if (!Hive.isAdapterRegistered(GymEquipmentProfileAdapter().typeId)) {
+    Hive.registerAdapter(GymEquipmentProfileAdapter());
   }
 
   // ✅ CRITICAL FIX: Initialize HiveBoxManagerEnhanced with pre-opened critical boxes

@@ -8996,7 +8996,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Keep original and create a copy with changes';
 
   @override
-  String get keepOriginal => 'Don\'t Save Changes';
+  String keepOriginal(double weight) {
+    return 'Keep ${weight}kg';
+  }
 
   @override
   String get keepOriginalDescription =>
@@ -11005,7 +11007,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get availablePlates => 'Available Plates';
 
   @override
-  String get availablePlatesDescription => 'Plates available in your gym';
+  String get availablePlatesDescription =>
+      'Select plates available at this gym';
 
   @override
   String get useCustomIncrement => 'Use Custom Increment';
@@ -25036,7 +25039,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'For athletes who won\'t use the app independently. You\'ll record their workouts.';
 
   @override
-  String get createProfile => 'Create profile';
+  String get createProfile => 'Create Profile';
 
   @override
   String get weeklyCompliance => 'Weekly Compliance';
@@ -25046,6 +25049,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addNote => 'Add Note';
+
+  @override
+  String get tapToAddNotes => 'Tap to add notes...';
 
   @override
   String get removeAthlete => 'Remove Athlete';
@@ -26013,6 +26019,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adjustRestSubtitle => 'More time if high RPE';
 
   @override
+  String get restTimeAdjusted => 'Rest time adjusted';
+
+  @override
   String get setDurationTitle => 'Set execution time';
 
   @override
@@ -26926,4 +26935,138 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get presetEfficient => 'Efficient';
+
+  @override
+  String get equipmentProfilesDescription =>
+      'Manage gym equipment configurations';
+
+  @override
+  String get newProfile => 'New Profile...';
+
+  @override
+  String get manageProfiles => 'Manage Profiles';
+
+  @override
+  String get defaultProfile => 'Default';
+
+  @override
+  String get deleteProfile => 'Delete Profile';
+
+  @override
+  String get deleteProfileConfirm =>
+      'Are you sure you want to delete this profile?';
+
+  @override
+  String get profileName => 'Profile Name';
+
+  @override
+  String get profileNameHint => 'e.g. Home Gym, Office Gym';
+
+  @override
+  String get defaultBarbell => 'Default Barbell';
+
+  @override
+  String get availablePlatesTitle => 'Available Plates';
+
+  @override
+  String get setAsDefault => 'Set as default profile';
+
+  @override
+  String get currentConfiguration => 'Current configuration';
+
+  @override
+  String get saveProfile => 'Save Profile';
+
+  @override
+  String get selectAllPlates => 'Select All';
+
+  @override
+  String get standardSet => 'Standard Set';
+
+  @override
+  String get deselectAllPlates => 'Deselect All';
+
+  @override
+  String plateExcluded(double plate) {
+    return '${plate}kg excluded temporarily';
+  }
+
+  @override
+  String get restoreAllPlates => 'Restore all plates';
+
+  @override
+  String cannotReachWeight(double weight) {
+    return 'Cannot reach exactly ${weight}kg';
+  }
+
+  @override
+  String get availableAlternatives => 'Available alternatives';
+
+  @override
+  String get useThisWeight => 'Use this weight';
+
+  @override
+  String perSideBreakdown(String breakdown) {
+    return 'Per side: $breakdown';
+  }
+
+  @override
+  String profileCreated(String name) {
+    return 'Profile \"$name\" created';
+  }
+
+  @override
+  String get profileDeleted => 'Profile deleted';
+
+  @override
+  String get quickCreateTip =>
+      'Tip: You can also create profiles directly from the plate calculator';
+
+  @override
+  String get selectBarbellWeight => 'Select the default barbell weight:';
+
+  @override
+  String get defaultProfileDescription =>
+      'This profile will be automatically selected when you open the plate calculator';
+
+  @override
+  String get selectAtLeastOnePlate => 'Please select at least one plate';
+
+  @override
+  String deleteProfileConfirmation(String profileName) {
+    return 'Are you sure you want to delete the profile \"$profileName\"?';
+  }
+
+  @override
+  String platesExcludedWarning(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count plates temporarily excluded',
+      one: '1 plate temporarily excluded',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get resetExclusions => 'Reset all';
+
+  @override
+  String cannotReachExactWeight(double weight) {
+    return 'Cannot reach exactly ${weight}kg';
+  }
+
+  @override
+  String get alternativesAvailable => 'Available alternatives:';
+
+  @override
+  String keepTargetWeight(double weight) {
+    return 'Keep ${weight}kg target';
+  }
+
+  @override
+  String get lighter => 'lighter';
+
+  @override
+  String get heavier => 'heavier';
 }

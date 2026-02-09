@@ -9078,7 +9078,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Mantieni l\'originale e crea una copia con le modifiche';
 
   @override
-  String get keepOriginal => 'Non Salvare le Modifiche';
+  String keepOriginal(double weight) {
+    return 'Mantieni ${weight}kg';
+  }
 
   @override
   String get keepOriginalDescription =>
@@ -11115,7 +11117,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get availablePlatesDescription =>
-      'Dischi disponibili nella tua palestra';
+      'Seleziona i dischi disponibili in questa palestra';
 
   @override
   String get useCustomIncrement => 'Usa Incremento Personalizzato';
@@ -25279,7 +25281,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Per atleti che non useranno l\'app in autonomia. Tu registrerai i loro workout.';
 
   @override
-  String get createProfile => 'Crea profilo';
+  String get createProfile => 'Crea Profilo';
 
   @override
   String get weeklyCompliance => 'Compliance Settimanale';
@@ -25289,6 +25291,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get addNote => 'Aggiungi Nota';
+
+  @override
+  String get tapToAddNotes => 'Tocca per aggiungere note...';
 
   @override
   String get removeAthlete => 'Rimuovi Atleta';
@@ -26270,6 +26275,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get adjustRestSubtitle => 'Più tempo se RPE alto';
 
   @override
+  String get restTimeAdjusted => 'Riposo regolato';
+
+  @override
   String get setDurationTitle => 'Durata esecuzione set';
 
   @override
@@ -27185,4 +27193,139 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get presetEfficient => 'Efficiente';
+
+  @override
+  String get equipmentProfilesDescription =>
+      'Gestisci configurazioni attrezzatura palestra';
+
+  @override
+  String get newProfile => 'Nuovo Profilo...';
+
+  @override
+  String get manageProfiles => 'Gestisci Profili';
+
+  @override
+  String get defaultProfile => 'Default';
+
+  @override
+  String get deleteProfile => 'Elimina Profilo';
+
+  @override
+  String get deleteProfileConfirm =>
+      'Sei sicuro di voler eliminare questo profilo?';
+
+  @override
+  String get profileName => 'Nome Profilo';
+
+  @override
+  String get profileNameHint => 'es. Palestra Casa, Palestra Ufficio';
+
+  @override
+  String get defaultBarbell => 'Bilanciere Default';
+
+  @override
+  String get availablePlatesTitle => 'Dischi Disponibili';
+
+  @override
+  String get setAsDefault => 'Imposta come profilo default';
+
+  @override
+  String get currentConfiguration => 'Configurazione attuale';
+
+  @override
+  String get saveProfile => 'Salva Profilo';
+
+  @override
+  String get selectAllPlates => 'Seleziona Tutti';
+
+  @override
+  String get standardSet => 'Set Standard';
+
+  @override
+  String get deselectAllPlates => 'Deseleziona Tutti';
+
+  @override
+  String plateExcluded(double plate) {
+    return '${plate}kg escluso temporaneamente';
+  }
+
+  @override
+  String get restoreAllPlates => 'Ripristina tutti i dischi';
+
+  @override
+  String cannotReachWeight(double weight) {
+    return 'Non posso raggiungere esattamente ${weight}kg';
+  }
+
+  @override
+  String get availableAlternatives => 'Alternative disponibili';
+
+  @override
+  String get useThisWeight => 'Usa questo peso';
+
+  @override
+  String perSideBreakdown(String breakdown) {
+    return 'Per lato: $breakdown';
+  }
+
+  @override
+  String profileCreated(String name) {
+    return 'Profilo \"$name\" creato';
+  }
+
+  @override
+  String get profileDeleted => 'Profilo eliminato';
+
+  @override
+  String get quickCreateTip =>
+      'Suggerimento: puoi creare profili anche direttamente dal calcolatore dischi';
+
+  @override
+  String get selectBarbellWeight =>
+      'Seleziona il peso del bilanciere predefinito:';
+
+  @override
+  String get defaultProfileDescription =>
+      'Questo profilo verrà selezionato automaticamente quando apri il calcolatore dischi';
+
+  @override
+  String get selectAtLeastOnePlate => 'Seleziona almeno un disco';
+
+  @override
+  String deleteProfileConfirmation(String profileName) {
+    return 'Sei sicuro di voler eliminare il profilo \"$profileName\"?';
+  }
+
+  @override
+  String platesExcludedWarning(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dischi temporaneamente esclusi',
+      one: '1 disco temporaneamente escluso',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get resetExclusions => 'Ripristina tutti';
+
+  @override
+  String cannotReachExactWeight(double weight) {
+    return 'Non riesco a raggiungere esattamente ${weight}kg';
+  }
+
+  @override
+  String get alternativesAvailable => 'Alternative disponibili:';
+
+  @override
+  String keepTargetWeight(double weight) {
+    return 'Mantieni ${weight}kg obiettivo';
+  }
+
+  @override
+  String get lighter => 'più leggero';
+
+  @override
+  String get heavier => 'più pesante';
 }
