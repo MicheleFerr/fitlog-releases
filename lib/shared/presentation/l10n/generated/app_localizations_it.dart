@@ -1414,6 +1414,33 @@ class AppLocalizationsIt extends AppLocalizations {
   String get themeSystemDesc => 'Segui l\'impostazione di sistema';
 
   @override
+  String get primaryColor => 'Colore Primario';
+
+  @override
+  String get choosePrimaryColor => 'Scegli Colore Primario';
+
+  @override
+  String get colorBlue => 'Blu';
+
+  @override
+  String get colorRed => 'Rosso';
+
+  @override
+  String get colorGreen => 'Verde';
+
+  @override
+  String get colorPurple => 'Viola';
+
+  @override
+  String get colorOrange => 'Arancione';
+
+  @override
+  String get colorTeal => 'Turchese';
+
+  @override
+  String get colorPink => 'Rosa';
+
+  @override
   String get allSettings => 'Tutte le Impostazioni';
 
   @override
@@ -2436,6 +2463,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get exerciseInfo => 'Info';
+
+  @override
+  String get noExerciseInfoAvailable =>
+      'Nessuna informazione sull\'esercizio disponibile';
 
   @override
   String get warmup => 'Riscaldamento';
@@ -22953,7 +22984,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get saveAndNext => 'Salva + Prossimo';
 
   @override
-  String get showRpe => 'Aggiungi RPE';
+  String get showRpe => 'Mostra RPE';
 
   @override
   String get tutorialWelcomeTitle => 'Benvenuto nel Tuo Allenamento!';
@@ -26063,9 +26094,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get tagline => 'Slogan';
 
   @override
-  String get primaryColor => 'Colore Primario';
-
-  @override
   String get logoUrl => 'URL Logo';
 
   @override
@@ -27059,4 +27087,102 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get aiCoachSuggestion3 =>
       'Quanti allenamenti ho fatto questa settimana?';
+
+  @override
+  String get aiCoachNoDataAvailable => 'Nessun dato disponibile';
+
+  @override
+  String aiCoachSessionsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sessioni',
+      one: '1 sessione',
+      zero: 'Nessuna',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get forYou => 'Per te';
+
+  @override
+  String get recommendedForYourLevel => 'Consigliati per il tuo livello';
+
+  @override
+  String get exerciseCardSettings => 'Scheda Esercizio';
+
+  @override
+  String get gifSize => 'Dimensione GIF';
+
+  @override
+  String get gifSizeDescription =>
+      'Dimensione dell\'anteprima animata dell\'esercizio';
+
+  @override
+  String get hidden => 'Nascosta';
+
+  @override
+  String get cardDensity => 'Densità Scheda';
+
+  @override
+  String get cardDensityDescription => 'Spaziatura tra gli elementi';
+
+  @override
+  String get showElements => 'Mostra Elementi';
+
+  @override
+  String get showInsight => 'Mostra Insight';
+
+  @override
+  String get showInsightDescription =>
+      'Mostra il tuo record accanto al nome dell\'esercizio';
+
+  @override
+  String get showTimer => 'Mostra Timer';
+
+  @override
+  String get showTimerDescription =>
+      'Mostra il badge del timer di riposo nell\'header';
+
+  @override
+  String get showPlates => 'Mostra Dischi';
+
+  @override
+  String get showPlatesDescription =>
+      'Mostra i dischi necessari per gli esercizi con bilanciere';
+
+  @override
+  String get showRpeDescription =>
+      'Mostra l\'input RPE (sforzo percepito) nelle serie';
+
+  @override
+  String get footerElements => 'Elementi Footer';
+
+  @override
+  String get footerElementsDescription =>
+      'Seleziona quali elementi mostrare nel footer collassabile';
+
+  @override
+  String get footerExpandedByDefault => 'Footer Espanso';
+
+  @override
+  String get footerExpandedByDefaultDescription =>
+      'Mostra il footer espanso per default';
+
+  @override
+  String get presets => 'Preset';
+
+  @override
+  String get presetsDescription =>
+      'Configurazioni rapide per diversi casi d\'uso';
+
+  @override
+  String get presetBeginner => 'Principiante';
+
+  @override
+  String get presetPowerUser => 'Power User';
+
+  @override
+  String get presetEfficient => 'Efficiente';
 }

@@ -141,7 +141,7 @@ class _SuggestionCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
             child: Text(
-              'Nessun dato disponibile',
+              context.l10n.aiCoachNoDataAvailable,
               style: context.textTheme.bodySmall?.copyWith(
                 color: context.colors.onSurfaceVariant,
                 fontStyle: FontStyle.italic,
@@ -217,7 +217,7 @@ class _SessionBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        hasData ? '$count sessioni' : 'Nessuna',
+        context.l10n.aiCoachSessionsCount(count),
         style: context.textTheme.labelSmall?.copyWith(
           color: hasData
               ? context.colors.onPrimaryContainer

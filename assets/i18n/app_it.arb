@@ -562,6 +562,15 @@
   "themeLightDesc": "Usa sempre il tema chiaro",
   "themeDarkDesc": "Usa sempre il tema scuro",
   "themeSystemDesc": "Segui l'impostazione di sistema",
+  "primaryColor": "Colore Primario",
+  "choosePrimaryColor": "Scegli Colore Primario",
+  "colorBlue": "Blu",
+  "colorRed": "Rosso",
+  "colorGreen": "Verde",
+  "colorPurple": "Viola",
+  "colorOrange": "Arancione",
+  "colorTeal": "Turchese",
+  "colorPink": "Rosa",
   "allSettings": "Tutte le Impostazioni",
   "selectLanguage": "Seleziona Lingua",
   "systemDefault": "Predefinito di Sistema",
@@ -19924,6 +19933,7 @@
   "assignTemplatesToAthletes": "Assegna template per iniziare il coaching",
   "createFirstCoachTemplate": "Crea il tuo primo template da assegnare agli atleti",
   "exerciseInfo": "Info",
+  "noExerciseInfoAvailable": "Nessuna informazione sull'esercizio disponibile",
   "exhaustedMuscle": "Necessita Riposo",
   "fatiguedMuscle": "Affaticato",
   "fullyRecovered": "Completamente Recuperato",
@@ -20269,5 +20279,126 @@
   "aiCoachSuggestion3": "Quanti allenamenti ho fatto questa settimana?",
   "@aiCoachSuggestion3": {
     "description": "Third AI Coach suggestion chip"
+  },
+  "aiCoachNoDataAvailable": "Nessun dato disponibile",
+  "@aiCoachNoDataAvailable": {
+    "description": "Message shown when exercise has no historical data"
+  },
+  "aiCoachSessionsCount": "{count, plural, =0{Nessuna} =1{1 sessione} other{{count} sessioni}}",
+  "@aiCoachSessionsCount": {
+    "description": "Session count for exercise suggestions",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "forYou": "Per te",
+  "@forYou": {
+    "description": "Section title for personalized template recommendations"
+  },
+  "recommendedForYourLevel": "Consigliati per il tuo livello",
+  "@recommendedForYourLevel": {
+    "description": "Subtitle for personalized recommendations based on user tier"
+  },
+  "exerciseCardSettings": "Scheda Esercizio",
+  "@exerciseCardSettings": {
+    "description": "Settings section title for exercise card customization"
+  },
+  "gifSize": "Dimensione GIF",
+  "@gifSize": {
+    "description": "Label for GIF size selector"
+  },
+  "gifSizeDescription": "Dimensione dell'anteprima animata dell'esercizio",
+  "@gifSizeDescription": {
+    "description": "Description for GIF size setting"
+  },
+  "hidden": "Nascosta",
+  "@hidden": {
+    "description": "Option to hide element"
+  },
+  "cardDensity": "Densità Scheda",
+  "@cardDensity": {
+    "description": "Label for card density selector"
+  },
+  "cardDensityDescription": "Spaziatura tra gli elementi",
+  "@cardDensityDescription": {
+    "description": "Description for card density setting"
+  },
+  "showElements": "Mostra Elementi",
+  "@showElements": {
+    "description": "Section title for toggle elements"
+  },
+  "showInsight": "Mostra Insight",
+  "@showInsight": {
+    "description": "Toggle label for insight chip"
+  },
+  "showInsightDescription": "Mostra il tuo record accanto al nome dell'esercizio",
+  "@showInsightDescription": {
+    "description": "Description for insight toggle"
+  },
+  "showTimer": "Mostra Timer",
+  "@showTimer": {
+    "description": "Toggle label for rest timer"
+  },
+  "showTimerDescription": "Mostra il badge del timer di riposo nell'header",
+  "@showTimerDescription": {
+    "description": "Description for timer toggle"
+  },
+  "showPlates": "Mostra Dischi",
+  "@showPlates": {
+    "description": "Toggle label for plate calculator"
+  },
+  "showPlatesDescription": "Mostra i dischi necessari per gli esercizi con bilanciere",
+  "@showPlatesDescription": {
+    "description": "Description for plates toggle"
+  },
+  "showRpe": "Mostra RPE",
+  "@showRpe": {
+    "description": "Toggle label for RPE input"
+  },
+  "showRpeDescription": "Mostra l'input RPE (sforzo percepito) nelle serie",
+  "@showRpeDescription": {
+    "description": "Description for RPE toggle"
+  },
+  "footerElements": "Elementi Footer",
+  "@footerElements": {
+    "description": "Section title for footer elements"
+  },
+  "footerElementsDescription": "Seleziona quali elementi mostrare nel footer collassabile",
+  "@footerElementsDescription": {
+    "description": "Description for footer elements selection"
+  },
+  "footerExpandedByDefault": "Footer Espanso",
+  "@footerExpandedByDefault": {
+    "description": "Toggle label for footer expanded state"
+  },
+  "footerExpandedByDefaultDescription": "Mostra il footer espanso per default",
+  "@footerExpandedByDefaultDescription": {
+    "description": "Description for footer expanded toggle"
+  },
+  "presets": "Preset",
+  "@presets": {
+    "description": "Section title for preset configurations"
+  },
+  "presetsDescription": "Configurazioni rapide per diversi casi d'uso",
+  "@presetsDescription": {
+    "description": "Description for presets section"
+  },
+  "presetBeginner": "Principiante",
+  "@presetBeginner": {
+    "description": "Preset for beginners - more guidance"
+  },
+  "presetPowerUser": "Power User",
+  "@presetPowerUser": {
+    "description": "Preset for advanced users - all features"
+  },
+  "presetEfficient": "Efficiente",
+  "@presetEfficient": {
+    "description": "Preset for quick workouts - minimal info"
+  },
+  "resetToDefaults": "Ripristina Predefiniti",
+  "@resetToDefaults": {
+    "description": "Button to restore default settings"
   }
 }

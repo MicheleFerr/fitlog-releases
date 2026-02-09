@@ -2665,6 +2665,60 @@ abstract class AppLocalizations {
   /// **'Follow system setting'**
   String get themeSystemDesc;
 
+  /// Label for primary color picker
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Color'**
+  String get primaryColor;
+
+  /// Primary color picker dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Primary Color'**
+  String get choosePrimaryColor;
+
+  /// Blue color name
+  ///
+  /// In en, this message translates to:
+  /// **'Blue'**
+  String get colorBlue;
+
+  /// Red color name
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get colorRed;
+
+  /// Green color name
+  ///
+  /// In en, this message translates to:
+  /// **'Green'**
+  String get colorGreen;
+
+  /// Purple color name
+  ///
+  /// In en, this message translates to:
+  /// **'Purple'**
+  String get colorPurple;
+
+  /// Orange color name
+  ///
+  /// In en, this message translates to:
+  /// **'Orange'**
+  String get colorOrange;
+
+  /// Teal color name
+  ///
+  /// In en, this message translates to:
+  /// **'Teal'**
+  String get colorTeal;
+
+  /// Pink color name
+  ///
+  /// In en, this message translates to:
+  /// **'Pink'**
+  String get colorPink;
+
   /// Button to open full settings screen
   ///
   /// In en, this message translates to:
@@ -2911,7 +2965,7 @@ abstract class AppLocalizations {
   /// **'Load settings from JSON file'**
   String get importSettingsDesc;
 
-  /// Button to restore default notification settings
+  /// Button to restore default settings
   ///
   /// In en, this message translates to:
   /// **'Reset to Defaults'**
@@ -4560,6 +4614,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Info'**
   String get exerciseInfo;
+
+  /// Message shown when no exercise info is available for tips
+  ///
+  /// In en, this message translates to:
+  /// **'No exercise information available'**
+  String get noExerciseInfoAvailable;
 
   /// Warmup chip label
   ///
@@ -40689,10 +40749,10 @@ abstract class AppLocalizations {
   /// **'Save + Next'**
   String get saveAndNext;
 
-  /// Button to show RPE selector
+  /// Toggle label for RPE input
   ///
   /// In en, this message translates to:
-  /// **'Add RPE'**
+  /// **'Show RPE'**
   String get showRpe;
 
   /// Tutorial welcome title
@@ -46112,12 +46172,6 @@ abstract class AppLocalizations {
   /// **'Tagline'**
   String get tagline;
 
-  /// Label for primary color picker
-  ///
-  /// In en, this message translates to:
-  /// **'Primary Color'**
-  String get primaryColor;
-
   /// Label for logo URL input
   ///
   /// In en, this message translates to:
@@ -47971,6 +48025,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'How many workouts did I do this week?'**
   String get aiCoachSuggestion3;
+
+  /// Message shown when exercise has no historical data
+  ///
+  /// In en, this message translates to:
+  /// **'No data available'**
+  String get aiCoachNoDataAvailable;
+
+  /// Session count for exercise suggestions
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{None} =1{1 session} other{{count} sessions}}'**
+  String aiCoachSessionsCount(int count);
+
+  /// Section title for personalized template recommendations
+  ///
+  /// In en, this message translates to:
+  /// **'For You'**
+  String get forYou;
+
+  /// Subtitle for personalized recommendations based on user tier
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended for your level'**
+  String get recommendedForYourLevel;
+
+  /// Settings section title for exercise card customization
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Card'**
+  String get exerciseCardSettings;
+
+  /// Label for GIF size selector
+  ///
+  /// In en, this message translates to:
+  /// **'GIF Size'**
+  String get gifSize;
+
+  /// Description for GIF size setting
+  ///
+  /// In en, this message translates to:
+  /// **'Size of exercise animation preview'**
+  String get gifSizeDescription;
+
+  /// Option to hide element
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden'**
+  String get hidden;
+
+  /// Label for card density selector
+  ///
+  /// In en, this message translates to:
+  /// **'Card Density'**
+  String get cardDensity;
+
+  /// Description for card density setting
+  ///
+  /// In en, this message translates to:
+  /// **'Amount of spacing between elements'**
+  String get cardDensityDescription;
+
+  /// Section title for toggle elements
+  ///
+  /// In en, this message translates to:
+  /// **'Show Elements'**
+  String get showElements;
+
+  /// Toggle label for insight chip
+  ///
+  /// In en, this message translates to:
+  /// **'Show Insight'**
+  String get showInsight;
+
+  /// Description for insight toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Display personal best info next to exercise name'**
+  String get showInsightDescription;
+
+  /// Toggle label for rest timer
+  ///
+  /// In en, this message translates to:
+  /// **'Show Timer'**
+  String get showTimer;
+
+  /// Description for timer toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Display rest timer badge on exercise header'**
+  String get showTimerDescription;
+
+  /// Toggle label for plate calculator
+  ///
+  /// In en, this message translates to:
+  /// **'Show Plates'**
+  String get showPlates;
+
+  /// Description for plates toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Display plate breakdown for barbell exercises'**
+  String get showPlatesDescription;
+
+  /// Description for RPE toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Display Rate of Perceived Exertion input in sets'**
+  String get showRpeDescription;
+
+  /// Section title for footer elements
+  ///
+  /// In en, this message translates to:
+  /// **'Footer Elements'**
+  String get footerElements;
+
+  /// Description for footer elements selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select which elements appear in the collapsible footer'**
+  String get footerElementsDescription;
+
+  /// Toggle label for footer expanded state
+  ///
+  /// In en, this message translates to:
+  /// **'Footer Expanded'**
+  String get footerExpandedByDefault;
+
+  /// Description for footer expanded toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Show footer content expanded by default'**
+  String get footerExpandedByDefaultDescription;
+
+  /// Section title for preset configurations
+  ///
+  /// In en, this message translates to:
+  /// **'Presets'**
+  String get presets;
+
+  /// Description for presets section
+  ///
+  /// In en, this message translates to:
+  /// **'Quick configurations for different use cases'**
+  String get presetsDescription;
+
+  /// Preset for beginners - more guidance
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get presetBeginner;
+
+  /// Preset for advanced users - all features
+  ///
+  /// In en, this message translates to:
+  /// **'Power User'**
+  String get presetPowerUser;
+
+  /// Preset for quick workouts - minimal info
+  ///
+  /// In en, this message translates to:
+  /// **'Efficient'**
+  String get presetEfficient;
 }
 
 class _AppLocalizationsDelegate

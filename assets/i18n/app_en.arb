@@ -1743,6 +1743,42 @@
   "@themeSystemDesc": {
     "description": "System theme description"
   },
+  "primaryColor": "Primary Color",
+  "@primaryColor": {
+    "description": "Primary color setting label"
+  },
+  "choosePrimaryColor": "Choose Primary Color",
+  "@choosePrimaryColor": {
+    "description": "Primary color picker dialog title"
+  },
+  "colorBlue": "Blue",
+  "@colorBlue": {
+    "description": "Blue color name"
+  },
+  "colorRed": "Red",
+  "@colorRed": {
+    "description": "Red color name"
+  },
+  "colorGreen": "Green",
+  "@colorGreen": {
+    "description": "Green color name"
+  },
+  "colorPurple": "Purple",
+  "@colorPurple": {
+    "description": "Purple color name"
+  },
+  "colorOrange": "Orange",
+  "@colorOrange": {
+    "description": "Orange color name"
+  },
+  "colorTeal": "Teal",
+  "@colorTeal": {
+    "description": "Teal color name"
+  },
+  "colorPink": "Pink",
+  "@colorPink": {
+    "description": "Pink color name"
+  },
   "allSettings": "All Settings",
   "@allSettings": {
     "description": "Button to open full settings screen"
@@ -3118,6 +3154,10 @@
   "exerciseInfo": "Info",
   "@exerciseInfo": {
     "description": "Exercise information chip label"
+  },
+  "noExerciseInfoAvailable": "No exercise information available",
+  "@noExerciseInfoAvailable": {
+    "description": "Message shown when no exercise info is available for tips"
   },
   "warmup": "Warmup",
   "@warmup": {
@@ -32869,5 +32909,126 @@
   "aiCoachSuggestion3": "How many workouts did I do this week?",
   "@aiCoachSuggestion3": {
     "description": "Third AI Coach suggestion chip"
+  },
+  "aiCoachNoDataAvailable": "No data available",
+  "@aiCoachNoDataAvailable": {
+    "description": "Message shown when exercise has no historical data"
+  },
+  "aiCoachSessionsCount": "{count, plural, =0{None} =1{1 session} other{{count} sessions}}",
+  "@aiCoachSessionsCount": {
+    "description": "Session count for exercise suggestions",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "forYou": "For You",
+  "@forYou": {
+    "description": "Section title for personalized template recommendations"
+  },
+  "recommendedForYourLevel": "Recommended for your level",
+  "@recommendedForYourLevel": {
+    "description": "Subtitle for personalized recommendations based on user tier"
+  },
+  "exerciseCardSettings": "Exercise Card",
+  "@exerciseCardSettings": {
+    "description": "Settings section title for exercise card customization"
+  },
+  "gifSize": "GIF Size",
+  "@gifSize": {
+    "description": "Label for GIF size selector"
+  },
+  "gifSizeDescription": "Size of exercise animation preview",
+  "@gifSizeDescription": {
+    "description": "Description for GIF size setting"
+  },
+  "hidden": "Hidden",
+  "@hidden": {
+    "description": "Option to hide element"
+  },
+  "cardDensity": "Card Density",
+  "@cardDensity": {
+    "description": "Label for card density selector"
+  },
+  "cardDensityDescription": "Amount of spacing between elements",
+  "@cardDensityDescription": {
+    "description": "Description for card density setting"
+  },
+  "showElements": "Show Elements",
+  "@showElements": {
+    "description": "Section title for toggle elements"
+  },
+  "showInsight": "Show Insight",
+  "@showInsight": {
+    "description": "Toggle label for insight chip"
+  },
+  "showInsightDescription": "Display personal best info next to exercise name",
+  "@showInsightDescription": {
+    "description": "Description for insight toggle"
+  },
+  "showTimer": "Show Timer",
+  "@showTimer": {
+    "description": "Toggle label for rest timer"
+  },
+  "showTimerDescription": "Display rest timer badge on exercise header",
+  "@showTimerDescription": {
+    "description": "Description for timer toggle"
+  },
+  "showPlates": "Show Plates",
+  "@showPlates": {
+    "description": "Toggle label for plate calculator"
+  },
+  "showPlatesDescription": "Display plate breakdown for barbell exercises",
+  "@showPlatesDescription": {
+    "description": "Description for plates toggle"
+  },
+  "showRpe": "Show RPE",
+  "@showRpe": {
+    "description": "Toggle label for RPE input"
+  },
+  "showRpeDescription": "Display Rate of Perceived Exertion input in sets",
+  "@showRpeDescription": {
+    "description": "Description for RPE toggle"
+  },
+  "footerElements": "Footer Elements",
+  "@footerElements": {
+    "description": "Section title for footer elements"
+  },
+  "footerElementsDescription": "Select which elements appear in the collapsible footer",
+  "@footerElementsDescription": {
+    "description": "Description for footer elements selection"
+  },
+  "footerExpandedByDefault": "Footer Expanded",
+  "@footerExpandedByDefault": {
+    "description": "Toggle label for footer expanded state"
+  },
+  "footerExpandedByDefaultDescription": "Show footer content expanded by default",
+  "@footerExpandedByDefaultDescription": {
+    "description": "Description for footer expanded toggle"
+  },
+  "presets": "Presets",
+  "@presets": {
+    "description": "Section title for preset configurations"
+  },
+  "presetsDescription": "Quick configurations for different use cases",
+  "@presetsDescription": {
+    "description": "Description for presets section"
+  },
+  "presetBeginner": "Beginner",
+  "@presetBeginner": {
+    "description": "Preset for beginners - more guidance"
+  },
+  "presetPowerUser": "Power User",
+  "@presetPowerUser": {
+    "description": "Preset for advanced users - all features"
+  },
+  "presetEfficient": "Efficient",
+  "@presetEfficient": {
+    "description": "Preset for quick workouts - minimal info"
+  },
+  "resetToDefaults": "Reset to Defaults",
+  "@resetToDefaults": {
+    "description": "Button to restore default settings"
   }
 }

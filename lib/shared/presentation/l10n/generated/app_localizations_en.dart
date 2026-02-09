@@ -1403,6 +1403,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeSystemDesc => 'Follow system setting';
 
   @override
+  String get primaryColor => 'Primary Color';
+
+  @override
+  String get choosePrimaryColor => 'Choose Primary Color';
+
+  @override
+  String get colorBlue => 'Blue';
+
+  @override
+  String get colorRed => 'Red';
+
+  @override
+  String get colorGreen => 'Green';
+
+  @override
+  String get colorPurple => 'Purple';
+
+  @override
+  String get colorOrange => 'Orange';
+
+  @override
+  String get colorTeal => 'Teal';
+
+  @override
+  String get colorPink => 'Pink';
+
+  @override
   String get allSettings => 'All Settings';
 
   @override
@@ -2415,6 +2442,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exerciseInfo => 'Info';
+
+  @override
+  String get noExerciseInfoAvailable => 'No exercise information available';
 
   @override
   String get warmup => 'Warmup';
@@ -22744,7 +22774,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveAndNext => 'Save + Next';
 
   @override
-  String get showRpe => 'Add RPE';
+  String get showRpe => 'Show RPE';
 
   @override
   String get tutorialWelcomeTitle => 'Welcome to Your Workout!';
@@ -25808,9 +25838,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tagline => 'Tagline';
 
   @override
-  String get primaryColor => 'Primary Color';
-
-  @override
   String get logoUrl => 'Logo URL';
 
   @override
@@ -26802,4 +26829,101 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiCoachSuggestion3 => 'How many workouts did I do this week?';
+
+  @override
+  String get aiCoachNoDataAvailable => 'No data available';
+
+  @override
+  String aiCoachSessionsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sessions',
+      one: '1 session',
+      zero: 'None',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get forYou => 'For You';
+
+  @override
+  String get recommendedForYourLevel => 'Recommended for your level';
+
+  @override
+  String get exerciseCardSettings => 'Exercise Card';
+
+  @override
+  String get gifSize => 'GIF Size';
+
+  @override
+  String get gifSizeDescription => 'Size of exercise animation preview';
+
+  @override
+  String get hidden => 'Hidden';
+
+  @override
+  String get cardDensity => 'Card Density';
+
+  @override
+  String get cardDensityDescription => 'Amount of spacing between elements';
+
+  @override
+  String get showElements => 'Show Elements';
+
+  @override
+  String get showInsight => 'Show Insight';
+
+  @override
+  String get showInsightDescription =>
+      'Display personal best info next to exercise name';
+
+  @override
+  String get showTimer => 'Show Timer';
+
+  @override
+  String get showTimerDescription =>
+      'Display rest timer badge on exercise header';
+
+  @override
+  String get showPlates => 'Show Plates';
+
+  @override
+  String get showPlatesDescription =>
+      'Display plate breakdown for barbell exercises';
+
+  @override
+  String get showRpeDescription =>
+      'Display Rate of Perceived Exertion input in sets';
+
+  @override
+  String get footerElements => 'Footer Elements';
+
+  @override
+  String get footerElementsDescription =>
+      'Select which elements appear in the collapsible footer';
+
+  @override
+  String get footerExpandedByDefault => 'Footer Expanded';
+
+  @override
+  String get footerExpandedByDefaultDescription =>
+      'Show footer content expanded by default';
+
+  @override
+  String get presets => 'Presets';
+
+  @override
+  String get presetsDescription =>
+      'Quick configurations for different use cases';
+
+  @override
+  String get presetBeginner => 'Beginner';
+
+  @override
+  String get presetPowerUser => 'Power User';
+
+  @override
+  String get presetEfficient => 'Efficient';
 }
