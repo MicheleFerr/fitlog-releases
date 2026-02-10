@@ -403,6 +403,9 @@ class _LevelInfoModalState extends ConsumerState<LevelInfoModal> {
                     color: context.colors.onSurfaceVariant,
                   ),
                 ),
+                const SizedBox(height: 8),
+                // Tier benefits
+                _buildTierBenefits(context, tier),
               ],
             ),
           ),
@@ -517,6 +520,96 @@ class _LevelInfoModalState extends ConsumerState<LevelInfoModal> {
           ),
         ),
       ],
+    );
+  }
+
+  /// Build tier benefits display
+  Widget _buildTierBenefits(BuildContext context, UserTier tier) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 4,
+      children: [
+        // Templates benefit
+        _buildBenefitChip(
+          context,
+          icon: AppIcons.template,
+          text: '${tier.maxTemplates} templates',
+          color: context.colors.primary,
+        ),
+        // Custom exercises benefit
+        if (tier.maxCustomSingleExercises < 999)
+          _buildBenefitChip(
+            context,
+            icon: AppIcons.add,
+            text: '${tier.maxCustomSingleExercises} custom',
+            color: context.colors.secondary,
+          )
+        else
+          _buildBenefitChip(
+            context,
+            icon: AppIcons.allInclusive,
+            text: 'Unlimited custom',
+            color: context.colors.secondary,
+          ),
+        // Platinum exclusive benefits
+        if (tier == UserTier.platinum) ...[
+          _buildBenefitChip(
+            context,
+            icon: AppIcons.block,
+            text: 'No Ads',
+            color: context.colors.success,
+          ),
+          _buildBenefitChip(
+            context,
+            icon: AppIcons.analytics,
+            text: 'Pro Analytics',
+            color: context.colors.tertiary,
+          ),
+          _buildBenefitChip(
+            context,
+            icon: AppIcons.cloud,
+            text: 'Cloud Sync',
+            color: context.colors.tertiary,
+          ),
+        ],
+      ],
+    );
+  }
+
+  /// Build individual benefit chip
+  Widget _buildBenefitChip(
+    BuildContext context, {
+    required IconData icon,
+    required String text,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: color.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 14,
+            color: color,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: context.textTheme.labelSmall?.copyWith(
+              color: color,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
