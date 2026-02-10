@@ -1076,6 +1076,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       exerciseSet: set,
       suggestedWeight: prefill?.weight,
       suggestedSource: suggestedSource,
+      countingMode: widget.exercise.countingMode, // ✅ NUOVO: Pass counting mode
       onSave: (updatedSet) {
         final updatedSets = widget.exercise.sets.map((s) {
           return s.id == set.id ? updatedSet : s;

@@ -1969,6 +1969,7 @@ class _ExerciseCustomizationScreenState
       measurementUnit: weightUnit,
       previousSet: previousSet,
       allSets: allSets,
+      countingMode: _customizations[exerciseIndex].countingMode, // ✅ NUOVO: Pass counting mode
       onSave: (updatedSet) {
         _updateSetFromMinimalSheet(exerciseIndex, setIndex, updatedSet);
       },
@@ -2026,9 +2027,13 @@ class _ExerciseCustomizationScreenState
       final currentSets = List<SetCustomization>.from(
         _customizations[exerciseIndex].sets,
       );
+      final countingMode = _customizations[exerciseIndex].countingMode;
+
+      // ✅ NUOVO: Update fields based on counting mode
       currentSets[setIndex] = currentSets[setIndex].copyWith(
-        weight: updatedSet.weight ?? 0,
-        reps: updatedSet.reps ?? 10,
+        weight: countingMode.requiresWeight ? (updatedSet.weight ?? 0) : 0,
+        reps: countingMode.requiresReps ? (updatedSet.reps ?? 10) : 0,
+        seconds: countingMode.requiresTime ? (updatedSet.seconds ?? 60) : null,
       );
       _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
         sets: currentSets,
@@ -2045,10 +2050,14 @@ class _ExerciseCustomizationScreenState
       final currentSets = List<SetCustomization>.from(
         _customizations[exerciseIndex].sets,
       );
+      final countingMode = _customizations[exerciseIndex].countingMode;
+
+      // ✅ NUOVO: Apply fields based on counting mode
       for (int i = 0; i < currentSets.length; i++) {
         currentSets[i] = currentSets[i].copyWith(
-          weight: updatedSet.weight ?? 0,
-          reps: updatedSet.reps ?? 10,
+          weight: countingMode.requiresWeight ? (updatedSet.weight ?? 0) : 0,
+          reps: countingMode.requiresReps ? (updatedSet.reps ?? 10) : 0,
+          seconds: countingMode.requiresTime ? (updatedSet.seconds ?? 60) : null,
         );
       }
       _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(

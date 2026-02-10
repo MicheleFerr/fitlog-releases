@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart';
 
 /// Custom scroll physics that accelerates when scrolling fast
 /// Based on: https://stackoverflow.com/questions/57671811/flutter-how-to-override-scroll-physics
@@ -55,6 +56,7 @@ class MinimalSetEditSheet extends StatefulWidget {
     this.recentWeights,
     this.suggestedWeight,
     this.suggestedSource,
+    this.countingMode = ExerciseCountingMode.weighted,
   });
 
   final ExerciseSet exerciseSet;
@@ -72,6 +74,7 @@ class MinimalSetEditSheet extends StatefulWidget {
   recentWeights; // History of recent weights for quick select
   final double? suggestedWeight; // Pre-fill weight from suggestion provider
   final String? suggestedSource; // Source label for the suggestion chip
+  final ExerciseCountingMode countingMode; // How this exercise is tracked
 
   @override
   State<MinimalSetEditSheet> createState() => _MinimalSetEditSheetState();
@@ -80,6 +83,7 @@ class MinimalSetEditSheet extends StatefulWidget {
 class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
   late double _weight;
   late int _reps;
+  late int _seconds; // For time-based exercises
   bool _isManualInput = false;
   bool _isWeightFastScrubActive = false;
   bool _isRepsFastScrubActive = false;
@@ -87,10 +91,13 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
 
   late FixedExtentScrollController _weightController;
   late FixedExtentScrollController _repsController;
+  late FixedExtentScrollController _secondsController; // For duration picker
   late TextEditingController _weightTextController;
   late TextEditingController _repsTextController;
+  late TextEditingController _secondsTextController;
   final FocusNode _weightFocusNode = FocusNode();
   final FocusNode _repsFocusNode = FocusNode();
+  final FocusNode _secondsFocusNode = FocusNode();
 
   // Weight range: 0 to 400 in 0.25 increments = 1601 items
   static const double _minWeight = 0;
@@ -101,11 +108,17 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
   static const int _minReps = 1;
   static const int _maxReps = 100;
 
+  // Seconds range: 5 to 600 (10 minutes) in 5-second increments
+  static const int _minSeconds = 5;
+  static const int _maxSeconds = 600;
+  static const int _secondsStep = 5;
+
   @override
   void initState() {
     super.initState();
     _weight = widget.exerciseSet.weight ?? 0;
     _reps = widget.exerciseSet.reps ?? 10;
+    _seconds = widget.exerciseSet.seconds ?? 60;
 
     // Initialize wheel controllers at current values
     final weightIndex = ((_weight - _minWeight) / _weightStep).round().clamp(
@@ -113,11 +126,17 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
       _weightItemCount - 1,
     );
     final repsIndex = (_reps - _minReps).clamp(0, _maxReps - _minReps);
+    final secondsIndex = ((_seconds - _minSeconds) ~/ _secondsStep).clamp(
+      0,
+      (_maxSeconds - _minSeconds) ~/ _secondsStep,
+    );
 
     _weightController = FixedExtentScrollController(initialItem: weightIndex);
     _repsController = FixedExtentScrollController(initialItem: repsIndex);
+    _secondsController = FixedExtentScrollController(initialItem: secondsIndex);
     _weightTextController = TextEditingController(text: _formatWeight(_weight));
     _repsTextController = TextEditingController(text: '$_reps');
+    _secondsTextController = TextEditingController(text: _formatDuration(_seconds));
 
     // Select all text when focus is gained
     _weightFocusNode.addListener(() {
@@ -136,16 +155,27 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
         );
       }
     });
+    _secondsFocusNode.addListener(() {
+      if (_secondsFocusNode.hasFocus) {
+        _secondsTextController.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: _secondsTextController.text.length,
+        );
+      }
+    });
   }
 
   @override
   void dispose() {
     _weightController.dispose();
     _repsController.dispose();
+    _secondsController.dispose();
     _weightTextController.dispose();
     _repsTextController.dispose();
+    _secondsTextController.dispose();
     _weightFocusNode.dispose();
     _repsFocusNode.dispose();
+    _secondsFocusNode.dispose();
     super.dispose();
   }
 
@@ -155,6 +185,15 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
       return weight.toStringAsFixed(1); // .5 increments
     }
     return weight.toStringAsFixed(2); // .25 increments
+  }
+
+  String _formatDuration(int seconds) {
+    final minutes = seconds ~/ 60;
+    final remainingSeconds = seconds % 60;
+    if (minutes > 0) {
+      return '${minutes}m ${remainingSeconds}s';
+    }
+    return '${seconds}s';
   }
 
   bool get _isFirstSet => (widget.currentSetIndex ?? 0) == 0;
@@ -172,7 +211,19 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
       widget.currentSetIndex! > 0;
 
   ExerciseSet _createUpdatedSet() {
-    return widget.exerciseSet.copyWith(weight: _weight, reps: _reps);
+    // Return different fields based on counting mode
+    switch (widget.countingMode) {
+      case ExerciseCountingMode.weighted:
+        return widget.exerciseSet.copyWith(weight: _weight, reps: _reps);
+      case ExerciseCountingMode.reps:
+        return widget.exerciseSet.copyWith(weight: null, reps: _reps);
+      case ExerciseCountingMode.time:
+        return widget.exerciseSet.copyWith(
+          weight: null,
+          reps: null,
+          seconds: _seconds,
+        );
+    }
   }
 
   void _save() {
@@ -203,26 +254,45 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
 
   /// Apply manual text input values to wheel controllers
   void _applyManualInputToWheel() {
-    // Parse weight from text
-    final weightText = _weightTextController.text.replaceAll(',', '.');
-    final parsedWeight = double.tryParse(weightText);
-    if (parsedWeight != null && parsedWeight >= _minWeight) {
-      _weight = parsedWeight;
-      final weightIndex = ((_weight - _minWeight) / _weightStep).round().clamp(
-        0,
-        _weightItemCount - 1,
-      );
-      _weightController.jumpToItem(weightIndex);
+    // Parse weight from text (only for weighted exercises)
+    if (widget.countingMode.requiresWeight) {
+      final weightText = _weightTextController.text.replaceAll(',', '.');
+      final parsedWeight = double.tryParse(weightText);
+      if (parsedWeight != null && parsedWeight >= _minWeight) {
+        _weight = parsedWeight;
+        final weightIndex = ((_weight - _minWeight) / _weightStep).round().clamp(
+          0,
+          _weightItemCount - 1,
+        );
+        _weightController.jumpToItem(weightIndex);
+      }
     }
 
-    // Parse reps from text
-    final parsedReps = int.tryParse(_repsTextController.text);
-    if (parsedReps != null &&
-        parsedReps >= _minReps &&
-        parsedReps <= _maxReps) {
-      _reps = parsedReps;
-      final repsIndex = (_reps - _minReps).clamp(0, _maxReps - _minReps);
-      _repsController.jumpToItem(repsIndex);
+    // Parse reps from text (only for exercises with reps)
+    if (widget.countingMode.requiresReps) {
+      final parsedReps = int.tryParse(_repsTextController.text);
+      if (parsedReps != null &&
+          parsedReps >= _minReps &&
+          parsedReps <= _maxReps) {
+        _reps = parsedReps;
+        final repsIndex = (_reps - _minReps).clamp(0, _maxReps - _minReps);
+        _repsController.jumpToItem(repsIndex);
+      }
+    }
+
+    // Parse duration from text (only for time-based exercises)
+    if (widget.countingMode.requiresTime) {
+      final parsedSeconds = int.tryParse(_secondsTextController.text);
+      if (parsedSeconds != null &&
+          parsedSeconds >= _minSeconds &&
+          parsedSeconds <= _maxSeconds) {
+        _seconds = parsedSeconds;
+        final secondsIndex = ((_seconds - _minSeconds) ~/ _secondsStep).clamp(
+          0,
+          (_maxSeconds - _minSeconds) ~/ _secondsStep,
+        );
+        _secondsController.jumpToItem(secondsIndex);
+      }
     }
   }
 
@@ -287,6 +357,15 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     if (reps != null && reps >= 1 && reps <= 100) {
       setState(() {
         _reps = reps;
+      });
+    }
+  }
+
+  void _onSecondsTextChanged(String value) {
+    final seconds = int.tryParse(value);
+    if (seconds != null && seconds >= _minSeconds && seconds <= _maxSeconds) {
+      setState(() {
+        _seconds = seconds;
       });
     }
   }
@@ -520,8 +599,15 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                       _applyManualInputToWheel();
                     } else {
                       // Switching TO manual: populate text fields
-                      _weightTextController.text = _formatWeight(_weight);
-                      _repsTextController.text = '$_reps';
+                      if (widget.countingMode.requiresWeight) {
+                        _weightTextController.text = _formatWeight(_weight);
+                      }
+                      if (widget.countingMode.requiresReps) {
+                        _repsTextController.text = '$_reps';
+                      }
+                      if (widget.countingMode.requiresTime) {
+                        _secondsTextController.text = '$_seconds';
+                      }
                     }
                     _isManualInput = !_isManualInput;
                   });
@@ -545,26 +631,27 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
 
           const SizedBox(height: 8),
 
-          // Pickers row
+          // Pickers row - conditional based on counting mode
           Row(
             children: [
-              // Weight picker
-              Expanded(
-                child: _isManualInput
-                    ? _buildManualInput(
-                        label: context.l10n.weightKg.replaceAll(
-                          'kg',
-                          widget.measurementUnit,
-                        ),
-                        controller: _weightTextController,
-                        focusNode: _weightFocusNode,
-                        onChanged: _onWeightTextChanged,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                        ),
-                        suffix: widget.measurementUnit,
-                      )
-                    : _buildWheelPicker(
+              // Weight picker (only for weighted exercises)
+              if (widget.countingMode.requiresWeight)
+                Expanded(
+                  child: _isManualInput
+                      ? _buildManualInput(
+                          label: context.l10n.weightKg.replaceAll(
+                            'kg',
+                            widget.measurementUnit,
+                          ),
+                          controller: _weightTextController,
+                          focusNode: _weightFocusNode,
+                          onChanged: _onWeightTextChanged,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          suffix: widget.measurementUnit,
+                        )
+                      : _buildWheelPicker(
                         label: context.l10n.weightKg.replaceAll(
                           'kg',
                           widget.measurementUnit,
@@ -602,22 +689,26 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                             setState(() => _isWeightFastScrubActive = false),
                         currentValue: _weight,
                       ),
-              ),
+                ),
 
-              const SizedBox(width: 16),
+              // Spacing (only if both weight and reps/duration are shown)
+              if (widget.countingMode.requiresWeight &&
+                  (widget.countingMode.requiresReps || widget.countingMode.requiresTime))
+                const SizedBox(width: 16),
 
-              // Reps picker
-              Expanded(
-                child: _isManualInput
-                    ? _buildManualInput(
-                        label: context.l10n.reps,
-                        controller: _repsTextController,
-                        focusNode: _repsFocusNode,
-                        onChanged: _onRepsTextChanged,
-                        keyboardType: TextInputType.number,
-                        suffix: '',
-                      )
-                    : _buildWheelPicker(
+              // Reps picker (for weighted + reps exercises)
+              if (widget.countingMode.requiresReps)
+                Expanded(
+                  child: _isManualInput
+                      ? _buildManualInput(
+                          label: context.l10n.reps,
+                          controller: _repsTextController,
+                          focusNode: _repsFocusNode,
+                          onChanged: _onRepsTextChanged,
+                          keyboardType: TextInputType.number,
+                          suffix: '',
+                        )
+                      : _buildWheelPicker(
                         label: context.l10n.reps,
                         controller: _repsController,
                         itemCount: _maxReps - _minReps + 1,
@@ -652,7 +743,54 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                         currentValue: _reps.toDouble(),
                         fastScrubOnRight: true,
                       ),
-              ),
+                ),
+
+              // Duration picker (for time-based exercises)
+              if (widget.countingMode.requiresTime)
+                Expanded(
+                  child: _isManualInput
+                      ? _buildManualInput(
+                          label: 'Durata',
+                          controller: _secondsTextController,
+                          focusNode: _secondsFocusNode,
+                          onChanged: _onSecondsTextChanged,
+                          keyboardType: TextInputType.number,
+                          suffix: '',
+                        )
+                      : _buildWheelPicker(
+                          label: 'Durata',
+                          controller: _secondsController,
+                          itemCount: (_maxSeconds - _minSeconds) ~/ _secondsStep + 1,
+                          itemBuilder: (index) {
+                            final seconds = _minSeconds + (index * _secondsStep);
+                            final isSelected = seconds == _seconds;
+                            return _buildPickerItem(
+                              text: _formatDuration(seconds),
+                              isSelected: isSelected,
+                            );
+                          },
+                          onSelectedItemChanged: (index) {
+                            setState(() => _seconds = _minSeconds + (index * _secondsStep));
+                            HapticFeedback.selectionClick();
+                          },
+                          // Fast scrub for common durations
+                          showFastScrub: true,
+                          fastScrubValues: [15, 30, 45, 60, 90, 120, 180, 300],
+                          onFastScrubSelect: (value) {
+                            final index = ((value - _minSeconds) ~/ _secondsStep).clamp(
+                              0,
+                              (_maxSeconds - _minSeconds) ~/ _secondsStep,
+                            );
+                            _secondsController.jumpToItem(index);
+                            setState(() => _seconds = value);
+                          },
+                          isFastScrubActive: false, // No separate state for now
+                          onFastScrubStart: () {},
+                          onFastScrubEnd: () {},
+                          currentValue: _seconds.toDouble(),
+                          fastScrubOnRight: true,
+                        ),
+                ),
             ],
           ),
         ],
@@ -1129,6 +1267,7 @@ extension MinimalSetEditSheetExtension on BuildContext {
     List<double>? recentWeights,
     double? suggestedWeight,
     String? suggestedSource,
+    ExerciseCountingMode countingMode = ExerciseCountingMode.weighted,
   }) {
     return showModalBottomSheet<void>(
       context: this,
@@ -1149,6 +1288,7 @@ extension MinimalSetEditSheetExtension on BuildContext {
         recentWeights: recentWeights,
         suggestedWeight: suggestedWeight,
         suggestedSource: suggestedSource,
+        countingMode: countingMode,
       ),
     );
   }
