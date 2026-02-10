@@ -34,10 +34,21 @@
 | [`AI_COACH_DOCUMENTS_IMPLEMENTATION.md`](AI_COACH_DOCUMENTS_IMPLEMENTATION.md) | **Implementation Report** - Backend API + Flutter layers + Delta sync | ✅ Complete |
 | [`AI_COACH_SMART_SUGGESTIONS_DESIGN.md`](AI_COACH_SMART_SUGGESTIONS_DESIGN.md) | **Smart Suggestions** - Autocomplete esercizi stile Perplexity | 📋 Proposta |
 
+#### Exercise Popularity Ranking (✅ New - 2026-02-10)
+| Document | Purpose | Status |
+|----------|---------|--------|
+| [`design/EXERCISE_POPULARITY_RANKING.md`](design/EXERCISE_POPULARITY_RANKING.md) | **System Design** - Data Bundles, Cloud Functions, Search Boost (1.0x-1.5x) | ✅ Implemented |
+| [`EXERCISE_POPULARITY_TESTING.md`](EXERCISE_POPULARITY_TESTING.md) | **Testing Guide** - Manual testing steps, verification commands, success criteria | 📋 Ready for Testing |
+
 #### Debug Audit (✅ New - 2026-02-08)
 | Document | Purpose |
 |----------|---------|
 | [`DEBUG_AUDIT_ACTION_PLAN.md`](DEBUG_AUDIT_ACTION_PLAN.md) | **FULL CODEBASE AUDIT** - 23 critical issues, prioritized action plan, checklist esecuzione |
+
+#### Firebase Memory Leak (🔥 Critical - 2026-02-10)
+| Document | Purpose | Status |
+|----------|---------|--------|
+| [`FIREBASE_GRPC_MEMORY_LEAK_FIX.md`](FIREBASE_GRPC_MEMORY_LEAK_FIX.md) | **iOS gRPC Memory Leak** - Analisi Instruments, bug Firebase SDK confermati, workaround SICURI, testing plan | 🔴 In Testing |
 
 #### Template Cloud Sync (✅ New - 2026-02-05)
 | Document | Purpose |
@@ -217,7 +228,51 @@ git commit -m "feat: ..."
 
 ---
 
-## ✅ Production Checklist
+## ✅ Quality Checklists
+
+### 🚀 Beta Launch Checklist (NEW)
+**Full pre-launch checklist** for beta testing expansion → [`BETA_LAUNCH_CHECKLIST.md`](BETA_LAUNCH_CHECKLIST.md)
+
+Comprehensive 10-section checklist covering:
+- Code quality & iOS compliance
+- Performance & stability
+- User experience (all 5 personas)
+- Data & backend (Firebase, Hive, Cloud Functions)
+- Testing & QA (automated + manual + device matrix)
+- Documentation
+- Deployment (TestFlight + Play Store Beta)
+- Monitoring & feedback
+- Legal & privacy (GDPR)
+- Rollback plan
+
+### 🤖 Autonomous Beta Verification (NEW - EXPERIMENTAL)
+
+#### ⚡ Quick Start
+**3-command workflow** → [`BETA_VERIFICATION_QUICK_START.md`](BETA_VERIFICATION_QUICK_START.md)
+
+```bash
+.claude/scripts/pre-verification.sh  # Pre-flight check
+claude && /verify-beta               # Launch team
+.claude/scripts/post-verification.sh # Generate report
+```
+
+#### 📖 Full Documentation
+**Agent team design** → [`BETA_LAUNCH_AGENT_TEAM.md`](BETA_LAUNCH_AGENT_TEAM.md)
+
+6 specialized agents working in parallel (30-45 min):
+- **Code Guardian** 🛡️: Pre-commit rules, iOS compliance, performance
+- **QA Specialist** 🧪: Test suite, coverage, manual test matrix
+- **Backend Auditor** ☁️: Firebase rules, Cloud Functions, data integrity
+- **UX Personas Inspector** 👥: 5-persona impact analysis
+- **Docs & Compliance** 📚: Documentation, GDPR, beta resources
+- **Deployment Checker** 🚀: Build config, store readiness, CI/CD
+
+#### 🧪 Test First (Dry Run)
+```bash
+.claude/scripts/dry-run-verification.sh  # 5-10 min infrastructure test
+```
+
+### Feature Shipping Checklist
 
 Before shipping a feature:
 
