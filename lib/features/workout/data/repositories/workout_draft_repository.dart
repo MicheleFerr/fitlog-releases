@@ -99,8 +99,17 @@ class WorkoutDraftRepository {
       final draft = WorkoutDraft.fromWorkout(workout);
       await _draftBox?.put(_currentDraftKey, draft);
 
+      // 🔥 CRITICAL FIX: Force immediate disk flush for emergency saves
+      // PROBLEM: Hive uses lazy writes - put() writes to memory, flush to disk
+      // happens later (seconds/minutes). If iOS terminates app before lazy flush
+      // completes (memory pressure, backgrounding), draft is lost forever.
+      // SOLUTION: Explicit flush() ensures data is written to physical disk
+      // before returning. iOS background task gives ~30s, flush takes ~10-50ms.
+      // Trade-off: Tiny performance hit vs preventing total data loss.
+      await _draftBox?.flush();
+
       if (kDebugMode) {
-        debugPrint('✅ Workout draft saved at ${draft.lastSaved}');
+        debugPrint('✅ Workout draft saved and flushed to disk at ${draft.lastSaved}');
       }
     } catch (e) {
       if (kDebugMode) {
@@ -187,12 +196,14 @@ class WorkoutDraftRepository {
       // Mark as recovered to prevent showing again
       final recoveredDraft = draft.copyWith(isRecovered: true);
       await _draftBox?.put(_currentDraftKey, recoveredDraft);
+      await _draftBox?.flush(); // Ensure persisted
 
       // Also save to recovered drafts history
       final existing = _recoveredBox?.get(_recoveredDraftsKey);
       final recoveredList = (existing is List) ? List.from(existing) : [];
       recoveredList.add(recoveredDraft);
       await _recoveredBox?.put(_recoveredDraftsKey, recoveredList);
+      await _recoveredBox?.flush(); // Ensure persisted
 
       return draft.toWorkout();
     } catch (e) {
