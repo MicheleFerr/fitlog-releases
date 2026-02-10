@@ -158,6 +158,10 @@ class UserExercisePreferencesRepository {
 
       await _preferencesBox?.put(userKey, preferences);
 
+      // 🔥 FIX: Force immediate disk flush to prevent form cues loss
+      // User-entered data should be persisted immediately
+      await _preferencesBox?.flush();
+
       if (kDebugMode) {
         debugPrint('✅ Form cues saved for $exerciseName');
       }
@@ -261,6 +265,7 @@ class UserExercisePreferencesRepository {
       if (preferences != null) {
         final updated = preferences.copyWith(needsSync: false);
         await _preferencesBox?.put(userKey, updated);
+        await _preferencesBox?.flush(); // Ensure sync flag persisted
 
         if (kDebugMode) {
           debugPrint('✅ Preferences marked as synced for $exerciseName');

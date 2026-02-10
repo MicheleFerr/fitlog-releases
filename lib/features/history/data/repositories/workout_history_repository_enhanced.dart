@@ -283,6 +283,10 @@ class WorkoutHistoryRepositoryEnhanced {
     // Key format: workout_{userId}_{workoutId} for user isolation
     final key = 'workout_${userId}_${workout.id}';
     await _historyBox!.put(key, workout.toMap());
+
+    // 🔥 FIX: Force immediate disk flush to prevent data loss
+    // Ensures workout history is persisted even if app crashes/terminates
+    await _historyBox!.flush();
   }
 
   /// Get workouts from local storage
@@ -378,6 +382,10 @@ class WorkoutHistoryRepositoryEnhanced {
         }
       }
     }
+
+    // 🔥 FIX: Flush after batch migration to ensure all migrated data is persisted
+    // Only one flush for all migrations (performance optimization)
+    await _historyBox!.flush();
   }
 
   /// Get all workouts (local-first approach)

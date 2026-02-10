@@ -192,6 +192,9 @@ class GymEquipmentRepository {
 
       await _box!.put(profile.id, profile);
 
+      // 🔥 FIX: Force immediate disk flush for gym equipment profiles
+      await _box!.flush();
+
       if (kDebugMode) {
         debugPrint('✅ [GymEquipmentRepository] Saved profile: ${profile.name}');
       }
@@ -215,6 +218,9 @@ class GymEquipmentRepository {
         final updated = profile.copyWith(isDefault: profile.id == id);
         await _box!.put(profile.id, updated);
       }
+
+      // 🔥 FIX: Flush after batch update to persist all profile changes
+      await _box!.flush();
 
       if (kDebugMode) {
         debugPrint('✅ [GymEquipmentRepository] Set default profile: $id');
