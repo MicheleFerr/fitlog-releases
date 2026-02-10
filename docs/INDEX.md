@@ -26,12 +26,13 @@
 
 ### Feature Documentation
 
-#### AI Coach Documents System (✅ Backend Complete - 2026-02-05)
-| Document | Purpose | Audience |
-|----------|---------|----------|
-| [`AI_COACH_DOCUMENTS_SYSTEM_DESIGN.md`](AI_COACH_DOCUMENTS_SYSTEM_DESIGN.md) | Backend design - Admin panel + Firebase + API endpoints | Web Developer |
-| [`AI_COACH_DOCUMENTS_FLUTTER_DESIGN.md`](AI_COACH_DOCUMENTS_FLUTTER_DESIGN.md) | Flutter implementation - Sync service + Hive cache + AI integration | Flutter Developer |
-| [`AI_COACH_DOCUMENTS_IMPLEMENTATION.md`](AI_COACH_DOCUMENTS_IMPLEMENTATION.md) | **Implementation Report** - Backend API + Flutter layers + Delta sync | All developers |
+#### AI Coach System
+| Document | Purpose | Status |
+|----------|---------|--------|
+| [`AI_COACH_DOCUMENTS_SYSTEM_DESIGN.md`](AI_COACH_DOCUMENTS_SYSTEM_DESIGN.md) | Backend design - Admin panel + Firebase + API endpoints | ✅ Complete |
+| [`AI_COACH_DOCUMENTS_FLUTTER_DESIGN.md`](AI_COACH_DOCUMENTS_FLUTTER_DESIGN.md) | Flutter implementation - Sync service + Hive cache + AI integration | ✅ Complete |
+| [`AI_COACH_DOCUMENTS_IMPLEMENTATION.md`](AI_COACH_DOCUMENTS_IMPLEMENTATION.md) | **Implementation Report** - Backend API + Flutter layers + Delta sync | ✅ Complete |
+| [`AI_COACH_SMART_SUGGESTIONS_DESIGN.md`](AI_COACH_SMART_SUGGESTIONS_DESIGN.md) | **Smart Suggestions** - Autocomplete esercizi stile Perplexity | 📋 Proposta |
 
 #### Debug Audit (✅ New - 2026-02-08)
 | Document | Purpose |
@@ -60,6 +61,13 @@
 | Document | Purpose |
 |----------|---------|
 | [`USER_PERSONAS.md`](USER_PERSONAS.md) | 5 user personas (Marco, Chiara, Luca, Sofia, Roberto) |
+
+#### Design Proposals
+| Document | Purpose |
+|----------|---------|
+| [`design/PLATE_CALCULATOR_REDESIGN.md`](design/PLATE_CALCULATOR_REDESIGN.md) | 🆕 Plate Calculator 2.0 - Gym Profiles, Quick Selection, Smart Recalc |
+| [`design/TEMPLATE_CARDS_DESIGN_UNIFICATION.md`](design/TEMPLATE_CARDS_DESIGN_UNIFICATION.md) | Unificazione design template cards con analisi personas |
+| [`design/EXERCISE_POPULARITY_RANKING.md`](design/EXERCISE_POPULARITY_RANKING.md) | ✨ **NEW** - Exercise Popularity Ranking (Cloud Functions + Data Bundles) |
 
 ### Archived Documentation
 
