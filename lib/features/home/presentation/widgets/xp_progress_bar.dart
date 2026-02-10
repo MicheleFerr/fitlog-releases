@@ -9,9 +9,11 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
 import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/widgets/level_info_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -43,20 +45,36 @@ class XPProgressBar extends ConsumerWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: context.colors.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: context.colors.outlineVariant.withValues(alpha: 0.5),
-            width: 1,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
+      child: Material(
+        color: context.colors.surface.withValues(alpha: 0),
+        child: Semantics(
+          label: context.l10n.levelInfo,
+          hint: context.l10n.tapToViewGamificationInfo,
+          button: true,
+          child: InkWell(
+            onTap: () {
+              HapticFeedback.lightImpact();
+              LevelInfoModal.show(
+                context: context,
+                currentXP: currentXP,
+                currentTier: currentTier,
+              );
+            },
+            borderRadius: BorderRadius.circular(16),
+            child: Ink(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: context.colors.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: context.colors.outlineVariant.withValues(alpha: 0.5),
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
             // Header row with tier info
             Row(
               children: [
@@ -153,9 +171,12 @@ class XPProgressBar extends ConsumerWidget {
 
             const SizedBox(height: 12),
 
-            // Progress bar - clean, no shimmer
-            _buildProgressBar(context, progress),
-          ],
+                  // Progress bar - clean, no shimmer
+                  _buildProgressBar(context, progress),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

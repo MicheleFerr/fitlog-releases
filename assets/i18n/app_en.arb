@@ -33263,5 +33263,13 @@
   "heavier": "heavier",
   "@heavier": {
     "description": "Label indicating weight is heavier than target"
+  },
+  "tapToViewGamificationInfo": "Tap to view tier system and Ghost Mode info",
+  "@tapToViewGamificationInfo": {
+    "description": "Accessibility hint for XP progress bar"
+  },
+  "ghostModeKeepsXP": "Note: Ghost Mode only hides UI elements. You continue earning XP from workouts.",
+  "@ghostModeKeepsXP": {
+    "description": "Clarification that Ghost Mode doesn't stop XP accumulation"
   }
 }

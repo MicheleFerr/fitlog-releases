@@ -12,14 +12,17 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Modal that explains the level/tier progression system
-class LevelInfoModal extends StatefulWidget {
+/// Now includes Ghost Mode toggle and explanation
+class LevelInfoModal extends ConsumerStatefulWidget {
   const LevelInfoModal({
     super.key,
     required this.currentXP,
@@ -49,10 +52,10 @@ class LevelInfoModal extends StatefulWidget {
   }
 
   @override
-  State<LevelInfoModal> createState() => _LevelInfoModalState();
+  ConsumerState<LevelInfoModal> createState() => _LevelInfoModalState();
 }
 
-class _LevelInfoModalState extends State<LevelInfoModal> {
+class _LevelInfoModalState extends ConsumerState<LevelInfoModal> {
   bool _isExpanded = false;
 
   @override
@@ -94,6 +97,11 @@ class _LevelInfoModalState extends State<LevelInfoModal> {
 
                   // How to earn XP section
                   _buildHowToEarnSection(context),
+
+                  const SizedBox(height: 24),
+
+                  // Ghost Mode section
+                  _buildGhostModeSection(context),
 
                   // Bottom padding for safe area
                   SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
@@ -509,6 +517,103 @@ class _LevelInfoModalState extends State<LevelInfoModal> {
           ),
         ),
       ],
+    );
+  }
+
+  /// Build Ghost Mode section with toggle and explanation
+  Widget _buildGhostModeSection(BuildContext context) {
+    final ghostModeState = ref.watch(ghostModeProvider);
+    final isEnabled = ghostModeState.isEnabled;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header row with icon and title
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: context.colors.primaryContainer,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: SemanticIcon(
+                  icon: AppIcons.visibility,
+                  semanticLabel: context.l10n.ghostModeTitle,
+                  size: AppIconSize.medium,
+                  color: context.colors.onPrimaryContainer,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  context.l10n.ghostModeTitle,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              // Toggle switch
+              Switch(
+                value: isEnabled,
+                onChanged: (value) {
+                  HapticFeedback.lightImpact();
+                  ref.read(ghostModeProvider.notifier).toggleGhostMode();
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // Description
+          Text(
+            context.l10n.ghostModeDescription,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Important note about XP accumulation
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: context.colors.primaryContainer.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: context.colors.primary.withValues(alpha: 0.3),
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SemanticIcon(
+                  icon: AppIcons.info,
+                  semanticLabel: context.l10n.ghostModeKeepsXP,
+                  size: AppIconSize.small,
+                  color: context.colors.primary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    context.l10n.ghostModeKeepsXP,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.onSurface,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -48427,6 +48427,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'heavier'**
   String get heavier;
+
+  /// Accessibility hint for XP progress bar
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to view tier system and Ghost Mode info'**
+  String get tapToViewGamificationInfo;
+
+  /// Clarification that Ghost Mode doesn't stop XP accumulation
+  ///
+  /// In en, this message translates to:
+  /// **'Note: Ghost Mode only hides UI elements. You continue earning XP from workouts.'**
+  String get ghostModeKeepsXP;
 }
 
 class _AppLocalizationsDelegate

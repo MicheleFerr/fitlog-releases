@@ -20627,5 +20627,13 @@
   "heavier": "più pesante",
   "@heavier": {
     "description": "Label indicating weight is heavier than target"
+  },
+  "tapToViewGamificationInfo": "Tap per vedere il sistema tier e le info sulla Modalità Fantasma",
+  "@tapToViewGamificationInfo": {
+    "description": "Accessibility hint for XP progress bar"
+  },
+  "ghostModeKeepsXP": "Nota: La Modalità Fantasma nasconde solo gli elementi dell'interfaccia. Continui ad accumulare XP dai tuoi allenamenti.",
+  "@ghostModeKeepsXP": {
+    "description": "Clarification that Ghost Mode doesn't stop XP accumulation"
   }
 }

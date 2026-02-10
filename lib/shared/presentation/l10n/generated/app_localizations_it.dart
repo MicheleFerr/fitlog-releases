@@ -27334,4 +27334,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get heavier => 'più pesante';
+
+  @override
+  String get tapToViewGamificationInfo =>
+      'Tap per vedere il sistema tier e le info sulla Modalità Fantasma';
+
+  @override
+  String get ghostModeKeepsXP =>
+      'Nota: La Modalità Fantasma nasconde solo gli elementi dell\'interfaccia. Continui ad accumulare XP dai tuoi allenamenti.';
 }

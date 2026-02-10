@@ -27075,4 +27075,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get heavier => 'heavier';
+
+  @override
+  String get tapToViewGamificationInfo =>
+      'Tap to view tier system and Ghost Mode info';
+
+  @override
+  String get ghostModeKeepsXP =>
+      'Note: Ghost Mode only hides UI elements. You continue earning XP from workouts.';
 }
