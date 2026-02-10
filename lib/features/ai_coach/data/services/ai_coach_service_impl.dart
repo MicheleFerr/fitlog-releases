@@ -21,6 +21,14 @@ import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_context.
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/services/ai_coach_service.dart';
 
+/// English indicators for language violation detection
+const _englishIndicators = [
+  'here is', 'here are', 'let me', 'i can help', 'based on',
+  'however', 'therefore', 'furthermore', 'in conclusion',
+  'workout', 'training', 'exercise', 'muscle', 'strength',
+  'should', 'could', 'would', 'the ', ' a ', ' an ',
+];
+
 /// Implementation of AI Coach service
 class AICoachServiceImpl implements AICoachService {
   AICoachServiceImpl({
@@ -208,8 +216,16 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
         } else {
           // Got final text response
           debugPrint('[AI_COACH_SERVICE] ✅ Got final text response');
+
+          final sanitized = _sanitizeResponse(response);
+
+          // Check for language violations (monitoring only, doesn't block)
+          if (_detectEnglishContent(sanitized)) {
+            await _logLanguageViolation(sanitized);
+          }
+
           return AIServiceResponse(
-            content: _sanitizeResponse(response),
+            content: sanitized,
             suggestions: extractedSuggestions,
           );
         }
@@ -358,6 +374,31 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
     return cleaned.isEmpty ? 'Non ho dati sufficienti per rispondere. Prova a riformulare.' : cleaned;
   }
 
+  /// Detect if response contains too much English content
+  /// Returns true if 3+ English indicators found (likely English response)
+  bool _detectEnglishContent(String response) {
+    final lower = response.toLowerCase();
+    int matches = 0;
+    for (final indicator in _englishIndicators) {
+      if (lower.contains(indicator)) {
+        matches++;
+        if (matches >= 3) return true;
+      }
+    }
+    return false;
+  }
+
+  /// Log language violation to Crashlytics for monitoring
+  Future<void> _logLanguageViolation(String response) async {
+    debugPrint('[AI_COACH] ⚠️ LANGUAGE VIOLATION detected');
+    await FirebaseCrashlytics.instance.recordError(
+      Exception('AI Coach responded in English'),
+      StackTrace.current,
+      reason: 'Language violation',
+      fatal: false,
+    );
+  }
+
   /// Check message for medical keywords and block if found
   String? _checkMedicalKeywords(String message) {
     final lowerMessage = message.toLowerCase();
@@ -396,7 +437,13 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
     const planningKeywords = [
       'cosa alleno', 'allenamento', 'scheda', 'esercizi', 'workout', 'routine',
       'piano', 'cosa fare', 'che fare oggi', 'allenare', 'focus', 'muscolo',
-      'muscoli', 'sessione', 'programma'
+      'muscoli', 'sessione', 'programma',
+      'template', 'templates', 'i miei template', 'mie schede',
+    ];
+
+    const exerciseSearchKeywords = [
+      'esercizio', 'alternativa', 'alternative',
+      'sostituire', 'simile', 'cerca', 'trova', 'esiste',
     ];
 
     const analysisKeywords = [
@@ -417,12 +464,14 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
     final hasPlanning = planningKeywords.any((kw) => lowerMsg.contains(kw));
     final hasAnalysis = analysisKeywords.any((kw) => lowerMsg.contains(kw));
     final hasBodyComposition = bodyCompositionKeywords.any((kw) => lowerMsg.contains(kw));
+    final hasExerciseSearch = exerciseSearchKeywords.any((kw) => lowerMsg.contains(kw));
 
     // Add tools based on matched categories
     // Tool indexes in aiToolDefinitions array:
     // 0:get1RMHistory, 1:getWeeklyVolume, 2:analyzeMuscleBalance, 3:getRecoveryData
     // 4:suggestWorkout, 5:compareToStandards, 6:getWorkoutStats, 7:getPersonalRecords
-    // 8:getStreak, 9:getWorkoutHistory, 10:generateTemplate, 11:getBodyProgress, 12:addBodyMeasurement
+    // 8:getStreak, 9:getWorkoutHistory, 10:getBodyProgress, 11:addBodyMeasurement
+    // 12:generateTemplate, 13:getUserTemplates, 14:searchExercises
 
     // Always include general stats tool as baseline
     relevantTools.add(aiToolDefinitions[6]); // getWorkoutStats
@@ -448,7 +497,8 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
     if (hasPlanning) {
       relevantTools.addAll([
         aiToolDefinitions[4], // suggestWorkout
-        aiToolDefinitions[10], // generateTemplate
+        aiToolDefinitions[12], // generateTemplate
+        aiToolDefinitions[13], // getUserTemplates
         aiToolDefinitions[1], // getWeeklyVolume
       ]);
     }
@@ -459,9 +509,13 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
 
     if (hasBodyComposition) {
       relevantTools.addAll([
-        aiToolDefinitions[11], // getBodyProgress
-        aiToolDefinitions[12], // addBodyMeasurement
+        aiToolDefinitions[10], // getBodyProgress
+        aiToolDefinitions[11], // addBodyMeasurement
       ]);
+    }
+
+    if (hasExerciseSearch) {
+      relevantTools.add(aiToolDefinitions[14]); // searchExercises
     }
 
     // Default: if no category matched, include top 5 tools

@@ -112,38 +112,24 @@ class SwipeableTemplateCard extends ConsumerWidget {
                 ],
               )
             : null,
-        // P0-3 FIX: Use StretchMotion for more deliberate feel + reduce extent
-        // Also add higher openThreshold to require more intentional swipe
+        // UX FIX: Reduced from 5 actions to 3 for less accidental triggers
+        // View and Share moved to long-press context menu (future)
+        // Kept: Edit, Duplicate, Delete - most frequent actions
         endActionPane: ActionPane(
           motion: const StretchMotion(), // More resistance than BehindMotion
-          extentRatio: onView != null ? 0.72 : 0.56, // Reduced from 0.80/0.64
-          openThreshold:
-              0.3, // Must swipe 30% before actions reveal (default 0.5)
+          extentRatio: 0.48, // Reduced from 0.72 - 3 actions only
+          openThreshold: 0.35, // Require more intentional swipe
           children: [
-            // View action (presentation mode)
-            if (onView != null)
-              _buildSlidableAction(
-                context: context,
-                icon: AppIcons.visibility,
-                label: context.l10n.templateActionView,
-                backgroundColor: context.infoColor,
-                foregroundColor: context.textOnInfo,
-                onPressed: () {
-                  HapticFeedback.mediumImpact();
-                  Slidable.of(context)?.close();
-                  onView!();
-                },
-              ),
             _buildSlidableAction(
               context: context,
-              icon: AppIcons.share,
-              label: context.l10n.templateActionShare,
+              icon: AppIcons.edit,
+              label: context.l10n.templateActionEdit,
               backgroundColor: context.colors.primary,
               foregroundColor: context.colors.onPrimary,
               onPressed: () {
                 HapticFeedback.mediumImpact();
                 Slidable.of(context)?.close();
-                onShare();
+                onEdit();
               },
             ),
             _buildSlidableAction(
@@ -156,18 +142,6 @@ class SwipeableTemplateCard extends ConsumerWidget {
                 HapticFeedback.mediumImpact();
                 Slidable.of(context)?.close();
                 onDuplicate();
-              },
-            ),
-            _buildSlidableAction(
-              context: context,
-              icon: AppIcons.edit,
-              label: context.l10n.templateActionEdit,
-              backgroundColor: context.colors.secondary,
-              foregroundColor: context.colors.onSecondary,
-              onPressed: () {
-                HapticFeedback.mediumImpact();
-                Slidable.of(context)?.close();
-                onEdit();
               },
             ),
             _buildSlidableAction(
@@ -215,31 +189,13 @@ class SwipeableTemplateCard extends ConsumerWidget {
             color: backgroundColor,
             borderRadius: borderRadius,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SemanticIcon(
-                icon: icon,
-                semanticLabel: label,
-                size: AppIconSize.medium,
-                color: foregroundColor,
-              ),
-              const SizedBox(height: 4),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Text(
-                  label,
-                  style: context.textTheme.labelSmall?.copyWith(
-                    color: foregroundColor,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 10,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
+          child: Center(
+            child: SemanticIcon(
+              icon: icon,
+              semanticLabel: label,
+              size: AppIconSize.medium,
+              color: foregroundColor,
+            ),
           ),
         ),
       ),

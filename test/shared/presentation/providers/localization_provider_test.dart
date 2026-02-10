@@ -1,10 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'localization_provider_test.g.dart';
 
 // Localization Provider implementation for testing
-class LocalizationNotifier extends StateNotifier<Locale> {
-  LocalizationNotifier() : super(const Locale('en', 'US'));
+@riverpod
+class Localization extends _$Localization {
+  @override
+  Locale build() => const Locale('en', 'US');
   
   static const supportedLocales = [
     Locale('en', 'US'),
@@ -13,16 +18,16 @@ class LocalizationNotifier extends StateNotifier<Locale> {
     Locale('fr', 'FR'),
     Locale('de', 'DE'),
   ];
-  
+
   // Get current locale
   Locale get currentLocale => state;
-  
+
   // Get language code
   String get languageCode => state.languageCode;
-  
+
   // Get country code
   String? get countryCode => state.countryCode;
-  
+
   // Get language name
   String get languageName {
     switch (state.languageCode) {
@@ -40,7 +45,7 @@ class LocalizationNotifier extends StateNotifier<Locale> {
         return 'Unknown';
     }
   }
-  
+
   // Get native language name
   String get nativeLanguageName {
     switch (state.languageCode) {
@@ -58,77 +63,80 @@ class LocalizationNotifier extends StateNotifier<Locale> {
         return state.languageCode.toUpperCase();
     }
   }
-  
+
   // Get flag emoji
   String get flagEmoji {
     final country = state.countryCode?.toUpperCase() ?? '';
     if (country.length != 2) return '🌐';
-    
-    final flag = country.codeUnits.map((code) => 
+
+    final flag = country.codeUnits.map((code) =>
       String.fromCharCode(code + 127397)
     ).join();
-    
+
     return flag;
   }
-  
+
   // Set locale
   void setLocale(Locale locale) {
     if (!supportedLocales.contains(locale)) {
       throw Exception('Unsupported locale: $locale');
     }
-    
+
     state = locale;
     _saveLocalePreference(locale);
   }
-  
+
   // Set locale by language code
   void setLanguage(String languageCode) {
     final locale = supportedLocales.firstWhere(
       (l) => l.languageCode == languageCode,
       orElse: () => const Locale('en', 'US'),
     );
-    
+
     setLocale(locale);
   }
-  
+
   // Load saved locale preference
   Future<void> loadLocale() async {
     // Simulate loading from storage
     await Future.delayed(const Duration(milliseconds: 50));
-    
+
+    // Check if still mounted after async gap
+    if (!ref.mounted) return;
+
     // For testing, default to English
     state = const Locale('en', 'US');
   }
-  
+
   // Save locale preference
   Future<void> _saveLocalePreference(Locale locale) async {
     // Simulate saving to storage
     await Future.delayed(const Duration(milliseconds: 10));
   }
-  
+
   // Check if locale is supported
   bool isSupported(Locale locale) {
-    return supportedLocales.any((l) => 
+    return supportedLocales.any((l) =>
       l.languageCode == locale.languageCode
     );
   }
-  
+
   // Get closest supported locale
   Locale getClosestSupported(Locale locale) {
     // First try exact match
     if (supportedLocales.contains(locale)) {
       return locale;
     }
-    
+
     // Then try language match
     final languageMatch = supportedLocales.firstWhere(
       (l) => l.languageCode == locale.languageCode,
       orElse: () => const Locale('en', 'US'),
     );
-    
+
     return languageMatch;
   }
-  
+
   // Reset to default
   void resetToDefault() {
     setLocale(const Locale('en', 'US'));
@@ -244,142 +252,140 @@ class TranslationHelper {
 
 void main() {
   group('🌍 Localization Provider Tests', () {
-    late LocalizationNotifier notifier;
     late ProviderContainer container;
-    
+
     setUp(() {
-      notifier = LocalizationNotifier();
       container = ProviderContainer();
     });
-    
+
     tearDown(() {
       container.dispose();
     });
     
     group('🌐 Locale Management', () {
       test('✅ Initial locale is English', () {
-        expect(notifier.currentLocale, const Locale('en', 'US'));
-        expect(notifier.languageCode, 'en');
-        expect(notifier.countryCode, 'US');
-        expect(notifier.languageName, 'English');
+        expect(container.read(localizationProvider.notifier).currentLocale, const Locale('en', 'US'));
+        expect(container.read(localizationProvider.notifier).languageCode, 'en');
+        expect(container.read(localizationProvider.notifier).countryCode, 'US');
+        expect(container.read(localizationProvider.notifier).languageName, 'English');
       });
       
       test('✅ Set Italian locale', () {
-        notifier.setLocale(const Locale('it', 'IT'));
+        container.read(localizationProvider.notifier).setLocale(const Locale('it', 'IT'));
         
-        expect(notifier.currentLocale, const Locale('it', 'IT'));
-        expect(notifier.languageCode, 'it');
-        expect(notifier.countryCode, 'IT');
-        expect(notifier.languageName, 'Italiano');
-        expect(notifier.nativeLanguageName, 'Italiano');
+        expect(container.read(localizationProvider.notifier).currentLocale, const Locale('it', 'IT'));
+        expect(container.read(localizationProvider.notifier).languageCode, 'it');
+        expect(container.read(localizationProvider.notifier).countryCode, 'IT');
+        expect(container.read(localizationProvider.notifier).languageName, 'Italiano');
+        expect(container.read(localizationProvider.notifier).nativeLanguageName, 'Italiano');
       });
       
       test('✅ Set Spanish locale', () {
-        notifier.setLocale(const Locale('es', 'ES'));
+        container.read(localizationProvider.notifier).setLocale(const Locale('es', 'ES'));
         
-        expect(notifier.currentLocale, const Locale('es', 'ES'));
-        expect(notifier.languageName, 'Español');
+        expect(container.read(localizationProvider.notifier).currentLocale, const Locale('es', 'ES'));
+        expect(container.read(localizationProvider.notifier).languageName, 'Español');
       });
       
       test('✅ Set French locale', () {
-        notifier.setLocale(const Locale('fr', 'FR'));
+        container.read(localizationProvider.notifier).setLocale(const Locale('fr', 'FR'));
         
-        expect(notifier.currentLocale, const Locale('fr', 'FR'));
-        expect(notifier.languageName, 'Français');
+        expect(container.read(localizationProvider.notifier).currentLocale, const Locale('fr', 'FR'));
+        expect(container.read(localizationProvider.notifier).languageName, 'Français');
       });
       
       test('✅ Set German locale', () {
-        notifier.setLocale(const Locale('de', 'DE'));
+        container.read(localizationProvider.notifier).setLocale(const Locale('de', 'DE'));
         
-        expect(notifier.currentLocale, const Locale('de', 'DE'));
-        expect(notifier.languageName, 'Deutsch');
+        expect(container.read(localizationProvider.notifier).currentLocale, const Locale('de', 'DE'));
+        expect(container.read(localizationProvider.notifier).languageName, 'Deutsch');
       });
       
       test('✅ Set language by code', () {
-        notifier.setLanguage('it');
-        expect(notifier.languageCode, 'it');
+        container.read(localizationProvider.notifier).setLanguage('it');
+        expect(container.read(localizationProvider.notifier).languageCode, 'it');
         
-        notifier.setLanguage('es');
-        expect(notifier.languageCode, 'es');
+        container.read(localizationProvider.notifier).setLanguage('es');
+        expect(container.read(localizationProvider.notifier).languageCode, 'es');
       });
       
       test('❌ Reject unsupported locale', () {
         expect(
-          () => notifier.setLocale(const Locale('zh', 'CN')),
+          () => container.read(localizationProvider.notifier).setLocale(const Locale('zh', 'CN')),
           throwsException,
         );
       });
       
       test('✅ Load saved locale', () async {
-        await notifier.loadLocale();
-        expect(notifier.currentLocale, const Locale('en', 'US'));
+        await container.read(localizationProvider.notifier).loadLocale();
+        expect(container.read(localizationProvider.notifier).currentLocale, const Locale('en', 'US'));
       });
       
       test('✅ Reset to default', () {
-        notifier.setLocale(const Locale('it', 'IT'));
-        notifier.resetToDefault();
+        container.read(localizationProvider.notifier).setLocale(const Locale('it', 'IT'));
+        container.read(localizationProvider.notifier).resetToDefault();
         
-        expect(notifier.currentLocale, const Locale('en', 'US'));
+        expect(container.read(localizationProvider.notifier).currentLocale, const Locale('en', 'US'));
       });
     });
     
     group('🏳️ Flag Emojis', () {
       test('✅ Get flag for US', () {
-        notifier.setLocale(const Locale('en', 'US'));
-        expect(notifier.flagEmoji, '🇺🇸');
+        container.read(localizationProvider.notifier).setLocale(const Locale('en', 'US'));
+        expect(container.read(localizationProvider.notifier).flagEmoji, '🇺🇸');
       });
       
       test('✅ Get flag for Italy', () {
-        notifier.setLocale(const Locale('it', 'IT'));
-        expect(notifier.flagEmoji, '🇮🇹');
+        container.read(localizationProvider.notifier).setLocale(const Locale('it', 'IT'));
+        expect(container.read(localizationProvider.notifier).flagEmoji, '🇮🇹');
       });
       
       test('✅ Get flag for Spain', () {
-        notifier.setLocale(const Locale('es', 'ES'));
-        expect(notifier.flagEmoji, '🇪🇸');
+        container.read(localizationProvider.notifier).setLocale(const Locale('es', 'ES'));
+        expect(container.read(localizationProvider.notifier).flagEmoji, '🇪🇸');
       });
       
       test('✅ Get flag for France', () {
-        notifier.setLocale(const Locale('fr', 'FR'));
-        expect(notifier.flagEmoji, '🇫🇷');
+        container.read(localizationProvider.notifier).setLocale(const Locale('fr', 'FR'));
+        expect(container.read(localizationProvider.notifier).flagEmoji, '🇫🇷');
       });
       
       test('✅ Get flag for Germany', () {
-        notifier.setLocale(const Locale('de', 'DE'));
-        expect(notifier.flagEmoji, '🇩🇪');
+        container.read(localizationProvider.notifier).setLocale(const Locale('de', 'DE'));
+        expect(container.read(localizationProvider.notifier).flagEmoji, '🇩🇪');
       });
     });
     
     group('🌍 Locale Support', () {
       test('✅ Check supported locales', () {
-        expect(notifier.isSupported(const Locale('en', 'US')), true);
-        expect(notifier.isSupported(const Locale('it', 'IT')), true);
-        expect(notifier.isSupported(const Locale('es', 'ES')), true);
-        expect(notifier.isSupported(const Locale('fr', 'FR')), true);
-        expect(notifier.isSupported(const Locale('de', 'DE')), true);
+        expect(container.read(localizationProvider.notifier).isSupported(const Locale('en', 'US')), true);
+        expect(container.read(localizationProvider.notifier).isSupported(const Locale('it', 'IT')), true);
+        expect(container.read(localizationProvider.notifier).isSupported(const Locale('es', 'ES')), true);
+        expect(container.read(localizationProvider.notifier).isSupported(const Locale('fr', 'FR')), true);
+        expect(container.read(localizationProvider.notifier).isSupported(const Locale('de', 'DE')), true);
       });
       
       test('✅ Check unsupported locale', () {
-        expect(notifier.isSupported(const Locale('zh', 'CN')), false);
-        expect(notifier.isSupported(const Locale('ja', 'JP')), false);
+        expect(container.read(localizationProvider.notifier).isSupported(const Locale('zh', 'CN')), false);
+        expect(container.read(localizationProvider.notifier).isSupported(const Locale('ja', 'JP')), false);
       });
       
       test('✅ Get closest supported locale', () {
         // Exact match
         expect(
-          notifier.getClosestSupported(const Locale('it', 'IT')),
+          container.read(localizationProvider.notifier).getClosestSupported(const Locale('it', 'IT')),
           const Locale('it', 'IT'),
         );
         
         // Language match
         expect(
-          notifier.getClosestSupported(const Locale('en', 'GB')),
+          container.read(localizationProvider.notifier).getClosestSupported(const Locale('en', 'GB')),
           const Locale('en', 'US'),
         );
         
         // No match - default to English
         expect(
-          notifier.getClosestSupported(const Locale('zh', 'CN')),
+          container.read(localizationProvider.notifier).getClosestSupported(const Locale('zh', 'CN')),
           const Locale('en', 'US'),
         );
       });
@@ -451,13 +457,13 @@ void main() {
     
     group('🌐 Supported Locales', () {
       test('✅ All supported locales', () {
-        expect(LocalizationNotifier.supportedLocales.length, 5);
+        expect(Localization.supportedLocales.length, 5);
         expect(
-          LocalizationNotifier.supportedLocales,
+          Localization.supportedLocales,
           contains(const Locale('en', 'US')),
         );
         expect(
-          LocalizationNotifier.supportedLocales,
+          Localization.supportedLocales,
           contains(const Locale('it', 'IT')),
         );
       });

@@ -199,15 +199,16 @@ class RPEAutoregulationService {
 
   /// 🔄 Calculate rest time adjustment based on RPE
   ///
-  /// Scientific basis: Higher perceived exertion requires more recovery
-  /// Based on research showing fatigue correlates with rest requirements
+  /// Conservative approach: small adjustments to avoid disrupting workout flow.
+  /// Based on general principles that higher exertion may benefit from
+  /// slightly longer recovery, while easy sets can use shorter rest.
   ///
-  /// Algorithm:
-  /// - RPE 9.5-10: +60s (very high fatigue, needs full recovery)
-  /// - RPE 8.5-9: +30s (high fatigue)
-  /// - RPE 7-8: 0s (moderate fatigue, standard rest)
-  /// - RPE 5-6.5: -15s (low fatigue, can reduce rest)
-  /// - RPE < 5: -30s (very low fatigue)
+  /// Algorithm (conservative values):
+  /// - RPE 10: +30s (failure/max effort)
+  /// - RPE 9-9.5: +15s (very hard)
+  /// - RPE 7-8.5: 0s (moderate to hard - optimal training zone)
+  /// - RPE 5-7: -15s (easy to moderate)
+  /// - RPE < 5: -30s (very easy)
   ///
   /// Returns adjustment in seconds (positive = more rest, negative = less rest)
   static RestTimeAdjustment calculateRestTimeAdjustment({
@@ -217,24 +218,24 @@ class RPEAutoregulationService {
     int adjustmentSeconds = 0;
     String reason = '';
 
-    if (actualRPE >= 9.5) {
-      // Very high fatigue - significant extra rest
-      adjustmentSeconds = 60;
-      reason = 'RPE very high ($actualRPE) - adding 60s for full recovery';
-    } else if (actualRPE >= 8.5) {
-      // High fatigue - moderate extra rest
+    if (actualRPE >= 10) {
+      // Failure/max effort - moderate extra rest
       adjustmentSeconds = 30;
-      reason = 'RPE high ($actualRPE) - adding 30s for recovery';
+      reason = 'RPE max ($actualRPE) - adding 30s for recovery';
+    } else if (actualRPE >= 9) {
+      // Very hard - slight extra rest
+      adjustmentSeconds = 15;
+      reason = 'RPE very hard ($actualRPE) - adding 15s for recovery';
     } else if (actualRPE >= 7) {
-      // Moderate fatigue - standard rest
+      // Moderate to hard - standard rest (optimal training zone)
       adjustmentSeconds = 0;
       reason = 'RPE moderate ($actualRPE) - using standard rest time';
     } else if (actualRPE >= 5) {
-      // Low fatigue - slightly reduced rest
+      // Easy to moderate - slightly reduced rest
       adjustmentSeconds = -15;
       reason = 'RPE low ($actualRPE) - reducing rest by 15s';
     } else {
-      // Very low fatigue - can reduce rest more
+      // Very easy - can reduce rest more
       adjustmentSeconds = -30;
       reason = 'RPE very low ($actualRPE) - reducing rest by 30s';
     }

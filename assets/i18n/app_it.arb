@@ -1332,6 +1332,7 @@
   "strengthPercentage": "Percentuale Forza",
   "targetExplanation": "Gli obiettivi sono traguardi personalizzabili che ti aiutano a mantenere un allenamento equilibrato su tutti i gruppi muscolari.",
   "previousWeightsLoaded": "Pesi precedenti caricati",
+  "lastTime": "Ultima volta",
   "insightStrengthGainsTitle": "Guadagni di Forza",
   "insightStrengthGainsMessage": "Hai fatto miglioramenti significativi nella forza",
   "insightStrengthGainsRecommendation": "Continua con il sovraccarico progressivo per mantenere lo slancio",
@@ -20516,8 +20517,8 @@
   "@useThisWeight": {
     "description": "Button to apply alternative weight"
   },
-  "keepOriginal": "Mantieni {weight}kg",
-  "@keepOriginal": {
+  "keepOriginalWeight": "Mantieni {weight}kg",
+  "@keepOriginalWeight": {
     "description": "Button to keep original weight",
     "placeholders": {
       "weight": {

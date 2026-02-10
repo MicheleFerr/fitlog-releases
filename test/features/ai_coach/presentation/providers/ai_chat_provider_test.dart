@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/rate_limit_result.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/services/ai_coach_service.dart';
@@ -7,11 +8,16 @@ import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_coach_serv
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/ai_chat_provider.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/ai_rate_limit_provider.dart';
 import 'package:mocktail/mocktail.dart';
+import '../../../../shared/test_firebase_setup.dart';
 
 // Mocks
 class MockAICoachServiceImpl extends Mock implements AICoachServiceImpl {}
 
 void main() {
+  // Initialize Firebase before all tests
+  setUpAll(() async {
+    await setupFirebaseForTesting();
+  });
   group('AIChat Provider', () {
     late MockAICoachServiceImpl mockService;
     late ProviderContainer container;

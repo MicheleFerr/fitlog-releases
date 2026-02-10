@@ -29,12 +29,15 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           userTierProvider.overrideWithValue(UserTier.starter),
-          userProfileProvider.overrideWith((ref) => Stream.value(profile)),
+          // Use Stream.value() which automatically closes after emitting
+          userProfileProvider.overrideWith((ref) async* {
+            yield profile;
+          }),
         ],
       );
 
-      // Wait for stream to emit
-      await container.read(userProfileProvider.future);
+      // Give provider time to initialize
+      await Future.delayed(const Duration(milliseconds: 10));
 
       final entitlements = container.read(tierEntitlementsProvider);
 
@@ -66,12 +69,14 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           userTierProvider.overrideWithValue(UserTier.bronze),
-          userProfileProvider.overrideWith((ref) => Stream.value(profile)),
+          userProfileProvider.overrideWith((ref) async* {
+            yield profile;
+          }),
         ],
       );
 
-      // Wait for stream to emit
-      await container.read(userProfileProvider.future);
+      // Give provider time to initialize
+      await Future.delayed(const Duration(milliseconds: 10));
 
       final entitlements = container.read(tierEntitlementsProvider);
 
@@ -103,12 +108,14 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           userTierProvider.overrideWithValue(UserTier.platinum),
-          userProfileProvider.overrideWith((ref) => Stream.value(profile)),
+          userProfileProvider.overrideWith((ref) async* {
+            yield profile;
+          }),
         ],
       );
 
-      // Wait for stream to emit
-      await container.read(userProfileProvider.future);
+      // Give provider time to initialize
+      await Future.delayed(const Duration(milliseconds: 10));
 
       final entitlements = container.read(tierEntitlementsProvider);
 
@@ -142,7 +149,9 @@ void main() {
           // LOW XP (Starter tier)
           userTierProvider.overrideWithValue(UserTier.starter),
           // BUT Premium account!
-          userProfileProvider.overrideWith((ref) => Stream.value(premiumProfile)),
+          userProfileProvider.overrideWith((ref) async* {
+            yield premiumProfile;
+          }),
         ],
       );
 
@@ -185,7 +194,9 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           userTierProvider.overrideWithValue(UserTier.starter),
-          userProfileProvider.overrideWith((ref) => Stream.value(proProfile)),
+          userProfileProvider.overrideWith((ref) async* {
+            yield proProfile;
+          }),
         ],
       );
 
@@ -222,7 +233,9 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           userTierProvider.overrideWithValue(UserTier.platinum),
-          userProfileProvider.overrideWith((ref) => Stream.value(premiumProfile)),
+          userProfileProvider.overrideWith((ref) async* {
+            yield premiumProfile;
+          }),
         ],
       );
 
@@ -268,7 +281,9 @@ void main() {
         final container = ProviderContainer(
           overrides: [
             userTierProvider.overrideWithValue(tiers[i]),
-            userProfileProvider.overrideWith((ref) => Stream.value(profile)),
+            userProfileProvider.overrideWith((ref) async* {
+            yield profile;
+          }),
           ],
         );
 
@@ -302,12 +317,14 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           userTierProvider.overrideWithValue(UserTier.silver),
-          userProfileProvider.overrideWith((ref) => Stream.value(profile)),
+          userProfileProvider.overrideWith((ref) async* {
+            yield profile;
+          }),
         ],
       );
 
-      // Wait for stream to emit
-      await container.read(userProfileProvider.future);
+      // Give provider time to initialize
+      await Future.delayed(const Duration(milliseconds: 10));
 
       // Test selective providers (PEP pattern)
       expect(container.read(maxCustomSingleExercisesProvider), 7);
@@ -352,12 +369,14 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           userTierProvider.overrideWithValue(UserTier.platinum),
-          userProfileProvider.overrideWith((ref) => Stream.value(profile)),
+          userProfileProvider.overrideWith((ref) async* {
+            yield profile;
+          }),
         ],
       );
 
-      // Wait for stream to emit
-      await container.read(userProfileProvider.future);
+      // Give provider time to initialize
+      await Future.delayed(const Duration(milliseconds: 10));
 
       final entitlements = container.read(tierEntitlementsProvider);
 
@@ -383,7 +402,9 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           userTierProvider.overrideWithValue(UserTier.starter),
-          userProfileProvider.overrideWith((ref) => Stream.value(premiumProfile)),
+          userProfileProvider.overrideWith((ref) async* {
+            yield premiumProfile;
+          }),
         ],
       );
 

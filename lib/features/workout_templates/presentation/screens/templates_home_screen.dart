@@ -63,6 +63,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/rest_
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/advanced_template_creation_modals.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_gdpr_dialogs.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/widgets.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/cards/discover_template_card.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/for_you_section.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/templates_tour_service.dart';
 
 class TemplatesHomeScreen extends ConsumerStatefulWidget {
@@ -113,10 +115,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   String? _selectedCategory;
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // Discover sub-tab: 0 = Workout Templates, 1 = Advanced Techniques
-  // Separates content to reduce cognitive load
+  // UX REDESIGN: Toggle removed - advanced techniques now integrated as section
+  // at the bottom of the Discover tab (single unified feed)
   // ═══════════════════════════════════════════════════════════════════════════
-  int _discoverSubTabIndex = 0;
 
   @override
   void initState() {
@@ -473,21 +474,21 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               ),
             ],
           ),
-          if (labelOpacity > 0.01) ...[
-            const SizedBox(height: AppSpacing.xs),
-            Opacity(
-              opacity: labelOpacity,
-              child: Text(
-                label,
-                style: context.textTheme.labelSmall?.copyWith(
-                  color: context.colors.onSurfaceVariant,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+          // UX REDESIGN: Labels always visible (min opacity 0.7) per usability
+          // Numbers without labels are cryptic (4, 0, 30 mean nothing)
+          const SizedBox(height: AppSpacing.xs),
+          Opacity(
+            opacity: labelOpacity.clamp(0.7, 1.0),
+            child: Text(
+              label,
+              style: context.textTheme.labelSmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
               ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-          ],
+          ),
         ],
       ),
     );
@@ -579,193 +580,24 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     List<workout_template.WorkoutTemplate> templates,
     BuildContext context,
   ) {
-    final l10n = AppLocalizations.of(context);
+    // 🚀 OPTIMIZATION: Batch load all template stats in one pass
+    final allStatsAsync = ref.watch(allTemplateStatsProvider);
+    final allStats = allStatsAsync.value ?? {};
+
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
           final template = templates[index];
-          return Card(
-            margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-            child: ListTile(
-              onTap: () =>
-                  _editWorkoutTemplate(context, template), // Tap → Edit
-              leading: CircleAvatar(
-                backgroundColor: context.colors.primaryContainer,
-                child: SemanticIcon(
-                  icon: AppIcons.workout,
-                  semanticLabel: l10n.workout,
-                  size: AppIconSize.small,
-                  color: context.colors.onPrimaryContainer,
-                ),
-              ),
-              title: Text(
-                template.name,
-                style: context.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    template.description.isNotEmpty
-                        ? template.description
-                        : l10n.noDescription,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if (template.forkedFromTemplateId != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SemanticIcon(
-                            icon: AppIcons.copy,
-                            semanticLabel: l10n.templateForkedFrom(
-                              template.originalAuthorName ?? '',
-                            ),
-                            size: AppIconSize.tiny,
-                            color: context.colors.tertiary,
-                          ),
-                          const SizedBox(width: AppSpacing.xs),
-                          Flexible(
-                            child: Text(
-                              l10n.templateForkedFrom(
-                                template.originalAuthorName ?? l10n.anonymous,
-                              ),
-                              style: context.textTheme.labelSmall?.copyWith(
-                                color: context.colors.tertiary,
-                                fontStyle: FontStyle.italic,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-              trailing: PopupMenuButton<String>(
-                onSelected: (value) {
-                  if (value == 'start') _openWorkoutTemplate(context, template);
-                  if (value == 'duplicate') {
-                    _duplicateTemplate(context, template);
-                  }
-                  if (value == 'share') _shareTemplate(context, template);
-                  if (value == 'make_public') {
-                    _makeTemplatePublic(context, template);
-                  }
-                  if (value == 'delete') {
-                    _deleteWorkoutTemplate(context, template);
-                  }
-                },
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  // Start Workout option (primary action in menu)
-                  PopupMenuItem<String>(
-                    value: 'start',
-                    child: Row(
-                      children: [
-                        SemanticIcon(
-                          icon: AppIcons.play,
-                          semanticLabel: l10n.startWorkout,
-                          size: AppIconSize.small,
-                          color: context.colors.primary,
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Text(
-                          l10n.startWorkout,
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: context.colors.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const PopupMenuDivider(),
-                  // Duplicate option
-                  PopupMenuItem<String>(
-                    value: 'duplicate',
-                    child: Row(
-                      children: [
-                        SemanticIcon(
-                          icon: AppIcons.copy,
-                          semanticLabel: l10n.duplicate,
-                          size: AppIconSize.small,
-                          color: context.colors.onSurface,
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Text(
-                          l10n.duplicate,
-                          style: context.textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Share option
-                  PopupMenuItem<String>(
-                    value: 'share',
-                    child: Row(
-                      children: [
-                        SemanticIcon(
-                          icon: AppIcons.share,
-                          semanticLabel: l10n.share,
-                          size: AppIconSize.small,
-                          color: context.colors.onSurface,
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Text(l10n.share, style: context.textTheme.bodyMedium),
-                      ],
-                    ),
-                  ),
-                  // Make Public option
-                  PopupMenuItem<String>(
-                    value: 'make_public',
-                    child: Row(
-                      children: [
-                        SemanticIcon(
-                          icon: AppIcons.public,
-                          semanticLabel: l10n.makePublic,
-                          size: AppIconSize.small,
-                          color: context.colors.onSurface,
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Text(
-                          l10n.makePublic,
-                          style: context.textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const PopupMenuDivider(),
-                  // Delete option
-                  PopupMenuItem<String>(
-                    value: 'delete',
-                    child: Row(
-                      children: [
-                        SemanticIcon(
-                          icon: AppIcons.delete,
-                          semanticLabel: l10n.delete,
-                          size: AppIconSize.small,
-                          color: context.colors.error,
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Text(
-                          l10n.delete,
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: context.colors.error,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          return WorkoutTemplateListItem(
+            template: template,
+            onTap: () => _editWorkoutTemplate(context, template),
+            onStartWorkout: () => _openWorkoutTemplate(context, template),
+            onDuplicate: () => _duplicateTemplate(context, template),
+            onShare: () => _shareTemplate(context, template),
+            onMakePublic: () => _makeTemplatePublic(context, template),
+            onDelete: () => _deleteWorkoutTemplate(context, template),
+            preloadedStats: allStats[template.id],
           );
         }, childCount: templates.length),
       ),
@@ -1053,59 +885,44 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       child: CustomScrollView(
         slivers: [
           // ═══════════════════════════════════════════════════════════════════
-          // SECTION 0: Sub-tab selector (Workout Templates / Advanced Techniques)
+          // UX REDESIGN: Unified feed without toggle
+          // All workout templates shown first, then advanced techniques at bottom
           // ═══════════════════════════════════════════════════════════════════
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.md,
-                AppSpacing.sm,
-                AppSpacing.md,
-                AppSpacing.xs,
-              ),
-              child: SegmentedButton<int>(
-                segments: [
-                  ButtonSegment<int>(
-                    value: 0,
-                    label: Text(l10n.workoutTemplates),
-                    icon: const Icon(AppIcons.workout, size: AppIconSize.small),
+
+          // "For You" section - personalized recommendations
+          defaultTemplatesAsync.maybeWhen(
+            data: (templates) {
+              if (templates.isEmpty) {
+                return const SliverToBoxAdapter(child: SizedBox.shrink());
+              }
+              return SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.md),
+                  child: ForYouSection(
+                    allTemplates: templates,
+                    onTemplateUse: (t) => _useDefaultTemplate(context, t),
+                    onTemplatePreview: (t) =>
+                        _previewDefaultTemplate(context, t),
                   ),
-                  ButtonSegment<int>(
-                    value: 1,
-                    label: Text(l10n.advancedTechniques),
-                    icon: const Icon(AppIcons.science, size: AppIconSize.small),
-                  ),
-                ],
-                selected: {_discoverSubTabIndex},
-                onSelectionChanged: (Set<int> selected) {
-                  HapticFeedback.selectionClick();
-                  setState(() => _discoverSubTabIndex = selected.first);
-                },
-                style: const ButtonStyle(
-                  visualDensity: VisualDensity.compact,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-              ),
+              );
+            },
+            orElse: () => const SliverToBoxAdapter(child: SizedBox.shrink()),
+          ),
+
+          // Category Filter Chips (sticky) - existing implementation
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: CategoryFilterDelegate(
+              selectedCategory: _selectedCategory,
+              onCategorySelected: (category) {
+                HapticFeedback.selectionClick();
+                setState(() => _selectedCategory = category);
+              },
             ),
           ),
 
-          // ═══════════════════════════════════════════════════════════════════
-          // SUB-TAB 0: Workout Templates
-          // ═══════════════════════════════════════════════════════════════════
-          if (_discoverSubTabIndex == 0) ...[
-            // Category Filter Chips (sticky)
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: CategoryFilterDelegate(
-                selectedCategory: _selectedCategory,
-                onCategorySelected: (category) {
-                  HapticFeedback.selectionClick();
-                  setState(() => _selectedCategory = category);
-                },
-              ),
-            ),
-
-            // Workout Templates (filtered by category)
+          // Workout Templates (filtered by category)
             defaultTemplatesAsync.when(
               loading: () => const SliverToBoxAdapter(
                 child: Padding(
@@ -1148,15 +965,22 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   'specialty': (l10n.specialty, AppIcons.star),
                 };
 
-                // Order of categories
+                // Order of categories (UX-optimized: quick wins first, intimidating last)
+                // 1. Express: ⚡ Quick wins for everyone (Chiara's priority)
+                // 2. Beginner: 🌱 Non-intimidating for Marco
+                // 3. Home: 🏠 Accessible (no gym needed)
+                // 4. Dumbbell: 💪 Minimal equipment
+                // 5. Intermediate: 📈 Growth path
+                // 6. Specialty: ⭐ Niche programs
+                // 7. Advanced: 🔥 Last - for those seeking challenge
                 final orderedCategories = [
+                  'express',
                   'beginner',
-                  'intermediate',
-                  'advanced',
                   'home',
                   'dumbbell',
-                  'express',
+                  'intermediate',
                   'specialty',
+                  'advanced',
                 ];
 
                 // Filter categories based on selection
@@ -1218,26 +1042,18 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                               ),
                             ),
 
-                          // Horizontal scrollable templates
-                          SizedBox(
-                            height: 120,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: categoryTemplates.length,
-                              separatorBuilder: (_, __) =>
-                                  const SizedBox(width: AppSpacing.sm),
-                              itemBuilder: (context, i) {
-                                final template = categoryTemplates[i];
-                                return CompactTemplateCard(
-                                  template: template,
-                                  onTap: () => _previewDefaultTemplate(
-                                    context,
-                                    template,
-                                  ),
-                                  onUse: () =>
-                                      _useDefaultTemplate(context, template),
-                                );
-                              },
+                          // UX REDESIGN: Vertical list with large cards
+                          // Replaces horizontal scroll of small cards
+                          // Better readability and touch targets
+                          ...categoryTemplates.map(
+                            (template) => DiscoverTemplateCard(
+                              template: template,
+                              onTap: () => _previewDefaultTemplate(
+                                context,
+                                template,
+                              ),
+                              onUse: () =>
+                                  _useDefaultTemplate(context, template),
                             ),
                           ),
                           const SizedBox(height: AppSpacing.md),
@@ -1248,33 +1064,68 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 );
               },
             ),
-          ], // END SUB-TAB 0: Workout Templates
+
           // ═══════════════════════════════════════════════════════════════════
-          // SUB-TAB 1: Advanced Techniques
+          // ADVANCED TECHNIQUES SECTION (integrated at bottom of unified feed)
+          // UX: No more toggle - always visible as final section
           // ═══════════════════════════════════════════════════════════════════
-          if (_discoverSubTabIndex == 1) ...[
-            // Description header for advanced techniques
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.md,
-                  AppSpacing.sm,
-                  AppSpacing.md,
-                  AppSpacing.md,
-                ),
-                child: Text(
-                  l10n.advancedTechniquesDesc,
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: context.colors.onSurfaceVariant,
+
+          // Section header for advanced techniques
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                AppSpacing.xl,
+                AppSpacing.md,
+                AppSpacing.sm,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              context.colors.tertiary,
+                              context.colors.secondary,
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          AppIcons.science,
+                          size: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Text(
+                        l10n.advancedTechniques,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    l10n.advancedTechniquesDesc,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
               ),
             ),
+          ),
 
-            // ═══════════════════════════════════════════════════════════════════
-            // Superset Templates (Custom first, then Predefined)
-            // ═══════════════════════════════════════════════════════════════════
-            _buildAdvancedTechniqueWithCustom<SupersetTemplate>(
+          // ═══════════════════════════════════════════════════════════════════
+          // Superset Templates (Custom first, then Predefined)
+          // ═══════════════════════════════════════════════════════════════════
+          _buildAdvancedTechniqueWithCustom<SupersetTemplate>(
               context: context,
               title: l10n.superset,
               icon: AppIcons.link,
@@ -1347,8 +1198,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 onTap: () => _previewPredefinedRestPause(context, template),
                 onUse: () => _usePredefinedRestPause(context, template),
               ),
-            ),
-          ], // END SUB-TAB 1: Advanced Techniques
+          ),
+
           // Bottom padding for FAB
           const SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],

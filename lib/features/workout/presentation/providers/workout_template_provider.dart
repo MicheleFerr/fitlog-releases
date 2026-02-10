@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart'
     show WorkoutTemplate, ExerciseTemplate;
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template_extensions.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/template_category.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/template_stats.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/workout_template_repository.dart';
@@ -108,6 +110,42 @@ final customWorkoutTemplatesProvider = FutureProvider.autoDispose<List<WorkoutTe
   }
   return legacyTemplates;
 });
+
+// Categoria dominante tra i template dell'utente (per PersonalizedContentCard)
+/// Calcola la categoria più frequente tra i template custom dell'utente.
+/// Usato per colorare dinamicamente il widget "Le mie schede" nella home.
+final dominantTemplateCategoryProvider =
+    FutureProvider.autoDispose<TemplateCategory?>((ref) async {
+      final templatesAsync = await ref.watch(customWorkoutTemplatesProvider.future);
+
+      if (templatesAsync.isEmpty) {
+        return null; // Nessun template, usa colore default
+      }
+
+      // Conta le categorie
+      final categoryCount = <TemplateCategory, int>{};
+      for (final template in templatesAsync) {
+        final category = template.effectiveCategory;
+        categoryCount[category] = (categoryCount[category] ?? 0) + 1;
+      }
+
+      // Trova la categoria dominante
+      TemplateCategory? dominant;
+      int maxCount = 0;
+      for (final entry in categoryCount.entries) {
+        if (entry.value > maxCount) {
+          maxCount = entry.value;
+          dominant = entry.key;
+        }
+      }
+
+      if (kDebugMode) {
+        debugPrint('🎨 [DOMINANT_CATEGORY] Distribution: $categoryCount');
+        debugPrint('🎨 [DOMINANT_CATEGORY] Dominant: $dominant');
+      }
+
+      return dominant;
+    });
 
 // Template più utilizzati (per quick start)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
@@ -1090,4 +1128,211 @@ class PendingTemplateSyncInfo {
 
     return 'Tentativo $attemptCount di $maxAttempts';
   }
+}
+
+// ============================================================
+// 🔧 DIAGNOSTIC PROVIDERS - For debugging template sync issues
+// ============================================================
+
+/// 🔧 Provider for template diagnostic info
+///
+/// Shows discrepancy between cached templates and Firebase templates.
+/// Use this to diagnose "ghost templates" that appear in quota but not UI.
+final templateDiagnosticProvider =
+    FutureProvider.autoDispose<TemplateDiagnosticInfo>((ref) async {
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+
+      if (repository is! FirebaseWorkoutTemplateRepository) {
+        return TemplateDiagnosticInfo.notAvailable();
+      }
+
+      final info = await repository.getDiagnosticInfo();
+
+      return TemplateDiagnosticInfo(
+        userId: info['userId'] as String? ?? 'N/A',
+        cacheCount: info['cacheCount'] as int? ?? 0,
+        firebaseCount: info['firebaseCount'] as int? ?? 0,
+        cacheAgeMinutes: info['cacheAgeMinutes'] as int? ?? 0,
+        isCacheStale: info['isCacheStale'] as bool? ?? false,
+        discrepancy: info['discrepancy'] as int? ?? 0,
+      );
+    });
+
+/// 🔧 Provider to fetch ALL templates directly from Firebase (bypassing cache)
+///
+/// Use this to see "ghost templates" that don't appear in the normal UI.
+final allFirebaseTemplatesProvider =
+    FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+
+      if (repository is! FirebaseWorkoutTemplateRepository) {
+        return [];
+      }
+
+      return repository.fetchAllTemplatesFromFirebaseDirect();
+    });
+
+/// 🔧 Notifier to manage template diagnostics and fixes
+class TemplateDiagnosticNotifier extends Notifier<TemplateDiagnosticState> {
+  @override
+  TemplateDiagnosticState build() {
+    return const TemplateDiagnosticState();
+  }
+
+  /// Run full diagnostics and get list of all templates from Firebase
+  Future<void> runDiagnostics() async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+
+      if (repository is! FirebaseWorkoutTemplateRepository) {
+        state = state.copyWith(
+          isLoading: false,
+          error: 'Repository non è Firebase',
+        );
+        return;
+      }
+
+      // Get diagnostic info
+      final info = await repository.getDiagnosticInfo();
+      final diagnosticInfo = TemplateDiagnosticInfo(
+        userId: info['userId'] as String? ?? 'N/A',
+        cacheCount: info['cacheCount'] as int? ?? 0,
+        firebaseCount: info['firebaseCount'] as int? ?? 0,
+        cacheAgeMinutes: info['cacheAgeMinutes'] as int? ?? 0,
+        isCacheStale: info['isCacheStale'] as bool? ?? false,
+        discrepancy: info['discrepancy'] as int? ?? 0,
+      );
+
+      // Fetch all templates from Firebase
+      final firebaseTemplates =
+          await repository.fetchAllTemplatesFromFirebaseDirect();
+
+      state = state.copyWith(
+        isLoading: false,
+        diagnosticInfo: diagnosticInfo,
+        firebaseTemplates: firebaseTemplates,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
+    }
+  }
+
+  /// Delete a specific template by ID
+  Future<bool> deleteTemplate(String templateId) async {
+    final repository = ref.read(workoutTemplateRepositoryProvider);
+
+    if (repository is! FirebaseWorkoutTemplateRepository) {
+      return false;
+    }
+
+    final success = await repository.forceDeleteTemplateById(templateId);
+
+    if (success) {
+      // Re-run diagnostics to update the list
+      await runDiagnostics();
+
+      // Invalidate main providers
+      ref.invalidate(templateQuotaProvider);
+      ref.invalidate(customWorkoutTemplatesProvider);
+      ref.invalidate(allWorkoutTemplatesProvider);
+    }
+
+    return success;
+  }
+
+  /// Invalidate cache and force refresh from Firebase
+  Future<void> invalidateCacheAndRefresh() async {
+    final repository = ref.read(workoutTemplateRepositoryProvider);
+
+    if (repository is! FirebaseWorkoutTemplateRepository) {
+      return;
+    }
+
+    await repository.invalidateCacheAndForceRefresh();
+
+    // Invalidate all related providers
+    ref.invalidate(templateQuotaProvider);
+    ref.invalidate(customWorkoutTemplatesProvider);
+    ref.invalidate(allWorkoutTemplatesProvider);
+    ref.invalidate(templateDiagnosticProvider);
+
+    // Re-run diagnostics
+    await runDiagnostics();
+  }
+}
+
+/// State for diagnostic notifier
+class TemplateDiagnosticState {
+  const TemplateDiagnosticState({
+    this.isLoading = false,
+    this.error,
+    this.diagnosticInfo,
+    this.firebaseTemplates = const [],
+  });
+
+  final bool isLoading;
+  final String? error;
+  final TemplateDiagnosticInfo? diagnosticInfo;
+  final List<Map<String, dynamic>> firebaseTemplates;
+
+  TemplateDiagnosticState copyWith({
+    bool? isLoading,
+    String? error,
+    TemplateDiagnosticInfo? diagnosticInfo,
+    List<Map<String, dynamic>>? firebaseTemplates,
+  }) {
+    return TemplateDiagnosticState(
+      isLoading: isLoading ?? this.isLoading,
+      error: error,
+      diagnosticInfo: diagnosticInfo ?? this.diagnosticInfo,
+      firebaseTemplates: firebaseTemplates ?? this.firebaseTemplates,
+    );
+  }
+}
+
+/// Provider for template diagnostic notifier
+final templateDiagnosticNotifierProvider =
+    NotifierProvider<TemplateDiagnosticNotifier, TemplateDiagnosticState>(
+  TemplateDiagnosticNotifier.new,
+);
+
+/// 🔧 Diagnostic info class
+class TemplateDiagnosticInfo {
+  const TemplateDiagnosticInfo({
+    required this.userId,
+    required this.cacheCount,
+    required this.firebaseCount,
+    required this.cacheAgeMinutes,
+    required this.isCacheStale,
+    required this.discrepancy,
+  });
+
+  factory TemplateDiagnosticInfo.notAvailable() {
+    return const TemplateDiagnosticInfo(
+      userId: 'N/A',
+      cacheCount: 0,
+      firebaseCount: 0,
+      cacheAgeMinutes: 0,
+      isCacheStale: false,
+      discrepancy: 0,
+    );
+  }
+
+  final String userId;
+  final int cacheCount;
+  final int firebaseCount;
+  final int cacheAgeMinutes;
+  final bool isCacheStale;
+  final int discrepancy;
+
+  /// True if there are more templates in Firebase than in cache (ghost templates)
+  bool get hasGhostTemplates => discrepancy > 0;
+
+  /// True if there's a mismatch between cache and Firebase
+  bool get hasSyncIssue => discrepancy != 0;
 }

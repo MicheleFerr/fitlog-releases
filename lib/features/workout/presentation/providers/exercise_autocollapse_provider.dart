@@ -1,26 +1,29 @@
-/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+/// GymBro TrackLog - Flutter Fitness App
 ///
-/// 📁 Layer: presentation/providers
-/// 🎯 Feature: workout
-/// 🔧 Type: provider
-/// 📱 Platform: Universal
+/// Layer: presentation/providers
+/// Feature: workout
+/// Type: provider
+/// Platform: Universal
 ///
 /// Exercise auto-collapse provider
 /// Manages automatic collapse with countdown timer
 library;
 
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// State for exercise auto-collapse
 class AutoCollapseState {
-  // Signal that collapse should be executed
-
   const AutoCollapseState({
     this.inProgress = false,
     this.countdown = 0,
     this.enabled = true,
     this.shouldExecuteCollapse = false,
   });
+
   final bool inProgress;
   final int countdown;
   final bool enabled;
@@ -42,15 +45,18 @@ class AutoCollapseState {
   }
 }
 
-/* TEMPORARY: Disabled for Riverpod 3.x migration - TODO: Migrate to @riverpod codegen
 /// Notifier for managing auto-collapse with countdown
-class AutoCollapseNotifier extends AutoDisposeFamilyNotifier<AutoCollapseState, String> {
+/// ✅ Riverpod 3.x: Uses Notifier with constructor argument for family support
+class AutoCollapseNotifier extends Notifier<AutoCollapseState> {
+  AutoCollapseNotifier(this.exerciseId);
+  final String exerciseId;
+
   Timer? _countdownTimer;
   Timer? _autoCollapseTimer;
   bool _disposed = false;
 
   @override
-  AutoCollapseState build(String exerciseId) {
+  AutoCollapseState build() {
     // Setup disposal on provider cleanup
     ref.onDispose(() {
       _disposed = true;
@@ -177,13 +183,10 @@ class AutoCollapseNotifier extends AutoDisposeFamilyNotifier<AutoCollapseState, 
     state = state.copyWith(enabled: true);
   }
 }
-*/
 
-/// Provider for exercise auto-collapse state
-/// Family provider indexed by exercise ID
-/// TEMPORARY: Disabled for Riverpod 3.x migration (StateProvider removed)
-/// TODO: Migrate to @riverpod codegen
-final exerciseAutoCollapseProvider =
-    Provider.family.autoDispose<AutoCollapseState, String>(
-  (ref, exerciseId) => const AutoCollapseState(),
+/// Provider for exercise auto-collapse state with notifier
+/// ✅ Riverpod 3.x syntax with family and autoDispose
+final exerciseAutoCollapseProvider = NotifierProvider.family
+    .autoDispose<AutoCollapseNotifier, AutoCollapseState, String>(
+  AutoCollapseNotifier.new,
 );

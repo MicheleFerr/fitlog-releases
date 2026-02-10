@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart'
     as wt;
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
@@ -10,6 +11,9 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+
+/// Key for SharedPreferences to track if swipe hint was shown
+const _kSwipeHintShownKey = 'swipe_hint_shown_v1';
 
 /// Welcome/empty state view displayed when no workout is active.
 ///
@@ -298,31 +302,119 @@ class WelcomeView extends ConsumerWidget {
       return _buildEmptyTemplateState(context, isCustomTab);
     }
 
+    // For custom tab, add +1 for the "Create New" card at the end
+    final itemCount = isCustomTab ? templates.length + 1 : templates.length;
+
     // Use vertical ListView with SwipeableTemplateCard (iOS-style swipe actions)
     return ListView.builder(
-      itemCount: templates.length,
-      itemExtent: 216, // 200px card + 16px margin (8px top + 8px bottom)
+      itemCount: itemCount,
       itemBuilder: (context, index) {
+        // Last item in custom tab is the "Create New Template" card
+        if (isCustomTab && index == templates.length) {
+          return _buildCreateTemplateCard(context);
+        }
+
         final template = templates[index];
-        return SwipeableTemplateCard(
-          key: ValueKey(template.id),
-          template: template,
-          onTap: () => onStartTemplate(template),
-          onShare: () => onShareTemplate(template),
-          onDuplicate: () => onDuplicateTemplate(template),
-          onEdit: () => onEditTemplate(template),
-          onDelete: () => onDeleteTemplate(template),
-          onSchedule: onScheduleTemplate != null
-              ? () => onScheduleTemplate!(template)
-              : null,
-          onRefresh: (onRefreshTemplate != null && template.isCustom)
-              ? () => onRefreshTemplate!(template)
-              : null,
-          onView: onViewTemplate != null
-              ? () => onViewTemplate!(template)
-              : null,
+        final card = SizedBox(
+          height: 216, // 200px card + 16px margin
+          child: SwipeableTemplateCard(
+            key: ValueKey(template.id),
+            template: template,
+            onTap: () => onStartTemplate(template),
+            onShare: () => onShareTemplate(template),
+            onDuplicate: () => onDuplicateTemplate(template),
+            onEdit: () => onEditTemplate(template),
+            onDelete: () => onDeleteTemplate(template),
+            onSchedule: onScheduleTemplate != null
+                ? () => onScheduleTemplate!(template)
+                : null,
+            onRefresh: (onRefreshTemplate != null && template.isCustom)
+                ? () => onRefreshTemplate!(template)
+                : null,
+            onView: onViewTemplate != null
+                ? () => onViewTemplate!(template)
+                : null,
+          ),
         );
+
+        // Show swipe hint animation only on first card
+        if (index == 0) {
+          return _SwipeHintWrapper(child: card);
+        }
+        return card;
       },
+    );
+  }
+
+  /// Builds the "Create New Template" card shown at the end of custom templates
+  Widget _buildCreateTemplateCard(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
+      child: Material(
+        color: context.colors.surface.withValues(alpha: 0),
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          onTap: onCreateTemplate,
+          borderRadius: BorderRadius.circular(16),
+          child: Ink(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: context.colors.primary.withValues(alpha: 0.3),
+                width: 2,
+                strokeAlign: BorderSide.strokeAlignInside,
+              ),
+              color: context.colors.primaryContainer.withValues(alpha: 0.1),
+            ),
+            child: SizedBox(
+              height: 100,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: context.colors.primary.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: SemanticIcon(
+                      icon: AppIcons.add,
+                      semanticLabel: context.l10n.createNewTemplate,
+                      size: AppIconSize.large,
+                      color: context.colors.primary,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.md),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.l10n.createNewTemplate,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: context.colors.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        context.l10n.buildFromScratch,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -372,6 +464,87 @@ class WelcomeView extends ConsumerWidget {
           ],
         ],
       ),
+    );
+  }
+}
+
+/// Widget that wraps a child and shows a "peek" animation to hint swipe actions.
+/// Only shows the animation once, then saves to SharedPreferences.
+class _SwipeHintWrapper extends StatefulWidget {
+  const _SwipeHintWrapper({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_SwipeHintWrapper> createState() => _SwipeHintWrapperState();
+}
+
+class _SwipeHintWrapperState extends State<_SwipeHintWrapper>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+  bool _shouldAnimate = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+
+    // Peek animation: slide left slightly, then back
+    _offsetAnimation = TweenSequence<Offset>([
+      TweenSequenceItem(
+        tween: Tween(begin: Offset.zero, end: const Offset(-0.08, 0))
+            .chain(CurveTween(curve: Curves.easeOut)),
+        weight: 40,
+      ),
+      TweenSequenceItem(
+        tween: Tween(begin: const Offset(-0.08, 0), end: Offset.zero)
+            .chain(CurveTween(curve: Curves.elasticOut)),
+        weight: 60,
+      ),
+    ]).animate(_controller);
+
+    _checkAndAnimate();
+  }
+
+  Future<void> _checkAndAnimate() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final hasShown = prefs.getBool(_kSwipeHintShownKey) ?? false;
+
+      if (!hasShown && mounted) {
+        setState(() => _shouldAnimate = true);
+        // Delay before starting animation
+        await Future.delayed(const Duration(milliseconds: 800));
+        if (mounted) {
+          await _controller.forward();
+          // Mark as shown
+          await prefs.setBool(_kSwipeHintShownKey, true);
+        }
+      }
+    } catch (_) {
+      // Ignore errors - hint is not critical
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_shouldAnimate) {
+      return widget.child;
+    }
+
+    return SlideTransition(
+      position: _offsetAnimation,
+      child: widget.child,
     );
   }
 }

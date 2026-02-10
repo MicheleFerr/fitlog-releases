@@ -1,9 +1,18 @@
 /// Main workout template card for grid/list view in My Templates tab
+///
+/// Unified design matching TemplateCard from WorkoutScreen:
+/// - Category strip with animated press feedback
+/// - Double shadow system for depth
+/// - Press animation (0.98 scale) with haptic feedback
+/// - Difficulty badge and exercise preview
+/// - Last performed with status color
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_card_styles.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
@@ -12,10 +21,11 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/template_stats.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/template_category.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/difficulty_level.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 
-class WorkoutTemplateCard extends ConsumerWidget {
+class WorkoutTemplateCard extends ConsumerStatefulWidget {
   const WorkoutTemplateCard({
     super.key,
     required this.template,
@@ -39,8 +49,16 @@ class WorkoutTemplateCard extends ConsumerWidget {
   /// Pre-calculated stats from parent (optimization: avoids N provider calls)
   final TemplateStats? preloadedStats;
 
+  @override
+  ConsumerState<WorkoutTemplateCard> createState() =>
+      _WorkoutTemplateCardState();
+}
+
+class _WorkoutTemplateCardState extends ConsumerState<WorkoutTemplateCard> {
+  bool _isPressed = false;
+
   /// Get color based on template category (matches TemplateCard in WorkoutScreen)
-  Color _getCategoryColor(BuildContext context, TemplateCategory category) {
+  Color _getCategoryColor(TemplateCategory category) {
     switch (category) {
       case TemplateCategory.strength:
         return context.colors.error; // Red
@@ -68,311 +86,509 @@ class WorkoutTemplateCard extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
     // OPTIMIZATION: Use preloaded stats if available
     final TemplateStats? stats;
-    if (preloadedStats != null) {
-      stats = preloadedStats;
+    if (widget.preloadedStats != null) {
+      stats = widget.preloadedStats;
     } else {
-      final statsAsync = ref.watch(templateStatsProvider(template.id));
+      final statsAsync = ref.watch(templateStatsProvider(widget.template.id));
       stats = statsAsync.value;
     }
 
     // Get category for colors/icon
-    final category = template.effectiveCategory;
-    final categoryColor = _getCategoryColor(context, category);
+    final category = widget.template.effectiveCategory;
+    final difficulty = widget.template.effectiveDifficulty;
+    final categoryColor = _getCategoryColor(category);
     final categoryIcon = _getCategoryIcon(category);
 
     return GestureDetector(
-      onTap: onTap,
-      child: Stack(
-        children: [
-          // Main card content
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: context.colors.surface,
-              borderRadius: BorderRadius.circular(AppSpacing.md),
-              boxShadow: [
-                BoxShadow(
-                  color: context.colors.shadow.withValues(alpha: 0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-              // Border with category color accent
-              border: Border.all(
-                color: categoryColor.withValues(alpha: 0.4),
-                width: 1.5,
+      onTapDown: (_) {
+        setState(() => _isPressed = true);
+        HapticFeedback.mediumImpact();
+      },
+      onTapUp: (_) => setState(() => _isPressed = false),
+      onTapCancel: () => setState(() => _isPressed = false),
+      onTap: widget.onTap,
+      child: AnimatedScale(
+        scale: _isPressed ? AppCardStyles.pressedScale : 1.0,
+        duration: AppCardStyles.pressAnimationDuration,
+        curve: Curves.easeOut,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            // Main card content
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: context.colors.surface,
+                borderRadius: BorderRadius.circular(AppCardStyles.cornerRadius),
+                boxShadow: AppCardStyles.cardShadows(context),
               ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                Padding(
-                  padding: const EdgeInsets.all(AppSpacing.sm),
-                  child: Row(
-                    children: [
-                      // Icon with category-based colors
-                      Container(
-                        padding: const EdgeInsets.all(AppSpacing.sm),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: category.gradientColors(context.isDarkMode),
-                          ),
-                          borderRadius: BorderRadius.circular(AppSpacing.sm),
-                          boxShadow: [
-                            BoxShadow(
-                              color: categoryColor.withValues(alpha: 0.3),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: SemanticIcon(
-                          icon: categoryIcon,
-                          semanticLabel: l10n.workout,
-                          size: AppIconSize.small,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const Spacer(),
-                      PopupMenuButton<String>(
-                        icon: SemanticIcon(
-                          icon: AppIcons.moreVert,
-                          semanticLabel: l10n.more,
-                          size: AppIconSize.small,
-                        ),
-                        onSelected: (value) {
-                          if (value == 'start') onStartWorkout();
-                          if (value == 'duplicate') onDuplicate();
-                          if (value == 'share') onShare();
-                          if (value == 'make_public') onMakePublic?.call();
-                          if (value == 'delete') onDelete();
-                        },
-                        itemBuilder: (context) => [
-                          // Start Workout option (primary action in menu)
-                          PopupMenuItem(
-                            value: 'start',
-                            child: Row(
-                              children: [
-                                SemanticIcon(
-                                  icon: AppIcons.play,
-                                  semanticLabel: l10n.startWorkout,
-                                  size: AppIconSize.small,
-                                  color: context.colors.primary,
-                                ),
-                                const SizedBox(width: AppSpacing.sm),
-                                Text(
-                                  l10n.startWorkout,
-                                  style: context.textTheme.bodyMedium?.copyWith(
-                                    color: context.colors.primary,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const PopupMenuDivider(),
-                          // Duplicate option
-                          PopupMenuItem(
-                            value: 'duplicate',
-                            child: Row(
-                              children: [
-                                SemanticIcon(
-                                  icon: AppIcons.copy,
-                                  semanticLabel: l10n.duplicate,
-                                  size: AppIconSize.small,
-                                  color: context.colors.onSurface,
-                                ),
-                                const SizedBox(width: AppSpacing.sm),
-                                Text(
-                                  l10n.duplicate,
-                                  style: context.textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Share option
-                          PopupMenuItem(
-                            value: 'share',
-                            child: Row(
-                              children: [
-                                SemanticIcon(
-                                  icon: AppIcons.share,
-                                  semanticLabel: l10n.share,
-                                  size: AppIconSize.small,
-                                  color: context.colors.onSurface,
-                                ),
-                                const SizedBox(width: AppSpacing.sm),
-                                Text(
-                                  l10n.share,
-                                  style: context.textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Make Public option
-                          PopupMenuItem(
-                            value: 'make_public',
-                            child: Row(
-                              children: [
-                                SemanticIcon(
-                                  icon: AppIcons.public,
-                                  semanticLabel: l10n.makePublic,
-                                  size: AppIconSize.small,
-                                  color: context.colors.onSurface,
-                                ),
-                                const SizedBox(width: AppSpacing.sm),
-                                Text(
-                                  l10n.makePublic,
-                                  style: context.textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const PopupMenuDivider(),
-                          // Delete option
-                          PopupMenuItem(
-                            value: 'delete',
-                            child: Row(
-                              children: [
-                                SemanticIcon(
-                                  icon: AppIcons.delete,
-                                  semanticLabel: l10n.delete,
-                                  size: AppIconSize.small,
-                                  color: context.colors.error,
-                                ),
-                                const SizedBox(width: AppSpacing.sm),
-                                Text(
-                                  l10n.delete,
-                                  style: context.textTheme.bodyMedium?.copyWith(
-                                    color: context.colors.error,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Name
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-                  child: Text(
-                    template.name,
-                    style: context.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-
-                // Fork attribution badge
-                if (template.forkedFromTemplateId != null)
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header with icon and menu
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                    padding: const EdgeInsets.all(AppSpacing.sm),
                     child: Row(
                       children: [
-                        SemanticIcon(
-                          icon: AppIcons.copy,
-                          semanticLabel: l10n.templateForkedFrom(
-                            template.originalAuthorName ?? '',
-                          ),
-                          size: AppIconSize.tiny,
-                          color: context.colors.tertiary,
-                        ),
-                        const SizedBox(width: AppSpacing.xs),
-                        Flexible(
-                          child: Text(
-                            l10n.templateForkedFrom(
-                              template.originalAuthorName ?? l10n.anonymous,
+                        // Icon with category-based colors
+                        Container(
+                          padding: const EdgeInsets.all(AppSpacing.sm),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors:
+                                  category.gradientColors(context.isDarkMode),
                             ),
-                            style: context.textTheme.labelSmall?.copyWith(
-                              color: context.colors.tertiary,
-                              fontStyle: FontStyle.italic,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            borderRadius:
+                                BorderRadius.circular(AppSpacing.sm),
+                            boxShadow: [
+                              BoxShadow(
+                                color: categoryColor.withValues(alpha: 0.3),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: SemanticIcon(
+                            icon: categoryIcon,
+                            semanticLabel: l10n.workout,
+                            size: AppIconSize.small,
+                            color: Colors.white,
                           ),
                         ),
+                        const SizedBox(width: AppSpacing.sm),
+                        // Difficulty badge
+                        _DifficultyBadge(difficulty: difficulty),
+                        const Spacer(),
+                        _buildPopupMenu(context, l10n),
                       ],
                     ),
                   ),
 
-                const Spacer(),
-
-                // Stats
-                Padding(
-                  padding: const EdgeInsets.all(AppSpacing.sm),
-                  child: Row(
-                    children: [
-                      SemanticIcon(
-                        icon: AppIcons.workout,
-                        semanticLabel: l10n.exercises,
-                        size: AppIconSize.tiny,
-                        color: context.colors.onSurfaceVariant,
+                  // Name
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                    child: Text(
+                      widget.template.name,
+                      style: context.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
-                      const SizedBox(width: AppSpacing.xs),
-                      Text(
-                        '${template.exercises.length}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+
+                  const SizedBox(height: AppSpacing.xs),
+
+                  // Exercise preview
+                  if (widget.template.exercises.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.sm,
+                      ),
+                      child: Text(
+                        _buildExercisePreview(),
                         style: context.textTheme.bodySmall?.copyWith(
                           color: context.colors.onSurfaceVariant,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(width: AppSpacing.sm),
-                      SemanticIcon(
-                        icon: AppIcons.timer,
-                        semanticLabel: l10n.duration,
-                        size: AppIconSize.tiny,
-                        color: context.colors.onSurfaceVariant,
+                    ),
+
+                  // Fork attribution badge
+                  if (widget.template.forkedFromTemplateId != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.sm,
                       ),
-                      const SizedBox(width: AppSpacing.xs),
-                      // Duration display: real average or estimated
-                      if (stats != null &&
-                          stats.totalCompletions > 0 &&
-                          stats.avgDuration != null)
-                        Text(
-                          '${stats.avgDuration!.inMinutes}m',
-                          style: context.textTheme.bodySmall?.copyWith(
-                            color: context.colors.success, // Green for real data
+                      child: Row(
+                        children: [
+                          SemanticIcon(
+                            icon: AppIcons.copy,
+                            semanticLabel: l10n.templateForkedFrom(
+                              widget.template.originalAuthorName ?? '',
+                            ),
+                            size: AppIconSize.tiny,
+                            color: context.colors.tertiary,
                           ),
-                        )
-                      else
-                        Text(
-                          '~${template.estimatedDuration}m',
-                          style: context.textTheme.bodySmall?.copyWith(
-                            color: context.colors.onSurfaceVariant,
-                            fontStyle: FontStyle.italic,
+                          const SizedBox(width: AppSpacing.xs),
+                          Flexible(
+                            child: Text(
+                              l10n.templateForkedFrom(
+                                widget.template.originalAuthorName ??
+                                    l10n.anonymous,
+                              ),
+                              style: context.textTheme.labelSmall?.copyWith(
+                                color: context.colors.tertiary,
+                                fontStyle: FontStyle.italic,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        ),
+                        ],
+                      ),
+                    ),
+
+                  const Spacer(),
+
+                  // Stats row with duration and last performed
+                  Padding(
+                    padding: const EdgeInsets.all(AppSpacing.sm),
+                    child: _buildStatsRow(context, l10n, stats),
+                  ),
+                ],
+              ),
+            ),
+
+            // Left accent strip (category color) - matches TemplateCard
+            Positioned(
+              left: 0,
+              top: 0,
+              bottom: 0,
+              child: AnimatedContainer(
+                duration: AppCardStyles.pressAnimationDuration,
+                curve: Curves.easeOut,
+                width: _isPressed
+                    ? AppCardStyles.stripWidthPressed
+                    : AppCardStyles.stripWidth,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      categoryColor.withValues(alpha: 0.9),
+                      categoryColor.withValues(alpha: 0.7),
                     ],
                   ),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(AppCardStyles.cornerRadius),
+                    bottomLeft: Radius.circular(AppCardStyles.cornerRadius),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: categoryColor.withValues(
+                        alpha: AppCardStyles.stripGlowOpacity,
+                      ),
+                      blurRadius: AppCardStyles.stripGlowBlurRadius,
+                      offset: const Offset(2, 0),
+                    ),
+                  ],
                 ),
-              ],
+              ),
+            ),
+
+            // Watermark category icon
+            Positioned(
+              right: -10,
+              bottom: -10,
+              child: Icon(
+                categoryIcon,
+                size: AppCardStyles.watermarkSize(CardSize.medium),
+                color: categoryColor.withValues(
+                  alpha: AppCardStyles.watermarkOpacity,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build exercise preview text "Panca · Croci · Dips +3"
+  String _buildExercisePreview() {
+    final exercises = widget.template.exercises;
+    final names = exercises.take(3).map((e) => e.exerciseName).join(' · ');
+    final remaining =
+        exercises.length > 3 ? ' +${exercises.length - 3}' : '';
+    return '$names$remaining';
+  }
+
+  /// Build stats row with exercise count, duration, and last performed
+  Widget _buildStatsRow(
+    BuildContext context,
+    AppLocalizations l10n,
+    TemplateStats? stats,
+  ) {
+    final hasRealDuration = stats != null &&
+        stats.totalCompletions > 0 &&
+        stats.avgDuration != null;
+
+    return Row(
+      children: [
+        // Exercise count
+        SemanticIcon(
+          icon: AppIcons.workout,
+          semanticLabel: l10n.exercises,
+          size: AppIconSize.tiny,
+          color: context.colors.onSurfaceVariant,
+        ),
+        const SizedBox(width: AppSpacing.xs),
+        Text(
+          '${widget.template.exercises.length}',
+          style: context.textTheme.bodySmall?.copyWith(
+            color: context.colors.onSurfaceVariant,
+          ),
+        ),
+
+        const SizedBox(width: AppSpacing.sm),
+
+        // Duration
+        SemanticIcon(
+          icon: AppIcons.timer,
+          semanticLabel: l10n.duration,
+          size: AppIconSize.tiny,
+          color: hasRealDuration
+              ? context.colors.success
+              : context.colors.onSurfaceVariant,
+        ),
+        const SizedBox(width: AppSpacing.xs),
+        Text(
+          hasRealDuration
+              ? '~${stats.avgDuration!.inMinutes}m'
+              : '${widget.template.estimatedDuration}m',
+          style: context.textTheme.bodySmall?.copyWith(
+            color: hasRealDuration
+                ? context.colors.success
+                : context.colors.onSurfaceVariant,
+            fontStyle: hasRealDuration ? null : FontStyle.italic,
+          ),
+        ),
+
+        // Last performed (if available)
+        if (stats != null && stats.lastPerformed != null) ...[
+          const SizedBox(width: AppSpacing.xs),
+          Container(
+            width: AppSpacing.xxs,
+            height: AppSpacing.xxs,
+            decoration: BoxDecoration(
+              color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+              shape: BoxShape.circle,
             ),
           ),
-
-          // Watermark category icon (matches TemplateCard in WorkoutScreen)
-          Positioned(
-            right: -10,
-            bottom: -10,
-            child: Icon(
-              categoryIcon,
-              size: 80,
-              color: categoryColor.withValues(alpha: 0.08),
+          const SizedBox(width: AppSpacing.xs),
+          Icon(
+            AppIcons.history,
+            size: AppIconSize.tiny,
+            color: stats.statusColor(context) ??
+                context.colors.onSurfaceVariant,
+          ),
+          const SizedBox(width: 2),
+          Flexible(
+            child: Text(
+              stats.formattedLastPerformed(context),
+              style: context.textTheme.labelSmall?.copyWith(
+                color: stats.statusColor(context) ??
+                    context.colors.onSurfaceVariant,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
+      ],
+    );
+  }
+
+  /// Build popup menu for card actions
+  Widget _buildPopupMenu(BuildContext context, AppLocalizations l10n) {
+    return PopupMenuButton<String>(
+      icon: SemanticIcon(
+        icon: AppIcons.moreVert,
+        semanticLabel: l10n.more,
+        size: AppIconSize.small,
+      ),
+      onSelected: (value) {
+        if (value == 'start') widget.onStartWorkout();
+        if (value == 'duplicate') widget.onDuplicate();
+        if (value == 'share') widget.onShare();
+        if (value == 'make_public') widget.onMakePublic?.call();
+        if (value == 'delete') widget.onDelete();
+      },
+      itemBuilder: (context) => [
+        // Start Workout option (primary action in menu)
+        PopupMenuItem(
+          value: 'start',
+          child: Row(
+            children: [
+              SemanticIcon(
+                icon: AppIcons.play,
+                semanticLabel: l10n.startWorkout,
+                size: AppIconSize.small,
+                color: context.colors.primary,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                l10n.startWorkout,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const PopupMenuDivider(),
+        // Duplicate option
+        PopupMenuItem(
+          value: 'duplicate',
+          child: Row(
+            children: [
+              SemanticIcon(
+                icon: AppIcons.copy,
+                semanticLabel: l10n.duplicate,
+                size: AppIconSize.small,
+                color: context.colors.onSurface,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                l10n.duplicate,
+                style: context.textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+        // Share option
+        PopupMenuItem(
+          value: 'share',
+          child: Row(
+            children: [
+              SemanticIcon(
+                icon: AppIcons.share,
+                semanticLabel: l10n.share,
+                size: AppIconSize.small,
+                color: context.colors.onSurface,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                l10n.share,
+                style: context.textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+        // Make Public option
+        PopupMenuItem(
+          value: 'make_public',
+          child: Row(
+            children: [
+              SemanticIcon(
+                icon: AppIcons.public,
+                semanticLabel: l10n.makePublic,
+                size: AppIconSize.small,
+                color: context.colors.onSurface,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                l10n.makePublic,
+                style: context.textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+        const PopupMenuDivider(),
+        // Delete option
+        PopupMenuItem(
+          value: 'delete',
+          child: Row(
+            children: [
+              SemanticIcon(
+                icon: AppIcons.delete,
+                semanticLabel: l10n.delete,
+                size: AppIconSize.small,
+                color: context.colors.error,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                l10n.delete,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colors.error,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Difficulty badge with WCAG AA compliant semantic colors
+/// Matches the design from TemplateCard
+class _DifficultyBadge extends StatelessWidget {
+  const _DifficultyBadge({required this.difficulty});
+
+  final DifficultyLevel difficulty;
+
+  /// Get background color (light container)
+  Color _getBackgroundColor(BuildContext context) {
+    switch (difficulty) {
+      case DifficultyLevel.beginner:
+        return context.colors.successContainer;
+      case DifficultyLevel.intermediate:
+        return context.colors.warningContainer;
+      case DifficultyLevel.advanced:
+        return context.colors.primaryContainer; // Blue - not intimidating
+      case DifficultyLevel.expert:
+        return context.colors.tertiaryContainer; // Purple for expert
+    }
+  }
+
+  /// Get border color (saturated semantic)
+  Color _getBorderColor(BuildContext context) {
+    switch (difficulty) {
+      case DifficultyLevel.beginner:
+        return context.colors.success;
+      case DifficultyLevel.intermediate:
+        return context.colors.warning;
+      case DifficultyLevel.advanced:
+        return context.colors.primary; // Blue - not intimidating
+      case DifficultyLevel.expert:
+        return context.colors.tertiary; // Purple for expert
+    }
+  }
+
+  /// Get text color (on container)
+  Color _getTextColor(BuildContext context) {
+    switch (difficulty) {
+      case DifficultyLevel.beginner:
+        return context.colors.onSuccessContainer;
+      case DifficultyLevel.intermediate:
+        return context.colors.onWarningContainer;
+      case DifficultyLevel.advanced:
+        return context.colors.onPrimaryContainer;
+      case DifficultyLevel.expert:
+        return context.colors.onTertiaryContainer;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.xs,
+        vertical: 2,
+      ),
+      decoration: BoxDecoration(
+        color: _getBackgroundColor(context),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: _getBorderColor(context), width: 1),
+      ),
+      child: Text(
+        difficulty.localizedName(context),
+        style: context.textTheme.labelSmall?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: _getTextColor(context),
+          fontSize: 10,
+        ),
       ),
     );
   }

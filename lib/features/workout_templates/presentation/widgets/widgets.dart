@@ -14,6 +14,7 @@ export 'cards/compact_superset_card.dart';
 export 'cards/compact_dropset_card.dart';
 export 'cards/compact_rest_pause_card.dart';
 export 'cards/workout_template_card.dart';
+export 'cards/workout_template_list_item.dart';
 
 // Sheet widgets
 export 'sheets/template_preview_sheet.dart';

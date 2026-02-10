@@ -297,6 +297,92 @@ class TemplateCloudService {
     }
   }
 
+  /// Create a new template from pre-serialized JSON exercises.
+  ///
+  /// 🔐 SECURITY FIX 2025-02-09: This variant accepts exercises already in JSON format,
+  /// useful when creating templates from WorkoutTemplate (which uses ExerciseTemplate).
+  ///
+  /// **Parameters**:
+  /// - `name`: Template name (required)
+  /// - `description`: Optional description
+  /// - `exercisesJson`: List of exercises already serialized to JSON
+  /// - `tags`: List of tags for categorization
+  /// - `isPublic`: Whether template is public (default: false)
+  ///
+  /// **Returns**: `CreateTemplateResult` with template ID and quota info
+  static Future<CreateTemplateResult> createTemplateFromJson({
+    required String name,
+    String? description,
+    required List<Map<String, dynamic>> exercisesJson,
+    List<String> tags = const [],
+    bool isPublic = false,
+  }) async {
+    try {
+      AppLogger.info(
+        'Creating template via Cloud Function (JSON): "$name" (${exercisesJson.length} exercises)',
+        tag: 'TemplateCloudService',
+      );
+
+      // 🔐 SECURITY: Call Cloud Function with rate limit handling
+      final result = await _rateLimitHandler
+          .executeWithRetry<HttpsCallableResult<Map<String, dynamic>>>(
+            () => FirebaseFunctions.instance
+                .httpsCallable(
+                  'createTemplate',
+                  options: HttpsCallableOptions(
+                    timeout: const Duration(seconds: 30),
+                  ),
+                )
+                .call<Map<String, dynamic>>({
+                  'name': name,
+                  'description': description ?? '',
+                  'exercises': exercisesJson,
+                  'tags': tags,
+                  'isPublic': isPublic,
+                }),
+            onRateLimited: (retryAfter) {
+              AppLogger.warning(
+                'Rate limited. Retrying createTemplate in $retryAfter seconds...',
+                tag: 'TemplateCloudService',
+              );
+            },
+            maxDelay: const Duration(minutes: 2),
+          );
+
+      final createResult = CreateTemplateResult.fromResponse(result.data);
+
+      AppLogger.info(
+        'Template created successfully: ${createResult.templateId}',
+        tag: 'TemplateCloudService',
+      );
+
+      return createResult;
+    } on FirebaseFunctionsException catch (e) {
+      AppLogger.error(
+        'Cloud Function error: ${e.code} - ${e.message}',
+        tag: 'TemplateCloudService',
+        error: e,
+      );
+
+      if (e.code == 'resource-exhausted') {
+        final quota = TemplateQuotaInfo.empty();
+        throw TemplateQuotaExceededException(
+          message: e.message ?? 'Template quota exceeded',
+          quota: quota,
+        );
+      }
+
+      rethrow;
+    } catch (e) {
+      AppLogger.error(
+        'Unexpected error creating template: $e',
+        tag: 'TemplateCloudService',
+        error: e,
+      );
+      rethrow;
+    }
+  }
+
   /// Get current template quota status
   ///
   /// **Returns**: `TemplateQuotaInfo` with current quota status

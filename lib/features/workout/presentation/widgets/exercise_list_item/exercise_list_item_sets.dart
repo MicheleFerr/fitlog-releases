@@ -256,16 +256,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     }
   }
 
-  /// Whether [set]'s weight matches the prefill suggestion (not yet edited).
-  bool _isSuggestedWeight(ExerciseSet set) {
-    if (set.isCompleted || set.weight == null) return false;
-    final prefill = ref.read(
-      exerciseWeightPrefillProvider(widget.exercise.name),
-    );
-    final prefillValue = prefill.value;
-    if (prefillValue == null) return false;
-    return (set.weight! - prefillValue.weight).abs() < 0.01;
-  }
+  // NOTE: _isSuggestedWeight removed - lightbulb indicator was removed per user request
 
   @override
   Widget build(BuildContext context) {
@@ -723,15 +714,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                   children: [
                     ..._buildSetDetailsForMode(set, config),
 
-                    // Suggested weight indicator (lightbulb)
-                    if (_isSuggestedWeight(set)) ...[
-                      const SizedBox(width: 4),
-                      Icon(
-                        AppIcons.lightbulbOutline,
-                        size: 14,
-                        color: context.colors.primary,
-                      ),
-                    ],
+                    // NOTE: Lightbulb icon removed per user request
+                    // Was showing when weight matched prefill suggestion
 
                     // RPE indicator if completed
                     if (set.isCompleted && set.rpe != null) ...[
@@ -1285,6 +1269,48 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       // Show RPE selector when completing a set
       final targetReps = set.reps ?? 10;
 
+      // ✅ FIX: Calculate set duration BEFORE showing RPE modal
+      // This ensures accurate TUT tracking even when RPE is enabled
+      double? setDuration;
+      DateTime? setStartTime;
+
+      final durationTracker = ref.read(setDurationTrackerProvider);
+
+      // First check persistent setStartedAt (source of truth)
+      if (set.setStartedAt != null) {
+        setStartTime = set.setStartedAt;
+        if (kDebugMode) {
+          debugPrint(
+            '⏱️ [TUT+RPE] Using setStartedAt from set: $setStartTime',
+          );
+        }
+      } else {
+        // Check in-memory tracker
+        setStartTime = durationTracker.getSetStartTime(
+          widget.exercise.id,
+          set.setNumber,
+        );
+      }
+
+      // Calculate duration if we have a start time
+      if (setStartTime != null) {
+        setDuration = DateTime.now()
+            .difference(setStartTime)
+            .inMilliseconds
+            .toDouble();
+
+        // Cap at 5 minutes max (sanity check)
+        if (setDuration > 300000) {
+          setDuration = 30000;
+        }
+
+        if (kDebugMode) {
+          debugPrint(
+            '⏱️ [TUT+RPE] Calculated duration: ${setDuration}ms',
+          );
+        }
+      }
+
       RpeSelectorBottomSheet.show(
         context: context,
         set: set,
@@ -1294,13 +1320,15 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           _handleRPESuggestion(suggestedWeight);
         },
         onConfirm: (actualReps, actualWeight, rpe) {
-          // Create updated set with RPE data
+          // ✅ FIX: Create updated set with RPE data AND duration tracking
           final updatedSet = set.copyWith(
             isCompleted: true,
             completedAt: DateTime.now(),
             actualReps: actualReps,
             weight: actualWeight,
             rpe: rpe,
+            setDurationMillis: setDuration, // ✅ Include TUT duration
+            setStartedAt: setStartTime, // ✅ Include start time
           );
 
           widget.onSetToggleComplete(updatedSet);

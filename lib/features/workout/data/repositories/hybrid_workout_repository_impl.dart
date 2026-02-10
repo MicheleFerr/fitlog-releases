@@ -1031,30 +1031,55 @@ class HybridWorkoutRepositoryImpl
           date: sessionDate,
         );
 
-        // Update analytics (fire-and-forget, don't block workout save)
+        // Update analytics with error tracking
+        // NOTE: Using unawaited but with proper error handling
+        debugPrint(
+          '📊 [ANALYTICS_SYNC] Syncing "${exercise.name}" - ${analyticsSets.length} sets, '
+          'max ${session.maxWeight}kg, est1RM ${session.highestEstimated1RM.toStringAsFixed(1)}kg',
+        );
+
         unawaited(
-          _analyticsRepository!.updateExerciseHistory(
-            userId: userId,
-            exerciseId: exercise.id,
-            exerciseName: exercise.name,
-            muscleGroup: exercise.category.name,
-            session: session,
-          ),
+          _analyticsRepository!
+              .updateExerciseHistory(
+                userId: userId,
+                exerciseId: exercise.id,
+                exerciseName: exercise.name,
+                muscleGroup: exercise.category.name,
+                session: session,
+              )
+              .then((result) {
+            result.fold(
+              (failure) {
+                // LOG FAILURE - This is critical for debugging sync issues!
+                debugPrint(
+                  '❌ [ANALYTICS_SYNC] FAILED to sync "${exercise.name}": ${failure.message}',
+                );
+              },
+              (_) {
+                debugPrint(
+                  '✅ [ANALYTICS_SYNC] Synced "${exercise.name}" successfully',
+                );
+              },
+            );
+          }).catchError((Object error, StackTrace stackTrace) {
+            // Catch any unhandled errors
+            debugPrint(
+              '❌ [ANALYTICS_SYNC] Exception syncing "${exercise.name}": $error',
+            );
+            debugPrint('   Stack: $stackTrace');
+          }),
         );
       }
 
-      if (kDebugMode) {
-        debugPrint(
-          '✅ [HybridWorkoutRepository] Analytics updated for ${workout.exercises.length} exercises',
-        );
-      }
-    } catch (e) {
+      debugPrint(
+        '📊 [ANALYTICS_SYNC] Initiated sync for ${workout.exercises.length} exercises from workout "${workout.name}"',
+      );
+    } catch (e, stackTrace) {
       // Log error but don't fail workout save
-      if (kDebugMode) {
-        debugPrint(
-          '⚠️ [HybridWorkoutRepository] Failed to update analytics: $e',
-        );
-      }
+      debugPrint(
+        '❌ [ANALYTICS_SYNC] Failed to process workout for analytics: $e',
+      );
+      debugPrint('   Stack: $stackTrace');
     }
   }
 

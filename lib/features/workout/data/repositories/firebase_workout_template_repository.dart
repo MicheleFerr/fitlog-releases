@@ -707,9 +707,71 @@ class FirebaseWorkoutTemplateRepository
   }
 
   /// Salva template nel cloud (rate-limited)
+  ///
+  /// 🔐 SECURITY FIX 2025-02-09: Per nuovi template usa Cloud Function createTemplate
+  /// che enforce quota limits server-side. Per UPDATE usa scrittura diretta (permesso).
   Future<void> _saveTemplateToCloud(WorkoutTemplate template) async {
     if (_auth.currentUser == null) return;
 
+    // 🔐 STEP 1: Check if document already exists (UPDATE vs CREATE)
+    final docExists = await _firestore
+        .collection(_templatesCollection)
+        .doc(template.id)
+        .get()
+        .then((doc) => doc.exists)
+        .timeout(
+          const Duration(seconds: 5),
+          onTimeout: () => false, // Assume new if timeout
+        );
+
+    if (!docExists) {
+      // 🆕 NEW TEMPLATE: Use Cloud Function to enforce quota limits
+      if (kDebugMode) {
+        debugPrint(
+          '🆕 Firebase: Creating NEW template "${template.name}" via Cloud Function',
+        );
+      }
+
+      try {
+        // Convert ExerciseTemplate list to JSON format for Cloud Function
+        final exercisesJson = template.exercises
+            .map((e) => e.toJson())
+            .toList();
+
+        final result = await TemplateCloudService.createTemplateFromJson(
+          name: template.name,
+          description: template.description ?? '',
+          exercisesJson: exercisesJson,
+          tags: template.tags,
+          isPublic: template.isPublic,
+        );
+
+        if (!result.success) {
+          throw Exception(result.error ?? 'Failed to create template via Cloud Function');
+        }
+
+        if (kDebugMode) {
+          debugPrint(
+            '✅ Firebase: Template created with ID: ${result.templateId}',
+          );
+        }
+
+        // 🔧 Update local cache with the new ID from Cloud Function
+        // The template ID might be different from the UUID generated client-side
+        if (result.templateId != null && result.templateId != template.id) {
+          // Update local cache to use the server-generated ID
+          await _updateLocalTemplateId(template.id, result.templateId!);
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('❌ Firebase: Cloud Function failed: $e');
+        }
+        rethrow;
+      }
+      return;
+    }
+
+    // 📝 EXISTING TEMPLATE: Use direct UPDATE (allowed by security rules)
     await rateLimitedWrite(() async {
       final data = template.toJson();
       data['userId'] = _auth.currentUser!.uid;
@@ -727,18 +789,9 @@ class FirebaseWorkoutTemplateRepository
 
       if (kDebugMode) {
         debugPrint(
-          '🔥 Firebase: Saving template ${template.name} with isCustom=${data['isCustom']}',
+          '🔥 Firebase: Updating template ${template.name} with isCustom=${data['isCustom']}',
         );
       }
-
-      // Enhanced Debug Logging - JSON validation
-
-      if (data['exercises'] != null) {
-        final exercisesJson = data['exercises'] as List;
-        for (int i = 0; i < exercisesJson.length; i++) {
-          exercisesJson[i] as Map<String, dynamic>;
-        }
-      } else {}
 
       // 🔧 FIX: Add 10s timeout to prevent infinite hanging on network issues
       await _firestore
@@ -786,16 +839,78 @@ class FirebaseWorkoutTemplateRepository
     });
   }
 
+  /// Helper to update local cache when template ID changes after Cloud Function creation
+  Future<void> _updateLocalTemplateId(String oldId, String newId) async {
+    try {
+      final templates = await _getTemplatesFromCache();
+      final index = templates.indexWhere((t) => t.id == oldId);
+      if (index != -1) {
+        templates[index] = templates[index].copyWith(id: newId);
+        await _cacheTemplates(templates);
+        if (kDebugMode) {
+          debugPrint('🔄 Cache: Updated template ID from $oldId to $newId');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ Cache: Failed to update template ID: $e');
+      }
+    }
+  }
+
   /// Elimina template dal cloud (rate-limited)
   Future<void> _deleteTemplateFromCloud(String templateId) async {
     if (_auth.currentUser == null) return;
 
-    await rateLimitedDelete(() async {
-      await _firestore
-          .collection(_templatesCollection)
-          .doc(templateId)
-          .delete();
-    });
+    // 🔍 DEBUG: Log user and document info before delete attempt
+    final currentUserId = _auth.currentUser!.uid;
+    final currentUserEmail = _auth.currentUser!.email;
+
+    // Get document to check ownership before delete
+    final docSnapshot = await _firestore
+        .collection(_templatesCollection)
+        .doc(templateId)
+        .get();
+
+    if (docSnapshot.exists) {
+      final data = docSnapshot.data()!;
+      final docUserId = data['userId'] as String?;
+      final docEmail = data['email'] as String?;
+      final docCoachId = data['coachId'] as String?;
+
+      // Log comparison (works in release via print)
+      if (kDebugMode) {
+        print('🔍 DELETE DEBUG:');
+        print('   Template ID: $templateId');
+        print('   Current user UID: $currentUserId');
+        print('   Current user email: $currentUserEmail');
+        print('   Doc userId: $docUserId');
+        print('   Doc email: $docEmail');
+        print('   Doc coachId: $docCoachId');
+        print('   userId match: ${docUserId == currentUserId}');
+        print('   email match: ${docEmail == currentUserEmail}');
+      }
+
+      if (docUserId != currentUserId && docEmail != currentUserEmail && docCoachId != currentUserId) {
+        if (kDebugMode) {
+          print('⚠️ OWNERSHIP MISMATCH - Delete will fail!');
+        }
+      }
+
+      // Only attempt delete if document exists
+      await rateLimitedDelete(() async {
+        await _firestore
+            .collection(_templatesCollection)
+            .doc(templateId)
+            .delete();
+      });
+    } else {
+      // Document doesn't exist in Firestore - skip cloud delete
+      // This happens when template was only in local cache (never synced)
+      if (kDebugMode) {
+        print('🔍 DELETE: Document $templateId not in Firestore, skipping cloud delete');
+      }
+    }
   }
 
   /// Carica template dalla cache locale
@@ -1234,5 +1349,173 @@ class FirebaseWorkoutTemplateRepository
         debugPrint('🔄 Migration: Updated templates with isCustom=true');
       }
     }
+  }
+
+  // ============================================================
+  // 🔧 DIAGNOSTIC METHODS - For debugging template sync issues
+  // ============================================================
+
+  /// 🔧 Invalidates local cache and forces a fresh load from Firebase
+  ///
+  /// Use this when:
+  /// - Templates are out of sync between cache and Firebase
+  /// - Quota shows more templates than visible in UI
+  /// - Need to diagnose ghost templates
+  Future<void> invalidateCacheAndForceRefresh() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Clear cache
+    await prefs.remove(_localCacheKey);
+    await prefs.remove(_lastSyncKey);
+
+    debugPrint('🔧 [DIAG] Cache invalidated - next getAllTemplates will fetch from Firebase');
+  }
+
+  /// 🔧 Fetches ALL templates for current user directly from Firebase (no cache)
+  ///
+  /// Returns diagnostic info including template IDs for deletion.
+  /// Use this to see "ghost" templates that don't appear in the UI.
+  Future<List<Map<String, dynamic>>> fetchAllTemplatesFromFirebaseDirect() async {
+    if (_auth.currentUser == null) {
+      debugPrint('🔧 [DIAG] User not authenticated');
+      return [];
+    }
+
+    final userId = _auth.currentUser!.uid;
+    debugPrint('🔧 [DIAG] Fetching ALL templates for userId: $userId');
+
+    try {
+      final querySnapshot = await _firestore
+          .collection(_templatesCollection)
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      debugPrint('🔧 [DIAG] Found ${querySnapshot.docs.length} templates in Firebase');
+
+      final results = <Map<String, dynamic>>[];
+
+      for (final doc in querySnapshot.docs) {
+        final data = doc.data();
+        final info = <String, dynamic>{
+          'id': doc.id,
+          'name': data['name'] ?? 'NO NAME',
+          'isPublic': data['isPublic'] ?? false,
+          'exerciseCount': (data['exercises'] as List?)?.length ?? 0,
+          'createdAt': data['createdAt']?.toDate()?.toIso8601String() ?? 'N/A',
+          'userId': data['userId'],
+        };
+
+        results.add(info);
+
+        debugPrint('🔧 [DIAG] Template: ${info['name']}');
+        debugPrint('         ID: ${info['id']}');
+        debugPrint('         Exercises: ${info['exerciseCount']}');
+        debugPrint('         Created: ${info['createdAt']}');
+        debugPrint('         isPublic: ${info['isPublic']}');
+        debugPrint('');
+      }
+
+      return results;
+    } catch (e) {
+      debugPrint('🔧 [DIAG] Error fetching templates: $e');
+      return [];
+    }
+  }
+
+  /// 🔧 Deletes a template directly from Firebase by ID
+  ///
+  /// Use this to remove "ghost" templates that appear in quota but not in UI.
+  /// ⚠️ WARNING: This is permanent and cannot be undone!
+  Future<bool> forceDeleteTemplateById(String templateId) async {
+    if (_auth.currentUser == null) {
+      debugPrint('🔧 [DIAG] User not authenticated');
+      return false;
+    }
+
+    try {
+      debugPrint('🔧 [DIAG] Force deleting template: $templateId');
+
+      // First verify the template belongs to current user
+      final doc = await _firestore
+          .collection(_templatesCollection)
+          .doc(templateId)
+          .get();
+
+      if (!doc.exists) {
+        debugPrint('🔧 [DIAG] Template does not exist in Firebase');
+        return false;
+      }
+
+      final data = doc.data()!;
+      final docUserId = data['userId'] as String?;
+
+      if (docUserId != _auth.currentUser!.uid) {
+        debugPrint('🔧 [DIAG] Template belongs to different user - cannot delete');
+        return false;
+      }
+
+      // Delete from Firebase
+      await _firestore.collection(_templatesCollection).doc(templateId).delete();
+
+      debugPrint('🔧 [DIAG] ✅ Template deleted successfully');
+
+      // Also remove from local cache
+      await _deleteTemplateLocally(templateId);
+
+      return true;
+    } catch (e) {
+      debugPrint('🔧 [DIAG] Error deleting template: $e');
+      return false;
+    }
+  }
+
+  /// 🔧 Gets diagnostic info about template quota discrepancy
+  Future<Map<String, dynamic>> getDiagnosticInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Cache info
+    final cacheJson = prefs.getString(_localCacheKey);
+    final lastSync = prefs.getInt(_lastSyncKey) ?? 0;
+    final cacheAge = DateTime.now().millisecondsSinceEpoch - lastSync;
+
+    int cachedCount = 0;
+    if (cacheJson != null) {
+      try {
+        final cacheList = json.decode(cacheJson) as List;
+        cachedCount = cacheList.length;
+      } catch (_) {}
+    }
+
+    // Firebase count
+    int firebaseCount = 0;
+    if (_auth.currentUser != null) {
+      try {
+        final snapshot = await _firestore
+            .collection(_templatesCollection)
+            .where('userId', isEqualTo: _auth.currentUser!.uid)
+            .count()
+            .get();
+        firebaseCount = snapshot.count ?? 0;
+      } catch (_) {}
+    }
+
+    final info = {
+      'userId': _auth.currentUser?.uid ?? 'NOT AUTHENTICATED',
+      'cacheCount': cachedCount,
+      'firebaseCount': firebaseCount,
+      'cacheAgeMinutes': (cacheAge / 1000 / 60).round(),
+      'isCacheStale': cacheAge > (60 * 60 * 1000), // > 1 hour
+      'discrepancy': firebaseCount - cachedCount,
+    };
+
+    debugPrint('🔧 [DIAG] Template Diagnostic Info:');
+    debugPrint('         User ID: ${info['userId']}');
+    debugPrint('         Cache count: ${info['cacheCount']}');
+    debugPrint('         Firebase count: ${info['firebaseCount']}');
+    debugPrint('         Cache age: ${info['cacheAgeMinutes']} minutes');
+    debugPrint('         Cache stale: ${info['isCacheStale']}');
+    debugPrint('         Discrepancy: ${info['discrepancy']}');
+
+    return info;
   }
 }

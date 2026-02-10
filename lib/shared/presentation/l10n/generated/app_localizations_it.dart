@@ -3995,6 +3995,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get previousWeightsLoaded => 'Pesi precedenti caricati';
 
   @override
+  String get lastTime => 'Ultima volta';
+
+  @override
   String get insightStrengthGainsTitle => 'Guadagni di Forza';
 
   @override
@@ -9078,9 +9081,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Mantieni l\'originale e crea una copia con le modifiche';
 
   @override
-  String keepOriginal(double weight) {
-    return 'Mantieni ${weight}kg';
-  }
+  String get keepOriginal => 'Non Salvare le Modifiche';
 
   @override
   String get keepOriginalDescription =>
@@ -27262,6 +27263,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get useThisWeight => 'Usa questo peso';
+
+  @override
+  String keepOriginalWeight(double weight) {
+    return 'Mantieni ${weight}kg';
+  }
 
   @override
   String perSideBreakdown(String breakdown) {

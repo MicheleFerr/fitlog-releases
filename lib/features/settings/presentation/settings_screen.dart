@@ -2261,11 +2261,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               child: Text(context.l10n.cancel),
             ),
             FilledButton(
-              onPressed: () {
-                ref
+              onPressed: () async {
+                await ref
                     .read(appConfigProvider.notifier)
                     .setDefaultRestTime(selectedTime);
-                Navigator.pop(context);
+                if (context.mounted) Navigator.pop(context);
               },
               child: Text(context.l10n.save),
             ),
@@ -2310,11 +2310,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               child: Text(context.l10n.cancel),
             ),
             FilledButton(
-              onPressed: () {
-                ref
+              onPressed: () async {
+                await ref
                     .read(appConfigProvider.notifier)
                     .setDefaultRestBetweenExercises(selectedTime);
-                Navigator.pop(context);
+                if (context.mounted) Navigator.pop(context);
               },
               child: Text(context.l10n.save),
             ),

@@ -7379,6 +7379,12 @@ abstract class AppLocalizations {
   /// **'Previous weights loaded successfully'**
   String get previousWeightsLoaded;
 
+  /// Label for showing last workout configuration
+  ///
+  /// In en, this message translates to:
+  /// **'Last time'**
+  String get lastTime;
+
   /// Title for strength gains insight
   ///
   /// In en, this message translates to:
@@ -16148,11 +16154,11 @@ abstract class AppLocalizations {
   /// **'Keep original and create a copy with changes'**
   String get saveAsNewTemplateDescription;
 
-  /// Button to keep original weight
+  /// Option to keep original template unchanged
   ///
   /// In en, this message translates to:
-  /// **'Keep {weight}kg'**
-  String keepOriginal(double weight);
+  /// **'Don\'t Save Changes'**
+  String get keepOriginal;
 
   /// Description for keep original option
   ///
@@ -48325,6 +48331,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use this weight'**
   String get useThisWeight;
+
+  /// Button to keep original weight
+  ///
+  /// In en, this message translates to:
+  /// **'Keep {weight}kg'**
+  String keepOriginalWeight(double weight);
 
   /// Breakdown of plates per side
   ///

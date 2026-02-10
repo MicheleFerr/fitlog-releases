@@ -5236,6 +5236,10 @@
   "@previousWeightsLoaded": {
     "description": "Message when previous workout weights are loaded"
   },
+  "lastTime": "Last time",
+  "@lastTime": {
+    "description": "Label for showing last workout configuration"
+  },
   "insightStrengthGainsTitle": "Strength Gains",
   "@insightStrengthGainsTitle": {
     "description": "Title for strength gains insight"
@@ -33149,8 +33153,8 @@
   "@useThisWeight": {
     "description": "Button to apply alternative weight"
   },
-  "keepOriginal": "Keep {weight}kg",
-  "@keepOriginal": {
+  "keepOriginalWeight": "Keep {weight}kg",
+  "@keepOriginalWeight": {
     "description": "Button to keep original weight",
     "placeholders": {
       "weight": {

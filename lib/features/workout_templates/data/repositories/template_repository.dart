@@ -15,8 +15,10 @@ library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/domain/services/template_cloud_service.dart';
 
 class TemplateRepository {
   TemplateRepository({FirebaseFirestore? firestore, FirebaseAuth? auth})
@@ -41,6 +43,9 @@ class TemplateRepository {
 
   /// Crea un nuovo template
   ///
+  /// 🔐 SECURITY FIX 2025-02-09: Uses Cloud Function to enforce server-side quota.
+  /// Direct Firestore writes are BLOCKED by security rules (allow create: if false).
+  ///
   /// [maxPrivateTemplates] - Max private templates (from tierEntitlementsProvider)
   /// [maxPublicTemplates] - Max public templates (from tierEntitlementsProvider)
   Future<String> createTemplate(
@@ -51,7 +56,8 @@ class TemplateRepository {
     final userId = _auth.currentUser?.uid;
     if (userId == null) throw Exception('User not authenticated');
 
-    // Controlla quota utente con limiti consolidati (UserTier + AccountTier)
+    // Note: Quota is now enforced server-side by the Cloud Function.
+    // We still do a client-side check for better UX (faster feedback).
     await _checkUserQuota(
       userId,
       template.visibility,
@@ -59,26 +65,64 @@ class TemplateRepository {
       maxPublic: maxPublicTemplates,
     );
 
-    final doc = _templatesCollection.doc();
-
     // GDPR: Anonymize author info if isAnonymous is true
     final authorName = template.isAnonymous
         ? 'Utente Anonimo'
         : _auth.currentUser?.displayName;
-    final authorPhotoUrl = template.isAnonymous
-        ? null
-        : _auth.currentUser?.photoURL;
 
-    final newTemplate = template.copyWith(
-      id: doc.id,
-      userId: userId,
-      createdAt: DateTime.now(),
-      authorName: authorName,
-      authorPhotoUrl: authorPhotoUrl,
+    if (kDebugMode) {
+      debugPrint(
+        '🔐 [TemplateRepository] Creating template via Cloud Function: "${template.name}"',
+      );
+    }
+
+    // 🔐 SECURITY: Use Cloud Function for CREATE (direct writes are blocked)
+    // Convert WorkoutTemplateExercise to JSON format for Cloud Function
+    final exercisesJson = template.exercises.map((e) => e.toJson()).toList();
+
+    final result = await TemplateCloudService.createTemplateFromJson(
+      name: template.name,
+      description: template.description ?? '',
+      exercisesJson: exercisesJson,
+      tags: template.tags,
+      isPublic: template.visibility == TemplateVisibility.public,
     );
 
-    await doc.set(newTemplate.toJson());
-    return doc.id;
+    if (!result.success) {
+      throw Exception(result.error ?? 'Failed to create template via Cloud Function');
+    }
+
+    if (kDebugMode) {
+      debugPrint(
+        '✅ [TemplateRepository] Template created: ${result.templateId} '
+        '(quota: ${result.quota.privateUsed}/${result.quota.privateMax})',
+      );
+    }
+
+    // Update template with additional fields via direct UPDATE (allowed by rules)
+    // This adds fields that the Cloud Function doesn't set
+    if (result.templateId.isNotEmpty) {
+      try {
+        await _templatesCollection.doc(result.templateId).update({
+          'authorName': authorName,
+          'authorPhotoUrl': template.isAnonymous ? null : _auth.currentUser?.photoURL,
+          'isAnonymous': template.isAnonymous,
+          'visibility': template.visibility.name,
+          'category': template.category.name,
+          'difficultyLevel': template.difficultyLevel,
+          'estimatedDurationMinutes': template.estimatedDurationMinutes,
+          'forkedFromTemplateId': template.forkedFromTemplateId,
+          'originalAuthorName': template.originalAuthorName,
+        });
+      } catch (e) {
+        // Non-critical - template was created, just missing some metadata
+        if (kDebugMode) {
+          debugPrint('⚠️ [TemplateRepository] Failed to update metadata: $e');
+        }
+      }
+    }
+
+    return result.templateId;
   }
 
   /// Ottieni i template dell'utente corrente

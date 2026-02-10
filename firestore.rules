@@ -249,15 +249,19 @@ service cloud.firestore {
       allow create: if false;
 
       // UPDATE: Allow if user owns document (quota not affected by updates)
+      // FIXED 2025-02-09: Added backward compatibility for 'email' field (legacy templates)
       allow update: if request.auth != null && (
         ('userId' in resource.data && request.auth.uid == resource.data.userId) ||
-        ('coachId' in resource.data && request.auth.uid == resource.data.coachId)
+        ('coachId' in resource.data && request.auth.uid == resource.data.coachId) ||
+        ('email' in resource.data && emailMatches(resource.data.email))
       );
 
       // DELETE: User must own the template (quota decremented client-side via listener)
+      // FIXED 2025-02-09: Added backward compatibility for 'email' field (legacy templates)
       allow delete: if request.auth != null && (
         ('userId' in resource.data && request.auth.uid == resource.data.userId) ||
-        ('coachId' in resource.data && request.auth.uid == resource.data.coachId)
+        ('coachId' in resource.data && request.auth.uid == resource.data.coachId) ||
+        ('email' in resource.data && emailMatches(resource.data.email))
       );
     }
 

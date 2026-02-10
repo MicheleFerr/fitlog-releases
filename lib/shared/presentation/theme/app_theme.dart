@@ -21,6 +21,7 @@ class AppTheme {
     'purple': Color(0xFF9C27B0),  // Material Purple 500
     'orange': Color(0xFFFF9800),  // Material Orange 500
     'teal': Color(0xFF009688),    // Material Teal 500
+    'pink': Color(0xFFE91E63),    // Material Pink 500
   };
 
   /// Get Color from color name string

@@ -627,6 +627,20 @@ class _RpeSelectorBottomSheetState
     final showRPESuggestion = _shouldShowRPESuggestion();
     final rpeSuggestion = showRPESuggestion ? _calculateRPESuggestion() : null;
 
+    // ✅ Calculate rest time adjustment preview
+    final config = ref.read(appConfigProvider);
+    final showRestAdjustment = (config.autoAdjustRestFromRpe ?? false) &&
+        _selectedRpe != null;
+    RestTimeAdjustment? restSuggestion;
+    if (showRestAdjustment) {
+      final baseRestSeconds =
+          widget.set.restTime ?? widget.exercise?.restTime ?? 90;
+      restSuggestion = RPEAutoregulationService.calculateRestTimeAdjustment(
+        baseRestSeconds: baseRestSeconds,
+        actualRPE: _selectedRpe!.toDouble(),
+      );
+    }
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -641,7 +655,14 @@ class _RpeSelectorBottomSheetState
             colorScheme,
             rpeSuggestion,
             useRir,
+            restSuggestion: restSuggestion,
           ),
+
+        // ✅ Show rest adjustment preview even without weight suggestion
+        if (!showRPESuggestion &&
+            restSuggestion != null &&
+            restSuggestion.hasAdjustment)
+          _buildRestOnlyCard(context, theme, l10n, colorScheme, restSuggestion),
 
         // Toggle for Weight & Reps (dynamic text based on counting mode)
         Padding(
@@ -1087,19 +1108,20 @@ class _RpeSelectorBottomSheetState
   }
 
   // RPE Autoregulation Helper Methods
+  //
+  // ✅ SIMPLIFIED: Now uses global config.autoAdjustWeightFromRpe setting
+  // instead of requiring per-exercise configuration (autoAdjustmentType).
+  // Uses sensible defaults: RPE 7-9 range or RIR 2 target.
   bool _shouldShowRPESuggestion() {
     if (widget.exercise == null) return false;
-    if (widget.exercise!.autoAdjustmentType != AutoAdjustmentType.rpe) {
-      return false;
-    }
     if (_selectedRpe == null) return false;
 
-    // Check if we have valid RPE targets
-    if (widget.exercise!.targetRPEMin == null ||
-        widget.exercise!.targetRPEMax == null) {
-      // Check for RIR mode
-      if (widget.exercise!.targetRIR == null) return false;
-    }
+    // ✅ Check global setting instead of per-exercise config
+    final config = ref.read(appConfigProvider);
+    if (config.autoAdjustWeightFromRpe != true) return false;
+
+    // Need actual weight to calculate suggestion
+    if (_actualWeight <= 0) return false;
 
     return true;
   }
@@ -1109,30 +1131,39 @@ class _RpeSelectorBottomSheetState
       return null;
     }
 
-    // Check if using RPE range mode
-    if (widget.exercise!.targetRPEMin != null &&
-        widget.exercise!.targetRPEMax != null) {
+    final useRir = ref.read(useRirModeProvider);
+
+    // ✅ Use exercise-specific targets if available, otherwise use defaults
+    // Default RPE range: 7-9 (optimal training zone)
+    // Default RIR target: 2 (2 reps in reserve)
+    const defaultRPEMin = 7.0;
+    const defaultRPEMax = 9.0;
+    const defaultRIR = 2;
+
+    if (!useRir) {
+      // RPE mode - use configured range or defaults
+      final targetMin = widget.exercise!.targetRPEMin ?? defaultRPEMin;
+      final targetMax = widget.exercise!.targetRPEMax ?? defaultRPEMax;
+
       return RPEAutoregulationService.calculateRPEAdjustment(
         currentWeight: _actualWeight,
         actualRPE: _selectedRpe!.toDouble(),
-        targetRPEMin: widget.exercise!.targetRPEMin!,
-        targetRPEMax: widget.exercise!.targetRPEMax!,
+        targetRPEMin: targetMin,
+        targetRPEMax: targetMax,
       );
-    }
-
-    // Check if using RIR mode
-    if (widget.exercise!.targetRIR != null) {
+    } else {
+      // RIR mode - use configured target or default
+      final targetRIR = widget.exercise!.targetRIR ?? defaultRIR;
       final actualRIR = RPEAutoregulationService.rpeToRIR(
         _selectedRpe!.toDouble(),
       );
+
       return RPEAutoregulationService.calculateRIRAdjustment(
         currentWeight: _actualWeight,
         actualRIR: actualRIR,
-        targetRIR: widget.exercise!.targetRIR!,
+        targetRIR: targetRIR,
       );
     }
-
-    return null;
   }
 
   Widget _buildRPESuggestionCard(
@@ -1141,8 +1172,9 @@ class _RpeSelectorBottomSheetState
     AppLocalizations l10n,
     ColorScheme colorScheme,
     WeightAdjustment suggestion,
-    bool useRir,
-  ) {
+    bool useRir, {
+    RestTimeAdjustment? restSuggestion,
+  }) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(12),
@@ -1292,12 +1324,162 @@ class _RpeSelectorBottomSheetState
               ],
             ),
           ),
+
+          // ✅ Rest time adjustment preview (if applicable)
+          if (restSuggestion != null && restSuggestion.hasAdjustment) ...[
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: colorScheme.tertiaryContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.timer,
+                    semanticLabel: l10n.adjustRestTitle,
+                    size: AppIconSize.small,
+                    color: restSuggestion.needsMoreRest
+                        ? context.colors.warning
+                        : context.colors.success,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.adjustRestTitle,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          '${restSuggestion.baseRestSeconds}s → ${restSuggestion.adjustedRestSeconds}s',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: restSuggestion.needsMoreRest
+                                ? context.colors.warning
+                                : context.colors.success,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: restSuggestion.needsMoreRest
+                          ? context.colors.warning.withValues(alpha: 0.2)
+                          : context.colors.success.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      restSuggestion.needsMoreRest
+                          ? '+${restSuggestion.adjustmentSeconds}s'
+                          : '${restSuggestion.adjustmentSeconds}s',
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: restSuggestion.needsMoreRest
+                            ? context.colors.warning
+                            : context.colors.success,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+
           const SizedBox(height: 4),
           Text(
             _getLocalizedAdjustmentReason(l10n, suggestion),
             style: theme.textTheme.bodySmall?.copyWith(
               fontStyle: FontStyle.italic,
               color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ✅ Card for rest-only adjustment (when weight suggestion is disabled)
+  Widget _buildRestOnlyCard(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+    RestTimeAdjustment restSuggestion,
+  ) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: colorScheme.tertiaryContainer.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: restSuggestion.needsMoreRest
+              ? context.colors.warning.withValues(alpha: 0.3)
+              : context.colors.success.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        children: [
+          SemanticIcon(
+            icon: AppIcons.timer,
+            semanticLabel: l10n.adjustRestTitle,
+            size: AppIconSize.medium,
+            color: restSuggestion.needsMoreRest
+                ? context.colors.warning
+                : context.colors.success,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.adjustRestTitle,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  '${restSuggestion.baseRestSeconds}s → ${restSuggestion.adjustedRestSeconds}s',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: restSuggestion.needsMoreRest
+                        ? context.colors.warning
+                        : context.colors.success,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: restSuggestion.needsMoreRest
+                  ? context.colors.warning.withValues(alpha: 0.2)
+                  : context.colors.success.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Text(
+              restSuggestion.needsMoreRest
+                  ? '+${restSuggestion.adjustmentSeconds}s'
+                  : '${restSuggestion.adjustmentSeconds}s',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: restSuggestion.needsMoreRest
+                    ? context.colors.warning
+                    : context.colors.success,
+              ),
             ),
           ),
         ],

@@ -91,6 +91,20 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
     }
   }
 
+  /// Get background icon based on category (large watermark style)
+  IconData _getCategoryIcon(TemplateCategory category) {
+    switch (category) {
+      case TemplateCategory.strength:
+        return AppIcons.workout; // Dumbbell
+      case TemplateCategory.cardio:
+        return AppIcons.directionsRun; // Running person
+      case TemplateCategory.flexibility:
+        return AppIcons.flexibility; // Yoga pose (self_improvement)
+      case TemplateCategory.hybrid:
+        return AppIcons.fitnessCenter; // General fitness
+    }
+  }
+
   /// Check if this template is currently active
   /// Uses select() to only rebuild when the specific templateId changes
   bool get _isActiveWorkout {
@@ -176,6 +190,17 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
             ),
             child: Stack(
               children: [
+                // Background category icon (watermark style)
+                Positioned(
+                  right: -20,
+                  bottom: -20,
+                  child: Icon(
+                    _getCategoryIcon(category),
+                    size: 120,
+                    color: _getStripColor(category).withValues(alpha: 0.08),
+                  ),
+                ),
+
                 // Left accent strip (category color) with enhanced glow
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 150),
@@ -263,6 +288,8 @@ class _DifficultyBadge extends StatelessWidget {
   final DifficultyLevel difficulty;
 
   /// Get background color (light container)
+  /// Note: Advanced uses primary (blue) instead of error (red) to avoid
+  /// intimidating beginners - red is associated with danger/error in UX
   Color _getBackgroundColor(BuildContext context) {
     switch (difficulty) {
       case DifficultyLevel.beginner:
@@ -270,7 +297,7 @@ class _DifficultyBadge extends StatelessWidget {
       case DifficultyLevel.intermediate:
         return context.colors.warningContainer;
       case DifficultyLevel.advanced:
-        return context.colors.errorContainer;
+        return context.colors.primaryContainer; // Blue - not intimidating
       case DifficultyLevel.expert:
         return context.colors.tertiaryContainer; // Purple for expert
     }
@@ -284,7 +311,7 @@ class _DifficultyBadge extends StatelessWidget {
       case DifficultyLevel.intermediate:
         return context.colors.warning;
       case DifficultyLevel.advanced:
-        return context.colors.error;
+        return context.colors.primary; // Blue - not intimidating
       case DifficultyLevel.expert:
         return context.colors.tertiary; // Purple for expert
     }
@@ -298,7 +325,7 @@ class _DifficultyBadge extends StatelessWidget {
       case DifficultyLevel.intermediate:
         return context.colors.onWarningContainer;
       case DifficultyLevel.advanced:
-        return context.colors.onErrorContainer;
+        return context.colors.onPrimaryContainer; // Blue text
       case DifficultyLevel.expert:
         return context.colors.onTertiaryContainer; // Purple text for expert
     }

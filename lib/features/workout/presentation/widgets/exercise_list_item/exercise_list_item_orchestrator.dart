@@ -26,6 +26,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item/exercise_list_item_header.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item/exercise_list_item_sets.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item/exercise_list_item_footer.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_history_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/counting_mode_picker_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_time_picker_modal.dart';
@@ -47,6 +48,7 @@ import 'package:gymbro_flutter_new/features/exercise_merge/domain/entities/merge
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_upgrade_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_upgrade_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/rpe_autoregulation_service.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/plate_calculator_widget.dart';
 
 /// Orchestrator widget that coordinates ExerciseListItemHeader and ExerciseListItemSets
 ///
@@ -124,19 +126,17 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       .read(exerciseExpansionProvider(widget.exercise.id))
       .userManuallyExpanded;
 
-  // TEMPORARY: Disabled for Riverpod 3.x migration
-  // TODO: Restore when migrating to @riverpod codegen
-  // ExerciseExpansionNotifier get _expansionNotifier =>
-  //     ref.read(exerciseExpansionProvider(widget.exercise.id).notifier);
+  // ✅ RESTORED: NotifierProvider.family now works
+  ExerciseExpansionNotifier get _expansionNotifier =>
+      ref.read(exerciseExpansionProvider(widget.exercise.id).notifier);
 
   // For debugging only - use .read()
   AutoCollapseState get _autoCollapseState =>
       ref.read(exerciseAutoCollapseProvider(widget.exercise.id));
 
-  // TEMPORARY: Disabled for Riverpod 3.x migration
-  // TODO: Restore when migrating to @riverpod codegen
-  // AutoCollapseNotifier get _autoCollapseNotifier =>
-  //     ref.read(exerciseAutoCollapseProvider(widget.exercise.id).notifier);
+  // ✅ RESTORED: NotifierProvider.family now works
+  AutoCollapseNotifier get _autoCollapseNotifier =>
+      ref.read(exerciseAutoCollapseProvider(widget.exercise.id).notifier);
 
   // TEMPORARY: Disabled for Riverpod 3.x migration
   // TODO: Restore when migrating to @riverpod codegen
@@ -238,12 +238,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
         final showCountdown = config.showCollapseCountdown ?? false;
 
-        // TEMPORARY: Disabled for Riverpod 3.x migration
-        /* _autoCollapseNotifier.startAutoCollapse(
+        // ✅ RESTORED: Start auto-collapse
+        _autoCollapseNotifier.startAutoCollapse(
           initialDelay: delay,
           countdownSeconds: countdownDuration,
           showCountdown: showCountdown,
-        ); */
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -392,7 +392,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
   void _handleCancelAutoCollapse() {
     try {
-// TEMPORARY: Disabled -       _autoCollapseNotifier.cancel();
+      _autoCollapseNotifier.cancel();
       if (mounted) {
         HapticFeedback.lightImpact();
       }
@@ -459,6 +459,150 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     // Default TUT value if not available
     final tutValue = widget.exercise.tut ?? '2-0-2-0';
     showTutInfoBottomSheet(context, tutValue);
+  }
+
+  /// Shows Tips bottom sheet with Info/Warmup/Prevention options
+  /// Part of Exercise Card redesign - Tips moved from header to footer
+  void _handleShowTipsBottomSheet() async {
+    final data = await _loadExerciseDataFromJson();
+
+    if (!mounted) return;
+
+    final hasInfo = data != null;
+    final hasWarmup = data != null && _hasWarmupData(data);
+    final hasPrevention = data != null && _hasInjuryPreventionData(data);
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: context.colors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Handle
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: context.colors.onSurface.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              // Title
+              Text(
+                widget.exercise.name,
+                style: context.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Options
+              if (hasInfo)
+                _buildTipsOption(
+                  ctx,
+                  icon: AppIcons.info,
+                  label: context.l10n.exerciseInfo,
+                  color: context.colors.primary,
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _handleShowExerciseInfoModal(data);
+                  },
+                ),
+              if (hasWarmup) ...[
+                const SizedBox(height: 8),
+                _buildTipsOption(
+                  ctx,
+                  icon: AppIcons.whatshot,
+                  label: context.l10n.warmupProtocol,
+                  color: context.warningColor,
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _handleShowWarmupModal(data);
+                  },
+                ),
+              ],
+              if (hasPrevention) ...[
+                const SizedBox(height: 8),
+                _buildTipsOption(
+                  ctx,
+                  icon: AppIcons.shieldOutlined,
+                  label: context.l10n.injuryPrevention,
+                  color: context.successColor,
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _handleShowInjuryPreventionModal(data);
+                  },
+                ),
+              ],
+              // Fallback if no data
+              if (!hasInfo && !hasWarmup && !hasPrevention)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Center(
+                    child: Text(
+                      context.l10n.noExerciseInfoAvailable,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Builds a single option row for the Tips bottom sheet
+  Widget _buildTipsOption(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: color, size: AppIconSize.medium),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: context.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Icon(
+              AppIcons.chevronRight,
+              color: context.colors.onSurfaceVariant,
+              size: AppIconSize.small,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   /// ⚡ PERFORMANCE: Uses cached exercisesDatabaseProvider
@@ -1336,6 +1480,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
       adjustedRestSeconds = adjustment.adjustedRestSeconds;
 
+      // ✅ Show user feedback when rest time is adjusted
+      if (adjustment.hasAdjustment && mounted) {
+        final sign = adjustment.needsMoreRest ? '+' : '';
+        final adjustmentSecs = adjustment.adjustmentSeconds;
+        SnackBarService.showInfo(
+          context,
+          '⏱️ ${context.l10n.restTimeAdjusted}: ${baseRestSeconds}s → ${adjustedRestSeconds}s ($sign${adjustmentSecs}s)',
+        );
+      }
+
       if (kDebugMode && adjustment.hasAdjustment) {
         debugPrint(
           '🔄 [RPE Rest Adjustment] ${adjustment.reason} '
@@ -1630,7 +1784,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
   }
 
   void _handleCollapseExercise() {
-// TEMPORARY: Disabled -     _expansionNotifier.collapse();
+    _expansionNotifier.collapse();
   }
 
   IconData _getSuggestionIcon(String suggestionType) {
@@ -1677,6 +1831,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       appConfigProvider.select((c) => c.hasSeenRestPauseTutorial),
     );
 
+    // Watch full config for child widgets that need multiple properties
+    final config = ref.watch(appConfigProvider);
+
     // ✅ PERFORMANCE FIX: Watch ONLY the specific properties needed for rendering
     // Previously, getters with ref.watch were causing rebuild chains when accessed.
     // Now we watch once in build() and use the local variables.
@@ -1706,8 +1863,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
       (previous, shouldCollapse) {
         if (shouldCollapse) {
           // Execute the collapse
-// TEMPORARY: Disabled -           _expansionNotifier.markAutoCollapsed();
-// TEMPORARY: Disabled -           _autoCollapseNotifier.acknowledgeCollapse();
+          _expansionNotifier.autoCollapse();
+          _autoCollapseNotifier.acknowledgeCollapse();
 
           if (kDebugMode) {
             debugPrint(
@@ -1771,7 +1928,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     return GestureDetector(
       onTap: !isExpanded
           ? () {
-// TEMPORARY: Disabled -               _expansionNotifier.expand();
+              _expansionNotifier.expand();
               HapticFeedback.lightImpact();
               if (kDebugMode) {
                 debugPrint(
@@ -1939,23 +2096,44 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                   child: isExpanded
                       ? Padding(
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                          child: ExerciseListItemSets(
-                            exercise: widget.exercise,
-                            config: config,
-                            onExerciseUpdate: (exercise) {
-                              widget.onExerciseUpdate?.call(exercise);
-                            },
-                            onSetToggleComplete: (set) {
-                              widget.onSetToggleComplete?.call(set);
-                            },
-                            onStartRestTimer: _handleStartRestTimer,
-                            onExecuteDropSet: _handleExecuteDropSet,
-                            onExecuteRestPause: _handleExecuteRestPause,
-                            onCollapseExercise: _handleCollapseExercise,
-                            tutorialFirstSetKey: widget.tutorialFirstSetKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ExerciseListItemSets(
+                                exercise: widget.exercise,
+                                config: config,
+                                onExerciseUpdate: (exercise) {
+                                  widget.onExerciseUpdate?.call(exercise);
+                                },
+                                onSetToggleComplete: (set) {
+                                  widget.onSetToggleComplete?.call(set);
+                                },
+                                onStartRestTimer: _handleStartRestTimer,
+                                onExecuteDropSet: _handleExecuteDropSet,
+                                onExecuteRestPause: _handleExecuteRestPause,
+                                onCollapseExercise: _handleCollapseExercise,
+                                tutorialFirstSetKey: widget.tutorialFirstSetKey,
+                              ),
+                              // ✅ NEW: Plate Calculator chip - shows when enabled and has weight
+                              if (config.plateCalculator ?? true)
+                                _PlateCalculatorChip(
+                                  exercise: widget.exercise,
+                                ),
+                            ],
                           ),
                         )
                       : const SizedBox.shrink(),
+                ),
+
+                // ✅ NEW: Footer section with Tips, TUT, Notes
+                // Shows compact chips, expandable for full content
+                // Part of Exercise Card redesign to reduce information overload
+                ExerciseListItemFooter(
+                  exercise: widget.exercise,
+                  formCues: formCues,
+                  onEditNotes: _handleEditNotes,
+                  onShowTutExplanationModal: _handleShowTutExplanationModal,
+                  onShowTipsBottomSheet: () => _handleShowTipsBottomSheet(),
                 ),
 
                 // ✅ DESIGN FIX: Minimal expansion hint (Opzione A)
@@ -1967,7 +2145,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                     child: Center(
                       child: InkWell(
                         onTap: () {
-// TEMPORARY: Disabled -                           _expansionNotifier.expand();
+                          _expansionNotifier.expand();
                           HapticFeedback.lightImpact();
                           if (kDebugMode) {
                             debugPrint(
@@ -2042,6 +2220,203 @@ class SmartSuggestionChip extends StatelessWidget {
       ),
       onPressed: onDismiss,
       backgroundColor: context.colors.surfaceContainerHighest,
+    );
+  }
+}
+
+/// ✅ NEW: Plate Calculator Chip widget
+/// Shows calculated plates for the exercise weight and opens configurator on tap
+/// Uses ConsumerWidget to read available plates from appConfigProvider
+/// so it auto-updates when user changes plate configuration
+class _PlateCalculatorChip extends ConsumerWidget {
+  const _PlateCalculatorChip({required this.exercise});
+
+  final Exercise exercise;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Read available plates from config (auto-updates when user changes in modal)
+    final config = ref.watch(appConfigProvider);
+    final availablePlates = config.availablePlates ??
+        [25.0, 20.0, 15.0, 10.0, 5.0, 2.5, 1.25, 0.5];
+
+    // Find working sets with weight > 0 (skip warmup sets)
+    final workingSets = exercise.sets
+        .where((s) => !s.isWarmup && (double.tryParse(s.weight.toString()) ?? 0) > 0)
+        .toList();
+
+    if (workingSets.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    // ✅ FIX: Use the first UNCOMPLETED working set's weight for calculation
+    // If all sets are completed, fall back to first working set
+    final nextSet = workingSets.where((s) => !s.isCompleted).firstOrNull;
+    final setToShow = nextSet ?? workingSets.first;
+    final targetWeight = double.tryParse(setToShow.weight.toString()) ?? 0;
+    if (targetWeight <= 0) {
+      return const SizedBox.shrink();
+    }
+
+    // Calculate plates using configured available plates
+    final platesSummary = _calculatePlatesSummary(targetWeight, availablePlates);
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: Semantics(
+        label: 'Plate calculator: $platesSummary',
+        hint: 'Tap to configure available plates',
+        button: true,
+        child: InkWell(
+          onTap: () => _showPlateCalculatorModal(context, targetWeight),
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: context.colors.secondaryContainer.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: context.colors.secondary.withValues(alpha: 0.3),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  AppIcons.calculateRounded,
+                  size: AppIconSize.small,
+                  color: context.colors.secondary,
+                ),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    'Plates: $platesSummary',
+                    style: context.textTheme.labelMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: context.colors.secondary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Icon(
+                  AppIcons.settings,
+                  size: AppIconSize.tiny,
+                  color: context.colors.secondary.withValues(alpha: 0.7),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Calculate plates summary for display (e.g., "2×20kg + 1×10kg")
+  /// Uses the provided availablePlates list from user configuration
+  String _calculatePlatesSummary(double targetWeight, List<double> availablePlates) {
+    const barbellWeight = 20.0;
+
+    if (targetWeight <= barbellWeight) {
+      return 'Only barbell';
+    }
+
+    final remainingWeight = targetWeight - barbellWeight;
+    final weightPerSide = remainingWeight / 2;
+
+    final plateCounts = <double, int>{};
+    var remaining = weightPerSide;
+
+    // Sort plates descending to use greedy algorithm
+    final sortedPlates = List<double>.from(availablePlates)..sort((a, b) => b.compareTo(a));
+
+    for (final plate in sortedPlates) {
+      final count = (remaining / plate).floor();
+      if (count > 0) {
+        plateCounts[plate] = count;
+        remaining -= count * plate;
+      }
+    }
+
+    if (plateCounts.isEmpty) {
+      return 'Only barbell';
+    }
+
+    return plateCounts.entries
+        .map((e) => '${e.value}×${e.key.truncate() == e.key ? e.key.truncate() : e.key}kg')
+        .join(' + ');
+  }
+
+  void _showPlateCalculatorModal(BuildContext context, double targetWeight) {
+    HapticFeedback.lightImpact();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: context.colors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.5,
+        maxChildSize: 0.9,
+        expand: false,
+        builder: (context, scrollController) => Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              // Handle bar
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              // Title
+              Row(
+                children: [
+                  Icon(
+                    AppIcons.calculateRounded,
+                    color: context.colors.secondary,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Plate Calculator',
+                      style: context.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(AppIcons.close),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              // Plate calculator widget
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: PlateCalculatorWidget(
+                    targetWeight: targetWeight,
+                    onWeightChanged: (_) {}, // Read-only for now
+                    unit: 'kg',
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
