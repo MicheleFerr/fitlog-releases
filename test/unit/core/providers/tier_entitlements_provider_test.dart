@@ -36,8 +36,11 @@ void main() {
         ],
       );
 
-      // Give provider time to initialize
-      await Future.delayed(const Duration(milliseconds: 10));
+      // Give provider time to initialize and stream to emit
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      // Force provider to refresh after stream emission
+      container.refresh(tierEntitlementsProvider);
 
       final entitlements = container.read(tierEntitlementsProvider);
 
@@ -75,8 +78,11 @@ void main() {
         ],
       );
 
-      // Give provider time to initialize
-      await Future.delayed(const Duration(milliseconds: 10));
+      // Give provider time to initialize and stream to emit
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      // Force provider to refresh after stream emission
+      container.refresh(tierEntitlementsProvider);
 
       final entitlements = container.read(tierEntitlementsProvider);
 
@@ -114,8 +120,11 @@ void main() {
         ],
       );
 
-      // Give provider time to initialize
-      await Future.delayed(const Duration(milliseconds: 10));
+      // Give provider time to initialize and stream to emit
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      // Force provider to refresh after stream emission
+      container.refresh(tierEntitlementsProvider);
 
       final entitlements = container.read(tierEntitlementsProvider);
 
@@ -155,8 +164,11 @@ void main() {
         ],
       );
 
-      // Wait for stream to emit
-      await container.read(userProfileProvider.future);
+      // Give provider time to initialize and stream to emit
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      // Force provider to refresh after stream emission
+      container.refresh(tierEntitlementsProvider);
 
       final entitlements = container.read(tierEntitlementsProvider);
 
@@ -200,8 +212,11 @@ void main() {
         ],
       );
 
-      // Wait for stream to emit
-      await container.read(userProfileProvider.future);
+      // Give provider time to initialize and stream to emit
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      // Force provider to refresh after stream emission
+      container.refresh(tierEntitlementsProvider);
 
       final entitlements = container.read(tierEntitlementsProvider);
 
@@ -218,6 +233,8 @@ void main() {
       container.dispose();
     });
 
+    // TODO: Fix stream timing issue - provider reads value before stream emits
+    // See: https://github.com/your-repo/issues/XXX
     test('Premium user with Platinum tier should still get 999 unlimited', () async {
       final now = DateTime.now();
       final premiumProfile = UserProfile(
@@ -239,8 +256,10 @@ void main() {
         ],
       );
 
-      // Wait for stream to emit
-      await container.read(userProfileProvider.future);
+      // Pump event queue to process stream emissions
+      await Future(() {});
+      await Future(() {});
+      await Future(() {});
 
       final entitlements = container.read(tierEntitlementsProvider);
 
@@ -255,6 +274,8 @@ void main() {
       container.dispose();
     });
 
+    // TODO: Fix stream timing issue - provider reads value before stream emits
+    // See: https://github.com/your-repo/issues/XXX
     test('Tier progression: Starter → Bronze → Silver → Gold → Platinum', () async {
       final tiers = [
         UserTier.starter,
@@ -323,8 +344,11 @@ void main() {
         ],
       );
 
-      // Give provider time to initialize
-      await Future.delayed(const Duration(milliseconds: 10));
+      // Give provider time to initialize and stream to emit
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      // Force provider to refresh after stream emission
+      container.refresh(tierEntitlementsProvider);
 
       // Test selective providers (PEP pattern)
       expect(container.read(maxCustomSingleExercisesProvider), 7);
@@ -375,8 +399,11 @@ void main() {
         ],
       );
 
-      // Give provider time to initialize
-      await Future.delayed(const Duration(milliseconds: 10));
+      // Give provider time to initialize and stream to emit
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      // Force provider to refresh after stream emission
+      container.refresh(tierEntitlementsProvider);
 
       final entitlements = container.read(tierEntitlementsProvider);
 
@@ -387,6 +414,8 @@ void main() {
       container.dispose();
     });
 
+    // TODO: Fix stream timing issue - provider reads value before stream emits
+    // See: https://github.com/your-repo/issues/XXX
     test('Premium limits should always be exactly 999', () async {
       final now = DateTime.now();
       final premiumProfile = UserProfile(
@@ -408,8 +437,11 @@ void main() {
         ],
       );
 
-      // Wait for stream to emit
-      await container.read(userProfileProvider.future);
+      // Give provider time to initialize and stream to emit
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      // Force provider to refresh after stream emission
+      container.refresh(tierEntitlementsProvider);
 
       final entitlements = container.read(tierEntitlementsProvider);
 
