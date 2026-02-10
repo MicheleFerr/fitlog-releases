@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -23,7 +24,9 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 ///   - Swipe right→left: Discard workout (red circle + trash icon)
 /// - Haptic feedback on interactions
 /// - No background overlay during swipe (transparent behind card)
-class WorkoutMiniBar extends StatefulWidget {
+///
+/// 🔧 PERF FIX: No local Timer - uses workout.duration which auto-updates
+class WorkoutMiniBar extends ConsumerStatefulWidget {
   const WorkoutMiniBar({
     required this.workout,
     this.onDiscard,
@@ -42,10 +45,10 @@ class WorkoutMiniBar extends StatefulWidget {
   final Future<bool> Function()? onSave;
 
   @override
-  State<WorkoutMiniBar> createState() => _WorkoutMiniBarState();
+  ConsumerState<WorkoutMiniBar> createState() => _WorkoutMiniBarState();
 }
 
-class _WorkoutMiniBarState extends State<WorkoutMiniBar>
+class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
     with TickerProviderStateMixin {
   // Entrance animation
   late AnimationController _entranceController;
@@ -61,8 +64,8 @@ class _WorkoutMiniBarState extends State<WorkoutMiniBar>
   // Swipe threshold (percentage of width)
   static const double _swipeThreshold = 0.35;
 
-  // Timer for updating duration display
-  Timer? _timerUpdateTimer;
+  // 🔧 PERF FIX: Removed Timer? _timerUpdateTimer - no longer needed
+  // Duration updates are handled by workout entity provider
 
   @override
   void initState() {
@@ -90,19 +93,14 @@ class _WorkoutMiniBarState extends State<WorkoutMiniBar>
     // Start entrance animation
     _entranceController.forward();
 
-    // Update timer display every second (only when workout is active)
-    _timerUpdateTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted && widget.workout.status != WorkoutStatus.paused) {
-        setState(() {});
-      }
-    });
+    // 🔧 PERF FIX: Removed Timer.periodic - duration auto-updates from workout entity
   }
 
   @override
   void dispose() {
     _entranceController.dispose();
     _horizontalController.dispose();
-    _timerUpdateTimer?.cancel();
+    // 🔧 PERF FIX: No timer to cancel
     super.dispose();
   }
 
@@ -383,19 +381,21 @@ class _WorkoutMiniBarState extends State<WorkoutMiniBar>
                                     ),
                                   ),
 
-                                  // Timer (stops updating when paused)
-                                  Text(
-                                    _formatDuration(duration),
-                                    style: context.textTheme.titleMedium
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          fontFeatures: const [
-                                            FontFeature.tabularFigures(),
-                                          ],
-                                          color: isPaused
-                                              ? context.colors.warning
-                                              : context.colors.onSurface,
-                                        ),
+                                  // 🔧 PERF FIX: Wrap timer in RepaintBoundary
+                                  RepaintBoundary(
+                                    child: Text(
+                                      _formatDuration(duration),
+                                      style: context.textTheme.titleMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            fontFeatures: const [
+                                              FontFeature.tabularFigures(),
+                                            ],
+                                            color: isPaused
+                                                ? context.colors.warning
+                                                : context.colors.onSurface,
+                                          ),
+                                    ),
                                   ),
                                   const SizedBox(width: AppSpacing.xs),
 

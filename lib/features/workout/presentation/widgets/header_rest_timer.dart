@@ -38,36 +38,41 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
 
   @override
   Widget build(BuildContext context) {
-    // 🔧 PERF FIX: Use .select() to only rebuild when specific fields change
-    // instead of rebuilding on every timer tick (60+ rebuilds/min)
-    final isTimerActive = ref.watch(
-      unifiedTimerProvider.select((state) => state != null),
+    // 🔧 PERF FIX: Consolidate 8 watches into 3 strategic watches using records
+    // Watch 1: Timer state flags (boolean values)
+    final timerFlags = ref.watch(
+      unifiedTimerProvider.select((state) => (
+        isTimerActive: state != null,
+        isIdle: state == null || state.isIdle,
+        isRunning: state?.isActive ?? false,
+        isPaused: state?.isPaused ?? false,
+        isCompleted: state?.isCompleted ?? false,
+        isInterExercise: state?.type == TimerType.interExercise,
+      )),
     );
-    final isIdle = ref.watch(
-      unifiedTimerProvider.select((state) => state == null || state.isIdle),
+
+    // Watch 2: Time values (numbers that update frequently)
+    final timeValues = ref.watch(
+      unifiedTimerProvider.select((state) => (
+        remainingSeconds: state?.remainingSeconds ?? 0,
+        remainingProgress: state?.remainingProgress ?? 0.0,
+      )),
     );
-    final isRunning = ref.watch(
-      unifiedTimerProvider.select((state) => state?.isActive ?? false),
-    );
-    final isPaused = ref.watch(
-      unifiedTimerProvider.select((state) => state?.isPaused ?? false),
-    );
-    final isCompleted = ref.watch(
-      unifiedTimerProvider.select((state) => state?.isCompleted ?? false),
-    );
-    final remainingSeconds = ref.watch(
-      unifiedTimerProvider.select((state) => state?.remainingSeconds ?? 0),
-    );
-    final remainingProgress = ref.watch(
-      unifiedTimerProvider.select((state) => state?.remainingProgress ?? 0.0),
-    );
-    // Watch timer type for inter-exercise display
-    final timerType = ref.watch(
-      unifiedTimerProvider.select((state) => state?.type ?? TimerType.rest),
-    );
-    final isInterExercise = timerType == TimerType.interExercise;
-    // Only watch the timerSound field from config, not entire config
+
+    // Watch 3: Config (separate provider)
     final timerSound = ref.watch(appConfigProvider.select((c) => c.timerSound));
+
+    // Extract flags for easier reading
+    final isTimerActive = timerFlags.isTimerActive;
+    final isIdle = timerFlags.isIdle;
+    final isRunning = timerFlags.isRunning;
+    final isPaused = timerFlags.isPaused;
+    final isCompleted = timerFlags.isCompleted;
+    final isInterExercise = timerFlags.isInterExercise;
+
+    // Extract time values
+    final remainingSeconds = timeValues.remainingSeconds;
+    final remainingProgress = timeValues.remainingProgress;
 
     // Auto-reset quando completa (status completed O remainingSeconds == 0)
     final shouldReset =
@@ -185,6 +190,7 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
 
   /// Countdown grande e leggibile
   /// 🔧 PERF FIX: Accept primitives instead of full UnifiedTimerState
+  /// 🔧 PERF FIX: Wrap in RepaintBoundary to isolate frequent repaints
   Widget _buildCountdown(
     BuildContext context,
     int remainingSeconds,
@@ -193,47 +199,49 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
     bool isPaused, {
     bool isInterExercise = false,
   }) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Tempo rimanente
-        Text(
-          _formatTime(remainingSeconds),
-          style: TextStyle(
-            fontSize: widget.compact ? 12 : 14,
-            fontWeight: FontWeight.bold,
-            fontFeatures: const [FontFeature.tabularFigures()],
-            color: _getTextColor(
-              context,
-              false,
-              isRunning,
-              isPaused,
-              remainingSeconds,
-              isInterExercise: isInterExercise,
+    return RepaintBoundary(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Tempo rimanente
+          Text(
+            _formatTime(remainingSeconds),
+            style: TextStyle(
+              fontSize: widget.compact ? 12 : 14,
+              fontWeight: FontWeight.bold,
+              fontFeatures: const [FontFeature.tabularFigures()],
+              color: _getTextColor(
+                context,
+                false,
+                isRunning,
+                isPaused,
+                remainingSeconds,
+                isInterExercise: isInterExercise,
+              ),
             ),
           ),
-        ),
-        SizedBox(width: widget.compact ? 4 : 6),
-        // Mini progress bar
-        SizedBox(
-          width: widget.compact ? 24 : 36,
-          height: widget.compact ? 3 : 4,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(2),
-            child: LinearProgressIndicator(
-              value: progress,
-              backgroundColor: context.colors.surfaceContainerHighest,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                _getProgressColor(
-                  context,
-                  remainingSeconds,
-                  isInterExercise: isInterExercise,
+          SizedBox(width: widget.compact ? 4 : 6),
+          // Mini progress bar
+          SizedBox(
+            width: widget.compact ? 24 : 36,
+            height: widget.compact ? 3 : 4,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(2),
+              child: LinearProgressIndicator(
+                value: progress,
+                backgroundColor: context.colors.surfaceContainerHighest,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  _getProgressColor(
+                    context,
+                    remainingSeconds,
+                    isInterExercise: isInterExercise,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

@@ -1925,7 +1925,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
     // BUG FIX #4: Wrap card in GestureDetector to allow expanding collapsed exercises
     // When exercise is collapsed, tapping anywhere on the card expands it
 
-    return GestureDetector(
+    // 🔧 PERF FIX: Wrap entire list item in RepaintBoundary to isolate repaints
+    return RepaintBoundary(
+      child: GestureDetector(
       onTap: !isExpanded
           ? () {
               _expansionNotifier.expand();
@@ -2188,6 +2190,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
           ),
         ),
       ),
+      ), // 🔧 PERF FIX: Close RepaintBoundary
     );
   }
 }
