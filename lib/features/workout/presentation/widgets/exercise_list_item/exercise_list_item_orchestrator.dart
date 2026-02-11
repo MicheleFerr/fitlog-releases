@@ -49,6 +49,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_u
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_upgrade_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/rpe_autoregulation_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/plate_calculator_widget.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/exercise_card_settings_provider.dart';
 
 /// Orchestrator widget that coordinates ExerciseListItemHeader and ExerciseListItemSets
 ///
@@ -99,16 +100,9 @@ class ExerciseListItem extends ConsumerStatefulWidget {
   ConsumerState<ExerciseListItem> createState() => _ExerciseListItemState();
 }
 
-class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
-    with AutomaticKeepAliveClientMixin {
+class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   ExerciseActivity? _lastActivity;
   Map<String, dynamic>? _exerciseData;
-
-  // ✅ PERFORMANCE FIX: Keep widget alive when scrolling out of view
-  // This prevents dispose/initState cycle when scrolling up/down
-  // which was causing repeated JSON loads and GIF requests
-  @override
-  bool get wantKeepAlive => true;
 
   bool get isProMode => ref.read(appConfigProvider).isProMode ?? false;
 
@@ -1812,9 +1806,6 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
   @override
   Widget build(BuildContext context) {
-    // ✅ Required when using AutomaticKeepAliveClientMixin
-    super.build(context);
-
     // ✅ PERFORMANCE FIX: Selective watching for only used config fields
     // Previously watched entire appConfigProvider causing unnecessary rebuilds.
     // Now we watch only the 4 specific fields used in this widget.
@@ -1833,6 +1824,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
 
     // Watch full config for child widgets that need multiple properties
     final config = ref.watch(appConfigProvider);
+
+    // ✅ Watch ExerciseCardSettings for visual toggles
+    final showPlates = ref.watch(showExercisePlatesProvider);
+    final density = ref.watch(exerciseCardDensityProvider);
 
     // ✅ PERFORMANCE FIX: Watch ONLY the specific properties needed for rendering
     // Previously, getters with ref.watch were causing rebuild chains when accessed.
@@ -1977,8 +1972,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header section
+                // ✅ FIX: Use density from ExerciseCardSettings
                 Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: density.horizontalPadding,
+                    vertical: density.verticalPadding,
+                  ),
                   child: ExerciseListItemHeader(
                     exercise: widget.exercise,
                     config: config,
@@ -2037,7 +2036,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                     }
 
                     return Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                      padding: EdgeInsets.fromLTRB(
+                        density.horizontalPadding, 0, density.horizontalPadding, density.sectionSpacing,
+                      ),
                       child: WeightJumpIndicator(
                         minWeight: minWeight,
                         maxWeight: maxWeight,
@@ -2060,12 +2061,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                     }
 
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: EdgeInsets.symmetric(horizontal: density.horizontalPadding),
                       child: Column(
                         children: [
                           Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
+                            spacing: density.sectionSpacing,
+                            runSpacing: density.sectionSpacing,
                             children: filteredSuggestions.map((suggestion) {
                               return SmartSuggestionChip(
                                 key: ValueKey(suggestion.id),
@@ -2097,7 +2098,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                   alignment: Alignment.topCenter,
                   child: isExpanded
                       ? Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          // ✅ FIX: Use density from ExerciseCardSettings
+                          padding: EdgeInsets.fromLTRB(
+                            density.horizontalPadding,
+                            0,
+                            density.horizontalPadding,
+                            density.verticalPadding,
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -2116,8 +2123,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem>
                                 onCollapseExercise: _handleCollapseExercise,
                                 tutorialFirstSetKey: widget.tutorialFirstSetKey,
                               ),
-                              // ✅ NEW: Plate Calculator chip - shows when enabled and has weight
-                              if (config.plateCalculator ?? true)
+                              // ✅ NEW: Plate Calculator chip - shows when enabled in ExerciseCardSettings
+                              if (showPlates)
                                 _PlateCalculatorChip(
                                   exercise: widget.exercise,
                                 ),

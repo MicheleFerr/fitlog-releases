@@ -126,6 +126,8 @@ class _MaterialScrollListState extends State<MaterialScrollList> {
         itemExtent: widget.itemExtent,
         cacheExtent: widget.cacheExtent,
         clipBehavior: widget.clipBehavior,
+        addAutomaticKeepAlives: false,
+        addRepaintBoundaries: true,
         itemCount: widget.itemCount,
         itemBuilder: widget.itemBuilder,
       );
@@ -153,6 +155,8 @@ class _MaterialScrollListState extends State<MaterialScrollList> {
         itemExtent: widget.itemExtent,
         cacheExtent: widget.cacheExtent,
         clipBehavior: widget.clipBehavior,
+        addAutomaticKeepAlives: false,
+        addRepaintBoundaries: true,
         itemCount: widget.itemCount,
         itemBuilder: (context, index) {
           // ✅ FIX: Pass ValueNotifier to item - child rebuilds only on velocity change

@@ -1,4 +1,5 @@
-import 'dart:async' show Timer, unawaited, Completer, TimeoutException;
+import 'dart:async'
+    show Completer, StreamController, TimeoutException, Timer, unawaited;
 import 'dart:io';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
@@ -10,6 +11,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import 'package:gymbro_flutter_new/features/timer/domain/models/timer_event.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
@@ -79,16 +81,18 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           // Marked audio as played from iOS notification
 
           // ✅ FIX: Call duration tracking when iOS completes timer
+          // NOTE: currentSet is the COMPLETED set, so we track the NEXT set (currentSet + 1)
           if (kDebugMode) {
             debugPrint('🍎 [iOS AUDIO] Timer completed by iOS notification');
           }
           if (_currentExerciseId != null && state?.currentSet != null) {
             try {
               final durationTracker = ref.read(setDurationTrackerProvider);
-              durationTracker.startSet(_currentExerciseId!, state!.currentSet!);
+              final nextSetNumber = state!.currentSet! + 1;
+              durationTracker.startSet(_currentExerciseId!, nextSetNumber);
               if (kDebugMode) {
                 debugPrint(
-                  '✅ [iOS AUDIO] Called startSet for exercise $_currentExerciseId, set ${state!.currentSet}',
+                  '✅ [iOS AUDIO] Called startSet for exercise $_currentExerciseId, set $nextSetNumber (after completing set ${state!.currentSet})',
                 );
               }
             } catch (e) {
@@ -163,6 +167,23 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
   Timer? _ticker;
   AudioPlayer? _audioPlayer;
   FlutterLocalNotificationsPlugin? _notifications;
+
+  // PERF: ValueNotifier for high-frequency updates (1Hz countdown)
+  // Isolates per-second updates from Riverpod state notifications
+  ValueNotifier<int>? _remainingSecondsNotifier;
+  ValueNotifier<int> get remainingSecondsNotifier {
+    _remainingSecondsNotifier ??= ValueNotifier<int>(
+      state?.remainingSeconds ?? 0,
+    );
+    return _remainingSecondsNotifier!;
+  }
+
+  // PERF: Stream for discrete timer events (started, paused, completed)
+  StreamController<TimerEvent>? _eventController;
+  Stream<TimerEvent> get eventStream {
+    _eventController ??= StreamController<TimerEvent>.broadcast();
+    return _eventController!.stream;
+  }
 
   // SINGLE unified platform channel - all timer operations go through here
   // This prevents race conditions and duplicate audio issues
@@ -507,6 +528,14 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       // Start the timer
       state = newState.start();
 
+      // PERF: Initialize ValueNotifier with starting value
+      _remainingSecondsNotifier?.value = durationSeconds;
+
+      // PERF: Emit start event
+      _eventController?.add(
+        TimerEvent.started(Duration(seconds: durationSeconds)),
+      );
+
       // OPTIMIZATION: Cache endTime for faster tick calculations
       _cachedEndTime = state!.endTime;
       _internalTickCount = 0;
@@ -514,7 +543,6 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
       // Start internal ticker
       _startTicker();
-      // Timer started
 
       // FIX #1: Re-enabled iOS background scheduling
       // This ensures timer completion audio plays even when app is in background
@@ -575,6 +603,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       final remainingSeconds = state!.remainingSeconds;
       state = state!.pause();
       _stopTicker();
+
+      // PERF: Emit pause event
+      _eventController?.add(TimerEvent.paused());
 
       // Cancel scheduled notifications
       await _cancelScheduledNotifications();
@@ -643,6 +674,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       final remainingSeconds = state!.remainingSeconds;
       state = state!.resume();
       _startTicker();
+
+      // PERF: Emit resume event
+      _eventController?.add(TimerEvent.resumed());
 
       // DISABLED: No automatic notification scheduling
       // Only play sound when timer completes, no notification
@@ -748,12 +782,14 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
       state = state!.reset();
 
+      // PERF: Reset ValueNotifier
+      _remainingSecondsNotifier?.value = 0;
+
       if (Platform.isIOS) {
         await _updateLiveActivity();
       }
 
       await _saveState();
-      // Timer reset
     } catch (e, stackTrace) {
       debugPrint('⚠️ [UnifiedTimer] Error: $e');
       unawaited(
@@ -816,6 +852,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       // Without this, _calculateRemainingSeconds() uses stale cached value
       // and the next tick overwrites the added time!
       _cachedEndTime = state!.endTime;
+
+      // PERF: Sync ValueNotifier with new remaining seconds
+      _remainingSecondsNotifier?.value = newRemainingSeconds;
 
       debugPrint(
         '[UnifiedTimer] ✅ Time added: newRemaining=${newRemainingSeconds}s, newTotal=${newTotalDurationSeconds}s, secondsAdded=${newSecondsAdded}s, cachedEndTime updated',
@@ -934,6 +973,10 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
       // Mark timer as skipped - this prevents audio playback
       state = state!.skip();
+
+      // PERF: Update ValueNotifier and emit skip event
+      _remainingSecondsNotifier?.value = 0;
+      _eventController?.add(TimerEvent.skipped());
 
       // Update Live Activity with skipped state
       if (Platform.isIOS) {
@@ -1089,21 +1132,33 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       _applyDriftCorrectionIfNeeded(now);
     }
 
-    // Update timer state with new remaining time
-    // NOTE: In Riverpod, setting state = newState automatically notifies all watchers,
-    // including .select() watchers. No need for ref.invalidateSelf() which would
-    // cause the provider to rebuild and lose timer state.
-    state = state!.copyWith(
-      remainingSeconds: newRemainingSeconds,
-      tickCount: _internalTickCount,
-    );
+    // PERF: Update ValueNotifier for high-frequency UI updates (no Riverpod rebuild)
+    _remainingSecondsNotifier?.value = newRemainingSeconds;
+
+    // Internal tracking (no Riverpod notification)
+    _internalTickCount;
+
+    // State update ONLY for structural changes (every 30 seconds for auto-save)
+    if (_internalTickCount % 30 == 0) {
+      state = state!.copyWith(
+        remainingSeconds: newRemainingSeconds,
+        tickCount: _internalTickCount,
+      );
+    }
 
     if (kDebugMode && _internalTickCount % 10 == 0) {
-      debugPrint('⏱️ [TIMER TICK] ${state!.remainingSeconds}s remaining');
+      debugPrint('⏱️ [TIMER TICK] ${newRemainingSeconds}s remaining');
     }
 
     // CRITICAL: Handle completion IMMEDIATELY and SYNCHRONOUSLY
-    if (state!.isCompleted && !state!.audioPlayed) {
+    // Use newRemainingSeconds directly since state may not be updated every tick
+    if (newRemainingSeconds <= 0 && !(_completionInProgress || (state!.audioPlayed))) {
+      // Sync state for completion
+      state = state!.copyWith(
+        remainingSeconds: 0,
+        tickCount: _internalTickCount,
+        status: TimerStatus.completed,
+      );
       _onTimerComplete();
     }
 
@@ -1238,6 +1293,11 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
     // CRITICAL FIX: Mark audio as played IMMEDIATELY to prevent race conditions
     state = state!.markAudioPlayed();
+
+    // PERF: Update ValueNotifier and emit completion event
+    _remainingSecondsNotifier?.value = 0;
+    _eventController?.add(TimerEvent.completed());
+
     await _saveState();
 
     // DOUBLE CHECK: Ensure the audioPlayed flag is truly persisted
@@ -1271,14 +1331,15 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       if (_currentExerciseId != null && state?.currentSet != null) {
         try {
           final durationTracker = ref.read(setDurationTrackerProvider);
-          final currentSetNumber = state!.currentSet!;
+          // NOTE: currentSet is the COMPLETED set, so we track the NEXT set (currentSet + 1)
+          final nextSetNumber = state!.currentSet! + 1;
 
           // Start tracking the set execution from the exact moment rest ends
-          durationTracker.startSet(_currentExerciseId!, currentSetNumber);
+          durationTracker.startSet(_currentExerciseId!, nextSetNumber);
 
           if (kDebugMode) {
             debugPrint(
-              '✅ [TIMER COMPLETION] Called startSet for exercise $_currentExerciseId, set $currentSetNumber',
+              '✅ [TIMER COMPLETION] Called startSet for exercise $_currentExerciseId, set $nextSetNumber (after completing set ${state!.currentSet})',
             );
           }
         } catch (durationError) {
@@ -2060,6 +2121,8 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           if (timeLeft > 0) {
             // Timer still has time left
             state = restoredState.copyWith(remainingSeconds: timeLeft);
+            // PERF: Sync ValueNotifier with restored state
+            _remainingSecondsNotifier?.value = timeLeft;
             _startTicker();
 
             if (Platform.isIOS) {
@@ -2457,7 +2520,22 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         }
       }
 
-      // 2.4. OPTIMIZATION: Clear cached data
+      // 2.4. PERF: Dispose ValueNotifier and StreamController
+      try {
+        _remainingSecondsNotifier?.dispose();
+        _remainingSecondsNotifier = null;
+      } catch (e) {
+        _remainingSecondsNotifier = null;
+      }
+
+      try {
+        _eventController?.close();
+        _eventController = null;
+      } catch (e) {
+        _eventController = null;
+      }
+
+      // 2.5. OPTIMIZATION: Clear cached data
       _cachedEndTime = null;
       _lastUIUpdate = null;
       _internalTickCount = 0;
