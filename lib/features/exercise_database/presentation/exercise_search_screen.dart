@@ -493,7 +493,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     final exercisesAsync = ref.read(jsonExerciseRepositoryProvider);
     final exercises = exercisesAsync.value ?? [];
 
-    await ModalService.showSheet(context,
+    await ModalService.showSheet(
+      context,
       isScrollControlled: true,
       builder: (sheetContext) => _FilterBottomSheet(
         exercises: exercises,
@@ -598,180 +599,186 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           ),
         ],
       ),
-      body: Column(
+      body: Stack(
         children: [
-          // Search Bar (compact)
-          if (_showSearch) ...[
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-              color: context.colors.surfaceContainerHighest.withValues(
-                alpha: 0.5,
-              ),
-              child: SizedBox(
-                height: 40,
-                child: TextField(
-                  controller: _searchController,
-                  autofocus: true,
-                  style: context.textTheme.bodyMedium,
-                  decoration: InputDecoration(
-                    hintText: l10n.searchExercisesHint,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
-                    isDense: true,
-                    prefixIcon: const Padding(
-                      padding: EdgeInsets.only(left: 8.0, right: 4.0),
-                      child: SemanticIcon(
-                        icon: AppIcons.search,
-                        semanticLabel: 'Search',
-                        size: 20,
-                      ),
-                    ),
-                    prefixIconConstraints: const BoxConstraints(
-                      minWidth: 32,
-                      minHeight: 32,
-                    ),
-                    suffixIcon: _isSearching
-                        ? const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: LoadingIndicator(size: 18),
-                          )
-                        : (_searchQuery.isNotEmpty
-                              ? IconButton(
-                                  icon: const SemanticIcon(
-                                    icon: AppIcons.clear,
-                                    semanticLabel: 'Clear',
-                                    size: 18,
-                                  ),
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(
-                                    minWidth: 32,
-                                    minHeight: 32,
-                                  ),
-                                  onPressed: () {
-                                    _searchController.clear();
-                                    setState(() {
-                                      _searchQuery = '';
-                                      _useFuzzyResults = false;
-                                      _fuzzyResults = [];
-                                    });
-                                    _searchDebouncer.cancel();
-                                  },
-                                )
-                              : null),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(
-                        color: context.colors.primary,
-                        width: 1.5,
-                      ),
-                    ),
-                    filled: true,
-                    fillColor: context.colors.surface,
+          Column(
+            children: [
+              // Search Bar (compact)
+              if (_showSearch) ...[
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                    vertical: 8.0,
                   ),
-                  onChanged: (value) {
-                    setState(() => _searchQuery = value.toLowerCase());
-                    _performFuzzySearch(value);
-                  },
+                  color: context.colors.surfaceContainerHighest.withValues(
+                    alpha: 0.5,
+                  ),
+                  child: SizedBox(
+                    height: 40,
+                    child: TextField(
+                      controller: _searchController,
+                      autofocus: true,
+                      style: context.textTheme.bodyMedium,
+                      decoration: InputDecoration(
+                        hintText: l10n.searchExercisesHint,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 8.0,
+                        ),
+                        isDense: true,
+                        prefixIcon: const Padding(
+                          padding: EdgeInsets.only(left: 8.0, right: 4.0),
+                          child: SemanticIcon(
+                            icon: AppIcons.search,
+                            semanticLabel: 'Search',
+                            size: 20,
+                          ),
+                        ),
+                        prefixIconConstraints: const BoxConstraints(
+                          minWidth: 32,
+                          minHeight: 32,
+                        ),
+                        suffixIcon: _isSearching
+                            ? const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: LoadingIndicator(size: 18),
+                              )
+                            : (_searchQuery.isNotEmpty
+                                  ? IconButton(
+                                      icon: const SemanticIcon(
+                                        icon: AppIcons.clear,
+                                        semanticLabel: 'Clear',
+                                        size: 18,
+                                      ),
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(
+                                        minWidth: 32,
+                                        minHeight: 32,
+                                      ),
+                                      onPressed: () {
+                                        _searchController.clear();
+                                        setState(() {
+                                          _searchQuery = '';
+                                          _useFuzzyResults = false;
+                                          _fuzzyResults = [];
+                                        });
+                                        _searchDebouncer.cancel();
+                                      },
+                                    )
+                                  : null),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                            color: context.colors.primary,
+                            width: 1.5,
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: context.colors.surface,
+                      ),
+                      onChanged: (value) {
+                        setState(() => _searchQuery = value.toLowerCase());
+                        _performFuzzySearch(value);
+                      },
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ],
+              ],
 
-          // Results
-          Expanded(
-            child: _useFuzzyResults
-                ? _buildFuzzySearchResults()
-                : exercisesAsync.when(
-                    data: (exercises) {
-                      final filteredExercises = _filterExercises(exercises);
+              // Results
+              Expanded(
+                child: _useFuzzyResults
+                    ? _buildFuzzySearchResults()
+                    : exercisesAsync.when(
+                        data: (exercises) {
+                          final filteredExercises = _filterExercises(exercises);
 
-                      if (filteredExercises.isEmpty) {
-                        return _buildEmptyState();
-                      }
+                          if (filteredExercises.isEmpty) {
+                            return _buildEmptyState();
+                          }
 
-                      return _buildSearchResults(filteredExercises);
-                    },
-                    loading: () => const Center(child: LoadingIndicator()),
-                    error: (error, stack) => _buildErrorState(error),
-                  ),
-          ),
-        ],
-      ),
-
-      // FABs: close (X) + add (+) with badge, positioned bottom-right
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom > 0
-              ? MediaQuery.of(context).viewInsets.bottom + 8.0
-              : 24.0,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Close/Search FAB
-            FloatingActionButton(
-              key: _searchBarKey,
-              heroTag: 'search_toggle',
-              onPressed: _toggleSearch,
-              tooltip: _showSearch ? l10n.close : l10n.search,
-              child: Icon(_showSearch ? AppIcons.close : AppIcons.search),
-            ),
-            // Add FAB with badge (shown when exercises selected)
-            if (_selectedExercises.isNotEmpty) ...[
-              const SizedBox(width: 16),
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  FloatingActionButton(
-                    key: _addButtonKey,
-                    heroTag: 'add_exercises',
-                    onPressed: widget.multiSelectMode
-                        ? _selectExercises
-                        : _addSelectedToWorkout,
-                    tooltip: widget.multiSelectMode
-                        ? 'Select Exercises'
-                        : l10n.addToWorkout,
-                    child: Icon(
-                      widget.multiSelectMode ? AppIcons.check : AppIcons.add,
-                    ),
-                  ),
-                  // Badge count
-                  Positioned(
-                    right: -4,
-                    top: -4,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: context.colors.primary,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: context.colors.surface,
-                          width: 2,
-                        ),
+                          return _buildSearchResults(filteredExercises);
+                        },
+                        loading: () => const Center(child: LoadingIndicator()),
+                        error: (error, stack) => _buildErrorState(error),
                       ),
-                      constraints: const BoxConstraints(
-                        minWidth: 22,
-                        minHeight: 22,
-                      ),
-                      child: Text(
-                        '${_selectedExercises.length}',
-                        style: context.textTheme.labelSmall?.copyWith(
-                          color: context.colors.onPrimary,
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ],
-          ],
-        ),
+          ),
+          // FABs: positioned bottom-right, just above keyboard
+          Positioned(
+            bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+            right: 16,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Close/Search FAB
+                FloatingActionButton(
+                  key: _searchBarKey,
+                  heroTag: 'search_toggle',
+                  onPressed: _toggleSearch,
+                  tooltip: _showSearch ? l10n.close : l10n.search,
+                  child: Icon(_showSearch ? AppIcons.close : AppIcons.search),
+                ),
+                // Add FAB with badge (shown when exercises selected)
+                if (_selectedExercises.isNotEmpty) ...[
+                  const SizedBox(width: 16),
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      FloatingActionButton(
+                        key: _addButtonKey,
+                        heroTag: 'add_exercises',
+                        onPressed: widget.multiSelectMode
+                            ? _selectExercises
+                            : _addSelectedToWorkout,
+                        tooltip: widget.multiSelectMode
+                            ? 'Select Exercises'
+                            : l10n.addToWorkout,
+                        child: Icon(
+                          widget.multiSelectMode
+                              ? AppIcons.check
+                              : AppIcons.add,
+                        ),
+                      ),
+                      // Badge count
+                      Positioned(
+                        right: -4,
+                        top: -4,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: context.colors.primary,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: context.colors.surface,
+                              width: 2,
+                            ),
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 22,
+                            minHeight: 22,
+                          ),
+                          child: Text(
+                            '${_selectedExercises.length}',
+                            style: context.textTheme.labelSmall?.copyWith(
+                              color: context.colors.onPrimary,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1001,31 +1008,31 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             context: context,
             removeBottom: true,
             child: ListView.builder(
-            key: const PageStorageKey('exercise_fuzzy_search_list'),
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom + 80,
+              key: const PageStorageKey('exercise_fuzzy_search_list'),
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + 80,
+              ),
+              itemCount:
+                  _fuzzyResults.length + 1, // +1 for missing exercise widget
+              itemBuilder: (context, index) {
+                // Show missing exercise widget as last item
+                if (index == _fuzzyResults.length) {
+                  return _buildMissingExerciseWidget();
+                }
+
+                final fuzzyResult = _fuzzyResults[index];
+                final exercise = fuzzyResult.exercise;
+                final isSelected = _selectedExercises.contains(exercise);
+
+                return _buildFuzzyExerciseCard(
+                  exercise,
+                  isSelected,
+                  fuzzyResult.score,
+                  fuzzyResult.wasAutoCorrected,
+                  tutorialKey: index == 0 ? _exerciseCardKey : null,
+                );
+              },
             ),
-            itemCount:
-                _fuzzyResults.length + 1, // +1 for missing exercise widget
-            itemBuilder: (context, index) {
-              // Show missing exercise widget as last item
-              if (index == _fuzzyResults.length) {
-                return _buildMissingExerciseWidget();
-              }
-
-              final fuzzyResult = _fuzzyResults[index];
-              final exercise = fuzzyResult.exercise;
-              final isSelected = _selectedExercises.contains(exercise);
-
-              return _buildFuzzyExerciseCard(
-                exercise,
-                isSelected,
-                fuzzyResult.score,
-                fuzzyResult.wasAutoCorrected,
-                tutorialKey: index == 0 ? _exerciseCardKey : null,
-              );
-            },
-          ),
           ),
         ),
       ],
@@ -1426,7 +1433,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                     child: IconButton(
                       icon: const Icon(AppIcons.copy),
                       tooltip: context.l10n.createVariant,
-                      onPressed: () => _showCreateVariantSheet(context, exercise),
+                      onPressed: () =>
+                          _showCreateVariantSheet(context, exercise),
                       iconSize: 20,
                     ),
                   ),
@@ -1910,35 +1918,35 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       child: GestureDetector(
         onTap: () => _showExerciseStatusSheet(customExercise),
         child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('⚡', style: context.textTheme.titleMedium),
-          const SizedBox(width: 4),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color: badgeColor.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: badgeColor.withValues(alpha: 0.5)),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(badgeIcon, size: 12, color: badgeColor),
-                const SizedBox(width: 2),
-                Text(
-                  badgeText,
-                  style: context.textTheme.labelSmall?.copyWith(
-                    color: badgeColor,
-                    fontWeight: FontWeight.bold,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('⚡', style: context.textTheme.titleMedium),
+            const SizedBox(width: 4),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: badgeColor.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: badgeColor.withValues(alpha: 0.5)),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(badgeIcon, size: 12, color: badgeColor),
+                  const SizedBox(width: 2),
+                  Text(
+                    badgeText,
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: badgeColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 
@@ -1947,7 +1955,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     final l10n = context.l10n;
     final isExpired = customExercise.isExpired;
 
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
       builder: (sheetContext) => Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -2240,7 +2249,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       context,
       workoutExercise,
       onHistory: () {
-        ModalService.showSheet(context,
+        ModalService.showSheet(
+          context,
           isScrollControlled: true,
           backgroundColor: Theme.of(
             context,
@@ -2306,7 +2316,6 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 
 /// Filter Bottom Sheet Widget - Solo attrezzatura
 class _FilterBottomSheet extends StatefulWidget {
-
   const _FilterBottomSheet({
     required this.exercises,
     required this.selectedEquipment,
@@ -2368,10 +2377,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.filter,
-                    color: context.colors.primary,
-                  ),
+                  Icon(AppIcons.filter, color: context.colors.primary),
                   const SizedBox(width: 12),
                   Text(
                     l10n.equipment,
