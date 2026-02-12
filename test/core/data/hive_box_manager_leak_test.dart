@@ -6,6 +6,7 @@ import 'package:leak_tracker_flutter_testing/leak_tracker_flutter_testing.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import '../../helpers/test_setup.dart';
 
 /// Test helper class for AnimationController vsync
 class TestVSync extends TickerProvider {
@@ -17,6 +18,7 @@ class TestVSync extends TickerProvider {
 
 void main() {
   setUpAll(() async {
+    mockSecureStorage();
     // Initialize Hive with temporary directory for tests
     Hive.init('./test/.hive_test');
 

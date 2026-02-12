@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/template_cloud_sync_service.dart';
+import '../../../../helpers/test_setup.dart';
 
 void main() {
   // Initialize Flutter binding for platform channel support
@@ -7,6 +8,7 @@ void main() {
 
   group('TemplateCloudSyncService', () {
     setUp(() {
+    mockSecureStorage();
       // Reset service state before each test
       TemplateCloudSyncService.dispose();
     });

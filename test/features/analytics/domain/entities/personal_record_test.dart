@@ -2,9 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/personal_record.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import '../../../../test_helpers/firebase_test_helper.dart';
+import '../../../../helpers/test_setup.dart';
 
 void main() {
   setUpAll(() async {
+    mockSecureStorage();
     await setupTestEnvironment();
   });
   

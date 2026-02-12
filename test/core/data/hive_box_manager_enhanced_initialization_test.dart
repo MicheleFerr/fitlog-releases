@@ -1,10 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import '../../helpers/test_setup.dart';
 
 /// Test to verify HiveBoxManagerEnhanced.initialize() correctly pre-opens critical boxes
 void main() {
   setUpAll(() async {
+    mockSecureStorage();
     // Initialize Hive with temporary directory for tests
     Hive.init('./test/.hive_test_init');
   });

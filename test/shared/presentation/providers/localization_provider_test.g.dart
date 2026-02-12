@@ -41,7 +41,7 @@ final class LocalizationProvider
   }
 }
 
-String _$localizationHash() => r'90a11aea71a833f9833ca1262d27736681b76753';
+String _$localizationHash() => r'496ea78110a6aaf8fc3a0dcaa114a4c9b1e0bbc7';
 
 abstract class _$Localization extends $Notifier<Locale> {
   Locale build();

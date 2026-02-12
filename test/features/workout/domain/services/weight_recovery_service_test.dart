@@ -413,6 +413,87 @@ void main() {
       });
     });
 
+    group('applyPreviousWeights with weightsOnly', () {
+      test('should apply only weights and NOT reps when weightsOnly is true', () {
+        final currentWorkout = _createWorkoutWithReps('Push Day', [
+          _createExerciseWithReps('Bench Press', [0, 0, 0], [8, 8, 8]),
+        ]);
+
+        final previousWorkout = _createWorkoutWithReps('Push Day', [
+          _createExerciseWithReps('Bench Press', [100, 105, 110], [12, 10, 8]),
+        ]);
+
+        final result = WeightRecoveryService.applyPreviousWeights(
+          currentWorkout: currentWorkout,
+          previousWorkout: previousWorkout,
+          multiplier: 1.0,
+          weightsOnly: true,
+        );
+
+        // Weights should be copied from previous
+        expect(result.exercises.first.sets[0].weight, equals(100));
+        expect(result.exercises.first.sets[1].weight, equals(105));
+        expect(result.exercises.first.sets[2].weight, equals(110));
+
+        // Reps should remain from current workout (NOT copied)
+        expect(result.exercises.first.sets[0].reps, equals(8));
+        expect(result.exercises.first.sets[1].reps, equals(8));
+        expect(result.exercises.first.sets[2].reps, equals(8));
+      });
+
+      test('should copy reps when weightsOnly is false (default)', () {
+        final currentWorkout = _createWorkoutWithReps('Push Day', [
+          _createExerciseWithReps('Bench Press', [0, 0, 0], [8, 8, 8]),
+        ]);
+
+        final previousWorkout = _createWorkoutWithReps('Push Day', [
+          _createExerciseWithReps('Bench Press', [100, 105, 110], [12, 10, 8]),
+        ]);
+
+        final result = WeightRecoveryService.applyPreviousWeights(
+          currentWorkout: currentWorkout,
+          previousWorkout: previousWorkout,
+          multiplier: 1.0,
+        );
+
+        // Weights should be copied
+        expect(result.exercises.first.sets[0].weight, equals(100));
+
+        // Reps should ALSO be copied (default behavior)
+        expect(result.exercises.first.sets[0].reps, equals(12));
+        expect(result.exercises.first.sets[1].reps, equals(10));
+        expect(result.exercises.first.sets[2].reps, equals(8));
+      });
+
+      test('should only apply weights to matching template exercises', () {
+        final currentWorkout = _createWorkout('Push Day', [
+          _createExercise('Bench Press', [0, 0]),
+          _createExercise('Shoulder Press', [0, 0]),
+        ]);
+
+        // Previous workout had an extra exercise not in template
+        final previousWorkout = _createWorkout('Push Day', [
+          _createExercise('Bench Press', [100, 105]),
+          _createExercise('Cable Fly', [30, 30]),
+        ]);
+
+        final result = WeightRecoveryService.applyPreviousWeights(
+          currentWorkout: currentWorkout,
+          previousWorkout: previousWorkout,
+          multiplier: 1.0,
+          weightsOnly: true,
+        );
+
+        // Bench Press should get weights from previous
+        expect(result.exercises[0].sets[0].weight, equals(100));
+        expect(result.exercises[0].sets[1].weight, equals(105));
+
+        // Shoulder Press has no match in previous, stays at 0
+        expect(result.exercises[1].sets[0].weight, equals(0));
+        expect(result.exercises[1].sets[1].weight, equals(0));
+      });
+    });
+
     group('calculateDifferences', () {
       test('should calculate weight difference for matching exercises', () {
         final currentWorkout = _createWorkout('Push Day', [
@@ -650,6 +731,37 @@ Exercise _createExercise(String name, List<double> weights) {
         setNumber: entry.key + 1,
         weight: entry.value,
         reps: 10, // Default reps
+      );
+    }).toList(),
+    type: ExerciseType.single,
+    category: ExerciseCategory.chest,
+  );
+}
+
+Workout _createWorkoutWithReps(String name, List<Exercise> exercises) {
+  return Workout(
+    id: 'workout-${DateTime.now().millisecondsSinceEpoch}',
+    name: name,
+    exercises: exercises,
+    status: WorkoutStatus.planned,
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
+}
+
+Exercise _createExerciseWithReps(
+  String name,
+  List<double> weights,
+  List<int> reps,
+) {
+  return Exercise(
+    id: 'exercise-${name.replaceAll(' ', '-').toLowerCase()}',
+    name: name,
+    sets: weights.asMap().entries.map((entry) {
+      return ExerciseSet(
+        setNumber: entry.key + 1,
+        weight: entry.value,
+        reps: entry.key < reps.length ? reps[entry.key] : 10,
       );
     }).toList(),
     type: ExerciseType.single,

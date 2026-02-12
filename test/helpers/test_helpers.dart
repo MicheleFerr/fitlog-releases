@@ -12,10 +12,10 @@ Future<void> setupFirebaseForTest() async {
 /// Create a test widget wrapper with Riverpod
 Widget createTestWidget({
   required Widget child,
-  List<Override> overrides = const [],
+  List overrides = const [],
 }) {
   return ProviderScope(
-    overrides: overrides,
+    overrides: [...overrides],
     child: MaterialApp(
       home: Scaffold(body: child),
     ),
@@ -43,7 +43,7 @@ class MockUser {
 
 /// Mock Firebase Auth User
 class MockFirebaseUser {
-  
+
   MockFirebaseUser({
     required this.uid,
     this.email,
@@ -60,12 +60,12 @@ class TestData {
     'email': 'test@example.com',
     'password': 'Test123!@#',
   };
-  
+
   static Map<String, dynamic> invalidLoginCredentials() => {
     'email': 'invalid@example.com',
     'password': 'wrong',
   };
-  
+
   static Map<String, dynamic> validRegistrationData() => {
     'email': 'newuser@example.com',
     'password': 'NewUser123!@#',

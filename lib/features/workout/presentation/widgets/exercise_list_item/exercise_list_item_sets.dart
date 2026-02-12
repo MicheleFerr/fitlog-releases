@@ -374,145 +374,83 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             child: _areAllSetsCompleted() && isExpanded
                 ? Row(
                     key: const ValueKey('buttons_with_collapse'),
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Add Set button (left)
-                      Expanded(
-                        child: Semantics(
-                          label: context.l10n.addSet,
-                          button: true,
-                          child: InkWell(
-                            onTap: () => _addNewSet(),
-                            borderRadius: BorderRadius.circular(8),
-                            child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            decoration: BoxDecoration(
-                              color: context.colors.primaryContainer.withValues(
-                                alpha: 0.2,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: context.colors.primary.withValues(
-                                  alpha: 0.3,
-                                ),
-                                style: BorderStyle.solid,
-                                width: 1.5,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SemanticIcon(
-                                  icon: AppIcons.addCircleOutline,
-                                  semanticLabel: context.l10n.addSet,
-                                  size: AppIconSize.small,
-                                  color: context.colors.primary,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  context.l10n.addSet,
-                                  style: context.textTheme.labelLarge?.copyWith(
-                                    color: context.colors.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
+                      // Add Set button - minimal Apple HIG style
+                      TextButton.icon(
+                        onPressed: () => _addNewSet(),
+                        icon: SemanticIcon(
+                          icon: AppIcons.add,
+                          semanticLabel: context.l10n.addSet,
+                          size: AppIconSize.small,
+                          color: context.colors.primary,
+                        ),
+                        label: Text(context.l10n.addSet),
+                        style: TextButton.styleFrom(
+                          foregroundColor: context.colors.primary,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          textStyle: context.textTheme.labelLarge?.copyWith(
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
+                      // Subtle divider
+                      Container(
+                        width: 1,
+                        height: 20,
+                        color: context.colors.outlineVariant.withValues(alpha: 0.4),
                       ),
-                      const SizedBox(width: 8),
-                      // Collapse button (right) - no animation to prevent flash on scroll rebuild
-                      Expanded(
-                        child: Semantics(
-                          label: context.l10n.collapseExercise,
-                          button: true,
-                          child: InkWell(
-                            onTap: () {
-                              widget.onCollapseExercise();
-                              HapticFeedback.lightImpact();
-                            },
-                            borderRadius: BorderRadius.circular(8),
-                            child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            decoration: BoxDecoration(
-                              color: context.colors.secondaryContainer
-                                  .withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: context.colors.secondary.withValues(
-                                  alpha: 0.3,
-                                ),
-                                style: BorderStyle.solid,
-                                width: 1.5,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SemanticIcon(
-                                  icon: AppIcons.unfoldLess,
-                                  semanticLabel: context.l10n.collapseExercise,
-                                  size: AppIconSize.small,
-                                  color: context.colors.secondary,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  context.l10n.collapseExercise,
-                                  style: context.textTheme.labelLarge?.copyWith(
-                                    color: context.colors.secondary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
+                      // Collapse button - minimal
+                      TextButton.icon(
+                        onPressed: () {
+                          widget.onCollapseExercise();
+                          HapticFeedback.lightImpact();
+                        },
+                        icon: SemanticIcon(
+                          icon: AppIcons.unfoldLess,
+                          semanticLabel: context.l10n.collapseExercise,
+                          size: AppIconSize.small,
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                        label: Text(context.l10n.collapseExercise),
+                        style: TextButton.styleFrom(
+                          foregroundColor: context.colors.onSurfaceVariant,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          textStyle: context.textTheme.labelLarge?.copyWith(
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                      ),
                       ),
                     ],
                   )
-                : Semantics(
-                    label: context.l10n.addSet,
-                    button: true,
-                    child: InkWell(
-                      key: const ValueKey('button_add_only'),
-                      onTap: () => _addNewSet(),
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                        color: context.colors.primaryContainer.withValues(
-                          alpha: 0.2,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: context.colors.primary.withValues(alpha: 0.3),
-                          style: BorderStyle.solid,
-                          width: 1.5,
-                        ),
+                : Center(
+                    key: const ValueKey('button_add_only'),
+                    child: TextButton.icon(
+                      onPressed: () => _addNewSet(),
+                      icon: SemanticIcon(
+                        icon: AppIcons.add,
+                        semanticLabel: context.l10n.addSet,
+                        size: AppIconSize.small,
+                        color: context.colors.primary,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SemanticIcon(
-                            icon: AppIcons.addCircleOutline,
-                            semanticLabel: context.l10n.addSet,
-                            size: AppIconSize.small,
-                            color: context.colors.primary,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            context.l10n.addSet,
-                            style: context.textTheme.labelLarge?.copyWith(
-                              color: context.colors.primary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
+                      label: Text(context.l10n.addSet),
+                      style: TextButton.styleFrom(
+                        foregroundColor: context.colors.primary,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        textStyle: context.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
                   ),
           ),
         ),
@@ -1467,19 +1405,27 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: FilledButton.icon(
-        onPressed: _onStartFirstSet,
-        icon: const SemanticIcon(
-          icon: AppIcons.playArrow,
-          semanticLabel: 'Start',
-          size: AppIconSize.small,
-        ),
-        label: Text(context.l10n.startSet),
-        style: FilledButton.styleFrom(
-          minimumSize: const Size(double.infinity, 48),
-          backgroundColor: context.colors.secondary,
-          foregroundColor: context.colors.onSecondary,
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Center(
+        child: TextButton.icon(
+          onPressed: _onStartFirstSet,
+          icon: SemanticIcon(
+            icon: AppIcons.playArrow,
+            semanticLabel: 'Start',
+            size: AppIconSize.small,
+            color: context.colors.secondary,
+          ),
+          label: Text(context.l10n.startSet),
+          style: TextButton.styleFrom(
+            foregroundColor: context.colors.secondary,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 8,
+            ),
+            textStyle: context.textTheme.labelLarge?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ),
       ),
     );

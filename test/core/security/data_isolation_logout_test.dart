@@ -13,6 +13,7 @@
 library;
 
 import 'dart:io';
+import '../../helpers/test_setup.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive.dart';
@@ -27,6 +28,7 @@ void main() {
   late Directory testDir;
 
   setUpAll(() async {
+    mockSecureStorage();
     TestWidgetsFlutterBinding.ensureInitialized();
     testDir = await Directory.systemTemp.createTemp('hive_data_isolation_test_');
     Hive.init(testDir.path);

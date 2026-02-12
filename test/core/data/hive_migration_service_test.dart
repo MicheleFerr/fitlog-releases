@@ -16,6 +16,7 @@ import 'package:hive_ce/hive.dart';
 import 'package:gymbro_flutter_new/core/data/hive_migration_service.dart';
 import 'package:gymbro_flutter_new/core/security/hive_encryption_manager.dart';
 import 'dart:io';
+import '../../helpers/test_setup.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,7 @@ void main() {
   late Directory tempDir;
 
   setUp(() async {
+    mockSecureStorage();
     // Create temporary directory for test Hive boxes
     tempDir = await Directory.systemTemp.createTemp('hive_migration_test_');
     Hive.init(tempDir.path);

@@ -32,7 +32,7 @@ void _mockPlatformChannels() {
       return null;
     },
   );
-  
+
   // Mock timer audio channel
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(
@@ -41,7 +41,7 @@ void _mockPlatformChannels() {
       return null;
     },
   );
-  
+
   // Mock audio session channel
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(
@@ -50,7 +50,7 @@ void _mockPlatformChannels() {
       return null;
     },
   );
-  
+
   // Mock live activity channel
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(
@@ -67,13 +67,75 @@ void _mockPlatformChannels() {
       }
     },
   );
-  
+
   // Mock local notifications
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(
     const MethodChannel('dexterous.com/flutter/local_notifications'),
     (methodCall) async {
       return null;
+    },
+  );
+
+  // Mock flutter_secure_storage
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(
+    const MethodChannel('plugins.it_nomads.com/flutter_secure_storage'),
+    (methodCall) async {
+      switch (methodCall.method) {
+        case 'read':
+          return null;
+        case 'write':
+          return null;
+        case 'delete':
+          return null;
+        case 'deleteAll':
+          return null;
+        case 'readAll':
+          return <String, String>{};
+        case 'containsKey':
+          return false;
+        default:
+          return null;
+      }
+    },
+  );
+}
+
+/// Mock flutter_secure_storage for tests that don't use initializeTestEnvironment
+/// This implementation actually stores values in memory for realistic testing
+void mockSecureStorage() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  final storage = <String, String>{};
+
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(
+    const MethodChannel('plugins.it_nomads.com/flutter_secure_storage'),
+    (methodCall) async {
+      switch (methodCall.method) {
+        case 'read':
+          final key = methodCall.arguments['key'] as String;
+          return storage[key];
+        case 'write':
+          final key = methodCall.arguments['key'] as String;
+          final value = methodCall.arguments['value'] as String;
+          storage[key] = value;
+          return null;
+        case 'delete':
+          final key = methodCall.arguments['key'] as String;
+          storage.remove(key);
+          return null;
+        case 'deleteAll':
+          storage.clear();
+          return null;
+        case 'readAll':
+          return Map<String, String>.from(storage);
+        case 'containsKey':
+          final key = methodCall.arguments['key'] as String;
+          return storage.containsKey(key);
+        default:
+          return null;
+      }
     },
   );
 }

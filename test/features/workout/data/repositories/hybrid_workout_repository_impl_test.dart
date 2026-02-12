@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.da
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';
+import '../../../../helpers/test_setup.dart';
 
 // Mocks
 class MockHiveWorkoutDataSource extends Mock implements HiveWorkoutDataSource {}
@@ -27,6 +28,7 @@ void main() {
   late MockUser mockUser;
 
   setUp(() {
+    mockSecureStorage();
     mockLocalDataSource = MockHiveWorkoutDataSource();
     mockRemoteDataSource = MockFirebaseWorkoutDataSource();
     mockAuth = MockFirebaseAuth();

@@ -16,15 +16,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:gymbro_flutter_new/core/security/hive_encryption_manager.dart';
 import 'dart:convert';
+import '../../helpers/test_setup.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   group('HiveEncryptionManager', () {
     setUp(() {
-      // Reset secure storage before each test
-      // Note: In real tests, you'd use a mock FlutterSecureStorage
-      // For integration tests, this uses real secure storage (cleaned up after)
+      mockSecureStorage();
     });
 
     tearDown(() async {

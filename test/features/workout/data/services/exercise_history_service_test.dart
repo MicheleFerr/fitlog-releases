@@ -16,6 +16,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import '../../../../helpers/test_setup.dart';
 
 // Mock
 class MockHiveBoxManagerEnhanced extends Mock implements HiveBoxManagerEnhanced {}
@@ -30,6 +31,7 @@ void main() {
     const testExerciseName = 'Bench Press';
 
     setUpAll(() async {
+    mockSecureStorage();
       // Initialize Hive for testing
       await Hive.initFlutter();
     });
