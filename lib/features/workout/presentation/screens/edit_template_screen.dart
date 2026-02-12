@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/template_view_screen.dart';
 
 class EditTemplateScreen extends ConsumerStatefulWidget {
@@ -46,6 +47,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
   final Map<int, Map<int, _WarmupSet>> _warmupOverrides = {};
   // Warmup percentages (default: 40%, 60%, 75%, 85%)
   List<int> _warmupPercentages = [40, 60, 75, 85];
+  // Auto-populate guard
+  bool _hasAutoPopulated = false;
 
   @override
   void initState() {
@@ -69,6 +72,11 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
     _pulseAnimation = Tween<double>(begin: 0.4, end: 1.0).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
+
+    // Auto-populate empty sets from workout history
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _autoPopulateFromHistory();
+    });
   }
 
   @override
@@ -820,6 +828,75 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
         ],
       ),
     );
+  }
+
+  /// Auto-populate empty template sets from workout history
+  Future<void> _autoPopulateFromHistory() async {
+    if (_hasAutoPopulated || !mounted) return;
+    _hasAutoPopulated = true;
+
+    final userId = ref.read(currentUserIdProvider);
+    if (userId == null) return;
+
+    final service = ref.read(workoutHistoryServiceProvider);
+    var populated = 0;
+
+    for (int i = 0; i < _exercises.length; i++) {
+      final exercise = _exercises[i];
+      // Skip supersets and exercises that already have weight data
+      if (exercise.type == ExerciseType.superset) continue;
+      final hasAnyWeight = exercise.sets.any((s) => (s.targetWeight ?? 0) > 0);
+      if (hasAnyWeight) continue;
+
+      try {
+        final history = await service.getExerciseHistoryWithSetDetails(
+          exerciseName: exercise.exerciseName,
+          userId: userId,
+          limit: 1,
+        );
+        if (history.isEmpty || !mounted) continue;
+
+        final lastWorkout = history.first;
+        final sets = (lastWorkout['sets'] as List<dynamic>?) ?? [];
+        // Filter out warmup sets
+        final workingSets = sets
+            .where((s) => s['isWarmup'] != true)
+            .toList();
+        if (workingSets.isEmpty) continue;
+
+        final updatedSets = <SetTemplate>[];
+        for (int j = 0; j < exercise.sets.length; j++) {
+          final historySet = j < workingSets.length ? workingSets[j] : workingSets.last;
+          final weight = (historySet['weight'] as num?)?.toDouble() ?? 0;
+          final reps = (historySet['reps'] as num?)?.toInt() ?? 0;
+          updatedSets.add(SetTemplate(
+            setNumber: exercise.sets[j].setNumber,
+            targetWeight: weight > 0 ? weight : exercise.sets[j].targetWeight,
+            targetReps: reps > 0 ? reps : exercise.sets[j].targetReps,
+            targetRpe: exercise.sets[j].targetRpe,
+            notes: exercise.sets[j].notes,
+          ));
+        }
+
+        if (mounted) {
+          setState(() {
+            _exercises[i] = exercise.copyWith(sets: updatedSets);
+          });
+          populated++;
+        }
+      } catch (_) {
+        // Skip exercises with no history
+        continue;
+      }
+    }
+
+    if (populated > 0 && mounted) {
+      _markAsChanged();
+      SnackBarService.showSuccess(
+        context,
+        context.l10n.autoPopulatedFromHistory,
+      );
+    }
   }
 
   void _markAsChanged() {

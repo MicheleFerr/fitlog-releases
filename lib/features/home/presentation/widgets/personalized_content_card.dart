@@ -4,7 +4,7 @@
 /// Feature: Personalized Content Card
 /// Type: Widget
 ///
-/// Compact card for accessing personalized templates and custom exercises.
+/// Two side-by-side tiles for accessing templates and custom exercises.
 /// Uses consistent outline style matching other home cards.
 library;
 
@@ -17,30 +17,81 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/custom_exercises/presentation/providers/custom_exercise_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
-/// Compact card for personalized content access
+/// Two side-by-side tiles for personalized content access
 ///
-/// Shows a simple entry point to manage:
-/// - Custom workout templates
-/// - Custom exercises/variants
-///
-/// Design: Consistent outline style matching other home cards
-/// - Light gradient background with primaryContainer
-/// - Subtle border with primary color
-/// - Standard press feedback (0.98 scale, 150ms, light haptic)
-class PersonalizedContentCard extends ConsumerStatefulWidget {
+/// - Left tile: "Le mie schede" (primary) → /templates
+/// - Right tile: "Esercizi custom" (tertiary) → /templates?tab=1
+class PersonalizedContentCard extends ConsumerWidget {
   const PersonalizedContentCard({super.key});
 
   @override
-  ConsumerState<PersonalizedContentCard> createState() =>
-      _PersonalizedContentCardState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colorScheme = context.colors;
+
+    final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
+    final customExercisesAsync = ref.watch(allCustomExercisesProvider);
+    final entitlements = ref.watch(tierEntitlementsProvider);
+
+    final templateCount = templatesAsync.value?.length ?? 0;
+    final exerciseCount = customExercisesAsync.value?.length ?? 0;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      child: Row(
+        children: [
+          // Left tile: Templates
+          Expanded(
+            child: _ContentTile(
+              icon: AppIcons.listAlt,
+              title: context.l10n.myTemplates,
+              count: templateCount,
+              max: entitlements.maxTemplates,
+              color: colorScheme.primary,
+              onTap: () => context.push('/templates'),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          // Right tile: Custom exercises
+          Expanded(
+            child: _ContentTile(
+              icon: AppIcons.workout,
+              title: context.l10n.exercises,
+              count: exerciseCount,
+              max: entitlements.maxCustomSingleExercises,
+              color: colorScheme.tertiary,
+              onTap: () => context.push('/templates?tab=1'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
-class _PersonalizedContentCardState
-    extends ConsumerState<PersonalizedContentCard>
+class _ContentTile extends StatefulWidget {
+  const _ContentTile({
+    required this.icon,
+    required this.title,
+    required this.count,
+    required this.max,
+    required this.color,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final int count;
+  final int max;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  State<_ContentTile> createState() => _ContentTileState();
+}
+
+class _ContentTileState extends State<_ContentTile>
     with SingleTickerProviderStateMixin {
   late AnimationController _scaleController;
   late Animation<double> _scaleAnimation;
@@ -48,14 +99,13 @@ class _PersonalizedContentCardState
   @override
   void initState() {
     super.initState();
-    // Standard feedback: 0.98 scale, 150ms (DESIGN_GUIDELINES.md)
     _scaleController = AnimationController(
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
     _scaleAnimation = Tween<double>(
       begin: 1.0,
-      end: 0.98,
+      end: 0.97,
     ).animate(CurvedAnimation(parent: _scaleController, curve: Curves.easeOut));
   }
 
@@ -67,178 +117,77 @@ class _PersonalizedContentCardState
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colors;
+    final isUnlimited = widget.max >= 999;
 
-    // Watch counts for display
-    final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
-    final customExercisesAsync = ref.watch(allCustomExercisesProvider);
-    final entitlements = ref.watch(tierEntitlementsProvider);
-
-    final templateCount = templatesAsync.value?.length ?? 0;
-    final exerciseCount = customExercisesAsync.value?.length ?? 0;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-      child: Semantics(
-        label: context.l10n.templates,
-        button: true,
-        child: GestureDetector(
-          onTapDown: (_) {
-            // Light haptic feedback - standard tier (DESIGN_GUIDELINES.md)
-            HapticFeedback.lightImpact();
-            _scaleController.forward();
-          },
-          onTapUp: (_) {
-            _scaleController.reverse();
-            _openPersonalizedContent(context);
-          },
-          onTapCancel: () => _scaleController.reverse(),
-          child: AnimatedBuilder(
-          animation: _scaleAnimation,
-          builder: (context, child) {
-            return Transform.scale(
-              scale: _scaleAnimation.value,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  // Consistent style matching other home cards
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      colorScheme.primaryContainer.withValues(alpha: 0.3),
-                      colorScheme.primaryContainer.withValues(alpha: 0.1),
-                    ],
-                  ),
-                  border: Border.all(
-                    color: colorScheme.primary.withValues(alpha: 0.3),
-                    width: 1,
-                  ),
+    return GestureDetector(
+      onTapDown: (_) {
+        HapticFeedback.lightImpact();
+        _scaleController.forward();
+      },
+      onTapUp: (_) {
+        _scaleController.reverse();
+        widget.onTap();
+      },
+      onTapCancel: () => _scaleController.reverse(),
+      child: AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    widget.color.withValues(alpha: 0.12),
+                    widget.color.withValues(alpha: 0.04),
+                  ],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: Row(
-                    children: [
-                      // Icon container - consistent style
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primary.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: SemanticIcon(
-                          icon: AppIcons.dashboard,
-                          semanticLabel: context.l10n.myTemplates,
-                          size: AppIconSize.medium,
-                          color: colorScheme.primary,
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.md),
-
-                      // Text content
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              context.l10n.myTemplates,
-                              style: context.textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: colorScheme.onSurface,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            // Stats row
-                            Row(
-                              children: [
-                                _StatChip(
-                                  icon: AppIcons.listAlt,
-                                  count: templateCount,
-                                  max: entitlements.maxTemplates,
-                                  label: context.l10n.templates,
-                                  color: colorScheme.primary,
-                                ),
-                                const SizedBox(width: 12),
-                                _StatChip(
-                                  icon: AppIcons.workout,
-                                  count: exerciseCount,
-                                  max: entitlements.maxCustomSingleExercises,
-                                  label: context.l10n.exercises,
-                                  color: colorScheme.tertiary,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Arrow indicator
-                      SemanticIcon(
-                        icon: AppIcons.chevronRight,
-                        semanticLabel: context.l10n.view,
-                        size: AppIconSize.small,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ],
-                  ),
+                border: Border.all(
+                  color: widget.color.withValues(alpha: 0.25),
+                  width: 1,
                 ),
               ),
-            );
-          },
-        ),
-      ),
-    ),
-    );
-  }
-
-  void _openPersonalizedContent(BuildContext context) {
-    // Haptic feedback gestito da InteractiveElement (FeedbackTier.standard → light haptic)
-    context.push('/templates');
-  }
-}
-
-/// Small stat chip showing count/max
-class _StatChip extends StatelessWidget {
-  const _StatChip({
-    required this.icon,
-    required this.count,
-    required this.max,
-    required this.label,
-    required this.color,
-  });
-
-  final IconData icon;
-  final int count;
-  final int max;
-  final String label;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final isUnlimited = max >= 999;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xs,
-        vertical: AppSpacing.xxs,
-      ),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 18, color: color),
-          const SizedBox(width: 4),
-          Text(
-            isUnlimited ? '$count' : '$count/$max',
-            style: context.textTheme.labelSmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w600,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Icon
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: widget.color.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(widget.icon, size: 20, color: widget.color),
+                  ),
+                  const SizedBox(height: 10),
+                  // Title
+                  Text(
+                    widget.title,
+                    style: context.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: context.colors.onSurface,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  // Counter
+                  Text(
+                    isUnlimited ? '${widget.count}' : '${widget.count}/${widget.max}',
+                    style: context.textTheme.labelMedium?.copyWith(
+                      color: widget.color,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

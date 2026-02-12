@@ -202,12 +202,11 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                   const SizedBox(height: 20),
                 ],
 
-                // 0.75 Activity Rings (HealthKit Integration)
-                const RepaintBoundary(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                    child: ActivityRingsWidget(),
-                  ),
+                // 0.75 Personalized Content (Templates + Custom Exercises)
+                // 🎯 Tour Step 2: "Le mie schede"
+                RepaintBoundary(
+                  key: _myTemplatesKey,
+                  child: const PersonalizedContentCard(),
                 ),
                 const SizedBox(height: 16),
 
@@ -252,11 +251,12 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // 2. Personalized Content (Templates + Custom Exercises)
-                // 🎯 Tour Step 2: "Le mie schede"
-                RepaintBoundary(
-                  key: _myTemplatesKey,
-                  child: const PersonalizedContentCard(),
+                // 2. Activity Rings (HealthKit Integration)
+                const RepaintBoundary(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                    child: ActivityRingsWidget(),
+                  ),
                 ),
                 const SizedBox(height: 24),
 
@@ -370,9 +370,7 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
   }
 
   void _showDeveloperTools(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: context.colors.surface.withValues(alpha: 0),
+    ModalService.showSheet<void>(context,
       builder: (context) => const _DeveloperToolsSheet(),
     );
   }
