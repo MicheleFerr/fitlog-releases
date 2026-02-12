@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_temp
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/minimal_set_edit_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/reps_picker_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_time_picker_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_picker_modal.dart';
@@ -27,7 +28,8 @@ class EditTemplateScreen extends ConsumerStatefulWidget {
   ConsumerState<EditTemplateScreen> createState() => _EditTemplateScreenState();
 }
 
-class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
+class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
+    with SingleTickerProviderStateMixin {
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
   late List<ExerciseTemplate> _exercises;
@@ -35,6 +37,15 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
   bool _hasChanges = false;
   // Track which exercises are expanded
   final Map<int, bool> _expandedExercises = {};
+  // Pulse animation for empty fields
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
+  // Track warmup enabled per exercise
+  final Map<int, bool> _warmupEnabled = {};
+  // Manual overrides for warmup sets: {exerciseIndex: {warmupIndex: _WarmupSet}}
+  final Map<int, Map<int, _WarmupSet>> _warmupOverrides = {};
+  // Warmup percentages (default: 40%, 60%, 75%, 85%)
+  List<int> _warmupPercentages = [40, 60, 75, 85];
 
   @override
   void initState() {
@@ -49,12 +60,22 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
     if (_exercises.isNotEmpty) {
       _expandedExercises[0] = true;
     }
+
+    // Pulse animation for empty fields
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat(reverse: true);
+    _pulseAnimation = Tween<double>(begin: 0.4, end: 1.0).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _descriptionController.dispose();
+    _pulseController.dispose();
     super.dispose();
   }
 
@@ -69,7 +90,31 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(context.l10n.edit),
+          title: GestureDetector(
+            onTap: () => _nameController.selection = TextSelection(
+              baseOffset: 0,
+              extentOffset: _nameController.text.length,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: Text(
+                    _nameController.text.isEmpty
+                        ? context.l10n.templateName
+                        : _nameController.text.toUpperCase(),
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(AppIcons.edit, size: 14, color: context.colors.onSurface.withValues(alpha: 0.5)),
+              ],
+            ),
+          ),
           actions: [
             // View mode button (presentation mode)
             IconButton(
@@ -81,62 +126,62 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
               ),
               tooltip: context.l10n.templateViewMode,
             ),
-            if (_hasChanges)
-              Semantics(
-                label: context.l10n.save,
-                button: true,
-                enabled: !_isLoading,
-                child: TextButton(
-                  onPressed: _isLoading ? null : _saveTemplate,
-                  child: _isLoading
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: LoadingIndicator(),
-                        )
-                      : Text(context.l10n.save),
-                ),
+            // Save button - always visible
+            Semantics(
+              label: context.l10n.save,
+              button: true,
+              enabled: !_isLoading && _hasChanges,
+              child: TextButton(
+                onPressed: _isLoading || !_hasChanges ? null : _saveTemplate,
+                child: _isLoading
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: LoadingIndicator(),
+                      )
+                    : Text(context.l10n.save),
               ),
+            ),
           ],
         ),
         body: Column(
           children: [
-            // Header con info template
+            // Header - description field + inline name edit
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Column(
                 children: [
+                  // Inline name edit
                   TextField(
                     controller: _nameController,
                     decoration: InputDecoration(
-                      labelText: context.l10n.templateName,
-                      border: const OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: context.colors.primary,
-                          width: 2.0,
-                        ),
-                      ),
+                      hintText: context.l10n.templateName,
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                      isDense: true,
                     ),
-                    onChanged: (_) => _markAsChanged(),
+                    style: context.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                    onChanged: (_) {
+                      _markAsChanged();
+                      setState(() {}); // Update AppBar title
+                    },
                   ),
-                  const SizedBox(height: 12),
                   TextField(
                     controller: _descriptionController,
                     decoration: InputDecoration(
-                      labelText: context.l10n.description,
-                      border: const OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: context.colors.primary,
-                          width: 2.0,
-                        ),
-                      ),
+                      hintText: context.l10n.description,
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                      isDense: true,
                     ),
-                    maxLines: 2,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.onSurface.withValues(alpha: 0.6),
+                    ),
+                    maxLines: 1,
                     onChanged: (_) => _markAsChanged(),
                   ),
-                  const SizedBox(height: 12),
                   // Toggle pubblico/privato
                   /* Card(
                     child: Padding(
@@ -348,9 +393,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                         index: index,
                         child: Icon(
                           AppIcons.dragHandle,
-                          color: context.colors.onSurface.withValues(
-                            alpha: 0.5,
-                          ),
+                          color: context.colors.onSurface.withValues(alpha: 0.5),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -368,80 +411,74 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                             const SizedBox(height: 4),
                             Row(
                               children: [
-                                Text(
-                                  // ✅ FIX: For superset, show "X round x Y exercises" instead of "X set"
-                                  exerciseTemplate.type ==
-                                              ExerciseType.superset &&
-                                          exerciseTemplate.subExercises !=
-                                              null &&
-                                          exerciseTemplate
-                                              .subExercises!
-                                              .isNotEmpty
-                                      ? '${exerciseTemplate.sets.length} round × ${exerciseTemplate.subExercises!.length} esercizi • ${exerciseTemplate.category.name}'
-                                      : '${exerciseTemplate.sets.length} set • ${exerciseTemplate.category.name}',
-                                  style: context.textTheme.bodySmall?.copyWith(
-                                    color: context.colors.onSurface.withValues(
-                                      alpha: 0.7,
+                                // Muscle group chip
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                                  decoration: BoxDecoration(
+                                    color: context.colors.surfaceContainerHighest,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    exerciseTemplate.category.name,
+                                    style: context.textTheme.labelSmall?.copyWith(
+                                      fontSize: 9,
+                                      color: context.colors.onSurface.withValues(alpha: 0.6),
                                     ),
                                   ),
                                 ),
-                                if (exerciseTemplate.restTime != null) ...[
-                                  const SizedBox(width: 8),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 6,
-                                      vertical: 2,
-                                    ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  exerciseTemplate.type == ExerciseType.superset &&
+                                          exerciseTemplate.subExercises != null &&
+                                          exerciseTemplate.subExercises!.isNotEmpty
+                                      ? '${exerciseTemplate.sets.length} round × ${exerciseTemplate.subExercises!.length}'
+                                      : '${exerciseTemplate.sets.length} set',
+                                  style: context.textTheme.bodySmall?.copyWith(
+                                    color: context.colors.onSurface.withValues(alpha: 0.7),
+                                  ),
+                                ),
+                                // Rest time chip - tappable
+                                const SizedBox(width: 8),
+                                GestureDetector(
+                                  onTap: () {
+                                    // Prevent parent InkWell
+                                    _showRestTimePicker(index);
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                     decoration: BoxDecoration(
-                                      color: context.colors.primary.withValues(
-                                        alpha: 0.1,
-                                      ),
+                                      color: context.colors.primary.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
-                                        color: context.colors.primary
-                                            .withValues(alpha: 0.3),
+                                        color: context.colors.primary.withValues(alpha: 0.3),
                                       ),
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        SemanticIcon(
-                                          icon: AppIcons.timer,
-                                          semanticLabel: 'Timer',
-                                          size: AppIconSize.medium,
-                                          color: context.colors.primary,
-                                        ),
-                                        const SizedBox(width: 2),
-                                        Text(
-                                          _formatRestTime(
-                                            exerciseTemplate.restTime!,
+                                        Icon(AppIcons.timer, size: 12, color: context.colors.primary),
+                                        if (exerciseTemplate.restTime != null) ...[
+                                          const SizedBox(width: 2),
+                                          Text(
+                                            _formatRestTime(exerciseTemplate.restTime!),
+                                            style: context.textTheme.labelSmall?.copyWith(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w600,
+                                              color: context.colors.primary,
+                                            ),
                                           ),
-                                          style: context.textTheme.labelSmall
-                                              ?.copyWith(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.w600,
-                                                color: context.colors.primary,
-                                              ),
-                                        ),
+                                        ],
                                       ],
                                     ),
                                   ),
-                                ],
+                                ),
                               ],
                             ),
                           ],
                         ),
                       ),
-                      // Rest timer button
-                      IconButton.filledTonal(
-                        onPressed: () => _showRestTimePicker(index),
-                        icon: const SemanticIcon(
-                          icon: AppIcons.timer,
-                          semanticLabel: 'Timer',
-                        ),
-                        iconSize: 20,
-                        tooltip: context.l10n.restTimer,
-                      ),
+                      // Warmup toggle button
+                      _buildWarmupToggle(index),
                       const SizedBox(width: 8),
                       // Expand/collapse icon
                       Icon(
@@ -452,6 +489,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                   ),
                 ),
               ),
+              // Warmup sets (visible when expanded and warmup enabled)
+              if (isExpanded && (_warmupEnabled[index] ?? false))
+                _buildWarmupSets(index, exerciseTemplate),
               // Expanded sets editor
               if (isExpanded) _buildSetsEditor(index, exerciseTemplate),
             ],
@@ -623,97 +663,137 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                 );
               }
 
-              // ✅ For standard exercise: show weight/reps pickers
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Row(
-                  children: [
-                    // Set number
-                    Container(
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        color: context.colors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: context.colors.primary.withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${set.setNumber}',
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: context.colors.primary,
+              // Compact inline set row (~38px)
+              final isWeightEmpty = (set.targetWeight ?? 0) == 0;
+              final isRepsEmpty = (set.targetReps ?? 0) == 0;
+
+              return GestureDetector(
+                onTap: () => _showEditTemplateSetModal(exerciseIndex, setIndex),
+                onLongPress: () {
+                  final w = set.targetWeight ?? 0;
+                  if (w > 0) _applyWeightToAllSets(exerciseIndex, w);
+                },
+                child: SizedBox(
+                  height: 38,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    child: Row(
+                      children: [
+                        // Set number badge
+                        Container(
+                          width: 28,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            color: context.colors.primary.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${set.setNumber}',
+                              style: context.textTheme.labelMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: context.colors.primary,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    // Weight Picker Button
-                    Expanded(
-                      child: _buildPickerButton(
-                        label: context.l10n.weight,
-                        value: set.targetWeight == 0
-                            ? '-'
-                            : '${set.targetWeight?.toStringAsFixed(1)} kg',
-                        icon: AppIcons.workout,
-                        color: context.colors.primary,
-                        onTap: () async {
-                          final newWeight = await WeightPickerModal.show(
-                            context,
-                            initialWeight: set.targetWeight ?? 0,
-                          );
-                          if (newWeight != null) {
-                            _updateSetWeight(
-                              exerciseIndex,
-                              setIndex,
-                              newWeight,
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '×',
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    // Reps Picker Button
-                    Expanded(
-                      child: _buildPickerButton(
-                        label: context.l10n.reps,
-                        value: '${set.targetReps ?? 0}',
-                        icon: AppIcons.repeat,
-                        color: context.colors.secondary,
-                        onTap: () async {
-                          final newReps = await RepsPickerModal.show(
-                            context,
-                            initialReps: set.targetReps ?? 0,
-                          );
-                          if (newReps != null) {
-                            _updateSetReps(exerciseIndex, setIndex, newReps);
-                          }
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    // Remove set button
-                    if (exerciseTemplate.sets.length > 1)
-                      IconButton(
-                        onPressed: () => _removeSet(exerciseIndex, setIndex),
-                        icon: const SemanticIcon(
-                          icon: AppIcons.removeCircleOutline,
-                          semanticLabel: 'Remove circle outline',
+                        const SizedBox(width: 8),
+                        // Weight field with pulse if empty
+                        Expanded(
+                          child: AnimatedBuilder(
+                            animation: _pulseAnimation,
+                            builder: (context, child) {
+                              return Container(
+                                height: 30,
+                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                decoration: BoxDecoration(
+                                  color: context.colors.surfaceContainerHighest.withValues(
+                                    alpha: isWeightEmpty ? _pulseAnimation.value * 0.3 : 0.5,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: isWeightEmpty
+                                      ? Border.all(
+                                          color: context.colors.primary.withValues(
+                                            alpha: _pulseAnimation.value * 0.5,
+                                          ),
+                                        )
+                                      : null,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    isWeightEmpty ? '-' : '${set.targetWeight?.toStringAsFixed(1)} kg',
+                                    style: context.textTheme.bodySmall?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: isWeightEmpty
+                                          ? context.colors.onSurface.withValues(alpha: 0.3)
+                                          : context.colors.onSurface,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                        color: context.colors.error,
-                        iconSize: 20,
-                        tooltip: context.l10n.removeSet,
-                      ),
-                  ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: Text(
+                            '×',
+                            style: context.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: context.colors.onSurface.withValues(alpha: 0.5),
+                            ),
+                          ),
+                        ),
+                        // Reps field with pulse if empty
+                        Expanded(
+                          child: AnimatedBuilder(
+                            animation: _pulseAnimation,
+                            builder: (context, child) {
+                              return Container(
+                                height: 30,
+                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                decoration: BoxDecoration(
+                                  color: context.colors.surfaceContainerHighest.withValues(
+                                    alpha: isRepsEmpty ? _pulseAnimation.value * 0.3 : 0.5,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: isRepsEmpty
+                                      ? Border.all(
+                                          color: context.colors.secondary.withValues(
+                                            alpha: _pulseAnimation.value * 0.5,
+                                          ),
+                                        )
+                                      : null,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    isRepsEmpty ? '-' : '${set.targetReps} rep',
+                                    style: context.textTheme.bodySmall?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: isRepsEmpty
+                                          ? context.colors.onSurface.withValues(alpha: 0.3)
+                                          : context.colors.onSurface,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        // Remove set
+                        if (exerciseTemplate.sets.length > 1)
+                          SizedBox(
+                            width: 32,
+                            child: IconButton(
+                              onPressed: () => _removeSet(exerciseIndex, setIndex),
+                              icon: Icon(AppIcons.close, size: 14, color: context.colors.error.withValues(alpha: 0.6)),
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(maxWidth: 32, maxHeight: 32),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
               );
             },
@@ -1125,6 +1205,584 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
     }
   }
 
+  /// Apply weight to all sets of an exercise (long-press action)
+  void _applyWeightToAllSets(int exerciseIndex, double weight) {
+    final exercise = _exercises[exerciseIndex];
+    final updatedSets = exercise.sets.map((s) => SetTemplate(
+      setNumber: s.setNumber,
+      targetWeight: weight,
+      targetReps: s.targetReps,
+      targetRpe: s.targetRpe,
+      notes: s.notes,
+    )).toList();
+    setState(() {
+      _exercises[exerciseIndex] = exercise.copyWith(sets: updatedSets);
+    });
+    _markAsChanged();
+    if (mounted) {
+      SnackBarService.showSuccess(context, '${weight.toStringAsFixed(1)} kg → ${context.l10n.appliedToAllSets}');
+    }
+  }
+
+  /// Show MinimalSetEditSheet for editing a template set
+  void _showEditTemplateSetModal(int exerciseIndex, int setIndex) {
+    final exercise = _exercises[exerciseIndex];
+    final set = exercise.sets[setIndex];
+
+    // Bridge: convert SetTemplate → ExerciseSet for the modal
+    final exerciseSet = ExerciseSet(
+      setNumber: set.setNumber,
+      weight: set.targetWeight,
+      reps: set.targetReps,
+    );
+
+    final allSets = exercise.sets.map((s) => ExerciseSet(
+      setNumber: s.setNumber,
+      weight: s.targetWeight,
+      reps: s.targetReps,
+    )).toList();
+
+    final previousSet = setIndex > 0
+        ? ExerciseSet(
+            setNumber: exercise.sets[setIndex - 1].setNumber,
+            weight: exercise.sets[setIndex - 1].targetWeight,
+            reps: exercise.sets[setIndex - 1].targetReps,
+          )
+        : null;
+
+    context.showMinimalSetEditSheet(
+      exerciseSet: exerciseSet,
+      currentSetIndex: setIndex,
+      totalSets: exercise.sets.length,
+      allSets: allSets,
+      previousSet: previousSet,
+      onSave: (updatedSet) {
+        _updateSetWeight(exerciseIndex, setIndex, updatedSet.weight ?? 0);
+        _updateSetReps(exerciseIndex, setIndex, updatedSet.reps ?? 0);
+      },
+      onSaveAndNext: setIndex < exercise.sets.length - 1
+          ? (updatedSet) {
+              _updateSetWeight(exerciseIndex, setIndex, updatedSet.weight ?? 0);
+              _updateSetReps(exerciseIndex, setIndex, updatedSet.reps ?? 0);
+              Future.microtask(() => _showEditTemplateSetModal(exerciseIndex, setIndex + 1));
+            }
+          : null,
+      onSaveAndPrevious: setIndex > 0
+          ? (updatedSet) {
+              _updateSetWeight(exerciseIndex, setIndex, updatedSet.weight ?? 0);
+              _updateSetReps(exerciseIndex, setIndex, updatedSet.reps ?? 0);
+              Future.microtask(() => _showEditTemplateSetModal(exerciseIndex, setIndex - 1));
+            }
+          : null,
+      onApplyToAll: (updatedSet) {
+        final w = updatedSet.weight ?? 0;
+        final r = updatedSet.reps ?? 0;
+        for (int i = 0; i < exercise.sets.length; i++) {
+          _updateSetWeight(exerciseIndex, i, w);
+          _updateSetReps(exerciseIndex, i, r);
+        }
+      },
+    );
+  }
+
+  /// Warmup toggle button widget
+  Widget _buildWarmupToggle(int index) {
+    final exercise = _exercises[index];
+    final isSupersetWithSubExercises = exercise.type == ExerciseType.superset &&
+        exercise.subExercises != null &&
+        exercise.subExercises!.isNotEmpty;
+
+    // Don't show warmup for supersets
+    if (isSupersetWithSubExercises) return const SizedBox.shrink();
+
+    final isEnabled = _warmupEnabled[index] ?? false;
+    return GestureDetector(
+      onTap: () => _toggleWarmup(index),
+      onLongPress: () {
+        if (isEnabled) _showWarmupPercentageConfig();
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: isEnabled
+              ? context.colors.warning.withValues(alpha: 0.15)
+              : context.colors.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isEnabled
+                ? context.colors.warning.withValues(alpha: 0.4)
+                : context.colors.outline.withValues(alpha: 0.2),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              AppIcons.localFireDepartment,
+              size: 14,
+              color: isEnabled ? context.colors.warning : context.colors.onSurface.withValues(alpha: 0.4),
+            ),
+            const SizedBox(width: 2),
+            Text(
+              'W',
+              style: context.textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: isEnabled ? context.colors.warning : context.colors.onSurface.withValues(alpha: 0.4),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Toggle warmup for an exercise
+  void _toggleWarmup(int exerciseIndex) {
+    final isCurrentlyEnabled = _warmupEnabled[exerciseIndex] ?? false;
+    final isExpanded = _expandedExercises[exerciseIndex] ?? false;
+
+    if (!isCurrentlyEnabled) {
+      setState(() {
+        _warmupEnabled[exerciseIndex] = true;
+        if (!isExpanded) _expandedExercises[exerciseIndex] = true;
+      });
+      _markAsChanged();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showWarmupPercentageConfig();
+      });
+    } else {
+      setState(() {
+        _warmupEnabled[exerciseIndex] = false;
+      });
+      _markAsChanged();
+    }
+  }
+
+  /// Generate warmup sets from percentages
+  List<_WarmupSet> _generateWarmupSets(int exerciseIndex, ExerciseTemplate exercise) {
+    final firstSet = exercise.sets.firstOrNull;
+    final baseWeight = firstSet?.targetWeight ?? 0;
+    if (baseWeight <= 0) return [];
+
+    final overrides = _warmupOverrides[exerciseIndex] ?? {};
+
+    return _warmupPercentages.asMap().entries.map((entry) {
+      final i = entry.key;
+      final percent = entry.value;
+
+      final override = overrides[i];
+      if (override != null) {
+        return _WarmupSet(weight: override.weight, reps: override.reps, percent: percent);
+      }
+
+      final weight = _smartRound(baseWeight * percent / 100);
+      final baseReps = firstSet?.targetReps ?? 10;
+      final reps = percent <= 50 ? (baseReps * 0.5).round().clamp(3, 8) : (baseReps * 0.6).round().clamp(3, 8);
+      return _WarmupSet(weight: weight, reps: reps, percent: percent);
+    }).toList();
+  }
+
+  /// Smart rounding for plate-friendly weights
+  static double _smartRound(double weight) {
+    if (weight <= 0) return weight;
+    if (weight < 20) {
+      return (weight * 2).round() / 2; // Round to 0.5kg
+    } else {
+      return (weight / 2.5).round() * 2.5; // Round to 2.5kg
+    }
+  }
+
+  /// Show warmup percentage configuration bottom sheet
+  void _showWarmupPercentageConfig() {
+    final tempPercentages = List<int>.from(_warmupPercentages);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: context.colors.surface.withValues(alpha: 0),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setSheetState) => Container(
+          decoration: BoxDecoration(
+            color: context.colors.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 16,
+            top: 20,
+            left: 20,
+            right: 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(AppIcons.localFireDepartment, color: context.colors.warning, size: 22),
+                      const SizedBox(width: 8),
+                      Text(
+                        context.l10n.warmupConfig,
+                        style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    icon: const SemanticIcon(icon: AppIcons.close, semanticLabel: 'Close'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                context.l10n.warmupConfigDescription,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Percentage chips
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: List.generate(tempPercentages.length, (i) {
+                  return GestureDetector(
+                    onTap: () {
+                      final options = [30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
+                      final currentIdx = options.indexOf(tempPercentages[i]);
+                      final nextIdx = (currentIdx + 1) % options.length;
+                      setSheetState(() {
+                        tempPercentages[i] = options[nextIdx];
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: context.colors.warning.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: context.colors.warning.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            '${context.l10n.warmupSetLabel} ${i + 1}',
+                            style: context.textTheme.labelSmall?.copyWith(
+                              color: context.colors.warning,
+                              fontSize: 10,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${tempPercentages[i]}%',
+                            style: context.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: context.colors.warning,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ),
+              const SizedBox(height: 8),
+              // Add/remove warmup set buttons
+              Row(
+                children: [
+                  if (tempPercentages.length > 1)
+                    TextButton.icon(
+                      onPressed: () {
+                        setSheetState(() => tempPercentages.removeLast());
+                      },
+                      icon: Icon(AppIcons.removeCircleOutline, size: 16, color: context.colors.error),
+                      label: Text(
+                        context.l10n.removeSet,
+                        style: context.textTheme.labelSmall?.copyWith(color: context.colors.error),
+                      ),
+                    ),
+                  const Spacer(),
+                  if (tempPercentages.length < 6)
+                    TextButton.icon(
+                      onPressed: () {
+                        final lastPercent = tempPercentages.last;
+                        final newPercent = ((lastPercent + 100) / 2).round();
+                        final snapped = (newPercent / 5).round() * 5;
+                        setSheetState(() => tempPercentages.add(snapped.clamp(30, 95)));
+                      },
+                      icon: Icon(AppIcons.add, size: 16, color: context.colors.warning),
+                      label: Text(
+                        context.l10n.addSet,
+                        style: context.textTheme.labelSmall?.copyWith(color: context.colors.warning),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // Save button
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () {
+                    setState(() {
+                      _warmupPercentages = tempPercentages;
+                      // Clear overrides when percentages change
+                      _warmupOverrides.clear();
+                    });
+                    _markAsChanged();
+                    Navigator.pop(ctx);
+                  },
+                  style: FilledButton.styleFrom(
+                    backgroundColor: context.colors.warning,
+                    foregroundColor: context.colors.onPrimary,
+                  ),
+                  child: Text(context.l10n.done),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Edit a single warmup set via MinimalSetEditSheet
+  void _editWarmupSet(int exerciseIndex, int warmupIndex, _WarmupSet warmup) {
+    final exercise = _exercises[exerciseIndex];
+    final allWarmups = _generateWarmupSets(exerciseIndex, exercise);
+
+    final exerciseSet = ExerciseSet(
+      setNumber: warmupIndex + 1,
+      weight: warmup.weight,
+      reps: warmup.reps,
+    );
+
+    final allSets = allWarmups.asMap().entries.map((e) => ExerciseSet(
+      setNumber: e.key + 1,
+      weight: e.value.weight,
+      reps: e.value.reps,
+    )).toList();
+
+    context.showMinimalSetEditSheet(
+      exerciseSet: exerciseSet,
+      currentSetIndex: warmupIndex,
+      totalSets: allWarmups.length,
+      allSets: allSets,
+      onSave: (updatedSet) {
+        setState(() {
+          _warmupOverrides[exerciseIndex] ??= {};
+          _warmupOverrides[exerciseIndex]![warmupIndex] = _WarmupSet(
+            weight: updatedSet.weight ?? warmup.weight,
+            reps: updatedSet.reps ?? warmup.reps,
+            percent: warmup.percent,
+          );
+        });
+        _markAsChanged();
+      },
+      onSaveAndNext: warmupIndex < allWarmups.length - 1
+          ? (updatedSet) {
+              setState(() {
+                _warmupOverrides[exerciseIndex] ??= {};
+                _warmupOverrides[exerciseIndex]![warmupIndex] = _WarmupSet(
+                  weight: updatedSet.weight ?? warmup.weight,
+                  reps: updatedSet.reps ?? warmup.reps,
+                  percent: warmup.percent,
+                );
+              });
+              _markAsChanged();
+              Future.microtask(() {
+                final nextWarmups = _generateWarmupSets(exerciseIndex, _exercises[exerciseIndex]);
+                if (warmupIndex + 1 < nextWarmups.length) {
+                  _editWarmupSet(exerciseIndex, warmupIndex + 1, nextWarmups[warmupIndex + 1]);
+                }
+              });
+            }
+          : null,
+      onSaveAndPrevious: warmupIndex > 0
+          ? (updatedSet) {
+              setState(() {
+                _warmupOverrides[exerciseIndex] ??= {};
+                _warmupOverrides[exerciseIndex]![warmupIndex] = _WarmupSet(
+                  weight: updatedSet.weight ?? warmup.weight,
+                  reps: updatedSet.reps ?? warmup.reps,
+                  percent: warmup.percent,
+                );
+              });
+              _markAsChanged();
+              Future.microtask(() {
+                final prevWarmups = _generateWarmupSets(exerciseIndex, _exercises[exerciseIndex]);
+                if (warmupIndex - 1 >= 0) {
+                  _editWarmupSet(exerciseIndex, warmupIndex - 1, prevWarmups[warmupIndex - 1]);
+                }
+              });
+            }
+          : null,
+      onApplyToAll: (updatedSet) {
+        setState(() {
+          final w = updatedSet.weight ?? warmup.weight;
+          final r = updatedSet.reps ?? warmup.reps;
+          _warmupOverrides[exerciseIndex] ??= {};
+          for (int i = 0; i < allWarmups.length; i++) {
+            _warmupOverrides[exerciseIndex]![i] = _WarmupSet(
+              weight: w,
+              reps: r,
+              percent: allWarmups[i].percent,
+            );
+          }
+        });
+        _markAsChanged();
+      },
+    );
+  }
+
+  /// Build warmup sets display (2-per-row, amber colored)
+  Widget _buildWarmupSets(int exerciseIndex, ExerciseTemplate exercise) {
+    final isSupersetWithSubExercises = exercise.type == ExerciseType.superset &&
+        exercise.subExercises != null &&
+        exercise.subExercises!.isNotEmpty;
+    if (isSupersetWithSubExercises) return const SizedBox.shrink();
+
+    final warmupSets = _generateWarmupSets(exerciseIndex, exercise);
+    if (warmupSets.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: context.colors.warning.withValues(alpha: 0.06),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: context.colors.warning.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(AppIcons.infoOutline, size: 16, color: context.colors.warning),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  context.l10n.warmupNeedsWeight,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.warning,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // 2-per-row layout - each chip individually tappable
+    final rows = <Widget>[];
+    for (int i = 0; i < warmupSets.length; i += 2) {
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => _editWarmupSet(exerciseIndex, i, warmupSets[i]),
+                  child: _buildWarmupChip(warmupSets[i]),
+                ),
+              ),
+              const SizedBox(width: 6),
+              if (i + 1 < warmupSets.length)
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => _editWarmupSet(exerciseIndex, i + 1, warmupSets[i + 1]),
+                    child: _buildWarmupChip(warmupSets[i + 1]),
+                  ),
+                )
+              else
+                const Expanded(child: SizedBox()),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Warmup label - tappable for percentage config
+          GestureDetector(
+            onTap: () => _showWarmupPercentageConfig(),
+            child: Row(
+              children: [
+                Icon(AppIcons.localFireDepartment, size: 12, color: context.colors.warning),
+                const SizedBox(width: 4),
+                Text(
+                  context.l10n.warmupSets,
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.colors.warning,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 10,
+                  ),
+                ),
+                const Spacer(),
+                Icon(AppIcons.edit, size: 12, color: context.colors.warning.withValues(alpha: 0.5)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 4),
+          ...rows,
+          Divider(color: context.colors.warning.withValues(alpha: 0.2), height: 12),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWarmupChip(_WarmupSet warmup) {
+    return Container(
+      height: 30,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: context.colors.warning.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: context.colors.warning.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '${warmup.percent}%',
+            style: context.textTheme.labelSmall?.copyWith(
+              color: context.colors.warning.withValues(alpha: 0.6),
+              fontSize: 9,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '${warmup.weight.toStringAsFixed(1)} kg',
+            style: context.textTheme.labelSmall?.copyWith(
+              color: context.colors.warning,
+              fontWeight: FontWeight.w700,
+              fontSize: 11,
+            ),
+          ),
+          Text(
+            ' × ${warmup.reps}',
+            style: context.textTheme.labelSmall?.copyWith(
+              color: context.colors.warning.withValues(alpha: 0.7),
+              fontWeight: FontWeight.w600,
+              fontSize: 11,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showRestTimePicker(int exerciseIndex) {
     final exerciseTemplate = _exercises[exerciseIndex];
 
@@ -1158,4 +1816,15 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
       return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
     }
   }
+}
+
+class _WarmupSet {
+  const _WarmupSet({
+    required this.weight,
+    required this.reps,
+    required this.percent,
+  });
+  final double weight;
+  final int reps;
+  final int percent;
 }
