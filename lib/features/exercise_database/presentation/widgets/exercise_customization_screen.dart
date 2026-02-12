@@ -112,14 +112,21 @@ class _ExerciseCustomizationScreenState
         ),
         actions: [
           Semantics(
-            label: l10n.addAll,
+            label: l10n.add,
             button: true,
-            child: FilledButton.tonal(
+            child: TextButton(
               onPressed: _addAllToWorkout,
-              child: Text(l10n.addAll),
+              child: Text(
+                l10n.add,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 4),
         ],
       ),
       body: ReorderableListView.builder(
@@ -1773,35 +1780,34 @@ class _ExerciseCustomizationScreenState
               width: 1,
             ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Header: icona + label
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
+              Column(
                 children: [
-                  Icon(icon, size: 14, color: color),
-                  const SizedBox(width: 6),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(icon, size: 14, color: color),
+                      const SizedBox(width: 4),
+                      Text(
+                        label,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
                   Text(
-                    label,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
+                    value,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: color,
+                      fontSize: 15,
                     ),
                   ),
                 ],
-              ),
-              const SizedBox(height: 4),
-              // Valore principale
-              Text(
-                value,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: color,
-                  fontSize: 15,
-                ),
               ),
             ],
           ),
