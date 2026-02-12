@@ -348,9 +348,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         ...widget.exercise.sets.asMap().entries.map(
           (entry) => _buildSetItem(context, entry.key, entry.value, config),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
         // Add set button (with smooth animated collapse button when completed)
-        // ✅ FIX: Wrap in ClipRect to prevent red box overflow during slide animation
         ClipRect(
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 400),
@@ -376,85 +375,85 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                     key: const ValueKey('buttons_with_collapse'),
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Add Set button - minimal Apple HIG style
-                      TextButton.icon(
-                        onPressed: () => _addNewSet(),
-                        icon: SemanticIcon(
-                          icon: AppIcons.add,
-                          semanticLabel: context.l10n.addSet,
-                          size: AppIconSize.small,
-                          color: context.colors.primary,
-                        ),
-                        label: Text(context.l10n.addSet),
-                        style: TextButton.styleFrom(
-                          foregroundColor: context.colors.primary,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          textStyle: context.textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      // Subtle divider
-                      Container(
-                        width: 1,
-                        height: 20,
-                        color: context.colors.outlineVariant.withValues(alpha: 0.4),
-                      ),
-                      // Collapse button - minimal
-                      TextButton.icon(
-                        onPressed: () {
-                          widget.onCollapseExercise();
-                          HapticFeedback.lightImpact();
-                        },
-                        icon: SemanticIcon(
-                          icon: AppIcons.unfoldLess,
-                          semanticLabel: context.l10n.collapseExercise,
-                          size: AppIconSize.small,
-                          color: context.colors.onSurfaceVariant,
-                        ),
-                        label: Text(context.l10n.collapseExercise),
-                        style: TextButton.styleFrom(
-                          foregroundColor: context.colors.onSurfaceVariant,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          textStyle: context.textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
+                      _buildMinimalAddSetChip(context),
+                      const SizedBox(width: 12),
+                      _buildMinimalCollapseChip(context),
                     ],
                   )
                 : Center(
                     key: const ValueKey('button_add_only'),
-                    child: TextButton.icon(
-                      onPressed: () => _addNewSet(),
-                      icon: SemanticIcon(
-                        icon: AppIcons.add,
-                        semanticLabel: context.l10n.addSet,
-                        size: AppIconSize.small,
-                        color: context.colors.primary,
-                      ),
-                      label: Text(context.l10n.addSet),
-                      style: TextButton.styleFrom(
-                        foregroundColor: context.colors.primary,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        textStyle: context.textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
+                    child: _buildMinimalAddSetChip(context),
                   ),
           ),
         ),
       ],
+    );
+  }
+
+  /// Minimal tappable chip for "Add Set" - Apple HIG inspired
+  Widget _buildMinimalAddSetChip(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _addNewSet(),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: context.colors.primary.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              AppIcons.add,
+              size: 16,
+              color: context.colors.primary,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              context.l10n.addSet,
+              style: context.textTheme.labelMedium?.copyWith(
+                color: context.colors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Minimal tappable chip for "Collapse" - Apple HIG inspired
+  Widget _buildMinimalCollapseChip(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        widget.onCollapseExercise();
+        HapticFeedback.lightImpact();
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: context.colors.onSurface.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              AppIcons.unfoldLess,
+              size: 16,
+              color: context.colors.onSurfaceVariant,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              context.l10n.collapseExercise,
+              style: context.textTheme.labelMedium?.copyWith(
+                color: context.colors.onSurfaceVariant,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -1009,11 +1008,22 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         ? _prefillSourceLabel(prefill.source)
         : null;
 
+    // Recent weights (excluding warmups - filtered at service level) with dates
+    final recentHistory = ref
+        .read(recentWeightsWithDetailsProvider(widget.exercise.name))
+        .value;
+    final recentWeightsWithDates = recentHistory
+        ?.where((h) => h.weight != null && h.weight! > 0)
+        .map((h) => (weight: h.weight!, date: h.date))
+        .take(5)
+        .toList();
+
     // ✅ NEW: Use MinimalSetEditSheet for cleaner UX
     context.showMinimalSetEditSheet(
       exerciseSet: set,
       suggestedWeight: prefill?.weight,
       suggestedSource: suggestedSource,
+      recentWeights: recentWeightsWithDates,
       countingMode: widget.exercise.countingMode, // ✅ NUOVO: Pass counting mode
       onSave: (updatedSet) {
         final updatedSets = widget.exercise.sets.map((s) {
