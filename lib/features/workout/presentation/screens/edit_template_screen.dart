@@ -846,10 +846,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
     final round = exerciseTemplate.sets[roundIndex];
 
     // Show modal with weight/reps pickers for this round
-    await showModalBottomSheet(
-      context: context,
+    await ModalService.showSheet(context,
       isScrollControlled: true,
-      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => Container(
         decoration: BoxDecoration(
           color: context.colors.surface,
