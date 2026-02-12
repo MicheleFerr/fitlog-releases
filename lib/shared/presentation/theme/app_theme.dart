@@ -82,6 +82,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
+      fontFamily: 'Inter',
 
       // App Bar Theme
       appBarTheme: const AppBarTheme(
@@ -155,6 +156,16 @@ class AppTheme {
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         shape: CircleBorder(),
         elevation: 4,
+      ),
+
+      // Bottom Sheet Theme - solid bg, no gap
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: colorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        clipBehavior: Clip.antiAlias,
       ),
 
       // Bottom Navigation Bar Theme

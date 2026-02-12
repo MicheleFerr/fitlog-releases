@@ -10,13 +10,13 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Shows the suggestion info bottom sheet
 void showSuggestionInfoSheet(BuildContext context, SmartSuggestion suggestion) {
   HapticFeedback.lightImpact();
 
-  showModalBottomSheet(
-    context: context,
+  ModalService.showSheet(context,
     isScrollControlled: true,
     backgroundColor: context.colors.surface,
     shape: const RoundedRectangleBorder(
@@ -139,54 +139,39 @@ class SuggestionInfoSheet extends StatelessWidget {
   }
 
   IconData _getIcon() {
-    switch (suggestion.type) {
-      case ContributionType.tip:
-        return AppIcons.lightbulb;
-      case ContributionType.warning:
-        return AppIcons.warning;
-      case ContributionType.correction:
-        return AppIcons.checkCircle;
-      case ContributionType.technique:
-        return AppIcons.workout;
-      case ContributionType.variant:
-        return AppIcons.swapHoriz;
-      case ContributionType.translation:
-        return AppIcons.language;
-    }
+    return switch (suggestion.type) {
+      'tip' => AppIcons.lightbulb,
+      'warning' => AppIcons.warning,
+      'correction' => AppIcons.checkCircle,
+      'technique' => AppIcons.workout,
+      'variant' => AppIcons.swapHoriz,
+      'translation' => AppIcons.language,
+      _ => AppIcons.lightbulb,
+    };
   }
 
   Color _getIconColor(BuildContext context) {
-    switch (suggestion.type) {
-      case ContributionType.tip:
-        return context.colors.primary;
-      case ContributionType.warning:
-        return context.colors.error;
-      case ContributionType.correction:
-        return context.colors.tertiary;
-      case ContributionType.technique:
-        return context.colors.secondary;
-      case ContributionType.variant:
-        return context.colors.primary;
-      case ContributionType.translation:
-        return context.colors.onSurfaceVariant;
-    }
+    return switch (suggestion.type) {
+      'tip' => context.colors.primary,
+      'warning' => context.colors.error,
+      'correction' => context.colors.tertiary,
+      'technique' => context.colors.secondary,
+      'variant' => context.colors.primary,
+      'translation' => context.colors.onSurfaceVariant,
+      _ => context.colors.primary,
+    };
   }
 
   Color _getIconBackgroundColor(BuildContext context) {
-    switch (suggestion.type) {
-      case ContributionType.tip:
-        return context.colors.primaryContainer;
-      case ContributionType.warning:
-        return context.colors.errorContainer;
-      case ContributionType.correction:
-        return context.colors.tertiaryContainer;
-      case ContributionType.technique:
-        return context.colors.secondaryContainer;
-      case ContributionType.variant:
-        return context.colors.primaryContainer;
-      case ContributionType.translation:
-        return context.colors.surfaceContainerHighest;
-    }
+    return switch (suggestion.type) {
+      'tip' => context.colors.primaryContainer,
+      'warning' => context.colors.errorContainer,
+      'correction' => context.colors.tertiaryContainer,
+      'technique' => context.colors.secondaryContainer,
+      'variant' => context.colors.primaryContainer,
+      'translation' => context.colors.surfaceContainerHighest,
+      _ => context.colors.primaryContainer,
+    };
   }
 
   String _getTitle(BuildContext context) {
@@ -195,20 +180,15 @@ class SuggestionInfoSheet extends StatelessWidget {
       return context.l10n.personalRecord;
     }
 
-    switch (suggestion.type) {
-      case ContributionType.tip:
-        return context.l10n.tip;
-      case ContributionType.warning:
-        return context.l10n.warning;
-      case ContributionType.correction:
-        return context.l10n.correction;
-      case ContributionType.technique:
-        return context.l10n.technique;
-      case ContributionType.variant:
-        return context.l10n.variant;
-      case ContributionType.translation:
-        return context.l10n.translation;
-    }
+    return switch (suggestion.type) {
+      'tip' => context.l10n.tip,
+      'warning' => context.l10n.warning,
+      'correction' => context.l10n.correction,
+      'technique' => context.l10n.technique,
+      'variant' => context.l10n.variant,
+      'translation' => context.l10n.translation,
+      _ => suggestion.type,
+    };
   }
 
   String _getSubtitle(BuildContext context) {
@@ -247,19 +227,13 @@ class SuggestionInfoSheet extends StatelessWidget {
     }
     // Generic tips based on type
     else {
-      switch (suggestion.type) {
-        case ContributionType.tip:
-          tips.addAll([context.l10n.tipAdvice1, context.l10n.tipAdvice2]);
-          break;
-        case ContributionType.warning:
-          tips.addAll([
-            context.l10n.warningAdvice1,
-            context.l10n.warningAdvice2,
-          ]);
-          break;
-        default:
-          // No additional tips for other types
-          break;
+      if (suggestion.type == 'tip') {
+        tips.addAll([context.l10n.tipAdvice1, context.l10n.tipAdvice2]);
+      } else if (suggestion.type == 'warning') {
+        tips.addAll([
+          context.l10n.warningAdvice1,
+          context.l10n.warningAdvice2,
+        ]);
       }
     }
 

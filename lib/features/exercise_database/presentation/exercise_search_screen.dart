@@ -45,6 +45,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superse
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_converter.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_configuration.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_template.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 // Exercise search tutorial REMOVED - UX 2025 analysis: search UI is standard pattern
 
 class ExerciseSearchScreen extends ConsumerStatefulWidget {
@@ -492,10 +493,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     final exercisesAsync = ref.read(jsonExerciseRepositoryProvider);
     final exercises = exercisesAsync.value ?? [];
 
-    await showModalBottomSheet(
-      context: context,
+    await ModalService.showSheet(context,
       isScrollControlled: true,
-      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (sheetContext) => _FilterBottomSheet(
         exercises: exercises,
         selectedEquipment: _selectedEquipment,
@@ -543,7 +542,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${l10n.searchExercises} (${_selectedExercises.length})'),
+        title: Text(l10n.addExercisesTitle),
         centerTitle: true,
         leading: IconButton(
           icon: const SemanticIcon(icon: AppIcons.back, semanticLabel: 'Back'),
@@ -556,56 +555,6 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           },
         ),
         actions: [
-          // Add/Confirm button with badge count
-          if (_selectedExercises.isNotEmpty)
-            Stack(
-              children: [
-                Semantics(
-                  label: widget.multiSelectMode
-                      ? 'Select Exercises'
-                      : l10n.addToWorkout,
-                  button: true,
-                  enabled: true,
-                  child: IconButton(
-                    key: _addButtonKey, // Tutorial target
-                    icon: Icon(
-                      widget.multiSelectMode ? AppIcons.check : AppIcons.add,
-                    ),
-                    onPressed: widget.multiSelectMode
-                        ? _selectExercises
-                        : _addSelectedToWorkout,
-                    tooltip: widget.multiSelectMode
-                        ? 'Select Exercises'
-                        : l10n.addToWorkout,
-                  ),
-                ),
-                // Badge con numero selezionati
-                Positioned(
-                  right: 6,
-                  top: 6,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: context.colors.primary,
-                      shape: BoxShape.circle,
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: 16,
-                      minHeight: 16,
-                    ),
-                    child: Text(
-                      '${_selectedExercises.length}',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: context.colors.onPrimary,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ],
-            ),
           // Filter button with badge
           Stack(
             children: [
@@ -650,65 +599,81 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       ),
       body: Column(
         children: [
-          // Search Bar (shown when FAB is tapped)
+          // Search Bar (compact)
           if (_showSearch) ...[
             Container(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
               color: context.colors.surfaceContainerHighest.withValues(
                 alpha: 0.5,
               ),
-              child: TextField(
-                controller: _searchController,
-                autofocus: true,
-                decoration: InputDecoration(
-                  hintText: l10n.searchExercisesHint,
-                  // ✅ FIX: Icona search sempre visibile (mai nascosta dal loader)
-                  prefixIcon: const SemanticIcon(
-                    icon: AppIcons.search,
-                    semanticLabel: 'Search',
-                  ),
-                  // ✅ FIX: Loader a destra quando carica, altrimenti X per cancellare
-                  suffixIcon: _isSearching
-                      ? const Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: LoadingIndicator(size: 20),
-                        )
-                      : (_searchQuery.isNotEmpty
-                            ? IconButton(
-                                icon: const SemanticIcon(
-                                  icon: AppIcons.clear,
-                                  semanticLabel: 'Clear',
-                                ),
-                                onPressed: () {
-                                  _searchController.clear();
-                                  setState(() {
-                                    _searchQuery = '';
-                                    _useFuzzyResults = false;
-                                    _fuzzyResults = [];
-                                  });
-                                  _searchDebouncer
-                                      .cancel(); // 🔐 SECURITY: Cancel pending search
-                                },
-                              )
-                            : null),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: context.colors.primary,
-                      width: 2.0,
+              child: SizedBox(
+                height: 40,
+                child: TextField(
+                  controller: _searchController,
+                  autofocus: true,
+                  style: context.textTheme.bodyMedium,
+                  decoration: InputDecoration(
+                    hintText: l10n.searchExercisesHint,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
+                    isDense: true,
+                    prefixIcon: const Padding(
+                      padding: EdgeInsets.only(left: 8.0, right: 4.0),
+                      child: SemanticIcon(
+                        icon: AppIcons.search,
+                        semanticLabel: 'Search',
+                        size: 20,
+                      ),
                     ),
+                    prefixIconConstraints: const BoxConstraints(
+                      minWidth: 32,
+                      minHeight: 32,
+                    ),
+                    suffixIcon: _isSearching
+                        ? const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: LoadingIndicator(size: 18),
+                          )
+                        : (_searchQuery.isNotEmpty
+                              ? IconButton(
+                                  icon: const SemanticIcon(
+                                    icon: AppIcons.clear,
+                                    semanticLabel: 'Clear',
+                                    size: 18,
+                                  ),
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(
+                                    minWidth: 32,
+                                    minHeight: 32,
+                                  ),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    setState(() {
+                                      _searchQuery = '';
+                                      _useFuzzyResults = false;
+                                      _fuzzyResults = [];
+                                    });
+                                    _searchDebouncer.cancel();
+                                  },
+                                )
+                              : null),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        color: context.colors.primary,
+                        width: 1.5,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: context.colors.surface,
                   ),
-                  filled: true,
-                  fillColor: context.colors.surface,
+                  onChanged: (value) {
+                    setState(() => _searchQuery = value.toLowerCase());
+                    _performFuzzySearch(value);
+                  },
                 ),
-                onChanged: (value) {
-                  setState(() => _searchQuery = value.toLowerCase());
-                  // Trigger fuzzy search
-                  _performFuzzySearch(value);
-                },
               ),
             ),
           ],
@@ -734,12 +699,76 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         ],
       ),
 
-      // FAB for search (always visible)
-      floatingActionButton: FloatingActionButton(
-        key: _searchBarKey, // Tutorial target for search
-        onPressed: _toggleSearch,
-        tooltip: _showSearch ? l10n.close : l10n.search,
-        child: Icon(_showSearch ? AppIcons.close : AppIcons.search),
+      // FABs: close (X) + add (+) with badge, positioned near keyboard
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom > 0 ? 4.0 : 16.0,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Close/Search FAB
+            FloatingActionButton(
+              key: _searchBarKey,
+              heroTag: 'search_toggle',
+              onPressed: _toggleSearch,
+              tooltip: _showSearch ? l10n.close : l10n.search,
+              child: Icon(_showSearch ? AppIcons.close : AppIcons.search),
+            ),
+            // Add FAB with badge (shown when exercises selected)
+            if (_selectedExercises.isNotEmpty) ...[
+              const SizedBox(width: 16),
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  FloatingActionButton(
+                    key: _addButtonKey,
+                    heroTag: 'add_exercises',
+                    onPressed: widget.multiSelectMode
+                        ? _selectExercises
+                        : _addSelectedToWorkout,
+                    tooltip: widget.multiSelectMode
+                        ? 'Select Exercises'
+                        : l10n.addToWorkout,
+                    child: Icon(
+                      widget.multiSelectMode ? AppIcons.check : AppIcons.add,
+                    ),
+                  ),
+                  // Badge count
+                  Positioned(
+                    right: -4,
+                    top: -4,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: context.colors.primary,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: context.colors.surface,
+                          width: 2,
+                        ),
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 22,
+                        minHeight: 22,
+                      ),
+                      child: Text(
+                        '${_selectedExercises.length}',
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: context.colors.onPrimary,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
@@ -1901,8 +1930,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     final l10n = context.l10n;
     final isExpired = customExercise.isExpired;
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       builder: (sheetContext) => Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -2195,8 +2223,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       context,
       workoutExercise,
       onHistory: () {
-        showModalBottomSheet(
-          context: context,
+        ModalService.showSheet(context,
           isScrollControlled: true,
           backgroundColor: Theme.of(
             context,

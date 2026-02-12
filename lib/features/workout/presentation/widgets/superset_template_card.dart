@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_tem
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Compact superset template card for horizontal scroll
 ///
@@ -100,8 +101,7 @@ class _SupersetTemplateCardState extends ConsumerState<SupersetTemplateCard>
   void _showOptionsMenu() {
     HapticFeedback.mediumImpact();
 
-    showModalBottomSheet<void>(
-      context: context,
+    ModalService.showSheet<void>(context,
       backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Result of the counting mode picker modal
 ///
@@ -59,8 +60,7 @@ class CountingModePickerModal extends StatefulWidget {
     bool showSaveAsDefault = true,
   }) async {
     unawaited(HapticFeedback.mediumImpact());
-    return showModalBottomSheet<CountingModePickerResult>(
-      context: context,
+    return ModalService.showSheet<CountingModePickerResult>(context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,

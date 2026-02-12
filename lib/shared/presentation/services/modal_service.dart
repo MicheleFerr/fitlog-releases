@@ -41,28 +41,65 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 
 class ModalService {
+  /// Tracks number of open bottom sheets.
+  /// MainShell listens to this to hide/show the nav bar.
+  static final openSheetCount = ValueNotifier<int>(0);
+
   /// Calcola la dimensione massima sicura per DraggableScrollableSheet
   /// che evita notch/Dynamic Island.
-  ///
-  /// Uso:
-  /// ```dart
-  /// DraggableScrollableSheet(
-  ///   maxChildSize: ModalService.safeMaxChildSize(context),
-  ///   // ...
-  /// )
-  /// ```
   static double safeMaxChildSize(BuildContext context, {double preferredMax = 0.95}) {
     final screenHeight = MediaQuery.of(context).size.height;
     final topPadding = MediaQuery.of(context).viewPadding.top;
-    // Lascia almeno topPadding + 8px di clearance dal notch
     final maxSize = (screenHeight - topPadding - 8) / screenHeight;
     return maxSize.clamp(0.80, preferredMax);
   }
 
-  /// Mostra bottom sheet standard (altezza ~50-90% schermo)
+  /// @deprecated Use [showSheet] instead. Will be removed in a future version.
+  static double bottomNavBarPadding(BuildContext context) => 0.0;
+
+  /// Mostra un bottom sheet generico. Nasconde automaticamente la nav bar.
   ///
-  /// ✅ Protetto automaticamente dal notch/Dynamic Island:
-  /// L'altezza massima viene limitata per non andare sotto la safe area.
+  /// Questo è il metodo principale per tutti i bottom sheet dell'app.
+  /// Gestisce automaticamente:
+  /// - Nascondere/mostrare la nav bar
+  /// - Background color solido (theme default)
+  /// - Shape con borderRadius 20px (theme default)
+  static Future<T?> showSheet<T>(
+    BuildContext context, {
+    required WidgetBuilder builder,
+    bool isDismissible = true,
+    bool enableDrag = true,
+    bool isScrollControlled = true,
+    Color? backgroundColor,
+    ShapeBorder? shape,
+    bool showDragHandle = false,
+    BoxConstraints? constraints,
+    bool useSafeArea = false,
+  }) async {
+    openSheetCount.value++;
+    try {
+      return await showModalBottomSheet<T>(
+        context: context,
+        isDismissible: isDismissible,
+        enableDrag: enableDrag,
+        isScrollControlled: isScrollControlled,
+        backgroundColor: backgroundColor,
+        shape: shape,
+        showDragHandle: showDragHandle,
+        constraints: constraints,
+        useSafeArea: useSafeArea,
+        builder: (ctx) => MediaQuery.removePadding(
+          context: ctx,
+          removeBottom: true,
+          child: builder(ctx),
+        ),
+      );
+    } finally {
+      openSheetCount.value--;
+    }
+  }
+
+  /// Mostra bottom sheet standard con altezza fissa e handle bar.
   static Future<T?> showBottomSheet<T>(
     BuildContext context, {
     required Widget child,
@@ -71,24 +108,17 @@ class ModalService {
     double? height,
     Color? backgroundColor,
   }) {
-    // ✅ FIX: Calcola altezza massima sicura (evita notch/Dynamic Island)
     final screenHeight = context.screenHeight;
     final topPadding = context.mediaQuery.viewPadding.top;
-    final maxSafeHeight = screenHeight - topPadding - 8; // 8px clearance
+    final maxSafeHeight = screenHeight - topPadding - 8;
 
-    // Se viene passata un'altezza, limitala al massimo sicuro
     final requestedHeight = height ?? screenHeight * 0.8;
     final safeHeight = requestedHeight.clamp(0.0, maxSafeHeight);
 
-    return showModalBottomSheet<T>(
-      context: context,
+    return showSheet<T>(
+      context,
       isDismissible: isDismissible,
       enableDrag: enableDrag,
-      backgroundColor: backgroundColor ?? context.colors.surface,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
       builder: (_) => Container(
         height: safeHeight,
         padding: EdgeInsets.only(
@@ -101,7 +131,6 @@ class ModalService {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Handle bar
             Container(
               margin: const EdgeInsets.only(top: 8, bottom: 4),
               width: 40,
@@ -125,12 +154,11 @@ class ModalService {
     bool isDismissible = true,
     Color? backgroundColor,
   }) {
-    return showModalBottomSheet<T>(
-      context: context,
+    return showSheet<T>(
+      context,
       isDismissible: isDismissible,
       enableDrag: false,
       backgroundColor: backgroundColor ?? context.colors.surface,
-      isScrollControlled: true,
       useSafeArea: true,
       builder: (_) => child,
     );

@@ -28,7 +28,11 @@ class ExerciseCardSettingsAdapter extends TypeAdapter<ExerciseCardSettings> {
       showPlates: fields[4] == null ? true : fields[4] as bool,
       showRpe: fields[5] == null ? true : fields[5] as bool,
       footerElements: fields[6] == null
-          ? const [ExerciseFooterElement.tips, ExerciseFooterElement.notes]
+          ? const [
+              ExerciseFooterElement.tips,
+              ExerciseFooterElement.tut,
+              ExerciseFooterElement.notes,
+            ]
           : (fields[6] as List).cast<ExerciseFooterElement>(),
       footerExpanded: fields[7] == null ? false : fields[7] as bool,
     );

@@ -382,7 +382,6 @@ class PrivacyManager {
         'user_profile_cache',      // User profile cache
         'stress_index_cache',      // Stress index cache
         'personal_records',        // PR cache
-        'progress_photos_cache',   // Progress photos metadata
       ];
 
       // Clear each box

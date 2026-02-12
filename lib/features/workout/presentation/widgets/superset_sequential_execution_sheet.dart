@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Widget per esecuzione SEQUENZIALE superset secondo metodologia scientifica
 ///
@@ -44,8 +45,7 @@ class SupersetSequentialExecutionSheet extends ConsumerStatefulWidget {
     required Function(SupersetSet completedRound) onRoundCompleted,
     VoidCallback? onAllRoundsCompleted,
   }) {
-    return showModalBottomSheet<void>(
-      context: context,
+    return ModalService.showSheet<void>(context,
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,

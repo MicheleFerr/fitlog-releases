@@ -476,8 +476,7 @@ class _CoachTemplateEditorScreenState
   }
 
   Future<void> _showAddExercise() async {
-    final result = await showModalBottomSheet<ExerciseTemplate>(
-      context: context,
+    final result = await ModalService.showSheet<ExerciseTemplate>(context,
       isScrollControlled: true,
       useSafeArea: true,
       builder: (_) => const AddExerciseModal(),

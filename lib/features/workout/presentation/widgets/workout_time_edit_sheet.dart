@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Bottom sheet per modificare il tempo del workout
 ///
@@ -49,8 +50,7 @@ class WorkoutTimeEditSheet extends ConsumerStatefulWidget {
   }) async {
     Duration? result;
 
-    await showModalBottomSheet<void>(
-      context: context,
+    await ModalService.showSheet<void>(context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,

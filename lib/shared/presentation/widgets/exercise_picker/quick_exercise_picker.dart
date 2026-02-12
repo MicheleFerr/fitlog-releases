@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Modal semplificato per quick pick di esercizi
 /// Usato in Community per "Contribuisci"
@@ -185,10 +186,8 @@ extension QuickExercisePickerExtension on BuildContext {
   Future<Exercise?> showQuickExercisePicker({
     void Function(Exercise)? onExerciseSelected,
   }) {
-    return showModalBottomSheet<Exercise>(
-      context: this,
+    return ModalService.showSheet<Exercise>(this,
       isScrollControlled: true,
-      backgroundColor: Theme.of(this).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => QuickExercisePicker(
         onExerciseSelected: onExerciseSelected,
       ),

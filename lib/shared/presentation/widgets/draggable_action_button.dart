@@ -257,9 +257,12 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
     final isCompact = screenWidth < _compactScreenThreshold;
     final buttonWidth = isCompact ? _compactButtonSize : _buttonWidth;
 
+    // Account for tab bar / nav bar height injected via MediaQuery
+    final bottomInset = MediaQuery.of(context).padding.bottom + _bottomPadding;
+
     // When hidden, show only the tab handle
     if (_isHidden) {
-      return _buildHiddenTab(context, colorScheme);
+      return _buildHiddenTab(context, colorScheme, bottomInset);
     }
 
     _targetX = _getTargetX(screenWidth, isCompact);
@@ -307,7 +310,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
 
         return Positioned(
           left: clampedX,
-          bottom: _bottomPadding,
+          bottom: bottomInset,
           child: GestureDetector(
             onPanStart: _onPanStart,
             onPanUpdate: _onPanUpdate,
@@ -354,11 +357,11 @@ class _DraggableActionButtonState extends State<DraggableActionButton> {
   }
 
   /// Build the hidden tab - simple, no animation needed
-  Widget _buildHiddenTab(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildHiddenTab(BuildContext context, ColorScheme colorScheme, double bottomInset) {
     final isLeftSide = _isOnLeft;
 
     return Positioned(
-      bottom: _bottomPadding,
+      bottom: bottomInset,
       left: isLeftSide ? 0 : null,
       right: isLeftSide ? null : 0,
       child: GestureDetector(
@@ -490,10 +493,8 @@ class _ExpandableExerciseMenu extends StatefulWidget {
     List<DraggableActionOption>? additionalOptions,
   }) {
     final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.9);
-    return showModalBottomSheet<void>(
-      context: context,
+    return ModalService.showSheet<void>(context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.45,
         minChildSize: 0.3,

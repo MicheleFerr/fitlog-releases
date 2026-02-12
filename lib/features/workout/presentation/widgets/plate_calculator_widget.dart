@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 class PlateCalculatorWidget extends ConsumerStatefulWidget {
   const PlateCalculatorWidget({
@@ -634,8 +635,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
   void _showBarbellSelector(BuildContext context) {
     final theme = Theme.of(context);
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

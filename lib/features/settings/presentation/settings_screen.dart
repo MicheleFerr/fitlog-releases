@@ -33,8 +33,8 @@ import 'package:gymbro_flutter_new/features/data_export/presentation/widgets/dat
 import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/legal_document_screen.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/appearance_preview_modal.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/widgets/exercise_card_settings_section.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -857,25 +857,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 semanticLabel: 'Chevron right',
               ),
               onTap: () => _showColorPickerDialog(context, ref, config.primaryColor),
-              contentPadding: EdgeInsets.zero,
-            ),
-
-            const Divider(),
-
-            // Appearance Preview (live preview of exercise card)
-            ListTile(
-              title: Text(context.l10n.appearancePreview),
-              subtitle: Text(context.l10n.appearancePreviewSubtitle),
-              leading: const SemanticIcon(
-                icon: AppIcons.preview,
-                semanticLabel: 'Preview appearance',
-                size: AppIconSize.medium,
-              ),
-              trailing: const SemanticIcon(
-                icon: AppIcons.chevronRight,
-                semanticLabel: 'Chevron right',
-              ),
-              onTap: () => AppearancePreviewModal.show(context),
               contentPadding: EdgeInsets.zero,
             ),
 
@@ -1946,8 +1927,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       },
     ];
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       builder: (BuildContext bottomSheetContext) {
         return Container(
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -2627,10 +2607,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   void _showExportDataSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (context) => const DataExportSheet(),
     );
   }

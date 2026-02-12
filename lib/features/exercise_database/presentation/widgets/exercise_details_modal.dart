@@ -32,8 +32,7 @@ class ExerciseDetailsModal extends StatefulWidget {
     int? currentExerciseIndex,
     void Function(WarmupSuggestion, int)? onWarmupExerciseAdded,
   }) {
-    return showModalBottomSheet(
-      context: context,
+    return ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,

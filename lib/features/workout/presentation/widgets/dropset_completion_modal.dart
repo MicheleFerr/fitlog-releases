@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_selector_bottom_sheet.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Modal shown after completing all stages of a DropSet
 ///
@@ -31,8 +32,7 @@ class DropSetCompletionModal extends ConsumerStatefulWidget {
     required String exerciseName,
     required List<DropSetStage> stages,
   }) {
-    return showModalBottomSheet<int>(
-      context: context,
+    return ModalService.showSheet<int>(context,
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,

@@ -17,14 +17,13 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Shows the quick settings bottom sheet
 void showSettingsBottomSheet(BuildContext context) {
   HapticFeedback.lightImpact();
-  showModalBottomSheet(
-    context: context,
+  ModalService.showSheet(context,
     isScrollControlled: true,
-    backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
     builder: (context) => const _SettingsBottomSheetContent(),
   );
 }
@@ -223,8 +222,7 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
     String currentLanguageCode,
   ) {
     HapticFeedback.lightImpact();
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       builder: (context) => _LanguageSelectorSheet(
         currentLanguageCode: currentLanguageCode,
         onSelect: (languageCode) {
@@ -241,8 +239,7 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
     int currentValue,
   ) {
     HapticFeedback.lightImpact();
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       builder: (context) => _RestTimeQuickPicker(
         currentValue: currentValue,
         onSelect: (value) {

@@ -24,6 +24,7 @@ import 'package:gymbro_flutter_new/features/workout/data/repositories/rest_pause
 import 'package:gymbro_flutter_new/features/workout/domain/entities/dropset_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/rest_pause_template.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 class AddExerciseModal extends ConsumerStatefulWidget {
   const AddExerciseModal({
@@ -51,8 +52,7 @@ class AddExerciseModal extends ConsumerStatefulWidget {
     final maxSize = (screenHeight - topPadding - 8) / screenHeight;
     final safeMaxSize = maxSize.clamp(0.85, 0.96);
 
-    return showModalBottomSheet<void>(
-      context: context,
+    return ModalService.showSheet<void>(context,
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,

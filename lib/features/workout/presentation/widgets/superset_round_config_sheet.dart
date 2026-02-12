@@ -12,6 +12,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Round-based superset configuration sheet.
 ///
@@ -44,8 +45,7 @@ class SupersetRoundConfigSheet extends ConsumerStatefulWidget {
     int initialRounds = 3,
     int restAfterRound = 90,
   }) {
-    return showModalBottomSheet<SupersetConfiguration>(
-      context: context,
+    return ModalService.showSheet<SupersetConfiguration>(context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,

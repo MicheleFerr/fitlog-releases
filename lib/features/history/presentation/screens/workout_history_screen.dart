@@ -34,6 +34,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Date range filter options
 enum DateRangeOption { today, thisWeek, thisMonth, allTime }
@@ -1200,12 +1201,8 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
   /// Show view settings bottom sheet
   void _showViewSettingsSheet(BuildContext context, AppLocalizations l10n) {
     HapticFeedback.lightImpact();
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(
-        context,
-      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) => _ViewSettingsSheet(l10n: l10n),
     );
   }
@@ -1756,12 +1753,8 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     WorkoutHistoryDetail workout,
     AppLocalizations l10n,
   ) {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(
-        context,
-      ).colorScheme.surface.withValues(alpha: 0),
       builder: (_) => DraggableScrollableSheet(
         initialChildSize: 0.8,
         minChildSize: 0.8,
@@ -1887,12 +1880,8 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
       return;
     }
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(
-        context,
-      ).colorScheme.surface.withValues(alpha: 0),
       builder: (context) =>
           WorkoutHistoryEditorEnhanced(historyWorkout: workout),
     );

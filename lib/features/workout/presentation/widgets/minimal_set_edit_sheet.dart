@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Custom scroll physics that accelerates when scrolling fast
 /// Based on: https://stackoverflow.com/questions/57671811/flutter-how-to-override-scroll-physics
@@ -1269,10 +1270,8 @@ extension MinimalSetEditSheetExtension on BuildContext {
     String? suggestedSource,
     ExerciseCountingMode countingMode = ExerciseCountingMode.weighted,
   }) {
-    return showModalBottomSheet<void>(
-      context: this,
+    return ModalService.showSheet<void>(this,
       isScrollControlled: true,
-      backgroundColor: colors.surface.withValues(alpha: 0),
       builder: (context) => MinimalSetEditSheet(
         exerciseSet: exerciseSet,
         onSave: onSave,

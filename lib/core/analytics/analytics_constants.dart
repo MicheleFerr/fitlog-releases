@@ -233,6 +233,33 @@ class AnalyticsEvents {
   /// Duplicate patch submission blocked
   static const String duplicatePatchBlocked = 'duplicate_patch_blocked';
 
+  // ===== PR CELEBRATION EVENTS =====
+
+  /// PR celebration recorded
+  static const String prCelebrationRecorded = 'pr_celebration_recorded';
+
+  /// PR celebration engagement (user interacted with celebration)
+  static const String prCelebrationEngagement = 'pr_celebration_engagement';
+
+  // ===== AI COACH EVENTS =====
+
+  /// AI Coach suggestion selected
+  static const String aiCoachSuggestionSelected =
+      'ai_coach_suggestion_selected';
+
+  /// AI Coach message sent
+  static const String aiCoachMessageSent = 'ai_coach_message_sent';
+
+  // ===== ROUTINE DAY EVENTS =====
+
+  /// Routine day completed manually
+  static const String routineDayCompleted = 'routine_day_completed';
+
+  // ===== PRESET USAGE EVENTS =====
+
+  /// Preset usage pattern (aggregate tracking)
+  static const String presetUsagePattern = 'preset_usage_pattern';
+
   // ===== ECOMMERCE =====
 
   /// In-app purchase
@@ -491,6 +518,55 @@ class AnalyticsParameters {
 
   /// Success flag
   static const String success = 'success';
+
+  // ===== WORKOUT TIMING PARAMETERS =====
+
+  /// Elapsed seconds before pause/cancel
+  static const String elapsedSeconds = 'elapsed_seconds';
+
+  /// Paused duration in seconds
+  static const String pausedSeconds = 'paused_seconds';
+
+  /// Cancellation or action reason
+  static const String reason = 'reason';
+
+  // ===== EXERCISE DETAIL PARAMETERS =====
+
+  /// Field that was changed in customization
+  static const String fieldChanged = 'field_changed';
+
+  /// Set number within exercise
+  static const String setNumber = 'set_number';
+
+  // ===== PRESET USAGE PARAMETERS =====
+
+  /// Usage count for preset tracking
+  static const String usageCount = 'usage_count';
+
+  // ===== TEMPLATE TYPE PARAMETERS =====
+
+  /// Template type (superset, regular, etc.)
+  static const String templateType = 'template_type';
+
+  /// Original template name (before custom copy)
+  static const String originalTemplateName = 'original_template_name';
+
+  // ===== AI COACH PARAMETERS =====
+
+  /// Question/message length
+  static const String questionLength = 'question_length';
+
+  /// Message count in conversation
+  static const String messageCount = 'message_count';
+
+  /// Number of function calls used
+  static const String functionCallsUsed = 'function_calls_used';
+
+  /// Whether a tool call was made
+  static const String hasToolCall = 'has_tool_call';
+
+  /// Name of tool called
+  static const String toolName = 'tool_name';
 }
 
 /// Analytics user properties
@@ -577,6 +653,14 @@ class AnalyticsUserProperties {
 
   /// Routines active count
   static const String activeRoutines = 'active_routines';
+
+  // ===== DISPLAY PREFERENCES =====
+
+  /// Font size multiplier
+  static const String fontSize = 'font_size';
+
+  /// Authentication status
+  static const String authStatus = 'auth_status';
 }
 
 /// Analytics trace names for performance monitoring

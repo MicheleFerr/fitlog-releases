@@ -15,14 +15,13 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Shows the weekly stats bottom sheet
 void showWeeklyStatsBottomSheet(BuildContext context) {
   HapticFeedback.lightImpact();
-  showModalBottomSheet(
-    context: context,
+  ModalService.showSheet(context,
     isScrollControlled: true,
-    backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
     builder: (context) => const _WeeklyStatsBottomSheetContent(),
   );
 }

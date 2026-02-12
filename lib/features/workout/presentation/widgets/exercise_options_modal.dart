@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// 🚀 TIER-1: Modal condiviso per opzioni esercizio sia per single che superset
 class ExerciseOptionsModal extends ConsumerWidget {
@@ -465,8 +466,7 @@ class ExerciseOptionsModal extends ConsumerWidget {
     BuildContext context,
     Map<String, dynamic> exerciseData,
   ) {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,
@@ -580,8 +580,7 @@ class ExerciseOptionsModal extends ConsumerWidget {
     BuildContext context,
     Map<String, dynamic> exerciseData,
   ) {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,
@@ -680,8 +679,7 @@ class ExerciseOptionsModal extends ConsumerWidget {
     BuildContext context,
     Map<String, dynamic> exerciseData,
   ) {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,
@@ -869,8 +867,7 @@ class ExerciseOptionsModal extends ConsumerWidget {
     String languageCode = 'en',
   }) {
     HapticFeedback.mediumImpact();
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       backgroundColor: Theme.of(
         context,
       ).colorScheme.surface.withValues(alpha: 0),

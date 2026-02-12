@@ -12,6 +12,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/pdf_detail_l
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/pdf_preferences_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Mostra il BottomSheet per selezionare le opzioni di esportazione PDF
 /// Ritorna il [PdfDetailLevel] selezionato, o null se l'utente annulla
@@ -19,11 +20,9 @@ Future<PdfDetailLevel?> showPdfExportBottomSheet(
   BuildContext context,
   WidgetRef ref,
 ) async {
-  return showModalBottomSheet<PdfDetailLevel>(
-    context: context,
+  return ModalService.showSheet<PdfDetailLevel>(context,
     isScrollControlled: true,
     useSafeArea: true,
-    backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
     builder: (context) => const PdfExportBottomSheet(),
   );
 }

@@ -769,10 +769,8 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     final l10n = AppLocalizations.of(context);
 
     final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.95);
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
-      backgroundColor: theme.colorScheme.surface.withValues(alpha: 0),
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.7,
         maxChildSize: safeMax,
@@ -1381,8 +1379,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       return;
     }
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       useSafeArea: true,
       builder: (context) => _AllActivitiesModal(

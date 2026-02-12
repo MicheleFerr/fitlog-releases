@@ -54,10 +54,8 @@ class ExerciseCorrelationsSheet extends ConsumerStatefulWidget {
     required String exerciseId,
     required String exerciseName,
   }) {
-    return showModalBottomSheet<void>(
-      context: context,
+    return ModalService.showSheet<void>(context,
       isScrollControlled: true,
-      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => ExerciseCorrelationsSheet(
         exerciseId: exerciseId,
         exerciseName: exerciseName,

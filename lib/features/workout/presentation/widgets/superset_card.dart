@@ -12,6 +12,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Tier-1 SupersetCard che mostra tutti gli esercizi del superset in una singola card
 class SupersetCard extends ConsumerStatefulWidget {
@@ -448,8 +449,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
 
   void _showSupersetOptions(BuildContext context) {
     HapticFeedback.mediumImpact();
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       builder: (context) => Container(
         padding: const EdgeInsets.all(16),
         child: Column(

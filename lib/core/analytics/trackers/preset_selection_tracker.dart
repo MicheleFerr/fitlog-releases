@@ -211,11 +211,11 @@ class PresetSelectionTracker {
       if (repPresetUsageCount != null && repPresetUsageCount.isNotEmpty) {
         for (final entry in repPresetUsageCount.entries) {
           await analytics.logEvent(
-            name: 'preset_usage_pattern',
+            name: AnalyticsEvents.presetUsagePattern,
             parameters: {
               AnalyticsParameters.presetType: 'rep_range',
               AnalyticsParameters.presetId: entry.key,
-              'usage_count': entry.value,
+              AnalyticsParameters.usageCount: entry.value,
             },
           );
         }
@@ -225,11 +225,11 @@ class PresetSelectionTracker {
       if (setPresetUsageCount != null && setPresetUsageCount.isNotEmpty) {
         for (final entry in setPresetUsageCount.entries) {
           await analytics.logEvent(
-            name: 'preset_usage_pattern',
+            name: AnalyticsEvents.presetUsagePattern,
             parameters: {
               AnalyticsParameters.presetType: 'set_count',
               AnalyticsParameters.presetId: 'sets_${entry.key}',
-              'usage_count': entry.value,
+              AnalyticsParameters.usageCount: entry.value,
             },
           );
         }
@@ -239,11 +239,11 @@ class PresetSelectionTracker {
       if (restPresetUsageCount != null && restPresetUsageCount.isNotEmpty) {
         for (final entry in restPresetUsageCount.entries) {
           await analytics.logEvent(
-            name: 'preset_usage_pattern',
+            name: AnalyticsEvents.presetUsagePattern,
             parameters: {
               AnalyticsParameters.presetType: 'rest_time',
               AnalyticsParameters.presetId: entry.key,
-              'usage_count': entry.value,
+              AnalyticsParameters.usageCount: entry.value,
             },
           );
         }

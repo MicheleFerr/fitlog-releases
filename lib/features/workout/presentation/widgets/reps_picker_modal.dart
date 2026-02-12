@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 class RepsPickerModal {
   static Future<int?> show(BuildContext context, {required int initialReps}) {
-    return showModalBottomSheet<int>(
-      context: context,
+    return ModalService.showSheet<int>(context,
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,

@@ -27,6 +27,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Helper function to convert RPE to RIR
 int rpeToRir(double rpe) => (10 - rpe).round();
@@ -97,8 +98,7 @@ class RpeSelectorBottomSheet extends ConsumerStatefulWidget {
     int currentExerciseIndex = 0,
     Function(Map<int, SupersetExerciseCompleteData>)? onSupersetCompleteAll,
   }) {
-    return showModalBottomSheet(
-      context: context,
+    return ModalService.showSheet(context,
       isScrollControlled: true,
       // Remove fixed constraints to allow dynamic sizing
       builder: (context) => RpeSelectorBottomSheet(

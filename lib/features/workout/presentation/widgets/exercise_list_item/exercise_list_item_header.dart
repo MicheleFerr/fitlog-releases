@@ -121,8 +121,25 @@ class ExerciseListItemHeader extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Exercise name row - includes inline insight chip and timer
-              _buildExerciseNameRow(context, showInsight: showInsight),
+              // Exercise name row - name only for max space
+              _buildExerciseNameRow(context),
+              // ✅ Timer badge + progress chip in same row
+              if ((config.showCustomTimers ?? isProMode) ||
+                  (showInsight && lastActivity != null))
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Row(
+                    children: [
+                      if (config.showCustomTimers ?? isProMode)
+                        _buildCompactTimerBadge(context),
+                      if ((config.showCustomTimers ?? isProMode) &&
+                          showInsight && lastActivity != null)
+                        const SizedBox(width: 6),
+                      if (showInsight && lastActivity != null)
+                        _buildInlineInsightChip(context),
+                    ],
+                  ),
+                ),
               // ✅ REDESIGN: Badge row (Tips, TUT) REMOVED - now in ExerciseListItemFooter
               // Countdown badge for auto-collapse kept if needed
               if (autoCollapseState.countdown > 0 &&
@@ -134,7 +151,7 @@ class ExerciseListItemHeader extends ConsumerWidget {
             ],
           ),
         ),
-        _buildPopupMenu(context),
+        _buildPopupMenu(context, ref),
       ],
     );
   }
@@ -142,7 +159,7 @@ class ExerciseListItemHeader extends ConsumerWidget {
   // NOTE: _buildExerciseTypeIcon was removed and replaced with _ExerciseGifIcon widget
   // This isolates the ref.watch for GIF provider, preventing header rebuilds
 
-  Widget _buildExerciseNameRow(BuildContext context, {required bool showInsight}) {
+  Widget _buildExerciseNameRow(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
@@ -180,14 +197,6 @@ class ExerciseListItemHeader extends ConsumerWidget {
               exerciseName: exercise.name,
               onTap: onShowQuickUpgrade!,
             ),
-          // ✅ REDESIGN: Inline insight chip (between name and timer)
-          if (showInsight && lastActivity != null)
-            _buildInlineInsightChip(context),
-          // Spacer pushes timer to the right
-          const Spacer(),
-          // ✅ Timer badge positioned at top right
-          if (config.showCustomTimers ?? isProMode)
-            _buildCompactTimerBadge(context),
         ],
       ),
     );
@@ -265,7 +274,7 @@ class ExerciseListItemHeader extends ConsumerWidget {
     );
   }
 
-  /// Compact timer badge for the name row (top right position)
+  /// Compact timer badge positioned below exercise name
   Widget _buildCompactTimerBadge(BuildContext context) {
     final restTimeStr = exercise.restTime != null
         ? _formatRestTime(exercise.restTime!)
@@ -379,9 +388,9 @@ class ExerciseListItemHeader extends ConsumerWidget {
   // NOTE: _buildQuickActionIcon removed - consolidated into Tips bottom sheet
   // NOTE: _buildInsightChip and _buildNotesSection moved to ExerciseListItemFooter
 
-  Widget _buildPopupMenu(BuildContext context) {
+  Widget _buildPopupMenu(BuildContext context, WidgetRef ref) {
     final showAdvanced = config.showAdvancedMenu ?? isProMode;
-    final showInsights = config.showExerciseInsights ?? isProMode;
+    final showInsights = ref.read(showExerciseInsightProvider);
 
     return PopupMenuButton<String>(
       key: tutorialMenuKey,

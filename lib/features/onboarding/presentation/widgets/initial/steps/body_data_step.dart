@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Step 3: Body measurements (height and weight)
 class BodyDataStep extends ConsumerStatefulWidget {
@@ -117,8 +118,7 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
     // Common body weights
     final presets = [50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110];
 
-    showModalBottomSheet<void>(
-      context: context,
+    ModalService.showSheet<void>(context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),

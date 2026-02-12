@@ -27,6 +27,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 class QuickEditOverlayV2 extends ConsumerStatefulWidget {
   const QuickEditOverlayV2({
@@ -2460,8 +2461,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   void _showPlateCalculator(BuildContext context) {
     final theme = Theme.of(context);
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -2568,10 +2568,8 @@ extension QuickEditOverlayV2Extension on BuildContext {
     Function(ExerciseSet, int remainingCount)? onApplyToRemaining,
   }) {
     // ✅ CHANGED: Use showModalBottomSheet instead of showDialog
-    return showModalBottomSheet<void>(
-      context: this,
+    return ModalService.showSheet<void>(this,
       isScrollControlled: true,
-      backgroundColor: colors.surface.withValues(alpha: 0),
       builder: (context) => Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -2620,10 +2618,8 @@ extension QuickEditOverlayV2Extension on BuildContext {
     required Offset position,
   }) {
     // ✅ CHANGED: Use showModalBottomSheet for superset too
-    return showModalBottomSheet<void>(
-      context: this,
+    return ModalService.showSheet<void>(this,
       isScrollControlled: true,
-      backgroundColor: colors.surface.withValues(alpha: 0),
       builder: (context) => Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,

@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:share_plus/share_plus.dart' as share_plus;
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Filter type for athletes list
 enum AthleteFilter { all, active, paused }
@@ -257,8 +258,7 @@ class _AthletesListScreenState extends ConsumerState<AthletesListScreen> {
   }
 
   void _showAddAthleteSheet() {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       useSafeArea: true,
       builder: (context) => const _AddAthleteSheet(),

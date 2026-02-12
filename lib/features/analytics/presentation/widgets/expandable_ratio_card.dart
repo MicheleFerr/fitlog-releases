@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/ratio
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Expandable Ratio Card Widget
 ///
@@ -96,11 +97,9 @@ class _ExpandableRatioCardState extends State<ExpandableRatioCard>
 
   void _openFullScreenSheet() {
     HapticFeedback.mediumImpact();
-    showModalBottomSheet<void>(
-      context: context,
+    ModalService.showSheet<void>(context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => RatioBreakdownSheet(
         title: widget.title,
         firstCategory: widget.firstCategory,

@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 class EditSetModal extends ConsumerStatefulWidget {
   const EditSetModal({
@@ -754,8 +755,7 @@ extension EditSetModalExtension on BuildContext {
     }
 
     try {
-      await showModalBottomSheet(
-        context: this,
+      await ModalService.showSheet(this,
         isScrollControlled: true,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

@@ -50,6 +50,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/workout/domain/services/rpe_autoregulation_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/plate_calculator_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/exercise_card_settings_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Orchestrator widget that coordinates ExerciseListItemHeader and ExerciseListItemSets
 ///
@@ -398,8 +399,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   void _handleShowAutoAdjustmentModal() async {
     if (widget.onExerciseUpdate == null) return;
 
-    await showModalBottomSheet(
-      context: context,
+    await ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(
@@ -420,8 +420,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   }
 
   Future<void> _handleShowQuickTimerSettings() async {
-    await showModalBottomSheet(
-      context: context,
+    await ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(
@@ -466,8 +465,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     final hasWarmup = data != null && _hasWarmupData(data);
     final hasPrevention = data != null && _hasInjuryPreventionData(data);
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -708,8 +706,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     final warmupSets = data['warmupSets'] as String?;
     final tempoWarmup = data['tempoWarmup'] as String?;
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: theme.colorScheme.surface,
       shape: const RoundedRectangleBorder(
@@ -813,8 +810,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     final cooldown = data['cooldownConsigliato'] as String?;
     final drillTecnico = data['drillTecnico'] as String?;
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: theme.colorScheme.surface,
       shape: const RoundedRectangleBorder(
@@ -1025,10 +1021,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   }
 
   void _handleShowExerciseHistory() {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
-      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => ExerciseHistoryBottomSheet(
         exerciseName: widget.exercise.name,
         exerciseId: widget.exercise.id,
@@ -2362,8 +2356,7 @@ class _PlateCalculatorChip extends ConsumerWidget {
   void _showPlateCalculatorModal(BuildContext context, double targetWeight) {
     HapticFeedback.lightImpact();
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(

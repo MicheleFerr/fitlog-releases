@@ -152,11 +152,11 @@ Future<void> _setUserProperties({
         value: premiumValue,
       ),
       analytics.setUserProperty(
-        name: 'font_size',
+        name: AnalyticsUserProperties.fontSize,
         value: fontSizeValue,
       ),
       analytics.setUserProperty(
-        name: 'auth_status',
+        name: AnalyticsUserProperties.authStatus,
         value: authValue,
       ),
     ]);

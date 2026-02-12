@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Modal for executing a Rest-Pause set with guided flow
 ///
@@ -51,8 +52,7 @@ class RestPauseExecutionModal extends StatefulWidget {
     bool showTutorialOnFirstUse = false,
     VoidCallback? onTutorialSeen,
   }) {
-    return showModalBottomSheet<RestPauseExecutionResult>(
-      context: context,
+    return ModalService.showSheet<RestPauseExecutionResult>(context,
       isScrollControlled: true,
       isDismissible: false,
       enableDrag: false,

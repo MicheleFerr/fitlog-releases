@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Main form for creating/editing custom exercises with progressive disclosure.
 ///
@@ -61,8 +62,7 @@ class CustomExerciseFormSheet extends ConsumerStatefulWidget {
     CustomExercise? existingCustom,
     required ValueChanged<CustomExercise> onSave,
   }) {
-    return showModalBottomSheet<CustomExercise>(
-      context: context,
+    return ModalService.showSheet<CustomExercise>(context,
       isScrollControlled: true,
       builder: (context) => CustomExerciseFormSheet(
         baseExercise: baseExercise,

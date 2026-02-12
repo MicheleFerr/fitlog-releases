@@ -46,6 +46,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Data class for PR detail information
 class PRDetailData {
@@ -98,10 +99,8 @@ Future<void> showPRDetailSheet({
     );
   } else {
     unawaited(HapticFeedback.lightImpact());
-    await showModalBottomSheet<void>(
-      context: context,
+    await ModalService.showSheet<void>(context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (context) => _PRDetailBottomSheet(data: data),
     );
   }

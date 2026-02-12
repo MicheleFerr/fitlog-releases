@@ -3,13 +3,12 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/services/tu
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Shows TUT (Time Under Tension) information in a bottom sheet modal
 void showTutInfoBottomSheet(BuildContext context, String tutValue) {
-  showModalBottomSheet(
-    context: context,
+  ModalService.showSheet(context,
     isScrollControlled: true,
-    backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
     builder: (context) => TutInfoBottomSheet(tutValue: tutValue),
   );
 }

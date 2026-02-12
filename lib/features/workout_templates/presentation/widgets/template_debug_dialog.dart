@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Shows a dialog with all Firebase templates for debugging
 void showTemplateDebugDialog(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
+  ModalService.showSheet(context,
     isScrollControlled: true,
     useSafeArea: true,
     builder: (context) => const TemplateDebugSheet(),

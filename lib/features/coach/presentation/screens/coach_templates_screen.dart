@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/draggable_action_button.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Coach templates management screen
 class CoachTemplatesScreen extends ConsumerStatefulWidget {
@@ -174,8 +175,7 @@ class _TemplatesList extends StatelessWidget {
   }
 
   void _showAssignmentSheet(BuildContext context, CoachTemplate template) {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       useSafeArea: true,
       builder: (_) => TemplateAssignmentSheet(template: template),

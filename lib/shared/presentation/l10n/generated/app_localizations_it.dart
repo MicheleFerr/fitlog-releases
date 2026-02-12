@@ -1354,6 +1354,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get searchExercises => 'Cerca esercizi...';
 
   @override
+  String get addExercisesTitle => 'Aggiungi Esercizi';
+
+  @override
   String get searchExercisesHint => 'Cerca per nome esercizio...';
 
   @override
@@ -2143,6 +2146,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get confirmSet => 'Conferma Serie';
 
   @override
+  String get applyAndConfirm => 'Applica e Conferma';
+
+  @override
   String get repsInReserve => 'reps in riserva';
 
   @override
@@ -2493,6 +2499,20 @@ class AppLocalizationsIt extends AppLocalizations {
   String get warmupSets => 'Serie di Riscaldamento';
 
   @override
+  String get warmupConfig => 'Config Riscaldamento';
+
+  @override
+  String get warmupConfigDescription =>
+      'Tocca ogni percentuale per scorrere i valori';
+
+  @override
+  String get warmupSetLabel => 'Risc.';
+
+  @override
+  String get warmupNeedsWeight =>
+      'Imposta un peso di lavoro per generare i set di riscaldamento';
+
+  @override
   String get recommendedWarmup => 'Riscaldamento Consigliato';
 
   @override
@@ -2530,6 +2550,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get addAll => 'Aggiungi tutti';
+
+  @override
+  String addExercisesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Aggiungi Esercizi',
+      one: 'Aggiungi Esercizio',
+    );
+    return '$_temp0';
+  }
 
   @override
   String editSet(String percentage) {
@@ -3345,7 +3376,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get useSelectedExercise => 'Usa Selezionato';
 
   @override
-  String get workoutTemplates => 'Schede Allenamento';
+  String get workoutTemplates => 'Routine';
 
   @override
   String get discover => 'Scopri';
@@ -6120,14 +6151,8 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String exerciseReplacedSuccess(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count schede',
-      one: '1 scheda',
-    );
-    return 'Esercizio sostituito con successo in $_temp0';
+  String exerciseReplacedSuccess(String oldExercise, String newExercise) {
+    return '$oldExercise sostituito con $newExercise';
   }
 
   @override
@@ -8739,7 +8764,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get removeSetTooltip => 'Rimuovi Serie';
 
   @override
-  String get weightHint => 'Inserisci peso';
+  String get weightHint => 'es. 60kg';
 
   @override
   String get repsHint => 'Inserisci ripetizioni';
@@ -9054,6 +9079,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get templateSaved => 'Template salvato con successo';
+
+  @override
+  String get appliedToAllSets => 'Applicato a tutte le serie';
+
+  @override
+  String get longPressToApplyAll =>
+      'Tieni premuto su peso o reps per applicare a tutte le serie';
+
+  @override
+  String get autoPopulatedFromHistory =>
+      'Pre-compilato con i dati dell\'ultimo allenamento';
 
   @override
   String get saveTemplateChanges => 'Salvare le Modifiche al Template?';
@@ -15554,6 +15590,25 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get noWorkoutDataYet => 'Nessun dato allenamento ancora';
+
+  @override
+  String get analyticsEmptyStateTitle => 'Le tue statistiche appariranno qui';
+
+  @override
+  String get analyticsEmptyStateDescription =>
+      'Completa il tuo primo allenamento per iniziare a monitorare i tuoi progressi. Ecco cosa sbloccherai:';
+
+  @override
+  String get analyticsEmptyStateFeaturePR =>
+      'Record personali per ogni esercizio';
+
+  @override
+  String get analyticsEmptyStateFeatureVolume =>
+      'Volume settimanale e trend di progressione';
+
+  @override
+  String get analyticsEmptyStateFeatureStreak =>
+      'Serie di allenamenti e monitoraggio costanza';
 
   @override
   String get completeSomeWorkoutsToSeeYournanalyticsA =>
@@ -27342,4 +27397,174 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get ghostModeKeepsXP =>
       'Nota: La Modalità Fantasma nasconde solo gli elementi dell\'interfaccia. Continui ad accumulare XP dai tuoi allenamenti.';
+
+  @override
+  String get hintTapSet => 'Tocca il set per completarlo';
+
+  @override
+  String get hintTapSetAccent => 'Tocca il set';
+
+  @override
+  String get hintSwipeForActions => 'Scorri per azioni rapide';
+
+  @override
+  String get hintDiscoverTemplates =>
+      'Esplora schede pronte per iniziare subito';
+
+  @override
+  String get hintAiCoachTitle => 'Hai un coach personale AI';
+
+  @override
+  String get hintAiCoachDesc => 'Chiedigli consigli, analisi e suggerimenti';
+
+  @override
+  String get hintImportTitle => 'Hai dati da un\'altra app?';
+
+  @override
+  String get hintImportDesc => 'Importali per non perdere i progressi';
+
+  @override
+  String get hintDiscoverAction => 'Scopri';
+
+  @override
+  String get hintImportAction => 'Importa';
+
+  @override
+  String get hintLongPressCorrection =>
+      'Tieni premuto per correggere il gruppo muscolare';
+
+  @override
+  String get hintLongPressAccent => 'Tieni premuto';
+
+  @override
+  String get hintSwipeHistoryCard => 'Scorri per ripetere o eliminare';
+
+  @override
+  String get hintDiscoverScheduling =>
+      'Programma gli allenamenti per creare costanza';
+
+  @override
+  String get hintLongPressFabMenu => 'Tieni premuto per altre opzioni';
+
+  @override
+  String get hintLongPressFabAccent => 'Tieni premuto';
+
+  @override
+  String get hintSwipeMiniBar => 'Scorri per controllare l\'allenamento';
+
+  @override
+  String get hintTapWorkoutNameShare => 'Tocca il nome per condividere';
+
+  @override
+  String get hintLongPressSkipTimer => 'Tieni premuto per saltare il timer';
+
+  @override
+  String get hintDiscoverProgressPhotos =>
+      'Traccia i progressi visivi con le foto';
+
+  @override
+  String get hintDiscoverStreaks =>
+      'Crea serie consecutive per restare motivato';
+
+  @override
+  String get hintDiscoverExerciseHistory =>
+      'Vedi i progressi degli esercizi nel tempo';
+
+  @override
+  String get hintDiscoverAchievements => 'Sblocca traguardi mentre ti alleni';
+
+  @override
+  String get hintDiscoverBodyMeasurements =>
+      'Monitora le misure per un quadro completo';
+
+  @override
+  String get hintSwipeSupersetActions => 'Scorri per azioni superset';
+
+  @override
+  String get hintTapHeatmapMuscles =>
+      'Tocca i muscoli per statistiche dettagliate';
+
+  @override
+  String get hintPinchZoomCharts => 'Pizzica per zoomare i grafici';
+
+  @override
+  String get hintTapCalendarStats => 'Tocca una settimana per le statistiche';
+
+  @override
+  String get hintLongPressAiMessage => 'Tieni premuto per azioni messaggio';
+
+  @override
+  String get hintDoubleTapSupersetEdit =>
+      'Doppio tocco per modificare il superset';
+
+  @override
+  String get hintLongPressSuperset => 'Tieni premuto per opzioni superset';
+
+  @override
+  String get hintDragReorderCharts => 'Trascina per riordinare i grafici';
+
+  @override
+  String get hintDragFab => 'Trascina per spostare il pulsante';
+
+  @override
+  String get hintDiscoverSuperset =>
+      'Prova i superset per allenamenti più veloci';
+
+  @override
+  String get hintDiscoverRpe => 'Valuta lo sforzo per monitorare l\'intensità';
+
+  @override
+  String get hintDiscoverHealthSync =>
+      'Sincronizza con Apple Health per dati completi';
+
+  @override
+  String get hintDiscoverRecovery => 'Controlla il recupero tra le sessioni';
+
+  @override
+  String get hintDiscoverStrengthStandards =>
+      'Confronta i tuoi pesi con gli standard';
+
+  @override
+  String get hintDiscoverPlateCalculator =>
+      'Usa il calcolatore dischi per un carico rapido';
+
+  @override
+  String get hintTapCalendarDetails =>
+      'Tocca un giorno per i dettagli allenamento';
+
+  @override
+  String get hintTapExpandExercise =>
+      'Tocca per espandere i dettagli esercizio';
+
+  @override
+  String get hintTapRingsRefresh =>
+      'Tocca gli anelli per aggiornare le statistiche';
+
+  @override
+  String get hintTapRepZoneToggle =>
+      'Tocca per cambiare vista zone ripetizioni';
+
+  @override
+  String get selectExerciseToReplace => 'Quale esercizio vuoi sostituire?';
+
+  @override
+  String get keepWeightAndReps => 'Mantieni peso e ripetizioni';
+
+  @override
+  String get replaceInAllRounds => 'Sostituisci in tutti i round';
+
+  @override
+  String get chooseReplacement => 'Scegli sostituto';
+
+  @override
+  String get dropSetTraining => 'Allenamento Drop Set';
+
+  @override
+  String get smartWeightHelper => 'Calcolatore peso smart';
+
+  @override
+  String get generatedSets => 'Serie generate';
+
+  @override
+  String get linkCopied => 'Link copiato';
 }

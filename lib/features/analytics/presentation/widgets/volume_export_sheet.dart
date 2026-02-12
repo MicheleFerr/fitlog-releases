@@ -30,6 +30,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Export format options
 enum VolumeExportFormat { csv, pdf }
@@ -39,11 +40,9 @@ Future<void> showVolumeExportSheet({
   required BuildContext context,
   required List<ExerciseHistory> exerciseHistories,
 }) async {
-  await showModalBottomSheet<void>(
-    context: context,
+  await ModalService.showSheet<void>(context,
     isScrollControlled: true,
     useSafeArea: true,
-    backgroundColor: Colors.transparent,
     builder: (context) =>
         VolumeExportSheet(exerciseHistories: exerciseHistories),
   );

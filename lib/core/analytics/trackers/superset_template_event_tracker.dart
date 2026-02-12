@@ -110,7 +110,7 @@ class SupersetTemplateEventTracker {
           AnalyticsParameters.exerciseCount: template.exerciseNames.length,
           if (workoutId != null) AnalyticsParameters.workoutId: workoutId,
           AnalyticsParameters.source: source,
-          'template_type': 'superset', // Distinguish from regular templates
+          AnalyticsParameters.templateType: 'superset', // Distinguish from regular templates
         },
       );
 
@@ -143,12 +143,12 @@ class SupersetTemplateEventTracker {
         parameters: {
           AnalyticsParameters.templateId: template.id,
           AnalyticsParameters.templateName: customTemplateName,
-          'original_template_name': template.name,
+          AnalyticsParameters.originalTemplateName: template.name,
           AnalyticsParameters.templateDifficulty: template.difficulty.name,
           AnalyticsParameters.hasScientificBasis:
               template.scientificBasis.isNotEmpty,
           AnalyticsParameters.exerciseCount: template.exerciseNames.length,
-          'was_predefined': !template.isCustom,
+          AnalyticsParameters.isPredefinedTemplate: !template.isCustom,
         },
       );
 
@@ -209,7 +209,7 @@ class SupersetTemplateEventTracker {
         parameters: {
           AnalyticsParameters.templateId: templateId,
           AnalyticsParameters.templateName: templateName,
-          'template_type': 'superset',
+          AnalyticsParameters.templateType: 'superset',
         },
       );
 

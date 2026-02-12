@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Screen showing detailed workout info for an athlete
 class AthleteDetailScreen extends ConsumerWidget {
@@ -171,8 +172,7 @@ class AthleteDetailScreen extends ConsumerWidget {
   }
 
   void _showAthleteOptions(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
+    ModalService.showSheet<void>(context,
       builder: (context) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -216,8 +216,7 @@ class AthleteDetailScreen extends ConsumerWidget {
   }
 
   void _showWorkoutDetail(BuildContext context, AthleteWorkoutSummary workout) {
-    showModalBottomSheet<void>(
-      context: context,
+    ModalService.showSheet<void>(context,
       isScrollControlled: true,
       useSafeArea: true,
       builder: (context) => _WorkoutDetailModal(workout: workout),

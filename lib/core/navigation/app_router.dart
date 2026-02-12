@@ -333,7 +333,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     name: AppRoutes.templatesName,
                     builder: (context, state) {
                       final showTour = state.uri.queryParameters['showTour'] == 'true';
-                      return TemplatesHomeScreen(showTour: showTour);
+                      final initialTab = int.tryParse(
+                        state.uri.queryParameters['tab'] ?? '',
+                      );
+                      return TemplatesHomeScreen(
+                        showTour: showTour,
+                        initialTab: initialTab,
+                      );
                     },
                     routes: [
                       // Template detail (view mode)
@@ -523,7 +529,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'exercises',
                     name: AppRoutes.exerciseDatabaseName,
-                    builder: (context, state) => const WorkoutHistoryScreen(),
+                    builder: (context, state) => const ExerciseSearchScreen(),
                   ),
                   // Edit profile (pushed from ✏️ icon)
                   GoRoute(

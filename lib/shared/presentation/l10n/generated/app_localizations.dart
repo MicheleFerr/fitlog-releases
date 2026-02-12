@@ -2551,6 +2551,12 @@ abstract class AppLocalizations {
   /// **'Search exercises...'**
   String get searchExercises;
 
+  /// Title for exercise search screen
+  ///
+  /// In en, this message translates to:
+  /// **'Add Exercises'**
+  String get addExercisesTitle;
+
   /// Search exercises input hint
   ///
   /// In en, this message translates to:
@@ -4051,6 +4057,12 @@ abstract class AppLocalizations {
   /// **'Confirm Set'**
   String get confirmSet;
 
+  /// Button to apply RPE suggestions and confirm set
+  ///
+  /// In en, this message translates to:
+  /// **'Apply & Confirm'**
+  String get applyAndConfirm;
+
   /// Full text for reps in reserve
   ///
   /// In en, this message translates to:
@@ -4669,6 +4681,30 @@ abstract class AppLocalizations {
   /// **'Warmup Sets'**
   String get warmupSets;
 
+  /// Warmup configuration sheet title
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup Config'**
+  String get warmupConfig;
+
+  /// Warmup configuration sheet description
+  ///
+  /// In en, this message translates to:
+  /// **'Tap each percentage to cycle through values'**
+  String get warmupConfigDescription;
+
+  /// Single warmup set label prefix
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup'**
+  String get warmupSetLabel;
+
+  /// Message shown when warmup is enabled but no weight is set
+  ///
+  /// In en, this message translates to:
+  /// **'Set a working weight first to generate warmup sets'**
+  String get warmupNeedsWeight;
+
   /// Title for recommended warmup card
   ///
   /// In en, this message translates to:
@@ -4738,6 +4774,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add All'**
   String get addAll;
+
+  /// Dynamic add exercise button label based on count
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Add Exercise} other{Add Exercises}}'**
+  String addExercisesCount(int count);
 
   /// Edit set dialog title with percentage
   ///
@@ -6164,7 +6206,7 @@ abstract class AppLocalizations {
   /// Title for workout templates screen
   ///
   /// In en, this message translates to:
-  /// **'Workout Templates'**
+  /// **'Routines'**
   String get workoutTemplates;
 
   /// Tab label for discovering public templates
@@ -11153,11 +11195,11 @@ abstract class AppLocalizations {
   /// **'Apply to {count, plural, =1{1 template} other{{count} templates}}'**
   String applyToTemplates(int count);
 
-  /// Success message after exercise replacement
+  /// Success message after replacing exercise in superset
   ///
   /// In en, this message translates to:
-  /// **'Exercise replaced successfully in {count, plural, =1{1 template} other{{count} templates}}'**
-  String exerciseReplacedSuccess(int count);
+  /// **'{oldExercise} replaced with {newExercise}'**
+  String exerciseReplacedSuccess(String oldExercise, String newExercise);
 
   /// Message when no similar exercises are available
   ///
@@ -15545,10 +15587,10 @@ abstract class AppLocalizations {
   /// **'Remove Set'**
   String get removeSetTooltip;
 
-  /// Weight input field hint
+  /// Placeholder hint for weight field when empty
   ///
   /// In en, this message translates to:
-  /// **'Enter weight'**
+  /// **'e.g. 60kg'**
   String get weightHint;
 
   /// Reps input field hint
@@ -16111,6 +16153,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Template saved successfully'**
   String get templateSaved;
+
+  /// Snackbar message when value is applied to all sets
+  ///
+  /// In en, this message translates to:
+  /// **'Applied to all sets'**
+  String get appliedToAllSets;
+
+  /// Hint text for batch edit feature
+  ///
+  /// In en, this message translates to:
+  /// **'Long press on weight or reps to apply to all sets'**
+  String get longPressToApplyAll;
+
+  /// Snackbar message when template fields are auto-populated from history
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-filled with your last workout data'**
+  String get autoPopulatedFromHistory;
 
   /// Dialog title for template save options
   ///
@@ -27455,6 +27515,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No workout data yet'**
   String get noWorkoutDataYet;
+
+  /// Title for analytics empty state when user has no workout data
+  ///
+  /// In en, this message translates to:
+  /// **'Your stats will appear here'**
+  String get analyticsEmptyStateTitle;
+
+  /// Description for analytics empty state
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your first workout to start tracking your progress. Here\'s what you\'ll unlock:'**
+  String get analyticsEmptyStateDescription;
+
+  /// Feature bullet point in analytics empty state
+  ///
+  /// In en, this message translates to:
+  /// **'Personal records for every exercise'**
+  String get analyticsEmptyStateFeaturePR;
+
+  /// Feature bullet point in analytics empty state
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly volume and progression trends'**
+  String get analyticsEmptyStateFeatureVolume;
+
+  /// Feature bullet point in analytics empty state
+  ///
+  /// In en, this message translates to:
+  /// **'Workout streaks and consistency tracking'**
+  String get analyticsEmptyStateFeatureStreak;
 
   /// From quick wins migration - 1 occurrences
   ///
@@ -48439,6 +48529,312 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Note: Ghost Mode only hides UI elements. You continue earning XP from workouts.'**
   String get ghostModeKeepsXP;
+
+  /// Hint message for tapping a set to complete it
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the set to complete it'**
+  String get hintTapSet;
+
+  /// Accent portion of the tap set hint
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the set'**
+  String get hintTapSetAccent;
+
+  /// Hint for swipe gesture on exercise or template cards
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe for quick actions'**
+  String get hintSwipeForActions;
+
+  /// Hint suggesting user explore the Discover tab
+  ///
+  /// In en, this message translates to:
+  /// **'Explore ready-made templates to start training right away'**
+  String get hintDiscoverTemplates;
+
+  /// Title for AI Coach discovery hint card
+  ///
+  /// In en, this message translates to:
+  /// **'You have a personal AI coach'**
+  String get hintAiCoachTitle;
+
+  /// Description for AI Coach discovery hint card
+  ///
+  /// In en, this message translates to:
+  /// **'Ask for advice, analysis and suggestions'**
+  String get hintAiCoachDesc;
+
+  /// Title for import data hint card
+  ///
+  /// In en, this message translates to:
+  /// **'Got data from another app?'**
+  String get hintImportTitle;
+
+  /// Description for import data hint card
+  ///
+  /// In en, this message translates to:
+  /// **'Import it so you don\'t lose your progress'**
+  String get hintImportDesc;
+
+  /// CTA button text for Discover hint
+  ///
+  /// In en, this message translates to:
+  /// **'Discover'**
+  String get hintDiscoverAction;
+
+  /// CTA button text for Import hint
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get hintImportAction;
+
+  /// Hint for long press on analytics exercise card
+  ///
+  /// In en, this message translates to:
+  /// **'Long press to correct muscle group'**
+  String get hintLongPressCorrection;
+
+  /// Accent portion of the long press correction hint
+  ///
+  /// In en, this message translates to:
+  /// **'Long press'**
+  String get hintLongPressAccent;
+
+  /// Hint for swipe gesture on history workout cards
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe to repeat or delete'**
+  String get hintSwipeHistoryCard;
+
+  /// Hint to discover workout scheduling feature
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule workouts to build consistency'**
+  String get hintDiscoverScheduling;
+
+  /// Hint for long press on FAB button
+  ///
+  /// In en, this message translates to:
+  /// **'Long press for more options'**
+  String get hintLongPressFabMenu;
+
+  /// Accent for long press FAB hint
+  ///
+  /// In en, this message translates to:
+  /// **'Long press'**
+  String get hintLongPressFabAccent;
+
+  /// Hint for swipe on mini workout bar
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe to control your workout'**
+  String get hintSwipeMiniBar;
+
+  /// Hint for tapping workout name to share
+  ///
+  /// In en, this message translates to:
+  /// **'Tap workout name to share'**
+  String get hintTapWorkoutNameShare;
+
+  /// Hint for long press to skip timer
+  ///
+  /// In en, this message translates to:
+  /// **'Long press to skip rest timer'**
+  String get hintLongPressSkipTimer;
+
+  /// Hint to discover progress photo feature
+  ///
+  /// In en, this message translates to:
+  /// **'Track visual progress with photos'**
+  String get hintDiscoverProgressPhotos;
+
+  /// Hint to discover workout streak tracking
+  ///
+  /// In en, this message translates to:
+  /// **'Build streaks to stay motivated'**
+  String get hintDiscoverStreaks;
+
+  /// Hint to discover exercise history charts
+  ///
+  /// In en, this message translates to:
+  /// **'View your exercise progress over time'**
+  String get hintDiscoverExerciseHistory;
+
+  /// Hint to discover achievements system
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock achievements as you train'**
+  String get hintDiscoverAchievements;
+
+  /// Hint to discover body measurements feature
+  ///
+  /// In en, this message translates to:
+  /// **'Track body measurements for full progress'**
+  String get hintDiscoverBodyMeasurements;
+
+  /// Hint for swipe actions on superset cards
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe for superset actions'**
+  String get hintSwipeSupersetActions;
+
+  /// Hint for tapping body heatmap muscles
+  ///
+  /// In en, this message translates to:
+  /// **'Tap muscles for detailed stats'**
+  String get hintTapHeatmapMuscles;
+
+  /// Hint for pinch zoom on analytics charts
+  ///
+  /// In en, this message translates to:
+  /// **'Pinch to zoom charts'**
+  String get hintPinchZoomCharts;
+
+  /// Hint for tapping weekly calendar for stats
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a week for detailed stats'**
+  String get hintTapCalendarStats;
+
+  /// Hint for long press on AI coach messages
+  ///
+  /// In en, this message translates to:
+  /// **'Long press for message actions'**
+  String get hintLongPressAiMessage;
+
+  /// Hint for double tap to edit superset
+  ///
+  /// In en, this message translates to:
+  /// **'Double tap to quick-edit superset'**
+  String get hintDoubleTapSupersetEdit;
+
+  /// Hint for long press on superset card
+  ///
+  /// In en, this message translates to:
+  /// **'Long press for superset options'**
+  String get hintLongPressSuperset;
+
+  /// Hint for drag reorder on analytics charts
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to reorder your charts'**
+  String get hintDragReorderCharts;
+
+  /// Hint for dragging the floating action button
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to move the button'**
+  String get hintDragFab;
+
+  /// Hint to discover superset feature
+  ///
+  /// In en, this message translates to:
+  /// **'Try supersets for faster workouts'**
+  String get hintDiscoverSuperset;
+
+  /// Hint to discover RPE rating feature
+  ///
+  /// In en, this message translates to:
+  /// **'Rate your effort to track intensity'**
+  String get hintDiscoverRpe;
+
+  /// Hint to discover health sync feature
+  ///
+  /// In en, this message translates to:
+  /// **'Sync with Apple Health for complete data'**
+  String get hintDiscoverHealthSync;
+
+  /// Hint to discover recovery insight feature
+  ///
+  /// In en, this message translates to:
+  /// **'Check recovery insights between sessions'**
+  String get hintDiscoverRecovery;
+
+  /// Hint to discover strength standards comparison
+  ///
+  /// In en, this message translates to:
+  /// **'Compare your lifts to strength standards'**
+  String get hintDiscoverStrengthStandards;
+
+  /// Hint to discover plate calculator feature
+  ///
+  /// In en, this message translates to:
+  /// **'Use the plate calculator for quick loading'**
+  String get hintDiscoverPlateCalculator;
+
+  /// Hint for tapping calendar day for details
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a day for workout details'**
+  String get hintTapCalendarDetails;
+
+  /// Hint for tapping collapsed exercise to expand
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to expand exercise details'**
+  String get hintTapExpandExercise;
+
+  /// Hint for tapping activity rings to refresh
+  ///
+  /// In en, this message translates to:
+  /// **'Tap rings to refresh your stats'**
+  String get hintTapRingsRefresh;
+
+  /// Hint for tapping rep zone toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to switch rep zone view'**
+  String get hintTapRepZoneToggle;
+
+  /// Title asking which exercise in the superset to replace
+  ///
+  /// In en, this message translates to:
+  /// **'Which exercise do you want to replace?'**
+  String get selectExerciseToReplace;
+
+  /// Toggle label for keeping weight and reps when replacing exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Keep weight and reps'**
+  String get keepWeightAndReps;
+
+  /// Button to confirm replacing exercise in all superset rounds
+  ///
+  /// In en, this message translates to:
+  /// **'Replace in all rounds'**
+  String get replaceInAllRounds;
+
+  /// Title for choosing replacement exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Choose replacement'**
+  String get chooseReplacement;
+
+  /// Title for drop set info card
+  ///
+  /// In en, this message translates to:
+  /// **'Drop Set Training'**
+  String get dropSetTraining;
+
+  /// Tooltip for weight calculator icon button in drop set
+  ///
+  /// In en, this message translates to:
+  /// **'Smart weight calculator'**
+  String get smartWeightHelper;
+
+  /// Label for rest-pause generated sets preview
+  ///
+  /// In en, this message translates to:
+  /// **'Generated sets'**
+  String get generatedSets;
+
+  /// Snackbar message when a link is copied to clipboard
+  ///
+  /// In en, this message translates to:
+  /// **'Link copied'**
+  String get linkCopied;
 }
 
 class _AppLocalizationsDelegate

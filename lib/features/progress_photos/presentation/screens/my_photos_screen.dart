@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/progress_photos/presentation/widgets
 import 'package:gymbro_flutter_new/features/progress_photos/presentation/widgets/photo_detail_modal.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/presentation/widgets/photo_reminder_settings_sheet.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/presentation/widgets/photo_timeline_widget.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// MyPhotosScreen - Progress photos timeline view
 ///
@@ -408,8 +409,7 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
   }
 
   void _showPhotoDetail(ProgressPhoto photo) {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => PhotoDetailModal(
@@ -431,8 +431,7 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
   }
 
   void _showReminderSettings() {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       builder: (context) => const PhotoReminderSettingsSheet(),
     );
@@ -452,8 +451,7 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
       }
     });
 
-    final result = await showModalBottomSheet<PhotoCaptureResult>(
-      context: context,
+    final result = await ModalService.showSheet<PhotoCaptureResult>(context,
       isScrollControlled: true,
       builder: (context) => PhotoCaptureSheet(
         imagePicker: _imagePicker,

@@ -27,6 +27,7 @@ import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mix
 import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pro_insights_badge.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_avatar.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Filter options for exercise list
 ///
@@ -630,10 +631,8 @@ class _QuickStatsSummary extends ConsumerWidget {
               trend: null,
               onTap: () {
                 HapticFeedback.lightImpact();
-                showModalBottomSheet(
-                  context: context,
+                ModalService.showSheet(context,
                   isScrollControlled: true,
-                  backgroundColor: context.colors.surface.withValues(alpha: 0),
                   builder: (_) => DraggableScrollableSheet(
                     initialChildSize: 0.8,
                     minChildSize: 0.8,
@@ -667,10 +666,8 @@ class _QuickStatsSummary extends ConsumerWidget {
                   : context.colors.error,
               onTap: () {
                 HapticFeedback.lightImpact();
-                showModalBottomSheet(
-                  context: context,
+                ModalService.showSheet(context,
                   isScrollControlled: true,
-                  backgroundColor: context.colors.surface.withValues(alpha: 0),
                   builder: (_) => DraggableScrollableSheet(
                     initialChildSize: 0.8,
                     minChildSize: 0.8,
@@ -700,10 +697,8 @@ class _QuickStatsSummary extends ConsumerWidget {
               trend: null,
               onTap: () {
                 HapticFeedback.lightImpact();
-                showModalBottomSheet(
-                  context: context,
+                ModalService.showSheet(context,
                   isScrollControlled: true,
-                  backgroundColor: context.colors.surface.withValues(alpha: 0),
                   builder: (_) => DraggableScrollableSheet(
                     initialChildSize: 0.8,
                     minChildSize: 0.8,
@@ -735,10 +730,8 @@ class _QuickStatsSummary extends ConsumerWidget {
               trend: null,
               onTap: () {
                 HapticFeedback.lightImpact();
-                showModalBottomSheet(
-                  context: context,
+                ModalService.showSheet(context,
                   isScrollControlled: true,
-                  backgroundColor: context.colors.surface.withValues(alpha: 0),
                   builder: (_) => DraggableScrollableSheet(
                     initialChildSize: 0.8,
                     minChildSize: 0.8,
@@ -953,10 +946,8 @@ class _ExerciseHistoryCard extends ConsumerWidget {
   /// Show muscle group correction bottom sheet
   Future<void> _showCorrectionSheet(BuildContext context) async {
     // Show bottom sheet
-    final correction = await showModalBottomSheet(
-      context: context,
+    final correction = await ModalService.showSheet(context,
       isScrollControlled: true,
-      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (_) => Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,

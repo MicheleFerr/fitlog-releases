@@ -7,7 +7,6 @@
 /// Workout event tracking helper
 library;
 
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/core/analytics/analytics_constants.dart';
 import 'package:gymbro_flutter_new/core/services/analytics/i_analytics_service.dart';
@@ -107,7 +106,7 @@ class WorkoutEventTracker {
         name: AnalyticsEvents.workoutPaused,
         parameters: {
           AnalyticsParameters.workoutId: workoutId,
-          'elapsed_seconds': elapsedSeconds,
+          AnalyticsParameters.elapsedSeconds: elapsedSeconds,
         },
       );
 
@@ -137,7 +136,7 @@ class WorkoutEventTracker {
         name: AnalyticsEvents.workoutResumed,
         parameters: {
           AnalyticsParameters.workoutId: workoutId,
-          'paused_seconds': pausedSeconds,
+          AnalyticsParameters.pausedSeconds: pausedSeconds,
         },
       );
 
@@ -226,9 +225,9 @@ class WorkoutEventTracker {
         name: AnalyticsEvents.workoutCancelled,
         parameters: {
           AnalyticsParameters.workoutId: workoutId,
-          'elapsed_seconds': elapsedSeconds,
+          AnalyticsParameters.elapsedSeconds: elapsedSeconds,
           if (exerciseCount != null) AnalyticsParameters.exerciseCount: exerciseCount,
-          if (reason != null) 'reason': reason,
+          if (reason != null) AnalyticsParameters.reason: reason,
         },
       );
 
@@ -346,7 +345,7 @@ class WorkoutEventTracker {
         parameters: {
           AnalyticsParameters.workoutId: workoutId,
           AnalyticsParameters.exerciseId: exerciseId,
-          'field_changed': fieldChanged,
+          AnalyticsParameters.fieldChanged: fieldChanged,
           AnalyticsParameters.oldValue: oldValue.toString(),
           AnalyticsParameters.newValue: newValue.toString(),
         },
@@ -428,7 +427,7 @@ class WorkoutEventTracker {
         parameters: {
           AnalyticsParameters.workoutId: workoutId,
           AnalyticsParameters.exerciseId: exerciseId,
-          'set_number': setNumber,
+          AnalyticsParameters.setNumber: setNumber,
           AnalyticsParameters.reps: reps,
           if (weight != null) AnalyticsParameters.weight: weight,
           if (rpe != null) AnalyticsParameters.rpe: rpe,
@@ -557,21 +556,24 @@ class WorkoutEventTracker {
   /// - [date] - Date of the completed day
   /// - [method] - Completion method: 'manual_with_workout' or 'manual_without_workout'
   /// - [workoutId] - Optional workout ID if completed with workout
-  static void trackRoutineDayCompleted({
+  /// Track routine day completed using IAnalyticsService instance
+  ///
+  /// NOTE: Converted from static to instance method to use IAnalyticsService
+  /// instead of direct FirebaseAnalytics.instance access.
+  Future<void> trackRoutineDayCompleted({
     required String routineId,
     required DateTime date,
     required String method,
     String? workoutId,
-  }) {
+  }) async {
     try {
-      FirebaseAnalytics.instance.logEvent(
-        name: 'routine_day_completed',
+      await analytics.logEvent(
+        name: AnalyticsEvents.routineDayCompleted,
         parameters: {
-          'routine_id': routineId,
+          AnalyticsParameters.routineId: routineId,
           'date': date.toIso8601String(),
           'completion_method': method,
-          'workout_id': workoutId ?? 'none',
-          'timestamp': DateTime.now().toIso8601String(),
+          if (workoutId != null) AnalyticsParameters.workoutId: workoutId,
         },
       );
 

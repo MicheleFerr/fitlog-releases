@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Dialog options for template save
 enum TemplateSaveOption { updateTemplate, discardChanges }
@@ -44,12 +45,10 @@ Future<TemplateSaveResult?> showTemplateSaveDialog({
   required Workout completedWorkout,
   required WorkoutTemplate originalTemplate,
 }) async {
-  final result = await showModalBottomSheet<TemplateSaveResult>(
-    context: context,
+  final result = await ModalService.showSheet<TemplateSaveResult>(context,
     isScrollControlled: true,
     isDismissible: true,
     enableDrag: true,
-    backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
     builder: (context) => _TemplateSaveDialogContent(
       completedWorkout: completedWorkout,
       originalTemplate: originalTemplate,

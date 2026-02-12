@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Schermata per merge esercizi
 ///
@@ -298,8 +299,7 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
 
     HapticFeedback.mediumImpact();
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,

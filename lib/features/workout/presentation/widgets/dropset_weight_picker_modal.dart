@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart'
     as ExerciseDB;
 import 'package:gymbro_flutter_new/features/workout/presentation/utils/weight_rounding_utils.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Modal for picking weight in DropSet exercises with smart rounding
 ///
@@ -52,8 +53,7 @@ class DropSetWeightPickerModal extends StatefulWidget {
     ExerciseDB.Exercise? selectedExercise,
     String? exerciseName,
   }) {
-    return showModalBottomSheet<double>(
-      context: context,
+    return ModalService.showSheet<double>(context,
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,

@@ -66,12 +66,16 @@ import 'package:gymbro_flutter_new/features/workout_templates/presentation/widge
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/cards/discover_template_card.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/for_you_section.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/templates_tour_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 class TemplatesHomeScreen extends ConsumerStatefulWidget {
-  const TemplatesHomeScreen({super.key, this.showTour = false});
+  const TemplatesHomeScreen({super.key, this.showTour = false, this.initialTab});
 
   /// Whether to show the guided tour when screen opens
   final bool showTour;
+
+  /// Optional initial tab index to show
+  final int? initialTab;
 
   @override
   ConsumerState<TemplatesHomeScreen> createState() =>
@@ -122,7 +126,11 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(
+      length: 3,
+      vsync: this,
+      initialIndex: widget.initialTab?.clamp(0, 2) ?? 0,
+    );
     _tabController.addListener(() {
       if (mounted) {
         setState(() {});
@@ -1513,8 +1521,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     final parentContext = context;
 
     // Show template preview bottom sheet
-    showModalBottomSheet<void>(
-      context: context,
+    ModalService.showSheet<void>(context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (modalContext) => TemplatePreviewSheet(
@@ -1772,8 +1779,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   ) {
     HapticFeedback.lightImpact();
 
-    showModalBottomSheet<void>(
-      context: context,
+    ModalService.showSheet<void>(context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (modalContext) => SupersetPreviewSheet(
@@ -1856,8 +1862,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   ) {
     HapticFeedback.lightImpact();
 
-    showModalBottomSheet<void>(
-      context: context,
+    ModalService.showSheet<void>(context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (modalContext) => DropsetPreviewSheet(
@@ -1939,8 +1944,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   ) {
     HapticFeedback.lightImpact();
 
-    showModalBottomSheet<void>(
-      context: context,
+    ModalService.showSheet<void>(context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (modalContext) => RestPausePreviewSheet(
@@ -2291,8 +2295,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
     HapticFeedback.mediumImpact();
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
@@ -2625,8 +2628,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
     HapticFeedback.mediumImpact();
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

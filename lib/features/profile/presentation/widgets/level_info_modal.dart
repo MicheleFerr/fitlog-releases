@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_prov
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Modal that explains the level/tier progression system
 /// Now includes Ghost Mode toggle and explanation
@@ -38,8 +39,7 @@ class LevelInfoModal extends ConsumerStatefulWidget {
     required int currentXP,
     required UserTier currentTier,
   }) {
-    return showModalBottomSheet<void>(
-      context: context,
+    return ModalService.showSheet<void>(context,
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,

@@ -12,6 +12,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Bottom sheet for scheduling workouts on multiple dates
 class ScheduleBottomSheet extends ConsumerStatefulWidget {
@@ -30,8 +31,7 @@ class ScheduleBottomSheet extends ConsumerStatefulWidget {
     required String templateId,
     required String templateName,
   }) {
-    return showModalBottomSheet<bool>(
-      context: context,
+    return ModalService.showSheet<bool>(context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,

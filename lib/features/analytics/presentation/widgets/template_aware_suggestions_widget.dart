@@ -29,6 +29,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Template-Aware Exercise Suggestions Widget
 ///
@@ -313,11 +314,9 @@ class _TemplateAwareMuscleCard extends StatelessWidget {
 
   void _showPriorityExplanation(BuildContext context) {
     HapticFeedback.selectionClick();
-    showModalBottomSheet<void>(
-      context: context,
+    ModalService.showSheet<void>(context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) =>
           PriorityExplanationSheet(neglectedMuscle: adjustedMuscle.original),
     );
@@ -610,11 +609,9 @@ class _TemplateAwareExerciseTile extends StatelessWidget {
 
   void _openTemplateSelector(BuildContext context) {
     HapticFeedback.selectionClick();
-    showModalBottomSheet<void>(
-      context: context,
+    ModalService.showSheet<void>(context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => AddExerciseToTemplateSheet(
         suggestion: suggestion,
         onExerciseAdded: () {

@@ -1343,6 +1343,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchExercises => 'Search exercises...';
 
   @override
+  String get addExercisesTitle => 'Add Exercises';
+
+  @override
   String get searchExercisesHint => 'Type to search exercise database';
 
   @override
@@ -2124,6 +2127,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmSet => 'Confirm Set';
 
   @override
+  String get applyAndConfirm => 'Apply & Confirm';
+
+  @override
   String get repsInReserve => 'reps in reserve';
 
   @override
@@ -2471,6 +2477,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get warmupSets => 'Warmup Sets';
 
   @override
+  String get warmupConfig => 'Warmup Config';
+
+  @override
+  String get warmupConfigDescription =>
+      'Tap each percentage to cycle through values';
+
+  @override
+  String get warmupSetLabel => 'Warmup';
+
+  @override
+  String get warmupNeedsWeight =>
+      'Set a working weight first to generate warmup sets';
+
+  @override
   String get recommendedWarmup => 'Recommended Warmup';
 
   @override
@@ -2508,6 +2528,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addAll => 'Add All';
+
+  @override
+  String addExercisesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Add Exercises',
+      one: 'Add Exercise',
+    );
+    return '$_temp0';
+  }
 
   @override
   String editSet(String percentage) {
@@ -3321,7 +3352,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get useSelectedExercise => 'Use Selected';
 
   @override
-  String get workoutTemplates => 'Workout Templates';
+  String get workoutTemplates => 'Routines';
 
   @override
   String get discover => 'Discover';
@@ -6071,14 +6102,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String exerciseReplacedSuccess(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count templates',
-      one: '1 template',
-    );
-    return 'Exercise replaced successfully in $_temp0';
+  String exerciseReplacedSuccess(String oldExercise, String newExercise) {
+    return '$oldExercise replaced with $newExercise';
   }
 
   @override
@@ -8661,7 +8686,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get removeSetTooltip => 'Remove Set';
 
   @override
-  String get weightHint => 'Enter weight';
+  String get weightHint => 'e.g. 60kg';
 
   @override
   String get repsHint => 'Enter reps';
@@ -8972,6 +8997,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get templateSaved => 'Template saved successfully';
+
+  @override
+  String get appliedToAllSets => 'Applied to all sets';
+
+  @override
+  String get longPressToApplyAll =>
+      'Long press on weight or reps to apply to all sets';
+
+  @override
+  String get autoPopulatedFromHistory =>
+      'Pre-filled with your last workout data';
 
   @override
   String get saveTemplateChanges => 'Save Template Changes?';
@@ -15399,6 +15435,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noWorkoutDataYet => 'No workout data yet';
+
+  @override
+  String get analyticsEmptyStateTitle => 'Your stats will appear here';
+
+  @override
+  String get analyticsEmptyStateDescription =>
+      'Complete your first workout to start tracking your progress. Here\'s what you\'ll unlock:';
+
+  @override
+  String get analyticsEmptyStateFeaturePR =>
+      'Personal records for every exercise';
+
+  @override
+  String get analyticsEmptyStateFeatureVolume =>
+      'Weekly volume and progression trends';
+
+  @override
+  String get analyticsEmptyStateFeatureStreak =>
+      'Workout streaks and consistency tracking';
 
   @override
   String get completeSomeWorkoutsToSeeYournanalyticsA =>
@@ -27083,4 +27138,164 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get ghostModeKeepsXP =>
       'Note: Ghost Mode only hides UI elements. You continue earning XP from workouts.';
+
+  @override
+  String get hintTapSet => 'Tap the set to complete it';
+
+  @override
+  String get hintTapSetAccent => 'Tap the set';
+
+  @override
+  String get hintSwipeForActions => 'Swipe for quick actions';
+
+  @override
+  String get hintDiscoverTemplates =>
+      'Explore ready-made templates to start training right away';
+
+  @override
+  String get hintAiCoachTitle => 'You have a personal AI coach';
+
+  @override
+  String get hintAiCoachDesc => 'Ask for advice, analysis and suggestions';
+
+  @override
+  String get hintImportTitle => 'Got data from another app?';
+
+  @override
+  String get hintImportDesc => 'Import it so you don\'t lose your progress';
+
+  @override
+  String get hintDiscoverAction => 'Discover';
+
+  @override
+  String get hintImportAction => 'Import';
+
+  @override
+  String get hintLongPressCorrection => 'Long press to correct muscle group';
+
+  @override
+  String get hintLongPressAccent => 'Long press';
+
+  @override
+  String get hintSwipeHistoryCard => 'Swipe to repeat or delete';
+
+  @override
+  String get hintDiscoverScheduling => 'Schedule workouts to build consistency';
+
+  @override
+  String get hintLongPressFabMenu => 'Long press for more options';
+
+  @override
+  String get hintLongPressFabAccent => 'Long press';
+
+  @override
+  String get hintSwipeMiniBar => 'Swipe to control your workout';
+
+  @override
+  String get hintTapWorkoutNameShare => 'Tap workout name to share';
+
+  @override
+  String get hintLongPressSkipTimer => 'Long press to skip rest timer';
+
+  @override
+  String get hintDiscoverProgressPhotos => 'Track visual progress with photos';
+
+  @override
+  String get hintDiscoverStreaks => 'Build streaks to stay motivated';
+
+  @override
+  String get hintDiscoverExerciseHistory =>
+      'View your exercise progress over time';
+
+  @override
+  String get hintDiscoverAchievements => 'Unlock achievements as you train';
+
+  @override
+  String get hintDiscoverBodyMeasurements =>
+      'Track body measurements for full progress';
+
+  @override
+  String get hintSwipeSupersetActions => 'Swipe for superset actions';
+
+  @override
+  String get hintTapHeatmapMuscles => 'Tap muscles for detailed stats';
+
+  @override
+  String get hintPinchZoomCharts => 'Pinch to zoom charts';
+
+  @override
+  String get hintTapCalendarStats => 'Tap a week for detailed stats';
+
+  @override
+  String get hintLongPressAiMessage => 'Long press for message actions';
+
+  @override
+  String get hintDoubleTapSupersetEdit => 'Double tap to quick-edit superset';
+
+  @override
+  String get hintLongPressSuperset => 'Long press for superset options';
+
+  @override
+  String get hintDragReorderCharts => 'Drag to reorder your charts';
+
+  @override
+  String get hintDragFab => 'Drag to move the button';
+
+  @override
+  String get hintDiscoverSuperset => 'Try supersets for faster workouts';
+
+  @override
+  String get hintDiscoverRpe => 'Rate your effort to track intensity';
+
+  @override
+  String get hintDiscoverHealthSync =>
+      'Sync with Apple Health for complete data';
+
+  @override
+  String get hintDiscoverRecovery => 'Check recovery insights between sessions';
+
+  @override
+  String get hintDiscoverStrengthStandards =>
+      'Compare your lifts to strength standards';
+
+  @override
+  String get hintDiscoverPlateCalculator =>
+      'Use the plate calculator for quick loading';
+
+  @override
+  String get hintTapCalendarDetails => 'Tap a day for workout details';
+
+  @override
+  String get hintTapExpandExercise => 'Tap to expand exercise details';
+
+  @override
+  String get hintTapRingsRefresh => 'Tap rings to refresh your stats';
+
+  @override
+  String get hintTapRepZoneToggle => 'Tap to switch rep zone view';
+
+  @override
+  String get selectExerciseToReplace =>
+      'Which exercise do you want to replace?';
+
+  @override
+  String get keepWeightAndReps => 'Keep weight and reps';
+
+  @override
+  String get replaceInAllRounds => 'Replace in all rounds';
+
+  @override
+  String get chooseReplacement => 'Choose replacement';
+
+  @override
+  String get dropSetTraining => 'Drop Set Training';
+
+  @override
+  String get smartWeightHelper => 'Smart weight calculator';
+
+  @override
+  String get generatedSets => 'Generated sets';
+
+  @override
+  String get linkCopied => 'Link copied';
 }

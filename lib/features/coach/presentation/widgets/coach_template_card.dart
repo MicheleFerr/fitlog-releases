@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Card widget displaying a coach template
 class CoachTemplateCard extends StatelessWidget {
@@ -185,8 +186,7 @@ class CoachTemplateCard extends StatelessWidget {
   }
 
   void _showMenu(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       builder: (ctx) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,

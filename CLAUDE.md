@@ -10,7 +10,7 @@
 
 **Entry point**: [`docs/INDEX.md`](docs/INDEX.md) → documentazione essenziale
 
-**Dettagli regole**: [`docs/DEVELOPMENT_RULES.md`](docs/DEVELOPMENT_RULES.md) | **Code patterns**: [`docs/CODE_PATTERNS.md`](docs/CODE_PATTERNS.md)
+**Regole e patterns**: Documentati in questo file e in [`docs/INDEX.md`](docs/INDEX.md)
 
 ---
 
@@ -318,10 +318,7 @@ Se vengono trovati warning, valutare e fixare prima di considerare la task compl
 | **Template Cloud Sync** | [`docs/TEMPLATE_CLOUD_SYNC_DOCUMENTATION.md`](docs/TEMPLATE_CLOUD_SYNC_DOCUMENTATION.md) ⭐ |
 | **AI Coach Documents** | [`docs/AI_COACH_DOCUMENTS_IMPLEMENTATION.md`](docs/AI_COACH_DOCUMENTS_IMPLEMENTATION.md) ✅ |
 | User Personas | [`docs/USER_PERSONAS.md`](docs/USER_PERSONAS.md) |
-| Architettura | [`docs/architecture/OVERVIEW.md`](docs/architecture/OVERVIEW.md) |
-| Regole sviluppo | [`docs/DEVELOPMENT_RULES.md`](docs/DEVELOPMENT_RULES.md) |
-| Pattern codice | [`docs/CODE_PATTERNS.md`](docs/CODE_PATTERNS.md) |
-| Design system | [`docs/DESIGN_GUIDELINES.md`](docs/DESIGN_GUIDELINES.md) |
+| Beta checklist | [`docs/BETA_LAUNCH_CHECKLIST.md`](docs/BETA_LAUNCH_CHECKLIST.md) |
 | ADR | [`docs/ADR/`](docs/ADR/) |
 
 > Documentazione precedente archiviata in `docs/_archived/`

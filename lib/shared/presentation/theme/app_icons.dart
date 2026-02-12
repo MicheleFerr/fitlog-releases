@@ -1,5 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// 🎨 Centralized icon constants for GymBro app
@@ -75,287 +76,287 @@ class AppIcons {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// ⏱️ Timer (active)
-  static const IconData timer = Icons.timer;
+  static const IconData timer = CupertinoIcons.timer;
 
   /// ⏸️ Timer (paused/disabled)
-  static const IconData timerOff = Icons.timer_off;
+  static const IconData timerOff = CupertinoIcons.timer_fill;
 
   /// 📅 Calendar/Date
-  static const IconData calendar = Icons.calendar_today;
+  static const IconData calendar = CupertinoIcons.calendar;
 
   /// 🗓️ Calendar month view
-  static const IconData calendarMonth = Icons.calendar_month;
+  static const IconData calendarMonth = CupertinoIcons.calendar;
 
   /// 🕐 Schedule/Time
-  static const IconData schedule = Icons.schedule;
+  static const IconData schedule = CupertinoIcons.clock;
 
   /// ⏰ Access time
-  static const IconData clock = Icons.access_time;
+  static const IconData clock = CupertinoIcons.clock;
 
   /// 📜 History
-  static const IconData history = Icons.history;
+  static const IconData history = CupertinoIcons.clock_fill;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // ✅ SUCCESS & VALIDATION
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// ✅ Complete/Confirmed (filled)
-  static const IconData complete = Icons.check_circle;
+  static const IconData complete = CupertinoIcons.checkmark_circle_fill;
 
   /// ✅ Complete (outline)
-  static const IconData completeOutline = Icons.check_circle_outline;
+  static const IconData completeOutline = CupertinoIcons.checkmark_circle;
 
   /// ✓ Check mark (simple)
-  static const IconData check = Icons.check;
+  static const IconData check = CupertinoIcons.checkmark;
 
   /// ✅ All done
-  static const IconData allDone = Icons.done_all;
+  static const IconData allDone = CupertinoIcons.checkmark_seal_fill;
 
   /// ✅ Done all (alias for allDone)
-  static const IconData doneAll = Icons.done_all;
+  static const IconData doneAll = CupertinoIcons.checkmark_seal_fill;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 📈 PROGRESS & ANALYTICS
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// 📈 Trend up/Progress
-  static const IconData trendUp = Icons.trending_up;
+  static const IconData trendUp = CupertinoIcons.arrow_up_right;
 
   /// 📉 Trend down/Decline
-  static const IconData trendDown = Icons.trending_down;
+  static const IconData trendDown = CupertinoIcons.arrow_down_right;
 
   /// → Trend flat/Stable
-  static const IconData trendFlat = Icons.trending_flat;
+  static const IconData trendFlat = CupertinoIcons.arrow_right;
 
   /// 📊 Analytics
-  static const IconData analytics = Icons.analytics;
+  static const IconData analytics = CupertinoIcons.chart_bar_fill;
 
   /// 📊 Bar chart
-  static const IconData barChart = Icons.bar_chart;
+  static const IconData barChart = CupertinoIcons.chart_bar;
 
   /// 📈 Line chart
-  static const IconData lineChart = Icons.show_chart;
+  static const IconData lineChart = CupertinoIcons.graph_square;
 
   /// 💡 Insights
-  static const IconData insights = Icons.insights;
+  static const IconData insights = CupertinoIcons.lightbulb_fill;
 
   /// ⚡ Speed/Performance
-  static const IconData speed = Icons.speed;
+  static const IconData speed = CupertinoIcons.speedometer;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 🎮 GAMIFICATION
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// ⭐ Star/Rating/Favorite
-  static const IconData star = Icons.star;
+  static const IconData star = CupertinoIcons.star_fill;
 
   /// ☆ Star outline
-  static const IconData starOutline = Icons.star_border;
+  static const IconData starOutline = CupertinoIcons.star;
 
   /// 🏆 Achievement/Trophy
-  static const IconData achievement = Icons.emoji_events;
+  static const IconData achievement = CupertinoIcons.rosette;
 
   /// 🔥 Streak/Fire
-  static const IconData streak = Icons.local_fire_department;
+  static const IconData streak = CupertinoIcons.flame_fill;
 
   /// 🎉 Celebration
-  static const IconData celebration = Icons.celebration;
+  static const IconData celebration = CupertinoIcons.sparkles;
 
   /// 👍 Thumbs up
-  static const IconData thumbUp = Icons.thumb_up;
+  static const IconData thumbUp = CupertinoIcons.hand_thumbsup;
 
   /// 👎 Thumbs down
-  static const IconData thumbDown = Icons.thumb_down;
+  static const IconData thumbDown = CupertinoIcons.hand_thumbsdown;
 
   /// 👍 Thumbs up (filled)
-  static const IconData thumbUpFilled = Icons.thumb_up;
+  static const IconData thumbUpFilled = CupertinoIcons.hand_thumbsup_fill;
 
   /// 👎 Thumbs down (filled)
-  static const IconData thumbDownFilled = Icons.thumb_down;
+  static const IconData thumbDownFilled = CupertinoIcons.hand_thumbsdown_fill;
 
   /// 🤖 Smart toy / AI
-  static const IconData smartToy = Icons.smart_toy;
+  static const IconData smartToy = CupertinoIcons.wand_stars;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // ❌ UI CONTROLS & NAVIGATION
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// ❌ Close/Dismiss
-  static const IconData close = Icons.close;
+  static const IconData close = CupertinoIcons.xmark;
 
   /// ← Back
-  static const IconData back = Icons.arrow_back;
+  static const IconData back = CupertinoIcons.chevron_back;
 
   /// → Forward
-  static const IconData forward = Icons.forward;
+  static const IconData forward = CupertinoIcons.chevron_forward;
 
   /// → Forward iOS style
-  static const IconData forwardIos = Icons.arrow_forward_ios;
+  static const IconData forwardIos = CupertinoIcons.chevron_forward;
 
   /// ▼ Expand more
-  static const IconData expandMore = Icons.expand_more;
+  static const IconData expandMore = CupertinoIcons.chevron_down;
 
   /// ▲ Expand less
-  static const IconData expandLess = Icons.expand_less;
+  static const IconData expandLess = CupertinoIcons.chevron_up;
 
   /// ⛶ Fullscreen
-  static const IconData fullscreen = Icons.fullscreen;
+  static const IconData fullscreen = CupertinoIcons.fullscreen;
 
   /// ⛶ Exit fullscreen
-  static const IconData fullscreenExit = Icons.fullscreen_exit;
+  static const IconData fullscreenExit = CupertinoIcons.fullscreen_exit;
 
   /// › Chevron right
-  static const IconData chevronRight = Icons.chevron_right;
+  static const IconData chevronRight = CupertinoIcons.chevron_right;
 
   /// ‹ Chevron left
-  static const IconData chevronLeft = Icons.chevron_left;
+  static const IconData chevronLeft = CupertinoIcons.chevron_left;
 
   /// ∨ Chevron down (for expandable menus)
-  static const IconData chevronDown = Icons.keyboard_arrow_down;
+  static const IconData chevronDown = CupertinoIcons.chevron_down;
 
   /// ⚡ Lightning (for advanced features)
-  static const IconData lightning = Icons.bolt;
+  static const IconData lightning = CupertinoIcons.bolt_fill;
 
   /// ⊗ Clear
-  static const IconData clear = Icons.clear;
+  static const IconData clear = CupertinoIcons.xmark_circle_fill;
 
   /// − Remove
-  static const IconData remove = Icons.remove;
+  static const IconData remove = CupertinoIcons.minus;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // ℹ️ INFO & FEEDBACK
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// ℹ️ Info
-  static const IconData info = Icons.info;
+  static const IconData info = CupertinoIcons.info_circle_fill;
 
   /// ⚠️ Error
-  static const IconData error = Icons.error;
+  static const IconData error = CupertinoIcons.exclamationmark_circle_fill;
 
   /// ⚠️ Warning
-  static const IconData warning = Icons.warning;
+  static const IconData warning = CupertinoIcons.exclamationmark_triangle_fill;
 
   /// ❓ Help
-  static const IconData help = Icons.help;
+  static const IconData help = CupertinoIcons.question_circle_fill;
 
   /// 💡 Tip/Suggestion
-  static const IconData tip = Icons.lightbulb_outline;
+  static const IconData tip = CupertinoIcons.lightbulb;
 
   /// 💡 Lightbulb (filled)
-  static const IconData lightbulb = Icons.lightbulb;
+  static const IconData lightbulb = CupertinoIcons.lightbulb_fill;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // ✏️ ACTIONS & EDITING
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// ✏️ Edit
-  static const IconData edit = Icons.edit;
+  static const IconData edit = CupertinoIcons.pencil;
 
   /// ➕ Add
-  static const IconData add = Icons.add;
+  static const IconData add = CupertinoIcons.plus;
 
   /// ➕ Add circle outline
-  static const IconData addCircleOutline = Icons.add_circle_outline;
+  static const IconData addCircleOutline = CupertinoIcons.plus_circle;
 
   /// 🗑️ Delete
-  static const IconData delete = Icons.delete;
+  static const IconData delete = CupertinoIcons.trash_fill;
 
   /// 🗑️ Delete outline
-  static const IconData deleteOutline = Icons.delete_outline;
+  static const IconData deleteOutline = CupertinoIcons.trash;
 
   /// 🔄 Refresh
-  static const IconData refresh = Icons.refresh;
+  static const IconData refresh = CupertinoIcons.arrow_clockwise;
 
   /// 💾 Save
-  static const IconData save = Icons.save;
+  static const IconData save = CupertinoIcons.floppy_disk;
 
   /// 📋 Copy
-  static const IconData copy = Icons.copy;
+  static const IconData copy = CupertinoIcons.doc_on_doc;
 
   /// 📋 Paste
-  static const IconData paste = Icons.content_paste;
+  static const IconData paste = CupertinoIcons.doc_on_clipboard;
 
   /// ↩️ Undo
-  static const IconData undo = Icons.undo;
+  static const IconData undo = CupertinoIcons.arrow_uturn_left;
 
   /// ↪️ Redo
-  static const IconData redo = Icons.redo;
+  static const IconData redo = CupertinoIcons.arrow_uturn_right;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 👥 PEOPLE & SOCIAL
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// 👤 Person/Profile
-  static const IconData person = Icons.person;
+  static const IconData person = CupertinoIcons.person_fill;
 
   /// 👥 People/Group
-  static const IconData people = Icons.people;
+  static const IconData people = CupertinoIcons.person_2_fill;
 
   /// 👥 People outline
-  static const IconData peopleOutline = Icons.people_outline;
+  static const IconData peopleOutline = CupertinoIcons.person_2;
 
   /// ✅ Verified
-  static const IconData verified = Icons.verified;
+  static const IconData verified = CupertinoIcons.checkmark_seal_fill;
 
   /// 🤝 Handshake
-  static const IconData handshake = Icons.handshake;
+  static const IconData handshake = CupertinoIcons.hand_raised_fill;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // ▶️ MEDIA & PLAYBACK
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// ▶️ Play
-  static const IconData play = Icons.play_arrow;
+  static const IconData play = CupertinoIcons.play_fill;
 
   /// ⏸️ Pause
-  static const IconData pause = Icons.pause;
+  static const IconData pause = CupertinoIcons.pause_fill;
 
   /// ⏹️ Stop
-  static const IconData stop = Icons.stop;
+  static const IconData stop = CupertinoIcons.stop_fill;
 
   /// ⏭️ Skip next
-  static const IconData skipNext = Icons.skip_next;
+  static const IconData skipNext = CupertinoIcons.forward_end_fill;
 
   /// 🔁 Repeat
-  static const IconData repeat = Icons.repeat;
+  static const IconData repeat = CupertinoIcons.repeat;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 🔍 SEARCH
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// 🔍 Search
-  static const IconData search = Icons.search;
+  static const IconData search = CupertinoIcons.search;
 
   /// 🔍 Search off
-  static const IconData searchOff = Icons.search_off;
+  static const IconData searchOff = CupertinoIcons.search_circle;
 
   /// 🎛️ Filter (imbuto classico)
-  static const IconData filter = Icons.filter_alt;
+  static const IconData filter = CupertinoIcons.line_horizontal_3_decrease;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // ⚙️ SETTINGS & ADMIN
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// ⚙️ Settings
-  static const IconData settings = Icons.settings;
+  static const IconData settings = CupertinoIcons.gear;
 
   /// 🛡️ Admin
-  static const IconData admin = Icons.admin_panel_settings;
+  static const IconData admin = CupertinoIcons.shield_lefthalf_fill;
 
   /// 🔒 Lock
-  static const IconData lock = Icons.lock;
+  static const IconData lock = CupertinoIcons.lock_fill;
 
   /// 🔓 Unlock
-  static const IconData unlock = Icons.lock_open;
+  static const IconData unlock = CupertinoIcons.lock_open_fill;
 
   /// 🔔 Notifications
-  static const IconData notifications = Icons.notifications;
+  static const IconData notifications = CupertinoIcons.bell_fill;
 
   /// 🎨 Theme/Palette
-  static const IconData theme = Icons.palette;
+  static const IconData theme = CupertinoIcons.paintbrush_fill;
 
   /// 🌍 Language
-  static const IconData language = Icons.language;
+  static const IconData language = CupertinoIcons.globe;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 👑 PREMIUM & IAP
@@ -378,105 +379,105 @@ class AppIcons {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// 📤 Share
-  static const IconData share = Icons.share;
+  static const IconData share = CupertinoIcons.share;
 
   /// 📥 Download
-  static const IconData download = Icons.download;
+  static const IconData download = CupertinoIcons.arrow_down_circle;
 
   /// 📤 Upload
-  static const IconData upload = Icons.upload;
+  static const IconData upload = CupertinoIcons.arrow_up_circle;
 
   /// 📷 Camera
-  static const IconData camera = Icons.camera_alt;
+  static const IconData camera = CupertinoIcons.camera_fill;
 
   /// 🔄 Switch camera (front/back)
-  static const IconData cameraSwitch = Icons.cameraswitch;
+  static const IconData cameraSwitch = CupertinoIcons.camera_rotate;
 
   /// 🎚️ Opacity/Transparency
   static const IconData opacity = Icons.opacity;
 
   /// 🖼️ Image
-  static const IconData image = Icons.image;
+  static const IconData image = CupertinoIcons.photo;
 
   /// 📄 Document
-  static const IconData document = Icons.description;
+  static const IconData document = CupertinoIcons.doc_text_fill;
 
   /// 🔗 Link
-  static const IconData link = Icons.link;
+  static const IconData link = CupertinoIcons.link;
 
   /// 🔗⛔ Link off (disconnected)
   static const IconData linkOff = Icons.link_off;
 
   /// 📱 QR Code
-  static const IconData qrCode = Icons.qr_code;
+  static const IconData qrCode = CupertinoIcons.qrcode;
 
   /// ⌚ Apple Watch
-  static const IconData watch = Icons.watch;
+  static const IconData watch = CupertinoIcons.device_desktop;
 
   /// 🏠 Home
-  static const IconData home = Icons.home;
+  static const IconData home = CupertinoIcons.house_fill;
 
   /// 📧 Email
-  static const IconData email = Icons.email;
+  static const IconData email = CupertinoIcons.mail_solid;
 
   /// 📍 Location
-  static const IconData location = Icons.location_on;
+  static const IconData location = CupertinoIcons.location_solid;
 
   /// ☁️ Cloud
-  static const IconData cloud = Icons.cloud;
+  static const IconData cloud = CupertinoIcons.cloud_fill;
 
   /// ☁️ Cloud sync
-  static const IconData cloudSync = Icons.cloud_sync;
+  static const IconData cloudSync = CupertinoIcons.arrow_2_circlepath_circle;
 
   /// 💬 Chat/Comment
-  static const IconData chat = Icons.chat;
+  static const IconData chat = CupertinoIcons.chat_bubble_fill;
 
   /// ☰ Menu
-  static const IconData menu = Icons.menu;
+  static const IconData menu = CupertinoIcons.line_horizontal_3;
 
   /// ⋮ More vertical
-  static const IconData moreVert = Icons.more_vert;
+  static const IconData moreVert = CupertinoIcons.ellipsis_vertical;
 
   /// ··· More horizontal
-  static const IconData moreHoriz = Icons.more_horiz;
+  static const IconData moreHoriz = CupertinoIcons.ellipsis;
 
   /// 👁️ Visibility
-  static const IconData visibility = Icons.visibility;
+  static const IconData visibility = CupertinoIcons.eye_fill;
 
   /// 👁️‍🗨️ Visibility off
-  static const IconData visibilityOff = Icons.visibility_off;
+  static const IconData visibilityOff = CupertinoIcons.eye_slash_fill;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 🎨 THEME & APPEARANCE
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// ☀️ Light mode
-  static const IconData lightMode = Icons.light_mode;
+  static const IconData lightMode = CupertinoIcons.sun_max_fill;
 
   /// 🌙 Dark mode
-  static const IconData darkMode = Icons.dark_mode;
+  static const IconData darkMode = CupertinoIcons.moon_fill;
 
   /// 🎨 Color lens
-  static const IconData colorLens = Icons.color_lens;
+  static const IconData colorLens = CupertinoIcons.paintbrush;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 🧠 SMART FEATURES
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// 🧠 Psychology/AI
-  static const IconData ai = Icons.psychology;
+  static const IconData ai = CupertinoIcons.wand_stars;
 
   /// 🔬 Science
   static const IconData science = Icons.science;
 
   /// 🎓 School/Education
-  static const IconData education = Icons.school;
+  static const IconData education = CupertinoIcons.book_fill;
 
   /// 🧪 Experiment
   static const IconData experiment = Icons.science_outlined;
 
   /// 🎤 Voice input/Microphone (AI Coach Phase 3.1)
-  static const IconData mic = Icons.mic;
+  static const IconData mic = CupertinoIcons.mic_fill;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 🎨 SEMANTIC DUPLICATE VARIANTS (Phase 2)

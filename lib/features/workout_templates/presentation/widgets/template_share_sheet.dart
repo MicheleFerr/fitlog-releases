@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Share format options
 enum ShareFormat {
@@ -50,10 +51,8 @@ Future<void> showTemplateShareSheet({
   required BuildContext context,
   required WorkoutTemplate template,
 }) {
-  return showModalBottomSheet<void>(
-    context: context,
+  return ModalService.showSheet<void>(context,
     isScrollControlled: true,
-    backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
     builder: (context) => _TemplateShareSheetContent(template: template),
   );
 }

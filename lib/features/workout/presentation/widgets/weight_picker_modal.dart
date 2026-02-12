@@ -4,14 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 class WeightPickerModal {
   static Future<double?> show(
     BuildContext context, {
     required double initialWeight,
   }) {
-    return showModalBottomSheet<double>(
-      context: context,
+    return ModalService.showSheet<double>(context,
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,

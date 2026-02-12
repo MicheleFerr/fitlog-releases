@@ -24,6 +24,7 @@ import 'package:gymbro_flutter_new/features/workout/data/services/exercise_histo
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/minimal_set_edit_sheet.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 class ExerciseCustomizationScreen extends ConsumerStatefulWidget {
   // 🔥 FIX: Add callback parameter
@@ -548,8 +549,7 @@ class _ExerciseCustomizationScreenState
       initialItem: (selectedSeconds / 5).round() - 1,
     );
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Container(
           height: 380,
@@ -777,8 +777,7 @@ class _ExerciseCustomizationScreenState
       initialItem: (selectedSeconds / 5).round() - 1,
     );
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Container(
           height: 380,
@@ -2084,8 +2083,7 @@ class _ExerciseCustomizationScreenState
       initialItem: selectedReps - 1,
     );
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Container(
@@ -2333,8 +2331,7 @@ class _ExerciseCustomizationScreenState
       initialItem: (selectedSeconds / 5).round() - 1, // 5s increments
     );
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Container(
           height: 350,
@@ -2468,8 +2465,7 @@ class _ExerciseCustomizationScreenState
       initialItem: WeightHelper.weightToIndex(selectedWeight, unit),
     );
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Container(

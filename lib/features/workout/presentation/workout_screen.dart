@@ -46,6 +46,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen/
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen/widgets/preloaded_view.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen/widgets/workout_view.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen/controllers/workout_screen_controller.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Orchestrator for WorkoutScreen that delegates to sub-components.
 ///
@@ -315,19 +316,22 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
   /// Build welcome/empty state view
   Widget _buildWelcomeView() {
-    return WelcomeView(
-      onQuickStart: () => _startQuickWorkout(context),
-      onStartTemplate: (template) => _startTemplateWorkout(template),
-      onShareTemplate: (template) => _shareTemplatePdf(context, template),
-      onDuplicateTemplate: (template) => _duplicateTemplate(context, template),
-      onEditTemplate: (template) =>
-          _editTemplateFromQuickStart(context, template),
-      onDeleteTemplate: (template) =>
-          _deleteTemplateFromQuickStart(context, template),
-      onCreateTemplate: () => _showCreateTemplateModal(context),
-      onScheduleTemplate: (template) => _scheduleTemplate(context, template),
-      onRefreshTemplate: (template) => _refreshTemplate(template),
-      onViewTemplate: (template) => _viewTemplate(template),
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+      body: WelcomeView(
+        onQuickStart: () => _startQuickWorkout(context),
+        onStartTemplate: (template) => _startTemplateWorkout(template),
+        onShareTemplate: (template) => _shareTemplatePdf(context, template),
+        onDuplicateTemplate: (template) => _duplicateTemplate(context, template),
+        onEditTemplate: (template) =>
+            _editTemplateFromQuickStart(context, template),
+        onDeleteTemplate: (template) =>
+            _deleteTemplateFromQuickStart(context, template),
+        onCreateTemplate: () => _showCreateTemplateModal(context),
+        onScheduleTemplate: (template) => _scheduleTemplate(context, template),
+        onRefreshTemplate: (template) => _refreshTemplate(template),
+        onViewTemplate: (template) => _viewTemplate(template),
+      ),
     );
   }
 
@@ -769,10 +773,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
   /// Start quick workout (context gathering flow)
   void _startQuickWorkout(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
-      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => const ContextGatheringBottomSheet(),
     );
   }
@@ -1089,10 +1091,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
   /// Replace exercise - swap one exercise for another at the same position
   void _replaceExercise(BuildContext context, Exercise exercise) {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
-      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => AddExerciseModal(
         onExerciseAdded: (newExercise) {
           // Update the exercise at the old exercise's ID position

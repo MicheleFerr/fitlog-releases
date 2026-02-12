@@ -34,6 +34,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superse
 import 'package:gymbro_flutter_new/core/analytics/trackers/superset_template_event_tracker.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 class WorkoutTemplatesScreen extends ConsumerStatefulWidget {
   const WorkoutTemplatesScreen({super.key});
@@ -731,8 +732,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
   }
 
   void _showCreateTemplateModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -764,8 +764,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
   }
 
   void _showCreateTemplateModalOriginal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

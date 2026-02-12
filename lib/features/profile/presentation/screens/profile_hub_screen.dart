@@ -29,6 +29,7 @@ import 'package:gymbro_flutter_new/features/profile/presentation/providers/user_
 import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_detail_modal.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // 🚧 MVP FEATURE FLAGS
@@ -208,8 +209,7 @@ class _MetricRingsSection extends ConsumerWidget {
     double? currentValue,
   ) {
     HapticFeedback.lightImpact();
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       builder: (context) => _VolumeGoalEditSheet(
         currentValue: currentValue,
         onSave: (newValue) async {
@@ -368,8 +368,7 @@ class _RecentWorkoutsSection extends ConsumerWidget {
                 workouts: workouts,
                 onWorkoutTap: (workout) {
                   HapticFeedback.lightImpact();
-                  showModalBottomSheet(
-                    context: context,
+                  ModalService.showSheet(context,
                     isScrollControlled: true,
                     backgroundColor: Theme.of(
                       context,

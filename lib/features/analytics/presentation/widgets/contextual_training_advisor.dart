@@ -396,10 +396,8 @@ class ContextualTrainingAdvisor extends StatelessWidget {
 
   void _showDetailedExplanation(BuildContext context) {
     HapticFeedback.lightImpact();
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
-      backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (context) => _DetailedExplanationSheet(
         volumeChange: _getVolumeChangePercent(),
         avgIntensity: avgIntensity,

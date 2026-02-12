@@ -36,8 +36,7 @@ class RecoveryInsightSheet extends ConsumerStatefulWidget {
 
   /// Show the recovery insight bottom sheet
   static Future<void> show(BuildContext context) {
-    return showModalBottomSheet<void>(
-      context: context,
+    return ModalService.showSheet<void>(context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,

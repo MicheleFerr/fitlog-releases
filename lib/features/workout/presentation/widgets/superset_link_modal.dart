@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Modal for quickly creating a superset by linking exercises.
 /// Accessible from exercise menu → "Create Superset"
@@ -42,8 +43,7 @@ class SupersetLinkModal extends ConsumerStatefulWidget {
     required Exercise currentExercise,
     required List<Exercise> workoutExercises,
   }) {
-    return showModalBottomSheet<SupersetConfiguration>(
-      context: context,
+    return ModalService.showSheet<SupersetConfiguration>(context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,

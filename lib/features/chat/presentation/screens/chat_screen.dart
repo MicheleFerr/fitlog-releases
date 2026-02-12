@@ -25,6 +25,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Main chat interface for messaging
 class ChatScreen extends ConsumerStatefulWidget {
@@ -353,8 +354,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   void _showWorkoutPicker() {
     // TODO: Implement workout picker sheet
     // For now, show a placeholder
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       useSafeArea: true,
       builder: (context) => _WorkoutPickerSheet(

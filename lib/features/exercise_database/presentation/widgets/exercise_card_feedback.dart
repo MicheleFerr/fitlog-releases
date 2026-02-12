@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Widget button per segnalare problemi su esercizi
 class ExerciseFeedbackButton extends ConsumerStatefulWidget {
@@ -48,8 +49,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
     required String exerciseName,
     required String version,
   }) async {
-    await showModalBottomSheet<void>(
-      context: context,
+    await ModalService.showSheet<void>(context,
       isScrollControlled: true,
       useSafeArea: true,
       builder: (context) => _ExerciseFeedbackBottomSheet(

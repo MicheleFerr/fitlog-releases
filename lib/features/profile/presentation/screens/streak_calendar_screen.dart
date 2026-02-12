@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/features/history/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// View modes for streak visualization
 enum _StreakViewMode { monthly, annual, multiYear }
@@ -240,8 +241,7 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
 
     final dateFormat = DateFormat.yMMMd(context.l10n.localeName);
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,

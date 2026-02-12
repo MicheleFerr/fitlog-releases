@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Minimal weight jump warning indicator
 ///
@@ -86,8 +87,7 @@ class WeightJumpIndicator extends StatelessWidget {
   void _showWeightJumpInfo(BuildContext context) {
     HapticFeedback.lightImpact();
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(

@@ -12,18 +12,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/interface_size.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise_card_settings.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/exercise_card_settings_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Simplified Workout Customization Modal
 class WorkoutCustomizationModalV3 extends ConsumerStatefulWidget {
   const WorkoutCustomizationModalV3({super.key});
 
   static Future<void> show(BuildContext context) {
-    return showModalBottomSheet(
-      context: context,
+    return ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,
@@ -45,11 +47,11 @@ class _WorkoutCustomizationModalV3State
   late bool _autoAdjustRestFromRpe;
   late bool _setDurationTracking;
 
-  // === ASPETTO ===
-  late bool _showExerciseNotes;
-  late bool _showExerciseInsights;
-  late bool _showQuickIcons; // Unified: was 3 separate toggles
-  late bool _plateCalculator;
+  // === ASPETTO (from ExerciseCardSettings - single source of truth) ===
+  late bool _showInsight;
+  late bool _showTimer;
+  late bool _showPlates;
+  late bool _showRpe;
   late InterfaceSize _interfaceSize;
 
   // ✅ Initial values for change tracking (feedback on close)
@@ -57,16 +59,17 @@ class _WorkoutCustomizationModalV3State
   late bool _initialAutoAdjustWeightFromRpe;
   late bool _initialAutoAdjustRestFromRpe;
   late bool _initialSetDurationTracking;
-  late bool _initialShowExerciseNotes;
-  late bool _initialShowExerciseInsights;
-  late bool _initialShowQuickIcons;
-  late bool _initialPlateCalculator;
+  late bool _initialShowInsight;
+  late bool _initialShowTimer;
+  late bool _initialShowPlates;
+  late bool _initialShowRpe;
   late InterfaceSize _initialInterfaceSize;
 
   @override
   void initState() {
     super.initState();
     final config = ref.read(appConfigProvider);
+    final cardSettings = ref.read(exerciseCardSettingsProvider);
 
     // Tracciamento
     _rpeTracking = config.rpeTracking ?? false;
@@ -74,14 +77,11 @@ class _WorkoutCustomizationModalV3State
     _autoAdjustRestFromRpe = config.autoAdjustRestFromRpe ?? false;
     _setDurationTracking = config.setDurationTracking ?? false;
 
-    // Aspetto
-    _showExerciseNotes = config.showExerciseNotes ?? false;
-    _showExerciseInsights = config.showExerciseInsights ?? false;
-    _showQuickIcons =
-        (config.showQuickInfoIcon ?? false) ||
-        (config.showWarmupIcon ?? false) ||
-        (config.showPreventionIcon ?? false);
-    _plateCalculator = config.plateCalculator ?? true;
+    // Aspetto - reads from ExerciseCardSettings (single source of truth)
+    _showInsight = cardSettings.showInsight;
+    _showTimer = cardSettings.showTimer;
+    _showPlates = cardSettings.showPlates;
+    _showRpe = cardSettings.showRpe;
     _interfaceSize =
         config.interfaceSize ?? InterfaceSize.fromFontSize(config.fontSize);
 
@@ -90,10 +90,10 @@ class _WorkoutCustomizationModalV3State
     _initialAutoAdjustWeightFromRpe = _autoAdjustWeightFromRpe;
     _initialAutoAdjustRestFromRpe = _autoAdjustRestFromRpe;
     _initialSetDurationTracking = _setDurationTracking;
-    _initialShowExerciseNotes = _showExerciseNotes;
-    _initialShowExerciseInsights = _showExerciseInsights;
-    _initialShowQuickIcons = _showQuickIcons;
-    _initialPlateCalculator = _plateCalculator;
+    _initialShowInsight = _showInsight;
+    _initialShowTimer = _showTimer;
+    _initialShowPlates = _showPlates;
+    _initialShowRpe = _showRpe;
     _initialInterfaceSize = _interfaceSize;
   }
 
@@ -104,10 +104,10 @@ class _WorkoutCustomizationModalV3State
     if (_autoAdjustWeightFromRpe != _initialAutoAdjustWeightFromRpe) changes++;
     if (_autoAdjustRestFromRpe != _initialAutoAdjustRestFromRpe) changes++;
     if (_setDurationTracking != _initialSetDurationTracking) changes++;
-    if (_showExerciseNotes != _initialShowExerciseNotes) changes++;
-    if (_showExerciseInsights != _initialShowExerciseInsights) changes++;
-    if (_showQuickIcons != _initialShowQuickIcons) changes++;
-    if (_plateCalculator != _initialPlateCalculator) changes++;
+    if (_showInsight != _initialShowInsight) changes++;
+    if (_showTimer != _initialShowTimer) changes++;
+    if (_showPlates != _initialShowPlates) changes++;
+    if (_showRpe != _initialShowRpe) changes++;
     if (_interfaceSize != _initialInterfaceSize) changes++;
     return changes;
   }
@@ -268,7 +268,7 @@ class _WorkoutCustomizationModalV3State
 
                     const SizedBox(height: 12),
 
-                    // === ASPETTO ===
+                    // === ASPETTO (unified with ExerciseCardSettings) ===
                     _buildExpandableSection(
                       context,
                       icon: AppIcons.colorLens,
@@ -279,48 +279,48 @@ class _WorkoutCustomizationModalV3State
                       children: [
                         _buildToggleRow(
                           context,
-                          icon: AppIcons.noteAlt,
-                          title: context.l10n.exerciseNotesTitle,
-                          subtitle: context.l10n.exerciseNotesSubtitle,
-                          value: _showExerciseNotes,
-                          onChanged: (v) {
-                            setState(() => _showExerciseNotes = v);
-                            _saveAll();
-                          },
-                        ),
-                        _buildDivider(),
-                        _buildToggleRow(
-                          context,
                           icon: AppIcons.insights,
-                          title: context.l10n.progressChartsTitle,
-                          subtitle: context.l10n.progressChartsSubtitle,
-                          value: _showExerciseInsights,
+                          title: context.l10n.showInsight,
+                          subtitle: context.l10n.showInsightDescription,
+                          value: _showInsight,
                           onChanged: (v) {
-                            setState(() => _showExerciseInsights = v);
+                            setState(() => _showInsight = v);
                             _saveAll();
                           },
                         ),
                         _buildDivider(),
                         _buildToggleRow(
                           context,
-                          icon: AppIcons.touchApp,
-                          title: context.l10n.quickIconsTitle,
-                          subtitle: context.l10n.quickIconsSubtitle,
-                          value: _showQuickIcons,
+                          icon: AppIcons.timer,
+                          title: context.l10n.showTimer,
+                          subtitle: context.l10n.showTimerDescription,
+                          value: _showTimer,
                           onChanged: (v) {
-                            setState(() => _showQuickIcons = v);
+                            setState(() => _showTimer = v);
                             _saveAll();
                           },
                         ),
                         _buildDivider(),
                         _buildToggleRow(
                           context,
-                          icon: AppIcons.weight,
-                          title: context.l10n.plateCalculatorTitle,
-                          subtitle: context.l10n.plateCalculatorSubtitle,
-                          value: _plateCalculator,
+                          icon: AppIcons.calculateRounded,
+                          title: context.l10n.showPlates,
+                          subtitle: context.l10n.showPlatesDescription,
+                          value: _showPlates,
                           onChanged: (v) {
-                            setState(() => _plateCalculator = v);
+                            setState(() => _showPlates = v);
+                            _saveAll();
+                          },
+                        ),
+                        _buildDivider(),
+                        _buildToggleRow(
+                          context,
+                          icon: AppIcons.speed,
+                          title: context.l10n.showRpe,
+                          subtitle: context.l10n.showRpeDescription,
+                          value: _showRpe,
+                          onChanged: (v) {
+                            setState(() => _showRpe = v);
                             _saveAll();
                           },
                         ),
@@ -564,8 +564,7 @@ class _WorkoutCustomizationModalV3State
   // === SAVE ===
 
   void _saveAll() {
-    // Save workout settings
-    // Note: autoRestTimer, autoCollapseCompleted are always enabled (hardcoded)
+    // Save workout/tracking settings to AppConfig
     ref
         .read(appConfigProvider.notifier)
         .updateWorkoutSettings(
@@ -575,22 +574,14 @@ class _WorkoutCustomizationModalV3State
           autoAdjustWeightFromRpe: _autoAdjustWeightFromRpe,
           autoAdjustRestFromRpe: _autoAdjustRestFromRpe,
           setDurationTracking: _setDurationTracking,
-          plateCalculator: _plateCalculator,
         );
 
-    // Save display settings
-    // Note: showCustomTimers is always enabled (hardcoded)
-    ref
-        .read(appConfigProvider.notifier)
-        .updateDisplaySettings(
-          showExerciseNotes: _showExerciseNotes,
-          showExerciseInsights: _showExerciseInsights,
-          showCustomTimers: true, // Always enabled
-          // Unified quick icons - set all 3 to same value
-          showQuickInfoIcon: _showQuickIcons,
-          showWarmupIcon: _showQuickIcons,
-          showPreventionIcon: _showQuickIcons,
-        );
+    // Save appearance settings to ExerciseCardSettings (single source of truth)
+    final notifier = ref.read(exerciseCardSettingsProvider.notifier);
+    notifier.setShowInsight(_showInsight);
+    notifier.setShowTimer(_showTimer);
+    notifier.setShowPlates(_showPlates);
+    notifier.setShowRpe(_showRpe);
 
     // Sound is always enabled (hardcoded)
     ref.read(appConfigProvider.notifier).setSoundEnabled(true);

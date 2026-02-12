@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/features/import/presentation/providers/import
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Widget for mapping imported exercises to database
 class ExerciseMappingWidget extends ConsumerStatefulWidget {
@@ -215,8 +216,7 @@ class _ExerciseMappingWidgetState extends ConsumerState<ExerciseMappingWidget> {
   ) async {
     final exercises = ref.read(allExercisesProvider).value ?? [];
 
-    final selectedId = await showModalBottomSheet<String>(
-      context: context,
+    final selectedId = await ModalService.showSheet<String>(context,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.7,

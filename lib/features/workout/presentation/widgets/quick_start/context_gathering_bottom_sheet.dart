@@ -29,6 +29,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Bottom sheet for gathering workout context before category selection
 ///
@@ -373,8 +374,7 @@ class _ContextGatheringBottomSheetState
     Navigator.pop(context);
 
     // Open category selection bottom sheet
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       showDragHandle: true,
       builder: (context) => const WorkoutCategoryBottomSheet(),
@@ -882,8 +882,7 @@ class _ContextGatheringBottomSheetState
     Navigator.pop(context);
 
     // Open category selection bottom sheet
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       showDragHandle: true,
       builder: (context) => const WorkoutCategoryBottomSheet(),

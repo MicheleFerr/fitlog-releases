@@ -31,6 +31,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Stress Prediction Card for home screen
 ///
@@ -321,8 +322,7 @@ class _StressPredictionContent extends StatelessWidget {
     final calibrationHintText = l10n.stressPredictionCalibrationHint;
     final editProfileText = l10n.editProfile;
 
-    showModalBottomSheet<void>(
-      context: context,
+    ModalService.showSheet<void>(context,
       backgroundColor: context.colors.surface,
       isScrollControlled: true, // Allow larger sheet
       shape: const RoundedRectangleBorder(

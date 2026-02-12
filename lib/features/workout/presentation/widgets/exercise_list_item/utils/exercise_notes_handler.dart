@@ -11,6 +11,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Result from notes dialog
 class NotesDialogResult {
@@ -70,8 +71,7 @@ class ExerciseNotesHandler {
       text: currentSessionNotes,
     );
 
-    return showModalBottomSheet<NotesDialogResult>(
-      context: context,
+    return ModalService.showSheet<NotesDialogResult>(context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

@@ -250,24 +250,29 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
             ),
 
           // Smart suggestions overlay + Input bar
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SmartSuggestionsOverlay(
-                onSelect: _onSuggestionSelected,
-              ),
-              AIInputBar(
-                onSend: (text) {
-                  // Clear suggestions when sending
-                  ref.read(exerciseSuggestionsProvider.notifier).clear();
-                  setState(() => _lastFailedMessage = text);
-                  ref.read(aIChatProvider.notifier).sendMessage(text);
-                  _scrollToBottom();
-                },
-                onTextChanged: _onInputTextChanged,
-                isLoading: chatState.isLoading,
-              ),
-            ],
+          Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).padding.bottom,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SmartSuggestionsOverlay(
+                  onSelect: _onSuggestionSelected,
+                ),
+                AIInputBar(
+                  onSend: (text) {
+                    // Clear suggestions when sending
+                    ref.read(exerciseSuggestionsProvider.notifier).clear();
+                    setState(() => _lastFailedMessage = text);
+                    ref.read(aIChatProvider.notifier).sendMessage(text);
+                    _scrollToBottom();
+                  },
+                  onTextChanged: _onInputTextChanged,
+                  isLoading: chatState.isLoading,
+                ),
+              ],
+            ),
           ),
         ],
       ),

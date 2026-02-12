@@ -50,6 +50,10 @@ import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/document_l
 // 🤖 AI Coach Document Sync
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise_card_settings.dart'; // 🎨 Exercise Card Settings
 import 'package:gymbro_flutter_new/features/workout/domain/entities/gym_equipment_profile.dart'; // 🏋️ Gym Equipment Profiles
+import 'package:gymbro_flutter_new/shared/data/models/exercise_popularity_hive_model.dart'; // 📊 Exercise Popularity
+import 'package:gymbro_flutter_new/shared/data/services/exercise_popularity_cache.dart';
+import 'package:gymbro_flutter_new/shared/data/services/exercise_popularity_bundle_service.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 void main() async {
   // 🚀 SPLASH: Preserve native splash screen during initialization
@@ -240,6 +244,11 @@ void main() async {
     Hive.registerAdapter(GymEquipmentProfileAdapter());
   }
 
+  // 📊 Exercise Popularity adapter for search ranking boost
+  if (!Hive.isAdapterRegistered(ExercisePopularityHiveModelAdapter().typeId)) {
+    Hive.registerAdapter(ExercisePopularityHiveModelAdapter());
+  }
+
   // ✅ CRITICAL FIX: Initialize HiveBoxManagerEnhanced with pre-opened critical boxes
   // This pre-opens: user_consents, privacy (app_config opened on-demand by AppConfigNotifier)
   // Must be called AFTER adapter registration, BEFORE any service uses boxes
@@ -397,6 +406,13 @@ void main() async {
 
   // Initialize SharedPreferences for notification settings v2.0
   final sharedPreferences = await SharedPreferences.getInstance();
+
+  // ========================================
+  // 📊 EXERCISE POPULARITY RANKING: Initialize cache and sync bundle
+  // ========================================
+  // Background sync of popularity data for search ranking boost
+  // Fire-and-forget: app works without it (graceful degradation)
+  await _initPopularitySystem();
 
   // ========================================
   // 🔧 CRITICAL FIX: Pre-load AppConfig from Hive BEFORE app starts
@@ -573,5 +589,50 @@ Future<void> _preloadAppConfig() async {
       debugPrint('📍 Stack trace: $stackTrace');
     }
     // Continue - AppConfigNotifier will handle initialization
+  }
+}
+
+/// Initialize exercise popularity ranking system
+///
+/// Steps:
+/// 1. Open Hive cache box
+/// 2. Background sync bundle from Storage (fire-and-forget)
+///
+/// Graceful degradation: App works without this
+/// (search just won't have popularity boost)
+Future<void> _initPopularitySystem() async {
+  try {
+    if (kDebugMode) {
+      debugPrint('📊 Initializing exercise popularity system...');
+    }
+
+    // 1. Initialize cache (opens Hive box)
+    final cache = ExercisePopularityCache();
+    await cache.init();
+
+    if (kDebugMode) {
+      debugPrint('✅ Exercise popularity cache initialized');
+    }
+
+    // 2. Sync bundle in background (non-blocking)
+    final service = ExercisePopularityBundleService(
+      firestore: FirebaseFirestore.instance,
+      storage: FirebaseStorage.instance,
+      cache: cache,
+    );
+
+    // Fire-and-forget: don't block app startup
+    unawaited(service.syncPopularityData());
+
+    if (kDebugMode) {
+      debugPrint('✅ Exercise popularity bundle sync started (background)');
+    }
+  } catch (e, stackTrace) {
+    // Graceful degradation: log error but don't throw
+    if (kDebugMode) {
+      debugPrint('⚠️ Exercise popularity system init failed: $e');
+      debugPrint('📍 Stack trace: $stackTrace');
+      debugPrint('ℹ️ App will continue without popularity boost');
+    }
   }
 }

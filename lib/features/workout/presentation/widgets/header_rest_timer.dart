@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Timer compatto per l'header del workout
 ///
@@ -242,8 +243,7 @@ class _HeaderRestTimerState extends ConsumerState<HeaderRestTimer> {
   /// Mostra modal per selezione timer personalizzato
   // 🔧 PERF FIX: Accept timerSound directly instead of entire config
   void _showTimerModal(BuildContext context, String timerSound) {
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       // 🔧 PERF FIX: Use theme color instead of hardcoded Colors.transparent
       backgroundColor: Theme.of(
         context,

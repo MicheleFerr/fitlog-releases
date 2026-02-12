@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/chart
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/volume_bar_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/reps_line_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/rpe_gauge_widget.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 class ExerciseDetailScreen extends ConsumerStatefulWidget {
   const ExerciseDetailScreen({
@@ -853,8 +854,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       ),
     };
 
-    showModalBottomSheet(
-      context: context,
+    ModalService.showSheet(context,
       isScrollControlled: true,
       backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(

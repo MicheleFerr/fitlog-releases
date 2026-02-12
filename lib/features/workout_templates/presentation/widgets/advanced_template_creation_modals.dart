@@ -26,6 +26,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:uuid/uuid.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 // ============================================================================
 // SUPERSET TEMPLATE CREATION MODAL
@@ -36,8 +37,7 @@ class SupersetTemplateCreationModal extends ConsumerStatefulWidget {
   const SupersetTemplateCreationModal({super.key});
 
   static Future<void> show(BuildContext context) {
-    return showModalBottomSheet<void>(
-      context: context,
+    return ModalService.showSheet<void>(context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
@@ -324,8 +324,7 @@ class _SupersetTemplateCreationModalState
   }
 
   void _showExercisePicker(BuildContext context) {
-    showModalBottomSheet<Exercise>(
-      context: context,
+    ModalService.showSheet<Exercise>(context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
@@ -505,8 +504,7 @@ class DropsetTemplateCreationModal extends ConsumerStatefulWidget {
   const DropsetTemplateCreationModal({super.key});
 
   static Future<void> show(BuildContext context) {
-    return showModalBottomSheet<void>(
-      context: context,
+    return ModalService.showSheet<void>(context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
@@ -787,8 +785,7 @@ class _DropsetTemplateCreationModalState
   }
 
   void _showExercisePicker(BuildContext context) {
-    showModalBottomSheet<Exercise>(
-      context: context,
+    ModalService.showSheet<Exercise>(context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
@@ -969,8 +966,7 @@ class RestPauseTemplateCreationModal extends ConsumerStatefulWidget {
   const RestPauseTemplateCreationModal({super.key});
 
   static Future<void> show(BuildContext context) {
-    return showModalBottomSheet<void>(
-      context: context,
+    return ModalService.showSheet<void>(context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
@@ -1251,8 +1247,7 @@ class _RestPauseTemplateCreationModalState
   }
 
   void _showExercisePicker(BuildContext context) {
-    showModalBottomSheet<Exercise>(
-      context: context,
+    ModalService.showSheet<Exercise>(context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(

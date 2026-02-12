@@ -23,6 +23,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Template Suggestion Card for home screen
 ///
@@ -488,8 +489,7 @@ class _TemplateSuggestionContent extends StatelessWidget {
     BuildContext context,
     List<TemplateStressAnalysis> alternatives,
   ) {
-    showModalBottomSheet<void>(
-      context: context,
+    ModalService.showSheet<void>(context,
       isScrollControlled: true,
       backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(

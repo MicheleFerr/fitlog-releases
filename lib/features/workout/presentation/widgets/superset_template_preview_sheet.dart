@@ -49,8 +49,7 @@ class SupersetTemplatePreviewSheet extends ConsumerWidget {
     final tracker = SupersetTemplateEventTracker(analytics);
     tracker.trackTemplateViewed(template: template, source: source);
 
-    return showModalBottomSheet<void>(
-      context: context,
+    return ModalService.showSheet<void>(context,
       isScrollControlled: true,
       backgroundColor: Theme.of(
         context,

@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/legal_document_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Bottom sheet modal that displays medical disclaimer and liability limitations.
 ///
@@ -36,8 +37,7 @@ class LegalDisclaimerModal extends StatelessWidget {
     required VoidCallback onAccept,
     VoidCallback? onDecline,
   }) {
-    return showModalBottomSheet<void>(
-      context: context,
+    return ModalService.showSheet<void>(context,
       isScrollControlled: true,
       isDismissible: false, // Cannot dismiss without accepting
       enableDrag: false, // Cannot swipe to close

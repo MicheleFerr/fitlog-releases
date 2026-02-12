@@ -15,6 +15,7 @@ import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/domain/entities/progress_photo.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/presentation/screens/my_photos_screen.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/presentation/widgets/ghost_overlay_camera.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// PhotoCaptureSheet - Bottom sheet for capturing/selecting progress photos
 ///
@@ -260,8 +261,7 @@ class _PhotoCaptureSheetState extends State<PhotoCaptureSheet>
     }
 
     // Show options dialog
-    final useGhost = await showModalBottomSheet<bool>(
-      context: context,
+    final useGhost = await ModalService.showSheet<bool>(context,
       builder: (context) => SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.md),

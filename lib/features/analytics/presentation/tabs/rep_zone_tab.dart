@@ -31,6 +31,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Rep Zone Distribution Tab
 ///
@@ -319,11 +320,9 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
       debugPrint(
         '🔍 [REP_ZONE_TAB] Opening bottom sheet with ${suggestions.length} suggestions...',
       );
-      await showModalBottomSheet<void>(
-        context: context,
+      await ModalService.showSheet<void>(context,
         isScrollControlled: true,
         useSafeArea: true,
-        backgroundColor: context.colors.surface.withValues(alpha: 0),
         builder: (context) => DraggableScrollableSheet(
           initialChildSize: 0.9,
           minChildSize: 0.5,
