@@ -36,7 +36,7 @@ import 'package:gymbro_flutter_new/shared/domain/privacy/privacy_manager.dart';
 import 'package:gymbro_flutter_new/shared/services/privacy_safe_analytics.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/core/data/hive_migration_service.dart'; // 🔐 SECURITY: Hive encryption migration
-// NOTE: Notification deep linking imports removed - will be rebuilt from scratch
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'; // 🔔 Deep linking cold-start
 import 'package:voo_logging/voo_logging.dart'; // 🔍 Unified logging + HTTP inspector
 import 'package:gymbro_flutter_new/features/auth/data/auth_service.dart'; // google_sign_in 7.x init
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_draft.dart'; // 💾 Workout Draft for auto-save
@@ -70,7 +70,7 @@ void main() async {
     debugPrint('✅ VooLogger initialized (debug mode)');
   }
 
-  // NOTE: Timezone initialization removed - will be added when notifications are rebuilt
+  // NOTE: Timezone initialized by LocalNotificationDatasource.initialize()
 
   // ========================================
   // 🔐 SECURITY: Load Environment Variables from .env
@@ -95,9 +95,29 @@ void main() async {
   // ========================================
   // 🔔 DEEP LINKING: Cold-Start Detection (T=0ms to T=250ms)
   // ========================================
-  // NOTE: Notification deep linking temporarily disabled (notification system removed)
-  // TODO: Re-implement when notification system is rebuilt
+  // Detect if app was launched by tapping a notification.
+  // Parse the payload to extract the deep link path for GoRouter.
   String? initialDeepLink;
+  try {
+    final notificationLaunchDetails = await FlutterLocalNotificationsPlugin()
+        .getNotificationAppLaunchDetails();
+    if (notificationLaunchDetails?.didNotificationLaunchApp == true) {
+      final payload = notificationLaunchDetails!.notificationResponse?.payload;
+      if (payload != null) {
+        final parts = payload.split(':');
+        if (parts.length >= 3) {
+          initialDeepLink = parts.sublist(2).join(':');
+          if (kDebugMode) {
+            debugPrint('🔔 [DeepLink] Cold-start from notification → $initialDeepLink');
+          }
+        }
+      }
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('⚠️ [DeepLink] Failed to get launch details: $e');
+    }
+  }
 
   // Initialize Firebase (handle Android auto-initialization)
   try {
@@ -448,10 +468,10 @@ void main() async {
 }
 
 // ========================================
-// 🔔 DEEP LINKING: Helper Functions (DISABLED)
+// 🔔 DEEP LINKING: Implemented via notification payload parsing
 // ========================================
-// NOTE: Deep linking from notifications temporarily disabled
-// TODO: Re-implement when notification system is rebuilt
+// Cold-start: initialDeepLink parsed above → passed to GoRouter initialLocation
+// Warm-start: pendingNotificationDeepLinkProvider in notification_provider.dart
 
 /// Initialize all storage systems
 Future<void> _initializeStorage() async {
@@ -498,7 +518,7 @@ Future<void> _initializeStorage() async {
     // Removed: ExerciseFuzzyMatcher - overengineered, simple token matching is sufficient
   ]);
 
-  // NOTE: Notification services removed - will be rebuilt from scratch
+  // NOTE: Notification services initialized in app.dart via notificationInitProvider
 }
 
 /// Helper function to safely initialize services with error handling

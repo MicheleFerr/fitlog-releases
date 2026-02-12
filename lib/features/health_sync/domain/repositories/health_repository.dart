@@ -166,6 +166,26 @@ abstract class IHealthRepository {
   Future<Either<Failure, void>> writeBodyWeight(BodyMeasurement measurement);
 
   // ============================================================
+  // WORKOUT WRITE
+  // ============================================================
+
+  /// Writes a completed workout to health platform (HealthKit/Health Connect).
+  ///
+  /// Enables the workout to appear in Apple Fitness and count toward
+  /// Activity rings (Exercise ring) on iOS.
+  ///
+  /// Returns:
+  /// - Right(true): Workout written successfully
+  /// - Right(false): Write failed (e.g. permission denied)
+  /// - Left: [ServerFailure] if platform error occurs
+  Future<Either<Failure, bool>> writeWorkout({
+    required DateTime startTime,
+    required DateTime endTime,
+    int? totalCalories,
+    String? workoutName,
+  });
+
+  // ============================================================
   // SYNC STATUS & HISTORY
   // ============================================================
 

@@ -81,17 +81,19 @@ extension NotificationTypeX on NotificationType {
     }
   }
 
-  /// Returns the deep link path for this notification type
+  /// Returns the deep link path for this notification type.
+  ///
+  /// Paths must match GoRouter route definitions in [AppRoutes].
   String get deepLinkPath {
     switch (this) {
       case NotificationType.workoutForgotten:
-        return '/workout/active';
+        return '/workout';
       case NotificationType.inactivity:
-        return '/home';
+        return '/';
       case NotificationType.insightPr:
       case NotificationType.insightStreak:
       case NotificationType.insightVolume:
-        return '/analytics';
+        return '/stats';
     }
   }
 

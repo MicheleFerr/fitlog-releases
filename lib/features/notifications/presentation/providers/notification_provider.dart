@@ -36,6 +36,12 @@ final localNotificationDatasourceProvider =
       return LocalNotificationDatasource();
     });
 
+/// Provider holding a pending deep link path from notification tap (warm-start).
+///
+/// Set by [NotificationRepositoryImpl] when a notification is tapped while the
+/// app is running. Listened to by [FitLogApp] to trigger GoRouter navigation.
+final pendingNotificationDeepLinkProvider = createStateProvider<String?>(null);
+
 /// Provider for the notification repository
 final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
   ref.keepAlive(); // FIX: previene ricreazione repository
@@ -45,6 +51,9 @@ final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
   return NotificationRepositoryImpl(
     localNotificationDatasource: localDatasource,
     storageDatasource: storageDatasource,
+    onDeepLinkNavigation: (deepLink) {
+      ref.read(pendingNotificationDeepLinkProvider.notifier).state = deepLink;
+    },
   );
 });
 

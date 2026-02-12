@@ -101,6 +101,8 @@ import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_d
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/body_measurement.dart';
 // 📚 Exercise Database for real TUT lookup
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
+// 🔄 RPE Autoregulation for rest time adjustment
+import 'package:gymbro_flutter_new/features/workout/domain/services/rpe_autoregulation_service.dart';
 // 📱 iOS 17+ Workout Session Live Activity
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_session_la_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/workout_session_la_service.dart'
@@ -869,6 +871,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
             'actualReps':
                 s.actualReps, // ✅ Reps effettive (null se non completato)
             'isCompleted': s.isCompleted, // ✅ Stato completamento
+            'isWarmup': s.isWarmup, // ✅ Warmup flag per Watch
           },
         )
         .toList();
@@ -1697,30 +1700,50 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
             workout.startTime != null &&
             workout.endTime != null) {
           try {
-            final healthRemote = ref.read(healthRemoteDatasourceProvider);
-            final success = await healthRemote.writeWorkout(
+            final healthRepo = ref.read(healthRepositoryProvider);
+            final result = await healthRepo.writeWorkout(
               startTime: workout.startTime!,
               endTime: workout.endTime!,
               workoutName: workout.name,
             );
 
-            if (kDebugMode) {
-              if (success) {
-                debugLog(
-                  LogCategory.workout,
-                  '🍎 [WorkoutProvider] ✅ Workout exported to Apple Fitness',
-                );
-                debugLog(
-                  LogCategory.workout,
-                  '🍎 [WorkoutProvider] Exercise ring should update with workout duration',
-                );
-              } else {
-                debugLog(
-                  LogCategory.workout,
-                  '🍎 [WorkoutProvider] ⚠️ Failed to export workout to Apple Fitness',
-                );
-              }
-            }
+            result.fold(
+              (failure) {
+                // Write failed via repository error handling
+                if (kDebugMode) {
+                  debugLog(
+                    LogCategory.workout,
+                    '🍎 [WorkoutProvider] ⚠️ HealthKit export failed: ${failure.message}',
+                  );
+                }
+                if (context != null && context.mounted) {
+                  SyncStatusToast.showHealthKitSyncFailed(context);
+                }
+              },
+              (success) {
+                if (success) {
+                  if (kDebugMode) {
+                    debugLog(
+                      LogCategory.workout,
+                      '🍎 [WorkoutProvider] ✅ Workout exported to Apple Fitness',
+                    );
+                  }
+                  if (context != null && context.mounted) {
+                    SyncStatusToast.showHealthKitSyncSuccess(context);
+                  }
+                } else {
+                  if (kDebugMode) {
+                    debugLog(
+                      LogCategory.workout,
+                      '🍎 [WorkoutProvider] ⚠️ Failed to export workout to Apple Fitness',
+                    );
+                  }
+                  if (context != null && context.mounted) {
+                    SyncStatusToast.showHealthKitSyncFailed(context);
+                  }
+                }
+              },
+            );
           } catch (healthKitError) {
             // Non-critical: HealthKit export failure shouldn't affect workout save
             if (kDebugMode) {
@@ -1728,6 +1751,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
                 LogCategory.workout,
                 '🍎 [WorkoutProvider] ⚠️ HealthKit export error: $healthKitError',
               );
+            }
+            if (context != null && context.mounted) {
+              SyncStatusToast.showHealthKitSyncFailed(context);
             }
           }
         }
@@ -4430,8 +4456,30 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
         if (!isLastSet) {
           // Get rest time from exercise (default 90 seconds)
-          final restTime = targetExercise!.restTime ?? 90;
+          final baseRestTime = targetExercise!.restTime ?? 90;
           final nextSetNumber = completedSetNumber + 1;
+
+          // 🔄 RPE-based rest time adjustment (when enabled)
+          // If user completed set with RPE and autoAdjustRestFromRpe is enabled,
+          // adjust rest time based on perceived exertion
+          int restTime = baseRestTime;
+          final config = ref.read(appConfigProvider);
+          if ((config.autoAdjustRestFromRpe ?? false) &&
+              completedSet?.rpe != null) {
+            final adjustment =
+                RPEAutoregulationService.calculateRestTimeAdjustment(
+                  baseRestSeconds: baseRestTime,
+                  actualRPE: completedSet!.rpe!.toDouble(),
+                );
+            restTime = adjustment.adjustedRestSeconds;
+
+            if (adjustment.hasAdjustment) {
+              debugPrint(
+                '🔄 [RPE Rest Adjustment] ${adjustment.reason} '
+                '(${baseRestTime}s → ${restTime}s)',
+              );
+            }
+          }
 
           debugPrint(
             '⏰ [TIMER] 🚀 Starting rest timer: ${restTime}s for set $nextSetNumber/$totalSets',

@@ -202,6 +202,30 @@ class SyncStatusToast {
     );
   }
 
+  /// Mostra "Workout sincronizzato con Apple Health" (HealthKit export success)
+  ///
+  /// Usare quando writeWorkout() su HealthKit ha successo.
+  /// Tipo: Success (verde)
+  static void showHealthKitSyncSuccess(BuildContext context) {
+    SnackBarService.showSuccess(
+      context,
+      context.l10n.healthKitExportSuccess,
+      duration: const Duration(seconds: 3),
+    );
+  }
+
+  /// Mostra warning per fallimento sync HealthKit
+  ///
+  /// Usare quando writeWorkout() su HealthKit fallisce o permessi negati.
+  /// Tipo: Warning (arancione) con hint permessi
+  static void showHealthKitSyncFailed(BuildContext context) {
+    SnackBarService.showWarning(
+      context,
+      context.l10n.healthKitExportFailed,
+      duration: const Duration(seconds: 5),
+    );
+  }
+
   /// Chiudi tutti i toast di sync attivi
   ///
   /// Utile per cleanup quando si naviga via dalla schermata workout.

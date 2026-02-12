@@ -23928,6 +23928,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'Health permissions denied. Enable in Settings > Privacy > Health';
 
   @override
+  String get healthKitExportSuccess => 'Workout synced with Apple Health';
+
+  @override
+  String get healthKitExportFailed =>
+      'Unable to sync with Apple Health. Check permissions in Settings > Health';
+
+  @override
+  String get healthKitRequestingPermissions =>
+      'Requesting health permissions...';
+
+  @override
   String get sleepTrackingDescription =>
       'Track your sleep to get personalized recovery insights and training recommendations';
 

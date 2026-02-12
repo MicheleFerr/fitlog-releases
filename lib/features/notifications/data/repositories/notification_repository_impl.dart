@@ -21,11 +21,15 @@ class NotificationRepositoryImpl implements NotificationRepository {
   NotificationRepositoryImpl({
     required LocalNotificationDatasource localNotificationDatasource,
     required NotificationStorageDatasource storageDatasource,
+    this.onDeepLinkNavigation,
   }) : _localDatasource = localNotificationDatasource,
        _storageDatasource = storageDatasource;
 
   final LocalNotificationDatasource _localDatasource;
   final NotificationStorageDatasource _storageDatasource;
+
+  /// Callback invoked when a notification tap requires navigation.
+  final void Function(String deepLink)? onDeepLinkNavigation;
 
   final _uuid = const Uuid();
 
@@ -225,7 +229,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
     return null;
   }
 
-  /// Handle notification tap
+  /// Handle notification tap — marks as opened and triggers navigation.
   void _handleNotificationTap(String? payload) {
     final parsed = _parsePayload(payload);
     if (parsed == null) return;
@@ -235,9 +239,13 @@ class NotificationRepositoryImpl implements NotificationRepository {
       markNotificationOpened(recordId);
     }
 
-    // Deep linking handled elsewhere (router)
-    if (kDebugMode) {
-      debugPrint('📲 Notification tapped: $parsed');
+    // Navigate to deep link path
+    final deepLink = parsed['deepLink'];
+    if (deepLink != null && deepLink.isNotEmpty) {
+      if (kDebugMode) {
+        debugPrint('📲 Notification tapped → navigating to: $deepLink');
+      }
+      onDeepLinkNavigation?.call(deepLink);
     }
   }
 

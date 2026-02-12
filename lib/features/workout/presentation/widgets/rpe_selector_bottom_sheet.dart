@@ -431,17 +431,22 @@ class _RpeSelectorBottomSheetState
               button: true,
               child: GestureDetector(
                 onTap: () {
-                  // ✅ NEW: Auto-confirm on tap (2-tap UX: tap set → tap RPE = done)
+                  // ✅ If tapping already-selected RPE, don't auto-confirm
+                  // User may want to review/change weight/reps first
+                  final wasAlreadySelected = _selectedRpe == rpe;
                   setState(() {
                     _selectedRpe = rpe;
                     _updateRir();
                   });
-                  // Small delay for visual feedback, then auto-confirm
-                  Future.delayed(const Duration(milliseconds: 150), () {
-                    if (mounted) {
-                      _autoConfirmWithRpe(rpe);
-                    }
-                  });
+                  if (!wasAlreadySelected) {
+                    // New RPE selection → auto-confirm after visual feedback
+                    Future.delayed(const Duration(milliseconds: 150), () {
+                      if (mounted) {
+                        _autoConfirmWithRpe(rpe);
+                      }
+                    });
+                  }
+                  // If already selected, user can confirm via the button below
                 },
                 child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),

@@ -24155,6 +24155,17 @@ class AppLocalizationsIt extends AppLocalizations {
       'Permessi negati. Abilita in Impostazioni > Privacy > Salute';
 
   @override
+  String get healthKitExportSuccess =>
+      'Allenamento sincronizzato con Apple Health';
+
+  @override
+  String get healthKitExportFailed =>
+      'Impossibile sincronizzare con Apple Health. Verifica i permessi in Impostazioni > Salute';
+
+  @override
+  String get healthKitRequestingPermissions => 'Richiesta permessi salute...';
+
+  @override
   String get sleepTrackingDescription =>
       'Monitora il sonno per ottenere insight sul recupero e consigli personalizzati';
 

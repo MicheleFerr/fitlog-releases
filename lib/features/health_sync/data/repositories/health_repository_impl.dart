@@ -255,6 +255,24 @@ class HealthRepositoryImpl
   }
 
   @override
+  Future<Either<Failure, bool>> writeWorkout({
+    required DateTime startTime,
+    required DateTime endTime,
+    int? totalCalories,
+    String? workoutName,
+  }) async {
+    return handleFirebaseOperation(() async {
+      final success = await _remoteDatasource.writeWorkout(
+        startTime: startTime,
+        endTime: endTime,
+        totalCalories: totalCalories,
+        workoutName: workoutName,
+      );
+      return success;
+    }, operationName: 'writeWorkout');
+  }
+
+  @override
   Future<Either<Failure, void>> writeBodyWeight(
     BodyMeasurement measurement,
   ) async {

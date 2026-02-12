@@ -64,6 +64,7 @@ class ExerciseListItemHeader extends ConsumerWidget {
     this.hasInjuryPreventionData,
     this.tutorialMenuKey,
     this.formCues,
+    this.isExpanded = true,
   });
 
   final Exercise exercise;
@@ -104,6 +105,9 @@ class ExerciseListItemHeader extends ConsumerWidget {
   /// Optional key for tutorial overlay on the popup menu (⋮)
   final GlobalKey? tutorialMenuKey;
 
+  /// Whether the exercise card is expanded (controls timer badge visibility)
+  final bool isExpanded;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // ✅ PERFORMANCE: Removed debug print that was causing log spam during scroll
@@ -125,9 +129,9 @@ class ExerciseListItemHeader extends ConsumerWidget {
             children: [
               // Exercise name row - name only for max space
               _buildExerciseNameRow(context),
-              // ✅ Timer badge + progress chip in same row
-              if (showTimer ||
-                  (showInsight && lastActivity != null))
+              // ✅ Timer badge + progress chip in same row (hidden when collapsed)
+              if (isExpanded && (showTimer ||
+                  (showInsight && lastActivity != null)))
                 Padding(
                   padding: const EdgeInsets.only(top: 4),
                   child: Row(

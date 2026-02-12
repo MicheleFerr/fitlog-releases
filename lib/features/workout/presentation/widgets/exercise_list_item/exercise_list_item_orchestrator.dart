@@ -2001,6 +2001,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     hasWarmupData: _hasWarmupData,
                     hasInjuryPreventionData: _hasInjuryPreventionData,
                     tutorialMenuKey: widget.tutorialExerciseMenuKey,
+                    isExpanded: isExpanded,
                   ),
                 ),
 
@@ -2131,61 +2132,19 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 // ✅ NEW: Footer section with Tips, TUT, Notes
                 // Shows compact chips, expandable for full content
                 // Part of Exercise Card redesign to reduce information overload
-                ExerciseListItemFooter(
-                  exercise: widget.exercise,
-                  formCues: formCues,
-                  onEditNotes: _handleEditNotes,
-                  onShowTutExplanationModal: _handleShowTutExplanationModal,
-                  onShowTipsBottomSheet: () => _handleShowTipsBottomSheet(),
-                ),
-
-                // ✅ DESIGN FIX: Minimal expansion hint (Opzione A)
-                // Replaces prominent chip with discrete, integrated hint
-                // Consistent with app design system and user-friendly for all personas
-                if (!isExpanded)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Center(
-                      child: InkWell(
-                        onTap: () {
-                          _expansionNotifier.expand();
-                          HapticFeedback.lightImpact();
-                          if (kDebugMode) {
-                            debugPrint(
-                              '📖 [Expand] Exercise "${widget.exercise.name}" expanded via hint tap',
-                            );
-                          }
-                        },
-                        borderRadius: BorderRadius.circular(12),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                AppIcons.expandMore,
-                                size: AppIconSize.tiny,
-                                color: context.colors.onSurfaceVariant
-                                    .withValues(alpha: 0.5),
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                context.l10n.tapToExpand,
-                                style: context.textTheme.labelSmall?.copyWith(
-                                  color: context.colors.onSurfaceVariant
-                                      .withValues(alpha: 0.5),
-                                  fontSize: 11,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                // ✅ Footer hidden when collapsed (no TUT/timer when compressed)
+                if (isExpanded)
+                  ExerciseListItemFooter(
+                    exercise: widget.exercise,
+                    formCues: formCues,
+                    onEditNotes: _handleEditNotes,
+                    onShowTutExplanationModal: _handleShowTutExplanationModal,
+                    onShowTipsBottomSheet: () => _handleShowTipsBottomSheet(),
                   ),
+
+                // ✅ Collapsed summary: tonnage + muscle focus (no TUT/timer)
+                if (!isExpanded)
+                  _CollapsedSummary(exercise: widget.exercise),
               ],
             ),
           ),
@@ -2193,6 +2152,112 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       ),
       ), // 🔧 PERF FIX: Close RepaintBoundary
     );
+  }
+}
+
+/// Collapsed summary showing tonnage + muscle focus
+///
+/// Replaces the "tap to expand" hint with useful data:
+/// - Total tonnage (weight × reps for completed sets) in kg
+/// - Muscle focus category
+class _CollapsedSummary extends StatelessWidget {
+  const _CollapsedSummary({required this.exercise});
+
+  final Exercise exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    // Calculate tonnage from completed non-warmup sets
+    double tonnage = 0;
+    int completedSets = 0;
+    for (final set in exercise.sets) {
+      if (set.isCompleted && !set.isWarmup) {
+        final weight = set.weight ?? 0;
+        final reps = set.reps ?? 0;
+        tonnage += weight * reps;
+        completedSets++;
+      }
+    }
+
+    // Category display name
+    final categoryLabel = _categoryToLabel(context, exercise.category);
+
+    // Format tonnage - remove decimal if .0
+    final tonnageStr = tonnage == tonnage.truncateToDouble()
+        ? tonnage.truncate().toString()
+        : tonnage.toStringAsFixed(1);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+      child: Row(
+        children: [
+          // Tonnage chip
+          if (tonnage > 0) ...[
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: context.colors.primaryContainer.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    AppIcons.workout,
+                    size: AppIconSize.tiny,
+                    color: context.colors.primary,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${tonnageStr}kg',
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: context.colors.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+          ],
+          // Category chip
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: context.colors.secondaryContainer.withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              categoryLabel,
+              style: context.textTheme.labelSmall?.copyWith(
+                color: context.colors.secondary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          const Spacer(),
+          // Expand hint icon
+          Icon(
+            AppIcons.expandMore,
+            size: AppIconSize.tiny,
+            color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _categoryToLabel(BuildContext context, ExerciseCategory category) {
+    return switch (category) {
+      ExerciseCategory.chest => context.l10n.exerciseCategoryChest,
+      ExerciseCategory.back => context.l10n.exerciseCategoryBack,
+      ExerciseCategory.shoulders => context.l10n.exerciseCategoryShoulders,
+      ExerciseCategory.arms => context.l10n.exerciseCategoryArms,
+      ExerciseCategory.legs => context.l10n.exerciseCategoryLegs,
+      ExerciseCategory.abs => context.l10n.exerciseCategoryAbs,
+      ExerciseCategory.cardio => context.l10n.exerciseCategoryCardio,
+      ExerciseCategory.other => context.l10n.exerciseCategoryOther,
+    };
   }
 }
 

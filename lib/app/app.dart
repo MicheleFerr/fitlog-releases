@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_router.dart';
+import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/splash/presentation/screens/animated_splash_screen.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_orchestrator.dart';
 
@@ -80,6 +81,18 @@ class FitLogApp extends ConsumerWidget {
 
     // Use new StatefulShellRoute-based router
     final router = ref.watch(appRouterProvider);
+
+    // 🔔 DEEP LINK: Navigate when notification tapped while app is running (warm-start)
+    ref.listen(pendingNotificationDeepLinkProvider, (previous, next) {
+      if (next != null) {
+        if (kDebugMode) {
+          debugPrint('🔔 [DeepLink] Warm-start navigation → $next');
+        }
+        router.go(next);
+        // Clear after navigation to prevent re-navigation on rebuild
+        ref.read(pendingNotificationDeepLinkProvider.notifier).state = null;
+      }
+    });
     // 🔧 PERF FIX: Use .select() to watch ONLY specific fields needed by MaterialApp
     // This prevents full app rebuild when unrelated settings change (e.g., soundEnabled, vibrationsEnabled)
     // Before: ANY config change → full MaterialApp rebuild → blank screen flash
@@ -217,9 +230,11 @@ class FitLogApp extends ConsumerWidget {
         routerConfig: router,
         debugShowCheckedModeBanner: false,
         builder: (context, child) {
-          // Global: dismiss keyboard on tap outside any text field
-          return GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
+          // Global: dismiss keyboard on tap outside any text field.
+          // Use Listener instead of GestureDetector to avoid competing
+          // with native platform views (CNTabBar) in the gesture arena.
+          return Listener(
+            onPointerDown: (_) => FocusScope.of(context).unfocus(),
             behavior: HitTestBehavior.translucent,
             child: child,
           );

@@ -29276,6 +29276,18 @@
   "@healthKitPermissionDenied": {
     "description": "Error message when HealthKit permissions are denied"
   },
+  "healthKitExportSuccess": "Workout synced with Apple Health",
+  "@healthKitExportSuccess": {
+    "description": "Toast when workout is successfully written to HealthKit"
+  },
+  "healthKitExportFailed": "Unable to sync with Apple Health. Check permissions in Settings > Health",
+  "@healthKitExportFailed": {
+    "description": "Toast when HealthKit workout write fails"
+  },
+  "healthKitRequestingPermissions": "Requesting health permissions...",
+  "@healthKitRequestingPermissions": {
+    "description": "Loading message while requesting HealthKit permissions"
+  },
   "sleepTrackingDescription": "Track your sleep to get personalized recovery insights and training recommendations",
   "@sleepTrackingDescription": {
     "description": "Description for sleep tracking feature"

@@ -2,8 +2,11 @@ import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_permission_status.dart';
+import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/initial/initial_onboarding_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Step 5: HealthKit permissions selection
@@ -189,10 +192,55 @@ class HealthKitStep extends ConsumerWidget {
 
   Future<void> _connectHealthKit(BuildContext context, WidgetRef ref) async {
     final notifier = ref.read(initialOnboardingNotifierProvider.notifier);
+    final state = ref.read(initialOnboardingNotifierProvider);
+    final selectedTypes = state.selectedHealthTypes.toList();
 
-    // TODO: Implement actual HealthKit permission request
-    // For now, mark as connected and proceed
-    notifier.setHealthKitConnected(true);
+    if (selectedTypes.isEmpty) return;
+
+    // Show loading feedback
+    SnackBarService.showInfo(
+      context,
+      context.l10n.healthKitRequestingPermissions,
+    );
+
+    try {
+      // Request HealthKit permissions for selected data types
+      final permissionController = ref.read(
+        healthPermissionControllerProvider.notifier,
+      );
+      await permissionController.requestPermissions(dataTypes: selectedTypes);
+
+      if (!context.mounted) return;
+
+      // Check permission result
+      final permissionState = ref.read(healthPermissionControllerProvider);
+      final hasAnyPermission = permissionState.when(
+        data: (status) => selectedTypes.any((type) => status.canSync(type)),
+        loading: () => false,
+        error: (_, __) => false,
+      );
+
+      if (hasAnyPermission) {
+        SnackBarService.showSuccess(context, context.l10n.healthKitConnected);
+        notifier.setHealthKitConnected(true);
+      } else {
+        SnackBarService.showWarning(
+          context,
+          context.l10n.healthKitPermissionDenied,
+        );
+        notifier.setHealthKitConnected(false);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        SnackBarService.showError(
+          context,
+          context.l10n.healthKitPermissionDenied,
+        );
+        notifier.setHealthKitConnected(false);
+      }
+    }
+
+    // Always proceed to next step regardless of permission result
     notifier.nextStep();
   }
 }

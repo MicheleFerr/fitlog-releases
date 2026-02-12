@@ -42747,6 +42747,24 @@ abstract class AppLocalizations {
   /// **'Health permissions denied. Enable in Settings > Privacy > Health'**
   String get healthKitPermissionDenied;
 
+  /// Toast when workout is successfully written to HealthKit
+  ///
+  /// In en, this message translates to:
+  /// **'Workout synced with Apple Health'**
+  String get healthKitExportSuccess;
+
+  /// Toast when HealthKit workout write fails
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to sync with Apple Health. Check permissions in Settings > Health'**
+  String get healthKitExportFailed;
+
+  /// Loading message while requesting HealthKit permissions
+  ///
+  /// In en, this message translates to:
+  /// **'Requesting health permissions...'**
+  String get healthKitRequestingPermissions;
+
   /// Description for sleep tracking feature
   ///
   /// In en, this message translates to:

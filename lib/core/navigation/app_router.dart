@@ -38,6 +38,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/core/navigation/main_shell.dart';
+import 'package:gymbro_flutter_new/app/app.dart' show initialDeepLinkProvider;
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
@@ -135,13 +136,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     appConfigProvider.select((c) => c.initialOnboardingCompleted),
   );
 
+  // 🔔 DEEP LINK: Use notification deep link as initial location (cold-start)
+  final initialDeepLink = ref.read(initialDeepLinkProvider);
+
   debugPrint('🔧 [Router] Provider building/rebuilding');
   debugPrint('   - authState: $authState');
   debugPrint('   - initialOnboardingCompleted: $initialOnboardingCompleted');
+  debugPrint('   - initialDeepLink: $initialDeepLink');
 
   return GoRouter(
     navigatorKey: AppRoutes.rootNavigatorKey,
-    initialLocation: AppRoutes.homePath,
+    initialLocation: initialDeepLink ?? AppRoutes.homePath,
     debugLogDiagnostics: kDebugMode,
     // ═══════════════════════════════════════════════════════════════════════
     // REDIRECT LOGIC
