@@ -544,6 +544,7 @@
   "delete": "Elimina",
   "duplicate": "Duplica",
   "searchExercises": "Cerca esercizi...",
+  "addExercisesTitle": "Aggiungi Esercizi",
   "searchExercisesHint": "Cerca per nome esercizio...",
   "supersetInfo": "Il Superset combina 2+ esercizi eseguiti consecutivamente con riposo minimo.",
   "dropsetInfo": "Drop Set: Esegui l'esercizio fino al cedimento, poi riduci immediatamente il peso e continua.",
@@ -793,6 +794,7 @@
   "ofWord": "di",
   "skipRpe": "Salta RPE",
   "confirmSet": "Conferma Serie",
+  "applyAndConfirm": "Applica e Conferma",
   "repsInReserve": "reps in riserva",
   "preferredTemplateSet": "Template preferito impostato!",
   "preferredTemplateRemoved": "Template preferito rimosso",
@@ -891,6 +893,10 @@
   "preWorkoutMobility": "Mobilità Pre-Allenamento",
   "muscleActivation": "Attivazione Muscolare",
   "warmupSets": "Serie di Riscaldamento",
+  "warmupConfig": "Config Riscaldamento",
+  "warmupConfigDescription": "Tocca ogni percentuale per scorrere i valori",
+  "warmupSetLabel": "Risc.",
+  "warmupNeedsWeight": "Imposta un peso di lavoro per generare i set di riscaldamento",
   "recommendedWarmup": "Riscaldamento Consigliato",
   "warmupSmart": "SMART",
   "warmupTap": "Tocca",
@@ -902,6 +908,15 @@
   "emptyBarbell": "Bilanciere Vuoto",
   "customize": "Personalizza",
   "addAll": "Aggiungi tutti",
+  "addExercisesCount": "{count, plural, =1{Aggiungi Esercizio} other{Aggiungi Esercizi}}",
+  "@addExercisesCount": {
+    "description": "Dynamic add exercise button label based on count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "editSet": "Modifica Set {percentage}%",
   "comingSoon": "In Arrivo",
   "warmupSetsAdded": "Aggiunti {count} set di riscaldamento",
@@ -1129,7 +1144,7 @@
   "skipExercise": "Salta Esercizio",
   "createNewExercise": "Crea Nuovo",
   "useSelectedExercise": "Usa Selezionato",
-  "workoutTemplates": "Schede Allenamento",
+  "workoutTemplates": "Routine",
   "discover": "Scopri",
   "searchContributions": "Cerca contributi...",
   "sort": "Ordina",
@@ -3277,6 +3292,10 @@
   "templateSlotsRemaining": "slot template rimanenti",
   "saveTemplate": "Salva Template",
   "templateSaved": "Template salvato con successo",
+  "weightHint": "es. 60kg",
+  "appliedToAllSets": "Applicato a tutte le serie",
+  "longPressToApplyAll": "Tieni premuto su peso o reps per applicare a tutte le serie",
+  "autoPopulatedFromHistory": "Pre-compilato con i dati dell'ultimo allenamento",
   "saveTemplateChanges": "Salvare le Modifiche al Template?",
   "workoutModifiedFromTemplate": "Il tuo allenamento è stato modificato da \"{templateName}\"",
   "changesDetected": "Modifiche rilevate:",
@@ -7104,6 +7123,26 @@
   "noWorkoutDataYet": "Nessun dato allenamento ancora",
   "@noWorkoutDataYet": {
     "description": "Stato vuoto grafico volume"
+  },
+  "analyticsEmptyStateTitle": "Le tue statistiche appariranno qui",
+  "@analyticsEmptyStateTitle": {
+    "description": "Title for analytics empty state when user has no workout data"
+  },
+  "analyticsEmptyStateDescription": "Completa il tuo primo allenamento per iniziare a monitorare i tuoi progressi. Ecco cosa sbloccherai:",
+  "@analyticsEmptyStateDescription": {
+    "description": "Description for analytics empty state"
+  },
+  "analyticsEmptyStateFeaturePR": "Record personali per ogni esercizio",
+  "@analyticsEmptyStateFeaturePR": {
+    "description": "Feature bullet point in analytics empty state"
+  },
+  "analyticsEmptyStateFeatureVolume": "Volume settimanale e trend di progressione",
+  "@analyticsEmptyStateFeatureVolume": {
+    "description": "Feature bullet point in analytics empty state"
+  },
+  "analyticsEmptyStateFeatureStreak": "Serie di allenamenti e monitoraggio costanza",
+  "@analyticsEmptyStateFeatureStreak": {
+    "description": "Feature bullet point in analytics empty state"
   },
   "completeSomeWorkoutsToSeeYournanalyticsA": "Complete some workouts to see your\\nanalytics and progress!",
   "@completeSomeWorkoutsToSeeYournanalyticsA": {
@@ -20635,5 +20674,58 @@
   "ghostModeKeepsXP": "Nota: La Modalità Fantasma nasconde solo gli elementi dell'interfaccia. Continui ad accumulare XP dai tuoi allenamenti.",
   "@ghostModeKeepsXP": {
     "description": "Clarification that Ghost Mode doesn't stop XP accumulation"
-  }
+  },
+
+  "hintTapSet": "Tocca il set per completarlo",
+  "hintTapSetAccent": "Tocca il set",
+  "hintSwipeForActions": "Scorri per azioni rapide",
+  "hintDiscoverTemplates": "Esplora schede pronte per iniziare subito",
+  "hintAiCoachTitle": "Hai un coach personale AI",
+  "hintAiCoachDesc": "Chiedigli consigli, analisi e suggerimenti",
+  "hintImportTitle": "Hai dati da un'altra app?",
+  "hintImportDesc": "Importali per non perdere i progressi",
+  "hintDiscoverAction": "Scopri",
+  "hintImportAction": "Importa",
+  "hintLongPressCorrection": "Tieni premuto per correggere il gruppo muscolare",
+  "hintLongPressAccent": "Tieni premuto",
+  "hintSwipeHistoryCard": "Scorri per ripetere o eliminare",
+  "hintDiscoverScheduling": "Programma gli allenamenti per creare costanza",
+  "hintLongPressFabMenu": "Tieni premuto per altre opzioni",
+  "hintLongPressFabAccent": "Tieni premuto",
+  "hintSwipeMiniBar": "Scorri per controllare l'allenamento",
+  "hintTapWorkoutNameShare": "Tocca il nome per condividere",
+  "hintLongPressSkipTimer": "Tieni premuto per saltare il timer",
+  "hintDiscoverProgressPhotos": "Traccia i progressi visivi con le foto",
+  "hintDiscoverStreaks": "Crea serie consecutive per restare motivato",
+  "hintDiscoverExerciseHistory": "Vedi i progressi degli esercizi nel tempo",
+  "hintDiscoverAchievements": "Sblocca traguardi mentre ti alleni",
+  "hintDiscoverBodyMeasurements": "Monitora le misure per un quadro completo",
+  "hintSwipeSupersetActions": "Scorri per azioni superset",
+  "hintTapHeatmapMuscles": "Tocca i muscoli per statistiche dettagliate",
+  "hintPinchZoomCharts": "Pizzica per zoomare i grafici",
+  "hintTapCalendarStats": "Tocca una settimana per le statistiche",
+  "hintLongPressAiMessage": "Tieni premuto per azioni messaggio",
+  "hintDoubleTapSupersetEdit": "Doppio tocco per modificare il superset",
+  "hintLongPressSuperset": "Tieni premuto per opzioni superset",
+  "hintDragReorderCharts": "Trascina per riordinare i grafici",
+  "hintDragFab": "Trascina per spostare il pulsante",
+  "hintDiscoverSuperset": "Prova i superset per allenamenti più veloci",
+  "hintDiscoverRpe": "Valuta lo sforzo per monitorare l'intensità",
+  "hintDiscoverHealthSync": "Sincronizza con Apple Health per dati completi",
+  "hintDiscoverRecovery": "Controlla il recupero tra le sessioni",
+  "hintDiscoverStrengthStandards": "Confronta i tuoi pesi con gli standard",
+  "hintDiscoverPlateCalculator": "Usa il calcolatore dischi per un carico rapido",
+  "hintTapCalendarDetails": "Tocca un giorno per i dettagli allenamento",
+  "hintTapExpandExercise": "Tocca per espandere i dettagli esercizio",
+  "hintTapRingsRefresh": "Tocca gli anelli per aggiornare le statistiche",
+  "hintTapRepZoneToggle": "Tocca per cambiare vista zone ripetizioni",
+  "selectExerciseToReplace": "Quale esercizio vuoi sostituire?",
+  "keepWeightAndReps": "Mantieni peso e ripetizioni",
+  "replaceInAllRounds": "Sostituisci in tutti i round",
+  "exerciseReplacedSuccess": "{oldExercise} sostituito con {newExercise}",
+  "chooseReplacement": "Scegli sostituto",
+  "dropSetTraining": "Allenamento Drop Set",
+  "smartWeightHelper": "Calcolatore peso smart",
+  "generatedSets": "Serie generate",
+  "linkCopied": "Link copiato"
 }

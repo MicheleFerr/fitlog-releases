@@ -1,0 +1,420 @@
+{
+  "category": "challenge",
+  "difficulty": "all",
+  "description": "Sfide mensili per esplorare tutte le tecniche di allenamento dell'app",
+  "templates": [
+    {
+      "id": "default_challenge_superset_storm",
+      "name": "Superset Storm",
+      "description": "3 superset agonisti-antagonisti per un allenamento full body esplosivo. Massimo lavoro in minimo tempo!",
+      "difficulty": "intermediate",
+      "category": "challenge",
+      "estimatedDuration": 35,
+      "tags": ["superset", "full_body", "challenge"],
+      "exercises": [
+        {
+          "exerciseId": "barbell_bench_press",
+          "exerciseName": "",
+          "category": "chest",
+          "type": "superset",
+          "sets": [
+            {"setNumber": 1, "targetReps": 10},
+            {"setNumber": 2, "targetReps": 10},
+            {"setNumber": 3, "targetReps": 10}
+          ],
+          "exercises": [
+            {
+              "exerciseId": "barbell_bench_press",
+              "exerciseName": "",
+              "category": "chest",
+              "type": "single",
+              "sets": [
+                {"setNumber": 1, "targetReps": 10},
+                {"setNumber": 2, "targetReps": 10},
+                {"setNumber": 3, "targetReps": 10}
+              ]
+            },
+            {
+              "exerciseId": "barbell_bent_over_row",
+              "exerciseName": "",
+              "category": "back",
+              "type": "single",
+              "sets": [
+                {"setNumber": 1, "targetReps": 10},
+                {"setNumber": 2, "targetReps": 10},
+                {"setNumber": 3, "targetReps": 10}
+              ]
+            }
+          ],
+          "restTime": 90,
+          "notes": "Panca + Rematore. Esegui i due esercizi senza pausa, poi riposa 90s."
+        },
+        {
+          "exerciseId": "barbell_squat",
+          "exerciseName": "",
+          "category": "legs",
+          "type": "superset",
+          "sets": [
+            {"setNumber": 1, "targetReps": 12},
+            {"setNumber": 2, "targetReps": 12},
+            {"setNumber": 3, "targetReps": 12}
+          ],
+          "exercises": [
+            {
+              "exerciseId": "barbell_squat",
+              "exerciseName": "",
+              "category": "legs",
+              "type": "single",
+              "sets": [
+                {"setNumber": 1, "targetReps": 12},
+                {"setNumber": 2, "targetReps": 12},
+                {"setNumber": 3, "targetReps": 12}
+              ]
+            },
+            {
+              "exerciseId": "lying_leg_curls",
+              "exerciseName": "",
+              "category": "legs",
+              "type": "single",
+              "sets": [
+                {"setNumber": 1, "targetReps": 12},
+                {"setNumber": 2, "targetReps": 12},
+                {"setNumber": 3, "targetReps": 12}
+              ]
+            }
+          ],
+          "restTime": 90,
+          "notes": "Squat + Leg Curl. Quadricipiti e femorali nello stesso superset."
+        },
+        {
+          "exerciseId": "standing_military_press",
+          "exerciseName": "",
+          "category": "shoulders",
+          "type": "superset",
+          "sets": [
+            {"setNumber": 1, "targetReps": 10},
+            {"setNumber": 2, "targetReps": 10},
+            {"setNumber": 3, "targetReps": 10}
+          ],
+          "exercises": [
+            {
+              "exerciseId": "standing_military_press",
+              "exerciseName": "",
+              "category": "shoulders",
+              "type": "single",
+              "sets": [
+                {"setNumber": 1, "targetReps": 10},
+                {"setNumber": 2, "targetReps": 10},
+                {"setNumber": 3, "targetReps": 10}
+              ]
+            },
+            {
+              "exerciseId": "lever_front_pulldown",
+              "exerciseName": "",
+              "category": "back",
+              "type": "single",
+              "sets": [
+                {"setNumber": 1, "targetReps": 10},
+                {"setNumber": 2, "targetReps": 10},
+                {"setNumber": 3, "targetReps": 10}
+              ]
+            }
+          ],
+          "restTime": 90,
+          "notes": "Military Press + Lat Machine. Push-pull verticale."
+        },
+        {
+          "exerciseId": "dumbbell_bicep_curl",
+          "exerciseName": "",
+          "category": "arms",
+          "type": "superset",
+          "sets": [
+            {"setNumber": 1, "targetReps": 12},
+            {"setNumber": 2, "targetReps": 12},
+            {"setNumber": 3, "targetReps": 12}
+          ],
+          "exercises": [
+            {
+              "exerciseId": "dumbbell_bicep_curl",
+              "exerciseName": "",
+              "category": "arms",
+              "type": "single",
+              "sets": [
+                {"setNumber": 1, "targetReps": 12},
+                {"setNumber": 2, "targetReps": 12},
+                {"setNumber": 3, "targetReps": 12}
+              ]
+            },
+            {
+              "exerciseId": "cable_pushdown",
+              "exerciseName": "",
+              "category": "arms",
+              "type": "single",
+              "sets": [
+                {"setNumber": 1, "targetReps": 12},
+                {"setNumber": 2, "targetReps": 12},
+                {"setNumber": 3, "targetReps": 12}
+              ]
+            }
+          ],
+          "restTime": 60,
+          "notes": "Curl + Pushdown. Finisher braccia: pompaggio massimo!"
+        }
+      ]
+    },
+    {
+      "id": "default_challenge_dropset_inferno",
+      "name": "Drop Set Inferno",
+      "description": "Ogni esercizio e un drop set: spingi fino al cedimento, riduci il peso, continua. Preparati al pump della vita!",
+      "difficulty": "intermediate",
+      "category": "challenge",
+      "estimatedDuration": 30,
+      "tags": ["dropset", "upper_body", "challenge", "pump"],
+      "exercises": [
+        {
+          "exerciseId": "dumbbell_incline_bench_press",
+          "exerciseName": "",
+          "category": "chest",
+          "type": "dropset",
+          "sets": [
+            {"setNumber": 1, "targetReps": 8},
+            {"setNumber": 2, "targetReps": 10},
+            {"setNumber": 3, "targetReps": 12}
+          ],
+          "restTime": 120,
+          "notes": "Inizia pesante, riduci 20-30% ogni drop. Nessuna pausa tra i drop!"
+        },
+        {
+          "exerciseId": "wide_grip_lat_pulldown",
+          "exerciseName": "",
+          "category": "back",
+          "type": "dropset",
+          "sets": [
+            {"setNumber": 1, "targetReps": 8},
+            {"setNumber": 2, "targetReps": 10},
+            {"setNumber": 3, "targetReps": 12}
+          ],
+          "restTime": 120,
+          "notes": "3 drop. Tira al petto, squeeze dorsali. Cambia il perno velocemente!"
+        },
+        {
+          "exerciseId": "dumbbell_shoulder_press",
+          "exerciseName": "",
+          "category": "shoulders",
+          "type": "dropset",
+          "sets": [
+            {"setNumber": 1, "targetReps": 8},
+            {"setNumber": 2, "targetReps": 10},
+            {"setNumber": 3, "targetReps": 12}
+          ],
+          "restTime": 120,
+          "notes": "Prendi 3 paia di manubri pronti. Drop senza pausa!"
+        },
+        {
+          "exerciseId": "dumbbell_lateral_raise",
+          "exerciseName": "",
+          "category": "shoulders",
+          "type": "dropset",
+          "sets": [
+            {"setNumber": 1, "targetReps": 10},
+            {"setNumber": 2, "targetReps": 12},
+            {"setNumber": 3, "targetReps": 15}
+          ],
+          "restTime": 90,
+          "notes": "Run the rack! Parti pesante e scendi fino a 2kg."
+        },
+        {
+          "exerciseId": "dumbbell_bicep_curl",
+          "exerciseName": "",
+          "category": "arms",
+          "type": "dropset",
+          "sets": [
+            {"setNumber": 1, "targetReps": 8},
+            {"setNumber": 2, "targetReps": 10},
+            {"setNumber": 3, "targetReps": 15}
+          ],
+          "restTime": 90,
+          "notes": "Finisher braccia. Bruciore garantito!"
+        }
+      ]
+    },
+    {
+      "id": "default_challenge_restpause_power",
+      "name": "Rest-Pause Power",
+      "description": "Tecnica rest-pause: vai a cedimento, pausa 15 secondi, ripeti. Massima intensita, massimi risultati in poco tempo.",
+      "difficulty": "advanced",
+      "category": "challenge",
+      "estimatedDuration": 35,
+      "tags": ["restpause", "strength", "challenge", "intensity"],
+      "exercises": [
+        {
+          "exerciseId": "barbell_bench_press",
+          "exerciseName": "",
+          "category": "chest",
+          "type": "restPause",
+          "sets": [
+            {"setNumber": 1, "targetReps": 8, "restSeconds": 15},
+            {"setNumber": 2, "targetReps": 4, "restSeconds": 15},
+            {"setNumber": 3, "targetReps": 2}
+          ],
+          "restTime": 180,
+          "notes": "Peso per 8 reps max. Dopo cedimento: 15s pausa, spremile tutte."
+        },
+        {
+          "exerciseId": "barbell_bent_over_row",
+          "exerciseName": "",
+          "category": "back",
+          "type": "restPause",
+          "sets": [
+            {"setNumber": 1, "targetReps": 8, "restSeconds": 15},
+            {"setNumber": 2, "targetReps": 4, "restSeconds": 15},
+            {"setNumber": 3, "targetReps": 2}
+          ],
+          "restTime": 180,
+          "notes": "Stesso protocollo. Tira forte, pausa breve, spingi al limite."
+        },
+        {
+          "exerciseId": "standing_military_press",
+          "exerciseName": "",
+          "category": "shoulders",
+          "type": "restPause",
+          "sets": [
+            {"setNumber": 1, "targetReps": 6, "restSeconds": 15},
+            {"setNumber": 2, "targetReps": 3, "restSeconds": 15},
+            {"setNumber": 3, "targetReps": 2}
+          ],
+          "restTime": 180,
+          "notes": "In piedi, core solido. Le spalle bruceranno!"
+        },
+        {
+          "exerciseId": "barbell_squat",
+          "exerciseName": "",
+          "category": "legs",
+          "type": "restPause",
+          "sets": [
+            {"setNumber": 1, "targetReps": 8, "restSeconds": 20},
+            {"setNumber": 2, "targetReps": 4, "restSeconds": 20},
+            {"setNumber": 3, "targetReps": 3}
+          ],
+          "restTime": 180,
+          "notes": "Attenzione: lo squat rest-pause e brutale. 20s di pausa tra i mini-set."
+        },
+        {
+          "exerciseId": "pull_up",
+          "exerciseName": "",
+          "category": "back",
+          "type": "restPause",
+          "sets": [
+            {"setNumber": 1, "targetReps": 8, "restSeconds": 15},
+            {"setNumber": 2, "targetReps": 4, "restSeconds": 15},
+            {"setNumber": 3, "targetReps": 2}
+          ],
+          "restTime": 120,
+          "notes": "A corpo libero o con zavorra. Massime reps ogni mini-set."
+        }
+      ]
+    },
+    {
+      "id": "default_challenge_technique_sampler",
+      "name": "Technique Sampler",
+      "description": "Prova TUTTE le tecniche in un allenamento: set normali, superset, drop set e rest-pause. Il tour completo delle feature!",
+      "difficulty": "intermediate",
+      "category": "challenge",
+      "estimatedDuration": 45,
+      "tags": ["mixed", "full_body", "challenge", "showcase"],
+      "exercises": [
+        {
+          "exerciseId": "barbell_squat",
+          "exerciseName": "",
+          "category": "legs",
+          "type": "single",
+          "sets": [
+            {"setNumber": 1, "targetReps": 8, "targetRpe": 7},
+            {"setNumber": 2, "targetReps": 8, "targetRpe": 7},
+            {"setNumber": 3, "targetReps": 8, "targetRpe": 8},
+            {"setNumber": 4, "targetReps": 8, "targetRpe": 8}
+          ],
+          "restTime": 120,
+          "notes": "Set classici con RPE target. La base solida di ogni programma."
+        },
+        {
+          "exerciseId": "barbell_bench_press",
+          "exerciseName": "",
+          "category": "chest",
+          "type": "superset",
+          "sets": [
+            {"setNumber": 1, "targetReps": 10},
+            {"setNumber": 2, "targetReps": 10},
+            {"setNumber": 3, "targetReps": 10}
+          ],
+          "exercises": [
+            {
+              "exerciseId": "barbell_bench_press",
+              "exerciseName": "",
+              "category": "chest",
+              "type": "single",
+              "sets": [
+                {"setNumber": 1, "targetReps": 10},
+                {"setNumber": 2, "targetReps": 10},
+                {"setNumber": 3, "targetReps": 10}
+              ]
+            },
+            {
+              "exerciseId": "one_arm_dumbbell_row",
+              "exerciseName": "",
+              "category": "back",
+              "type": "single",
+              "sets": [
+                {"setNumber": 1, "targetReps": 10},
+                {"setNumber": 2, "targetReps": 10},
+                {"setNumber": 3, "targetReps": 10}
+              ]
+            }
+          ],
+          "restTime": 90,
+          "notes": "SUPERSET: Panca + Rematore un braccio. Push-pull senza pausa!"
+        },
+        {
+          "exerciseId": "dumbbell_lateral_raise",
+          "exerciseName": "",
+          "category": "shoulders",
+          "type": "dropset",
+          "sets": [
+            {"setNumber": 1, "targetReps": 10},
+            {"setNumber": 2, "targetReps": 12},
+            {"setNumber": 3, "targetReps": 15}
+          ],
+          "restTime": 90,
+          "notes": "DROP SET: 3 drop senza pausa. Riduci peso 25% ogni drop."
+        },
+        {
+          "exerciseId": "dumbbell_bicep_curl",
+          "exerciseName": "",
+          "category": "arms",
+          "type": "restPause",
+          "sets": [
+            {"setNumber": 1, "targetReps": 10, "restSeconds": 15},
+            {"setNumber": 2, "targetReps": 5, "restSeconds": 15},
+            {"setNumber": 3, "targetReps": 3}
+          ],
+          "restTime": 90,
+          "notes": "REST-PAUSE: A cedimento, 15s pausa, continua. Pompaggio totale!"
+        },
+        {
+          "exerciseId": "plank",
+          "exerciseName": "",
+          "category": "abs",
+          "type": "single",
+          "countingMode": "time",
+          "sets": [
+            {"setNumber": 1, "targetReps": 1},
+            {"setNumber": 2, "targetReps": 1},
+            {"setNumber": 3, "targetReps": 1}
+          ],
+          "restTime": 60,
+          "notes": "Finisher core: 45-60 secondi per serie. Corpo dritto come una tavola."
+        }
+      ]
+    }
+  ]
+}

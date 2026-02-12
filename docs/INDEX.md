@@ -1,14 +1,14 @@
 # 📚 FitLog Pro - Documentation Index
 
-**Framework**: Flutter | **Architecture**: Clean Architecture + Riverpod 3.x | **Status**: 🟢 Production Ready
+**Framework**: Flutter | **Architecture**: Clean Architecture + Riverpod 3.x | **Status**: 🧪 Beta Testing
 
 ---
 
 ## 🚀 Quick Start
 
-- **New Developer?** → Start with [`CLAUDE.md`](../CLAUDE.md) (project rules) then [`CODE_PATTERNS.md`](CODE_PATTERNS.md)
+- **New Developer?** → Start with [`CLAUDE.md`](../CLAUDE.md) (project rules & patterns)
 - **Working on Onboarding?** → [`ONBOARDING_COMPLETE_REFERENCE.md`](ONBOARDING_COMPLETE_REFERENCE.md)
-- **Implementing Features?** → [`DEVELOPMENT_RULES.md`](DEVELOPMENT_RULES.md)
+- **Beta Launch?** → [`BETA_LAUNCH_CHECKLIST.md`](BETA_LAUNCH_CHECKLIST.md)
 - **Debugging?** → [`DEBUG_AUDIT_ACTION_PLAN.md`](DEBUG_AUDIT_ACTION_PLAN.md) + [`CLAUDE.md`](../CLAUDE.md#debugging)
 
 ---
@@ -19,10 +19,10 @@
 
 | Document | Purpose | Audience |
 |----------|---------|----------|
-| [`CLAUDE.md`](../CLAUDE.md) | **PROJECT RULES** - Must read first | All developers |
-| [`CODE_PATTERNS.md`](CODE_PATTERNS.md) | Common code patterns & examples | Implementation developers |
-| [`DEVELOPMENT_RULES.md`](DEVELOPMENT_RULES.md) | Development standards & checklist | All developers |
-| [`DESIGN_GUIDELINES.md`](DESIGN_GUIDELINES.md) | UI/UX design system | UI developers |
+| [`CLAUDE.md`](../CLAUDE.md) | **PROJECT RULES** - Must read first (includes code patterns & dev rules) | All developers |
+| [`BRAND_GUIDELINES.md`](BRAND_GUIDELINES.md) | **BRAND IDENTITY** - Colori, tipografia, icone, spacing, componenti | All developers |
+| [`BETA_LAUNCH_CHECKLIST.md`](BETA_LAUNCH_CHECKLIST.md) | Beta launch readiness checklist | All developers |
+| [`USER_PERSONAS.md`](USER_PERSONAS.md) | 5 user personas for UX decisions | All developers |
 
 ### Feature Documentation
 
@@ -62,11 +62,8 @@
 | [`ONBOARDING_COMPLETE_REFERENCE.md`](ONBOARDING_COMPLETE_REFERENCE.md) | Complete system reference with architecture, flows, troubleshooting |
 | [`ITERATION_8_IMPLEMENTATION.md`](ITERATION_8_IMPLEMENTATION.md) | Technical implementation details of P0 bug fixes |
 
-#### Architecture & Design
-| Document | Purpose |
-|----------|---------|
-| [`architecture/OVERVIEW.md`](architecture/OVERVIEW.md) | High-level app architecture |
-| [`architecture/CURRENT_VS_IDEAL.md`](architecture/CURRENT_VS_IDEAL.md) | Architecture improvements roadmap |
+#### Architecture
+Architecture is documented in [`CLAUDE.md`](../CLAUDE.md) (section Architettura).
 
 #### User Experience
 | Document | Purpose |
@@ -115,8 +112,9 @@ Includes:
 
 #### Make design decisions
 1. Review [`USER_PERSONAS.md`](USER_PERSONAS.md) for impact analysis
-2. Check [`DESIGN_GUIDELINES.md`](DESIGN_GUIDELINES.md)
-3. Reference [`architecture/OVERVIEW.md`](architecture/OVERVIEW.md)
+2. Check [`BRAND_GUIDELINES.md`](BRAND_GUIDELINES.md) for visual identity
+3. Check [`DESIGN_GUIDELINES.md`](DESIGN_GUIDELINES.md)
+4. Reference [`architecture/OVERVIEW.md`](architecture/OVERVIEW.md)
 
 #### Improve performance
 1. Use tool: `.claude/scripts/performance-check.sh lib/features/<feature>/`

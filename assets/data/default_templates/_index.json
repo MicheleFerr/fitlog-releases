@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "lastUpdated": "2026-01-01",
   "description": "Default workout templates based on scientific evidence and proven training methods",
-  "totalTemplates": 30,
+  "totalTemplates": 34,
   "categories": [
     {
       "id": "beginner",
@@ -73,6 +73,16 @@
       "file": "specialty_templates.json",
       "templateCount": 4,
       "icon": "star"
+    },
+    {
+      "id": "challenge",
+      "name": "Sfide del Mese",
+      "nameEn": "Monthly Challenges",
+      "description": "Sfide con tecniche avanzate: superset, drop set, rest-pause. Prova tutte le feature!",
+      "descriptionEn": "Challenges with advanced techniques: superset, drop set, rest-pause. Try all features!",
+      "file": "challenge_templates.json",
+      "templateCount": 4,
+      "icon": "emoji_events"
     }
   ],
   "allTemplates": [
@@ -315,6 +325,38 @@
       "difficulty": "intermediate",
       "frequency": "2-3x/week",
       "estimatedDuration": 30
+    },
+    {
+      "id": "default_challenge_superset_storm",
+      "name": "Superset Storm",
+      "category": "challenge",
+      "difficulty": "intermediate",
+      "frequency": "2-3x/week",
+      "estimatedDuration": 35
+    },
+    {
+      "id": "default_challenge_dropset_inferno",
+      "name": "Drop Set Inferno",
+      "category": "challenge",
+      "difficulty": "intermediate",
+      "frequency": "2x/week",
+      "estimatedDuration": 30
+    },
+    {
+      "id": "default_challenge_restpause_power",
+      "name": "Rest-Pause Power",
+      "category": "challenge",
+      "difficulty": "advanced",
+      "frequency": "2x/week",
+      "estimatedDuration": 35
+    },
+    {
+      "id": "default_challenge_technique_sampler",
+      "name": "Technique Sampler",
+      "category": "challenge",
+      "difficulty": "intermediate",
+      "frequency": "2-3x/week",
+      "estimatedDuration": 45
     }
   ]
 }

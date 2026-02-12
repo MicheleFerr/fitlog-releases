@@ -1667,6 +1667,10 @@
   "@searchExercises": {
     "description": "Search exercises placeholder"
   },
+  "addExercisesTitle": "Add Exercises",
+  "@addExercisesTitle": {
+    "description": "Title for exercise search screen"
+  },
   "searchExercisesHint": "Type to search exercise database",
   "@searchExercisesHint": {
     "description": "Search exercises input hint"
@@ -2727,6 +2731,10 @@
   "@confirmSet": {
     "description": "Button to confirm set completion"
   },
+  "applyAndConfirm": "Apply & Confirm",
+  "@applyAndConfirm": {
+    "description": "Button to apply RPE suggestions and confirm set"
+  },
   "repsInReserve": "reps in reserve",
   "@repsInReserve": {
     "description": "Full text for reps in reserve"
@@ -3191,6 +3199,22 @@
   "@warmupSets": {
     "description": "Warmup sets section title"
   },
+  "warmupConfig": "Warmup Config",
+  "@warmupConfig": {
+    "description": "Warmup configuration sheet title"
+  },
+  "warmupConfigDescription": "Tap each percentage to cycle through values",
+  "@warmupConfigDescription": {
+    "description": "Warmup configuration sheet description"
+  },
+  "warmupSetLabel": "Warmup",
+  "@warmupSetLabel": {
+    "description": "Single warmup set label prefix"
+  },
+  "warmupNeedsWeight": "Set a working weight first to generate warmup sets",
+  "@warmupNeedsWeight": {
+    "description": "Message shown when warmup is enabled but no weight is set"
+  },
   "recommendedWarmup": "Recommended Warmup",
   "@recommendedWarmup": {
     "description": "Title for recommended warmup card"
@@ -3245,6 +3269,15 @@
   "addAll": "Add All",
   "@addAll": {
     "description": "Add all button label"
+  },
+  "addExercisesCount": "{count, plural, =1{Add Exercise} other{Add Exercises}}",
+  "@addExercisesCount": {
+    "description": "Dynamic add exercise button label based on count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "editSet": "Edit Set {percentage}%",
   "@editSet": {
@@ -4345,7 +4378,7 @@
   "@useSelectedExercise": {
     "description": "Button to confirm exercise selection"
   },
-  "workoutTemplates": "Workout Templates",
+  "workoutTemplates": "Routines",
   "@workoutTemplates": {
     "description": "Title for workout templates screen"
   },
@@ -10172,9 +10205,9 @@
   "@removeSetTooltip": {
     "description": "Remove set button tooltip"
   },
-  "weightHint": "Enter weight",
+  "weightHint": "e.g. 60kg",
   "@weightHint": {
-    "description": "Weight input field hint"
+    "description": "Placeholder hint for weight field when empty"
   },
   "repsHint": "Enter reps",
   "@repsHint": {
@@ -10600,6 +10633,18 @@
   "templateSaved": "Template saved successfully",
   "@templateSaved": {
     "description": "Template saved success message"
+  },
+  "appliedToAllSets": "Applied to all sets",
+  "@appliedToAllSets": {
+    "description": "Snackbar message when value is applied to all sets"
+  },
+  "longPressToApplyAll": "Long press on weight or reps to apply to all sets",
+  "@longPressToApplyAll": {
+    "description": "Hint text for batch edit feature"
+  },
+  "autoPopulatedFromHistory": "Pre-filled with your last workout data",
+  "@autoPopulatedFromHistory": {
+    "description": "Snackbar message when template fields are auto-populated from history"
   },
   "saveTemplateChanges": "Save Template Changes?",
   "@saveTemplateChanges": {
@@ -18918,6 +18963,26 @@
   "noWorkoutDataYet": "No workout data yet",
   "@noWorkoutDataYet": {
     "description": "Empty state for volume chart"
+  },
+  "analyticsEmptyStateTitle": "Your stats will appear here",
+  "@analyticsEmptyStateTitle": {
+    "description": "Title for analytics empty state when user has no workout data"
+  },
+  "analyticsEmptyStateDescription": "Complete your first workout to start tracking your progress. Here's what you'll unlock:",
+  "@analyticsEmptyStateDescription": {
+    "description": "Description for analytics empty state"
+  },
+  "analyticsEmptyStateFeaturePR": "Personal records for every exercise",
+  "@analyticsEmptyStateFeaturePR": {
+    "description": "Feature bullet point in analytics empty state"
+  },
+  "analyticsEmptyStateFeatureVolume": "Weekly volume and progression trends",
+  "@analyticsEmptyStateFeatureVolume": {
+    "description": "Feature bullet point in analytics empty state"
+  },
+  "analyticsEmptyStateFeatureStreak": "Workout streaks and consistency tracking",
+  "@analyticsEmptyStateFeatureStreak": {
+    "description": "Feature bullet point in analytics empty state"
   },
   "completeSomeWorkoutsToSeeYournanalyticsA": "Complete some workouts to see your\\nanalytics and progress!",
   "@completeSomeWorkoutsToSeeYournanalyticsA": {
@@ -33271,5 +33336,220 @@
   "ghostModeKeepsXP": "Note: Ghost Mode only hides UI elements. You continue earning XP from workouts.",
   "@ghostModeKeepsXP": {
     "description": "Clarification that Ghost Mode doesn't stop XP accumulation"
+  },
+
+  "hintTapSet": "Tap the set to complete it",
+  "@hintTapSet": {
+    "description": "Hint message for tapping a set to complete it"
+  },
+  "hintTapSetAccent": "Tap the set",
+  "@hintTapSetAccent": {
+    "description": "Accent portion of the tap set hint"
+  },
+  "hintSwipeForActions": "Swipe for quick actions",
+  "@hintSwipeForActions": {
+    "description": "Hint for swipe gesture on exercise or template cards"
+  },
+  "hintDiscoverTemplates": "Explore ready-made templates to start training right away",
+  "@hintDiscoverTemplates": {
+    "description": "Hint suggesting user explore the Discover tab"
+  },
+  "hintAiCoachTitle": "You have a personal AI coach",
+  "@hintAiCoachTitle": {
+    "description": "Title for AI Coach discovery hint card"
+  },
+  "hintAiCoachDesc": "Ask for advice, analysis and suggestions",
+  "@hintAiCoachDesc": {
+    "description": "Description for AI Coach discovery hint card"
+  },
+  "hintImportTitle": "Got data from another app?",
+  "@hintImportTitle": {
+    "description": "Title for import data hint card"
+  },
+  "hintImportDesc": "Import it so you don't lose your progress",
+  "@hintImportDesc": {
+    "description": "Description for import data hint card"
+  },
+  "hintDiscoverAction": "Discover",
+  "@hintDiscoverAction": {
+    "description": "CTA button text for Discover hint"
+  },
+  "hintImportAction": "Import",
+  "@hintImportAction": {
+    "description": "CTA button text for Import hint"
+  },
+  "hintLongPressCorrection": "Long press to correct muscle group",
+  "@hintLongPressCorrection": {
+    "description": "Hint for long press on analytics exercise card"
+  },
+  "hintLongPressAccent": "Long press",
+  "@hintLongPressAccent": {
+    "description": "Accent portion of the long press correction hint"
+  },
+  "hintSwipeHistoryCard": "Swipe to repeat or delete",
+  "@hintSwipeHistoryCard": {
+    "description": "Hint for swipe gesture on history workout cards"
+  },
+
+  "hintDiscoverScheduling": "Schedule workouts to build consistency",
+  "@hintDiscoverScheduling": {
+    "description": "Hint to discover workout scheduling feature"
+  },
+  "hintLongPressFabMenu": "Long press for more options",
+  "@hintLongPressFabMenu": {
+    "description": "Hint for long press on FAB button"
+  },
+  "hintLongPressFabAccent": "Long press",
+  "@hintLongPressFabAccent": {
+    "description": "Accent for long press FAB hint"
+  },
+  "hintSwipeMiniBar": "Swipe to control your workout",
+  "@hintSwipeMiniBar": {
+    "description": "Hint for swipe on mini workout bar"
+  },
+  "hintTapWorkoutNameShare": "Tap workout name to share",
+  "@hintTapWorkoutNameShare": {
+    "description": "Hint for tapping workout name to share"
+  },
+  "hintLongPressSkipTimer": "Long press to skip rest timer",
+  "@hintLongPressSkipTimer": {
+    "description": "Hint for long press to skip timer"
+  },
+  "hintDiscoverProgressPhotos": "Track visual progress with photos",
+  "@hintDiscoverProgressPhotos": {
+    "description": "Hint to discover progress photo feature"
+  },
+  "hintDiscoverStreaks": "Build streaks to stay motivated",
+  "@hintDiscoverStreaks": {
+    "description": "Hint to discover workout streak tracking"
+  },
+  "hintDiscoverExerciseHistory": "View your exercise progress over time",
+  "@hintDiscoverExerciseHistory": {
+    "description": "Hint to discover exercise history charts"
+  },
+  "hintDiscoverAchievements": "Unlock achievements as you train",
+  "@hintDiscoverAchievements": {
+    "description": "Hint to discover achievements system"
+  },
+  "hintDiscoverBodyMeasurements": "Track body measurements for full progress",
+  "@hintDiscoverBodyMeasurements": {
+    "description": "Hint to discover body measurements feature"
+  },
+  "hintSwipeSupersetActions": "Swipe for superset actions",
+  "@hintSwipeSupersetActions": {
+    "description": "Hint for swipe actions on superset cards"
+  },
+  "hintTapHeatmapMuscles": "Tap muscles for detailed stats",
+  "@hintTapHeatmapMuscles": {
+    "description": "Hint for tapping body heatmap muscles"
+  },
+  "hintPinchZoomCharts": "Pinch to zoom charts",
+  "@hintPinchZoomCharts": {
+    "description": "Hint for pinch zoom on analytics charts"
+  },
+  "hintTapCalendarStats": "Tap a week for detailed stats",
+  "@hintTapCalendarStats": {
+    "description": "Hint for tapping weekly calendar for stats"
+  },
+  "hintLongPressAiMessage": "Long press for message actions",
+  "@hintLongPressAiMessage": {
+    "description": "Hint for long press on AI coach messages"
+  },
+  "hintDoubleTapSupersetEdit": "Double tap to quick-edit superset",
+  "@hintDoubleTapSupersetEdit": {
+    "description": "Hint for double tap to edit superset"
+  },
+  "hintLongPressSuperset": "Long press for superset options",
+  "@hintLongPressSuperset": {
+    "description": "Hint for long press on superset card"
+  },
+  "hintDragReorderCharts": "Drag to reorder your charts",
+  "@hintDragReorderCharts": {
+    "description": "Hint for drag reorder on analytics charts"
+  },
+  "hintDragFab": "Drag to move the button",
+  "@hintDragFab": {
+    "description": "Hint for dragging the floating action button"
+  },
+  "hintDiscoverSuperset": "Try supersets for faster workouts",
+  "@hintDiscoverSuperset": {
+    "description": "Hint to discover superset feature"
+  },
+  "hintDiscoverRpe": "Rate your effort to track intensity",
+  "@hintDiscoverRpe": {
+    "description": "Hint to discover RPE rating feature"
+  },
+  "hintDiscoverHealthSync": "Sync with Apple Health for complete data",
+  "@hintDiscoverHealthSync": {
+    "description": "Hint to discover health sync feature"
+  },
+  "hintDiscoverRecovery": "Check recovery insights between sessions",
+  "@hintDiscoverRecovery": {
+    "description": "Hint to discover recovery insight feature"
+  },
+  "hintDiscoverStrengthStandards": "Compare your lifts to strength standards",
+  "@hintDiscoverStrengthStandards": {
+    "description": "Hint to discover strength standards comparison"
+  },
+  "hintDiscoverPlateCalculator": "Use the plate calculator for quick loading",
+  "@hintDiscoverPlateCalculator": {
+    "description": "Hint to discover plate calculator feature"
+  },
+  "hintTapCalendarDetails": "Tap a day for workout details",
+  "@hintTapCalendarDetails": {
+    "description": "Hint for tapping calendar day for details"
+  },
+  "hintTapExpandExercise": "Tap to expand exercise details",
+  "@hintTapExpandExercise": {
+    "description": "Hint for tapping collapsed exercise to expand"
+  },
+  "hintTapRingsRefresh": "Tap rings to refresh your stats",
+  "@hintTapRingsRefresh": {
+    "description": "Hint for tapping activity rings to refresh"
+  },
+  "hintTapRepZoneToggle": "Tap to switch rep zone view",
+  "@hintTapRepZoneToggle": {
+    "description": "Hint for tapping rep zone toggle"
+  },
+
+  "selectExerciseToReplace": "Which exercise do you want to replace?",
+  "@selectExerciseToReplace": {
+    "description": "Title asking which exercise in the superset to replace"
+  },
+  "keepWeightAndReps": "Keep weight and reps",
+  "@keepWeightAndReps": {
+    "description": "Toggle label for keeping weight and reps when replacing exercise"
+  },
+  "replaceInAllRounds": "Replace in all rounds",
+  "@replaceInAllRounds": {
+    "description": "Button to confirm replacing exercise in all superset rounds"
+  },
+  "exerciseReplacedSuccess": "{oldExercise} replaced with {newExercise}",
+  "@exerciseReplacedSuccess": {
+    "description": "Success message after replacing exercise in superset",
+    "placeholders": {
+      "oldExercise": {"type": "String"},
+      "newExercise": {"type": "String"}
+    }
+  },
+  "chooseReplacement": "Choose replacement",
+  "@chooseReplacement": {
+    "description": "Title for choosing replacement exercise"
+  },
+  "dropSetTraining": "Drop Set Training",
+  "@dropSetTraining": {
+    "description": "Title for drop set info card"
+  },
+  "smartWeightHelper": "Smart weight calculator",
+  "@smartWeightHelper": {
+    "description": "Tooltip for weight calculator icon button in drop set"
+  },
+  "generatedSets": "Generated sets",
+  "@generatedSets": {
+    "description": "Label for rest-pause generated sets preview"
+  },
+  "linkCopied": "Link copied",
+  "@linkCopied": {
+    "description": "Snackbar message when a link is copied to clipboard"
   }
 }
