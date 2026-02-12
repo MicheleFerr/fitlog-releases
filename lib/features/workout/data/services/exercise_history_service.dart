@@ -228,22 +228,22 @@ class ExerciseHistoryService {
           if (isMatch) {
             final workoutDate = workout.startTime ?? workout.createdAt;
 
-            // Get completed sets first
+            // Get completed non-warmup sets first
             var setsToProcess = exercise.sets
-                .where((set) => set.isCompleted)
+                .where((set) => set.isCompleted && !set.isWarmup)
                 .toList();
 
-            // If no completed sets, look for sets with weight > 0 and reps > 0
+            // If no completed sets, look for non-warmup sets with weight > 0 and reps > 0
             if (setsToProcess.isEmpty) {
               setsToProcess = exercise.sets
-                  .where((set) => (set.weight ?? 0) > 0 && (set.reps ?? 0) > 0)
+                  .where((set) => !set.isWarmup && (set.weight ?? 0) > 0 && (set.reps ?? 0) > 0)
                   .toList();
             }
 
-            // If still no sets, include any sets with data
+            // If still no sets, include any non-warmup sets with data
             if (setsToProcess.isEmpty) {
               setsToProcess = exercise.sets
-                  .where((set) => (set.weight ?? 0) > 0 || (set.reps ?? 0) > 0)
+                  .where((set) => !set.isWarmup && ((set.weight ?? 0) > 0 || (set.reps ?? 0) > 0))
                   .toList();
             }
 

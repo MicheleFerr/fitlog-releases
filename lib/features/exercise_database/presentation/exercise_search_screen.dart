@@ -541,6 +541,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     final activeFilterCount = _getActiveFilterCount();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(l10n.addExercisesTitle),
         centerTitle: true,
@@ -699,11 +700,13 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         ],
       ),
 
-      // FABs: close (X) + add (+) with badge, positioned near keyboard
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // FABs: close (X) + add (+) with badge, positioned bottom-right
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Padding(
         padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom > 0 ? 4.0 : 16.0,
+          bottom: MediaQuery.of(context).viewInsets.bottom > 0
+              ? MediaQuery.of(context).viewInsets.bottom + 8.0
+              : 24.0,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -913,34 +916,41 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 
         // Exercise List + Missing Exercise Widget
         Expanded(
-          child: ListView.builder(
-            key: const PageStorageKey('exercise_search_list'),
-            itemCount:
-                allExercises.length + 1, // +1 for missing exercise widget
-            itemBuilder: (context, index) {
-              // Show missing exercise widget as last item
-              if (index == allExercises.length) {
-                return _buildMissingExerciseWidget();
-              }
+          child: MediaQuery.removePadding(
+            context: context,
+            removeBottom: true,
+            child: ListView.builder(
+              key: const PageStorageKey('exercise_search_list'),
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + 80,
+              ),
+              itemCount:
+                  allExercises.length + 1, // +1 for missing exercise widget
+              itemBuilder: (context, index) {
+                // Show missing exercise widget as last item
+                if (index == allExercises.length) {
+                  return _buildMissingExerciseWidget();
+                }
 
-              final exercise = allExercises[index];
-              final isSelected = _selectedExercises.contains(exercise);
-              final isCustom = index < customAsExercises.length;
-              // Get original CustomExercise for status info (if custom)
-              final customExercise = isCustom
-                  ? customExerciseMap[exercise.id]
-                  : null;
+                final exercise = allExercises[index];
+                final isSelected = _selectedExercises.contains(exercise);
+                final isCustom = index < customAsExercises.length;
+                // Get original CustomExercise for status info (if custom)
+                final customExercise = isCustom
+                    ? customExerciseMap[exercise.id]
+                    : null;
 
-              // Add tutorial key to first exercise card
-              return _buildExerciseCard(
-                exercise,
-                isSelected,
-                isCustom: isCustom,
-                customExercise: customExercise,
-                hasUnlimitedExercises: hasUnlimitedExercises,
-                tutorialKey: index == 0 ? _exerciseCardKey : null,
-              );
-            },
+                // Add tutorial key to first exercise card
+                return _buildExerciseCard(
+                  exercise,
+                  isSelected,
+                  isCustom: isCustom,
+                  customExercise: customExercise,
+                  hasUnlimitedExercises: hasUnlimitedExercises,
+                  tutorialKey: index == 0 ? _exerciseCardKey : null,
+                );
+              },
+            ),
           ),
         ),
       ],
@@ -987,8 +997,14 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 
         // Fuzzy Exercise List + Missing Exercise Widget
         Expanded(
-          child: ListView.builder(
+          child: MediaQuery.removePadding(
+            context: context,
+            removeBottom: true,
+            child: ListView.builder(
             key: const PageStorageKey('exercise_fuzzy_search_list'),
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + 80,
+            ),
             itemCount:
                 _fuzzyResults.length + 1, // +1 for missing exercise widget
             itemBuilder: (context, index) {
@@ -1009,6 +1025,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 tutorialKey: index == 0 ? _exerciseCardKey : null,
               );
             },
+          ),
           ),
         ),
       ],

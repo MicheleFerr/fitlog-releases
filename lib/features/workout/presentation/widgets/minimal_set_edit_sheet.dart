@@ -56,6 +56,7 @@ class MinimalSetEditSheet extends StatefulWidget {
     this.measurementUnit = 'kg',
     this.recentWeights,
     this.suggestedWeight,
+    this.suggestedReps,
     this.suggestedSource,
     this.countingMode = ExerciseCountingMode.weighted,
   });
@@ -71,9 +72,10 @@ class MinimalSetEditSheet extends StatefulWidget {
   final ExerciseSet? previousSet; // Previous set data for copy
   final List<ExerciseSet>? allSets; // All sets for dot indicators
   final String measurementUnit;
-  final List<double>?
-  recentWeights; // History of recent weights for quick select
+  final List<({double weight, DateTime date})>?
+  recentWeights; // History of recent weights with date for quick select
   final double? suggestedWeight; // Pre-fill weight from suggestion provider
+  final int? suggestedReps; // Pre-fill reps from suggestion (e.g. warmup %)
   final String? suggestedSource; // Source label for the suggestion chip
   final ExerciseCountingMode countingMode; // How this exercise is tracked
 
@@ -1124,11 +1126,18 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     );
   }
 
-  /// Builds a highlighted chip for the AI-suggested weight.
+  /// Builds a highlighted chip for the AI-suggested weight (and optionally reps).
   Widget _buildSuggestionChip() {
     final weight = widget.suggestedWeight!;
-    final isSelected = (_weight - weight).abs() < 0.01;
+    final suggestedReps = widget.suggestedReps;
+    final weightMatch = (_weight - weight).abs() < 0.01;
+    final repsMatch = suggestedReps != null && _reps == suggestedReps;
+    final isSelected = weightMatch && (suggestedReps == null || repsMatch);
     final label = widget.suggestedSource ?? '';
+
+    // Build display text
+    final weightText = '${_formatWeight(weight)} ${widget.measurementUnit}';
+    final repsText = suggestedReps != null ? ' × $suggestedReps' : '';
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
@@ -1143,7 +1152,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                   : context.colors.primary,
             ),
             label: Text(
-              '${_formatWeight(weight)} ${widget.measurementUnit}'
+              '$weightText$repsText'
               '${label.isNotEmpty ? ' · $label' : ''}',
             ),
             labelStyle: context.textTheme.labelMedium?.copyWith(
@@ -1160,12 +1169,19 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
             ),
             onPressed: () {
               HapticFeedback.selectionClick();
-              setState(() => _weight = weight);
+              setState(() {
+                _weight = weight;
+                if (suggestedReps != null) _reps = suggestedReps;
+              });
               _weightTextController.text = _formatWeight(weight);
               final weightIndex = ((weight - _minWeight) / _weightStep)
                   .round()
                   .clamp(0, _weightItemCount - 1);
               _weightController.jumpToItem(weightIndex);
+              if (suggestedReps != null) {
+                final repsIndex = (suggestedReps - _minReps).clamp(0, _maxReps - _minReps);
+                _repsController.jumpToItem(repsIndex);
+              }
             },
           ),
         ],
@@ -1173,11 +1189,28 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     );
   }
 
-  /// Builds chips row with recent weights for quick selection
+  /// Format a date as relative day label (e.g., "Lun 3/2")
+  String _formatDateShort(DateTime date) {
+    final now = DateTime.now();
+    final diff = now.difference(date).inDays;
+    if (diff == 0) return context.l10n.today;
+    if (diff == 1) return context.l10n.yesterday;
+    return '${date.day}/${date.month}';
+  }
+
+  /// Builds chips row with recent weights + date for quick selection
   Widget _buildRecentWeightsChips() {
-    final weights = widget.recentWeights!;
-    // Remove duplicates and sort by most recent (first = most recent)
-    final uniqueWeights = weights.toSet().take(5).toList();
+    final entries = widget.recentWeights!;
+    // Deduplicate by weight, keep most recent date, take 5
+    final seen = <double>{};
+    final uniqueEntries = <({double weight, DateTime date})>[];
+    for (final entry in entries) {
+      if (!seen.contains(entry.weight)) {
+        seen.add(entry.weight);
+        uniqueEntries.add(entry);
+        if (uniqueEntries.length >= 5) break;
+      }
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
@@ -1194,17 +1227,17 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: uniqueWeights.map((weight) {
-                final isSelected = (_weight - weight).abs() < 0.01;
+              children: uniqueEntries.map((entry) {
+                final isSelected = (_weight - entry.weight).abs() < 0.01;
                 return Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: OutlinedButton(
                     onPressed: () {
                       HapticFeedback.selectionClick();
-                      setState(() => _weight = weight);
-                      _weightTextController.text = _formatWeight(weight);
+                      setState(() => _weight = entry.weight);
+                      _weightTextController.text = _formatWeight(entry.weight);
                       // Update wheel position
-                      final weightIndex = ((weight - _minWeight) / _weightStep)
+                      final weightIndex = ((entry.weight - _minWeight) / _weightStep)
                           .round()
                           .clamp(0, _weightItemCount - 1);
                       _weightController.animateToItem(
@@ -1229,16 +1262,29 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                         width: isSelected ? 2 : 1,
                       ),
                     ),
-                    child: Text(
-                      '${_formatWeight(weight)} ${widget.measurementUnit}',
-                      style: TextStyle(
-                        fontWeight: isSelected
-                            ? FontWeight.bold
-                            : FontWeight.w500,
-                        color: isSelected
-                            ? context.colors.primary
-                            : context.colors.onSurface,
-                      ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${_formatWeight(entry.weight)} ${widget.measurementUnit}',
+                          style: TextStyle(
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.w500,
+                            color: isSelected
+                                ? context.colors.primary
+                                : context.colors.onSurface,
+                            fontSize: 13,
+                          ),
+                        ),
+                        Text(
+                          _formatDateShort(entry.date),
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: context.colors.onSurfaceVariant,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );
@@ -1265,7 +1311,7 @@ extension MinimalSetEditSheetExtension on BuildContext {
     ExerciseSet? previousSet,
     List<ExerciseSet>? allSets,
     String measurementUnit = 'kg',
-    List<double>? recentWeights,
+    List<({double weight, DateTime date})>? recentWeights,
     double? suggestedWeight,
     String? suggestedSource,
     ExerciseCountingMode countingMode = ExerciseCountingMode.weighted,

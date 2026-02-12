@@ -155,9 +155,9 @@ class WorkoutHistoryService {
               .firstOrNull;
 
           if (exercise != null && exercise.sets.isNotEmpty) {
-            // Aggiungi ogni serie come history data
+            // Aggiungi ogni serie come history data (escludi warmup)
             for (final set in exercise.sets) {
-              if (set.weight > 0 || set.reps > 0) {
+              if ((set.weight > 0 || set.reps > 0) && !set.isWarmup) {
                 history.add(
                   ExerciseHistoryData(
                     weight: set.weight > 0 ? set.weight : null,
