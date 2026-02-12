@@ -378,42 +378,6 @@ class _RpeSelectorBottomSheetState
     return [baseColor, baseColor.withValues(alpha: 0.7)];
   }
 
-  /// ✅ NEW: Auto-confirm with the selected RPE value (2-tap UX)
-  void _autoConfirmWithRpe(int rpe) {
-    HapticFeedback.mediumImpact();
-
-    if (widget.isPartOfSuperset) {
-      // Save data for this exercise in superset
-      _supersetCompleteData[_currentExerciseIndex] =
-          SupersetExerciseCompleteData(
-            actualReps: _actualReps,
-            actualWeight: _actualWeight,
-            rpe: rpe,
-          );
-
-      if (_allExercisesCompleted() && widget.onSupersetCompleteAll != null) {
-        // All exercises completed → close and callback
-        Navigator.of(context).pop();
-        widget.onSupersetCompleteAll!(_supersetCompleteData);
-      } else {
-        // Advance to next exercise automatically
-        if (_currentExerciseIndex <
-            (widget.supersetExercises?.length ?? 0) - 1) {
-          _pageController?.animateToPage(
-            _currentExerciseIndex + 1,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        }
-      }
-    } else {
-      // Single exercise: close and confirm
-      Navigator.of(context).pop();
-      final (actualReps, actualWeight) = _getConfirmData();
-      widget.onConfirm(actualReps, actualWeight, rpe);
-    }
-  }
-
   Widget _buildRpeScale(ThemeData theme, ColorScheme colorScheme, bool useRir) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -431,22 +395,11 @@ class _RpeSelectorBottomSheetState
               button: true,
               child: GestureDetector(
                 onTap: () {
-                  // ✅ If tapping already-selected RPE, don't auto-confirm
-                  // User may want to review/change weight/reps first
-                  final wasAlreadySelected = _selectedRpe == rpe;
+                  HapticFeedback.selectionClick();
                   setState(() {
                     _selectedRpe = rpe;
                     _updateRir();
                   });
-                  if (!wasAlreadySelected) {
-                    // New RPE selection → auto-confirm after visual feedback
-                    Future.delayed(const Duration(milliseconds: 150), () {
-                      if (mounted) {
-                        _autoConfirmWithRpe(rpe);
-                      }
-                    });
-                  }
-                  // If already selected, user can confirm via the button below
                 },
                 child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
