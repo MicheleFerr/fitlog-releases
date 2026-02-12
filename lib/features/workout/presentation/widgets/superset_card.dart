@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
-import 'package:gymbro_flutter_new/shared/domain/entities/interface_size.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_selector_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_display_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -366,14 +365,8 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
         .where((s) => s.isFullyCompleted)
         .length;
     final totalSets = widget.superset.supersetSets.length;
-    // ✅ Display mode is now determined by global AppConfig interfaceSize only
-    // No more separate "comodo/compatto" options in workout screen
-    final config = ref.watch(appConfigProvider);
-    final interfaceSize =
-        config.interfaceSize ?? InterfaceSize.fromFontSize(config.fontSize);
-    final displayMode = interfaceSize.setRowMode == 'compact'
-        ? SetDisplayMode.compact
-        : SetDisplayMode.comfortable;
+    // Derive display mode from ExerciseCardSettings density (single source of truth)
+    final displayMode = ref.watch(setDisplayProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

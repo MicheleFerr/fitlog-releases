@@ -1,11 +1,12 @@
 /// Set Display Settings Provider
 ///
-/// Manages user preference for set row display size (compact vs comfortable).
+/// Derives set row display mode from ExerciseCardSettings density.
+/// Single source of truth: exerciseCardSettingsProvider.
 library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise_card_settings.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/exercise_card_settings_provider.dart';
 
 /// Display mode for set rows
 enum SetDisplayMode {
@@ -47,54 +48,19 @@ extension SetDisplayModeExtension on SetDisplayMode {
     SetDisplayMode.compact => 8.0,
     SetDisplayMode.comfortable => 12.0,
   };
+}
 
-  /// Icon for the settings UI
-  String get icon => switch (this) {
-    SetDisplayMode.compact => '📦',
-    SetDisplayMode.comfortable => '📐',
-  };
-
-  /// Label for settings
-  String get label => switch (this) {
-    SetDisplayMode.compact => 'Compatto',
-    SetDisplayMode.comfortable => 'Comodo',
+/// Derives SetDisplayMode from ExerciseCardDensity (single source of truth)
+SetDisplayMode _densityToDisplayMode(ExerciseCardDensity density) {
+  return switch (density) {
+    ExerciseCardDensity.compact => SetDisplayMode.compact,
+    ExerciseCardDensity.standard => SetDisplayMode.comfortable,
+    ExerciseCardDensity.extended => SetDisplayMode.comfortable,
   };
 }
 
-/// Notifier for set display mode
-class SetDisplayNotifier extends Notifier<SetDisplayMode> {
-  // Cache key for persistence
-  String get _prefsKey => userCacheKeys.userScopedKey('set_display_mode');
-
-  @override
-  SetDisplayMode build() {
-    _loadPreference();
-    return SetDisplayMode.comfortable; // Default
-  }
-
-  Future<void> _loadPreference() async {
-    final prefs = await SharedPreferences.getInstance();
-    final modeIndex = prefs.getInt(_prefsKey);
-
-    if (modeIndex != null && modeIndex < SetDisplayMode.values.length) {
-      state = SetDisplayMode.values[modeIndex];
-    }
-  }
-
-  Future<void> setMode(SetDisplayMode mode) async {
-    state = mode;
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_prefsKey, mode.index);
-  }
-
-  void toggleMode() {
-    final nextIndex = (state.index + 1) % SetDisplayMode.values.length;
-    setMode(SetDisplayMode.values[nextIndex]);
-  }
-}
-
-/// Provider for set display mode
-final setDisplayProvider = NotifierProvider<SetDisplayNotifier, SetDisplayMode>(
-  SetDisplayNotifier.new,
-);
+/// Provider for set display mode - derived from ExerciseCardSettings density
+final setDisplayProvider = Provider<SetDisplayMode>((ref) {
+  final density = ref.watch(exerciseCardDensityProvider);
+  return _densityToDisplayMode(density);
+});
