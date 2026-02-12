@@ -99,3 +99,16 @@ export {
   gdprGetAuditLog,
   gdprCleanupAuditLogs,
 } from './gdpr/adminAuditLog';
+
+// ========================================
+// 📊 EXERCISE POPULARITY RANKING SYSTEM
+// ========================================
+// Export exercise popularity functions:
+// - generatePopularityBundle: Scheduled daily (3am) - generates Data Bundle
+// - onTemplateCreated: Firestore trigger - increments popularity on template save
+export {
+  generatePopularityBundle,
+} from './scheduled/generatePopularityBundle';
+export {
+  onTemplateCreated,
+} from './triggers/onTemplateCreated';

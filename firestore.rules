@@ -1466,8 +1466,8 @@ service cloud.firestore {
       // Everyone can read version info (for update checks)
       allow read: if true;
       
-      // Only authenticated users can write (admin/system)
-      allow write: if request.auth != null;
+      // Only admins can write version info
+      allow write: if isAdmin();
     }
 
     // ==========================================
@@ -2052,6 +2052,33 @@ service cloud.firestore {
         && request.resource.data.userId == resource.data.userId;
 
       // DELETE: Not allowed (preserve key rotation history)
+      allow delete: if false;
+    }
+
+    // ============================================================================
+    // 📊 EXERCISE POPULARITY RANKING SYSTEM
+    // ============================================================================
+    // Collection: /exercise_popularity/{exerciseId}
+    // Purpose: Global usage counts for exercise search ranking boost
+    // Data Flow: Cloud Functions (write) → Data Bundle → Flutter (read via bundle)
+    // Security: Read-only for authenticated users, write-only for Cloud Functions
+    // ============================================================================
+    match /exercise_popularity/{exerciseId} {
+      // READ: All authenticated users can read (via Data Bundle)
+      // Bundle download happens once/day, zero read cost after that
+      allow read: if isAuthenticated();
+
+      // WRITE: Only Cloud Functions (server-side)
+      // Prevents client manipulation of popularity counts
+      // Cloud Functions have admin privileges, bypass this rule
+      allow write: if false;
+
+      // CREATE/UPDATE: Handled by Cloud Functions
+      // - onTemplateCreated trigger: increments count
+      // - generatePopularityBundle: generates daily bundle
+      allow create, update: if false;
+
+      // DELETE: Not allowed (preserve popularity history)
       allow delete: if false;
     }
 

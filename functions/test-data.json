@@ -1,0 +1,22 @@
+{
+  "squat_full_bilanciere": {
+    "count": 150,
+    "lastUpdated": "2026-02-10T10:00:00.000Z"
+  },
+  "panca_piana_bilanciere": {
+    "count": 120,
+    "lastUpdated": "2026-02-10T10:00:00.000Z"
+  },
+  "stacco_terra_bilanciere": {
+    "count": 100,
+    "lastUpdated": "2026-02-10T10:00:00.000Z"
+  },
+  "military_press": {
+    "count": 80,
+    "lastUpdated": "2026-02-10T10:00:00.000Z"
+  },
+  "trazioni_sbarra": {
+    "count": 60,
+    "lastUpdated": "2026-02-10T10:00:00.000Z"
+  }
+}

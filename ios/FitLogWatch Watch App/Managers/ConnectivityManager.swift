@@ -49,7 +49,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     // ✅ FIX: All sets' targets for current exercise (for navigation between sets)
     // Each element: (weight, reps, actualReps?, isCompleted) indexed by setNumber - 1
     // actualReps is nil if set not completed, or the actual reps performed
-    @Published var allSetsTargets: [(weight: Double, reps: Int, actualReps: Int?, isCompleted: Bool)] = []
+    @Published var allSetsTargets: [(weight: Double, reps: Int, actualReps: Int?, isCompleted: Bool, isWarmup: Bool)] = []
 
     // MARK: - 🔥 SUPERSET State (synced from iPhone)
     @Published var isSuperset = false
@@ -524,7 +524,14 @@ class ConnectivityManager: NSObject, ObservableObject {
 
         // ✅ FIX: Show optimistic timer immediately while waiting for confirmation
         // This prevents the "no timer" gap while waiting for iPhone response
-        showOptimisticTimerIfNeeded()
+        // ✅ Skip timer for warmup sets (warmup → no rest needed)
+        let setIndex = currentSetNumber - 1
+        let isCurrentSetWarmup = setIndex >= 0 && setIndex < allSetsTargets.count && allSetsTargets[setIndex].isWarmup
+        if isCurrentSetWarmup {
+            print("⌚ [OPTIMISTIC] Skipping timer - warmup set")
+        } else {
+            showOptimisticTimerIfNeeded()
+        }
 
         // ✅ FIX: Use sendMessage with replyHandler to receive rest timer in response
         // This eliminates the 1-5s latency of applicationContext
@@ -777,7 +784,8 @@ class ConnectivityManager: NSObject, ObservableObject {
                 weight: weight,
                 reps: reps,
                 actualReps: currentTarget.actualReps,
-                isCompleted: currentTarget.isCompleted
+                isCompleted: currentTarget.isCompleted,
+                isWarmup: currentTarget.isWarmup
             )
             print("⌚ [WATCH] Updated allSetsTargets[\(setIndex)]: \(weight) kg × \(reps) reps")
         }
@@ -1042,7 +1050,8 @@ class ConnectivityManager: NSObject, ObservableObject {
                 weight: weight,
                 reps: reps,
                 actualReps: currentTarget.actualReps,
-                isCompleted: currentTarget.isCompleted
+                isCompleted: currentTarget.isCompleted,
+                isWarmup: currentTarget.isWarmup
             )
         }
 
@@ -1076,7 +1085,8 @@ class ConnectivityManager: NSObject, ObservableObject {
                     weight: previousSet.weight,
                     reps: previousSet.reps,
                     actualReps: currentTarget.actualReps,
-                    isCompleted: currentTarget.isCompleted
+                    isCompleted: currentTarget.isCompleted,
+                    isWarmup: currentTarget.isWarmup
                 )
             }
             print("⌚ [SET] Copied from previous set: \(previousSet.weight)kg × \(previousSet.reps) reps")
@@ -1431,7 +1441,15 @@ class ConnectivityManager: NSObject, ObservableObject {
                     isCompleted = false
                 }
 
-                return (weight: weight, reps: reps, actualReps: actualReps, isCompleted: isCompleted)
+                // ✅ Parse isWarmup flag for warmup set awareness
+                let isWarmup: Bool
+                if let iw = setData["isWarmup"] as? Bool {
+                    isWarmup = iw
+                } else {
+                    isWarmup = false
+                }
+
+                return (weight: weight, reps: reps, actualReps: actualReps, isCompleted: isCompleted, isWarmup: isWarmup)
             }
             let completedCount = allSetsTargets.filter { $0.isCompleted }.count
             print("⌚ [WATCH] Parsed \(allSetsTargets.count) sets (\(completedCount) completed): \(allSetsTargets.map { "\($0.weight)kg×\($0.actualReps ?? $0.reps)\($0.isCompleted ? "✓" : "")" }.joined(separator: ", "))")

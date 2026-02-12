@@ -1552,10 +1552,18 @@ struct SimplifiedSetView: View {
                 .foregroundColor(.primary)
                 .accessibilityAddTraits(.isHeader)
 
-            // Set indicator: "Set 2/4"
-            Text("\(setText) \(connectivity.currentSetNumber)/\(connectivity.totalSets)")
-                .font(.system(size: 11, weight: .medium))
-                .foregroundColor(.secondary)
+            // Set indicator: "Set 2/4" or "Warmup" for warmup sets
+            if connectivity.currentSetNumber - 1 >= 0 &&
+               connectivity.currentSetNumber - 1 < connectivity.allSetsTargets.count &&
+               connectivity.allSetsTargets[connectivity.currentSetNumber - 1].isWarmup {
+                Text(isItalian ? "Riscaldamento" : "Warmup")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundColor(.orange)
+            } else {
+                Text("\(setText) \(connectivity.currentSetNumber)/\(connectivity.totalSets)")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(.secondary)
+            }
 
             // Weight × Reps (LARGE, TAPPABLE to edit)
             VStack(spacing: 2) {
@@ -1844,6 +1852,7 @@ struct AdvancedInfoView: View {
                 totalSets: connectivity.totalSets,
                 currentSet: connectivity.currentSetNumber,
                 locale: connectivity.appLocale,
+                allSetsTargets: connectivity.allSetsTargets,
                 onSelect: { setNumber in
                     showingSetPicker = false
                     connectivity.jumpToSet(setNumber)
@@ -1884,15 +1893,17 @@ struct SetPickerSheetView: View {
     let totalSets: Int
     let currentSet: Int
     let locale: String
+    let allSetsTargets: [(weight: Double, reps: Int, actualReps: Int?, isCompleted: Bool, isWarmup: Bool)]
     let onSelect: (Int) -> Void
     let onCancel: () -> Void
 
     @State private var selectedSet: Int
 
-    init(totalSets: Int, currentSet: Int, locale: String, onSelect: @escaping (Int) -> Void, onCancel: @escaping () -> Void) {
+    init(totalSets: Int, currentSet: Int, locale: String, allSetsTargets: [(weight: Double, reps: Int, actualReps: Int?, isCompleted: Bool, isWarmup: Bool)] = [], onSelect: @escaping (Int) -> Void, onCancel: @escaping () -> Void) {
         self.totalSets = totalSets
         self.currentSet = currentSet
         self.locale = locale
+        self.allSetsTargets = allSetsTargets
         self.onSelect = onSelect
         self.onCancel = onCancel
         // Initialize state with current set value
@@ -1904,6 +1915,15 @@ struct SetPickerSheetView: View {
     private var selectText: String { isItalian ? "Vai" : "Go" }
     private var cancelText: String { isItalian ? "Annulla" : "Cancel" }
 
+    /// Label for a set number: "W" prefix for warmup, normal number otherwise
+    private func setLabel(for setNum: Int) -> String {
+        let idx = setNum - 1
+        if idx >= 0 && idx < allSetsTargets.count && allSetsTargets[idx].isWarmup {
+            return "W\(setNum)"
+        }
+        return "\(isItalian ? "Serie" : "Set") \(setNum)"
+    }
+
     var body: some View {
         VStack(spacing: 10) {
             Text(titleText)
@@ -1913,7 +1933,7 @@ struct SetPickerSheetView: View {
             // Set picker with Crown
             Picker(titleText, selection: $selectedSet) {
                 ForEach(1...totalSets, id: \.self) { setNum in
-                    Text("\(isItalian ? "Serie" : "Set") \(setNum)")
+                    Text(setLabel(for: setNum))
                         .tag(setNum)
                 }
             }

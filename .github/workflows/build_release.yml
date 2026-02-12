@@ -1,0 +1,138 @@
+name: 🚀 Build Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform to build'
+        required: true
+        type: choice
+        options:
+          - ios
+          - android
+          - both
+        default: 'both'
+      build_number:
+        description: 'Build number override (optional, uses pubspec.yaml if empty)'
+        required: false
+        type: string
+
+jobs:
+  # ============================================================================
+  # iOS Build (IPA for TestFlight)
+  # ============================================================================
+  build-ios:
+    name: 🍎 Build iOS
+    if: ${{ inputs.platform == 'ios' || inputs.platform == 'both' }}
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔵 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.3'
+          channel: 'stable'
+
+      - name: 📦 Get dependencies
+        run: flutter pub get
+
+      - name: 🔍 Analyze code
+        run: flutter analyze --no-fatal-infos
+
+      - name: 🔧 Set build number
+        if: ${{ inputs.build_number != '' }}
+        run: |
+          # Override build number in pubspec.yaml
+          sed -i '' "s/+[0-9]*/+${{ inputs.build_number }}/" pubspec.yaml
+
+      - name: 🏗️ Build iOS (no codesign)
+        run: |
+          flutter build ios --release --no-codesign \
+            --dart-define=ENVIRONMENT=production
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+
+      - name: 📤 Upload iOS build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build-${{ github.sha }}
+          path: build/ios/iphoneos/Runner.app
+          retention-days: 14
+
+  # ============================================================================
+  # Android Build (AAB for Play Store)
+  # ============================================================================
+  build-android:
+    name: 🤖 Build Android
+    if: ${{ inputs.platform == 'android' || inputs.platform == 'both' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: 🔵 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.3'
+          channel: 'stable'
+
+      - name: 📦 Get dependencies
+        run: flutter pub get
+
+      - name: 🔍 Analyze code
+        run: flutter analyze --no-fatal-infos
+
+      - name: 🔧 Set build number
+        if: ${{ inputs.build_number != '' }}
+        run: |
+          sed -i "s/+[0-9]*/+${{ inputs.build_number }}/" pubspec.yaml
+
+      - name: 🔑 Decode keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
+          cat > android/key.properties << EOF
+          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=keystore.jks
+          EOF
+
+      - name: 🏗️ Build Android App Bundle
+        run: |
+          flutter build appbundle --release \
+            --dart-define=ENVIRONMENT=production
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+
+      - name: 🏗️ Build APK (for direct distribution)
+        run: |
+          flutter build apk --release \
+            --dart-define=ENVIRONMENT=production
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+
+      - name: 📤 Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-aab-${{ github.sha }}
+          path: build/app/outputs/bundle/release/app-release.aab
+          retention-days: 14
+
+      - name: 📤 Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk-${{ github.sha }}
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 14

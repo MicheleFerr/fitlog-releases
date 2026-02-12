@@ -150,6 +150,7 @@ dependencies:
   flutter_native_splash: ^2.4.4
   keyboard_actions: ^4.2.1
   fuzzywuzzy: ^1.2.0
+  cupertino_native: ^0.1.1
 
 dev_dependencies:
   flutter_test:
@@ -211,7 +212,7 @@ flutter:
     - assets/images/
     - assets/animations/
     - assets/i18n/
-    - .env  # Environment variables for API keys (AI Coach, etc.)
+    # .env REMOVED - was exposing API keys in compiled app binary
     # Legal docs moved to separate bundle - not included in app assets
     # - docs/legal/PRIVACY_POLICY_IT.md
     # - docs/legal/PRIVACY_POLICY_EN.md
@@ -242,25 +243,17 @@ flutter:
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/to/asset-from-package
 
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/to/font-from-package
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
 
 # ============================================
 # 🚀 Flutter Native Splash Screen Configuration
