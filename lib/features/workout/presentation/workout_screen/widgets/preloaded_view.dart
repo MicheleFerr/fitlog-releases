@@ -4,7 +4,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen/widgets/change_workout_banner.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
@@ -36,44 +35,10 @@ class PreloadedView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Expanded(child: Text(workout.name)),
-            const SizedBox(width: AppSpacing.xs),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.xs,
-                vertical: AppSpacing.xxs,
-              ),
-              decoration: BoxDecoration(
-                color: context.colors.primary.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(AppSpacing.sm),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.autoAwesome,
-                    semanticLabel: 'Auto awesome',
-                    size: AppIconSize.tiny,
-                    color: context.colors.primary,
-                  ),
-                  const SizedBox(width: AppSpacing.xxs),
-                  Text(
-                    context.l10n.suggested,
-                    style: context.textTheme.labelSmall?.copyWith(
-                      color: context.colors.primary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: Column(
+    return SafeArea(
+      left: false,
+      right: false,
+      child: Column(
         children: [
           // "Change Workout" banner
           ChangeWorkoutBanner(onBrowseTemplates: onBrowseTemplates),

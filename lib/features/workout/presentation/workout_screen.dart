@@ -342,7 +342,40 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       appBar: AppBar(
-        title: Text(l10n.workout),
+        title: Row(
+          children: [
+            Expanded(child: Text(workout.name)),
+            const SizedBox(width: AppSpacing.xs),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.xs,
+                vertical: AppSpacing.xxs,
+              ),
+              decoration: BoxDecoration(
+                color: context.colors.primary.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(AppSpacing.sm),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.autoAwesome,
+                    semanticLabel: 'Auto awesome',
+                    size: AppIconSize.tiny,
+                    color: context.colors.primary,
+                  ),
+                  const SizedBox(width: AppSpacing.xxs),
+                  Text(
+                    l10n.suggested,
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: context.colors.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
         leading: IconButton(
           icon: SemanticIcon(
             icon: AppIcons.back,
