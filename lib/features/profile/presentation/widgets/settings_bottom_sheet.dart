@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/cn_switch_list_tile.dart';
 
 /// Shows the quick settings bottom sheet
 void showSettingsBottomSheet(BuildContext context) {
@@ -316,7 +317,7 @@ class _SettingsToggleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SwitchListTile(
+    return CNSwitchListTile(
       secondary: Icon(
         icon,
         size: AppIconSize.medium,

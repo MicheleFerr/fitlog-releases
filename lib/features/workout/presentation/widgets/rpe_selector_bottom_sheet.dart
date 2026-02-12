@@ -13,6 +13,7 @@
 /// - Hive: None
 library;
 
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -679,14 +680,14 @@ class _RpeSelectorBottomSheetState
               ),
               Transform.scale(
                 scale: 0.8,
-                child: Switch(
+                child: CNSwitch(
                   value: _showWeightAndReps,
                   onChanged: (value) {
                     setState(() {
                       _showWeightAndReps = value;
                     });
                   },
-                  thumbColor: WidgetStateProperty.all(colorScheme.primary),
+                  color: colorScheme.primary,
                 ),
               ),
             ],
@@ -751,7 +752,7 @@ class _RpeSelectorBottomSheetState
               ),
               Transform.scale(
                 scale: 0.9,
-                child: Switch(
+                child: CNSwitch(
                   value: _isSetCompleted,
                   onChanged: (value) {
                     setState(() {
@@ -759,18 +760,7 @@ class _RpeSelectorBottomSheetState
                     });
                     HapticFeedback.lightImpact();
                   },
-                  thumbColor: WidgetStateProperty.resolveWith((states) {
-                    if (states.contains(WidgetState.selected)) {
-                      return colorScheme.tertiary;
-                    }
-                    return colorScheme.outline;
-                  }),
-                  trackColor: WidgetStateProperty.resolveWith((states) {
-                    if (states.contains(WidgetState.selected)) {
-                      return colorScheme.tertiaryContainer;
-                    }
-                    return colorScheme.surfaceContainerHighest;
-                  }),
+                  color: colorScheme.tertiary,
                 ),
               ),
             ],

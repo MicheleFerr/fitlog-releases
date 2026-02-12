@@ -11,6 +11,7 @@ library;
 
 import 'dart:async';
 import 'dart:io' show Platform;
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -347,11 +348,12 @@ class _HealthSyncSettingsScreenState
                     ? context.successColor
                     : colorScheme.onSurface.withValues(alpha: 0.3),
               )
-            : Switch.adaptive(
+            : CNSwitch(
                 value: isEnabled,
                 onChanged: dataType != null
                     ? (value) => _handlePermissionToggle(dataType, value)
-                    : null,
+                    : (_) {},
+                enabled: dataType != null,
               ),
       ),
     );
@@ -396,7 +398,7 @@ class _HealthSyncSettingsScreenState
                   ],
                 ),
               ),
-              Switch.adaptive(
+              CNSwitch(
                 value: backgroundSyncState.isScheduled,
                 onChanged: _handleBackgroundSyncToggle,
               ),

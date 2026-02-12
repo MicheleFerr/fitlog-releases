@@ -1,3 +1,4 @@
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
@@ -293,10 +294,10 @@ class _HealthToggle extends StatelessWidget {
           ),
 
           // Toggle switch
-          Switch.adaptive(
+          CNSwitch(
             value: isSelected,
             onChanged: (_) => onToggle(),
-            activeColor: context.colors.primary,
+            color: context.colors.primary,
           ),
         ],
       ),

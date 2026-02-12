@@ -10,6 +10,7 @@
 /// - Progress visualization
 library;
 
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -653,7 +654,7 @@ class _LevelInfoModalState extends ConsumerState<LevelInfoModal> {
                 ),
               ),
               // Toggle switch
-              Switch(
+              CNSwitch(
                 value: isEnabled,
                 onChanged: (value) {
                   HapticFeedback.lightImpact();

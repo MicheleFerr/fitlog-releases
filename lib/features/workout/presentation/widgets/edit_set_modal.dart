@@ -12,6 +12,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/cn_switch_list_tile.dart';
 
 class EditSetModal extends ConsumerStatefulWidget {
   const EditSetModal({
@@ -146,7 +147,7 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
 
             // Completion toggle
             Card(
-              child: SwitchListTile(
+              child: CNSwitchListTile(
                 title: Text(context.l10n.markAsCompleted),
                 subtitle: Text(
                   _isCompleted

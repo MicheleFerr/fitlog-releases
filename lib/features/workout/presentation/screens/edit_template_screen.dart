@@ -196,7 +196,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                                 ),
                               ),
                               const Spacer(),
-                              Switch(
+                              CNSwitch(
                                 value: _isPublic,
                                 onChanged: (value) {
                                   setState(() {

@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/widgets/exercise_card_preview.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/cn_switch_list_tile.dart';
 
 /// Settings section for Exercise Card customization
 ///
@@ -196,7 +197,7 @@ class ExerciseCardSettingsSection extends ConsumerWidget {
         ),
         const SizedBox(height: 8),
         // Insight toggle
-        SwitchListTile(
+        CNSwitchListTile(
           title: Text(context.l10n.showInsight),
           subtitle: Text(context.l10n.showInsightDescription),
           value: settings.showInsight,
@@ -209,7 +210,7 @@ class ExerciseCardSettingsSection extends ConsumerWidget {
           ),
         ),
         // Timer toggle
-        SwitchListTile(
+        CNSwitchListTile(
           title: Text(context.l10n.showTimer),
           subtitle: Text(context.l10n.showTimerDescription),
           value: settings.showTimer,
@@ -222,7 +223,7 @@ class ExerciseCardSettingsSection extends ConsumerWidget {
           ),
         ),
         // Plates toggle
-        SwitchListTile(
+        CNSwitchListTile(
           title: Text(context.l10n.showPlates),
           subtitle: Text(context.l10n.showPlatesDescription),
           value: settings.showPlates,
@@ -235,7 +236,7 @@ class ExerciseCardSettingsSection extends ConsumerWidget {
           ),
         ),
         // RPE toggle
-        SwitchListTile(
+        CNSwitchListTile(
           title: Text(context.l10n.showRpe),
           subtitle: Text(context.l10n.showRpeDescription),
           value: settings.showRpe,
@@ -304,7 +305,7 @@ class ExerciseCardSettingsSection extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         // Footer expanded by default
-        SwitchListTile(
+        CNSwitchListTile(
           title: Text(context.l10n.footerExpandedByDefault),
           subtitle: Text(context.l10n.footerExpandedByDefaultDescription),
           value: settings.footerExpanded,

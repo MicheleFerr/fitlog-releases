@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 
 /// GhostOverlayCamera - Camera with semi-transparent previous photo overlay
 ///
@@ -331,23 +332,16 @@ class _GhostOverlayCameraState extends State<GhostOverlayCamera>
                   ),
                   const SizedBox(width: AppSpacing.xs),
                   Expanded(
-                    child: SliderTheme(
-                      data: SliderTheme.of(context).copyWith(
-                        activeTrackColor: context.colors.primary,
-                        inactiveTrackColor: context.colors.onPrimary.withValues(
-                          alpha: 0.24,
-                        ),
-                        thumbColor: context.colors.onPrimary,
-                        overlayColor: context.colors.primary.withValues(
-                          alpha: 0.2,
-                        ),
+                    child: CNSlider(
+                      value: _ghostOpacity,
+                      min: 0.2,
+                      max: 0.8,
+                      trackColor: context.colors.primary,
+                      trackBackgroundColor: context.colors.onPrimary.withValues(
+                        alpha: 0.24,
                       ),
-                      child: Slider(
-                        value: _ghostOpacity,
-                        min: 0.2,
-                        max: 0.8,
-                        onChanged: (v) => setState(() => _ghostOpacity = v),
-                      ),
+                      thumbColor: context.colors.onPrimary,
+                      onChanged: (v) => setState(() => _ghostOpacity = v),
                     ),
                   ),
                 ],

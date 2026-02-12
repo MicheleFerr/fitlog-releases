@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/cn_switch_list_tile.dart';
 
 /// Screen for creating or editing a gym equipment profile
 class ProfileDetailScreen extends ConsumerStatefulWidget {
@@ -181,7 +182,7 @@ class _ProfileDetailScreenState extends ConsumerState<ProfileDetailScreen> {
 
             // Default profile switch
             if (!widget.isEditing || !widget.profile!.isDefault)
-              SwitchListTile(
+              CNSwitchListTile(
                 title: Text(context.l10n.setAsDefault),
                 subtitle: Text(
                   context.l10n.defaultProfileDescription,

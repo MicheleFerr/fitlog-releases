@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/cn_switch_list_tile.dart';
 
 /// Modal for configuring RPE-based auto adjustment for exercises.
 class AutoAdjustmentModal extends ConsumerStatefulWidget {
@@ -122,7 +123,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
               color: _isEnabled
                   ? context.colors.secondaryContainer
                   : context.colors.surfaceContainerHighest,
-              child: SwitchListTile(
+              child: CNSwitchListTile(
                 title: Text(
                   l10n.rpeBasedAdjustment,
                   style: context.textTheme.titleMedium?.copyWith(

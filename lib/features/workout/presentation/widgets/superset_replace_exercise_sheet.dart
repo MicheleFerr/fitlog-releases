@@ -1,3 +1,4 @@
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -162,13 +163,13 @@ class _SupersetReplaceExerciseSheetState
                     style: context.textTheme.bodyMedium,
                   ),
                 ),
-                Switch.adaptive(
+                CNSwitch(
                   value: _keepWeightAndReps,
                   onChanged: (value) {
                     setState(() => _keepWeightAndReps = value);
                     HapticFeedback.lightImpact();
                   },
-                  activeTrackColor: context.colors.primary,
+                  color: context.colors.primary,
                 ),
               ],
             ),

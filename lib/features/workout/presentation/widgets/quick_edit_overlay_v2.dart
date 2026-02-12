@@ -28,6 +28,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 
 class QuickEditOverlayV2 extends ConsumerStatefulWidget {
   const QuickEditOverlayV2({
@@ -1483,28 +1484,20 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           ),
         ),
         Expanded(
-          child: SliderTheme(
-            data: SliderThemeData(
-              activeTrackColor: theme.colorScheme.primary,
-              inactiveTrackColor: theme.colorScheme.primary.withValues(
-                alpha: 0.2,
-              ),
-              thumbColor: theme.colorScheme.primary,
-              overlayColor: theme.colorScheme.primary.withValues(alpha: 0.2),
-              trackHeight: 4,
-              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
-              overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
+          child: CNSlider(
+            value: _percentageValue,
+            min: 1,
+            max: 20,
+            step: 1.0,
+            trackColor: theme.colorScheme.primary,
+            trackBackgroundColor: theme.colorScheme.primary.withValues(
+              alpha: 0.2,
             ),
-            child: Slider(
-              value: _percentageValue,
-              min: 1,
-              max: 20,
-              divisions: 19,
-              onChanged: (value) {
-                setState(() => _percentageValue = value);
-                HapticFeedback.selectionClick();
-              },
-            ),
+            thumbColor: theme.colorScheme.primary,
+            onChanged: (value) {
+              setState(() => _percentageValue = value);
+              HapticFeedback.selectionClick();
+            },
           ),
         ),
       ],

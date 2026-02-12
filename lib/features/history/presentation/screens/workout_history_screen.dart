@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 
 import 'dart:async';
 
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -2081,7 +2082,7 @@ class _ViewSettingsSheet extends ConsumerWidget {
               icon: isCalendarView ? AppIcons.calendarMonth : AppIcons.list,
               title: isCalendarView ? l10n.calendarView : l10n.listView,
               subtitle: isCalendarView ? l10n.calendarView : l10n.listView,
-              trailing: Switch.adaptive(
+              trailing: CNSwitch(
                 value: isCalendarView,
                 onChanged: (value) {
                   HapticFeedback.lightImpact();
@@ -2097,7 +2098,7 @@ class _ViewSettingsSheet extends ConsumerWidget {
               icon: AppIcons.calendarToday,
               title: l10n.groupByDate,
               subtitle: l10n.groupByDate,
-              trailing: Switch.adaptive(
+              trailing: CNSwitch(
                 value: groupByDate,
                 onChanged: (value) {
                   HapticFeedback.lightImpact();

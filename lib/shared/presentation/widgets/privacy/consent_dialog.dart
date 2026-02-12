@@ -1,3 +1,4 @@
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/legal_document_screen.dart';
 import 'package:gymbro_flutter_new/shared/domain/privacy/consent_type.dart';
@@ -172,15 +173,14 @@ class _ConsentDialogState extends State<ConsentDialog> {
                   ],
                 ),
               ),
-              Switch(
+              CNSwitch(
                 value: isGranted,
-                onChanged: type.isRequired
-                    ? null
-                    : (value) {
-                        setState(() {
-                          _consents[type] = value;
-                        });
-                      },
+                onChanged: (value) {
+                  setState(() {
+                    _consents[type] = value;
+                  });
+                },
+                enabled: !type.isRequired,
               ),
             ],
           ),

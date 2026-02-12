@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:intl/intl.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 
 /// PhotoComparisonScreen - Side-by-side before/after comparison
 ///
@@ -453,7 +454,7 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
 
           // Slider
           Expanded(
-            child: Slider(
+            child: CNSlider(
               value: _sliderPosition,
               onChanged: (v) => setState(() => _sliderPosition = v),
             ),

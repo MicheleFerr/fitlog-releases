@@ -23,6 +23,7 @@ import 'package:gymbro_flutter_new/features/settings/presentation/screens/equipm
 import 'package:gymbro_flutter_new/features/debug/presentation/screens/tier_limits_test_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/migration_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/cn_switch_list_tile.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/tutorial_state_notifier.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
@@ -35,6 +36,7 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/lega
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/widgets/exercise_card_settings_section.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -739,7 +741,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ],
           ),
           const SizedBox(height: 8),
-          SwitchListTile(
+          CNSwitchListTile(
             title: Text(context.l10n.adminPremiumStatus),
             subtitle: Text(
               isPremium
@@ -747,7 +749,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   : context.l10n.adminPremiumInactive,
             ),
             value: isPremium,
-            activeTrackColor: context.colors.tertiary.withValues(alpha: 0.5),
             contentPadding: EdgeInsets.zero,
             onChanged: (value) async {
               final newTier = value ? AccountTier.premium : AccountTier.free;
@@ -901,12 +902,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                Slider(
+                CNSlider(
                   value: config.fontSize,
                   min: 0.8,
                   max: 1.1,
-                  divisions: 4,
-                  label: _getFontSizeLabel(config.fontSize),
+                  step: 0.075,
                   onChanged: (value) {
                     ref.read(appConfigProvider.notifier).setFontSize(value);
                   },
@@ -1448,7 +1448,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   const Divider(),
 
                   // Ghost Mode Toggle
-                  SwitchListTile(
+                  CNSwitchListTile(
                     title: Row(
                       children: [
                         Expanded(child: Text(context.l10n.ghostModeTitle)),
@@ -1825,7 +1825,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     required ValueChanged<bool> onChanged,
     Widget? leading,
   }) {
-    return SwitchListTile(
+    return CNSwitchListTile(
       title: Text(title),
       subtitle: Text(subtitle),
       value: value,
@@ -2222,11 +2222,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text('${selectedTime}s'),
-              Slider(
+              CNSlider(
                 value: selectedTime.toDouble(),
                 min: 30,
                 max: 300,
-                divisions: 27,
+                step: 10.0,
                 onChanged: (value) {
                   setState(() {
                     selectedTime = value.round();
@@ -2271,11 +2271,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text('${selectedTime}s'),
-              Slider(
+              CNSlider(
                 value: selectedTime.toDouble(),
                 min: 30,
                 max: 300,
-                divisions: 27,
+                step: 10.0,
                 onChanged: (value) {
                   setState(() {
                     selectedTime = value.round();
@@ -2321,12 +2321,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 style: context.textTheme.headlineSmall,
               ),
               const SizedBox(height: 16),
-              Slider(
+              CNSlider(
                 value: selectedHour.toDouble(),
                 min: 0,
                 max: 23,
-                divisions: 23,
-                label: '$selectedHour:00',
+                step: 1.0,
                 onChanged: (value) {
                   setState(() {
                     selectedHour = value.round();

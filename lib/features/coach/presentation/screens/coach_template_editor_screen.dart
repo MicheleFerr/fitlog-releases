@@ -26,6 +26,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/draggable_action_button.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 
 /// Screen for creating/editing coach templates
 class CoachTemplateEditorScreen extends ConsumerStatefulWidget {
@@ -230,12 +231,11 @@ class _CoachTemplateEditorScreenState
           ],
         ),
         const SizedBox(height: AppSpacing.xs),
-        Slider(
+        CNSlider(
           value: _estimatedDuration.toDouble(),
           min: 15,
           max: 120,
-          divisions: 21,
-          label: '$_estimatedDuration min',
+          step: 5.0,
           onChanged: (value) {
             setState(() => _estimatedDuration = value.toInt());
             _markAsChanged();

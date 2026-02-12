@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/core/services/analytics/i_analytics_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_time_picker_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/cn_switch_list_tile.dart';
 
 /// Mock analytics service for testing
 class MockAnalyticsService implements IAnalyticsService {
@@ -106,9 +107,9 @@ void main() {
       await tester.pumpAndSettle();
 
       // Enable custom timer toggle if not already enabled
-      final switchFinder = find.byType(SwitchListTile);
+      final switchFinder = find.byType(CNSwitchListTile);
       if (switchFinder.evaluate().isNotEmpty) {
-        final switchWidget = tester.widget<SwitchListTile>(switchFinder);
+        final switchWidget = tester.widget<CNSwitchListTile>(switchFinder);
         if (!switchWidget.value) {
           await tester.tap(switchFinder);
           await tester.pumpAndSettle();
@@ -166,9 +167,9 @@ void main() {
 
       // The modal should show with custom timer enabled
       // since initialRestTime is provided
-      final switchFinder = find.byType(SwitchListTile);
+      final switchFinder = find.byType(CNSwitchListTile);
       if (switchFinder.evaluate().isNotEmpty) {
-        final switchWidget = tester.widget<SwitchListTile>(switchFinder);
+        final switchWidget = tester.widget<CNSwitchListTile>(switchFinder);
         expect(switchWidget.value, isTrue, reason: 'Switch should be ON when initialRestTime is provided');
       }
 
@@ -191,10 +192,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Disable the timer switch
-      final switchFinder = find.byType(SwitchListTile);
+      final switchFinder = find.byType(CNSwitchListTile);
       expect(switchFinder, findsOneWidget);
 
-      final switchWidget = tester.widget<SwitchListTile>(switchFinder);
+      final switchWidget = tester.widget<CNSwitchListTile>(switchFinder);
       if (switchWidget.value) {
         await tester.tap(switchFinder);
         await tester.pumpAndSettle();

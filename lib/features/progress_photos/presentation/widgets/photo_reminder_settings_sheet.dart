@@ -1,3 +1,4 @@
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/domain/entities/photo_reminder.dart';
@@ -221,7 +222,7 @@ class _PhotoReminderSettingsSheetState
               ],
             ),
           ),
-          Switch.adaptive(
+          CNSwitch(
             value: isEnabled,
             onChanged: (value) async {
               if (value) {

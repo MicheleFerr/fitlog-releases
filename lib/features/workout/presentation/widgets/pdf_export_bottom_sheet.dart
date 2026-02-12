@@ -5,6 +5,7 @@
 library;
 
 import 'dart:async';
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -304,7 +305,7 @@ class _PdfExportBottomSheetState extends ConsumerState<PdfExportBottomSheet> {
               ),
             ),
           ),
-          Switch(
+          CNSwitch(
             value: _rememberChoice,
             onChanged: (value) {
               HapticFeedback.selectionClick();

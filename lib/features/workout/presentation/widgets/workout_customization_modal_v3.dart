@@ -8,6 +8,7 @@
 /// are always enabled and not configurable by the user.
 library;
 
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -469,7 +470,7 @@ class _WorkoutCustomizationModalV3State
             ),
           ),
           const SizedBox(width: 8),
-          Switch(value: value, onChanged: onChanged),
+          CNSwitch(value: value, onChanged: onChanged),
         ],
       ),
     );

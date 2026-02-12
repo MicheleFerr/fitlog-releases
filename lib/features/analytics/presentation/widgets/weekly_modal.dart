@@ -35,6 +35,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 
 /// Modal for displaying weekly workout details with calendar and goal setter
 class WeeklyModal extends StatefulWidget {
@@ -579,28 +580,18 @@ class _WeeklyModalState extends State<WeeklyModal> {
           const SizedBox(height: 16),
 
           // Slider
-          SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-              activeTrackColor: context.colors.primary,
-              inactiveTrackColor: context.colors.surfaceContainerHighest,
-              thumbColor: context.colors.primary,
-              overlayColor: context.colors.primary.withValues(alpha: 0.2),
-              valueIndicatorColor: context.colors.primary,
-              valueIndicatorTextStyle: context.textTheme.labelSmall?.copyWith(
-                color: context.colors.onPrimary,
-              ),
-            ),
-            child: Slider(
-              value: _weeklyGoal,
-              min: 1,
-              max: 7,
-              divisions: 6,
-              label: context.l10n.workoutsGoalLabel(_weeklyGoal.round()),
-              onChanged: (value) {
-                setState(() => _weeklyGoal = value);
-                HapticFeedback.selectionClick();
-              },
-            ),
+          CNSlider(
+            value: _weeklyGoal,
+            min: 1,
+            max: 7,
+            step: 1.0,
+            trackColor: context.colors.primary,
+            trackBackgroundColor: context.colors.surfaceContainerHighest,
+            thumbColor: context.colors.primary,
+            onChanged: (value) {
+              setState(() => _weeklyGoal = value);
+              HapticFeedback.selectionClick();
+            },
           ),
 
           // Progress indicator
