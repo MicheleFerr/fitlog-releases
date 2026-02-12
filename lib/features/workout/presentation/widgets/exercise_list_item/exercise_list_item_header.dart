@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise_card_settings.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/exercise_card_settings_provider.dart';
 
 /// Header component for ExerciseListItem
@@ -108,8 +109,9 @@ class ExerciseListItemHeader extends ConsumerWidget {
     // ✅ PERFORMANCE: Removed debug print that was causing log spam during scroll
     // The header no longer rebuilds when GIF provider changes state
 
-    // Watch ExerciseCardSettings for insight visibility
+    // Watch ExerciseCardSettings for visual toggles (single source of truth)
     final showInsight = ref.watch(showExerciseInsightProvider);
+    final showTimer = ref.watch(showExerciseTimerProvider);
 
     return Row(
       children: [
@@ -124,15 +126,15 @@ class ExerciseListItemHeader extends ConsumerWidget {
               // Exercise name row - name only for max space
               _buildExerciseNameRow(context),
               // ✅ Timer badge + progress chip in same row
-              if ((config.showCustomTimers ?? isProMode) ||
+              if (showTimer ||
                   (showInsight && lastActivity != null))
                 Padding(
                   padding: const EdgeInsets.only(top: 4),
                   child: Row(
                     children: [
-                      if (config.showCustomTimers ?? isProMode)
+                      if (showTimer)
                         _buildCompactTimerBadge(context),
-                      if ((config.showCustomTimers ?? isProMode) &&
+                      if (showTimer &&
                           showInsight && lastActivity != null)
                         const SizedBox(width: 6),
                       if (showInsight && lastActivity != null)
@@ -658,6 +660,14 @@ class _ExerciseGifIcon extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = context.colors;
+    final gifSize = ref.watch(exerciseGifSizeProvider);
+
+    // Hidden = no GIF icon at all
+    if (gifSize == ExerciseGifSize.hidden) {
+      return const SizedBox.shrink();
+    }
+
+    final displaySize = gifSize.size;
 
     // For single type exercises, use animated GIF
     if (exercise.type == ExerciseType.single) {
@@ -669,23 +679,24 @@ class _ExerciseGifIcon extends ConsumerWidget {
           child: ExerciseGifWidget(
             gifUrl: gifUrl,
             exerciseName: exercise.name,
+            size: displaySize,
             backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
             iconColor: colorScheme.primary,
           ),
         ),
         loading: () => Container(
-          width: 56,
-          height: 56,
+          width: displaySize,
+          height: displaySize,
           decoration: BoxDecoration(
             color: colorScheme.primary.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Center(
-            child: LoadingIndicator(size: 20, color: colorScheme.primary),
+            child: LoadingIndicator(size: displaySize * 0.35, color: colorScheme.primary),
           ),
         ),
         error: (_, __) =>
-            _buildStaticIcon(context, AppIcons.workout, colorScheme.primary),
+            _buildStaticIcon(context, AppIcons.workout, colorScheme.primary, displaySize),
       );
     }
 
@@ -697,13 +708,13 @@ class _ExerciseGifIcon extends ConsumerWidget {
       ExerciseType.single => (AppIcons.workout, colorScheme.primary),
     };
 
-    return _buildStaticIcon(context, icon, color);
+    return _buildStaticIcon(context, icon, color, displaySize);
   }
 
-  Widget _buildStaticIcon(BuildContext context, IconData icon, Color color) {
+  Widget _buildStaticIcon(BuildContext context, IconData icon, Color color, double size) {
     return Container(
-      width: 40,
-      height: 40,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         shape: BoxShape.circle,
