@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
@@ -22,6 +23,9 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
   // Fade-out controller for smooth transition
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
+
+  // Audio player for intro sound
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   // Background color matching native splash
   static const Color _backgroundColor = Color(0xFF1B2838);
@@ -76,11 +80,14 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
     _lottieController.duration = composition.duration;
     if (mounted) {
       _lottieController.forward();
+      // Play intro sound synced with animation start
+      _audioPlayer.play(AssetSource('sounds/app_intro.mp3'));
     }
   }
 
   @override
   void dispose() {
+    _audioPlayer.dispose();
     _lottieController.dispose();
     _fadeController.dispose();
     super.dispose();
