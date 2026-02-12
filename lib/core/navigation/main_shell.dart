@@ -4,39 +4,62 @@
 /// Feature: Main Shell with Bottom Navigation
 /// Type: StatefulShellRoute Container
 ///
-/// Provides persistent bottom navigation across 4 main branches
+/// Provides persistent bottom navigation across 5 main branches
 /// with state preservation using StatefulShellRoute pattern.
 ///
 /// **Architecture**:
 /// ```
-/// MainShell (Scaffold)
-///   ├── body: StatefulNavigationShell (preserves branch state)
-///   └── bottomNavigationBar: NavigationBar (Material 3)
+/// MainShell (Scaffold, extendBody: true)
+///   └── body: Stack
+///         ├── MediaQuery(adjustedPadding) → NavigationShell
+///         ├── WorkoutMiniBar (if active, above nav bar)
+///         ├── _NativeIOSTabBar (iOS: CNTabBar Liquid Glass)
+///         └── _FloatingBottomNavBar (Android: custom floating bar)
 /// ```
 ///
 /// **Branches**:
 /// 1. Home (index 0) - Dashboard and quick actions
 /// 2. Workout (index 1) - Active workout and templates
 /// 3. Analytics (index 2) - Stats and progress
-/// 4. Settings (index 3) - App configuration
+/// 4. Profile (index 3) - App configuration
+/// 5. AI Coach (index 4) - AI-powered coaching (feature flag)
 library;
 
 import 'dart:async';
+import 'dart:io';
+import 'dart:ui';
 
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/config/feature_flags.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_sync_listener.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/registry/hint_registry.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/discoverability_hint_provider.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/hint_peek.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_mini_bar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_sync_listener.dart';
-import 'package:gymbro_flutter_new/core/config/feature_flags.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+
+/// iOS CNTabBar approximate content height (native intrinsic ~50pt)
+const _kIOSTabBarHeight = 50.0;
+
+/// Android floating nav bar height
+const _kAndroidNavBarHeight = 56.0;
+
+/// Android floating nav bar bottom margin from safe area
+const _kAndroidNavBarBottomMargin = 12.0;
+
+/// Android floating nav bar horizontal margin
+const _kAndroidNavBarHorizontalMargin = 16.0;
 
 /// Global key for bottom navigation bar - used by home tour
 final bottomNavKeyProvider = Provider<GlobalKey>((ref) => GlobalKey());
@@ -44,16 +67,15 @@ final bottomNavKeyProvider = Provider<GlobalKey>((ref) => GlobalKey());
 /// Main shell widget containing bottom navigation and branch content
 ///
 /// Uses [StatefulNavigationShell] to preserve branch state when switching tabs.
-/// Implements Material 3 NavigationBar with animated transitions.
+/// On iOS: native CNTabBar (Liquid Glass) via cupertino_native package.
+/// On Android: custom floating bottom nav bar with backdrop blur.
 /// Shows WorkoutMiniBar when workout is active and user is not on workout tab.
 class MainShell extends ConsumerStatefulWidget {
-  /// Creates the main shell with navigation
   const MainShell({
     required this.navigationShell,
     super.key,
   });
 
-  /// The navigation shell containing branch content
   final StatefulNavigationShell navigationShell;
 
   @override
@@ -69,15 +91,11 @@ class _MainShellState extends ConsumerState<MainShell> {
   int? _previousIndex;
 
   @override
-  void initState() {
-    super.initState();
-    // Journey Themes now auto-initialize via Notifier.build()
-  }
-
-  @override
   Widget build(BuildContext context) {
     final workout = ref.watch(currentWorkoutProvider);
     final currentIndex = widget.navigationShell.currentIndex;
+    final isIOS = Platform.isIOS;
+    final bottomSafeArea = MediaQuery.of(context).viewPadding.bottom;
 
     // Reset tracking if workout changed or ended
     if (workout?.id != _lastWorkoutId) {
@@ -104,51 +122,117 @@ class _MainShellState extends ConsumerState<MainShell> {
         currentIndex != 1 &&
         _hasVisitedWorkoutScreen;
 
+    // Calculate total nav bar height (content + safe area)
+    final navBarTotalHeight = isIOS
+        ? _kIOSTabBarHeight + bottomSafeArea
+        : _kAndroidNavBarHeight + _kAndroidNavBarBottomMargin + bottomSafeArea;
+
+    // Inject adjusted MediaQuery so scroll views add bottom inset for nav bar.
+    // IMPORTANT: Zero out viewInsets.bottom because MainShell's Scaffold already
+    // handles keyboard resize via resizeToAvoidBottomInset. Preserving viewInsets
+    // would cause child Scaffolds to double-resize, creating a black gap.
+    final existingMediaQuery = MediaQuery.of(context);
+    final keyboardVisible = existingMediaQuery.viewInsets.bottom > 0;
+    final adjustedMediaQuery = existingMediaQuery.copyWith(
+      padding: existingMediaQuery.padding.copyWith(
+        // When keyboard covers the nav bar, no need for extra bottom padding
+        bottom: keyboardVisible ? 0 : navBarTotalHeight,
+      ),
+      viewInsets: existingMediaQuery.viewInsets.copyWith(
+        bottom: 0, // MainShell Scaffold handles this
+      ),
+    );
+
     return Scaffold(
-      // ✨ Material 3 2025: Subtle background veil instead of pure white
-      backgroundColor: context.colors.surfaceContainer,
+      extendBody: true,
+      backgroundColor: Colors.transparent,
       body: ExerciseSyncListener(
         child: Stack(
           children: [
-            // Main content with bottom padding when mini bar is visible
-            // This prevents content from being covered by the floating mini bar
-            Padding(
-              padding: EdgeInsets.only(
-                bottom: showMiniBar ? 68 : 0, // 60px mini bar height + 8px gap
-              ),
+            // Main content with adjusted bottom padding via MediaQuery
+            MediaQuery(
+              data: adjustedMediaQuery,
               child: widget.navigationShell,
             ),
 
             // Floating mini-bar positioned just above nav bar
-            // showMiniBar already checks workout != null
             if (showMiniBar)
               Positioned(
                 left: 0,
                 right: 0,
-                bottom: 4, // Body ends at top of nav bar, so 4px gap is enough
-                child: WorkoutMiniBar(
-                  // ignore: unnecessary_non_null_assertion
-                  workout: workout!, // Safe: showMiniBar condition ensures workout != null
-                  onDiscard: () => _showDiscardConfirmation(context),
-                  onSave: () => _showSaveConfirmation(context),
-                ),
+                bottom: navBarTotalHeight - 4,
+                child: _buildMiniBar(workout!, context),
               ),
+
+            // Bottom navigation bar - hidden when a bottom sheet is open
+            ValueListenableBuilder<int>(
+              valueListenable: ModalService.openSheetCount,
+              builder: (context, sheetCount, child) {
+                final isHidden = sheetCount > 0;
+                if (isIOS) {
+                  return Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: AnimatedSlide(
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeInOut,
+                      offset: Offset(0, isHidden ? 1.0 : 0.0),
+                      child: _NativeIOSTabBar(
+                        navKey: ref.watch(bottomNavKeyProvider),
+                        currentIndex: currentIndex,
+                        onTap: (index) => _onDestinationSelected(context, index),
+                      ),
+                    ),
+                  );
+                }
+                return Positioned(
+                  left: _kAndroidNavBarHorizontalMargin,
+                  right: _kAndroidNavBarHorizontalMargin,
+                  bottom: _kAndroidNavBarBottomMargin + bottomSafeArea,
+                  child: AnimatedSlide(
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeInOut,
+                    offset: Offset(0, isHidden ? 2.0 : 0.0),
+                    child: _FloatingBottomNavBar(
+                      navKey: ref.watch(bottomNavKeyProvider),
+                      currentIndex: currentIndex,
+                      onTap: (index) => _onDestinationSelected(context, index),
+                    ),
+                  ),
+                );
+              },
+            ),
           ],
         ),
-      ),
-      bottomNavigationBar: _BottomNavigationBar(
-        navKey: ref.watch(bottomNavKeyProvider),
-        currentIndex: currentIndex,
-        onDestinationSelected: (index) =>
-            _onDestinationSelected(context, index),
       ),
     );
   }
 
+  /// Build mini bar with optional HintPeek wrapper
+  Widget _buildMiniBar(Workout workout, BuildContext context) {
+    final miniBar = WorkoutMiniBar(
+      workout: workout,
+      onDiscard: () => _showDiscardConfirmation(context),
+      onSave: () => _showSaveConfirmation(context),
+    );
+
+    final showHint = ref.watch(
+      shouldShowHintProvider(HintRegistry.swipeMiniBar.hintId),
+    );
+    if (showHint) {
+      return HintPeek(
+        hint: HintRegistry.swipeMiniBar,
+        child: miniBar,
+      );
+    }
+    return miniBar;
+  }
+
   /// Handle auto-pause/resume when navigating between tabs
   ///
-  /// When user leaves workout tab (index 1) with active workout → auto-pause
-  /// When user returns to workout tab with paused workout → auto-resume
+  /// When user leaves workout tab (index 1) with active workout -> auto-pause
+  /// When user returns to workout tab with paused workout -> auto-resume
   void _handleAutoPause(int currentIndex, Workout? workout) {
     if (_previousIndex == null) {
       _previousIndex = currentIndex;
@@ -157,7 +241,7 @@ class _MainShellState extends ConsumerState<MainShell> {
 
     final config = ref.read(appConfigProvider);
 
-    // Leaving workout tab → auto-pause
+    // Leaving workout tab -> auto-pause
     if (_previousIndex == 1 &&
         currentIndex != 1 &&
         config.autoPauseOnNavigateAway &&
@@ -168,7 +252,7 @@ class _MainShellState extends ConsumerState<MainShell> {
       });
     }
 
-    // Returning to workout tab → auto-resume
+    // Returning to workout tab -> auto-resume
     if (_previousIndex != 1 &&
         currentIndex == 1 &&
         config.autoPauseOnNavigateAway &&
@@ -184,20 +268,15 @@ class _MainShellState extends ConsumerState<MainShell> {
 
   /// Handle destination selection with branch switching
   void _onDestinationSelected(BuildContext context, int index) {
-    // Haptic feedback on tab change
     HapticFeedback.lightImpact();
 
-    // Navigate to selected branch
-    // goBranch preserves the state of the previous branch
     widget.navigationShell.goBranch(
       index,
-      // If same branch, go to initial location (pop to root)
       initialLocation: index == widget.navigationShell.currentIndex,
     );
   }
 
   /// Show confirmation dialog before discarding workout
-  /// Returns true if user confirmed discard, false if canceled
   Future<bool> _showDiscardConfirmation(BuildContext context) async {
     unawaited(HapticFeedback.mediumImpact());
 
@@ -223,7 +302,6 @@ class _MainShellState extends ConsumerState<MainShell> {
     );
 
     if (confirmed == true && context.mounted) {
-      // Clear workout (user stays on current screen)
       ref.read(currentWorkoutProvider.notifier).clearWorkout();
       return true;
     }
@@ -232,7 +310,6 @@ class _MainShellState extends ConsumerState<MainShell> {
   }
 
   /// Show confirmation dialog before saving workout
-  /// Returns true if user confirmed save, false if canceled
   Future<bool> _showSaveConfirmation(BuildContext context) async {
     unawaited(HapticFeedback.mediumImpact());
 
@@ -258,10 +335,8 @@ class _MainShellState extends ConsumerState<MainShell> {
     );
 
     if (confirmed == true && context.mounted) {
-      // Pause workout to save state
       ref.read(currentWorkoutProvider.notifier).pauseWorkout();
 
-      // Show confirmation snackbar
       SnackBarService.showSuccess(
         context,
         context.l10n.workoutSaved,
@@ -274,130 +349,170 @@ class _MainShellState extends ConsumerState<MainShell> {
   }
 }
 
-/// Material 3 NavigationBar with 5 destinations
-/// Home, Workout, Stats, Profile, AI Coach
-class _BottomNavigationBar extends StatelessWidget {
-  const _BottomNavigationBar({
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// iOS: Native CNTabBar (Liquid Glass)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/// Native iOS tab bar using CNTabBar from cupertino_native package.
+/// Renders a real UITabBar with Liquid Glass appearance and SF Symbols.
+class _NativeIOSTabBar extends StatelessWidget {
+  const _NativeIOSTabBar({
     required this.currentIndex,
-    required this.onDestinationSelected,
+    required this.onTap,
     this.navKey,
   });
 
   final int currentIndex;
-  final ValueChanged<int> onDestinationSelected;
+  final ValueChanged<int> onTap;
   final GlobalKey? navKey;
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        navigationBarTheme: NavigationBarThemeData(
-          labelTextStyle: WidgetStateProperty.resolveWith((states) {
-            final isSelected = states.contains(WidgetState.selected);
-            return context.textTheme.labelSmall?.copyWith(
-              fontSize: 11,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+    return SizedBox(
+      key: navKey,
+      width: double.infinity,
+      child: CNTabBar(
+        items: [
+          CNTabBarItem(
+            label: context.l10n.home,
+            icon: const CNSymbol('house.fill'),
+          ),
+          CNTabBarItem(
+            label: context.l10n.workout,
+            icon: const CNSymbol('dumbbell.fill'),
+          ),
+          CNTabBarItem(
+            label: context.l10n.statistics,
+            icon: const CNSymbol('chart.bar.fill'),
+          ),
+          CNTabBarItem(
+            label: context.l10n.profile,
+            icon: const CNSymbol('person.fill'),
+          ),
+          if (FeatureFlags.aiCoachEnabled)
+            CNTabBarItem(
+              label: context.l10n.aiCoach,
+              icon: const CNSymbol('brain.head.profile.fill'),
+            ),
+        ],
+        currentIndex: currentIndex,
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Android: Floating Bottom Nav Bar
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/// Custom floating bottom navigation bar for Android.
+/// Uses ClipRRect + BackdropFilter for glassmorphic appearance.
+class _FloatingBottomNavBar extends StatelessWidget {
+  const _FloatingBottomNavBar({
+    required this.currentIndex,
+    required this.onTap,
+    this.navKey,
+  });
+
+  final int currentIndex;
+  final ValueChanged<int> onTap;
+  final GlobalKey? navKey;
+
+  @override
+  Widget build(BuildContext context) {
+    final items = <_NavItemData>[
+      _NavItemData(AppIcons.homeOutlined, context.l10n.home),
+      _NavItemData(AppIcons.workoutOutlined, context.l10n.workout),
+      _NavItemData(AppIcons.analyticsOutlined, context.l10n.statistics),
+      _NavItemData(AppIcons.profileOutlined, context.l10n.profile),
+      if (FeatureFlags.aiCoachEnabled)
+        _NavItemData(AppIcons.psychology, context.l10n.aiCoach),
+    ];
+
+    return ClipRRect(
+      key: navKey,
+      borderRadius: BorderRadius.circular(28),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        child: Container(
+          height: _kAndroidNavBarHeight,
+          decoration: BoxDecoration(
+            color: context.colors.surfaceContainer.withValues(alpha: 0.85),
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(
+              color: context.colors.outlineVariant.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              for (var i = 0; i < items.length; i++)
+                _FloatingNavItem(
+                  icon: items[i].icon,
+                  label: items[i].label,
+                  isSelected: i == currentIndex,
+                  onTap: () => onTap(i),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NavItemData {
+  const _NavItemData(this.icon, this.label);
+  final IconData icon;
+  final String label;
+}
+
+class _FloatingNavItem extends StatelessWidget {
+  const _FloatingNavItem({
+    required this.icon,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: SizedBox(
+        width: 64,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: AppIconSize.medium,
               color: isSelected
                   ? context.colors.primary
                   : context.colors.onSurfaceVariant,
-            );
-          }),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: context.textTheme.labelSmall?.copyWith(
+                fontSize: 10,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                color: isSelected
+                    ? context.colors.primary
+                    : context.colors.onSurfaceVariant,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
         ),
-      ),
-      child: NavigationBar(
-        key: navKey,
-        selectedIndex: currentIndex,
-        onDestinationSelected: onDestinationSelected,
-        // Material 3 styling - iOS standard 64px height
-        elevation: 0,
-        // Same color as scaffold for seamless transition
-        backgroundColor: context.colors.surfaceContainer,
-        indicatorColor: context.colors.surfaceContainer.withValues(alpha: 0), // No indicator background
-        surfaceTintColor: context.colors.surfaceContainer.withValues(alpha: 0),
-        height: 64,
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        animationDuration: const Duration(milliseconds: 200),
-        destinations: [
-          // Note: AI Coach tab conditional rendering based on feature flag
-          // Design requirement: docs/AI_COACH_DESIGN.md lines 638-652
-          // Home - outlined icon, color change on selection
-          NavigationDestination(
-            icon: Icon(
-              AppIcons.homeOutlined,
-              size: AppIconSize.medium,
-              color: context.colors.onSurfaceVariant,
-            ),
-            selectedIcon: Icon(
-              AppIcons.homeOutlined,
-              size: AppIconSize.medium,
-              color: context.colors.primary,
-            ),
-            label: context.l10n.home,
-            tooltip: context.l10n.home,
-          ),
-          // Workout - outlined icon, color change on selection
-          NavigationDestination(
-            icon: Icon(
-              AppIcons.workoutOutlined,
-              size: AppIconSize.medium,
-              color: context.colors.onSurfaceVariant,
-            ),
-            selectedIcon: Icon(
-              AppIcons.workoutOutlined,
-              size: AppIconSize.medium,
-              color: context.colors.primary,
-            ),
-            label: context.l10n.workout,
-            tooltip: context.l10n.workout,
-          ),
-          // Stats - outlined icon, color change on selection
-          NavigationDestination(
-            icon: Icon(
-              AppIcons.analyticsOutlined,
-              size: AppIconSize.medium,
-              color: context.colors.onSurfaceVariant,
-            ),
-            selectedIcon: Icon(
-              AppIcons.analyticsOutlined,
-              size: AppIconSize.medium,
-              color: context.colors.primary,
-            ),
-            label: context.l10n.statistics,
-            tooltip: context.l10n.statistics,
-          ),
-          // Profile - outlined icon, color change on selection
-          NavigationDestination(
-            icon: Icon(
-              AppIcons.profileOutlined,
-              size: AppIconSize.medium,
-              color: context.colors.onSurfaceVariant,
-            ),
-            selectedIcon: Icon(
-              AppIcons.profileOutlined,
-              size: AppIconSize.medium,
-              color: context.colors.primary,
-            ),
-            label: context.l10n.profile,
-            tooltip: context.l10n.profile,
-          ),
-          // AI Coach - psychology icon, color change on selection
-          // Conditional rendering: only show if feature flag enabled
-          if (FeatureFlags.aiCoachEnabled)
-            NavigationDestination(
-              icon: Icon(
-                AppIcons.psychology,
-                size: AppIconSize.medium,
-                color: context.colors.onSurfaceVariant,
-              ),
-              selectedIcon: Icon(
-                AppIcons.psychology,
-                size: AppIconSize.medium,
-                color: context.colors.primary,
-              ),
-              label: context.l10n.aiCoach,
-              tooltip: context.l10n.aiCoach,
-            ),
-        ],
       ),
     );
   }

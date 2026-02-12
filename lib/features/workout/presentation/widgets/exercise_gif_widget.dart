@@ -106,6 +106,8 @@ class _ExerciseGifWidgetState extends State<ExerciseGifWidget>
 
   // 🔧 PERF FIX: Pause animation when scrolled out of viewport
   void _onVisibilityChanged(VisibilityInfo info) {
+    if (!mounted) return;
+
     // Consider visible if at least 10% of widget is showing
     final isVisible = info.visibleFraction > 0.1;
 
