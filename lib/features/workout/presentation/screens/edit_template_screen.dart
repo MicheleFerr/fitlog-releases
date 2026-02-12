@@ -1628,10 +1628,29 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
     );
   }
 
+  /// Recalculate warmup percent based on actual weight vs base weight
+  int _recalcPercent(int exerciseIndex, double weight, int originalPercent) {
+    final baseWeight = _exercises[exerciseIndex].sets.firstOrNull?.targetWeight ?? 0;
+    if (baseWeight <= 0) return originalPercent;
+    return ((weight / baseWeight) * 100).round().clamp(1, 100);
+  }
+
+  /// Create a _WarmupSet override with recalculated percent
+  _WarmupSet _makeOverride(int exerciseIndex, ExerciseSet updatedSet, _WarmupSet original) {
+    final w = updatedSet.weight ?? original.weight;
+    final r = updatedSet.reps ?? original.reps;
+    return _WarmupSet(
+      weight: w,
+      reps: r,
+      percent: _recalcPercent(exerciseIndex, w, original.percent),
+    );
+  }
+
   /// Edit a single warmup set via MinimalSetEditSheet
   void _editWarmupSet(int exerciseIndex, int warmupIndex, _WarmupSet warmup) {
     final exercise = _exercises[exerciseIndex];
     final allWarmups = _generateWarmupSets(exerciseIndex, exercise);
+    final baseWeight = exercise.sets.firstOrNull?.targetWeight ?? 0;
 
     final exerciseSet = ExerciseSet(
       setNumber: warmupIndex + 1,
@@ -1645,19 +1664,25 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       reps: e.value.reps,
     )).toList();
 
+    // Calculate suggested weight/reps from the percentage
+    final suggestedWeight = baseWeight > 0 ? _smartRound(baseWeight * warmup.percent / 100) : null;
+    final baseReps = exercise.sets.firstOrNull?.targetReps ?? 10;
+    final suggestedReps = warmup.percent <= 50
+        ? (baseReps * 0.5).round().clamp(3, 8)
+        : (baseReps * 0.6).round().clamp(3, 8);
+
     context.showMinimalSetEditSheet(
       exerciseSet: exerciseSet,
       currentSetIndex: warmupIndex,
       totalSets: allWarmups.length,
       allSets: allSets,
+      suggestedWeight: suggestedWeight,
+      suggestedReps: suggestedReps,
+      suggestedSource: '${warmup.percent}%',
       onSave: (updatedSet) {
         setState(() {
           _warmupOverrides[exerciseIndex] ??= {};
-          _warmupOverrides[exerciseIndex]![warmupIndex] = _WarmupSet(
-            weight: updatedSet.weight ?? warmup.weight,
-            reps: updatedSet.reps ?? warmup.reps,
-            percent: warmup.percent,
-          );
+          _warmupOverrides[exerciseIndex]![warmupIndex] = _makeOverride(exerciseIndex, updatedSet, warmup);
         });
         _markAsChanged();
       },
@@ -1665,11 +1690,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
           ? (updatedSet) {
               setState(() {
                 _warmupOverrides[exerciseIndex] ??= {};
-                _warmupOverrides[exerciseIndex]![warmupIndex] = _WarmupSet(
-                  weight: updatedSet.weight ?? warmup.weight,
-                  reps: updatedSet.reps ?? warmup.reps,
-                  percent: warmup.percent,
-                );
+                _warmupOverrides[exerciseIndex]![warmupIndex] = _makeOverride(exerciseIndex, updatedSet, warmup);
               });
               _markAsChanged();
               Future.microtask(() {
@@ -1684,11 +1705,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
           ? (updatedSet) {
               setState(() {
                 _warmupOverrides[exerciseIndex] ??= {};
-                _warmupOverrides[exerciseIndex]![warmupIndex] = _WarmupSet(
-                  weight: updatedSet.weight ?? warmup.weight,
-                  reps: updatedSet.reps ?? warmup.reps,
-                  percent: warmup.percent,
-                );
+                _warmupOverrides[exerciseIndex]![warmupIndex] = _makeOverride(exerciseIndex, updatedSet, warmup);
               });
               _markAsChanged();
               Future.microtask(() {
@@ -1708,7 +1725,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
             _warmupOverrides[exerciseIndex]![i] = _WarmupSet(
               weight: w,
               reps: r,
-              percent: allWarmups[i].percent,
+              percent: _recalcPercent(exerciseIndex, w, allWarmups[i].percent),
             );
           }
         });

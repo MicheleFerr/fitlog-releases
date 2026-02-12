@@ -1313,6 +1313,7 @@ extension MinimalSetEditSheetExtension on BuildContext {
     String measurementUnit = 'kg',
     List<({double weight, DateTime date})>? recentWeights,
     double? suggestedWeight,
+    int? suggestedReps,
     String? suggestedSource,
     ExerciseCountingMode countingMode = ExerciseCountingMode.weighted,
   }) {
@@ -1332,6 +1333,7 @@ extension MinimalSetEditSheetExtension on BuildContext {
         measurementUnit: measurementUnit,
         recentWeights: recentWeights,
         suggestedWeight: suggestedWeight,
+        suggestedReps: suggestedReps,
         suggestedSource: suggestedSource,
         countingMode: countingMode,
       ),
