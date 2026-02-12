@@ -216,6 +216,14 @@ class FitLogApp extends ConsumerWidget {
         ],
         routerConfig: router,
         debugShowCheckedModeBanner: false,
+        builder: (context, child) {
+          // Global: dismiss keyboard on tap outside any text field
+          return GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            behavior: HitTestBehavior.translucent,
+            child: child,
+          );
+        },
       );
     } catch (e, stack) {
       // ✅ FIX #5: Graceful error handling - show error screen instead of black screen

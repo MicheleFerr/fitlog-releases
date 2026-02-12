@@ -149,10 +149,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
             ),
           ],
         ),
-        body: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          behavior: HitTestBehavior.translucent,
-          child: Column(
+        body: Column(
           children: [
             // Header - description field only (name is edited via AppBar tap)
             Container(
@@ -278,7 +275,6 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                     ),
             ),
           ],
-        ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: FloatingActionButton(
