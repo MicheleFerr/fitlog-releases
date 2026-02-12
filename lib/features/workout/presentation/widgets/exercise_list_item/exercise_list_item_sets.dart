@@ -714,60 +714,73 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
 
   /// Build set details widgets based on counting mode
   /// ✅ OPTIMIZATION: Uses cached counting mode instead of calling service per set
+  /// ✅ FIX: Always show placeholder when weight/reps are null to prevent empty rows
   List<Widget> _buildSetDetailsForMode(ExerciseSet set, AppConfig config) {
+    final placeholderStyle = context.textTheme.bodyMedium?.copyWith(
+      fontWeight: FontWeight.w500,
+      color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+    );
+    final valueStyle = context.textTheme.bodyMedium?.copyWith(
+      fontWeight: FontWeight.w500,
+    );
+
     switch (_cachedCountingMode) {
       case ExerciseCountingMode.weighted:
-        // Weighted: Show weight × reps
-        // ✅ Removed lineThrough - completed sets already show check icon
+        // Weighted: Show weight × reps (with placeholders for null values)
+        final hasWeight = set.weight != null;
+        final hasReps = set.reps != null;
+
+        // If both null, show a single placeholder prompting edit
+        if (!hasWeight && !hasReps) {
+          return [
+            Text(
+              '-- × -- reps',
+              style: placeholderStyle,
+            ),
+          ];
+        }
+
         return [
-          if (set.weight != null) ...[
-            Text(
-              set.weight!.formatWeight(config.measurementUnit),
-              style: context.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(width: 4),
-            Text('×', style: context.textTheme.bodySmall),
-            const SizedBox(width: 4),
-          ],
-          if (set.reps != null)
-            Text(
-              set.actualReps != null && set.isCompleted
-                  ? '${set.actualReps}/${set.reps} reps'
-                  : '${set.reps} reps',
-              style: context.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+          Text(
+            hasWeight
+                ? set.weight!.formatWeight(config.measurementUnit)
+                : '--',
+            style: hasWeight ? valueStyle : placeholderStyle,
+          ),
+          const SizedBox(width: 4),
+          Text('×', style: context.textTheme.bodySmall),
+          const SizedBox(width: 4),
+          Text(
+            hasReps
+                ? (set.actualReps != null && set.isCompleted
+                    ? '${set.actualReps}/${set.reps} reps'
+                    : '${set.reps} reps')
+                : '-- reps',
+            style: hasReps ? valueStyle : placeholderStyle,
+          ),
         ];
 
       case ExerciseCountingMode.reps:
         // Reps-only: Show reps only (bodyweight exercises)
-        // ✅ Removed lineThrough - completed sets already show check icon
         return [
-          if (set.reps != null)
-            Text(
-              set.actualReps != null && set.isCompleted
-                  ? '${set.actualReps}/${set.reps} reps'
-                  : '${set.reps} reps',
-              style: context.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+          Text(
+            set.reps != null
+                ? (set.actualReps != null && set.isCompleted
+                    ? '${set.actualReps}/${set.reps} reps'
+                    : '${set.reps} reps')
+                : '-- reps',
+            style: set.reps != null ? valueStyle : placeholderStyle,
+          ),
         ];
 
       case ExerciseCountingMode.time:
         // Time-based: Show duration (isometric exercises)
         // ✅ FIX: Prioritize seconds field for time mode, fallback to reps for backward compatibility
-        // ✅ Removed lineThrough - completed sets already show check icon
         final duration = set.seconds ?? set.reps ?? 60;
         return [
           Text(
             _formatDuration(duration),
-            style: context.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
+            style: valueStyle,
           ),
         ];
     }
