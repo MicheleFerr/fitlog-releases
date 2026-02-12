@@ -99,10 +99,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       child: Scaffold(
         appBar: AppBar(
           title: GestureDetector(
-            onTap: () => _nameController.selection = TextSelection(
-              baseOffset: 0,
-              extentOffset: _nameController.text.length,
-            ),
+            onTap: _showEditNameDialog,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -154,40 +151,22 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
         ),
         body: Column(
           children: [
-            // Header - description field + inline name edit
+            // Header - description field only (name is edited via AppBar tap)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Column(
                 children: [
-                  // Inline name edit
-                  TextField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      hintText: context.l10n.templateName,
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                      isDense: true,
-                    ),
-                    style: context.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-                    onChanged: (_) {
-                      _markAsChanged();
-                      setState(() {}); // Update AppBar title
-                    },
-                  ),
                   TextField(
                     controller: _descriptionController,
                     decoration: InputDecoration(
                       hintText: context.l10n.description,
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                      isDense: true,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                     ),
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: context.colors.onSurface.withValues(alpha: 0.6),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colors.onSurface.withValues(alpha: 0.7),
                     ),
-                    maxLines: 1,
+                    maxLines: 2,
                     onChanged: (_) => _markAsChanged(),
                   ),
                   // Toggle pubblico/privato
@@ -897,6 +876,63 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
         context.l10n.autoPopulatedFromHistory,
       );
     }
+  }
+
+  /// Show dialog to edit template name from the AppBar
+  void _showEditNameDialog() {
+    final controller = TextEditingController(text: _nameController.text);
+    ModalService.showSheet(
+      context,
+      isScrollControlled: true,
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(ctx).viewInsets.bottom + 16,
+          top: 20,
+          left: 20,
+          right: 20,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              context.l10n.templateName,
+              style: context.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: controller,
+              autofocus: true,
+              textCapitalization: TextCapitalization.words,
+              decoration: InputDecoration(
+                hintText: context.l10n.templateName,
+                border: const OutlineInputBorder(),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              ),
+              style: context.textTheme.titleSmall,
+              onSubmitted: (_) {
+                _nameController.text = controller.text;
+                _markAsChanged();
+                setState(() {});
+                Navigator.pop(ctx);
+              },
+            ),
+            const SizedBox(height: 12),
+            FilledButton(
+              onPressed: () {
+                _nameController.text = controller.text;
+                _markAsChanged();
+                setState(() {});
+                Navigator.pop(ctx);
+              },
+              child: Text(context.l10n.done),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _markAsChanged() {
