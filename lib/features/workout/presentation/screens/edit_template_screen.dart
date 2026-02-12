@@ -1476,6 +1476,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useRootNavigator: true,
       backgroundColor: context.colors.surface.withValues(alpha: 0),
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSheetState) => Container(
@@ -1484,7 +1485,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           padding: EdgeInsets.only(
-            bottom: MediaQuery.of(ctx).viewInsets.bottom + 16,
+            bottom: MediaQuery.of(ctx).viewPadding.bottom + 16,
             top: 20,
             left: 20,
             right: 20,
