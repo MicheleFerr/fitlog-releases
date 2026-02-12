@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -549,126 +551,24 @@ class _ExerciseCustomizationScreenState
 
   /// Show rest time picker dialog
   void _showRestTimePicker(int exerciseIndex, ExerciseCustomization customization) {
-    final theme = Theme.of(context);
     final l10n = context.l10n;
-    int selectedSeconds = customization.restTime ?? 90; // Default 90s
-    final controller = FixedExtentScrollController(
-      initialItem: (selectedSeconds / 5).round() - 1,
-    );
+    final initialSeconds = customization.restTime ?? 90;
 
     ModalService.showSheet(context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setModalState) => Container(
-          height: 380,
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              // Handle bar
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              // Title
-              Text(
-                l10n.restTimer,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 12),
-
-              // Quick select buttons (common rest times)
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [30, 60, 90, 120, 180].map((seconds) {
-                  final isSelected = selectedSeconds == seconds;
-                  return FilterChip(
-                    label: Text(_formatRestTime(seconds)),
-                    selected: isSelected,
-                    onSelected: (_) {
-                      setModalState(() => selectedSeconds = seconds);
-                      controller.animateToItem(
-                        (seconds / 5).round() - 1,
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut,
-                      );
-                    },
-                    backgroundColor: theme.colorScheme.surface,
-                    selectedColor: theme.colorScheme.tertiaryContainer,
-                    labelStyle: theme.textTheme.labelMedium?.copyWith(
-                      color: isSelected
-                          ? theme.colorScheme.onTertiaryContainer
-                          : theme.colorScheme.onSurface,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                    ),
-                  );
-                }).toList(),
-              ),
-
-              const SizedBox(height: 16),
-              // Picker (5s increments, 5s to 5min)
-              Expanded(
-                child: ListWheelScrollView.useDelegate(
-                  controller: controller,
-                  itemExtent: 50,
-                  perspective: 0.005,
-                  diameterRatio: 1.2,
-                  physics: const FixedExtentScrollPhysics(),
-                  childDelegate: ListWheelChildBuilderDelegate(
-                    childCount: 60, // 5s to 300s (5min)
-                    builder: (context, index) {
-                      final seconds = (index + 1) * 5;
-                      final isSelected = seconds == selectedSeconds;
-                      return Center(
-                        child: Text(
-                          _formatRestTime(seconds),
-                          style: theme.textTheme.headlineSmall?.copyWith(
-                            fontWeight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                            color: isSelected
-                                ? theme.colorScheme.tertiary
-                                : theme.colorScheme.onSurface,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  onSelectedItemChanged: (index) {
-                    setModalState(() => selectedSeconds = (index + 1) * 5);
-                  },
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Confirm button
-              SizedBox(
-                width: double.infinity,
-                child: Semantics(
-                  label: l10n.confirm,
-                  button: true,
-                  child: FilledButton(
-                    onPressed: () {
-                      setState(() {
-                        _customizations[exerciseIndex] =
-                            _customizations[exerciseIndex].copyWith(
-                          restTime: selectedSeconds,
-                        );
-                      });
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(l10n.confirm),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      isScrollControlled: true,
+      builder: (context) => _RestTimePickerSheet(
+        title: l10n.restTimer,
+        presetSeconds: const [30, 60, 90, 120, 180, 300],
+        initialSeconds: initialSeconds,
+        onConfirm: (seconds) {
+          setState(() {
+            _customizations[exerciseIndex] =
+                _customizations[exerciseIndex].copyWith(
+              restTime: seconds,
+            );
+          });
+        },
       ),
     );
   }
@@ -774,130 +674,26 @@ class _ExerciseCustomizationScreenState
     int exerciseIndex,
     ExerciseCustomization customization,
   ) {
-    final theme = Theme.of(context);
     final l10n = context.l10n;
-    // Get global default from config
     final appConfig = ref.read(appConfigProvider);
-    int selectedSeconds =
+    final initialSeconds =
         customization.restAfterExercise ?? appConfig.defaultRestBetweenExercises;
-    final controller = FixedExtentScrollController(
-      initialItem: (selectedSeconds / 5).round() - 1,
-    );
 
     ModalService.showSheet(context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setModalState) => Container(
-          height: 380,
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              // Handle bar
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              // Title
-              Text(
-                l10n.restBetweenExercises,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 12),
-
-              // Quick select buttons (common rest times)
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [60, 90, 120, 180, 240].map((seconds) {
-                  final isSelected = selectedSeconds == seconds;
-                  return FilterChip(
-                    label: Text(_formatRestTime(seconds)),
-                    selected: isSelected,
-                    onSelected: (_) {
-                      setModalState(() => selectedSeconds = seconds);
-                      controller.animateToItem(
-                        (seconds / 5).round() - 1,
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut,
-                      );
-                    },
-                    backgroundColor: theme.colorScheme.surface,
-                    selectedColor: theme.colorScheme.secondaryContainer,
-                    labelStyle: theme.textTheme.labelMedium?.copyWith(
-                      color: isSelected
-                          ? theme.colorScheme.onSecondaryContainer
-                          : theme.colorScheme.onSurface,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
-                    ),
-                  );
-                }).toList(),
-              ),
-
-              const SizedBox(height: 16),
-              // Picker (5s increments, 5s to 5min)
-              Expanded(
-                child: ListWheelScrollView.useDelegate(
-                  controller: controller,
-                  itemExtent: 50,
-                  perspective: 0.005,
-                  diameterRatio: 1.2,
-                  physics: const FixedExtentScrollPhysics(),
-                  childDelegate: ListWheelChildBuilderDelegate(
-                    childCount: 60, // 5s to 300s (5min)
-                    builder: (context, index) {
-                      final seconds = (index + 1) * 5;
-                      final isSelected = seconds == selectedSeconds;
-                      return Center(
-                        child: Text(
-                          _formatRestTime(seconds),
-                          style: theme.textTheme.headlineSmall?.copyWith(
-                            fontWeight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                            color: isSelected
-                                ? theme.colorScheme.secondary
-                                : theme.colorScheme.onSurface,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  onSelectedItemChanged: (index) {
-                    setModalState(() => selectedSeconds = (index + 1) * 5);
-                  },
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Confirm button
-              SizedBox(
-                width: double.infinity,
-                child: Semantics(
-                  label: l10n.confirm,
-                  button: true,
-                  child: FilledButton(
-                    onPressed: () {
-                      setState(() {
-                        _customizations[exerciseIndex] =
-                            _customizations[exerciseIndex].copyWith(
-                          restAfterExercise: selectedSeconds,
-                        );
-                      });
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(l10n.confirm),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+      isScrollControlled: true,
+      builder: (context) => _RestTimePickerSheet(
+        title: l10n.restBetweenExercises,
+        presetSeconds: const [60, 90, 120, 180, 240, 300],
+        initialSeconds: initialSeconds,
+        onConfirm: (seconds) {
+          setState(() {
+            _customizations[exerciseIndex] =
+                _customizations[exerciseIndex].copyWith(
+              restAfterExercise: seconds,
+            );
+          });
+        },
       ),
     );
   }
@@ -2972,6 +2768,284 @@ class _ExerciseCustomizationScreenState
 }
 
 // Data Classes
+/// Unified rest time picker sheet matching header timer modal style
+class _RestTimePickerSheet extends StatefulWidget {
+  const _RestTimePickerSheet({
+    required this.title,
+    required this.presetSeconds,
+    required this.initialSeconds,
+    required this.onConfirm,
+  });
+
+  final String title;
+  final List<int> presetSeconds;
+  final int initialSeconds;
+  final void Function(int seconds) onConfirm;
+
+  @override
+  State<_RestTimePickerSheet> createState() => _RestTimePickerSheetState();
+}
+
+class _RestTimePickerSheetState extends State<_RestTimePickerSheet> {
+  late int _selectedMinutes;
+  late int _selectedSeconds;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedMinutes = widget.initialSeconds ~/ 60;
+    _selectedSeconds = widget.initialSeconds % 60;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final l10n = AppLocalizations.of(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Handle
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: colors.onSurfaceVariant.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Title
+          Text(
+            widget.title,
+            style: textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            l10n.selectRestDuration,
+            style: textTheme.bodyMedium?.copyWith(
+              color: colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Preset chips
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            alignment: WrapAlignment.center,
+            children: widget.presetSeconds.map((seconds) {
+              return _buildPresetChip(context, seconds);
+            }).toList(),
+          ),
+          const SizedBox(height: 24),
+
+          // Divider with "oppure"
+          Row(
+            children: [
+              Expanded(
+                child: Divider(
+                  color: colors.outline.withValues(alpha: 0.3),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  l10n.orCustom,
+                  style: textTheme.labelMedium?.copyWith(
+                    color: colors.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Divider(
+                  color: colors.outline.withValues(alpha: 0.3),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          // Number picker
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildNumberPicker(
+                context,
+                value: _selectedMinutes,
+                maxValue: 10,
+                label: l10n.minutes,
+                onChanged: (val) => setState(() => _selectedMinutes = val),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  ':',
+                  style: textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              _buildNumberPicker(
+                context,
+                value: _selectedSeconds,
+                maxValue: 59,
+                label: l10n.seconds,
+                onChanged: (val) => setState(() => _selectedSeconds = val),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          // Confirm button
+          SizedBox(
+            width: double.infinity,
+            child: Semantics(
+              label: l10n.confirm,
+              button: true,
+              child: FilledButton(
+                onPressed: () {
+                  final totalSeconds = (_selectedMinutes * 60) + _selectedSeconds;
+                  if (totalSeconds > 0) {
+                    HapticFeedback.mediumImpact();
+                    widget.onConfirm(totalSeconds);
+                  }
+                  Navigator.of(context).pop();
+                },
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  textStyle: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                child: Text(
+                  '${l10n.confirm} ${_formatDuration(_selectedMinutes, _selectedSeconds)}',
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPresetChip(BuildContext context, int seconds) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final label = _formatPresetLabel(seconds);
+
+    return InkWell(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        widget.onConfirm(seconds);
+        Navigator.of(context).pop();
+      },
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+        decoration: BoxDecoration(
+          color: colors.primaryContainer.withValues(alpha: 0.4),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: colors.primary.withValues(alpha: 0.3),
+          ),
+        ),
+        child: Text(
+          label,
+          style: textTheme.labelLarge?.copyWith(
+            color: colors.primary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNumberPicker(
+    BuildContext context, {
+    required int value,
+    required int maxValue,
+    required String label,
+    required void Function(int) onChanged,
+  }) {
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Column(
+      children: [
+        Text(
+          label,
+          style: textTheme.labelSmall?.copyWith(
+            color: colors.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 8),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: colors.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                onPressed: value > 0 ? () => onChanged(value - 1) : null,
+                icon: const Icon(AppIcons.remove),
+                iconSize: AppIconSize.small,
+              ),
+              SizedBox(
+                width: 50,
+                child: Text(
+                  value.toString().padLeft(2, '0'),
+                  textAlign: TextAlign.center,
+                  style: textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: value < maxValue ? () => onChanged(value + 1) : null,
+                icon: const Icon(AppIcons.add),
+                iconSize: AppIconSize.small,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _formatPresetLabel(int seconds) {
+    final minutes = seconds ~/ 60;
+    final secs = seconds % 60;
+    if (minutes > 0 && secs > 0) {
+      return '$minutes:${secs.toString().padLeft(2, '0')}';
+    } else if (minutes > 0) {
+      return '$minutes:00';
+    }
+    return '${secs}s';
+  }
+
+  String _formatDuration(int minutes, int seconds) {
+    if (minutes > 0) {
+      return '$minutes:${seconds.toString().padLeft(2, '0')}';
+    }
+    return '0:${seconds.toString().padLeft(2, '0')}';
+  }
+}
+
 class ExerciseCustomization {
   ExerciseCustomization({
     required this.exercise,
