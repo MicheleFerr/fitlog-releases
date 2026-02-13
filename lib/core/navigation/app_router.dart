@@ -5,7 +5,7 @@
 /// Type: GoRouter Configuration
 ///
 /// Complete router implementation using StatefulShellRoute for
-/// persistent bottom navigation with 5 branches.
+/// persistent bottom navigation with branches.
 ///
 /// **Architecture** (2024/2025 Best Practices):
 /// ```
@@ -13,14 +13,12 @@
 ///   ├── Auth Routes (login, register) - outside shell
 ///   ├── StatefulShellRoute (MainShell)
 ///   │   ├── Branch 0: Home
-///   │   │   └── Sub-routes (community, help, templates, etc.)
+///   │   │   └── Sub-routes (community, help, templates, analytics, etc.)
 ///   │   ├── Branch 1: Workout
 ///   │   │   └── Sub-routes (completion, exercises, history)
-///   │   ├── Branch 2: Analytics
-///   │   │   └── Sub-routes (overview, exercise-detail, progress)
-///   │   ├── Branch 3: Profile
+///   │   ├── Branch 2: Profile
 ///   │   │   └── Sub-routes (settings, measurements, coach, etc.)
-///   │   └── Branch 4: AI Coach
+///   │   └── Branch 3: AI Coach
 ///   │       └── Chat interface with OpenRouter
 ///   └── Modal Routes (outside shell, full-screen)
 /// ```
@@ -298,7 +296,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
 
       // ─────────────────────────────────────────────────────────────────────
-      // MAIN SHELL (5-branch bottom navigation)
+      // MAIN SHELL (bottom navigation: Home, Workout, Profile, AI Coach)
       // Wrapped with MobileWebGuard for mobile web detection
       // ─────────────────────────────────────────────────────────────────────
       StatefulShellRoute.indexedStack(
@@ -358,6 +356,58 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       ),
                     ],
                   ),
+                  // Stats / Analytics (pushed from Home, no longer a tab)
+                  GoRoute(
+                    path: 'stats',
+                    name: AppRoutes.statsName,
+                    builder: (context, state) => const AnalyticsScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'analytics',
+                        name: AppRoutes.analyticsName,
+                        builder: (context, state) => const TabbedAnalyticsScreen(),
+                        routes: [
+                          GoRoute(
+                            path: 'overview',
+                            name: AppRoutes.analyticsOverviewName,
+                            builder: (context, state) => const TabbedAnalyticsScreen(),
+                          ),
+                          GoRoute(
+                            path: 'exercise/:exerciseName',
+                            name: AppRoutes.analyticsExerciseDetailName,
+                            builder: (context, state) {
+                              final exerciseName = state.pathParameters['exerciseName']!;
+                              return ExerciseDetailScreen(
+                                exerciseName: Uri.decodeComponent(exerciseName),
+                              );
+                            },
+                          ),
+                          GoRoute(
+                            path: 'exercise-progress',
+                            name: AppRoutes.exerciseProgressName,
+                            builder: (context, state) => const ExerciseProgressScreen(),
+                            routes: [
+                              GoRoute(
+                                path: 'detail',
+                                name: AppRoutes.exerciseProgressDetailName,
+                                builder: (context, state) {
+                                  final exerciseName = state.extra as String;
+                                  return ExerciseDetailScreen(
+                                    exerciseName: exerciseName,
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                          GoRoute(
+                            path: 'pro',
+                            name: AppRoutes.proAnalyticsName,
+                            builder: (context, state) => const ProAnalyticsTabbedScreen(),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ],
@@ -414,73 +464,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
 
           // ═════════════════════════════════════════════════════════════════
-          // BRANCH 2: STATS
-          // ═════════════════════════════════════════════════════════════════
-          StatefulShellBranch(
-            navigatorKey: AppRoutes.statsNavigatorKey,
-            routes: [
-              GoRoute(
-                path: AppRoutes.statsPath,
-                name: AppRoutes.statsName,
-                builder: (context, state) => const AnalyticsScreen(),
-                routes: [
-                  // Analytics (nested under stats)
-                  GoRoute(
-                    path: 'analytics',
-                    name: AppRoutes.analyticsName,
-                    builder: (context, state) => const TabbedAnalyticsScreen(),
-                    routes: [
-                      // Analytics overview (tabbed)
-                      GoRoute(
-                        path: 'overview',
-                        name: AppRoutes.analyticsOverviewName,
-                        builder: (context, state) => const TabbedAnalyticsScreen(),
-                      ),
-                      // Exercise detail
-                      GoRoute(
-                        path: 'exercise/:exerciseName',
-                        name: AppRoutes.analyticsExerciseDetailName,
-                        builder: (context, state) {
-                          final exerciseName = state.pathParameters['exerciseName']!;
-                          return ExerciseDetailScreen(
-                            exerciseName: Uri.decodeComponent(exerciseName),
-                          );
-                        },
-                      ),
-                      // Exercise progress
-                      GoRoute(
-                        path: 'exercise-progress',
-                        name: AppRoutes.exerciseProgressName,
-                        builder: (context, state) => const ExerciseProgressScreen(),
-                        routes: [
-                          // Exercise progress detail
-                          GoRoute(
-                            path: 'detail',
-                            name: AppRoutes.exerciseProgressDetailName,
-                            builder: (context, state) {
-                              final exerciseName = state.extra as String;
-                              return ExerciseDetailScreen(
-                                exerciseName: exerciseName,
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                      // Pro Analytics (tabbed version)
-                      GoRoute(
-                        path: 'pro',
-                        name: AppRoutes.proAnalyticsName,
-                        builder: (context, state) => const ProAnalyticsTabbedScreen(),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-
-          // ═════════════════════════════════════════════════════════════════
-          // BRANCH 3: PROFILE
+          // BRANCH 2: PROFILE
           // ═════════════════════════════════════════════════════════════════
           StatefulShellBranch(
             navigatorKey: AppRoutes.profileNavigatorKey,
@@ -636,7 +620,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
 
           // ═════════════════════════════════════════════════════════════════
-          // BRANCH 4: AI COACH
+          // BRANCH 3: AI COACH
           // ═════════════════════════════════════════════════════════════════
           StatefulShellBranch(
             navigatorKey: AppRoutes.aiCoachNavigatorKey,

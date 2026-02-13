@@ -150,7 +150,8 @@ dependencies:
   flutter_native_splash: ^2.4.4
   keyboard_actions: ^4.2.1
   fuzzywuzzy: ^1.2.0
-  cupertino_native: ^0.1.1
+  cupertino_native:
+    path: packages/cupertino_native
 
 dev_dependencies:
   flutter_test:

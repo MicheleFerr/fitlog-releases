@@ -32,10 +32,6 @@ abstract final class AppRoutes {
   static final GlobalKey<NavigatorState> workoutNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'workout');
 
-  /// Navigator key for Stats branch
-  static final GlobalKey<NavigatorState> statsNavigatorKey =
-      GlobalKey<NavigatorState>(debugLabel: 'stats');
-
   /// Navigator key for Profile branch
   static final GlobalKey<NavigatorState> profileNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'profile');
@@ -70,7 +66,7 @@ abstract final class AppRoutes {
   static const String workoutPath = '/workout';
   static const String workoutName = 'workout';
 
-  /// Stats tab - analytics and statistics
+  /// Stats - analytics and statistics (sub-route of Home, no tab)
   static const String statsPath = '/stats';
   static const String statsName = 'stats';
 
@@ -78,7 +74,7 @@ abstract final class AppRoutes {
   static const String profilePath = '/profile';
   static const String profileName = 'profile';
 
-  /// Analytics screen - pushed from Stats tab
+  /// Analytics screen - pushed from Stats
   static const String analyticsPath = '/stats/analytics';
   static const String analyticsName = 'analytics';
 
@@ -252,12 +248,11 @@ abstract final class AppRoutes {
   // Branch Index Mapping (for StatefulShellRoute)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /// Branch index for each main tab (5 tabs: Home, Workout, Stats, Profile, AI Coach)
+  /// Branch index for each main tab (Home, Workout, Profile, AI Coach)
   static const int homeBranchIndex = 0;
   static const int workoutBranchIndex = 1;
-  static const int statsBranchIndex = 2;
-  static const int profileBranchIndex = 3;
-  static const int aiCoachBranchIndex = 4;
+  static const int profileBranchIndex = 2;
+  static const int aiCoachBranchIndex = 3;
 
   /// Get branch index from route path
   static int? getBranchIndex(String path) {
@@ -266,9 +261,6 @@ abstract final class AppRoutes {
     }
     if (path.startsWith(workoutPath)) {
       return workoutBranchIndex;
-    }
-    if (path.startsWith(statsPath)) {
-      return statsBranchIndex;
     }
     if (path.startsWith(profilePath)) {
       return profileBranchIndex;

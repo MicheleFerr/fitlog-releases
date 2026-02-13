@@ -4,7 +4,7 @@
 /// Feature: Main Shell with Bottom Navigation
 /// Type: StatefulShellRoute Container
 ///
-/// Provides persistent bottom navigation across 5 main branches
+/// Provides persistent bottom navigation across main branches
 /// with state preservation using StatefulShellRoute pattern.
 ///
 /// **Architecture**:
@@ -20,9 +20,8 @@
 /// **Branches**:
 /// 1. Home (index 0) - Dashboard and quick actions
 /// 2. Workout (index 1) - Active workout and templates
-/// 3. Analytics (index 2) - Stats and progress
-/// 4. Profile (index 3) - App configuration
-/// 5. AI Coach (index 4) - AI-powered coaching (feature flag)
+/// 3. Profile (index 2) - App configuration
+/// 4. AI Coach (index 3) - AI-powered coaching (feature flag)
 library;
 
 import 'dart:async';
@@ -49,17 +48,17 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
-/// iOS CNTabBar approximate content height (native intrinsic ~50pt)
-const _kIOSTabBarHeight = 50.0;
+/// iOS CNTabBar approximate content height (native intrinsic ~49pt)
+const _kIOSTabBarHeight = 49.0;
 
 /// Android floating nav bar height
-const _kAndroidNavBarHeight = 56.0;
+const _kAndroidNavBarHeight = 48.0;
 
 /// Android floating nav bar bottom margin from safe area
-const _kAndroidNavBarBottomMargin = 12.0;
+const _kAndroidNavBarBottomMargin = 10.0;
 
 /// Android floating nav bar horizontal margin
-const _kAndroidNavBarHorizontalMargin = 16.0;
+const _kAndroidNavBarHorizontalMargin = 24.0;
 
 /// Global key for bottom navigation bar - used by home tour
 final bottomNavKeyProvider = Provider<GlobalKey>((ref) => GlobalKey());
@@ -372,27 +371,25 @@ class _NativeIOSTabBar extends StatelessWidget {
       key: navKey,
       width: double.infinity,
       child: CNTabBar(
+        iconSize: 15,
+        shrinkCentered: false,
         items: [
           CNTabBarItem(
             label: context.l10n.home,
-            icon: const CNSymbol('house.fill'),
+            icon: const CNSymbol('house', size: 15, weight: CNSymbolWeight.light),
           ),
           CNTabBarItem(
             label: context.l10n.workout,
-            icon: const CNSymbol('dumbbell.fill'),
-          ),
-          CNTabBarItem(
-            label: context.l10n.statistics,
-            icon: const CNSymbol('chart.bar.fill'),
+            icon: const CNSymbol('dumbbell', size: 15, weight: CNSymbolWeight.light),
           ),
           CNTabBarItem(
             label: context.l10n.profile,
-            icon: const CNSymbol('person.fill'),
+            icon: const CNSymbol('person', size: 15, weight: CNSymbolWeight.light),
           ),
           if (FeatureFlags.aiCoachEnabled)
             CNTabBarItem(
               label: context.l10n.aiCoach,
-              icon: const CNSymbol('brain.head.profile.fill'),
+              icon: const CNSymbol('brain.head.profile', size: 15, weight: CNSymbolWeight.light),
             ),
         ],
         currentIndex: currentIndex,
@@ -424,7 +421,6 @@ class _FloatingBottomNavBar extends StatelessWidget {
     final items = <_NavItemData>[
       _NavItemData(AppIcons.homeOutlined, context.l10n.home),
       _NavItemData(AppIcons.workoutOutlined, context.l10n.workout),
-      _NavItemData(AppIcons.analyticsOutlined, context.l10n.statistics),
       _NavItemData(AppIcons.profileOutlined, context.l10n.profile),
       if (FeatureFlags.aiCoachEnabled)
         _NavItemData(AppIcons.psychology, context.l10n.aiCoach),
@@ -432,14 +428,14 @@ class _FloatingBottomNavBar extends StatelessWidget {
 
     return ClipRRect(
       key: navKey,
-      borderRadius: BorderRadius.circular(28),
+      borderRadius: BorderRadius.circular(24),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
           height: _kAndroidNavBarHeight,
           decoration: BoxDecoration(
             color: context.colors.surfaceContainer.withValues(alpha: 0.85),
-            borderRadius: BorderRadius.circular(28),
+            borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color: context.colors.outlineVariant.withValues(alpha: 0.2),
             ),
@@ -487,22 +483,22 @@ class _FloatingNavItem extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
-        width: 64,
+        width: 56,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
-              size: AppIconSize.medium,
+              size: AppIconSize.small,
               color: isSelected
                   ? context.colors.primary
                   : context.colors.onSurfaceVariant,
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: 1),
             Text(
               label,
               style: context.textTheme.labelSmall?.copyWith(
-                fontSize: 10,
+                fontSize: 9,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 color: isSelected
                     ? context.colors.primary
