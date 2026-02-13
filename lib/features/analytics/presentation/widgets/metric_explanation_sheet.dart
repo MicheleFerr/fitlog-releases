@@ -12,6 +12,13 @@
 /// - 2-3 sentence explanation
 /// - Practical example with numbers
 /// - "Why it matters" section
+///
+/// **Localization Note**:
+/// Metric explanations are intentionally hardcoded in Italian (not in l10n)
+/// for faster implementation in single-language app context.
+/// If internationalization is needed in future, extract to:
+/// - context.l10n.metricRpeTitle / metricRpeDescription / metricRpeExample / metricRpeWhy
+/// - (same pattern for: 1rm, volume, tonnage, correlation)
 library;
 
 import 'package:flutter/material.dart';
@@ -165,7 +172,7 @@ class MetricExplanationSheet extends StatelessWidget {
   _MetricData _getMetricData(BuildContext context, String key) {
     switch (key) {
       case 'rpe':
-        return _MetricData(
+        return const _MetricData(
           icon: AppIcons.speed,
           title: 'RPE - Quanto è stato difficile',
           description:
@@ -182,7 +189,7 @@ class MetricExplanationSheet extends StatelessWidget {
         );
 
       case '1rm':
-        return _MetricData(
+        return const _MetricData(
           icon: AppIcons.weight,
           title: '1RM - Massimale',
           description:
@@ -198,7 +205,7 @@ class MetricExplanationSheet extends StatelessWidget {
         );
 
       case 'volume':
-        return _MetricData(
+        return const _MetricData(
           icon: AppIcons.barChart,
           title: 'Volume - Lavoro totale',
           description:
@@ -215,7 +222,7 @@ class MetricExplanationSheet extends StatelessWidget {
         );
 
       case 'tonnage':
-        return _MetricData(
+        return const _MetricData(
           icon: AppIcons.trendUp,
           title: 'Tonnellaggio - Volume totale',
           description:
@@ -234,7 +241,7 @@ class MetricExplanationSheet extends StatelessWidget {
 
       case 'r_squared':
       case 'correlation':
-        return _MetricData(
+        return const _MetricData(
           icon: AppIcons.analytics,
           title: 'Correlazione - Relazione tra dati',
           description:
@@ -251,7 +258,7 @@ class MetricExplanationSheet extends StatelessWidget {
         );
 
       default:
-        return _MetricData(
+        return const _MetricData(
           icon: AppIcons.info,
           title: 'Metrica sconosciuta',
           description: 'Spiegazione non disponibile per questa metrica.',

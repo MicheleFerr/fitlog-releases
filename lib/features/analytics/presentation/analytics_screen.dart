@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/favorite_exercises_notifier.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_view_mode_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_group_correction_sheet.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/feedback_submission_dialog.dart';
@@ -28,6 +29,8 @@ import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pro_insights_badge.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_avatar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/mini_sparkline.dart';
 
 /// Filter options for exercise list
 ///
@@ -66,6 +69,41 @@ class AnalyticsScreen extends ConsumerWidget {
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         // No leading back button - this is a tab root
         actions: [
+          // View mode toggle (Simple/Detailed)
+          Consumer(
+            builder: (context, ref, child) {
+              final viewMode = ref.watch(analyticsViewModeProvider);
+              final isDetailed = viewMode == AnalyticsViewMode.detailed;
+
+              return IconButton(
+                icon: SemanticIcon.button(
+                  icon: isDetailed ? AppIcons.viewCompact : AppIcons.viewDetailed,
+                  semanticLabel: isDetailed
+                      ? context.l10n.analyticsSwitchToSimple
+                      : context.l10n.analyticsSwitchToDetailed,
+                ),
+                tooltip: isDetailed
+                    ? context.l10n.analyticsViewSimple
+                    : context.l10n.analyticsViewDetailed,
+                onPressed: () async {
+                  // Toggle mode
+                  final currentMode = ref.read(analyticsViewModeProvider);
+                  final newMode = currentMode == AnalyticsViewMode.simple
+                      ? AnalyticsViewMode.detailed
+                      : AnalyticsViewMode.simple;
+
+                  // Update state
+                  ref.read(analyticsViewModeProvider.notifier).state = newMode;
+
+                  // Persist to storage
+                  await AnalyticsViewModeHelper.saveViewMode(newMode);
+
+                  // Haptic feedback
+                  HapticFeedback.lightImpact();
+                },
+              );
+            },
+          ),
           // Search toggle button (Task: New UX)
           Consumer(
             builder: (context, ref, child) {
@@ -267,7 +305,16 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
   @override
   Widget build(BuildContext context) {
     if (widget.exerciseHistories.isEmpty) {
-      return const _EmptyStateView();
+      return EnhancedEmptyState(
+        type: EmptyStateType.motivational,
+        icon: AppIcons.barChart,
+        title: context.l10n.noWorkoutDataYet,
+        description: context.l10n.completeWorkoutsToSeeAnalytics,
+        motivationalQuote: context.l10n.analyticsEmptyQuote,
+        proTip: context.l10n.analyticsEmptyTip,
+        primaryActionLabel: context.l10n.startYourFirstWorkout,
+        onPrimaryAction: () => context.go(AppRoutes.workoutPath),
+      );
     }
 
     return Stack(
@@ -371,43 +418,17 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
                       : const SizedBox.shrink(),
                 ),
 
-                // Pro Insights Badge - Compact clickable badge with PRO label
+                // Pro Insights Badge - Only shown in detailed view
                 // Click → Navigate to /analytics/pro for full analytics view
                 // FREE: Lock icon + upgrade CTA
                 // PREMIUM: Quick stats preview + "View Details"
-                if (_showBars)
+                if (_showBars && ref.watch(analyticsViewModeProvider) == AnalyticsViewMode.detailed)
                   ProInsightsBadge(exerciseHistories: widget.exerciseHistories),
 
                 // Results list
                 Expanded(
                   child: filteredHistories.isEmpty
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SemanticIcon(
-                                icon: AppIcons.search,
-                                semanticLabel: context.l10n.noResultsFound,
-                                size: AppIconSize.xxlarge,
-                                color: context.colors.onSurfaceVariant,
-                              ),
-                              const SizedBox(height: AppSpacing.md),
-                              Text(
-                                context.l10n.noResultsFound,
-                                style: context.textTheme.titleMedium?.copyWith(
-                                  color: context.colors.onSurfaceVariant,
-                                ),
-                              ),
-                              const SizedBox(height: AppSpacing.xs),
-                              Text(
-                                context.l10n.tryAnotherSearch,
-                                style: context.textTheme.bodyMedium?.copyWith(
-                                  color: context.colors.onSurfaceVariant,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
+                      ? _buildEmptyFilteredState(context, searchQuery)
                       : RefreshIndicator(
                           onRefresh: () async {
                             // Invalidate provider to trigger fresh data fetch
@@ -458,6 +479,43 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
           child: _ExerciseHistoryCard(history: history),
         );
       },
+    );
+  }
+
+  /// Build appropriate empty state based on filter/search context
+  Widget _buildEmptyFilteredState(BuildContext context, String searchQuery) {
+    // Case 1: Search query with no results
+    if (searchQuery.isNotEmpty) {
+      return EnhancedEmptyState(
+        type: EmptyStateType.info,
+        icon: AppIcons.search,
+        title: context.l10n.noResultsFound,
+        description: context.l10n.analyticsSearchEmptyDescription,
+        secondaryActionLabel: context.l10n.clearSearch,
+        onSecondaryAction: () {
+          _searchQuery.value = '';
+          HapticFeedback.lightImpact();
+        },
+      );
+    }
+
+    // Case 2: Favorites filter with no favorites
+    if (_sortBy == SortBy.favorites) {
+      return EnhancedEmptyState(
+        type: EmptyStateType.info,
+        icon: AppIcons.starOutline,
+        title: context.l10n.analyticsFavoritesEmptyTitle,
+        description: context.l10n.analyticsFavoritesEmptyDescription,
+        proTip: context.l10n.analyticsFavoritesEmptyTip,
+      );
+    }
+
+    // Default: Generic no results
+    return EnhancedEmptyState(
+      type: EmptyStateType.info,
+      icon: AppIcons.barChart,
+      title: context.l10n.noResultsFound,
+      description: context.l10n.tryAnotherSearch,
     );
   }
 }
@@ -545,6 +603,141 @@ class _QuickStatsSummary extends ConsumerWidget {
     return weeklyDates.length;
   }
 
+  /// Calculate weekly workouts delta (current week vs previous week)
+  int _calculateWeeklyDelta() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    // Current week (last 7 days)
+    final currentWeekStart = today.subtract(const Duration(days: 6));
+    final currentWeekDates = <DateTime>{};
+
+    // Previous week (days 7-13 ago)
+    final previousWeekStart = today.subtract(const Duration(days: 13));
+    final previousWeekEnd = today.subtract(const Duration(days: 7));
+    final previousWeekDates = <DateTime>{};
+
+    for (final history in exerciseHistories) {
+      for (final session in history.sessions) {
+        final dateOnly = DateTime(
+          session.date.year,
+          session.date.month,
+          session.date.day,
+        );
+
+        // Current week
+        if (!dateOnly.isBefore(currentWeekStart) && !dateOnly.isAfter(today)) {
+          currentWeekDates.add(dateOnly);
+        }
+
+        // Previous week
+        if (!dateOnly.isBefore(previousWeekStart) &&
+            !dateOnly.isAfter(previousWeekEnd)) {
+          previousWeekDates.add(dateOnly);
+        }
+      }
+    }
+
+    return currentWeekDates.length - previousWeekDates.length;
+  }
+
+  /// Calculate streak delta (current streak vs one week ago streak)
+  ///
+  /// Simplified implementation: Checks if user worked out 7 days ago
+  /// - If yes → delta +1 (streak maintained/improved)
+  /// - If no → delta 0 (new streak or gap)
+  int _calculateStreakDelta() {
+    if (exerciseHistories.isEmpty) return 0;
+
+    // Get all unique workout dates
+    final allDates = <DateTime>{};
+    for (final history in exerciseHistories) {
+      for (final session in history.sessions) {
+        final dateOnly = DateTime(
+          session.date.year,
+          session.date.month,
+          session.date.day,
+        );
+        allDates.add(dateOnly);
+      }
+    }
+
+    if (allDates.isEmpty) return 0;
+
+    // Check if there was a workout 7 days ago (with ±1 day tolerance)
+    final now = DateTime.now();
+    final sevenDaysAgo = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).subtract(const Duration(days: 7));
+
+    final sixDaysAgo = sevenDaysAgo.subtract(const Duration(days: 1));
+    final eightDaysAgo = sevenDaysAgo.add(const Duration(days: 1));
+
+    // Check if any workout exists in the range [8 days ago, 6 days ago]
+    final hadWorkoutWeekAgo = allDates.any((date) =>
+        !date.isBefore(sixDaysAgo) && !date.isAfter(eightDaysAgo));
+
+    // Simple logic:
+    // - If workout 7 days ago: streak maintained (+1)
+    // - If no workout 7 days ago: new streak or break (0)
+    return hadWorkoutWeekAgo ? 1 : 0;
+  }
+
+  /// Calculate PR delta (this week vs previous week)
+  int _calculatePRDelta() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    // Current week (last 7 days)
+    final currentWeekStart = today.subtract(const Duration(days: 6));
+    int currentPRCount = 0;
+
+    // Previous week (days 7-13 ago)
+    final previousWeekStart = today.subtract(const Duration(days: 13));
+    final previousWeekEnd = today.subtract(const Duration(days: 7));
+    int previousPRCount = 0;
+
+    for (final history in exerciseHistories) {
+      if (history.sessions.isEmpty) continue;
+
+      final pr = history.personalRecord;
+
+      // Count PRs in current week
+      for (final session in history.sessions) {
+        final sessionDate = DateTime(
+          session.date.year,
+          session.date.month,
+          session.date.day,
+        );
+        if (!sessionDate.isBefore(currentWeekStart) &&
+            !sessionDate.isAfter(today) &&
+            session.highestEstimated1RM >= pr * 0.99) {
+          currentPRCount++;
+          break; // Count once per exercise
+        }
+      }
+
+      // Count PRs in previous week
+      for (final session in history.sessions) {
+        final sessionDate = DateTime(
+          session.date.year,
+          session.date.month,
+          session.date.day,
+        );
+        if (!sessionDate.isBefore(previousWeekStart) &&
+            !sessionDate.isAfter(previousWeekEnd) &&
+            session.highestEstimated1RM >= pr * 0.99) {
+          previousPRCount++;
+          break; // Count once per exercise
+        }
+      }
+    }
+
+    return currentPRCount - previousPRCount;
+  }
+
   /// Calculate average weekly volume progression across all exercises
   double _calculateVolumeProgression() {
     if (exerciseHistories.isEmpty) return 0;
@@ -605,6 +798,11 @@ class _QuickStatsSummary extends ConsumerWidget {
     final recentPRs = _calculateRecentPRs();
     final weeklyGoal = ref.watch(weeklyWorkoutGoalProvider);
 
+    // Calculate deltas for each metric
+    final streakDelta = _calculateStreakDelta();
+    final weeklyDelta = _calculateWeeklyDelta();
+    final prDelta = _calculatePRDelta();
+
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
@@ -639,7 +837,16 @@ class _QuickStatsSummary extends ConsumerWidget {
               value: '$streak',
               suffix: streak == 1 ? context.l10n.day : context.l10n.days,
               color: context.colors.onPrimaryContainer,
-              trend: null,
+              trend: streakDelta > 0
+                  ? 'up'
+                  : streakDelta < 0
+                      ? 'down'
+                      : null,
+              trendColor: streakDelta > 0
+                  ? context.colors.success
+                  : streakDelta < 0
+                      ? context.colors.warning
+                      : null,
               onTap: () {
                 HapticFeedback.lightImpact();
                 ModalService.showSheet(context,
@@ -705,7 +912,16 @@ class _QuickStatsSummary extends ConsumerWidget {
               value: '$weeklyWorkouts',
               suffix: '/$weeklyGoal ${context.l10n.workouts.toLowerCase()}',
               color: context.colors.onPrimaryContainer,
-              trend: null,
+              trend: weeklyDelta > 0
+                  ? 'up'
+                  : weeklyDelta < 0
+                      ? 'down'
+                      : null,
+              trendColor: weeklyDelta > 0
+                  ? context.colors.success
+                  : weeklyDelta < 0
+                      ? context.colors.warning
+                      : null,
               onTap: () {
                 HapticFeedback.lightImpact();
                 ModalService.showSheet(context,
@@ -738,7 +954,16 @@ class _QuickStatsSummary extends ConsumerWidget {
                   ? context.l10n.newSingular
                   : context.l10n.newPlural,
               color: context.colors.onPrimaryContainer,
-              trend: null,
+              trend: prDelta > 0
+                  ? 'up'
+                  : prDelta < 0
+                      ? 'down'
+                      : null,
+              trendColor: prDelta > 0
+                  ? context.colors.success
+                  : prDelta < 0
+                      ? context.colors.warning
+                      : null,
               onTap: () {
                 HapticFeedback.lightImpact();
                 ModalService.showSheet(context,
@@ -1219,6 +1444,33 @@ class _ExerciseHistoryCard extends ConsumerWidget {
     );
   }
 
+  /// Extract weight progression data points for sparkline (last 12 sessions)
+  List<double> _extractWeightProgression() {
+    if (history.sessions.isEmpty) return [];
+
+    // Sort sessions by date (oldest first)
+    final sortedSessions = List.of(history.sessions)
+      ..sort((a, b) => a.date.compareTo(b.date));
+
+    // Take last 12 sessions
+    final recentSessions = sortedSessions.length > 12
+        ? sortedSessions.sublist(sortedSessions.length - 12)
+        : sortedSessions;
+
+    // Extract average weight per session
+    return recentSessions.map((session) {
+      final sets = session.sets;
+      if (sets.isEmpty) return 0.0;
+
+      // Calculate average weight across sets
+      final totalWeight = sets.fold<double>(
+        0.0,
+        (sum, set) => sum + (set.weight ?? 0.0),
+      );
+      return totalWeight / sets.length;
+    }).toList();
+  }
+
   /// Show muscle group correction bottom sheet
   Future<void> _showCorrectionSheet(BuildContext context) async {
     // Show bottom sheet
@@ -1338,6 +1590,14 @@ class _ExerciseHistoryCard extends ConsumerWidget {
                               alpha: 0.5,
                             ),
                     ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  // Sparkline (compact trend visualization)
+                  MiniSparkline(
+                    dataPoints: _extractWeightProgression(),
+                    isPositiveTrend: weeklyProgression >= 0,
+                    width: 60,
+                    height: 24,
                   ),
                   const SizedBox(width: AppSpacing.sm),
                   // PR value (compact, bold)
@@ -1633,51 +1893,6 @@ class _ErrorView extends StatelessWidget {
             style: context.textTheme.bodyMedium?.copyWith(
               color: context.colors.onSurfaceVariant,
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _EmptyStateView extends StatelessWidget {
-  const _EmptyStateView();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SemanticIcon(
-            icon: AppIcons.workout,
-            semanticLabel: context.l10n.noWorkoutDataYet,
-            size: AppIconSize.xxlarge,
-            color: context.colors.onSurfaceVariant,
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          Text(
-            context.l10n.noWorkoutDataYet,
-            style: context.textTheme.headlineSmall?.copyWith(
-              color: context.colors.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            context.l10n.completeWorkoutsToSeeAnalytics,
-            textAlign: TextAlign.center,
-            style: context.textTheme.bodyMedium?.copyWith(
-              color: context.colors.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          ElevatedButton.icon(
-            onPressed: () => context.go(AppRoutes.workoutPath),
-            icon: SemanticIcon.button(
-              icon: AppIcons.play,
-              semanticLabel: context.l10n.startYourFirstWorkout,
-            ),
-            label: Text(context.l10n.startYourFirstWorkout),
           ),
         ],
       ),

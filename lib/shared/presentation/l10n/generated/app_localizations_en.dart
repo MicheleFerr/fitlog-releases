@@ -27401,4 +27401,42 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get weeklySummaryNoRecent =>
       'Start training to see your progress here!';
+
+  @override
+  String get analyticsEmptyQuote =>
+      'Every champion started as a beginner. Your journey begins now!';
+
+  @override
+  String get analyticsEmptyTip =>
+      '💡 Pro tip: Log at least 3 workouts to unlock progress trends and insights!';
+
+  @override
+  String get analyticsSearchEmptyDescription =>
+      'No exercises match your search. Try different keywords or clear the search.';
+
+  @override
+  String get clearSearch => 'Clear search';
+
+  @override
+  String get analyticsFavoritesEmptyTitle => 'No favorites yet';
+
+  @override
+  String get analyticsFavoritesEmptyDescription =>
+      'Star your favorite exercises to quickly find them here!';
+
+  @override
+  String get analyticsFavoritesEmptyTip =>
+      '💡 Tip: Tap the ⭐ icon on any exercise to add it to your favorites.';
+
+  @override
+  String get analyticsSwitchToSimple => 'Switch to simple view';
+
+  @override
+  String get analyticsSwitchToDetailed => 'Switch to detailed view';
+
+  @override
+  String get analyticsViewSimple => 'Simple view';
+
+  @override
+  String get analyticsViewDetailed => 'Detailed view';
 }

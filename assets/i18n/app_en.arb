@@ -33690,5 +33690,49 @@
   "weeklySummaryNoRecent": "Start training to see your progress here!",
   "@weeklySummaryNoRecent": {
     "description": "Summary banner when no recent workouts"
+  },
+  "analyticsEmptyQuote": "Every champion started as a beginner. Your journey begins now!",
+  "@analyticsEmptyQuote": {
+    "description": "Motivational quote for empty analytics screen"
+  },
+  "analyticsEmptyTip": "💡 Pro tip: Log at least 3 workouts to unlock progress trends and insights!",
+  "@analyticsEmptyTip": {
+    "description": "Pro tip for empty analytics screen"
+  },
+  "analyticsSearchEmptyDescription": "No exercises match your search. Try different keywords or clear the search.",
+  "@analyticsSearchEmptyDescription": {
+    "description": "Description for empty search results"
+  },
+  "clearSearch": "Clear search",
+  "@clearSearch": {
+    "description": "Button to clear search query"
+  },
+  "analyticsFavoritesEmptyTitle": "No favorites yet",
+  "@analyticsFavoritesEmptyTitle": {
+    "description": "Title for empty favorites filter"
+  },
+  "analyticsFavoritesEmptyDescription": "Star your favorite exercises to quickly find them here!",
+  "@analyticsFavoritesEmptyDescription": {
+    "description": "Description for empty favorites filter"
+  },
+  "analyticsFavoritesEmptyTip": "💡 Tip: Tap the ⭐ icon on any exercise to add it to your favorites.",
+  "@analyticsFavoritesEmptyTip": {
+    "description": "Pro tip for empty favorites"
+  },
+  "analyticsSwitchToSimple": "Switch to simple view",
+  "@analyticsSwitchToSimple": {
+    "description": "Semantic label for view mode toggle to simple"
+  },
+  "analyticsSwitchToDetailed": "Switch to detailed view",
+  "@analyticsSwitchToDetailed": {
+    "description": "Semantic label for view mode toggle to detailed"
+  },
+  "analyticsViewSimple": "Simple view",
+  "@analyticsViewSimple": {
+    "description": "Tooltip for simple view mode"
+  },
+  "analyticsViewDetailed": "Detailed view",
+  "@analyticsViewDetailed": {
+    "description": "Tooltip for detailed view mode"
   }
 }

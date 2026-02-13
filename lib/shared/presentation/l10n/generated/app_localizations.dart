@@ -48985,6 +48985,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start training to see your progress here!'**
   String get weeklySummaryNoRecent;
+
+  /// Motivational quote for empty analytics screen
+  ///
+  /// In en, this message translates to:
+  /// **'Every champion started as a beginner. Your journey begins now!'**
+  String get analyticsEmptyQuote;
+
+  /// Pro tip for empty analytics screen
+  ///
+  /// In en, this message translates to:
+  /// **'💡 Pro tip: Log at least 3 workouts to unlock progress trends and insights!'**
+  String get analyticsEmptyTip;
+
+  /// Description for empty search results
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises match your search. Try different keywords or clear the search.'**
+  String get analyticsSearchEmptyDescription;
+
+  /// Button to clear search query
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get clearSearch;
+
+  /// Title for empty favorites filter
+  ///
+  /// In en, this message translates to:
+  /// **'No favorites yet'**
+  String get analyticsFavoritesEmptyTitle;
+
+  /// Description for empty favorites filter
+  ///
+  /// In en, this message translates to:
+  /// **'Star your favorite exercises to quickly find them here!'**
+  String get analyticsFavoritesEmptyDescription;
+
+  /// Pro tip for empty favorites
+  ///
+  /// In en, this message translates to:
+  /// **'💡 Tip: Tap the ⭐ icon on any exercise to add it to your favorites.'**
+  String get analyticsFavoritesEmptyTip;
+
+  /// Semantic label for view mode toggle to simple
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to simple view'**
+  String get analyticsSwitchToSimple;
+
+  /// Semantic label for view mode toggle to detailed
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to detailed view'**
+  String get analyticsSwitchToDetailed;
+
+  /// Tooltip for simple view mode
+  ///
+  /// In en, this message translates to:
+  /// **'Simple view'**
+  String get analyticsViewSimple;
+
+  /// Tooltip for detailed view mode
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed view'**
+  String get analyticsViewDetailed;
 }
 
 class _AppLocalizationsDelegate

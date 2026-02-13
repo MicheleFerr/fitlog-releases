@@ -20755,5 +20755,16 @@
   "weeklySummaryNormal": "Buona settimana! {workouts} allenamenti completati. Continua così!",
   "weeklySummaryWeak": "Settimana tranquilla. {workouts} allenamento completato. Ogni sessione conta!",
   "weeklySummaryFirstWeek": "Benvenuto nelle tue statistiche! Completa il primo allenamento per iniziare.",
-  "weeklySummaryNoRecent": "Inizia ad allenarti per vedere i tuoi progressi qui!"
+  "weeklySummaryNoRecent": "Inizia ad allenarti per vedere i tuoi progressi qui!",
+  "analyticsEmptyQuote": "Ogni campione è partito da principiante. Il tuo viaggio inizia ora!",
+  "analyticsEmptyTip": "💡 Consiglio: Completa almeno 3 allenamenti per sbloccare tendenze e insights sui progressi!",
+  "analyticsSearchEmptyDescription": "Nessun esercizio corrisponde alla ricerca. Prova parole diverse o cancella la ricerca.",
+  "clearSearch": "Cancella ricerca",
+  "analyticsFavoritesEmptyTitle": "Nessun preferito",
+  "analyticsFavoritesEmptyDescription": "Aggiungi una stella ai tuoi esercizi preferiti per trovarli velocemente qui!",
+  "analyticsFavoritesEmptyTip": "💡 Suggerimento: Tocca l'icona ⭐ su qualsiasi esercizio per aggiungerlo ai preferiti.",
+  "analyticsSwitchToSimple": "Passa a vista semplice",
+  "analyticsSwitchToDetailed": "Passa a vista dettagliata",
+  "analyticsViewSimple": "Vista semplice",
+  "analyticsViewDetailed": "Vista dettagliata"
 }

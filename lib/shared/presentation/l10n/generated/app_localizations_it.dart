@@ -27670,4 +27670,42 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get weeklySummaryNoRecent =>
       'Inizia ad allenarti per vedere i tuoi progressi qui!';
+
+  @override
+  String get analyticsEmptyQuote =>
+      'Ogni campione è partito da principiante. Il tuo viaggio inizia ora!';
+
+  @override
+  String get analyticsEmptyTip =>
+      '💡 Consiglio: Completa almeno 3 allenamenti per sbloccare tendenze e insights sui progressi!';
+
+  @override
+  String get analyticsSearchEmptyDescription =>
+      'Nessun esercizio corrisponde alla ricerca. Prova parole diverse o cancella la ricerca.';
+
+  @override
+  String get clearSearch => 'Cancella ricerca';
+
+  @override
+  String get analyticsFavoritesEmptyTitle => 'Nessun preferito';
+
+  @override
+  String get analyticsFavoritesEmptyDescription =>
+      'Aggiungi una stella ai tuoi esercizi preferiti per trovarli velocemente qui!';
+
+  @override
+  String get analyticsFavoritesEmptyTip =>
+      '💡 Suggerimento: Tocca l\'icona ⭐ su qualsiasi esercizio per aggiungerlo ai preferiti.';
+
+  @override
+  String get analyticsSwitchToSimple => 'Passa a vista semplice';
+
+  @override
+  String get analyticsSwitchToDetailed => 'Passa a vista dettagliata';
+
+  @override
+  String get analyticsViewSimple => 'Vista semplice';
+
+  @override
+  String get analyticsViewDetailed => 'Vista dettagliata';
 }
