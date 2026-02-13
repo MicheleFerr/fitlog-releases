@@ -906,7 +906,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   value: config.fontSize,
                   min: 0.8,
                   max: 1.1,
-                  step: 0.075,
+                  step: 0.01,
                   onChanged: (value) {
                     ref.read(appConfigProvider.notifier).setFontSize(value);
                   },
@@ -2637,10 +2637,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   String _getFontSizeText(BuildContext context, double fontSize) {
-    if (fontSize < 0.85) return context.l10n.settingsFontSizeExtraSmall;
-    if (fontSize < 0.95) return context.l10n.settingsFontSizeSmall;
-    if (fontSize < 1.025) return context.l10n.settingsFontSizeNormal;
-    if (fontSize < 1.075) return context.l10n.settingsFontSizeMediumLarge;
+    if (fontSize < 0.87) return context.l10n.settingsFontSizeExtraSmall;
+    if (fontSize < 0.94) return context.l10n.settingsFontSizeSmall;
+    if (fontSize < 1.01) return context.l10n.settingsFontSizeNormal;
+    if (fontSize < 1.07) return context.l10n.settingsFontSizeMediumLarge;
     return context.l10n.settingsFontSizeLarge;
   }
 

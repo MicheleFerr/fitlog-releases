@@ -404,13 +404,11 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     }
   }
 
-  @Deprecated('Use setInterfaceSize instead')
   Future<void> setFontSize(double fontSize) async {
     try {
       await _ensureInitialized();
       if (_isDisposed) return;
 
-      // Input validation - now supporting 5 steps: 0.8, 0.9, 1.0, 1.05, 1.1
       if (fontSize < 0.8 || fontSize > 1.1) {
         if (kDebugMode) {
           debugPrint('⚠️ [AppConfig] Invalid font size: $fontSize (must be 0.8-1.1)');
@@ -418,12 +416,20 @@ class AppConfigNotifier extends Notifier<AppConfig> {
         return;
       }
 
-      // Convert fontSize to InterfaceSize for unified control
-      final interfaceSize = InterfaceSize.fromFontSize(fontSize);
-      await setInterfaceSize(interfaceSize);
+      // Round to 2 decimal places to avoid floating point noise
+      final rounded = (fontSize * 100).roundToDouble() / 100;
+
+      // Derive interfaceSize from the continuous value for layout mode
+      final interfaceSize = InterfaceSize.fromFontSize(rounded);
+
+      state = state.copyWith(
+        fontSize: rounded,
+        interfaceSize: interfaceSize,
+      );
+      await _saveConfig();
 
       if (kDebugMode) {
-        debugPrint('✅ [AppConfig] Font size set to: $fontSize (migrated to $interfaceSize)');
+        debugPrint('✅ [AppConfig] Font size set to: $rounded (layout: ${interfaceSize.setRowMode})');
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
