@@ -175,6 +175,7 @@ class _ExerciseCorrelationsSheetState
     ScrollController scrollController,
   ) {
     final correlations = analytics.correlations;
+    final rpeSessionsCount = analytics.rpeHistory.length;
 
     return ListView(
       controller: scrollController,
@@ -184,46 +185,18 @@ class _ExerciseCorrelationsSheetState
         _buildQuickSummary(analytics),
         const SizedBox(height: 20),
 
-        // Data quality indicator
-        _buildDataQualityCard(analytics),
+        // Data quality indicator with session threshold logic
+        _buildDataQualityCard(analytics, rpeSessionsCount),
         const SizedBox(height: 20),
 
-        // Collapsible Correlations Section
-        _buildCollapsibleSection(
-          title: context.l10n.analyticsCorrelationsTitle,
-          icon: AppIcons.insights,
-          isExpanded: _correlationsExpanded,
-          onToggle: () =>
-              setState(() => _correlationsExpanded = !_correlationsExpanded),
-          child: Column(
-            children: [
-              // Weight vs RPE Correlation
-              _buildCorrelationCard(
-                title: context.l10n.analyticsWeightVsRpe,
-                subtitle: context.l10n.analyticsWeightVsRpeDescription,
-                result: correlations.weightRpe,
-                icon: AppIcons.workout,
-                color: context.colors.primary,
-              ),
-              const SizedBox(height: 16),
+        // Correlation section based on RPE session count
+        if (rpeSessionsCount < 5)
+          _buildInsufficientDataSection(rpeSessionsCount)
+        else if (rpeSessionsCount < 10)
+          _buildEarlyPatternsSection(analytics, correlations)
+        else
+          _buildFullCorrelationsSection(analytics, correlations),
 
-              // Volume vs RPE Correlation
-              _buildCorrelationCard(
-                title: context.l10n.analyticsVolumeVsRpe,
-                subtitle: context.l10n.analyticsVolumeVsRpeDescription,
-                result: correlations.volumeRpe,
-                icon: AppIcons.analytics,
-                color: context.colors.secondary,
-              ),
-
-              // Interpretation section
-              if (correlations.hasSignificantCorrelations) ...[
-                const SizedBox(height: 16),
-                _buildInterpretationSection(correlations),
-              ],
-            ],
-          ),
-        ),
         const SizedBox(height: 16),
 
         // Collapsible Trend Section
@@ -463,10 +436,14 @@ class _ExerciseCorrelationsSheetState
     );
   }
 
-  Widget _buildDataQualityCard(ExerciseAnalyticsData analytics) {
-    final hasEnoughData = analytics.hasEnoughDataForCorrelations;
+  Widget _buildDataQualityCard(
+    ExerciseAnalyticsData analytics,
+    int rpeSessionsCount,
+  ) {
+    final hasEnoughData = rpeSessionsCount >= 5;
     final sessionCount = analytics.sessionCount;
-    final dataSpanDays = analytics.dataSpanDays;
+    // Fix bug: Ensure dataSpanDays is reasonable (max 365*3 = ~1000 days)
+    final dataSpanDays = analytics.dataSpanDays.clamp(0, 1095);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -518,6 +495,244 @@ class _ExerciseCorrelationsSheetState
           ),
         ],
       ),
+    );
+  }
+
+  /// Section shown when < 5 RPE sessions
+  Widget _buildInsufficientDataSection(int currentSessions) {
+    const requiredSessions = 5;
+    final progress = currentSessions / requiredSessions;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainer,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: context.colors.outline.withValues(alpha: 0.1),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                AppIcons.insights,
+                color: context.colors.primary,
+                size: AppIconSize.large,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.analyticsCorrelationsTitle,
+                      style: context.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      context.l10n.correlationNeedMoreSessionsHint,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          // Progress bar
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    context.l10n.correlationNeedMoreSessions(
+                      currentSessions,
+                      requiredSessions,
+                    ),
+                    style: context.textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    '${(progress * 100).toStringAsFixed(0)}%',
+                    style: context.textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: context.colors.primary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: LinearProgressIndicator(
+                  value: progress,
+                  minHeight: 8,
+                  backgroundColor:
+                      context.colors.primaryContainer.withValues(alpha: 0.3),
+                  valueColor: AlwaysStoppedAnimation(context.colors.primary),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Section shown for 5-10 RPE sessions - simplified natural language
+  Widget _buildEarlyPatternsSection(
+    ExerciseAnalyticsData analytics,
+    CorrelationResults correlations,
+  ) {
+    return _buildCollapsibleSection(
+      title: context.l10n.correlationEarlyPatterns,
+      icon: AppIcons.insights,
+      isExpanded: _correlationsExpanded,
+      onToggle: () =>
+          setState(() => _correlationsExpanded = !_correlationsExpanded),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.l10n.correlationEarlyPatternsHint,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 16),
+          _buildNaturalLanguageInsight(
+            correlations.weightRpe,
+            context.l10n.correlationMetricWeight,
+          ),
+          const SizedBox(height: 12),
+          _buildNaturalLanguageInsight(
+            correlations.volumeRpe,
+            context.l10n.correlationMetricVolume,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Section shown for 10+ RPE sessions - full correlations with technical toggle
+  Widget _buildFullCorrelationsSection(
+    ExerciseAnalyticsData analytics,
+    CorrelationResults correlations,
+  ) {
+    return _buildCollapsibleSection(
+      title: context.l10n.analyticsCorrelationsTitle,
+      icon: AppIcons.insights,
+      isExpanded: _correlationsExpanded,
+      onToggle: () =>
+          setState(() => _correlationsExpanded = !_correlationsExpanded),
+      child: Column(
+        children: [
+          // Natural language insights
+          _buildNaturalLanguageInsight(
+            correlations.weightRpe,
+            context.l10n.correlationMetricWeight,
+          ),
+          const SizedBox(height: 12),
+          _buildNaturalLanguageInsight(
+            correlations.volumeRpe,
+            context.l10n.correlationMetricVolume,
+          ),
+          const SizedBox(height: 20),
+
+          // Technical details toggle
+          ExpansionTile(
+            title: Text(
+              context.l10n.correlationTechnicalDetails,
+              style: context.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            tilePadding: EdgeInsets.zero,
+            childrenPadding: const EdgeInsets.only(top: 16),
+            children: [
+              _buildCorrelationCard(
+                title: context.l10n.analyticsWeightVsRpe,
+                subtitle: context.l10n.analyticsWeightVsRpeDescription,
+                result: correlations.weightRpe,
+                icon: AppIcons.workout,
+                color: context.colors.primary,
+              ),
+              const SizedBox(height: 16),
+              _buildCorrelationCard(
+                title: context.l10n.analyticsVolumeVsRpe,
+                subtitle: context.l10n.analyticsVolumeVsRpeDescription,
+                result: correlations.volumeRpe,
+                icon: AppIcons.analytics,
+                color: context.colors.secondary,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build natural language insight for a correlation
+  Widget _buildNaturalLanguageInsight(
+    CorrelationResult result,
+    String metricName,
+  ) {
+    String message;
+    IconData icon;
+    Color color;
+
+    // Determine message based on r² and r
+    if (result.rSquared >= 0.49) {
+      // Strong correlation (r² >= 0.7 = 70%, but using r > 0.7 means r² > 0.49)
+      if (result.r > 0) {
+        message = context.l10n.correlationStrongPositive(metricName);
+        icon = AppIcons.trendingUp;
+        color = context.colors.success;
+      } else {
+        message = context.l10n.correlationStrongNegative(metricName);
+        icon = AppIcons.trendingDown;
+        color = context.colors.error;
+      }
+    } else if (result.rSquared >= 0.09) {
+      // Moderate correlation (r > 0.3 means r² > 0.09)
+      if (result.r > 0) {
+        message = context.l10n.correlationModeratePositive(metricName);
+        icon = AppIcons.trendingUp;
+        color = context.colors.primary;
+      } else {
+        message = context.l10n.correlationModerateNegative(metricName);
+        icon = AppIcons.trendingDown;
+        color = context.colors.warning;
+      }
+    } else {
+      // Weak/no correlation
+      message = context.l10n.correlationWeak(metricName);
+      icon = AppIcons.trendFlat;
+      color = context.colors.onSurfaceVariant;
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: color, size: AppIconSize.medium),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            message,
+            style: context.textTheme.bodyMedium,
+          ),
+        ),
+      ],
     );
   }
 
@@ -702,85 +917,6 @@ class _ExerciseCorrelationsSheetState
     return content;
   }
 
-  Widget _buildInterpretationSection(CorrelationResults correlations) {
-    final insights = <String>[];
-
-    // Weight-RPE insight
-    if (correlations.weightRpe.isSignificant) {
-      if (correlations.weightRpe.isPositive) {
-        insights.add(context.l10n.analyticsInsightWeightRpePositive);
-      } else {
-        insights.add(context.l10n.analyticsInsightWeightRpeNegative);
-      }
-    }
-
-    // Volume-RPE insight
-    if (correlations.volumeRpe.isSignificant) {
-      if (correlations.volumeRpe.isPositive) {
-        insights.add(context.l10n.analyticsInsightVolumeRpePositive);
-      } else {
-        insights.add(context.l10n.analyticsInsightVolumeRpeNegative);
-      }
-    }
-
-    if (insights.isEmpty) return const SizedBox.shrink();
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            context.colors.tertiaryContainer.withValues(alpha: 0.5),
-            context.colors.tertiaryContainer.withValues(alpha: 0.2),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                AppIcons.insights,
-                color: context.colors.tertiary,
-                size: AppIconSize.medium,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                context.l10n.analyticsKeyInsights,
-                style: context.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: context.colors.tertiary,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          ...insights.map(
-            (insight) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '• ',
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colors.tertiary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(insight, style: context.textTheme.bodyMedium),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildTrendItem({
     required IconData icon,

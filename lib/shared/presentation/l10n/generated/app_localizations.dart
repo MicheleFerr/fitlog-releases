@@ -48853,6 +48853,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Link copied'**
   String get linkCopied;
+
+  /// Badge for exercise with only 1 session
+  ///
+  /// In en, this message translates to:
+  /// **'New!'**
+  String get progressionNew;
+
+  /// Label when weekly volume change is 0%
+  ///
+  /// In en, this message translates to:
+  /// **'Stable'**
+  String get progressionStable;
+
+  /// Label for positive weekly volume progression
+  ///
+  /// In en, this message translates to:
+  /// **'+{percent}%'**
+  String progressionUp(String percent);
+
+  /// Label for negative weekly volume progression
+  ///
+  /// In en, this message translates to:
+  /// **'-{percent}%'**
+  String progressionDown(String percent);
+
+  /// Label when exercise not done in >14 days
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get progressionResume;
+
+  /// Progress label for insufficient correlation data
+  ///
+  /// In en, this message translates to:
+  /// **'{current} of {required} sessions with RPE'**
+  String correlationNeedMoreSessions(int current, int required);
+
+  /// Hint explaining why more RPE sessions are needed
+  ///
+  /// In en, this message translates to:
+  /// **'Log RPE after each set to unlock correlation insights'**
+  String get correlationNeedMoreSessionsHint;
+
+  /// Title for 5-10 session correlation insights
+  ///
+  /// In en, this message translates to:
+  /// **'Early patterns emerging'**
+  String get correlationEarlyPatterns;
+
+  /// Subtitle for early patterns section
+  ///
+  /// In en, this message translates to:
+  /// **'More sessions will improve accuracy'**
+  String get correlationEarlyPatternsHint;
+
+  /// Natural language for strong positive correlation
+  ///
+  /// In en, this message translates to:
+  /// **'When you increase {metric}, your effort perception (RPE) tends to rise significantly'**
+  String correlationStrongPositive(String metric);
+
+  /// Natural language for strong negative correlation
+  ///
+  /// In en, this message translates to:
+  /// **'When you increase {metric}, your effort perception (RPE) tends to decrease significantly'**
+  String correlationStrongNegative(String metric);
+
+  /// Natural language for moderate positive correlation
+  ///
+  /// In en, this message translates to:
+  /// **'There\'s a moderate link between {metric} and effort perception'**
+  String correlationModeratePositive(String metric);
+
+  /// Natural language for moderate negative correlation
+  ///
+  /// In en, this message translates to:
+  /// **'There\'s a moderate inverse link between {metric} and effort perception'**
+  String correlationModerateNegative(String metric);
+
+  /// Natural language for weak/no correlation
+  ///
+  /// In en, this message translates to:
+  /// **'{metric} and effort perception appear to be independent'**
+  String correlationWeak(String metric);
+
+  /// Toggle label for showing r, r², scatter plot
+  ///
+  /// In en, this message translates to:
+  /// **'Technical details'**
+  String get correlationTechnicalDetails;
+
+  /// Weight metric name for correlation messages
+  ///
+  /// In en, this message translates to:
+  /// **'weight'**
+  String get correlationMetricWeight;
+
+  /// Volume metric name for correlation messages
+  ///
+  /// In en, this message translates to:
+  /// **'volume'**
+  String get correlationMetricVolume;
+
+  /// Summary banner for a strong week
+  ///
+  /// In en, this message translates to:
+  /// **'Fantastic week! {workouts} workouts, {prs} new PRs. Volume up {percent}%.'**
+  String weeklySummaryStrong(int workouts, int prs, String percent);
+
+  /// Summary banner for a normal week
+  ///
+  /// In en, this message translates to:
+  /// **'Good week! {workouts} workouts completed. Keep it up!'**
+  String weeklySummaryNormal(int workouts);
+
+  /// Summary banner for a weak week
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet week. {workouts} workout completed. Every session counts!'**
+  String weeklySummaryWeak(int workouts);
+
+  /// Summary banner for users with no workout history
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to your stats! Complete your first workout to get started.'**
+  String get weeklySummaryFirstWeek;
+
+  /// Summary banner when no recent workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Start training to see your progress here!'**
+  String get weeklySummaryNoRecent;
 }
 
 class _AppLocalizationsDelegate

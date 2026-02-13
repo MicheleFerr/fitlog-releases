@@ -27578,4 +27578,96 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get linkCopied => 'Link copiato';
+
+  @override
+  String get progressionNew => 'Nuovo!';
+
+  @override
+  String get progressionStable => 'Stabile';
+
+  @override
+  String progressionUp(String percent) {
+    return '+$percent%';
+  }
+
+  @override
+  String progressionDown(String percent) {
+    return '-$percent%';
+  }
+
+  @override
+  String get progressionResume => 'Da riprendere';
+
+  @override
+  String correlationNeedMoreSessions(int current, int required) {
+    return '$current di $required sessioni con RPE';
+  }
+
+  @override
+  String get correlationNeedMoreSessionsHint =>
+      'Registra l\'RPE dopo ogni serie per sbloccare le analisi di correlazione';
+
+  @override
+  String get correlationEarlyPatterns => 'Primi pattern emergenti';
+
+  @override
+  String get correlationEarlyPatternsHint =>
+      'Più sessioni miglioreranno la precisione';
+
+  @override
+  String correlationStrongPositive(String metric) {
+    return 'Quando aumenti il $metric, la tua percezione dello sforzo (RPE) tende a salire significativamente';
+  }
+
+  @override
+  String correlationStrongNegative(String metric) {
+    return 'Quando aumenti il $metric, la tua percezione dello sforzo (RPE) tende a diminuire significativamente';
+  }
+
+  @override
+  String correlationModeratePositive(String metric) {
+    return 'C\'è un collegamento moderato tra $metric e percezione dello sforzo';
+  }
+
+  @override
+  String correlationModerateNegative(String metric) {
+    return 'C\'è un collegamento moderato inverso tra $metric e percezione dello sforzo';
+  }
+
+  @override
+  String correlationWeak(String metric) {
+    return '$metric e percezione dello sforzo appaiono indipendenti';
+  }
+
+  @override
+  String get correlationTechnicalDetails => 'Dati tecnici';
+
+  @override
+  String get correlationMetricWeight => 'peso';
+
+  @override
+  String get correlationMetricVolume => 'volume';
+
+  @override
+  String weeklySummaryStrong(int workouts, int prs, String percent) {
+    return 'Settimana fantastica! $workouts allenamenti, $prs nuovi PR. Volume in crescita del $percent%.';
+  }
+
+  @override
+  String weeklySummaryNormal(int workouts) {
+    return 'Buona settimana! $workouts allenamenti completati. Continua così!';
+  }
+
+  @override
+  String weeklySummaryWeak(int workouts) {
+    return 'Settimana tranquilla. $workouts allenamento completato. Ogni sessione conta!';
+  }
+
+  @override
+  String get weeklySummaryFirstWeek =>
+      'Benvenuto nelle tue statistiche! Completa il primo allenamento per iniziare.';
+
+  @override
+  String get weeklySummaryNoRecent =>
+      'Inizia ad allenarti per vedere i tuoi progressi qui!';
 }

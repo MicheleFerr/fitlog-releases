@@ -280,6 +280,17 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
 
             return Column(
               children: [
+                // Weekly summary banner (with scroll-away animation)
+                AnimatedSize(
+                  duration: AppAnimations.normal,
+                  curve: AppAnimations.decelerate,
+                  child: _showBars
+                      ? _WeeklySummaryBanner(
+                          exerciseHistories: widget.exerciseHistories,
+                        )
+                      : const SizedBox.shrink(),
+                ),
+
                 // Stats bar (with scroll-away animation)
                 AnimatedSize(
                   duration: AppAnimations.normal,
@@ -754,6 +765,203 @@ class _QuickStatsSummary extends ConsumerWidget {
   }
 }
 
+/// Weekly summary banner - Natural language summary of weekly performance
+class _WeeklySummaryBanner extends ConsumerWidget {
+  const _WeeklySummaryBanner({required this.exerciseHistories});
+
+  final List<ExerciseHistory> exerciseHistories;
+
+  /// Calculate workouts this week (last 7 days)
+  int _calculateWeeklyWorkouts() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final weekStart = today.subtract(const Duration(days: 6));
+
+    final weeklyDates = <DateTime>{};
+    for (final history in exerciseHistories) {
+      for (final session in history.sessions) {
+        final dateOnly = DateTime(
+          session.date.year,
+          session.date.month,
+          session.date.day,
+        );
+        if (!dateOnly.isBefore(weekStart) && !dateOnly.isAfter(today)) {
+          weeklyDates.add(dateOnly);
+        }
+      }
+    }
+    return weeklyDates.length;
+  }
+
+  /// Calculate recent PRs (last 7 days)
+  int _calculateRecentPRs() {
+    final now = DateTime.now();
+    final weekAgo = now.subtract(const Duration(days: 7));
+
+    int prs = 0;
+    for (final history in exerciseHistories) {
+      final recentSessions = history.sessions
+          .where((s) => s.date.isAfter(weekAgo))
+          .toList();
+
+      if (recentSessions.isNotEmpty) {
+        final recentMaxWeight = recentSessions
+            .map((s) => s.highestEstimated1RM)
+            .reduce((a, b) => a > b ? a : b);
+        final olderSessions = history.sessions
+            .where((s) => s.date.isBefore(weekAgo))
+            .toList();
+
+        if (olderSessions.isNotEmpty) {
+          final previousMaxWeight = olderSessions
+              .map((s) => s.highestEstimated1RM)
+              .reduce((a, b) => a > b ? a : b);
+          if (recentMaxWeight > previousMaxWeight) {
+            prs++;
+          }
+        } else if (recentMaxWeight > 0) {
+          prs++; // First ever PR
+        }
+      }
+    }
+    return prs;
+  }
+
+  /// Calculate average volume progression
+  double _calculateVolumeProgression() {
+    if (exerciseHistories.isEmpty) return 0;
+
+    final progressions = exerciseHistories
+        .map((h) => h.weeklyVolumeProgression)
+        .where((p) => p != 0)
+        .toList();
+
+    if (progressions.isEmpty) return 0;
+
+    return progressions.reduce((a, b) => a + b) / progressions.length;
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (exerciseHistories.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.xs,
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                context.colors.primaryContainer.withValues(alpha: 0.5),
+                context.colors.tertiaryContainer.withValues(alpha: 0.3),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                AppIcons.celebration,
+                color: context.colors.primary,
+                size: AppIconSize.large,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  context.l10n.weeklySummaryFirstWeek,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final weeklyWorkouts = _calculateWeeklyWorkouts();
+    final recentPRs = _calculateRecentPRs();
+    final volumeProgression = _calculateVolumeProgression();
+
+    // Determine summary category
+    String message;
+    IconData icon;
+    List<Color> gradientColors;
+
+    if (weeklyWorkouts == 0) {
+      message = context.l10n.weeklySummaryNoRecent;
+      icon = AppIcons.clock;
+      gradientColors = [
+        context.colors.surfaceContainer,
+        context.colors.surfaceContainer,
+      ];
+    } else if (weeklyWorkouts >= 4 && recentPRs >= 1 && volumeProgression > 0) {
+      // Strong week
+      message = context.l10n.weeklySummaryStrong(
+        weeklyWorkouts,
+        recentPRs,
+        volumeProgression.toStringAsFixed(0),
+      );
+      icon = AppIcons.celebration;
+      gradientColors = [
+        context.colors.successContainer.withValues(alpha: 0.6),
+        context.colors.primaryContainer.withValues(alpha: 0.4),
+      ];
+    } else if (weeklyWorkouts == 1) {
+      // Weak week
+      message = context.l10n.weeklySummaryWeak(weeklyWorkouts);
+      icon = AppIcons.trendFlat;
+      gradientColors = [
+        context.colors.surfaceContainer,
+        context.colors.surfaceContainer.withValues(alpha: 0.8),
+      ];
+    } else {
+      // Normal week
+      message = context.l10n.weeklySummaryNormal(weeklyWorkouts);
+      icon = AppIcons.check;
+      gradientColors = [
+        context.colors.primaryContainer.withValues(alpha: 0.4),
+        context.colors.secondaryContainer.withValues(alpha: 0.3),
+      ];
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.xs,
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(colors: gradientColors),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: context.colors.primary,
+              size: AppIconSize.large,
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                message,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// Animated counter widget - Smoothly animates from 0 to target value
 /// **Used in**: Quick Stats card for dynamic number animation
 class _AnimatedCounter extends StatefulWidget {
@@ -937,11 +1145,79 @@ class _HybridStatItem extends StatelessWidget {
   }
 }
 
+/// Contextual progression display info
+class _ProgressionInfo {
+  const _ProgressionInfo({
+    required this.label,
+    required this.color,
+    this.icon,
+  });
+  final String label;
+  final Color color;
+  final IconData? icon;
+}
+
 /// Exercise history card - shows exercise name, PR, sessions count
 class _ExerciseHistoryCard extends ConsumerWidget {
   const _ExerciseHistoryCard({required this.history});
 
   final ExerciseHistory history;
+
+  /// Determine contextual progression info based on session count and delta
+  _ProgressionInfo _getProgressionInfo(
+    BuildContext context,
+    int sessionsCount,
+    double weeklyProgression,
+  ) {
+    // Check if no recent session (>14 days)
+    if (history.sessions.isNotEmpty) {
+      final lastSessionDate = history.sessions
+          .map((s) => s.date)
+          .reduce((a, b) => a.isAfter(b) ? a : b);
+      final daysSinceLastSession =
+          DateTime.now().difference(lastSessionDate).inDays;
+      if (daysSinceLastSession > 14) {
+        return _ProgressionInfo(
+          label: context.l10n.progressionResume,
+          color: context.colors.onSurfaceVariant,
+          icon: AppIcons.clock,
+        );
+      }
+    }
+
+    // Only 1 session → "New!" badge
+    if (sessionsCount <= 1) {
+      return _ProgressionInfo(
+        label: context.l10n.progressionNew,
+        color: context.colors.primary,
+        icon: AppIcons.celebration,
+      );
+    }
+
+    // 2+ sessions with actual progression
+    if (weeklyProgression > 0) {
+      return _ProgressionInfo(
+        label: context.l10n.progressionUp(weeklyProgression.toStringAsFixed(0)),
+        color: context.colors.success,
+        icon: AppIcons.trendingUp,
+      );
+    } else if (weeklyProgression < 0) {
+      return _ProgressionInfo(
+        label: context.l10n.progressionDown(
+          weeklyProgression.abs().toStringAsFixed(0),
+        ),
+        color: context.colors.warning,
+        icon: AppIcons.trendingDown,
+      );
+    }
+
+    // delta == 0 → "Stable"
+    return _ProgressionInfo(
+      label: context.l10n.progressionStable,
+      color: context.colors.onSurfaceVariant,
+      icon: AppIcons.trendFlat,
+    );
+  }
 
   /// Show muscle group correction bottom sheet
   Future<void> _showCorrectionSheet(BuildContext context) async {
@@ -989,13 +1265,8 @@ class _ExerciseHistoryCard extends ConsumerWidget {
       ),
     );
 
-    // Determine progression color and icon
-    final progressionColor = weeklyProgression >= 0
-        ? context.colors.success
-        : context.colors.error;
-    final progressionIcon = weeklyProgression >= 0
-        ? AppIcons.trendingUp
-        : AppIcons.trendingDown;
+    // Determine contextual progression display
+    final progressionInfo = _getProgressionInfo(context, sessionsCount, weeklyProgression);
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppSpacing.xs),
@@ -1078,25 +1349,25 @@ class _ExerciseHistoryCard extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),
-                  // Progression with icon
+                  // Contextual progression display
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      if (progressionInfo.icon != null) ...[
+                        SemanticIcon(
+                          icon: progressionInfo.icon!,
+                          semanticLabel: progressionInfo.label,
+                          size: AppIconSize.tiny,
+                          color: progressionInfo.color,
+                        ),
+                        const SizedBox(width: 2),
+                      ],
                       Text(
-                        '${weeklyProgression >= 0 ? '+' : ''}${weeklyProgression.toStringAsFixed(0)}%',
+                        progressionInfo.label,
                         style: context.textTheme.labelMedium?.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: progressionColor,
+                          color: progressionInfo.color,
                         ),
-                      ),
-                      const SizedBox(width: 2),
-                      SemanticIcon(
-                        icon: progressionIcon,
-                        semanticLabel: weeklyProgression >= 0
-                            ? context.l10n.trendImproving
-                            : context.l10n.trendDeclining,
-                        size: AppIconSize.tiny,
-                        color: progressionColor,
                       ),
                     ],
                   ),

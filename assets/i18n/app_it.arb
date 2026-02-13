@@ -20730,5 +20730,30 @@
   "dropSetTraining": "Allenamento Drop Set",
   "smartWeightHelper": "Calcolatore peso smart",
   "generatedSets": "Serie generate",
-  "linkCopied": "Link copiato"
+  "linkCopied": "Link copiato",
+
+  "progressionNew": "Nuovo!",
+  "progressionStable": "Stabile",
+  "progressionUp": "+{percent}%",
+  "progressionDown": "-{percent}%",
+  "progressionResume": "Da riprendere",
+
+  "correlationNeedMoreSessions": "{current} di {required} sessioni con RPE",
+  "correlationNeedMoreSessionsHint": "Registra l'RPE dopo ogni serie per sbloccare le analisi di correlazione",
+  "correlationEarlyPatterns": "Primi pattern emergenti",
+  "correlationEarlyPatternsHint": "Più sessioni miglioreranno la precisione",
+  "correlationStrongPositive": "Quando aumenti il {metric}, la tua percezione dello sforzo (RPE) tende a salire significativamente",
+  "correlationStrongNegative": "Quando aumenti il {metric}, la tua percezione dello sforzo (RPE) tende a diminuire significativamente",
+  "correlationModeratePositive": "C'è un collegamento moderato tra {metric} e percezione dello sforzo",
+  "correlationModerateNegative": "C'è un collegamento moderato inverso tra {metric} e percezione dello sforzo",
+  "correlationWeak": "{metric} e percezione dello sforzo appaiono indipendenti",
+  "correlationTechnicalDetails": "Dati tecnici",
+  "correlationMetricWeight": "peso",
+  "correlationMetricVolume": "volume",
+
+  "weeklySummaryStrong": "Settimana fantastica! {workouts} allenamenti, {prs} nuovi PR. Volume in crescita del {percent}%.",
+  "weeklySummaryNormal": "Buona settimana! {workouts} allenamenti completati. Continua così!",
+  "weeklySummaryWeak": "Settimana tranquilla. {workouts} allenamento completato. Ogni sessione conta!",
+  "weeklySummaryFirstWeek": "Benvenuto nelle tue statistiche! Completa il primo allenamento per iniziare.",
+  "weeklySummaryNoRecent": "Inizia ad allenarti per vedere i tuoi progressi qui!"
 }

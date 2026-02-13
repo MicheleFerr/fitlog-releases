@@ -33563,5 +33563,132 @@
   "linkCopied": "Link copied",
   "@linkCopied": {
     "description": "Snackbar message when a link is copied to clipboard"
+  },
+
+  "progressionNew": "New!",
+  "@progressionNew": {
+    "description": "Badge for exercise with only 1 session"
+  },
+  "progressionStable": "Stable",
+  "@progressionStable": {
+    "description": "Label when weekly volume change is 0%"
+  },
+  "progressionUp": "+{percent}%",
+  "@progressionUp": {
+    "description": "Label for positive weekly volume progression",
+    "placeholders": {
+      "percent": { "type": "String" }
+    }
+  },
+  "progressionDown": "-{percent}%",
+  "@progressionDown": {
+    "description": "Label for negative weekly volume progression",
+    "placeholders": {
+      "percent": { "type": "String" }
+    }
+  },
+  "progressionResume": "Resume",
+  "@progressionResume": {
+    "description": "Label when exercise not done in >14 days"
+  },
+
+  "correlationNeedMoreSessions": "{current} of {required} sessions with RPE",
+  "@correlationNeedMoreSessions": {
+    "description": "Progress label for insufficient correlation data",
+    "placeholders": {
+      "current": { "type": "int" },
+      "required": { "type": "int" }
+    }
+  },
+  "correlationNeedMoreSessionsHint": "Log RPE after each set to unlock correlation insights",
+  "@correlationNeedMoreSessionsHint": {
+    "description": "Hint explaining why more RPE sessions are needed"
+  },
+  "correlationEarlyPatterns": "Early patterns emerging",
+  "@correlationEarlyPatterns": {
+    "description": "Title for 5-10 session correlation insights"
+  },
+  "correlationEarlyPatternsHint": "More sessions will improve accuracy",
+  "@correlationEarlyPatternsHint": {
+    "description": "Subtitle for early patterns section"
+  },
+  "correlationStrongPositive": "When you increase {metric}, your effort perception (RPE) tends to rise significantly",
+  "@correlationStrongPositive": {
+    "description": "Natural language for strong positive correlation",
+    "placeholders": {
+      "metric": { "type": "String" }
+    }
+  },
+  "correlationStrongNegative": "When you increase {metric}, your effort perception (RPE) tends to decrease significantly",
+  "@correlationStrongNegative": {
+    "description": "Natural language for strong negative correlation",
+    "placeholders": {
+      "metric": { "type": "String" }
+    }
+  },
+  "correlationModeratePositive": "There's a moderate link between {metric} and effort perception",
+  "@correlationModeratePositive": {
+    "description": "Natural language for moderate positive correlation",
+    "placeholders": {
+      "metric": { "type": "String" }
+    }
+  },
+  "correlationModerateNegative": "There's a moderate inverse link between {metric} and effort perception",
+  "@correlationModerateNegative": {
+    "description": "Natural language for moderate negative correlation",
+    "placeholders": {
+      "metric": { "type": "String" }
+    }
+  },
+  "correlationWeak": "{metric} and effort perception appear to be independent",
+  "@correlationWeak": {
+    "description": "Natural language for weak/no correlation",
+    "placeholders": {
+      "metric": { "type": "String" }
+    }
+  },
+  "correlationTechnicalDetails": "Technical details",
+  "@correlationTechnicalDetails": {
+    "description": "Toggle label for showing r, r², scatter plot"
+  },
+  "correlationMetricWeight": "weight",
+  "@correlationMetricWeight": {
+    "description": "Weight metric name for correlation messages"
+  },
+  "correlationMetricVolume": "volume",
+  "@correlationMetricVolume": {
+    "description": "Volume metric name for correlation messages"
+  },
+
+  "weeklySummaryStrong": "Fantastic week! {workouts} workouts, {prs} new PRs. Volume up {percent}%.",
+  "@weeklySummaryStrong": {
+    "description": "Summary banner for a strong week",
+    "placeholders": {
+      "workouts": { "type": "int" },
+      "prs": { "type": "int" },
+      "percent": { "type": "String" }
+    }
+  },
+  "weeklySummaryNormal": "Good week! {workouts} workouts completed. Keep it up!",
+  "@weeklySummaryNormal": {
+    "description": "Summary banner for a normal week",
+    "placeholders": {
+      "workouts": { "type": "int" }
+    }
+  },
+  "weeklySummaryWeak": "Quiet week. {workouts} workout completed. Every session counts!",
+  "@weeklySummaryWeak": {
+    "description": "Summary banner for a weak week",
+    "placeholders": {
+      "workouts": { "type": "int" }
+    }
+  },
+  "weeklySummaryFirstWeek": "Welcome to your stats! Complete your first workout to get started.",
+  "@weeklySummaryFirstWeek": {
+    "description": "Summary banner for users with no workout history"
+  },
+  "weeklySummaryNoRecent": "Start training to see your progress here!",
+  "@weeklySummaryNoRecent": {
+    "description": "Summary banner when no recent workouts"
   }
 }
