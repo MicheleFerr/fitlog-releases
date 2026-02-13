@@ -33,6 +33,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/core/config/feature_flags.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_sync_listener.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/registry/hint_registry.dart';
@@ -59,6 +60,12 @@ const _kAndroidNavBarBottomMargin = 10.0;
 
 /// Android floating nav bar horizontal margin
 const _kAndroidNavBarHorizontalMargin = 24.0;
+
+/// FitLog primary blue for the center + button
+const _kCenterButtonColor = Color(0xFF1E88E5);
+
+/// Tab index of the center "+" button (not a real branch)
+const _kPlusButtonTabIndex = 2;
 
 /// Global key for bottom navigation bar - used by home tour
 final bottomNavKeyProvider = Provider<GlobalKey>((ref) => GlobalKey());
@@ -164,10 +171,16 @@ class _MainShellState extends ConsumerState<MainShell> {
               ),
 
             // Bottom navigation bar - hidden when a bottom sheet is open
+            // Tab indices: [Home(0), Workout(1), +(2), Profile(3), AI Coach(4)]
+            // Branch indices: [Home(0), Workout(1), Profile(2), AI Coach(3)]
             ValueListenableBuilder<int>(
               valueListenable: ModalService.openSheetCount,
               builder: (context, sheetCount, child) {
                 final isHidden = sheetCount > 0;
+                // Map branch index → tab display index (skip + button at 2)
+                final tabDisplayIndex = currentIndex < _kPlusButtonTabIndex
+                    ? currentIndex
+                    : currentIndex + 1;
                 if (isIOS) {
                   return Positioned(
                     left: 0,
@@ -179,8 +192,8 @@ class _MainShellState extends ConsumerState<MainShell> {
                       offset: Offset(0, isHidden ? 1.0 : 0.0),
                       child: _NativeIOSTabBar(
                         navKey: ref.watch(bottomNavKeyProvider),
-                        currentIndex: currentIndex,
-                        onTap: (index) => _onDestinationSelected(context, index),
+                        currentIndex: tabDisplayIndex,
+                        onTap: (index) => _onTabBarTap(context, index),
                       ),
                     ),
                   );
@@ -195,8 +208,8 @@ class _MainShellState extends ConsumerState<MainShell> {
                     offset: Offset(0, isHidden ? 2.0 : 0.0),
                     child: _FloatingBottomNavBar(
                       navKey: ref.watch(bottomNavKeyProvider),
-                      currentIndex: currentIndex,
-                      onTap: (index) => _onDestinationSelected(context, index),
+                      currentIndex: tabDisplayIndex,
+                      onTap: (index) => _onTabBarTap(context, index),
                     ),
                   ),
                 );
@@ -265,6 +278,22 @@ class _MainShellState extends ConsumerState<MainShell> {
     _previousIndex = currentIndex;
   }
 
+  /// Handle tab bar tap with index mapping.
+  ///
+  /// Tab indices include the + button: [Home(0), Workout(1), +(2), Profile(3), AI Coach(4)]
+  /// Branch indices skip it: [Home(0), Workout(1), Profile(2), AI Coach(3)]
+  void _onTabBarTap(BuildContext context, int tabIndex) {
+    if (tabIndex == _kPlusButtonTabIndex) {
+      _showQuickActionsModal(context);
+      return;
+    }
+    // Map tab index → branch index (subtract 1 for items after the + button)
+    final branchIndex = tabIndex < _kPlusButtonTabIndex
+        ? tabIndex
+        : tabIndex - 1;
+    _onDestinationSelected(context, branchIndex);
+  }
+
   /// Handle destination selection with branch switching
   void _onDestinationSelected(BuildContext context, int index) {
     HapticFeedback.lightImpact();
@@ -306,6 +335,47 @@ class _MainShellState extends ConsumerState<MainShell> {
     }
 
     return false;
+  }
+
+  /// Show quick actions modal with blur background
+  void _showQuickActionsModal(BuildContext context) {
+    HapticFeedback.mediumImpact();
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'QuickActions',
+      barrierColor: Colors.transparent,
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+      transitionBuilder: (dialogContext, animation, secondaryAnimation, _) {
+        return _QuickActionsOverlay(
+          animation: animation,
+          onAction: (action) {
+            Navigator.of(dialogContext).pop();
+            _handleQuickAction(context, action);
+          },
+          onClose: () => Navigator.of(dialogContext).pop(),
+        );
+      },
+    );
+  }
+
+  /// Handle quick action selection
+  void _handleQuickAction(BuildContext context, _QuickAction action) {
+    switch (action) {
+      case _QuickAction.newWorkout:
+        widget.navigationShell.goBranch(1, initialLocation: true);
+      case _QuickAction.templates:
+        context.pushNamed(AppRoutes.templatesName);
+      case _QuickAction.history:
+        context.pushNamed(AppRoutes.workoutHistoryName);
+      case _QuickAction.statistics:
+        context.pushNamed(AppRoutes.statsName);
+      case _QuickAction.measurements:
+        context.pushNamed(AppRoutes.bodyMeasurementsName);
+      case _QuickAction.calendar:
+        context.pushNamed(AppRoutes.streakCalendarName);
+    }
   }
 
   /// Show confirmation dialog before saving workout
@@ -382,6 +452,16 @@ class _NativeIOSTabBar extends StatelessWidget {
             label: context.l10n.workout,
             icon: const CNSymbol('dumbbell', size: 15, weight: CNSymbolWeight.light),
           ),
+          // Center "+" button item
+          CNTabBarItem(
+            label: '',
+            icon: CNSymbol(
+              'plus.circle.fill',
+              size: 22,
+              weight: CNSymbolWeight.medium,
+              color: _kCenterButtonColor,
+            ),
+          ),
           CNTabBarItem(
             label: context.l10n.profile,
             icon: const CNSymbol('person', size: 15, weight: CNSymbolWeight.light),
@@ -443,12 +523,25 @@ class _FloatingBottomNavBar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              for (var i = 0; i < items.length; i++)
+              // Items before the + button
+              for (var i = 0; i < _kPlusButtonTabIndex; i++)
                 _FloatingNavItem(
                   icon: items[i].icon,
                   label: items[i].label,
                   isSelected: i == currentIndex,
                   onTap: () => onTap(i),
+                ),
+              // Center + button
+              _FloatingPlusItem(
+                onTap: () => onTap(_kPlusButtonTabIndex),
+              ),
+              // Items after the + button
+              for (var i = _kPlusButtonTabIndex; i < items.length; i++)
+                _FloatingNavItem(
+                  icon: items[i].icon,
+                  label: items[i].label,
+                  isSelected: (i + 1) == currentIndex,
+                  onTap: () => onTap(i + 1),
                 ),
             ],
           ),
@@ -512,4 +605,263 @@ class _FloatingNavItem extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Styled "+" button for the Android floating nav bar.
+class _FloatingPlusItem extends StatelessWidget {
+  const _FloatingPlusItem({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: const BoxDecoration(
+          color: _kCenterButtonColor,
+          shape: BoxShape.circle,
+        ),
+        child: const Icon(
+          AppIcons.add,
+          color: Colors.white,
+          size: 22,
+        ),
+      ),
+    );
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Quick Actions Overlay
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+enum _QuickAction {
+  newWorkout,
+  templates,
+  history,
+  statistics,
+  measurements,
+  calendar,
+}
+
+class _QuickActionsOverlay extends StatelessWidget {
+  const _QuickActionsOverlay({
+    required this.animation,
+    required this.onAction,
+    required this.onClose,
+  });
+
+  final Animation<double> animation;
+  final ValueChanged<_QuickAction> onAction;
+  final VoidCallback onClose;
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: animation,
+      child: Material(
+        color: Colors.transparent,
+        child: Stack(
+          children: [
+            // Blur background
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: onClose,
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+                  child: Container(
+                    color: Colors.black.withValues(alpha: 0.6),
+                  ),
+                ),
+              ),
+            ),
+
+            // Content
+            SafeArea(
+              child: Column(
+                children: [
+                  const Spacer(),
+
+                  // Quick actions grid
+                  SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(0, 0.3),
+                      end: Offset.zero,
+                    ).animate(CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutCubic,
+                    )),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: _buildActionsGrid(context),
+                    ),
+                  ),
+
+                  const SizedBox(height: 48),
+
+                  // Close button
+                  ScaleTransition(
+                    scale: CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutBack,
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        onClose();
+                      },
+                      child: Container(
+                        width: 52,
+                        height: 52,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.15),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          AppIcons.close,
+                          color: Colors.white,
+                          size: 22,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionsGrid(BuildContext context) {
+    final actions = [
+      _QuickActionItem(
+        action: _QuickAction.newWorkout,
+        icon: AppIcons.workout,
+        label: context.l10n.newWorkout,
+      ),
+      _QuickActionItem(
+        action: _QuickAction.templates,
+        icon: AppIcons.template,
+        label: context.l10n.templates,
+      ),
+      _QuickActionItem(
+        action: _QuickAction.history,
+        icon: AppIcons.history,
+        label: context.l10n.history,
+      ),
+      _QuickActionItem(
+        action: _QuickAction.statistics,
+        icon: AppIcons.analytics,
+        label: context.l10n.statistics,
+      ),
+      _QuickActionItem(
+        action: _QuickAction.measurements,
+        icon: AppIcons.bodyMeasurements,
+        label: context.l10n.measurements,
+      ),
+      _QuickActionItem(
+        action: _QuickAction.calendar,
+        icon: AppIcons.calendar,
+        label: context.l10n.calendar,
+      ),
+    ];
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (var row = 0; row < 2; row++)
+          Padding(
+            padding: EdgeInsets.only(bottom: row == 0 ? 24 : 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                for (var col = 0; col < 3; col++)
+                  _buildActionButton(
+                    context,
+                    actions[row * 3 + col],
+                    delay: (row * 3 + col) * 0.05,
+                  ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildActionButton(
+    BuildContext context,
+    _QuickActionItem item, {
+    double delay = 0,
+  }) {
+    final delayed = CurvedAnimation(
+      parent: animation,
+      curve: Interval(delay, 1.0, curve: Curves.easeOutCubic),
+    );
+
+    return ScaleTransition(
+      scale: delayed,
+      child: GestureDetector(
+        onTap: () {
+          HapticFeedback.mediumImpact();
+          onAction(item.action);
+        },
+        child: SizedBox(
+          width: 80,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.08),
+                  ),
+                ),
+                child: Icon(
+                  item.icon,
+                  color: Colors.white,
+                  size: 26,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                item.label,
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.9),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _QuickActionItem {
+  const _QuickActionItem({
+    required this.action,
+    required this.icon,
+    required this.label,
+  });
+
+  final _QuickAction action;
+  final IconData icon;
+  final String label;
 }

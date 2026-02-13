@@ -13,6 +13,7 @@ class CupertinoTabBarPlatformView: NSObject, FlutterPlatformView, UITabBarDelega
   private var currentSymbols: [String] = []
   private var currentSizes: [NSNumber] = []
   private var currentWeights: [String] = []
+  private var currentColors: [NSNumber] = []
   private var leftInsetVal: CGFloat = 0
   private var rightInsetVal: CGFloat = 0
   private var splitSpacingVal: CGFloat = 8
@@ -25,7 +26,7 @@ class CupertinoTabBarPlatformView: NSObject, FlutterPlatformView, UITabBarDelega
     var symbols: [String] = []
     var sizes: [NSNumber] = []
     var weights: [String] = []
-    var colors: [NSNumber] = [] // ignored; use tintColor
+    var colors: [NSNumber] = []
     var selectedIndex: Int = 0
     var isDark: Bool = false
     var tint: UIColor? = nil
@@ -77,6 +78,11 @@ class CupertinoTabBarPlatformView: NSObject, FlutterPlatformView, UITabBarDelega
             image = UIImage(systemName: symbols[i], withConfiguration: config)
           } else {
             image = UIImage(systemName: symbols[i])
+          }
+          // Per-item color: render as .alwaysOriginal so UITabBar tint doesn't override
+          if i < colors.count, colors[i].intValue != 0 {
+            let c = CupertinoTabBarPlatformView.colorFromARGB(colors[i].intValue)
+            image = image?.withTintColor(c, renderingMode: .alwaysOriginal)
           }
         }
         let title = (i < labels.count) ? labels[i] : nil
@@ -166,6 +172,7 @@ class CupertinoTabBarPlatformView: NSObject, FlutterPlatformView, UITabBarDelega
     self.currentSymbols = symbols
     self.currentSizes = sizes
     self.currentWeights = weights
+    self.currentColors = colors
     self.leftInsetVal = leftInset
     self.rightInsetVal = rightInset
 channel.setMethodCallHandler { [weak self] call, result in
@@ -184,6 +191,7 @@ channel.setMethodCallHandler { [weak self] call, result in
           let symbols = (args["sfSymbols"] as? [String]) ?? []
           let sizes = self.currentSizes
           let weights = self.currentWeights
+          let itemColors = self.currentColors
           let selectedIndex = (args["selectedIndex"] as? NSNumber)?.intValue ?? 0
           self.currentLabels = labels
           self.currentSymbols = symbols
@@ -202,6 +210,10 @@ channel.setMethodCallHandler { [weak self] call, result in
                   image = UIImage(systemName: symbols[i], withConfiguration: config)
                 } else {
                   image = UIImage(systemName: symbols[i])
+                }
+                if i < itemColors.count, itemColors[i].intValue != 0 {
+                  let c = CupertinoTabBarPlatformView.colorFromARGB(itemColors[i].intValue)
+                  image = image?.withTintColor(c, renderingMode: .alwaysOriginal)
                 }
               }
               let title = (i < labels.count) ? labels[i] : nil
@@ -245,6 +257,7 @@ channel.setMethodCallHandler { [weak self] call, result in
           let symbols = self.currentSymbols
           let sizes = self.currentSizes
           let weights = self.currentWeights
+          let itemColors = self.currentColors
           let appearance: UITabBarAppearance? = {
             if #available(iOS 13.0, *) { let ap = UITabBarAppearance(); ap.configureWithDefaultBackground(); return ap }
             return nil
@@ -264,6 +277,10 @@ channel.setMethodCallHandler { [weak self] call, result in
                   image = UIImage(systemName: symbols[i], withConfiguration: config)
                 } else {
                   image = UIImage(systemName: symbols[i])
+                }
+                if i < itemColors.count, itemColors[i].intValue != 0 {
+                  let c = CupertinoTabBarPlatformView.colorFromARGB(itemColors[i].intValue)
+                  image = image?.withTintColor(c, renderingMode: .alwaysOriginal)
                 }
               }
               let title = (i < labels.count) ? labels[i] : nil
