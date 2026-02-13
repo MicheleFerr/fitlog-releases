@@ -102,121 +102,145 @@ class _ExerciseCorrelationsSheetState
               ),
             ],
           ),
-          child: Column(
-            children: [
-              // Handle
-              Container(
-                margin: const EdgeInsets.only(top: 12),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: context.colors.outline.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              // Header
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-                child: Row(
-                  children: [
-                    Icon(
-                      AppIcons.analytics,
-                      color: context.colors.primary,
-                      size: AppIconSize.large,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            context.l10n.analyticsCorrelationsTitle,
-                            style: context.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
+          child: analyticsAsync.when(
+            data: (analytics) => analytics != null
+                ? CustomScrollView(
+                    controller: scrollController,
+                    slivers: [
+                      // Handle
+                      SliverToBoxAdapter(
+                        child: Center(
+                          child: Container(
+                            margin: const EdgeInsets.only(top: 12, bottom: 12),
+                            width: 40,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: context.colors.outline.withValues(alpha: 0.3),
+                              borderRadius: BorderRadius.circular(2),
                             ),
                           ),
-                          Text(
-                            widget.exerciseName,
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              color: context.colors.onSurfaceVariant,
-                            ),
+                        ),
+                      ),
+                      // Header
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
+                          child: Row(
+                            children: [
+                              Icon(
+                                AppIcons.analytics,
+                                color: context.colors.primary,
+                                size: AppIconSize.large,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      context.l10n.analyticsCorrelationsTitle,
+                                      style: context.textTheme.titleLarge?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      widget.exerciseName,
+                                      style: context.textTheme.bodyMedium?.copyWith(
+                                        color: context.colors.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () => Navigator.pop(context),
+                                icon: Icon(
+                                  AppIcons.close,
+                                  color: context.colors.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: Icon(
-                        AppIcons.close,
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
+                      const SliverToBoxAdapter(child: Divider(height: 1)),
+                      // Content
+                      ..._buildContentSlivers(analytics),
+                    ],
+                  )
+                : CustomScrollView(
+                    controller: scrollController,
+                    slivers: [
+                      SliverToBoxAdapter(child: _buildNoData()),
+                    ],
+                  ),
+            loading: () => CustomScrollView(
+              controller: scrollController,
+              slivers: [
+                const SliverFillRemaining(
+                  child: Center(child: LoadingIndicator()),
                 ),
-              ),
-              const Divider(height: 1),
-              // Content
-              Expanded(
-                child: analyticsAsync.when(
-                  data: (analytics) => analytics != null
-                      ? _buildContent(analytics, scrollController)
-                      : _buildNoData(),
-                  loading: () => const Center(child: LoadingIndicator()),
-                  error: (e, _) => _buildError(e),
-                ),
-              ),
-            ],
+              ],
+            ),
+            error: (e, _) => CustomScrollView(
+              controller: scrollController,
+              slivers: [
+                SliverToBoxAdapter(child: _buildError(e)),
+              ],
+            ),
           ),
         );
       },
     );
   }
 
-  Widget _buildContent(
-    ExerciseAnalyticsData analytics,
-    ScrollController scrollController,
-  ) {
+  /// Build content as Slivers for CustomScrollView (makes header draggable)
+  List<Widget> _buildContentSlivers(ExerciseAnalyticsData analytics) {
     final correlations = analytics.correlations;
     final rpeSessionsCount = analytics.rpeHistory.length;
 
-    return ListView(
-      controller: scrollController,
-      padding: const EdgeInsets.all(20),
-      children: [
-        // Quick summary at a glance
-        _buildQuickSummary(analytics),
-        const SizedBox(height: 20),
+    return [
+      SliverPadding(
+        padding: const EdgeInsets.all(20),
+        sliver: SliverList(
+          delegate: SliverChildListDelegate([
+            // Quick summary at a glance
+            _buildQuickSummary(analytics),
+            const SizedBox(height: 20),
 
-        // Data quality indicator with session threshold logic
-        _buildDataQualityCard(analytics, rpeSessionsCount),
-        const SizedBox(height: 20),
+            // Data quality indicator with session threshold logic
+            _buildDataQualityCard(analytics, rpeSessionsCount),
+            const SizedBox(height: 20),
 
-        // Correlation section based on RPE session count
-        if (rpeSessionsCount < 5)
-          _buildInsufficientDataSection(rpeSessionsCount)
-        else if (rpeSessionsCount < 10)
-          _buildEarlyPatternsSection(analytics, correlations)
-        else
-          _buildFullCorrelationsSection(analytics, correlations),
+            // Correlation section based on RPE session count
+            if (rpeSessionsCount < 5)
+              _buildInsufficientDataSection(rpeSessionsCount)
+            else if (rpeSessionsCount < 10)
+              _buildEarlyPatternsSection(analytics, correlations)
+            else
+              _buildFullCorrelationsSection(analytics, correlations),
 
-        const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-        // Collapsible Trend Section
-        _buildCollapsibleSection(
-          title: context.l10n.analyticsTrendSummary,
-          icon: AppIcons.trendUp,
-          isExpanded: _trendsExpanded,
-          onToggle: () => setState(() => _trendsExpanded = !_trendsExpanded),
-          child: _buildTrendContent(analytics),
+            // Collapsible Trend Section
+            _buildCollapsibleSection(
+              title: context.l10n.analyticsTrendSummary,
+              icon: AppIcons.trendUp,
+              isExpanded: _trendsExpanded,
+              onToggle: () => setState(() => _trendsExpanded = !_trendsExpanded),
+              child: _buildTrendContent(analytics),
+            ),
+            const SizedBox(height: 24),
+
+            // Navigate to full analytics (L3)
+            _buildFullAnalyticsButton(analytics),
+            const SizedBox(height: 32),
+          ]),
         ),
-        const SizedBox(height: 24),
-
-        // Navigate to full analytics (L3)
-        _buildFullAnalyticsButton(analytics),
-        const SizedBox(height: 32),
-      ],
-    );
+      ),
+    ];
   }
+
 
   /// Quick at-a-glance summary showing key metrics
   Widget _buildQuickSummary(ExerciseAnalyticsData analytics) {
@@ -444,8 +468,7 @@ class _ExerciseCorrelationsSheetState
   ) {
     final hasEnoughData = rpeSessionsCount >= 5;
     final sessionCount = analytics.sessionCount;
-    // Fix bug: Ensure dataSpanDays is reasonable (max 365*3 = ~1000 days)
-    final dataSpanDays = analytics.dataSpanDays.clamp(0, 1095);
+    final dataSpanDays = analytics.dataSpanDays;
 
     return Container(
       padding: const EdgeInsets.all(16),
