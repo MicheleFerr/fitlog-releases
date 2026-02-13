@@ -23,6 +23,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_h
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/rep_zone_suggestion.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/rep_zone_suggestion_engine.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_analyzer.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/rep_zone_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/rep_zone_optimization_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -76,7 +77,7 @@ class _RepZoneTabState extends ConsumerState<RepZoneTab>
         analysis.totalSets >= RepZoneSuggestionEngine.minimumSetsForAnalysis;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + context.tabBarInset),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

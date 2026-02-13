@@ -68,7 +68,7 @@ class PlateauDetectionTab extends ConsumerWidget {
     final progressing = plateaus.where((p) => p.isProgressing).toList();
 
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + context.tabBarInset),
       children: [
         // Summary card
         _buildSummaryCard(

@@ -70,7 +70,7 @@ class StressIndexTab extends ConsumerWidget {
     final history = state.history as List<StressIndexResult>;
 
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + context.tabBarInset),
       children: [
         // Refresh button row
         _buildRefreshButton(context, ref),
