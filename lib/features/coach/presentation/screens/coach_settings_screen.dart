@@ -83,8 +83,8 @@ class CoachSettingsScreen extends ConsumerWidget {
           const TemplateFoldersSection(),
           const SizedBox(height: AppSpacing.xl),
 
-          // Bottom padding for safe area
-          const SizedBox(height: 100),
+          // Bottom padding for tab bar overlay
+          const TabBarBottomPadding(),
         ],
       ),
     );

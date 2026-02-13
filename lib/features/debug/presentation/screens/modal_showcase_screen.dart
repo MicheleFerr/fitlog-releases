@@ -382,7 +382,7 @@ class ModalShowcaseScreen extends ConsumerWidget {
           const SizedBox(height: 24),
 
           // LOW PRIORITY - Community Features
-          const SizedBox(height: 100), // Bottom padding
+          const TabBarBottomPadding(), // Bottom padding for tab bar overlay
         ],
       ),
     );

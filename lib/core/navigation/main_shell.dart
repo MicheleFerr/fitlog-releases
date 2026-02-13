@@ -155,10 +155,15 @@ class _MainShellState extends ConsumerState<MainShell> {
       body: ExerciseSyncListener(
         child: Stack(
           children: [
-            // Main content with adjusted bottom padding via MediaQuery
-            MediaQuery(
-              data: adjustedMediaQuery,
-              child: widget.navigationShell,
+            // Main content with adjusted bottom padding via MediaQuery.
+            // TabBarInset exposes navBarTotalHeight to all descendants
+            // so they can add transparent bottom padding dynamically.
+            TabBarInset(
+              height: navBarTotalHeight,
+              child: MediaQuery(
+                data: adjustedMediaQuery,
+                child: widget.navigationShell,
+              ),
             ),
 
             // Floating mini-bar positioned just above nav bar

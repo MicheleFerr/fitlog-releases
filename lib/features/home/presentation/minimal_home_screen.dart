@@ -276,8 +276,8 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                   },
                 ),
 
-                // Bottom padding for navigation bar
-                const SizedBox(height: 100),
+                // Bottom padding for tab bar overlay
+                const TabBarBottomPadding(),
               ]),
             ),
           ),

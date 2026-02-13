@@ -182,11 +182,11 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
     return MaterialScrollList(
       itemCount: widget.workout.exercises.length,
       // List is now below header in Column, no need for header padding
-      padding: const EdgeInsets.only(
+      padding: EdgeInsets.only(
         left: AppSpacing.md,
         right: AppSpacing.md,
         top: AppSpacing.sm,
-        bottom: AppSpacing.md + 60, // Extra space for banner ad
+        bottom: AppSpacing.md + 60 + context.tabBarInset, // FAB + tab bar
       ),
       itemBuilder: (context, index) {
         final exercise = widget.workout.exercises[index];
@@ -250,11 +250,11 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
         shadowColor: context.colors.surface.withValues(alpha: 0),
       ),
       child: ReorderableListView.builder(
-        padding: const EdgeInsets.only(
+        padding: EdgeInsets.only(
           left: AppSpacing.md,
           right: AppSpacing.md,
           top: AppSpacing.sm,
-          bottom: AppSpacing.md + 60,
+          bottom: AppSpacing.md + 60 + context.tabBarInset, // FAB + tab bar
         ),
         itemCount: widget.workout.exercises.length,
         onReorder: (oldIndex, newIndex) {

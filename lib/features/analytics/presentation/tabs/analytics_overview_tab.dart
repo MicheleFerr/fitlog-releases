@@ -274,7 +274,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                 const SizedBox(height: 20),
                 // Quick Actions
                 _buildQuickActions(context),
-                const SizedBox(height: 100), // Space for bottom navigation
+                const TabBarBottomPadding(), // Bottom padding for tab bar overlay
               ]),
             ),
           ),

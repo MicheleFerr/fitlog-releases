@@ -126,8 +126,8 @@ class AthleteDetailScreen extends ConsumerWidget {
                   ),
                 ),
 
-                // Bottom spacing
-                const SizedBox(height: 100),
+                // Bottom padding for tab bar overlay
+                const TabBarBottomPadding(),
               ]),
             ),
           ),

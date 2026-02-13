@@ -80,8 +80,8 @@ class CoachDashboardScreen extends ConsumerWidget {
             ),
           ),
 
-          // Bottom padding
-          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+          // Bottom padding for tab bar overlay
+          const SliverTabBarBottomPadding(),
         ],
       ),
     );

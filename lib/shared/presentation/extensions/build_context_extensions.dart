@@ -21,9 +21,12 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/tab_bar_safe_area.dart';
 
 // Export ColorScheme extensions so they're available to all files using context.colors
 export 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+// Export TabBarInset widget so it's available to all files using context.tabBarInset
+export 'package:gymbro_flutter_new/shared/presentation/widgets/tab_bar_safe_area.dart';
 
 extension BuildContextExtensions on BuildContext {
   /// Accesso rapido al ColorScheme del tema corrente
@@ -126,6 +129,20 @@ extension BuildContextExtensions on BuildContext {
   /// }
   /// ```
   bool get isKeyboardVisible => MediaQuery.of(this).viewInsets.bottom > 0;
+
+  /// Height of the overlay tab bar (from [TabBarInset] InheritedWidget).
+  ///
+  /// Returns 0 if the widget is not inside MainShell.
+  /// Use this to add transparent bottom padding so content doesn't hide
+  /// behind the overlay tab bar.
+  ///
+  /// ```dart
+  /// Padding(
+  ///   padding: EdgeInsets.only(bottom: context.tabBarInset),
+  ///   child: myBottomButton,
+  /// )
+  /// ```
+  double get tabBarInset => TabBarInset.of(this);
 }
 
 /// Extension per colori semantici con garantito WCAG AA contrast

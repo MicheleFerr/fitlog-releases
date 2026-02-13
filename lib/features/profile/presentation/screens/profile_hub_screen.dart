@@ -116,8 +116,8 @@ class _ProfileHubContent extends ConsumerWidget {
           // Recent workouts section
           SliverToBoxAdapter(child: _RecentWorkoutsSection()),
 
-          // Bottom padding
-          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+          // Bottom padding for tab bar overlay
+          const SliverTabBarBottomPadding(),
         ],
       ),
     );

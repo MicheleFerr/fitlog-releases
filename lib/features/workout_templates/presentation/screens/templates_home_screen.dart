@@ -541,7 +541,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     : _buildMyTemplatesList(templates, context),
 
               // Bottom padding for FAB
-              const SliverToBoxAdapter(child: SizedBox(height: 100)),
+              const SliverTabBarBottomPadding(),
             ],
           ),
         );
@@ -1208,8 +1208,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               ),
           ),
 
-          // Bottom padding for FAB
-          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+          // Bottom padding for tab bar overlay
+          const SliverTabBarBottomPadding(),
         ],
       ),
     );
@@ -2168,8 +2168,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
             ),
           ),
 
-          // Bottom padding for FAB
-          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+          // Bottom padding for tab bar overlay
+          const SliverTabBarBottomPadding(),
         ],
       ),
     );

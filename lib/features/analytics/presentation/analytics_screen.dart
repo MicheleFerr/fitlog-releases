@@ -466,9 +466,11 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
 
     return ListView.builder(
       controller: _scrollController,
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.xs,
+      padding: EdgeInsets.only(
+        left: AppSpacing.md,
+        right: AppSpacing.md,
+        top: AppSpacing.xs,
+        bottom: AppSpacing.xs + context.tabBarInset,
       ),
       itemCount: histories.length,
       itemBuilder: (context, index) {

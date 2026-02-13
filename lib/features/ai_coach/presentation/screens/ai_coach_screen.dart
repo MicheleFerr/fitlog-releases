@@ -250,9 +250,10 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
             ),
 
           // Smart suggestions overlay + Input bar
+          // Use tabBarInset to position above the overlay tab bar
           Padding(
             padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).padding.bottom,
+              bottom: context.tabBarInset,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,

@@ -180,8 +180,8 @@ class _CoachTemplateEditorScreenState
                   // Exercises section
                   _buildExercisesSection(),
 
-                  // Bottom padding for FAB
-                  const SizedBox(height: 100),
+                  // Bottom padding for tab bar overlay
+                  const TabBarBottomPadding(),
                 ],
               ),
             ),
