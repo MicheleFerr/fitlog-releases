@@ -171,7 +171,7 @@ class _ExerciseMergeScreenState extends ConsumerState<ExerciseMergeScreen> {
     final colorScheme = context.colors;
 
     return ListView(
-      padding: const EdgeInsets.only(bottom: 32),
+      padding: EdgeInsets.only(bottom: 32 + context.tabBarInset),
       children: [
         // Header info
         Padding(

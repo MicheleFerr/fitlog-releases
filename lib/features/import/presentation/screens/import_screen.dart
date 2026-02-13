@@ -155,6 +155,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
               ),
             ),
           ),
+          const TabBarBottomPadding(),
         ],
       ),
     );

@@ -929,7 +929,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             child: ListView.builder(
               key: const PageStorageKey('exercise_search_list'),
               padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom + 80,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 80 + context.tabBarInset,
               ),
               itemCount:
                   allExercises.length + 1, // +1 for missing exercise widget
@@ -1010,7 +1010,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             child: ListView.builder(
               key: const PageStorageKey('exercise_fuzzy_search_list'),
               padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom + 80,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 80 + context.tabBarInset,
               ),
               itemCount:
                   _fuzzyResults.length + 1, // +1 for missing exercise widget

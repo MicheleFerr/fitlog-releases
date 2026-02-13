@@ -149,7 +149,12 @@ class _TemplateViewContent extends ConsumerWidget {
       ),
       bottomNavigationBar: SafeArea(
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 16,
+            bottom: 16 + context.tabBarInset,
+          ),
           decoration: BoxDecoration(
             color: context.colors.surface,
             border: Border(

@@ -146,7 +146,11 @@ class _ExerciseProgressScreenState
 
     return ListView.builder(
       key: const PageStorageKey('exercise_progress_list'),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        bottom: context.tabBarInset,
+      ),
       itemCount: exercises.length,
       itemBuilder: (context, index) {
         final entry = exercises[index];

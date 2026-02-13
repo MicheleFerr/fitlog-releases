@@ -18,7 +18,12 @@ class DocumentsAttributionScreen extends ConsumerWidget {
         title: Text(context.l10n.scientificSources),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.only(
+          left: 16,
+          right: 16,
+          top: 16,
+          bottom: 16 + context.tabBarInset,
+        ),
         children: [
           _buildSection(
             context,

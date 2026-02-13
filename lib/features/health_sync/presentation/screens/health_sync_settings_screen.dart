@@ -90,6 +90,7 @@ class _HealthSyncSettingsScreenState
           // if (isConnected) ...[
           //   _buildAutoSyncSection(context, backgroundSyncState),
           // ],
+          const TabBarBottomPadding(),
         ],
       ),
     );

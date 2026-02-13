@@ -308,6 +308,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                 ),
               ),
+
+            // Bottom padding for tab bar overlay
+            const TabBarBottomPadding(),
           ],
         ),
       ),

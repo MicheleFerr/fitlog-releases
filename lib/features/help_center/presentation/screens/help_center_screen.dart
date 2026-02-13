@@ -42,6 +42,7 @@ class HelpCenterScreen extends StatelessWidget {
 
             // Category List (better for 12+ categories)
             _buildCategoryList(context),
+            const TabBarBottomPadding(),
           ],
         ),
       ),

@@ -330,6 +330,7 @@ class _WorkoutCompletionSummaryScreenState
                   ),
                 ],
               ),
+              const TabBarBottomPadding(),
             ],
           ),
         ),

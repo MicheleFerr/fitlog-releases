@@ -78,7 +78,10 @@ class ConversationsListScreen extends ConsumerWidget {
         await Future.delayed(const Duration(milliseconds: 500));
       },
       child: ListView.separated(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+        padding: EdgeInsets.only(
+          top: AppSpacing.sm,
+          bottom: AppSpacing.sm + context.tabBarInset,
+        ),
         itemCount: conversations.length,
         separatorBuilder: (_, __) => Divider(
           height: 1,

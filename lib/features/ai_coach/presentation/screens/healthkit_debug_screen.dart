@@ -723,7 +723,12 @@ class _HealthKitDebugScreenState extends State<HealthKitDebugScreen> {
 
           // Run Button
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: 16,
+              bottom: 16 + context.tabBarInset,
+            ),
             width: double.infinity,
             child: Semantics(
               label: _isRunning

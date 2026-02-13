@@ -95,11 +95,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ),
 
           // Input bar
-          ChatInputBar(
-            isLoading: _isLoading,
-            onSendText: _sendTextMessage,
-            onSendImage: _sendImageMessage,
-            onAttachWorkout: _showWorkoutPicker,
+          Padding(
+            padding: EdgeInsets.only(bottom: context.tabBarInset),
+            child: ChatInputBar(
+              isLoading: _isLoading,
+              onSendText: _sendTextMessage,
+              onSendImage: _sendImageMessage,
+              onAttachWorkout: _showWorkoutPicker,
+            ),
           ),
         ],
       ),

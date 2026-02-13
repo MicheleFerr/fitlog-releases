@@ -33,6 +33,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/material_scroll_l
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_time_edit_sheet.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
@@ -342,7 +343,11 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                         onRefresh: _onRefresh,
                         color: colorScheme.primary,
                         child: MaterialScrollList(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: EdgeInsets.only(
+                            left: 16,
+                            right: 16,
+                            bottom: context.tabBarInset,
+                          ),
                           itemCount: filteredByDateRange.length,
                           itemBuilder: (context, index) {
                             final workout = filteredByDateRange[index];
@@ -482,7 +487,11 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
 
     return ListView.builder(
       key: const PageStorageKey('workout_history_grouped_list'),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        bottom: context.tabBarInset,
+      ),
       itemCount: sectionKeys.length,
       itemBuilder: (context, sectionIndex) {
         final sectionKey = sectionKeys[sectionIndex];
@@ -798,7 +807,11 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                   l10n,
                 )
               : MaterialScrollList(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    bottom: context.tabBarInset,
+                  ),
                   itemCount: selectedDayWorkouts.length,
                   itemBuilder: (context, index) {
                     return _buildSwipeableWorkoutCard(

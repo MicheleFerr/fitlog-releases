@@ -151,6 +151,7 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
               workoutDates,
             ),
           },
+          const TabBarBottomPadding(),
         ],
       ),
     );

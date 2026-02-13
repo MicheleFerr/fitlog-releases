@@ -263,7 +263,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           }
         },
         child: ListView(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            top: 16.0,
+            bottom: 16.0 + context.tabBarInset,
+          ),
           children: [
             // Profile Avatar Section
             Center(

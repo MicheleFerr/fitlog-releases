@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/anima
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/sync_progress_overlay.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/skeleton_loader.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -205,21 +206,22 @@ class TabbedAnalyticsScreen extends ConsumerWidget {
   Widget _buildLoadingSkeleton() {
     return ListView(
       padding: const EdgeInsets.all(16),
-      children: const [
+      children: [
         // Hero card skeleton
-        HeroCardSkeleton(),
-        SizedBox(height: 16),
+        const HeroCardSkeleton(),
+        const SizedBox(height: 16),
 
         // Stats grid skeleton
-        MetricGridSkeleton(itemCount: 4),
-        SizedBox(height: 20),
+        const MetricGridSkeleton(itemCount: 4),
+        const SizedBox(height: 20),
 
         // Recent workouts skeleton
-        WorkoutListSkeleton(itemCount: 3),
-        SizedBox(height: 20),
+        const WorkoutListSkeleton(itemCount: 3),
+        const SizedBox(height: 20),
 
         // Chart skeleton
-        ChartSkeleton(height: 200, showLegend: true),
+        const ChartSkeleton(height: 200, showLegend: true),
+        const TabBarBottomPadding(),
       ],
     );
   }
