@@ -14,23 +14,20 @@
 /// - Adjusts severity based on template coverage
 library;
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/template_coverage.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/exercise_suggestion_engine.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/neglected_muscle_detector.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/template_coverage_provider.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/add_exercise_to_template_sheet.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/priority_explanation_sheet.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_priority_card.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
-import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 /// Template-Aware Exercise Suggestions Widget
 ///

@@ -73,27 +73,67 @@ class VolumeRecommendationService {
   /// [experience] - User's training experience level
   /// [goal] - User's primary training goal
   /// [hasInjuryHistory] - Whether user has reported injuries
+  /// [exerciseType] - 'Compound' or 'Isolation' for differentiated programming
   ///
   /// Returns a [VolumeRecommendation] with sets, reps, rest time, and rationale
   VolumeRecommendation calculate({
     required ExperienceLevel experience,
     required TrainingGoal goal,
     required bool hasInjuryHistory,
+    String exerciseType = 'Compound',
   }) {
-    // Start with base sets for intermediate level
-    int sets = 3;
+    final isCompound = exerciseType.toLowerCase() == 'compound';
+
+    // Base sets/reps/rest differentiated by exercise type
+    int sets;
+    int reps;
+    int restSeconds;
+
+    if (isCompound) {
+      // Compound: fewer reps, more rest, standard sets
+      switch (goal) {
+        case TrainingGoal.strength:
+          sets = 4;
+          reps = 5;
+          restSeconds = 180;
+        case TrainingGoal.hypertrophy:
+          sets = 4;
+          reps = 8;
+          restSeconds = 120;
+        case TrainingGoal.endurance:
+          sets = 3;
+          reps = 12;
+          restSeconds = 60;
+      }
+    } else {
+      // Isolation: more reps, less rest
+      switch (goal) {
+        case TrainingGoal.strength:
+          sets = 3;
+          reps = 8;
+          restSeconds = 120;
+        case TrainingGoal.hypertrophy:
+          sets = 3;
+          reps = 12;
+          restSeconds = 90;
+        case TrainingGoal.endurance:
+          sets = 3;
+          reps = 15;
+          restSeconds = 45;
+      }
+    }
 
     // Apply experience modifier
     // Research: Beginners need less volume to progress, advanced need more
     switch (experience) {
       case ExperienceLevel.untrained:
       case ExperienceLevel.novice:
-        sets -= 1; // 2 sets - sufficient for neural adaptations
+        sets = max(2, sets - 1); // Reduce for beginners
       case ExperienceLevel.intermediate:
-        break; // 3 sets - standard hypertrophy range
+        break; // Keep base
       case ExperienceLevel.advanced:
       case ExperienceLevel.elite:
-        sets += 1; // 4 sets - higher volume for continued progress
+        sets += 1; // Higher volume for continued progress
     }
 
     // Apply injury modifier
@@ -102,17 +142,6 @@ class VolumeRecommendationService {
       sets = max(2, sets - 1);
     }
 
-    // Determine reps and rest based on goal
-    // Rep ranges from NSCA guidelines and Schoenfeld meta-analyses
-    final (reps, restSeconds) = switch (goal) {
-      TrainingGoal.strength => (5, 180), // Strength: heavy, longer rest
-      TrainingGoal.hypertrophy => (
-        10,
-        90,
-      ), // Hypertrophy: moderate, medium rest
-      TrainingGoal.endurance => (15, 60), // Endurance: light, short rest
-    };
-
     // Build rationale string
     final rationale = _buildRationale(
       experience: experience,
@@ -120,6 +149,7 @@ class VolumeRecommendationService {
       hasInjuryHistory: hasInjuryHistory,
       sets: sets,
       reps: reps,
+      exerciseType: exerciseType,
     );
 
     return VolumeRecommendation(
@@ -147,29 +177,37 @@ class VolumeRecommendationService {
     required bool hasInjuryHistory,
     required int sets,
     required int reps,
+    String exerciseType = 'Compound',
   }) {
     final parts = <String>[];
+
+    // Exercise type
+    final isCompound = exerciseType.toLowerCase() == 'compound';
+    parts.add(isCompound ? 'Compound' : 'Isolation');
+
+    // Sets and reps
+    parts.add('$sets set x $reps rep');
 
     // Experience explanation
     switch (experience) {
       case ExperienceLevel.untrained:
       case ExperienceLevel.novice:
-        parts.add('2 set per principianti');
+        parts.add('principiante');
       case ExperienceLevel.intermediate:
-        parts.add('3 set standard');
+        parts.add('intermedio');
       case ExperienceLevel.advanced:
       case ExperienceLevel.elite:
-        parts.add('4 set per avanzati');
+        parts.add('avanzato');
     }
 
     // Goal explanation
     switch (goal) {
       case TrainingGoal.strength:
-        parts.add('5 rep per forza');
+        parts.add('forza');
       case TrainingGoal.hypertrophy:
-        parts.add('10 rep per ipertrofia');
+        parts.add('ipertrofia');
       case TrainingGoal.endurance:
-        parts.add('15 rep per resistenza');
+        parts.add('resistenza');
     }
 
     // Injury note

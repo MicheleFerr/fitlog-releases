@@ -34,15 +34,9 @@ import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.da
 ///
 /// Automatically filters out exercises that are already in user's templates.
 ///
-/// **Usage**:
-/// ```dart
-/// ExerciseSuggestionsWidget(
-///   neglectedMuscles: detector.detectNeglectedMuscles(balance),
-///   onExerciseAdded: () {
-///     // Called when exercise is added to a template
-///   },
-/// )
-/// ```
+/// @deprecated Use [TemplateAwareSuggestionsWidget] instead, which provides
+/// template coverage awareness and adjusted severity.
+@Deprecated('Use TemplateAwareSuggestionsWidget instead')
 class ExerciseSuggestionsWidget extends ConsumerWidget {
   const ExerciseSuggestionsWidget({
     required this.neglectedMuscles,

@@ -33,7 +33,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/core/config/feature_flags.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_sync_listener.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/registry/hint_registry.dart';
@@ -45,6 +44,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/features/quick_actions/presentation/widgets/quick_actions_overlay_content.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -95,6 +95,9 @@ class _MainShellState extends ConsumerState<MainShell> {
 
   // Track previous tab index for auto-pause feature
   int? _previousIndex;
+
+  // Guard against multiple quick actions overlay openings
+  bool _isQuickActionsOpen = false;
 
   @override
   Widget build(BuildContext context) {
@@ -289,9 +292,13 @@ class _MainShellState extends ConsumerState<MainShell> {
   /// Branch indices skip it: [Home(0), Workout(1), Profile(2), AI Coach(3)]
   void _onTabBarTap(BuildContext context, int tabIndex) {
     if (tabIndex == _kPlusButtonTabIndex) {
+      // Don't open if already open (prevents stacking overlays → black screen)
+      if (_isQuickActionsOpen) return;
       _showQuickActionsModal(context);
       return;
     }
+    // Ignore tab taps while quick actions overlay is open
+    if (_isQuickActionsOpen) return;
     // Map tab index → branch index (subtract 1 for items after the + button)
     final branchIndex = tabIndex < _kPlusButtonTabIndex
         ? tabIndex
@@ -344,6 +351,7 @@ class _MainShellState extends ConsumerState<MainShell> {
 
   /// Show quick actions modal with blur background
   void _showQuickActionsModal(BuildContext context) {
+    _isQuickActionsOpen = true;
     HapticFeedback.mediumImpact();
     showGeneralDialog(
       context: context,
@@ -355,32 +363,18 @@ class _MainShellState extends ConsumerState<MainShell> {
       transitionBuilder: (dialogContext, animation, secondaryAnimation, _) {
         return _QuickActionsOverlay(
           animation: animation,
-          onAction: (action) {
-            Navigator.of(dialogContext).pop();
-            _handleQuickAction(context, action);
-          },
           onClose: () => Navigator.of(dialogContext).pop(),
+          navigationShell: widget.navigationShell,
         );
       },
-    );
-  }
-
-  /// Handle quick action selection
-  void _handleQuickAction(BuildContext context, _QuickAction action) {
-    switch (action) {
-      case _QuickAction.newWorkout:
-        widget.navigationShell.goBranch(1, initialLocation: true);
-      case _QuickAction.templates:
-        context.pushNamed(AppRoutes.templatesName);
-      case _QuickAction.history:
-        context.pushNamed(AppRoutes.workoutHistoryName);
-      case _QuickAction.statistics:
-        context.pushNamed(AppRoutes.statsName);
-      case _QuickAction.measurements:
-        context.pushNamed(AppRoutes.bodyMeasurementsName);
-      case _QuickAction.calendar:
-        context.pushNamed(AppRoutes.streakCalendarName);
-    }
+    ).then((_) {
+      // Reset guard when dialog is dismissed (by any means)
+      _isQuickActionsOpen = false;
+      // Force CNTabBar to re-sync to the actual current branch index.
+      // Without this, the native tab bar keeps _lastIndex = 2 (the "+" index)
+      // and ignores the next tap on "+" because idx == _lastIndex.
+      if (mounted) setState(() {});
+    });
   }
 
   /// Show confirmation dialog before saving workout
@@ -644,25 +638,16 @@ class _FloatingPlusItem extends StatelessWidget {
 // Quick Actions Overlay
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-enum _QuickAction {
-  newWorkout,
-  templates,
-  history,
-  statistics,
-  measurements,
-  calendar,
-}
-
 class _QuickActionsOverlay extends StatelessWidget {
   const _QuickActionsOverlay({
     required this.animation,
-    required this.onAction,
     required this.onClose,
+    required this.navigationShell,
   });
 
   final Animation<double> animation;
-  final ValueChanged<_QuickAction> onAction;
   final VoidCallback onClose;
+  final StatefulNavigationShell navigationShell;
 
   @override
   Widget build(BuildContext context) {
@@ -691,19 +676,11 @@ class _QuickActionsOverlay extends StatelessWidget {
                 children: [
                   const Spacer(),
 
-                  // Quick actions grid
-                  SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0, 0.3),
-                      end: Offset.zero,
-                    ).animate(CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.easeOutCubic,
-                    )),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: _buildActionsGrid(context),
-                    ),
+                  // Quick actions content (3 sections)
+                  QuickActionsOverlayContent(
+                    animation: animation,
+                    onClose: onClose,
+                    navigationShell: navigationShell,
                   ),
 
                   const SizedBox(height: 48),
@@ -744,129 +721,4 @@ class _QuickActionsOverlay extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildActionsGrid(BuildContext context) {
-    final actions = [
-      _QuickActionItem(
-        action: _QuickAction.newWorkout,
-        icon: AppIcons.workout,
-        label: context.l10n.newWorkout,
-      ),
-      _QuickActionItem(
-        action: _QuickAction.templates,
-        icon: AppIcons.template,
-        label: context.l10n.templates,
-      ),
-      _QuickActionItem(
-        action: _QuickAction.history,
-        icon: AppIcons.history,
-        label: context.l10n.history,
-      ),
-      _QuickActionItem(
-        action: _QuickAction.statistics,
-        icon: AppIcons.analytics,
-        label: context.l10n.statistics,
-      ),
-      _QuickActionItem(
-        action: _QuickAction.measurements,
-        icon: AppIcons.bodyMeasurements,
-        label: context.l10n.measurements,
-      ),
-      _QuickActionItem(
-        action: _QuickAction.calendar,
-        icon: AppIcons.calendar,
-        label: context.l10n.calendar,
-      ),
-    ];
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        for (var row = 0; row < 2; row++)
-          Padding(
-            padding: EdgeInsets.only(bottom: row == 0 ? 24 : 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                for (var col = 0; col < 3; col++)
-                  _buildActionButton(
-                    context,
-                    actions[row * 3 + col],
-                    delay: (row * 3 + col) * 0.05,
-                  ),
-              ],
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildActionButton(
-    BuildContext context,
-    _QuickActionItem item, {
-    double delay = 0,
-  }) {
-    final delayed = CurvedAnimation(
-      parent: animation,
-      curve: Interval(delay, 1.0, curve: Curves.easeOutCubic),
-    );
-
-    return ScaleTransition(
-      scale: delayed,
-      child: GestureDetector(
-        onTap: () {
-          HapticFeedback.mediumImpact();
-          onAction(item.action);
-        },
-        child: SizedBox(
-          width: 80,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.12),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.08),
-                  ),
-                ),
-                child: Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 26,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                item.label,
-                style: context.textTheme.labelSmall?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.9),
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _QuickActionItem {
-  const _QuickActionItem({
-    required this.action,
-    required this.icon,
-    required this.label,
-  });
-
-  final _QuickAction action;
-  final IconData icon;
-  final String label;
 }

@@ -750,6 +750,7 @@ class ExerciseSetModel {
     this.rpe,
     this.notes,
     this.completedAt,
+    this.isCompletedLegacy = false,
     // TUT & Advanced Tracking
     this.setDurationMillis,
     this.setStartedAt,
@@ -810,17 +811,10 @@ class ExerciseSetModel {
     // since these are workouts that have already been finished
     final isCompletedFromJson = data['isCompleted'] as bool? ?? true;
 
-    // Determine completedAt: use existing or synthesize if isCompleted is true (legacy support)
-    DateTime? completedAt = _parseDateTime(data['completedAt']);
-    if (completedAt == null && isCompletedFromJson) {
-      // Legacy data: set was marked completed but has no timestamp
-      // Use a default old timestamp to indicate completion without exact time
-      completedAt = DateTime(
-        2000,
-        1,
-        1,
-      ); // Sentinel value for legacy completed sets
-    }
+    // Determine completedAt from data, or mark as legacy completed
+    final DateTime? completedAt = _parseDateTime(data['completedAt']);
+    // Legacy data: set was marked completed but has no timestamp
+    final isLegacyCompleted = completedAt == null && isCompletedFromJson;
 
     return ExerciseSetModel(
       id: id,
@@ -830,8 +824,8 @@ class ExerciseSetModel {
       restTime: restTime,
       rpe: data['rpe'] as int?,
       notes: data['notes'] as String?,
-      completedAt:
-          completedAt, // ✅ FIX: Now uses isCompleted as fallback for legacy data
+      completedAt: completedAt,
+      isCompletedLegacy: isLegacyCompleted,
       // ✅ TUT & Advanced Tracking Fields
       setDurationMillis: (data['setDurationMillis'] as num?)?.toDouble(),
       setStartedAt: _parseDateTime(data['setStartedAt']),
@@ -854,6 +848,8 @@ class ExerciseSetModel {
   final int? rpe;
   final String? notes;
   final DateTime? completedAt;
+  /// True when legacy data had isCompleted=true but no completedAt timestamp
+  final bool isCompletedLegacy;
   // ✅ TUT & Advanced Tracking Fields
   final double? setDurationMillis;
   final DateTime? setStartedAt;
@@ -867,8 +863,8 @@ class ExerciseSetModel {
   final int? restTimerSecondsAdded;
   final int? actualRestSeconds;
 
-  /// Whether this set has been completed (calculated from completedAt)
-  bool get isCompleted => completedAt != null;
+  /// Whether this set has been completed (from completedAt or legacy flag)
+  bool get isCompleted => completedAt != null || isCompletedLegacy;
 
   /// Total volume for this set (weight × reps), or 0 if either is null
   double get volume => (weight ?? 0) * (reps ?? 0);
@@ -879,9 +875,7 @@ class ExerciseSetModel {
       setNumber: setNumber,
       weight: weight,
       reps: reps,
-      isCompleted:
-          completedAt !=
-          null, // ✅ Calculated from presence of completion timestamp
+      isCompleted: isCompleted, // From completedAt or legacy flag
       rpe: rpe,
       notes: notes,
       completedAt: completedAt,
@@ -935,12 +929,13 @@ class ExerciseSetModel {
     int? rpe,
     String? notes,
     DateTime? completedAt,
+    bool? isCompletedLegacy,
     double? setDurationMillis,
     DateTime? setStartedAt,
     int? actualReps,
     bool? isWarmup,
     int? seconds,
-    double? distance, // ✅ Added
+    double? distance,
     // ✅ Rest Timer Tracking
     bool? restTimerSkipped,
     int? restTimerSecondsRemaining,
@@ -956,12 +951,14 @@ class ExerciseSetModel {
       rpe: rpe ?? this.rpe,
       notes: notes ?? this.notes,
       completedAt: completedAt ?? this.completedAt,
+      // If a real completedAt is set, clear legacy flag
+      isCompletedLegacy: completedAt != null ? false : (isCompletedLegacy ?? this.isCompletedLegacy),
       setDurationMillis: setDurationMillis ?? this.setDurationMillis,
       setStartedAt: setStartedAt ?? this.setStartedAt,
       actualReps: actualReps ?? this.actualReps,
       isWarmup: isWarmup ?? this.isWarmup,
       seconds: seconds ?? this.seconds,
-      distance: distance ?? this.distance, // ✅ Added
+      distance: distance ?? this.distance,
       // ✅ Rest Timer Tracking
       restTimerSkipped: restTimerSkipped ?? this.restTimerSkipped,
       restTimerSecondsRemaining: restTimerSecondsRemaining ?? this.restTimerSecondsRemaining,

@@ -23,7 +23,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/neglected_
 import 'package:gymbro_flutter_new/features/analytics/domain/services/ratio_breakdown_calculator.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/expandable_ratio_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/professional_body_heatmap.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_suggestions_widget.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/template_aware_suggestions_widget.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -216,10 +216,9 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
           const SizedBox(height: 12),
           Builder(
             builder: (context) {
-              final detector = NeglectedMuscleDetector();
-              final neglectedMuscles = detector.detectNeglectedMuscles(balance);
-
-              return ExerciseSuggestionsWidget(
+              final neglectedMuscles = NeglectedMuscleDetector()
+                  .detectNeglectedMuscles(balance);
+              return TemplateAwareSuggestionsWidget(
                 neglectedMuscles: neglectedMuscles,
                 onExerciseAdded: () {
                   HapticFeedback.mediumImpact();

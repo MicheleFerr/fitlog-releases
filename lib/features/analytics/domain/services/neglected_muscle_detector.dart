@@ -56,14 +56,33 @@ enum NeglectSeverity {
 /// }
 /// ```
 class NeglectedMuscleDetector {
-  /// Threshold for neglected muscle (<5% of total volume)
-  static const double neglectThreshold = 5.0;
+  /// Soglie di neglect per gruppo muscolare.
+  ///
+  /// Basate su distribuzione naturale del volume:
+  /// - Muscoli grandi (back, quads): range naturale 12-25%
+  /// - Muscoli medi (chest, hamstrings): range 8-15%
+  /// - Muscoli piccoli (biceps, calves): range 3-8%
+  static const Map<String, double> neglectThresholds = {
+    // Grandi
+    'back': 8.0,
+    'quads': 8.0,
+    // Medi
+    'chest': 6.0,
+    'hamstrings': 5.0,
+    'glutes': 5.0,
+    'shoulders': 5.0,
+    // Piccoli
+    'biceps': 3.0,
+    'triceps': 3.0,
+    'calves': 2.5,
+    'forearms': 2.0,
+    'abs': 3.0,
+    'lower_back': 2.5,
+    'rear_delts': 2.0,
+  };
 
-  /// Critical threshold (<2% of total volume)
-  static const double criticalThreshold = 2.0;
-
-  /// High severity threshold (2-3.5%)
-  static const double highSeverityThreshold = 3.5;
+  /// Fallback se muscolo non in mappa
+  static const double defaultNeglectThreshold = 5.0;
 
   /// Detect neglected muscles from balance metrics
   ///
@@ -71,14 +90,14 @@ class NeglectedMuscleDetector {
   List<NeglectedMuscle> detectNeglectedMuscles(MuscleBalanceMetrics balance) {
     final neglectedList = <NeglectedMuscle>[];
 
-    // Check each muscle group
     for (final entry in balance.muscleVolumePercentages.entries) {
       final muscleName = entry.key;
       final volumePercent = entry.value;
+      final threshold = neglectThresholds[muscleName.toLowerCase()] ??
+          defaultNeglectThreshold;
 
-      // Check if neglected (<5%)
-      if (volumePercent < neglectThreshold) {
-        final severity = _calculateSeverity(volumePercent);
+      if (volumePercent < threshold) {
+        final severity = _calculateSeverity(volumePercent, threshold);
         final priority = _calculatePriority(
           muscleName: muscleName,
           volumePercent: volumePercent,
@@ -103,15 +122,16 @@ class NeglectedMuscleDetector {
     return neglectedList;
   }
 
-  /// Calculate severity based on volume percentage
-  NeglectSeverity _calculateSeverity(double volumePercent) {
-    if (volumePercent < criticalThreshold) {
-      return NeglectSeverity.critical;
-    } else if (volumePercent < highSeverityThreshold) {
-      return NeglectSeverity.high;
-    } else {
-      return NeglectSeverity.medium;
-    }
+  /// Calculate severity based on ratio of volume to muscle-specific threshold
+  ///
+  /// - ratio < 0.4 = critical (less than 40% of expected minimum)
+  /// - ratio < 0.7 = high (40-70% of expected minimum)
+  /// - else = medium (70-100% of expected minimum)
+  NeglectSeverity _calculateSeverity(double volumePercent, double threshold) {
+    final ratio = threshold > 0 ? volumePercent / threshold : 0.0;
+    if (ratio < 0.4) return NeglectSeverity.critical;
+    if (ratio < 0.7) return NeglectSeverity.high;
+    return NeglectSeverity.medium;
   }
 
   /// Calculate priority score (0-10)
@@ -171,6 +191,8 @@ class NeglectedMuscleDetector {
   /// - chest ↔ back
   /// - quads ↔ hamstrings
   /// - biceps ↔ triceps
+  /// - rear_delts ↔ shoulders
+  /// - glutes ↔ hip_flexors
   String? _getAntagonist(String muscleName) {
     const antagonistPairs = {
       'chest': 'back',
@@ -181,17 +203,25 @@ class NeglectedMuscleDetector {
       'triceps': 'biceps',
       'abs': 'lower_back',
       'lower_back': 'abs',
+      'rear_delts': 'shoulders',
+      'shoulders': 'rear_delts',
+      'glutes': 'hip_flexors',
+      'hip_flexors': 'glutes',
     };
 
     return antagonistPairs[muscleName.toLowerCase()];
   }
 
-  /// Calculate posture risk score (0-3)
+  /// Calculate posture risk score (0-3) using relative ratios
+  ///
+  /// Uses agonist/antagonist volume ratio instead of absolute percentages,
+  /// making detection independent of total training volume.
   ///
   /// High risk scenarios:
-  /// - Back neglected + chest high → rounded shoulders
-  /// - Hamstrings neglected + quads high → knee issues
-  /// - Rear delts neglected + front delts high → shoulder impingement
+  /// - Back neglected + chest/back ratio > 2.0 → rounded shoulders
+  /// - Hamstrings neglected + quads/hamstrings ratio > 2.5 → knee issues
+  /// - Rear delts neglected + shoulders/rear_delts ratio > 3.0 → shoulder impingement
+  /// - Lower back neglected + abs/lower_back ratio > 2.5 → lower back weakness
   double _calculatePostureRisk(
     String muscleName,
     MuscleBalanceMetrics balance,
@@ -199,38 +229,37 @@ class NeglectedMuscleDetector {
     final muscle = muscleName.toLowerCase();
     final volumes = balance.muscleVolumePercentages;
 
-    // Back neglected + chest overdeveloped
+    // Back neglected: rischio rounded shoulders se chest/back ratio alto
     if (muscle == 'back') {
-      final chestVolume = volumes['chest'] ?? 0.0;
-      if (chestVolume > 15.0) {
-        return 3.0; // High risk: rounded shoulders
-      }
+      final chestVol = volumes['chest'] ?? 0.0;
+      final backVol = volumes['back'] ?? 0.01;
+      if (chestVol / backVol > 2.0) return 3.0;
+      if (chestVol / backVol > 1.5) return 2.0;
     }
 
-    // Hamstrings neglected + quads overdeveloped
+    // Hamstrings neglected: rischio ginocchia se quads/hamstrings ratio alto
     if (muscle == 'hamstrings') {
-      final quadsVolume = volumes['quads'] ?? 0.0;
-      if (quadsVolume > 20.0) {
-        return 3.0; // High risk: knee strain
-      }
+      final quadsVol = volumes['quads'] ?? 0.0;
+      final hamVol = volumes['hamstrings'] ?? 0.01;
+      if (quadsVol / hamVol > 2.5) return 3.0;
+      if (quadsVol / hamVol > 1.8) return 2.0;
     }
 
-    // Rear delts neglected + front/side delts overdeveloped
+    // Rear delts neglected: rischio shoulder impingement
     if (muscle == 'rear_delts') {
-      final shouldersVolume = volumes['shoulders'] ?? 0.0;
-      if (shouldersVolume > 12.0) {
-        return 2.5; // Moderate-high risk: shoulder impingement
-      }
+      final shouldersVol = volumes['shoulders'] ?? 0.0;
+      final rearVol = volumes['rear_delts'] ?? 0.01;
+      if (shouldersVol / rearVol > 3.0) return 2.5;
+      if (shouldersVol / rearVol > 2.0) return 1.5;
     }
 
-    // Lower back neglected + abs overdeveloped
+    // Lower back neglected: rischio debolezza lombare
     if (muscle == 'lower_back') {
-      final absVolume = volumes['abs'] ?? 0.0;
-      if (absVolume > 10.0) {
-        return 2.0; // Moderate risk: lower back weakness
-      }
+      final absVol = volumes['abs'] ?? 0.0;
+      final lbVol = volumes['lower_back'] ?? 0.01;
+      if (absVol / lbVol > 2.5) return 2.0;
     }
 
-    return 0.0; // No specific posture risk
+    return 0.0;
   }
 }
