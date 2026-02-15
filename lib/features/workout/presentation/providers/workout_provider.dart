@@ -60,6 +60,9 @@ import 'package:gymbro_flutter_new/features/analytics/data/repositories/workout_
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_records_provider.dart';
 // 📊 Analytics Repository for updating analytics collection
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
+// 📊 Historical Workouts Provider for exercise progress metrics refresh
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart'
+    show historicalWorkoutsProvider;
 // 📈 Stress Index for training load tracking
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 // 📊 Workout to Analytics Converter utility
@@ -1688,6 +1691,12 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
             );
           }
         }
+
+        // 📊 REFRESH: Invalidate historical workouts provider so exercise
+        // progress metrics are recalculated with the new workout data.
+        // Without this, exerciseMetricsProvider returns stale data (null for
+        // new exercises) and ExerciseDetailScreen falls back to old Firebase data.
+        ref.invalidate(historicalWorkoutsProvider);
 
         // 📢 UI Feedback: Show "Workout saved locally" toast
         if (context != null && context.mounted) {
