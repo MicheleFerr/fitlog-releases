@@ -60,8 +60,16 @@ class CupertinoTabBarPlatformView: NSObject, FlutterPlatformView, UITabBarDelega
     if #available(iOS 13.0, *) { container.overrideUserInterfaceStyle = isDark ? .dark : .light }
 
     let appearance: UITabBarAppearance? = {
-    if #available(iOS 13.0, *) { let ap = UITabBarAppearance(); ap.configureWithDefaultBackground(); return ap }
-    return nil
+    guard #available(iOS 13.0, *) else { return nil }
+    let ap = UITabBarAppearance()
+    ap.configureWithDefaultBackground()
+    // Force stacked item layout (icon above label) on all size classes
+    // to prevent label/icon overlap on iOS 26 Liquid Glass.
+    let stacked = UITabBarItemAppearance(style: .stacked)
+    ap.stackedLayoutAppearance = stacked
+    ap.inlineLayoutAppearance = stacked
+    ap.compactInlineLayoutAppearance = stacked
+    return ap
   }()
     func buildItems(_ range: Range<Int>) -> [UITabBarItem] {
       var items: [UITabBarItem] = []
@@ -101,7 +109,7 @@ class CupertinoTabBarPlatformView: NSObject, FlutterPlatformView, UITabBarDelega
       left.delegate = self; right.delegate = self
       if let bg = bg { left.barTintColor = bg; right.barTintColor = bg }
       if #available(iOS 10.0, *), let tint = tint { left.tintColor = tint; right.tintColor = tint }
-      if let ap = appearance { if #available(iOS 13.0, *) { left.standardAppearance = ap; right.standardAppearance = ap } }
+      if let ap = appearance { if #available(iOS 13.0, *) { left.standardAppearance = ap; right.standardAppearance = ap; if #available(iOS 15.0, *) { left.scrollEdgeAppearance = ap; right.scrollEdgeAppearance = ap } } }
       left.items = buildItems(0..<leftEnd)
       right.items = buildItems(leftEnd..<count)
       if selectedIndex < leftEnd, let items = left.items {
@@ -259,9 +267,18 @@ channel.setMethodCallHandler { [weak self] call, result in
           let weights = self.currentWeights
           let itemColors = self.currentColors
           let appearance: UITabBarAppearance? = {
-            if #available(iOS 13.0, *) { let ap = UITabBarAppearance(); ap.configureWithDefaultBackground(); return ap }
-            return nil
+            guard #available(iOS 13.0, *) else { return nil }
+            let ap = UITabBarAppearance()
+            ap.configureWithDefaultBackground()
+            let stacked = UITabBarItemAppearance(style: .stacked)
+            ap.stackedLayoutAppearance = stacked
+            ap.inlineLayoutAppearance = stacked
+            ap.compactInlineLayoutAppearance = stacked
+            return ap
           }()
+          func applyAppearance(_ bar: UITabBar) {
+            if let ap = appearance { if #available(iOS 13.0, *) { bar.standardAppearance = ap; if #available(iOS 15.0, *) { bar.scrollEdgeAppearance = ap } } }
+          }
           func buildItems(_ range: Range<Int>) -> [UITabBarItem] {
             var items: [UITabBarItem] = []
             for i in range {
@@ -297,6 +314,7 @@ channel.setMethodCallHandler { [weak self] call, result in
             left.translatesAutoresizingMaskIntoConstraints = false
             right.translatesAutoresizingMaskIntoConstraints = false
             left.delegate = self; right.delegate = self
+            applyAppearance(left); applyAppearance(right)
             left.items = buildItems(0..<leftEnd)
             right.items = buildItems(leftEnd..<count)
             if selectedIndex < leftEnd, let items = left.items { left.selectedItem = items[selectedIndex]; right.selectedItem = nil }
@@ -336,6 +354,7 @@ channel.setMethodCallHandler { [weak self] call, result in
             self.tabBar = bar
             bar.delegate = self
             bar.translatesAutoresizingMaskIntoConstraints = false
+            applyAppearance(bar)
             bar.items = buildItems(0..<count)
             if let items = bar.items, selectedIndex >= 0, selectedIndex < items.count { bar.selectedItem = items[selectedIndex] }
             self.container.addSubview(bar)

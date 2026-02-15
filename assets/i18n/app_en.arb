@@ -21099,10 +21099,6 @@
       }
     }
   },
-  "daysAgoShort": "d ago",
-  "@daysAgoShort": {
-    "description": "Short form for days ago (e.g., '5d ago')"
-  },
   "weeksAgoShort": "w ago",
   "@weeksAgoShort": {
     "description": "Short form for weeks ago (e.g., '2w ago')"

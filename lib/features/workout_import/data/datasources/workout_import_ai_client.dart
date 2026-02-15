@@ -19,8 +19,8 @@ class WorkoutImportAiClient {
   final OpenRouterHttpClient httpClient;
 
   static const _textModel = 'meta-llama/llama-3.3-70b-instruct:free';
-  // Removed :free suffix - model might not support it
-  static const _visionModel = 'meta-llama/llama-3.2-90b-vision-instruct:free';
+  // Using Google Gemini Flash - reliable free vision model
+  static const _visionModel = 'google/gemini-flash-1.5';
 
   static const _systemPrompt = '''You are a workout plan parser. Extract exercise data from the input and return ONLY valid JSON.
 

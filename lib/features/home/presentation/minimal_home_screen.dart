@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -171,16 +172,26 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
               ),
             ),
             actions: [
-              IconButton(
-                onPressed: () => showSettingsBottomSheet(context),
-                icon: SemanticIcon(
-                  icon: AppIcons.settingsOutlined,
-                  semanticLabel: context.l10n.settings,
-                  size: AppIconSize.medium,
-                  color: context.colors.onSurfaceVariant,
+              GestureDetector(
+                onTap: () => showSettingsBottomSheet(context),
+                behavior: HitTestBehavior.opaque,
+                child: Semantics(
+                  label: context.l10n.settings,
+                  button: true,
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.sm),
+                    child: CNIcon(
+                      symbol: CNSymbol(
+                        'gearshape',
+                        size: 22,
+                        weight: CNSymbolWeight.light,
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.xs),
             ],
           ),
 

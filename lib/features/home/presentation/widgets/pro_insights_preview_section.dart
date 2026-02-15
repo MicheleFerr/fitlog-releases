@@ -64,18 +64,21 @@ class ProInsightsPreviewSection extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Section Header
-              _buildSectionHeader(context, l10n, colorScheme),
-              const SizedBox(height: AppSpacing.sm),
-
-              // Main content card
+              // Section Header + Main content card (all tappable)
               Semantics(
                 label: l10n.proInsights,
                 hint: l10n.viewDetails,
                 button: true,
                 child: GestureDetector(
                   onTap: () => _navigateToProAnalytics(context),
-                  child: DecoratedBox(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+              _buildSectionHeader(context, l10n, colorScheme),
+              const SizedBox(height: AppSpacing.sm),
+
+              // Main content card
+              DecoratedBox(
                   decoration: BoxDecoration(
                     color: colorScheme.surfaceContainerLow,
                     borderRadius: AppBorderRadius.lgRadius,
@@ -140,8 +143,10 @@ class ProInsightsPreviewSection extends ConsumerWidget {
                     ],
                   ),
                 ),
-              ),
+              ],
             ),
+          ),
+        ),
             ],
           ),
         );
