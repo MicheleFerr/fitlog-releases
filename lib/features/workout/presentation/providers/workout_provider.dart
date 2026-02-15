@@ -4383,7 +4383,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
             if (set.id == setId) {
               completedSetNumber = set.setNumber;
               completedSet = set;
-              return set.copyWith(isCompleted: true);
+              return set.copyWith(
+                isCompleted: true,
+                completedAt: DateTime.now(),
+              );
             }
             return set;
           }).toList();
