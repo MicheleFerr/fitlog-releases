@@ -11065,7 +11065,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get daysAgoShort => 'd ago';
+  String daysAgoShort(int count) {
+    return '${count}d ago';
+  }
 
   @override
   String get weightSettings => 'Weight Settings';
@@ -27593,4 +27595,79 @@ class AppLocalizationsEn extends AppLocalizations {
   String workoutImportDay(int number) {
     return 'Day $number';
   }
+
+  @override
+  String get quickActionLogMeasurements => 'Log Measurements';
+
+  @override
+  String get quickActionEmptyWorkout => 'Empty';
+
+  @override
+  String get quickActionStart => 'START';
+
+  @override
+  String get quickActionOtherMeasurements => 'Other measurements...';
+
+  @override
+  String get quickActionArmsLR => 'Arms (R/L)';
+
+  @override
+  String get quickActionThighsLR => 'Thighs (R/L)';
+
+  @override
+  String get quickActionChest => 'Chest';
+
+  @override
+  String get quickActionHips => 'Hips';
+
+  @override
+  String get quickActionShoulders => 'Shoulders';
+
+  @override
+  String get quickActionBodyFat => 'Body Fat %';
+
+  @override
+  String get quickActionWaist => 'Waist';
+
+  @override
+  String quickActionNotTrainedSince(int days) {
+    return 'not trained for ${days}d';
+  }
+
+  @override
+  String get quickActionBasedOnSplit => 'Based on your split:';
+
+  @override
+  String get quickActionImport => 'Import';
+
+  @override
+  String quickActionLastValue(String value, String unit, String timeAgo) {
+    return 'Last: $value $unit ($timeAgo)';
+  }
+
+  @override
+  String get quickActionSave => 'Save';
+
+  @override
+  String get quickActionStartWorkout => 'Start Workout';
+
+  @override
+  String quickActionTemplateLabel(String name) {
+    return 'Template: $name';
+  }
+
+  @override
+  String get muscleChest => 'Chest';
+
+  @override
+  String get muscleBack => 'Back';
+
+  @override
+  String get muscleShoulders => 'Shoulders';
+
+  @override
+  String get muscleRearDelts => 'Rear Deltoids';
+
+  @override
+  String get alreadyAdded => 'Added';
 }

@@ -11175,7 +11175,9 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get daysAgoShort => 'g fa';
+  String daysAgoShort(int count) {
+    return '${count}g fa';
+  }
 
   @override
   String get weightSettings => 'Impostazioni Peso';
@@ -27863,4 +27865,79 @@ class AppLocalizationsIt extends AppLocalizations {
   String workoutImportDay(int number) {
     return 'Giorno $number';
   }
+
+  @override
+  String get quickActionLogMeasurements => 'Log Misure';
+
+  @override
+  String get quickActionEmptyWorkout => 'Vuoto';
+
+  @override
+  String get quickActionStart => 'INIZIA';
+
+  @override
+  String get quickActionOtherMeasurements => 'Altre misure...';
+
+  @override
+  String get quickActionArmsLR => 'Braccia (dx/sx)';
+
+  @override
+  String get quickActionThighsLR => 'Cosce (dx/sx)';
+
+  @override
+  String get quickActionChest => 'Petto';
+
+  @override
+  String get quickActionHips => 'Fianchi';
+
+  @override
+  String get quickActionShoulders => 'Spalle';
+
+  @override
+  String get quickActionBodyFat => 'Grasso Corporeo %';
+
+  @override
+  String get quickActionWaist => 'Girovita';
+
+  @override
+  String quickActionNotTrainedSince(int days) {
+    return 'non le alleni da ${days}gg';
+  }
+
+  @override
+  String get quickActionBasedOnSplit => 'Basato sulla tua split:';
+
+  @override
+  String get quickActionImport => 'Importa';
+
+  @override
+  String quickActionLastValue(String value, String unit, String timeAgo) {
+    return 'Ultimo: $value $unit ($timeAgo)';
+  }
+
+  @override
+  String get quickActionSave => 'Salva';
+
+  @override
+  String get quickActionStartWorkout => 'Inizia Workout';
+
+  @override
+  String quickActionTemplateLabel(String name) {
+    return 'Template: $name';
+  }
+
+  @override
+  String get muscleChest => 'Petto';
+
+  @override
+  String get muscleBack => 'Schiena';
+
+  @override
+  String get muscleShoulders => 'Spalle';
+
+  @override
+  String get muscleRearDelts => 'Deltoidi Posteriori';
+
+  @override
+  String get alreadyAdded => 'Aggiunto';
 }

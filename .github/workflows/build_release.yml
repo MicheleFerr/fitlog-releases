@@ -52,7 +52,8 @@ jobs:
       - name: 🏗️ Build iOS (no codesign)
         run: |
           flutter build ios --release --no-codesign \
-            --dart-define=ENVIRONMENT=production
+            --dart-define=ENVIRONMENT=production \
+            --dart-define=OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
 
@@ -112,14 +113,16 @@ jobs:
       - name: 🏗️ Build Android App Bundle
         run: |
           flutter build appbundle --release \
-            --dart-define=ENVIRONMENT=production
+            --dart-define=ENVIRONMENT=production \
+            --dart-define=OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
 
       - name: 🏗️ Build APK (for direct distribution)
         run: |
           flutter build apk --release \
-            --dart-define=ENVIRONMENT=production
+            --dart-define=ENVIRONMENT=production \
+            --dart-define=OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
 

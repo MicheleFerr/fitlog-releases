@@ -766,7 +766,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 subtitle: Text(context.l10n.workoutImportHaveWorkoutDesc),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.of(context).push(
+                  Navigator.of(context, rootNavigator: true).push(
                     MaterialPageRoute<void>(
                       builder: (context) => const WorkoutImportScreen(),
                       fullscreenDialog: true,

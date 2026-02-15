@@ -33881,5 +33881,61 @@
     "placeholders": {
       "number": {"type": "int"}
     }
+  },
+
+  "quickActionLogMeasurements": "Log Measurements",
+  "quickActionEmptyWorkout": "Empty",
+  "quickActionStart": "START",
+  "quickActionOtherMeasurements": "Other measurements...",
+  "quickActionArmsLR": "Arms (R/L)",
+  "quickActionThighsLR": "Thighs (R/L)",
+  "quickActionChest": "Chest",
+  "quickActionHips": "Hips",
+  "quickActionShoulders": "Shoulders",
+  "quickActionBodyFat": "Body Fat %",
+  "quickActionWaist": "Waist",
+  "quickActionNotTrainedSince": "not trained for {days}d",
+  "@quickActionNotTrainedSince": {
+    "placeholders": {
+      "days": {"type": "int"}
+    }
+  },
+  "quickActionBasedOnSplit": "Based on your split:",
+  "quickActionImport": "Import",
+  "quickActionLastValue": "Last: {value} {unit} ({timeAgo})",
+  "@quickActionLastValue": {
+    "placeholders": {
+      "value": {"type": "String"},
+      "unit": {"type": "String"},
+      "timeAgo": {"type": "String"}
+    }
+  },
+  "quickActionSave": "Save",
+  "quickActionStartWorkout": "Start Workout",
+  "quickActionTemplateLabel": "Template: {name}",
+  "@quickActionTemplateLabel": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "muscleChest": "Chest",
+  "@muscleChest": {
+    "description": "Chest muscle group name"
+  },
+  "muscleBack": "Back",
+  "@muscleBack": {
+    "description": "Back muscle group name"
+  },
+  "muscleShoulders": "Shoulders",
+  "@muscleShoulders": {
+    "description": "Shoulders muscle group name"
+  },
+  "muscleRearDelts": "Rear Deltoids",
+  "@muscleRearDelts": {
+    "description": "Rear deltoid muscle group name"
+  },
+  "alreadyAdded": "Added",
+  "@alreadyAdded": {
+    "description": "Label for exercises already added to a template"
   }
 }

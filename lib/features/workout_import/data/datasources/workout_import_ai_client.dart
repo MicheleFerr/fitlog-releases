@@ -19,8 +19,8 @@ class WorkoutImportAiClient {
   final OpenRouterHttpClient httpClient;
 
   static const _textModel = 'meta-llama/llama-3.3-70b-instruct:free';
-  // Using Google Gemini Flash - reliable free vision model
-  static const _visionModel = 'google/gemini-flash-1.5';
+  // Google Gemini 2.0 Flash - fast, reliable vision model
+  static const _visionModel = 'google/gemini-2.0-flash-001';
 
   static const _systemPrompt = '''You are a workout plan parser. Extract exercise data from the input and return ONLY valid JSON.
 
@@ -81,6 +81,8 @@ JSON schema:
 
   /// Parse workout photo into structured JSON
   Future<Map<String, dynamic>> parseImage(String base64Image) async {
+    // Note: jsonMode disabled for vision - not all providers support
+    // response_format with multimodal input. The system prompt enforces JSON output.
     final response = await httpClient.chatCompletion(
       model: _visionModel,
       messages: [
@@ -90,7 +92,8 @@ JSON schema:
           'content': [
             {
               'type': 'text',
-              'text': 'Parse the workout plan in this image into JSON.',
+              'text':
+                  'Parse the workout plan in this image. Return ONLY the JSON object, no markdown.',
             },
             {
               'type': 'image_url',
@@ -103,7 +106,6 @@ JSON schema:
       ],
       maxTokens: 4000,
       timeout: const Duration(seconds: 60),
-      jsonMode: true,
     );
 
     final content = response.content;
@@ -152,9 +154,7 @@ JSON schema:
     final repaired = _repairJson(content);
     if (repaired != null) return repaired;
 
-    if (kDebugMode) {
-      debugPrint('Failed to parse AI response: ${content.substring(0, content.length.clamp(0, 200))}');
-    }
+    debugPrint('[WorkoutImport] Failed to parse AI response: ${content.substring(0, content.length.clamp(0, 200))}');
     throw const FormatException('Could not extract valid JSON from AI response');
   }
 

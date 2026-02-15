@@ -2711,7 +2711,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 subtitle: Text(l10n.workoutImportHaveWorkoutDesc),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.of(context).push(
+                  Navigator.of(context, rootNavigator: true).push(
                     MaterialPageRoute<void>(
                       builder: (context) => const WorkoutImportScreen(),
                       fullscreenDialog: true,

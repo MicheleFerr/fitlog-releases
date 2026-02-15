@@ -9,6 +9,7 @@ library;
 
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 /// OpenRouter API response
@@ -86,6 +87,7 @@ class OpenRouterHttpClient {
     ).timeout(timeout);
 
     if (response.statusCode != 200) {
+      debugPrint('[OpenRouter] API error ${response.statusCode}: ${response.body}');
       throw Exception(
         'OpenRouter API error ${response.statusCode}: ${response.body}',
       );

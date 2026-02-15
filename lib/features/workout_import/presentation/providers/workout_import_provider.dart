@@ -77,12 +77,27 @@ class WorkoutImportNotifier extends Notifier<WorkoutImportState> {
   @override
   WorkoutImportState build() => const WorkoutImportState();
 
+  /// Check if API key is configured
+  bool _isApiKeyConfigured() {
+    final apiKey = EnvironmentConfig.openRouterApiKey;
+    return apiKey != null && apiKey.isNotEmpty;
+  }
+
   /// Parse text input
   Future<void> parseText(String text) async {
     if (text.trim().isEmpty) {
       state = state.copyWith(
         status: WorkoutImportStatus.error,
         errorMessage: 'empty',
+      );
+      return;
+    }
+
+    if (!_isApiKeyConfigured()) {
+      debugPrint('[WorkoutImport] ERROR: OPENROUTER_API_KEY not configured');
+      state = state.copyWith(
+        status: WorkoutImportStatus.error,
+        errorMessage: 'api',
       );
       return;
     }
@@ -121,10 +136,8 @@ class WorkoutImportNotifier extends Notifier<WorkoutImportState> {
         errorMessage: 'parsing',
       );
     } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('Import error: $e');
-        debugPrint('Stack trace: $stackTrace');
-      }
+      debugPrint('[WorkoutImport] Error: $e');
+      debugPrint('[WorkoutImport] Stack: $stackTrace');
       state = state.copyWith(
         status: WorkoutImportStatus.error,
         errorMessage: 'api',
@@ -134,6 +147,15 @@ class WorkoutImportNotifier extends Notifier<WorkoutImportState> {
 
   /// Parse image from camera or gallery
   Future<void> parseImage(ImageSource source) async {
+    if (!_isApiKeyConfigured()) {
+      debugPrint('[WorkoutImport] ERROR: OPENROUTER_API_KEY not configured');
+      state = state.copyWith(
+        status: WorkoutImportStatus.error,
+        errorMessage: 'api',
+      );
+      return;
+    }
+
     if (!_checkRateLimit()) {
       state = state.copyWith(
         status: WorkoutImportStatus.error,
@@ -181,10 +203,8 @@ class WorkoutImportNotifier extends Notifier<WorkoutImportState> {
         errorMessage: 'parsing',
       );
     } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('Image import error: $e');
-        debugPrint('Stack trace: $stackTrace');
-      }
+      debugPrint('[WorkoutImport] Image error: $e');
+      debugPrint('[WorkoutImport] Stack: $stackTrace');
       state = state.copyWith(
         status: WorkoutImportStatus.error,
         errorMessage: 'api',

@@ -19626,11 +19626,11 @@ abstract class AppLocalizations {
   /// **'{count} months ago'**
   String monthsAgo(int count);
 
-  /// Short form for days ago (e.g., '5d ago')
+  /// Days ago short label
   ///
   /// In en, this message translates to:
-  /// **'d ago'**
-  String get daysAgoShort;
+  /// **'{count}d ago'**
+  String daysAgoShort(int count);
 
   /// Weight settings screen title
   ///
@@ -49309,6 +49309,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Day {number}'**
   String workoutImportDay(int number);
+
+  /// No description provided for @quickActionLogMeasurements.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Measurements'**
+  String get quickActionLogMeasurements;
+
+  /// No description provided for @quickActionEmptyWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty'**
+  String get quickActionEmptyWorkout;
+
+  /// No description provided for @quickActionStart.
+  ///
+  /// In en, this message translates to:
+  /// **'START'**
+  String get quickActionStart;
+
+  /// No description provided for @quickActionOtherMeasurements.
+  ///
+  /// In en, this message translates to:
+  /// **'Other measurements...'**
+  String get quickActionOtherMeasurements;
+
+  /// No description provided for @quickActionArmsLR.
+  ///
+  /// In en, this message translates to:
+  /// **'Arms (R/L)'**
+  String get quickActionArmsLR;
+
+  /// No description provided for @quickActionThighsLR.
+  ///
+  /// In en, this message translates to:
+  /// **'Thighs (R/L)'**
+  String get quickActionThighsLR;
+
+  /// No description provided for @quickActionChest.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get quickActionChest;
+
+  /// No description provided for @quickActionHips.
+  ///
+  /// In en, this message translates to:
+  /// **'Hips'**
+  String get quickActionHips;
+
+  /// No description provided for @quickActionShoulders.
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulders'**
+  String get quickActionShoulders;
+
+  /// No description provided for @quickActionBodyFat.
+  ///
+  /// In en, this message translates to:
+  /// **'Body Fat %'**
+  String get quickActionBodyFat;
+
+  /// No description provided for @quickActionWaist.
+  ///
+  /// In en, this message translates to:
+  /// **'Waist'**
+  String get quickActionWaist;
+
+  /// No description provided for @quickActionNotTrainedSince.
+  ///
+  /// In en, this message translates to:
+  /// **'not trained for {days}d'**
+  String quickActionNotTrainedSince(int days);
+
+  /// No description provided for @quickActionBasedOnSplit.
+  ///
+  /// In en, this message translates to:
+  /// **'Based on your split:'**
+  String get quickActionBasedOnSplit;
+
+  /// No description provided for @quickActionImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get quickActionImport;
+
+  /// No description provided for @quickActionLastValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Last: {value} {unit} ({timeAgo})'**
+  String quickActionLastValue(String value, String unit, String timeAgo);
+
+  /// No description provided for @quickActionSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get quickActionSave;
+
+  /// No description provided for @quickActionStartWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Workout'**
+  String get quickActionStartWorkout;
+
+  /// No description provided for @quickActionTemplateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Template: {name}'**
+  String quickActionTemplateLabel(String name);
+
+  /// Chest muscle group name
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get muscleChest;
+
+  /// Back muscle group name
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get muscleBack;
+
+  /// Shoulders muscle group name
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulders'**
+  String get muscleShoulders;
+
+  /// Rear deltoid muscle group name
+  ///
+  /// In en, this message translates to:
+  /// **'Rear Deltoids'**
+  String get muscleRearDelts;
+
+  /// Label for exercises already added to a template
+  ///
+  /// In en, this message translates to:
+  /// **'Added'**
+  String get alreadyAdded;
 }
 
 class _AppLocalizationsDelegate

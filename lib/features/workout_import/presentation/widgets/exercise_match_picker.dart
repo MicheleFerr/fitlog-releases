@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
     show ExerciseDefinition;
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_fuzzy_matcher.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -106,12 +107,10 @@ class _ExerciseMatchPickerState extends ConsumerState<ExerciseMatchPicker> {
     final l10n = context.l10n;
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.7,
+      height: MediaQuery.of(context).size.height * 0.75,
       padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 16,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+        top: 12,
+        bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       decoration: BoxDecoration(
         color: context.colors.surface,
@@ -125,36 +124,39 @@ class _ExerciseMatchPickerState extends ConsumerState<ExerciseMatchPicker> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: context.colors.surfaceContainerHighest.withValues(
-                  alpha: 0.3,
-                ),
+                color: context.colors.outlineVariant,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
           // Search field
-          TextField(
-            controller: _searchController,
-            autofocus: true,
-            decoration: InputDecoration(
-              hintText: l10n.workoutImportSearchExercise,
-              prefixIcon: const Icon(AppIcons.search, size: AppIconSize.small),
-              suffixIcon: _searchController.text.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(AppIcons.close, size: AppIconSize.small),
-                      onPressed: () {
-                        _searchController.clear();
-                      },
-                    )
-                  : null,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              controller: _searchController,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: l10n.workoutImportSearchExercise,
+                prefixIcon:
+                    const Icon(AppIcons.search, size: AppIconSize.small),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(AppIcons.close,
+                            size: AppIconSize.small),
+                        onPressed: () {
+                          _searchController.clear();
+                        },
+                      )
+                    : null,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
 
           // Results
           Expanded(
@@ -176,8 +178,10 @@ class _ExerciseMatchPickerState extends ConsumerState<ExerciseMatchPicker> {
                           ),
                         ),
                       )
-                    : ListView.builder(
+                    : ListView.separated(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         itemCount: _results.length,
+                        separatorBuilder: (_, __) => const Divider(height: 1),
                         itemBuilder: (context, index) {
                           final result = _results[index];
                           return _buildResultTile(context, result);
@@ -194,26 +198,31 @@ class _ExerciseMatchPickerState extends ConsumerState<ExerciseMatchPicker> {
     final confidence = (result.score * 100).toInt();
 
     return ListTile(
-      leading: Icon(
-        AppIcons.workout,
-        color: confidence >= 80
-            ? context.colors.primary
-            : context.colors.onSurfaceVariant,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      leading: ExerciseGifWidget(
+        gifUrl: exercise.imageUrl,
+        exerciseName: exercise.nome,
+        size: 48,
       ),
-      title: Text(exercise.nome),
+      title: Text(
+        exercise.nome,
+        style: context.textTheme.bodyMedium?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
       subtitle: Text(
-        exercise.focus.join(', '),
-        style: context.textTheme.bodySmall?.copyWith(
+        exercise.focus.join(', ').toUpperCase(),
+        style: context.textTheme.labelSmall?.copyWith(
           color: context.colors.onSurfaceVariant,
         ),
       ),
       trailing: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: confidence >= 80
               ? context.colors.primary.withValues(alpha: 0.12)
-              : context.colors.onSurfaceVariant.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(6),
+              : context.colors.onSurfaceVariant.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
           '$confidence%',
