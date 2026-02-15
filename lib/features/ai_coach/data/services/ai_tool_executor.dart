@@ -189,6 +189,26 @@ class AIToolExecutor {
                 return 0;
               });
 
+              // Disambiguation: if 2+ exercises match with sessions and query is NOT exact
+              final matchesWithSessions = sortedMatches.where((m) => m.sessions.isNotEmpty).toList();
+              if (matchesWithSessions.length >= 2) {
+                final isExactMatch = matchesWithSessions.any(
+                  (m) => m.exerciseName.toLowerCase().trim() == normalizedSearch,
+                );
+                if (!isExactMatch) {
+                  debugPrint('[AI_TOOL] 🔀 Disambiguation: ${matchesWithSessions.length} matches for "$exerciseName"');
+                  return jsonEncode({
+                    'disambiguation': true,
+                    'query': exerciseName,
+                    'options': matchesWithSessions.take(5).map((m) => {
+                      'name': m.exerciseName,
+                      'sessions': m.sessions.length,
+                    }).toList(),
+                    'suggestions': matchesWithSessions.take(5).map((m) => m.exerciseName).toList(),
+                  });
+                }
+              }
+
               // Take best match (with sessions and most relevant)
               final caseInsensitiveMatch = sortedMatches.firstOrNull;
 

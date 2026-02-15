@@ -52,6 +52,7 @@ sealed class AIMessage with _$AIMessage {
     @Default(false) bool isTyping,
     String? error,
     @Default([]) List<String> suggestions,
+    @Default(false) bool isDisambiguation,
   }) = _AIMessage;
 
   factory AIMessage.fromJson(Map<String, dynamic> json) =>

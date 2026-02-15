@@ -34,6 +34,7 @@ _AIMessage _$AIMessageFromJson(Map<String, dynamic> json) => _AIMessage(
           ?.map((e) => e as String)
           .toList() ??
       const [],
+  isDisambiguation: json['isDisambiguation'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$AIMessageToJson(_AIMessage instance) =>
@@ -46,6 +47,7 @@ Map<String, dynamic> _$AIMessageToJson(_AIMessage instance) =>
       'isTyping': instance.isTyping,
       'error': instance.error,
       'suggestions': instance.suggestions,
+      'isDisambiguation': instance.isDisambiguation,
     };
 
 const _$MessageRoleEnumMap = {

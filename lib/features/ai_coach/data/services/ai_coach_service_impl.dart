@@ -86,6 +86,7 @@ class AICoachServiceImpl implements AICoachService {
       var iterations = 0;
       const maxIterations = 3; // Reduced from 5 to 3 for cost optimization
       List<String>? extractedSuggestions;
+      bool extractedIsDisambiguation = false;
 
       while (iterations < maxIterations) {
         debugPrint('[AI_COACH_SERVICE] 🔄 Iteration ${iterations + 1}/$maxIterations');
@@ -146,8 +147,9 @@ class AICoachServiceImpl implements AICoachService {
 
                 debugPrint('[AI_COACH_SERVICE] ✅ Tool result: $result');
 
-                // Extract suggestions from tool result if present
+                // Extract suggestions and disambiguation from tool result
                 List<String>? foundSuggestions;
+                bool foundDisambiguation = false;
                 try {
                   final resultJson = jsonDecode(result) as Map<String, dynamic>;
                   if (resultJson.containsKey('suggestions')) {
@@ -158,6 +160,10 @@ class AICoachServiceImpl implements AICoachService {
                       debugPrint('[AI_COACH_SERVICE] 💡 Found suggestions: $suggestions');
                     }
                   }
+                  if (resultJson.containsKey('disambiguation') && resultJson['disambiguation'] == true) {
+                    foundDisambiguation = true;
+                    debugPrint('[AI_COACH_SERVICE] 🔀 Disambiguation detected');
+                  }
                 } catch (_) {
                   // Tool result wasn't valid JSON or had no suggestions - that's fine
                 }
@@ -166,6 +172,7 @@ class AICoachServiceImpl implements AICoachService {
                   'tool': toolName,
                   'result': result,
                   'suggestions': foundSuggestions,
+                  'isDisambiguation': foundDisambiguation,
                 };
               } catch (e) {
                 debugPrint('[AI_COACH_SERVICE] ❌ Error executing tool: $e');
@@ -178,11 +185,14 @@ class AICoachServiceImpl implements AICoachService {
             }),
           );
 
-          // Collect suggestions from all tools (last one with suggestions wins)
+          // Collect suggestions and disambiguation from all tools (last one wins)
           for (final toolResult in toolResults) {
             final suggestions = toolResult['suggestions'] as List<String>?;
             if (suggestions != null && suggestions.isNotEmpty) {
               extractedSuggestions = suggestions;
+            }
+            if (toolResult['isDisambiguation'] == true) {
+              extractedIsDisambiguation = true;
             }
           }
 
@@ -227,6 +237,7 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
           return AIServiceResponse(
             content: sanitized,
             suggestions: extractedSuggestions,
+            isDisambiguation: extractedIsDisambiguation,
           );
         }
       }

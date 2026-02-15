@@ -282,7 +282,7 @@ class _AIMessageBubbleState extends State<AIMessageBubble> {
                   // Quick actions row (always visible for AI)
                   if (!widget.isFromUser) _buildQuickActions(context),
 
-                  // Suggestion chips
+                  // Suggestion chips - with different style for disambiguation
                   if (!widget.isFromUser && widget.message.suggestions.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.only(top: AppSpacing.xs),
@@ -290,6 +290,22 @@ class _AIMessageBubbleState extends State<AIMessageBubble> {
                         spacing: 8,
                         runSpacing: 4,
                         children: widget.message.suggestions.map((suggestion) {
+                          if (widget.message.isDisambiguation) {
+                            return FilledButton.tonal(
+                              onPressed: () =>
+                                  widget.onSuggestionTap?.call(suggestion),
+                              style: FilledButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              child: Text(suggestion),
+                            );
+                          }
                           return ActionChip(
                             label: Text(suggestion),
                             onPressed: () =>

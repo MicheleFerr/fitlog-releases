@@ -284,7 +284,7 @@ as String?,
 /// @nodoc
 mixin _$AIMessage {
 
- String get id; MessageRole get role; String get content; DateTime get timestamp; AIToolCall? get toolCall; bool get isTyping; String? get error; List<String> get suggestions;
+ String get id; MessageRole get role; String get content; DateTime get timestamp; AIToolCall? get toolCall; bool get isTyping; String? get error; List<String> get suggestions; bool get isDisambiguation;
 /// Create a copy of AIMessage
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -297,16 +297,16 @@ $AIMessageCopyWith<AIMessage> get copyWith => _$AIMessageCopyWithImpl<AIMessage>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AIMessage&&(identical(other.id, id) || other.id == id)&&(identical(other.role, role) || other.role == role)&&(identical(other.content, content) || other.content == content)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.toolCall, toolCall) || other.toolCall == toolCall)&&(identical(other.isTyping, isTyping) || other.isTyping == isTyping)&&(identical(other.error, error) || other.error == error)&&const DeepCollectionEquality().equals(other.suggestions, suggestions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AIMessage&&(identical(other.id, id) || other.id == id)&&(identical(other.role, role) || other.role == role)&&(identical(other.content, content) || other.content == content)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.toolCall, toolCall) || other.toolCall == toolCall)&&(identical(other.isTyping, isTyping) || other.isTyping == isTyping)&&(identical(other.error, error) || other.error == error)&&const DeepCollectionEquality().equals(other.suggestions, suggestions)&&(identical(other.isDisambiguation, isDisambiguation) || other.isDisambiguation == isDisambiguation));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,role,content,timestamp,toolCall,isTyping,error,const DeepCollectionEquality().hash(suggestions));
+int get hashCode => Object.hash(runtimeType,id,role,content,timestamp,toolCall,isTyping,error,const DeepCollectionEquality().hash(suggestions),isDisambiguation);
 
 @override
 String toString() {
-  return 'AIMessage(id: $id, role: $role, content: $content, timestamp: $timestamp, toolCall: $toolCall, isTyping: $isTyping, error: $error, suggestions: $suggestions)';
+  return 'AIMessage(id: $id, role: $role, content: $content, timestamp: $timestamp, toolCall: $toolCall, isTyping: $isTyping, error: $error, suggestions: $suggestions, isDisambiguation: $isDisambiguation)';
 }
 
 
@@ -317,7 +317,7 @@ abstract mixin class $AIMessageCopyWith<$Res>  {
   factory $AIMessageCopyWith(AIMessage value, $Res Function(AIMessage) _then) = _$AIMessageCopyWithImpl;
 @useResult
 $Res call({
- String id, MessageRole role, String content, DateTime timestamp, AIToolCall? toolCall, bool isTyping, String? error, List<String> suggestions
+ String id, MessageRole role, String content, DateTime timestamp, AIToolCall? toolCall, bool isTyping, String? error, List<String> suggestions, bool isDisambiguation
 });
 
 
@@ -334,7 +334,7 @@ class _$AIMessageCopyWithImpl<$Res>
 
 /// Create a copy of AIMessage
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? role = null,Object? content = null,Object? timestamp = null,Object? toolCall = freezed,Object? isTyping = null,Object? error = freezed,Object? suggestions = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? role = null,Object? content = null,Object? timestamp = null,Object? toolCall = freezed,Object? isTyping = null,Object? error = freezed,Object? suggestions = null,Object? isDisambiguation = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
@@ -344,7 +344,8 @@ as DateTime,toolCall: freezed == toolCall ? _self.toolCall : toolCall // ignore:
 as AIToolCall?,isTyping: null == isTyping ? _self.isTyping : isTyping // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as String?,suggestions: null == suggestions ? _self.suggestions : suggestions // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,isDisambiguation: null == isDisambiguation ? _self.isDisambiguation : isDisambiguation // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 /// Create a copy of AIMessage
@@ -438,10 +439,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  MessageRole role,  String content,  DateTime timestamp,  AIToolCall? toolCall,  bool isTyping,  String? error,  List<String> suggestions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  MessageRole role,  String content,  DateTime timestamp,  AIToolCall? toolCall,  bool isTyping,  String? error,  List<String> suggestions,  bool isDisambiguation)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AIMessage() when $default != null:
-return $default(_that.id,_that.role,_that.content,_that.timestamp,_that.toolCall,_that.isTyping,_that.error,_that.suggestions);case _:
+return $default(_that.id,_that.role,_that.content,_that.timestamp,_that.toolCall,_that.isTyping,_that.error,_that.suggestions,_that.isDisambiguation);case _:
   return orElse();
 
 }
@@ -459,10 +460,10 @@ return $default(_that.id,_that.role,_that.content,_that.timestamp,_that.toolCall
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  MessageRole role,  String content,  DateTime timestamp,  AIToolCall? toolCall,  bool isTyping,  String? error,  List<String> suggestions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  MessageRole role,  String content,  DateTime timestamp,  AIToolCall? toolCall,  bool isTyping,  String? error,  List<String> suggestions,  bool isDisambiguation)  $default,) {final _that = this;
 switch (_that) {
 case _AIMessage():
-return $default(_that.id,_that.role,_that.content,_that.timestamp,_that.toolCall,_that.isTyping,_that.error,_that.suggestions);}
+return $default(_that.id,_that.role,_that.content,_that.timestamp,_that.toolCall,_that.isTyping,_that.error,_that.suggestions,_that.isDisambiguation);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -476,10 +477,10 @@ return $default(_that.id,_that.role,_that.content,_that.timestamp,_that.toolCall
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  MessageRole role,  String content,  DateTime timestamp,  AIToolCall? toolCall,  bool isTyping,  String? error,  List<String> suggestions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  MessageRole role,  String content,  DateTime timestamp,  AIToolCall? toolCall,  bool isTyping,  String? error,  List<String> suggestions,  bool isDisambiguation)?  $default,) {final _that = this;
 switch (_that) {
 case _AIMessage() when $default != null:
-return $default(_that.id,_that.role,_that.content,_that.timestamp,_that.toolCall,_that.isTyping,_that.error,_that.suggestions);case _:
+return $default(_that.id,_that.role,_that.content,_that.timestamp,_that.toolCall,_that.isTyping,_that.error,_that.suggestions,_that.isDisambiguation);case _:
   return null;
 
 }
@@ -491,7 +492,7 @@ return $default(_that.id,_that.role,_that.content,_that.timestamp,_that.toolCall
 @JsonSerializable()
 
 class _AIMessage extends AIMessage {
-  const _AIMessage({required this.id, required this.role, required this.content, required this.timestamp, this.toolCall, this.isTyping = false, this.error, final  List<String> suggestions = const []}): _suggestions = suggestions,super._();
+  const _AIMessage({required this.id, required this.role, required this.content, required this.timestamp, this.toolCall, this.isTyping = false, this.error, final  List<String> suggestions = const [], this.isDisambiguation = false}): _suggestions = suggestions,super._();
   factory _AIMessage.fromJson(Map<String, dynamic> json) => _$AIMessageFromJson(json);
 
 @override final  String id;
@@ -508,6 +509,7 @@ class _AIMessage extends AIMessage {
   return EqualUnmodifiableListView(_suggestions);
 }
 
+@override@JsonKey() final  bool isDisambiguation;
 
 /// Create a copy of AIMessage
 /// with the given fields replaced by the non-null parameter values.
@@ -522,16 +524,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AIMessage&&(identical(other.id, id) || other.id == id)&&(identical(other.role, role) || other.role == role)&&(identical(other.content, content) || other.content == content)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.toolCall, toolCall) || other.toolCall == toolCall)&&(identical(other.isTyping, isTyping) || other.isTyping == isTyping)&&(identical(other.error, error) || other.error == error)&&const DeepCollectionEquality().equals(other._suggestions, _suggestions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AIMessage&&(identical(other.id, id) || other.id == id)&&(identical(other.role, role) || other.role == role)&&(identical(other.content, content) || other.content == content)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.toolCall, toolCall) || other.toolCall == toolCall)&&(identical(other.isTyping, isTyping) || other.isTyping == isTyping)&&(identical(other.error, error) || other.error == error)&&const DeepCollectionEquality().equals(other._suggestions, _suggestions)&&(identical(other.isDisambiguation, isDisambiguation) || other.isDisambiguation == isDisambiguation));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,role,content,timestamp,toolCall,isTyping,error,const DeepCollectionEquality().hash(_suggestions));
+int get hashCode => Object.hash(runtimeType,id,role,content,timestamp,toolCall,isTyping,error,const DeepCollectionEquality().hash(_suggestions),isDisambiguation);
 
 @override
 String toString() {
-  return 'AIMessage(id: $id, role: $role, content: $content, timestamp: $timestamp, toolCall: $toolCall, isTyping: $isTyping, error: $error, suggestions: $suggestions)';
+  return 'AIMessage(id: $id, role: $role, content: $content, timestamp: $timestamp, toolCall: $toolCall, isTyping: $isTyping, error: $error, suggestions: $suggestions, isDisambiguation: $isDisambiguation)';
 }
 
 
@@ -542,7 +544,7 @@ abstract mixin class _$AIMessageCopyWith<$Res> implements $AIMessageCopyWith<$Re
   factory _$AIMessageCopyWith(_AIMessage value, $Res Function(_AIMessage) _then) = __$AIMessageCopyWithImpl;
 @override @useResult
 $Res call({
- String id, MessageRole role, String content, DateTime timestamp, AIToolCall? toolCall, bool isTyping, String? error, List<String> suggestions
+ String id, MessageRole role, String content, DateTime timestamp, AIToolCall? toolCall, bool isTyping, String? error, List<String> suggestions, bool isDisambiguation
 });
 
 
@@ -559,7 +561,7 @@ class __$AIMessageCopyWithImpl<$Res>
 
 /// Create a copy of AIMessage
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? role = null,Object? content = null,Object? timestamp = null,Object? toolCall = freezed,Object? isTyping = null,Object? error = freezed,Object? suggestions = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? role = null,Object? content = null,Object? timestamp = null,Object? toolCall = freezed,Object? isTyping = null,Object? error = freezed,Object? suggestions = null,Object? isDisambiguation = null,}) {
   return _then(_AIMessage(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
@@ -569,7 +571,8 @@ as DateTime,toolCall: freezed == toolCall ? _self.toolCall : toolCall // ignore:
 as AIToolCall?,isTyping: null == isTyping ? _self.isTyping : isTyping // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as String?,suggestions: null == suggestions ? _self._suggestions : suggestions // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,isDisambiguation: null == isDisambiguation ? _self.isDisambiguation : isDisambiguation // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

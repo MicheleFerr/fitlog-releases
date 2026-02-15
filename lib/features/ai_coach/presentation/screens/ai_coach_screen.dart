@@ -205,9 +205,16 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
                         message: message,
                         isFromUser: message.role == MessageRole.user,
                         onSuggestionTap: (exercise) {
-                          ref
-                              .read(aIChatProvider.notifier)
-                              .sendMessage('Qual e il mio massimale su $exercise?');
+                          if (message.isDisambiguation) {
+                            // Disambiguation: send exercise name directly
+                            ref.read(aIChatProvider.notifier).sendMessage(exercise);
+                          } else {
+                            // Suggestion: ask about the exercise
+                            ref
+                                .read(aIChatProvider.notifier)
+                                .sendMessage('Qual e il mio massimale su $exercise?');
+                          }
+                          _scrollToBottom();
                         },
                       );
                     },

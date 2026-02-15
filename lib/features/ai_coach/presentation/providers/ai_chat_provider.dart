@@ -297,6 +297,7 @@ class AIChat extends _$AIChat {
         timestamp: DateTime.now(),
         toolCall: response.toolCall,
         suggestions: response.suggestions ?? [],
+        isDisambiguation: response.isDisambiguation,
       );
 
       // 6. Apply memory limit: keep last 10 messages (design requirement line 585)

@@ -40,6 +40,7 @@ class AIServiceResponse {
     required this.content,
     this.toolCall,
     this.suggestions,
+    this.isDisambiguation = false,
   });
   /// AI-generated text content
   final String content;
@@ -49,4 +50,7 @@ class AIServiceResponse {
 
   /// Exercise name suggestions when a tool search didn't find exact match
   final List<String>? suggestions;
+
+  /// Whether suggestions are for disambiguation (multiple matching exercises)
+  final bool isDisambiguation;
 }
