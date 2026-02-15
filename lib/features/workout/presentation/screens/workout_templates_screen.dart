@@ -35,6 +35,8 @@ import 'package:gymbro_flutter_new/core/analytics/trackers/superset_template_eve
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/core/config/feature_flags.dart';
+import 'package:gymbro_flutter_new/features/workout_import/presentation/screens/workout_import_screen.dart';
 
 class WorkoutTemplatesScreen extends ConsumerStatefulWidget {
   const WorkoutTemplatesScreen({super.key});
@@ -757,6 +759,21 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 _showCreateTemplateModalOriginal(context);
               },
             ),
+            if (FeatureFlags.workoutImportEnabled)
+              ListTile(
+                leading: Icon(AppIcons.paste, color: context.colors.primary),
+                title: Text(context.l10n.workoutImportHaveWorkout),
+                subtitle: Text(context.l10n.workoutImportHaveWorkoutDesc),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (context) => const WorkoutImportScreen(),
+                      fullscreenDialog: true,
+                    ),
+                  );
+                },
+              ),
           ],
         ),
       ),

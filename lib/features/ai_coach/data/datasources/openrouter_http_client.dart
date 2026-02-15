@@ -17,9 +17,11 @@ class OpenRouterResponse {
   const OpenRouterResponse({
     this.content,
     this.toolCalls = const [],
+    this.finishReason,
   });
   final String? content;
   final List<ToolCall> toolCalls;
+  final String? finishReason;
 
   bool get hasToolCalls => toolCalls.isNotEmpty;
 }
@@ -61,6 +63,8 @@ class OpenRouterHttpClient {
     required List<Map<String, dynamic>> messages,
     List<Map<String, dynamic>>? tools,
     int maxTokens = 1000,
+    Duration timeout = const Duration(seconds: 30),
+    bool jsonMode = false,
   }) async {
     final response = await http.post(
       Uri.parse('$_baseUrl/chat/completions'),
@@ -76,8 +80,10 @@ class OpenRouterHttpClient {
         if (tools != null && tools.isNotEmpty) 'tools': tools,
         if (tools != null && tools.isNotEmpty) 'tool_choice': 'auto',
         'max_tokens': maxTokens,
+        if (jsonMode)
+          'response_format': {'type': 'json_object'},
       }),
-    );
+    ).timeout(timeout);
 
     if (response.statusCode != 200) {
       throw Exception(
@@ -89,6 +95,7 @@ class OpenRouterHttpClient {
     final choices = json['choices'] as List<dynamic>;
     final firstChoice = choices.first as Map<String, dynamic>;
     final message = firstChoice['message'] as Map<String, dynamic>;
+    final finishReason = firstChoice['finish_reason'] as String?;
 
     // Check for tool calls
     final toolCallsJson = message['tool_calls'] as List<dynamic>?;
@@ -100,6 +107,7 @@ class OpenRouterHttpClient {
     return OpenRouterResponse(
       content: message['content'] as String?,
       toolCalls: toolCalls,
+      finishReason: finishReason,
     );
   }
 }

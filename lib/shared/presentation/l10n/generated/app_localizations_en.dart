@@ -11014,6 +11014,60 @@ class AppLocalizationsEn extends AppLocalizations {
   String get effort => 'Effort';
 
   @override
+  String get atAGlanceSubtitle => 'Your exercises at a glance';
+
+  @override
+  String get prWeight => 'PR Weight';
+
+  @override
+  String get est1RM => 'Est. 1RM';
+
+  @override
+  String get totalVol => 'Total Vol';
+
+  @override
+  String lastSession(int sets, int reps, String weight, String timeAgo) {
+    return 'Last: ${sets}x$reps @ ${weight}kg · $timeAgo';
+  }
+
+  @override
+  String lastSessionSimple(String timeAgo) {
+    return 'Last: $timeAgo';
+  }
+
+  @override
+  String insightImproving(String percent) {
+    return 'Weight up $percent% recently';
+  }
+
+  @override
+  String insightDeclining(String percent) {
+    return 'Weight down $percent% — try deload?';
+  }
+
+  @override
+  String get insightStable => 'Consistent — ready to push heavier?';
+
+  @override
+  String get insightNewExercise => 'Keep training to track progress';
+
+  @override
+  String get recentPR => 'Recent PR!';
+
+  @override
+  String weeksAgo(int count) {
+    return '$count weeks ago';
+  }
+
+  @override
+  String monthsAgo(int count) {
+    return '$count months ago';
+  }
+
+  @override
+  String get daysAgoShort => 'd ago';
+
+  @override
   String get weightSettings => 'Weight Settings';
 
   @override
@@ -12862,16 +12916,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String daysAgo(int count) {
     return '$count days ago';
-  }
-
-  @override
-  String weeksAgo(int count) {
-    return '$count weeks ago';
-  }
-
-  @override
-  String monthsAgo(int count) {
-    return '$count months ago';
   }
 
   @override
@@ -17328,9 +17372,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String settingsDayCutoffHourUpdated(int hour) {
     return 'Day cutoff updated to $hour:00';
   }
-
-  @override
-  String get daysAgoShort => 'd ago';
 
   @override
   String get weeksAgoShort => 'w ago';
@@ -27439,4 +27480,117 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get analyticsViewDetailed => 'Detailed view';
+
+  @override
+  String get workoutImportTitle => 'Import Workout';
+
+  @override
+  String get workoutImportFromText => 'From Text';
+
+  @override
+  String get workoutImportFromPhoto => 'From Photo';
+
+  @override
+  String get workoutImportPasteHint =>
+      'Paste your workout plan here...\n\nExample:\nDay 1 - Push\nBench Press 4x8 80kg\nOverhead Press 3x10 40kg';
+
+  @override
+  String get workoutImportAnalyze => 'Analyze';
+
+  @override
+  String get workoutImportAnalyzing => 'Analyzing...';
+
+  @override
+  String get workoutImportTakePhoto => 'Take Photo';
+
+  @override
+  String get workoutImportChooseGallery => 'Choose from Gallery';
+
+  @override
+  String get workoutImportPreviewTitle => 'Preview';
+
+  @override
+  String workoutImportExercisesFound(int count) {
+    return '$count exercises found';
+  }
+
+  @override
+  String workoutImportDaysFound(int count) {
+    return '$count days found';
+  }
+
+  @override
+  String get workoutImportConfidentMatch => 'Confident';
+
+  @override
+  String get workoutImportSuggestedMatch => 'Suggested';
+
+  @override
+  String get workoutImportNoMatch => 'No match';
+
+  @override
+  String get workoutImportChangeExercise => 'Change';
+
+  @override
+  String get workoutImportCreateTemplates => 'Create Templates';
+
+  @override
+  String get workoutImportCreateSingleTemplate => 'Create Template';
+
+  @override
+  String get workoutImportSuccess => 'Templates created successfully!';
+
+  @override
+  String get workoutImportSingleSuccess => 'Template created successfully!';
+
+  @override
+  String get workoutImportErrorEmpty => 'Please enter a workout plan';
+
+  @override
+  String get workoutImportErrorParsing =>
+      'Could not parse the workout. Try rephrasing or check the format.';
+
+  @override
+  String get workoutImportErrorApi =>
+      'Service temporarily unavailable. Please try again later.';
+
+  @override
+  String get workoutImportErrorRateLimit =>
+      'Too many requests. Please wait a moment.';
+
+  @override
+  String get workoutImportHaveWorkout => 'I already have a workout plan';
+
+  @override
+  String get workoutImportHaveWorkoutDesc => 'Import from text or photo';
+
+  @override
+  String workoutImportSets(int count) {
+    return '$count sets';
+  }
+
+  @override
+  String workoutImportReps(int count) {
+    return '$count reps';
+  }
+
+  @override
+  String workoutImportKg(String weight) {
+    return '$weight kg';
+  }
+
+  @override
+  String get workoutImportMaxReps => 'Max reps';
+
+  @override
+  String get workoutImportSearchExercise => 'Search exercise...';
+
+  @override
+  String get workoutImportPhotoHint =>
+      'Take a photo of your workout plan or select from gallery';
+
+  @override
+  String workoutImportDay(int number) {
+    return 'Day $number';
+  }
 }

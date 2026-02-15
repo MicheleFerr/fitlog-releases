@@ -11123,6 +11123,61 @@ class AppLocalizationsIt extends AppLocalizations {
   String get effort => 'Sforzo';
 
   @override
+  String get atAGlanceSubtitle => 'I tuoi esercizi a colpo d\'occhio';
+
+  @override
+  String get prWeight => 'PR Peso';
+
+  @override
+  String get est1RM => '1RM Stim.';
+
+  @override
+  String get totalVol => 'Volume Tot';
+
+  @override
+  String lastSession(int sets, int reps, String weight, String timeAgo) {
+    return 'Ultimo: ${sets}x$reps @ ${weight}kg · $timeAgo';
+  }
+
+  @override
+  String lastSessionSimple(String timeAgo) {
+    return 'Ultimo: $timeAgo';
+  }
+
+  @override
+  String insightImproving(String percent) {
+    return 'Peso +$percent% di recente';
+  }
+
+  @override
+  String insightDeclining(String percent) {
+    return 'Peso -$percent% — prova un deload?';
+  }
+
+  @override
+  String get insightStable => 'Costante — pronto per aumentare?';
+
+  @override
+  String get insightNewExercise =>
+      'Continua ad allenarti per tracciare i progressi';
+
+  @override
+  String get recentPR => 'PR recente!';
+
+  @override
+  String weeksAgo(int count) {
+    return '$count settimane fa';
+  }
+
+  @override
+  String monthsAgo(int count) {
+    return '$count mesi fa';
+  }
+
+  @override
+  String get daysAgoShort => 'g fa';
+
+  @override
   String get weightSettings => 'Impostazioni Peso';
 
   @override
@@ -13000,16 +13055,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String daysAgo(int count) {
     return '$count giorni fa';
-  }
-
-  @override
-  String weeksAgo(int count) {
-    return '$count settimane fa';
-  }
-
-  @override
-  String monthsAgo(int count) {
-    return '$count mesi fa';
   }
 
   @override
@@ -17498,9 +17543,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String settingsDayCutoffHourUpdated(int hour) {
     return 'Orario limite aggiornato alle $hour:00';
   }
-
-  @override
-  String get daysAgoShort => 'g fa';
 
   @override
   String get weeksAgoShort => 'sett fa';
@@ -27708,4 +27750,117 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get analyticsViewDetailed => 'Vista dettagliata';
+
+  @override
+  String get workoutImportTitle => 'Importa Scheda';
+
+  @override
+  String get workoutImportFromText => 'Da Testo';
+
+  @override
+  String get workoutImportFromPhoto => 'Da Foto';
+
+  @override
+  String get workoutImportPasteHint =>
+      'Incolla qui la tua scheda...\n\nEsempio:\nGiorno 1 - Push\nPanca Piana 4x8 80kg\nLento Avanti 3x10 40kg';
+
+  @override
+  String get workoutImportAnalyze => 'Analizza';
+
+  @override
+  String get workoutImportAnalyzing => 'Analisi in corso...';
+
+  @override
+  String get workoutImportTakePhoto => 'Scatta Foto';
+
+  @override
+  String get workoutImportChooseGallery => 'Scegli dalla Galleria';
+
+  @override
+  String get workoutImportPreviewTitle => 'Anteprima';
+
+  @override
+  String workoutImportExercisesFound(int count) {
+    return '$count esercizi trovati';
+  }
+
+  @override
+  String workoutImportDaysFound(int count) {
+    return '$count giorni trovati';
+  }
+
+  @override
+  String get workoutImportConfidentMatch => 'Sicuro';
+
+  @override
+  String get workoutImportSuggestedMatch => 'Suggerito';
+
+  @override
+  String get workoutImportNoMatch => 'Non trovato';
+
+  @override
+  String get workoutImportChangeExercise => 'Cambia';
+
+  @override
+  String get workoutImportCreateTemplates => 'Crea Schede';
+
+  @override
+  String get workoutImportCreateSingleTemplate => 'Crea Scheda';
+
+  @override
+  String get workoutImportSuccess => 'Schede create con successo!';
+
+  @override
+  String get workoutImportSingleSuccess => 'Scheda creata con successo!';
+
+  @override
+  String get workoutImportErrorEmpty => 'Inserisci una scheda di allenamento';
+
+  @override
+  String get workoutImportErrorParsing =>
+      'Impossibile analizzare la scheda. Riprova riformulando o controlla il formato.';
+
+  @override
+  String get workoutImportErrorApi =>
+      'Servizio temporaneamente non disponibile. Riprova più tardi.';
+
+  @override
+  String get workoutImportErrorRateLimit =>
+      'Troppe richieste. Attendi un momento.';
+
+  @override
+  String get workoutImportHaveWorkout => 'Ho già una scheda';
+
+  @override
+  String get workoutImportHaveWorkoutDesc => 'Importa da testo o foto';
+
+  @override
+  String workoutImportSets(int count) {
+    return '$count serie';
+  }
+
+  @override
+  String workoutImportReps(int count) {
+    return '$count rip';
+  }
+
+  @override
+  String workoutImportKg(String weight) {
+    return '$weight kg';
+  }
+
+  @override
+  String get workoutImportMaxReps => 'Max rip';
+
+  @override
+  String get workoutImportSearchExercise => 'Cerca esercizio...';
+
+  @override
+  String get workoutImportPhotoHint =>
+      'Scatta una foto della tua scheda o seleziona dalla galleria';
+
+  @override
+  String workoutImportDay(int number) {
+    return 'Giorno $number';
+  }
 }

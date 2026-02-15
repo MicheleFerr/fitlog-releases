@@ -8579,13 +8579,13 @@ abstract class AppLocalizations {
   /// **'Complete workouts to see history'**
   String get completeWorkoutsToSeeHistory;
 
-  /// Today
+  /// Today relative time label
   ///
   /// In en, this message translates to:
   /// **'Today'**
   String get today;
 
-  /// Yesterday
+  /// Yesterday relative time label
   ///
   /// In en, this message translates to:
   /// **'Yesterday'**
@@ -19548,6 +19548,90 @@ abstract class AppLocalizations {
   /// **'Effort'**
   String get effort;
 
+  /// Subtitle for exercise at a glance screen
+  ///
+  /// In en, this message translates to:
+  /// **'Your exercises at a glance'**
+  String get atAGlanceSubtitle;
+
+  /// Personal record weight label in at-a-glance card
+  ///
+  /// In en, this message translates to:
+  /// **'PR Weight'**
+  String get prWeight;
+
+  /// Estimated one rep max short label
+  ///
+  /// In en, this message translates to:
+  /// **'Est. 1RM'**
+  String get est1RM;
+
+  /// Total volume short label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Vol'**
+  String get totalVol;
+
+  /// Last session summary inline on card
+  ///
+  /// In en, this message translates to:
+  /// **'Last: {sets}x{reps} @ {weight}kg · {timeAgo}'**
+  String lastSession(int sets, int reps, String weight, String timeAgo);
+
+  /// Last session fallback when no set data
+  ///
+  /// In en, this message translates to:
+  /// **'Last: {timeAgo}'**
+  String lastSessionSimple(String timeAgo);
+
+  /// Insight text when exercise is improving
+  ///
+  /// In en, this message translates to:
+  /// **'Weight up {percent}% recently'**
+  String insightImproving(String percent);
+
+  /// Insight text when exercise is declining
+  ///
+  /// In en, this message translates to:
+  /// **'Weight down {percent}% — try deload?'**
+  String insightDeclining(String percent);
+
+  /// Insight text when exercise is stable
+  ///
+  /// In en, this message translates to:
+  /// **'Consistent — ready to push heavier?'**
+  String get insightStable;
+
+  /// Insight text for exercises with few sessions
+  ///
+  /// In en, this message translates to:
+  /// **'Keep training to track progress'**
+  String get insightNewExercise;
+
+  /// Badge text when exercise has a recent PR
+  ///
+  /// In en, this message translates to:
+  /// **'Recent PR!'**
+  String get recentPR;
+
+  /// Weeks ago
+  ///
+  /// In en, this message translates to:
+  /// **'{count} weeks ago'**
+  String weeksAgo(int count);
+
+  /// Months ago
+  ///
+  /// In en, this message translates to:
+  /// **'{count} months ago'**
+  String monthsAgo(int count);
+
+  /// Short form for days ago (e.g., '5d ago')
+  ///
+  /// In en, this message translates to:
+  /// **'d ago'**
+  String get daysAgoShort;
+
   /// Weight settings screen title
   ///
   /// In en, this message translates to:
@@ -22715,18 +22799,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} days ago'**
   String daysAgo(int count);
-
-  /// Weeks ago
-  ///
-  /// In en, this message translates to:
-  /// **'{count} weeks ago'**
-  String weeksAgo(int count);
-
-  /// Months ago
-  ///
-  /// In en, this message translates to:
-  /// **'{count} months ago'**
-  String monthsAgo(int count);
 
   /// Short format for days ago
   ///
@@ -30983,12 +31055,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Day cutoff updated to {hour}:00'**
   String settingsDayCutoffHourUpdated(int hour);
-
-  /// Short form for days ago (e.g., '5d ago')
-  ///
-  /// In en, this message translates to:
-  /// **'d ago'**
-  String get daysAgoShort;
 
   /// Short form for weeks ago (e.g., '2w ago')
   ///
@@ -49051,6 +49117,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Detailed view'**
   String get analyticsViewDetailed;
+
+  /// No description provided for @workoutImportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Workout'**
+  String get workoutImportTitle;
+
+  /// No description provided for @workoutImportFromText.
+  ///
+  /// In en, this message translates to:
+  /// **'From Text'**
+  String get workoutImportFromText;
+
+  /// No description provided for @workoutImportFromPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'From Photo'**
+  String get workoutImportFromPhoto;
+
+  /// No description provided for @workoutImportPasteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste your workout plan here...\n\nExample:\nDay 1 - Push\nBench Press 4x8 80kg\nOverhead Press 3x10 40kg'**
+  String get workoutImportPasteHint;
+
+  /// No description provided for @workoutImportAnalyze.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyze'**
+  String get workoutImportAnalyze;
+
+  /// No description provided for @workoutImportAnalyzing.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing...'**
+  String get workoutImportAnalyzing;
+
+  /// No description provided for @workoutImportTakePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get workoutImportTakePhoto;
+
+  /// No description provided for @workoutImportChooseGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get workoutImportChooseGallery;
+
+  /// No description provided for @workoutImportPreviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get workoutImportPreviewTitle;
+
+  /// No description provided for @workoutImportExercisesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercises found'**
+  String workoutImportExercisesFound(int count);
+
+  /// No description provided for @workoutImportDaysFound.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days found'**
+  String workoutImportDaysFound(int count);
+
+  /// No description provided for @workoutImportConfidentMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Confident'**
+  String get workoutImportConfidentMatch;
+
+  /// No description provided for @workoutImportSuggestedMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested'**
+  String get workoutImportSuggestedMatch;
+
+  /// No description provided for @workoutImportNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No match'**
+  String get workoutImportNoMatch;
+
+  /// No description provided for @workoutImportChangeExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get workoutImportChangeExercise;
+
+  /// No description provided for @workoutImportCreateTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Templates'**
+  String get workoutImportCreateTemplates;
+
+  /// No description provided for @workoutImportCreateSingleTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Template'**
+  String get workoutImportCreateSingleTemplate;
+
+  /// No description provided for @workoutImportSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Templates created successfully!'**
+  String get workoutImportSuccess;
+
+  /// No description provided for @workoutImportSingleSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Template created successfully!'**
+  String get workoutImportSingleSuccess;
+
+  /// No description provided for @workoutImportErrorEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a workout plan'**
+  String get workoutImportErrorEmpty;
+
+  /// No description provided for @workoutImportErrorParsing.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not parse the workout. Try rephrasing or check the format.'**
+  String get workoutImportErrorParsing;
+
+  /// No description provided for @workoutImportErrorApi.
+  ///
+  /// In en, this message translates to:
+  /// **'Service temporarily unavailable. Please try again later.'**
+  String get workoutImportErrorApi;
+
+  /// No description provided for @workoutImportErrorRateLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many requests. Please wait a moment.'**
+  String get workoutImportErrorRateLimit;
+
+  /// No description provided for @workoutImportHaveWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'I already have a workout plan'**
+  String get workoutImportHaveWorkout;
+
+  /// No description provided for @workoutImportHaveWorkoutDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Import from text or photo'**
+  String get workoutImportHaveWorkoutDesc;
+
+  /// No description provided for @workoutImportSets.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} sets'**
+  String workoutImportSets(int count);
+
+  /// No description provided for @workoutImportReps.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reps'**
+  String workoutImportReps(int count);
+
+  /// No description provided for @workoutImportKg.
+  ///
+  /// In en, this message translates to:
+  /// **'{weight} kg'**
+  String workoutImportKg(String weight);
+
+  /// No description provided for @workoutImportMaxReps.
+  ///
+  /// In en, this message translates to:
+  /// **'Max reps'**
+  String get workoutImportMaxReps;
+
+  /// No description provided for @workoutImportSearchExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Search exercise...'**
+  String get workoutImportSearchExercise;
+
+  /// No description provided for @workoutImportPhotoHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo of your workout plan or select from gallery'**
+  String get workoutImportPhotoHint;
+
+  /// No description provided for @workoutImportDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {number}'**
+  String workoutImportDay(int number);
 }
 
 class _AppLocalizationsDelegate

@@ -13256,6 +13256,94 @@
   "@effort": {
     "description": "Effort table header"
   },
+  "atAGlanceSubtitle": "Your exercises at a glance",
+  "@atAGlanceSubtitle": {
+    "description": "Subtitle for exercise at a glance screen"
+  },
+  "prWeight": "PR Weight",
+  "@prWeight": {
+    "description": "Personal record weight label in at-a-glance card"
+  },
+  "est1RM": "Est. 1RM",
+  "@est1RM": {
+    "description": "Estimated one rep max short label"
+  },
+  "totalVol": "Total Vol",
+  "@totalVol": {
+    "description": "Total volume short label"
+  },
+  "lastSession": "Last: {sets}x{reps} @ {weight}kg · {timeAgo}",
+  "@lastSession": {
+    "description": "Last session summary inline on card",
+    "placeholders": {
+      "sets": { "type": "int" },
+      "reps": { "type": "int" },
+      "weight": { "type": "String" },
+      "timeAgo": { "type": "String" }
+    }
+  },
+  "lastSessionSimple": "Last: {timeAgo}",
+  "@lastSessionSimple": {
+    "description": "Last session fallback when no set data",
+    "placeholders": {
+      "timeAgo": { "type": "String" }
+    }
+  },
+  "insightImproving": "Weight up {percent}% recently",
+  "@insightImproving": {
+    "description": "Insight text when exercise is improving",
+    "placeholders": {
+      "percent": { "type": "String" }
+    }
+  },
+  "insightDeclining": "Weight down {percent}% — try deload?",
+  "@insightDeclining": {
+    "description": "Insight text when exercise is declining",
+    "placeholders": {
+      "percent": { "type": "String" }
+    }
+  },
+  "insightStable": "Consistent — ready to push heavier?",
+  "@insightStable": {
+    "description": "Insight text when exercise is stable"
+  },
+  "insightNewExercise": "Keep training to track progress",
+  "@insightNewExercise": {
+    "description": "Insight text for exercises with few sessions"
+  },
+  "recentPR": "Recent PR!",
+  "@recentPR": {
+    "description": "Badge text when exercise has a recent PR"
+  },
+  "today": "Today",
+  "@today": {
+    "description": "Today relative time label"
+  },
+  "yesterday": "Yesterday",
+  "@yesterday": {
+    "description": "Yesterday relative time label"
+  },
+  "weeksAgo": "{count}w ago",
+  "@weeksAgo": {
+    "description": "Weeks ago short label",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "monthsAgo": "{count}mo ago",
+  "@monthsAgo": {
+    "description": "Months ago short label",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "daysAgoShort": "{count}d ago",
+  "@daysAgoShort": {
+    "description": "Days ago short label",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "weightSettings": "Weight Settings",
   "@weightSettings": {
     "description": "Weight settings screen title"
@@ -33734,5 +33822,68 @@
   "analyticsViewDetailed": "Detailed view",
   "@analyticsViewDetailed": {
     "description": "Tooltip for detailed view mode"
+  },
+
+  "workoutImportTitle": "Import Workout",
+  "workoutImportFromText": "From Text",
+  "workoutImportFromPhoto": "From Photo",
+  "workoutImportPasteHint": "Paste your workout plan here...\n\nExample:\nDay 1 - Push\nBench Press 4x8 80kg\nOverhead Press 3x10 40kg",
+  "workoutImportAnalyze": "Analyze",
+  "workoutImportAnalyzing": "Analyzing...",
+  "workoutImportTakePhoto": "Take Photo",
+  "workoutImportChooseGallery": "Choose from Gallery",
+  "workoutImportPreviewTitle": "Preview",
+  "workoutImportExercisesFound": "{count} exercises found",
+  "@workoutImportExercisesFound": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "workoutImportDaysFound": "{count} days found",
+  "@workoutImportDaysFound": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "workoutImportConfidentMatch": "Confident",
+  "workoutImportSuggestedMatch": "Suggested",
+  "workoutImportNoMatch": "No match",
+  "workoutImportChangeExercise": "Change",
+  "workoutImportCreateTemplates": "Create Templates",
+  "workoutImportCreateSingleTemplate": "Create Template",
+  "workoutImportSuccess": "Templates created successfully!",
+  "workoutImportSingleSuccess": "Template created successfully!",
+  "workoutImportErrorEmpty": "Please enter a workout plan",
+  "workoutImportErrorParsing": "Could not parse the workout. Try rephrasing or check the format.",
+  "workoutImportErrorApi": "Service temporarily unavailable. Please try again later.",
+  "workoutImportErrorRateLimit": "Too many requests. Please wait a moment.",
+  "workoutImportHaveWorkout": "I already have a workout plan",
+  "workoutImportHaveWorkoutDesc": "Import from text or photo",
+  "workoutImportSets": "{count} sets",
+  "@workoutImportSets": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "workoutImportReps": "{count} reps",
+  "@workoutImportReps": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "workoutImportKg": "{weight} kg",
+  "@workoutImportKg": {
+    "placeholders": {
+      "weight": {"type": "String"}
+    }
+  },
+  "workoutImportMaxReps": "Max reps",
+  "workoutImportSearchExercise": "Search exercise...",
+  "workoutImportPhotoHint": "Take a photo of your workout plan or select from gallery",
+  "workoutImportDay": "Day {number}",
+  "@workoutImportDay": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
   }
 }

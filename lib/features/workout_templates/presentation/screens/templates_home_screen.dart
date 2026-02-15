@@ -63,6 +63,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/rest_
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/advanced_template_creation_modals.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_gdpr_dialogs.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/widgets.dart';
+import 'package:gymbro_flutter_new/core/config/feature_flags.dart';
+import 'package:gymbro_flutter_new/features/workout_import/presentation/screens/workout_import_screen.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/cards/discover_template_card.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/for_you_section.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/templates_tour_service.dart';
@@ -2691,6 +2693,32 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 );
               },
             ),
+            if (FeatureFlags.workoutImportEnabled)
+              ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(AppSpacing.sm),
+                  decoration: BoxDecoration(
+                    color: context.colors.primaryContainer,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: SemanticIcon(
+                    icon: AppIcons.paste,
+                    semanticLabel: l10n.workoutImportHaveWorkout,
+                    color: context.colors.onPrimaryContainer,
+                  ),
+                ),
+                title: Text(l10n.workoutImportHaveWorkout),
+                subtitle: Text(l10n.workoutImportHaveWorkoutDesc),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (context) => const WorkoutImportScreen(),
+                      fullscreenDialog: true,
+                    ),
+                  );
+                },
+              ),
             SizedBox(
               height: MediaQuery.of(context).padding.bottom + AppSpacing.md,
             ),
