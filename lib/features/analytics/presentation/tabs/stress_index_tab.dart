@@ -209,24 +209,38 @@ class StressIndexTab extends ConsumerWidget {
             const SizedBox(height: 20),
             Row(
               children: [
-                // Large score circle
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: color, width: 6),
-                    color: color.withValues(alpha: 0.1),
-                  ),
-                  child: Center(
-                    child: Text(
-                      score.round().toString(),
-                      style: context.textTheme.headlineLarge?.copyWith(
-                        color: color,
-                        fontWeight: FontWeight.bold,
+                // Score circle with label
+                Column(
+                  children: [
+                    // Label "Da ultimo workout"
+                    Text(
+                      context.l10n.stressPredictionCurrent,
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
+                    const SizedBox(height: 8),
+                    // Large score circle
+                    Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: color, width: 6),
+                        color: color.withValues(alpha: 0.1),
+                      ),
+                      child: Center(
+                        child: Text(
+                          score.round().toString(),
+                          style: context.textTheme.headlineLarge?.copyWith(
+                            color: color,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(width: 24),
                 Expanded(
