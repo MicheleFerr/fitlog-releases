@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/screens/profile_detail_screen.dart';
 
@@ -30,13 +31,12 @@ class EquipmentProfilesScreen extends ConsumerWidget {
           child: Text('Error: $error'),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: CNButton(
+        label: context.l10n.createProfile,
         onPressed: () => _createNewProfile(context, ref),
-        icon: const SemanticIcon(
-          icon: AppIcons.add,
-          semanticLabel: 'Add',
-        ),
-        label: Text(context.l10n.createProfile),
+        style: CNButtonStyle.filled,
+        height: 48,
+        tint: context.colors.primary,
       ),
     );
   }

@@ -7,6 +7,8 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:voo_logging/voo_logging.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:cupertino_native/cupertino_native.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class DebugLogsScreen extends StatefulWidget {
   const DebugLogsScreen({super.key});
@@ -127,7 +129,8 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
       ),
       // 🔍 VooLogger test log button (debug mode only)
       floatingActionButton: kDebugMode
-          ? FloatingActionButton.extended(
+          ? CNButton(
+              label: 'Test VooLogger',
               onPressed: () async {
                 // Log a test message via VooLogger
                 await VooLogger.info(
@@ -142,11 +145,9 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
                   'VooLogger test message sent! Check console/DevTools.',
                 );
               },
-              icon: const SemanticIcon(
-                icon: AppIcons.bugReport,
-                semanticLabel: 'Send Test Log',
-              ),
-              label: const Text('Test VooLogger'),
+              style: CNButtonStyle.filled,
+              height: 48,
+              tint: context.colors.primary,
             )
           : null,
     );

@@ -38,6 +38,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/domain/abstractions/i_exercise_preferences.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/superset_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_template_card.dart';
@@ -715,12 +716,17 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Close/Search FAB
-                FloatingActionButton(
+                CNButton.icon(
                   key: _searchBarKey,
-                  heroTag: 'search_toggle',
+                  icon: CNSymbol(
+                    _showSearch ? 'xmark' : 'magnifyingglass',
+                    size: 20,
+                    weight: CNSymbolWeight.medium,
+                  ),
                   onPressed: _toggleSearch,
-                  tooltip: _showSearch ? l10n.close : l10n.search,
-                  child: Icon(_showSearch ? AppIcons.close : AppIcons.search),
+                  style: CNButtonStyle.glass,
+                  size: 56,
+                  tint: context.colors.primary,
                 ),
                 // Add FAB with badge (shown when exercises selected)
                 if (_selectedExercises.isNotEmpty) ...[
@@ -728,20 +734,19 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      FloatingActionButton(
+                      CNButton.icon(
                         key: _addButtonKey,
-                        heroTag: 'add_exercises',
+                        icon: CNSymbol(
+                          widget.multiSelectMode ? 'checkmark' : 'plus',
+                          size: 20,
+                          weight: CNSymbolWeight.medium,
+                        ),
                         onPressed: widget.multiSelectMode
                             ? _selectExercises
                             : _addSelectedToWorkout,
-                        tooltip: widget.multiSelectMode
-                            ? 'Select Exercises'
-                            : l10n.addToWorkout,
-                        child: Icon(
-                          widget.multiSelectMode
-                              ? AppIcons.check
-                              : AppIcons.add,
-                        ),
+                        style: CNButtonStyle.glass,
+                        size: 56,
+                        tint: context.colors.primary,
                       ),
                       // Badge count
                       Positioned(

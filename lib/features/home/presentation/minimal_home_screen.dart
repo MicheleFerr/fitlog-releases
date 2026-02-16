@@ -118,14 +118,12 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
     return Scaffold(
       backgroundColor: context.colors.surface,
       floatingActionButton: isDeveloper
-          ? FloatingActionButton(
+          ? CNButton.icon(
+              icon: const CNSymbol('terminal', size: 20, weight: CNSymbolWeight.medium),
               onPressed: () => _showDeveloperTools(context),
-              backgroundColor: context.colors.tertiary,
-              child: SemanticIcon(
-                icon: AppIcons.code,
-                semanticLabel: 'Developer Tools',
-                color: context.colors.onTertiary,
-              ),
+              style: CNButtonStyle.glass,
+              size: 56,
+              tint: context.colors.tertiary,
             )
           : null,
       body: CustomScrollView(

@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/metric_display.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 
 /// MeasurementListScreen - Dashboard-style display of body measurements
 ///
@@ -1159,9 +1160,12 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
 
   /// iOS: FAB with action sheet menu for metric selection
   Widget _buildIOSPopupMenu() {
-    return FloatingActionButton(
+    return CNButton.icon(
+      icon: const CNSymbol('plus', size: 20, weight: CNSymbolWeight.medium),
       onPressed: _showIOSMetricPicker,
-      child: const Icon(AppIcons.add),
+      style: CNButtonStyle.glass,
+      size: 56,
+      tint: context.colors.primary,
     );
   }
 
@@ -1248,9 +1252,12 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
 
   /// Android: Classic FAB
   Widget _buildAndroidFAB() {
-    return FloatingActionButton(
+    return CNButton.icon(
+      icon: const CNSymbol('plus', size: 20, weight: CNSymbolWeight.medium),
       onPressed: _openFullMetricInput,
-      child: const Icon(AppIcons.add),
+      style: CNButtonStyle.glass,
+      size: 56,
+      tint: context.colors.primary,
     );
   }
 

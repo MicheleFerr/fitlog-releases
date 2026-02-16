@@ -27,6 +27,7 @@ import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 
 class DatabaseManagerScreen extends ConsumerStatefulWidget {
   const DatabaseManagerScreen({super.key});
@@ -473,11 +474,12 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
   }
 
   Widget _buildFAB(BuildContext context, AppLocalizations l10n) {
-    return FloatingActionButton.extended(
+    return CNButton(
+      label: l10n.addExercise,
       onPressed: () => _openExerciseEditor(context, null),
-      icon: const Icon(AppIcons.add),
-      label: Text(l10n.addExercise),
-      tooltip: l10n.addExercise,
+      style: CNButtonStyle.filled,
+      height: 48,
+      tint: context.colors.primary,
     );
   }
 

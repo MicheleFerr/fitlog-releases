@@ -152,11 +152,11 @@ class AppTheme {
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
 
-      // Floating Action Button Theme
-      floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        shape: CircleBorder(),
-        elevation: 4,
-      ),
+      // Floating Action Button Theme (deprecated - using CNButton.icon Liquid Glass instead)
+      // floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      //   shape: CircleBorder(),
+      //   elevation: 4,
+      // ),
 
       // Bottom Sheet Theme - solid bg, no gap
       bottomSheetTheme: BottomSheetThemeData(

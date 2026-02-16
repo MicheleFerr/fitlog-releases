@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/progress_photos/presentation/widgets
 import 'package:gymbro_flutter_new/features/progress_photos/presentation/widgets/photo_reminder_settings_sheet.dart';
 import 'package:gymbro_flutter_new/features/progress_photos/presentation/widgets/photo_timeline_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 
 /// MyPhotosScreen - Progress photos timeline view
 ///
@@ -173,11 +174,12 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
         ],
       ),
       // Accessibility: Add photo button with tooltip
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: CNButton(
+        label: context.l10n.addPhoto,
         onPressed: _showCaptureSheet,
-        icon: const Icon(AppIcons.camera),
-        label: Text(context.l10n.addPhoto),
-        tooltip: context.l10n.addPhoto,
+        style: CNButtonStyle.filled,
+        height: 48,
+        tint: context.colors.primary,
       ),
     );
   }

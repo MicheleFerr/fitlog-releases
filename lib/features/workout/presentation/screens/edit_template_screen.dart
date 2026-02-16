@@ -20,6 +20,8 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/template_view_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/tab_bar_safe_area.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 
 class EditTemplateScreen extends ConsumerStatefulWidget {
   const EditTemplateScreen({super.key, required this.template});
@@ -277,9 +279,15 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-        floatingActionButton: FloatingActionButton(
-          onPressed: _showAddExercise,
-          child: const SemanticIcon(icon: AppIcons.add, semanticLabel: 'Add'),
+        floatingActionButton: Padding(
+          padding: EdgeInsets.only(bottom: TabBarInset.of(context)),
+          child: CNButton.icon(
+            icon: const CNSymbol('plus', size: 20, weight: CNSymbolWeight.medium),
+            onPressed: _showAddExercise,
+            style: CNButtonStyle.glass,
+            size: 56,
+            tint: context.colors.primary,
+          ),
         ),
       ),
     );
