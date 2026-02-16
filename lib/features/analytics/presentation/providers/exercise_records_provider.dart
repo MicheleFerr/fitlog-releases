@@ -40,7 +40,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_records.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 
 /// In-memory cache entry for computed records
 class _CachedRecords {

@@ -13,9 +13,9 @@ library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
-import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/shared/domain/user/user_xp_provider.dart';
+import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/auth/entities/user_profile.dart';
 
 /// Centralized entitlement provider (Policy Decision Point)
 ///

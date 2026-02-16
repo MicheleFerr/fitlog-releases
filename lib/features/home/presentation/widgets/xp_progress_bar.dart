@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
-import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/user/user_xp_provider.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/level_info_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';

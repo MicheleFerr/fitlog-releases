@@ -13,7 +13,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/shared/auth/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class UserProfileFactory {

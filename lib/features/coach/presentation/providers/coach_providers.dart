@@ -10,7 +10,7 @@ library;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/coach/data/repositories/coach_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/coach/data/repositories/coach_templates_repository.dart';
 import 'package:gymbro_flutter_new/features/coach/domain/entities/account_mode.dart';

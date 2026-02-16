@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/providers/shared_preferences_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/level_system.dart';
 import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
-import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/user/user_xp_provider.dart';
 
 class DailyLoginState {
   DailyLoginState({

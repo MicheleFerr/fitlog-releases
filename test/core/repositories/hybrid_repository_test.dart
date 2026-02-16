@@ -16,7 +16,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:gymbro_flutter_new/core/data/repositories/base_hybrid_repository.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/shared/auth/entities/user_profile.dart';
 
 
 // Mock Firebase implementation for tests

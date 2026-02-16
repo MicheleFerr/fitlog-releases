@@ -9,7 +9,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/hero_stat_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/weekly_dashboard_widget.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';

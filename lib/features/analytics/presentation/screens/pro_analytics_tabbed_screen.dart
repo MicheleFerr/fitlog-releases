@@ -20,7 +20,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/volume_p
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/muscle_balance_tab.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/stress_index_tab.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/plateau_detection_tab.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';

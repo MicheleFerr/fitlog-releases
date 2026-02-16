@@ -10,7 +10,7 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/personaliz
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/xp_progress_bar.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/motivational_quote_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/settings_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/debug/presentation/screens/debug_logs_screen.dart';

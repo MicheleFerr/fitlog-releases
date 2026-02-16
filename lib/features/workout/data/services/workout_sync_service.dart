@@ -19,7 +19,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/firebase_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/shared/auth/entities/user_profile.dart';
 import 'package:flutter/foundation.dart';
 
 /// Service to handle background synchronization for premium users

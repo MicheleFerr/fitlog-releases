@@ -15,8 +15,8 @@ import 'package:gymbro_flutter_new/core/analytics/analytics_constants.dart';
 import 'package:gymbro_flutter_new/core/services/analytics/i_analytics_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_providers_shared.dart';
+import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 
 /// Tracks if app_open has been logged this session (avoid duplicate events)
 bool _appOpenLogged = false;

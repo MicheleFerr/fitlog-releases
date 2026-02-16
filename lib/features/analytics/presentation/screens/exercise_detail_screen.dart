@@ -5,7 +5,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_p
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_progress_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/landscape_graph_screen.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';

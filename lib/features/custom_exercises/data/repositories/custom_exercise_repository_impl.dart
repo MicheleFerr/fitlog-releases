@@ -36,7 +36,7 @@ import 'package:gymbro_flutter_new/features/custom_exercises/domain/repositories
 import 'package:gymbro_flutter_new/features/custom_exercises/domain/entities/custom_exercise.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/data/datasources/custom_exercise_local_datasource.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/shared/auth/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/core/data/mixins/firebase_error_mapper_mixin.dart';
 
 // Fix for unawaited futures

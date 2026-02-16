@@ -22,7 +22,7 @@ import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart'
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/template_category.dart';
 import 'package:gymbro_flutter_new/core/domain/entities/user_tier.dart';
-import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/user/user_xp_provider.dart';
 
 /// Hero section showing personalized template recommendations
 ///

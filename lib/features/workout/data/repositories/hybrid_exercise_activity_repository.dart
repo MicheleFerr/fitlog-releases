@@ -21,7 +21,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/shared/auth/entities/user_profile.dart';
 
 /// Hybrid repository per gestire le attività degli esercizi
 /// - Free users: Solo storage locale

@@ -20,7 +20,7 @@ The `CustomExerciseLimitService` manages business logic for custom exercise limi
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/domain/services/custom_exercise_limit_service.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/domain/repositories/custom_exercise_repository.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 
 /// Custom Exercise Limit Service Provider
 final customExerciseLimitServiceProvider = Provider<CustomExerciseLimitService>((ref) {

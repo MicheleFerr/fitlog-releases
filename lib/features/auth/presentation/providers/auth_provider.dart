@@ -8,11 +8,11 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exe
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/data/auth_service.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_model.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_usage_tracker.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/home/providers/daily_login_provider.dart';
-import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/user/user_xp_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/cached_progress_provider.dart';
 import 'package:gymbro_flutter_new/features/scheduling/presentation/providers/scheduling_provider.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/providers/cloud_sync_provider.dart';

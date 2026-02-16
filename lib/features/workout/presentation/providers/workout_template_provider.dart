@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart'
     show WorkoutTemplate, ExerciseTemplate;
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template_extensions.dart';

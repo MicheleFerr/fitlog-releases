@@ -25,7 +25,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:intl/intl.dart';
 // 📊 Analytics migration imports
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:cupertino_native/cupertino_native.dart';
 

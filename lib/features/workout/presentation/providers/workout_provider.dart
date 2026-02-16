@@ -93,7 +93,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/achievement_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 // 🎮 Gamification: XP awarding on workout completion
-import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/user/user_xp_provider.dart';
 // ⌚ Apple Watch Connectivity for workout companion updates
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/watch_connectivity_provider.dart';
 // 🍎 HealthKit Integration for Apple Fitness / Activity rings sync

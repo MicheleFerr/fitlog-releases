@@ -28,7 +28,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/firebase_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/shared/auth/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/shared/domain/concurrency/mutex_wrapper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/analytics_repository.dart';

@@ -21,9 +21,9 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebra
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/achievement_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/achievement_unlock_modal.dart';
-import 'package:gymbro_flutter_new/features/home/providers/user_xp_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/user/user_xp_provider.dart';
 import 'package:gymbro_flutter_new/shared/data/services/interstitial_ad_service.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 part 'workout_screen_controller.freezed.dart';
