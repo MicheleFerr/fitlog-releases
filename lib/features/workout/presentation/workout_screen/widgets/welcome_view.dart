@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -185,110 +187,66 @@ class WelcomeView extends ConsumerWidget {
     );
   }
 
-  /// Builds the tabbed template list (custom and predefined)
+  /// Builds the template list (custom templates only - single view)
   Widget _buildQuickStartList(BuildContext context, WidgetRef ref) {
-    return DefaultTabController(
-      length: 2, // I Tuoi Template, Schede Predefinite
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Tab Bar - Clean text-only design matching Apple Fitness+ style
-          Container(
-            margin: const EdgeInsets.only(bottom: AppSpacing.xs),
-            decoration: BoxDecoration(
-              color: context.colors.surfaceContainerHighest.withValues(
-                alpha: 0.5,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header - Clean text-only design with liquid glass effect
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(
+              margin: const EdgeInsets.only(bottom: AppSpacing.xs),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
               ),
-              borderRadius: BorderRadius.circular(12),
+              decoration: BoxDecoration(
+                color: context.colors.surfaceContainerHighest.withValues(
+                  alpha: 0.3,
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                context.l10n.yourTemplates,
+                style: context.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.colors.onSurface,
+                ),
+              ),
             ),
-            child: TabBar(
-              labelColor: context.colors.onSurface,
-              unselectedLabelColor: context.colors.onSurface.withValues(
-                alpha: 0.5,
-              ),
-              indicator: BoxDecoration(
-                color: context.colors.surface,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: context.colors.shadow.withValues(alpha: 0.08),
-                    blurRadius: 4,
-                    offset: const Offset(0, 1),
+          ),
+        ),
+
+        // Template List
+        Expanded(
+          child: Consumer(
+            builder: (context, ref, child) {
+              final customTemplatesAsync = ref.watch(
+                customWorkoutTemplatesProvider,
+              );
+
+              return customTemplatesAsync.when(
+                loading: () => const LoadingIndicator(),
+                error: (error, stack) => Center(
+                  child: Text(
+                    context.l10n.errorLoading(error.toString()),
                   ),
-                ],
-              ),
-              indicatorSize: TabBarIndicatorSize.tab,
-              dividerColor: context.colors.surface.withValues(alpha: 0),
-              labelStyle: context.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-              unselectedLabelStyle: context.textTheme.labelLarge,
-              padding: const EdgeInsets.all(4),
-              labelPadding: EdgeInsets.zero,
-              tabs: [
-                Tab(height: 36, text: context.l10n.yourTemplates),
-                Tab(height: 36, text: context.l10n.predefinedWorkouts),
-              ],
-            ),
+                ),
+                data: (customTemplates) {
+                  return _buildTemplateList(
+                    context,
+                    customTemplates,
+                    isCustomTab: true,
+                  );
+                },
+              );
+            },
           ),
-
-          // Tab Views
-          Expanded(
-            child: Consumer(
-              builder: (context, ref, child) {
-                final customTemplatesAsync = ref.watch(
-                  customWorkoutTemplatesProvider,
-                );
-                final allTemplatesAsync = ref.watch(
-                  allWorkoutTemplatesProvider,
-                );
-
-                return TabBarView(
-                  children: [
-                    // Tab 1: I Tuoi Template (Custom)
-                    customTemplatesAsync.when(
-                      loading: () => const LoadingIndicator(),
-                      error: (error, stack) => Center(
-                        child: Text(
-                          context.l10n.errorLoading(error.toString()),
-                        ),
-                      ),
-                      data: (customTemplates) {
-                        return _buildTemplateList(
-                          context,
-                          customTemplates,
-                          isCustomTab: true,
-                        );
-                      },
-                    ),
-
-                    // Tab 2: Schede Predefinite (Predefined)
-                    allTemplatesAsync.when(
-                      loading: () => const LoadingIndicator(),
-                      error: (error, stack) => Center(
-                        child: Text(
-                          context.l10n.errorLoading(error.toString()),
-                        ),
-                      ),
-                      data: (allTemplates) {
-                        // Filtra solo i template predefiniti (non custom)
-                        final predefinedTemplates = allTemplates
-                            .where((t) => !t.isCustom)
-                            .toList();
-                        return _buildTemplateList(
-                          context,
-                          predefinedTemplates,
-                          isCustomTab: false,
-                        );
-                      },
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -306,7 +264,11 @@ class WelcomeView extends ConsumerWidget {
     final itemCount = isCustomTab ? templates.length + 1 : templates.length;
 
     // Use vertical ListView with SwipeableTemplateCard (iOS-style swipe actions)
+    // Add bottom padding to prevent overlap with bottom navigation bar
     return ListView.builder(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).padding.bottom + 80,
+      ),
       itemCount: itemCount,
       itemBuilder: (context, index) {
         // Last item in custom tab is the "Create New Template" card

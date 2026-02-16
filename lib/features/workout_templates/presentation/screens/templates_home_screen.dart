@@ -16,6 +16,7 @@
 library;
 
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -2557,7 +2558,18 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return ColoredBox(color: backgroundColor, child: tabBar);
+    // ✨ Liquid glass effect: blur + semi-transparent background
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          decoration: BoxDecoration(
+            color: backgroundColor.withValues(alpha: 0.7),
+          ),
+          child: tabBar,
+        ),
+      ),
+    );
   }
 
   @override
