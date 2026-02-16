@@ -27,6 +27,12 @@ class ExerciseCardSettingsNotifier extends Notifier<ExerciseCardSettings> {
   ExerciseCardSettings build() {
     ref.keepAlive();
 
+    // Reset instance state on rebuild to handle provider invalidation
+    _isDisposed = false;
+    _isInitialized = false;
+    _isInitializing = false;
+    _settingsBox = null;
+
     ref.onDispose(() {
       if (kDebugMode) {
         debugPrint('[ExerciseCardSettings] Starting disposal');
@@ -38,17 +44,15 @@ class ExerciseCardSettingsNotifier extends Notifier<ExerciseCardSettings> {
       }
     });
 
+    _initCompleter = Completer<void>();
+    _initializeSettings();
+
     if (_cachedSettings != null) {
       if (kDebugMode) {
         debugPrint('[ExerciseCardSettings] Returning cached settings');
       }
-      _initCompleter = Completer<void>();
-      _initializeSettings();
       return _cachedSettings!;
     }
-
-    _initCompleter = Completer<void>();
-    _initializeSettings();
 
     return const ExerciseCardSettings();
   }
@@ -124,21 +128,43 @@ class ExerciseCardSettingsNotifier extends Notifier<ExerciseCardSettings> {
 
   Future<void> _ensureInitialized() async {
     if (_isInitialized) return;
-    if (_initCompleter != null) {
+    if (_initCompleter != null && !_initCompleter!.isCompleted) {
       try {
         await _initCompleter!.future.timeout(const Duration(seconds: 10));
       } catch (e) {
         if (kDebugMode) {
           debugPrint('[ExerciseCardSettings] Ensure initialized timeout: $e');
         }
+        // If init failed, try again
+        if (!_isInitialized && !_isInitializing) {
+          _initCompleter = Completer<void>();
+          await _initializeSettings();
+        }
       }
+    } else if (!_isInitializing) {
+      // Completer is null or already completed with error, retry init
+      _initCompleter = Completer<void>();
+      await _initializeSettings();
     }
   }
 
   Future<void> _saveSettings() async {
     try {
       await _ensureInitialized();
-      if (_isDisposed || _settingsBox == null) return;
+      if (_isDisposed) return;
+
+      // If box is null (init failed), try opening it again
+      if (_settingsBox == null || !_settingsBox!.isOpen) {
+        try {
+          final boxManager = ref.read(hiveBoxManagerProvider);
+          _settingsBox = await boxManager.openBox<ExerciseCardSettings>(_boxName);
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint('[ExerciseCardSettings] Failed to open box for save: $e');
+          }
+          return;
+        }
+      }
 
       await _settingsBox!.put('settings', state);
       _cachedSettings = state;

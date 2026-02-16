@@ -187,6 +187,9 @@ class HiveBoxNames {
   /// Weight settings
   static const String weightSettings = 'weight_settings';
 
+  /// Exercise card visual settings (GIF size, density, toggles)
+  static const String exerciseCardSettings = 'exercise_card_settings';
+
   /// Generic settings box (contains multiple setting keys)
   /// Used by: HistoryViewSettingsDataSource, and others
   static const String settingsBox = 'settings_box';
@@ -289,6 +292,7 @@ class HiveBoxNames {
         syncPreferences,
         feedbackSettings,
         weightSettings,
+        exerciseCardSettings,
         settingsBox,
         // Privacy
         userConsent,
