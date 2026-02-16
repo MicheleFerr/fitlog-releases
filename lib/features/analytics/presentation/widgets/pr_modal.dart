@@ -28,6 +28,7 @@
 /// ```
 library;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
@@ -145,42 +146,31 @@ class PRModal extends StatelessWidget {
     return prInfoList;
   }
 
-  /// Show reset confirmation dialog
+  /// Show reset confirmation action sheet
   void _showResetConfirmation(BuildContext context) {
-    showDialog(
+    showCupertinoModalPopup<void>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        icon: SemanticIcon(
-          icon: AppIcons.warning,
-          semanticLabel: context.l10n.warning,
-          size: AppIconSize.large,
-          color: context.colors.error,
-        ),
+      builder: (BuildContext context) => CupertinoActionSheet(
         title: Text(context.l10n.resetAllPRsQuestion),
-        content: Text(
-          context.l10n.resetAllPRsMessage,
-          style: context.textTheme.bodyMedium,
-        ),
+        message: Text(context.l10n.resetAllPRsMessage),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text(context.l10n.cancel),
-          ),
-          FilledButton(
+          CupertinoActionSheetAction(
+            isDestructiveAction: true,
             onPressed: () {
               // TODO: Implement PR reset functionality
               HapticFeedback.mediumImpact();
-              Navigator.pop(dialogContext);
+              Navigator.pop(context); // Close action sheet
               Navigator.pop(context); // Close modal
               SnackBarService.showInfo(context, context.l10n.prResetComingSoon);
             },
-            style: FilledButton.styleFrom(
-              backgroundColor: context.colors.error,
-              foregroundColor: context.colors.onError,
-            ),
             child: Text(context.l10n.resetAll),
           ),
         ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () => Navigator.pop(context),
+          isDefaultAction: true,
+          child: Text(context.l10n.cancel),
+        ),
       ),
     );
   }
