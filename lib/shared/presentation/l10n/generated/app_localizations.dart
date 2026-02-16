@@ -49436,6 +49436,18 @@ abstract class AppLocalizations {
   /// **'Template: {name}'**
   String quickActionTemplateLabel(String name);
 
+  /// No description provided for @quickActionNoTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'No templates yet'**
+  String get quickActionNoTemplates;
+
+  /// No description provided for @quickActionViewAllTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'View all templates...'**
+  String get quickActionViewAllTemplates;
+
   /// Chest muscle group name
   ///
   /// In en, this message translates to:

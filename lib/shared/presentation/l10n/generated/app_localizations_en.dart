@@ -27666,6 +27666,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get quickActionNoTemplates => 'No templates yet';
+
+  @override
+  String get quickActionViewAllTemplates => 'View all templates...';
+
+  @override
   String get muscleChest => 'Chest';
 
   @override

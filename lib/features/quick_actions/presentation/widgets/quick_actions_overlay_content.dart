@@ -13,7 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
-import 'package:gymbro_flutter_new/features/workout_templates/presentation/providers/template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
 import 'package:gymbro_flutter_new/features/quick_actions/presentation/widgets/create_template_popup.dart';
 import 'package:gymbro_flutter_new/features/quick_actions/presentation/widgets/log_measurements_popup.dart';
@@ -53,7 +53,9 @@ class QuickActionsOverlayContent extends ConsumerWidget {
             child: SmartWorkoutCard(
               onStartSuggested: (templateId) =>
                   _handleStartSuggested(context, ref, templateId),
-              onFromTemplate: () => _handleFromTemplate(context),
+              onTemplateSelected: (template) =>
+                  _handleTemplateSelected(context, ref, template),
+              onViewAllTemplates: () => _handleFromTemplate(context),
               onEmpty: () => _handleEmptyWorkout(context, ref),
             ),
           ),
@@ -121,7 +123,7 @@ class QuickActionsOverlayContent extends ConsumerWidget {
       if (templateId != null) {
         // Load template and start from it
         final templates =
-            ref.read(templateProvider).userTemplates;
+            ref.read(customWorkoutTemplatesProvider).value ?? [];
         final template = templates.where((t) => t.id == templateId).firstOrNull;
         if (template != null) {
           ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
@@ -135,6 +137,20 @@ class QuickActionsOverlayContent extends ConsumerWidget {
         ref.read(currentWorkoutProvider.notifier).createWorkout('Workout');
         ref.read(currentWorkoutProvider.notifier).startWorkout();
       }
+      navigationShell.goBranch(1);
+    });
+  }
+
+  void _handleTemplateSelected(
+    BuildContext context,
+    WidgetRef ref,
+    dynamic template,
+  ) {
+    HapticFeedback.mediumImpact();
+    onClose();
+    _postFrameNavigate(context, () {
+      // Start workout from the selected template
+      ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
       navigationShell.goBranch(1);
     });
   }

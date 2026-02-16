@@ -20909,6 +20909,8 @@
   "quickActionSave": "Salva",
   "quickActionStartWorkout": "Inizia Workout",
   "quickActionTemplateLabel": "Template: {name}",
+  "quickActionNoTemplates": "Nessun template ancora",
+  "quickActionViewAllTemplates": "Vedi tutti i template...",
   "muscleChest": "Petto",
   "muscleBack": "Schiena",
   "muscleShoulders": "Spalle",

@@ -10,16 +10,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/quick_actions/domain/services/split_detection_service.dart';
 import 'package:gymbro_flutter_new/features/quick_actions/presentation/providers/next_workout_suggestion_provider.dart';
+import 'package:gymbro_flutter_new/features/quick_actions/presentation/widgets/from_template_popup.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Smart workout suggestion card for the Quick Actions overlay
 class SmartWorkoutCard extends ConsumerWidget {
   const SmartWorkoutCard({
     required this.onStartSuggested,
-    required this.onFromTemplate,
+    required this.onTemplateSelected,
+    required this.onViewAllTemplates,
     required this.onEmpty,
     super.key,
   });
@@ -27,8 +29,11 @@ class SmartWorkoutCard extends ConsumerWidget {
   /// Called when user taps INIZIA with the suggested workout
   final void Function(String? templateId) onStartSuggested;
 
-  /// Called when user taps "Da Template"
-  final VoidCallback onFromTemplate;
+  /// Called when user selects a template from the popup
+  final void Function(WorkoutTemplate template) onTemplateSelected;
+
+  /// Called when user taps "View all templates..."
+  final VoidCallback onViewAllTemplates;
 
   /// Called when user taps "Vuoto"
   final VoidCallback onEmpty;
@@ -77,11 +82,9 @@ class SmartWorkoutCard extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: _buildCTAButton(
-                  context,
-                  label: context.l10n.fromTemplate,
-                  filled: false,
-                  onTap: onFromTemplate,
+                child: FromTemplatePopup(
+                  onTemplateSelected: onTemplateSelected,
+                  onViewAll: onViewAllTemplates,
                 ),
               ),
               const SizedBox(width: 12),
@@ -177,11 +180,9 @@ class SmartWorkoutCard extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: _buildCTAButton(
-                  context,
-                  label: context.l10n.fromTemplate,
-                  filled: false,
-                  onTap: onFromTemplate,
+                child: FromTemplatePopup(
+                  onTemplateSelected: onTemplateSelected,
+                  onViewAll: onViewAllTemplates,
                 ),
               ),
               const SizedBox(width: 12),

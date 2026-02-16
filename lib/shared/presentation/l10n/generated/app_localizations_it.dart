@@ -27936,6 +27936,12 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get quickActionNoTemplates => 'Nessun template ancora';
+
+  @override
+  String get quickActionViewAllTemplates => 'Vedi tutti i template...';
+
+  @override
   String get muscleChest => 'Petto';
 
   @override

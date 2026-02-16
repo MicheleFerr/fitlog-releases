@@ -33930,6 +33930,8 @@
       "name": {"type": "String"}
     }
   },
+  "quickActionNoTemplates": "No templates yet",
+  "quickActionViewAllTemplates": "View all templates...",
   "muscleChest": "Chest",
   "@muscleChest": {
     "description": "Chest muscle group name"
