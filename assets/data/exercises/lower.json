@@ -188,7 +188,7 @@
       "thigh",
       "thigh adductor"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -347,7 +347,7 @@
       "squat",
       "squat with plate mov"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -369,7 +369,7 @@
       "standing calf raises",
       "standing"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -665,7 +665,7 @@
       "barbell",
       "barbell walking lung"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -846,7 +846,7 @@
       "elevated",
       "elevated back lunge"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1597,7 +1597,7 @@
       "thigh abductor",
       "thigh"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1766,7 +1766,7 @@
       "box squat with chain",
       "box"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1848,7 +1848,7 @@
       "good morning off pin",
       "good"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1874,7 +1874,7 @@
       "hanging",
       "hanging bar good mor"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1925,7 +1925,7 @@
       "good morning",
       "good"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -2613,7 +2613,7 @@
       "one legged cable kic",
       "one-legged"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -2681,7 +2681,7 @@
     ]
   },
   {
-    "id": "fermo_bike_walk",
+    "id": "stationary_bike_walk",
     "nome": "Camminata su Cyclette",
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/a8VDgLw.gif",
@@ -2986,7 +2986,7 @@
     ]
   },
   {
-    "id": "fermo_bike_run",
+    "id": "stationary_bike_run",
     "nome": "Corsa su Cyclette",
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/H1PESYI.gif",
@@ -3143,7 +3143,7 @@
       "dumbbell lunges",
       "dumbbell"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3310,7 +3310,7 @@
       "lying leg curls",
       "lying"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3332,7 +3332,7 @@
       "seated leg curl",
       "seated"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3376,7 +3376,7 @@
       "standing",
       "standing leg curl"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3457,7 +3457,7 @@
       "kettlebell",
       "kettlebell dead clea"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3488,7 +3488,7 @@
       "reverse",
       "reverse band sumo de"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3517,7 +3517,7 @@
       "one-arm",
       "one arm side deadlif"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3544,7 +3544,7 @@
       "cable",
       "cable deadlifts"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3862,7 +3862,7 @@
       "single-leg",
       "single leg leg exten"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3908,7 +3908,7 @@
       "leg extensions",
       "leg"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -4571,7 +4571,7 @@
       "narrow stance hack s",
       "narrow"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -4631,7 +4631,7 @@
       "double kettlebell al",
       "double"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -4737,7 +4737,7 @@
       "barbell",
       "barbell hip thrust"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -5242,7 +5242,7 @@
       "reverse hyperextensi",
       "reverse"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -5277,7 +5277,7 @@
     ]
   },
   {
-    "id": "reverse_hyper_extension_on_stabilità_ball",
+    "id": "reverse_hyper_extension_on_stability_ball",
     "nome": "Iperestensione Inversa su Fitball",
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/vM5YS2g.gif",
@@ -6160,7 +6160,7 @@
       "lunge pass through",
       "lunge"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -6493,7 +6493,7 @@
       "alternating hang cle",
       "alternating"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -6520,7 +6520,7 @@
       "barbell",
       "barbell step ups"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -6548,7 +6548,7 @@
       "smith machine hang p",
       "smith"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -6577,7 +6577,7 @@
       "box squat with bands",
       "box"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -6603,7 +6603,7 @@
       "lying",
       "lying machine squat"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -6680,7 +6680,7 @@
       "chair",
       "chair squat"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -6758,7 +6758,7 @@
       "smith machine pistol",
       "smith"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -6865,7 +6865,7 @@
       "wide",
       "wide stance barbell "
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -7071,7 +7071,7 @@
     ]
   },
   {
-    "id": "gluteierfly_yoga_pose",
+    "id": "butterfly_yoga_pose",
     "nome": "Posizione Yoga Farfalla",
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/bWlZvXh.gif",
@@ -7201,7 +7201,7 @@
       "calf press",
       "calf"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -7227,7 +7227,7 @@
       "leg",
       "leg press"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -7253,7 +7253,7 @@
       "smith machine leg pr",
       "smith"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -7275,7 +7275,7 @@
       "calf press on the le",
       "calf"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -7301,7 +7301,7 @@
       "narrow stance leg pr",
       "narrow"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -7350,7 +7350,7 @@
       "open palm kettlebell",
       "open"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -7378,7 +7378,7 @@
       "one-arm",
       "one arm open palm ke"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -7405,7 +7405,7 @@
       "one arm kettlebell c",
       "one-arm"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -7605,7 +7605,7 @@
       "smith machine revers",
       "smith"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -7671,7 +7671,7 @@
       "smith machine calf r",
       "smith"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -7741,7 +7741,7 @@
       "standing barbell cal",
       "standing"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -7763,7 +7763,7 @@
       "rocking standing cal",
       "rocking"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -7785,7 +7785,7 @@
       "calf",
       "calf raise on a dumb"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -7807,7 +7807,7 @@
       "seated",
       "seated calf raise"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -7851,7 +7851,7 @@
       "standing dumbbell ca",
       "standing"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -9310,7 +9310,7 @@
     ]
   },
   {
-    "id": "glutei_lift_bridge",
+    "id": "butt_lift_bridge",
     "nome": "Sollevamento dei Glutei (Ponte)",
     "focus": "GLUT",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Butt_Lift_Bridge/0.jpg",
@@ -9692,7 +9692,7 @@
       "lunge",
       "lunge sprint"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -9781,7 +9781,7 @@
       "front",
       "front squats with tw"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -10049,7 +10049,7 @@
       "barbell",
       "barbell squat to a b"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -10293,7 +10293,7 @@
       "front",
       "front squat clean gr"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -10412,7 +10412,7 @@
       "hack squat",
       "hack"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -10561,7 +10561,7 @@
       "jefferson",
       "jefferson squats"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -10742,7 +10742,7 @@
       "dumbbell",
       "dumbbell squat to a "
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -10924,7 +10924,7 @@
       "weighted",
       "weighted jump squat"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -11370,7 +11370,7 @@
       "split squat with dum",
       "split"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -11458,7 +11458,7 @@
       "smith machine squat",
       "smith"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -11488,7 +11488,7 @@
       "reverse",
       "reverse band box squ"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -11515,7 +11515,7 @@
       "barbell squat",
       "barbell"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -11541,7 +11541,7 @@
       "front",
       "front barbell squat "
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -11569,7 +11569,7 @@
       "squat with chains",
       "squat"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -11628,7 +11628,7 @@
       "squat",
       "squat with bands"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -11655,7 +11655,7 @@
       "goblet",
       "goblet squat"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -11714,7 +11714,7 @@
       "plie",
       "plie dumbbell squat"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -11741,7 +11741,7 @@
       "one-arm",
       "one arm overhead ket"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -11769,7 +11769,7 @@
       "reverse",
       "reverse band power s"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -11886,7 +11886,7 @@
       "front",
       "front barbell squat"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -11913,7 +11913,7 @@
       "narrow",
       "narrow stance squats"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -11999,7 +11999,7 @@
       "one",
       "one leg barbell squa"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -12027,7 +12027,7 @@
       "box squat",
       "box"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -12053,7 +12053,7 @@
       "speed box squat",
       "speed"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -12079,7 +12079,7 @@
       "kneeling",
       "kneeling squat"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -12311,7 +12311,7 @@
       "speed squats",
       "speed"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -12656,7 +12656,7 @@
       "sumo",
       "sumo deadlift with c"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -12686,7 +12686,7 @@
       "sumo deadlift with b",
       "sumo"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -12711,7 +12711,7 @@
       "kettlebell",
       "kettlebell one legge"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -12766,7 +12766,7 @@
       "romanian",
       "romanian deadlift"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -12941,7 +12941,7 @@
       "sumo deadlift",
       "sumo"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -12995,7 +12995,7 @@
       "leverage",
       "leverage deadlift"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -13217,7 +13217,7 @@
       "stiff legged barbell",
       "stiff-legged"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -13305,7 +13305,7 @@
       "dumbbell step ups",
       "dumbbell"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -13518,7 +13518,7 @@
       "smith machine stiff ",
       "smith"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -13543,7 +13543,7 @@
       "stiff-legged",
       "stiff legged dumbbel"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -14340,7 +14340,7 @@
       "one-arm",
       "one arm kettlebell s"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -14652,7 +14652,7 @@
       "pull through",
       "pull"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -14759,7 +14759,7 @@
       "zercher",
       "zercher squats"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"

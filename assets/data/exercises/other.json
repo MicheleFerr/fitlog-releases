@@ -110,7 +110,7 @@
     ]
   },
   {
-    "id": "bicycling_fermo",
+    "id": "bicycling_stationary",
     "nome": "Bicicletta, Stazionaria",
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bicycling_Stationary/0.jpg",
@@ -156,7 +156,7 @@
       "jerk balance",
       "jerk"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -184,7 +184,7 @@
       "snatch",
       "snatch balance"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -213,7 +213,7 @@
       "heaving snatch balan",
       "heaving"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -276,7 +276,7 @@
     ]
   },
   {
-    "id": "double_leg_glutei_kick",
+    "id": "double_leg_butt_kick",
     "nome": "Calcio Doppio al Gluteo con le gambe",
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Double_Leg_Butt_Kick/0.jpg",
@@ -304,7 +304,7 @@
     ]
   },
   {
-    "id": "single_leg_glutei_kick",
+    "id": "single_leg_butt_kick",
     "nome": "Calcio al Gluteo con una Solda",
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single_Leg_Butt_Kick/0.jpg",
@@ -603,7 +603,7 @@
       "rack delivery",
       "rack"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -830,7 +830,7 @@
       "split jerk",
       "split"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -881,7 +881,7 @@
       "dumbbell seated box ",
       "dumbbell"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -907,7 +907,7 @@
       "supine",
       "supine two arm overh"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -933,7 +933,7 @@
       "supine",
       "supine one arm overh"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -958,7 +958,7 @@
       "supine",
       "supine chest throw"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -983,7 +983,7 @@
       "standing two arm ove",
       "standing"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1009,7 +1009,7 @@
       "medicine ball scoop ",
       "medicine"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1031,7 +1031,7 @@
       "backward medicine ba",
       "backward"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1134,7 +1134,7 @@
       "medicine ball full t",
       "medicine"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1186,7 +1186,7 @@
       "chest",
       "chest push multiple "
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1260,7 +1260,7 @@
       "hang",
       "hang clean   below t"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1375,7 +1375,7 @@
       "wide stance stiff le",
       "wide"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1401,7 +1401,7 @@
       "catch",
       "catch and overhead t"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1454,7 +1454,7 @@
       "chest push single re",
       "chest"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1483,7 +1483,7 @@
     "aliases": [
       "clean"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1513,7 +1513,7 @@
       "hang clean",
       "hang"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1543,7 +1543,7 @@
       "split clean",
       "split"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1572,7 +1572,7 @@
       "clean",
       "clean deadlift"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1596,7 +1596,7 @@
       "power clean from blo",
       "power"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1624,7 +1624,7 @@
       "clean from blocks",
       "clean"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1649,7 +1649,7 @@
       "clean shrug",
       "clean"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1680,7 +1680,7 @@
       "clean",
       "clean and jerk"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1712,7 +1712,7 @@
     ]
   },
   {
-    "id": "rowing_fermo",
+    "id": "rowing_stationary",
     "nome": "Remo, Stazionario",
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rowing_Stationary/0.jpg",
@@ -1782,7 +1782,7 @@
       "return push from sta",
       "return"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -1809,7 +1809,7 @@
       "romanian",
       "romanian deadlift fr"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -2477,7 +2477,7 @@
       "overhead",
       "overhead slam"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -2508,7 +2508,7 @@
       "hang snatch   below ",
       "hang"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -2538,7 +2538,7 @@
       "power snatch",
       "power"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -2569,7 +2569,7 @@
       "hang snatch",
       "hang"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -2597,7 +2597,7 @@
       "muscle",
       "muscle snatch"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -2628,7 +2628,7 @@
       "power snatch from bl",
       "power"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -2660,7 +2660,7 @@
       "split snatch",
       "split"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -2686,7 +2686,7 @@
       "chest push with run ",
       "chest"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -2712,7 +2712,7 @@
       "chest",
       "chest push from 3 po"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -2738,7 +2738,7 @@
       "push press",
       "push"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -2765,7 +2765,7 @@
       "push press   behind ",
       "push"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -2951,7 +2951,7 @@
       "olympic squat",
       "olympic"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -2981,7 +2981,7 @@
       "overhead",
       "overhead squat"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3006,7 +3006,7 @@
       "jerk dip squat",
       "jerk"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3035,7 +3035,7 @@
     "aliases": [
       "snatch"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3064,7 +3064,7 @@
       "power jerk",
       "power"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3093,7 +3093,7 @@
       "snatch deadlift",
       "snatch"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3118,7 +3118,7 @@
       "snatch",
       "snatch shrug"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3149,7 +3149,7 @@
       "snatch",
       "snatch from blocks"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3276,7 +3276,7 @@
       "vertical swing",
       "vertical"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
@@ -3409,7 +3409,7 @@
       "clean pull",
       "clean"
     ],
-    "countingMode": "reps",
+    "countingMode": "weighted",
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
