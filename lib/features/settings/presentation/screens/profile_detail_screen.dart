@@ -34,13 +34,29 @@ class _ProfileDetailScreenState extends ConsumerState<ProfileDetailScreen> {
   bool _isSaving = false;
   bool _isDeleting = false;
 
-  // Common barbell weights
-  static const List<double?> _barbellOptions = [
-    20.0, // Olympic
-    15.0, // Women's Olympic
-    10.0, // Technique/Training
-    7.5, // EZ Curl
-    null, // No barbell
+  // Common barbell options with descriptive labels
+  static const List<BarbellOption> _barbellOptions = [
+    // Olympic Barbells
+    BarbellOption(label: 'Bilanciere 20kg', weight: 20.0),
+    BarbellOption(label: 'Bilanciere 15kg', weight: 15.0),
+    BarbellOption(label: 'Bilanciere 10kg', weight: 10.0),
+    BarbellOption(label: 'Bilanciere 5kg', weight: 5.0),
+
+    // EZ Curl Bars
+    BarbellOption(label: 'Barra EZ 10kg', weight: 10.0),
+    BarbellOption(label: 'Barra EZ 8kg', weight: 8.0),
+    BarbellOption(label: 'Barra EZ 7.5kg', weight: 7.5),
+    BarbellOption(label: 'Barra EZ 7kg', weight: 7.0),
+    BarbellOption(label: 'Barra EZ 6kg', weight: 6.0),
+
+    // Specialty Bars
+    BarbellOption(label: 'Trap Bar 25kg', weight: 25.0),
+    BarbellOption(label: 'Trap Bar 20kg', weight: 20.0),
+    BarbellOption(label: 'Smith Machine', weight: 15.0),
+    BarbellOption(label: 'Barra fissa 12kg', weight: 12.0),
+
+    // No barbell
+    BarbellOption(label: 'Nessun bilanciere', weight: null),
   ];
 
   @override
@@ -132,17 +148,15 @@ class _ProfileDetailScreenState extends ConsumerState<ProfileDetailScreen> {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: _barbellOptions.map((weight) {
-                final isSelected = _selectedBarbellWeight == weight;
+              children: _barbellOptions.map((option) {
+                final isSelected = _selectedBarbellWeight == option.weight;
                 return ChoiceChip(
-                  label: Text(
-                    weight != null ? '${weight}kg' : context.l10n.noBarbell,
-                  ),
+                  label: Text(option.label),
                   selected: isSelected,
                   onSelected: (_) {
                     HapticFeedback.selectionClick();
                     setState(() {
-                      _selectedBarbellWeight = weight;
+                      _selectedBarbellWeight = option.weight;
                     });
                   },
                   avatar: isSelected

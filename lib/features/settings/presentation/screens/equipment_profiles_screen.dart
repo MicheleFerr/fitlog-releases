@@ -31,12 +31,26 @@ class EquipmentProfilesScreen extends ConsumerWidget {
           child: Text('Error: $error'),
         ),
       ),
-      floatingActionButton: CNButton(
-        label: context.l10n.createProfile,
-        onPressed: () => _createNewProfile(context, ref),
-        style: CNButtonStyle.filled,
-        height: 48,
-        tint: context.colors.primary,
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.scaffoldBackgroundColor,
+            border: Border(
+              top: BorderSide(
+                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                width: 1,
+              ),
+            ),
+          ),
+          child: CNButton(
+            label: context.l10n.createProfile,
+            onPressed: () => _createNewProfile(context, ref),
+            style: CNButtonStyle.filled,
+            height: 48,
+            tint: context.colors.primary,
+          ),
+        ),
       ),
     );
   }
@@ -71,7 +85,7 @@ class EquipmentProfilesScreen extends ConsumerWidget {
     }
 
     return ListView(
-      padding: const EdgeInsets.only(bottom: 80), // Space for FAB
+      padding: const EdgeInsets.only(bottom: 16),
       children: [
         // Tip card
         Container(
