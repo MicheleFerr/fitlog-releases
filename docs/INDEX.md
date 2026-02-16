@@ -73,10 +73,9 @@ Architecture is documented in [`CLAUDE.md`](../CLAUDE.md) (section Architettura)
 #### Design Proposals
 | Document | Purpose |
 |----------|---------|
-| [`WORKOUT_TAB_REDESIGN_PLAN.md`](WORKOUT_TAB_REDESIGN_PLAN.md) | **Workout Tab Redesign** - Fix disconnessione UX, AI suggestion, carousel template recenti |
-| [`design/PLATE_CALCULATOR_REDESIGN.md`](design/PLATE_CALCULATOR_REDESIGN.md) | Plate Calculator 2.0 - Gym Profiles, Quick Selection, Smart Recalc |
+| [`design/PLATE_CALCULATOR_REDESIGN.md`](design/PLATE_CALCULATOR_REDESIGN.md) | 🆕 Plate Calculator 2.0 - Gym Profiles, Quick Selection, Smart Recalc |
 | [`design/TEMPLATE_CARDS_DESIGN_UNIFICATION.md`](design/TEMPLATE_CARDS_DESIGN_UNIFICATION.md) | Unificazione design template cards con analisi personas |
-| [`design/EXERCISE_POPULARITY_RANKING.md`](design/EXERCISE_POPULARITY_RANKING.md) | Exercise Popularity Ranking (Cloud Functions + Data Bundles) |
+| [`design/EXERCISE_POPULARITY_RANKING.md`](design/EXERCISE_POPULARITY_RANKING.md) | ✨ **NEW** - Exercise Popularity Ranking (Cloud Functions + Data Bundles) |
 
 ### Archived Documentation
 

@@ -1036,7 +1036,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
   void _updateSetReps(
     int exerciseIndex,
     int setIndex,
-    int reps, {
+    int? reps, { // ✅ NULLABLE - può essere null in range mode
     int? minReps,
     int? maxReps,
   }) {
@@ -1045,7 +1045,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
     updatedSets[setIndex] = SetTemplate(
       setNumber: updatedSets[setIndex].setNumber,
       targetWeight: updatedSets[setIndex].targetWeight,
-      targetReps: reps,
+      targetReps: reps, // ✅ Ora può essere null in range mode
       targetMinReps: minReps,
       targetMaxReps: maxReps,
       targetRpe: updatedSets[setIndex].targetRpe,
@@ -1207,7 +1207,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                                 _updateSetReps(
                                   exerciseIndex,
                                   roundIndex,
-                                  result.minReps!,
+                                  null, // ✅ NULL in range mode, non minReps!
                                   minReps: result.minReps,
                                   maxReps: result.maxReps,
                                 );
@@ -1215,7 +1215,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                                 _updateSetReps(
                                   exerciseIndex,
                                   roundIndex,
-                                  result.reps ?? round.targetReps ?? 0,
+                                  result.reps ?? round.targetReps, // ✅ Nullable
                                 );
                               }
                               if (!context.mounted) return;
@@ -1416,13 +1416,13 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       previousSet: previousSet,
       onSave: (updatedSet) {
         _updateSetWeight(exerciseIndex, setIndex, updatedSet.weight ?? 0);
-        _updateSetReps(exerciseIndex, setIndex, updatedSet.reps ?? 0,
+        _updateSetReps(exerciseIndex, setIndex, updatedSet.reps,
             minReps: updatedSet.minReps, maxReps: updatedSet.maxReps);
       },
       onSaveAndNext: setIndex < exercise.sets.length - 1
           ? (updatedSet) {
               _updateSetWeight(exerciseIndex, setIndex, updatedSet.weight ?? 0);
-              _updateSetReps(exerciseIndex, setIndex, updatedSet.reps ?? 0,
+              _updateSetReps(exerciseIndex, setIndex, updatedSet.reps,
                   minReps: updatedSet.minReps, maxReps: updatedSet.maxReps);
               Future.microtask(() => _showEditTemplateSetModal(exerciseIndex, setIndex + 1));
             }
@@ -1430,14 +1430,14 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       onSaveAndPrevious: setIndex > 0
           ? (updatedSet) {
               _updateSetWeight(exerciseIndex, setIndex, updatedSet.weight ?? 0);
-              _updateSetReps(exerciseIndex, setIndex, updatedSet.reps ?? 0,
+              _updateSetReps(exerciseIndex, setIndex, updatedSet.reps,
                   minReps: updatedSet.minReps, maxReps: updatedSet.maxReps);
               Future.microtask(() => _showEditTemplateSetModal(exerciseIndex, setIndex - 1));
             }
           : null,
       onApplyToAll: (updatedSet) {
         final w = updatedSet.weight ?? 0;
-        final r = updatedSet.reps ?? 0;
+        final r = updatedSet.reps; // ✅ Nullable in range mode
         for (int i = 0; i < exercise.sets.length; i++) {
           _updateSetWeight(exerciseIndex, i, w);
           _updateSetReps(exerciseIndex, i, r,

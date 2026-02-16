@@ -70,6 +70,7 @@ class WelcomeView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SafeArea(
+      bottom: false, // Permette al contenuto di estendersi con il padding del MediaQuery
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
@@ -265,9 +266,10 @@ class WelcomeView extends ConsumerWidget {
 
     // Use vertical ListView with SwipeableTemplateCard (iOS-style swipe actions)
     // Add bottom padding to prevent overlap with bottom navigation bar
+    // MediaQuery.padding.bottom already includes the nav bar height from MainShell
     return ListView.builder(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).padding.bottom + 80,
+        bottom: MediaQuery.of(context).padding.bottom + AppSpacing.md,
       ),
       itemCount: itemCount,
       itemBuilder: (context, index) {
