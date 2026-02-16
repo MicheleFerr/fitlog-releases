@@ -12,8 +12,8 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/features/import/data/parsers/strong_csv_parser.dart';
 import 'package:gymbro_flutter_new/features/import/data/mappers/exercise_name_mapper.dart';
 import 'package:gymbro_flutter_new/features/import/domain/entities/import_result.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart'
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart'
     as workout_entities;
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';

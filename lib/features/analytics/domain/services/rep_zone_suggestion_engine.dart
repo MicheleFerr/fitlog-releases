@@ -26,9 +26,9 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_cal
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/strength_standard.dart';
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart'
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart'
     show ExerciseCategory;
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 
 /// Rep Zone Suggestion Engine v3
 ///

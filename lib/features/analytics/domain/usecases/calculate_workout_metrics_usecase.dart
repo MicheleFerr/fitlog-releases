@@ -12,7 +12,7 @@
 /// - analytics/domain/entities: WorkoutMetrics
 library;
 
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
 
 /// Use case for calculating real-time workout metrics

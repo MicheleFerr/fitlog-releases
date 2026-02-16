@@ -33,7 +33,7 @@ library;
 
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_set.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_session.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart';
 
 /// Data class for analytics conversion result

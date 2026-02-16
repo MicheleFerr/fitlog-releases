@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/streak/domain/services/consistency_score_calculator.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 void main() {
   late ConsistencyScoreCalculator calculator;

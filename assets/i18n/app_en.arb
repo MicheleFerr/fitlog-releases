@@ -28284,9 +28284,9 @@
   "@stressPredictionTitle": {
     "description": "Title for stress prediction card"
   },
-  "stressPredictionCurrent": "Current",
+  "stressPredictionCurrent": "From last workout",
   "@stressPredictionCurrent": {
-    "description": "Label for current stress level"
+    "description": "Label for stress from last workout"
   },
   "stressPredictionTomorrow": "Tomorrow",
   "@stressPredictionTomorrow": {

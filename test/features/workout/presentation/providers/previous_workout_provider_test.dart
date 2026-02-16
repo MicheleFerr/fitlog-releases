@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/previous_workout_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 
 void main() {
   group('WeightRecoveryData', () {

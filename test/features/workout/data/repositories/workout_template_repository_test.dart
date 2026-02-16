@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/workout_template_repository.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

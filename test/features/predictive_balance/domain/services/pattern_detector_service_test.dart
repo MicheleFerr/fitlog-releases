@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/predictive_balance/domain/entities/workout_fingerprint.dart';
 import 'package:gymbro_flutter_new/features/predictive_balance/domain/services/pattern_detector_service.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 
 void main() {
   group('PatternDetectorService', () {

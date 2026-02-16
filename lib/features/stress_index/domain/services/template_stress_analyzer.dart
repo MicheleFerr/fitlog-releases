@@ -16,7 +16,7 @@ import 'package:gymbro_flutter_new/features/stress_index/domain/entities/muscle_
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/personal_calibration.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/template_stress_analysis.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/services/calibration_service.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart'
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart'
     as workout;
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
 

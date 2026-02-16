@@ -11,7 +11,7 @@
 /// - workout/domain/entities
 library;
 
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 /// Types of personal records that can be tracked
 enum PRType {

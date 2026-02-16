@@ -6,7 +6,7 @@ library;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/discover_filter_bar.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/template_category.dart';
 

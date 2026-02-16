@@ -9,7 +9,7 @@ library;
 
 import 'package:gymbro_flutter_new/features/streak/domain/entities/consistency_score.dart';
 import 'package:gymbro_flutter_new/features/streak/domain/entities/weekly_stats.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 
 /// Service for calculating consistency scores from workout data
 class ConsistencyScoreCalculator {

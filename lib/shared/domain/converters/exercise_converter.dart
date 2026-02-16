@@ -11,7 +11,7 @@ library;
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart'
     as DatabaseExercise;
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart'
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart'
     as WorkoutExercise;
 import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
 

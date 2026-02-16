@@ -20,7 +20,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/neglected_
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/template_coverage_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_priority_card.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';

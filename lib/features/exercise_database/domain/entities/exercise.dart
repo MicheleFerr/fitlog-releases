@@ -5,7 +5,7 @@
 /// NOT an instance of an exercise in a workout.
 ///
 /// For workout exercise instances, see:
-/// `lib/features/workout/domain/entities/exercise.dart`
+/// `lib/shared/domain/entities/exercise.dart`
 library;
 
 import 'package:equatable/equatable.dart';

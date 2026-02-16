@@ -21,7 +21,7 @@ import 'package:gymbro_flutter_new/features/stress_index/domain/constants/stress
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/stress_index_result.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/stress_index_state.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/services/stress_index_calculator.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 
 // ====================
 // REPOSITORY PROVIDER

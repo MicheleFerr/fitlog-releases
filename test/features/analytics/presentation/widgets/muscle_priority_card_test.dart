@@ -7,8 +7,8 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/neglected_
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_compact_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_priority_card.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 // Helper: Create NeglectedMuscle

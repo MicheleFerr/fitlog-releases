@@ -12,7 +12,7 @@
 /// - analytics/domain/entities: WorkoutMetrics, PersonalRecordAchieved
 library;
 
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';

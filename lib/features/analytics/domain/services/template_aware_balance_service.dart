@@ -23,8 +23,8 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/template_c
 import 'package:gymbro_flutter_new/features/analytics/domain/services/exercise_suggestion_engine.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/neglected_muscle_detector.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 
 /// Template-Aware Balance Service
 ///

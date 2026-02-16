@@ -20,7 +20,7 @@
 library;
 
 import 'package:gymbro_flutter_new/features/stress_index/domain/constants/stress_index_constants.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 /// Represents muscle group categories for grouping in UI
 enum MuscleCategory { chest, back, shoulders, arms, legs, core }

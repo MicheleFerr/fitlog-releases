@@ -9,7 +9,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout_import/domain/entities/parsed_workout.dart';
 import 'package:gymbro_flutter_new/features/workout_import/presentation/providers/workout_import_provider.dart';
 import 'package:gymbro_flutter_new/features/workout_import/presentation/widgets/exercise_match_picker.dart';

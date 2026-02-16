@@ -18,8 +18,8 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolid
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart'
     show ExerciseDefinition;
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout_import/data/datasources/workout_import_ai_client.dart';
 import 'package:gymbro_flutter_new/features/workout_import/domain/entities/parsed_workout.dart';

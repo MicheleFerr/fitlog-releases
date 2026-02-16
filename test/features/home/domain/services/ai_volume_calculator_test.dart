@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' show ExerciseCategory;
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart' show ExerciseCategory;
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/home/domain/services/ai_volume_calculator.dart';
 

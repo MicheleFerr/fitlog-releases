@@ -7,7 +7,7 @@
 library;
 
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 /// Result of split detection analysis
 class SplitDetectionResult {

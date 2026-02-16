@@ -10,7 +10,7 @@
 library;
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 part 'parsed_workout.freezed.dart';
 part 'parsed_workout.g.dart';

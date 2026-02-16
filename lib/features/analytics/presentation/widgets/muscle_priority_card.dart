@@ -21,7 +21,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/las
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/template_coverage_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_compact_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/priority_explanation_sheet.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';

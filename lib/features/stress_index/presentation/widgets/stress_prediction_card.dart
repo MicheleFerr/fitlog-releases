@@ -230,19 +230,6 @@ class _StressPredictionContent extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      // Current stress
-                      _buildMetric(
-                        context,
-                        label: context.l10n.stressPredictionCurrent,
-                        value: '${insight.displayStress}',
-                        color: stressColor,
-                      ),
-                      // Divider
-                      Container(
-                        width: 1,
-                        height: 40,
-                        color: context.colors.outline.withValues(alpha: 0.2),
-                      ),
                       // Tomorrow prediction
                       _buildMetric(
                         context,
@@ -266,6 +253,19 @@ class _StressPredictionContent extends StatelessWidget {
                         value:
                             '-${insight.recoveryRatePerHour.toStringAsFixed(1)}/h',
                         color: context.colors.primary,
+                      ),
+                      // Divider
+                      Container(
+                        width: 1,
+                        height: 40,
+                        color: context.colors.outline.withValues(alpha: 0.2),
+                      ),
+                      // From last workout (moved to end)
+                      _buildMetric(
+                        context,
+                        label: context.l10n.stressPredictionCurrent,
+                        value: '${insight.displayStress}',
+                        color: stressColor,
                       ),
                     ],
                   ),

@@ -8,7 +8,7 @@
 library;
 
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 class ExerciseCountingModeService {
   static ExerciseCountingMode getModeFromWorkoutExercise(Exercise exercise) {

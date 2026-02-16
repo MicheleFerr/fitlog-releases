@@ -5,7 +5,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/pdf_detail_level.dart';
 import 'package:gymbro_flutter_new/features/coach/domain/entities/coach_branding.dart';
 import 'package:flutter/foundation.dart';

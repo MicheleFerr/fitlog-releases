@@ -11,8 +11,8 @@
 /// - workout/domain/entities: Workout, Exercise, ExerciseSet
 library;
 
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 
 /// Real-time workout metrics calculated during active workout

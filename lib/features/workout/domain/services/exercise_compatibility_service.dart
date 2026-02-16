@@ -1,4 +1,4 @@
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 class ExerciseCompatibilityService {
   static const double primaryMuscleWeight = 0.40;

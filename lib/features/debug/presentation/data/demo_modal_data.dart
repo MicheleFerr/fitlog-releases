@@ -7,9 +7,9 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_h
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_session.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/muscle_correction.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/warmup_calculator_service.dart'
     show WarmupSet;
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart'

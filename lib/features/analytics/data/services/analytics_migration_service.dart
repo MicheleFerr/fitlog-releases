@@ -41,8 +41,8 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_h
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_session.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_set.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/domain/services/secure_logger.dart'; // 🔐 SECURITY: Secure logging
 import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart'; // 🏋️ Bodyweight support
 

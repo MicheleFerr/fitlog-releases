@@ -38,7 +38,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/widge
 import 'package:gymbro_flutter_new/features/onboarding/domain/registry/hint_registry.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/discoverability_hint_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/hint_peek.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_mini_bar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';

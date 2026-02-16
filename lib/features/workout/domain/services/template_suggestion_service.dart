@@ -13,10 +13,10 @@
 /// - Category: chest, back, legs, shoulders, arms, abs, cardio, fullBody
 library;
 
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/experience_level.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_context.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 
 /// Service for suggesting workout templates based on user context
 class TemplateSuggestionService {

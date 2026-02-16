@@ -129,7 +129,7 @@ await _atomicService.updateMultipleFieldsAtomically(
 ### Step 1: Add Version Field to Entity
 
 ```dart
-// lib/features/workout/domain/entities/workout.dart
+// lib/shared/domain/entities/workout.dart
 class Workout with OptimisticLockable {
   final int version; // ← ADD THIS
 

@@ -35,7 +35,7 @@ library;
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:gymbro_flutter_new/shared/domain/services/request_throttler.dart';
 import 'package:gymbro_flutter_new/core/utils/app_logger.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 /// Result of creating a template via Cloud Function
 class CreateTemplateResult {

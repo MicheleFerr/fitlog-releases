@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 /// Modello per salvare le attività degli esercizi completati in Firestore
 /// Corrisponde alla struttura /exerciseActivities della vecchia app

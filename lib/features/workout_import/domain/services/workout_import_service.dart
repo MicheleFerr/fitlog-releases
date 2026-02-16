@@ -11,7 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart'
     show ExerciseDefinition;
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_fuzzy_matcher.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout_import/data/datasources/workout_import_ai_client.dart';
 import 'package:gymbro_flutter_new/features/workout_import/domain/entities/parsed_workout.dart';
 

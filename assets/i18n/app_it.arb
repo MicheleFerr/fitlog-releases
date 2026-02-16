@@ -16452,9 +16452,9 @@
   "@stressPredictionTitle": {
     "description": "Title for stress prediction card"
   },
-  "stressPredictionCurrent": "Attuale",
+  "stressPredictionCurrent": "Da ultimo workout",
   "@stressPredictionCurrent": {
-    "description": "Label for current stress level"
+    "description": "Label for stress from last workout"
   },
   "stressPredictionTomorrow": "Domani",
   "@stressPredictionTomorrow": {

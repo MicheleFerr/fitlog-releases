@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/tut_decoder_service.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise_card_settings.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/exercise_card_settings_provider.dart';

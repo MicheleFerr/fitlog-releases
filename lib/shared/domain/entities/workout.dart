@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 part 'workout.freezed.dart';
 part 'workout.g.dart';
@@ -154,7 +154,7 @@ extension WorkoutExtensions on Workout {
 ///
 /// **⚠️ NAMING CLARIFICATION**: This class was previously named `WorkoutTemplate`
 /// which caused confusion with the actual template entities:
-/// - `lib/features/workout/domain/entities/workout_template.dart` (user templates)
+/// - `lib/shared/domain/entities/workout_template.dart` (user templates)
 /// - `lib/features/workout_templates/domain/entities/workout_template.dart` (community templates)
 ///
 /// This class provides STATIC exercise name suggestions for autocomplete/picker UI.

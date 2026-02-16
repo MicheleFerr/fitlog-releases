@@ -40558,10 +40558,10 @@ abstract class AppLocalizations {
   /// **'Recovery Status'**
   String get stressPredictionTitle;
 
-  /// Label for current stress level
+  /// Label for stress from last workout
   ///
   /// In en, this message translates to:
-  /// **'Current'**
+  /// **'From last workout'**
   String get stressPredictionCurrent;
 
   /// Label for predicted stress tomorrow

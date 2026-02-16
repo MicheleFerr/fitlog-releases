@@ -7,8 +7,8 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_me
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/workout_analytics_repository.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/services/analytics_cache_service.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';

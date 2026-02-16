@@ -22886,7 +22886,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get stressPredictionTitle => 'Stato Recupero';
 
   @override
-  String get stressPredictionCurrent => 'Attuale';
+  String get stressPredictionCurrent => 'Da ultimo workout';
 
   @override
   String get stressPredictionTomorrow => 'Domani';

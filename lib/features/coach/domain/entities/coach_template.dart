@@ -8,7 +8,7 @@
 library;
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 
 part 'coach_template.freezed.dart';
 part 'coach_template.g.dart';

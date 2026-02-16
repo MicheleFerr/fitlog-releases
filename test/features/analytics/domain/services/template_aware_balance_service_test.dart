@@ -5,8 +5,8 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/neglected_
 import 'package:gymbro_flutter_new/features/analytics/domain/services/template_aware_balance_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 
 void main() {
   late TemplateAwareBalanceService service;

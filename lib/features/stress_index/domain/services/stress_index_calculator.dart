@@ -27,8 +27,8 @@ import 'package:gymbro_flutter_new/features/stress_index/domain/entities/muscle_
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/stress_index_result.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/services/fitness_fatigue_service.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart';
 
 /// Internal accumulator for muscle stress data

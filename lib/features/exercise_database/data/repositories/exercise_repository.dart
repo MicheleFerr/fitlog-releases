@@ -1,6 +1,6 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';  // Temporarily disabled
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_template.dart';
 
 final exerciseRepositoryProvider = Provider<ExerciseRepository>((ref) {

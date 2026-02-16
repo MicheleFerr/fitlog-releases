@@ -9,7 +9,7 @@
 ///
 /// This is for COMMUNITY/PUBLIC templates (shareable with others).
 /// For internal workout templates used during workouts, see:
-/// `lib/features/workout/domain/entities/workout_template.dart`
+/// `lib/shared/domain/entities/workout_template.dart`
 ///
 /// Dependencies:
 /// - Riverpod: None
@@ -18,7 +18,7 @@
 library;
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 part 'workout_template.freezed.dart';
 part 'workout_template.g.dart';

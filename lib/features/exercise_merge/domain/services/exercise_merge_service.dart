@@ -13,7 +13,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_fuzzy_matcher.dart';
 import 'package:gymbro_flutter_new/features/exercise_merge/domain/entities/merge_candidate.dart';
 import 'package:gymbro_flutter_new/features/exercise_merge/domain/entities/merge_preview.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 
 /// Servizio per identificare esercizi custom che potrebbero essere consolidati
 ///

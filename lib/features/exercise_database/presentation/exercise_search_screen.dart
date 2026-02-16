@@ -14,7 +14,7 @@ import 'package:gymbro_flutter_new/shared/domain/services/request_throttler.dart
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart'
     hide exerciseSearchQueryProvider;
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart'
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart'
     as WorkoutExercise;
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_options_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_history_bottom_sheet.dart';

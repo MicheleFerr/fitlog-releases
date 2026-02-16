@@ -13,7 +13,7 @@
 library;
 
 import 'dart:math';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
 
 /// Use case for comparing workouts and finding similar training sessions
