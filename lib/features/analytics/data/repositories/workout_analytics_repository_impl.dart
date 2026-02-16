@@ -720,11 +720,17 @@ class WorkoutAnalyticsRepositoryImpl
 
       for (final workout in workouts) {
         for (final exercise in workout.exercises) {
-          exerciseFreq[exercise.name] = (exerciseFreq[exercise.name] ?? 0) + 1;
+          final completedSets = exercise.sets.where((s) => s.isCompleted);
+          // Only count exercises that have at least one completed set
+          if (completedSets.isEmpty) continue;
 
-          final exerciseVolume = exercise.sets
-              .where((s) => s.isCompleted)
-              .fold(0.0, (sum, set) => sum + set.volume);
+          exerciseFreq[exercise.name] =
+              (exerciseFreq[exercise.name] ?? 0) + 1;
+
+          final exerciseVolume = completedSets.fold(
+            0.0,
+            (sum, set) => sum + set.volume,
+          );
 
           exerciseVolDist[exercise.name] =
               (exerciseVolDist[exercise.name] ?? 0) + exerciseVolume;

@@ -848,12 +848,15 @@ class AIToolExecutor {
           final limited = filtered.take(limit).toList();
 
           final history = limited.map((w) {
+            // Only include exercises that have at least 1 set performed
+            final completedExercises =
+                w.exercises.where((e) => e.sets.isNotEmpty).toList();
             return {
               'name': w.name,
               'completedAt': w.completedAt.toIso8601String(),
               'durationMinutes': w.duration.inMinutes,
-              'exerciseCount': w.exercises.length,
-              'exercises': w.exercises.map((e) => e.name).toList(),
+              'exerciseCount': completedExercises.length,
+              'exercises': completedExercises.map((e) => e.name).toList(),
               'totalVolume': w.totalVolume.toStringAsFixed(0),
               'totalSets': w.totalSets,
             };
