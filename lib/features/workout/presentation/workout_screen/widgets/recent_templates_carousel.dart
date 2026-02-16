@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -57,7 +58,10 @@ class RecentTemplatesCarousel extends ConsumerWidget {
 
               // Template card
               final template = recentTemplates[index];
-              return _buildTemplateCard(context, template);
+              return _TemplateCard(
+                template: template,
+                onStartTemplate: onStartTemplate,
+              );
             },
           ),
         );
@@ -132,7 +136,85 @@ class RecentTemplatesCarousel extends ConsumerWidget {
     );
   }
 
-  Widget _buildTemplateCard(BuildContext context, WorkoutTemplate template) {
+  Widget _buildViewAllCard(BuildContext context, int totalCount) {
+    return Container(
+      width: 120,
+      margin: const EdgeInsets.only(right: AppSpacing.sm),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(AppSpacing.md),
+        border: Border.all(
+          color: context.colors.primary.withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      child: InkWell(
+        onTap: () => context.push('/templates'),
+        borderRadius: BorderRadius.circular(AppSpacing.md),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SemanticIcon(
+                icon: AppIcons.arrowForward,
+                size: AppIconSize.medium,
+                color: context.colors.primary,
+                semanticLabel: context.l10n.viewAll,
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                context.l10n.viewAllCount(totalCount),
+                style: context.textTheme.labelMedium?.copyWith(
+                  color: context.colors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Template card showing name, difficulty, duration, and start button
+///
+/// Displays actual duration from last completed workout if available,
+/// otherwise shows estimated duration from template.
+class _TemplateCard extends ConsumerWidget {
+  const _TemplateCard({
+    required this.template,
+    required this.onStartTemplate,
+  });
+
+  final WorkoutTemplate template;
+  final void Function(WorkoutTemplate) onStartTemplate;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final workoutHistoryAsync = ref.watch(workoutHistoryProvider);
+
+    // Calculate actual duration from workout history
+    Duration? actualDuration;
+    workoutHistoryAsync.whenData((workouts) {
+      // Find last completed workout with this template
+      final templateWorkouts = workouts
+          .where((w) => w.templateId == template.id)
+          .toList()
+        ..sort((a, b) => b.completedAt.compareTo(a.completedAt));
+
+      if (templateWorkouts.isNotEmpty) {
+        actualDuration = templateWorkouts.first.duration;
+      }
+    });
+
+    // Use actual duration if available, otherwise estimated
+    final displayMinutes = actualDuration != null
+        ? actualDuration!.inMinutes
+        : template.estimatedDuration;
+
     return Container(
       width: 160,
       margin: const EdgeInsets.only(right: AppSpacing.sm),
@@ -168,7 +250,7 @@ class RecentTemplatesCarousel extends ConsumerWidget {
               const SizedBox(height: AppSpacing.xs),
             ],
 
-            // Estimated duration
+            // Duration (actual or estimated)
             Row(
               children: [
                 SemanticIcon(
@@ -179,7 +261,7 @@ class RecentTemplatesCarousel extends ConsumerWidget {
                 ),
                 const SizedBox(width: AppSpacing.xxs),
                 Text(
-                  '${template.estimatedDuration} ${context.l10n.minutes}',
+                  '$displayMinutes ${context.l10n.minutes}',
                   style: context.textTheme.bodySmall?.copyWith(
                     color: context.colors.onSurfaceVariant,
                   ),
@@ -191,23 +273,29 @@ class RecentTemplatesCarousel extends ConsumerWidget {
             // Start button
             SizedBox(
               width: double.infinity,
-              child: FilledButton.icon(
+              child: FilledButton.tonal(
                 onPressed: () => onStartTemplate(template),
-                icon: SemanticIcon(
-                  icon: AppIcons.play,
-                  size: AppIconSize.tiny,
-                  semanticLabel: context.l10n.start,
-                ),
-                label: Text(
-                  context.l10n.start,
-                  style: context.textTheme.labelSmall,
-                ),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.sm,
                     vertical: AppSpacing.xs,
                   ),
                   minimumSize: const Size(0, 32),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SemanticIcon(
+                      icon: AppIcons.play,
+                      size: AppIconSize.tiny,
+                      semanticLabel: context.l10n.start,
+                    ),
+                    const SizedBox(width: AppSpacing.xxs),
+                    Text(
+                      context.l10n.start,
+                      style: context.textTheme.labelSmall,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -248,48 +336,6 @@ class RecentTemplatesCarousel extends ConsumerWidget {
           color: badgeColor,
           fontWeight: FontWeight.w600,
           fontSize: 10,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildViewAllCard(BuildContext context, int totalCount) {
-    return Container(
-      width: 120,
-      margin: const EdgeInsets.only(right: AppSpacing.sm),
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(AppSpacing.md),
-        border: Border.all(
-          color: context.colors.primary.withValues(alpha: 0.3),
-          width: 1,
-        ),
-      ),
-      child: InkWell(
-        onTap: () => context.push('/templates'),
-        borderRadius: BorderRadius.circular(AppSpacing.md),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SemanticIcon(
-                icon: AppIcons.arrowForward,
-                size: AppIconSize.medium,
-                color: context.colors.primary,
-                semanticLabel: context.l10n.viewAll,
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                context.l10n.viewAllCount(totalCount),
-                style: context.textTheme.labelMedium?.copyWith(
-                  color: context.colors.primary,
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
         ),
       ),
     );

@@ -228,14 +228,20 @@ class TodaysWorkoutCard extends ConsumerWidget {
             // Start button
             SizedBox(
               width: double.infinity,
-              child: FilledButton.icon(
+              child: FilledButton.tonal(
                 onPressed: () => onStartTemplate(template),
-                icon: SemanticIcon(
-                  icon: AppIcons.play,
-                  size: AppIconSize.small,
-                  semanticLabel: context.l10n.start,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SemanticIcon(
+                      icon: AppIcons.play,
+                      size: AppIconSize.small,
+                      semanticLabel: context.l10n.start,
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Text(context.l10n.start),
+                  ],
                 ),
-                label: Text(context.l10n.start),
               ),
             ),
           ],
