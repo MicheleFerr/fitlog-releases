@@ -4246,6 +4246,10 @@
   "@minutes": {
     "description": "Minutes abbreviation"
   },
+  "meters": "m",
+  "@meters": {
+    "description": "Meters abbreviation (distance unit)"
+  },
   "noTemplatesYet": "No templates yet",
   "@noTemplatesYet": {
     "description": "Message when user has no templates"
@@ -33951,5 +33955,46 @@
   "alreadyAdded": "Added",
   "@alreadyAdded": {
     "description": "Label for exercises already added to a template"
+  },
+  "suggestedForToday": "Suggested for today",
+  "@suggestedForToday": {
+    "description": "Label for AI-suggested template in workout tab"
+  },
+  "recentlyUsed": "Recently used",
+  "@recentlyUsed": {
+    "description": "Section header for recently used templates"
+  },
+  "viewAll": "View all",
+  "@viewAll": {
+    "description": "Button to view all templates"
+  },
+  "viewAllCount": "View all ({count})",
+  "@viewAllCount": {
+    "description": "Button to view all templates with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "musclesRecovered": "Muscles recovered",
+  "@musclesRecovered": {
+    "description": "Badge indicating muscles are recovered for suggested template"
+  },
+  "acceptable": "Acceptable",
+  "@acceptable": {
+    "description": "Label for acceptable template recommendation"
+  },
+  "restDaySuggestion": "Today is ideal for recovery",
+  "@restDaySuggestion": {
+    "description": "Message shown when rest day is recommended"
+  },
+  "noTemplatesYet": "No templates yet",
+  "@noTemplatesYet": {
+    "description": "Empty state message when user has no templates"
+  },
+  "createFirstTemplateHint": "Create your first template to start",
+  "@createFirstTemplateHint": {
+    "description": "Hint message to create first template"
   }
 }

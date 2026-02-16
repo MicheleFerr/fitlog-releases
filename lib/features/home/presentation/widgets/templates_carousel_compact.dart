@@ -248,7 +248,7 @@ class _TemplateCard extends ConsumerWidget {
     HapticFeedback.mediumImpact();
     // Start workout directly from this template
     ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
-    context.push('/workout');
+    context.go('/workout');
   }
 }
 

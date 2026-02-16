@@ -67,7 +67,7 @@ class _ActiveWorkoutCard extends ConsumerWidget {
           child: InkWell(
             onTap: () {
               HapticFeedback.mediumImpact();
-              context.push('/workout');
+              context.go('/workout');
             },
             borderRadius: BorderRadius.circular(AppSpacing.md),
             child: Padding(
@@ -105,7 +105,7 @@ class _ActiveWorkoutCard extends ConsumerWidget {
                     FilledButton.icon(
                       onPressed: () {
                         HapticFeedback.mediumImpact();
-                        context.push('/workout');
+                        context.go('/workout');
                       },
                       icon: SemanticIcon(
                         icon: AppIcons.play,

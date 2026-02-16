@@ -1114,6 +1114,7 @@
   "tryModifyingFilters": "Prova a modificare i filtri di ricerca",
   "clearAllFilters": "Rimuovi tutti i filtri",
   "minutes": "min",
+  "meters": "m",
   "noTemplatesYet": "Nessun template ancora",
   "difficulty": "Difficoltà",
   "errorOccurred": "Si è verificato un errore durante il caricamento dell'allenamento",
@@ -20915,5 +20916,14 @@
   "muscleBack": "Schiena",
   "muscleShoulders": "Spalle",
   "muscleRearDelts": "Deltoidi Posteriori",
-  "alreadyAdded": "Aggiunto"
+  "alreadyAdded": "Aggiunto",
+  "suggestedForToday": "Suggerito per oggi",
+  "recentlyUsed": "Ultimi usati",
+  "viewAll": "Vedi tutti",
+  "viewAllCount": "Vedi tutti ({count})",
+  "musclesRecovered": "Muscoli recuperati",
+  "acceptable": "Accettabile",
+  "restDaySuggestion": "Oggi è ideale per il recupero",
+  "noTemplatesYet": "Non hai ancora template",
+  "createFirstTemplateHint": "Crea il tuo primo template per iniziare"
 }

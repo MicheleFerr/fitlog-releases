@@ -3269,7 +3269,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get minutes => 'min';
 
   @override
-  String get noTemplatesYet => 'Nessun template ancora';
+  String get meters => 'm';
+
+  @override
+  String get noTemplatesYet => 'Non hai ancora template';
 
   @override
   String get difficulty => 'Difficoltà';
@@ -5016,7 +5019,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get justNow => 'ora';
 
   @override
-  String get viewAll => 'Vedi Tutti';
+  String get viewAll => 'Vedi tutti';
 
   @override
   String get viewFullHistory => 'Vedi Cronologia Completa';
@@ -27955,4 +27958,25 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get alreadyAdded => 'Aggiunto';
+
+  @override
+  String get recentlyUsed => 'Ultimi usati';
+
+  @override
+  String viewAllCount(int count) {
+    return 'Vedi tutti ($count)';
+  }
+
+  @override
+  String get musclesRecovered => 'Muscoli recuperati';
+
+  @override
+  String get acceptable => 'Accettabile';
+
+  @override
+  String get restDaySuggestion => 'Oggi è ideale per il recupero';
+
+  @override
+  String get createFirstTemplateHint =>
+      'Crea il tuo primo template per iniziare';
 }

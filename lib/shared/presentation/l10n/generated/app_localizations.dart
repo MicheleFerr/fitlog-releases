@@ -5141,7 +5141,7 @@ abstract class AppLocalizations {
   /// **'START WORKOUT'**
   String get startWorkoutQuick;
 
-  /// Suggested workout subtitle
+  /// Label for AI-suggested template in workout tab
   ///
   /// In en, this message translates to:
   /// **'Suggested for today'**
@@ -6023,7 +6023,13 @@ abstract class AppLocalizations {
   /// **'min'**
   String get minutes;
 
-  /// Message when user has no templates
+  /// Meters abbreviation (distance unit)
+  ///
+  /// In en, this message translates to:
+  /// **'m'**
+  String get meters;
+
+  /// Empty state message when user has no templates
   ///
   /// In en, this message translates to:
   /// **'No templates yet'**
@@ -9191,10 +9197,10 @@ abstract class AppLocalizations {
   /// **'now'**
   String get justNow;
 
-  /// View all button text
+  /// Button to view all templates
   ///
   /// In en, this message translates to:
-  /// **'View All'**
+  /// **'View all'**
   String get viewAll;
 
   /// Button text to view complete workout history
@@ -49477,6 +49483,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Added'**
   String get alreadyAdded;
+
+  /// Section header for recently used templates
+  ///
+  /// In en, this message translates to:
+  /// **'Recently used'**
+  String get recentlyUsed;
+
+  /// Button to view all templates with count
+  ///
+  /// In en, this message translates to:
+  /// **'View all ({count})'**
+  String viewAllCount(int count);
+
+  /// Badge indicating muscles are recovered for suggested template
+  ///
+  /// In en, this message translates to:
+  /// **'Muscles recovered'**
+  String get musclesRecovered;
+
+  /// Label for acceptable template recommendation
+  ///
+  /// In en, this message translates to:
+  /// **'Acceptable'**
+  String get acceptable;
+
+  /// Message shown when rest day is recommended
+  ///
+  /// In en, this message translates to:
+  /// **'Today is ideal for recovery'**
+  String get restDaySuggestion;
+
+  /// Hint message to create first template
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first template to start'**
+  String get createFirstTemplateHint;
 }
 
 class _AppLocalizationsDelegate

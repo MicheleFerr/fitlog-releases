@@ -3246,6 +3246,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get minutes => 'min';
 
   @override
+  String get meters => 'm';
+
+  @override
   String get noTemplatesYet => 'No templates yet';
 
   @override
@@ -4976,7 +4979,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get justNow => 'now';
 
   @override
-  String get viewAll => 'View All';
+  String get viewAll => 'View all';
 
   @override
   String get viewFullHistory => 'View Full History';
@@ -27685,4 +27688,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get alreadyAdded => 'Added';
+
+  @override
+  String get recentlyUsed => 'Recently used';
+
+  @override
+  String viewAllCount(int count) {
+    return 'View all ($count)';
+  }
+
+  @override
+  String get musclesRecovered => 'Muscles recovered';
+
+  @override
+  String get acceptable => 'Acceptable';
+
+  @override
+  String get restDaySuggestion => 'Today is ideal for recovery';
+
+  @override
+  String get createFirstTemplateHint => 'Create your first template to start';
 }
