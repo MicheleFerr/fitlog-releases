@@ -11,7 +11,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart';
-import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 
 /// Tier-1 SupersetCard che mostra tutti gli esercizi del superset in una singola card
 class SupersetCard extends ConsumerStatefulWidget {
@@ -130,13 +130,10 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
       ),
       child: Semantics(
         label: 'Superset',
-        hint: widget.isReorderMode ? null : 'Tap to expand, long press for options',
+        hint: widget.isReorderMode ? null : 'Tap to expand',
         button: true,
         child: GestureDetector(
           onTap: widget.isReorderMode ? null : widget.onTap,
-          onLongPress: widget.isReorderMode
-              ? null
-              : () => _showSupersetOptions(context),
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: context.colors.surfaceContainer,
@@ -341,6 +338,31 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                 ),
               ),
             ),
+            // Menu button - wrappato per evitare conflitto con GestureDetector parent
+            if (!widget.isReorderMode)
+              GestureDetector(
+                onTap: () {}, // Blocca propagation al parent
+                child: CNPopupMenuButton.icon(
+                  buttonIcon: const CNSymbol('ellipsis', size: 16),
+                  buttonStyle: CNButtonStyle.plain,
+                  size: 32,
+                  items: [
+                    CNPopupMenuItem(
+                      label: l10n.editSuperset,
+                      icon: const CNSymbol('pencil', size: 14),
+                    ),
+                    CNPopupMenuItem(
+                      label: l10n.duplicate,
+                      icon: const CNSymbol('doc.on.doc', size: 14),
+                    ),
+                    CNPopupMenuItem(
+                      label: l10n.deleteSuperset,
+                      icon: const CNSymbol('trash', size: 14),
+                    ),
+                  ],
+                  onSelected: _handleMenuAction,
+                ),
+              ),
             // ✅ FIX Issue 1: Only show chevron when completed (can re-expand)
             if (_allSetsCompleted) ...[
               const SizedBox(width: 4),
@@ -440,53 +462,15 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
     );
   }
 
-  void _showSupersetOptions(BuildContext context) {
-    HapticFeedback.mediumImpact();
-    ModalService.showSheet(context,
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const SemanticIcon(
-                icon: AppIcons.edit,
-                semanticLabel: 'Edit',
-              ),
-              title: Text(context.l10n.editSuperset),
-              onTap: () {
-                Navigator.pop(context);
-                if (widget.onEdit != null) widget.onEdit!();
-              },
-            ),
-            ListTile(
-              leading: const SemanticIcon(
-                icon: AppIcons.iconCopy,
-                semanticLabel: 'Icon copy',
-              ),
-              title: Text(context.l10n.duplicate),
-              onTap: () {
-                Navigator.pop(context);
-                // TODO: Implement duplicate functionality
-              },
-            ),
-            ListTile(
-              leading: Icon(AppIcons.delete, color: context.colors.error),
-              title: Text(
-                context.l10n.deleteSuperset,
-                style: context.textTheme.bodyLarge?.copyWith(
-                  color: context.colors.error,
-                ),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                _showDeleteConfirmation(context);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
+  void _handleMenuAction(int index) {
+    switch (index) {
+      case 0: // Edit
+        if (widget.onEdit != null) widget.onEdit!();
+      case 1: // Duplicate
+        // TODO: Implement duplicate functionality
+      case 2: // Delete
+        _showDeleteConfirmation(context);
+    }
   }
 
   Color _getRPEColor(int rpe) {

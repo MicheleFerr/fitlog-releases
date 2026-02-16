@@ -5,7 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_tem
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 
 /// Compact superset template card for horizontal scroll
 ///
@@ -98,83 +98,65 @@ class _SupersetTemplateCardState extends ConsumerState<SupersetTemplateCard>
   }
 
   /// Show options menu on long press
-  void _showOptionsMenu() {
-    HapticFeedback.mediumImpact();
+  void _handleMenuAction(int index) {
+    // Menu items are built conditionally, map index to actual action
+    int actionIndex = 0;
 
-    ModalService.showSheet<void>(context,
-      backgroundColor: context.colors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Handle
-            Container(
-              margin: const EdgeInsets.only(top: 12, bottom: 8),
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: context.colors.outline.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
+    // Duplicate is always first if available
+    if (widget.onDuplicate != null) {
+      if (index == actionIndex) {
+        widget.onDuplicate!();
+        return;
+      }
+      actionIndex++;
+    }
 
-            // Title
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              child: Text(
-                context.l10n.templateOptions,
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
+    // Edit is second if available (custom only)
+    if (widget.template.isCustom && widget.onEdit != null) {
+      if (index == actionIndex) {
+        widget.onEdit!();
+        return;
+      }
+      actionIndex++;
+    }
 
-            const Divider(height: 1),
+    // Delete is last if available (custom only)
+    if (widget.template.isCustom && widget.onDelete != null) {
+      if (index == actionIndex) {
+        widget.onDelete!();
+        return;
+      }
+    }
+  }
 
-            // Duplicate option (always available)
-            if (widget.onDuplicate != null)
-              ListTile(
-                leading: Icon(AppIcons.copy, color: context.colors.primary),
-                title: Text(context.l10n.duplicateTemplate),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  widget.onDuplicate!();
-                },
-              ),
+  List<CNPopupMenuEntry> _buildMenuItems() {
+    final items = <CNPopupMenuEntry>[];
 
-            // Edit option (only for custom templates)
-            if (widget.template.isCustom && widget.onEdit != null)
-              ListTile(
-                leading: Icon(AppIcons.edit, color: context.colors.primary),
-                title: Text(context.l10n.editTemplate),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  widget.onEdit!();
-                },
-              ),
+    // Duplicate (always available if callback provided)
+    if (widget.onDuplicate != null) {
+      items.add(CNPopupMenuItem(
+        label: context.l10n.duplicateTemplate,
+        icon: const CNSymbol('doc.on.doc', size: 14),
+      ));
+    }
 
-            // Delete option (only for custom templates)
-            if (widget.template.isCustom && widget.onDelete != null)
-              ListTile(
-                leading: Icon(AppIcons.delete, color: context.colors.error),
-                title: Text(
-                  context.l10n.deleteTemplate,
-                  style: TextStyle(color: context.colors.error),
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  widget.onDelete!();
-                },
-              ),
+    // Edit (custom templates only)
+    if (widget.template.isCustom && widget.onEdit != null) {
+      items.add(CNPopupMenuItem(
+        label: context.l10n.editTemplate,
+        icon: const CNSymbol('pencil', size: 14),
+      ));
+    }
 
-            const SizedBox(height: 8),
-          ],
-        ),
-      ),
-    );
+    // Delete (custom templates only)
+    if (widget.template.isCustom && widget.onDelete != null) {
+      items.add(CNPopupMenuItem(
+        label: context.l10n.deleteTemplate,
+        icon: const CNSymbol('trash', size: 14),
+      ));
+    }
+
+    return items;
   }
 
   @override
@@ -192,12 +174,6 @@ class _SupersetTemplateCardState extends ConsumerState<SupersetTemplateCard>
         onTapUp: (_) => setState(() => _isPressed = false),
         onTapCancel: () => setState(() => _isPressed = false),
         onTap: widget.onTap,
-        onLongPress:
-            (widget.onDuplicate != null ||
-                widget.onEdit != null ||
-                widget.onDelete != null)
-            ? _showOptionsMenu
-            : null,
         child: AnimatedScale(
           scale: _isPressed ? 0.95 : 1.0,
           duration: const Duration(milliseconds: 150),
@@ -223,7 +199,7 @@ class _SupersetTemplateCardState extends ConsumerState<SupersetTemplateCard>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header: Difficulty badge + Scientific indicator
+                  // Header: Difficulty badge + Scientific indicator + Menu
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -247,13 +223,34 @@ class _SupersetTemplateCardState extends ConsumerState<SupersetTemplateCard>
                         ),
                       ),
 
-                      // Scientific badge
-                      if (hasScientificBasis)
-                        Icon(
-                          AppIcons.science,
-                          size: AppIconSize.small,
-                          color: context.colors.primary,
-                        ),
+                      // Right side: Scientific badge + Menu button
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Scientific badge
+                          if (hasScientificBasis) ...[
+                            Icon(
+                              AppIcons.science,
+                              size: AppIconSize.small,
+                              color: context.colors.primary,
+                            ),
+                            const SizedBox(width: 4),
+                          ],
+
+                          // Menu button (if any actions available)
+                          if (_buildMenuItems().isNotEmpty)
+                            GestureDetector(
+                              onTap: () {}, // Blocca propagation al parent
+                              child: CNPopupMenuButton.icon(
+                                buttonIcon: const CNSymbol('ellipsis', size: 12),
+                                buttonStyle: CNButtonStyle.plain,
+                                size: 24,
+                                items: _buildMenuItems(),
+                                onSelected: _handleMenuAction,
+                              ),
+                            ),
+                        ],
+                      ),
                     ],
                   ),
 
