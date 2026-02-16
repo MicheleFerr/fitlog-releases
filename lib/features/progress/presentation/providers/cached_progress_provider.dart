@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'dart:async';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_providers_shared.dart';
 import 'package:gymbro_flutter_new/shared/providers/shared_preferences_provider.dart';
 import 'package:gymbro_flutter_new/shared/data/mixins/firestore_cache_first_mixin.dart';
 import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';

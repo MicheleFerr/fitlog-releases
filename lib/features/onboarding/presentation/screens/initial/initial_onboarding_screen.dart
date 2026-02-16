@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/core/navigation/app_router.dart';
+import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/initial/initial_onboarding_completion_service.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/initial/initial_onboarding_provider.dart';
@@ -130,33 +130,15 @@ class _InitialOnboardingScreenState
       // Start home tour - will show automatically when Home renders
       ref.read(homeTourProvider.notifier).startTour();
 
-      // CRITICAL FIX: Wait for Riverpod state to propagate to router provider
-      // The router's redirect closure captures initialOnboardingCompleted at creation time.
-      // We need to wait for:
-      // 1. AppConfig state change to propagate
-      // 2. Router provider to rebuild with new state
-      // 3. New router instance to be installed in widget tree
+      // Wait for Riverpod state to propagate before navigating
       print('🏠 [Onboarding] Waiting for state propagation...');
+      await Future.delayed(const Duration(milliseconds: 200));
 
-      // Wait for next frame to ensure state is propagated
-      await Future.delayed(const Duration(milliseconds: 150));
-
-      if (mounted) {
-        // Force router to rebuild by invalidating and re-reading
-        print('🔄 [Onboarding] Invalidating router provider...');
-        ref.invalidate(appRouterProvider);
-
-        // Wait another frame for the new router to be created
-        await Future.delayed(const Duration(milliseconds: 50));
-
-        if (mounted) {
-          // Now get the fresh router with updated state
-          final router = ref.read(appRouterProvider);
-          // Navigate to choice screen (guide me vs explore)
-          print('🎯 [Onboarding] Navigating to choice screen...');
-          router.go(AppRoutes.onboardingChoicePath);
-          print('✅ [Onboarding] Navigation to choice screen triggered');
-        }
+      if (mounted && context.mounted) {
+        // Navigate using GoRouter context extension (avoids circular import with app_router.dart)
+        print('🎯 [Onboarding] Navigating to choice screen...');
+        context.go(AppRoutes.onboardingChoicePath);
+        print('✅ [Onboarding] Navigation to choice screen triggered');
       }
 
       // Keep spinner visible until navigation completes

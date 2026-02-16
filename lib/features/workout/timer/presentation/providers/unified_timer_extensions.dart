@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_ui_state_provider.dart';
-import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/presentation/providers/unified_timer_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/presentation/providers/timer_ui_state_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/domain/models/unified_timer_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// Extensions per UnifiedTimerProvider con funzionalità tier-1

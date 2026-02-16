@@ -36,7 +36,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/core/navigation/main_shell.dart';
-import 'package:gymbro_flutter_new/app/app.dart' show initialDeepLinkProvider;
+import 'package:gymbro_flutter_new/shared/presentation/providers/deep_link_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';

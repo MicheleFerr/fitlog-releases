@@ -1,5 +1,5 @@
 /// Test file to debug and verify timer audio fixes
-/// Run this with: flutter test test/features/timer/timer_audio_debug.dart
+/// Run this with: flutter test test/features/workout/timer/timer_audio_debug.dart
 /// 
 /// PROBLEMS FIXED:
 /// 1. ✅ Audio not synchronized with audioEnabled setting
@@ -13,7 +13,7 @@ library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 void main() {

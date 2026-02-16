@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/timer/domain/entities/rest_timer.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/domain/entities/rest_timer.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';

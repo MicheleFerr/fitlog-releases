@@ -1,3 +1,9 @@
+// Re-export initialDeepLinkProvider for backward compatibility
+// (moved to shared/presentation/providers/deep_link_provider.dart
+// to break circular dependency with app_router.dart)
+export 'package:gymbro_flutter_new/shared/presentation/providers/deep_link_provider.dart'
+    show initialDeepLinkProvider;
+
 import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -13,11 +19,10 @@ import 'package:gymbro_flutter_new/features/strength_standards/presentation/prov
 import 'package:gymbro_flutter_new/core/providers/analytics_initialization_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/auth/providers/session_timeout_providers.dart';
 import 'package:gymbro_flutter_new/shared/domain/auth/session_timeout_service.dart';
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_router.dart';
-import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/splash/presentation/screens/animated_splash_screen.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_orchestrator.dart';
 
@@ -370,6 +375,3 @@ class FitLogApp extends ConsumerWidget {
 // - Workout forgotten notification
 // - Draft recovery
 
-/// Provider for initial deep link (set during cold-start from notifications)
-/// This is overridden in main.dart ProviderScope.overrides
-final initialDeepLinkProvider = Provider<String?>((ref) => null);

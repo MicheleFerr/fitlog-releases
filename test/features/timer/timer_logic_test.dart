@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gymbro_flutter_new/features/timer/domain/entities/rest_timer.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/domain/entities/rest_timer.dart';
 
 void main() {
   group('⏱️ Timer Logic Tests', () {

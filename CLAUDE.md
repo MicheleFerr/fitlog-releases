@@ -131,6 +131,31 @@ final testAccount = AccountTier.premium;  // Per testing admin
 
 ---
 
+## 🔄 PREVENZIONE CICLI DI DIPENDENZE
+
+### ❌ VIETATO (Cross-feature cycles)
+- Feature A importa Feature B + Feature B importa Feature A
+- `core/navigation` importa `features/*`
+- `shared/` importa `features/*`
+
+### ✅ PERMESSO
+- Features importano Core/Shared (one-way)
+- Provider importa Service (one-way)
+- Cicli intra-feature (same feature OK, monitorare)
+
+### 🛠️ PATTERN SE SERVE ROMPERE UN CICLO
+
+1. **Extract Shared Provider**: Sposta provider base in file `_shared.dart`
+2. **Use context.go()**: Per navigazione, usa GoRouter context extension invece di `ref.read(routerProvider)`
+3. **Move to correct feature**: Se un modulo è usato solo da 1 feature, spostalo in quella feature
+4. **Re-export per backward compat**: `export 'new_file.dart' show Symbol;`
+
+### ⚠️ CICLI RESIDUI NOTI (accettabili)
+- `analytics ↔ workout` (workout_analytics_provider) - da risolvere in futuro
+- Cicli intra-feature (same feature) - monitorare ma OK
+
+---
+
 ## ⚡ PERFORMANCE RULES (MANDATORY)
 
 ### 🤖 CLAUDE - AUTOMATIC CHECK BEFORE CODING

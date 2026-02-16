@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
@@ -25,13 +24,10 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_replacement_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
-// Auth Service Provider
-final authServiceProvider = Provider<AuthService>((ref) => AuthService());
-
-// Current Firebase User Provider
-final firebaseUserProvider = StreamProvider<User?>(
-  (ref) => ref.watch(authServiceProvider).authStateChanges,
-);
+// Re-export shared providers for backward compatibility.
+// All existing imports of auth_provider.dart continue to work.
+export 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_providers_shared.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_providers_shared.dart';
 
 // Current User Model Provider
 final currentUserProvider = StreamProvider<UserModel?>((ref) async* {
@@ -83,17 +79,8 @@ final currentUserProvider = StreamProvider<UserModel?>((ref) async* {
   }
 });
 
-// Auth State Provider (loading, authenticated, unauthenticated)
-final authStateProvider = Provider<AuthState>((ref) {
-  final asyncUser = ref.watch(firebaseUserProvider);
-
-  return asyncUser.when(
-    data: (user) =>
-        user != null ? AuthState.authenticated : AuthState.unauthenticated,
-    loading: () => AuthState.loading,
-    error: (_, __) => AuthState.unauthenticated,
-  );
-});
+// authStateProvider is now defined in auth_providers_shared.dart
+// and re-exported above for backward compatibility.
 
 // Auth Controller
 final authControllerProvider =
@@ -460,4 +447,4 @@ class AuthController extends Notifier<AsyncValue<void>> {
   }
 }
 
-enum AuthState { loading, authenticated, unauthenticated }
+// AuthState enum is now defined in auth_providers_shared.dart

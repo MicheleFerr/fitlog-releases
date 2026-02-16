@@ -36,10 +36,10 @@ import 'package:gymbro_flutter_new/shared/domain/services/input_validator.dart';
 // Haptic feedback
 import 'package:gymbro_flutter_new/shared/presentation/services/haptic_feedback_service.dart';
 // ⏱️ Unified Timer for rest timer auto-start
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/presentation/providers/unified_timer_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/presentation/providers/unified_timer_extensions.dart';
 // 🏋️ TimerType enum for inter-exercise timer
-import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/domain/models/unified_timer_state.dart';
 // 🔄 Firestore Batch Writer for optimized cloud sync
 import 'package:gymbro_flutter_new/shared/data/services/firestore_batch_writer.dart';
 // 📸 Snapshot Sync Service for differential cloud sync

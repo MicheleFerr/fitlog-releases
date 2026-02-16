@@ -12,7 +12,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/auto_adjustment_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/presentation/providers/unified_timer_extensions.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart'
     show showTutInfoBottomSheet;

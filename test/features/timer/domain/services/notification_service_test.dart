@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gymbro_flutter_new/features/timer/domain/services/notification_service.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/domain/services/notification_service.dart';
 
 void main() {
   late NotificationService service;
