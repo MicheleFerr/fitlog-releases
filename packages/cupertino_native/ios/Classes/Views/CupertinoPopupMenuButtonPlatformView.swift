@@ -288,7 +288,11 @@ class CupertinoPopupMenuButtonPlatformView: NSObject, FlutterPlatformView {
       }
       flushGroup()
       let children: [UIMenuElement] = groups.map { group in
-        UIMenu(title: "", options: .displayInline, children: group)
+        if #available(iOS 16.0, *) {
+          return UIMenu(title: "", options: .displayInline, preferredElementSize: .large, children: group)
+        } else {
+          return UIMenu(title: "", options: .displayInline, children: group)
+        }
       }
       button.menu = UIMenu(title: "", children: children)
     }

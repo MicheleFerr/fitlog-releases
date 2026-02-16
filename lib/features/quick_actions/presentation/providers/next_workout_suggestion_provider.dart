@@ -7,6 +7,7 @@ library;
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/quick_actions/domain/services/split_detection_service.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/template_stress_analysis.dart';
@@ -49,8 +50,8 @@ final nextWorkoutSuggestionProvider =
 
       final workouts = workoutsAsync.when(
         data: (list) => list,
-        loading: () => <dynamic>[],
-        error: (_, __) => <dynamic>[],
+        loading: () => <WorkoutHistoryDetail>[],
+        error: (_, __) => <WorkoutHistoryDetail>[],
       );
 
       if (workouts.isEmpty) {

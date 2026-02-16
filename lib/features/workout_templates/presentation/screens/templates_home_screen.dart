@@ -195,8 +195,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               SliverAppBar(
                 pinned: false,
                 floating: false,
-                expandedHeight: 80,
+                expandedHeight: 96,
                 backgroundColor: context.colors.surface,
+                centerTitle: true,
                 leading: IconButton(
                   icon: SemanticIcon(
                     icon: AppIcons.arrowBack,
@@ -221,25 +222,25 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                       },
                     ),
                 ],
-                flexibleSpace: FlexibleSpaceBar(
-                  titlePadding: const EdgeInsets.only(left: 56, bottom: 16),
-                  title: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.workoutTemplates,
-                        style: context.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
+                title: Text(
+                  l10n.workoutTemplates,
+                  style: context.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                bottom: PreferredSize(
+                  preferredSize: const Size.fromHeight(32),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16, bottom: 8),
+                      child: Text(
                         l10n.workoutRoutines,
-                        style: context.textTheme.labelSmall?.copyWith(
+                        style: context.textTheme.labelMedium?.copyWith(
                           color: context.colors.onSurfaceVariant,
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),

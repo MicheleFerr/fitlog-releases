@@ -70,6 +70,7 @@ class WelcomeView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SafeArea(
+      bottom: false, // Allow content to scroll under bottom navigation bar
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
