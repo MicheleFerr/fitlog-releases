@@ -88,7 +88,8 @@ class MainShell extends ConsumerStatefulWidget {
   ConsumerState<MainShell> createState() => _MainShellState();
 }
 
-class _MainShellState extends ConsumerState<MainShell> {
+class _MainShellState extends ConsumerState<MainShell>
+    with SingleTickerProviderStateMixin {
   // Track if user has visited workout screen since workout started
   bool _hasVisitedWorkoutScreen = false;
   String? _lastWorkoutId;
@@ -98,6 +99,31 @@ class _MainShellState extends ConsumerState<MainShell> {
 
   // Guard against multiple quick actions overlay openings
   bool _isQuickActionsOpen = false;
+
+  // Quick actions overlay animation (Stack-based, not dialog)
+  late final AnimationController _overlayController;
+  late final Animation<double> _overlayAnimation;
+  bool _showOverlay = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _overlayController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _overlayAnimation = CurvedAnimation(
+      parent: _overlayController,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
+    );
+  }
+
+  @override
+  void dispose() {
+    _overlayController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +202,17 @@ class _MainShellState extends ConsumerState<MainShell> {
                 right: 0,
                 bottom: navBarTotalHeight - 4,
                 child: _buildMiniBar(workout!, context),
+              ),
+
+            // Quick actions overlay (above content, below tab bar in z-order)
+            if (_showOverlay)
+              Positioned.fill(
+                child: _QuickActionsOverlay(
+                  animation: _overlayAnimation,
+                  onClose: _closeQuickActions,
+                  navigationShell: widget.navigationShell,
+                  bottomOffset: navBarTotalHeight,
+                ),
               ),
 
             // Bottom navigation bar - hidden when a bottom sheet is open
@@ -292,13 +329,17 @@ class _MainShellState extends ConsumerState<MainShell> {
   /// Branch indices skip it: [Home(0), Workout(1), Profile(2), AI Coach(3)]
   void _onTabBarTap(BuildContext context, int tabIndex) {
     if (tabIndex == _kPlusButtonTabIndex) {
-      // Don't open if already open (prevents stacking overlays → black screen)
-      if (_isQuickActionsOpen) return;
-      _showQuickActionsModal(context);
+      if (_isQuickActionsOpen) {
+        _closeQuickActions();
+      } else {
+        _showQuickActionsModal(context);
+      }
       return;
     }
-    // Ignore tab taps while quick actions overlay is open
-    if (_isQuickActionsOpen) return;
+    // Close overlay if open, then navigate
+    if (_isQuickActionsOpen) {
+      _closeQuickActions();
+    }
     // Map tab index → branch index (subtract 1 for items after the + button)
     final branchIndex = tabIndex < _kPlusButtonTabIndex
         ? tabIndex
@@ -349,31 +390,25 @@ class _MainShellState extends ConsumerState<MainShell> {
     return false;
   }
 
-  /// Show quick actions modal with blur background
+  /// Show quick actions overlay within the Stack (tab bar stays visible)
   void _showQuickActionsModal(BuildContext context) {
-    _isQuickActionsOpen = true;
     HapticFeedback.mediumImpact();
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: 'QuickActions',
-      barrierColor: Colors.transparent,
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
-      transitionBuilder: (dialogContext, animation, secondaryAnimation, _) {
-        return _QuickActionsOverlay(
-          animation: animation,
-          onClose: () => Navigator.of(dialogContext).pop(),
-          navigationShell: widget.navigationShell,
-        );
-      },
-    ).then((_) {
-      // Reset guard when dialog is dismissed (by any means)
-      _isQuickActionsOpen = false;
-      // Force CNTabBar to re-sync to the actual current branch index.
-      // Without this, the native tab bar keeps _lastIndex = 2 (the "+" index)
-      // and ignores the next tap on "+" because idx == _lastIndex.
-      if (mounted) setState(() {});
+    setState(() {
+      _isQuickActionsOpen = true;
+      _showOverlay = true;
+    });
+    _overlayController.forward();
+  }
+
+  /// Close quick actions overlay with reverse animation
+  void _closeQuickActions() {
+    _overlayController.reverse().then((_) {
+      if (mounted) {
+        setState(() {
+          _isQuickActionsOpen = false;
+          _showOverlay = false;
+        });
+      }
     });
   }
 
@@ -643,11 +678,13 @@ class _QuickActionsOverlay extends StatelessWidget {
     required this.animation,
     required this.onClose,
     required this.navigationShell,
+    required this.bottomOffset,
   });
 
   final Animation<double> animation;
   final VoidCallback onClose;
   final StatefulNavigationShell navigationShell;
+  final double bottomOffset;
 
   @override
   Widget build(BuildContext context) {
@@ -657,21 +694,22 @@ class _QuickActionsOverlay extends StatelessWidget {
         color: Colors.transparent,
         child: Stack(
           children: [
-            // Blur background
+            // Blur background - covers entire overlay area
             Positioned.fill(
               child: GestureDetector(
                 onTap: onClose,
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
                   child: Container(
-                    color: Colors.black.withValues(alpha: 0.6),
+                    color: Colors.black.withValues(alpha: 0.75),
                   ),
                 ),
               ),
             ),
 
-            // Content
+            // Content - positioned above the tab bar
             SafeArea(
+              bottom: false,
               child: Column(
                 children: [
                   const Spacer(),
@@ -712,7 +750,8 @@ class _QuickActionsOverlay extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 40),
+                  // Space for tab bar + padding so close button stays above it
+                  SizedBox(height: bottomOffset + 16),
                 ],
               ),
             ),
