@@ -10,9 +10,9 @@
 /// Used inside MusclePriorityCard's horizontal ListView.
 library;
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/exercise_suggestion_engine.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_image_carousel.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -105,13 +105,12 @@ class ExerciseCompactCard extends StatelessWidget {
       child: Stack(
         children: [
           if (suggestion.imageUrl != null && suggestion.imageUrl!.isNotEmpty)
-            CachedNetworkImage(
+            ExerciseImageCarousel(
               imageUrl: suggestion.imageUrl!,
               height: imageHeight,
               width: double.infinity,
-              fit: BoxFit.cover,
-              placeholder: (_, __) => _imagePlaceholder(context),
-              errorWidget: (_, __, ___) => _imagePlaceholder(context),
+              placeholder: _imagePlaceholder(context),
+              errorWidget: _imagePlaceholder(context),
             )
           else
             _imagePlaceholder(context),

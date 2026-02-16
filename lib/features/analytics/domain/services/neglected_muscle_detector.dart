@@ -56,6 +56,40 @@ enum NeglectSeverity {
 /// }
 /// ```
 class NeglectedMuscleDetector {
+  /// Mappa abbreviazioni JSON → chiavi detector
+  ///
+  /// Normalizza le chiavi abbreviate lowercase del MuscleBalanceCalculator
+  /// (es. "glut", "femo", "quad") alle chiavi inglesi del detector
+  /// (es. "glutes", "hamstrings", "quads").
+  ///
+  /// Grouping logic:
+  /// - trap → back (upper back is part of back group)
+  /// - add/abdu → glutes (hip complex)
+  /// - coll → shoulders (neck training often uses shoulder exercises)
+  static const Map<String, String> _abbrToDetectorKey = {
+    'pett': 'chest',
+    'lat': 'back',
+    'trap': 'back', // traps group con back
+    'lomb': 'lower_back',
+    'lombar': 'lower_back',
+    'delt': 'shoulders',
+    'delt_ant': 'shoulders',
+    'delt_lat': 'shoulders',
+    'delt_post': 'rear_delts',
+    'bici': 'biceps',
+    'tric': 'triceps',
+    'ava': 'forearms',
+    'quad': 'quads',
+    'femo': 'hamstrings',
+    'glut': 'glutes',
+    'polp': 'calves',
+    'core': 'abs',
+    'obl': 'abs',
+    'add': 'glutes', // adductors group con glutes
+    'abdu': 'glutes', // abductors group con glutes
+    'coll': 'shoulders', // neck → shoulders
+  };
+
   /// Soglie di neglect per gruppo muscolare.
   ///
   /// Basate su distribuzione naturale del volume:
@@ -90,11 +124,22 @@ class NeglectedMuscleDetector {
   List<NeglectedMuscle> detectNeglectedMuscles(MuscleBalanceMetrics balance) {
     final neglectedList = <NeglectedMuscle>[];
 
+    // Normalize abbreviated keys to detector keys
+    final normalizedVolumes = <String, double>{};
     for (final entry in balance.muscleVolumePercentages.entries) {
+      final rawKey = entry.key.toLowerCase();
+      final detectorKey = _abbrToDetectorKey[rawKey] ?? rawKey;
+      // Aggregate volumes for keys that map to the same detector key (e.g., trap + lat → back)
+      normalizedVolumes[detectorKey] =
+          (normalizedVolumes[detectorKey] ?? 0.0) + entry.value;
+    }
+
+    // Iterate over normalized volumes instead of raw balance data
+    for (final entry in normalizedVolumes.entries) {
       final muscleName = entry.key;
       final volumePercent = entry.value;
-      final threshold = neglectThresholds[muscleName.toLowerCase()] ??
-          defaultNeglectThreshold;
+      final threshold =
+          neglectThresholds[muscleName] ?? defaultNeglectThreshold;
 
       if (volumePercent < threshold) {
         final severity = _calculateSeverity(volumePercent, threshold);
@@ -102,7 +147,7 @@ class NeglectedMuscleDetector {
           muscleName: muscleName,
           volumePercent: volumePercent,
           severity: severity,
-          balance: balance,
+          normalizedVolumes: normalizedVolumes,
         );
 
         neglectedList.add(
@@ -144,7 +189,7 @@ class NeglectedMuscleDetector {
     required String muscleName,
     required double volumePercent,
     required NeglectSeverity severity,
-    required MuscleBalanceMetrics balance,
+    required Map<String, double> normalizedVolumes,
   }) {
     double score = 0;
 
@@ -164,8 +209,7 @@ class NeglectedMuscleDetector {
     // 2. Antagonist imbalance score (0-3)
     final antagonist = _getAntagonist(muscleName);
     if (antagonist != null) {
-      final antagonistVolume =
-          balance.muscleVolumePercentages[antagonist] ?? 0.0;
+      final antagonistVolume = normalizedVolumes[antagonist] ?? 0.0;
       final imbalanceRatio = antagonistVolume > 0
           ? (antagonistVolume / volumePercent)
           : 1.0;
@@ -180,7 +224,7 @@ class NeglectedMuscleDetector {
     }
 
     // 3. Posture risk score (0-3)
-    score += _calculatePostureRisk(muscleName, balance);
+    score += _calculatePostureRisk(muscleName, normalizedVolumes);
 
     return score.clamp(0.0, 10.0);
   }
@@ -224,39 +268,38 @@ class NeglectedMuscleDetector {
   /// - Lower back neglected + abs/lower_back ratio > 2.5 → lower back weakness
   double _calculatePostureRisk(
     String muscleName,
-    MuscleBalanceMetrics balance,
+    Map<String, double> normalizedVolumes,
   ) {
     final muscle = muscleName.toLowerCase();
-    final volumes = balance.muscleVolumePercentages;
 
     // Back neglected: rischio rounded shoulders se chest/back ratio alto
     if (muscle == 'back') {
-      final chestVol = volumes['chest'] ?? 0.0;
-      final backVol = volumes['back'] ?? 0.01;
+      final chestVol = normalizedVolumes['chest'] ?? 0.0;
+      final backVol = normalizedVolumes['back'] ?? 0.01;
       if (chestVol / backVol > 2.0) return 3.0;
       if (chestVol / backVol > 1.5) return 2.0;
     }
 
     // Hamstrings neglected: rischio ginocchia se quads/hamstrings ratio alto
     if (muscle == 'hamstrings') {
-      final quadsVol = volumes['quads'] ?? 0.0;
-      final hamVol = volumes['hamstrings'] ?? 0.01;
+      final quadsVol = normalizedVolumes['quads'] ?? 0.0;
+      final hamVol = normalizedVolumes['hamstrings'] ?? 0.01;
       if (quadsVol / hamVol > 2.5) return 3.0;
       if (quadsVol / hamVol > 1.8) return 2.0;
     }
 
     // Rear delts neglected: rischio shoulder impingement
     if (muscle == 'rear_delts') {
-      final shouldersVol = volumes['shoulders'] ?? 0.0;
-      final rearVol = volumes['rear_delts'] ?? 0.01;
+      final shouldersVol = normalizedVolumes['shoulders'] ?? 0.0;
+      final rearVol = normalizedVolumes['rear_delts'] ?? 0.01;
       if (shouldersVol / rearVol > 3.0) return 2.5;
       if (shouldersVol / rearVol > 2.0) return 1.5;
     }
 
     // Lower back neglected: rischio debolezza lombare
     if (muscle == 'lower_back') {
-      final absVol = volumes['abs'] ?? 0.0;
-      final lbVol = volumes['lower_back'] ?? 0.01;
+      final absVol = normalizedVolumes['abs'] ?? 0.0;
+      final lbVol = normalizedVolumes['lower_back'] ?? 0.01;
       if (absVol / lbVol > 2.5) return 2.0;
     }
 

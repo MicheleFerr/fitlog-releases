@@ -341,6 +341,141 @@ void main() {
     });
   });
 
+  group('Key normalization (abbreviated to detector keys)', () {
+    test('glut → glutes normalization', () {
+      final balance = createMetrics({'glut': 3.0}); // threshold 5%
+      final result = detector.detectNeglectedMuscles(balance);
+
+      expect(result.length, 1);
+      expect(result.first.muscleName, 'glutes'); // normalized key
+      expect(result.first.volumePercentage, 3.0);
+    });
+
+    test('femo → hamstrings normalization', () {
+      final balance = createMetrics({'femo': 3.0}); // threshold 5%
+      final result = detector.detectNeglectedMuscles(balance);
+
+      expect(result.length, 1);
+      expect(result.first.muscleName, 'hamstrings');
+      expect(result.first.volumePercentage, 3.0);
+    });
+
+    test('quad → quads normalization', () {
+      final balance = createMetrics({'quad': 5.0}); // threshold 8%
+      final result = detector.detectNeglectedMuscles(balance);
+
+      expect(result.length, 1);
+      expect(result.first.muscleName, 'quads');
+      expect(result.first.volumePercentage, 5.0);
+    });
+
+    test('delt_post → rear_delts normalization', () {
+      final balance = createMetrics({'delt_post': 1.0}); // threshold 2%
+      final result = detector.detectNeglectedMuscles(balance);
+
+      expect(result.length, 1);
+      expect(result.first.muscleName, 'rear_delts');
+      expect(result.first.volumePercentage, 1.0);
+    });
+
+    test('pett → chest normalization', () {
+      final balance = createMetrics({'pett': 4.0}); // threshold 6%
+      final result = detector.detectNeglectedMuscles(balance);
+
+      expect(result.length, 1);
+      expect(result.first.muscleName, 'chest');
+      expect(result.first.volumePercentage, 4.0);
+    });
+
+    test('aggregates lat + trap → back', () {
+      final balance = createMetrics({
+        'lat': 3.0,
+        'trap': 2.0, // total = 5.0, threshold 8%
+      });
+      final result = detector.detectNeglectedMuscles(balance);
+
+      expect(result.length, 1);
+      expect(result.first.muscleName, 'back');
+      expect(result.first.volumePercentage, 5.0); // aggregated
+    });
+
+    test('aggregates delt + delt_ant + delt_lat → shoulders', () {
+      final balance = createMetrics({
+        'delt': 1.0,
+        'delt_ant': 1.5,
+        'delt_lat': 1.0, // total = 3.5, threshold 5%
+      });
+      final result = detector.detectNeglectedMuscles(balance);
+
+      expect(result.length, 1);
+      expect(result.first.muscleName, 'shoulders');
+      expect(result.first.volumePercentage, 3.5);
+    });
+
+    test('aggregates core + obl → abs', () {
+      final balance = createMetrics({
+        'core': 1.0,
+        'obl': 1.0, // total = 2.0, threshold 3%
+      });
+      final result = detector.detectNeglectedMuscles(balance);
+
+      expect(result.length, 1);
+      expect(result.first.muscleName, 'abs');
+      expect(result.first.volumePercentage, 2.0);
+    });
+
+    test('aggregates add + abdu → glutes', () {
+      final balance = createMetrics({
+        'add': 1.5,
+        'abdu': 1.5, // total = 3.0, threshold 5%
+      });
+      final result = detector.detectNeglectedMuscles(balance);
+
+      expect(result.length, 1);
+      expect(result.first.muscleName, 'glutes');
+      expect(result.first.volumePercentage, 3.0);
+    });
+
+    test('mixed abbreviated and normalized keys', () {
+      final balance = createMetrics({
+        'glut': 2.0, // → glutes (threshold 5%) - neglected
+        'femo': 2.0, // → hamstrings (threshold 5%) - neglected
+        'chest': 10.0, // already normalized - OK
+        'lat': 9.0, // → back (threshold 8%) - OK
+      });
+      final result = detector.detectNeglectedMuscles(balance);
+
+      expect(result.length, 2);
+      final names = result.map((m) => m.muscleName).toSet();
+      expect(names, containsAll(['glutes', 'hamstrings']));
+      expect(names, isNot(contains('back'))); // lat at 9% > 8% threshold
+    });
+
+    test('posture risk works with normalized keys', () {
+      final balance = createMetrics({
+        'femo': 2.0, // → hamstrings (neglected)
+        'quad': 15.0, // → quads (high)
+      });
+      final result = detector.detectNeglectedMuscles(balance);
+
+      final ham = result.firstWhere((m) => m.muscleName == 'hamstrings');
+      // Should detect posture risk (quads/hamstrings = 7.5 > 2.5)
+      expect(ham.priority, greaterThanOrEqualTo(7.0));
+    });
+
+    test('antagonist pairs work with normalized keys', () {
+      final balance = createMetrics({
+        'pett': 15.0, // → chest
+        'lat': 3.0, // → back (neglected)
+      });
+      final result = detector.detectNeglectedMuscles(balance);
+
+      final back = result.firstWhere((m) => m.muscleName == 'back');
+      // Should detect antagonist imbalance (chest/back = 5.0 > 3.0)
+      expect(back.priority, greaterThan(4.0));
+    });
+  });
+
   group('Edge cases', () {
     test('empty volume percentages returns empty list', () {
       final balance = createMetrics({});

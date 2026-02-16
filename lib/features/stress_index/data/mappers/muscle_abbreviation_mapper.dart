@@ -596,6 +596,8 @@ class MuscleAbbreviationMapper {
       'forearms': 'AVA',
       'lower back': 'LOMB',
       'lower_back': 'LOMB',
+      'rear delts': 'DELT_POST',
+      'rear_delts': 'DELT_POST',
       'adductors': 'ADD',
       'abductors': 'ABDU',
     };
