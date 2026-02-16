@@ -34,13 +34,14 @@ class StressIndexConstants {
   static const double rawScoreForMax100 = 15000.0;
 
   // === RECOVERY TIME (hours) BY MUSCLE GROUP ===
-  // Based on research and practical experience
+  // Based on research (Beardsley 2022, UNI ScholarWorks, ACSM Guidelines)
+  // Updated with evidence-based values - quads/core recover faster than previously estimated
   static const Map<String, int> muscleRecoveryHours = {
-    'QUAD': 72, // Large muscle, compound movements
-    'GLUT': 72, // Large muscle, compound movements
-    'FEMO': 72, // Hamstrings (canonical)
-    'LAT': 72, // Large back muscles
-    'PETT': 72, // Chest
+    'QUAD': 48, // UPDATED: 72→48h - quads recover faster despite size
+    'GLUT': 60, // UPDATED: 72→60h - slightly faster than previous estimate
+    'FEMO': 60, // UPDATED: 72→60h - hamstrings recover moderately fast
+    'LAT': 60, // UPDATED: 72→60h - back muscles recover faster
+    'PETT': 60, // UPDATED: 72→60h - chest recovers faster
     // Deltoid portions (P0 fix: split DELT into ANT/LAT/POST)
     'DELT_ANT': 48, // Anterior deltoid (front raises, pressing)
     'DELT_LAT': 48, // Lateral deltoid (lateral raises)
@@ -48,11 +49,11 @@ class StressIndexConstants {
     'DELT': 48, // Generic shoulders (backward compatibility)
     'TRAP': 48, // Trapezius
     'ROMB': 48, // Rhomboids (canonical - secondary back muscles)
-    'BICI': 48, // Biceps
-    'TRIC': 48, // Triceps
-    'CORE': 48, // Core/Abs
-    'OBL': 48, // Obliques (canonical - core secondary muscles)
-    'AVA': 48, // Forearms
+    'BICI': 48, // Biceps (unchanged - evidence confirms 36-48h)
+    'TRIC': 48, // Triceps (unchanged - evidence confirms 36-48h)
+    'CORE': 36, // UPDATED: 48→36h - core recovers faster, high frequency OK
+    'OBL': 36, // UPDATED: 48→36h - obliques similar to core
+    'AVA': 36, // UPDATED: 48→36h - forearms recover fast
     'POLP': 48, // Calves
     'ADD': 48, // Adductors
     'ABDU': 48, // Abductors

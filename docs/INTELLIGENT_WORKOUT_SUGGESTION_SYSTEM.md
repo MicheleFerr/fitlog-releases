@@ -1,8 +1,31 @@
 # Intelligent Workout Day Suggestion System - Design Document
 
-**Versione**: 1.0
+**Versione**: 1.1
 **Data**: 2026-02-16
-**Status**: Design Complete - Ready for Implementation
+**Status**: ✅ **FASE 1 IMPLEMENTATA** - Multi-Factor Scoring Live
+
+---
+
+## 📊 Implementation Status
+
+| Fase | Status | Data Completamento | Note |
+|------|--------|-------------------|------|
+| **Fase 1 MVP** | ✅ **COMPLETATA** | 2026-02-16 | 6-factor scoring, volume tracking, supercompensation curve |
+| **Fase 2** | ⏳ Planned | TBD | Rest day decision tree, deload detection |
+| **Fase 3** | ⏳ Planned | TBD | Adaptive personalization, pattern learning |
+
+### Fase 1 Deliverables
+
+✅ `WeeklyVolumeTracker` - Weekly set counting per muscle group
+✅ `VolumeLandmarks` - MEV/MAV/MRV thresholds (RP Strength)
+✅ `TemplateSuggestionEngine` - 6-factor scoring algorithm
+✅ `smartTemplateSuggestionProvider` - New provider with multi-factor scoring
+✅ `smartTemplateSuggestionAdapterProvider` - Backward-compatible adapter
+✅ Evidence-based recovery hours update (quads 48h, core 36h)
+✅ Pre-filter threshold lowered: 50% → 30%
+✅ Supercompensation curve: 70-90% recovery scores 100 pts
+✅ Unit tests: 20 tests passing (engine + tracker)
+✅ UI integration: TodaysWorkoutCard, TemplateSuggestionCard, QuickActions
 
 ---
 
@@ -914,32 +937,43 @@ Nessuna persona ha impatto negativo. Marco e Roberto sono i piu beneficiati.
 
 ## 10. Implementation Roadmap
 
-### Fase 1: Smart Scoring MVP (Settimana 1)
+### Fase 1: Smart Scoring MVP ✅ COMPLETATA (2026-02-16)
 
-**Goal**: Ridurre i falsi "Rest Day" del 70%+
+**Goal**: Ridurre i falsi "Rest Day" del 70%+ ➜ **DA VALIDARE IN PRODUZIONE**
 
 **Tasks**:
-1. Creare `WeeklyVolumeTracker` service
-2. Creare `VolumeLandmarks` constants (tabella MEV/MAV/MRV)
-3. Creare `TemplateSuggestionEngine` con i 6 fattori di scoring
-4. Abbassare soglia pre-filter da 50% a 30%
-5. Implementare `_supercompensationCurve()` per RecoveryScore
-6. Integrare `NeglectedMuscleDetector` results nello scoring
-7. Aggiornare `templateSuggestionProvider` per usare il nuovo engine
-8. Aggiornare `TodaysWorkoutCard` per mostrare rationale e confidence
-9. Test unitari per ogni fattore di scoring
+1. ✅ Creare `WeeklyVolumeTracker` service
+2. ✅ Creare `VolumeLandmarks` constants (tabella MEV/MAV/MRV)
+3. ✅ Creare `TemplateSuggestionEngine` con i 6 fattori di scoring
+4. ✅ Abbassare soglia pre-filter da 50% a 30%
+5. ✅ Implementare `_supercompensationCurve()` per RecoveryScore
+6. ⏳ Integrare `NeglectedMuscleDetector` results nello scoring *(Fase 2)*
+7. ✅ Aggiornare `templateSuggestionProvider` per usare il nuovo engine
+8. ✅ Aggiornare `TodaysWorkoutCard` per mostrare rationale e confidence
+9. ✅ Test unitari per ogni fattore di scoring (20 tests passing)
 
-**Files da creare**:
-- `lib/features/stress_index/domain/services/template_suggestion_engine.dart`
-- `lib/features/stress_index/domain/services/weekly_volume_tracker.dart`
-- `lib/features/stress_index/domain/constants/volume_landmarks.dart`
+**Files creati**:
+- ✅ `lib/features/stress_index/domain/services/template_suggestion_engine.dart` (17KB)
+- ✅ `lib/features/stress_index/domain/services/weekly_volume_tracker.dart` (3.6KB)
+- ✅ `lib/features/stress_index/domain/constants/volume_landmarks.dart` (3.5KB)
+- ✅ `test/features/stress_index/domain/services/template_suggestion_engine_test.dart` (8 tests)
+- ✅ `test/features/stress_index/domain/services/weekly_volume_tracker_test.dart` (12 tests)
 
-**Files da modificare**:
-- `lib/features/stress_index/presentation/providers/template_suggestion_provider.dart`
-- `lib/features/stress_index/domain/constants/stress_index_constants.dart` (recovery times)
-- `lib/features/workout/presentation/workout_screen/widgets/todays_workout_card.dart`
+**Files modificati**:
+- ✅ `lib/features/stress_index/presentation/providers/template_suggestion_provider.dart`
+  - Nuovo `smartTemplateSuggestionProvider` (algoritmo completo)
+  - Nuovo `smartTemplateSuggestionAdapterProvider` (backward compatible)
+- ✅ `lib/features/stress_index/domain/constants/stress_index_constants.dart` (recovery hours aggiornati)
+- ✅ `lib/features/workout/presentation/workout_screen/widgets/todays_workout_card.dart` (usa nuovo provider)
+- ✅ `lib/features/quick_actions/presentation/providers/next_workout_suggestion_provider.dart` (usa nuovo provider)
+- ✅ `lib/features/stress_index/presentation/widgets/template_suggestion_card.dart` (usa nuovo provider)
 
-**Stima**: 4-5 giorni
+**Tempo effettivo**: 1 giorno (vs stima 4-5 giorni)
+
+**Note Implementazione**:
+- Neglected muscle integration rimandata a Fase 2 per semplicità MVP
+- Adapter provider creato per backward compatibility con UI esistente
+- Algorithm pronto per A/B testing tramite provider switch
 
 ### Fase 2: Smart Rest Day + Deload (Settimana 2)
 

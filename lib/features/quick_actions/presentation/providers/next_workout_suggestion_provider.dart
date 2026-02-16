@@ -12,7 +12,7 @@ import 'package:gymbro_flutter_new/features/history/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/quick_actions/domain/services/split_detection_service.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/template_stress_analysis.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/template_suggestion_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 /// Suggestion for next workout to display in Quick Actions
 class NextWorkoutSuggestion {
@@ -74,8 +74,9 @@ final nextWorkoutSuggestionProvider =
       String? matchedTemplateName;
 
       if (result.suggestedCategory != null) {
+        // 🆕 FASE 1 MVP: Use new multi-factor scoring algorithm
         final templateAnalyses = ref.watch(
-          templateSuggestionProvider.select((async) => async.value),
+          smartTemplateSuggestionAdapterProvider.select((async) => async.value),
         );
 
         if (templateAnalyses != null && templateAnalyses.isNotEmpty) {

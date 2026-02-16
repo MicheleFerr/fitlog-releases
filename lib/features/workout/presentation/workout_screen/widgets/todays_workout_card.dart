@@ -25,7 +25,8 @@ class TodaysWorkoutCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final suggestionAsync = ref.watch(templateSuggestionProvider);
+    // 🆕 FASE 1 MVP: Use new multi-factor scoring algorithm
+    final suggestionAsync = ref.watch(smartTemplateSuggestionAdapterProvider);
     final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
 
     return suggestionAsync.when(
