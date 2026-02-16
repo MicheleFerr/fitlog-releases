@@ -2,6 +2,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -87,10 +88,16 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
 
     final measurementRepo = ref.read(measurementRepositoryProvider);
 
-    // Load latest by type and all measurements in parallel
+    // Load latest by type and recent measurements for trend calculation
+    // ⚡ Performance: Only load last 90 days instead of all history
+    // (sufficient for trend calculation which needs only last 2 values per type)
+    final ninetyDaysAgo = DateTime.now().subtract(const Duration(days: 90));
     final results = await Future.wait([
       measurementRepo.getLatestMeasurementsByType(widget.userId),
-      measurementRepo.getMeasurements(widget.userId),
+      measurementRepo.getMeasurements(
+        widget.userId,
+        dateFrom: ninetyDaysAgo,
+      ),
     ]);
 
     final latestResult = results[0] as dynamic;
@@ -1143,21 +1150,137 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
             : _buildDashboard(),
       ),
       // Accessibility: Add measurement button with tooltip
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final result = await Navigator.push<bool>(
-            context,
-            MaterialPageRoute(
-              builder: (_) => MeasurementInputScreen(userId: widget.userId),
+      floatingActionButtonLocation: _MeasurementFabLocation(context.tabBarInset),
+      floatingActionButton: Platform.isIOS
+          ? _buildIOSPopupMenu()
+          : _buildAndroidFAB(),
+    );
+  }
+
+  /// iOS: FAB with action sheet menu for metric selection
+  Widget _buildIOSPopupMenu() {
+    return FloatingActionButton(
+      onPressed: _showIOSMetricPicker,
+      child: const Icon(AppIcons.add),
+    );
+  }
+
+  /// Show iOS-style action sheet for metric selection
+  Future<void> _showIOSMetricPicker() async {
+    await showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        actions: <CupertinoActionSheetAction>[
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(context);
+              _openMetricInput(MetricType.weight);
+            },
+            child: Row(
+              children: [
+                Icon(AppIcons.weight, size: 20, color: this.context.colors.primary),
+                const SizedBox(width: 12),
+                Text(this.context.l10n.bodyMeasurementsMetricWeight),
+              ],
             ),
-          );
-          if (result == true) {
-            await _loadData();
-          }
-        },
-        child: const Icon(AppIcons.add),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(context);
+              _openMetricInput(MetricType.height);
+            },
+            child: Row(
+              children: [
+                Icon(AppIcons.height, size: 20, color: this.context.colors.primary),
+                const SizedBox(width: 12),
+                Text(this.context.l10n.bodyMeasurementsMetricHeight),
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(context);
+              _openMetricInput(MetricType.bodyFatPercentage);
+            },
+            child: Row(
+              children: [
+                Icon(AppIcons.percent, size: 20, color: this.context.colors.primary),
+                const SizedBox(width: 12),
+                Text(this.context.l10n.bodyMeasurementsMetricBodyFat),
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(context);
+              _openMetricInput(MetricType.leanMass);
+            },
+            child: Row(
+              children: [
+                Icon(AppIcons.workout, size: 20, color: this.context.colors.primary),
+                const SizedBox(width: 12),
+                Text(this.context.l10n.bodyMeasurementsMetricLeanMass),
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(context);
+              _openFullMetricInput();
+            },
+            child: Row(
+              children: [
+                Icon(AppIcons.moreHoriz, size: 20, color: this.context.colors.onSurfaceVariant),
+                const SizedBox(width: 12),
+                Text(this.context.l10n.bodyMeasurementsOtherMetrics),
+              ],
+            ),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () => Navigator.pop(context),
+          isDefaultAction: true,
+          child: Text(this.context.l10n.cancel),
+        ),
       ),
     );
+  }
+
+  /// Android: Classic FAB
+  Widget _buildAndroidFAB() {
+    return FloatingActionButton(
+      onPressed: _openFullMetricInput,
+      child: const Icon(AppIcons.add),
+    );
+  }
+
+  /// Open input screen for specific metric
+  Future<void> _openMetricInput(MetricType metricType) async {
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MeasurementInputScreen(
+          userId: widget.userId,
+          focusedMetric: metricType,
+        ),
+      ),
+    );
+    if (result == true) {
+      await _loadData();
+    }
+  }
+
+  /// Open input screen with all metrics
+  Future<void> _openFullMetricInput() async {
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MeasurementInputScreen(userId: widget.userId),
+      ),
+    );
+    if (result == true) {
+      await _loadData();
+    }
   }
 
   Widget _buildDashboard() {
@@ -1305,5 +1428,31 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
         ],
       ],
     );
+  }
+}
+
+/// Custom FloatingActionButtonLocation that lifts FAB above the tab bar overlay.
+///
+/// Uses [tabBarInset] to calculate the bottom offset, ensuring the FAB is
+/// always fully visible above the bottom navigation bar.
+class _MeasurementFabLocation extends FloatingActionButtonLocation {
+  const _MeasurementFabLocation(this.tabBarInset);
+
+  final double tabBarInset;
+
+  @override
+  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+    // Start with standard endFloat position
+    final fabX = scaffoldGeometry.scaffoldSize.width -
+        scaffoldGeometry.floatingActionButtonSize.width -
+        16.0; // 16px margin from right edge
+
+    // Lift FAB above tab bar + extra 8px margin
+    final fabY = scaffoldGeometry.scaffoldSize.height -
+        scaffoldGeometry.floatingActionButtonSize.height -
+        tabBarInset -
+        8.0; // 8px extra margin above tab bar
+
+    return Offset(fabX, fabY);
   }
 }
