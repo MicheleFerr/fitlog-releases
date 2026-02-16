@@ -53,6 +53,55 @@ Import: `build_context_extensions.dart` + `color_scheme_extensions.dart`
 
 ---
 
+## 📐 UI LAYOUT & NAVIGATION BAR
+
+**CRITICAL**: MainShell usa `extendBody: true` e inietta padding bottom dinamico tramite MediaQuery.
+
+### SafeArea Bottom Padding
+
+```dart
+// ✅ CORRETTO - Nuove pagine nella shell navigation
+return SafeArea(
+  bottom: false,  // Preserva padding MediaQuery per tab bar
+  child: YourContent(),
+);
+
+// ❌ SBAGLIATO - Consuma il padding, contenuto copre tab bar
+return SafeArea(
+  child: YourContent(),
+);
+```
+
+### ListView/ScrollView Padding
+
+```dart
+// ✅ CORRETTO - Usa padding dinamico dal MediaQuery
+ListView.builder(
+  padding: EdgeInsets.only(
+    bottom: MediaQuery.of(context).padding.bottom + AppSpacing.md,
+  ),
+  // ...
+);
+
+// ❌ SBAGLIATO - Valore fisso non si adatta a iOS/Android
+ListView.builder(
+  padding: const EdgeInsets.only(bottom: 80),
+  // ...
+);
+```
+
+**Perché?**
+- `MainShell` calcola altezza tab bar dinamicamente (iOS vs Android)
+- Inietta padding via `MediaQuery.copyWith(padding: bottom)`
+- `SafeArea(bottom: false)` preserva questo padding
+- Content scrollabile aggiunge `MediaQuery.padding.bottom + margine`
+
+**Quando usare**:
+- ✅ Tutte le pagine dentro `StatefulNavigationShell` (Home, Workout, Profile)
+- ❌ Pagine fullscreen senza tab bar (Onboarding, modal, etc.)
+
+---
+
 ## 🧩 ARCHITETTURA
 
 ```
