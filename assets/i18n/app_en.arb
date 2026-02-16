@@ -33996,5 +33996,9 @@
   "createFirstTemplateHint": "Create your first template to start",
   "@createFirstTemplateHint": {
     "description": "Hint message to create first template"
+  },
+  "restDay": "Rest Day",
+  "@restDay": {
+    "description": "Rest day title when no workout suggested"
   }
 }

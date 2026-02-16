@@ -20925,5 +20925,6 @@
   "acceptable": "Accettabile",
   "restDaySuggestion": "Oggi è ideale per il recupero",
   "noTemplatesYet": "Non hai ancora template",
-  "createFirstTemplateHint": "Crea il tuo primo template per iniziare"
+  "createFirstTemplateHint": "Crea il tuo primo template per iniziare",
+  "restDay": "Giorno di Riposo"
 }

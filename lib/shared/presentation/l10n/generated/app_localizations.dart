@@ -7961,7 +7961,7 @@ abstract class AppLocalizations {
   /// **'Total Duration'**
   String get totalDuration;
 
-  /// Label for rest day
+  /// Rest day title when no workout suggested
   ///
   /// In en, this message translates to:
   /// **'Rest Day'**
