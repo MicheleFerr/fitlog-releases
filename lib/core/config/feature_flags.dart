@@ -19,7 +19,8 @@ class FeatureFlags {
       EnvironmentConfig.openRouterApiKey!.isNotEmpty;
 
   /// Workout Import from text/photo - requires OpenRouter API key
-  static bool get workoutImportEnabled => aiCoachEnabled;
+  /// TEMPORARILY DISABLED - Remove this line to re-enable
+  static bool get workoutImportEnabled => false; // was: aiCoachEnabled
 
   /// Debug mode flag
   static bool get isDebugMode => EnvironmentConfig.environment == 'development';
