@@ -487,6 +487,21 @@ final smartTemplateSuggestionProvider =
       );
     }
 
+    // 🔧 FIX: Fallback if pre-filter too aggressive
+    // If ALL templates filtered out, use all templates and let scoring decide
+    // This prevents showing "Rest Day" when user has templates but with low recovery
+    if (viable.isEmpty && templates.isNotEmpty) {
+      if (kDebugMode) {
+        debugPrint(
+          '[SmartTemplateSuggestion] ⚠️  Pre-filter too aggressive (all templates < 30% recovery)',
+        );
+        debugPrint(
+          '[SmartTemplateSuggestion] → Fallback: Using all ${templates.length} templates, scoring will rank them',
+        );
+      }
+      viable.addAll(templates);
+    }
+
     // 2. Score each template using multi-factor algorithm
     final scored = viable.map((t) {
       final score = engine.computeScore(t, ctx, exerciseMap);
