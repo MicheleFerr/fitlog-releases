@@ -317,7 +317,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   /// Build welcome/empty state view
   Widget _buildWelcomeView() {
     return Scaffold(
-      backgroundColor: Colors.transparent, // Allow liquid glass effect
       body: WelcomeView(
         onQuickStart: () => _startQuickWorkout(context),
         onStartTemplate: (template) => _startTemplateWorkout(template),
@@ -340,7 +339,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.transparent, // Allow liquid glass effect
       appBar: AppBar(
         title: Row(
           children: [
@@ -412,7 +410,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
         watchData.currentHeartRate > 0 && watchData.hasRecentHealthMetrics;
 
     return Scaffold(
-      backgroundColor: colorScheme.surfaceContainer,
       appBar: AppBar(
         // ✅ IMPROVED: Different title and styling in reorder mode
         title: Row(

@@ -11,6 +11,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:motor/motor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +19,6 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/premium_action_bu
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 /// Opzione aggiuntiva per il menu del long press
@@ -473,17 +473,7 @@ class ActionButtonPosition {
 /// Expandable menu for Add Exercise FAB with advanced sets dropdown
 /// Implements Option B from UX analysis with hierarchical navigation
 class _ExpandableExerciseMenu extends StatefulWidget {
-  const _ExpandableExerciseMenu({
-    required this.onSingleExercise,
-    this.onShowHistory,
-    this.onHide,
-    this.additionalOptions,
-  });
-
-  final VoidCallback onSingleExercise;
-  final VoidCallback? onShowHistory;
-  final VoidCallback? onHide;
-  final List<DraggableActionOption>? additionalOptions;
+  const _ExpandableExerciseMenu();
 
   static Future<void> show(
     BuildContext context, {
@@ -492,20 +482,88 @@ class _ExpandableExerciseMenu extends StatefulWidget {
     VoidCallback? onHide,
     List<DraggableActionOption>? additionalOptions,
   }) {
-    final safeMax = ModalService.safeMaxChildSize(context, preferredMax: 0.9);
-    return ModalService.showSheet<void>(context,
-      isScrollControlled: true,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.45,
-        minChildSize: 0.3,
-        maxChildSize: safeMax,
-        snap: true,
-        snapSizes: [0.45, safeMax],
-        builder: (context, scrollController) => _ExpandableExerciseMenu(
-          onSingleExercise: onSingleExercise,
-          onShowHistory: onShowHistory,
-          onHide: onHide,
-          additionalOptions: additionalOptions,
+    return showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: Text(
+          context.l10n.addExercise,
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+        ),
+        actions: [
+          // Primary: Add Single Exercise
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(context);
+              onSingleExercise();
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  AppIcons.add,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      context.l10n.addSingleExercise,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      context.l10n.addSingleExerciseHint,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.6),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          // Additional options (Advanced Sets)
+          if (additionalOptions != null)
+            ...additionalOptions.map((option) {
+              return CupertinoActionSheetAction(
+                onPressed: () {
+                  Navigator.pop(context);
+                  option.onTap();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      option.icon,
+                      color: option.color ?? Theme.of(context).colorScheme.secondary,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      option.label,
+                      style: TextStyle(
+                        color: option.color ?? Theme.of(context).colorScheme.secondary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () => Navigator.pop(context),
+          isDefaultAction: true,
+          child: Text(context.l10n.cancel),
         ),
       ),
     );
@@ -516,114 +574,6 @@ class _ExpandableExerciseMenu extends StatefulWidget {
 }
 
 class _ExpandableExerciseMenuState extends State<_ExpandableExerciseMenu> {
-  // ✅ FIX: Rimossa variabile _advancedExpanded (dropdown rimosso)
-
   @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Handle bar
-            const SizedBox(height: 12),
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Title
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Icon(
-                    AppIcons.add,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    context.l10n.addExercise,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Opzione 1: Esercizio Singolo (PRIMARIA)
-            ListTile(
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  AppIcons.add,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-              title: Text(context.l10n.addSingleExercise),
-              subtitle: Text(context.l10n.addSingleExerciseHint),
-              trailing: const Icon(AppIcons.chevronRight),
-              onTap: () {
-                Navigator.of(context).pop();
-                widget.onSingleExercise();
-              },
-            ),
-
-            // ✅ FIX: Rimosso dropdown "Set Avanzati"
-            // Mostra direttamente le opzioni individuali (Superset, DropSet, Rest-Pause)
-
-            // Additional options (se presenti) - ora include Set Avanzati direttamente
-            if (widget.additionalOptions != null) ...[
-              const Divider(height: 1),
-              ...widget.additionalOptions!.map((option) {
-                return ListTile(
-                  leading: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: (option.color ?? Theme.of(context).colorScheme.secondary).withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      option.icon,
-                      color: option.color ?? Theme.of(context).colorScheme.secondary,
-                    ),
-                  ),
-                  title: Text(option.label),
-                  trailing: const Icon(AppIcons.chevronRight),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    option.onTap();
-                  },
-                );
-              }),
-            ],
-
-            // ✅ FIX: Rimosso "Storico" e "Nascondi pulsante"
-            // Menu deve mostrare solo: Singolo, Superset, DropSet, Rest-Pause
-
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ✅ FIX: Rimosso metodo _buildAdvancedOption (dropdown rimosso)
+  Widget build(BuildContext context) => const SizedBox.shrink();
 }

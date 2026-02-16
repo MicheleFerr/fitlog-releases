@@ -114,6 +114,7 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
     return SafeArea(
       left: false,
       right: false,
+      bottom: false, // Allow content to scroll under bottom navigation bar
       child: Column(
         children: [
           // Header section with gradient fade below

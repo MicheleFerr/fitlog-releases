@@ -38,6 +38,7 @@ class PreloadedView extends ConsumerWidget {
     return SafeArea(
       left: false,
       right: false,
+      bottom: false, // Allow content to scroll under bottom navigation bar
       child: Column(
         children: [
           // "Change Workout" banner
