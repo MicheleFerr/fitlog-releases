@@ -300,6 +300,15 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
             return templateExercise.toWorkoutExercise();
           }).toList(),
         );
+
+        // 🌍 LOCALIZATION FIX: Replace hardcoded English names with localized names from database
+        final localizedExercises = <Exercise>[];
+        for (final exercise in workout.exercises) {
+          final localizedExercise = await _localizeExerciseName(exercise);
+          localizedExercises.add(localizedExercise);
+        }
+
+        workout = workout.copyWith(exercises: localizedExercises);
       }
 
       // Imposta il workout e lo avvia automaticamente
@@ -5077,6 +5086,89 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       return exercise.restPauseSets.length;
     }
     return exercise.sets.length;
+  }
+
+  /// 🌍 Localizes exercise name by looking up in exercise database
+  ///
+  /// Replaces hardcoded English names from templates with localized names.
+  /// Handles all exercise types: Exercise, SupersetExercise, DropSetExercise, RestPauseExercise.
+  ///
+  /// Returns the exercise with localized name(s), or the original if lookup fails.
+  Future<Exercise> _localizeExerciseName(Exercise exercise) async {
+    try {
+      // Fetch localized name from exercise database
+      final exerciseDefinition = await ref.read(
+        exerciseByIdProvider(exercise.id).future,
+      );
+
+      if (exerciseDefinition == null) {
+        // Exercise not found in database, keep original name
+        if (kDebugMode) {
+          debugLog(
+            LogCategory.workout,
+            '⚠️ [WorkoutProvider] Exercise not found in database: ${exercise.id}',
+          );
+        }
+        return exercise;
+      }
+
+      final localizedName = exerciseDefinition.nome;
+
+      // Handle different exercise types
+      if (exercise is SupersetExercise) {
+        // Localize main name and sub-exercise names
+        final localizedSubExercises = <Exercise>[];
+        for (final subExercise in exercise.exercises) {
+          final localizedSub = await _localizeExerciseName(subExercise);
+          localizedSubExercises.add(localizedSub);
+        }
+
+        // Update superset exercise data with localized names
+        final localizedSupersetSets = exercise.supersetSets.map((supersetSet) {
+          final localizedExerciseData = <String, SupersetExerciseData>{};
+
+          for (final entry in supersetSet.exerciseData.entries) {
+            final exerciseId = entry.key;
+            final data = entry.value;
+
+            // Find the localized name for this exercise
+            final localizedExercise = localizedSubExercises.firstWhere(
+              (e) => e.id == exerciseId,
+              orElse: () => exercise.exercises.firstWhere((e) => e.id == exerciseId),
+            );
+
+            localizedExerciseData[exerciseId] = data.copyWith(
+              exerciseName: localizedExercise.name,
+            );
+          }
+
+          return supersetSet.copyWith(exerciseData: localizedExerciseData);
+        }).toList();
+
+        return exercise.copyWith(
+          name: localizedName,
+          exercises: localizedSubExercises,
+          supersetSets: localizedSupersetSets,
+        );
+      } else if (exercise is DropSetExercise) {
+        return exercise.copyWith(name: localizedName);
+      } else if (exercise is RestPauseExercise) {
+        return exercise.copyWith(name: localizedName);
+      } else {
+        // Regular Exercise
+        return exercise.copyWith(name: localizedName);
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugLog(
+          LogCategory.workout,
+          '❌ [WorkoutProvider] Error localizing exercise name: $e',
+        );
+        debugLog(LogCategory.workout, '📍 Stack trace: $stackTrace');
+      }
+      // Return original exercise if localization fails
+      return exercise;
+    }
   }
 
   // Note: Notifier doesn't have dispose() - use ref.onDispose() in build() instead
