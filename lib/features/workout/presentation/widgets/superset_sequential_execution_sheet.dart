@@ -49,9 +49,8 @@ class SupersetSequentialExecutionSheet extends ConsumerStatefulWidget {
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
-      backgroundColor: Theme.of(
-        context,
-      ).colorScheme.surface.withValues(alpha: 0),
+      // ✅ FIX: Use solid background instead of transparent (fixes white artifacts)
+      backgroundColor: Theme.of(context).colorScheme.surface,
       builder: (context) => SupersetSequentialExecutionSheet(
         superset: superset,
         roundIndex: roundIndex,
@@ -368,75 +367,68 @@ class _SupersetSequentialExecutionSheetState
 
             const SizedBox(height: 24),
 
-            // ✅ FIX PROBLEMA 3: Lista esercizi con double-tap editing
+            // ✅ FIX: Lista esercizi con edit button cliccabile
             ...widget.superset.exercises.map((exercise) {
               final exerciseData = currentRound.exerciseData[exercise.id];
               final isCompleted = exerciseData?.isCompleted ?? false;
 
-              return GestureDetector(
-                onDoubleTap: () => _showQuickEdit(exercise, exerciseData),
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
+              return Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: isCompleted
+                      ? context.colors.secondaryContainer
+                      : context.colors.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
                     color: isCompleted
-                        ? context.colors.secondaryContainer
-                        : context.colors.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
+                        ? context.colors.secondary
+                        : context.colors.outline.withValues(alpha: 0.2),
+                    width: 2,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      isCompleted
+                          ? AppIcons.checkCircle
+                          : AppIcons.radioButtonUnchecked,
                       color: isCompleted
                           ? context.colors.secondary
-                          : context.colors.outline.withValues(alpha: 0.2),
-                      width: 2,
+                          : context.colors.outline,
                     ),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        isCompleted
-                            ? AppIcons.checkCircle
-                            : AppIcons.radioButtonUnchecked,
-                        color: isCompleted
-                            ? context.colors.secondary
-                            : context.colors.outline,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    exercise.name,
-                                    style: context.textTheme.titleMedium
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                // ✅ Visual hint for double-tap
-                                SemanticIcon(
-                                  icon: AppIcons.edit,
-                                  semanticLabel: 'Edit',
-                                  size: AppIconSize.tiny,
-                                  color: context.colors.outline.withValues(
-                                    alpha: 0.5,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            if (exerciseData != null)
-                              Text(
-                                '${context.l10n.target}: ${exerciseData.targetWeight?.toStringAsFixed(1) ?? '?'} kg × ${exerciseData.targetReps ?? '?'} reps',
-                                style: context.textTheme.bodySmall?.copyWith(
-                                  color: context.colors.outline,
-                                ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            exercise.name,
+                            style: context.textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          if (exerciseData != null)
+                            Text(
+                              '${context.l10n.target}: ${exerciseData.targetWeight?.toStringAsFixed(1) ?? '?'} kg × ${exerciseData.targetReps ?? '?'} reps',
+                              style: context.textTheme.bodySmall?.copyWith(
+                                color: context.colors.outline,
                               ),
-                          ],
-                        ),
+                            ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    // ✅ FIX: Bottone edit cliccabile invece di double-tap
+                    IconButton(
+                      onPressed: () => _showQuickEdit(exercise, exerciseData),
+                      icon: SemanticIcon(
+                        icon: AppIcons.edit,
+                        semanticLabel: 'Edit',
+                        size: AppIconSize.small,
+                        color: context.colors.primary,
+                      ),
+                      tooltip: context.l10n.edit,
+                    ),
+                  ],
                 ),
               );
             }),

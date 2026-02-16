@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 
 /// Custom scroll physics that accelerates when scrolling fast
 /// Based on: https://stackoverflow.com/questions/57671811/flutter-how-to-override-scroll-physics
@@ -92,9 +93,17 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
   bool _isRepsFastScrubActive = false;
   int? _lastFastScrubValue; // Track last value to avoid haptic spam
 
+  // ✅ Rep Range Mode
+  late bool _isRangeMode;
+  late int _selectedMinReps;
+  late int _selectedMaxReps;
+
   late FixedExtentScrollController _weightController;
   late FixedExtentScrollController _repsController;
   late FixedExtentScrollController _secondsController; // For duration picker
+  // ✅ Range mode controllers
+  late FixedExtentScrollController _selectedMinRepsController;
+  late FixedExtentScrollController _selectedMaxRepsController;
   late TextEditingController _weightTextController;
   late TextEditingController _repsTextController;
   late TextEditingController _secondsTextController;
@@ -107,9 +116,9 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
   static const double _weightStep = 0.25;
   static const int _weightItemCount = 1601; // (400 - 0) / 0.25 + 1
 
-  // Reps range: 1 to 100
-  static const int _minReps = 1;
-  static const int _maxReps = 100;
+  // Reps range constants: 1 to 100
+  static const int _repsMin = 1;
+  static const int _repsMax = 100;
 
   // Seconds range: 5 to 600 (10 minutes) in 5-second increments
   static const int _minSeconds = 5;
@@ -123,20 +132,34 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     _reps = widget.exerciseSet.reps ?? 10;
     _seconds = widget.exerciseSet.seconds ?? 60;
 
+    // ✅ Initialize rep range mode from existing data
+    final hasRange = widget.exerciseSet.minReps != null &&
+        widget.exerciseSet.maxReps != null &&
+        widget.exerciseSet.minReps != widget.exerciseSet.maxReps;
+    _isRangeMode = hasRange;
+    _selectedMinReps = widget.exerciseSet.minReps ?? _reps;
+    _selectedMaxReps = widget.exerciseSet.maxReps ?? _reps;
+
     // Initialize wheel controllers at current values
     final weightIndex = ((_weight - _minWeight) / _weightStep).round().clamp(
       0,
       _weightItemCount - 1,
     );
-    final repsIndex = (_reps - _minReps).clamp(0, _maxReps - _minReps);
+    final repsIndex = (_reps - _repsMin).clamp(0, _selectedMaxReps - _repsMin);
     final secondsIndex = ((_seconds - _minSeconds) ~/ _secondsStep).clamp(
       0,
       (_maxSeconds - _minSeconds) ~/ _secondsStep,
     );
+    // ✅ Range mode indices
+    final minRepsIndex = (_selectedMinReps - _repsMin).clamp(0, _selectedMaxReps - _repsMin);
+    final maxRepsIndex = (_selectedMaxReps - _repsMin).clamp(0, _selectedMaxReps - _repsMin);
 
     _weightController = FixedExtentScrollController(initialItem: weightIndex);
     _repsController = FixedExtentScrollController(initialItem: repsIndex);
     _secondsController = FixedExtentScrollController(initialItem: secondsIndex);
+    // ✅ Range mode controllers
+    _selectedMinRepsController = FixedExtentScrollController(initialItem: minRepsIndex);
+    _selectedMaxRepsController = FixedExtentScrollController(initialItem: maxRepsIndex);
     _weightTextController = TextEditingController(text: _formatWeight(_weight));
     _repsTextController = TextEditingController(text: '$_reps');
     _secondsTextController = TextEditingController(text: _formatDuration(_seconds));
@@ -173,6 +196,9 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     _weightController.dispose();
     _repsController.dispose();
     _secondsController.dispose();
+    // ✅ Range mode controllers
+    _selectedMinRepsController.dispose();
+    _selectedMaxRepsController.dispose();
     _weightTextController.dispose();
     _repsTextController.dispose();
     _secondsTextController.dispose();
@@ -214,18 +240,55 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
       widget.currentSetIndex! > 0;
 
   ExerciseSet _createUpdatedSet() {
-    // Return different fields based on counting mode
-    switch (widget.countingMode) {
-      case ExerciseCountingMode.weighted:
-        return widget.exerciseSet.copyWith(weight: _weight, reps: _reps);
-      case ExerciseCountingMode.reps:
-        return widget.exerciseSet.copyWith(weight: null, reps: _reps);
-      case ExerciseCountingMode.time:
-        return widget.exerciseSet.copyWith(
-          weight: null,
-          reps: null,
-          seconds: _seconds,
-        );
+    // ✅ Build set with range support
+    if (_isRangeMode) {
+      // Range mode: save minReps/maxReps, clear single reps
+      switch (widget.countingMode) {
+        case ExerciseCountingMode.weighted:
+          return widget.exerciseSet.copyWith(
+            weight: _weight,
+            reps: null, // Clear single value in range mode
+            minReps: _selectedMinReps,
+            maxReps: _selectedMaxReps,
+          );
+        case ExerciseCountingMode.reps:
+          return widget.exerciseSet.copyWith(
+            weight: null,
+            reps: null,
+            minReps: _selectedMinReps,
+            maxReps: _selectedMaxReps,
+          );
+        case ExerciseCountingMode.time:
+          return widget.exerciseSet.copyWith(
+            weight: null,
+            reps: null,
+            seconds: _seconds,
+          );
+      }
+    } else {
+      // Exact mode: save single reps, clear minReps/maxReps
+      switch (widget.countingMode) {
+        case ExerciseCountingMode.weighted:
+          return widget.exerciseSet.copyWith(
+            weight: _weight,
+            reps: _reps,
+            minReps: null,
+            maxReps: null,
+          );
+        case ExerciseCountingMode.reps:
+          return widget.exerciseSet.copyWith(
+            weight: null,
+            reps: _reps,
+            minReps: null,
+            maxReps: null,
+          );
+        case ExerciseCountingMode.time:
+          return widget.exerciseSet.copyWith(
+            weight: null,
+            reps: null,
+            seconds: _seconds,
+          );
+      }
     }
   }
 
@@ -255,6 +318,36 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     widget.onSaveAndPrevious!(_createUpdatedSet());
   }
 
+  /// ✅ Switch between exact reps and rep range mode
+  void _toggleRepsMode(int selectedIndex) {
+    setState(() {
+      _isRangeMode = selectedIndex == 1; // 0 = Reps, 1 = Rep Range
+
+      if (_isRangeMode) {
+        // Switching TO range mode: initialize from current single value
+        if (_selectedMinReps == _selectedMaxReps) {
+          // Default to 8-12 range if coming from exact mode
+          _selectedMinReps = (_reps - 2).clamp(_selectedMinReps, _selectedMaxReps);
+          _selectedMaxReps = (_reps + 2).clamp(_selectedMinReps, _selectedMaxReps);
+        }
+        // Update controllers
+        final minIndex = (_selectedMinReps - _repsMin).clamp(0, _selectedMaxReps - _repsMin);
+        final maxIndex = (_selectedMaxReps - _repsMin).clamp(0, _selectedMaxReps - _repsMin);
+        _selectedMinRepsController.jumpToItem(minIndex);
+        _selectedMaxRepsController.jumpToItem(maxIndex);
+      } else {
+        // Switching TO exact mode: use current single reps or midpoint of range
+        if (_selectedMinReps != _selectedMaxReps) {
+          _reps = ((_selectedMinReps + _selectedMaxReps) / 2).round();
+        }
+        // Update controller
+        final repsIndex = (_reps - _repsMin).clamp(0, _selectedMaxReps - _repsMin);
+        _repsController.jumpToItem(repsIndex);
+      }
+    });
+    HapticFeedback.selectionClick();
+  }
+
   /// Apply manual text input values to wheel controllers
   void _applyManualInputToWheel() {
     // Parse weight from text (only for weighted exercises)
@@ -275,10 +368,10 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     if (widget.countingMode.requiresReps) {
       final parsedReps = int.tryParse(_repsTextController.text);
       if (parsedReps != null &&
-          parsedReps >= _minReps &&
-          parsedReps <= _maxReps) {
+          parsedReps >= _repsMin &&
+          parsedReps <= _repsMax) {
         _reps = parsedReps;
-        final repsIndex = (_reps - _minReps).clamp(0, _maxReps - _minReps);
+        final repsIndex = (_reps - _repsMin).clamp(0, _selectedMaxReps - _repsMin);
         _repsController.jumpToItem(repsIndex);
       }
     }
@@ -320,7 +413,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
         0,
         _weightItemCount - 1,
       );
-      final repsIndex = (_reps - _minReps).clamp(0, _maxReps - _minReps);
+      final repsIndex = (_reps - _repsMin).clamp(0, _selectedMaxReps - _repsMin);
       _weightController.jumpToItem(weightIndex);
       _repsController.jumpToItem(repsIndex);
     });
@@ -634,6 +727,31 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
 
           const SizedBox(height: 8),
 
+          // ✅ Rep Range Mode Selector (only for rep-based exercises)
+          if (widget.countingMode.requiresReps && !_isManualInput)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: CNPopupMenuButton(
+                buttonLabel: _isRangeMode
+                    ? '${context.l10n.reps}: $_selectedMinReps-$_selectedMaxReps'
+                    : '${context.l10n.reps}: $_reps',
+                buttonStyle: CNButtonStyle.glass,
+                height: 36,
+                shrinkWrap: true,
+                items: [
+                  CNPopupMenuItem(
+                    label: context.l10n.reps,
+                    icon: const CNSymbol('number'),
+                  ),
+                  const CNPopupMenuItem(
+                    label: 'Intervallo',
+                    icon: CNSymbol('arrow.left.and.right'),
+                  ),
+                ],
+                onSelected: _toggleRepsMode,
+              ),
+            ),
+
           // Pickers row - conditional based on counting mode
           Row(
             children: [
@@ -699,7 +817,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                   (widget.countingMode.requiresReps || widget.countingMode.requiresTime))
                 const SizedBox(width: 16),
 
-              // Reps picker (for weighted + reps exercises)
+              // ✅ Reps picker(s) - single or range based on mode
               if (widget.countingMode.requiresReps)
                 Expanded(
                   child: _isManualInput
@@ -711,41 +829,92 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                           keyboardType: TextInputType.number,
                           suffix: '',
                         )
-                      : _buildWheelPicker(
-                        label: context.l10n.reps,
-                        controller: _repsController,
-                        itemCount: _maxReps - _minReps + 1,
-                        itemBuilder: (index) {
-                          final reps = _minReps + index;
-                          final isSelected = reps == _reps;
-                          return _buildPickerItem(
-                            text: '$reps',
-                            isSelected: isSelected,
-                          );
-                        },
-                        onSelectedItemChanged: (index) {
-                          setState(() => _reps = _minReps + index);
-                          HapticFeedback.selectionClick();
-                        },
-                        // Fast scrub for common rep ranges
-                        showFastScrub: true,
-                        fastScrubValues: [1, 5, 8, 10, 12, 15, 20, 30],
-                        onFastScrubSelect: (value) {
-                          final index = (value - _minReps).clamp(
-                            0,
-                            _maxReps - _minReps,
-                          );
-                          _repsController.jumpToItem(index);
-                          setState(() => _reps = value);
-                        },
-                        isFastScrubActive: _isRepsFastScrubActive,
-                        onFastScrubStart: () =>
-                            setState(() => _isRepsFastScrubActive = true),
-                        onFastScrubEnd: () =>
-                            setState(() => _isRepsFastScrubActive = false),
-                        currentValue: _reps.toDouble(),
-                        fastScrubOnRight: true,
-                      ),
+                      : _isRangeMode
+                          ? Row(
+                              children: [
+                                // Min reps picker
+                                Expanded(
+                                  child: _buildWheelPicker(
+                                    label: 'Min',
+                                    controller: _selectedMinRepsController,
+                                    itemCount: _selectedMaxReps - _repsMin + 1,
+                                    itemBuilder: (index) {
+                                      final reps = _selectedMinReps + index;
+                                      final isSelected = reps == _selectedMinReps;
+                                      return _buildPickerItem(
+                                        text: '$reps',
+                                        isSelected: isSelected,
+                                      );
+                                    },
+                                    onSelectedItemChanged: (index) {
+                                      setState(() => _selectedMinReps = _selectedMinReps + index);
+                                      HapticFeedback.selectionClick();
+                                    },
+                                    showFastScrub: false,
+                                    currentValue: _selectedMinReps.toDouble(),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                // Max reps picker
+                                Expanded(
+                                  child: _buildWheelPicker(
+                                    label: 'Max',
+                                    controller: _selectedMaxRepsController,
+                                    itemCount: _selectedMaxReps - _repsMin + 1,
+                                    itemBuilder: (index) {
+                                      final reps = _selectedMinReps + index;
+                                      final isSelected = reps == _selectedMaxReps;
+                                      return _buildPickerItem(
+                                        text: '$reps',
+                                        isSelected: isSelected,
+                                      );
+                                    },
+                                    onSelectedItemChanged: (index) {
+                                      setState(() => _selectedMaxReps = _selectedMinReps + index);
+                                      HapticFeedback.selectionClick();
+                                    },
+                                    showFastScrub: false,
+                                    currentValue: _selectedMaxReps.toDouble(),
+                                    fastScrubOnRight: true,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : _buildWheelPicker(
+                              label: context.l10n.reps,
+                              controller: _repsController,
+                              itemCount: _selectedMaxReps - _repsMin + 1,
+                              itemBuilder: (index) {
+                                final reps = _selectedMinReps + index;
+                                final isSelected = reps == _reps;
+                                return _buildPickerItem(
+                                  text: '$reps',
+                                  isSelected: isSelected,
+                                );
+                              },
+                              onSelectedItemChanged: (index) {
+                                setState(() => _reps = _selectedMinReps + index);
+                                HapticFeedback.selectionClick();
+                              },
+                              // Fast scrub for common rep ranges
+                              showFastScrub: true,
+                              fastScrubValues: [1, 5, 8, 10, 12, 15, 20, 30],
+                              onFastScrubSelect: (value) {
+                                final index = (value - _repsMin).clamp(
+                                  0,
+                                  _selectedMaxReps - _repsMin,
+                                );
+                                _repsController.jumpToItem(index);
+                                setState(() => _reps = value);
+                              },
+                              isFastScrubActive: _isRepsFastScrubActive,
+                              onFastScrubStart: () =>
+                                  setState(() => _isRepsFastScrubActive = true),
+                              onFastScrubEnd: () =>
+                                  setState(() => _isRepsFastScrubActive = false),
+                              currentValue: _reps.toDouble(),
+                              fastScrubOnRight: true,
+                            ),
                 ),
 
               // Duration picker (for time-based exercises)
@@ -1179,7 +1348,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                   .clamp(0, _weightItemCount - 1);
               _weightController.jumpToItem(weightIndex);
               if (suggestedReps != null) {
-                final repsIndex = (suggestedReps - _minReps).clamp(0, _maxReps - _minReps);
+                final repsIndex = (suggestedReps - _repsMin).clamp(0, _selectedMaxReps - _repsMin);
                 _repsController.jumpToItem(repsIndex);
               }
             },

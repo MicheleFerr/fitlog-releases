@@ -3821,7 +3821,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get muscleBalance => 'Bilanciamento Muscoli';
 
   @override
-  String get allExercises => 'Tutti gli Esercizi';
+  String get allExercises => 'Tutti gli esercizi';
 
   @override
   String get trainingInsights => 'Insight di Allenamento';

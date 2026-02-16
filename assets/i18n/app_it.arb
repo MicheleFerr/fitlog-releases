@@ -20926,5 +20926,6 @@
   "restDaySuggestion": "Oggi è ideale per il recupero",
   "noTemplatesYet": "Non hai ancora template",
   "createFirstTemplateHint": "Crea il tuo primo template per iniziare",
-  "restDay": "Giorno di Riposo"
+  "restDay": "Giorno di Riposo",
+  "allExercises": "Tutti gli esercizi"
 }

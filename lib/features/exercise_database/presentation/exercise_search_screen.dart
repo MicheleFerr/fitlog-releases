@@ -47,6 +47,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_con
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_configuration.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/recent_exercises_section.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/add_exercise_provider.dart';
 // Exercise search tutorial REMOVED - UX 2025 analysis: search UI is standard pattern
 
 class ExerciseSearchScreen extends ConsumerStatefulWidget {
@@ -827,17 +829,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     // Merge: custom exercises first, then catalog
     final allExercises = [...customAsExercises, ...exercises];
 
-    // P1-3 FIX: Get recent/frequent exercises for quick access
-    final recentExercises = _searchQuery.isEmpty
-        ? allExercises
-              .where(
-                (e) =>
-                    _frequentExerciseIds.contains(e.id) ||
-                    _trendingExerciseIds.contains(e.id),
-              )
-              .take(5)
-              .toList()
-        : <Exercise>[];
+    // ✅ ALWAYS-VISIBLE RECENT EXERCISES (Hevy UX pattern)
+    // No condition on search query - show recent exercises ALWAYS for efficiency
+    final recentUsageAsync = ref.watch(recentExercisesForModalProvider);
 
     return Column(
       children: [
@@ -847,84 +841,68 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           _buildRecommendedTemplatesSection(),
         ],
 
-        // P1-3 FIX: Show recent exercises for quick access (when no search)
-        if (recentExercises.isNotEmpty) ...[
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+        // ✅ RECENT EXERCISES - ALWAYS VISIBLE (Hevy UX pattern)
+        // Shows most recently used exercises for quick one-tap selection
+        // No search condition - visible even during search for max efficiency
+        recentUsageAsync.when(
+          data: (recentUsage) {
+            // Take max 8 items (cognitive load optimization)
+            final limitedUsage = recentUsage.take(8).toList();
+
+            return RecentExercisesSection(
+              recentUsage: limitedUsage,
+              allExercises: allExercises,
+              selectedExercises: _selectedExercises.toList(),
+              onExerciseTap: (exercise) {
+                // Selection mode: return and close
+                if (widget.selectionMode) {
+                  Navigator.of(context).pop(exercise);
+                  return;
+                }
+                // Toggle selection
+                setState(() {
+                  if (_selectedExercises.contains(exercise)) {
+                    _selectedExercises.remove(exercise);
+                  } else {
+                    _selectedExercises.add(exercise);
+                  }
+                });
+              },
+            );
+          },
+          loading: () => const RecentExercisesSectionShimmer(),
+          error: (_, __) => const SizedBox.shrink(),
+        ),
+
+        // "Tutti gli esercizi" separator (when recent exercises shown)
+        if (recentUsageAsync.hasValue && recentUsageAsync.value!.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
             child: Row(
               children: [
-                Icon(AppIcons.history, size: 16, color: context.colors.primary),
+                Icon(
+                  AppIcons.libraryBooks,
+                  size: 16,
+                  color: context.colors.onSurfaceVariant,
+                ),
                 const SizedBox(width: 8),
                 Text(
-                  l10n.recentExercises,
+                  l10n.allExercises,
                   style: context.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: context.colors.primary,
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  '${allExercises.length}',
+                  style: context.textTheme.labelMedium?.copyWith(
+                    color: context.colors.onSurfaceVariant,
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(
-            height: 52,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              itemCount: recentExercises.length,
-              itemBuilder: (context, index) {
-                final exercise = recentExercises[index];
-                final isSelected = _selectedExercises.contains(exercise);
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: ActionChip(
-                    avatar: isSelected
-                        ? Icon(
-                            AppIcons.check,
-                            size: 16,
-                            color: context.colors.onPrimary,
-                          )
-                        : null,
-                    label: Text(
-                      exercise.nome,
-                      style: context.textTheme.labelLarge?.copyWith(
-                        color: isSelected ? context.colors.onPrimary : null,
-                      ),
-                    ),
-                    backgroundColor: isSelected ? context.colors.primary : null,
-                    onPressed: () {
-                      // Selection mode: return and close
-                      if (widget.selectionMode) {
-                        Navigator.of(context).pop(exercise);
-                        return;
-                      }
-                      // Toggle selection
-                      setState(() {
-                        if (_selectedExercises.contains(exercise)) {
-                          _selectedExercises.remove(exercise);
-                        } else {
-                          _selectedExercises.add(exercise);
-                        }
-                      });
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
-          const Divider(height: 16),
-        ],
-
-        // Results count
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
-          child: Text(
-            '${allExercises.length} ${l10n.exercisesFound}',
-            style: context.textTheme.bodySmall,
-          ),
-        ),
 
         // Exercise List + Missing Exercise Widget
         Expanded(

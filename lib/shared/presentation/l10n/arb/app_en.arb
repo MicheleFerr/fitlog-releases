@@ -54,5 +54,6 @@
   "hintTapCalendarDetails": "Tap a day for workout details",
   "hintTapExpandExercise": "Tap to expand exercise details",
   "hintTapRingsRefresh": "Tap rings to refresh your stats",
-  "hintTapRepZoneToggle": "Tap to switch rep zone view"
+  "hintTapRepZoneToggle": "Tap to switch rep zone view",
+  "allExercises": "All Exercises"
 }
