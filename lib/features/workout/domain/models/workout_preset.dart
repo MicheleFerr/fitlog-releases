@@ -34,6 +34,8 @@ class RepRangePreset {
     required this.id,
     required this.labelKey,
     required this.reps,
+    this.minReps,
+    this.maxReps,
     required this.descriptionKey,
     required this.iconName,
     required this.colorHex,
@@ -46,6 +48,8 @@ class RepRangePreset {
       id: json['id'] as String,
       labelKey: json['labelKey'] as String,
       reps: json['reps'] as int,
+      minReps: json['minReps'] as int?,
+      maxReps: json['maxReps'] as int?,
       descriptionKey: json['descriptionKey'] as String,
       iconName: json['iconName'] as String,
       colorHex: json['colorHex'] as String,
@@ -61,6 +65,15 @@ class RepRangePreset {
 
   /// Default rep count for this preset
   final int reps;
+
+  /// Min of rep range (optional, es. 8 in "8-12")
+  final int? minReps;
+
+  /// Max of rep range (optional, es. 12 in "8-12")
+  final int? maxReps;
+
+  /// True se il preset ha un range di ripetizioni
+  bool get hasRepRange => minReps != null && maxReps != null && minReps != maxReps;
 
   /// Localization key for description (e.g., 'repPreset.strength.description')
   final String descriptionKey;
@@ -115,6 +128,8 @@ class RepRangePreset {
       'id': id,
       'labelKey': labelKey,
       'reps': reps,
+      if (minReps != null) 'minReps': minReps,
+      if (maxReps != null) 'maxReps': maxReps,
       'descriptionKey': descriptionKey,
       'iconName': iconName,
       'colorHex': colorHex,
@@ -130,6 +145,8 @@ class RepRangePreset {
         other.id == id &&
         other.labelKey == labelKey &&
         other.reps == reps &&
+        other.minReps == minReps &&
+        other.maxReps == maxReps &&
         other.descriptionKey == descriptionKey &&
         other.iconName == iconName &&
         other.colorHex == colorHex &&
@@ -141,6 +158,8 @@ class RepRangePreset {
     return id.hashCode ^
         labelKey.hashCode ^
         reps.hashCode ^
+        (minReps?.hashCode ?? 0) ^
+        (maxReps?.hashCode ?? 0) ^
         descriptionKey.hashCode ^
         iconName.hashCode ^
         colorHex.hashCode ^

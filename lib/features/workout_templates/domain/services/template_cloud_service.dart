@@ -470,6 +470,8 @@ class TemplateCloudService {
             'exerciseName': data.exerciseName,
             'targetWeight': data.targetWeight,
             'targetReps': data.targetReps,
+            if (data.targetMinReps != null) 'targetMinReps': data.targetMinReps,
+            if (data.targetMaxReps != null) 'targetMaxReps': data.targetMaxReps,
           };
         });
 
@@ -495,6 +497,8 @@ class TemplateCloudService {
           'setNumber': index + 1,
           'targetWeight': firstExerciseData?.targetWeight,
           'targetReps': firstExerciseData?.targetReps,
+          if (firstExerciseData?.targetMinReps != null) 'targetMinReps': firstExerciseData?.targetMinReps,
+          if (firstExerciseData?.targetMaxReps != null) 'targetMaxReps': firstExerciseData?.targetMaxReps,
         };
       }).toList();
 
@@ -509,6 +513,8 @@ class TemplateCloudService {
         return <String, dynamic>{
           'weight': stage.weight,
           'reps': stage.reps,
+          if (stage.minReps != null) 'minReps': stage.minReps,
+          if (stage.maxReps != null) 'maxReps': stage.maxReps,
           'isCompleted': stage.isCompleted,
         };
       }).toList();
@@ -519,6 +525,8 @@ class TemplateCloudService {
         return <String, dynamic>{
           'reps': s.reps,
           'restSeconds': s.restSeconds,
+          if (s.minReps != null) 'minReps': s.minReps,
+          if (s.maxReps != null) 'maxReps': s.maxReps,
           'isCompleted': s.isCompleted,
         };
       }).toList();
@@ -526,6 +534,8 @@ class TemplateCloudService {
       return {
         ...baseJson,
         'targetReps': exercise.targetReps,
+        if (exercise.targetMinReps != null) 'targetMinReps': exercise.targetMinReps,
+        if (exercise.targetMaxReps != null) 'targetMaxReps': exercise.targetMaxReps,
         'restPauseSets': restPauseSets,
       };
     } else {
@@ -539,6 +549,8 @@ class TemplateCloudService {
                 'setNumber': s.setNumber,
                 'targetWeight': s.weight,
                 'targetReps': s.reps,
+                if (s.minReps != null) 'targetMinReps': s.minReps,
+                if (s.maxReps != null) 'targetMaxReps': s.maxReps,
                 'targetRpe': s.rpe,
                 'notes': s.notes,
               },

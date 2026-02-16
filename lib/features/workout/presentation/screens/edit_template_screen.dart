@@ -652,7 +652,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
 
               // Compact inline set row (~38px)
               final isWeightEmpty = (set.targetWeight ?? 0) == 0;
-              final isRepsEmpty = (set.targetReps ?? 0) == 0;
+              final isRepsEmpty = (set.targetReps ?? 0) == 0 && !set.hasRepRange;
 
               return GestureDetector(
                 onTap: () => _showEditTemplateSetModal(exerciseIndex, setIndex),
@@ -754,7 +754,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                                 ),
                                 child: Center(
                                   child: Text(
-                                    isRepsEmpty ? '-' : '${set.targetReps} rep',
+                                    isRepsEmpty ? '-' : '${set.repsDisplay} rep',
                                     style: context.textTheme.bodySmall?.copyWith(
                                       fontWeight: FontWeight.w600,
                                       color: isRepsEmpty
@@ -852,6 +852,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
             setNumber: exercise.sets[j].setNumber,
             targetWeight: weight > 0 ? weight : exercise.sets[j].targetWeight,
             targetReps: reps > 0 ? reps : exercise.sets[j].targetReps,
+            targetMinReps: exercise.sets[j].targetMinReps,
+            targetMaxReps: exercise.sets[j].targetMaxReps,
             targetRpe: exercise.sets[j].targetRpe,
             notes: exercise.sets[j].notes,
           ));
@@ -962,10 +964,13 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
     final exerciseTemplate = _exercises[exerciseIndex];
     final newSetNumber = exerciseTemplate.sets.length + 1;
 
+    final lastSet = exerciseTemplate.sets.lastOrNull;
     final newSet = SetTemplate(
       setNumber: newSetNumber,
-      targetWeight: exerciseTemplate.sets.lastOrNull?.targetWeight ?? 0,
-      targetReps: exerciseTemplate.sets.lastOrNull?.targetReps ?? 0,
+      targetWeight: lastSet?.targetWeight ?? 0,
+      targetReps: lastSet?.targetReps ?? 0,
+      targetMinReps: lastSet?.targetMinReps,
+      targetMaxReps: lastSet?.targetMaxReps,
     );
 
     setState(() {
@@ -988,6 +993,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
         setNumber: i + 1,
         targetWeight: updatedSets[i].targetWeight,
         targetReps: updatedSets[i].targetReps,
+        targetMinReps: updatedSets[i].targetMinReps,
+        targetMaxReps: updatedSets[i].targetMaxReps,
         targetRpe: updatedSets[i].targetRpe,
         notes: updatedSets[i].notes,
       );
@@ -1006,6 +1013,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       setNumber: updatedSets[setIndex].setNumber,
       targetWeight: weight,
       targetReps: updatedSets[setIndex].targetReps,
+      targetMinReps: updatedSets[setIndex].targetMinReps,
+      targetMaxReps: updatedSets[setIndex].targetMaxReps,
       targetRpe: updatedSets[setIndex].targetRpe,
       notes: updatedSets[setIndex].notes,
     );
@@ -1016,13 +1025,21 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
     _markAsChanged();
   }
 
-  void _updateSetReps(int exerciseIndex, int setIndex, int reps) {
+  void _updateSetReps(
+    int exerciseIndex,
+    int setIndex,
+    int reps, {
+    int? minReps,
+    int? maxReps,
+  }) {
     final exerciseTemplate = _exercises[exerciseIndex];
     final updatedSets = List<SetTemplate>.from(exerciseTemplate.sets);
     updatedSets[setIndex] = SetTemplate(
       setNumber: updatedSets[setIndex].setNumber,
       targetWeight: updatedSets[setIndex].targetWeight,
       targetReps: reps,
+      targetMinReps: minReps,
+      targetMaxReps: maxReps,
       targetRpe: updatedSets[setIndex].targetRpe,
       notes: updatedSets[setIndex].notes,
     );
@@ -1167,20 +1184,32 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                       Expanded(
                         child: _buildPickerButton(
                           label: context.l10n.reps,
-                          value: '${round.targetReps ?? 0}',
+                          value: round.repsDisplay,
                           icon: AppIcons.repeat,
                           color: context.colors.secondary,
                           onTap: () async {
-                            final newReps = await RepsPickerModal.show(
+                            final result = await RepsPickerModal.showWithRange(
                               context,
                               initialReps: round.targetReps ?? 0,
+                              initialMinReps: round.targetMinReps,
+                              initialMaxReps: round.targetMaxReps,
                             );
-                            if (newReps != null) {
-                              _updateSetReps(
-                                exerciseIndex,
-                                roundIndex,
-                                newReps,
-                              );
+                            if (result != null) {
+                              if (result.isRange) {
+                                _updateSetReps(
+                                  exerciseIndex,
+                                  roundIndex,
+                                  result.minReps!,
+                                  minReps: result.minReps,
+                                  maxReps: result.maxReps,
+                                );
+                              } else {
+                                _updateSetReps(
+                                  exerciseIndex,
+                                  roundIndex,
+                                  result.reps ?? round.targetReps ?? 0,
+                                );
+                              }
                               if (!context.mounted) return;
                               Navigator.pop(context);
                             }
@@ -1325,6 +1354,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       setNumber: s.setNumber,
       targetWeight: weight,
       targetReps: s.targetReps,
+      targetMinReps: s.targetMinReps,
+      targetMaxReps: s.targetMaxReps,
       targetRpe: s.targetRpe,
       notes: s.notes,
     )).toList();
@@ -1347,12 +1378,16 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       setNumber: set.setNumber,
       weight: set.targetWeight,
       reps: set.targetReps,
+      minReps: set.targetMinReps,
+      maxReps: set.targetMaxReps,
     );
 
     final allSets = exercise.sets.map((s) => ExerciseSet(
       setNumber: s.setNumber,
       weight: s.targetWeight,
       reps: s.targetReps,
+      minReps: s.targetMinReps,
+      maxReps: s.targetMaxReps,
     )).toList();
 
     final previousSet = setIndex > 0
@@ -1360,6 +1395,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
             setNumber: exercise.sets[setIndex - 1].setNumber,
             weight: exercise.sets[setIndex - 1].targetWeight,
             reps: exercise.sets[setIndex - 1].targetReps,
+            minReps: exercise.sets[setIndex - 1].targetMinReps,
+            maxReps: exercise.sets[setIndex - 1].targetMaxReps,
           )
         : null;
 
@@ -1371,19 +1408,22 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       previousSet: previousSet,
       onSave: (updatedSet) {
         _updateSetWeight(exerciseIndex, setIndex, updatedSet.weight ?? 0);
-        _updateSetReps(exerciseIndex, setIndex, updatedSet.reps ?? 0);
+        _updateSetReps(exerciseIndex, setIndex, updatedSet.reps ?? 0,
+            minReps: updatedSet.minReps, maxReps: updatedSet.maxReps);
       },
       onSaveAndNext: setIndex < exercise.sets.length - 1
           ? (updatedSet) {
               _updateSetWeight(exerciseIndex, setIndex, updatedSet.weight ?? 0);
-              _updateSetReps(exerciseIndex, setIndex, updatedSet.reps ?? 0);
+              _updateSetReps(exerciseIndex, setIndex, updatedSet.reps ?? 0,
+                  minReps: updatedSet.minReps, maxReps: updatedSet.maxReps);
               Future.microtask(() => _showEditTemplateSetModal(exerciseIndex, setIndex + 1));
             }
           : null,
       onSaveAndPrevious: setIndex > 0
           ? (updatedSet) {
               _updateSetWeight(exerciseIndex, setIndex, updatedSet.weight ?? 0);
-              _updateSetReps(exerciseIndex, setIndex, updatedSet.reps ?? 0);
+              _updateSetReps(exerciseIndex, setIndex, updatedSet.reps ?? 0,
+                  minReps: updatedSet.minReps, maxReps: updatedSet.maxReps);
               Future.microtask(() => _showEditTemplateSetModal(exerciseIndex, setIndex - 1));
             }
           : null,
@@ -1392,7 +1432,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
         final r = updatedSet.reps ?? 0;
         for (int i = 0; i < exercise.sets.length; i++) {
           _updateSetWeight(exerciseIndex, i, w);
-          _updateSetReps(exerciseIndex, i, r);
+          _updateSetReps(exerciseIndex, i, r,
+              minReps: updatedSet.minReps, maxReps: updatedSet.maxReps);
         }
       },
     );

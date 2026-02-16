@@ -746,6 +746,8 @@ class ExerciseSetModel {
     required this.setNumber,
     this.weight,
     this.reps,
+    this.minReps,
+    this.maxReps,
     this.restTime,
     this.rpe,
     this.notes,
@@ -771,6 +773,8 @@ class ExerciseSetModel {
       setNumber: exerciseSet.setNumber,
       weight: exerciseSet.weight,
       reps: exerciseSet.reps,
+      minReps: exerciseSet.minReps,
+      maxReps: exerciseSet.maxReps,
       restTime: exerciseSet.restTime, // ✅ FIX: Added missing restTime
       rpe: exerciseSet.rpe,
       notes: exerciseSet.notes,
@@ -816,11 +820,16 @@ class ExerciseSetModel {
     // Legacy data: set was marked completed but has no timestamp
     final isLegacyCompleted = completedAt == null && isCompletedFromJson;
 
+    final minReps = data['minReps'] as int?;
+    final maxReps = data['maxReps'] as int?;
+
     return ExerciseSetModel(
       id: id,
       setNumber: setNumber,
       weight: weight,
       reps: reps,
+      minReps: minReps,
+      maxReps: maxReps,
       restTime: restTime,
       rpe: data['rpe'] as int?,
       notes: data['notes'] as String?,
@@ -844,6 +853,8 @@ class ExerciseSetModel {
   final int setNumber;
   final double? weight;
   final int? reps;
+  final int? minReps;
+  final int? maxReps;
   final int? restTime;
   final int? rpe;
   final String? notes;
@@ -875,6 +886,8 @@ class ExerciseSetModel {
       setNumber: setNumber,
       weight: weight,
       reps: reps,
+      minReps: minReps,
+      maxReps: maxReps,
       isCompleted: isCompleted, // From completedAt or legacy flag
       rpe: rpe,
       notes: notes,
@@ -900,6 +913,8 @@ class ExerciseSetModel {
       'setNumber': setNumber,
       'weight': weight,
       'reps': reps,
+      if (minReps != null) 'minReps': minReps,
+      if (maxReps != null) 'maxReps': maxReps,
       'restTimeSeconds': restTime,
       'rpe': rpe,
       'notes': notes,
@@ -925,6 +940,8 @@ class ExerciseSetModel {
     int? setNumber,
     double? weight,
     int? reps,
+    int? minReps,
+    int? maxReps,
     int? restTime,
     int? rpe,
     String? notes,
@@ -947,6 +964,8 @@ class ExerciseSetModel {
       setNumber: setNumber ?? this.setNumber,
       weight: weight ?? this.weight,
       reps: reps ?? this.reps,
+      minReps: minReps ?? this.minReps,
+      maxReps: maxReps ?? this.maxReps,
       restTime: restTime ?? this.restTime,
       rpe: rpe ?? this.rpe,
       notes: notes ?? this.notes,

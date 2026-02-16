@@ -651,7 +651,10 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
     final isCompleted = exerciseData?.isCompleted ?? false;
     final weight =
         exerciseData?.actualWeight ?? exerciseData?.targetWeight ?? 0.0;
-    final reps = exerciseData?.actualReps ?? exerciseData?.targetReps ?? 0;
+    final repsStr = exerciseData?.actualReps?.toString()
+        ?? (exerciseData?.hasRepRange == true
+            ? exerciseData!.repsDisplay
+            : '${exerciseData?.targetReps ?? 0}');
 
     // ✅ TUT visibility controlled by setDurationTracking toggle
     // 🔧 PERF FIX: Use .select() to only watch the specific field needed
@@ -755,7 +758,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
 
         // Weight × Reps
         Text(
-          '${weight.toStringAsFixed(1)} × $reps',
+          '${weight.toStringAsFixed(1)} × $repsStr',
           style: context.textTheme.bodySmall?.copyWith(
             fontWeight: FontWeight.w500,
             color: context.colors.onSurfaceVariant,

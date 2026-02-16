@@ -2078,6 +2078,18 @@ abstract class AppLocalizations {
   /// **'Reps'**
   String get reps;
 
+  /// Toggle label for exact (single value) rep mode
+  ///
+  /// In en, this message translates to:
+  /// **'Exact'**
+  String get exact;
+
+  /// Toggle label for range rep mode
+  ///
+  /// In en, this message translates to:
+  /// **'Range'**
+  String get range;
+
   /// Notes label
   ///
   /// In en, this message translates to:
@@ -36569,6 +36581,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bone Mass'**
   String get bodyMeasurementsMetricBoneMass;
+
+  /// Menu item to open full measurement input with all metrics
+  ///
+  /// In en, this message translates to:
+  /// **'Other Metrics...'**
+  String get bodyMeasurementsOtherMetrics;
 
   /// Measurement list screen title
   ///

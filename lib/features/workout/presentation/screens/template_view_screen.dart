@@ -467,7 +467,9 @@ class _ExerciseViewTile extends StatelessWidget {
       final weight = s.targetWeight != null
           ? _formatWeight(s.targetWeight!)
           : '?';
-      final reps = s.targetReps != null ? '×${s.targetReps}' : '';
+      final reps = s.hasRepRange
+          ? '×${s.repsDisplay}'
+          : (s.targetReps != null ? '×${s.targetReps}' : '');
       return '$weight$reps';
     }).toList();
 
@@ -528,7 +530,7 @@ class _ExerciseViewTile extends StatelessWidget {
   ) {
     final weightStr = weight != null ? _formatWeight(weight) : '—';
     final repsStr = sets
-        .map((s) => s.targetReps?.toString() ?? '?')
+        .map((s) => s.hasRepRange ? s.repsDisplay : (s.targetReps?.toString() ?? '?'))
         .join(' • ');
 
     return Container(

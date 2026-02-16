@@ -1098,6 +1098,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get reps => 'Reps';
 
   @override
+  String get exact => 'Esatto';
+
+  @override
+  String get range => 'Range';
+
+  @override
   String get notes => 'Note';
 
   @override
@@ -20591,6 +20597,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get bodyMeasurementsMetricBoneMass => 'Massa Ossea';
+
+  @override
+  String get bodyMeasurementsOtherMetrics => 'Altre Metriche...';
 
   @override
   String get bodyMeasurementsListTitle => 'Le Mie Misurazioni';

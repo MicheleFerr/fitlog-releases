@@ -728,7 +728,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       case ExerciseCountingMode.weighted:
         // Weighted: Show weight × reps (with placeholders for null values)
         final hasWeight = set.weight != null;
-        final hasReps = set.reps != null;
+        final hasReps = set.reps != null || set.hasRepRange;
 
         // If both null, show a single placeholder prompting edit
         if (!hasWeight && !hasReps) {
@@ -753,8 +753,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
           Text(
             hasReps
                 ? (set.actualReps != null && set.isCompleted
-                    ? '${set.actualReps}/${set.reps} reps'
-                    : '${set.reps} reps')
+                    ? '${set.actualReps}/${set.repsDisplay} reps'
+                    : '${set.repsDisplay} reps')
                 : '-- reps',
             style: hasReps ? valueStyle : placeholderStyle,
           ),
@@ -762,14 +762,15 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
 
       case ExerciseCountingMode.reps:
         // Reps-only: Show reps only (bodyweight exercises)
+        final hasReps = set.reps != null || set.hasRepRange;
         return [
           Text(
-            set.reps != null
+            hasReps
                 ? (set.actualReps != null && set.isCompleted
-                    ? '${set.actualReps}/${set.reps} reps'
-                    : '${set.reps} reps')
+                    ? '${set.actualReps}/${set.repsDisplay} reps'
+                    : '${set.repsDisplay} reps')
                 : '-- reps',
-            style: set.reps != null ? valueStyle : placeholderStyle,
+            style: hasReps ? valueStyle : placeholderStyle,
           ),
         ];
 

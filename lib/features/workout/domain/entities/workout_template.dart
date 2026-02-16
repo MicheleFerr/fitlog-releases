@@ -396,16 +396,22 @@ class ExerciseTemplate {
         // Get target values from first exercise in round
         double? targetWeight;
         int? targetReps;
+        int? targetMinReps;
+        int? targetMaxReps;
         if (supersetSet.exerciseData.isNotEmpty) {
           final firstData = supersetSet.exerciseData.values.first;
           targetWeight = firstData.targetWeight;
           targetReps = firstData.targetReps;
+          targetMinReps = firstData.targetMinReps;
+          targetMaxReps = firstData.targetMaxReps;
         }
 
         return SetTemplate(
           setNumber: index + 1,
           targetWeight: targetWeight,
           targetReps: targetReps,
+          targetMinReps: targetMinReps,
+          targetMaxReps: targetMaxReps,
         );
       }).toList();
 
@@ -437,6 +443,8 @@ class ExerciseTemplate {
           setNumber: index + 1,
           targetWeight: stage.weight,
           targetReps: stage.reps,
+          targetMinReps: stage.minReps,
+          targetMaxReps: stage.maxReps,
         );
       }).toList();
 
@@ -462,6 +470,8 @@ class ExerciseTemplate {
           setNumber: index + 1,
           targetWeight: exercise.weight, // ✅ Preserve weight for all sets
           targetReps: rpSet.reps,
+          targetMinReps: rpSet.minReps,
+          targetMaxReps: rpSet.maxReps,
           restSeconds: rpSet.restSeconds, // ✅ Preserve restSeconds
         );
       }).toList();
@@ -490,6 +500,8 @@ class ExerciseTemplate {
           setNumber: set.setNumber,
           targetWeight: set.weight,
           targetReps: set.reps,
+          targetMinReps: set.minReps,
+          targetMaxReps: set.maxReps,
           targetRpe: set.rpe,
           notes: set.notes,
         );
@@ -595,6 +607,8 @@ class ExerciseTemplate {
             exerciseName: exercise.name,
             targetWeight: setTemplate.targetWeight,
             targetReps: setTemplate.targetReps,
+            targetMinReps: setTemplate.targetMinReps,
+            targetMaxReps: setTemplate.targetMaxReps,
             actualWeight: null,
             actualReps: null,
             rpe: null,
@@ -630,6 +644,8 @@ class ExerciseTemplate {
         return DropSetStage(
           weight: setTemplate.targetWeight ?? 0,
           reps: setTemplate.targetReps ?? 8,
+          minReps: setTemplate.targetMinReps,
+          maxReps: setTemplate.targetMaxReps,
           isCompleted: false,
         );
       }).toList();
@@ -655,9 +671,15 @@ class ExerciseTemplate {
           reps: setTemplate.targetReps ?? 0,
           restSeconds:
               setTemplate.restSeconds ?? 15, // Use saved value or default 15s
+          minReps: setTemplate.targetMinReps,
+          maxReps: setTemplate.targetMaxReps,
           isCompleted: false,
         );
       }).toList();
+
+      // Preserve range from first set for the exercise-level target
+      final targetMinReps = sets.isNotEmpty ? sets.first.targetMinReps : null;
+      final targetMaxReps = sets.isNotEmpty ? sets.first.targetMaxReps : null;
 
       return RestPauseExercise(
         id: exerciseId, // ✅ Preserve database ID for strength standards lookup
@@ -665,6 +687,8 @@ class ExerciseTemplate {
         category: category,
         weight: weight,
         targetReps: targetReps,
+        targetMinReps: targetMinReps,
+        targetMaxReps: targetMaxReps,
         restPauseSets: restPauseSets,
         notes: notes,
         restTime: restTime,
@@ -694,6 +718,8 @@ class SetTemplate {
     required this.setNumber,
     this.targetWeight,
     this.targetReps,
+    this.targetMinReps,
+    this.targetMaxReps,
     this.targetRpe,
     this.restSeconds,
     this.notes,
@@ -735,10 +761,23 @@ class SetTemplate {
         ? restSecondsRaw
         : (restSecondsRaw is String ? int.tryParse(restSecondsRaw) : null);
 
+    // Parse targetMinReps / targetMaxReps with fallback
+    final minRepsRaw = json['targetMinReps'] ?? json['minReps'];
+    final targetMinReps = minRepsRaw is int
+        ? minRepsRaw
+        : (minRepsRaw is String ? int.tryParse(minRepsRaw) : null);
+
+    final maxRepsRaw = json['targetMaxReps'] ?? json['maxReps'];
+    final targetMaxReps = maxRepsRaw is int
+        ? maxRepsRaw
+        : (maxRepsRaw is String ? int.tryParse(maxRepsRaw) : null);
+
     return SetTemplate(
       setNumber: setNumber,
       targetWeight: targetWeight,
       targetReps: targetReps,
+      targetMinReps: targetMinReps,
+      targetMaxReps: targetMaxReps,
       targetRpe: targetRpe,
       restSeconds: restSeconds,
       notes: json['notes']?.toString(),
@@ -747,15 +786,28 @@ class SetTemplate {
   final int setNumber;
   final double? targetWeight;
   final int? targetReps;
+  final int? targetMinReps;
+  final int? targetMaxReps;
   final int? targetRpe; // Rate of Perceived Exertion
   final int? restSeconds; // For RestPause sets (seconds between mini-sets)
   final String? notes;
+
+  /// True se ha un range di ripetizioni target
+  bool get hasRepRange => targetMinReps != null && targetMaxReps != null && targetMinReps != targetMaxReps;
+
+  /// Display string per le reps target: "8-12" per range, "10" per singolo
+  String get repsDisplay {
+    if (hasRepRange) return '$targetMinReps-$targetMaxReps';
+    return '${targetReps ?? targetMinReps ?? targetMaxReps ?? "-"}';
+  }
 
   Map<String, dynamic> toJson() {
     return {
       'setNumber': setNumber,
       'targetWeight': targetWeight,
       'targetReps': targetReps,
+      if (targetMinReps != null) 'targetMinReps': targetMinReps,
+      if (targetMaxReps != null) 'targetMaxReps': targetMaxReps,
       'targetRpe': targetRpe,
       if (restSeconds != null) 'restSeconds': restSeconds,
       'notes': notes,
@@ -768,6 +820,8 @@ class SetTemplate {
       setNumber: setNumber,
       weight: targetWeight,
       reps: targetReps,
+      minReps: targetMinReps,
+      maxReps: targetMaxReps,
       notes: notes,
     );
   }

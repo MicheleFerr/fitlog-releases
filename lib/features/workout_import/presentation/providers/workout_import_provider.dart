@@ -290,6 +290,8 @@ class WorkoutImportNotifier extends Notifier<WorkoutImportState> {
         setNumber: i + 1,
         targetWeight: s.weight,
         targetReps: s.reps ?? s.maxReps ?? (s.isMaxReps ? null : 8),
+        targetMinReps: s.minReps,
+        targetMaxReps: s.maxReps,
       );
     }).toList();
 

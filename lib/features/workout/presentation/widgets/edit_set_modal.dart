@@ -47,6 +47,8 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
 
   bool _isCompleted = false;
   int? _selectedRpe;
+  int? _minReps;
+  int? _maxReps;
 
   @override
   void initState() {
@@ -55,6 +57,8 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
     // User is typically opening this dialog to complete the set during workout
     _isCompleted = true; // Changed from: widget.exerciseSet.isCompleted
     _selectedRpe = widget.exerciseSet.rpe;
+    _minReps = widget.exerciseSet.minReps;
+    _maxReps = widget.exerciseSet.maxReps;
 
     _weightController = TextEditingController(
       text: widget.exerciseSet.weight?.toString() ?? '',
@@ -405,6 +409,8 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
       final updatedSet = widget.exerciseSet.copyWith(
         weight: widget.countingMode.requiresWeight ? weight : null,
         reps: widget.countingMode.requiresReps ? reps : null,
+        minReps: widget.countingMode.requiresReps ? _minReps : null,
+        maxReps: widget.countingMode.requiresReps ? _maxReps : null,
         actualReps: _isCompleted && widget.countingMode.requiresReps
             ? actualReps
             : null,
@@ -659,14 +665,24 @@ class _EditSetModalState extends ConsumerState<EditSetModal> {
   void _openRepsPicker(BuildContext context) async {
     final currentReps = int.tryParse(_repsController.text) ?? 10;
 
-    final selectedReps = await RepsPickerModal.show(
+    final result = await RepsPickerModal.showWithRange(
       context,
       initialReps: currentReps,
+      initialMinReps: widget.exerciseSet.minReps,
+      initialMaxReps: widget.exerciseSet.maxReps,
     );
 
-    if (selectedReps != null) {
+    if (result != null) {
       setState(() {
-        _repsController.text = selectedReps.toString();
+        if (result.isRange) {
+          _repsController.text = '${result.minReps}';
+          _minReps = result.minReps;
+          _maxReps = result.maxReps;
+        } else {
+          _repsController.text = '${result.reps ?? currentReps}';
+          _minReps = null;
+          _maxReps = null;
+        }
       });
     }
   }

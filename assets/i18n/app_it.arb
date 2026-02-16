@@ -460,6 +460,8 @@
   "oneRmEstimated": "1RM (Stim.)",
   "weightTimesReps": "Peso × Rip",
   "reps": "Reps",
+  "exact": "Esatto",
+  "range": "Range",
   "notes": "Note",
   "notesHint": "Aggiungi note sulla forma, progressione, ecc.",
   "formCues": "Punti Tecnici",
@@ -13648,6 +13650,10 @@
   "bodyMeasurementsMetricBoneMass": "Massa Ossea",
   "@bodyMeasurementsMetricBoneMass": {
     "description": "Etichetta metrica massa ossea"
+  },
+  "bodyMeasurementsOtherMetrics": "Altre Metriche...",
+  "@bodyMeasurementsOtherMetrics": {
+    "description": "Voce del menu per aprire l'input completo con tutte le metriche"
   },
   "bodyMeasurementsListTitle": "Le Mie Misurazioni",
   "@bodyMeasurementsListTitle": {

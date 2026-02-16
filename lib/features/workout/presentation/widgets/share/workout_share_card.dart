@@ -314,10 +314,10 @@ class _ShareExerciseItem extends StatelessWidget {
 
   String _formatSet(int setNumber, ExerciseSet set) {
     final weight = set.weight != null ? '${set.weight}kg' : '-';
-    final reps = set.actualReps ?? set.reps ?? 0;
+    final repsStr = set.actualReps?.toString() ?? set.repsDisplay;
     final rpeStr = set.rpe != null ? '  RPE ${set.rpe}' : '';
 
-    return 'Set $setNumber:  $weight × $reps$rpeStr';
+    return 'Set $setNumber:  $weight × $repsStr$rpeStr';
   }
 }
 

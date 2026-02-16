@@ -385,6 +385,8 @@ class ExerciseSet {
     required this.setNumber,
     this.weight,
     this.reps,
+    this.minReps,
+    this.maxReps,
     this.actualReps, // ✅ Nuovo
     this.rpe, // ✅ Nuovo
     this.seconds,
@@ -409,6 +411,8 @@ class ExerciseSet {
       setNumber: json['setNumber'],
       weight: json['weight']?.toDouble(),
       reps: json['reps'],
+      minReps: _normalizeMinReps(json['minReps'] as int?, json['maxReps'] as int?),
+      maxReps: _normalizeMaxReps(json['minReps'] as int?, json['maxReps'] as int?),
       actualReps: json['actualReps'], // ✅ Nuovo
       rpe: json['rpe'], // ✅ Nuovo
       seconds: json['seconds'],
@@ -438,7 +442,9 @@ class ExerciseSet {
   final String id;
   final int setNumber;
   final double? weight;
-  final int? reps; // Target reps
+  final int? reps; // Target reps (singolo, backward compat)
+  final int? minReps; // Min del range (es. 8)
+  final int? maxReps; // Max del range (es. 12)
   final int? actualReps; // ✅ Reps effettive completate
   final int? rpe; // ✅ RPE (Rate of Perceived Exertion) 5-10
   final int? seconds; // For time-based exercises
@@ -477,6 +483,8 @@ class ExerciseSet {
     int? setNumber,
     double? weight,
     int? reps,
+    int? minReps,
+    int? maxReps,
     int? actualReps, // ✅ Nuovo
     int? rpe, // ✅ Nuovo
     int? seconds,
@@ -499,6 +507,8 @@ class ExerciseSet {
       setNumber: setNumber ?? this.setNumber,
       weight: weight ?? this.weight,
       reps: reps ?? this.reps,
+      minReps: minReps ?? this.minReps,
+      maxReps: maxReps ?? this.maxReps,
       actualReps: actualReps ?? this.actualReps, // ✅ Nuovo
       rpe: rpe ?? this.rpe, // ✅ Nuovo
       restTime: restTime ?? this.restTime, // ✅ Rest time
@@ -524,6 +534,8 @@ class ExerciseSet {
       'setNumber': setNumber,
       'weight': weight,
       'reps': reps,
+      if (minReps != null) 'minReps': minReps,
+      if (maxReps != null) 'maxReps': maxReps,
       'actualReps': actualReps, // ✅ Nuovo
       'rpe': rpe, // ✅ Nuovo
       'seconds': seconds,
@@ -567,25 +579,60 @@ class ExerciseSet {
   /// Restituisce il testo RPE formattato
   String get rpeText => rpe != null ? 'RPE: $rpe/10' : '';
 
-  /// Restituisce le reps completate vs target
+  /// Restituisce le reps completate vs target (supporta range)
   String get repsText {
-    if (actualReps != null && reps != null) {
-      return '$actualReps/$reps reps';
+    final target = repsDisplay;
+    if (actualReps != null && target != '-') {
+      return '$actualReps/$target reps';
     } else if (actualReps != null) {
       return '$actualReps reps';
-    } else if (reps != null) {
-      return '$reps reps (target)';
+    } else if (target != '-') {
+      return '$target reps (target)';
     }
     return '';
   }
 
+  // ========== REP RANGE HELPERS ==========
+
+  /// True se il set ha un range di ripetizioni (min != max, entrambi definiti)
+  bool get hasRepRange => minReps != null && maxReps != null && minReps != maxReps;
+
+  /// Display string per le reps target: "8-12" per range, "10" per singolo
+  String get repsDisplay {
+    if (hasRepRange) return '$minReps-$maxReps';
+    return '${reps ?? minReps ?? maxReps ?? "-"}';
+  }
+
+  /// True se actualReps è sopra il maxReps del range (bonus!)
+  bool get isAboveRange {
+    if (!hasRepRange || actualReps == null) return false;
+    return actualReps! > maxReps!;
+  }
+
+  /// Normalizza minReps/maxReps: se min > max, li swappa
+  static int? _normalizeMinReps(int? min, int? max) {
+    if (min == null || max == null) return min;
+    return min <= max ? min : max;
+  }
+
+  static int? _normalizeMaxReps(int? min, int? max) {
+    if (min == null || max == null) return max;
+    return max >= min ? max : min;
+  }
+
   /// Indica se il set è stato completato con successo (tutte le target reps)
-  bool get isFullyCompleted =>
-      isCompleted && actualReps != null && reps != null && actualReps! >= reps!;
+  bool get isFullyCompleted {
+    if (!isCompleted || actualReps == null) return false;
+    if (hasRepRange) return actualReps! >= minReps!;
+    return reps != null && actualReps! >= reps!;
+  }
 
   /// Indica se sono state completate meno reps del target
-  bool get isPartiallyCompleted =>
-      isCompleted && actualReps != null && reps != null && actualReps! < reps!;
+  bool get isPartiallyCompleted {
+    if (!isCompleted || actualReps == null) return false;
+    if (hasRepRange) return actualReps! < minReps!;
+    return reps != null && actualReps! < reps!;
+  }
 
   /// Volume del set (peso × reps effettive o target)
   double get volume {
@@ -668,6 +715,8 @@ class SupersetExerciseData {
     required this.exerciseName,
     this.targetWeight,
     this.targetReps,
+    this.targetMinReps,
+    this.targetMaxReps,
     this.actualWeight,
     this.actualReps,
     this.rpe,
@@ -681,6 +730,8 @@ class SupersetExerciseData {
       exerciseName: json['exerciseName'] ?? '',
       targetWeight: json['targetWeight']?.toDouble(),
       targetReps: json['targetReps'],
+      targetMinReps: json['targetMinReps'] as int?,
+      targetMaxReps: json['targetMaxReps'] as int?,
       actualWeight: json['actualWeight']?.toDouble(),
       actualReps: json['actualReps'],
       rpe: json['rpe'],
@@ -692,17 +743,30 @@ class SupersetExerciseData {
   final String exerciseName;
   final double? targetWeight;
   final int? targetReps;
+  final int? targetMinReps;
+  final int? targetMaxReps;
   final double? actualWeight;
   final int? actualReps;
   final int? rpe;
   final bool isCompleted;
   final String? notes;
 
+  /// True se ha un range di ripetizioni target
+  bool get hasRepRange => targetMinReps != null && targetMaxReps != null && targetMinReps != targetMaxReps;
+
+  /// Display string per le reps target
+  String get repsDisplay {
+    if (hasRepRange) return '$targetMinReps-$targetMaxReps';
+    return '${targetReps ?? targetMinReps ?? targetMaxReps ?? "-"}';
+  }
+
   SupersetExerciseData copyWith({
     String? exerciseId,
     String? exerciseName,
     double? targetWeight,
     int? targetReps,
+    int? targetMinReps,
+    int? targetMaxReps,
     double? actualWeight,
     int? actualReps,
     int? rpe,
@@ -714,6 +778,8 @@ class SupersetExerciseData {
       exerciseName: exerciseName ?? this.exerciseName,
       targetWeight: targetWeight ?? this.targetWeight,
       targetReps: targetReps ?? this.targetReps,
+      targetMinReps: targetMinReps ?? this.targetMinReps,
+      targetMaxReps: targetMaxReps ?? this.targetMaxReps,
       actualWeight: actualWeight ?? this.actualWeight,
       actualReps: actualReps ?? this.actualReps,
       rpe: rpe ?? this.rpe,
@@ -728,6 +794,8 @@ class SupersetExerciseData {
       'exerciseName': exerciseName,
       'targetWeight': targetWeight,
       'targetReps': targetReps,
+      if (targetMinReps != null) 'targetMinReps': targetMinReps,
+      if (targetMaxReps != null) 'targetMaxReps': targetMaxReps,
       'actualWeight': actualWeight,
       'actualReps': actualReps,
       'rpe': rpe,
@@ -1311,6 +1379,8 @@ class DropSetStage {
   DropSetStage({
     required this.weight,
     required this.reps,
+    this.minReps,
+    this.maxReps,
     this.actualReps,
     this.rpe,
     this.isCompleted = false,
@@ -1321,6 +1391,8 @@ class DropSetStage {
     return DropSetStage(
       weight: (json['weight'] as num?)?.toDouble() ?? 0.0,
       reps: json['reps'] as int? ?? 0,
+      minReps: json['minReps'] as int?,
+      maxReps: json['maxReps'] as int?,
       actualReps: json['actualReps'] as int?,
       rpe: json['rpe'] as int?,
       isCompleted: json['isCompleted'] as bool? ?? false,
@@ -1335,6 +1407,12 @@ class DropSetStage {
 
   /// Target reps for this stage
   final int reps;
+
+  /// Min of rep range (optional, es. 8 in "8-12")
+  final int? minReps;
+
+  /// Max of rep range (optional, es. 12 in "8-12")
+  final int? maxReps;
 
   /// Actual reps completed (may differ from target)
   final int? actualReps;
@@ -1351,9 +1429,14 @@ class DropSetStage {
   /// Get effective reps (actual if available, otherwise target)
   int get effectiveReps => actualReps ?? reps;
 
+  /// True se ha un range di ripetizioni
+  bool get hasRepRange => minReps != null && maxReps != null && minReps != maxReps;
+
   DropSetStage copyWith({
     double? weight,
     int? reps,
+    int? minReps,
+    int? maxReps,
     int? actualReps,
     int? rpe,
     bool? isCompleted,
@@ -1362,6 +1445,8 @@ class DropSetStage {
     return DropSetStage(
       weight: weight ?? this.weight,
       reps: reps ?? this.reps,
+      minReps: minReps ?? this.minReps,
+      maxReps: maxReps ?? this.maxReps,
       actualReps: actualReps ?? this.actualReps,
       rpe: rpe ?? this.rpe,
       isCompleted: isCompleted ?? this.isCompleted,
@@ -1373,6 +1458,8 @@ class DropSetStage {
     return {
       'weight': weight,
       'reps': reps,
+      if (minReps != null) 'minReps': minReps,
+      if (maxReps != null) 'maxReps': maxReps,
       'actualReps': actualReps,
       'rpe': rpe,
       'isCompleted': isCompleted,
@@ -1389,6 +1476,8 @@ class RestPauseExercise extends Exercise {
     required super.category,
     required this.weight,
     required this.targetReps,
+    this.targetMinReps,
+    this.targetMaxReps,
     required this.restPauseSets,
     super.notes,
     super.restTime,
@@ -1425,6 +1514,8 @@ class RestPauseExercise extends Exercise {
       ),
       weight: (json['weight'] as num?)?.toDouble() ?? 0.0,
       targetReps: json['targetReps'] as int? ?? 0,
+      targetMinReps: json['targetMinReps'] as int?,
+      targetMaxReps: json['targetMaxReps'] as int?,
       restPauseSets: restPauseSets,
       notes: json['notes'] as String?,
       restTime: json['restTime'] is num
@@ -1466,7 +1557,12 @@ class RestPauseExercise extends Exercise {
 
   final double weight;
   final int targetReps;
+  final int? targetMinReps;
+  final int? targetMaxReps;
   final List<RestPauseSet> restPauseSets;
+
+  /// True se ha un range di ripetizioni target
+  bool get hasRepRange => targetMinReps != null && targetMaxReps != null && targetMinReps != targetMaxReps;
 
   @override
   RestPauseExercise copyWith({
@@ -1477,6 +1573,8 @@ class RestPauseExercise extends Exercise {
     List<ExerciseSet>? sets,
     double? weight,
     int? targetReps,
+    int? targetMinReps,
+    int? targetMaxReps,
     List<RestPauseSet>? restPauseSets,
     String? notes,
     int? restTime,
@@ -1505,6 +1603,8 @@ class RestPauseExercise extends Exercise {
       category: category ?? this.category,
       weight: weight ?? this.weight,
       targetReps: targetReps ?? this.targetReps,
+      targetMinReps: targetMinReps ?? this.targetMinReps,
+      targetMaxReps: targetMaxReps ?? this.targetMaxReps,
       restPauseSets: restPauseSets ?? this.restPauseSets,
       notes: notes ?? this.notes,
       restTime: clearRestTime ? null : (restTime ?? this.restTime),
@@ -1580,6 +1680,8 @@ class RestPauseExercise extends Exercise {
       // RestPause-specific
       'weight': weight,
       'targetReps': targetReps,
+      if (targetMinReps != null) 'targetMinReps': targetMinReps,
+      if (targetMaxReps != null) 'targetMaxReps': targetMaxReps,
       'restPauseSets': restPauseSets.map((s) => s.toJson()).toList(),
     };
   }
@@ -1589,6 +1691,8 @@ class RestPauseSet {
   RestPauseSet({
     required this.reps,
     required this.restSeconds,
+    this.minReps,
+    this.maxReps,
     this.actualReps,
     this.rpe,
     this.isCompleted = false,
@@ -1599,6 +1703,8 @@ class RestPauseSet {
     return RestPauseSet(
       reps: json['reps'] as int? ?? 0,
       restSeconds: json['restSeconds'] as int? ?? 0,
+      minReps: json['minReps'] as int?,
+      maxReps: json['maxReps'] as int?,
       actualReps: json['actualReps'] as int?,
       rpe: json['rpe'] as int?,
       isCompleted: json['isCompleted'] as bool? ?? false,
@@ -1610,6 +1716,12 @@ class RestPauseSet {
 
   /// Target reps for this set
   final int reps;
+
+  /// Min of rep range (optional)
+  final int? minReps;
+
+  /// Max of rep range (optional)
+  final int? maxReps;
 
   /// Rest seconds before this set (0 for first set)
   final int restSeconds;
@@ -1629,9 +1741,14 @@ class RestPauseSet {
   /// Get effective reps (actual if available, otherwise target)
   int get effectiveReps => actualReps ?? reps;
 
+  /// True se ha un range di ripetizioni
+  bool get hasRepRange => minReps != null && maxReps != null && minReps != maxReps;
+
   RestPauseSet copyWith({
     int? reps,
     int? restSeconds,
+    int? minReps,
+    int? maxReps,
     int? actualReps,
     int? rpe,
     bool? isCompleted,
@@ -1640,6 +1757,8 @@ class RestPauseSet {
     return RestPauseSet(
       reps: reps ?? this.reps,
       restSeconds: restSeconds ?? this.restSeconds,
+      minReps: minReps ?? this.minReps,
+      maxReps: maxReps ?? this.maxReps,
       actualReps: actualReps ?? this.actualReps,
       rpe: rpe ?? this.rpe,
       isCompleted: isCompleted ?? this.isCompleted,
@@ -1651,6 +1770,8 @@ class RestPauseSet {
     return {
       'reps': reps,
       'restSeconds': restSeconds,
+      if (minReps != null) 'minReps': minReps,
+      if (maxReps != null) 'maxReps': maxReps,
       'actualReps': actualReps,
       'rpe': rpe,
       'isCompleted': isCompleted,

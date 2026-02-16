@@ -1341,6 +1341,14 @@
   "@reps": {
     "description": "Reps table header"
   },
+  "exact": "Exact",
+  "@exact": {
+    "description": "Toggle label for exact (single value) rep mode"
+  },
+  "range": "Range",
+  "@range": {
+    "description": "Toggle label for range rep mode"
+  },
   "notes": "Notes",
   "@notes": {
     "description": "Notes label"
@@ -25117,6 +25125,10 @@
   "bodyMeasurementsMetricBoneMass": "Bone Mass",
   "@bodyMeasurementsMetricBoneMass": {
     "description": "Bone mass metric label"
+  },
+  "bodyMeasurementsOtherMetrics": "Other Metrics...",
+  "@bodyMeasurementsOtherMetrics": {
+    "description": "Menu item to open full measurement input with all metrics"
   },
   "bodyMeasurementsListTitle": "My Measurements",
   "@bodyMeasurementsListTitle": {
