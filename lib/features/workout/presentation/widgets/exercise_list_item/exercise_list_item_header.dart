@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/exercise_merge/domain/entities/merge_candidate.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
@@ -398,202 +399,153 @@ class ExerciseListItemHeader extends ConsumerWidget {
     final showAdvanced = config.showAdvancedMenu ?? isProMode;
     final showInsights = ref.read(showExerciseInsightProvider);
 
-    return PopupMenuButton<String>(
+    return CNPopupMenuButton.icon(
       key: tutorialMenuKey,
-      onSelected: (value) {
-        switch (value) {
-          // NOTE: 'auto_adjustment' removed - now controlled via global settings
-          case 'edit':
-            onShowExerciseEditor();
-            break;
-          case 'change_exercise':
-            onShowExerciseReplacement();
-            break;
-          case 'duplicate':
-            onDuplicateExercise();
-            break;
-          case 'delete':
-            onShowDeleteConfirmation();
-            break;
-          case 'insight':
-            onShowExerciseHistory();
-            break;
-          case 'change_counting_mode':
-            onShowCountingModePicker();
-            break;
-          case 'add_warmup_sets':
-            onAddWarmupSets();
-            break;
-          case 'create_superset':
-            onCreateSuperset?.call();
-            break;
-        }
-      },
-      itemBuilder: (context) {
-        return [
-          // NOTE: Auto Adjustment menu item removed - now controlled via global settings
-          // (WorkoutCustomizationModal → "Suggerisci Peso" toggle)
-
-          // Add/Edit Warmup Sets - always shown for single exercises
-          // Shows "Edit" if warmup sets already exist, "Add" otherwise
-          if (exercise.type == ExerciseType.single) ...[
-            PopupMenuItem(
-              value: 'add_warmup_sets',
-              child: _WarmupSetsMenuItem(exercise: exercise),
-            ),
-          ],
-          const PopupMenuDivider(),
-
-          // Delete - always shown
-          PopupMenuItem(
-            value: 'delete',
-            child: Row(
-              children: [
-                SemanticIcon(
-                  icon: AppIcons.delete,
-                  semanticLabel: 'Delete',
-                  size: AppIconSize.small,
-                  color: context.errorColor,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Delete',
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: context.errorColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Advanced options - conditional
-          if (showAdvanced) ...[
-            const PopupMenuDivider(),
-            PopupMenuItem(
-              value: 'edit',
-              child: Row(
-                children: [
-                  const SemanticIcon(
-                    icon: AppIcons.edit,
-                    semanticLabel: 'Edit',
-                    size: AppIconSize.small,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(context.l10n.edit),
-                ],
-              ),
-            ),
-            PopupMenuItem(
-              value: 'change_exercise',
-              child: Row(
-                children: [
-                  const SemanticIcon(
-                    icon: AppIcons.swapHoriz,
-                    semanticLabel: 'Change exercise',
-                    size: AppIconSize.small,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(context.l10n.exerciseChangeVariation),
-                ],
-              ),
-            ),
-            PopupMenuItem(
-              value: 'duplicate',
-              child: Row(
-                children: [
-                  const SemanticIcon(
-                    icon: AppIcons.copy,
-                    semanticLabel: 'Duplicate',
-                    size: AppIconSize.small,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(context.l10n.duplicate),
-                ],
-              ),
-            ),
-            // Create superset - only for single exercises
-            if (exercise.type == ExerciseType.single &&
-                onCreateSuperset != null)
-              PopupMenuItem(
-                value: 'create_superset',
-                child: Row(
-                  children: [
-                    SemanticIcon(
-                      icon: AppIcons.link,
-                      semanticLabel: context.l10n.createSuperset,
-                      size: AppIconSize.small,
-                      color: context.colors.secondary,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      context.l10n.createSuperset,
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: context.colors.secondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            // Change counting mode - always in advanced menu
-            PopupMenuItem(
-              value: 'change_counting_mode',
-              child: Row(
-                children: [
-                  const SemanticIcon(
-                    icon: AppIcons.swapHoriz,
-                    semanticLabel: 'Change counting format',
-                    size: AppIconSize.small,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      context.l10n.exerciseOptionsChangeCountingFormat,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: context.colors.secondaryContainer,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      exercise.countingMode.name.toUpperCase(),
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: context.colors.onSecondaryContainer,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-
-          // Insights - conditional
-          if (showInsights) ...[
-            const PopupMenuDivider(),
-            PopupMenuItem(
-              value: 'insight',
-              child: Row(
-                children: [
-                  const SemanticIcon(
-                    icon: AppIcons.insights,
-                    semanticLabel: 'View insights',
-                    size: AppIconSize.small,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(context.l10n.exerciseListInsight),
-                ],
-              ),
-            ),
-          ],
-        ];
-      },
+      buttonIcon: const CNSymbol('ellipsis', size: 16),
+      buttonStyle: CNButtonStyle.plain,
+      size: 32,
+      items: _buildMenuItems(context, showAdvanced, showInsights),
+      onSelected: (index) => _handleMenuSelection(index, context, ref),
     );
+  }
+
+  List<CNPopupMenuEntry> _buildMenuItems(
+    BuildContext context,
+    bool showAdvanced,
+    bool showInsights,
+  ) {
+    final items = <CNPopupMenuEntry>[];
+
+    // Add/Edit Warmup Sets - always shown for single exercises
+    if (exercise.type == ExerciseType.single) {
+      final hasExistingWarmup = exercise.sets.any((s) => s.isWarmup);
+      items.add(CNPopupMenuItem(
+        label: hasExistingWarmup
+          ? context.l10n.editWarmupSets
+          : context.l10n.addWarmupSets,
+        icon: CNSymbol(
+          hasExistingWarmup ? 'pencil' : 'flame',
+          size: 14,
+        ),
+      ));
+    }
+
+    // Delete - always shown
+    items.add(CNPopupMenuItem(
+      label: 'Delete',
+      icon: const CNSymbol('trash', size: 14),
+    ));
+
+    // Advanced options - conditional
+    if (showAdvanced) {
+      items.add(CNPopupMenuItem(
+        label: context.l10n.edit,
+        icon: const CNSymbol('pencil', size: 14),
+      ));
+      items.add(CNPopupMenuItem(
+        label: context.l10n.exerciseChangeVariation,
+        icon: const CNSymbol('arrow.left.arrow.right', size: 14),
+      ));
+      items.add(CNPopupMenuItem(
+        label: context.l10n.duplicate,
+        icon: const CNSymbol('doc.on.doc', size: 14),
+      ));
+
+      // Create superset - only for single exercises
+      if (exercise.type == ExerciseType.single && onCreateSuperset != null) {
+        items.add(CNPopupMenuItem(
+          label: context.l10n.createSuperset,
+          icon: const CNSymbol('link', size: 14),
+        ));
+      }
+
+      // Change counting mode (without badge - CNPopupMenuItem doesn't support custom layout)
+      items.add(CNPopupMenuItem(
+        label: '${context.l10n.exerciseOptionsChangeCountingFormat} (${exercise.countingMode.name.toUpperCase()})',
+        icon: const CNSymbol('arrow.left.arrow.right', size: 14),
+      ));
+    }
+
+    // Insights - conditional
+    if (showInsights) {
+      items.add(CNPopupMenuItem(
+        label: context.l10n.exerciseListInsight,
+        icon: const CNSymbol('chart.bar', size: 14),
+      ));
+    }
+
+    return items;
+  }
+
+  void _handleMenuSelection(int index, BuildContext context, WidgetRef ref) {
+    // Map index to action based on conditionally built menu
+    int currentIndex = 0;
+
+    // Warmup sets (if single exercise)
+    if (exercise.type == ExerciseType.single) {
+      if (index == currentIndex) {
+        onAddWarmupSets();
+        return;
+      }
+      currentIndex++;
+    }
+
+    // Delete
+    if (index == currentIndex) {
+      onShowDeleteConfirmation();
+      return;
+    }
+    currentIndex++;
+
+    // Advanced options (if enabled)
+    final showAdvanced = config.showAdvancedMenu ?? isProMode;
+    if (showAdvanced) {
+      // Edit
+      if (index == currentIndex) {
+        onShowExerciseEditor();
+        return;
+      }
+      currentIndex++;
+
+      // Change exercise
+      if (index == currentIndex) {
+        onShowExerciseReplacement();
+        return;
+      }
+      currentIndex++;
+
+      // Duplicate
+      if (index == currentIndex) {
+        onDuplicateExercise();
+        return;
+      }
+      currentIndex++;
+
+      // Create superset (if available)
+      if (exercise.type == ExerciseType.single && onCreateSuperset != null) {
+        if (index == currentIndex) {
+          onCreateSuperset!.call();
+          return;
+        }
+        currentIndex++;
+      }
+
+      // Change counting mode
+      if (index == currentIndex) {
+        onShowCountingModePicker();
+        return;
+      }
+      currentIndex++;
+    }
+
+    // Insights (if enabled)
+    final showInsights = ref.read(showExerciseInsightProvider);
+    if (showInsights) {
+      if (index == currentIndex) {
+        onShowExerciseHistory();
+        return;
+      }
+    }
   }
 
   // Helper methods
@@ -613,40 +565,6 @@ class ExerciseListItemHeader extends ConsumerWidget {
   // NOTE: _getDefaultTut and _formatTutDisplay REMOVED - TUT now in footer
 }
 
-/// Private widget for warmup sets menu item
-/// Shows different icon and label based on whether warmup sets exist
-class _WarmupSetsMenuItem extends StatelessWidget {
-  const _WarmupSetsMenuItem({required this.exercise});
-
-  final Exercise exercise;
-
-  @override
-  Widget build(BuildContext context) {
-    final hasExistingWarmup = exercise.sets.any((s) => s.isWarmup);
-
-    return Row(
-      children: [
-        SemanticIcon(
-          icon: hasExistingWarmup ? AppIcons.edit : AppIcons.streak,
-          semanticLabel: hasExistingWarmup
-              ? context.l10n.editWarmupSets
-              : context.l10n.addWarmupSets,
-          size: AppIconSize.small,
-          color: context.colors.warning,
-        ),
-        const SizedBox(width: 8),
-        Text(
-          hasExistingWarmup
-              ? context.l10n.editWarmupSets
-              : context.l10n.addWarmupSets,
-          style: context.textTheme.bodyMedium?.copyWith(
-            color: context.colors.warning,
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 /// ✅ PERFORMANCE FIX: Isolated GIF icon widget
 ///
