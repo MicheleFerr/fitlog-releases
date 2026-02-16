@@ -101,10 +101,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   final _discoverTabKey = GlobalKey();
   final _createButtonKey = GlobalKey();
 
-  // Auto-minimize animation state
-  bool _isMetricsMinimized = false;
-  late AnimationController _minimizeController;
-  late Animation<double> _minimizeAnimation;
+  // Template Quota expansion state
+  bool _isQuotaExpanded = false;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Expansion state for "Discover more templates" sections
@@ -136,24 +134,6 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     _tabController.addListener(() {
       if (mounted) {
         setState(() {});
-      }
-    });
-
-    // Setup auto-minimize animation
-    _minimizeController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    _minimizeAnimation = CurvedAnimation(
-      parent: _minimizeController,
-      curve: Curves.easeInOutCubic,
-    );
-
-    // Auto-minimize after 3 seconds
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted && !_isMetricsMinimized) {
-        _minimizeController.forward();
-        setState(() => _isMetricsMinimized = true);
       }
     });
 
@@ -198,188 +178,68 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     // Note: TabController listener is an anonymous function
     // It will be cleaned when controller is disposed, but explicit removal is safer
     _tabController.dispose();
-    _minimizeController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final myTemplatesAsync = ref.watch(customWorkoutTemplatesProvider);
-    // 🔧 PERF FIX: Access templateProvider state safely
-    // Note: We read the full state once but only extract the count we need
-    final templateState = ref.watch(templateProvider);
-    final publicTemplatesCount = templateState.publicTemplates.length;
 
     return Scaffold(
       body: Stack(
         children: [
           CustomScrollView(
             slivers: [
-              // Static header (back button, title, subtitle)
-              SliverToBoxAdapter(
-                child: SafeArea(
-                  bottom: false,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.sm,
-                      AppSpacing.sm,
-                      AppSpacing.sm,
-                      0,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Top row with actions
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              icon: SemanticIcon(
-                                icon: AppIcons.arrowBack,
-                                semanticLabel: l10n.back,
-                                size: AppIconSize.medium,
-                                color: context.colors.onSurfaceVariant,
-                              ),
-                              onPressed: () => Navigator.of(context).maybePop(),
-                            ),
-                            if (_tabController.index == 0)
-                              IconButton(
-                                icon: SemanticIcon(
-                                  icon: _isGridView
-                                      ? AppIcons.viewList
-                                      : AppIcons.gridView,
-                                  semanticLabel: _isGridView
-                                      ? l10n.listView
-                                      : l10n.gridView,
-                                  size: AppIconSize.medium,
-                                  color: context.colors.onSurfaceVariant,
-                                ),
-                                onPressed: () {
-                                  HapticFeedback.lightImpact();
-                                  setState(() => _isGridView = !_isGridView);
-                                },
-                              )
-                            else
-                              const SizedBox(width: 48),
-                          ],
-                        ),
-
-                        // Title and subtitle
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.sm,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                l10n.workoutTemplates,
-                                style: context.textTheme.headlineMedium
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: AppSpacing.xs),
-                              Text(
-                                l10n.workoutRoutines,
-                                style: context.textTheme.bodyMedium?.copyWith(
-                                  color: context.colors.onSurfaceVariant,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+              // Compact header with title inline with back button
+              SliverAppBar(
+                pinned: false,
+                floating: false,
+                expandedHeight: 80,
+                backgroundColor: context.colors.surface,
+                leading: IconButton(
+                  icon: SemanticIcon(
+                    icon: AppIcons.arrowBack,
+                    semanticLabel: l10n.back,
+                    size: AppIconSize.medium,
+                    color: context.colors.onSurfaceVariant,
                   ),
+                  onPressed: () => Navigator.of(context).maybePop(),
                 ),
-              ),
-
-              // Animated metrics row - minimizes after 3 seconds
-              SliverToBoxAdapter(
-                child: AnimatedBuilder(
-                  animation: _minimizeAnimation,
-                  builder: (context, child) {
-                    final progress = _minimizeAnimation.value;
-                    // Height goes from 90 (expanded) to 50 (minimized)
-                    final height = 90.0 - (40.0 * progress);
-                    // Labels fade out
-                    final labelOpacity = 1.0 - progress;
-
-                    return GestureDetector(
-                      onTap: () {
-                        // Toggle minimize on tap
-                        if (_isMetricsMinimized) {
-                          _minimizeController.reverse();
-                        } else {
-                          _minimizeController.forward();
-                        }
-                        setState(
-                          () => _isMetricsMinimized = !_isMetricsMinimized,
-                        );
+                actions: [
+                  if (_tabController.index == 0)
+                    IconButton(
+                      icon: SemanticIcon(
+                        icon: _isGridView ? AppIcons.viewList : AppIcons.gridView,
+                        semanticLabel: _isGridView ? l10n.listView : l10n.gridView,
+                        size: AppIconSize.medium,
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                      onPressed: () {
+                        HapticFeedback.lightImpact();
+                        setState(() => _isGridView = !_isGridView);
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          AppSpacing.md,
-                          AppSpacing.md,
-                          AppSpacing.md,
-                          AppSpacing.sm,
-                        ),
-                        child: SizedBox(
-                          height: height,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: _buildAnimatedMetricCard(
-                                  context,
-                                  icon: AppIcons.folderOutlined,
-                                  value: myTemplatesAsync.when(
-                                    data: (t) => '${t.length}',
-                                    loading: () => '0',
-                                    error: (_, __) => '0',
-                                  ),
-                                  label: l10n.myTemplates,
-                                  color: context.colors.primary,
-                                  labelOpacity: labelOpacity,
-                                ),
-                              ),
-                              const SizedBox(width: AppSpacing.sm),
-                              Expanded(
-                                child: _buildAnimatedMetricCard(
-                                  context,
-                                  icon: AppIcons.public,
-                                  value: '$publicTemplatesCount',
-                                  label: l10n.discover,
-                                  color: context.colors.secondary,
-                                  labelOpacity: labelOpacity,
-                                ),
-                              ),
-                              const SizedBox(width: AppSpacing.sm),
-                              Expanded(
-                                child: Consumer(
-                                  builder: (context, ref, _) {
-                                    final defaultCount = ref.watch(
-                                      defaultTemplatesProvider.select(
-                                        (state) =>
-                                            state.value?.length ?? 30,
-                                      ),
-                                    );
-                                    return _buildAnimatedMetricCard(
-                                      context,
-                                      icon: AppIcons.science,
-                                      value: '$defaultCount',
-                                      label: l10n.evidenceBased,
-                                      color: context.colors.tertiary,
-                                      labelOpacity: labelOpacity,
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
+                    ),
+                ],
+                flexibleSpace: FlexibleSpaceBar(
+                  titlePadding: const EdgeInsets.only(left: 56, bottom: 16),
+                  title: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.workoutTemplates,
+                        style: context.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    );
-                  },
+                      Text(
+                        l10n.workoutRoutines,
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
@@ -444,66 +304,6 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     );
   }
 
-  Widget _buildAnimatedMetricCard(
-    BuildContext context, {
-    required IconData icon,
-    required String value,
-    required String label,
-    required Color color,
-    required double labelOpacity,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: AppSpacing.sm,
-        horizontal: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(AppSpacing.sm),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SemanticIcon(
-                icon: icon,
-                semanticLabel: label,
-                size: AppIconSize.small,
-                color: color,
-              ),
-              const SizedBox(width: AppSpacing.xs),
-              Text(
-                value,
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: color,
-                ),
-              ),
-            ],
-          ),
-          // UX REDESIGN: Labels always visible (min opacity 0.7) per usability
-          // Numbers without labels are cryptic (4, 0, 30 mean nothing)
-          const SizedBox(height: AppSpacing.xs),
-          Opacity(
-            opacity: labelOpacity.clamp(0.7, 1.0),
-            child: Text(
-              label,
-              style: context.textTheme.labelSmall?.copyWith(
-                color: context.colors.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildMyTemplatesTab(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
@@ -517,7 +317,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           onRefresh: () => ref.refresh(customWorkoutTemplatesProvider.future),
           child: CustomScrollView(
             slivers: [
-              // Quota indicator
+              // Quota indicator (collassabile)
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.md),
@@ -526,6 +326,12 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     usedPublic: templates.where((t) => t.isPublic).length,
                     maxPrivate: entitlements.maxTemplates,
                     maxPublic: entitlements.maxPublicTemplates,
+                    isExpanded: _isQuotaExpanded,
+                    onTap: () {
+                      setState(() {
+                        _isQuotaExpanded = !_isQuotaExpanded;
+                      });
+                    },
                   ),
                 ),
               ),
