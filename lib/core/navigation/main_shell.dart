@@ -180,7 +180,7 @@ class _MainShellState extends ConsumerState<MainShell>
 
     return Scaffold(
       extendBody: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: ExerciseSyncListener(
         child: Stack(
           children: [

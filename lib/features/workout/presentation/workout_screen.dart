@@ -316,15 +316,21 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
 
   /// Build welcome/empty state view
   Widget _buildWelcomeView() {
-    final l10n = AppLocalizations.of(context);
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.workout),
-      ),
+      backgroundColor: Colors.transparent,
       body: WelcomeView(
         onQuickStart: () => _startQuickWorkout(context),
         onStartTemplate: (template) => _startTemplateWorkout(template),
+        onShareTemplate: (template) => _shareTemplatePdf(context, template),
+        onDuplicateTemplate: (template) => _duplicateTemplate(context, template),
+        onEditTemplate: (template) =>
+            _editTemplateFromQuickStart(context, template),
+        onDeleteTemplate: (template) =>
+            _deleteTemplateFromQuickStart(context, template),
+        onCreateTemplate: () => _showCreateTemplateModal(context),
+        onScheduleTemplate: (template) => _scheduleTemplate(context, template),
+        onRefreshTemplate: (template) => _refreshTemplate(template),
+        onViewTemplate: (template) => _viewTemplate(template),
       ),
     );
   }
@@ -753,7 +759,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                   await cacheService.forceSave();
                   ref.read(currentWorkoutProvider.notifier).pauseWorkout();
                   if (context.mounted) {
-                    context.pop();
+                    context.goNamed('home');
                   }
                 },
                 child: Text(l10n.yes),
@@ -781,7 +787,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
         ),
       );
     } else {
-      context.pop();
+      context.goNamed('home');
     }
   }
 
@@ -932,7 +938,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   /// Navigate to templates screen for template creation
   /// Template creation now happens only from "Le mie schede" section
   void _showCreateTemplateModal(BuildContext context) {
-    context.push('/templates');
+    context.go('/templates');
   }
 
   // ========================================================================
@@ -1169,6 +1175,244 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   // TEMPLATE ACTIONS
   // ========================================================================
 
+  /// Edit template from quick start
+  void _editTemplateFromQuickStart(
+    BuildContext context,
+    wt.WorkoutTemplate template,
+  ) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EditTemplateScreen(template: template),
+      ),
+    );
+  }
+
+  /// Share template as PDF
+  Future<void> _shareTemplatePdf(
+    BuildContext context,
+    wt.WorkoutTemplate template,
+  ) async {
+    final l10n = AppLocalizations.of(context);
+
+    // Store navigator before any async gap to avoid context issues
+    final navigator = Navigator.of(context);
+
+    // Check saved preference
+    final savedPreference = ref.read(pdfPreferencesProvider);
+
+    // Use saved preference or show dialog
+    PdfDetailLevel? selectedLevel = savedPreference;
+
+    if (savedPreference == null) {
+      selectedLevel = await showPdfExportBottomSheet(context, ref);
+      if (selectedLevel == null) return; // User cancelled
+    }
+
+    // Show loading dialog for PDF generation
+    if (context.mounted) {
+      unawaited(
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (dialogContext) => Center(
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const LoadingIndicator(),
+                    const SizedBox(height: AppSpacing.md),
+                    Text(l10n.generatingPdf),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    try {
+      // Step 1: Generate PDF (with loading visible)
+      final pdfData = await PdfTemplateService.generateTemplatePdf(
+        template,
+        detailLevel: selectedLevel!,
+      );
+
+      // Step 2: Save to temp file
+      final tempDir = await getTemporaryDirectory();
+      final fileName = '${template.name.replaceAll(' ', '_')}_template.pdf';
+      final file = File('${tempDir.path}/$fileName');
+      await file.writeAsBytes(pdfData);
+
+      // Step 3: Dismiss loading BEFORE showing share sheet
+      if (navigator.mounted) {
+        navigator.pop();
+      }
+
+      // Step 4: Share with share_plus (provides proper callbacks)
+      final result = await SharePlus.instance.share(
+        ShareParams(files: [XFile(file.path)], subject: template.name),
+      );
+
+      // Step 5: Handle result (optional: show feedback)
+      if (result.status == ShareResultStatus.dismissed && context.mounted) {
+        // User dismissed without sharing - no action needed
+      }
+
+      // Clean up temp file
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (e) {
+      // Dismiss loading if still visible
+      if (navigator.mounted) {
+        navigator.pop();
+      }
+      if (context.mounted) {
+        SnackBarService.showError(context, l10n.errorSharingPdf);
+      }
+    }
+  }
+
+  /// Delete template from quick start
+  void _deleteTemplateFromQuickStart(
+    BuildContext context,
+    wt.WorkoutTemplate template,
+  ) {
+    final l10n = AppLocalizations.of(context);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.deleteTemplate),
+        content: Text(l10n.deleteTemplateQuestion(template.name)),
+        actions: [
+          Semantics(
+            label: l10n.cancel,
+            button: true,
+            child: TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(l10n.cancel),
+            ),
+          ),
+          Semantics(
+            label: l10n.delete,
+            button: true,
+            child: TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                ref
+                    .read(workoutTemplateNotifierProvider.notifier)
+                    .deleteTemplate(template.id);
+                SnackBarService.showSuccess(
+                  context,
+                  l10n.templateDeletedSuccessfully(template.name),
+                );
+              },
+              child: Text(
+                l10n.delete,
+                style: context.textTheme.labelLarge?.copyWith(
+                  color: context.colors.error,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Schedule template - opens the schedule bottom sheet
+  void _scheduleTemplate(BuildContext context, wt.WorkoutTemplate template) {
+    ScheduleBottomSheet.show(
+      context,
+      templateId: template.id,
+      templateName: template.name,
+    );
+  }
+
+  /// View template in presentation mode
+  void _viewTemplate(wt.WorkoutTemplate template) {
+    context.push('/templates/detail', extra: template.id);
+  }
+
+  /// Refresh template from exercise database - syncs TUT and other fields
+  Future<void> _refreshTemplate(wt.WorkoutTemplate template) async {
+    final l10n = AppLocalizations.of(context);
+
+    try {
+      final updatedCount = await ref
+          .read(workoutTemplateNotifierProvider.notifier)
+          .refreshTemplateFromDatabase(template);
+
+      if (mounted) {
+        if (updatedCount > 0) {
+          // Invalidate providers to refresh UI
+          ref.invalidate(customWorkoutTemplatesProvider);
+
+          SnackBarService.showSuccess(
+            context,
+            l10n.refreshFromDatabaseSuccess(updatedCount),
+          );
+        } else {
+          SnackBarService.showInfo(context, l10n.refreshFromDatabaseNoUpdates);
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        SnackBarService.showError(context, 'Errore: $e');
+      }
+    }
+  }
+
+  /// Duplicate template
+  Future<void> _duplicateTemplate(
+    BuildContext context,
+    wt.WorkoutTemplate template,
+  ) async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    final l10n = AppLocalizations.of(context);
+
+    if (userId == null) {
+      SnackBarService.showError(
+        context,
+        l10n.workoutTemplateDuplicationError('User not authenticated'),
+      );
+      return;
+    }
+
+    // Create duplicate with "(Copy)" suffix
+    final duplicatedTemplate = template.copyWith(
+      name: '${template.name} (${l10n.copy})',
+      isCustom: true,
+      updatedAt: DateTime.now(),
+    );
+
+    try {
+      await ref
+          .read(workoutTemplateNotifierProvider.notifier)
+          .saveTemplate(duplicatedTemplate);
+
+      if (context.mounted) {
+        SnackBarService.showSuccess(
+          context,
+          l10n.workoutTemplateDuplicatedSuccess(duplicatedTemplate.name),
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Error duplicating template: $e');
+      }
+      if (context.mounted) {
+        SnackBarService.showError(
+          context,
+          l10n.workoutTemplateDuplicationError(e.toString()),
+        );
+      }
+    }
+  }
 
   /// Start the workout tutorial from the beginning
   Future<void> _startWorkoutTutorial() async {
