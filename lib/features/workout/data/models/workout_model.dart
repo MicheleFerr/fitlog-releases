@@ -518,16 +518,40 @@ class ExerciseModel {
         : ExerciseCountingMode.weighted;
 
     // Handle polymorphic conversion
-    if (type == 'superset' &&
-        supersetExercises != null &&
-        supersetSetsData != null) {
+    if (type == 'superset' && supersetExercises != null) {
+      // Fallback: if supersetSetsData is null, reconstruct from sets
+      List<SupersetSet> supersetSetsList;
+      if (supersetSetsData != null && supersetSetsData!.isNotEmpty) {
+        supersetSetsList = supersetSetsData!
+            .map((s) => SupersetSet.fromJson(s))
+            .toList();
+      } else {
+        // Fallback: create one SupersetSet per set in the exercise
+        supersetSetsList = sets.asMap().entries.map((entry) {
+          final index = entry.key;
+          final set = entry.value;
+          return SupersetSet(
+            setNumber: index + 1,
+            exerciseData: {
+              for (var exercise in supersetExercises!)
+                exercise.id: SupersetExerciseData(
+                  exerciseId: exercise.id,
+                  exerciseName: exercise.name,
+                  targetWeight: set.weight?.toDouble(),
+                  targetReps: set.reps,
+                  targetMinReps: set.minReps,
+                  targetMaxReps: set.maxReps,
+                ),
+            },
+          );
+        }).toList();
+      }
+
       return SupersetExercise(
         id: id,
         name: name,
         exercises: supersetExercises!.map((e) => e.toDomain()).toList(),
-        supersetSets: supersetSetsData!
-            .map((s) => SupersetSet.fromJson(s))
-            .toList(),
+        supersetSets: supersetSetsList,
         notes: notes,
         restTime: restTime,
         restAfterExercise: restAfterExercise,

@@ -128,6 +128,14 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
   @override
   void initState() {
     super.initState();
+
+    // 🔍 DEBUG: Verifica callback
+    print('🎬 MinimalSetEditSheet.initState()');
+    print('   - currentSetIndex: ${widget.currentSetIndex}');
+    print('   - totalSets: ${widget.totalSets}');
+    print('   - onApplyToAll: ${widget.onApplyToAll != null ? "✅ presente" : "❌ null"}');
+    print('   - _isFirstSet: $_isFirstSet');
+
     _weight = widget.exerciseSet.weight ?? 0;
     _reps = widget.exerciseSet.reps ?? 10;
     _seconds = widget.exerciseSet.seconds ?? 60;
@@ -243,6 +251,14 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     // ⚠️ WORKAROUND: copyWith ha un bug - non pulisce i campi quando passi null
     // Soluzione: creare esplicitamente un nuovo ExerciseSet
     final base = widget.exerciseSet;
+
+    // 🔍 DEBUG: Log modalità e valori correnti
+    print('📝 _createUpdatedSet: _isRangeMode=$_isRangeMode');
+    if (_isRangeMode) {
+      print('📝 Range Mode: minReps=$_selectedMinReps, maxReps=$_selectedMaxReps');
+    } else {
+      print('📝 Exact Mode: reps=$_reps');
+    }
 
     if (_isRangeMode) {
       // Range mode: save minReps/maxReps, clear single reps
@@ -500,10 +516,19 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
   }
 
   void _applyToAll() {
-    if (widget.onApplyToAll == null) return;
+    if (widget.onApplyToAll == null) {
+      print('⚠️ _applyToAll: callback è null, esco');
+      return;
+    }
+
+    final updatedSet = _createUpdatedSet();
+    print('🎯 _applyToAll: sto per chiamare callback con reps=${updatedSet.reps}, minReps=${updatedSet.minReps}, maxReps=${updatedSet.maxReps}');
+
     HapticFeedback.mediumImpact();
     Navigator.of(context).pop();
-    widget.onApplyToAll!(_createUpdatedSet());
+    widget.onApplyToAll!(updatedSet);
+
+    print('✅ _applyToAll: callback chiamato');
   }
 
   void _copyPrevious() {
@@ -1336,6 +1361,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
         duration: const Duration(milliseconds: 150),
         curve: Curves.easeOut,
         width: isActive ? 36 : 12,
+        height: 150, // Fixed height to match picker height (prevents resize on expand/collapse)
         margin: EdgeInsets.only(right: onRight ? 0 : 4, left: onRight ? 4 : 0),
         decoration: BoxDecoration(
           color: isActive
@@ -1381,17 +1407,8 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                   );
                 }).toList(),
               )
-            // Collapsed: just show a subtle indicator line
-            : Center(
-                child: Container(
-                  width: 3,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: context.colors.outline.withValues(alpha: 0.4),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
+            // Collapsed: transparent hit area (no visible indicator)
+            : const SizedBox.expand(),
       ),
     );
   }
