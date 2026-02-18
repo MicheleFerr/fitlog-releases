@@ -1,6 +1,8 @@
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/measurement.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
@@ -53,7 +55,7 @@ class _MeasurementChartsScreenState
         if (!mounted) return;
         SnackBarService.showError(
           context,
-          'Failed to load measurements: $failure',
+          context.l10n.errorLoadingData,
         );
         setState(() => _isLoading = false);
       },
@@ -103,6 +105,7 @@ class _MeasurementChartsScreenState
   }
 
   void _onMetricChanged(MetricType newMetric) {
+    HapticFeedback.selectionClick();
     setState(() {
       _selectedMetric = newMetric;
       _applyFilters();
@@ -110,6 +113,7 @@ class _MeasurementChartsScreenState
   }
 
   void _onPeriodChanged(ChartPeriod newPeriod) {
+    HapticFeedback.selectionClick();
     setState(() {
       _selectedPeriod = newPeriod;
       _applyFilters();
@@ -181,7 +185,14 @@ class _MeasurementChartsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(context.l10n.bodyMeasurementsChartsTitle)),
+      appBar: AppBar(
+        title: Text(context.l10n.bodyMeasurementsChartsTitle),
+        leading: IconButton(
+          icon: const Icon(AppIcons.arrowBackIos, size: AppIconSize.medium),
+          onPressed: () => Navigator.of(context).pop(),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+        ),
+      ),
       body: _isLoading
           ? const Center(child: LoadingIndicator())
           : Column(
@@ -291,16 +302,18 @@ class _MeasurementChartsScreenState
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-          child: Row(
-            children: items.map((item) {
-              return Expanded(
-                child: _buildSummaryItem(item.label, item.value, item.unit),
-              );
-            }).toList(),
-          ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        decoration: BoxDecoration(
+          color: context.colors.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: items.map((item) {
+            return Expanded(
+              child: _buildSummaryItem(item.label, item.value, item.unit),
+            );
+          }).toList(),
         ),
       ),
     );
@@ -381,129 +394,133 @@ class _MeasurementChartsScreenState
         children: [
           // Line chart
           Expanded(
-            child: LineChart(
-              LineChartData(
-                minY: minValue - padding,
-                maxY: maxValue + padding,
-                lineBarsData: [
-                  LineChartBarData(
-                    spots: spots,
-                    isCurved: true,
-                    color: context.colors.primary,
-                    barWidth: 3,
-                    dotData: FlDotData(
-                      show: true,
-                      getDotPainter: (spot, percent, barData, index) {
-                        return FlDotCirclePainter(
-                          radius: 4,
-                          color: context.colors.primary,
-                          strokeWidth: 2,
-                          strokeColor: context.colors.surface,
-                        );
-                      },
+            child: RepaintBoundary(
+              child: LineChart(
+                LineChartData(
+                  minY: minValue - padding,
+                  maxY: maxValue + padding,
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: spots,
+                      isCurved: true,
+                      color: context.colors.primary,
+                      barWidth: 3,
+                      dotData: FlDotData(
+                        show: true,
+                        getDotPainter: (spot, percent, barData, index) {
+                          return FlDotCirclePainter(
+                            radius: 4,
+                            color: context.colors.primary,
+                            strokeWidth: 2,
+                            strokeColor: context.colors.surface,
+                          );
+                        },
+                      ),
+                      belowBarData: BarAreaData(
+                        show: true,
+                        gradient: LinearGradient(
+                          colors: [
+                            context.colors.primary.withValues(alpha: 0.3),
+                            context.colors.primary.withValues(alpha: 0.0),
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                      ),
                     ),
-                    belowBarData: BarAreaData(
-                      show: true,
-                      color: context.colors.primary.withValues(alpha: 0.2),
+                  ],
+                  titlesData: FlTitlesData(
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 40,
+                        getTitlesWidget: (value, meta) {
+                          return Text(
+                            value.toStringAsFixed(1),
+                            style: context.textTheme.labelSmall?.copyWith(
+                              color: context.colors.onSurface
+                                  .withValues(alpha: 0.6),
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
-                titlesData: FlTitlesData(
-                  leftTitles: AxisTitles(
-                    axisNameWidget: Text(
-                      context.l10n.bodyMeasurementsChartsAxisValue,
-                      style: context.textTheme.bodySmall,
-                    ),
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 40,
-                      getTitlesWidget: (value, meta) {
-                        return Text(
-                          value.toStringAsFixed(1),
-                          style: context.textTheme.bodySmall,
-                        );
-                      },
-                    ),
-                  ),
-                  bottomTitles: AxisTitles(
-                    axisNameWidget: Text(
-                      context.l10n.bodyMeasurementsChartsAxisDate,
-                      style: context.textTheme.bodySmall,
-                    ),
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 30,
-                      interval: spots.length > 10 ? spots.length / 5 : 1,
-                      getTitlesWidget: (value, meta) {
-                        final index = value.toInt();
-                        if (index < 0 || index >= sortedMeasurements.length) {
-                          return const SizedBox.shrink();
-                        }
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 30,
+                        interval: spots.length > 10 ? spots.length / 5 : 1,
+                        getTitlesWidget: (value, meta) {
+                          final index = value.toInt();
+                          if (index < 0 ||
+                              index >= sortedMeasurements.length) {
+                            return const SizedBox.shrink();
+                          }
 
-                        final date = sortedMeasurements[index].timestamp;
-                        final formatter = DateFormat.MMMd(
-                          Localizations.localeOf(context).toString(),
-                        );
+                          final date = sortedMeasurements[index].timestamp;
+                          final formatter = DateFormat.MMMd(
+                            Localizations.localeOf(context).toString(),
+                          );
 
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Text(
-                            formatter.format(date),
-                            style: context.textTheme.bodySmall,
-                          ),
-                        );
-                      },
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              formatter.format(date),
+                              style: context.textTheme.labelSmall?.copyWith(
+                                color: context.colors.onSurface
+                                    .withValues(alpha: 0.6),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
                     ),
                   ),
-                  rightTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                ),
-                gridData: FlGridData(
-                  show: true,
-                  drawVerticalLine: false,
-                  getDrawingHorizontalLine: (value) {
-                    return FlLine(
-                      color: context.colors.outlineVariant,
-                      strokeWidth: 1,
-                    );
-                  },
-                ),
-                borderData: FlBorderData(
-                  show: true,
-                  border: Border.all(
-                    color: context.colors.outlineVariant,
-                    width: 1,
-                  ),
-                ),
-                lineTouchData: LineTouchData(
-                  touchTooltipData: LineTouchTooltipData(
-                    getTooltipColor: (touchedSpot) =>
-                        context.colors.surfaceContainerHighest,
-                    getTooltipItems: (touchedSpots) {
-                      return touchedSpots.map((LineBarSpot touchedSpot) {
-                        final index = touchedSpot.x.toInt();
-                        if (index < 0 || index >= sortedMeasurements.length) {
-                          return null;
-                        }
-
-                        final measurement = sortedMeasurements[index];
-                        final dateFormatter = DateFormat.yMd(
-                          Localizations.localeOf(context).toString(),
-                        );
-
-                        return LineTooltipItem(
-                          '${dateFormatter.format(measurement.timestamp)}\n${measurement.value.toStringAsFixed(1)} ${measurement.unit}',
-                          TextStyle(
-                            color: context.colors.onSurface,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
-                      }).toList();
+                  gridData: FlGridData(
+                    show: true,
+                    drawVerticalLine: false,
+                    getDrawingHorizontalLine: (value) {
+                      return FlLine(
+                        color: context.colors.outline.withValues(alpha: 0.1),
+                        strokeWidth: 1,
+                      );
                     },
+                  ),
+                  borderData: FlBorderData(show: false),
+                  lineTouchData: LineTouchData(
+                    touchTooltipData: LineTouchTooltipData(
+                      getTooltipColor: (touchedSpot) =>
+                          context.colors.primary,
+                      getTooltipItems: (touchedSpots) {
+                        return touchedSpots.map((LineBarSpot touchedSpot) {
+                          final index = touchedSpot.x.toInt();
+                          if (index < 0 ||
+                              index >= sortedMeasurements.length) {
+                            return null;
+                          }
+
+                          final measurement = sortedMeasurements[index];
+                          final dateFormatter = DateFormat.yMd(
+                            Localizations.localeOf(context).toString(),
+                          );
+
+                          return LineTooltipItem(
+                            '${dateFormatter.format(measurement.timestamp)}\n${measurement.value.toStringAsFixed(1)} ${measurement.unit}',
+                            TextStyle(
+                              color: context.colors.onPrimary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          );
+                        }).toList();
+                      },
+                    ),
                   ),
                 ),
               ),
