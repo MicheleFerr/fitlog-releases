@@ -312,8 +312,6 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // P0: Recent exercises section for quick one-tap selection
-          _buildRecentExercisesSection(),
           // Exercise search and selection with custom exercise form
           _buildExerciseSearchSection(),
         ],

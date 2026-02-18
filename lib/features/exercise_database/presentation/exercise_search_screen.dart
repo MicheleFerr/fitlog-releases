@@ -47,8 +47,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_con
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_configuration.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/recent_exercises_section.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/add_exercise_provider.dart';
 // Exercise search tutorial REMOVED - UX 2025 analysis: search UI is standard pattern
 
 class ExerciseSearchScreen extends ConsumerStatefulWidget {
@@ -847,10 +845,6 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     }
     final allExercises = [...customAsExercises, ...sortedCatalog];
 
-    // ✅ ALWAYS-VISIBLE RECENT EXERCISES (Hevy UX pattern)
-    // No condition on search query - show recent exercises ALWAYS for efficiency
-    final recentUsageAsync = ref.watch(recentExercisesForModalProvider);
-
     return Column(
       children: [
         // Recommended Superset Templates (when no search)
@@ -859,70 +853,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           _buildRecommendedTemplatesSection(),
         ],
 
-        // ✅ RECENT EXERCISES - ALWAYS VISIBLE (Hevy UX pattern)
-        // Shows most recently used exercises for quick one-tap selection
-        // No search condition - visible even during search for max efficiency
-        recentUsageAsync.when(
-          data: (recentUsage) {
-            // Take max 8 items (cognitive load optimization)
-            final limitedUsage = recentUsage.take(8).toList();
-
-            return RecentExercisesSection(
-              recentUsage: limitedUsage,
-              allExercises: allExercises,
-              selectedExercises: _selectedExercises.toList(),
-              onExerciseTap: (exercise) {
-                // Selection mode: return and close
-                if (widget.selectionMode) {
-                  Navigator.of(context).pop(exercise);
-                  return;
-                }
-                // Toggle selection
-                setState(() {
-                  if (_selectedExercises.contains(exercise)) {
-                    _selectedExercises.remove(exercise);
-                  } else {
-                    _selectedExercises.add(exercise);
-                  }
-                });
-              },
-            );
-          },
-          loading: () => const RecentExercisesSectionShimmer(),
-          error: (_, __) => const SizedBox.shrink(),
-        ),
-
-        // "Tutti gli esercizi" separator (when recent exercises shown)
-        if (recentUsageAsync.hasValue && recentUsageAsync.value!.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            child: Row(
-              children: [
-                Icon(
-                  AppIcons.libraryBooks,
-                  size: 16,
-                  color: context.colors.onSurfaceVariant,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  l10n.allExercises,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: context.colors.onSurfaceVariant,
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  '${allExercises.length}',
-                  style: context.textTheme.labelMedium?.copyWith(
-                    color: context.colors.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
         // Exercise List + Missing Exercise Widget
+        // Recent/frequent exercises appear first via usage-based sorting above
         Expanded(
           child: MediaQuery.removePadding(
             context: context,
