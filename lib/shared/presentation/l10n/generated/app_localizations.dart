@@ -2707,6 +2707,18 @@ abstract class AppLocalizations {
   /// **'Soft pink-tinted interface'**
   String get themePinkDesc;
 
+  /// Dark Pink theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Pink'**
+  String get themeDarkPink;
+
+  /// Dark Pink theme description
+  ///
+  /// In en, this message translates to:
+  /// **'Dark interface with pink tones'**
+  String get themeDarkPinkDesc;
+
   /// Label for primary color picker
   ///
   /// In en, this message translates to:
@@ -47450,10 +47462,10 @@ abstract class AppLocalizations {
   /// **'No rest-pause templates yet'**
   String get noRestPauseTemplates;
 
-  /// Empty state for custom exercises section
+  /// Empty state when no custom exercises exist
   ///
   /// In en, this message translates to:
-  /// **'No custom exercises yet'**
+  /// **'No custom exercises created yet'**
   String get noCustomExercises;
 
   /// Confirmation message when deleting a template
@@ -49543,6 +49555,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create your first template to start'**
   String get createFirstTemplateHint;
+
+  /// Filter chip label for all exercises sorted alphabetically
+  ///
+  /// In en, this message translates to:
+  /// **'All A-Z'**
+  String get exerciseFilterAll;
+
+  /// Filter chip label for user-created custom exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get exerciseFilterCreated;
+
+  /// Filter chip label for currently selected exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get exerciseFilterSelected;
+
+  /// Empty state when no exercises are selected in the filter
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises selected yet'**
+  String get noSelectedExercises;
 }
 
 class _AppLocalizationsDelegate

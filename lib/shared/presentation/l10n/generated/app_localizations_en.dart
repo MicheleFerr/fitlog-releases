@@ -1424,6 +1424,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themePinkDesc => 'Soft pink-tinted interface';
 
   @override
+  String get themeDarkPink => 'Dark Pink';
+
+  @override
+  String get themeDarkPinkDesc => 'Dark interface with pink tones';
+
+  @override
   String get primaryColor => 'Primary Color';
 
   @override
@@ -26536,7 +26542,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noRestPauseTemplates => 'No rest-pause templates yet';
 
   @override
-  String get noCustomExercises => 'No custom exercises yet';
+  String get noCustomExercises => 'No custom exercises created yet';
 
   @override
   String get deleteTemplateConfirmation =>
@@ -27720,4 +27726,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get createFirstTemplateHint => 'Create your first template to start';
+
+  @override
+  String get exerciseFilterAll => 'All A-Z';
+
+  @override
+  String get exerciseFilterCreated => 'Created';
+
+  @override
+  String get exerciseFilterSelected => 'Selected';
+
+  @override
+  String get noSelectedExercises => 'No exercises selected yet';
 }

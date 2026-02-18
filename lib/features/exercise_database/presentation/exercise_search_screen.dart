@@ -49,6 +49,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/superset_tem
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 // Exercise search tutorial REMOVED - UX 2025 analysis: search UI is standard pattern
 
+enum _ExerciseListFilter { allAZ, created, selected }
+
 class ExerciseSearchScreen extends ConsumerStatefulWidget {
   // New: Just select and return exercise template (for DropSet/Rest-Pause)
 
@@ -95,6 +97,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   List<ExerciseFuzzyResult> _fuzzyResults = [];
   bool _isSearching = false;
   bool _useFuzzyResults = false;
+
+  // Filter bar state
+  _ExerciseListFilter _activeFilter = _ExerciseListFilter.allAZ;
 
   // ML-enhanced state (usage tracking)
   Set<String> _frequentExerciseIds = {};
@@ -688,6 +693,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 ),
               ],
 
+              // Filter bar (hidden during fuzzy search)
+              if (!_useFuzzyResults) _buildFilterBar(),
+
               // Results
               Expanded(
                 child: _useFuzzyResults
@@ -788,6 +796,44 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     );
   }
 
+  String _filterLabel(_ExerciseListFilter filter) {
+    final l10n = context.l10n;
+    switch (filter) {
+      case _ExerciseListFilter.allAZ:
+        return l10n.exerciseFilterAll;
+      case _ExerciseListFilter.created:
+        return l10n.exerciseFilterCreated;
+      case _ExerciseListFilter.selected:
+        final count = _selectedExercises.length;
+        return count > 0
+            ? '${l10n.exerciseFilterSelected} ($count)'
+            : l10n.exerciseFilterSelected;
+    }
+  }
+
+  Widget _buildFilterBar() {
+    return Container(
+      height: 48,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: _ExerciseListFilter.values.map((filter) {
+            final isSelected = _activeFilter == filter;
+            return Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: ChoiceChip(
+                label: Text(_filterLabel(filter)),
+                selected: isSelected,
+                onSelected: (_) => setState(() => _activeFilter = filter),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
   Widget _buildSearchResults(List<Exercise> exercises) {
     final l10n = context.l10n;
 
@@ -845,6 +891,58 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     }
     final allExercises = [...customAsExercises, ...sortedCatalog];
 
+    // Apply filter bar selection
+    final List<Exercise> displayExercises;
+    final Set<String> customIds = customAsExercises.map((e) => e.id).toSet();
+    switch (_activeFilter) {
+      case _ExerciseListFilter.allAZ:
+        displayExercises = allExercises;
+      case _ExerciseListFilter.created:
+        displayExercises = customAsExercises;
+      case _ExerciseListFilter.selected:
+        displayExercises = _selectedExercises.toList();
+    }
+
+    // Empty state for filtered views
+    if (displayExercises.isEmpty && _activeFilter != _ExerciseListFilter.allAZ) {
+      return Column(
+        children: [
+          if (_searchQuery.isEmpty && _shouldShowSupersetTemplates()) ...[
+            _buildRecommendedTemplatesSection(),
+          ],
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      _activeFilter == _ExerciseListFilter.created
+                          ? AppIcons.add
+                          : AppIcons.checkCircle,
+                      size: 48,
+                      color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      _activeFilter == _ExerciseListFilter.created
+                          ? l10n.noCustomExercises
+                          : l10n.noSelectedExercises,
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
     return Column(
       children: [
         // Recommended Superset Templates (when no search)
@@ -865,16 +963,16 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 bottom: MediaQuery.of(context).viewInsets.bottom + 80 + context.tabBarInset,
               ),
               itemCount:
-                  allExercises.length + 1, // +1 for missing exercise widget
+                  displayExercises.length + 1, // +1 for missing exercise widget
               itemBuilder: (context, index) {
                 // Show missing exercise widget as last item
-                if (index == allExercises.length) {
+                if (index == displayExercises.length) {
                   return _buildMissingExerciseWidget();
                 }
 
-                final exercise = allExercises[index];
+                final exercise = displayExercises[index];
                 final isSelected = _selectedExercises.contains(exercise);
-                final isCustom = index < customAsExercises.length;
+                final isCustom = customIds.contains(exercise.id);
                 // Get original CustomExercise for status info (if custom)
                 final customExercise = isCustom
                     ? customExerciseMap[exercise.id]

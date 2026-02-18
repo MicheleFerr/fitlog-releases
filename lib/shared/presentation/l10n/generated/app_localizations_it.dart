@@ -1435,6 +1435,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get themePinkDesc => 'Interfaccia con tonalità rosa';
 
   @override
+  String get themeDarkPink => 'Dark Pink';
+
+  @override
+  String get themeDarkPinkDesc => 'Interfaccia scura con tonalità rosa';
+
+  @override
   String get primaryColor => 'Colore Primario';
 
   @override
@@ -26793,7 +26799,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noRestPauseTemplates => 'Nessun template rest-pause';
 
   @override
-  String get noCustomExercises => 'Nessun esercizio personalizzato';
+  String get noCustomExercises => 'Nessun esercizio creato';
 
   @override
   String get deleteTemplateConfirmation =>
@@ -27991,4 +27997,16 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get createFirstTemplateHint =>
       'Crea il tuo primo template per iniziare';
+
+  @override
+  String get exerciseFilterAll => 'Tutti A-Z';
+
+  @override
+  String get exerciseFilterCreated => 'Creati';
+
+  @override
+  String get exerciseFilterSelected => 'Già scelti';
+
+  @override
+  String get noSelectedExercises => 'Nessun esercizio selezionato';
 }

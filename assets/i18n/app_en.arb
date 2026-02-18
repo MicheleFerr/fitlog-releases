@@ -1771,6 +1771,14 @@
   "@themePinkDesc": {
     "description": "Pink theme description"
   },
+  "themeDarkPink": "Dark Pink",
+  "@themeDarkPink": {
+    "description": "Dark Pink theme option"
+  },
+  "themeDarkPinkDesc": "Dark interface with pink tones",
+  "@themeDarkPinkDesc": {
+    "description": "Dark Pink theme description"
+  },
   "primaryColor": "Primary Color",
   "@primaryColor": {
     "description": "Primary color setting label"
@@ -34016,5 +34024,25 @@
   "restDay": "Rest Day",
   "@restDay": {
     "description": "Rest day title when no workout suggested"
+  },
+  "exerciseFilterAll": "All A-Z",
+  "@exerciseFilterAll": {
+    "description": "Filter chip label for all exercises sorted alphabetically"
+  },
+  "exerciseFilterCreated": "Created",
+  "@exerciseFilterCreated": {
+    "description": "Filter chip label for user-created custom exercises"
+  },
+  "exerciseFilterSelected": "Selected",
+  "@exerciseFilterSelected": {
+    "description": "Filter chip label for currently selected exercises"
+  },
+  "noSelectedExercises": "No exercises selected yet",
+  "@noSelectedExercises": {
+    "description": "Empty state when no exercises are selected in the filter"
+  },
+  "noCustomExercises": "No custom exercises created yet",
+  "@noCustomExercises": {
+    "description": "Empty state when no custom exercises exist"
   }
 }
