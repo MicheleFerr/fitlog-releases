@@ -1340,7 +1340,7 @@ class _ExerciseCustomizationScreenState
           Expanded(
             child: _buildPickerButton(
               label: AppLocalizations.of(context).reps,
-              value: '${setCustomization.reps}',
+              value: setCustomization.repsDisplay,
               icon: AppIcons.repeat,
               color: theme.colorScheme.secondary,
               onTap: () =>
@@ -1401,6 +1401,8 @@ class _ExerciseCustomizationScreenState
         setNumber: newSetNumber,
         weight: lastSet?.weight ?? 0,
         reps: lastSet?.reps ?? 10,
+        minReps: lastSet?.minReps,
+        maxReps: lastSet?.maxReps,
       );
 
       _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
@@ -1504,9 +1506,10 @@ class _ExerciseCustomizationScreenState
           (setCustomization) => WorkoutExercise.ExerciseSet(
             setNumber: setCustomization.setNumber,
             weight: setCustomization.weight,
-            reps: setCustomization.reps,
-            seconds: setCustomization
-                .seconds, // ✅ NUOVO: Include seconds for time-based exercises
+            reps: setCustomization.hasRepRange ? null : setCustomization.reps,
+            minReps: setCustomization.minReps,
+            maxReps: setCustomization.maxReps,
+            seconds: setCustomization.seconds,
           ),
         )
         .toList();
@@ -1625,7 +1628,7 @@ class _ExerciseCustomizationScreenState
 
     return Semantics(
       label:
-          '${AppLocalizations.of(context).weight}: $weightDisplay, ${AppLocalizations.of(context).reps}: ${setCustomization.reps}',
+          '${AppLocalizations.of(context).weight}: $weightDisplay, ${AppLocalizations.of(context).reps}: ${setCustomization.repsDisplay}',
       button: true,
       child: InkWell(
         onTap: () => _showWeightRepsPicker(
@@ -1711,7 +1714,7 @@ class _ExerciseCustomizationScreenState
                     ],
                   ),
                   Text(
-                    '${setCustomization.reps}',
+                    setCustomization.repsDisplay,
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: theme.colorScheme.secondary,
@@ -1740,7 +1743,9 @@ class _ExerciseCustomizationScreenState
     final exerciseSet = WorkoutExercise.ExerciseSet(
       setNumber: setCustomization.setNumber,
       weight: setCustomization.weight,
-      reps: setCustomization.reps,
+      reps: setCustomization.hasRepRange ? null : setCustomization.reps,
+      minReps: setCustomization.minReps,
+      maxReps: setCustomization.maxReps,
     );
 
     // Converti tutti i set per la navigazione
@@ -1749,7 +1754,9 @@ class _ExerciseCustomizationScreenState
           (s) => WorkoutExercise.ExerciseSet(
             setNumber: s.setNumber,
             weight: s.weight,
-            reps: s.reps,
+            reps: s.hasRepRange ? null : s.reps,
+            minReps: s.minReps,
+            maxReps: s.maxReps,
           ),
         )
         .toList();
@@ -1759,7 +1766,9 @@ class _ExerciseCustomizationScreenState
         ? WorkoutExercise.ExerciseSet(
             setNumber: sets[setIndex - 1].setNumber,
             weight: sets[setIndex - 1].weight,
-            reps: sets[setIndex - 1].reps,
+            reps: sets[setIndex - 1].hasRepRange ? null : sets[setIndex - 1].reps,
+            minReps: sets[setIndex - 1].minReps,
+            maxReps: sets[setIndex - 1].maxReps,
           )
         : null;
 
@@ -1830,11 +1839,19 @@ class _ExerciseCustomizationScreenState
       );
       final countingMode = _customizations[exerciseIndex].countingMode;
 
-      // ✅ NUOVO: Update fields based on counting mode
-      currentSets[setIndex] = currentSets[setIndex].copyWith(
+      final hasRange = updatedSet.minReps != null &&
+          updatedSet.maxReps != null &&
+          updatedSet.minReps != updatedSet.maxReps;
+
+      currentSets[setIndex] = SetCustomization(
+        setNumber: currentSets[setIndex].setNumber,
         weight: countingMode.requiresWeight ? (updatedSet.weight ?? 0) : 0,
-        reps: countingMode.requiresReps ? (updatedSet.reps ?? 10) : 0,
+        reps: countingMode.requiresReps
+            ? (hasRange ? (updatedSet.minReps ?? 10) : (updatedSet.reps ?? 10))
+            : 0,
         seconds: countingMode.requiresTime ? (updatedSet.seconds ?? 60) : null,
+        minReps: hasRange ? updatedSet.minReps : null,
+        maxReps: hasRange ? updatedSet.maxReps : null,
       );
       _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
         sets: currentSets,
@@ -1853,12 +1870,20 @@ class _ExerciseCustomizationScreenState
       );
       final countingMode = _customizations[exerciseIndex].countingMode;
 
-      // ✅ NUOVO: Apply fields based on counting mode
+      final hasRange = updatedSet.minReps != null &&
+          updatedSet.maxReps != null &&
+          updatedSet.minReps != updatedSet.maxReps;
+
       for (int i = 0; i < currentSets.length; i++) {
-        currentSets[i] = currentSets[i].copyWith(
+        currentSets[i] = SetCustomization(
+          setNumber: currentSets[i].setNumber,
           weight: countingMode.requiresWeight ? (updatedSet.weight ?? 0) : 0,
-          reps: countingMode.requiresReps ? (updatedSet.reps ?? 10) : 0,
+          reps: countingMode.requiresReps
+              ? (hasRange ? (updatedSet.minReps ?? 10) : (updatedSet.reps ?? 10))
+              : 0,
           seconds: countingMode.requiresTime ? (updatedSet.seconds ?? 60) : null,
+          minReps: hasRange ? updatedSet.minReps : null,
+          maxReps: hasRange ? updatedSet.maxReps : null,
         );
       }
       _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
@@ -3095,23 +3120,40 @@ class SetCustomization {
     this.weight = 0, // Optional for bodyweight/time exercises
     this.reps = 10, // Optional for time exercises
     this.seconds, // ✅ NUOVO: Per esercizi a tempo
+    this.minReps, // Rep range min
+    this.maxReps, // Rep range max
   });
   final int setNumber;
   final double weight;
   final int reps;
-  final int? seconds; // ✅ NUOVO: Secondi per esercizi a tempo (plank, etc.)
+  final int? seconds;
+  final int? minReps;
+  final int? maxReps;
+
+  /// True se ha un range di reps (es. 8-10)
+  bool get hasRepRange =>
+      minReps != null && maxReps != null && minReps != maxReps;
+
+  /// Display string: "8-10" se range, altrimenti "10"
+  String get repsDisplay =>
+      hasRepRange ? '$minReps-$maxReps' : '$reps';
 
   SetCustomization copyWith({
     int? setNumber,
     double? weight,
     int? reps,
-    int? seconds, // ✅ NUOVO
+    int? seconds,
+    int? minReps,
+    int? maxReps,
+    bool clearRepRange = false,
   }) {
     return SetCustomization(
       setNumber: setNumber ?? this.setNumber,
       weight: weight ?? this.weight,
       reps: reps ?? this.reps,
-      seconds: seconds ?? this.seconds, // ✅ NUOVO
+      seconds: seconds ?? this.seconds,
+      minReps: clearRepRange ? null : (minReps ?? this.minReps),
+      maxReps: clearRepRange ? null : (maxReps ?? this.maxReps),
     );
   }
 }

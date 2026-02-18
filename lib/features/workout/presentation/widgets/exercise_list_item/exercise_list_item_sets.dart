@@ -1053,7 +1053,12 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       // Apply to all sets (first set only)
       onApplyToAll: (updatedSet) {
         final updatedSets = widget.exercise.sets.map((s) {
-          return s.copyWith(weight: updatedSet.weight, reps: updatedSet.reps);
+          return s.copyWith(
+            weight: updatedSet.weight,
+            reps: updatedSet.reps,
+            minReps: updatedSet.minReps,
+            maxReps: updatedSet.maxReps,
+          );
         }).toList();
         final updatedExercise = widget.exercise.copyWith(sets: updatedSets);
         widget.onExerciseUpdate(updatedExercise);
