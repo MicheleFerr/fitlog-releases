@@ -196,11 +196,23 @@ class _MainShellState extends ConsumerState<MainShell>
             ),
 
             // Floating mini-bar positioned just above nav bar
+            // Hidden when a bottom sheet is open (like the tab bar)
             if (showMiniBar)
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: navBarTotalHeight - 4,
+              ValueListenableBuilder<int>(
+                valueListenable: ModalService.openSheetCount,
+                builder: (context, sheetCount, child) {
+                  return Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: navBarTotalHeight - 4,
+                    child: AnimatedSlide(
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeInOut,
+                      offset: Offset(0, sheetCount > 0 ? 3.0 : 0.0),
+                      child: child!,
+                    ),
+                  );
+                },
                 child: _buildMiniBar(workout!, context),
               ),
 
