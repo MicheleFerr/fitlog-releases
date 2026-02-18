@@ -15,6 +15,7 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/app_theme_mode.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
@@ -83,12 +84,12 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
 
             // Theme toggle
             _SettingsTile(
-              icon: config.themeMode == ThemeMode.dark
+              icon: config.appThemeMode.isDark
                   ? AppIcons.darkMode
                   : AppIcons.lightMode,
               title: context.l10n.appearance,
-              subtitle: _getThemeModeLabel(context, config.themeMode),
-              onTap: () => _toggleTheme(context, ref, config.themeMode),
+              subtitle: _getThemeModeLabel(context, config.appThemeMode),
+              onTap: () => _toggleTheme(context, ref, config.appThemeMode),
             ),
 
             // Language selection
@@ -182,13 +183,17 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
     );
   }
 
-  String _getThemeModeLabel(BuildContext context, ThemeMode mode) {
+  String _getThemeModeLabel(BuildContext context, AppThemeMode mode) {
     switch (mode) {
-      case ThemeMode.light:
+      case AppThemeMode.light:
         return context.l10n.themeLight;
-      case ThemeMode.dark:
+      case AppThemeMode.dark:
         return context.l10n.themeDark;
-      case ThemeMode.system:
+      case AppThemeMode.ultraDark:
+        return context.l10n.themeUltraDark;
+      case AppThemeMode.pink:
+        return context.l10n.themePink;
+      case AppThemeMode.system:
         return context.l10n.themeSystem;
     }
   }
@@ -207,22 +212,26 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
   void _toggleTheme(
     BuildContext context,
     WidgetRef ref,
-    ThemeMode currentMode,
+    AppThemeMode currentMode,
   ) {
     HapticFeedback.lightImpact();
 
-    // Cycle through: System -> Light -> Dark -> System
-    final ThemeMode nextMode;
+    // Cycle through: System -> Light -> Dark -> Ultra Dark -> Pink -> System
+    final AppThemeMode nextMode;
     switch (currentMode) {
-      case ThemeMode.system:
-        nextMode = ThemeMode.light;
-      case ThemeMode.light:
-        nextMode = ThemeMode.dark;
-      case ThemeMode.dark:
-        nextMode = ThemeMode.system;
+      case AppThemeMode.system:
+        nextMode = AppThemeMode.light;
+      case AppThemeMode.light:
+        nextMode = AppThemeMode.dark;
+      case AppThemeMode.dark:
+        nextMode = AppThemeMode.ultraDark;
+      case AppThemeMode.ultraDark:
+        nextMode = AppThemeMode.pink;
+      case AppThemeMode.pink:
+        nextMode = AppThemeMode.system;
     }
 
-    ref.read(appConfigProvider.notifier).setThemeMode(nextMode);
+    ref.read(appConfigProvider.notifier).setAppThemeMode(nextMode);
   }
 
   void _showLanguageSelector(

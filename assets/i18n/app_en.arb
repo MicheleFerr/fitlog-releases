@@ -1755,6 +1755,22 @@
   "@themeSystemDesc": {
     "description": "System theme description"
   },
+  "themeUltraDark": "Ultra Dark",
+  "@themeUltraDark": {
+    "description": "Ultra dark AMOLED theme option"
+  },
+  "themeUltraDarkDesc": "Pure black for AMOLED screens",
+  "@themeUltraDarkDesc": {
+    "description": "Ultra dark theme description"
+  },
+  "themePink": "Pink",
+  "@themePink": {
+    "description": "Pink theme option"
+  },
+  "themePinkDesc": "Soft pink-tinted interface",
+  "@themePinkDesc": {
+    "description": "Pink theme description"
+  },
   "primaryColor": "Primary Color",
   "@primaryColor": {
     "description": "Primary color setting label"

@@ -59,6 +59,70 @@ class AppTheme {
     return _buildTheme(colorScheme, isDark: true);
   }
 
+  /// Build ultra dark (AMOLED) theme with pure black backgrounds
+  static ThemeData buildUltraDarkTheme([String? colorName]) {
+    final seedColor = colorName != null
+        ? getColorFromName(colorName)
+        : primaryBlue;
+
+    // Start from standard dark scheme
+    final baseScheme = ColorScheme.fromSeed(
+      seedColor: seedColor,
+      brightness: Brightness.dark,
+    );
+
+    // Override surfaces with pure black / very dark variants for AMOLED
+    final colorScheme = baseScheme.copyWith(
+      surface: Colors.black,
+      onSurface: const Color(0xFFEEEEEE),
+      surfaceContainerLowest: Colors.black,
+      surfaceContainerLow: const Color(0xFF0A0A0A),
+      surfaceContainer: const Color(0xFF111111),
+      surfaceContainerHigh: const Color(0xFF1A1A1A),
+      surfaceContainerHighest: const Color(0xFF222222),
+      surfaceDim: Colors.black,
+      surfaceBright: const Color(0xFF2A2A2A),
+      inverseSurface: const Color(0xFFE0E0E0),
+      onInverseSurface: const Color(0xFF1A1A1A),
+      outline: const Color(0xFF444444),
+      outlineVariant: const Color(0xFF333333),
+      shadow: Colors.black,
+      scrim: Colors.black,
+    );
+
+    return _buildTheme(colorScheme, isDark: true);
+  }
+
+  /// Build pink theme with pink-tinted surfaces
+  static ThemeData buildPinkTheme([String? colorName]) {
+    // Pink theme always uses pink as seed, ignoring the color picker
+    const pinkSeed = Color(0xFFE91E63);
+
+    final baseScheme = ColorScheme.fromSeed(
+      seedColor: pinkSeed,
+      brightness: Brightness.light,
+    );
+
+    // Override surfaces with pink-tinted variants
+    final colorScheme = baseScheme.copyWith(
+      surface: const Color(0xFFFFF0F3),
+      onSurface: const Color(0xFF2C1018),
+      surfaceContainerLowest: const Color(0xFFFFFFFF),
+      surfaceContainerLow: const Color(0xFFFFF5F7),
+      surfaceContainer: const Color(0xFFFFECF0),
+      surfaceContainerHigh: const Color(0xFFFFE0E8),
+      surfaceContainerHighest: const Color(0xFFFFD6E0),
+      surfaceDim: const Color(0xFFFFE0E8),
+      surfaceBright: const Color(0xFFFFF8F9),
+      inverseSurface: const Color(0xFF3B1020),
+      onInverseSurface: const Color(0xFFFFECF0),
+      outline: const Color(0xFFBF8090),
+      outlineVariant: const Color(0xFFE8B0C0),
+    );
+
+    return _buildTheme(colorScheme);
+  }
+
   /// Legacy static getters for backward compatibility
   static ThemeData get lightTheme => buildLightTheme();
   static ThemeData get darkTheme => buildDarkTheme();

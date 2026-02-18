@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/app_theme_mode.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
@@ -811,22 +812,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SemanticIcon(
-                    icon: _getThemeModeIcon(config.themeMode),
+                    icon: _getThemeModeIcon(config.appThemeMode),
                     semanticLabel: _getThemeModeText(
                       context.l10n,
-                      config.themeMode,
+                      config.appThemeMode,
                     ),
                     size: AppIconSize.small,
                   ),
                   const SizedBox(width: 8),
-                  Text(_getThemeModeText(context.l10n, config.themeMode)),
+                  Text(_getThemeModeText(context.l10n, config.appThemeMode)),
                 ],
               ),
               leading: SemanticIcon(
-                icon: _getThemeModeIcon(config.themeMode),
+                icon: _getThemeModeIcon(config.appThemeMode),
                 semanticLabel: _getThemeModeText(
                   context.l10n,
-                  config.themeMode,
+                  config.appThemeMode,
                 ),
                 size: AppIconSize.medium,
               ),
@@ -834,7 +835,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 icon: AppIcons.chevronRight,
                 semanticLabel: 'Chevron right',
               ),
-              onTap: () => _showThemeDialog(context, ref, config.themeMode),
+              onTap: () => _showThemeDialog(context, ref, config.appThemeMode),
               contentPadding: EdgeInsets.zero,
             ),
 
@@ -2056,38 +2057,48 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void _showThemeDialog(
     BuildContext context,
     WidgetRef ref,
-    ThemeMode currentMode,
+    AppThemeMode currentMode,
   ) {
     final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.chooseTheme),
-        content: RadioGroup<ThemeMode>(
+        content: RadioGroup<AppThemeMode>(
           groupValue: currentMode,
           onChanged: (value) {
             if (value != null) {
-              ref.read(appConfigProvider.notifier).setThemeMode(value);
+              ref.read(appConfigProvider.notifier).setAppThemeMode(value);
               Navigator.pop(context);
             }
           },
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              RadioListTile<ThemeMode>(
+              RadioListTile<AppThemeMode>(
                 title: Text(l10n.themeLight),
                 subtitle: Text(l10n.themeLightDesc),
-                value: ThemeMode.light,
+                value: AppThemeMode.light,
               ),
-              RadioListTile<ThemeMode>(
+              RadioListTile<AppThemeMode>(
                 title: Text(l10n.themeDark),
                 subtitle: Text(l10n.themeDarkDesc),
-                value: ThemeMode.dark,
+                value: AppThemeMode.dark,
               ),
-              RadioListTile<ThemeMode>(
+              RadioListTile<AppThemeMode>(
+                title: Text(l10n.themeUltraDark),
+                subtitle: Text(l10n.themeUltraDarkDesc),
+                value: AppThemeMode.ultraDark,
+              ),
+              RadioListTile<AppThemeMode>(
+                title: Text(l10n.themePink),
+                subtitle: Text(l10n.themePinkDesc),
+                value: AppThemeMode.pink,
+              ),
+              RadioListTile<AppThemeMode>(
                 title: Text(l10n.themeSystem),
                 subtitle: Text(l10n.themeSystemDesc),
-                value: ThemeMode.system,
+                value: AppThemeMode.system,
               ),
             ],
           ),
@@ -2617,24 +2628,32 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   // Helper Methods
 
-  String _getThemeModeText(AppLocalizations l10n, ThemeMode mode) {
+  String _getThemeModeText(AppLocalizations l10n, AppThemeMode mode) {
     switch (mode) {
-      case ThemeMode.light:
+      case AppThemeMode.light:
         return l10n.themeLight;
-      case ThemeMode.dark:
+      case AppThemeMode.dark:
         return l10n.themeDark;
-      case ThemeMode.system:
+      case AppThemeMode.ultraDark:
+        return l10n.themeUltraDark;
+      case AppThemeMode.pink:
+        return l10n.themePink;
+      case AppThemeMode.system:
         return l10n.themeSystem;
     }
   }
 
-  IconData _getThemeModeIcon(ThemeMode mode) {
+  IconData _getThemeModeIcon(AppThemeMode mode) {
     switch (mode) {
-      case ThemeMode.light:
+      case AppThemeMode.light:
         return AppIcons.lightMode;
-      case ThemeMode.dark:
+      case AppThemeMode.dark:
         return AppIcons.darkMode;
-      case ThemeMode.system:
+      case AppThemeMode.ultraDark:
+        return AppIcons.darkMode;
+      case AppThemeMode.pink:
+        return AppIcons.lightMode;
+      case AppThemeMode.system:
         return AppIcons.autoMode;
     }
   }

@@ -2683,6 +2683,30 @@ abstract class AppLocalizations {
   /// **'Follow system setting'**
   String get themeSystemDesc;
 
+  /// Ultra dark AMOLED theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Ultra Dark'**
+  String get themeUltraDark;
+
+  /// Ultra dark theme description
+  ///
+  /// In en, this message translates to:
+  /// **'Pure black for AMOLED screens'**
+  String get themeUltraDarkDesc;
+
+  /// Pink theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Pink'**
+  String get themePink;
+
+  /// Pink theme description
+  ///
+  /// In en, this message translates to:
+  /// **'Soft pink-tinted interface'**
+  String get themePinkDesc;
+
   /// Label for primary color picker
   ///
   /// In en, this message translates to:

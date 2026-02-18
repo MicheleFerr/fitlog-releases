@@ -1423,6 +1423,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get themeSystemDesc => 'Segui l\'impostazione di sistema';
 
   @override
+  String get themeUltraDark => 'Ultra Dark';
+
+  @override
+  String get themeUltraDarkDesc => 'Nero puro per schermi AMOLED';
+
+  @override
+  String get themePink => 'Pink';
+
+  @override
+  String get themePinkDesc => 'Interfaccia con tonalità rosa';
+
+  @override
   String get primaryColor => 'Colore Primario';
 
   @override

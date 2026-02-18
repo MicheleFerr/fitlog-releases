@@ -1412,6 +1412,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeSystemDesc => 'Follow system setting';
 
   @override
+  String get themeUltraDark => 'Ultra Dark';
+
+  @override
+  String get themeUltraDarkDesc => 'Pure black for AMOLED screens';
+
+  @override
+  String get themePink => 'Pink';
+
+  @override
+  String get themePinkDesc => 'Soft pink-tinted interface';
+
+  @override
   String get primaryColor => 'Primary Color';
 
   @override

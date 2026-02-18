@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
+import 'package:gymbro_flutter_new/shared/domain/entities/app_theme_mode.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/interface_size.dart';
 
 part 'app_config.g.dart';
@@ -63,6 +64,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.interfaceSize, // Unified interface size (font + layout), null = use fontSize for backward compat
     this.defaultRestBetweenExercises = 90, // Default rest between exercises (inter-exercise timer)
     this.hasSeenRestPauseTutorial = false, // First-time Rest-Pause tutorial flag
+    this.appThemeModeValue, // Custom theme mode: 'system'|'light'|'dark'|'ultraDark'|'pink'
   });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) {
@@ -111,6 +113,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       interfaceSize: interfaceSize,
       defaultRestBetweenExercises: json['defaultRestBetweenExercises'] ?? 90,
       hasSeenRestPauseTutorial: json['hasSeenRestPauseTutorial'] ?? false,
+      appThemeModeValue: json['appThemeModeValue'] as String?,
     );
   }
   @HiveField(0)
@@ -281,6 +284,18 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
   @HiveField(54)
   final bool hasSeenRestPauseTutorial; // Has seen Rest-Pause tutorial
 
+  @HiveField(55)
+  final String? appThemeModeValue; // Custom theme mode string: 'system'|'light'|'dark'|'ultraDark'|'pink'
+
+  /// Get the effective AppThemeMode (backward compatible with ThemeMode)
+  AppThemeMode get appThemeMode {
+    if (appThemeModeValue != null) {
+      return AppThemeMode.fromString(appThemeModeValue);
+    }
+    // Backward compat: derive from old ThemeMode field
+    return AppThemeMode.fromThemeMode(themeMode);
+  }
+
   Locale get locale => Locale(languageCode, countryCode);
 
   AppConfig copyWith({
@@ -338,6 +353,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     InterfaceSize? interfaceSize,
     int? defaultRestBetweenExercises,
     bool? hasSeenRestPauseTutorial,
+    String? appThemeModeValue,
   }) {
     return AppConfig(
       languageCode: languageCode ?? this.languageCode,
@@ -394,6 +410,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       interfaceSize: interfaceSize ?? this.interfaceSize,
       defaultRestBetweenExercises: defaultRestBetweenExercises ?? this.defaultRestBetweenExercises,
       hasSeenRestPauseTutorial: hasSeenRestPauseTutorial ?? this.hasSeenRestPauseTutorial,
+      appThemeModeValue: appThemeModeValue ?? this.appThemeModeValue,
     );
   }
 
@@ -428,6 +445,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       'interfaceSize': interfaceSize?.toJson(),
       'defaultRestBetweenExercises': defaultRestBetweenExercises,
       'hasSeenRestPauseTutorial': hasSeenRestPauseTutorial,
+      'appThemeModeValue': appThemeModeValue,
     };
   }
 
@@ -456,7 +474,8 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
         other.fontSize == fontSize &&
         other.preferredTemplateId == preferredTemplateId &&
         other.hasSeenWorkoutOnboarding == hasSeenWorkoutOnboarding &&
-        other.onboardingVersion == onboardingVersion;
+        other.onboardingVersion == onboardingVersion &&
+        other.appThemeModeValue == appThemeModeValue;
   }
 
   @override
@@ -479,6 +498,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       preferredTemplateId,
       hasSeenWorkoutOnboarding,
       onboardingVersion,
+      appThemeModeValue,
     );
   }
 }

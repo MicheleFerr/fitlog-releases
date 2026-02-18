@@ -14,6 +14,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_theme.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/app_theme_mode.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_initialization_provider.dart';
@@ -106,6 +107,7 @@ class FitLogApp extends ConsumerWidget {
     final primaryColor = ref.watch(appConfigProvider.select((c) => c.primaryColor));
     final locale = ref.watch(localeProvider);
     final themeMode = ref.watch(themeModeProvider);
+    final appThemeMode = ref.watch(appThemeModeProvider);
 
     // 🔥 CRITICAL: Load fitness questionnaire at app startup
     // This ensures weight suggestions work immediately without needing to visit settings first
@@ -216,11 +218,14 @@ class FitLogApp extends ConsumerWidget {
     // This prevents black screen when providers fail to initialize
     // NOTE: _AppLifecycleObserver REMOVED - lifecycle handled by AppLifecycleManager (centralized)
     try {
+      // Compute effective themes based on AppThemeMode
+      final effectiveThemes = _resolveThemes(appThemeMode, primaryColor, fontSize);
+
       return MaterialApp.router(
         title: 'FitLog Pro',
-        theme: _buildThemeWithFontSize(AppTheme.buildLightTheme(primaryColor), fontSize),
-        darkTheme: _buildThemeWithFontSize(AppTheme.buildDarkTheme(primaryColor), fontSize),
-        themeMode: themeMode,
+        theme: effectiveThemes.lightTheme,
+        darkTheme: effectiveThemes.darkTheme,
+        themeMode: effectiveThemes.themeMode,
         locale: locale,
         localizationsDelegates: const [
           AppLocalizations.delegate,
@@ -267,7 +272,7 @@ class FitLogApp extends ConsumerWidget {
                   Icon(
                     AppIcons.error,
                     size: AppIconSize.xxlarge,
-                    color: themeMode == ThemeMode.dark
+                    color: appThemeMode.isDark
                       ? const Color(0xFFE57373)
                       : const Color(0xFFD32F2F),
                   ),
@@ -299,6 +304,43 @@ class FitLogApp extends ConsumerWidget {
           ),
         ),
       );
+    }
+  }
+
+  /// Resolve effective themes based on AppThemeMode
+  _ResolvedThemes _resolveThemes(
+    AppThemeMode appThemeMode,
+    String primaryColor,
+    double fontSize,
+  ) {
+    final lightTheme = _buildThemeWithFontSize(
+      AppTheme.buildLightTheme(primaryColor),
+      fontSize,
+    );
+    final darkTheme = _buildThemeWithFontSize(
+      AppTheme.buildDarkTheme(primaryColor),
+      fontSize,
+    );
+
+    switch (appThemeMode) {
+      case AppThemeMode.system:
+        return _ResolvedThemes(lightTheme, darkTheme, ThemeMode.system);
+      case AppThemeMode.light:
+        return _ResolvedThemes(lightTheme, darkTheme, ThemeMode.light);
+      case AppThemeMode.dark:
+        return _ResolvedThemes(lightTheme, darkTheme, ThemeMode.dark);
+      case AppThemeMode.ultraDark:
+        final ultraDark = _buildThemeWithFontSize(
+          AppTheme.buildUltraDarkTheme(primaryColor),
+          fontSize,
+        );
+        return _ResolvedThemes(ultraDark, ultraDark, ThemeMode.dark);
+      case AppThemeMode.pink:
+        final pink = _buildThemeWithFontSize(
+          AppTheme.buildPinkTheme(primaryColor),
+          fontSize,
+        );
+        return _ResolvedThemes(pink, pink, ThemeMode.light);
     }
   }
 
@@ -360,6 +402,14 @@ class FitLogApp extends ConsumerWidget {
 
     return baseTheme.copyWith(textTheme: scaledTextTheme);
   }
+}
+
+/// Helper class to pass resolved theme data
+class _ResolvedThemes {
+  const _ResolvedThemes(this.lightTheme, this.darkTheme, this.themeMode);
+  final ThemeData lightTheme;
+  final ThemeData darkTheme;
+  final ThemeMode themeMode;
 }
 
 // NOTE: _AppLifecycleObserver REMOVED (was FIX #3)

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/app_theme_mode.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/interface_size.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
@@ -380,6 +381,30 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [AppConfig] Error setting theme mode: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
+  /// Set the app theme mode (supports ultra dark and pink themes)
+  Future<void> setAppThemeMode(AppThemeMode mode) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      // Set both fields: new string field + old ThemeMode for backward compat
+      state = state.copyWith(
+        themeMode: mode.flutterThemeMode,
+        appThemeModeValue: mode.name,
+      );
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint('✅ [AppConfig] App theme mode set to: ${mode.name}');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error setting app theme mode: $e');
         debugPrint('📍 Stack trace: $stackTrace');
       }
     }
@@ -1036,6 +1061,11 @@ final appLocalizationsProvider = Provider<AppLocalizations>((ref) {
 
 final themeModeProvider = Provider<ThemeMode>((ref) {
   return ref.watch(appConfigProvider.select((c) => c.themeMode));
+});
+
+/// Provider for the extended app theme mode (includes ultra dark and pink)
+final appThemeModeProvider = Provider<AppThemeMode>((ref) {
+  return ref.watch(appConfigProvider.select((c) => c.appThemeMode));
 });
 
 final measurementUnitProvider = Provider<String>((ref) {
