@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_exercise_preferences_provider.dart';
 
 class ExerciseHistoryBottomSheet extends ConsumerStatefulWidget {
@@ -59,10 +60,14 @@ class _ExerciseHistoryBottomSheetState
       )),
     );
 
+    final safeMax = ModalService.safeMaxChildSize(context);
+
     return DraggableScrollableSheet(
-      initialChildSize: 0.75,
-      maxChildSize: 0.95,
-      minChildSize: 0.5,
+      initialChildSize: 0.55,
+      maxChildSize: safeMax,
+      minChildSize: 0.3,
+      snap: true,
+      snapSizes: [0.55, 0.75.clamp(0.55, safeMax)],
       builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: context.colors.surface,

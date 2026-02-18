@@ -1023,6 +1023,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   void _handleShowExerciseHistory() {
     ModalService.showSheet(context,
       isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) => ExerciseHistoryBottomSheet(
         exerciseName: widget.exercise.name,
         exerciseId: widget.exercise.id,
