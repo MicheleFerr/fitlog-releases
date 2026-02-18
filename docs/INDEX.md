@@ -40,6 +40,11 @@
 | [`design/EXERCISE_POPULARITY_RANKING.md`](design/EXERCISE_POPULARITY_RANKING.md) | **System Design** - Data Bundles, Cloud Functions, Search Boost (1.0x-1.5x) | ✅ Implemented |
 | [`EXERCISE_POPULARITY_TESTING.md`](EXERCISE_POPULARITY_TESTING.md) | **Testing Guide** - Manual testing steps, verification commands, success criteria | 📋 Ready for Testing |
 
+#### iOS/Flutter Communication Audit (🔴 New - 2026-02-18)
+| Document | Purpose | Status |
+|----------|---------|--------|
+| [`IOS_FLUTTER_AUDIT_2026.md`](IOS_FLUTTER_AUDIT_2026.md) | **iOS/Flutter Audit** - 29 file Swift + 12 Dart, 4 bug P0, 8 bug P1, best practices 2025/2026 | 🔴 Fix in corso |
+
 #### Debug Audit (✅ New - 2026-02-08)
 | Document | Purpose |
 |----------|---------|

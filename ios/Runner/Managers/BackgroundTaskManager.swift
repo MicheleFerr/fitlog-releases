@@ -11,7 +11,6 @@ protocol BackgroundTaskManaging {
 }
 
 /// Manages BGTaskScheduler with retry logic and health checks
-@available(iOS 13.0, *)
 final class BackgroundTaskManager: BackgroundTaskManaging {
     
     // MARK: - Constants
@@ -50,12 +49,14 @@ final class BackgroundTaskManager: BackgroundTaskManaging {
     // MARK: - Public Methods
     
     func registerTasks() {
-        guard isBackgroundRefreshAvailable() else {
-            Logger.shared.log(.warning, "Background refresh not available, skipping registration")
+        // P1-6 FIX: BGTaskScheduler.register() MUST be called unconditionally before
+        // applicationDidFinishLaunching returns (Apple requirement). Availability is
+        // checked at scheduling time (scheduleAppRefresh / scheduleProcessingTask), not here.
+        if !isBackgroundRefreshAvailable() {
+            Logger.shared.log(.warning, "Background refresh not available — tasks registered but won't be scheduled")
             PermissionManager.shared.requestBackgroundRefreshIfNeeded()
-            return
         }
-        
+
         registerAppRefreshTask()
         registerProcessingTask()
     }
@@ -370,39 +371,3 @@ final class BackgroundTaskManager: BackgroundTaskManaging {
     }
 }
 
-// MARK: - iOS 12 Fallback
-
-final class BackgroundTaskManagerLegacy: BackgroundTaskManaging {
-    
-    static let shared = BackgroundTaskManagerLegacy()
-    
-    private init() {
-        Logger.shared.log(.warning, "Using legacy background task manager (iOS < 13) - silent loop still available")
-    }
-    
-    func registerTasks() {
-        Logger.shared.log(.info, "Legacy: Using UIApplication background modes only")
-    }
-    
-    func scheduleAppRefresh() {
-        // Use UIApplication background task for iOS < 13
-        UIApplication.shared.setMinimumBackgroundFetchInterval(
-            UIApplication.backgroundFetchIntervalMinimum
-        )
-    }
-    
-    func scheduleProcessingTask() {
-        // Not available in iOS < 13
-        Logger.shared.log(.debug, "Processing tasks not available in iOS < 13")
-    }
-    
-    func cancelAllTasks() {
-        UIApplication.shared.setMinimumBackgroundFetchInterval(
-            UIApplication.backgroundFetchIntervalNever
-        )
-    }
-    
-    func isBackgroundRefreshAvailable() -> Bool {
-        return UIApplication.shared.backgroundRefreshStatus == .available
-    }
-}

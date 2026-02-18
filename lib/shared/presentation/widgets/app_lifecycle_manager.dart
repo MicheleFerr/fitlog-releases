@@ -43,6 +43,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
+import 'package:gymbro_flutter_new/shared/data/platform_channels.dart';
 import 'package:gymbro_flutter_new/shared/data/services/firestore_batch_writer.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
@@ -352,7 +353,7 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
 
   /// FIX #3: Request iOS background task and perform save
   void _requestIOSBackgroundTaskForSave(Workout workout) {
-    const channel = MethodChannel('com.gymbro.timer/unified');
+    const channel = MethodChannel(PlatformChannels.unified);
 
     // Request background task from iOS
     channel.invokeMethod('beginBackgroundTask', {

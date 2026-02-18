@@ -28,7 +28,7 @@ class WorkoutSessionManager: NSObject {
 
     func setupMethodChannel(with binaryMessenger: FlutterBinaryMessenger) {
         let channel = FlutterMethodChannel(
-            name: "com.gymbro.timer/workout_session",
+            name: ChannelNames.workoutSession,
             binaryMessenger: binaryMessenger
         )
 
@@ -622,7 +622,6 @@ class WorkoutSessionManager: NSObject {
 
         let userDefaults = UserDefaults(suiteName: sharedSuiteName)
         userDefaults?.set(duration, forKey: "current_exercise_rest_duration")
-        userDefaults?.synchronize()
 
         Logger.shared.debug("📝 Stored current rest duration: \(duration)s", category: .general)
         result(true)
@@ -641,7 +640,6 @@ class WorkoutSessionManager: NSObject {
 
         let userDefaults = UserDefaults(suiteName: sharedSuiteName)
         userDefaults?.set(enabled, forKey: "rpe_tracking_enabled")
-        userDefaults?.synchronize()
 
         print("📝 [WorkoutSession] Stored RPE tracking enabled: \(enabled)")
         result(true)
@@ -672,7 +670,6 @@ class WorkoutSessionManager: NSObject {
 
         // Clear the event after forwarding
         userDefaults.removeObject(forKey: eventKey)
-        userDefaults.synchronize()
 
         // Return the event data so Flutter knows what was found
         result(eventData)
@@ -799,7 +796,6 @@ class WorkoutSessionManager: NSObject {
 
         // Clear the event
         userDefaults.removeObject(forKey: eventKey)
-        userDefaults.synchronize()
     }
 
     // MARK: - Helpers
@@ -827,7 +823,7 @@ class WorkoutSessionManagerFallback: NSObject {
 
     func setupMethodChannel(with binaryMessenger: FlutterBinaryMessenger) {
         let channel = FlutterMethodChannel(
-            name: "com.gymbro.timer/workout_session",
+            name: ChannelNames.workoutSession,
             binaryMessenger: binaryMessenger
         )
 

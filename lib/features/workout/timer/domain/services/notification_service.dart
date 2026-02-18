@@ -722,6 +722,7 @@ class NotificationService {
 
   /// ✅ Test Audio File Availability with multiple strategies
   Future<void> testAudioFiles() async {
+    if (!kDebugMode) return;
     final testSounds = ['timer_complete', 'LightWeight', 'YehBuddie'];
 
     DebugLogger.debug('=== COMPREHENSIVE AUDIO TEST ===');
@@ -801,6 +802,7 @@ class NotificationService {
 
   /// ✅ PRODUCTION-SPECIFIC TESTING METHOD for TestFlight debugging
   Future<void> testProductionAudio() async {
+    if (!kDebugMode) return;
     DebugLogger.debug('=== PRODUCTION AUDIO TESTING ===');
     DebugLogger.log(LogCategory.notification, 'Notification debug info');
     DebugLogger.log(LogCategory.notification, 'Notification debug info');
@@ -901,6 +903,7 @@ class NotificationService {
 
   /// ✅ TEST BACKGROUND AUDIO SPECIFICALLY
   Future<void> testBackgroundAudio() async {
+    if (!kDebugMode) return;
     DebugLogger.debug('=== BACKGROUND AUDIO TESTING ===');
     DebugLogger.log(LogCategory.notification, 'Notification debug info');
 
@@ -933,6 +936,7 @@ class NotificationService {
 
   /// ✅ HELPER: Force notification in background mode for testing
   Future<void> sendBackgroundTestNotification() async {
+    if (!kDebugMode) return;
     DebugLogger.debug('=== FORCED BACKGROUND NOTIFICATION TEST ===');
 
     final oldState = _isAppInBackground;
@@ -1027,6 +1031,7 @@ class NotificationService {
 
   /// Test the fixed notification system with custom sounds
   Future<void> testNotificationFixes() async {
+    if (!kDebugMode) return;
     if (!Platform.isIOS) {
       DebugLogger.log(
         LogCategory.notification,

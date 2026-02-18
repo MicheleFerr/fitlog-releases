@@ -11,7 +11,7 @@ final class UnifiedTimerCoordinator {
     
     // MARK: - Properties
     private var unifiedChannel: FlutterMethodChannel?
-    private let channelName = "com.gymbro.timer/unified"
+    private let channelName = ChannelNames.unified
     
     // Managers (only essential ones)
     private let backgroundAudio = BackgroundAudioManager.shared
@@ -20,7 +20,8 @@ final class UnifiedTimerCoordinator {
     // Coordination state
     private var lastAudioTriggerTime: Date?
     private var pendingCompletions: Set<String> = []
-    private let coordinationQueue = DispatchQueue(label: "com.gymbro.timer.coordination", attributes: .concurrent)
+    // P1-1 FIX: Serial queue ensures all property accesses are serialized without barriers
+    private let coordinationQueue = DispatchQueue(label: "com.gymbro.timer.coordination")
     
     // Audio session keep-alive
     private var audioSessionActive = false
@@ -68,9 +69,13 @@ final class UnifiedTimerCoordinator {
     
     // MARK: - Unified Method Handling
     private func handleMethodCall(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        // Wrap result to ensure FlutterResult is always called on main thread (Flutter requirement)
+        let mainResult: FlutterResult = { value in
+            DispatchQueue.main.async { result(value) }
+        }
         coordinationQueue.async(flags: .barrier) { [weak self] in
             guard let self = self else {
-                result(FlutterError(code: "DISPOSED", message: "Coordinator disposed", details: nil))
+                mainResult(FlutterError(code: "DISPOSED", message: "Coordinator disposed", details: nil))
                 return
             }
             
@@ -79,75 +84,75 @@ final class UnifiedTimerCoordinator {
             switch call.method {
             // Timer Control
             case "startTimer":
-                self.handleStartTimer(call.arguments, result: result)
-                
+                self.handleStartTimer(call.arguments, result: mainResult)
+
             case "pauseTimer":
-                self.handlePauseTimer(result: result)
-                
+                self.handlePauseTimer(result: mainResult)
+
             case "resumeTimer":
-                self.handleResumeTimer(call.arguments, result: result)
-                
+                self.handleResumeTimer(call.arguments, result: mainResult)
+
             case "stopTimer":
-                self.handleStopTimer(result: result)
-                
+                self.handleStopTimer(result: mainResult)
+
             // Audio Management (centralized to prevent duplicates)
             case "scheduleCompletion":
-                self.handleScheduleCompletion(call.arguments, result: result)
-                
+                self.handleScheduleCompletion(call.arguments, result: mainResult)
+
             case "playCompletionSound":
-                self.handlePlayCompletionSound(call.arguments, result: result)
-                
+                self.handlePlayCompletionSound(call.arguments, result: mainResult)
+
             case "hasAudioPlayedRecently":
-                self.handleHasAudioPlayedRecently(call.arguments, result: result)
-                
+                self.handleHasAudioPlayedRecently(call.arguments, result: mainResult)
+
             // Live Activity
             case "startLiveActivity":
-                self.handleStartLiveActivity(call.arguments, result: result)
-                
+                self.handleStartLiveActivity(call.arguments, result: mainResult)
+
             case "updateLiveActivity":
-                self.handleUpdateLiveActivity(call.arguments, result: result)
-                
+                self.handleUpdateLiveActivity(call.arguments, result: mainResult)
+
             case "endLiveActivity":
-                self.handleEndLiveActivity(call.arguments, result: result)
+                self.handleEndLiveActivity(call.arguments, result: mainResult)
 
             case "endAllActiveLiveActivities":
-                self.handleEndAllActiveLiveActivities(result: result)
+                self.handleEndAllActiveLiveActivities(result: mainResult)
 
             case "getActiveLiveActivities":
-                self.handleGetActiveLiveActivities(result: result)
-                
+                self.handleGetActiveLiveActivities(result: mainResult)
+
             // State Query
             case "getTimerState":
-                self.handleGetTimerState(result: result)
-                
+                self.handleGetTimerState(result: mainResult)
+
             case "getMetrics":
-                self.handleGetMetrics(result: result)
+                self.handleGetMetrics(result: mainResult)
 
             // CRITICAL FIX: Handle notification sending from Flutter
             case "sendNotification":
-                self.handleSendNotification(call.arguments, result: result)
+                self.handleSendNotification(call.arguments, result: mainResult)
 
             // CRITICAL FIX: Cancel background audio when timer is skipped
             case "cancelBackgroundAudio":
-                self.handleCancelBackgroundAudio(result: result)
+                self.handleCancelBackgroundAudio(result: mainResult)
 
             // ✅ FIX #2: Verify notification delivery
             case "wasNotificationDelivered":
-                self.handleWasNotificationDelivered(call.arguments, result: result)
+                self.handleWasNotificationDelivered(call.arguments, result: mainResult)
 
             // ✅ FIX #7: Print performance metrics report
             case "printPerformanceMetrics":
-                self.handlePrintPerformanceMetrics(result: result)
+                self.handlePrintPerformanceMetrics(result: mainResult)
 
             // ✅ FIX #3: Background task management for emergency saves
             case "beginBackgroundTask":
-                self.handleBeginBackgroundTask(call.arguments, result: result)
+                self.handleBeginBackgroundTask(call.arguments, result: mainResult)
 
             case "endBackgroundTask":
-                self.handleEndBackgroundTask(call.arguments, result: result)
+                self.handleEndBackgroundTask(call.arguments, result: mainResult)
 
             default:
-                result(FlutterMethodNotImplemented)
+                mainResult(FlutterMethodNotImplemented)
             }
         }
     }
@@ -240,19 +245,12 @@ final class UnifiedTimerCoordinator {
         // This ensures a previous skip doesn't block this new timer's notification
         DirectNotificationManager.shared.resetSkipFlag()
 
-        // ✅ FIX: Get app state on main thread to avoid Main Thread Checker warning
-        let appState = DispatchQueue.main.sync {
-            return UIApplication.shared.applicationState
-        }
-        
-        // Track scheduling details
-        
         // Track this completion to prevent duplicates
         pendingCompletions.insert(completionId)
-        
+
         // CRITICAL: Activate audio session for timers > 30 seconds
         // This prevents iOS from suspending the app
-        if duration > 30.0 && appState != .active {
+        if duration > 30.0 && AudioSessionManager.shared.isAppInBackground {
             activateAudioSessionForTimer()
             // Audio session activated for long timer
         }
@@ -274,8 +272,11 @@ final class UnifiedTimerCoordinator {
         
         // Clean up completion tracking after timer ends
         
+        // P1-1 FIX: Route through coordinationQueue to avoid cross-thread mutation
         DispatchQueue.main.asyncAfter(deadline: .now() + duration + 5) { [weak self] in
-            self?.pendingCompletions.remove(completionId)
+            self?.coordinationQueue.async { [weak self] in
+                self?.pendingCompletions.remove(completionId)
+            }
         }
         
         // Completion scheduled successfully
@@ -283,10 +284,6 @@ final class UnifiedTimerCoordinator {
     }
     
     private func handlePlayCompletionSound(_ arguments: Any?, result: @escaping FlutterResult) {
-        // ✅ FIX: Get app state on main thread to avoid Main Thread Checker warning
-        let appState = DispatchQueue.main.sync {
-            return UIApplication.shared.applicationState
-        }
         let soundName = (arguments as? [String: Any])?["soundName"] as? String ?? "sound"
 
         // ✅ FIX #1: Check if BackgroundAudioManager is already handling this
@@ -306,7 +303,7 @@ final class UnifiedTimerCoordinator {
         if let lastTime = lastAudioTriggerTime,
            Date().timeIntervalSince(lastTime) < 3.0 {
             let timeSince = Date().timeIntervalSince(lastTime)
-            Logger.shared.log(.warning, "⚠️ Audio already played \(timeSince)s ago, skipping duplicate", category: .audioSession)
+            Logger.shared.log(.debug, "⚠️ Audio already played \(timeSince)s ago, skipping duplicate", category: .audioSession)
             result("skipped_recent_playback")
             return
         }
@@ -591,11 +588,11 @@ final class UnifiedTimerCoordinator {
     /// Play silent audio in background to keep audio session active
     private func playSilentAudioInBackground() {
         // Use the silent_loop.caf file from bundle
-        guard let silentAudioPath = Bundle.main.path(forResource: "silent_loop", ofType: "caf"),
-              let silentAudioURL = URL(string: "file://\(silentAudioPath)") else {
+        guard let silentAudioPath = Bundle.main.path(forResource: "silent_loop", ofType: "caf") else {
             Logger.shared.log(.warning, "⚠️ [AUDIO-SESSION] Could not find silent_loop.caf in bundle", category: .audioSession)
             return
         }
+        let silentAudioURL = URL(fileURLWithPath: silentAudioPath)
         
         do {
             silentAudioPlayer = try AVAudioPlayer(contentsOf: silentAudioURL)
@@ -703,7 +700,8 @@ final class UnifiedTimerCoordinator {
 
     /// Internal method to end a background task
     private func endBackgroundTask(taskId: String) {
-        DispatchQueue.main.async { [weak self] in
+        // P1-1 FIX: Access activeBackgroundTasks on coordinationQueue (serial), then call UIApplication on main
+        coordinationQueue.async { [weak self] in
             guard let self = self,
                   let identifier = self.activeBackgroundTasks.removeValue(forKey: taskId) else {
                 Logger.shared.log(.warning, """
@@ -713,7 +711,9 @@ final class UnifiedTimerCoordinator {
                 return
             }
 
-            UIApplication.shared.endBackgroundTask(identifier)
+            DispatchQueue.main.async {
+                UIApplication.shared.endBackgroundTask(identifier)
+            }
 
             Logger.shared.log(.info, """
                 ✅ [BACKGROUND-TASK] Ended: \(taskId)

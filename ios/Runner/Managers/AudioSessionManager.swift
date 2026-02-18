@@ -77,12 +77,19 @@ final class AudioSessionManager: AudioSessionManaging {
     }
     
     // MARK: - Public Methods
-    
+
+    /// Thread-safe check whether the app is currently in background.
+    /// Use this instead of UIApplication.shared.applicationState from background threads
+    /// to avoid DispatchQueue.main.sync deadlock risk.
+    var isAppInBackground: Bool {
+        stateQueue.sync { currentState == .background }
+    }
+
     func configureForLaunch() {
         stateQueue.sync {
             Logger.shared.log(.info, "[TIMER-DEBUG] configureForLaunch called, current state: \(currentState.debugDescription)")
             guard currentState == .uninitialized else {
-                Logger.shared.log(.warning, "[TIMER-DEBUG] AudioSession already configured, state: \(currentState.debugDescription)")
+                Logger.shared.log(.debug, "[TIMER-DEBUG] AudioSession already configured, state: \(currentState.debugDescription)")
                 return
             }
             

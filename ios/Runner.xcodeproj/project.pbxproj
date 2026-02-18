@@ -15,6 +15,7 @@
 		2D3A70F0A98C42F56CA2E53C /* WorkoutSessionLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B39142A882AE14ACBE3AB4 /* WorkoutSessionLiveActivity.swift */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		3E6D863E9519B9E5B008B9EF /* FlutterChannelRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 203D38C643AA1DCC6B4A7AE9 /* FlutterChannelRegistry.swift */; };
 		4B6C1987638216DCEFE3589D /* WorkoutSessionAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46145500022F93830799909F /* WorkoutSessionAttributes.swift */; };
 		58CAFF603B5DDD2BA38487D4 /* GymBroTimerAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622EF15D9E96573F5D209ED8 /* GymBroTimerAttributes.swift */; };
 		6051D23547EE647FA2734AD8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 15BAF2CEDF57590327C204A5 /* Localizable.strings */; };
@@ -70,6 +71,7 @@
 		D1WIDGET001 /* sound.caf in Resources */ = {isa = PBXBuildFile; fileRef = D1A4AB2B2E72B65D0037BF3A /* sound.caf */; };
 		D1WIDGET002 /* YehBuddie.caf in Resources */ = {isa = PBXBuildFile; fileRef = D1F551482E4CE7B900DA47B4 /* YehBuddie.caf */; };
 		D1WIDGET003 /* LightWeight.caf in Resources */ = {isa = PBXBuildFile; fileRef = D1F551462E4CE7B900DA47B4 /* LightWeight.caf */; };
+		D77E36D2BE7F153906B0783B /* ChannelNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871BB49C0968C9CF1D75E0D9 /* ChannelNames.swift */; };
 		E15166539C1D460CA10A4D45 /* AudioDebugTestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9C4E78F11D4F929964F355 /* AudioDebugTestHandler.swift */; };
 		ECF69A032E3D259746CE078C /* WidgetLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160D2347D71CBBADFA502889 /* WidgetLocalization.swift */; };
 		F8E03C868505D492A575A3D1 /* AudioTraceLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B3B2256D118E1F3846BA7C /* AudioTraceLogger.swift */; };
@@ -142,6 +144,7 @@
 		160D2347D71CBBADFA502889 /* WidgetLocalization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetLocalization.swift; sourceTree = "<group>"; };
 		1760C539CEEFC322D2A4427D /* HealthKitActivityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HealthKitActivityManager.swift; sourceTree = "<group>"; };
 		17C30F0E38E9DB9E08279FB0 /* WorkoutSessionIntents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkoutSessionIntents.swift; sourceTree = "<group>"; };
+		203D38C643AA1DCC6B4A7AE9 /* FlutterChannelRegistry.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FlutterChannelRegistry.swift; sourceTree = "<group>"; };
 		20E3F22DAFC45283D2A63558 /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -154,6 +157,7 @@
 		7255022CD3DA881B20320D58 /* AppIntent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppIntent.swift; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+		871BB49C0968C9CF1D75E0D9 /* ChannelNames.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChannelNames.swift; sourceTree = "<group>"; };
 		8E9AD99DDE4910C32AFCBA29 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		910594C0C3CD14F051272D04 /* GymBroScheduleAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GymBroScheduleAttributes.swift; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
@@ -423,6 +427,8 @@
 			isa = PBXGroup;
 			children = (
 				D15AD7F32E4B91F00029B4D4 /* FeatureFlags.swift */,
+				871BB49C0968C9CF1D75E0D9 /* ChannelNames.swift */,
+				203D38C643AA1DCC6B4A7AE9 /* FlutterChannelRegistry.swift */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -852,6 +858,8 @@
 				99B2A35353F7A84D78C9DA49 /* HealthKitActivityManager.swift in Sources */,
 				1758016A75BB08966DB19E24 /* WorkoutSessionManager.swift in Sources */,
 				4B6C1987638216DCEFE3589D /* WorkoutSessionAttributes.swift in Sources */,
+				D77E36D2BE7F153906B0783B /* ChannelNames.swift in Sources */,
+				3E6D863E9519B9E5B008B9EF /* FlutterChannelRegistry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

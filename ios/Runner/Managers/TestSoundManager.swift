@@ -199,7 +199,7 @@ final class TestSoundManager {
 extension TestSoundManager {
     func setupFlutterChannel(with messenger: FlutterBinaryMessenger) {
         let channel = FlutterMethodChannel(
-            name: "com.gymbro.sound_test",
+            name: ChannelNames.soundTest,
             binaryMessenger: messenger
         )
         

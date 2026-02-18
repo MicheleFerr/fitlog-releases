@@ -21,7 +21,7 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
 
 // MARK: - Live Activity Interactive Intents
 
-@available(iOS 16.0, *)
+@available(iOS 16.1, *)
 struct AddTimeIntent: LiveActivityIntent {
     static var title: LocalizedStringResource { "Add Time" }
     static var description: IntentDescription { "Add 30 seconds to the rest timer" }
@@ -81,13 +81,13 @@ struct AddTimeIntent: LiveActivityIntent {
                 "eventType": "add_time"
             ]
             userDefaults?.set(eventData, forKey: "timer_event")
-            userDefaults?.synchronize()
+
         }
         return .result()
     }
 }
 
-@available(iOS 16.0, *)
+@available(iOS 16.1, *)
 struct PauseResumeIntent: LiveActivityIntent {
     static var title: LocalizedStringResource { "Pause/Resume" }
     static var description: IntentDescription { "Pause or resume the rest timer" }
@@ -145,13 +145,13 @@ struct PauseResumeIntent: LiveActivityIntent {
                 "eventType": "pause_resume"
             ]
             userDefaults?.set(eventData, forKey: "timer_event")
-            userDefaults?.synchronize()
+
         }
         return .result()
     }
 }
 
-@available(iOS 16.0, *)
+@available(iOS 16.1, *)
 struct SkipTimerIntent: LiveActivityIntent {
     static var title: LocalizedStringResource { "Skip Timer" }
     static var description: IntentDescription { "Skip the current rest timer" }
@@ -196,13 +196,13 @@ struct SkipTimerIntent: LiveActivityIntent {
                 "audioSkipped": true  // Flag to indicate audio should not play
             ]
             userDefaults?.set(eventData, forKey: "timer_event")
-            userDefaults?.synchronize()
+
         }
         return .result()
     }
 }
 
-@available(iOS 16.0, *)
+@available(iOS 16.1, *)
 struct CompleteSetIntent: LiveActivityIntent {
     static var title: LocalizedStringResource { "Complete Set" }
     static var description: IntentDescription { "Mark the current set as complete" }
@@ -244,14 +244,14 @@ struct CompleteSetIntent: LiveActivityIntent {
                 "eventType": "complete_set"
             ]
             userDefaults?.set(eventData, forKey: "timer_event")
-            userDefaults?.synchronize()
+
         }
         return .result()
     }
 }
 
 // Helper extension for accessing Live Activity Handler
-@available(iOS 16.0, *)
+@available(iOS 16.1, *)
 extension LiveActivityIntent {
     // This extension provides access to shared LiveActivityHandler methods
     // from within App Intents

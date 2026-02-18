@@ -14,11 +14,7 @@ import FirebaseCore
     // MARK: - Properties
 
     private var backgroundTaskManager: BackgroundTaskManaging {
-        if #available(iOS 13.0, *) {
-            return BackgroundTaskManager.shared
-        } else {
-            return BackgroundTaskManagerLegacy.shared
-        }
+        return BackgroundTaskManager.shared
     }
 
     // MARK: - Application Lifecycle
@@ -50,8 +46,7 @@ import FirebaseCore
         // Setup notification categories BEFORE checking permissions
         setupNotificationCategories()
 
-        // Set notification delegate for foreground notifications
-        UNUserNotificationCenter.current().delegate = self
+        // Note: UNUserNotificationCenter delegate is set by DirectNotificationManager (sole delegate)
 
         // Check permissions
         PermissionManager.shared.checkAllPermissions()
@@ -268,6 +263,9 @@ import FirebaseCore
         }
         let messenger = controller.binaryMessenger
 
+        // TD-8: Register messenger for channel reuse across managers
+        FlutterChannelRegistry.shared.setup(with: messenger)
+
         // Register plugins explicitly
         GeneratedPluginRegistrant.register(with: self)
 
@@ -280,8 +278,9 @@ import FirebaseCore
         // Setup notification channel for custom sounds
         setupNotificationChannel(with: messenger)
 
-        // Setup notification delegate
-        NotificationDelegate.shared.setupWithMessenger(messenger)
+        // ✅ AUDIO-FIX: NotificationDelegate.setupWithMessenger removed.
+        // DirectNotificationManager is the SOLE notification delegate (P0-2 fix).
+        // NotificationDelegate was dead code that could re-assign the delegate.
 
         // Setup HealthKit Activity channel for Activity Rings with real goals
         if #available(iOS 9.3, *) {
@@ -291,8 +290,10 @@ import FirebaseCore
         // Setup WatchConnectivity for Apple Watch companion app
         WatchConnectivityManager.shared.setupChannel(with: messenger)
 
+        #if DEBUG
         // Setup AudioDebugTestHandler for timer audio debug tests
         AudioDebugTestHandler.shared.setup(binaryMessenger: messenger)
+        #endif
 
         // Setup TimerSoundFix channel for sound preview in settings
         TimerSoundFix.shared.setupFlutterChannel(with: messenger)
@@ -309,7 +310,7 @@ import FirebaseCore
 
     private func setupFeatureFlagChannel(with messenger: FlutterBinaryMessenger) {
         let channel = FlutterMethodChannel(
-            name: "com.gymbro.feature_flags",
+            name: ChannelNames.featureFlags,
             binaryMessenger: messenger
         )
         
@@ -340,7 +341,7 @@ import FirebaseCore
     
     private func setupNotificationChannel(with messenger: FlutterBinaryMessenger) {
         let channel = FlutterMethodChannel(
-            name: "com.gymbro/notifications",
+            name: ChannelNames.notifications,
             binaryMessenger: messenger
         )
         
@@ -376,9 +377,17 @@ import FirebaseCore
                 }
                 
             case "testLockscreenAudio":
-                // Run the lockscreen audio test
+                // Run the lockscreen audio test (debug builds only)
+                #if DEBUG
                 LockscreenAudioTest.runTestFromFlutter()
                 result(true)
+                #else
+                result(FlutterError(
+                    code: "UNAVAILABLE",
+                    message: "testLockscreenAudio is only available in debug builds",
+                    details: nil
+                ))
+                #endif
                 
             case "scheduleNotification":
                 if let args = call.arguments as? [String: Any],
@@ -688,52 +697,8 @@ import FirebaseCore
 }
 
 // MARK: - UNUserNotificationCenterDelegate
-
-extension AppDelegate {
-
-    // Handle notifications when app is in foreground
-    override func userNotificationCenter(_ center: UNUserNotificationCenter,
-                              willPresent notification: UNNotification,
-                              withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        
-        let categoryIdentifier = notification.request.content.categoryIdentifier
-        
-        if categoryIdentifier == "TIMER_COMPLETE" {
-            // Timer completion - show banner and play sound even in foreground
-            Logger.shared.log(.info, "⏰ Timer completion notification received in foreground", category: .general)
-
-            // CRITICAL FIX: Notify Flutter that audio has been played via iOS notification
-            if let controller = window?.rootViewController as? FlutterViewController {
-                let unifiedChannel = FlutterMethodChannel(name: "com.gymbro.timer/unified",
-                                                         binaryMessenger: controller.binaryMessenger)
-                unifiedChannel.invokeMethod("timerAudioPlayedByiOS", arguments: [
-                    "timestamp": Date().timeIntervalSince1970,
-                    "source": "notification"
-                ])
-                Logger.shared.log(.info, "✅ Notified Flutter that audio was played by iOS notification", category: .general)
-            } else {
-                Logger.shared.log(.warning, "⚠️ Could not notify Flutter - no FlutterViewController available", category: .general)
-            }
-
-            completionHandler([.banner, .sound, .badge])
-        } else {
-            // Other notifications
-            completionHandler([.banner, .sound])
-        }
-    }
-
-    // Handle notification tap actions
-    override func userNotificationCenter(_ center: UNUserNotificationCenter,
-                              didReceive response: UNNotificationResponse,
-                              withCompletionHandler completionHandler: @escaping () -> Void) {
-        
-        let categoryIdentifier = response.notification.request.content.categoryIdentifier
-        
-        if categoryIdentifier == "TIMER_COMPLETE" {
-            Logger.shared.log(.info, "⏰ Timer notification tapped by user", category: .general)
-            // Could navigate to workout screen or perform other actions
-        }
-        
-        completionHandler()
-    }
-}
+// ✅ AUDIO-FIX: REMOVED willPresent and didReceive overrides from AppDelegate.
+// DirectNotificationManager is the SOLE delegate for UNUserNotificationCenter.
+// Having two classes implement willPresent caused non-deterministic delegate
+// conflicts (P0-2 from IOS_FLUTTER_AUDIT_2026.md). All notification handling
+// is now centralized in DirectNotificationManager.swift.

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/data/platform_channels.dart';
 
 /// Service for managing Schedule Countdown Live Activities on iOS.
 ///
@@ -20,7 +21,7 @@ class ScheduleLiveActivityService {
   static ScheduleLiveActivityService get instance => _instance;
 
   /// Method channel for Live Activities (shared with timer)
-  static const _channel = MethodChannel('com.gymbro.timer/live_activity');
+  static const _channel = MethodChannel(PlatformChannels.liveActivity);
 
   /// Currently active schedule Live Activity ID
   String? _currentActivityId;

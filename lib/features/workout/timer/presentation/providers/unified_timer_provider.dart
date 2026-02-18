@@ -23,6 +23,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/timer/domain/services/notification_service.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/shared/data/platform_channels.dart';
 import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 // ⌚ Apple Watch Connectivity for rest timer sync
@@ -187,7 +188,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
   // SINGLE unified platform channel - all timer operations go through here
   // This prevents race conditions and duplicate audio issues
-  static const _unifiedChannel = MethodChannel('com.gymbro.timer/unified');
+  static const _unifiedChannel = MethodChannel(PlatformChannels.unified);
 
   // Performance tracking
   DateTime? _lastTick;

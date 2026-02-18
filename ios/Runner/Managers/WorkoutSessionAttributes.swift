@@ -13,7 +13,7 @@ enum WorkoutSessionMode: String, Codable, Hashable {
 // MARK: - Workout Session Attributes
 /// Unified Live Activity that persists throughout the entire workout
 /// Transitions between exercise, rest, and RPE modes without flickering
-@available(iOS 16.1, *)
+@available(iOS 17.0, *)
 struct WorkoutSessionAttributes: ActivityAttributes {
 
     public struct ContentState: Codable, Hashable {
@@ -58,7 +58,7 @@ struct WorkoutSessionAttributes: ActivityAttributes {
 }
 
 // MARK: - Content State Extensions
-@available(iOS 16.1, *)
+@available(iOS 17.0, *)
 extension WorkoutSessionAttributes.ContentState {
 
     // MARK: - Workout Timer

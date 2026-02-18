@@ -75,17 +75,9 @@ final class NotificationPermissionHelper {
         }
     }
     
-    /// Verifica se possiamo riprodurre suoni critici
-    func canPlayCriticalAlerts() -> Bool {
-        var canPlay = false
-        let semaphore = DispatchSemaphore(value: 0)
-        
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            canPlay = settings.criticalAlertSetting == .enabled
-            semaphore.signal()
-        }
-        
-        semaphore.wait()
-        return canPlay
+    /// Verifica se possiamo riprodurre suoni critici (async — no deadlock risk)
+    func canPlayCriticalAlerts() async -> Bool {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        return settings.criticalAlertSetting == .enabled
     }
 }

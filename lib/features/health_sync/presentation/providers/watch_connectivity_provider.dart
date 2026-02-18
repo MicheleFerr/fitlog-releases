@@ -21,6 +21,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/shared/data/platform_channels.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
 
 /// Watch connectivity state
@@ -277,7 +278,7 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
   }
 
   // Method channel for iOS Watch Connectivity
-  static const _channel = MethodChannel('com.gymbro/watch_connectivity');
+  static const _channel = MethodChannel(PlatformChannels.watchConnectivity);
 
   // Note: EventChannel subscriptions removed - state changes are handled via
   // MethodChannel callbacks (onWatchStateChanged, etc.) which are properly

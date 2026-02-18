@@ -3,6 +3,7 @@ import 'dart:async' show unawaited;
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show MethodChannel;
+import 'package:gymbro_flutter_new/shared/data/platform_channels.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
@@ -2018,7 +2019,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   // Preview timer sound using platform channel
   void _previewTimerSound(String soundName) {
-    const platform = MethodChannel('com.gymbro.timer_sound_fix');
+    const platform = MethodChannel(PlatformChannels.timerSoundFix);
 
     try {
       // Use TimerSoundFix channel to play the sound

@@ -19,6 +19,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/shared/data/platform_channels.dart';
 import 'package:health/health.dart';
 
 /// Activity ring data for a single day
@@ -122,7 +123,7 @@ class ActivityRingsNotifier extends Notifier<ActivityRingsData> {
   }
 
   // Native method channel for iOS (HKActivitySummary with REAL goals)
-  static const _iosChannel = MethodChannel('com.gymbro/healthkit_activity');
+  static const _iosChannel = MethodChannel(PlatformChannels.healthkitActivity);
 
   // Health package for Android fallback
   final Health _health = Health();

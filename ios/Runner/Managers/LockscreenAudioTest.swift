@@ -2,6 +2,8 @@ import Foundation
 import UserNotifications
 import AVFoundation
 
+#if DEBUG
+
 /// Test utility to verify lockscreen audio functionality
 final class LockscreenAudioTest {
     
@@ -191,3 +193,5 @@ extension LockscreenAudioTest {
         }
     }
 }
+
+#endif // DEBUG

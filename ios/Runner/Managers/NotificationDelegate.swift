@@ -13,13 +13,12 @@ class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
     
     func setupWithMessenger(_ messenger: FlutterBinaryMessenger) {
         flutterChannel = FlutterMethodChannel(
-            name: "com.gymbro.timer/unified",
+            name: ChannelNames.unified,
             binaryMessenger: messenger
         )
         
-        // Set self as delegate for notification center
-        UNUserNotificationCenter.current().delegate = self
-        print("✅ NotificationDelegate configured")
+        // Note: delegate is managed by DirectNotificationManager (sole delegate)
+        // This class provides a Flutter channel bridge only
     }
     
     // MARK: - UNUserNotificationCenterDelegate

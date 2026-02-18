@@ -22,6 +22,12 @@ final class WatchConnectivityManager: NSObject {
     // When Flutter is in background, critical commands are saved here and processed on resume
     private static let pendingCommandsKey = "WatchConnectivity_PendingCommands"
 
+    // P1-8 FIX: Pending reply handler for setCompleted — avoids 300ms fixed delay.
+    // Saved when Watch sends setCompleted, fired as soon as Flutter updates rest timer state.
+    // Fallback timer ensures the handler is always called even if Flutter doesn't respond.
+    private var pendingSetCompletedReplyHandler: (([String: Any]) -> Void)?
+    private var pendingSetCompletedFallbackTimer: DispatchWorkItem?
+
     // ✅ Cache current workout state for Watch requests
     // Updated when workout starts/updates, cleared when workout ends
     // ✅ FIX: Now persisted to UserDefaults for crash recovery
@@ -54,6 +60,15 @@ final class WatchConnectivityManager: NSObject {
                 UserDefaults.standard.set(sanitized, forKey: "WatchConnectivity_RestTimerState")
             } else {
                 UserDefaults.standard.removeObject(forKey: "WatchConnectivity_RestTimerState")
+            }
+            // P1-8 FIX: Fulfill pending setCompleted reply as soon as Flutter sets timer state
+            if let newState = newValue, let handler = pendingSetCompletedReplyHandler {
+                pendingSetCompletedFallbackTimer?.cancel()
+                pendingSetCompletedFallbackTimer = nil
+                pendingSetCompletedReplyHandler = nil
+                DispatchQueue.main.async {
+                    handler(["success": true, "restTimer": newState])
+                }
             }
         }
     }
@@ -936,8 +951,9 @@ extension WatchConnectivityManager: WCSessionDelegate {
         activationDidCompleteWith activationState: WCSessionActivationState,
         error: Error?
     ) {
+        // P1-5 FIX: Only set activated if activation actually succeeded
         stateQueue.async(flags: .barrier) { [weak self] in
-            self?.isSessionActivated = true
+            self?.isSessionActivated = activationState == .activated
         }
 
         // 🔍 DEBUG: Print full session status
@@ -1401,22 +1417,23 @@ extension WatchConnectivityManager: WCSessionDelegate {
         // Flutter will then start the rest timer which updates currentRestTimerState
         notifyFlutter(event: "onSetCompletedFromWatch", data: message)
 
-        // ✅ FIX: Wait briefly for Flutter to process and start timer,
-        // then respond with timer data for immediate Watch sync.
-        // This prevents the Watch from waiting for applicationContext (1-5s latency)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-            var response: [String: Any] = ["success": true]
-
-            // Include rest timer data if available (Flutter has started the timer)
-            if let timerState = self?.currentRestTimerState {
-                response["restTimer"] = timerState
-                Logger.shared.log(.info, "⏱️ Including rest timer in setCompleted reply: \(timerState["duration"] ?? 0)s", category: .general)
-            } else {
-                Logger.shared.log(.debug, "⏱️ No rest timer to include in reply (last set or timer disabled)", category: .general)
-            }
-
+        // P1-8 FIX: Callback pattern — reply as soon as Flutter updates currentRestTimerState.
+        // No fixed delay: the currentRestTimerState setter will call this handler immediately.
+        // 2-second fallback ensures the Watch is never left waiting.
+        pendingSetCompletedReplyHandler = { response in
+            Logger.shared.log(.info, "⏱️ setCompleted reply: \(response["restTimer"] != nil ? "with timer" : "no timer")", category: .general)
             replyHandler(response)
         }
+
+        let fallback = DispatchWorkItem { [weak self] in
+            guard let self = self,
+                  let handler = self.pendingSetCompletedReplyHandler else { return }
+            self.pendingSetCompletedReplyHandler = nil
+            Logger.shared.log(.debug, "⏱️ setCompleted fallback reply (no timer from Flutter in 2s)", category: .general)
+            handler(["success": true])
+        }
+        pendingSetCompletedFallbackTimer = fallback
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: fallback)
     }
 
     /// Handle skip rest from Watch companion

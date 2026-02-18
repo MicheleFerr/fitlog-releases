@@ -45,8 +45,6 @@ class WorkoutManager: NSObject, ObservableObject {
         get { UserDefaults.standard.bool(forKey: Self.healthKitAuthRequestedKey) }
         set {
             UserDefaults.standard.set(newValue, forKey: Self.healthKitAuthRequestedKey)
-            // ✅ Force immediate persistence (important for watchOS which may terminate app)
-            UserDefaults.standard.synchronize()
         }
     }
 

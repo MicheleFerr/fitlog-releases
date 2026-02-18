@@ -10,12 +10,18 @@ import Foundation
 
 /// Thread-safe distributed tracing logger for audio playback debugging
 /// Assigns unique trace IDs to each timer and tracks all audio playback paths
+///
+/// In RELEASE builds every method is a no-op so zero CPU / memory is spent on
+/// tracing in production. The API surface is identical in both configurations so
+/// all call sites compile without change.
 final class AudioTraceLogger {
 
     // MARK: - Singleton
     static let shared = AudioTraceLogger()
 
     // MARK: - Properties
+    // Properties are kept in both configurations; the compiler optimises them
+    // away in release because no method body ever reads or writes them.
     private let traceQueue = DispatchQueue(label: "com.gymbro.audio.trace", qos: .userInitiated)
     private var activeTraces: [String: TraceContext] = [:]
     private var traceHistory: [TraceEvent] = []
@@ -82,13 +88,18 @@ final class AudioTraceLogger {
     // MARK: - Initialization
 
     private init() {
+        #if DEBUG
         Logger.shared.log(.info, "🔬 AudioTraceLogger initialized - distributed tracing ACTIVE", category: .audioSession)
+        #endif
     }
 
     // MARK: - Public API
 
-    /// Generate new trace ID for timer
+    /// Generate new trace ID for timer.
+    /// Returns the trace ID in DEBUG builds; returns an empty string in RELEASE builds.
+    @discardableResult
     func startTrace(duration: TimeInterval, soundName: String, skipNotification: Bool) -> String {
+        #if DEBUG
         let traceId = generateTraceId()
 
         traceQueue.sync {
@@ -113,10 +124,14 @@ final class AudioTraceLogger {
             """, category: .audioSession)
 
         return traceId
+        #else
+        return ""
+        #endif
     }
 
-    /// Log event for specific trace
+    /// Log event for specific trace.
     func logEvent(traceId: String, path: TraceEvent.AudioPath, action: TraceEvent.Action, metadata: [String: Any] = [:]) {
+        #if DEBUG
         let event = TraceEvent(
             traceId: traceId,
             timestamp: Date(),
@@ -141,10 +156,12 @@ final class AudioTraceLogger {
         Logger.shared.log(.info, """
             🔬 [\(traceId.prefix(8))] [\(path.rawValue)] \(action.rawValue)\(metadataStr)
             """, category: .audioSession)
+        #endif
     }
 
-    /// End trace and generate summary
+    /// End trace and generate summary.
     func endTrace(traceId: String, finalAction: TraceEvent.Action) {
+        #if DEBUG
         traceQueue.sync {
             guard let context = activeTraces.removeValue(forKey: traceId) else {
                 Logger.shared.log(.warning, "⚠️ Trace \(traceId) not found - already ended?", category: .audioSession)
@@ -156,10 +173,13 @@ final class AudioTraceLogger {
 
             Logger.shared.log(.info, summary, category: .audioSession)
         }
+        #endif
     }
 
-    /// Detect race conditions in active traces
+    /// Detect race conditions in active traces.
+    /// Returns an empty array in RELEASE builds.
     func detectRaceConditions() -> [String] {
+        #if DEBUG
         return traceQueue.sync {
             var warnings: [String] = []
 
@@ -184,10 +204,15 @@ final class AudioTraceLogger {
 
             return warnings
         }
+        #else
+        return []
+        #endif
     }
 
-    /// Get diagnostic report for debugging
+    /// Get diagnostic report for debugging.
+    /// Returns an empty string in RELEASE builds.
     func getDiagnosticReport() -> String {
+        #if DEBUG
         return traceQueue.sync {
             var report = """
 
@@ -251,26 +276,43 @@ final class AudioTraceLogger {
             report += "\n════════════════════════════════════════════════════════════\n"
             return report
         }
+        #else
+        return ""
+        #endif
     }
 
-    /// Get the last created trace ID (for AudioDebugTestHandler)
+    /// Get the last created trace ID (for AudioDebugTestHandler).
+    /// Returns nil in RELEASE builds.
     func getLastTraceId() -> String? {
+        #if DEBUG
         return traceQueue.sync {
             return lastTraceId
         }
+        #else
+        return nil
+        #endif
     }
 
     // MARK: - Private Helpers
 
     private func generateTraceId() -> String {
+        #if DEBUG
         return UUID().uuidString
+        #else
+        return ""
+        #endif
     }
 
     private func formatMetadata(_ metadata: [String: Any]) -> String {
+        #if DEBUG
         return metadata.map { "\($0.key): \($0.value)" }.joined(separator: ", ")
+        #else
+        return ""
+        #endif
     }
 
     private func generateTraceSummary(context: TraceContext, finalAction: TraceEvent.Action, elapsed: TimeInterval) -> String {
+        #if DEBUG
         let paths = Set(context.events.map { $0.path })
         let actions = context.events.map { $0.action }
 
@@ -318,5 +360,8 @@ final class AudioTraceLogger {
         summary += "══════════════════════════════════════════════════════════\n"
 
         return summary
+        #else
+        return ""
+        #endif
     }
 }

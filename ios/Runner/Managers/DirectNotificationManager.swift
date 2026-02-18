@@ -2,6 +2,8 @@ import UserNotifications
 import UIKit
 import AVFoundation
 
+// AUDIO-FIX: Removed objc_setAssociatedObject — used activePlayers array instead
+
 /// Manager diretto per notifiche iOS che bypassa flutter_local_notifications
 /// Questo risolve il problema dei suoni custom che non funzionano in background
 final class DirectNotificationManager: NSObject {
@@ -18,6 +20,10 @@ final class DirectNotificationManager: NSObject {
     // the skip/cancel command is received from Apple Watch
     private var isSkipInProgress: Bool = false
     private var skipTimestamp: Date?
+
+    // ✅ AUDIO-FIX: Array of active players to prevent ARC deallocation during playback.
+    // objc_setAssociatedObject was overwriting previous player, killing it mid-playback.
+    private var activePlayers: [AVAudioPlayer] = []
 
     private override init() {
         super.init()
@@ -618,16 +624,11 @@ final class DirectNotificationManager: NSObject {
     /// Notify Flutter when notification is scheduled
     private func notifyFlutterNotificationScheduled(identifier: String) {
         DispatchQueue.main.async {
-            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-               let controller = windowScene.windows.first?.rootViewController as? FlutterViewController {
-                let unifiedChannel = FlutterMethodChannel(name: "com.gymbro.timer/unified",
-                                                         binaryMessenger: controller.binaryMessenger)
-                unifiedChannel.invokeMethod("notificationScheduled", arguments: [
-                    "identifier": identifier,
-                    "timestamp": Date().timeIntervalSince1970
-                ])
-                print("📨 Notified Flutter that notification was scheduled")
-            }
+            FlutterChannelRegistry.shared.unified?.invokeMethod("notificationScheduled", arguments: [
+                "identifier": identifier,
+                "timestamp": Date().timeIntervalSince1970
+            ])
+            print("📨 Notified Flutter that notification was scheduled")
         }
     }
 
@@ -822,41 +823,24 @@ final class DirectNotificationManager: NSObject {
         }
     }
 
-    /// Logs comprehensive diagnostics for notification sending (SYNCHRONOUS version to preserve log order)
-    /// - Parameters:
-    ///   - title: Notification title
-    ///   - body: Notification body text
-    ///   - soundName: Sound file name
-    /// - Note: Uses synchronous DispatchQueue.main.sync for settings check to preserve log order
+    /// Logs comprehensive diagnostics for notification sending (async — no deadlock risk)
     private func logNotificationDiagnostics(
         title: String,
         body: String,
         soundName: String
     ) {
-        let appState = UIApplication.shared.applicationState
+        let isBackground = AudioSessionManager.shared.isAppInBackground
         print("🔔 ============================================")
         print("🔔 IMMEDIATE TIMER NOTIFICATION - DIAGNOSTIC")
         print("🔔 ============================================")
         print("   Title: \(title)")
         print("   Body: \(body)")
         print("   Sound: \(soundName)")
-        print("   App State: \(appState == .active ? "ACTIVE" : appState == .background ? "BACKGROUND" : "INACTIVE")")
+        print("   App State: \(isBackground ? "BACKGROUND/INACTIVE" : "ACTIVE")")
 
-        // SYNC settings check to preserve log order (ADJUSTMENT from original async version)
-        let settings = DispatchQueue.main.sync {
-            var settingsResult: UNNotificationSettings?
-            let semaphore = DispatchSemaphore(value: 0)
-
-            UNUserNotificationCenter.current().getNotificationSettings { settings in
-                settingsResult = settings
-                semaphore.signal()
-            }
-
-            semaphore.wait()
-            return settingsResult
-        }
-
-        if let settings = settings {
+        // Async settings check — avoids DispatchQueue.main.sync deadlock
+        Task {
+            let settings = await UNUserNotificationCenter.current().notificationSettings()
             print("📊 NOTIFICATION SETTINGS:")
             print("   - Authorization: \(settings.authorizationStatus.rawValue) (\(authStatusString(settings.authorizationStatus)))")
             print("   - Sound Setting: \(settings.soundSetting.rawValue) (\(settings.soundSetting == .enabled ? "✅ ENABLED" : "❌ DISABLED"))")
@@ -947,14 +931,30 @@ extension DirectNotificationManager: UNUserNotificationCenterDelegate {
             || identifier.contains("gymbro")
 
         if isTimerNotification {
-            completionHandler([.alert, .sound, .badge])
-            print("   📱 Showing timer notification in foreground with sound")
+            // BUG FIX: ALWAYS play sound + vibration in foreground (notification sound alone doesn't work)
+            let soundName = scheduled?.soundName ?? "sound"
+
+            // 1. Vibrate always
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+            print("   📳 Vibration triggered")
+
+            // 2. Play sound via AVAudioPlayer (notification sound doesn't work in foreground)
+            playNotificationAudio(soundName: soundName)
+
+            // Notify Flutter that audio is being played via iOS notification (deduplication)
+            FlutterChannelRegistry.shared.unified?.invokeMethod("timerAudioPlayedByiOS", arguments: [
+                "timestamp": Date().timeIntervalSince1970,
+                "source": "notification"
+            ])
+
+            completionHandler([.banner, .list, .sound, .badge])
+            print("   📱 Showing timer notification in foreground with sound + vibration")
 
             // AUTO-DISMISS: Remove notification after 60 seconds
             scheduleNotificationRemoval(identifier: identifier, afterSeconds: 60)
             print("   ⏱️ Auto-dismiss scheduled in 60 seconds")
         } else {
-            completionHandler([.alert, .sound])
+            completionHandler([.banner, .list, .sound])
         }
     }
 
@@ -995,6 +995,47 @@ extension DirectNotificationManager: UNUserNotificationCenterDelegate {
 
     /// Prepare audio session specifically for notification sound playback
     /// CENTRALIZED: Uses AudioSessionManager to prevent race conditions
+    // ✅ AUDIO-FIX: Play sound via AVAudioPlayer with proper lifecycle management.
+    // Uses activePlayers array instead of objc_setAssociatedObject to prevent
+    // ARC from killing a player while it's still playing.
+    private func playNotificationAudio(soundName: String) {
+        // Configure audio session synchronously BEFORE creating player
+        do {
+            let session = AVAudioSession.sharedInstance()
+            if session.category != .playback || !session.categoryOptions.contains(.mixWithOthers) {
+                try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            }
+            try session.setActive(true, options: [])
+        } catch {
+            print("   ⚠️ Audio session config failed: \(error) — attempting playback anyway")
+        }
+
+        for ext in ["caf", "wav"] {
+            if let soundURL = Bundle.main.url(forResource: soundName, withExtension: ext) {
+                do {
+                    let player = try AVAudioPlayer(contentsOf: soundURL)
+                    player.volume = 1.0
+                    player.prepareToPlay()
+                    if player.play() {
+                        // Keep player alive in array (not objc_setAssociatedObject)
+                        activePlayers.append(player)
+                        print("   🔊 Sound playing via AVAudioPlayer: \(soundName).\(ext)")
+
+                        // Cleanup finished players after this one completes
+                        let duration = player.duration
+                        DispatchQueue.main.asyncAfter(deadline: .now() + duration + 0.5) { [weak self] in
+                            self?.activePlayers.removeAll { !$0.isPlaying }
+                        }
+                        return
+                    }
+                } catch {
+                    print("   ❌ Failed to play sound: \(error)")
+                }
+            }
+        }
+        print("   ⚠️ Sound file not found: \(soundName)")
+    }
+
     private func prepareAudioSessionForNotification(soundName: String) {
         print("🔊 [AUDIO-PREPARE] Preparing audio session for notification sound: \(soundName)")
 

@@ -12,6 +12,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/shared/data/platform_channels.dart';
 
 /// Audio debug platform service for iOS communication
 class AudioDebugPlatformService {
@@ -19,7 +20,7 @@ class AudioDebugPlatformService {
 
   // Platform channel for audio debug tests
   static const MethodChannel _channel = MethodChannel(
-    'com.gymbro.fitlog/audio_debug',
+    PlatformChannels.audioDebug,
   );
 
   // Callback for test results

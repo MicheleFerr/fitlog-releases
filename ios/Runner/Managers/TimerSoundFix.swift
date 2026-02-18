@@ -46,7 +46,7 @@ final class TimerSoundFix {
                     preloadedAVPlayer?.prepareToPlay()
                     preloadedSoundURL = url
 
-                    Logger.shared.log(.warning, """
+                    Logger.shared.log(.debug, """
                         ✅ Preloaded AVAudioPlayer ready:
                         - Sound: \(soundName).caf
                         - Duration: \(preloadedAVPlayer?.duration ?? 0)s
@@ -54,7 +54,7 @@ final class TimerSoundFix {
                         """, category: .audioSession)
                     return
                 } catch {
-                    Logger.shared.log(.warning, "⚠️ Failed to preload \(soundName).caf: \(error)", category: .audioSession)
+                    Logger.shared.log(.debug, "⚠️ Failed to preload \(soundName).caf: \(error)", category: .audioSession)
                 }
             }
         }
@@ -65,14 +65,14 @@ final class TimerSoundFix {
     /// Play using the preloaded player (fastest possible)
     /// - Parameter preferredSound: Optional sound name to match against preloaded sound
     private func playPreloadedAVPlayer(preferredSound: String? = nil) -> Bool {
-        Logger.shared.log(.warning, "    ┌─ [PRELOADED-PLAYER] Checking preloaded player...", category: .audioSession)
+        Logger.shared.log(.debug, "    ┌─ [PRELOADED-PLAYER] Checking preloaded player...", category: .audioSession)
 
         // ✅ FIX BUG #1: Verify preloaded sound matches preferred sound
         if let preferred = preferredSound,
            let preloadedURL = preloadedSoundURL {
             let preloadedName = preloadedURL.deletingPathExtension().lastPathComponent
             if preloadedName != preferred {
-                Logger.shared.log(.warning, """
+                Logger.shared.log(.debug, """
                         ├─ ⚠️ Preloaded sound mismatch!
                         │   - Preloaded: \(preloadedName)
                         │   - Preferred: \(preferred)
@@ -80,11 +80,11 @@ final class TimerSoundFix {
                     """, category: .audioSession)
                 return false
             }
-            Logger.shared.log(.warning, "    ├─ ✅ Preloaded sound matches preferred: \(preferred)", category: .audioSession)
+            Logger.shared.log(.debug, "    ├─ ✅ Preloaded sound matches preferred: \(preferred)", category: .audioSession)
         }
 
         guard let player = preloadedAVPlayer else {
-            Logger.shared.log(.warning, """
+            Logger.shared.log(.debug, """
                     ├─ ⚠️ No preloaded AVAudioPlayer available
                     └─ Attempting to create one on-demand...
                 """, category: .audioSession)
@@ -94,12 +94,12 @@ final class TimerSoundFix {
                 Logger.shared.log(.error, "    └─ ❌ Failed to create preloaded AVAudioPlayer on demand", category: .audioSession)
                 return false
             }
-            Logger.shared.log(.warning, "    ├─ ✅ Created on-demand, retrying play...", category: .audioSession)
+            Logger.shared.log(.debug, "    ├─ ✅ Created on-demand, retrying play...", category: .audioSession)
             return playPreloadedAVPlayer() // Retry with new player
         }
 
         let session = AVAudioSession.sharedInstance()
-        Logger.shared.log(.warning, """
+        Logger.shared.log(.debug, """
                 ├─ 🚀 Preloaded AVAudioPlayer STATUS:
                 │   - Duration: \(player.duration)s
                 │   - CurrentTime: \(player.currentTime)
@@ -110,19 +110,19 @@ final class TimerSoundFix {
             """, category: .audioSession)
 
         // Reset to beginning if already played
-        Logger.shared.log(.warning, "    ├─ Resetting player to beginning...", category: .audioSession)
+        Logger.shared.log(.debug, "    ├─ Resetting player to beginning...", category: .audioSession)
         player.currentTime = 0
         player.volume = 1.0
 
         // Prepare again just to be safe
-        Logger.shared.log(.warning, "    ├─ Calling prepareToPlay()...", category: .audioSession)
+        Logger.shared.log(.debug, "    ├─ Calling prepareToPlay()...", category: .audioSession)
         player.prepareToPlay()
 
-        Logger.shared.log(.warning, "    ├─ Calling play()...", category: .audioSession)
+        Logger.shared.log(.debug, "    ├─ Calling play()...", category: .audioSession)
         let result = player.play()
 
         if result {
-            Logger.shared.log(.warning, """
+            Logger.shared.log(.debug, """
                     ├─ ✅ play() returned TRUE
                     ├─ Player is now playing: \(player.isPlaying)
                     └─ Scheduling player reload for next use
@@ -182,7 +182,7 @@ final class TimerSoundFix {
         let currentThread = Thread.isMainThread ? "MAIN" : "BACKGROUND"
         let queueLabel = OperationQueue.current?.underlyingQueue?.label ?? "unknown"
 
-        Logger.shared.log(.warning, """
+        Logger.shared.log(.debug, """
             ╔══════════════════════════════════════════════════════════════════╗
             ║ 🎯 [TIMER-SOUND] STEP 1/7: ENTRY POINT                          ║
             ╚══════════════════════════════════════════════════════════════════╝
@@ -192,23 +192,11 @@ final class TimerSoundFix {
             - Preferred Sound: \(preferredSound ?? "default")
             """, category: .audioSession)
 
-        // FIX: Get applicationState from main thread to avoid Main Thread Checker violation
-        // This function can be called from background queues (e.g., com.gymbro.timer.coordination)
-        // UIApplication.shared.applicationState is a UI API that MUST be called from main thread
-        var appState: UIApplication.State = .background
-        if Thread.isMainThread {
-            appState = UIApplication.shared.applicationState
-            Logger.shared.log(.warning, "📍 [TIMER-SOUND] STEP 1b: Got appState directly (main thread)", category: .audioSession)
-        } else {
-            Logger.shared.log(.warning, "📍 [TIMER-SOUND] STEP 1b: Switching to main thread for appState...", category: .audioSession)
-            DispatchQueue.main.sync {
-                appState = UIApplication.shared.applicationState
-            }
-            Logger.shared.log(.warning, "📍 [TIMER-SOUND] STEP 1b: Got appState via main thread sync", category: .audioSession)
-        }
-
-        let appStateStr = appState == .active ? "ACTIVE ✅" : appState == .background ? "BACKGROUND 🔒" : "INACTIVE ⏸️"
-        Logger.shared.log(.warning, """
+        // Use AudioSessionManager to avoid DispatchQueue.main.sync deadlock risk.
+        // UIApplication.shared.applicationState requires main thread — use the cached state instead.
+        let isBackground = AudioSessionManager.shared.isAppInBackground
+        let appStateStr = isBackground ? "BACKGROUND/INACTIVE 🔒" : "ACTIVE ✅"
+        Logger.shared.log(.debug, """
             📍 [TIMER-SOUND] STEP 2/7: APP STATE CHECK
             - App State: \(appStateStr)
             - Preloaded Sounds: \(preloadedSounds.keys.joined(separator: ", "))
@@ -218,14 +206,14 @@ final class TimerSoundFix {
         // CRITICAL FIX: Setup audio session with .mixWithOthers for consistency
         // This must be done BEFORE creating AVAudioPlayer
         // NOTE: Do NOT deactivate session first - that causes error 561015905 in background!
-        Logger.shared.log(.warning, "📍 [TIMER-SOUND] STEP 3/7: CONFIGURING AUDIO SESSION...", category: .audioSession)
+        Logger.shared.log(.debug, "📍 [TIMER-SOUND] STEP 3/7: CONFIGURING AUDIO SESSION...", category: .audioSession)
         do {
             let session = AVAudioSession.sharedInstance()
             let previousCategory = session.category.rawValue
             let previousMode = session.mode.rawValue
             let previousOptions = session.categoryOptions.rawValue
 
-            Logger.shared.log(.warning, """
+            Logger.shared.log(.debug, """
                 📍 [TIMER-SOUND] Audio session BEFORE config:
                 - Category: \(previousCategory)
                 - Mode: \(previousMode)
@@ -235,11 +223,11 @@ final class TimerSoundFix {
 
             // Use .mixWithOthers to match AudioSessionManager configuration
             try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
-            Logger.shared.log(.warning, "📍 [TIMER-SOUND] setCategory SUCCESS ✅", category: .audioSession)
+            Logger.shared.log(.debug, "📍 [TIMER-SOUND] setCategory SUCCESS ✅", category: .audioSession)
 
             // Use try? to avoid throwing if already active
             try? session.setActive(true)
-            Logger.shared.log(.warning, """
+            Logger.shared.log(.debug, """
                 📍 [TIMER-SOUND] STEP 3/7: AUDIO SESSION CONFIGURED ✅
                 - Category: \(session.category.rawValue)
                 - Mode: \(session.mode.rawValue)
@@ -260,7 +248,7 @@ final class TimerSoundFix {
         // STRATEGY 0: FASTEST - Use preloaded AVAudioPlayer
         // This is already initialized and prepared, so it should play instantly
         let soundToPlay = preferredSound ?? "sound"
-        Logger.shared.log(.warning, """
+        Logger.shared.log(.debug, """
             📍 [TIMER-SOUND] STEP 4/7: TRYING STRATEGY 0 - PRELOADED AVAudioPlayer
             - Player exists: \(preloadedAVPlayer != nil)
             - Player duration: \(preloadedAVPlayer?.duration ?? 0)s
@@ -268,7 +256,7 @@ final class TimerSoundFix {
             """, category: .audioSession)
         if playPreloadedAVPlayer(preferredSound: soundToPlay) {
             let elapsed = Date().timeIntervalSince(startTime) * 1000
-            Logger.shared.log(.warning, """
+            Logger.shared.log(.debug, """
                 ✅ [TIMER-SOUND] STEP 7/7: SUCCESS via STRATEGY 0 (Preloaded AVAudioPlayer)
                 - Total time: \(String(format: "%.2f", elapsed))ms
                 - Playing haptic feedback...
@@ -276,19 +264,19 @@ final class TimerSoundFix {
             playHapticFeedback()
             return
         }
-        Logger.shared.log(.warning, "⚠️ [TIMER-SOUND] STRATEGY 0 FAILED - trying next...", category: .audioSession)
+        Logger.shared.log(.debug, "⚠️ [TIMER-SOUND] STRATEGY 0 FAILED - trying next...", category: .audioSession)
 
         // STRATEGY 1: AVAudioPlayer (bypasses mute switch!)
         // This is the ONLY reliable way to play sound in silent mode
         // soundToPlay already defined in Strategy 0
-        Logger.shared.log(.warning, """
+        Logger.shared.log(.debug, """
             📍 [TIMER-SOUND] STEP 5/7: TRYING STRATEGY 1 - Fresh AVAudioPlayer
             - Sound name: \(soundToPlay)
             - Is preview: \(isPreview)
             """, category: .audioSession)
         if playWithAVAudioPlayer(soundName: soundToPlay, skipBackup: isPreview) {
             let elapsed = Date().timeIntervalSince(startTime) * 1000
-            Logger.shared.log(.warning, """
+            Logger.shared.log(.debug, """
                 ✅ [TIMER-SOUND] STEP 7/7: SUCCESS via STRATEGY 1 (Fresh AVAudioPlayer)
                 - Sound: \(soundToPlay)
                 - Total time: \(String(format: "%.2f", elapsed))ms
@@ -297,14 +285,14 @@ final class TimerSoundFix {
             playHapticFeedback()
             return
         }
-        Logger.shared.log(.warning, "⚠️ [TIMER-SOUND] STRATEGY 1 FAILED - trying next...", category: .audioSession)
+        Logger.shared.log(.debug, "⚠️ [TIMER-SOUND] STRATEGY 1 FAILED - trying next...", category: .audioSession)
 
         // STRATEGY 2: Try default sound if custom failed
         if soundToPlay != "sound" {
-            Logger.shared.log(.warning, "📍 [TIMER-SOUND] TRYING STRATEGY 2 - Default sound fallback", category: .audioSession)
+            Logger.shared.log(.debug, "📍 [TIMER-SOUND] TRYING STRATEGY 2 - Default sound fallback", category: .audioSession)
             if playWithAVAudioPlayer(soundName: "sound", skipBackup: isPreview) {
                 let elapsed = Date().timeIntervalSince(startTime) * 1000
-                Logger.shared.log(.warning, """
+                Logger.shared.log(.debug, """
                     ✅ [TIMER-SOUND] STEP 7/7: SUCCESS via STRATEGY 2 (Default sound)
                     - Total time: \(String(format: "%.2f", elapsed))ms
                     - Playing haptic feedback...
@@ -312,23 +300,23 @@ final class TimerSoundFix {
                 playHapticFeedback()
                 return
             }
-            Logger.shared.log(.warning, "⚠️ [TIMER-SOUND] STRATEGY 2 FAILED - trying next...", category: .audioSession)
+            Logger.shared.log(.debug, "⚠️ [TIMER-SOUND] STRATEGY 2 FAILED - trying next...", category: .audioSession)
         }
 
         // STRATEGY 3: Try preloaded SystemSoundID (works better for short sounds)
-        Logger.shared.log(.warning, """
+        Logger.shared.log(.debug, """
             📍 [TIMER-SOUND] STEP 6/7: TRYING STRATEGY 3 - SystemSoundID
             - Looking for: \(soundToPlay)
             - Available IDs: \(preloadedSounds.map { "\($0.key)=\($0.value)" }.joined(separator: ", "))
             """, category: .audioSession)
         if let soundID = preloadedSounds[soundToPlay] {
-            Logger.shared.log(.warning, "🔊 [TIMER-SOUND] Playing SystemSoundID: \(soundID)", category: .audioSession)
+            Logger.shared.log(.debug, "🔊 [TIMER-SOUND] Playing SystemSoundID: \(soundID)", category: .audioSession)
             AudioServicesPlaySystemSoundWithCompletion(soundID) {
-                Logger.shared.log(.warning, "✅ [TIMER-SOUND] SystemSoundID \(soundID) playback completed", category: .audioSession)
+                Logger.shared.log(.debug, "✅ [TIMER-SOUND] SystemSoundID \(soundID) playback completed", category: .audioSession)
             }
             AudioServicesPlayAlertSound(soundID)
             let elapsed = Date().timeIntervalSince(startTime) * 1000
-            Logger.shared.log(.warning, """
+            Logger.shared.log(.debug, """
                 ✅ [TIMER-SOUND] STEP 7/7: SUCCESS via STRATEGY 3 (SystemSoundID)
                 - Sound ID: \(soundID)
                 - Total time: \(String(format: "%.2f", elapsed))ms
@@ -338,15 +326,15 @@ final class TimerSoundFix {
         }
 
         // STRATEGY 4: Try default preloaded sound
-        Logger.shared.log(.warning, "📍 [TIMER-SOUND] TRYING STRATEGY 4 - Default SystemSoundID", category: .audioSession)
+        Logger.shared.log(.debug, "📍 [TIMER-SOUND] TRYING STRATEGY 4 - Default SystemSoundID", category: .audioSession)
         if let defaultSoundID = preloadedSounds["sound"] {
-            Logger.shared.log(.warning, "🔊 [TIMER-SOUND] Playing default SystemSoundID: \(defaultSoundID)", category: .audioSession)
+            Logger.shared.log(.debug, "🔊 [TIMER-SOUND] Playing default SystemSoundID: \(defaultSoundID)", category: .audioSession)
             AudioServicesPlaySystemSoundWithCompletion(defaultSoundID) {
-                Logger.shared.log(.warning, "✅ [TIMER-SOUND] Default SystemSoundID completed", category: .audioSession)
+                Logger.shared.log(.debug, "✅ [TIMER-SOUND] Default SystemSoundID completed", category: .audioSession)
             }
             AudioServicesPlayAlertSound(defaultSoundID)
             let elapsed = Date().timeIntervalSince(startTime) * 1000
-            Logger.shared.log(.warning, """
+            Logger.shared.log(.debug, """
                 ✅ [TIMER-SOUND] STEP 7/7: SUCCESS via STRATEGY 4 (Default SystemSoundID)
                 - Total time: \(String(format: "%.2f", elapsed))ms
                 """, category: .audioSession)
@@ -363,7 +351,7 @@ final class TimerSoundFix {
         playHapticFeedback()
 
         let elapsed = Date().timeIntervalSince(startTime) * 1000
-        Logger.shared.log(.warning, """
+        Logger.shared.log(.debug, """
             ⚠️ [TIMER-SOUND] STEP 7/7: COMPLETED via STRATEGY 5 (System sounds)
             - Total time: \(String(format: "%.2f", elapsed))ms
             - Note: This is the fallback - sound quality may vary
@@ -381,7 +369,7 @@ final class TimerSoundFix {
         // Check audio route first
         let session = AVAudioSession.sharedInstance()
         let currentRoute = session.currentRoute
-        Logger.shared.log(.warning, """
+        Logger.shared.log(.debug, """
             🎧 Audio Route Status:
             - Outputs: \(currentRoute.outputs.map { "\($0.portType.rawValue) - \($0.portName)" }.joined(separator: ", "))
             - Output volume: \(session.outputVolume)
@@ -419,7 +407,7 @@ final class TimerSoundFix {
 
                     // Debug: log player info
                     if let player = activePlayer {
-                        Logger.shared.log(.warning, """
+                        Logger.shared.log(.debug, """
                             🎵 AVAudioPlayer created:
                             - Duration: \(player.duration)s
                             - Format: \(player.format)
@@ -442,7 +430,7 @@ final class TimerSoundFix {
                         return true
                     } else {
                         lastError = "play() returned false on first attempt"
-                        Logger.shared.log(.warning, "⚠️ play() returned false, attempting retry strategies...", category: .audioSession)
+                        Logger.shared.log(.debug, "⚠️ play() returned false, attempting retry strategies...", category: .audioSession)
                     }
                 } catch {
                     lastError = "Player creation failed: \(error.localizedDescription)"
@@ -523,9 +511,9 @@ final class TimerSoundFix {
         }
 
         if fileFound {
-            Logger.shared.log(.warning, "⚠️ File found but could not play: \(soundName)", category: .audioSession)
+            Logger.shared.log(.debug, "⚠️ File found but could not play: \(soundName)", category: .audioSession)
         } else {
-            Logger.shared.log(.warning, "⚠️ No file found for: \(soundName)", category: .audioSession)
+            Logger.shared.log(.debug, "⚠️ No file found for: \(soundName)", category: .audioSession)
         }
         return false
     }
@@ -577,7 +565,7 @@ final class TimerSoundFix {
                     
                     Logger.shared.log(.info, "✅ Preloaded sound: \(soundName).caf with ID: \(soundID)", category: .audioSession)
                 } else {
-                    Logger.shared.log(.warning, "⚠️ Failed to preload \(soundName).caf, status: \(status)", category: .audioSession)
+                    Logger.shared.log(.debug, "⚠️ Failed to preload \(soundName).caf, status: \(status)", category: .audioSession)
                 }
             }
             // Try WAV as fallback
@@ -595,10 +583,10 @@ final class TimerSoundFix {
                     
                     Logger.shared.log(.info, "✅ Preloaded sound: \(soundName).wav with ID: \(soundID)", category: .audioSession)
                 } else {
-                    Logger.shared.log(.warning, "⚠️ Failed to preload \(soundName).wav, status: \(status)", category: .audioSession)
+                    Logger.shared.log(.debug, "⚠️ Failed to preload \(soundName).wav, status: \(status)", category: .audioSession)
                 }
             } else {
-                Logger.shared.log(.warning, "⚠️ Sound file not found: \(soundName)", category: .audioSession)
+                Logger.shared.log(.debug, "⚠️ Sound file not found: \(soundName)", category: .audioSession)
             }
         }
         
@@ -611,14 +599,14 @@ final class TimerSoundFix {
 
         // Verify preloaded AVAudioPlayer
         if let player = preloadedAVPlayer {
-            Logger.shared.log(.warning, """
+            Logger.shared.log(.debug, """
                 ✅ Preloaded AVAudioPlayer verified:
                 - Duration: \(player.duration)s
                 - Prepared: calling prepareToPlay()
                 """, category: .audioSession)
             player.prepareToPlay()
         } else {
-            Logger.shared.log(.warning, "⚠️ Preloaded AVAudioPlayer is nil - reloading...", category: .audioSession)
+            Logger.shared.log(.debug, "⚠️ Preloaded AVAudioPlayer is nil - reloading...", category: .audioSession)
             preloadAVAudioPlayer()
         }
 
@@ -632,7 +620,7 @@ final class TimerSoundFix {
 
         // Reload any invalid sounds
         if !invalidSounds.isEmpty {
-            Logger.shared.log(.warning, "⚠️ Reloading \(invalidSounds.count) invalid sounds: \(invalidSounds.joined(separator: ", "))", category: .audioSession)
+            Logger.shared.log(.debug, "⚠️ Reloading \(invalidSounds.count) invalid sounds: \(invalidSounds.joined(separator: ", "))", category: .audioSession)
 
             for soundName in invalidSounds {
                 // Dispose old sound ID
@@ -781,7 +769,7 @@ final class TimerSoundFix {
             }
         }
         
-        Logger.shared.log(.warning, "⚠️ No custom sounds could be played", category: .audioSession)
+        Logger.shared.log(.debug, "⚠️ No custom sounds could be played", category: .audioSession)
         return false
     }
     
@@ -803,7 +791,7 @@ final class TimerSoundFix {
             }
         }
         
-        Logger.shared.log(.warning, "⚠️ Custom sound \(name) not found", category: .audioSession)
+        Logger.shared.log(.debug, "⚠️ Custom sound \(name) not found", category: .audioSession)
         return nil
     }
     
@@ -927,7 +915,7 @@ final class TimerSoundFix {
 extension TimerSoundFix {
     func setupFlutterChannel(with messenger: FlutterBinaryMessenger) {
         let channel = FlutterMethodChannel(
-            name: "com.gymbro.timer_sound_fix",
+            name: ChannelNames.timerSoundFix,
             binaryMessenger: messenger
         )
         

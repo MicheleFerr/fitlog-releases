@@ -164,7 +164,7 @@ class LiveActivityHandler: NSObject {
             self.currentActivity = nil
 
             Logger.shared.debug("✅ All Live Activities ended successfully", category: .general)
-            result(true)
+            await MainActor.run { result(true) }
         }
     }
 
@@ -176,7 +176,7 @@ class LiveActivityHandler: NSObject {
     
     func setupMethodChannel(with binaryMessenger: FlutterBinaryMessenger) {
         let channel = FlutterMethodChannel(
-            name: "com.gymbro.timer/live_activity",
+            name: ChannelNames.liveActivity,
             binaryMessenger: binaryMessenger
         )
         
@@ -425,8 +425,8 @@ class LiveActivityHandler: NSObject {
                     """, category: .audioSession)
             }
             
-            result(activity.id)
-            
+            await MainActor.run { result(activity.id) }
+
             Logger.shared.debug( "✅ Live Activity created successfully with ID: \(activity.id)", category: .general)
             
         } catch {
@@ -899,10 +899,10 @@ class LiveActivityHandler: NSObject {
             if remainingSeconds % 15 == 0 || remainingSeconds <= 3 {
                 Logger.shared.log(.debug, "✅ Live Activity updated (\(remainingSeconds)s)", category: .general)
             }
-            result(true)
+            await MainActor.run { result(true) }
         }
     }
-    
+
     private func endLiveActivity(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
         guard let args = arguments,
               let activityId = args["activityId"] as? String else {
@@ -986,11 +986,11 @@ class LiveActivityHandler: NSObject {
             if self.currentActivity?.id == activityId {
                 self.currentActivity = nil
             }
-            
-            result(true)
+
+            await MainActor.run { result(true) }
         }
     }
-    
+
     private func isLiveActivitySupported(result: @escaping FlutterResult) {
         result(ActivityAuthorizationInfo().areActivitiesEnabled)
     }

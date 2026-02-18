@@ -5,6 +5,7 @@
 import Flutter
 import UIKit
 
+#if DEBUG
 class AudioDebugTestHandler: NSObject {
     static let shared = AudioDebugTestHandler()
 
@@ -15,7 +16,7 @@ class AudioDebugTestHandler: NSObject {
 
     func setup(binaryMessenger: FlutterBinaryMessenger) {
         channel = FlutterMethodChannel(
-            name: "com.gymbro.fitlog/audio_debug",
+            name: ChannelNames.audioDebug,
             binaryMessenger: binaryMessenger
         )
 
@@ -298,3 +299,4 @@ private class AudioDebugTest {
         self.liveActivityEnabled = liveActivityEnabled
     }
 }
+#endif

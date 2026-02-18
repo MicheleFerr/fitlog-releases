@@ -621,13 +621,11 @@ private func saveEventToUserDefaults(
 
     // Save to UserDefaults
     userDefaults.set(eventData, forKey: workoutEventKey)
-    userDefaults.synchronize()
     print("✅ [saveEventToUserDefaults] Saved to UserDefaults with key: \(workoutEventKey)")
 
     // Also save last RPE if this is a select RPE event
     if eventType == .selectRPE, let rpe = additionalData["selectedRPE"] as? Int {
         userDefaults.set(rpe, forKey: "last_selected_rpe")
-        userDefaults.synchronize()
     }
 
     // Post a Darwin notification for immediate Flutter response

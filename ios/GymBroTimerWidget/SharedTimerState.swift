@@ -34,10 +34,9 @@ class SharedTimerState {
         if let encoded = try? JSONEncoder().encode(state) {
             defaults.set(encoded, forKey: stateKey)
             defaults.set(Date(), forKey: changeKey)
-            defaults.synchronize()
         }
     }
-    
+
     static func getTimerState() -> TimerStateData? {
         guard let defaults = userDefaults,
               let data = defaults.data(forKey: stateKey) else { return nil }
@@ -53,16 +52,14 @@ class SharedTimerState {
         userDefaults?.removeObject(forKey: stateKey)
         userDefaults?.removeObject(forKey: eventKey)
         userDefaults?.removeObject(forKey: changeKey)
-        userDefaults?.synchronize()
     }
-    
+
     // Salva evento per comunicazione con Flutter
     static func saveTimerEvent(_ event: TimerStateData) {
         guard let defaults = userDefaults else { return }
         
         if let encoded = try? JSONEncoder().encode(event) {
             defaults.set(encoded, forKey: eventKey)
-            defaults.synchronize()
         }
     }
     
@@ -72,8 +69,7 @@ class SharedTimerState {
         
         // Rimuovi evento dopo lettura per evitare duplicati
         defaults.removeObject(forKey: eventKey)
-        defaults.synchronize()
-        
+
         return try? JSONDecoder().decode(TimerStateData.self, from: data)
     }
 }

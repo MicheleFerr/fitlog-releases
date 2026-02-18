@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/data/platform_channels.dart';
 
 /// Represents the current mode of the Workout Session Live Activity
 enum WorkoutSessionMode { exercise, rest, rpe }
@@ -111,7 +112,7 @@ class WorkoutSessionLAService {
   static final WorkoutSessionLAService _instance =
       WorkoutSessionLAService._internal();
 
-  static const _channel = MethodChannel('com.gymbro.timer/workout_session');
+  static const _channel = MethodChannel(PlatformChannels.workoutSession);
 
   final _eventController = StreamController<WorkoutSessionEvent>.broadcast();
 
