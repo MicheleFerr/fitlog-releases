@@ -164,7 +164,7 @@ class _TierProgressSection extends ConsumerWidget {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
-        AppSpacing.md, AppSpacing.md, AppSpacing.md, 0,
+        AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.md,
       ),
       child: GestureDetector(
         onTap: () {
@@ -178,7 +178,7 @@ class _TierProgressSection extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.sm,
-            vertical: AppSpacing.xs,
+            vertical: AppSpacing.sm,
           ),
           decoration: BoxDecoration(
             color: context.colors.surfaceContainerLow,

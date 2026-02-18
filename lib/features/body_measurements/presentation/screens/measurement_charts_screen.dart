@@ -195,8 +195,10 @@ class _MeasurementChartsScreenState
       ),
       body: _isLoading
           ? const Center(child: LoadingIndicator())
-          : Column(
-              children: [
+          : SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
                 // Period selector
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -260,6 +262,7 @@ class _MeasurementChartsScreenState
                 ),
               ],
             ),
+          ),
     );
   }
 
@@ -388,8 +391,10 @@ class _MeasurementChartsScreenState
     final range = maxValue - minValue;
     final padding = range > 0 ? range * 0.1 : 1.0;
 
+    final bottomPadding = MediaQuery.of(context).padding.bottom + 16;
+
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 16, 16, 16),
+      padding: EdgeInsets.fromLTRB(8, 16, 16, bottomPadding),
       child: Column(
         children: [
           // Line chart
