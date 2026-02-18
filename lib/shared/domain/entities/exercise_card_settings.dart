@@ -4,7 +4,7 @@ part 'exercise_card_settings.g.dart';
 
 /// GIF size options for Exercise Card
 /// Controls the size of the exercise GIF/image in the card header
-@HiveType(typeId: 101)
+@HiveType(typeId: 120)
 enum ExerciseGifSize {
   /// Small GIF (40x40)
   /// Use case: Maximum information density
@@ -46,7 +46,7 @@ enum ExerciseGifSize {
 
 /// Card density options for Exercise Card
 /// Controls vertical spacing and padding
-@HiveType(typeId: 102)
+@HiveType(typeId: 121)
 enum ExerciseCardDensity {
   /// Compact density
   /// Reduced padding, tighter spacing

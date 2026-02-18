@@ -73,7 +73,7 @@ class ExerciseCardSettingsAdapter extends TypeAdapter<ExerciseCardSettings> {
 
 class ExerciseGifSizeAdapter extends TypeAdapter<ExerciseGifSize> {
   @override
-  final typeId = 101;
+  final typeId = 120;
 
   @override
   ExerciseGifSize read(BinaryReader reader) {
@@ -118,7 +118,7 @@ class ExerciseGifSizeAdapter extends TypeAdapter<ExerciseGifSize> {
 
 class ExerciseCardDensityAdapter extends TypeAdapter<ExerciseCardDensity> {
   @override
-  final typeId = 102;
+  final typeId = 121;
 
   @override
   ExerciseCardDensity read(BinaryReader reader) {
