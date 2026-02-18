@@ -204,7 +204,7 @@ class _MainShellState extends ConsumerState<MainShell>
                   return Positioned(
                     left: 0,
                     right: 0,
-                    bottom: navBarTotalHeight - 4,
+                    bottom: navBarTotalHeight + 8,
                     child: AnimatedSlide(
                       duration: const Duration(milliseconds: 250),
                       curve: Curves.easeInOut,

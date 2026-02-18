@@ -17,15 +17,12 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 ///
 /// Features:
 /// - Smooth entrance animation
-/// - Infinite rubber-band drag in both directions (never blocks)
-/// - Natural spring physics for return animation
+/// - Subtle floating animation (vertical oscillation)
+/// - Live timer updating every second
 /// - Horizontal swipe gestures:
 ///   - Swipe left→right: Save workout (green circle + check icon)
 ///   - Swipe right→left: Discard workout (red circle + trash icon)
 /// - Haptic feedback on interactions
-/// - No background overlay during swipe (transparent behind card)
-///
-/// 🔧 PERF FIX: No local Timer - uses workout.duration which auto-updates
 class WorkoutMiniBar extends ConsumerStatefulWidget {
   const WorkoutMiniBar({
     required this.workout,
@@ -54,7 +51,9 @@ class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
   late AnimationController _entranceController;
   late Animation<Offset> _slideAnimation;
 
-  // Vertical drag disabled - was causing bugs with horizontal swipe
+  // Floating animation (subtle vertical oscillation)
+  late AnimationController _floatController;
+  late Animation<double> _floatAnimation;
 
   // Horizontal swipe
   late AnimationController _horizontalController;
@@ -64,25 +63,37 @@ class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
   // Swipe threshold (percentage of width)
   static const double _swipeThreshold = 0.35;
 
-  // 🔧 PERF FIX: Removed Timer? _timerUpdateTimer - no longer needed
-  // Duration updates are handled by workout entity provider
-
   @override
   void initState() {
     super.initState();
 
     // Entrance animation controller
     _entranceController = AnimationController(
-      duration: const Duration(milliseconds: 350),
+      duration: const Duration(milliseconds: 400),
       vsync: this,
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
-        .animate(
-          CurvedAnimation(
-            parent: _entranceController,
-            curve: Curves.easeOutCubic,
-          ),
-        );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 1.5),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _entranceController,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+
+    // Floating animation - subtle vertical oscillation
+    _floatController = AnimationController(
+      duration: const Duration(milliseconds: 2500),
+      vsync: this,
+    );
+    _floatAnimation = Tween<double>(begin: 0, end: 3.0).animate(
+      CurvedAnimation(
+        parent: _floatController,
+        curve: Curves.easeInOut,
+      ),
+    );
+    _floatController.repeat(reverse: true);
 
     // Horizontal animation controller
     _horizontalController = AnimationController(
@@ -92,15 +103,13 @@ class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
 
     // Start entrance animation
     _entranceController.forward();
-
-    // 🔧 PERF FIX: Removed Timer.periodic - duration auto-updates from workout entity
   }
 
   @override
   void dispose() {
     _entranceController.dispose();
+    _floatController.dispose();
     _horizontalController.dispose();
-    // 🔧 PERF FIX: No timer to cancel
     super.dispose();
   }
 
@@ -257,7 +266,6 @@ class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
   Widget build(BuildContext context) {
     final workout = widget.workout;
     final isPaused = workout.status == WorkoutStatus.paused;
-    final duration = workout.duration ?? Duration.zero;
     final progress = workout.progressPercentage;
 
     // Calculate opacity for action indicators based on swipe progress
@@ -273,176 +281,167 @@ class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
 
     return SlideTransition(
       position: _slideAnimation,
-      child: Container(
-        height: 60,
-        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-        child: Stack(
-          alignment: Alignment.center,
-          clipBehavior: Clip.none,
-          children: [
-            // Save indicator (left side, revealed when swiping right)
-            if (_horizontalDragOffset > 10)
-              Positioned(
-                left: AppSpacing.md,
-                child: _buildActionIndicator(
-                  icon: AppIcons.checkCircle,
-                  backgroundColor: context.colors.success,
-                  iconColor: context.colors.onPrimary,
-                  opacity: saveOpacity,
+      child: AnimatedBuilder(
+        animation: _floatAnimation,
+        builder: (context, child) {
+          return Transform.translate(
+            offset: Offset(0, -_floatAnimation.value),
+            child: child,
+          );
+        },
+        child: Container(
+          height: 56,
+          margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          child: Stack(
+            alignment: Alignment.center,
+            clipBehavior: Clip.none,
+            children: [
+              // Save indicator (left side, revealed when swiping right)
+              if (_horizontalDragOffset > 10)
+                Positioned(
+                  left: AppSpacing.md,
+                  child: _buildActionIndicator(
+                    icon: AppIcons.checkCircle,
+                    backgroundColor: context.colors.success,
+                    iconColor: context.colors.onPrimary,
+                    opacity: saveOpacity,
+                  ),
                 ),
-              ),
 
-            // Discard indicator (right side, revealed when swiping left)
-            if (_horizontalDragOffset < -10)
-              Positioned(
-                right: AppSpacing.md,
-                child: _buildActionIndicator(
-                  icon: AppIcons.delete,
-                  backgroundColor: context.colors.error,
-                  iconColor: context.colors.onError,
-                  opacity: discardOpacity,
+              // Discard indicator (right side, revealed when swiping left)
+              if (_horizontalDragOffset < -10)
+                Positioned(
+                  right: AppSpacing.md,
+                  child: _buildActionIndicator(
+                    icon: AppIcons.delete,
+                    backgroundColor: context.colors.error,
+                    iconColor: context.colors.onError,
+                    opacity: discardOpacity,
+                  ),
                 ),
-              ),
 
-            // Main card (slides horizontally) - frosted glass effect
-            Transform.translate(
-              offset: Offset(_horizontalDragOffset, 0),
-              child: GestureDetector(
-                onTap: () => _navigateToWorkout(context),
-                onHorizontalDragStart: _onHorizontalDragStart,
-                onHorizontalDragUpdate: _onHorizontalDragUpdate,
-                onHorizontalDragEnd: _onHorizontalDragEnd,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(AppSpacing.md),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        // Semi-transparent for frosted glass effect
-                        color: context.colors.surface.withValues(alpha: 0.85),
-                        borderRadius: BorderRadius.circular(AppSpacing.md),
-                        border: Border.all(
-                          color: context.colors.outlineVariant.withValues(
-                            alpha: 0.3,
+              // Main card (slides horizontally) - frosted glass effect
+              Transform.translate(
+                offset: Offset(_horizontalDragOffset, 0),
+                child: GestureDetector(
+                  onTap: () => _navigateToWorkout(context),
+                  onHorizontalDragStart: _onHorizontalDragStart,
+                  onHorizontalDragUpdate: _onHorizontalDragUpdate,
+                  onHorizontalDragEnd: _onHorizontalDragEnd,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: context.colors.surface.withValues(alpha: 0.82),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: context.colors.outlineVariant.withValues(
+                              alpha: 0.2,
+                            ),
+                            width: 0.5,
                           ),
-                          width: 1,
+                          boxShadow: [
+                            // Soft ambient shadow
+                            BoxShadow(
+                              color: context.colors.shadow.withValues(
+                                alpha: 0.08,
+                              ),
+                              blurRadius: 32,
+                              spreadRadius: 4,
+                              offset: Offset.zero,
+                            ),
+                            // Depth shadow
+                            BoxShadow(
+                              color: context.colors.shadow.withValues(
+                                alpha: 0.12,
+                              ),
+                              blurRadius: 16,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
                         ),
-                        boxShadow: [
-                          // Ambient shadow - spreads in all directions for corner coverage
-                          BoxShadow(
-                            color: context.colors.shadow.withValues(
-                              alpha: 0.06,
-                            ),
-                            blurRadius: 24,
-                            spreadRadius: 8,
-                            offset: Offset.zero,
-                          ),
-                          // Primary shadow for depth
-                          BoxShadow(
-                            color: context.colors.shadow.withValues(
-                              alpha: 0.10,
-                            ),
-                            blurRadius: 12,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          // Main content
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.md,
-                              ),
-                              child: Row(
-                                children: [
-                                  // Workout icon
-                                  SemanticIcon(
-                                    icon: AppIcons.workout,
-                                    semanticLabel: context.l10n.workout,
-                                    size: AppIconSize.medium,
-                                    color: isPaused
-                                        ? context.colors.onSurfaceVariant
-                                        : context.colors.primary,
-                                  ),
-                                  const SizedBox(width: AppSpacing.sm),
+                        child: Column(
+                          children: [
+                            // Main content
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: AppSpacing.md,
+                                ),
+                                child: Row(
+                                  children: [
+                                    // Workout icon with pulse dot
+                                    _StatusDot(isPaused: isPaused),
+                                    const SizedBox(width: AppSpacing.sm),
 
-                                  // Workout name
-                                  Expanded(
-                                    child: Text(
-                                      workout.name,
-                                      style: context.textTheme.titleSmall
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+                                    // Workout name
+                                    Expanded(
+                                      child: Text(
+                                        workout.name,
+                                        style: context.textTheme.titleSmall
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                  ),
 
-                                  // 🔧 PERF FIX: Wrap timer in RepaintBoundary
-                                  RepaintBoundary(
-                                    child: Text(
-                                      _formatDuration(duration),
-                                      style: context.textTheme.titleMedium
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            fontFeatures: const [
-                                              FontFeature.tabularFigures(),
-                                            ],
-                                            color: isPaused
-                                                ? context.colors.warning
-                                                : context.colors.onSurface,
-                                          ),
+                                    // Live timer - updates every second independently
+                                    _LiveTimer(
+                                      startTime: workout.startTime,
+                                      endTime: workout.endTime,
+                                      isPaused: isPaused,
                                     ),
-                                  ),
-                                  const SizedBox(width: AppSpacing.xs),
+                                    const SizedBox(width: AppSpacing.xs),
 
-                                  // Arrow to indicate tap action
-                                  SemanticIcon(
-                                    icon: AppIcons.chevronRight,
-                                    semanticLabel: context.l10n.goToWorkout,
-                                    size: AppIconSize.small,
-                                    color: context.colors.onSurfaceVariant,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-
-                          // Progress bar
-                          Container(
-                            height: 4,
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.vertical(
-                                bottom: Radius.circular(AppSpacing.md),
-                              ),
-                              color: context.colors.surfaceContainerLow,
-                            ),
-                            child: FractionallySizedBox(
-                              alignment: Alignment.centerLeft,
-                              widthFactor: progress.clamp(0.0, 1.0),
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.vertical(
-                                    bottom: Radius.circular(AppSpacing.md),
-                                  ),
-                                  color: isPaused
-                                      ? context.colors.warning
-                                      : context.colors.primary,
+                                    // Arrow to indicate tap action
+                                    SemanticIcon(
+                                      icon: AppIcons.chevronRight,
+                                      semanticLabel: context.l10n.goToWorkout,
+                                      size: AppIconSize.small,
+                                      color: context.colors.onSurfaceVariant,
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+
+                            // Progress bar
+                            Container(
+                              height: 3,
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.vertical(
+                                  bottom: Radius.circular(16),
+                                ),
+                                color: context.colors.surfaceContainerLow,
+                              ),
+                              child: FractionallySizedBox(
+                                alignment: Alignment.centerLeft,
+                                widthFactor: progress.clamp(0.0, 1.0),
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.vertical(
+                                      bottom: Radius.circular(16),
+                                    ),
+                                    color: isPaused
+                                        ? context.colors.warning
+                                        : context.colors.primary,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -452,15 +451,168 @@ class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
     HapticFeedback.lightImpact();
     context.go('/workout');
   }
+}
 
-  String _formatDuration(Duration duration) {
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Live Timer - Self-updating widget (isolated rebuild every second)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+class _LiveTimer extends StatefulWidget {
+  const _LiveTimer({
+    required this.startTime,
+    required this.endTime,
+    required this.isPaused,
+  });
+
+  final DateTime? startTime;
+  final DateTime? endTime;
+  final bool isPaused;
+
+  @override
+  State<_LiveTimer> createState() => _LiveTimerState();
+}
+
+class _LiveTimerState extends State<_LiveTimer> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!widget.isPaused) {
+      _startTimer();
+    }
+  }
+
+  @override
+  void didUpdateWidget(_LiveTimer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isPaused && !oldWidget.isPaused) {
+      _timer?.cancel();
+      _timer = null;
+    } else if (!widget.isPaused && oldWidget.isPaused) {
+      _startTimer();
+    }
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  Duration _computeDuration() {
+    if (widget.startTime == null) return Duration.zero;
+    final end = widget.endTime ?? DateTime.now();
+    return end.difference(widget.startTime!);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final duration = _computeDuration();
     final hours = duration.inHours;
     final minutes = duration.inMinutes.remainder(60);
     final seconds = duration.inSeconds.remainder(60);
 
-    if (hours > 0) {
-      return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    final text = hours > 0
+        ? '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}'
+        : '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+
+    return RepaintBoundary(
+      child: Text(
+        text,
+        style: context.textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.w700,
+          fontFeatures: const [FontFeature.tabularFigures()],
+          color: widget.isPaused
+              ? context.colors.warning
+              : context.colors.primary,
+        ),
+      ),
+    );
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Status Dot - Animated pulsing indicator
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+class _StatusDot extends StatefulWidget {
+  const _StatusDot({required this.isPaused});
+  final bool isPaused;
+
+  @override
+  State<_StatusDot> createState() => _StatusDotState();
+}
+
+class _StatusDotState extends State<_StatusDot>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    );
+    _pulseAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+    if (!widget.isPaused) {
+      _pulseController.repeat(reverse: true);
     }
-    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  void didUpdateWidget(_StatusDot oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isPaused && !oldWidget.isPaused) {
+      _pulseController.stop();
+      _pulseController.value = 1.0;
+    } else if (!widget.isPaused && oldWidget.isPaused) {
+      _pulseController.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final color = widget.isPaused
+        ? context.colors.warning
+        : context.colors.primary;
+
+    return AnimatedBuilder(
+      animation: _pulseAnimation,
+      builder: (context, child) {
+        return Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color.withValues(alpha: _pulseAnimation.value),
+            boxShadow: [
+              BoxShadow(
+                color: color.withValues(alpha: 0.4 * _pulseAnimation.value),
+                blurRadius: 6,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
