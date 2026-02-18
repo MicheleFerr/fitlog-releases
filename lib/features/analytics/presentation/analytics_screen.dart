@@ -66,7 +66,7 @@ class AnalyticsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.statistics),
-        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+        backgroundColor: Colors.transparent,
         // No leading back button - this is a tab root
         actions: [
           // View mode toggle (Simple/Detailed)

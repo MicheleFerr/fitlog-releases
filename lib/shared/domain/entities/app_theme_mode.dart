@@ -7,7 +7,8 @@ enum AppThemeMode {
   light,
   dark,
   ultraDark,
-  pink;
+  pink,
+  darkPink;
 
   /// Convert to Flutter's ThemeMode for MaterialApp
   ThemeMode get flutterThemeMode {
@@ -19,15 +20,16 @@ enum AppThemeMode {
         return ThemeMode.light;
       case AppThemeMode.dark:
       case AppThemeMode.ultraDark:
+      case AppThemeMode.darkPink:
         return ThemeMode.dark;
     }
   }
 
   /// Whether this mode uses dark brightness
-  bool get isDark => this == dark || this == ultraDark;
+  bool get isDark => this == dark || this == ultraDark || this == darkPink;
 
   /// Whether this is a custom theme (not standard light/dark/system)
-  bool get isCustomTheme => this == ultraDark || this == pink;
+  bool get isCustomTheme => this == ultraDark || this == pink || this == darkPink;
 
   /// Parse from stored string value, with backward compatibility
   static AppThemeMode fromString(String? value) {

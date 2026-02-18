@@ -180,7 +180,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 onChanged: (value) => setState(() => _searchQuery = value),
               )
             : Text(l10n.settingsTitle),
-        backgroundColor: context.colors.surfaceContainerHighest,
+        backgroundColor: Colors.transparent,
         leading: IconButton(
           icon: const SemanticIcon(icon: AppIcons.back, semanticLabel: 'Back'),
           onPressed: () {
@@ -2060,50 +2060,68 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     AppThemeMode currentMode,
   ) {
     final l10n = AppLocalizations.of(context);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.chooseTheme),
-        content: RadioGroup<AppThemeMode>(
-          groupValue: currentMode,
-          onChanged: (value) {
-            if (value != null) {
-              ref.read(appConfigProvider.notifier).setAppThemeMode(value);
-              Navigator.pop(context);
-            }
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              RadioListTile<AppThemeMode>(
-                title: Text(l10n.themeLight),
-                subtitle: Text(l10n.themeLightDesc),
-                value: AppThemeMode.light,
+    ModalService.showSheet(
+      context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+              child: Text(
+                l10n.chooseTheme,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              RadioListTile<AppThemeMode>(
-                title: Text(l10n.themeDark),
-                subtitle: Text(l10n.themeDarkDesc),
-                value: AppThemeMode.dark,
+            ),
+            RadioGroup<AppThemeMode>(
+              groupValue: currentMode,
+              onChanged: (value) {
+                if (value != null) {
+                  ref.read(appConfigProvider.notifier).setAppThemeMode(value);
+                  Navigator.pop(context);
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RadioListTile<AppThemeMode>(
+                    title: Text(l10n.themeLight),
+                    subtitle: Text(l10n.themeLightDesc),
+                    value: AppThemeMode.light,
+                  ),
+                  RadioListTile<AppThemeMode>(
+                    title: Text(l10n.themeDark),
+                    subtitle: Text(l10n.themeDarkDesc),
+                    value: AppThemeMode.dark,
+                  ),
+                  RadioListTile<AppThemeMode>(
+                    title: Text(l10n.themeUltraDark),
+                    subtitle: Text(l10n.themeUltraDarkDesc),
+                    value: AppThemeMode.ultraDark,
+                  ),
+                  RadioListTile<AppThemeMode>(
+                    title: Text(l10n.themePink),
+                    subtitle: Text(l10n.themePinkDesc),
+                    value: AppThemeMode.pink,
+                  ),
+                  RadioListTile<AppThemeMode>(
+                    title: Text(l10n.themeDarkPink),
+                    subtitle: Text(l10n.themeDarkPinkDesc),
+                    value: AppThemeMode.darkPink,
+                  ),
+                  RadioListTile<AppThemeMode>(
+                    title: Text(l10n.themeSystem),
+                    subtitle: Text(l10n.themeSystemDesc),
+                    value: AppThemeMode.system,
+                  ),
+                ],
               ),
-              RadioListTile<AppThemeMode>(
-                title: Text(l10n.themeUltraDark),
-                subtitle: Text(l10n.themeUltraDarkDesc),
-                value: AppThemeMode.ultraDark,
-              ),
-              RadioListTile<AppThemeMode>(
-                title: Text(l10n.themePink),
-                subtitle: Text(l10n.themePinkDesc),
-                value: AppThemeMode.pink,
-              ),
-              RadioListTile<AppThemeMode>(
-                title: Text(l10n.themeSystem),
-                subtitle: Text(l10n.themeSystemDesc),
-                value: AppThemeMode.system,
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 8),
+          ],
         ),
       ),
+      isScrollControlled: true,
     );
   }
 
@@ -2638,6 +2656,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         return l10n.themeUltraDark;
       case AppThemeMode.pink:
         return l10n.themePink;
+      case AppThemeMode.darkPink:
+        return l10n.themeDarkPink;
       case AppThemeMode.system:
         return l10n.themeSystem;
     }
@@ -2653,6 +2673,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         return AppIcons.darkMode;
       case AppThemeMode.pink:
         return AppIcons.lightMode;
+      case AppThemeMode.darkPink:
+        return AppIcons.darkMode;
       case AppThemeMode.system:
         return AppIcons.autoMode;
     }
@@ -2735,14 +2757,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   ) {
     final colors = AppTheme.themeColors.entries.toList();
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(context.l10n.choosePrimaryColor),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: colors.map((entry) {
+    ModalService.showSheet(
+      context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+              child: Text(
+                context.l10n.choosePrimaryColor,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            ...colors.map((entry) {
               final colorName = entry.key;
               final color = entry.value;
               final colorHex = (color.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0');
@@ -2794,16 +2822,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   );
                 },
               );
-            }).toList(),
-          ),
+            }),
+            const SizedBox(height: 8),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(context.l10n.cancel),
-          ),
-        ],
       ),
+      isScrollControlled: true,
     );
   }
 }

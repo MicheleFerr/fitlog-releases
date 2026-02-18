@@ -341,6 +341,12 @@ class FitLogApp extends ConsumerWidget {
           fontSize,
         );
         return _ResolvedThemes(pink, pink, ThemeMode.light);
+      case AppThemeMode.darkPink:
+        final darkPink = _buildThemeWithFontSize(
+          AppTheme.buildDarkPinkTheme(primaryColor),
+          fontSize,
+        );
+        return _ResolvedThemes(darkPink, darkPink, ThemeMode.dark);
     }
   }
 

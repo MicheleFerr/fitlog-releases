@@ -123,6 +123,36 @@ class AppTheme {
     return _buildTheme(colorScheme);
   }
 
+  /// Build dark pink theme with pink-tinted dark surfaces
+  static ThemeData buildDarkPinkTheme([String? colorName]) {
+    // Dark Pink always uses pink as seed, ignoring the color picker
+    const pinkSeed = Color(0xFFE91E63);
+
+    final baseScheme = ColorScheme.fromSeed(
+      seedColor: pinkSeed,
+      brightness: Brightness.dark,
+    );
+
+    // Override surfaces with dark pink-tinted variants
+    final colorScheme = baseScheme.copyWith(
+      surface: const Color(0xFF1A0A10),
+      onSurface: const Color(0xFFFFF0F3),
+      surfaceContainerLowest: const Color(0xFF120810),
+      surfaceContainerLow: const Color(0xFF1E0E15),
+      surfaceContainer: const Color(0xFF26141C),
+      surfaceContainerHigh: const Color(0xFF301A24),
+      surfaceContainerHighest: const Color(0xFF3A202E),
+      surfaceDim: const Color(0xFF1A0A10),
+      surfaceBright: const Color(0xFF44283A),
+      inverseSurface: const Color(0xFFFFE0E8),
+      onInverseSurface: const Color(0xFF1A0A10),
+      outline: const Color(0xFF7A4060),
+      outlineVariant: const Color(0xFF5A3048),
+    );
+
+    return _buildTheme(colorScheme, isDark: true);
+  }
+
   /// Legacy static getters for backward compatibility
   static ThemeData get lightTheme => buildLightTheme();
   static ThemeData get darkTheme => buildDarkTheme();

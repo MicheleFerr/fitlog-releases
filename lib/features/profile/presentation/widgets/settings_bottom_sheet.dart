@@ -193,6 +193,8 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
         return context.l10n.themeUltraDark;
       case AppThemeMode.pink:
         return context.l10n.themePink;
+      case AppThemeMode.darkPink:
+        return context.l10n.themeDarkPink;
       case AppThemeMode.system:
         return context.l10n.themeSystem;
     }
@@ -216,7 +218,7 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
   ) {
     HapticFeedback.lightImpact();
 
-    // Cycle through: System -> Light -> Dark -> Ultra Dark -> Pink -> System
+    // Cycle through: System -> Light -> Dark -> Ultra Dark -> Pink -> Dark Pink -> System
     final AppThemeMode nextMode;
     switch (currentMode) {
       case AppThemeMode.system:
@@ -228,6 +230,8 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
       case AppThemeMode.ultraDark:
         nextMode = AppThemeMode.pink;
       case AppThemeMode.pink:
+        nextMode = AppThemeMode.darkPink;
+      case AppThemeMode.darkPink:
         nextMode = AppThemeMode.system;
     }
 
