@@ -13,7 +13,7 @@
 /// - Hive: None
 library;
 
-import 'package:cupertino_native/cupertino_native.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -638,14 +638,14 @@ class _RpeSelectorBottomSheetState
               ),
               Transform.scale(
                 scale: 0.8,
-                child: CNSwitch(
+                child: CupertinoSwitch(
                   value: _showWeightAndReps,
                   onChanged: (value) {
                     setState(() {
                       _showWeightAndReps = value;
                     });
                   },
-                  color: colorScheme.primary,
+                  activeTrackColor: colorScheme.primary,
                 ),
               ),
             ],
@@ -710,7 +710,7 @@ class _RpeSelectorBottomSheetState
               ),
               Transform.scale(
                 scale: 0.9,
-                child: CNSwitch(
+                child: CupertinoSwitch(
                   value: _isSetCompleted,
                   onChanged: (value) {
                     setState(() {
@@ -718,7 +718,7 @@ class _RpeSelectorBottomSheetState
                     });
                     HapticFeedback.lightImpact();
                   },
-                  color: colorScheme.tertiary,
+                  activeTrackColor: colorScheme.tertiary,
                 ),
               ),
             ],
@@ -2162,36 +2162,33 @@ class _RpeSelectorBottomSheetState
     final l10n = AppLocalizations.of(context);
 
     // Main content of the bottom sheet
-    final mainContent = DecoratedBox(
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Handle bar
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.only(top: 12, bottom: 8),
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: colorScheme.outline.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+    // NOTE: No DecoratedBox needed - BottomSheetThemeData already provides
+    // background color, shape, and clipBehavior: Clip.antiAlias
+    final mainContent = SafeArea(
+      top: false, // Bottom sheet doesn't need top safe area
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Handle bar
+            Center(
+              child: Container(
+                margin: const EdgeInsets.only(top: 12, bottom: 8),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: colorScheme.outline.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              _buildSupersetHeader(context, theme, l10n, colorScheme),
-              _buildMainContent(context, theme, l10n, colorScheme),
-            ],
-          ),
+            ),
+            _buildSupersetHeader(context, theme, l10n, colorScheme),
+            _buildMainContent(context, theme, l10n, colorScheme),
+          ],
         ),
       ),
     );

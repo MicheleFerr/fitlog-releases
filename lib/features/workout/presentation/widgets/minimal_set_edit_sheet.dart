@@ -1363,15 +1363,13 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
         width: isActive ? 36 : 12,
         height: 150, // Fixed height to match picker height (prevents resize on expand/collapse)
         margin: EdgeInsets.only(right: onRight ? 0 : 4, left: onRight ? 4 : 0),
-        decoration: BoxDecoration(
-          color: isActive
-              ? context.colors.primary.withValues(alpha: 0.15)
-              : context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(8),
-          border: isActive
-              ? Border.all(color: context.colors.primary.withValues(alpha: 0.3))
-              : null,
-        ),
+        decoration: isActive
+            ? BoxDecoration(
+                color: context.colors.primary.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: context.colors.primary.withValues(alpha: 0.3)),
+              )
+            : null,
         child: isActive
             // Expanded: show values
             ? Column(

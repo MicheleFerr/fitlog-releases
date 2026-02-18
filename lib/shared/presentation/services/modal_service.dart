@@ -88,10 +88,13 @@ class ModalService {
         showDragHandle: showDragHandle,
         constraints: constraints,
         useSafeArea: useSafeArea,
-        builder: (ctx) => MediaQuery.removePadding(
-          context: ctx,
-          removeBottom: true,
-          child: builder(ctx),
+        builder: (ctx) => ScrollConfiguration(
+          behavior: ScrollConfiguration.of(ctx).copyWith(scrollbars: false),
+          child: MediaQuery.removePadding(
+            context: ctx,
+            removeBottom: true,
+            child: builder(ctx),
+          ),
         ),
       );
     } finally {

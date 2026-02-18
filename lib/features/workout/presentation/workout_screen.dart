@@ -307,8 +307,16 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
           //   const Tier1MinimalTimerOverlay(),
 
           // FAB for adding exercises (show in both active AND preloaded states)
+          // Hidden when a bottom sheet is open (FAB is above Scaffold overlay layer)
           if ((isActive || isPreloaded) && !controllerState.isReorderMode)
-            _buildDraggableFAB(),
+            ValueListenableBuilder<int>(
+              valueListenable: ModalService.openSheetCount,
+              builder: (context, sheetCount, child) {
+                if (sheetCount > 0) return const SizedBox.shrink();
+                return child!;
+              },
+              child: _buildDraggableFAB(),
+            ),
         ],
       ),
     );

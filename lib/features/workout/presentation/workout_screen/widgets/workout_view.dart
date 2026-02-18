@@ -180,7 +180,9 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
 
   /// Builds the normal (non-reorderable) exercise list with material-like physics
   Widget _buildNormalList(BuildContext context, WidgetRef ref) {
-    return MaterialScrollList(
+    return ScrollConfiguration(
+      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+      child: MaterialScrollList(
       itemCount: widget.workout.exercises.length,
       // List is now below header in Column, no need for header padding
       padding: EdgeInsets.only(
@@ -240,6 +242,7 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
           ),
         );
       },
+      ),
     );
   }
 
@@ -250,7 +253,9 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
         canvasColor: context.colors.surface.withValues(alpha: 0),
         shadowColor: context.colors.surface.withValues(alpha: 0),
       ),
-      child: ReorderableListView.builder(
+      child: ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+        child: ReorderableListView.builder(
         padding: EdgeInsets.only(
           left: AppSpacing.md,
           right: AppSpacing.md,
@@ -346,6 +351,7 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
             ),
           );
         },
+      ),
       ),
     );
   }
