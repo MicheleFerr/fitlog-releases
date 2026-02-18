@@ -4,8 +4,9 @@
 /// Feature: Profile Hub
 /// Type: Screen
 ///
-/// Apple Fitness+ style profile hub with compact header,
-/// metric ring cards, quick actions, and modern workout feed.
+/// Profile hub with fixed compact header and scrollable body.
+/// Header stays pinned with avatar + name + settings.
+/// Body contains tier progress, metric rings, quick actions, and workout feed.
 library;
 
 import 'package:flutter/material.dart';
@@ -14,6 +15,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
@@ -27,6 +31,9 @@ import 'package:gymbro_flutter_new/features/profile/presentation/widgets/weekly_
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/account_mode_section.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/providers/user_goals_provider.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_detail_modal.dart';
+import 'package:gymbro_flutter_new/shared/domain/user/user_xp_provider.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/widgets/level_info_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/ghost_mode_provider.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
@@ -40,13 +47,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.da
 /// TODO: Enable when fitlogpro.it/legal/coach-agreement-*.html are published
 const bool _coachFeatureEnabled = false;
 
-/// Profile hub screen - Apple Fitness+ style design
-///
-/// Features:
-/// - Compact horizontal header with tier progress
-/// - 3 metric ring cards (streak weeks, workout week, volume goal)
-/// - Quick action chips (Stats, History, Measures, Calendar)
-/// - Modern workout feed with exercise previews
+/// Profile hub screen with fixed header and scrollable body
 class ProfileHubScreen extends ConsumerWidget {
   const ProfileHubScreen({super.key});
 
@@ -64,7 +65,7 @@ class ProfileHubScreen extends ConsumerWidget {
   }
 }
 
-/// Main content of the Profile Hub
+/// Main content with fixed header + scrollable body
 class _ProfileHubContent extends ConsumerWidget {
   const _ProfileHubContent({required this.userName});
 
@@ -74,51 +75,193 @@ class _ProfileHubContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      body: CustomScrollView(
-        slivers: [
-          // Compact header with tier progress
-          SliverToBoxAdapter(
-            child: CompactProfileHeader(
-              userName: userName,
-              onSettingsTap: () => showSettingsBottomSheet(context),
-              onEditTap: () => context.pushNamed(AppRoutes.editProfileName),
-            ),
+      body: Column(
+        children: [
+          // Fixed header - always visible
+          CompactProfileHeader(
+            userName: userName,
+            onSettingsTap: () => showSettingsBottomSheet(context),
+            onEditTap: () => context.pushNamed(AppRoutes.editProfileName),
           ),
 
-          // Account mode section (Solo/Coach/Coached)
-          // 🚧 MVP: Disabled until Coach Agreement legal docs ready
-          if (_coachFeatureEnabled) ...[
-            const SliverToBoxAdapter(child: SizedBox(height: 16)),
-            const SliverToBoxAdapter(child: AccountModeSection()),
-            const SliverToBoxAdapter(child: SizedBox(height: 16)),
-          ],
+          // Scrollable body
+          Expanded(
+            child: CustomScrollView(
+              slivers: [
+                // Tier progress (moved from header)
+                const SliverToBoxAdapter(
+                  child: _TierProgressSection(),
+                ),
 
-          // Metric ring cards
-          SliverToBoxAdapter(child: _MetricRingsSection()),
+                // Account mode section (Solo/Coach/Coached)
+                // 🚧 MVP: Disabled until Coach Agreement legal docs ready
+                if (_coachFeatureEnabled) ...[
+                  const SliverToBoxAdapter(
+                    child: SizedBox(height: AppSpacing.md),
+                  ),
+                  const SliverToBoxAdapter(child: AccountModeSection()),
+                  const SliverToBoxAdapter(
+                    child: SizedBox(height: AppSpacing.md),
+                  ),
+                ],
 
-          const SliverToBoxAdapter(child: SizedBox(height: 24)),
+                // Metric ring cards
+                SliverToBoxAdapter(child: _MetricRingsSection()),
 
-          // Quick action chips
-          SliverToBoxAdapter(
-            child: ProfileQuickActions(
-              onStatsTap: () => context.pushNamed(AppRoutes.statsName),
-              onHistoryTap: () =>
-                  context.pushNamed(AppRoutes.workoutHistoryName),
-              onMeasuresTap: () =>
-                  context.pushNamed(AppRoutes.bodyMeasurementsName),
-              onCalendarTap: () =>
-                  context.pushNamed(AppRoutes.streakCalendarName),
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: AppSpacing.xl),
+                ),
+
+                // Quick action chips
+                SliverToBoxAdapter(
+                  child: ProfileQuickActions(
+                    onStatsTap: () => context.pushNamed(AppRoutes.statsName),
+                    onHistoryTap: () =>
+                        context.pushNamed(AppRoutes.workoutHistoryName),
+                    onMeasuresTap: () =>
+                        context.pushNamed(AppRoutes.bodyMeasurementsName),
+                    onCalendarTap: () =>
+                        context.pushNamed(AppRoutes.streakCalendarName),
+                  ),
+                ),
+
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: AppSpacing.xl),
+                ),
+
+                // Recent workouts section
+                SliverToBoxAdapter(child: _RecentWorkoutsSection()),
+
+                // Bottom padding for tab bar overlay
+                const SliverTabBarBottomPadding(),
+              ],
             ),
           ),
-
-          const SliverToBoxAdapter(child: SizedBox(height: 24)),
-
-          // Recent workouts section
-          SliverToBoxAdapter(child: _RecentWorkoutsSection()),
-
-          // Bottom padding for tab bar overlay
-          const SliverTabBarBottomPadding(),
         ],
+      ),
+    );
+  }
+}
+
+/// Tier progress section - moved from header to scrollable body
+///
+/// Shows tier badge, progress bar to next tier, and info button.
+/// Tappable to open the level info modal.
+class _TierProgressSection extends ConsumerWidget {
+  const _TierProgressSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userXPState = ref.watch(userXPProvider);
+    final shouldHideTier = ref.watch(shouldHideTierProvider);
+
+    if (shouldHideTier) return const SizedBox(height: AppSpacing.md);
+
+    final totalXP = userXPState.totalXP;
+    final currentTier = userXPState.currentTier;
+    final nextTier = currentTier.next;
+    final tierProgress = currentTier.progressToNext(totalXP);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.md, AppSpacing.md, AppSpacing.md, 0,
+      ),
+      child: GestureDetector(
+        onTap: () {
+          HapticFeedback.lightImpact();
+          LevelInfoModal.show(
+            context: context,
+            currentXP: totalXP,
+            currentTier: currentTier,
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.xs,
+          ),
+          decoration: BoxDecoration(
+            color: context.colors.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(AppSpacing.sm),
+            border: Border.all(
+              color: context.colors.outlineVariant.withValues(alpha: 0.5),
+            ),
+          ),
+          child: nextTier != null
+              ? Row(
+                  children: [
+                    // Tier icon
+                    Icon(
+                      AppIcons.achievement,
+                      size: AppSpacing.md,
+                      color: currentTier.color,
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    // Current tier
+                    Text(
+                      currentTier.displayName,
+                      style: context.textTheme.labelMedium?.copyWith(
+                        color: currentTier.color,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    // Progress bar
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(2),
+                        child: LinearProgressIndicator(
+                          value: tierProgress,
+                          minHeight: AppSpacing.xxs,
+                          backgroundColor: context.colors.surfaceContainerHigh,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            currentTier.color,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    // Next tier
+                    Text(
+                      nextTier.displayName,
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.xxs),
+                    // Info icon
+                    Icon(
+                      AppIcons.info,
+                      size: AppIconSize.small,
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ],
+                )
+              : Row(
+                  children: [
+                    // Max tier reached
+                    Icon(
+                      AppIcons.achievement,
+                      size: AppSpacing.md,
+                      color: currentTier.color,
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Text(
+                      currentTier.displayName,
+                      style: context.textTheme.labelMedium?.copyWith(
+                        color: currentTier.color,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Spacer(),
+                    Icon(
+                      AppIcons.info,
+                      size: AppIconSize.small,
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ],
+                ),
+        ),
       ),
     );
   }
@@ -298,7 +441,6 @@ class _VolumeGoalEditSheetState extends State<_VolumeGoalEditSheet> {
           const SizedBox(height: 24),
 
           // Save button
-          // Accessibility: Semantic label for screen readers
           SizedBox(
             width: double.infinity,
             child: Semantics(
@@ -345,7 +487,6 @@ class _RecentWorkoutsSection extends ConsumerWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              // Accessibility: Semantic label for screen readers
               Semantics(
                 label: context.l10n.seeAll,
                 child: TextButton(
@@ -393,14 +534,12 @@ class _RecentWorkoutsSection extends ConsumerWidget {
             loading: () => Container(
               height: 120,
               decoration: BoxDecoration(
-                // ✨ Material 3 2025: Elevated surface with defined border
                 color: context.colors.surfaceContainerLow,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: context.colors.outlineVariant.withValues(alpha: 0.5),
                   width: 1,
                 ),
-                // ✨ Material 3 2025: Subtle shadow for depth
                 boxShadow: [
                   BoxShadow(
                     color: context.colors.shadow.withValues(alpha: 0.05),
@@ -414,14 +553,12 @@ class _RecentWorkoutsSection extends ConsumerWidget {
             error: (_, __) => Container(
               height: 120,
               decoration: BoxDecoration(
-                // ✨ Material 3 2025: Elevated surface with defined border
                 color: context.colors.surfaceContainerLow,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: context.colors.outlineVariant.withValues(alpha: 0.5),
                   width: 1,
                 ),
-                // ✨ Material 3 2025: Subtle shadow for depth
                 boxShadow: [
                   BoxShadow(
                     color: context.colors.shadow.withValues(alpha: 0.05),
@@ -453,14 +590,12 @@ class _EmptyWorkoutsCard extends StatelessWidget {
     return Container(
       height: 120,
       decoration: BoxDecoration(
-        // ✨ Material 3 2025: Elevated surface with defined border
         color: context.colors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: context.colors.outlineVariant.withValues(alpha: 0.5),
           width: 1,
         ),
-        // ✨ Material 3 2025: Subtle shadow for depth
         boxShadow: [
           BoxShadow(
             color: context.colors.shadow.withValues(alpha: 0.05),
