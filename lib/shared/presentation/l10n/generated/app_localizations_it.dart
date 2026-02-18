@@ -27241,7 +27241,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get recommendedForYourLevel => 'Consigliati per il tuo livello';
 
   @override
-  String get exerciseCardSettings => 'Scheda Esercizio';
+  String get exerciseCardSettings => 'Personalizza Schede Workout';
 
   @override
   String get gifSize => 'Dimensione GIF';

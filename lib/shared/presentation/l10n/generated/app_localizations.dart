@@ -48269,7 +48269,7 @@ abstract class AppLocalizations {
   /// Settings section title for exercise card customization
   ///
   /// In en, this message translates to:
-  /// **'Exercise Card'**
+  /// **'Customize Workout Cards'**
   String get exerciseCardSettings;
 
   /// Label for GIF size selector

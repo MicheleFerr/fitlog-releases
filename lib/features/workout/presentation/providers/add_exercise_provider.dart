@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
@@ -87,14 +89,73 @@ final supersetExercisesProvider =
       SupersetExercisesNotifier.new,
     );
 
-/// P0: Provider for recently used exercises in AddExerciseModal
-/// Returns the 5 most recently used exercises for quick one-tap selection
-/// Uses ExerciseUsageTracker which persists usage data locally
+/// P0: Provider for recently used exercises in AddExerciseModal & ExerciseSearchScreen
+/// Returns the 8 most recently used exercises for quick one-tap selection.
+/// Uses ExerciseUsageTracker (Hive local) with automatic backfill from Firestore
+/// workout history when the tracker is empty (first launch or fresh install).
 final recentExercisesForModalProvider =
     FutureProvider.autoDispose<List<ExerciseUsageModel>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
   final tracker = ExerciseUsageTracker();
-  return tracker.getRecentlyUsedExercises(limit: 5);
+  var recent = await tracker.getRecentlyUsedExercises(limit: 8);
+
+  // Backfill from Firestore if tracker is empty (existing user, first use of feature)
+  if (recent.isEmpty) {
+    await _backfillUsageFromFirestore(tracker, userId);
+    recent = await tracker.getRecentlyUsedExercises(limit: 8);
+  }
+
+  return recent;
 });
+
+/// Backfill ExerciseUsageTracker from existing Firestore workout history.
+/// Reads the last 20 completed workouts and extracts all exercise names/IDs.
+/// Runs only once (when tracker is empty), then future workouts keep it updated
+/// via the completeWorkout() tracking in workout_provider.dart.
+Future<void> _backfillUsageFromFirestore(
+  ExerciseUsageTracker tracker,
+  String userId,
+) async {
+  try {
+    final workouts = await FirebaseFirestore.instance
+        .collection('workouts')
+        .where('userId', isEqualTo: userId)
+        .orderBy('completedAt', descending: true)
+        .limit(20)
+        .get();
+
+    if (workouts.docs.isEmpty) return;
+
+    // Track unique exercises to avoid duplicate incrementUsage calls
+    final seen = <String>{};
+
+    for (final doc in workouts.docs) {
+      final exercises = doc.data()['exercises'] as List<dynamic>? ?? [];
+      for (final exercise in exercises) {
+        if (exercise is! Map<String, dynamic>) continue;
+        final id = exercise['id'] as String?;
+        final name = exercise['name'] as String?;
+        if (id != null && name != null && !seen.contains(id)) {
+          seen.add(id);
+          await tracker.incrementUsage(
+            exerciseId: id,
+            exerciseName: name,
+            userId: userId,
+          );
+        }
+      }
+    }
+
+    if (kDebugMode) {
+      debugPrint(
+        '✅ [ExerciseUsage] Backfilled ${seen.length} exercises from Firestore history',
+      );
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('❌ [ExerciseUsage] Backfill from Firestore failed: $e');
+    }
+  }
+}

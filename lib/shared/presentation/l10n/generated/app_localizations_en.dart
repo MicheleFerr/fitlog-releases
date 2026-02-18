@@ -26983,7 +26983,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recommendedForYourLevel => 'Recommended for your level';
 
   @override
-  String get exerciseCardSettings => 'Exercise Card';
+  String get exerciseCardSettings => 'Customize Workout Cards';
 
   @override
   String get gifSize => 'GIF Size';

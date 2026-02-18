@@ -826,8 +826,26 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         )
         .toList();
 
-    // Merge: custom exercises first, then catalog
-    final allExercises = [...customAsExercises, ...exercises];
+    // Merge: custom exercises first, then catalog sorted by usage frequency
+    // Sort catalog exercises: frequent/trending first, then alphabetical
+    final sortedCatalog = List<Exercise>.from(exercises);
+    if (_frequentExerciseIds.isNotEmpty || _trendingExerciseIds.isNotEmpty) {
+      sortedCatalog.sort((a, b) {
+        final aFrequent = _frequentExerciseIds.contains(a.id);
+        final bFrequent = _frequentExerciseIds.contains(b.id);
+        final aTrending = _trendingExerciseIds.contains(a.id);
+        final bTrending = _trendingExerciseIds.contains(b.id);
+
+        // Score: frequent = 2, trending = 1, neither = 0
+        final aScore = (aFrequent ? 2 : 0) + (aTrending ? 1 : 0);
+        final bScore = (bFrequent ? 2 : 0) + (bTrending ? 1 : 0);
+
+        if (aScore != bScore) return bScore.compareTo(aScore);
+        // Same score: alphabetical
+        return a.nome.compareTo(b.nome);
+      });
+    }
+    final allExercises = [...customAsExercises, ...sortedCatalog];
 
     // ✅ ALWAYS-VISIBLE RECENT EXERCISES (Hevy UX pattern)
     // No condition on search query - show recent exercises ALWAYS for efficiency

@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/cn_switch_list_tile.dart';
+import 'package:gymbro_flutter_new/features/settings/presentation/widgets/exercise_card_settings_section.dart';
 
 /// Shows the quick settings bottom sheet
 void showSettingsBottomSheet(BuildContext context) {
@@ -140,6 +141,13 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
               ),
             ),
 
+            // Exercise Card Settings
+            _SettingsTile(
+              icon: AppIcons.workout,
+              title: context.l10n.exerciseCardSettings,
+              onTap: () => _showExerciseCardSettings(context),
+            ),
+
             const Divider(height: 32),
 
             // All settings button
@@ -230,6 +238,17 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
           ref.read(appConfigProvider.notifier).setLanguage(languageCode, '');
           Navigator.pop(context);
         },
+      ),
+    );
+  }
+
+  void _showExerciseCardSettings(BuildContext context) {
+    HapticFeedback.lightImpact();
+    ModalService.showBottomSheet(
+      context,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.only(top: 8, bottom: 16),
+        child: const ExerciseCardSettingsSection(),
       ),
     );
   }

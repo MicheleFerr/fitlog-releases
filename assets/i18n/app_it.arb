@@ -20440,7 +20440,7 @@
   "@recommendedForYourLevel": {
     "description": "Subtitle for personalized recommendations based on user tier"
   },
-  "exerciseCardSettings": "Scheda Esercizio",
+  "exerciseCardSettings": "Personalizza Schede Workout",
   "@exerciseCardSettings": {
     "description": "Settings section title for exercise card customization"
   },

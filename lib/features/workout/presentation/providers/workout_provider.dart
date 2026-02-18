@@ -108,6 +108,8 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/features/workout/domain/services/rpe_autoregulation_service.dart';
 // 📱 iOS 17+ Workout Session Live Activity
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_session_la_provider.dart';
+// 📊 Exercise Usage Tracker for recent exercises in exercise picker
+import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_usage_tracker.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/workout_session_la_service.dart'
     show WorkoutSessionMode;
 
@@ -1376,6 +1378,20 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         sessionId:
             workout.sessionId, // ✅ FIX #8: Add sessionId for funnel correlation
       );
+
+      // 📊 Track exercise usage for "Recent Exercises" in exercise picker
+      final authService = ref.read(authServiceProvider);
+      final currentUser = authService.currentUser;
+      if (currentUser != null) {
+        final usageTracker = ExerciseUsageTracker();
+        for (final exercise in workout.exercises) {
+          usageTracker.incrementUsage(
+            exerciseId: exercise.id,
+            exerciseName: exercise.name,
+            userId: currentUser.uid,
+          );
+        }
+      }
 
       state = state!.completeWorkout();
 

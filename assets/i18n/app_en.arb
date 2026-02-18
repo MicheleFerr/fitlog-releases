@@ -33120,7 +33120,7 @@
   "@recommendedForYourLevel": {
     "description": "Subtitle for personalized recommendations based on user tier"
   },
-  "exerciseCardSettings": "Exercise Card",
+  "exerciseCardSettings": "Customize Workout Cards",
   "@exerciseCardSettings": {
     "description": "Settings section title for exercise card customization"
   },
