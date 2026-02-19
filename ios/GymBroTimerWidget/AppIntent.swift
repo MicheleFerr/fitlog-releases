@@ -207,6 +207,11 @@ struct SkipTimerIntent: LiveActivityIntent {
             ]
             userDefaults?.set(eventData, forKey: "timer_event")
 
+            // MEDIO-8 FIX: End the Live Activity immediately after skip.
+            // Previously the activity was updated to remainingSeconds=0 but never
+            // ended — it lingered on the lock screen indefinitely.
+            // Using .immediate since the user explicitly dismissed the rest timer.
+            await activity.end(dismissalPolicy: .immediate)
         }
         return .result()
     }

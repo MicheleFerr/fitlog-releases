@@ -400,6 +400,14 @@ class _RpeSelectorBottomSheetState
                     _selectedRpe = rpe;
                     _updateRir();
                   });
+                  // Auto-confirm e dismiss per tutti i valori tranne RPE 10.
+                  // RPE 10 rimane aperto per permettere review prima di confermare.
+                  if (rpe != 10 && !widget.isPartOfSuperset) {
+                    HapticFeedback.mediumImpact();
+                    Navigator.of(context).pop();
+                    final (actualReps, actualWeight) = _getConfirmData();
+                    widget.onConfirm(actualReps, actualWeight, rpe);
+                  }
                 },
                 child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),

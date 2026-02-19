@@ -155,17 +155,17 @@ extension WorkoutSessionAttributes.ContentState {
     var statusText: String {
         switch effectiveMode {
         case .exercise:
-            return "Completa il Set"
+            return WidgetStrings.WorkoutSession.completeSet
         case .rest:
             if restRemainingSeconds <= 10 {
-                return "Preparati! 💪"
+                return WidgetStrings.WorkoutSession.getReady
             } else if restRemainingSeconds <= 30 {
-                return "Quasi pronto..."
+                return WidgetStrings.WorkoutSession.almostReady
             } else {
-                return "Riposo"
+                return WidgetStrings.WorkoutSession.rest
             }
         case .rpe:
-            return "Come ti sei sentito?"
+            return WidgetStrings.WorkoutSession.howDidYouFeel
         }
     }
 
@@ -198,7 +198,7 @@ extension WorkoutSessionAttributes.ContentState {
 
     /// Exercise progress string (e.g., "3/8 esercizi")
     var exerciseProgressInfo: String {
-        return "\(completedExercises)/\(totalExercises) esercizi"
+        return "\(completedExercises)/\(totalExercises) \(WidgetStrings.WorkoutSession.exercises)"
     }
 
     // MARK: - RPE Helpers
@@ -221,12 +221,12 @@ extension WorkoutSessionAttributes.ContentState {
     var rpeDescription: String {
         guard let rpe = selectedRPE else { return "" }
         switch rpe {
-        case 5: return "Molto Facile"
-        case 6: return "Facile"
-        case 7: return "Moderato"
-        case 8: return "Difficile"
-        case 9: return "Molto Difficile"
-        case 10: return "Massimo Sforzo"
+        case 5: return WidgetStrings.WorkoutSession.rpeVeryEasy
+        case 6: return WidgetStrings.WorkoutSession.rpeEasy
+        case 7: return WidgetStrings.WorkoutSession.rpeModerate
+        case 8: return WidgetStrings.WorkoutSession.rpeHard
+        case 9: return WidgetStrings.WorkoutSession.rpeVeryHard
+        case 10: return WidgetStrings.WorkoutSession.rpeMax
         default: return ""
         }
     }
@@ -235,12 +235,31 @@ extension WorkoutSessionAttributes.ContentState {
 // MARK: - Widget Localization Strings
 extension WidgetStrings {
     struct WorkoutSession {
+        // Exercise mode
         static let completeSet = "Completa il Set"
-        static let rest = "Riposo"
-        static let rpe = "RPE"
         static let done = "Fatto"
+        static let tapDone = "Tap Fatto"
+        // Rest mode
+        static let rest = "Riposo"
         static let skip = "Salta"
+        static let pause = "Pausa"
+        static let paused = "In pausa"
+        static let next = "Prossimo"
+        static let almostReady = "Quasi pronto..."
+        static let getReady = "Preparati! 💪"
+        // RPE mode
+        static let rpe = "RPE"
+        static let howDidYouFeel = "Come ti sei sentito?"
         static let confirm = "Conferma"
+        static let skipRpe = "Salta RPE"
+        // RPE descriptions
+        static let rpeVeryEasy = "Molto Facile"
+        static let rpeEasy = "Facile"
+        static let rpeModerate = "Moderato"
+        static let rpeHard = "Difficile"
+        static let rpeVeryHard = "Molto Difficile"
+        static let rpeMax = "Massimo Sforzo"
+        // Generic
         static let workout = "Allenamento"
         static let set = "Set"
         static let exercises = "esercizi"

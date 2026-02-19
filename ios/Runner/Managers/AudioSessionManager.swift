@@ -125,41 +125,49 @@ final class AudioSessionManager: AudioSessionManaging {
     }
     
     func validateConfiguration() -> Bool {
-        // ✅ FIX #4: Use cached validation result if recent enough
-        if let cachedResult = lastValidationResult,
-           let cachedTime = lastValidationTime,
-           Date().timeIntervalSince(cachedTime) < validationCacheDuration {
-            return cachedResult
+        // FIX #5: Wrap in stateQueue.sync to protect lastValidationResult /
+        // lastValidationTime against data races with performTransition(), which
+        // invalidates the cache from within a stateQueue.sync block on another thread.
+        stateQueue.sync {
+            // ✅ FIX #4: Use cached validation result if recent enough
+            if let cachedResult = lastValidationResult,
+               let cachedTime = lastValidationTime,
+               Date().timeIntervalSince(cachedTime) < validationCacheDuration {
+                return cachedResult
+            }
+
+            let isValid = session.category == .playback &&
+                         (currentState == .background ?
+                          session.categoryOptions.contains(.mixWithOthers) : true)
+
+            // ENHANCED: Additional validation for silent loop compatibility
+            let silentLoopReady = currentState == .background ?
+                (session.categoryOptions.contains(.mixWithOthers) &&
+                 session.preferredIOBufferDuration <= 0.2) : true
+
+            let overallValid = isValid && silentLoopReady
+
+            // ✅ FIX #4: Cache the validation result
+            lastValidationResult = overallValid
+            lastValidationTime = Date()
+
+            Logger.shared.log(
+                overallValid ? .debug : .warning,
+                "Audio configuration validation: \(overallValid ? "✅ Valid (silent loop ready)" : "❌ Invalid")"
+            )
+
+            return overallValid
         }
-
-        let isValid = session.category == .playback &&
-                     (currentState == .background ?
-                      session.categoryOptions.contains(.mixWithOthers) : true)
-
-        // ENHANCED: Additional validation for silent loop compatibility
-        let silentLoopReady = currentState == .background ?
-            (session.categoryOptions.contains(.mixWithOthers) &&
-             session.preferredIOBufferDuration <= 0.2) : true
-
-        let overallValid = isValid && silentLoopReady
-
-        // ✅ FIX #4: Cache the validation result
-        lastValidationResult = overallValid
-        lastValidationTime = Date()
-
-        Logger.shared.log(
-            overallValid ? .debug : .warning,
-            "Audio configuration validation: \(overallValid ? "✅ Valid (silent loop ready)" : "❌ Invalid")"
-        )
-
-        return overallValid
     }
     
     func reactivate() {
         Logger.shared.log(.info, "[TIMER-DEBUG] reactivate called")
 
-        // Configure on background queue to avoid UI blocking
-        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+        // FIX #6: Use stateQueue instead of a global concurrent queue so that
+        // AVAudioSession calls are serialized with all other state transitions.
+        // Using .userInteractive here was wrong — it let reactivation race with
+        // configureForBackground / configureForForeground on a separate thread.
+        stateQueue.async { [weak self] in
             guard let self = self else { return }
 
             do {
@@ -175,6 +183,11 @@ final class AudioSessionManager: AudioSessionManaging {
 
                 // Activate (safe to call even if already active)
                 try self.session.setActive(true, options: [])
+
+                // FIX #6: Invalidate validation cache after successful reactivation
+                // so the next validateConfiguration() reflects the fresh session state.
+                self.lastValidationResult = nil
+                self.lastValidationTime = nil
 
                 Logger.shared.log(.info, "[TIMER-DEBUG] ✅ Audio session reactivated successfully")
 

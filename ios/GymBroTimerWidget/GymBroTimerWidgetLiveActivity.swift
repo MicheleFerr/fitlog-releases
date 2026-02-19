@@ -3,6 +3,40 @@ import WidgetKit
 import SwiftUI
 import AppIntents
 
+// MARK: - MEDIO-4 FIX: Reusable progress bar for GymBroTimerAttributes
+//
+// The "running timer → native ProgressView / paused → value ProgressView" pattern
+// was duplicated in 3+ places. This struct centralises it so changes only need to
+// be made in one location.
+@available(iOS 16.1, *)
+private struct TimerProgressBar: View {
+    let startDate: Date?
+    let endDate: Date?
+    let isRunning: Bool
+    let progress: Double
+    let color: Color
+    var scaleY: CGFloat = 2.0
+
+    var body: some View {
+        if let start = startDate, let end = endDate, isRunning {
+            ProgressView(
+                timerInterval: start...end,
+                countsDown: true,
+                label: { EmptyView() },
+                currentValueLabel: { EmptyView() }
+            )
+            .progressViewStyle(LinearProgressViewStyle())
+            .tint(color)
+            .scaleEffect(y: scaleY)
+        } else {
+            ProgressView(value: progress)
+                .progressViewStyle(LinearProgressViewStyle())
+                .tint(color)
+                .scaleEffect(y: scaleY)
+        }
+    }
+}
+
   // MARK: - Live Activity Widget
   @available(iOS 16.1, *)
   struct GymBroTimerLiveActivity: Widget {
@@ -58,26 +92,14 @@ import AppIntents
 
                   DynamicIslandExpandedRegion(.bottom) {
                       // Progress bar with Native iOS Timer
-                      if let startDate = context.state.startDate, 
-                         let endDate = context.state.endDate,
-                         context.state.isRunning {
-                          // ✅ Native iOS Timer Progress Bar
-                          ProgressView(
-                              timerInterval: startDate...endDate,
-                              countsDown: true,
-                              label: { EmptyView() },
-                              currentValueLabel: { EmptyView() }
-                          )
-                          .progressViewStyle(LinearProgressViewStyle())
-                          .tint(context.state.progressColor)
-                          .scaleEffect(y: 2.0)
-                      } else {
-                          // Fallback for paused/stopped state
-                          ProgressView(value: context.state.progress)
-                              .progressViewStyle(LinearProgressViewStyle())
-                              .tint(context.state.progressColor)
-                              .scaleEffect(y: 2.0)
-                      }
+                      TimerProgressBar(
+                          startDate: context.state.startDate,
+                          endDate: context.state.endDate,
+                          isRunning: context.state.isRunning,
+                          progress: context.state.progress,
+                          color: context.state.progressColor,
+                          scaleY: 2.0
+                      )
                   }
 
               } compactLeading: {
@@ -217,26 +239,15 @@ import AppIntents
                           }
 
                           // Small progress indicator with native timer progress
-                          if let startDate = context.state.startDate, 
-                             let endDate = context.state.endDate,
-                             context.state.isRunning {
-                              ProgressView(
-                                  timerInterval: startDate...endDate,
-                                  countsDown: true,
-                                  label: { EmptyView() },
-                                  currentValueLabel: { EmptyView() }
-                              )
-                              .progressViewStyle(LinearProgressViewStyle())
-                              .tint(context.state.progressColor)
-                              .frame(width: 60)
-                              .scaleEffect(y: 1.5)
-                          } else {
-                              ProgressView(value: context.state.progress)
-                                  .progressViewStyle(LinearProgressViewStyle())
-                                  .tint(context.state.progressColor)
-                                  .frame(width: 60)
-                                  .scaleEffect(y: 1.5)
-                          }
+                          TimerProgressBar(
+                              startDate: context.state.startDate,
+                              endDate: context.state.endDate,
+                              isRunning: context.state.isRunning,
+                              progress: context.state.progress,
+                              color: context.state.progressColor,
+                              scaleY: 1.5
+                          )
+                          .frame(width: 60)
                       }
                   }
               }
@@ -279,26 +290,14 @@ import AppIntents
               } else {
                   VStack(spacing: 8) {
                       // Timer Progress Bar with Native iOS Timer
-                      if let startDate = context.state.startDate,
-                         let endDate = context.state.endDate,
-                         context.state.isRunning {
-                          // ✅ Native iOS Timer Progress Bar
-                          ProgressView(
-                              timerInterval: startDate...endDate,
-                              countsDown: true,
-                              label: { EmptyView() },
-                              currentValueLabel: { EmptyView() }
-                          )
-                          .progressViewStyle(LinearProgressViewStyle())
-                          .tint(context.state.progressColor)
-                          .scaleEffect(y: 2.0)
-                      } else {
-                          // Fallback for paused/stopped state
-                          ProgressView(value: context.state.progress)
-                              .progressViewStyle(LinearProgressViewStyle())
-                              .tint(context.state.progressColor)
-                              .scaleEffect(y: 2.0)
-                      }
+                      TimerProgressBar(
+                          startDate: context.state.startDate,
+                          endDate: context.state.endDate,
+                          isRunning: context.state.isRunning,
+                          progress: context.state.progress,
+                          color: context.state.progressColor,
+                          scaleY: 2.0
+                      )
 
                       // ✅ INTERACTIVE BUTTONS - INSTANT RESPONSE (NO APP WAKE)
                       HStack(spacing: 12) {

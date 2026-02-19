@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,7 +46,15 @@ class TimerUIState {
 class TimerUIStateNotifier extends Notifier<TimerUIState> {
   @override
   TimerUIState build() {
-    _loadPreferences();
+    // FIX #11: Explicitly handle errors from the fire-and-forget async init.
+    // Previously, if SharedPreferences.getInstance() threw (e.g., storage
+    // unavailable), the error was silently swallowed and position stayed at
+    // default with no diagnostic information.
+    unawaited(
+      _loadPreferences().catchError((Object e, StackTrace st) {
+        debugPrint('TimerUIStateNotifier: failed to load preferences: $e');
+      }),
+    );
     return const TimerUIState();
   }
 

@@ -10,6 +10,10 @@ final class FlutterChannelRegistry {
 
     static let shared = FlutterChannelRegistry()
 
+    // FIX #13: NSLock protects concurrent read/write access to channels and messenger.
+    // Without this, simultaneous calls from different threads can corrupt the dictionary
+    // or produce a crash (Swift dictionaries are not thread-safe).
+    private let lock = NSLock()
     private var messenger: FlutterBinaryMessenger?
     private var channels: [String: FlutterMethodChannel] = [:]
 
@@ -19,7 +23,9 @@ final class FlutterChannelRegistry {
 
     /// Must be called once during app startup with the Flutter binary messenger.
     func setup(with messenger: FlutterBinaryMessenger) {
+        lock.lock()
         self.messenger = messenger
+        lock.unlock()
         Logger.shared.log(.info, "FlutterChannelRegistry: messenger registered")
     }
 
@@ -27,6 +33,9 @@ final class FlutterChannelRegistry {
 
     /// Returns (or creates) a cached FlutterMethodChannel for the given name.
     func channel(for name: String) -> FlutterMethodChannel? {
+        lock.lock()
+        defer { lock.unlock() }
+
         guard let messenger = messenger else {
             Logger.shared.log(.warning, "FlutterChannelRegistry: messenger not set, cannot create channel \(name)")
             return nil

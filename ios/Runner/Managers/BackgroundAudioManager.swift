@@ -53,6 +53,10 @@ final class BackgroundAudioManager {
 
     // Health monitoring cleanup
     private var healthMonitoringWorkItem: DispatchWorkItem?
+    // FIX #8: Generation counter — incremented each time monitoring starts or stops.
+    // Work items compare their captured generation against the current value before
+    // executing; stale items from a previous cycle are silently discarded.
+    private var healthMonitoringGeneration: Int = 0
     
     // MARK: - Audio Mutex (Cross-Manager Deduplication)
 
@@ -1062,9 +1066,12 @@ final class BackgroundAudioManager {
     private func stopSilentLoop() {
         guard silentLoopActive else { return }
 
-        // CRITICAL FIX: Cancel health monitoring to prevent memory leaks
+        // CRITICAL FIX: Cancel health monitoring to prevent memory leaks.
+        // FIX #8: Also bump the generation counter so any in-flight work items
+        // from the current cycle are discarded when they eventually fire.
         healthMonitoringWorkItem?.cancel()
         healthMonitoringWorkItem = nil
+        healthMonitoringGeneration += 1
 
         silentLoopPlayer?.stop()
         silentLoopActive = false
@@ -1074,8 +1081,14 @@ final class BackgroundAudioManager {
 
     // CRITICAL FIX: Memory-safe health monitoring
     private func startHealthMonitoring(duration: TimeInterval) {
-        // Cancel any existing health monitoring
+        // Cancel any existing health monitoring and bump the generation counter.
+        // FIX #8: Without this, work items from the PREVIOUS monitoring cycle can
+        // still fire after cancel() is called, because DispatchWorkItem.cancel() only
+        // marks the item as cancelled — it doesn't prevent execution if the item has
+        // already been submitted. The generation counter provides a reliable guard.
         healthMonitoringWorkItem?.cancel()
+        healthMonitoringGeneration += 1
+        let currentGeneration = healthMonitoringGeneration
 
         let healthCheckInterval: TimeInterval = 10 // Check every 10 seconds
         let maxHealthChecks = Int(duration / healthCheckInterval) + 1
@@ -1092,6 +1105,12 @@ final class BackgroundAudioManager {
 
             let workItem = DispatchWorkItem { [weak self] in
                 guard let self = self else { return }
+
+                // FIX #8: Discard stale work items from previous monitoring cycles.
+                guard currentGeneration == self.healthMonitoringGeneration else {
+                    Logger.shared.log(.debug, "🔍 Health check discarded (stale generation)", category: .audioSession)
+                    return
+                }
 
                 // Thread-safe check
                 let shouldContinue = stateQueue.sync { () -> Bool in
@@ -1120,7 +1139,7 @@ final class BackgroundAudioManager {
                 scheduleNextHealthCheck()
             }
 
-            // Store work item for cancellation
+            // Store work item for cancellation (still useful for .cancel() hint)
             healthMonitoringWorkItem = workItem
 
             // Schedule the check
@@ -1134,8 +1153,11 @@ final class BackgroundAudioManager {
     
     private func scheduleTimerWithSilentLoop(duration: TimeInterval, soundName: String) {
         timerWorkItem?.cancel()
-        
-        timerWorkItem = DispatchWorkItem { [weak self] in
+
+        // FIX #17: Use a local variable to avoid forced unwrap.
+        // The property and local reference point to the same work item, so
+        // cancelling timerWorkItem later still works correctly.
+        let workItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
             self.stopSilentLoop()
             let traceId = self.currentTraceId ?? "legacy-timer"
@@ -1144,17 +1166,19 @@ final class BackgroundAudioManager {
 
             Logger.shared.log(.info, "✅ Timer completed", category: .audioSession)
         }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: timerWorkItem!)
-        
+        timerWorkItem = workItem
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: workItem)
+
         Logger.shared.log(.info, "Timer scheduled for \(duration)s", category: .audioSession)
     }
-    
+
     // 🎵 MUSIC-FRIENDLY: Timer without silent loop
     private func scheduleTimerWithoutSilentLoop(duration: TimeInterval, soundName: String) {
         timerWorkItem?.cancel()
-        
-        timerWorkItem = DispatchWorkItem { [weak self] in
+
+        // FIX #17: Use a local variable to avoid forced unwrap.
+        let workItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
             // v3.0.1 FIX: Play system sounds for long timers too!
             // This ensures audio plays even for timers > 30s
@@ -1163,12 +1187,13 @@ final class BackgroundAudioManager {
 
             // Notifications handle backup audio
             self.timerCompletionHandler?()
-            
+
             Logger.shared.log(.info, "✅ Timer completed - system sounds played + notification backup", category: .audioSession)
         }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: timerWorkItem!)
-        
+        timerWorkItem = workItem
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: workItem)
+
         Logger.shared.log(.info, "Music-friendly timer scheduled for \(duration)s", category: .audioSession)
     }
     

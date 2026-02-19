@@ -112,7 +112,7 @@ struct ExerciseModeView: View {
             Button(intent: WorkoutCompleteSetIntent()) {
                 HStack(spacing: 6) {
                     Image(systemName: "checkmark.circle.fill")
-                    Text("Fatto")
+                    Text(WidgetStrings.WorkoutSession.done)
                         .fontWeight(.semibold)
                 }
                 .frame(maxWidth: .infinity, minHeight: 44)
@@ -156,7 +156,9 @@ struct RestModeView: View {
 
                 // Next set info
                 VStack(alignment: .trailing, spacing: 2) {
-                    Text(context.state.isPaused ? "In pausa" : "Prossimo")
+                    Text(context.state.isPaused
+                         ? WidgetStrings.WorkoutSession.paused
+                         : WidgetStrings.WorkoutSession.next)
                         .font(.caption2)
                         .foregroundColor(context.state.isPaused ? .orange : .secondary)
                     Text(context.state.setInfo)
@@ -199,7 +201,7 @@ struct RestModeView: View {
                 Button(intent: WorkoutSkipRestIntent()) {
                     HStack(spacing: 4) {
                         Image(systemName: "forward.fill")
-                        Text("Salta")
+                        Text(WidgetStrings.WorkoutSession.skip)
                             .fontWeight(.medium)
                     }
                     .frame(maxWidth: .infinity, minHeight: 44)
@@ -294,7 +296,9 @@ struct RPEModeView: View {
             Button(intent: WorkoutConfirmRPEIntent()) {
                 HStack(spacing: 6) {
                     Image(systemName: "checkmark")
-                    Text(context.state.selectedRPE != nil ? "Conferma" : "Salta RPE")
+                    Text(context.state.selectedRPE != nil
+                         ? WidgetStrings.WorkoutSession.confirm
+                         : WidgetStrings.WorkoutSession.skipRpe)
                         .fontWeight(.semibold)
                 }
                 .frame(maxWidth: .infinity, minHeight: 44)
@@ -345,7 +349,7 @@ struct ExpandedTrailingView: View {
             case .exercise:
                 Image(systemName: "hand.tap.fill")
                     .foregroundColor(.green)
-                Text("Tap Fatto")
+                Text(WidgetStrings.WorkoutSession.tapDone)
                     .font(.caption2)
                     .foregroundColor(.secondary)
 
@@ -370,7 +374,9 @@ struct ExpandedTrailingView: View {
                         .monospacedDigit()
                         .foregroundColor(context.state.restUrgencyColor)
                 }
-                Text(context.state.isPaused ? "Pausa" : "Riposo")
+                Text(context.state.isPaused
+                     ? WidgetStrings.WorkoutSession.pause
+                     : WidgetStrings.WorkoutSession.rest)
                     .font(.caption2)
                     .foregroundColor(context.state.isPaused ? .orange : .secondary)
 
@@ -419,7 +425,7 @@ struct ExpandedBottomView: View {
             Button(intent: WorkoutCompleteSetIntent()) {
                 HStack {
                     Image(systemName: "checkmark.circle.fill")
-                    Text("Fatto")
+                    Text(WidgetStrings.WorkoutSession.done)
                         .fontWeight(.semibold)
                 }
                 .frame(maxWidth: .infinity)

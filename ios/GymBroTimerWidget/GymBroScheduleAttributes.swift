@@ -65,12 +65,22 @@ extension GymBroScheduleAttributes.ContentState {
         }
     }
 
-    /// Progress for visual indicator (1.0 = full, 0.0 = time up)
+    /// Progress for visual indicator (1.0 = close to workout, 0.0 = far away)
     var countdownProgress: Double {
-        // Calculate based on original time window (assume 24h max window)
-        let maxMinutes = 24.0 * 60.0 // 24 hours
-        let remaining = Double(actualRemainingMinutes)
-        return min(1.0, remaining / maxMinutes)
+        // MEDIO-7 FIX: Use lastUpdated (state push time) as the activity's "start"
+        // so the denominator reflects the actual tracking window rather than a
+        // hardcoded 24h constant that made the bar nearly invisible for short windows.
+        //
+        // Progress = elapsed / total_window
+        // elapsed = scheduledDate - now
+        // total_window = scheduledDate - lastUpdated
+        //
+        // Clamped to a minimum of 30 min to avoid division issues when
+        // lastUpdated ≈ scheduledDate (i.e. state updated right before workout).
+        let minimumWindowSeconds: TimeInterval = 30.0 * 60.0 // 30 minutes
+        let totalWindow = max(minimumWindowSeconds, scheduledDate.timeIntervalSince(lastUpdated))
+        let remaining = max(0, scheduledDate.timeIntervalSinceNow)
+        return min(1.0, max(0.0, remaining / totalWindow))
     }
 
     /// Color based on urgency

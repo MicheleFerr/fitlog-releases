@@ -1662,15 +1662,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           'strategy': strategy.toString(),
         };
 
-        // INTEGRATION FIX: Use unified coordinator for iOS
+        // FIX #6: The original catch block was a no-op — it retried the SAME
+        // channel that just failed, which would always fail again.
+        // Now we just log the failure and continue; `state.scheduleNotification()`
+        // below still marks the timer so the rest of the flow proceeds correctly.
         try {
           await _unifiedChannel.invokeMethod('scheduleCompletion', params);
-          // CRITICAL: Mark that notification has been scheduled for this timer
-          // State update is done below with state.scheduleNotification()
         } catch (e) {
-          // Fallback to legacy channel
-          await _unifiedChannel.invokeMethod('scheduleCompletion', params);
-          // State update is done below with state.scheduleNotification()
+          debugPrint(
+            '⚠️ [UnifiedTimer] scheduleCompletion channel call failed: $e. '
+            'Notification may not play — iOS timer completion state still tracked.',
+          );
         }
 
         // Additional background protection for long timers

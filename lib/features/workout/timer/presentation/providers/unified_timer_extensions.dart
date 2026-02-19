@@ -9,7 +9,10 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 ///
 /// Aggiunge funzionalità avanzate senza creare nuovi provider
 /// Rispetta CLAUDE.md: estende invece di stratificare
-extension Tier1TimerExtensions on Notifier<UnifiedTimerState?> {
+///
+/// FIX #10: Extension su UnifiedTimerProvider direttamente invece di
+/// Notifier<UnifiedTimerState?> per evitare `as dynamic` che bypassa il type system.
+extension Tier1TimerExtensions on UnifiedTimerProvider {
   /// Start rest timer con UI automatica
   Future<void> startRestTimerWithUI({
     required int seconds,
@@ -35,9 +38,7 @@ extension Tier1TimerExtensions on Notifier<UnifiedTimerState?> {
       );
     }
 
-    // Start timer logic - cast to access methods
-    final controller = this as dynamic;
-    await controller.startTimer(
+    await startTimer(
       durationSeconds: seconds,
       type: TimerType.rest,
       exerciseName: exerciseName,
@@ -59,8 +60,7 @@ extension Tier1TimerExtensions on Notifier<UnifiedTimerState?> {
 
   /// Stop timer e nascondi UI
   Future<void> stopTimerWithUI(Ref ref) async {
-    final controller = this as dynamic;
-    await controller.stopTimer();
+    await stopTimer();
     ref.read(timerUIStateProvider.notifier).hide();
   }
 
