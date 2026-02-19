@@ -7,6 +7,7 @@
 /// - "Large tappable buttons" - For use during workout
 library;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
@@ -14,7 +15,6 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
-import 'package:cupertino_native/cupertino_native.dart';
 
 /// Custom scroll physics that accelerates when scrolling fast
 /// Based on: https://stackoverflow.com/questions/57671811/flutter-how-to-override-scroll-physics
@@ -863,12 +863,15 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
           if (widget.countingMode.requiresReps && !_isManualInput)
             Padding(
               padding: const EdgeInsets.only(bottom: 12),
-              child: CNSegmentedControl(
-                labels: [context.l10n.reps, 'Intervallo'],
-                selectedIndex: _isRangeMode ? 1 : 0,
-                onValueChanged: _toggleRepsMode,
-                height: 32,
-                shrinkWrap: true,
+              child: CupertinoSlidingSegmentedControl<int>(
+                groupValue: _isRangeMode ? 1 : 0,
+                children: {
+                  0: Text(context.l10n.reps),
+                  1: Text('Intervallo'),
+                },
+                onValueChanged: (value) {
+                  if (value != null) _toggleRepsMode(value);
+                },
               ),
             ),
 
