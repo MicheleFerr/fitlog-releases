@@ -271,7 +271,7 @@ class ExerciseMergeRepositoryImpl
   }) async {
     // Query template dell'utente
     final query = _firestore
-        .collection('workout_templates')
+        .collection('workoutTemplates')
         .where('userId', isEqualTo: userId);
 
     final snapshot = await query.get();
@@ -483,7 +483,7 @@ class ExerciseMergeRepositoryImpl
   }) async {
     final result = await handleFirebaseOperation(() async {
       final query = _firestore
-          .collection('workout_templates')
+          .collection('workoutTemplates')
           .where('userId', isEqualTo: userId);
 
       final snapshot = await query.get();
