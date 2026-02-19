@@ -59,6 +59,8 @@ class WorkoutSessionManager: NSObject {
             updateSelectedRPE(call.arguments as? [String: Any], result: result)
         case "extendRestTimer":
             extendRestTimer(call.arguments as? [String: Any], result: result)
+        case "syncRestEndTime":
+            syncRestEndTime(call.arguments as? [String: Any], result: result)
         case "pauseRestTimer":
             pauseRestTimer(call.arguments as? [String: Any], result: result)
         case "resumeRestTimer":
@@ -499,6 +501,59 @@ class WorkoutSessionManager: NSObject {
 
             Logger.shared.debug("⏰ WorkoutSession rest extended by \(additionalSeconds)s (new total: \(newTotalSeconds)s)", category: .general)
             result(true)
+        }
+    }
+
+    // MARK: - Sync Rest End Time (Absolute)
+
+    /// Sync the rest timer to an absolute end time.
+    /// Called from Flutter after +30s to guarantee the LA matches Flutter's internal state,
+    /// regardless of whether the AppIntent update already applied.
+    private func syncRestEndTime(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
+        let activity = currentActivity ?? Activity<WorkoutSessionAttributes>.activities.first
+        guard let activity = activity else {
+            result(false)
+            return
+        }
+
+        guard let args = arguments,
+              let endTimeMs = args["endTimeMs"] as? Double else {
+            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing endTimeMs", details: nil))
+            return
+        }
+
+        let newEndDate = Date(timeIntervalSince1970: endTimeMs / 1000.0)
+        let currentState = activity.content.state
+
+        guard currentState.mode == .rest else {
+            // Not in rest mode, skip silently
+            result(false)
+            return
+        }
+
+        // ALWAYS apply the update (no tolerance skip) to force SwiftUI re-render.
+        // Even if the AppIntent already set the correct endDate, the widget
+        // extension process update may not have triggered a visual refresh.
+        // Sending a redundant update from the main app process forces iOS to
+        // re-render the Live Activity widget with the new timer interval.
+        var updatedState = currentState
+        updatedState.restEndDate = newEndDate
+        if let startDate = currentState.restStartDate {
+            updatedState.restTotalSeconds = max(0, Int(newEndDate.timeIntervalSince(startDate)))
+        }
+        updatedState.lastUpdated = Date()
+
+        Task {
+            await activity.update(
+                ActivityContent(
+                    state: updatedState,
+                    staleDate: Date().addingTimeInterval(7200)
+                )
+            )
+            Logger.shared.debug("🔄 [syncRestEndTime] LA force-synced to endDate: \(newEndDate)", category: .general)
+            DispatchQueue.main.async {
+                result(true)
+            }
         }
     }
 

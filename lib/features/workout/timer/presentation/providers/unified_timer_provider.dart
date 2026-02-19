@@ -864,47 +864,46 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         }
 
         if (workoutSessionLAActive) {
-          // Workout Session LA is active
+          // Workout Session LA is active.
+          final newEndTime = state!.endTime;
           if (fromLiveActivity) {
-            // Called from LA button - LA already updated by AppIntent, only notify Watch
-            debugPrint(
-              '[UnifiedTimer] 📡 From LA: skipping LA update, notifying Watch only...',
-            );
-            // ✅ FIX: Send REMAINING time (not total) for accurate Watch sync
-            await ref
-                .read(watchConnectivityProvider.notifier)
-                .sendRestTimerExtended(
-                  seconds,
-                  newRemainingSeconds, // REMAINING, not total!
-                );
-            debugPrint(
-              '[UnifiedTimer] ✅ Synced: LA (already updated) ✓ Watch notification sent (remaining=${newRemainingSeconds}s)',
-            );
+            // Called from LA button: AppIntent already updated the LA, but the
+            // widget might not visually refresh. Fire-and-forget a sync from
+            // the main app process to force a re-render. MUST NOT await this
+            // to avoid blocking the state update pipeline.
+            if (newEndTime != null) {
+              debugPrint(
+                '[UnifiedTimer] 📡 From LA: fire-and-forget sync to force re-render (endTime=$newEndTime)',
+              );
+              unawaited(
+                ref
+                    .read(workoutSessionLAServiceProvider)
+                    .syncRestEndTime(newEndTime),
+              );
+            }
           } else {
-            // Called from Flutter app - need to update both LA and Watch
-            debugPrint(
-              '[UnifiedTimer] 📡 From app: syncing +$seconds to Workout Session LA & Watch',
-            );
-
-            // Update Workout Session Live Activity
-            final wsLAService = ref.read(workoutSessionLAServiceProvider);
-            await wsLAService.extendRestTimer(seconds);
-            debugPrint('[UnifiedTimer] ✅ Workout Session LA extended');
-
-            // Notify Apple Watch
-            // ✅ FIX: Send REMAINING time (not total) for accurate Watch sync
-            await ref
-                .read(watchConnectivityProvider.notifier)
-                .sendRestTimerExtended(
-                  seconds,
-                  newRemainingSeconds, // REMAINING, not total!
-                );
-            debugPrint(
-              '[UnifiedTimer] ✅ Watch notification sent (remaining=${newRemainingSeconds}s)',
-            );
-
-            debugPrint('[UnifiedTimer] ✅ Synced: WorkoutSession LA ✓ Watch ✓');
+            // Called from Flutter app: sync LA with absolute end time
+            if (newEndTime != null) {
+              debugPrint(
+                '[UnifiedTimer] 📡 App-side: syncing absolute end time to LA: $newEndTime',
+              );
+              final wsLAService = ref.read(workoutSessionLAServiceProvider);
+              await wsLAService.syncRestEndTime(newEndTime);
+              debugPrint('[UnifiedTimer] ✅ LA end time synced');
+            }
           }
+
+          // Notify Apple Watch
+          // ✅ FIX: Send REMAINING time (not total) for accurate Watch sync
+          await ref
+              .read(watchConnectivityProvider.notifier)
+              .sendRestTimerExtended(
+                seconds,
+                newRemainingSeconds, // REMAINING, not total!
+              );
+          debugPrint(
+            '[UnifiedTimer] ✅ Synced: LA ✓ Watch notification sent (remaining=${newRemainingSeconds}s)',
+          );
         } else if (state!.liveActivityActive) {
           // Legacy timer LA is active
           debugPrint('[UnifiedTimer] 📡 Using legacy LA update');

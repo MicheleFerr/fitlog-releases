@@ -319,6 +319,32 @@ class WorkoutSessionLAService {
     }
   }
 
+  /// Sync the rest timer to an absolute end time.
+  ///
+  /// Used after +30s from Live Activity to guarantee LA and Flutter state match,
+  /// regardless of whether the AppIntent update already applied.
+  /// Using absolute time avoids double-add issues.
+  Future<bool> syncRestEndTime(DateTime absoluteEndTime) async {
+    if (!Platform.isIOS || _currentActivityId == null) return false;
+
+    try {
+      final result = await _channel.invokeMethod<bool>('syncRestEndTime', {
+        'endTimeMs': absoluteEndTime.millisecondsSinceEpoch.toDouble(),
+      });
+      debugPrint(
+        '[WorkoutSessionLA] 🔄 Synced absolute end time: $absoluteEndTime',
+      );
+      return result ?? false;
+    } catch (e) {
+      // Catch ALL exceptions (PlatformException, MissingPluginException, etc.)
+      // to prevent this from breaking the caller's flow
+      debugPrint(
+        '[WorkoutSessionLA] ⚠️ Failed to sync rest end time: $e',
+      );
+      return false;
+    }
+  }
+
   /// Extend the rest timer by adding additional seconds
   ///
   /// [additionalSeconds] - Number of seconds to add to current rest timer
