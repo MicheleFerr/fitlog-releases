@@ -50,117 +50,102 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     WidgetsBinding.instance.addObserver(this);
 
     // CRITICAL FIX: Listen for iOS notification that audio was played
-    _unifiedChannel.setMethodCallHandler((call) async {
-      // CRITICAL FIX: Check disposal status first to prevent operations after dispose
-      if (_isDisposed) {
-        // Ignoring method call on disposed provider
-        return null;
-      }
-
-      // CRITICAL FIX: Check initialization status before processing method calls
-      if (!_isInitialized) {
-        // Received iOS method call before initialization complete - queueing
-        try {
-          // Ensure we're initialized before handling method calls
-          await _ensureInitialized();
-        } catch (e) {
-          // Failed to initialize for iOS method call: $e
-          return null;
-        }
-      }
-
-      if (call.method == 'timerAudioPlayedByiOS') {
-        // Double-check disposal after potential async wait
-        if (_isDisposed) return null;
-
-        // iOS notified that timer audio was played
-
-        // Mark audio as played to prevent duplicate
-        if (state != null && !state!.audioPlayed) {
-          state = state!.markAudioPlayed();
-          await _saveState();
-          // Marked audio as played from iOS notification
-
-          // ✅ FIX: Call duration tracking when iOS completes timer
-          // NOTE: currentSet is the COMPLETED set, so we track the NEXT set (currentSet + 1)
-          if (kDebugMode) {
-            debugPrint('🍎 [iOS AUDIO] Timer completed by iOS notification');
-          }
-          if (_currentExerciseId != null && state?.currentSet != null) {
-            try {
-              final durationTracker = ref.read(setDurationTrackerProvider);
-              final nextSetNumber = state!.currentSet! + 1;
-              durationTracker.startSet(_currentExerciseId!, nextSetNumber);
-              if (kDebugMode) {
-                debugPrint(
-                  '✅ [iOS AUDIO] Called startSet for exercise $_currentExerciseId, set $nextSetNumber (after completing set ${state!.currentSet})',
-                );
-              }
-            } catch (e) {
-              if (kDebugMode) {
-                debugPrint('❌ [iOS AUDIO] Error calling startSet: $e');
-              }
-            }
-          }
-
-          // ✅ FIX: Complete the timer state when iOS notifies completion
-          // This ensures the timer is properly marked as completed even when
-          // the ticker was suspended in background
-          state = state!.copyWith(
-            status: TimerStatus.completed,
-            remainingSeconds: 0,
-            completionTime: DateTime.now(),
-          );
-          await _saveState();
-          debugPrint('🍎 [iOS AUDIO] Timer state marked as completed');
-
-          // ✅ FIX: Transition WorkoutSession Live Activity from REST to EXERCISE mode
-          // This is critical for when the app is in background and iOS timer completes
-          try {
-            final laState = ref.read(workoutSessionLAProvider);
-            if (laState.isActive && laState.mode == WorkoutSessionMode.rest) {
-              debugPrint(
-                '🍎 [iOS AUDIO] LA is in REST mode - transitioning to EXERCISE',
-              );
-              final workout = ref.read(currentWorkoutProvider);
-              if (workout != null) {
-                for (final exercise in workout.exercises) {
-                  final incompleteSetIndex = exercise.sets.indexWhere(
-                    (set) => !set.isCompleted,
-                  );
-                  if (incompleteSetIndex != -1) {
-                    final completedExercises = workout.exercises
-                        .where((e) => e.sets.every((s) => s.isCompleted))
-                        .length;
-                    await ref
-                        .read(workoutSessionLAProvider.notifier)
-                        .transitionToExercise(
-                          exercise: exercise,
-                          setIndex: incompleteSetIndex + 1,
-                          completedExercises: completedExercises,
-                          totalExercises: workout.exercises.length,
-                        );
-                    debugPrint(
-                      '✅ [iOS AUDIO] LA transitioned to EXERCISE: ${exercise.name} set ${incompleteSetIndex + 1}',
-                    );
-                    break;
-                  }
-                }
-              }
-            }
-          } catch (e) {
-            debugPrint('❌ [iOS AUDIO] Error transitioning LA to exercise: $e');
-          }
-        }
-      }
-      return null;
-    });
+    // FIX C10: Extracted to dedicated method to prevent re-registration on rebuild.
+    _unifiedChannel.setMethodCallHandler(_handleIOSMethodCall);
 
     // Setup disposal callback
     ref.onDispose(() {
       _disposeResources();
     });
 
+    return null;
+  }
+
+  /// Handles method calls from the native iOS side.
+  /// Extracted from build() to prevent re-registration on every Riverpod rebuild (FIX C10).
+  Future<dynamic> _handleIOSMethodCall(MethodCall call) async {
+    if (_isDisposed) return null;
+
+    if (!_isInitialized) {
+      try {
+        await _ensureInitialized();
+      } catch (e) {
+        return null;
+      }
+    }
+
+    if (call.method == 'timerAudioPlayedByiOS') {
+      if (_isDisposed) return null;
+
+      if (state != null && !state!.audioPlayed) {
+        state = state!.markAudioPlayed();
+        await _saveState(immediate: true); // FIX C13: critical state
+
+        if (kDebugMode) {
+          debugPrint('🍎 [iOS AUDIO] Timer completed by iOS notification');
+        }
+        if (_currentExerciseId != null && state?.currentSet != null) {
+          try {
+            final durationTracker = ref.read(setDurationTrackerProvider);
+            final nextSetNumber = state!.currentSet! + 1;
+            durationTracker.startSet(_currentExerciseId!, nextSetNumber);
+            if (kDebugMode) {
+              debugPrint(
+                '✅ [iOS AUDIO] Called startSet for exercise $_currentExerciseId, set $nextSetNumber (after completing set ${state!.currentSet})',
+              );
+            }
+          } catch (e) {
+            if (kDebugMode) {
+              debugPrint('❌ [iOS AUDIO] Error calling startSet: $e');
+            }
+          }
+        }
+
+        state = state!.copyWith(
+          status: TimerStatus.completed,
+          remainingSeconds: 0,
+          completionTime: DateTime.now(),
+        );
+        await _saveState(immediate: true); // FIX C13: critical state
+        debugPrint('🍎 [iOS AUDIO] Timer state marked as completed');
+
+        try {
+          final laState = ref.read(workoutSessionLAProvider);
+          if (laState.isActive && laState.mode == WorkoutSessionMode.rest) {
+            debugPrint(
+              '🍎 [iOS AUDIO] LA is in REST mode - transitioning to EXERCISE',
+            );
+            final workout = ref.read(currentWorkoutProvider);
+            if (workout != null) {
+              for (final exercise in workout.exercises) {
+                final incompleteSetIndex = exercise.sets.indexWhere(
+                  (set) => !set.isCompleted,
+                );
+                if (incompleteSetIndex != -1) {
+                  final completedExercises = workout.exercises
+                      .where((e) => e.sets.every((s) => s.isCompleted))
+                      .length;
+                  await ref
+                      .read(workoutSessionLAProvider.notifier)
+                      .transitionToExercise(
+                        exercise: exercise,
+                        setIndex: incompleteSetIndex + 1,
+                        completedExercises: completedExercises,
+                        totalExercises: workout.exercises.length,
+                      );
+                  debugPrint(
+                    '✅ [iOS AUDIO] LA transitioned to EXERCISE: ${exercise.name} set ${incompleteSetIndex + 1}',
+                  );
+                  break;
+                }
+              }
+            }
+          }
+        } catch (e) {
+          debugPrint('❌ [iOS AUDIO] Error transitioning LA to exercise: $e');
+        }
+      }
+    }
     return null;
   }
 
@@ -1060,7 +1045,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         }
       }
 
-      await _saveState();
+      await _saveState(immediate: true); // FIX C13: skip must persist immediately
 
       // Timer skipped - no audio will play
     } catch (e, stackTrace) {
@@ -1154,13 +1139,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     // CRITICAL: Handle completion IMMEDIATELY and SYNCHRONOUSLY
     // Use newRemainingSeconds directly since state may not be updated every tick
     if (newRemainingSeconds <= 0 && !(_completionInProgress || (state!.audioPlayed))) {
+      // FIX C12: Set flag HERE before calling to close the check-and-set gap.
+      // In Dart's single-threaded model the window is theoretical, but setting it
+      // early makes the intent explicit and protects against any future refactoring.
+      _completionInProgress = true;
       // Sync state for completion
       state = state!.copyWith(
         remainingSeconds: 0,
         tickCount: _internalTickCount,
         status: TimerStatus.completed,
       );
-      _onTimerComplete();
+      unawaited(_onTimerComplete());
     }
 
     // OPTIMIZATION: Batch Live Activity updates to prevent queue buildup
@@ -1271,11 +1260,8 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       return;
     }
 
-    // CRITICAL: Atomic check-and-set to prevent multiple simultaneous completions
-    if (_completionInProgress) {
-      // Completion already in progress
-      return;
-    }
+    // NOTE: _completionInProgress is set by the caller (_onTick) before invoking this.
+    // The audioPlayed guard below is the idempotency safety net for the restoration path.
 
     if (state?.isCompleted != true) {
       // Timer not completed yet
@@ -1287,10 +1273,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       return;
     }
 
-    // ATOMIC: Lock completion process
+    // Idempotent set: already true when called from _onTick(), but needed for
+    // the restoration path which calls this directly without pre-setting.
     _completionInProgress = true;
-
-    // Timer completion locked
 
     // CRITICAL FIX: Mark audio as played IMMEDIATELY to prevent race conditions
     state = state!.markAudioPlayed();
@@ -1299,7 +1284,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     _remainingSecondsNotifier?.value = 0;
     _eventController?.add(TimerEvent.completed());
 
-    await _saveState();
+    // FIX C13: immediate=true bypasses 500ms debounce — audioPlayed flag must
+    // be persisted before the app can be backgrounded or terminated.
+    await _saveState(immediate: true);
 
     // DOUBLE CHECK: Ensure the audioPlayed flag is truly persisted
     // Audio flag set: audioPlayed=${state!.audioPlayed}
@@ -2229,16 +2216,28 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     }
   }
 
-  /// OPTIMIZED: Save state with debouncing to reduce I/O operations
-  Future<void> _saveState() async {
+  /// OPTIMIZED: Save state with debouncing to reduce I/O operations.
+  ///
+  /// Pass [immediate] = true for critical events (completion, audioPlayed, skip)
+  /// to bypass the 500ms debounce window and prevent data loss on app termination.
+  Future<void> _saveState({bool immediate = false}) async {
     if (state == null || _storage == null) return;
+
+    _pendingSaveData = state!.toJson();
+
+    // FIX C13: Critical events must persist synchronously — debounce risks losing
+    // audioPlayed=true if the app goes to background within 500ms of completion.
+    if (immediate) {
+      _saveDebounceTimer?.cancel();
+      _saveDebounceTimer = null;
+      await _performActualSave();
+      return;
+    }
 
     // OPTIMIZATION: Debounce saves - wait 500ms for rapid changes to settle
     _saveDebounceTimer?.cancel();
-    _pendingSaveData = state!.toJson();
-
     _saveDebounceTimer = Timer(const Duration(milliseconds: 500), () {
-      _performActualSave();
+      unawaited(_performActualSave());
     });
   }
 
@@ -2745,14 +2744,49 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
   // SIMPLIFIED APP LIFECYCLE: Only handle critical state for iOS
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState appLifecycleState) {
     if (_isDisposed) return;
 
-    super.didChangeAppLifecycleState(state);
+    super.didChangeAppLifecycleState(appLifecycleState);
 
-    // Only sync on iOS when returning from background to prevent drift
-    if (Platform.isIOS && state == AppLifecycleState.resumed) {
-      // The drift correction in _tick() will automatically handle sync
+    // FIX C11: Sync immediately on resume — don't wait for next _onTick() (10s drift window).
+    // If timer expired while in background the ticker wasn't running, so state stays "running"
+    // forever without this explicit sync.
+    if (appLifecycleState == AppLifecycleState.resumed) {
+      _syncTimerStateAfterResume();
+    }
+  }
+
+  /// FIX C11: Recalculate timer state immediately when app returns from background.
+  /// Handles the case where the timer expired while Flutter was suspended.
+  void _syncTimerStateAfterResume() {
+    final currentState = state;
+    if (currentState == null || !currentState.isActive) return;
+
+    final endTime = _cachedEndTime ?? currentState.endTime;
+    if (endTime == null) return;
+
+    final now = DateTime.now();
+    final remaining = endTime.difference(now).inSeconds;
+
+    if (remaining <= 0) {
+      // Timer expired while in background.
+      // iOS already handled audio/notification — only correct Flutter UI state.
+      if (!currentState.audioPlayed && !_completionInProgress) {
+        _completionInProgress = true;
+        state = currentState.copyWith(
+          status: TimerStatus.completed,
+          remainingSeconds: 0,
+        );
+        _remainingSecondsNotifier?.value = 0;
+        // Mark as played to prevent duplicate audio on next tick
+        state = state!.markAudioPlayed();
+        unawaited(_saveState(immediate: true));
+      }
+    } else {
+      // Timer still running — apply precise correction now (don't wait 10 ticks)
+      _remainingSecondsNotifier?.value = remaining;
+      state = currentState.copyWith(remainingSeconds: remaining);
     }
   }
 }

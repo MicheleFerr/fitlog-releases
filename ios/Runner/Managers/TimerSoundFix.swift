@@ -178,6 +178,16 @@ final class TimerSoundFix {
     /// - Parameter preferredSound: Optional sound name to play
     /// - Parameter isPreview: If true, skip backup sound (for UI preview only)
     func playTimerCompletionSound(preferredSound: String? = nil, isPreview: Bool = false) {
+        // FIX C9: Redirect to utility queue if called from a high-priority GCD thread.
+        // The retry logic in playWithAVAudioPlayer uses Thread.sleep, which must not
+        // block .userInitiated or .userInteractive threads (e.g. coordinationQueue).
+        let qos = qos_class_self()
+        if qos == QOS_CLASS_USER_INTERACTIVE || qos == QOS_CLASS_USER_INITIATED {
+            DispatchQueue.global(qos: .utility).async { [weak self] in
+                self?.playTimerCompletionSound(preferredSound: preferredSound, isPreview: isPreview)
+            }
+            return
+        }
         let startTime = Date()
         let currentThread = Thread.isMainThread ? "MAIN" : "BACKGROUND"
         let queueLabel = OperationQueue.current?.underlyingQueue?.label ?? "unknown"
@@ -878,13 +888,18 @@ final class TimerSoundFix {
         }
         
         // Test preloaded sounds directly
+        // FIX C9: Use asyncAfter instead of Thread.sleep to avoid blocking the caller.
         Logger.shared.log(.info, "🔊 Testing preloaded sounds directly...", category: .audioSession)
-        for (name, soundID) in preloadedSounds {
-            Logger.shared.log(.info, "Playing \(name) with ID \(soundID)...", category: .audioSession)
-            AudioServicesPlaySystemSoundWithCompletion(soundID) {
-                Logger.shared.log(.info, "✅ Completed: \(name)", category: .audioSession)
+        var soundDelay = 0.0
+        for (name, soundID) in preloadedSounds.sorted(by: { $0.key < $1.key }) {
+            let delaySnapshot = soundDelay
+            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + delaySnapshot) {
+                Logger.shared.log(.info, "Playing \(name) with ID \(soundID)...", category: .audioSession)
+                AudioServicesPlaySystemSoundWithCompletion(soundID) {
+                    Logger.shared.log(.info, "✅ Completed: \(name)", category: .audioSession)
+                }
             }
-            Thread.sleep(forTimeInterval: 1.5)
+            soundDelay += 1.5
         }
         
         // Test each strategy individually

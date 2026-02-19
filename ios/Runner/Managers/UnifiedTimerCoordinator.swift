@@ -145,8 +145,11 @@ final class UnifiedTimerCoordinator {
                 self.handlePrintPerformanceMetrics(result: mainResult)
 
             // ✅ FIX #3: Background task management for emergency saves
+            // FIX C7: Pass original `result` (not mainResult) because handleBeginBackgroundTask
+            // already dispatches to DispatchQueue.main internally — using mainResult would
+            // cause a double-dispatch (main → main) with an unnecessary async hop.
             case "beginBackgroundTask":
-                self.handleBeginBackgroundTask(call.arguments, result: mainResult)
+                self.handleBeginBackgroundTask(call.arguments, result: result)
 
             case "endBackgroundTask":
                 self.handleEndBackgroundTask(call.arguments, result: mainResult)

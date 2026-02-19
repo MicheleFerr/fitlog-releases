@@ -35,7 +35,13 @@ final class AudioSessionManager: AudioSessionManaging {
     
     static let shared = AudioSessionManager()
     
-    private var currentState: State = .uninitialized
+    private var currentState: State = .uninitialized {
+        // FIX C6: Mirror background state in a separate flag so isAppInBackground
+        // can be read without re-entering stateQueue (avoids potential deadlock
+        // when called from inside a stateQueue.sync block).
+        didSet { _isAppInBackground = currentState == .background }
+    }
+    private var _isAppInBackground: Bool = false
     private let stateQueue = DispatchQueue(label: "com.gymbro.audio.state", qos: .userInitiated)
     private var session: AVAudioSession { AVAudioSession.sharedInstance() }
     
@@ -79,11 +85,10 @@ final class AudioSessionManager: AudioSessionManaging {
     // MARK: - Public Methods
 
     /// Thread-safe check whether the app is currently in background.
-    /// Use this instead of UIApplication.shared.applicationState from background threads
-    /// to avoid DispatchQueue.main.sync deadlock risk.
-    var isAppInBackground: Bool {
-        stateQueue.sync { currentState == .background }
-    }
+    /// Use this instead of UIApplication.shared.applicationState from background threads.
+    /// FIX C6: Reads _isAppInBackground (updated via currentState.didSet) instead of
+    /// re-entering stateQueue.sync to prevent deadlock when called from inside the queue.
+    var isAppInBackground: Bool { _isAppInBackground }
 
     func configureForLaunch() {
         stateQueue.sync {

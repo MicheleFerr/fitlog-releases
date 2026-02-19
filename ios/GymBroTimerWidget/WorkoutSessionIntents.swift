@@ -309,7 +309,28 @@ struct WorkoutSelectRPEIntent: LiveActivityIntent {
     }
 
     func perform() async throws -> some IntentResult {
-        // Signal Flutter via UserDefaults
+        // FIX C2: Update Live Activity immediately for instant UI feedback.
+        // Without this, the RPE button stays un-highlighted until Flutter processes
+        // the Darwin notification — which can take seconds or never happen when locked.
+        if let activity = Activity<WorkoutSessionAttributes>.activities.first {
+            let currentState = activity.content.state
+
+            // Only update if we're in RPE mode and the selection actually changed
+            if currentState.mode == .rpe && currentState.selectedRPE != rpeValue {
+                var updatedState = currentState
+                updatedState.selectedRPE = rpeValue
+                updatedState.lastUpdated = Date()
+
+                await activity.update(
+                    ActivityContent(
+                        state: updatedState,
+                        staleDate: nil
+                    )
+                )
+            }
+        }
+
+        // Signal Flutter via UserDefaults (secondary sync path)
         saveEventToUserDefaults(
             eventType: .selectRPE,
             additionalData: [

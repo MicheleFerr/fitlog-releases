@@ -305,10 +305,11 @@ final class DirectNotificationManager: NSObject {
     /// RACE CONDITION FIX: Also sets isSkipInProgress flag to prevent new notifications
     /// from being scheduled during the skip operation
     func cancelAllTimerNotifications() {
-        // RACE CONDITION FIX: Set flag BEFORE cancelling to block any pending schedules
-        trackingQueue.sync {
-            isSkipInProgress = true
-            skipTimestamp = Date()
+        // RACE CONDITION FIX: Set flag BEFORE cancelling to block any pending schedules.
+        // FIX C8: Use async write to avoid blocking the calling thread.
+        trackingQueue.async { [weak self] in
+            self?.isSkipInProgress = true
+            self?.skipTimestamp = Date()
         }
         print("🗑️ [SKIP] Set isSkipInProgress = true to block new notifications")
 
@@ -318,8 +319,8 @@ final class DirectNotificationManager: NSObject {
         // RACE CONDITION FIX: Keep the flag active for a short time to catch
         // any async scheduling that was already in flight
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.trackingQueue.sync {
-                // Only reset if this is the same skip operation (check timestamp)
+            // FIX C8: Use async write inside asyncAfter to avoid blocking.
+            self?.trackingQueue.async { [weak self] in
                 if let skipTime = self?.skipTimestamp,
                    Date().timeIntervalSince(skipTime) >= 0.5 {
                     self?.isSkipInProgress = false
@@ -332,9 +333,10 @@ final class DirectNotificationManager: NSObject {
     /// Reset the skip flag - call this when starting a NEW legitimate timer
     /// This allows notifications to be scheduled again after a skip
     func resetSkipFlag() {
-        trackingQueue.sync {
-            isSkipInProgress = false
-            skipTimestamp = nil
+        // FIX C8: Use async write to avoid blocking the calling thread.
+        trackingQueue.async { [weak self] in
+            self?.isSkipInProgress = false
+            self?.skipTimestamp = nil
         }
         print("🔓 [TIMER] Reset isSkipInProgress - new timer can schedule notifications")
     }

@@ -9,6 +9,7 @@ import WidgetKit
 import AppIntents
 import ActivityKit
 import Foundation
+import UserNotifications
 
 struct ConfigurationAppIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource { "Configuration" }
@@ -68,7 +69,7 @@ struct AddTimeIntent: LiveActivityIntent {
                 )
             )
             
-            // 🔥 NUOVO: Salva evento per Flutter tramite UserDefaults condivisi
+            // Salva evento per Flutter tramite UserDefaults condivisi
             let userDefaults = UserDefaults(suiteName: "group.com.michele.gymbro.flutter")
             let eventData: [String: Any] = [
                 "remainingSeconds": newRemainingSeconds,
@@ -82,6 +83,15 @@ struct AddTimeIntent: LiveActivityIntent {
             ]
             userDefaults?.set(eventData, forKey: "timer_event")
 
+            // FIX C4: Cancel the original scheduled notification and reschedule it for the
+            // new end time. Without this, the notification fires at the OLD time (before the
+            // extended timer ends), causing a premature sound alert to the user.
+            if currentState.isRunning {
+                await rescheduleTimerNotification(
+                    remainingSeconds: newRemainingSeconds,
+                    userDefaults: userDefaults
+                )
+            }
         }
         return .result()
     }
@@ -255,4 +265,61 @@ struct CompleteSetIntent: LiveActivityIntent {
 extension LiveActivityIntent {
     // This extension provides access to shared LiveActivityHandler methods
     // from within App Intents
+}
+
+// MARK: - FIX C4: Notification Rescheduling Helper
+
+/// Cancels the existing timer completion notification and schedules a new one
+/// for the updated remaining seconds. Called from AddTimeIntent to prevent
+/// the old notification from firing before the extended timer ends.
+@available(iOS 16.1, *)
+private func rescheduleTimerNotification(
+    remainingSeconds: Int,
+    userDefaults: UserDefaults?
+) async {
+    let center = UNUserNotificationCenter.current()
+
+    // 1. Cancel all pending timer notifications (by category, catches both
+    //    app-scheduled and intent-scheduled notifications)
+    let pendingRequests = await center.pendingNotificationRequests()
+    let timerIds = pendingRequests
+        .filter { $0.content.categoryIdentifier == "TIMER_COMPLETE" }
+        .map { $0.identifier }
+
+    if !timerIds.isEmpty {
+        center.removePendingNotificationRequests(withIdentifiers: timerIds)
+    }
+
+    // 2. Read preferred sound from shared UserDefaults (same key used by main app)
+    let soundName = userDefaults?.string(forKey: "timer_notification_sound") ?? "sound"
+    let soundFileName = "\(soundName).caf"
+
+    // 3. Schedule new notification at the updated end time
+    let content = UNMutableNotificationContent()
+    content.title = "⏱️ Rest Complete"
+    content.body = "Time to start your next set!"
+    content.categoryIdentifier = "TIMER_COMPLETE"
+    content.sound = UNNotificationSound(named: UNNotificationSoundName(soundFileName))
+    content.userInfo = [
+        "type": "rest_timer_completion",
+        "source": "add_time_intent",
+        "scheduledAt": Date().timeIntervalSince1970
+    ]
+
+    let trigger = UNTimeIntervalNotificationTrigger(
+        timeInterval: TimeInterval(max(1, remainingSeconds)),
+        repeats: false
+    )
+
+    let request = UNNotificationRequest(
+        identifier: "com.gymbro.rest_timer_completion",
+        content: content,
+        trigger: trigger
+    )
+
+    do {
+        try await center.add(request)
+    } catch {
+        // Non-fatal: Flutter will handle completion state even if notification fails
+    }
 }
