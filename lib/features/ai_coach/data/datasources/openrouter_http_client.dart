@@ -102,6 +102,9 @@ class OpenRouterHttpClient {
 
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         final choices = json['choices'] as List<dynamic>;
+        if (choices.isEmpty) {
+          throw Exception('OpenRouter: response contains no choices');
+        }
         final firstChoice = choices.first as Map<String, dynamic>;
         final message = firstChoice['message'] as Map<String, dynamic>;
         final finishReason = firstChoice['finish_reason'] as String?;

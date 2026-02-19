@@ -674,9 +674,9 @@ class AIToolExecutor {
         'firstWorkoutDate': stats.firstWorkoutDate?.toIso8601String(),
         'lastWorkoutDate': stats.lastWorkoutDate?.toIso8601String(),
         'topExercises': Map.fromEntries(
-          stats.exerciseFrequency.entries.toList()
-            ..sort((a, b) => b.value.compareTo(a.value))
-            ..take(10),
+          (stats.exerciseFrequency.entries.toList()
+            ..sort((a, b) => b.value.compareTo(a.value)))
+            .take(10),
         ),
       });
     } catch (e, stackTrace) {

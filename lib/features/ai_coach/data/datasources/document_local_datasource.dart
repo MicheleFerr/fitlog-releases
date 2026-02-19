@@ -9,6 +9,7 @@ library;
 
 import 'package:flutter/foundation.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:synchronized/synchronized.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/models/scientific_paper_model.dart';
 
 /// Box names for Hive storage
@@ -20,21 +21,26 @@ class DocumentLocalDataSource {
   late Box<ScientificPaperModel> _documentsBox;
   late Box<Map<dynamic, dynamic>> _metaBox;
   bool _initialized = false;
+  final _initLock = Lock(); // Previene race condition su chiamate concorrenti
 
   /// Initialize Hive boxes (call once on app start)
   Future<void> initialize() async {
-    if (_initialized) return;
+    if (_initialized) return; // fast path senza lock
 
-    try {
-      _documentsBox =
-          await Hive.openBox<ScientificPaperModel>(documentsBoxName);
-      _metaBox = await Hive.openBox<Map<dynamic, dynamic>>(documentMetaBoxName);
-      _initialized = true;
-      debugPrint('[DOCUMENTS_LOCAL] ✅ Initialized Hive boxes');
-    } catch (e) {
-      debugPrint('[DOCUMENTS_LOCAL] ❌ Failed to initialize: $e');
-      rethrow;
-    }
+    await _initLock.synchronized(() async {
+      if (_initialized) return; // double-check dentro il lock
+
+      try {
+        _documentsBox =
+            await Hive.openBox<ScientificPaperModel>(documentsBoxName);
+        _metaBox = await Hive.openBox<Map<dynamic, dynamic>>(documentMetaBoxName);
+        _initialized = true;
+        debugPrint('[DOCUMENTS_LOCAL] ✅ Initialized Hive boxes');
+      } catch (e) {
+        debugPrint('[DOCUMENTS_LOCAL] ❌ Failed to initialize: $e');
+        rethrow;
+      }
+    });
   }
 
   /// Get all active papers
@@ -91,11 +97,12 @@ class DocumentLocalDataSource {
     debugPrint('[DOCUMENTS_LOCAL] ✅ Removed ${ids.length} papers (batch)');
   }
 
-  /// Clear all documents
+  /// Clear all documents e metadata associata
   Future<void> clear() async {
     await initialize();
     await _documentsBox.clear();
-    debugPrint('[DOCUMENTS_LOCAL] ✅ Cleared all documents');
+    await _metaBox.delete('sync_metadata'); // resetta anche la versione locale
+    debugPrint('[DOCUMENTS_LOCAL] ✅ Cleared all documents and metadata');
   }
 
   /// Get sync metadata

@@ -26,7 +26,7 @@
 /// ```
 library;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart'; // solo per IconData — non Material-specific
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'exercise_suggestion.freezed.dart';

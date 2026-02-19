@@ -29,8 +29,11 @@ final _documentRemoteDataSourceProvider = Provider<DocumentRemoteDataSource>((re
   final firebaseService = ref.watch(firebaseServiceProvider);
   final baseUrl = firebaseService.functionsBaseUrl;
 
+  final client = http.Client();
+  ref.onDispose(client.close); // Previene connection leak al dispose del provider
+
   return DocumentRemoteDataSource(
-    client: http.Client(),
+    client: client,
     baseUrl: baseUrl,
   );
 });
@@ -170,6 +173,9 @@ class DocumentSyncNotifier extends AsyncNotifier<DocumentSyncStatus> {
     result.fold(
       (error) => throw Exception(error),
       (_) async {
+        // Invalida tutti i provider che dipendono dalla cache documenti
+        ref.invalidate(cachedDocumentsProvider);
+        ref.invalidate(documentCategoriesProvider);
         // Reload status after clearing
         state = AsyncValue.data(await _loadStatus());
       },

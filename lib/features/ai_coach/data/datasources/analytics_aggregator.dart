@@ -38,17 +38,13 @@ class AnalyticsAggregator {
       // Fetch all data in PARALLEL for better performance
       debugPrint('[AI_COACH] 📊 Fetching all context data in parallel...');
 
-      final results = await Future.wait([
+      // Fetch in parallelo con variabili tipizzate — evita cast per indice fragili
+      final (streak, lastWorkout, top5, recovery) = await (
         getCurrentStreak(userId),
         getLastWorkout(userId),
         getTop5OneRM(userId),
         getRecoveryStatus(userId),
-      ]);
-
-      final streak = results[0] as int;
-      final lastWorkout = results[1] as WorkoutSummary?;
-      final top5 = results[2] as Map<String, int>;
-      final recovery = results[3] as RecoveryStatus;
+      ).wait;
 
       debugPrint('[AI_COACH] ✅ Parallel fetch complete:');
       debugPrint('[AI_COACH]   - Streak: $streak days');

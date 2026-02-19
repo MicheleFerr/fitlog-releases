@@ -879,13 +879,15 @@ class HealthKitDatasource {
   /// Returns `true` if successful, `false` otherwise
   Future<bool> deleteAllHealthData() async {
     try {
-      // Note: health package doesn't expose cache deletion API
-      // This is a placeholder for future implementation
-      // Actual deletion would require clearing any local Hive/SharedPreferences cache
+      // Cancella la cache locale sleep (unico dato persistito in memoria da questa classe)
+      _sleepCache.clear();
 
       if (kDebugMode) {
         debugPrint(
-          '🗑️ [HealthKitDatasource] Local cache cleared (GDPR Article 17)',
+          '🗑️ [HealthKitDatasource] Local sleep cache cleared (GDPR Article 17)',
+        );
+        debugPrint(
+          'ℹ️ [HealthKitDatasource] I dati in Apple Health rimangono sotto controllo dell\'utente tramite l\'app Salute.',
         );
       }
 

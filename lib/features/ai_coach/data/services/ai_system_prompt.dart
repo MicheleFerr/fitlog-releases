@@ -7,7 +7,7 @@
 /// **Feature**: AI Coach
 library;
 
-/// System prompt for Mistral 7B AI Coach
+/// System prompt for Meta Llama 3.3 70B Instruct AI Coach
 const String aiSystemPrompt = '''
 You are an evidence-based Personal Trainer AI for FitLog Pro.
 

@@ -70,7 +70,7 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
                 setState(() => _disclaimerAccepted = true);
               } else {
                 // User cancelled - go back
-                Navigator.of(context).pop();
+                context.pop();
               }
             }
           }
@@ -88,6 +88,7 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
       Future.delayed(const Duration(milliseconds: 100), () {
+        if (!mounted) return; // evita animazione su widget dispose
         if (_scrollController.hasClients) {
           _scrollController.animateTo(
             _scrollController.position.maxScrollExtent,
@@ -120,11 +121,13 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
     final chatState = ref.watch(aIChatProvider);
     final rateLimitAsync = ref.watch(aIRateLimitProvider);
 
-    // Auto-scroll when new messages arrive
-    if (chatState.messages.length > _previousMessageCount) {
-      _previousMessageCount = chatState.messages.length;
-      _scrollToBottom();
-    }
+    // Auto-scroll when new messages arrive — ref.listen evita side effect nel build()
+    ref.listen<ChatState>(aIChatProvider, (previous, next) {
+      if (next.messages.length > _previousMessageCount) {
+        _previousMessageCount = next.messages.length;
+        _scrollToBottom();
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(

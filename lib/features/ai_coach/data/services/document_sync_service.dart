@@ -40,13 +40,13 @@ class DocumentSyncService {
 
       debugPrint('[DOCUMENT_SYNC] 🚀 Initializing background sync');
 
-      // Initial sync
-      await _syncNow();
+      // Initial sync — chiamata diretta senza lock (già dentro _lock.synchronized)
+      await _doSync();
 
       // Schedule daily sync (24 hours)
       _syncTimer = Timer.periodic(
         const Duration(hours: 24),
-        (_) => _syncNow(),
+        (_) => syncNow(),
       );
 
       _initialized = true;
@@ -56,28 +56,27 @@ class DocumentSyncService {
 
   /// Trigger immediate sync (manual refresh)
   Future<void> syncNow() async {
-    await _syncNow();
+    await _lock.synchronized(_doSync);
   }
 
-  /// Internal sync logic (locked to prevent concurrent execution)
-  /// PERFORMANCE: Lock ensures only one sync runs at a time
-  Future<void> _syncNow() async {
-    await _lock.synchronized(() async {
-      debugPrint('[DOCUMENT_SYNC] 🔄 Starting sync...');
+  /// Core sync logic — NON acquisisce _lock, deve essere chiamata dall'interno di un lock.
+  /// Questo previene il deadlock: initialize() e syncNow() acquisiscono il lock,
+  /// poi chiamano questo metodo che non tenta di riacquisirlo.
+  Future<void> _doSync() async {
+    debugPrint('[DOCUMENT_SYNC] 🔄 Starting sync...');
 
-      final result = await _repository.syncDocuments();
+    final result = await _repository.syncDocuments();
 
-      result.fold(
-        (error) {
-          debugPrint('[DOCUMENT_SYNC] ❌ Sync failed: $error');
-        },
-        (status) {
-          debugPrint(
-            '[DOCUMENT_SYNC] ✅ Sync complete: ${status.documentsCount} documents (${status.localVersion})',
-          );
-        },
-      );
-    });
+    result.fold(
+      (error) {
+        debugPrint('[DOCUMENT_SYNC] ❌ Sync failed: $error');
+      },
+      (status) {
+        debugPrint(
+          '[DOCUMENT_SYNC] ✅ Sync complete: ${status.documentsCount} documents (${status.localVersion})',
+        );
+      },
+    );
   }
 
   /// Check if sync is needed without downloading
@@ -114,6 +113,7 @@ class DocumentSyncService {
     _syncTimer?.cancel();
     _syncTimer = null;
     _initialized = false;
+    _instance = null; // permette di creare una nuova istanza dopo il dispose
     debugPrint('[DOCUMENT_SYNC] 🛑 Disposed');
   }
 }

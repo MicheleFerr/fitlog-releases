@@ -12,7 +12,7 @@ import 'dart:convert';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/analytics_aggregator.dart';
-import 'package:gymbro_flutter_new/features/ai_coach/data/repositories/ai_chat_repository_impl.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/repositories/ai_chat_repository.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_safety_keywords.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_system_prompt.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_tool_definitions.dart';
@@ -37,7 +37,7 @@ class AICoachServiceImpl implements AICoachService {
     required this.contextAggregator,
   });
 
-  final AIChatRepositoryImpl chatRepository;
+  final AIChatRepository chatRepository;
   final AIToolExecutor toolExecutor;
   final AnalyticsAggregator contextAggregator;
 

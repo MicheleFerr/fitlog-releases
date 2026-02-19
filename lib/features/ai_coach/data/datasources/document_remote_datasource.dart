@@ -8,6 +8,7 @@
 library;
 
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/models/scientific_paper_model.dart';
@@ -38,7 +39,7 @@ class DocumentRemoteDataSource {
           'X-Local-Version': localVersion,
           'Content-Type': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 30));
 
       if (response.statusCode != 200) {
         _handleHttpError(response);
@@ -67,7 +68,7 @@ class DocumentRemoteDataSource {
       final response = await _client.get(
         uri,
         headers: {'Content-Type': 'application/json'},
-      );
+      ).timeout(const Duration(seconds: 30));
 
       if (response.statusCode != 200) {
         _handleHttpError(response);
@@ -83,21 +84,26 @@ class DocumentRemoteDataSource {
   }
 
   /// Batch fetch documents by IDs (PERFORMANCE)
-  /// Uses Future.wait for parallel fetching
+  /// Usa chunk da 5 per evitare di aprire centinaia di connessioni simultanee
   Future<List<ScientificPaperModel>> fetchDocuments(List<String> ids) async {
     debugPrint('[DOCUMENTS_REMOTE] 📥 Batch fetching ${ids.length} documents');
 
     try {
-      // Parallel fetch - PERFORMANCE
-      final responses = await Future.wait(
-        ids.map((id) => fetchDocument(id)),
-      );
+      const chunkSize = 5;
+      final results = <ScientificPaperModel>[];
+
+      for (var i = 0; i < ids.length; i += chunkSize) {
+        final chunk = ids.sublist(i, min(i + chunkSize, ids.length));
+        final chunkResults = await Future.wait(chunk.map(fetchDocument));
+        results.addAll(chunkResults);
+        debugPrint('[DOCUMENTS_REMOTE] 📦 Chunk ${(i ~/ chunkSize) + 1}: ${chunkResults.length} docs');
+      }
 
       debugPrint(
-        '[DOCUMENTS_REMOTE] ✅ Batch fetch complete: ${responses.length} documents',
+        '[DOCUMENTS_REMOTE] ✅ Batch fetch complete: ${results.length} documents',
       );
 
-      return responses;
+      return results;
     } catch (e) {
       debugPrint('[DOCUMENTS_REMOTE] ❌ Batch fetch failed: $e');
       rethrow;
