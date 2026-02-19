@@ -30,9 +30,15 @@ import FirebaseCore
         // Call super FIRST to set up Flutter engine (traditional lifecycle)
         let result = super.application(application, didFinishLaunchingWithOptions: launchOptions)
 
-        // Firebase initialization is handled by Flutter's firebase_core plugin
-        // via Firebase.initializeApp() in main.dart - don't call FirebaseApp.configure() here
-        Logger.shared.log(.info, "✅ Flutter engine initialized", category: .general)
+        // Configure Firebase BEFORE plugin registration so Crashlytics registers
+        // its signal handlers BEFORE Google Mobile Ads SDK (GADRegisterSignalHandlers).
+        // Without this, Ads SDK captures SIGABRT/SIGSEGV first and Crashlytics
+        // cannot report crashes reliably. Safe to call here — firebase_core's
+        // Firebase.initializeApp() in main.dart handles the already-configured case.
+        if FirebaseApp.app() == nil {
+            FirebaseApp.configure()
+        }
+        Logger.shared.log(.info, "✅ Flutter engine initialized, Firebase configured", category: .general)
 
         // Setup Flutter integration (channels, plugins)
         setupFlutterIntegration()
