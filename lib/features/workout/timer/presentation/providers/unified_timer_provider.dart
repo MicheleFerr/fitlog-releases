@@ -2412,6 +2412,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
             return 'Riscaldamento Completato';
           case 'cooldownComplete':
             return 'Defaticamento Completato';
+          // FIX #15: Missing Italian translation for inter-exercise rest timer.
+          case 'restBetweenExercisesComplete':
+            return 'Pronto per il Prossimo Esercizio';
           case 'timerFinished':
             return 'Il tuo timer è terminato';
           case 'setComplete':
