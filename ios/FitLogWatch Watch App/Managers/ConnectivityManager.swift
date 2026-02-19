@@ -105,12 +105,25 @@ class ConnectivityManager: NSObject, ObservableObject {
     // MARK: - Templates
     @Published var receivedTemplates: [WorkoutTemplate] = []
 
+    // MARK: - P0-2 FIX: Serial Message Channel
+    // Ensures messages from nonisolated WCSession delegates are processed in order
+    private enum IncomingEvent: @unchecked Sendable {
+        case message([String: Any])
+        case applicationContext([String: Any])
+    }
+    // nonisolated(unsafe): AsyncStream.Continuation is thread-safe (Sendable),
+    // safe to yield from nonisolated WCSession delegates
+    private nonisolated(unsafe) var incomingContinuation: AsyncStream<IncomingEvent>.Continuation?
+
     // MARK: - Private Properties
     private var session: WCSession?
 
     // MARK: - Rate Limiting (prevents message flooding)
+    // P2-12 FIX: Configurable rate limits per message category
     private var lastMessageTime: Date = .distantPast
-    private let minimumMessageInterval: TimeInterval = 0.3  // 300ms between messages
+    private let minimumMessageInterval: TimeInterval = 0.3  // Default 300ms
+    private let healthMessageInterval: TimeInterval = 1.0   // Health updates: 1s (reduce noise)
+    private var lastHealthMessageTime: Date = .distantPast
 
     /// Flag to prevent race conditions during sync operations
     private var isSyncingWorkoutState = false
@@ -145,21 +158,35 @@ class ConnectivityManager: NSObject, ObservableObject {
         print("🔔 [HAPTIC] Playing workout start haptic")
     }
 
-    override init() {
+    // P2-7 FIX: Private init enforces singleton pattern
+    private override init() {
         super.init()
+
+        // P0-2 FIX: Setup serial message processing channel
+        let (stream, continuation) = AsyncStream<IncomingEvent>.makeStream()
+        self.incomingContinuation = continuation
+        Task { @MainActor [weak self] in
+            for await event in stream {
+                guard let self = self else { break }
+                switch event {
+                case .message(let message):
+                    self.handleIncomingMessage(message)
+                case .applicationContext(let context):
+                    self.handleIncomingApplicationContext(context)
+                }
+            }
+        }
 
         if WCSession.isSupported() {
             session = WCSession.default
             session?.delegate = self
             session?.activate()
 
-            // ✅ UNIFIED SYNC for fast startup (race-condition safe):
-            // Uses unified method that coordinates cache check + fresh request
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            // P2-10 FIX: Use Task instead of DispatchQueue.main.asyncAfter for Swift 6 compatibility
+            Task { @MainActor [weak self] in
+                try? await Task.sleep(for: .milliseconds(300))
                 self?.syncWorkoutStateFromiPhone()
             }
-        } else {
-            print("⚠️ WCSession not supported on this device")
         }
     }
 
@@ -199,7 +226,7 @@ class ConnectivityManager: NSObject, ObservableObject {
         if !context.isEmpty {
             if let workoutData = context["workout"] as? [String: Any] {
                 // Check timestamp to avoid showing stale workout state
-                if let timestamp = workoutData["timestamp"] as? TimeInterval {
+                if let timestamp = workoutData.doubleValue(for: "timestamp") {
                     let age = Date().timeIntervalSince1970 - timestamp
                     let maxAge: TimeInterval = 2 * 60 * 60  // 2 hours
                     if age > maxAge {
@@ -208,14 +235,14 @@ class ConnectivityManager: NSObject, ObservableObject {
                 }
 
                 // Check isActive flag FIRST - if false, don't show workout UI
-                if let isActive = workoutData["isActive"] as? Bool, !isActive {
+                if let isActive = workoutData.boolValue(for: "isActive"), !isActive {
                     isWorkoutActive = false
                     return
                 }
 
-                if let type = workoutData["type"] as? String {
+                if let type = workoutData.stringValue(for: "type") {
                     if type == "workoutStarted" {
-                        if let isActive = workoutData["isActive"] as? Bool, isActive {
+                        if let isActive = workoutData.boolValue(for: "isActive"), isActive {
                             isWorkoutActive = true
                             handleWorkoutUpdate(workoutData)
                             playWorkoutStartHapticIfNeeded()
@@ -272,7 +299,7 @@ class ConnectivityManager: NSObject, ObservableObject {
         }
 
         session.sendMessage(
-            ["type": "requestWorkoutState", "timestamp": Date().timeIntervalSince1970],
+            ["type": WatchMessageType.requestWorkoutState, "timestamp": Date().timeIntervalSince1970],
             replyHandler: { [weak self] response in
                 Task { @MainActor in
                     guard let self = self else { return }
@@ -280,7 +307,7 @@ class ConnectivityManager: NSObject, ObservableObject {
 
                     print("📱 [WATCH] Received workout state response: \(response)")
 
-                    if let isActive = response["isActive"] as? Bool {
+                    if let isActive = response.boolValue(for: "isActive") {
                         if isActive {
                             self.isWorkoutActive = true
                             self.handleWorkoutUpdate(response)
@@ -424,7 +451,7 @@ class ConnectivityManager: NSObject, ObservableObject {
 
     /// Retry a failed message with exponential backoff
     private func retryMessage(_ message: [String: Any]) {
-        let messageType = message["type"] as? String ?? "unknown"
+        let messageType = message.stringValue(for: "type") ?? "unknown"
         let retryCount = messageRetryCount[messageType] ?? 0
 
         guard retryCount < maxRetryCount else {
@@ -435,13 +462,13 @@ class ConnectivityManager: NSObject, ObservableObject {
 
         let delay = retryDelay * pow(2.0, Double(retryCount))
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+        Task { @MainActor [weak self] in
+            try? await Task.sleep(for: .milliseconds(Int(delay * 1000)))
             guard let self = self else { return }
 
             print("🔄 Retry attempt \(retryCount + 1) for: \(messageType)")
             self.messageRetryCount[messageType] = retryCount + 1
 
-            // Determine if message is critical based on type
             let criticalTypes = ["setCompleted", "endWorkout", "pauseWorkout", "workoutCompleted", "setModification"]
             let isCritical = criticalTypes.contains(messageType)
 
@@ -451,7 +478,7 @@ class ConnectivityManager: NSObject, ObservableObject {
 
     /// Handle message send failure with retry logic
     private func handleSendFailure(_ message: [String: Any], error: Error, critical: Bool) {
-        let messageType = message["type"] as? String ?? "unknown"
+        let messageType = message.stringValue(for: "type") ?? "unknown"
 
         print("❌ Send failed for \(messageType): \(error.localizedDescription)")
 
@@ -489,7 +516,7 @@ class ConnectivityManager: NSObject, ObservableObject {
 
     /// Clear retry count for successfully delivered message
     private func clearRetryCount(for message: [String: Any]) {
-        if let messageType = message["type"] as? String {
+        if let messageType = message.stringValue(for: "type") {
             messageRetryCount.removeValue(forKey: messageType)
         }
     }
@@ -511,7 +538,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// ✅ FIX: Uses sendMessage with replyHandler to receive rest timer immediately
     func sendSetCompleted(effort: Int? = nil) {
         var data: [String: Any] = [
-            "type": "setCompleted",
+            "type": WatchMessageType.setCompleted,
             "timestamp": Date().timeIntervalSince1970,
             "setNumber": currentSetNumber,
             "exerciseName": currentExerciseName
@@ -617,7 +644,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// All exercises in the round are marked as done at once, with a single RPE for the round
     func sendSupersetRoundCompleted(effort: Int? = nil) {
         var data: [String: Any] = [
-            "type": "supersetRoundCompleted",
+            "type": WatchMessageType.supersetRoundCompleted,
             "timestamp": Date().timeIntervalSince1970,
             "supersetName": supersetName ?? "Superset",
             "roundNumber": supersetRound,
@@ -649,7 +676,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// Each stage has different weight, user completes stages in sequence
     func sendDropsetStageCompleted(stageIndex: Int, actualReps: Int, effort: Int? = nil) {
         var data: [String: Any] = [
-            "type": "dropsetStageCompleted",
+            "type": WatchMessageType.dropsetStageCompleted,
             "timestamp": Date().timeIntervalSince1970,
             "exerciseName": currentExerciseName,
             "stageIndex": stageIndex,
@@ -679,7 +706,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// 🔥 DROPSET: Notify iPhone that entire dropset is completed
     func sendDropsetCompleted(effort: Int? = nil) {
         var data: [String: Any] = [
-            "type": "dropsetCompleted",
+            "type": WatchMessageType.dropsetCompleted,
             "timestamp": Date().timeIntervalSince1970,
             "exerciseName": currentExerciseName,
             "totalStages": totalDropsetStages
@@ -699,7 +726,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// 🔥 REST-PAUSE: Notify iPhone that a rest-pause set was completed
     func sendRestPauseSetCompleted(setIndex: Int, actualReps: Int, effort: Int? = nil) {
         var data: [String: Any] = [
-            "type": "restPauseSetCompleted",
+            "type": WatchMessageType.restPauseSetCompleted,
             "timestamp": Date().timeIntervalSince1970,
             "exerciseName": currentExerciseName,
             "setIndex": setIndex,
@@ -729,7 +756,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// 🔥 REST-PAUSE: Notify iPhone that entire rest-pause exercise is completed
     func sendRestPauseCompleted(effort: Int? = nil) {
         var data: [String: Any] = [
-            "type": "restPauseCompleted",
+            "type": WatchMessageType.restPauseCompleted,
             "timestamp": Date().timeIntervalSince1970,
             "exerciseName": currentExerciseName,
             "totalSets": totalRestPauseSets,
@@ -752,7 +779,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// Uses "setModification" type which is already handled by iPhone
     func sendUpdateSetTarget(weight: Double, reps: Int) {
         var data: [String: Any] = [
-            "type": "setModification",  // Reuse existing message type
+            "type": WatchMessageType.setModification,  // Reuse existing message type
             "timestamp": Date().timeIntervalSince1970,
             "weight": weight,
             "reps": reps,
@@ -797,7 +824,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// User-initiated immediate action with fallback to queue if not reachable
     func sendSkipRest() {
         let data: [String: Any] = [
-            "type": "skipRest",
+            "type": WatchMessageType.skipRest,
             "timestamp": Date().timeIntervalSince1970
         ]
 
@@ -814,7 +841,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// Notify iPhone to pause/stop the current workout
     func sendPauseWorkout() {
         let data: [String: Any] = [
-            "type": "pauseWorkout",
+            "type": WatchMessageType.pauseWorkout,
             "timestamp": Date().timeIntervalSince1970
         ]
 
@@ -825,7 +852,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// Notify iPhone to end/stop the current workout
     func sendEndWorkout(save: Bool = true, duration: TimeInterval = 0, calories: Double = 0) {
         let data: [String: Any] = [
-            "type": "endWorkout",
+            "type": WatchMessageType.endWorkout,
             "save": save,
             "timestamp": Date().timeIntervalSince1970
         ]
@@ -870,7 +897,7 @@ class ConnectivityManager: NSObject, ObservableObject {
         lastMessageTime = Date()
 
         let data: [String: Any] = [
-            "type": "healthMetrics",
+            "type": WatchMessageType.healthMetrics,
             "heartRate": heartRate,
             "calories": calories,
             "elapsedTime": elapsedTime,
@@ -897,7 +924,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// Send modified set data (weight/reps) to iPhone - modifies TARGET for NEXT set
     func sendSetModification(weight: Double, reps: Int) {
         let data: [String: Any] = [
-            "type": "setModification",
+            "type": WatchMessageType.setModification,
             "weight": weight,
             "reps": reps,
             "timestamp": Date().timeIntervalSince1970
@@ -919,7 +946,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// Called when user wants to correct the reps they actually did for any completed set
     func sendEditCompletedSetReps(setIndex: Int, reps: Int) {
         let data: [String: Any] = [
-            "type": "editCompletedSetReps",
+            "type": WatchMessageType.editCompletedSetReps,
             "setIndex": setIndex,  // 0-indexed
             "reps": reps,
             "timestamp": Date().timeIntervalSince1970
@@ -938,7 +965,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// Called when user wants to undo a completed set
     func sendUncompleteSet(setIndex: Int) {
         let data: [String: Any] = [
-            "type": "uncompleteSet",
+            "type": WatchMessageType.uncompleteSet,
             "setIndex": setIndex,  // 0-indexed
             "timestamp": Date().timeIntervalSince1970
         ]
@@ -962,7 +989,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// User-initiated immediate action with fallback to queue if not reachable
     func sendExtendTimer(seconds: Int) {
         let data: [String: Any] = [
-            "type": "extendTimer",
+            "type": WatchMessageType.extendTimer,
             "seconds": seconds,
             "timestamp": Date().timeIntervalSince1970
         ]
@@ -983,7 +1010,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// - Parameter duration: Timer duration in seconds
     func startNewTimer(duration: Int) {
         let data: [String: Any] = [
-            "type": "startNewTimer",
+            "type": WatchMessageType.startNewTimer,
             "duration": duration,
             "timestamp": Date().timeIntervalSince1970
         ]
@@ -1003,7 +1030,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// Sends request to iPhone to change the current set
     func jumpToSet(_ setNumber: Int) {
         let data: [String: Any] = [
-            "type": "jumpToSet",
+            "type": WatchMessageType.jumpToSet,
             "setNumber": setNumber,
             "timestamp": Date().timeIntervalSince1970
         ]
@@ -1030,7 +1057,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// Sends request to iPhone to apply the same values to all sets
     func copyToAllSets(weight: Double, reps: Int) {
         let data: [String: Any] = [
-            "type": "copyToAllSets",
+            "type": WatchMessageType.copyToAllSets,
             "weight": weight,
             "reps": reps,
             "timestamp": Date().timeIntervalSince1970
@@ -1062,7 +1089,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// Sends request to iPhone to copy values from set N-1
     func copyFromPreviousSet() {
         let data: [String: Any] = [
-            "type": "copyFromPreviousSet",
+            "type": WatchMessageType.copyFromPreviousSet,
             "currentSetNumber": currentSetNumber,
             "timestamp": Date().timeIntervalSince1970
         ]
@@ -1099,7 +1126,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// Sends request to iPhone to navigate to a different exercise
     func jumpToExercise(_ exerciseIndex: Int) {
         let data: [String: Any] = [
-            "type": "jumpToExercise",
+            "type": WatchMessageType.jumpToExercise,
             "exerciseIndex": exerciseIndex,
             "timestamp": Date().timeIntervalSince1970
         ]
@@ -1120,7 +1147,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     /// Used when HKWorkoutSession fails unexpectedly
     func sendWorkoutError(message: String) {
         let data: [String: Any] = [
-            "type": "workoutError",
+            "type": WatchMessageType.workoutError,
             "message": message,
             "timestamp": Date().timeIntervalSince1970
         ]
@@ -1140,7 +1167,7 @@ class ConnectivityManager: NSObject, ObservableObject {
         }
 
         let data: [String: Any] = [
-            "type": "workoutCompleted",
+            "type": WatchMessageType.workoutCompleted,
             "duration": workout.duration,
             "calories": calories,
             "startDate": workout.startDate.timeIntervalSince1970,
@@ -1162,7 +1189,7 @@ class ConnectivityManager: NSObject, ObservableObject {
         guard let session = session else { return }
 
         session.sendMessage(
-            ["type": "requestTemplates"],
+            ["type": WatchMessageType.requestTemplates],
             replyHandler: { [weak self] response in
                 Task { @MainActor in
                     if let templatesData = response["templates"] as? [[String: Any]] {
@@ -1285,223 +1312,89 @@ class ConnectivityManager: NSObject, ObservableObject {
 
     private func parseTemplates(_ templatesData: [[String: Any]]) {
         receivedTemplates = templatesData.compactMap { dict in
-            guard let id = dict["id"] as? String,
-                  let name = dict["name"] as? String else {
+            guard let id = dict.stringValue(for: "id"),
+                  let name = dict.stringValue(for: "name") else {
                 return nil
             }
-
-            return WorkoutTemplate(
-                id: id,
-                name: name,
-                exercises: []
-            )
+            return WorkoutTemplate(id: id, name: name, exercises: [])
         }
     }
 
+    // P1-4 FIX: Refactored with type-safe PayloadParsing helpers
+    // Centralizes NSNumber coercion (Flutter sends numbers via WCSession as NSNumber)
     private func handleWorkoutUpdate(_ data: [String: Any]) {
-        // ✅ FIX: DO NOT update isWorkoutActive here!
-        // This function updates exercise DETAILS only.
-        // isWorkoutActive should be managed explicitly by:
-        // - sendEndWorkout() for local user action
-        // - processIncomingMessage() for "workoutStarted"/"workoutEnded"
-        // - didReceiveApplicationContext() for state sync
-        // - requestWorkoutState() response handler
-        //
-        // Setting isWorkoutActive here causes race conditions where stale
-        // applicationContext data can override local user action (discard).
+        // Note: DO NOT update isWorkoutActive here — managed by message handlers only
 
-        // ✅ FIX: Track if exercise changed to reset stale set targets
+        // Track if exercise changed to reset stale set targets
         let previousExercise = currentExerciseName
-        if let exercise = data["exerciseName"] as? String {
+        if let exercise = data.stringValue(for: "exerciseName") {
             currentExerciseName = exercise
-
-            // If exercise changed, clear old set targets immediately
-            // New targets will be parsed from allSets below
             if exercise != previousExercise {
-                print("⌚ [WATCH] Exercise changed from '\(previousExercise)' to '\(exercise)' - resetting set targets")
+                print("⌚ [WATCH] Exercise changed: '\(previousExercise)' → '\(exercise)'")
                 allSetsTargets = []
             }
         }
 
-        if let setNum = data["currentSet"] as? Int {
-            currentSetNumber = setNum
-        }
+        // Core exercise state
+        if let v = data.intValue(for: "currentSet") { currentSetNumber = v }
+        if let v = data.intValue(for: "totalSets") { totalSets = v }
+        if let v = data.doubleValue(for: "targetWeight") { targetWeight = v }
+        if let v = data.intValue(for: "targetReps") { targetReps = v }
+        if let v = data.intValue(for: "setsCompleted") { setsCompleted = v }
+        if let v = data.intValue(for: "setsCompletedInExercise") { setsCompletedInExercise = v }
+        if let v = data.intValue(for: "lastCompletedReps") { lastCompletedReps = v }
 
-        if let total = data["totalSets"] as? Int {
-            totalSets = total
-        }
+        // Settings
+        if let v = data.boolValue(for: "rpeTrackingEnabled") { rpeTrackingEnabled = v }
+        if let v = data.stringValue(for: "effortScale") { effortScale = v }
+        if let v = data.stringValue(for: "locale") { appLocale = v }
+        if let v = data.stringValue(for: "workoutType") { workoutType = v }
 
-        if let weight = data["targetWeight"] as? Double {
-            targetWeight = weight
-        }
+        // Optional strings (nil if empty)
+        formCues = data.optionalString(for: "formCues")
+        tut = data.optionalString(for: "tut")
 
-        if let reps = data["targetReps"] as? Int {
-            targetReps = reps
-        }
-
-        if let completed = data["setsCompleted"] as? Int {
-            setsCompleted = completed
-        }
-
-        // ✅ FIX: Parse sets completed in current exercise (for edit UI)
-        if let completedInExercise = data["setsCompletedInExercise"] as? Int {
-            setsCompletedInExercise = completedInExercise
-        }
-
-        // ✅ FIX: Parse actual reps of last completed set (for edit UI)
-        if let lastReps = data["lastCompletedReps"] as? Int {
-            lastCompletedReps = lastReps
-        }
-
-        if let rpeEnabled = data["rpeTrackingEnabled"] as? Bool {
-            rpeTrackingEnabled = rpeEnabled
-        }
-
-        if let scale = data["effortScale"] as? String {
-            effortScale = scale
-        }
-
-        if let locale = data["locale"] as? String {
-            appLocale = locale
-        }
-
-        // Form Cues (persistent technique reminders) - may be nil
-        if let cues = data["formCues"] as? String {
-            formCues = cues.isEmpty ? nil : cues
-        } else {
-            formCues = nil
-        }
-
-        // ⌚ BUG FIX #3: Time Under Tension (e.g., "3-1-2-0") - may be nil
-        if let tutValue = data["tut"] as? String {
-            tut = tutValue.isEmpty ? nil : tutValue
-        } else {
-            tut = nil
-        }
-
-        // ✅ FIX: Workout type for HKWorkoutSession (strength, hiit, functional)
-        if let type = data["workoutType"] as? String {
-            workoutType = type
-        }
-
-        // Exercise navigation data
-        if let names = data["exerciseNames"] as? [String] {
+        // Exercise navigation
+        if let names = data.stringArray(for: "exerciseNames") {
             exerciseNames = names
             totalExercises = names.count
         }
-        if let index = data["currentExerciseIndex"] as? Int {
-            currentExerciseIndex = index
-        }
-        if let total = data["totalExercises"] as? Int {
-            totalExercises = total
-        }
+        if let v = data.intValue(for: "currentExerciseIndex") { currentExerciseIndex = v }
+        if let v = data.intValue(for: "totalExercises") { totalExercises = v }
 
-        // ✅ FIX: Parse all sets' targets for navigation between sets
-        // Format: [[weight: Double, reps: Int, actualReps: Int?, isCompleted: Bool], ...]
-        // Note: Flutter int/double may arrive as NSNumber, so we use flexible casting
-        if let setsArray = data["allSets"] as? [[String: Any]] {
-            allSetsTargets = setsArray.compactMap { setData in
-                // ✅ FIX: Handle both Double and NSNumber for weight
-                let weight: Double
-                if let w = setData["weight"] as? Double {
-                    weight = w
-                } else if let w = setData["weight"] as? NSNumber {
-                    weight = w.doubleValue
-                } else {
-                    print("⌚ [WATCH] ⚠️ Failed to parse weight: \(String(describing: setData["weight"]))")
+        // All sets' targets (for set navigation)
+        if let setsArray = data.dictArray(for: "allSets") {
+            allSetsTargets = setsArray.compactMap { s in
+                guard let weight = s.doubleValue(for: "weight"),
+                      let reps = s.intValue(for: "reps") else {
+                    print("⌚ [WATCH] ⚠️ Failed to parse set: \(s)")
                     return nil
                 }
-
-                // ✅ FIX: Handle both Int and NSNumber for reps
-                let reps: Int
-                if let r = setData["reps"] as? Int {
-                    reps = r
-                } else if let r = setData["reps"] as? NSNumber {
-                    reps = r.intValue
-                } else {
-                    print("⌚ [WATCH] ⚠️ Failed to parse reps: \(String(describing: setData["reps"]))")
-                    return nil
-                }
-
-                // ✅ NEW: Parse actualReps (nil if not completed)
-                let actualReps: Int?
-                if let ar = setData["actualReps"] as? Int {
-                    actualReps = ar
-                } else if let ar = setData["actualReps"] as? NSNumber {
-                    actualReps = ar.intValue
-                } else {
-                    actualReps = nil  // Set not completed yet
-                }
-
-                // ✅ NEW: Parse isCompleted
-                let isCompleted: Bool
-                if let ic = setData["isCompleted"] as? Bool {
-                    isCompleted = ic
-                } else {
-                    isCompleted = false
-                }
-
-                // ✅ Parse isWarmup flag for warmup set awareness
-                let isWarmup: Bool
-                if let iw = setData["isWarmup"] as? Bool {
-                    isWarmup = iw
-                } else {
-                    isWarmup = false
-                }
-
-                return (weight: weight, reps: reps, actualReps: actualReps, isCompleted: isCompleted, isWarmup: isWarmup)
+                return (
+                    weight: weight,
+                    reps: reps,
+                    actualReps: s.intValue(for: "actualReps"),
+                    isCompleted: s.boolValue(for: "isCompleted") ?? false,
+                    isWarmup: s.boolValue(for: "isWarmup") ?? false
+                )
             }
-            let completedCount = allSetsTargets.filter { $0.isCompleted }.count
-            print("⌚ [WATCH] Parsed \(allSetsTargets.count) sets (\(completedCount) completed): \(allSetsTargets.map { "\($0.weight)kg×\($0.actualReps ?? $0.reps)\($0.isCompleted ? "✓" : "")" }.joined(separator: ", "))")
+            let completed = allSetsTargets.filter { $0.isCompleted }.count
+            print("⌚ [WATCH] Parsed \(allSetsTargets.count) sets (\(completed) completed)")
         } else if data["allSets"] != nil {
-            // Debug: allSets exists but couldn't be parsed
-            print("⌚ [WATCH] ⚠️ allSets exists but couldn't parse: \(String(describing: data["allSets"]))")
+            print("⌚ [WATCH] ⚠️ allSets exists but couldn't parse")
         }
 
-        // 🔥 SUPERSET SUPPORT: Parse superset data from iPhone
-        if let isSupersetValue = data["isSuperset"] as? Bool {
-            isSuperset = isSupersetValue
-        } else {
-            isSuperset = false
-        }
-
+        // Superset state
+        isSuperset = data.boolValue(for: "isSuperset") ?? false
         if isSuperset {
-            if let name = data["supersetName"] as? String, !name.isEmpty {
-                supersetName = name
-            }
-
-            if let exercises = data["supersetExercises"] as? [String] {
-                supersetExercises = exercises
-            }
-
-            if let current = data["currentExerciseInSuperset"] as? Int {
-                currentExerciseInSuperset = current
-            } else if let current = data["currentExerciseInSuperset"] as? NSNumber {
-                currentExerciseInSuperset = current.intValue
-            }
-
-            if let total = data["totalExercisesInSuperset"] as? Int {
-                totalExercisesInSuperset = total
-            } else if let total = data["totalExercisesInSuperset"] as? NSNumber {
-                totalExercisesInSuperset = total.intValue
-            }
-
-            if let round = data["supersetRound"] as? Int {
-                supersetRound = round
-            } else if let round = data["supersetRound"] as? NSNumber {
-                supersetRound = round.intValue
-            }
-
-            if let totalRounds = data["totalSupersetRounds"] as? Int {
-                totalSupersetRounds = totalRounds
-            } else if let totalRounds = data["totalSupersetRounds"] as? NSNumber {
-                totalSupersetRounds = totalRounds.intValue
-            }
-
-            print("⌚ [WATCH] 🔥 SUPERSET: \(supersetName ?? "Unknown") - Ex \(currentExerciseInSuperset)/\(totalExercisesInSuperset), Round \(supersetRound)/\(totalSupersetRounds)")
-            print("⌚ [WATCH] 🔥 Exercises: \(supersetExercises.joined(separator: " → "))")
+            supersetName = data.optionalString(for: "supersetName")
+            if let ex = data.stringArray(for: "supersetExercises") { supersetExercises = ex }
+            if let v = data.intValue(for: "currentExerciseInSuperset") { currentExerciseInSuperset = v }
+            if let v = data.intValue(for: "totalExercisesInSuperset") { totalExercisesInSuperset = v }
+            if let v = data.intValue(for: "supersetRound") { supersetRound = v }
+            if let v = data.intValue(for: "totalSupersetRounds") { totalSupersetRounds = v }
+            print("⌚ [WATCH] 🔥 SUPERSET: \(supersetName ?? "?") - Ex \(currentExerciseInSuperset)/\(totalExercisesInSuperset), R\(supersetRound)/\(totalSupersetRounds)")
         } else {
-            // Clear superset state when not in superset mode
             supersetName = nil
             supersetExercises = []
             currentExerciseInSuperset = 0
@@ -1510,123 +1403,50 @@ class ConnectivityManager: NSObject, ObservableObject {
             totalSupersetRounds = 0
         }
 
-        // ✅ FIX: Cache rest time for optimistic timer
-        // When user completes a set from Watch, we show timer immediately using this cached value
-        if let restTime = data["restTime"] as? Int, restTime > 0 {
+        // Cache rest time for optimistic timer
+        if let restTime = data.intValue(for: "restTime"), restTime > 0 {
             updateCachedRestTime(restTime)
-            print("⌚ [WATCH] Cached rest time for optimistic timer: \(restTime)s")
-        } else if let restTime = data["restTime"] as? NSNumber {
-            let value = restTime.intValue
-            if value > 0 {
-                updateCachedRestTime(value)
-                print("⌚ [WATCH] Cached rest time for optimistic timer: \(value)s")
-            }
+            print("⌚ [WATCH] Cached rest time: \(restTime)s")
         }
 
-        // 🔥 DROPSET SUPPORT: Parse dropset data from iPhone
-        if let isDropsetValue = data["isDropset"] as? Bool {
-            isDropset = isDropsetValue
-        } else {
-            isDropset = false
-        }
-
+        // Dropset state
+        isDropset = data.boolValue(for: "isDropset") ?? false
         if isDropset {
-            if let stagesArray = data["dropsetStages"] as? [[String: Any]] {
-                dropsetStages = stagesArray.compactMap { stageData in
-                    let weight: Double
-                    if let w = stageData["weight"] as? Double {
-                        weight = w
-                    } else if let w = stageData["weight"] as? NSNumber {
-                        weight = w.doubleValue
-                    } else {
-                        return nil
-                    }
-
-                    let reps: Int
-                    if let r = stageData["reps"] as? Int {
-                        reps = r
-                    } else if let r = stageData["reps"] as? NSNumber {
-                        reps = r.intValue
-                    } else {
-                        return nil
-                    }
-
-                    let isCompleted = stageData["isCompleted"] as? Bool ?? false
-                    return (weight: weight, reps: reps, isCompleted: isCompleted)
+            if let stages = data.dictArray(for: "dropsetStages") {
+                dropsetStages = stages.compactMap { s in
+                    guard let weight = s.doubleValue(for: "weight"),
+                          let reps = s.intValue(for: "reps") else { return nil }
+                    return (weight: weight, reps: reps, isCompleted: s.boolValue(for: "isCompleted") ?? false)
                 }
                 totalDropsetStages = dropsetStages.count
             }
-
-            if let current = data["currentDropsetStage"] as? Int {
-                currentDropsetStage = current
-            } else if let current = data["currentDropsetStage"] as? NSNumber {
-                currentDropsetStage = current.intValue
-            }
-
+            if let v = data.intValue(for: "currentDropsetStage") { currentDropsetStage = v }
             print("⌚ [WATCH] 🔥 DROPSET: Stage \(currentDropsetStage + 1)/\(totalDropsetStages)")
-            print("⌚ [WATCH] 🔥 Stages: \(dropsetStages.map { "\($0.weight)kg×\($0.reps)" }.joined(separator: " → "))")
         } else {
-            // Clear dropset state
             dropsetStages = []
             currentDropsetStage = 0
             totalDropsetStages = 0
         }
 
-        // 🔥 REST-PAUSE SUPPORT: Parse rest-pause data from iPhone
-        if let isRestPauseValue = data["isRestPause"] as? Bool {
-            isRestPause = isRestPauseValue
-        } else {
-            isRestPause = false
-        }
-
+        // Rest-pause state
+        isRestPause = data.boolValue(for: "isRestPause") ?? false
         if isRestPause {
-            if let weight = data["restPauseWeight"] as? Double {
-                restPauseWeight = weight
-            } else if let weight = data["restPauseWeight"] as? NSNumber {
-                restPauseWeight = weight.doubleValue
-            }
-
-            if let targetReps = data["restPauseTargetReps"] as? Int {
-                restPauseTargetReps = targetReps
-            } else if let targetReps = data["restPauseTargetReps"] as? NSNumber {
-                restPauseTargetReps = targetReps.intValue
-            }
-
-            if let setsArray = data["restPauseSets"] as? [[String: Any]] {
-                restPauseSets = setsArray.compactMap { setData in
-                    let reps: Int
-                    if let r = setData["reps"] as? Int {
-                        reps = r
-                    } else if let r = setData["reps"] as? NSNumber {
-                        reps = r.intValue
-                    } else {
-                        return nil
-                    }
-
-                    let restSeconds: Int
-                    if let r = setData["restSeconds"] as? Int {
-                        restSeconds = r
-                    } else if let r = setData["restSeconds"] as? NSNumber {
-                        restSeconds = r.intValue
-                    } else {
-                        restSeconds = 0
-                    }
-
-                    let isCompleted = setData["isCompleted"] as? Bool ?? false
-                    return (reps: reps, restSeconds: restSeconds, isCompleted: isCompleted)
+            if let v = data.doubleValue(for: "restPauseWeight") { restPauseWeight = v }
+            if let v = data.intValue(for: "restPauseTargetReps") { restPauseTargetReps = v }
+            if let sets = data.dictArray(for: "restPauseSets") {
+                restPauseSets = sets.compactMap { s in
+                    guard let reps = s.intValue(for: "reps") else { return nil }
+                    return (
+                        reps: reps,
+                        restSeconds: s.intValue(for: "restSeconds") ?? 0,
+                        isCompleted: s.boolValue(for: "isCompleted") ?? false
+                    )
                 }
                 totalRestPauseSets = restPauseSets.count
             }
-
-            if let current = data["currentRestPauseSet"] as? Int {
-                currentRestPauseSet = current
-            } else if let current = data["currentRestPauseSet"] as? NSNumber {
-                currentRestPauseSet = current.intValue
-            }
-
-            print("⌚ [WATCH] 🔥 REST-PAUSE: \(restPauseWeight)kg, Target \(restPauseTargetReps) reps, Set \(currentRestPauseSet + 1)/\(totalRestPauseSets)")
+            if let v = data.intValue(for: "currentRestPauseSet") { currentRestPauseSet = v }
+            print("⌚ [WATCH] 🔥 REST-PAUSE: \(restPauseWeight)kg ×\(restPauseTargetReps), Set \(currentRestPauseSet + 1)/\(totalRestPauseSets)")
         } else {
-            // Clear rest-pause state
             restPauseWeight = 0
             restPauseTargetReps = 0
             restPauseSets = []
@@ -1636,7 +1456,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     }
 
     private func handleRestTimerUpdate(_ data: [String: Any]) {
-        if let duration = data["duration"] as? Int {
+        if let duration = data.intValue(for: "duration") {
             startRestTimer(duration: duration)
         }
     }
@@ -1660,7 +1480,9 @@ extension ConnectivityManager: WCSessionDelegate {
 
                 // Retry activation if failed
                 if reconnectionAttempts < maxReconnectionAttempts {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
+                    // P2-10 FIX: Use Task instead of DispatchQueue
+                    Task { @MainActor [weak self] in
+                        try? await Task.sleep(for: .seconds(3))
                         self?.attemptReconnection()
                     }
                 }
@@ -1691,14 +1513,14 @@ extension ConnectivityManager: WCSessionDelegate {
             if session.isReachable {
                 print("✅ Connection restored, processing pending messages")
 
-                // Small delay to ensure connection is stable
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                // P2-10 FIX: Use Task instead of DispatchQueue
+                Task { @MainActor [weak self] in
+                    try? await Task.sleep(for: .milliseconds(500))
                     self?.processPendingMessages()
                 }
 
-                // ⌚ BUG FIX #5: Request workout state when connection is restored
-                // Uses unified sync method to prevent race conditions
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
+                Task { @MainActor [weak self] in
+                    try? await Task.sleep(for: .milliseconds(800))
                     self?.syncWorkoutStateFromiPhone()
                     print("⌚ [RECOVERY] Unified sync after connection restored")
                 }
@@ -1724,7 +1546,8 @@ extension ConnectivityManager: WCSessionDelegate {
         _ session: WCSession,
         didReceiveMessage message: [String : Any]
     ) {
-        processIncomingMessage(message)
+        // P0-2 FIX: Route through serial channel for ordering guarantee
+        incomingContinuation?.yield(.message(message))
     }
 
     // Receive messages from iPhone WITH reply handler
@@ -1733,26 +1556,26 @@ extension ConnectivityManager: WCSessionDelegate {
         didReceiveMessage message: [String : Any],
         replyHandler: @escaping ([String : Any]) -> Void
     ) {
-        processIncomingMessage(message)
+        // P0-2 FIX: Route through serial channel for ordering guarantee
+        incomingContinuation?.yield(.message(message))
         replyHandler(["success": true, "timestamp": Date().timeIntervalSince1970])
     }
 
-    // Shared message processing logic
-    private nonisolated func processIncomingMessage(_ message: [String : Any]) {
-        Task { @MainActor in
-            guard let type = message["type"] as? String else { return }
+    // P0-2 FIX: @MainActor message handler called serially from AsyncStream
+    private func handleIncomingMessage(_ message: [String : Any]) {
+            guard let type = message.stringValue(for: "type") else { return }
 
             switch type {
-            case "workoutStarted":
+            case WatchMessageType.workoutStarted:
                 isWorkoutActive = true
                 handleWorkoutUpdate(message)
                 playWorkoutStartHapticIfNeeded()
 
-            case "workoutEnded":
+            case WatchMessageType.workoutEnded:
                 // ✅ FIX: Complete cleanup of workout and timer state
                 // ✅ FIX: Read save flag to determine if HKWorkoutSession should be saved
                 // Default to true for backwards compatibility
-                shouldSaveWorkoutToHealthKit = message["save"] as? Bool ?? true
+                shouldSaveWorkoutToHealthKit = message.boolValue(for: "save") ?? true
                 isWorkoutActive = false
                 restTimer?.invalidate()
                 restTimer = nil
@@ -1761,32 +1584,31 @@ extension ConnectivityManager: WCSessionDelegate {
                 shouldNavigateToExercise = false
                 WKInterfaceDevice.current().play(.success)
 
-            case "workoutUpdate":
+            case WatchMessageType.workoutUpdate:
                 handleWorkoutUpdate(message)
 
-            case "restTimerStarted":
+            case WatchMessageType.restTimerStarted:
                 handleRestTimerUpdate(message)
                 objectWillChange.send()
                 shouldShowTimer = true
 
-            case "restTimerSkipped":
+            case WatchMessageType.restTimerSkipped:
                 isTimerSkipped = true
                 restTimer?.invalidate()
                 restTimer = nil
                 restTimeRemaining = 0
 
-            case "restTimerPaused":
+            case WatchMessageType.restTimerPaused:
                 isTimerPaused = true
                 restTimer?.invalidate()
                 restTimer = nil
-                if let remaining = message["remainingTime"] as? Int {
+                if let remaining = message.intValue(for: "remainingTime") {
                     restTimeRemaining = remaining
                 }
-                // Use .notification for more distinct pause feedback (Apple HIG best practice)
                 WKInterfaceDevice.current().play(.notification)
 
-            case "restTimerResumed":
-                if let remaining = message["remainingTime"] as? Int, remaining > 0 {
+            case WatchMessageType.restTimerResumed:
+                if let remaining = message.intValue(for: "remainingTime"), remaining > 0 {
                     isTimerPaused = false
                     isTimerSkipped = false
                     restTimeRemaining = remaining
@@ -1794,22 +1616,18 @@ extension ConnectivityManager: WCSessionDelegate {
                 }
                 WKInterfaceDevice.current().play(.start)
 
-            case "restTimerExtended":
-                // Handle +30s (or other) extension from Live Activity or app
-                // ✅ FIX: Use ABSOLUTE newDuration from iPhone instead of relative addition
-                // This prevents desync due to timing differences and double processing
-                let addedSeconds = message["addedSeconds"] as? Int ?? 30
-                let timestamp = message["timestamp"] as? TimeInterval ?? Date().timeIntervalSince1970
+            case WatchMessageType.restTimerExtended:
+                let addedSeconds = message.intValue(for: "addedSeconds") ?? 30
+                let timestamp = message.doubleValue(for: "timestamp") ?? Date().timeIntervalSince1970
 
                 // Dedupe: Skip if we already processed this extension (within 2s window)
                 if let lastExtend = lastTimerExtendTimestamp, abs(timestamp - lastExtend) < 2.0 {
-                    print("⌚ [WATCH] Skipping duplicate timer extension (timestamp match)")
+                    print("⌚ [WATCH] Skipping duplicate timer extension")
                     break
                 }
                 lastTimerExtendTimestamp = timestamp
 
-                // Use iPhone's calculated remaining time for accuracy
-                let newRemainingFromIPhone = message["newDuration"] as? Int ?? (restTimeRemaining + addedSeconds)
+                let newRemainingFromIPhone = message.intValue(for: "newDuration") ?? (restTimeRemaining + addedSeconds)
                 let oldRemaining = restTimeRemaining
 
                 print("⌚ [WATCH] Rest timer extended: +\(addedSeconds)s (was \(oldRemaining)s, now \(newRemainingFromIPhone)s)")
@@ -1827,7 +1645,7 @@ extension ConnectivityManager: WCSessionDelegate {
                 // Haptic feedback to confirm extension
                 WKInterfaceDevice.current().play(.click)
 
-            case "templatesUpdate":
+            case WatchMessageType.templatesUpdate:
                 if let templates = message["templates"] as? [[String: Any]] {
                     parseTemplates(templates)
                 }
@@ -1835,7 +1653,6 @@ extension ConnectivityManager: WCSessionDelegate {
             default:
                 break
             }
-        }
     }
 
     // Receive application context (state sync) - PRIMARY delivery method
@@ -1843,12 +1660,17 @@ extension ConnectivityManager: WCSessionDelegate {
         _ session: WCSession,
         didReceiveApplicationContext applicationContext: [String : Any]
     ) {
-        Task { @MainActor in
+        // P0-2 FIX: Route through serial channel for ordering guarantee
+        incomingContinuation?.yield(.applicationContext(applicationContext))
+    }
+
+    // P0-2 FIX: @MainActor context handler called serially from AsyncStream
+    private func handleIncomingApplicationContext(_ applicationContext: [String : Any]) {
             // Sync workout state
             if let workoutData = applicationContext["workout"] as? [String: Any] {
-                if let type = workoutData["type"] as? String {
+                if let type = workoutData.stringValue(for: "type") {
                     if type == "workoutStarted" {
-                        let exerciseName = workoutData["exerciseName"] as? String ?? "Workout"
+                        let exerciseName = workoutData.stringValue(for: "exerciseName") ?? "Workout"
 
                         if !isWorkoutActive {
                             NotificationManager.shared.showWorkoutStartedNotification(
@@ -1861,9 +1683,7 @@ extension ConnectivityManager: WCSessionDelegate {
                         playWorkoutStartHapticIfNeeded()
 
                     } else if type == "workoutEnded" {
-                        // ✅ FIX: Complete cleanup of workout and timer state
-                        // ✅ FIX: Read save flag to determine if HKWorkoutSession should be saved
-                        shouldSaveWorkoutToHealthKit = workoutData["save"] as? Bool ?? true
+                        shouldSaveWorkoutToHealthKit = workoutData.boolValue(for: "save") ?? true
                         isWorkoutActive = false
                         restTimer?.invalidate()
                         restTimer = nil
@@ -1872,18 +1692,16 @@ extension ConnectivityManager: WCSessionDelegate {
                         shouldNavigateToExercise = false
                         WKInterfaceDevice.current().play(.success)
                     } else if type == "workoutUpdate" {
-                        // ✅ BUG FIX: Handle workout updates (set completed from iPhone, exercise change, etc.)
-                        // This was MISSING - workout updates from iPhone were being ignored!
                         if isWorkoutActive {
                             handleWorkoutUpdate(workoutData)
-                            print("⌚ [CONTEXT] Received workoutUpdate - synced exercise/set state from iPhone")
+                            print("⌚ [CONTEXT] workoutUpdate synced from iPhone")
                         }
                     }
                 }
 
-                if let isActive = workoutData["isActive"] as? Bool {
+                if let isActive = workoutData.boolValue(for: "isActive") {
                     if isActive && !isWorkoutActive {
-                        let exerciseName = workoutData["exerciseName"] as? String ?? "Workout"
+                        let exerciseName = workoutData.stringValue(for: "exerciseName") ?? "Workout"
 
                         NotificationManager.shared.showWorkoutStartedNotification(
                             exerciseName: exerciseName
@@ -1893,7 +1711,6 @@ extension ConnectivityManager: WCSessionDelegate {
                         handleWorkoutUpdate(workoutData)
                         playWorkoutStartHapticIfNeeded()
                     } else if !isActive && isWorkoutActive {
-                        // ✅ FIX: Complete cleanup of workout and timer state
                         isWorkoutActive = false
                         restTimer?.invalidate()
                         restTimer = nil
@@ -1908,7 +1725,6 @@ extension ConnectivityManager: WCSessionDelegate {
             if let timerData = applicationContext["restTimer"] as? [String: Any] {
                 handleRestTimerFromContext(timerData)
             }
-        }
     }
 
     /// Handle rest timer from applicationContext with proper time sync
@@ -1920,15 +1736,14 @@ extension ConnectivityManager: WCSessionDelegate {
             return
         }
 
-        guard let duration = data["duration"] as? Int,
-              let startTime = data["startTime"] as? TimeInterval else {
+        guard let duration = data.intValue(for: "duration"),
+              let startTime = data.doubleValue(for: "startTime") else {
             return
         }
 
-        // ✅ FIX: Check if timer is paused (from applicationContext sync)
-        // If paused, show timer UI with remaining time but don't start countdown
-        if let isPaused = data["isPaused"] as? Bool, isPaused {
-            let remainingTime = data["remainingTime"] as? Int ?? duration
+        // Check if timer is paused (from applicationContext sync)
+        if let isPaused = data.boolValue(for: "isPaused"), isPaused {
+            let remainingTime = data.intValue(for: "remainingTime") ?? duration
             print("⏱️ [TIMER] Timer is PAUSED from applicationContext: \(remainingTime)s remaining")
 
             isTimerPaused = true
@@ -1976,7 +1791,7 @@ extension ConnectivityManager: WCSessionDelegate {
         didReceiveUserInfo userInfo: [String : Any] = [:]
     ) {
         Task { @MainActor in
-            guard let type = userInfo["type"] as? String else { return }
+            guard let type = userInfo.stringValue(for: "type") else { return }
 
             if type == "workoutUpdate" {
                 handleWorkoutUpdate(userInfo)

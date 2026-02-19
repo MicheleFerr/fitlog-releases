@@ -33,8 +33,9 @@ class WorkoutManager: NSObject, ObservableObject {
     private var builder: HKLiveWorkoutBuilder?
     private var lastSentHeartRate: Double = 0
 
-    /// Threshold for sending HR updates to iPhone (±5 BPM)
-    private let heartRateDeltaThreshold: Double = 5.0
+    /// P2-11 FIX: Configurable HR delta threshold based on workout intensity
+    /// Strength: 5 BPM (standard), HIIT: 8 BPM (reduce noise), Cardio: 3 BPM (more granular)
+    var heartRateDeltaThreshold: Double = 5.0
 
     /// Key for persisting HealthKit authorization request status
     private static let healthKitAuthRequestedKey = "hasRequestedHealthKitAuthorization"
@@ -112,6 +113,15 @@ class WorkoutManager: NSObject, ObservableObject {
         // If session is ended/stopped, don't treat it as active
         guard recoveredSession.state == .running || recoveredSession.state == .paused else {
             print("⌚ [RECOVERY] Recovered session is in state \(recoveredSession.state.rawValue), not recovering")
+            return
+        }
+
+        // P1-6 FIX: Verify session is not stale (older than 4 hours)
+        // Stale sessions from previous crashes should be ended, not recovered
+        if let startDate = recoveredSession.startDate,
+           Date().timeIntervalSince(startDate) > 4 * 3600 {
+            print("⌚ [RECOVERY] Session is stale (started \(startDate)), ending instead of recovering")
+            recoveredSession.end()
             return
         }
 

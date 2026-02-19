@@ -9,19 +9,21 @@ import SwiftUI
 import UserNotifications
 import HealthKit
 
-/// Map string workout type from iPhone to WorkoutManager.WorkoutType
-/// Used to sync HKWorkoutSession type with Flutter app
-private func mapWorkoutType(_ typeString: String) -> WorkoutManager.WorkoutType {
-    switch typeString.lowercased() {
-    case "hiit":
-        return .hiit
-    case "functional":
-        return .functionalTraining
-    case "strength", "strengthtraining":
-        return .strengthTraining
-    default:
-        // Default to strength training for unknown types
-        return .strengthTraining
+// P2-9 FIX: Extension instead of free function
+extension WorkoutManager.WorkoutType {
+    /// Map string workout type from iPhone to WorkoutType
+    /// Used to sync HKWorkoutSession type with Flutter app
+    init(from typeString: String) {
+        switch typeString.lowercased() {
+        case "hiit":
+            self = .hiit
+        case "functional":
+            self = .functionalTraining
+        case "strength", "strengthtraining":
+            self = .strengthTraining
+        default:
+            self = .strengthTraining
+        }
     }
 }
 
@@ -95,7 +97,7 @@ struct FitLogWatch_Watch_AppApp: App {
                                 }
 
                                 do {
-                                    let workoutType = mapWorkoutType(connectivityManager.workoutType)
+                                    let workoutType = WorkoutManager.WorkoutType(from: connectivityManager.workoutType)
                                     print("⌚ [APP] 🔄 Restarting HKWorkoutSession with type: \(workoutType.rawValue)")
                                     try await workoutManager.startWorkout(type: workoutType, isCompanion: true)
                                     print("⌚ [APP] ✅ HKWorkoutSession restarted successfully on foreground")
@@ -135,7 +137,7 @@ struct FitLogWatch_Watch_AppApp: App {
 
                             do {
                                 // ✅ FIX: Use workout type from iPhone instead of hardcoding
-                                let workoutType = mapWorkoutType(connectivityManager.workoutType)
+                                let workoutType = WorkoutManager.WorkoutType(from: connectivityManager.workoutType)
                                 print("⌚ [APP] Starting HKWorkoutSession with type: \(workoutType.rawValue)")
 
                                 // isCompanion: true - haptic already played by ConnectivityManager
@@ -154,6 +156,13 @@ struct FitLogWatch_Watch_AppApp: App {
                         let shouldSave = connectivityManager.shouldSaveWorkoutToHealthKit
                         print("⌚ [APP] Workout ended - ending HKWorkoutSession (save: \(shouldSave))")
                         Task {
+                            // P1-8 FIX: Debounce end to prevent spurious stop/start from transient connectivity
+                            try? await Task.sleep(for: .seconds(1.5))
+                            // Re-check after debounce — if workout became active again, abort end
+                            guard !connectivityManager.isWorkoutActive else {
+                                print("⌚ [APP] Workout became active again during debounce, skipping end")
+                                return
+                            }
                             // ✅ FIX: Check workout STATE not just isWorkoutActive flag
                             // Only end if session is actually running or paused
                             guard workoutManager.workoutState == .running || workoutManager.workoutState == .paused else {

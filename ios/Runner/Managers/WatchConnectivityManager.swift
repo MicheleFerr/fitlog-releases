@@ -1007,175 +1007,14 @@ extension WatchConnectivityManager: WCSessionDelegate {
 
     // MARK: - Receive Messages from Watch
 
-    /// Handle immediate messages from Watch WITHOUT reply handler
-    /// This is called when Watch sends with replyHandler: nil
+    /// P2-2 FIX: Unified handler - no-reply messages route through reply handler with no-op
+    /// This eliminates the duplicate switch block that was hard to maintain
     func session(
         _ session: WCSession,
         didReceiveMessage message: [String : Any]
     ) {
-        guard let type = message["type"] as? String else {
-            Logger.shared.log(.warning, "⚠️ Received message without type (no reply)", category: .general)
-            return
-        }
-
-        Logger.shared.log(.info, "📩 Received Watch message (no reply): \(type)", category: .general)
-
-        switch type {
-        case "setCompleted":
-            // Extract effort value if present (RPE 6-10 or RIR 0-4)
-            let effort = message["effort"] as? Int
-            let effortScale = message["effortScale"] as? String ?? "rpe"
-            if let effort = effort {
-                Logger.shared.log(.info, "✅ Set completed from Watch with \(effortScale.uppercased()): \(effort)", category: .general)
-            } else {
-                Logger.shared.log(.info, "✅ Set completed from Watch (no effort)", category: .general)
-            }
-            notifyFlutter(event: "onSetCompletedFromWatch", data: message)
-
-        case "skipRest":
-            Logger.shared.log(.info, "⏭️ Rest skipped from Watch (no reply handler)", category: .general)
-            notifyFlutter(event: "onSkipRestFromWatch", data: message)
-
-        case "healthMetrics":
-            // Real-time HR/calories from Watch
-            Logger.shared.log(.debug, "❤️ Health metrics from Watch: HR=\(message["heartRate"] ?? 0)", category: .general)
-            notifyFlutter(event: "onHealthMetricsFromWatch", data: message)
-
-        case "endWorkout":
-            // Watch requested to end the workout
-            Logger.shared.log(.info, "🏁 End workout requested from Watch (no reply handler)", category: .general)
-            notifyFlutter(event: "onEndWorkoutFromWatch", data: message)
-
-        case "pauseWorkout":
-            // Watch requested to pause the workout
-            Logger.shared.log(.info, "⏸️ Pause workout requested from Watch (no reply handler)", category: .general)
-            notifyFlutter(event: "onPauseWorkoutFromWatch", data: message)
-
-        case "setModification":
-            // Watch modified the next set (weight/reps) via Digital Crown
-            Logger.shared.log(.info, "✏️ Set modification from Watch: weight=\(message["weight"] ?? 0), reps=\(message["reps"] ?? 0)", category: .general)
-            notifyFlutter(event: "onSetModificationFromWatch", data: message)
-
-        case "extendTimer":
-            // Watch requested to extend the rest timer
-            Logger.shared.log(.info, "⏱️ Timer extension from Watch: +\(message["seconds"] ?? 0)s", category: .general)
-            notifyFlutter(event: "onExtendTimerFromWatch", data: message)
-
-        case "editCompletedSetReps":
-            // ✅ Watch wants to edit reps of a SPECIFIC completed set (by index)
-            let setIndex = message["setIndex"] as? Int ?? 0
-            let reps = message["reps"] as? Int ?? 0
-            Logger.shared.log(.info, "✏️ Edit completed set \(setIndex + 1) from Watch: \(reps) reps", category: .general)
-            notifyFlutter(event: "onEditCompletedSetRepsFromWatch", data: message)
-
-        case "uncompleteSet":
-            // ✅ Watch wants to uncomplete (undo) a completed set
-            let setIndex = message["setIndex"] as? Int ?? 0
-            Logger.shared.log(.info, "↩️ Uncomplete set \(setIndex + 1) from Watch", category: .general)
-            notifyFlutter(event: "onUncompleteSetFromWatch", data: message)
-
-        case "workoutError":
-            // ✅ FIX: Handle HKWorkoutSession errors from Watch
-            // This is sent when HKWorkoutSession fails unexpectedly on Watch
-            let errorMessage = message["message"] as? String ?? "Unknown error"
-            Logger.shared.log(.error, "⚠️ Workout error from Watch: \(errorMessage)", category: .general)
-            notifyFlutter(event: "onWorkoutErrorFromWatch", data: message)
-
-        case "supersetRoundCompleted":
-            // 🔥 SUPERSET: Handle round completion from Watch
-            // Watch completes all exercises in a round at once with single RPE
-            let roundNumber = message["roundNumber"] as? Int ?? 0
-            let effort = message["effort"] as? Int
-            let effortScale = message["effortScale"] as? String ?? "rpe"
-            if let effort = effort {
-                Logger.shared.log(.info, "🔥 Superset round \(roundNumber) completed from Watch with \(effortScale.uppercased()): \(effort)", category: .general)
-            } else {
-                Logger.shared.log(.info, "🔥 Superset round \(roundNumber) completed from Watch (no effort)", category: .general)
-            }
-            notifyFlutter(event: "onSupersetRoundCompletedFromWatch", data: message)
-
-        // 🔥 DROPSET: Handle stage and completion from Watch
-        case "dropsetStageCompleted":
-            let stageIndex = message["stageIndex"] as? Int ?? 0
-            let totalStages = message["totalStages"] as? Int ?? 0
-            let actualReps = message["actualReps"] as? Int ?? 0
-            let effort = message["effort"] as? Int
-            let effortScale = message["effortScale"] as? String ?? "rpe"
-            if let effort = effort {
-                Logger.shared.log(.info, "🔥 Dropset stage \(stageIndex + 1)/\(totalStages) completed from Watch: \(actualReps) reps, \(effortScale.uppercased()): \(effort)", category: .general)
-            } else {
-                Logger.shared.log(.info, "🔥 Dropset stage \(stageIndex + 1)/\(totalStages) completed from Watch: \(actualReps) reps", category: .general)
-            }
-            notifyFlutter(event: "onDropsetStageCompletedFromWatch", data: message)
-
-        case "dropsetCompleted":
-            let totalStages = message["totalStages"] as? Int ?? 0
-            let effort = message["effort"] as? Int
-            let effortScale = message["effortScale"] as? String ?? "rpe"
-            if let effort = effort {
-                Logger.shared.log(.info, "🔥 Dropset completed from Watch (\(totalStages) stages) with \(effortScale.uppercased()): \(effort)", category: .general)
-            } else {
-                Logger.shared.log(.info, "🔥 Dropset completed from Watch (\(totalStages) stages)", category: .general)
-            }
-            notifyFlutter(event: "onDropsetCompletedFromWatch", data: message)
-
-        // 🔥 REST-PAUSE: Handle set and completion from Watch
-        case "restPauseSetCompleted":
-            let setIndex = message["setIndex"] as? Int ?? 0
-            let totalSets = message["totalSets"] as? Int ?? 0
-            let actualReps = message["actualReps"] as? Int ?? 0
-            let weight = message["weight"] as? Double ?? 0
-            let effort = message["effort"] as? Int
-            let effortScale = message["effortScale"] as? String ?? "rpe"
-            if let effort = effort {
-                Logger.shared.log(.info, "🔥 Rest-Pause set \(setIndex + 1)/\(totalSets) completed from Watch: \(weight)kg × \(actualReps), \(effortScale.uppercased()): \(effort)", category: .general)
-            } else {
-                Logger.shared.log(.info, "🔥 Rest-Pause set \(setIndex + 1)/\(totalSets) completed from Watch: \(weight)kg × \(actualReps)", category: .general)
-            }
-            notifyFlutter(event: "onRestPauseSetCompletedFromWatch", data: message)
-
-        case "restPauseCompleted":
-            let totalSets = message["totalSets"] as? Int ?? 0
-            let weight = message["weight"] as? Double ?? 0
-            let effort = message["effort"] as? Int
-            let effortScale = message["effortScale"] as? String ?? "rpe"
-            if let effort = effort {
-                Logger.shared.log(.info, "🔥 Rest-Pause completed from Watch (\(totalSets) sets, \(weight)kg) with \(effortScale.uppercased()): \(effort)", category: .general)
-            } else {
-                Logger.shared.log(.info, "🔥 Rest-Pause completed from Watch (\(totalSets) sets, \(weight)kg)", category: .general)
-            }
-            notifyFlutter(event: "onRestPauseCompletedFromWatch", data: message)
-
-        // MARK: - Navigation & Copy Actions from Watch
-        case "jumpToExercise":
-            let exerciseIndex = message["exerciseIndex"] as? Int ?? 0
-            Logger.shared.log(.info, "↔️ Jump to exercise \(exerciseIndex) from Watch", category: .general)
-            notifyFlutter(event: "onJumpToExerciseFromWatch", data: message)
-
-        case "jumpToSet":
-            let setNumber = message["setNumber"] as? Int ?? 1
-            Logger.shared.log(.info, "↕️ Jump to set \(setNumber) from Watch", category: .general)
-            notifyFlutter(event: "onJumpToSetFromWatch", data: message)
-
-        case "copyToAllSets":
-            let weight = message["weight"] as? Double ?? 0
-            let reps = message["reps"] as? Int ?? 0
-            Logger.shared.log(.info, "📄 Copy to all sets from Watch: \(weight)kg × \(reps)", category: .general)
-            notifyFlutter(event: "onCopyToAllSetsFromWatch", data: message)
-
-        case "copyFromPreviousSet":
-            let currentSetNumber = message["currentSetNumber"] as? Int ?? 1
-            Logger.shared.log(.info, "📋 Copy from previous set (current: \(currentSetNumber)) from Watch", category: .general)
-            notifyFlutter(event: "onCopyFromPreviousSetFromWatch", data: message)
-
-        case "startNewTimer":
-            let duration = message["duration"] as? Int ?? 60
-            Logger.shared.log(.info, "⏱️ Start new timer from Watch: \(duration)s", category: .general)
-            notifyFlutter(event: "onStartNewTimerFromWatch", data: message)
-
-        default:
-            Logger.shared.log(.warning, "⚠️ Unknown message type (no reply): \(type)", category: .general)
-        }
+        // Route through the reply-handler version with a no-op reply
+        self.session(session, didReceiveMessage: message) { _ in }
     }
 
     /// Handle immediate messages from Watch WITH reply handler
@@ -1255,6 +1094,38 @@ extension WatchConnectivityManager: WCSessionDelegate {
         // ⏱️ Timer from Watch
         case "startNewTimer":
             handleStartNewTimerFromWatch(message, replyHandler: replyHandler)
+
+        // P2-2 FIX: Cases previously only in no-reply handler, now unified
+        case "healthMetrics":
+            Logger.shared.log(.debug, "❤️ Health metrics from Watch", category: .general)
+            notifyFlutter(event: "onHealthMetricsFromWatch", data: message)
+            replyHandler(["success": true])
+
+        case "workoutError":
+            let errorMessage = message["message"] as? String ?? "Unknown error"
+            Logger.shared.log(.error, "⚠️ Workout error from Watch: \(errorMessage)", category: .general)
+            notifyFlutter(event: "onWorkoutErrorFromWatch", data: message)
+            replyHandler(["success": true])
+
+        case "jumpToExercise":
+            Logger.shared.log(.info, "↔️ Jump to exercise from Watch", category: .general)
+            notifyFlutter(event: "onJumpToExerciseFromWatch", data: message)
+            replyHandler(["success": true])
+
+        case "jumpToSet":
+            Logger.shared.log(.info, "↕️ Jump to set from Watch", category: .general)
+            notifyFlutter(event: "onJumpToSetFromWatch", data: message)
+            replyHandler(["success": true])
+
+        case "copyToAllSets":
+            Logger.shared.log(.info, "📄 Copy to all sets from Watch", category: .general)
+            notifyFlutter(event: "onCopyToAllSetsFromWatch", data: message)
+            replyHandler(["success": true])
+
+        case "copyFromPreviousSet":
+            Logger.shared.log(.info, "📋 Copy from previous set from Watch", category: .general)
+            notifyFlutter(event: "onCopyFromPreviousSetFromWatch", data: message)
+            replyHandler(["success": true])
 
         default:
             Logger.shared.log(.warning, "⚠️ Unknown message type: \(type)", category: .general)
