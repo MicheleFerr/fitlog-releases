@@ -931,24 +931,39 @@ extension DirectNotificationManager: UNUserNotificationCenterDelegate {
             || identifier.contains("gymbro")
 
         if isTimerNotification {
-            // BUG FIX: ALWAYS play sound + vibration in foreground (notification sound alone doesn't work)
             let soundName = scheduled?.soundName ?? "sound"
 
-            // 1. Vibrate always
-            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            print("   📳 Vibration triggered")
+            // ✅ AUDIO-MUTEX: Check if BackgroundAudioManager already played sound recently.
+            // This prevents double-sound when both the dispatch timer (playCompletionSound)
+            // and the backup notification fire close together in foreground.
+            let audioAlreadyPlayed = BackgroundAudioManager.shared.wasAudioPlayedRecently(withinSeconds: 3.0)
 
-            // 2. Play sound via AVAudioPlayer (notification sound doesn't work in foreground)
-            playNotificationAudio(soundName: soundName)
+            if audioAlreadyPlayed {
+                print("   🔇 [AUDIO-MUTEX] Audio already played by BackgroundAudioManager — suppressing notification sound")
+                // Still show banner but NO sound (audio already handled)
+                completionHandler([.banner, .list, .badge])
+            } else {
+                // Backup notification arrived but primary audio didn't play —
+                // this is the fallback path (e.g., app just came to foreground)
+                print("   🔊 [AUDIO-MUTEX] No recent audio — playing notification sound as fallback")
 
-            // Notify Flutter that audio is being played via iOS notification (deduplication)
-            FlutterChannelRegistry.shared.unified?.invokeMethod("timerAudioPlayedByiOS", arguments: [
-                "timestamp": Date().timeIntervalSince1970,
-                "source": "notification"
-            ])
+                // 1. Vibrate
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+                print("   📳 Vibration triggered")
 
-            completionHandler([.banner, .list, .sound, .badge])
-            print("   📱 Showing timer notification in foreground with sound + vibration")
+                // 2. Play sound via AVAudioPlayer
+                playNotificationAudio(soundName: soundName)
+
+                // Notify Flutter that audio is being played via iOS notification
+                FlutterChannelRegistry.shared.unified?.invokeMethod("timerAudioPlayedByiOS", arguments: [
+                    "timestamp": Date().timeIntervalSince1970,
+                    "source": "notification"
+                ])
+
+                // Do NOT pass .sound — playNotificationAudio() handles audio.
+                completionHandler([.banner, .list, .badge])
+            }
+            print("   📱 Timer notification presented in foreground")
 
             // AUTO-DISMISS: Remove notification after 60 seconds
             scheduleNotificationRemoval(identifier: identifier, afterSeconds: 60)

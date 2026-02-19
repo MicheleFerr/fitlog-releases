@@ -286,20 +286,7 @@ final class UnifiedTimerCoordinator {
     private func handlePlayCompletionSound(_ arguments: Any?, result: @escaping FlutterResult) {
         let soundName = (arguments as? [String: Any])?["soundName"] as? String ?? "sound"
 
-        // ✅ FIX #1: Check if BackgroundAudioManager is already handling this
-        if backgroundAudio.hasScheduledAudioForCompletion() {
-            Logger.shared.log(.info, """
-                ⏭️ [AUDIO-FIX] Skipping manual playback:
-                - BackgroundAudioManager is active and will handle completion
-                - Prevents duplicate audio playback
-                - Timer will play sound automatically at 00:00
-                """, category: .audioSession)
-
-            result("skipped_scheduled_audio_active")
-            return
-        }
-
-        // Check for recent playback to prevent duplicates
+        // Check for recent playback to prevent duplicates (keep 3s dedup)
         if let lastTime = lastAudioTriggerTime,
            Date().timeIntervalSince(lastTime) < 3.0 {
             let timeSince = Date().timeIntervalSince(lastTime)
@@ -308,16 +295,24 @@ final class UnifiedTimerCoordinator {
             return
         }
 
+        // ✅ AUDIO-MUTEX: Check if BackgroundAudioManager already played sound recently.
+        // The dispatch timer (Path A) fires playCompletionSound() at the same time as
+        // Flutter's Dart ticker reaches 0 and calls this method (Path C).
+        // Without this check, BOTH play simultaneously = double sound.
+        if backgroundAudio.wasAudioPlayedRecently(withinSeconds: 3.0) {
+            Logger.shared.log(.info, "🔇 [AUDIO-MUTEX] BackgroundAudioManager already played sound — skipping Flutter-triggered playback", category: .audioSession)
+            result("skipped_primary_already_played")
+            return
+        }
+
         // Mark audio as triggered
         lastAudioTriggerTime = Date()
 
-        // Use TimerSoundFix ONLY if BackgroundAudioManager not active
+        // Play via TimerSoundFix as fallback when BackgroundAudioManager hasn't played
         TimerSoundFix.shared.playTimerCompletionSound(preferredSound: soundName)
 
         Logger.shared.log(.info, """
-            🔊 [AUDIO-FIX] Manual playback executed:
-            - BackgroundAudioManager not active
-            - Playing via TimerSoundFix
+            🔊 [AUDIO-MUTEX] Flutter-triggered playback executed (BackgroundAudioManager had not played):
             - Sound: \(soundName)
             """, category: .audioSession)
 

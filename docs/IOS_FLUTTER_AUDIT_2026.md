@@ -697,7 +697,42 @@ L'audit ha identificato molte implementazioni eccellenti:
 **File modificati**: `BackgroundAudioManager.swift`, `DirectNotificationManager.swift`, `AppDelegate.swift`, `project.pbxproj`
 **Build**: ✅ Compilazione verificata | **Analyze**: ✅ Nessun nuovo warning
 
-**Status**: P0 ✅ | P1 ✅ | P2 ✅ | AUDIO-FIX ✅ | **Prossimo step**: P3 — Best Practices (backlog, bassa priorità).
+### AUDIO-MUTEX — Multiple Sounds on Timer Completion (2026-02-19)
+
+> Fix per il bug: timer emette MULTIPLI suoni alla scadenza invece di uno solo.
+> Causa: i fix AUDIO-FIX hanno ripristinato 3+ path audio indipendenti che si attivano contemporaneamente.
+
+**Root Cause Analysis** — 4 path audio simultanei in foreground:
+1. `playCompletionSound()` → AVAudioPlayer (dispatch timer)
+2. `TimerSoundFix.playTimerCompletionSound()` (chiamato SEMPRE come "backup" anche se #1 ha successo)
+3. Backup notification → `willPresent` → `playNotificationAudio()` (AVAudioPlayer manuale)
+4. Backup notification → `willPresent` → `.sound` nel completionHandler (suono notifica iOS)
+
+**Fix applicati**:
+- [x] AM-1: Rimosso `.sound` dal completionHandler in `willPresent` per notifiche timer — `playNotificationAudio()` già gestisce l'audio, `.sound` causava double-sound ✅
+- [x] AM-2: `willPresent` ora verifica `BackgroundAudioManager.wasAudioPlayedRecently()` — se il suono è già stato emesso dal dispatch timer, la notifica mostra solo banner (no audio) ✅
+- [x] AM-3: `TimerSoundFix` chiamato SOLO quando AVAudioPlayer fallisce — precedente "belt-and-suspenders" causava double-sound ✅
+- [x] AM-4: `cancelAllTimerNotifications()` chiamato dopo ogni play riuscito — previene backup notification dal suonare dopo il primario ✅
+- [x] AM-5: Aggiunto `wasAudioPlayedRecently(withinSeconds:)` a `BackgroundAudioManager` — API pubblica thread-safe per deduplication cross-manager ✅
+- [x] AM-6: `UnifiedTimerCoordinator.handlePlayCompletionSound()` ora verifica `wasAudioPlayedRecently()` — il Dart ticker e il dispatch timer iOS scattano contemporaneamente, AM-6 previene il doppio suono ✅
+
+**Architettura risultante — esattamente 1 suono**:
+```
+Timer Expire
+├─ Foreground + Silent Loop → AVAudioPlayer (primary) → cancel backup notification
+├─ Foreground senza Silent Loop → AVAudioPlayer (primary) → cancel backup notification
+├─ Background + Silent Loop → AVAudioPlayer (primary) → cancel backup notification
+├─ Background senza Silent Loop → TimerSoundFix (primary) → cancel backup notification
+└─ App Suspended/Killed → Backup UNNotification con suono (unico path attivo)
+
+willPresent handler (foreground only):
+├─ Se audio già played (< 3s) → banner only, NO sound
+└─ Se NO audio recente → playNotificationAudio() come fallback
+```
+
+**File modificati**: `BackgroundAudioManager.swift`, `DirectNotificationManager.swift`, `UnifiedTimerCoordinator.swift`
+
+**Status**: P0 ✅ | P1 ✅ | P2 ✅ | AUDIO-FIX ✅ | AUDIO-MUTEX ✅ | **Prossimo step**: P3 — Best Practices (backlog, bassa priorità).
 
 **Riferimenti Apple**:
 - [ActivityKit (iOS 16.1+)](https://developer.apple.com/documentation/activitykit)

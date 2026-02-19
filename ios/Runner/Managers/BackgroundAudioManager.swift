@@ -54,6 +54,18 @@ final class BackgroundAudioManager {
     // Health monitoring cleanup
     private var healthMonitoringWorkItem: DispatchWorkItem?
     
+    // MARK: - Audio Mutex (Cross-Manager Deduplication)
+
+    /// Check if audio was played recently by this manager.
+    /// Used by DirectNotificationManager.willPresent to suppress duplicate sound
+    /// when both the dispatch timer and backup notification fire close together.
+    func wasAudioPlayedRecently(withinSeconds threshold: TimeInterval) -> Bool {
+        return stateQueue.sync {
+            guard let lastTimestamp = audioPlayedTimestamp else { return false }
+            return Date().timeIntervalSince(lastTimestamp) < threshold
+        }
+    }
+
     // MARK: - Configuration
     private struct Config {
         static let silentLoopFileName = "silent_loop"
@@ -504,15 +516,18 @@ final class BackgroundAudioManager {
 
         Logger.shared.log(.info, "📱 App state: \(isInBackground ? "Background/Inactive" : "Active")", category: .audioSession)
 
-        // ✅ AUDIO-FIX: Switch to .duckOthers BEFORE playing completion sound.
-        // This lowers the user's music volume so the timer sound is clearly audible.
-        // After playback, we restore .mixWithOthers for the silent loop.
+        // ✅ AUDIO-FIX: Keep .mixWithOthers — do NOT switch to .duckOthers!
+        // Switching category options while Bluetooth A2DP is active causes
+        // PlayerRemoteXPC errors (-12860) and disrupts the audio graph.
+        // AVAudioPlayer.play() returns true but no sound reaches the output.
+        // Keeping .mixWithOthers ensures stable Bluetooth routing.
         do {
             let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playback, mode: .default, options: [.duckOthers])
-            Logger.shared.log(.info, "🔉 [DUCK] Switched to .duckOthers for completion sound", category: .audioSession)
+            try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            try? session.setActive(true)
+            Logger.shared.log(.info, "🔊 [STABLE] Ensured .mixWithOthers is active for completion sound", category: .audioSession)
         } catch {
-            Logger.shared.log(.warning, "⚠️ [DUCK] Failed to switch to .duckOthers: \(error) — playing anyway", category: .audioSession)
+            Logger.shared.log(.warning, "⚠️ [STABLE] Failed to ensure audio session: \(error) — playing anyway", category: .audioSession)
         }
 
         // HYBRID: Silent loop + Critical Alert fallback
@@ -568,37 +583,38 @@ final class BackgroundAudioManager {
                 }
             }
 
-            // Fallback to TimerSoundFix only if manual player failed
+            // ✅ AUDIO-MUTEX: Only use TimerSoundFix if AVAudioPlayer FAILED.
+            // Previous "belt-and-suspenders" approach caused DOUBLE SOUND because both
+            // AVAudioPlayer and TimerSoundFix have their own audio players.
             if !soundPlayed {
-                Logger.shared.log(.warning, "⚠️ Manual AVAudioPlayer failed, trying TimerSoundFix fallback", category: .audioSession)
+                Logger.shared.log(.warning, "⚠️ Manual AVAudioPlayer failed — TimerSoundFix is primary fallback", category: .audioSession)
 
-                // 🔬 TRACE: Log fallback to notification
+                // 🔬 TRACE: Log TimerSoundFix as primary (AVAudioPlayer failed)
                 AudioTraceLogger.shared.logEvent(
                     traceId: traceId,
                     path: .notification,
                     action: .played,
-                    metadata: ["method": "TimerSoundFix", "reason": "AVAudioPlayer failed"]
+                    metadata: ["method": "TimerSoundFix", "reason": "primary (AVAudioPlayer failed)"]
                 )
 
                 TimerSoundFix.shared.playTimerCompletionSound(preferredSound: soundName)
             } else {
-                // ✅ AUDIO-FIX: Do NOT cancel pending notifications!
-                // AVAudioPlayer.play() returns true even when device is locked and audio doesn't actually play.
-                // The scheduled notification with UNNotificationSound is our ONLY reliable backup
-                // for background/lockscreen. Let both attempt to play — iOS handles dedup naturally.
-                Logger.shared.log(.info, "🔊 [AUDIO-FIX] AVAudioPlayer reported success — keeping notification as backup (may not be audible when locked)", category: .audioSession)
+                Logger.shared.log(.info, "🔊 [AUDIO-MUTEX] AVAudioPlayer succeeded in background — skipping TimerSoundFix (anti-double-sound)", category: .audioSession)
+
+                // 🔬 TRACE: Log TimerSoundFix skipped
+                AudioTraceLogger.shared.logEvent(
+                    traceId: traceId,
+                    path: .notification,
+                    action: .skipped,
+                    metadata: ["method": "TimerSoundFix", "reason": "AVAudioPlayer succeeded"]
+                )
+
+                // Cancel backup notification since primary audio played
+                cancelAllTimerNotifications()
             }
 
-            // Stop silent loop and restore .mixWithOthers after playing sound
+            // Stop silent loop after playing sound
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-                // ✅ AUDIO-FIX: Restore .mixWithOthers so user's music goes back to normal volume
-                do {
-                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
-                    Logger.shared.log(.info, "🔊 [DUCK] Restored .mixWithOthers after completion sound", category: .audioSession)
-                } catch {
-                    Logger.shared.log(.warning, "⚠️ [DUCK] Failed to restore .mixWithOthers: \(error)", category: .audioSession)
-                }
-
                 if self?.silentLoopActive == true {
                     self?.stopSilentLoop()
                     Logger.shared.log(.info, "🔇 Silent loop stopped after timer completion", category: .audioSession)
@@ -619,6 +635,9 @@ final class BackgroundAudioManager {
 
             TimerSoundFix.shared.playTimerCompletionSound(preferredSound: soundName)
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+
+            // ✅ AUDIO-MUTEX: Cancel backup notification since TimerSoundFix played
+            cancelAllTimerNotifications()
 
             // 📣 POST NOTIFICATION: Notify AudioDebugTestHandler that audio completed
             #if DEBUG
@@ -714,26 +733,22 @@ final class BackgroundAudioManager {
                 AudioServicesPlaySystemSound(1005)  // System sound as fallback
                 Logger.shared.log(.info, "📢 Played system sound as fallback instead of notification", category: .audioSession)
 
-                // NOTE: Timer completion notification is handled by Flutter/LiveActivityHandler
-                // We don't need another notification here
+                // ✅ AUDIO-MUTEX: Cancel backup notification — system sound already played
+                cancelAllTimerNotifications()
             } else {
-                // ✅ AUDIO-FIX: Do NOT cancel pending notifications even in foreground.
-                // The notification serves as backup. In foreground willPresent handles presentation.
-                Logger.shared.log(.info, "🔊 [AUDIO-FIX] AVAudioPlayer played in foreground — keeping notification as backup", category: .audioSession)
+                // ✅ AUDIO-MUTEX: AVAudioPlayer succeeded — do NOT call TimerSoundFix as backup.
+                // Previous "belt-and-suspenders" approach caused DOUBLE SOUND because both
+                // AVAudioPlayer and TimerSoundFix have their own audio players.
+                // If AVAudioPlayer.play() returns true, trust it. The backup notification
+                // handles the case where the app is suspended and AVAudioPlayer can't play.
+                Logger.shared.log(.info, "🔊 [AUDIO-MUTEX] AVAudioPlayer succeeded in foreground — skipping TimerSoundFix (anti-double-sound)", category: .audioSession)
+
+                // Cancel backup notification since primary audio played successfully
+                cancelAllTimerNotifications()
             }
 
             // Vibrate for feedback
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-
-            // ✅ AUDIO-FIX: Restore .mixWithOthers after foreground sound completes
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                do {
-                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
-                    Logger.shared.log(.info, "🔊 [DUCK] Restored .mixWithOthers after foreground completion sound", category: .audioSession)
-                } catch {
-                    Logger.shared.log(.warning, "⚠️ [DUCK] Failed to restore .mixWithOthers: \(error)", category: .audioSession)
-                }
-            }
         }
 
         Logger.shared.log(.info, "📝 Audio playback tracked at \(audioPlayedTimestamp!)", category: .audioSession)
