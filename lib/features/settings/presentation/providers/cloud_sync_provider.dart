@@ -502,22 +502,16 @@ class CloudSyncNotifier extends Notifier<CloudSyncState> {
         debugPrint('🗑️ Clearing local data...');
       }
 
-      // Clear workout data
-      // ✅ FIX: Clear 'workouts' box (same as HiveWorkoutDataSource)
-      final workoutsBox = await _boxManager.openBox<Map>('workouts');
-      await workoutsBox.clear();
+      // Open all boxes in parallel
+      final boxes = await Future.wait([
+        _boxManager.openBox<Map>('workouts'),
+        _boxManager.openBox<Map>('templates_data'),
+        _boxManager.openBox<Map>('exercises_data'),
+        _boxManager.openBox<Map>('personal_records_data'),
+      ]);
 
-      // Clear templates
-      final templatesBox = await _boxManager.openBox<Map>('templates_data');
-      await templatesBox.clear();
-
-      // Clear exercises
-      final exercisesBox = await _boxManager.openBox<Map>('exercises_data');
-      await exercisesBox.clear();
-
-      // Clear personal records
-      final prsBox = await _boxManager.openBox<Map>('personal_records_data');
-      await prsBox.clear();
+      // Clear all boxes in parallel
+      await Future.wait(boxes.map((box) => box.clear()));
 
       if (kDebugMode) {
         debugPrint('✅ Local data cleared');

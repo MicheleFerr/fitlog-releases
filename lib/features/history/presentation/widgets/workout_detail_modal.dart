@@ -27,6 +27,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/widgets/history_share_card.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Modal showing full workout details
@@ -192,11 +193,7 @@ class _WorkoutDetailModalState extends State<WorkoutDetailModal> {
                   _isSharing
                       ? const Padding(
                           padding: EdgeInsets.all(12),
-                          child: SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          ),
+                          child: LoadingIndicator(),
                         )
                       : IconButton(
                           onPressed: () => _shareAsImage(context),

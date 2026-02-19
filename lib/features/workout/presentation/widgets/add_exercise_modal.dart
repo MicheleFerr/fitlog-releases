@@ -14,7 +14,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_usage_tracker.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_usage_model.dart';

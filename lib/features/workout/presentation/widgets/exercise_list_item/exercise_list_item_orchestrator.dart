@@ -1734,14 +1734,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       }
       // Show paused snackbar
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.pauseAndContinueLater),
-            action: SnackBarAction(
-              label: context.l10n.resumeRestPause,
-              onPressed: () => _handleExecuteRestPause(updatedExercise),
-            ),
-          ),
+        SnackBarService.showInfo(
+          context,
+          context.l10n.pauseAndContinueLater,
+          actionLabel: context.l10n.resumeRestPause,
+          onAction: () => _handleExecuteRestPause(updatedExercise),
         );
       }
       return;

@@ -4,6 +4,7 @@
 /// Feature: analytics
 /// Type: widget
 ///
+///
 /// Mini Sparkline - Compact line chart for exercise progression
 ///
 /// **Purpose**: Show weight progression trend in exercise list
@@ -16,6 +17,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'dart:math' as math;
 
 /// Mini sparkline widget showing exercise progression
@@ -49,7 +51,7 @@ class MiniSparkline extends StatelessWidget {
         height: height,
         child: Center(
           child: Icon(
-            Icons.remove,
+            AppIcons.remove,
             size: 16,
             color: context.colors.onSurfaceVariant.withValues(alpha: 0.3),
           ),

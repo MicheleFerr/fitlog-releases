@@ -16,7 +16,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/home/domain/services/ai_volume_calculator.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 
 /// Types of AI insights that can be generated
 enum InsightType {

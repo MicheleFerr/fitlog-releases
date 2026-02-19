@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/gym_e
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
@@ -187,11 +188,7 @@ class _QuickCreateProfileDialogState
         FilledButton.icon(
           onPressed: _isLoading ? null : _saveProfile,
           icon: _isLoading
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
+              ? const LoadingIndicator()
               : const SemanticIcon(
                   icon: AppIcons.save,
                   semanticLabel: 'Save',

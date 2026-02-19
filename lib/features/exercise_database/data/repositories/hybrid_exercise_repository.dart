@@ -16,7 +16,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/models/exerci
 import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercise_json_loader.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_cache_manager.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_version_service.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/sync_status.dart';
 
 class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {

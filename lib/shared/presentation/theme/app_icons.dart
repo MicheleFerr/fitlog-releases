@@ -1114,6 +1114,12 @@ class AppIcons {
 
   /// 🔗 Open external link
   static const IconData openExternal = Icons.open_in_new;
+
+  /// ⚖️ Gavel/Legal
+  static const IconData gavel = Icons.gavel;
+
+  /// © Copyright
+  static const IconData copyright = Icons.copyright;
 }
 
 /// 📦 Icon Groups - For when you need multiple related icons

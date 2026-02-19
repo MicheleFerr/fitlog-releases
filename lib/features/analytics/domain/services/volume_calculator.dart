@@ -1,5 +1,5 @@
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 
 /// Calculator for various volume metrics
 class VolumeCalculator {

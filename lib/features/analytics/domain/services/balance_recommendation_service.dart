@@ -15,7 +15,7 @@
 library;
 
 import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_balance_calculator.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/services/fitness_fatigue_service.dart';
 
 /// Type of balance recommendation

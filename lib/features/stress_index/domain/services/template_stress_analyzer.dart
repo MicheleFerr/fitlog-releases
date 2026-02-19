@@ -11,7 +11,7 @@
 library;
 
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/muscle_readiness_data.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/personal_calibration.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/template_stress_analysis.dart';

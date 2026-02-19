@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Screen showing attribution, licensing, and legal information for AI Coach Documents
@@ -27,7 +28,7 @@ class DocumentsAttributionScreen extends ConsumerWidget {
         children: [
           _buildSection(
             context,
-            icon: Icons.science,
+            icon: AppIcons.science,
             title: 'Evidence-Based Training',
             content: 'FitLog AI Coach uses scientifically validated papers '
                 'to provide evidence-based training advice. All recommendations '
@@ -36,7 +37,7 @@ class DocumentsAttributionScreen extends ConsumerWidget {
           const SizedBox(height: 24),
           _buildSection(
             context,
-            icon: Icons.lock_open,
+            icon: AppIcons.unlock,
             title: 'Open Access Sources',
             content: 'All papers used are open access with Creative Commons '
                 'licenses (CC-BY or CC-BY-NC-ND). Abstracts are provided '
@@ -45,7 +46,7 @@ class DocumentsAttributionScreen extends ConsumerWidget {
           const SizedBox(height: 24),
           _buildSection(
             context,
-            icon: Icons.link,
+            icon: AppIcons.link,
             title: 'Direct Links',
             content: 'Each paper includes a direct link to the original '
                 'publisher (DOI link). You can access the full paper for free '
@@ -54,7 +55,7 @@ class DocumentsAttributionScreen extends ConsumerWidget {
           const SizedBox(height: 24),
           _buildSection(
             context,
-            icon: Icons.format_quote,
+            icon: AppIcons.formatQuote,
             title: 'Proper Attribution',
             content: 'Every recommendation includes proper citation with '
                 'authors, year, title, and license information as required '
@@ -63,7 +64,7 @@ class DocumentsAttributionScreen extends ConsumerWidget {
           const SizedBox(height: 24),
           _buildSection(
             context,
-            icon: Icons.privacy_tip,
+            icon: AppIcons.privacyTipRounded,
             title: 'Your Privacy',
             content: 'Document synchronization is completely anonymous. '
                 'No personal data is collected, tracked, or shared. '
@@ -72,7 +73,7 @@ class DocumentsAttributionScreen extends ConsumerWidget {
           const SizedBox(height: 24),
           _buildSection(
             context,
-            icon: Icons.gavel,
+            icon: AppIcons.gavel,
             title: 'Legal Disclaimer',
             content: 'Information provided by AI Coach is for educational '
                 'purposes only and should not replace professional medical '
@@ -146,7 +147,7 @@ class DocumentsAttributionScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.copyright,
+                  AppIcons.copyright,
                   color: context.colors.primary,
                   size: 24,
                 ),
@@ -173,7 +174,7 @@ class DocumentsAttributionScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             TextButton.icon(
               onPressed: () => _launchUrl('https://creativecommons.org/licenses/'),
-              icon: const Icon(Icons.open_in_new, size: 16),
+              icon: const Icon(AppIcons.openInNew, size: 16),
               label: const Text('Learn more about CC licenses'),
             ),
           ],
@@ -236,7 +237,7 @@ class DocumentsAttributionScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             TextButton.icon(
               onPressed: () => _launchUrl('mailto:support@fitlogpro.it'),
-              icon: const Icon(Icons.email, size: 16),
+              icon: const Icon(AppIcons.email, size: 16),
               label: const Text('support@fitlogpro.it'),
             ),
           ],

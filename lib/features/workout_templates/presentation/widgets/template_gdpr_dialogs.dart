@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 // =============================================================================
@@ -161,11 +162,7 @@ class _TemplateReportDialogState extends State<_TemplateReportDialog> {
         FilledButton(
           onPressed: _selectedReason != null && !_isSubmitting ? _submit : null,
           child: _isSubmitting
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
+              ? const LoadingIndicator()
               : Text(l10n.templateReportSubmit),
         ),
       ],

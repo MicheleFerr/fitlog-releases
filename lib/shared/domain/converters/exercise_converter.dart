@@ -13,7 +13,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart'
     as WorkoutExercise;
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 
 /// Converter centralizzato per la conversione di esercizi
 /// da Database Exercise a Workout Exercise

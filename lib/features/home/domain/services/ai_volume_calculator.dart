@@ -10,7 +10,7 @@ library;
 
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 
 /// Risultato del calcolo volume per un muscle group
 class MuscleGroupVolume {

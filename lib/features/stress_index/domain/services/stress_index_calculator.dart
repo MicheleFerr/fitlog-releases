@@ -20,7 +20,7 @@ library;
 import 'dart:math';
 
 import 'package:gymbro_flutter_new/features/analytics/domain/services/emg_movement_ratios.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/constants/stress_index_constants.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/muscle_recovery_status.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/muscle_stress_data.dart';

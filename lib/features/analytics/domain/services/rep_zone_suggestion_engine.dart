@@ -25,7 +25,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/exercise_s
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/strength_standard.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart'
     show ExerciseCategory;
 import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';

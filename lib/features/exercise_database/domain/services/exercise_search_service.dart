@@ -12,7 +12,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/utils/exercis
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_template.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 
 class ExerciseSearchService {

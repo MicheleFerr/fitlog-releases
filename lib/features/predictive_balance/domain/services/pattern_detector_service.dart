@@ -11,7 +11,7 @@ import 'dart:convert';
 
 import 'package:gymbro_flutter_new/features/predictive_balance/domain/entities/weekly_pattern.dart';
 import 'package:gymbro_flutter_new/features/predictive_balance/domain/entities/workout_fingerprint.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';

@@ -21,7 +21,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/emg_movement_ratios.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_analyzer.dart';

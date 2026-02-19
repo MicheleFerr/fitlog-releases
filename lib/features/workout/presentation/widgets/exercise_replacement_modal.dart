@@ -17,7 +17,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 class ExerciseReplacementModal extends ConsumerStatefulWidget {

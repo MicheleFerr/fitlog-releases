@@ -18,7 +18,7 @@ library;
 import 'package:gymbro_flutter_new/features/analytics/domain/services/neglected_muscle_detector.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 
 /// Exercise Suggestion - Recommended exercise for neglected muscle
 class ExerciseSuggestion {

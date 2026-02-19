@@ -83,10 +83,15 @@ class WorkoutHistoryRepositoryEnhanced {
     if (_isInitialized) return;
 
     try {
-      // Open Hive boxes
-      _historyBox = await _boxManager.openBox(_historyBoxName);
-      _syncQueueBox = await _boxManager.openBox(_syncQueueBoxName);
-      _metadataBox = await _boxManager.openBox<dynamic>(_metadataBoxName);
+      // Open Hive boxes in parallel
+      final results = await Future.wait([
+        _boxManager.openBox(_historyBoxName),
+        _boxManager.openBox(_syncQueueBoxName),
+        _boxManager.openBox<dynamic>(_metadataBoxName),
+      ]);
+      _historyBox = results[0];
+      _syncQueueBox = results[1];
+      _metadataBox = results[2];
 
       _isInitialized = true;
 

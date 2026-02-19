@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/gym_e
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Dropdown selector for switching between gym equipment profiles
@@ -176,11 +177,7 @@ class GymProfileSelector extends ConsumerWidget {
       },
       loading: () => Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: const SizedBox(
-          width: 16,
-          height: 16,
-          child: CircularProgressIndicator(strokeWidth: 2),
-        ),
+        child: const LoadingIndicator(),
       ),
       error: (_, __) => const SizedBox.shrink(),
     );

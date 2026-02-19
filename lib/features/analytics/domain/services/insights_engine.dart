@@ -6,7 +6,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker
 import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/scientific_metrics_service.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_balance_analyzer.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 
 /// Types of insights
 enum InsightType {

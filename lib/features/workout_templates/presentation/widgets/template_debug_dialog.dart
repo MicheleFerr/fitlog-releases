@@ -7,8 +7,10 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Shows a dialog with all Firebase templates for debugging
 void showTemplateDebugDialog(BuildContext context) {
@@ -71,7 +73,7 @@ class _TemplateDebugSheetState extends ConsumerState<TemplateDebugSheet> {
                 child: Row(
                   children: [
                     Icon(
-                      Icons.bug_report,
+                      AppIcons.bugReport,
                       color: theme.colorScheme.error,
                     ),
                     const SizedBox(width: 8),
@@ -88,7 +90,7 @@ class _TemplateDebugSheetState extends ConsumerState<TemplateDebugSheet> {
                             .read(templateDiagnosticNotifierProvider.notifier)
                             .invalidateCacheAndRefresh();
                       },
-                      icon: const Icon(Icons.refresh),
+                      icon: const Icon(AppIcons.refresh),
                       tooltip: 'Force Refresh',
                     ),
                   ],
@@ -155,7 +157,7 @@ class _TemplateDebugSheetState extends ConsumerState<TemplateDebugSheet> {
                       child: Row(
                         children: [
                           Icon(
-                            Icons.warning,
+                            AppIcons.warningRounded,
                             color: theme.colorScheme.error,
                             size: 20,
                           ),
@@ -216,7 +218,7 @@ class _TemplateDebugSheetState extends ConsumerState<TemplateDebugSheet> {
                 trailing: IconButton(
                   onPressed: () => _confirmDelete(context, template),
                   icon: Icon(
-                    Icons.delete,
+                    AppIcons.delete,
                     color: theme.colorScheme.error,
                   ),
                   tooltip: 'Elimina',
@@ -280,16 +282,11 @@ class _TemplateDebugSheetState extends ConsumerState<TemplateDebugSheet> {
           .deleteTemplate(template['id'] as String);
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              success
-                  ? 'Template eliminato'
-                  : 'Errore durante l\'eliminazione',
-            ),
-            backgroundColor: success ? Colors.green : Colors.red,
-          ),
-        );
+        if (success) {
+          SnackBarService.showSuccess(context, 'Template eliminato');
+        } else {
+          SnackBarService.showError(context, 'Errore durante l\'eliminazione');
+        }
       }
     }
   }

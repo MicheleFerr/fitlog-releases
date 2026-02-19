@@ -573,7 +573,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             const Spacer(),
             IconButton(
               icon: Icon(
-                _isManualWeightEntry ? Icons.dialpad : AppIcons.keyboard,
+                _isManualWeightEntry ? AppIcons.dialpad : AppIcons.keyboard,
                 size: 16,
               ),
               onPressed: () {
@@ -745,7 +745,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             const Spacer(),
             IconButton(
               icon: Icon(
-                _isManualRepsEntry ? Icons.dialpad : AppIcons.keyboard,
+                _isManualRepsEntry ? AppIcons.dialpad : AppIcons.keyboard,
                 size: 16,
               ),
               onPressed: () {
@@ -904,7 +904,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             const Spacer(),
             IconButton(
               icon: Icon(
-                _isManualSecondsEntry ? Icons.dialpad : AppIcons.keyboard,
+                _isManualSecondsEntry ? AppIcons.dialpad : AppIcons.keyboard,
                 size: 16,
               ),
               onPressed: () {

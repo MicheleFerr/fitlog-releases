@@ -2,6 +2,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
@@ -55,7 +56,7 @@ class TemplateTypeOption extends StatelessWidget {
           ),
         ),
         trailing: Icon(
-          Icons.chevron_right,
+          AppIcons.chevronRight,
           color: context.colors.onSurfaceVariant,
         ),
       ),

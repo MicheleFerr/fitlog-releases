@@ -16,7 +16,7 @@ import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart'
     as workout_entities;
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';
-import 'package:gymbro_flutter_new/features/stress_index/data/mappers/muscle_abbreviation_mapper.dart';
+import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 
 /// Repository for importing workout data from external apps
 class ImportRepository {
