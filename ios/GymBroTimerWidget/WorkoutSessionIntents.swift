@@ -99,12 +99,16 @@ struct WorkoutCompleteSetIntent: LiveActivityIntent {
                     // 🔔 CRITICAL FIX: Schedule notification for timer completion
                     // This is the ONLY reliable way to get audio when app is in background
                     // iOS delivers this notification with sound even if app is killed
-                    scheduleRestTimerNotification(
+                    await scheduleRestTimerNotification(
                         duration: actualRestDuration,
                         exerciseName: currentState.exerciseName
                     )
                     print("🔔 [WorkoutCompleteSetIntent] Timer notification scheduled from Intent!")
                 }
+            } else {
+                // Mode is not .exercise - LA already in rest/RPE mode, don't send spurious event to Flutter
+                print("⚠️ [WorkoutCompleteSetIntent] Not in exercise mode (\(currentState.mode)) - skipping event")
+                return .result()
             }
         }
 
@@ -163,7 +167,7 @@ struct WorkoutSkipRestIntent: LiveActivityIntent {
 
                 // 🔔 CRITICAL FIX: Cancel pending notification since user is skipping rest
                 // Prevents notification from firing after skip
-                cancelRestTimerNotification()
+                await cancelRestTimerNotification()
                 print("🗑️ [WorkoutSkipRestIntent] Timer notification cancelled due to skip!")
             }
         }
@@ -256,7 +260,7 @@ struct WorkoutAddTimeIntent: LiveActivityIntent {
                 if !currentState.isPaused {
                     let remainingSeconds = Int(newEndDate.timeIntervalSinceNow)
                     if remainingSeconds > 0 {
-                        scheduleRestTimerNotification(
+                        await scheduleRestTimerNotification(
                             duration: remainingSeconds,
                             exerciseName: currentState.exerciseName
                         )
@@ -267,10 +271,13 @@ struct WorkoutAddTimeIntent: LiveActivityIntent {
                 }
 
             } else {
+                // Not in rest mode or no end date - don't signal Flutter for a +30s that didn't happen
                 print("⚠️ [WorkoutAddTimeIntent] Skipping LA update - mode=\(currentState.mode), hasEndDate=\(currentState.restEndDate != nil)")
+                return .result()
             }
         } else {
             print("⚠️ [WorkoutAddTimeIntent] No active Live Activity found!")
+            return .result()
         }
 
         // 2. Signal Flutter via UserDefaults + Darwin notification
@@ -399,7 +406,7 @@ struct WorkoutConfirmRPEIntent: LiveActivityIntent {
                 // 🔔 CRITICAL FIX: Schedule notification for timer completion
                 // This is the ONLY reliable way to get audio when app is in background
                 // iOS delivers this notification with sound even if app is killed
-                scheduleRestTimerNotification(
+                await scheduleRestTimerNotification(
                     duration: actualRestDuration,
                     exerciseName: currentState.exerciseName
                 )
@@ -443,7 +450,7 @@ struct WorkoutPauseResumeIntent: LiveActivityIntent {
                 if newPausedState {
                     // PAUSING: Cancel the notification since timer is stopped
                     print("⏸️ [WorkoutPauseResumeIntent] Pausing timer - cancelling notification")
-                    cancelRestTimerNotification()
+                    await cancelRestTimerNotification()
 
                     // Calculate remaining time and store it
                     var updatedState = currentState
@@ -492,7 +499,7 @@ struct WorkoutPauseResumeIntent: LiveActivityIntent {
                         )
 
                         // 🔔 Reschedule notification for remaining time
-                        scheduleRestTimerNotification(
+                        await scheduleRestTimerNotification(
                             duration: remainingSeconds,
                             exerciseName: currentState.exerciseName
                         )
@@ -519,100 +526,96 @@ struct WorkoutPauseResumeIntent: LiveActivityIntent {
 /// 🔔 CRITICAL FIX: Schedule iOS local notification for timer completion
 /// This is called directly from Intent when REST timer starts
 /// iOS delivers the notification with sound even if app is killed
-/// NOTE: This function uses async internally but fires-and-forgets for Intent performance
+/// NOTE: Awaited directly from perform() to guarantee completion before iOS terminates the extension.
 @available(iOS 17.0, *)
-private func scheduleRestTimerNotification(duration: Int, exerciseName: String = "Set") {
+private func scheduleRestTimerNotification(duration: Int, exerciseName: String = "Set") async {
     print("🔔 [INTENT-NOTIFICATION] Scheduling timer notification for \(duration)s")
 
     let userDefaults = UserDefaults(suiteName: sharedSuiteName)
     let soundName = userDefaults?.string(forKey: preferredSoundKey) ?? defaultTimerSound
 
-    // Use Task to ensure proper async ordering
-    Task {
-        // 🔔 DUPLICATE FIX: Cancel ALL pending timer notifications FIRST (await for order guarantee)
-        // This prevents duplicates when app already scheduled a notification with different UUID
-        let center = UNUserNotificationCenter.current()
-        let pendingRequests = await center.pendingNotificationRequests()
+    // 🔔 DUPLICATE FIX: Cancel ALL pending timer notifications FIRST (await for order guarantee)
+    // This prevents duplicates when app already scheduled a notification with different UUID
+    let center = UNUserNotificationCenter.current()
+    let pendingRequests = await center.pendingNotificationRequests()
 
-        let timerNotificationIds = pendingRequests
-            .filter { $0.content.categoryIdentifier == "TIMER_COMPLETE" }
-            .map { $0.identifier }
+    let timerNotificationIds = pendingRequests
+        .filter { $0.content.categoryIdentifier == "TIMER_COMPLETE" }
+        .map { $0.identifier }
 
-        if !timerNotificationIds.isEmpty {
-            center.removePendingNotificationRequests(withIdentifiers: timerNotificationIds)
-            print("🗑️ [INTENT-NOTIFICATION] Cancelled \(timerNotificationIds.count) existing timer notification(s)")
-        }
+    if !timerNotificationIds.isEmpty {
+        center.removePendingNotificationRequests(withIdentifiers: timerNotificationIds)
+        print("🗑️ [INTENT-NOTIFICATION] Cancelled \(timerNotificationIds.count) existing timer notification(s)")
+    }
 
-        // Create notification content
-        let content = UNMutableNotificationContent()
-        content.title = "⏱️ Rest Complete"
-        content.body = "Time to start your next set!"
-        content.categoryIdentifier = "TIMER_COMPLETE"
+    // Create notification content
+    let content = UNMutableNotificationContent()
+    content.title = "⏱️ Rest Complete"
+    content.body = "Time to start your next set!"
+    content.categoryIdentifier = "TIMER_COMPLETE"
 
-        // Use custom sound file (sound.caf)
-        // Note: Sound files are included in BOTH Runner and Widget extension bundles
-        // iOS looks for sounds in the extension's bundle when scheduling from Intent
-        let soundFileName = "\(soundName).caf"
-        content.sound = UNNotificationSound(named: UNNotificationSoundName(soundFileName))
+    // Use custom sound file (sound.caf)
+    // Note: Sound files are included in BOTH Runner and Widget extension bundles
+    // iOS looks for sounds in the extension's bundle when scheduling from Intent
+    let soundFileName = "\(soundName).caf"
+    content.sound = UNNotificationSound(named: UNNotificationSoundName(soundFileName))
 
-        // Add userInfo for identification
-        content.userInfo = [
-            "type": "rest_timer_completion",
-            "exercise": exerciseName,
-            "scheduledAt": Date().timeIntervalSince1970,
-            "duration": duration,
-            "source": "intent_direct" // Mark that this came from Intent, not Flutter
-        ]
+    // Add userInfo for identification
+    content.userInfo = [
+        "type": "rest_timer_completion",
+        "exercise": exerciseName,
+        "scheduledAt": Date().timeIntervalSince1970,
+        "duration": duration,
+        "source": "intent_direct" // Mark that this came from Intent, not Flutter
+    ]
 
-        // Schedule for timer duration
-        let trigger = UNTimeIntervalNotificationTrigger(
-            timeInterval: TimeInterval(duration),
-            repeats: false
-        )
+    // Schedule for timer duration
+    let trigger = UNTimeIntervalNotificationTrigger(
+        timeInterval: TimeInterval(duration),
+        repeats: false
+    )
 
-        let request = UNNotificationRequest(
-            identifier: timerNotificationIdentifier,
-            content: content,
-            trigger: trigger
-        )
+    let request = UNNotificationRequest(
+        identifier: timerNotificationIdentifier,
+        content: content,
+        trigger: trigger
+    )
 
-        do {
-            try await center.add(request)
-            print("✅ [INTENT-NOTIFICATION] Scheduled successfully!")
-            print("   - Duration: \(duration)s")
-            print("   - Sound: \(soundFileName)")
-            print("   - ID: \(timerNotificationIdentifier)")
-            print("   - This notification fires even if app is killed!")
-        } catch {
-            print("❌ [INTENT-NOTIFICATION] Failed to schedule: \(error.localizedDescription)")
-        }
+    do {
+        try await center.add(request)
+        print("✅ [INTENT-NOTIFICATION] Scheduled successfully!")
+        print("   - Duration: \(duration)s")
+        print("   - Sound: \(soundFileName)")
+        print("   - ID: \(timerNotificationIdentifier)")
+        print("   - This notification fires even if app is killed!")
+    } catch {
+        print("❌ [INTENT-NOTIFICATION] Failed to schedule: \(error.localizedDescription)")
     }
 }
 
 /// Cancel ALL pending timer completion notifications (called when user skips/pauses rest)
 /// Cancels both by fixed ID and by category to catch app-scheduled notifications too
+/// NOTE: Awaited directly from perform() to guarantee completion before iOS terminates the extension.
 @available(iOS 17.0, *)
-private func cancelRestTimerNotification() {
+private func cancelRestTimerNotification() async {
     print("🗑️ [INTENT-NOTIFICATION] Cancelling ALL timer notifications")
 
-    Task {
-        let center = UNUserNotificationCenter.current()
+    let center = UNUserNotificationCenter.current()
 
-        // Get all pending and cancel by category (catches app notifications with UUID)
-        let pendingRequests = await center.pendingNotificationRequests()
-        let timerNotificationIds = pendingRequests
-            .filter { $0.content.categoryIdentifier == "TIMER_COMPLETE" }
-            .map { $0.identifier }
+    // Get all pending and cancel by category (catches app notifications with UUID)
+    let pendingRequests = await center.pendingNotificationRequests()
+    let timerNotificationIds = pendingRequests
+        .filter { $0.content.categoryIdentifier == "TIMER_COMPLETE" }
+        .map { $0.identifier }
 
-        if !timerNotificationIds.isEmpty {
-            center.removePendingNotificationRequests(withIdentifiers: timerNotificationIds)
-            print("🗑️ [INTENT-NOTIFICATION] Cancelled \(timerNotificationIds.count) timer notification(s) by category")
-        }
-
-        // Also cancel by our known ID (redundant but explicit)
-        center.removePendingNotificationRequests(withIdentifiers: [timerNotificationIdentifier])
-        print("🗑️ [INTENT-NOTIFICATION] Cancelled notification with fixed ID")
+    if !timerNotificationIds.isEmpty {
+        center.removePendingNotificationRequests(withIdentifiers: timerNotificationIds)
+        print("🗑️ [INTENT-NOTIFICATION] Cancelled \(timerNotificationIds.count) timer notification(s) by category")
     }
+
+    // Also cancel by our known ID (redundant but explicit)
+    center.removePendingNotificationRequests(withIdentifiers: [timerNotificationIdentifier])
+    print("🗑️ [INTENT-NOTIFICATION] Cancelled notification with fixed ID")
 }
 
 // MARK: - Helper Function

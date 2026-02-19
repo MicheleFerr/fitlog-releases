@@ -453,7 +453,10 @@ class WorkoutSessionManager: NSObject {
     // MARK: - Extend Rest Timer
 
     private func extendRestTimer(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
-        guard let activity = currentActivity else {
+        // FIX: Use system-provided activity instead of potentially stale reference.
+        // mirrors the pattern used in transitionToExercise; currentActivity may be stale
+        // if iOS invalidated the reference while the app was in background.
+        guard let activity = Activity<WorkoutSessionAttributes>.activities.first else {
             result(FlutterError(code: "NO_ACTIVITY", message: "No active workout session", details: nil))
             return
         }

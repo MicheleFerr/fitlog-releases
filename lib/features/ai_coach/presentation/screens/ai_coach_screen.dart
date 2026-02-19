@@ -122,7 +122,7 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
     final rateLimitAsync = ref.watch(aIRateLimitProvider);
 
     // Auto-scroll when new messages arrive — ref.listen evita side effect nel build()
-    ref.listen<ChatState>(aIChatProvider, (previous, next) {
+    ref.listen<AIChatState>(aIChatProvider, (previous, next) {
       if (next.messages.length > _previousMessageCount) {
         _previousMessageCount = next.messages.length;
         _scrollToBottom();

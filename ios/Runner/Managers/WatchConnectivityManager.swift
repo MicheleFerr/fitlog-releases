@@ -893,9 +893,9 @@ final class WatchConnectivityManager: NSObject {
         // This ensures Watch calculates correct remaining time even if it receives context late
         do {
             var currentContext = session.applicationContext
-            if var restTimer = currentContext["restTimer"] as? [String: Any] {
-                let now = Date().timeIntervalSince1970
+            let now = Date().timeIntervalSince1970
 
+            if var restTimer = currentContext["restTimer"] as? [String: Any] {
                 // Calculate actual remaining time at this moment
                 if let oldStartTime = restTimer["startTime"] as? TimeInterval,
                    let oldDuration = restTimer["duration"] as? Int {
@@ -912,10 +912,21 @@ final class WatchConnectivityManager: NSObject {
                     restTimer["startTime"] = now
                     restTimer["duration"] = newDuration
                 }
-
                 restTimer["timestamp"] = now
                 currentContext["restTimer"] = restTimer
+            } else {
+                // restTimer not in context (cleared or never set) - create a fresh entry
+                // so Watch receives the correct state even after a context gap
+                let freshTimer: [String: Any] = [
+                    "type": "restTimerStarted",
+                    "duration": newDuration,
+                    "startTime": now,
+                    "timestamp": now
+                ]
+                currentContext["restTimer"] = freshTimer
+                Logger.shared.log(.warning, "⚠️ restTimer missing from context during +\(addedSeconds)s — created fresh entry (remaining: \(newDuration)s)", category: .general)
             }
+
             try session.updateApplicationContext(currentContext)
             Logger.shared.log(.info, "✅ Rest timer extended saved to applicationContext", category: .general)
         } catch {

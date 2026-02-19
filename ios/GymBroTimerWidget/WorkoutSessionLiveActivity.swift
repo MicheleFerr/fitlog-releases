@@ -147,9 +147,12 @@ struct RestModeView: View {
                 } else if let startDate = context.state.restStartDate,
                    let endDate = context.state.restEndDate {
                     // Running: show countdown timer
+                    // .id(endDate) forces SwiftUI to recreate the view when restEndDate changes
+                    // (e.g. after +30s tap), ensuring the timer animation restarts from new end time
                     Text(timerInterval: startDate...endDate, countsDown: true)
                         .font(.system(size: 36, weight: .bold, design: .monospaced))
                         .foregroundColor(context.state.restUrgencyColor)
+                        .id(endDate)
                 }
 
                 Spacer()
@@ -179,6 +182,7 @@ struct RestModeView: View {
                 )
                 .progressViewStyle(LinearProgressViewStyle())
                 .tint(context.state.restUrgencyColor)
+                .id(endDate)  // Force recreate when restEndDate changes (+30s)
             } else if context.state.isPaused {
                 // Show static progress bar when paused
                 let remaining = context.state.pausedRemainingSeconds ?? context.state.restRemainingSeconds
@@ -373,6 +377,7 @@ struct ExpandedTrailingView: View {
                         .fontWeight(.bold)
                         .monospacedDigit()
                         .foregroundColor(context.state.restUrgencyColor)
+                        .id(endDate)
                 }
                 Text(context.state.isPaused
                      ? WidgetStrings.WorkoutSession.pause
@@ -449,6 +454,7 @@ struct ExpandedBottomView: View {
                 .progressViewStyle(LinearProgressViewStyle())
                 .tint(context.state.restUrgencyColor)
                 .scaleEffect(y: 2.0)
+                .id(endDate)
             }
 
         case .rpe:
@@ -515,6 +521,7 @@ struct CompactTrailingView: View {
                 Text(timerInterval: startDate...endDate, countsDown: true)
                     .font(.system(size: 12, weight: .bold, design: .monospaced))
                     .foregroundColor(context.state.restUrgencyColor)
+                    .id(endDate)
             }
 
         case .rpe:
