@@ -328,20 +328,23 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                         ),
                       ],
                     ),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _buildHeader(theme),
-                          // ✅ NEW: Show swipe hint if navigation is available
-                          if (_hasSwipeNavigation) _buildSwipeHint(theme),
-                          const SizedBox(height: 12),
-                          _buildContent(
-                            theme,
-                            measurementUnit,
-                            plateCalculatorEnabled,
-                          ),
-                        ],
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _buildHeader(theme),
+                            // ✅ NEW: Show swipe hint if navigation is available
+                            if (_hasSwipeNavigation) _buildSwipeHint(theme),
+                            const SizedBox(height: 12),
+                            _buildContent(
+                              theme,
+                              measurementUnit,
+                              plateCalculatorEnabled,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
