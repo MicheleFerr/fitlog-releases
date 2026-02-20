@@ -25,34 +25,22 @@ import 'package:gymbro_flutter_new/shared/data/services/consent_service.dart';
 class TemplateState {
   TemplateState({
     this.userTemplates = const [],
-    this.publicTemplates = const [],
     this.isLoading = false,
     this.error,
-    this.templateReviews = const {},
-    this.templateComments = const {},
   });
   final List<WorkoutTemplate> userTemplates;
-  final List<WorkoutTemplate> publicTemplates;
   final bool isLoading;
   final String? error;
-  final Map<String, List<TemplateReview>> templateReviews;
-  final Map<String, List<TemplateComment>> templateComments;
 
   TemplateState copyWith({
     List<WorkoutTemplate>? userTemplates,
-    List<WorkoutTemplate>? publicTemplates,
     bool? isLoading,
     String? error,
-    Map<String, List<TemplateReview>>? templateReviews,
-    Map<String, List<TemplateComment>>? templateComments,
   }) {
     return TemplateState(
       userTemplates: userTemplates ?? this.userTemplates,
-      publicTemplates: publicTemplates ?? this.publicTemplates,
       isLoading: isLoading ?? this.isLoading,
       error: error,
-      templateReviews: templateReviews ?? this.templateReviews,
-      templateComments: templateComments ?? this.templateComments,
     );
   }
 }
@@ -103,37 +91,6 @@ class TemplateNotifier extends Notifier<TemplateState> {
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [TemplateProvider] Error loading user templates: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
-      }
-      state = state.copyWith(isLoading: false, error: e.toString());
-    }
-  }
-
-  // Carica template pubblici
-  Future<void> loadPublicTemplates({
-    TemplateCategory? category,
-    String? searchQuery,
-    List<String>? tags,
-    String? difficultyLevel,
-  }) async {
-    state = state.copyWith(isLoading: true, error: null);
-
-    try {
-      final templates = await _repository.getPublicTemplates(
-        category: category,
-        searchQuery: searchQuery,
-        tags: tags,
-        difficultyLevel: difficultyLevel,
-      );
-      if (kDebugMode) {
-        debugPrint(
-          '✅ [TemplateProvider] Loaded ${templates.length} public templates (category: $category, search: $searchQuery)',
-        );
-      }
-      state = state.copyWith(publicTemplates: templates, isLoading: false);
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [TemplateProvider] Error loading public templates: $e');
         debugPrint('📍 Stack trace: $stackTrace');
       }
       state = state.copyWith(isLoading: false, error: e.toString());
@@ -199,220 +156,6 @@ class TemplateNotifier extends Notifier<TemplateState> {
       }
       state = state.copyWith(isLoading: false, error: e.toString());
       return null;
-    }
-  }
-
-  // Download template pubblico
-  Future<bool> downloadTemplate(String templateId) async {
-    // Input validation
-    if (templateId.trim().isEmpty) {
-      if (kDebugMode) {
-        debugPrint(
-          '⚠️ [TemplateProvider] Cannot download template with empty ID',
-        );
-      }
-      state = state.copyWith(error: 'Invalid template ID');
-      return false;
-    }
-
-    state = state.copyWith(isLoading: true, error: null);
-
-    try {
-      // ✅ FIXED: Pass consolidated tier limits for quota check
-      final entitlements = ref.read(tierEntitlementsProvider);
-
-      if (kDebugMode) {
-        debugPrint(
-          '📥 [TemplateProvider] Downloading template: $templateId '
-          '(maxPrivate: ${entitlements.maxTemplates})',
-        );
-      }
-
-      await _repository.downloadTemplate(
-        templateId,
-        maxPrivateTemplates: entitlements.maxTemplates,
-        maxPublicTemplates: entitlements.maxPublicTemplates,
-      );
-
-      if (kDebugMode) {
-        debugPrint('✅ [TemplateProvider] Template downloaded successfully');
-      }
-
-      // Ricarica template utente per mostrare il nuovo
-      await loadUserTemplates();
-
-      return true;
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [TemplateProvider] Error downloading template: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
-      }
-      state = state.copyWith(isLoading: false, error: e.toString());
-      return false;
-    }
-  }
-
-  // Aggiungi review
-  Future<bool> addReview(TemplateReview review) async {
-    // Input validation
-    if (review.templateId.trim().isEmpty) {
-      if (kDebugMode) {
-        debugPrint(
-          '⚠️ [TemplateProvider] Cannot add review with empty template ID',
-        );
-      }
-      state = state.copyWith(error: 'Invalid template ID');
-      return false;
-    }
-
-    if (review.rating < 1 || review.rating > 5) {
-      if (kDebugMode) {
-        debugPrint(
-          '⚠️ [TemplateProvider] Invalid rating: ${review.rating} (must be 1-5)',
-        );
-      }
-      state = state.copyWith(error: 'Rating must be between 1 and 5');
-      return false;
-    }
-
-    state = state.copyWith(isLoading: true, error: null);
-
-    try {
-      if (kDebugMode) {
-        debugPrint(
-          '⭐ [TemplateProvider] Adding review for template: ${review.templateId} (rating: ${review.rating})',
-        );
-      }
-
-      await _repository.addReview(review);
-
-      // Aggiorna review locali
-      final reviews = Map<String, List<TemplateReview>>.from(
-        state.templateReviews,
-      );
-      final templateReviews = reviews[review.templateId] ?? [];
-      templateReviews.add(review);
-      reviews[review.templateId] = templateReviews;
-
-      if (kDebugMode) {
-        debugPrint('✅ [TemplateProvider] Review added successfully');
-      }
-
-      state = state.copyWith(templateReviews: reviews, isLoading: false);
-
-      return true;
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [TemplateProvider] Error adding review: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
-      }
-      state = state.copyWith(isLoading: false, error: e.toString());
-      return false;
-    }
-  }
-
-  // Aggiungi commento
-  Future<bool> addComment(TemplateComment comment) async {
-    // Input validation
-    if (comment.templateId.trim().isEmpty) {
-      if (kDebugMode) {
-        debugPrint(
-          '⚠️ [TemplateProvider] Cannot add comment with empty template ID',
-        );
-      }
-      state = state.copyWith(error: 'Invalid template ID');
-      return false;
-    }
-
-    if (comment.text.trim().isEmpty) {
-      if (kDebugMode) {
-        debugPrint('⚠️ [TemplateProvider] Cannot add empty comment');
-      }
-      state = state.copyWith(error: 'Comment cannot be empty');
-      return false;
-    }
-
-    state = state.copyWith(isLoading: true, error: null);
-
-    try {
-      if (kDebugMode) {
-        debugPrint(
-          '💬 [TemplateProvider] Adding comment to template: ${comment.templateId}',
-        );
-      }
-
-      await _repository.addComment(comment);
-
-      // Aggiorna commenti locali
-      final comments = Map<String, List<TemplateComment>>.from(
-        state.templateComments,
-      );
-      final templateComments = comments[comment.templateId] ?? [];
-      templateComments.add(comment);
-      comments[comment.templateId] = templateComments;
-
-      if (kDebugMode) {
-        debugPrint('✅ [TemplateProvider] Comment added successfully');
-      }
-
-      state = state.copyWith(templateComments: comments, isLoading: false);
-
-      return true;
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [TemplateProvider] Error adding comment: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
-      }
-      state = state.copyWith(isLoading: false, error: e.toString());
-      return false;
-    }
-  }
-
-  // Toggle like
-  Future<bool> toggleLike(String templateId) async {
-    // Input validation
-    if (templateId.trim().isEmpty) {
-      if (kDebugMode) {
-        debugPrint(
-          '⚠️ [TemplateProvider] Cannot toggle like with empty template ID',
-        );
-      }
-      state = state.copyWith(error: 'Invalid template ID');
-      return false;
-    }
-
-    try {
-      if (kDebugMode) {
-        debugPrint(
-          '❤️ [TemplateProvider] Toggling like for template: $templateId',
-        );
-      }
-
-      await _repository.toggleTemplateLike(templateId);
-
-      // Aggiorna template nella lista locale
-      final publicTemplates = state.publicTemplates.map((t) {
-        if (t.id == templateId) {
-          // Toggle like count (approssimativo, verrà aggiornato dal server)
-          return t.copyWith(likeCount: t.likeCount + 1);
-        }
-        return t;
-      }).toList();
-
-      if (kDebugMode) {
-        debugPrint('✅ [TemplateProvider] Like toggled successfully');
-      }
-
-      state = state.copyWith(publicTemplates: publicTemplates);
-
-      return true;
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [TemplateProvider] Error toggling like: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
-      }
-      state = state.copyWith(error: e.toString());
-      return false;
     }
   }
 
