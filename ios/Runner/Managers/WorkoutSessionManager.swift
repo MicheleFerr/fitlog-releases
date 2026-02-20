@@ -539,7 +539,11 @@ class WorkoutSessionManager: NSObject {
         var updatedState = currentState
         updatedState.restEndDate = newEndDate
         if let startDate = currentState.restStartDate {
-            updatedState.restTotalSeconds = max(0, Int(newEndDate.timeIntervalSince(startDate)))
+            let calculatedTotal = max(0, Int(newEndDate.timeIntervalSince(startDate)))
+            // FIX BUG-5: Never decrease restTotalSeconds after +15s extensions.
+            // After pause/resume, startDate is reset so the raw calculation can
+            // be smaller than the accumulated total. Using max() preserves it.
+            updatedState.restTotalSeconds = max(currentState.restTotalSeconds, calculatedTotal)
         }
         updatedState.lastUpdated = Date()
 
@@ -705,12 +709,17 @@ class WorkoutSessionManager: NSObject {
 
     // MARK: - Check Pending Events
 
-    /// Checks UserDefaults for any pending Live Activity events that weren't processed
-    /// This is called when the app resumes from background to catch events that were
-    /// sent while the app was suspended.
+    /// Checks UserDefaults for any pending Live Activity events that weren't processed.
+    /// Called when the app resumes from background to catch events missed while suspended.
     ///
-    /// FIX: When app is suspended, Darwin notifications may not wake the callback.
-    /// This method is called on app resume to process any missed events.
+    /// ARCH-2 FIX: Returns the event data directly to Flutter via result() instead of
+    /// invoking MethodChannel. The Dart provider processes the returned data explicitly.
+    /// This avoids double-processing (MethodChannel + result) and is more reliable
+    /// since the Flutter engine may not be ready for MethodChannel calls on wake.
+    ///
+    /// NOTE: With LiveActivityIntent, Darwin notifications are reliable (intents run
+    /// in main app process). This method is a safety net for edge cases where the
+    /// Darwin notification handler didn't fire (e.g., process was just woken).
     private func checkPendingEvents(result: @escaping FlutterResult) {
         guard let userDefaults = UserDefaults(suiteName: sharedSuiteName),
               let eventData = userDefaults.dictionary(forKey: eventKey) else {
@@ -721,15 +730,10 @@ class WorkoutSessionManager: NSObject {
 
         Logger.shared.debug("📬 Found pending workout event: \(eventData["eventType"] ?? "unknown")", category: .general)
 
-        // Forward to Flutter
-        DispatchQueue.main.async { [weak self] in
-            self?.methodChannel?.invokeMethod("onWorkoutSessionEvent", arguments: eventData)
-        }
-
-        // Clear the event after forwarding
+        // Clear the event from UserDefaults
         userDefaults.removeObject(forKey: eventKey)
 
-        // Return the event data so Flutter knows what was found
+        // Return the event data directly — Dart side will process it via _handleLiveActivityEvent
         result(eventData)
     }
 
@@ -840,20 +844,22 @@ class WorkoutSessionManager: NSObject {
 
         print("📨 [WorkoutSession] Event data found: \(eventData)")
 
-        // Forward event to Flutter
+        // Forward event to Flutter, clear UserDefaults AFTER confirmed delivery
+        let eventKeyToRemove = self.eventKey
         DispatchQueue.main.async { [weak self] in
             guard let channel = self?.methodChannel else {
                 print("❌ [WorkoutSession] MethodChannel is nil!")
                 return
             }
             print("📤 [WorkoutSession] Invoking onWorkoutSessionEvent on Flutter")
-            channel.invokeMethod("onWorkoutSessionEvent", arguments: eventData)
+            channel.invokeMethod("onWorkoutSessionEvent", arguments: eventData) { _ in
+                // Clear event only after Flutter confirmed reception
+                userDefaults.removeObject(forKey: eventKeyToRemove)
+                print("🗑️ [WorkoutSession] Event cleared from UserDefaults after Flutter delivery")
+            }
         }
 
         print("📨 [WorkoutSession] Forwarded workout event to Flutter: \(eventData["eventType"] ?? "unknown")")
-
-        // Clear the event
-        userDefaults.removeObject(forKey: eventKey)
     }
 
     // MARK: - Helpers

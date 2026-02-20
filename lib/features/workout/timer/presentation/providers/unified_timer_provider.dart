@@ -218,6 +218,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
   // CRITICAL: Disposal flag to prevent operations after dispose
   bool _isDisposed = false;
 
+  // FIX BUG-7: Debounce rapid +15s from Live Activity (second defense layer)
+  DateTime? _lastAddTimeFromLA;
+
   // CRITICAL: Initialization state to prevent operations before ready
   bool _isInitialized = false;
   Completer<void>? _initCompleter;
@@ -799,24 +802,35 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
   /// [fromLiveActivity] - Set to true when called from Live Activity button tap.
   /// This prevents double-updating the LA since the AppIntent already updated it.
   Future<void> addTime(int seconds, {bool fromLiveActivity = false}) async {
-    debugPrint(
+    print(
       '[UnifiedTimer] ⏰ addTime called: +$seconds seconds, fromLiveActivity=$fromLiveActivity',
     );
+
+    // FIX BUG-7: Debounce rapid taps from Live Activity (<800ms apart)
+    if (fromLiveActivity) {
+      final now = DateTime.now();
+      if (_lastAddTimeFromLA != null &&
+          now.difference(_lastAddTimeFromLA!).inMilliseconds < 800) {
+        print('[UnifiedTimer] ⚠️ addTime debounced — too soon from LA');
+        return;
+      }
+      _lastAddTimeFromLA = now;
+    }
 
     // CRITICAL FIX: Ensure initialization is complete before timer operations
     await _ensureInitialized();
 
     if (_isDisposed) {
-      debugPrint('[UnifiedTimer] ❌ addTime: provider is disposed');
+      print('[UnifiedTimer] ❌ addTime: provider is disposed');
       return;
     }
 
     if (state == null) {
-      debugPrint('[UnifiedTimer] ❌ addTime: state is null');
+      print('[UnifiedTimer] ❌ addTime: state is null');
       return;
     }
 
-    debugPrint(
+    print(
       '[UnifiedTimer] 📊 Current state: isActive=${state!.isActive}, remaining=${state!.remainingSeconds}s, total=${state!.totalDurationSeconds}s',
     );
 
@@ -842,7 +856,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       // PERF: Sync ValueNotifier with new remaining seconds
       _remainingSecondsNotifier?.value = newRemainingSeconds;
 
-      debugPrint(
+      print(
         '[UnifiedTimer] ✅ Time added: newRemaining=${newRemainingSeconds}s, newTotal=${newTotalDurationSeconds}s, secondsAdded=${newSecondsAdded}s, cachedEndTime updated',
       );
 
@@ -853,44 +867,28 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         try {
           final wsLAState = ref.read(workoutSessionLAProvider);
           workoutSessionLAActive = wsLAState.isActive;
-          debugPrint(
+          print(
             '[UnifiedTimer] 📊 Workout Session LA active: $workoutSessionLAActive',
           );
         } catch (e) {
-          debugPrint(
+          print(
             '[UnifiedTimer] ⚠️ Could not read workoutSessionLAProvider: $e',
           );
           // Provider not available, use legacy system
         }
 
         if (workoutSessionLAActive) {
-          // Workout Session LA is active.
+          // Workout Session LA is active — always sync absolute end time.
+          // The intent only signals Flutter; the actual LA update is done here
+          // via the proven MethodChannel → WorkoutSessionManager path.
           final newEndTime = state!.endTime;
-          if (fromLiveActivity) {
-            // Called from LA button: AppIntent already updated the LA, but the
-            // widget might not visually refresh. Fire-and-forget a sync from
-            // the main app process to force a re-render. MUST NOT await this
-            // to avoid blocking the state update pipeline.
-            if (newEndTime != null) {
-              debugPrint(
-                '[UnifiedTimer] 📡 From LA: fire-and-forget sync to force re-render (endTime=$newEndTime)',
-              );
-              unawaited(
-                ref
-                    .read(workoutSessionLAServiceProvider)
-                    .syncRestEndTime(newEndTime),
-              );
-            }
-          } else {
-            // Called from Flutter app: sync LA with absolute end time
-            if (newEndTime != null) {
-              debugPrint(
-                '[UnifiedTimer] 📡 App-side: syncing absolute end time to LA: $newEndTime',
-              );
-              final wsLAService = ref.read(workoutSessionLAServiceProvider);
-              await wsLAService.syncRestEndTime(newEndTime);
-              debugPrint('[UnifiedTimer] ✅ LA end time synced');
-            }
+          if (newEndTime != null) {
+            print(
+              '[UnifiedTimer] 📡 Syncing absolute end time to LA: $newEndTime',
+            );
+            final wsLAService = ref.read(workoutSessionLAServiceProvider);
+            await wsLAService.syncRestEndTime(newEndTime);
+            print('[UnifiedTimer] ✅ LA end time synced');
           }
 
           // Notify Apple Watch
@@ -901,23 +899,23 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
                 seconds,
                 newRemainingSeconds, // REMAINING, not total!
               );
-          debugPrint(
+          print(
             '[UnifiedTimer] ✅ Synced: LA ✓ Watch notification sent (remaining=${newRemainingSeconds}s)',
           );
         } else if (state!.liveActivityActive) {
           // Legacy timer LA is active
-          debugPrint('[UnifiedTimer] 📡 Using legacy LA update');
+          print('[UnifiedTimer] 📡 Using legacy LA update');
           await _updateLiveActivity();
         } else {
-          debugPrint('[UnifiedTimer] ⚠️ No LA active, skipping LA/Watch sync');
+          print('[UnifiedTimer] ⚠️ No LA active, skipping LA/Watch sync');
         }
       }
 
       await _saveState();
-      debugPrint('[UnifiedTimer] ✅ addTime completed successfully');
+      print('[UnifiedTimer] ✅ addTime completed successfully');
     } catch (e, stack) {
-      debugPrint('[UnifiedTimer] ❌ addTime error: $e');
-      debugPrint('[UnifiedTimer] ❌ Stack trace: $stack');
+      print('[UnifiedTimer] ❌ addTime error: $e');
+      print('[UnifiedTimer] ❌ Stack trace: $stack');
     }
   }
 

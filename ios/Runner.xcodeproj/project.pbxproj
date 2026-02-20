@@ -62,7 +62,7 @@
 		D1AF57CC2E3B1101005C381A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1AF57CB2E3B1101005C381A /* SwiftUI.framework */; };
 		D1AF57DD2E3B1102005C381A /* GymBroTimerWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D1AF57C82E3B1101005C381A /* GymBroTimerWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D1AF6C112E3B135A0024614B /* LiveActivityHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1AF6C102E3B135A0024614B /* LiveActivityHandler.swift */; };
-		D1AUDIO01 /* Runner/timer_complete.wav in Resources */ = {isa = PBXBuildFile; fileRef = D1AUDIOFILE01 /* Runner/timer_complete.wav */; };
+		D1AUDIO01 /* timer_complete.wav in Resources */ = {isa = PBXBuildFile; fileRef = D1AUDIOFILE01 /* timer_complete.wav */; };
 		D1F5514A2E4CE7B900DA47B4 /* LightWeight.wav in Resources */ = {isa = PBXBuildFile; fileRef = D1F551472E4CE7B900DA47B4 /* LightWeight.wav */; };
 		D1F5514B2E4CE7B900DA47B4 /* YehBuddie.wav in Resources */ = {isa = PBXBuildFile; fileRef = D1F551492E4CE7B900DA47B4 /* YehBuddie.wav */; };
 		D1F5514C2E4CE7B900DA47B4 /* LightWeight.caf in Resources */ = {isa = PBXBuildFile; fileRef = D1F551462E4CE7B900DA47B4 /* LightWeight.caf */; };
@@ -211,13 +211,13 @@
 		D1AF57C92E3B1101005C381A /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		D1AF57CB2E3B1101005C381A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		D1AF6C102E3B135A0024614B /* LiveActivityHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityHandler.swift; sourceTree = "<group>"; };
-		D1AUDIOFILE01 /* Runner/timer_complete.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/timer_complete.wav; sourceTree = "<group>"; };
-		D1AUDIOFILE02 /* Runner/LightWeight.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/LightWeight.wav; sourceTree = "<group>"; };
-		D1AUDIOFILE03 /* Runner/YehBuddie.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/YehBuddie.wav; sourceTree = "<group>"; };
-		D1AUDIOFILE04 /* Runner/timer_complete.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Runner/timer_complete.caf; sourceTree = "<group>"; };
-		D1AUDIOFILE05 /* Runner/LightWeight.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Runner/LightWeight.caf; sourceTree = "<group>"; };
-		D1AUDIOFILE06 /* Runner/YehBuddie.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Runner/YehBuddie.caf; sourceTree = "<group>"; };
-		D1AUDIOFILE07 /* Runner/silent_loop.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/silent_loop.wav; sourceTree = "<group>"; };
+		D1AUDIOFILE01 /* timer_complete.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/timer_complete.wav; sourceTree = "<group>"; };
+		D1AUDIOFILE02 /* LightWeight.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/LightWeight.wav; sourceTree = "<group>"; };
+		D1AUDIOFILE03 /* YehBuddie.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/YehBuddie.wav; sourceTree = "<group>"; };
+		D1AUDIOFILE04 /* timer_complete.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Runner/timer_complete.caf; sourceTree = "<group>"; };
+		D1AUDIOFILE05 /* LightWeight.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Runner/LightWeight.caf; sourceTree = "<group>"; };
+		D1AUDIOFILE06 /* YehBuddie.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Runner/YehBuddie.caf; sourceTree = "<group>"; };
+		D1AUDIOFILE07 /* silent_loop.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Runner/silent_loop.wav; sourceTree = "<group>"; };
 		D1F551462E4CE7B900DA47B4 /* LightWeight.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LightWeight.caf; sourceTree = "<group>"; };
 		D1F551472E4CE7B900DA47B4 /* LightWeight.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = LightWeight.wav; sourceTree = "<group>"; };
 		D1F551482E4CE7B900DA47B4 /* YehBuddie.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = YehBuddie.caf; sourceTree = "<group>"; };
@@ -228,14 +228,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		D1AF57E22E3B1102005C381A /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		D1AF57E22E3B1102005C381A /* Exceptions for "GymBroTimerWidget" folder in "GymBroTimerWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = D1AF57C72E3B1101005C381A /* GymBroTimerWidgetExtension */;
 		};
-		D1AF6C132E3B13EC0024614B /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		D1AF6C132E3B13EC0024614B /* Exceptions for "GymBroTimerWidget" folder in "Runner" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				GymBroScheduleAttributes.swift,
@@ -247,8 +247,30 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		D1534A4F2EE719E900C4E3C9 /* FitLogWatch Watch App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "FitLogWatch Watch App"; sourceTree = "<group>"; };
-		D1AF57CD2E3B1101005C381A /* GymBroTimerWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (D1AF6C132E3B13EC0024614B /* PBXFileSystemSynchronizedBuildFileExceptionSet */, D1AF57E22E3B1102005C381A /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = GymBroTimerWidget; sourceTree = "<group>"; };
+		D1534A4F2EE719E900C4E3C9 /* FitLogWatch Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = "FitLogWatch Watch App";
+			sourceTree = "<group>";
+		};
+		D1AF57CD2E3B1101005C381A /* GymBroTimerWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D1AF6C132E3B13EC0024614B /* Exceptions for "GymBroTimerWidget" folder in "Runner" target */,
+				D1AF57E22E3B1102005C381A /* Exceptions for "GymBroTimerWidget" folder in "GymBroTimerWidgetExtension" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = GymBroTimerWidget;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -383,13 +405,13 @@
 		D15AD7D72E4B91280029B4D4 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				D1AUDIOFILE01 /* Runner/timer_complete.wav */,
-				D1AUDIOFILE02 /* Runner/LightWeight.wav */,
-				D1AUDIOFILE03 /* Runner/YehBuddie.wav */,
-				D1AUDIOFILE04 /* Runner/timer_complete.caf */,
-				D1AUDIOFILE05 /* Runner/LightWeight.caf */,
-				D1AUDIOFILE06 /* Runner/YehBuddie.caf */,
-				D1AUDIOFILE07 /* Runner/silent_loop.wav */,
+				D1AUDIOFILE01 /* timer_complete.wav */,
+				D1AUDIOFILE02 /* LightWeight.wav */,
+				D1AUDIOFILE03 /* YehBuddie.wav */,
+				D1AUDIOFILE04 /* timer_complete.caf */,
+				D1AUDIOFILE05 /* LightWeight.caf */,
+				D1AUDIOFILE06 /* YehBuddie.caf */,
+				D1AUDIOFILE07 /* silent_loop.wav */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -624,7 +646,7 @@
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
-				D1AUDIO01 /* Runner/timer_complete.wav in Resources */,
+				D1AUDIO01 /* timer_complete.wav in Resources */,
 				D1F5514A2E4CE7B900DA47B4 /* LightWeight.wav in Resources */,
 				D1A4AB2C2E72B65D0037BF3A /* sound.caf in Resources */,
 				D1F5514B2E4CE7B900DA47B4 /* YehBuddie.wav in Resources */,
@@ -666,13 +688,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -762,13 +780,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

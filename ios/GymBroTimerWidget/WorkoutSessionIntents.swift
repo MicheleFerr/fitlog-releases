@@ -30,12 +30,13 @@ enum WorkoutSessionEventType: String {
 /// Updates Live Activity directly to REST mode for immediate feedback,
 /// then signals main app via UserDefaults for state sync
 @available(iOS 17.0, *)
-struct WorkoutCompleteSetIntent: LiveActivityIntent {
-    static var title: LocalizedStringResource { "Complete Set" }
-    static var description: IntentDescription { "Mark the current set as complete and start rest timer" }
-    static var openAppWhenRun: Bool = false
+public struct WorkoutCompleteSetIntent: LiveActivityIntent {
+    public init() {}
+    public static var title: LocalizedStringResource { "Complete Set" }
+    public static var description: IntentDescription { "Mark the current set as complete and start rest timer" }
+    public static var openAppWhenRun: Bool = false
 
-    func perform() async throws -> some IntentResult {
+    public func perform() async throws -> some IntentResult {
         print("🟢 [WorkoutCompleteSetIntent] perform() called!")
 
         let userDefaults = UserDefaults(suiteName: sharedSuiteName)
@@ -131,12 +132,13 @@ struct WorkoutCompleteSetIntent: LiveActivityIntent {
 /// Called when user taps "Salta" button to skip rest timer
 /// Updates Live Activity directly to EXERCISE mode for immediate feedback
 @available(iOS 17.0, *)
-struct WorkoutSkipRestIntent: LiveActivityIntent {
-    static var title: LocalizedStringResource { "Skip Rest" }
-    static var description: IntentDescription { "Skip the rest timer and proceed to next set" }
-    static var openAppWhenRun: Bool = false
+public struct WorkoutSkipRestIntent: LiveActivityIntent {
+    public init() {}
+    public static var title: LocalizedStringResource { "Skip Rest" }
+    public static var description: IntentDescription { "Skip the rest timer and proceed to next set" }
+    public static var openAppWhenRun: Bool = false
 
-    func perform() async throws -> some IntentResult {
+    public func perform() async throws -> some IntentResult {
         print("🟢 [WorkoutSkipRestIntent] perform() called!")
 
         // 1. Update Live Activity directly to EXERCISE mode for immediate feedback
@@ -186,103 +188,37 @@ struct WorkoutSkipRestIntent: LiveActivityIntent {
     }
 }
 
-// MARK: - Add Time Intent
-/// Called when user taps "+30s" button to add time to rest timer
+// MARK: - Extend Rest Intent
+/// Called when user taps "+15s" button to add time to rest timer
 @available(iOS 17.0, *)
-struct WorkoutAddTimeIntent: LiveActivityIntent {
-    static var title: LocalizedStringResource { "Add Time" }
-    static var description: IntentDescription { "Add 30 seconds to the rest timer" }
-    static var openAppWhenRun: Bool = false
+public struct WorkoutExtendRestIntent: LiveActivityIntent {
+    public init() {}
+    public static var title: LocalizedStringResource { "Extend Rest" }
+    public static var description: IntentDescription { "Add 15 seconds to the rest timer" }
+    public static var openAppWhenRun: Bool = false
 
-    func perform() async throws -> some IntentResult {
-        print("🟢 [WorkoutAddTimeIntent] perform() called at \(Date())")
+    public func perform() async throws -> some IntentResult {
+        print("🟢 [WorkoutExtendRestIntent] perform() called")
 
-        // 1. Update Live Activity directly for immediate UI feedback
-        let activities = Activity<WorkoutSessionAttributes>.activities
-        print("📊 [WorkoutAddTimeIntent] Found \(activities.count) active activities")
-
-        if let activity = activities.first {
+        // Reschedule notification with extended time (only if in rest mode, not paused)
+        if let activity = Activity<WorkoutSessionAttributes>.activities.first {
             let currentState = activity.content.state
-            print("📊 [WorkoutAddTimeIntent] BEFORE UPDATE:")
-            print("   - mode: \(currentState.mode)")
-            print("   - isPaused: \(currentState.isPaused)")
-            print("   - restStartDate: \(String(describing: currentState.restStartDate))")
-            print("   - restEndDate: \(String(describing: currentState.restEndDate))")
-            print("   - restTotalSeconds: \(currentState.restTotalSeconds)")
-
-            // Only extend if in rest mode with valid dates
-            if currentState.mode == .rest,
+            if currentState.mode == .rest, !currentState.isPaused,
                let currentEndDate = currentState.restEndDate {
                 let newEndDate = currentEndDate.addingTimeInterval(15)
-                let newTotalSeconds = currentState.restTotalSeconds + 15
-
-                print("⏰ [WorkoutAddTimeIntent] Extending: oldEnd=\(currentEndDate), newEnd=\(newEndDate)")
-                print("   - isPaused: \(currentState.isPaused)")
-
-                var updatedState = currentState
-                updatedState.restEndDate = newEndDate
-                updatedState.restTotalSeconds = newTotalSeconds
-                updatedState.lastUpdated = Date()
-
-                // IMPORTANT: If paused, also update pausedRemainingSeconds
-                // because that's what the UI displays when paused
-                if currentState.isPaused {
-                    let currentPausedRemaining = currentState.pausedRemainingSeconds ?? currentState.restRemainingSeconds
-                    updatedState.pausedRemainingSeconds = currentPausedRemaining + 15
-                    print("⏸️ [WorkoutAddTimeIntent] Timer is paused, updating pausedRemainingSeconds: \(currentPausedRemaining) -> \(currentPausedRemaining + 15)")
-                }
-
-                print("📊 [WorkoutAddTimeIntent] UPDATING to:")
-                print("   - restEndDate: \(String(describing: updatedState.restEndDate))")
-                print("   - restTotalSeconds: \(updatedState.restTotalSeconds)")
-                print("   - pausedRemainingSeconds: \(String(describing: updatedState.pausedRemainingSeconds))")
-
-                // FIX: Use long staleDate (2 hours from now) instead of short one (endDate + 10s)
-                // This allows future updates (extend timer again, skip, etc.) to work
-                // iOS ignores updates on "stale" activities, so we keep it fresh longer
-                await activity.update(
-                    ActivityContent(
-                        state: updatedState,
-                        staleDate: currentState.isPaused ? nil : Date().addingTimeInterval(7200)  // 2 hours from now
+                let remainingSeconds = Int(newEndDate.timeIntervalSinceNow)
+                if remainingSeconds > 0 {
+                    await scheduleRestTimerNotification(
+                        duration: remainingSeconds,
+                        exerciseName: currentState.exerciseName
                     )
-                )
-
-                // VERIFICATION: Read back the state after update
-                let verifyState = activity.content.state
-                print("✅ [WorkoutAddTimeIntent] AFTER UPDATE (verification):")
-                print("   - restEndDate: \(String(describing: verifyState.restEndDate))")
-                print("   - restTotalSeconds: \(verifyState.restTotalSeconds)")
-                print("   - pausedRemainingSeconds: \(String(describing: verifyState.pausedRemainingSeconds))")
-                print("   - restEndDate match? \(verifyState.restEndDate == newEndDate ? "YES ✓" : "NO ✗")")
-
-                // 🔔 CRITICAL FIX: Reschedule notification with new end time
-                // BUT ONLY if timer is NOT paused - paused timers don't need notifications
-                if !currentState.isPaused {
-                    let remainingSeconds = Int(newEndDate.timeIntervalSinceNow)
-                    if remainingSeconds > 0 {
-                        await scheduleRestTimerNotification(
-                            duration: remainingSeconds,
-                            exerciseName: currentState.exerciseName
-                        )
-                        print("🔔 [WorkoutAddTimeIntent] Timer notification rescheduled for \(remainingSeconds)s!")
-                    }
-                } else {
-                    print("⏸️ [WorkoutAddTimeIntent] Timer is paused - NOT scheduling notification (will be scheduled on resume)")
+                    print("🔔 [WorkoutExtendRestIntent] Notification rescheduled for \(remainingSeconds)s")
                 }
-
-            } else {
-                // Not in rest mode or no end date - don't signal Flutter for a +30s that didn't happen
-                print("⚠️ [WorkoutAddTimeIntent] Skipping LA update - mode=\(currentState.mode), hasEndDate=\(currentState.restEndDate != nil)")
-                return .result()
             }
-        } else {
-            print("⚠️ [WorkoutAddTimeIntent] No active Live Activity found!")
-            return .result()
         }
 
-        // 2. Signal Flutter via UserDefaults + Darwin notification
-        //    This allows Flutter to sync its timer when app becomes active
-        print("📤 [WorkoutAddTimeIntent] Saving event to UserDefaults...")
+        // Signal Flutter via UserDefaults + Darwin notification.
+        // Flutter will update the LA via syncRestEndTime (proven MethodChannel path).
         saveEventToUserDefaults(
             eventType: .addTime,
             additionalData: [
@@ -290,7 +226,6 @@ struct WorkoutAddTimeIntent: LiveActivityIntent {
                 "timestamp": Date().timeIntervalSince1970 * 1000
             ]
         )
-        print("✅ [WorkoutAddTimeIntent] Complete!")
 
         return .result()
     }
@@ -299,23 +234,23 @@ struct WorkoutAddTimeIntent: LiveActivityIntent {
 // MARK: - Select RPE Intent
 /// Called when user selects an RPE value
 @available(iOS 17.0, *)
-struct WorkoutSelectRPEIntent: LiveActivityIntent {
-    static var title: LocalizedStringResource { "Select RPE" }
-    static var description: IntentDescription { "Select the perceived exertion for this set" }
-    static var openAppWhenRun: Bool = false
+public struct WorkoutSelectRPEIntent: LiveActivityIntent {
+    public static var title: LocalizedStringResource { "Select RPE" }
+    public static var description: IntentDescription { "Select the perceived exertion for this set" }
+    public static var openAppWhenRun: Bool = false
 
     @Parameter(title: "RPE Value")
-    var rpeValue: Int
+    public var rpeValue: Int
 
-    init() {
+    public init() {
         self.rpeValue = 7
     }
 
-    init(rpeValue: Int) {
+    public init(rpeValue: Int) {
         self.rpeValue = rpeValue
     }
 
-    func perform() async throws -> some IntentResult {
+    public func perform() async throws -> some IntentResult {
         // FIX C2: Update Live Activity immediately for instant UI feedback.
         // Without this, the RPE button stays un-highlighted until Flutter processes
         // the Darwin notification — which can take seconds or never happen when locked.
@@ -353,12 +288,13 @@ struct WorkoutSelectRPEIntent: LiveActivityIntent {
 // MARK: - Confirm RPE Intent
 /// Called when user confirms RPE and proceeds to rest timer
 @available(iOS 17.0, *)
-struct WorkoutConfirmRPEIntent: LiveActivityIntent {
-    static var title: LocalizedStringResource { "Confirm RPE" }
-    static var description: IntentDescription { "Confirm RPE selection and start rest timer" }
-    static var openAppWhenRun: Bool = false
+public struct WorkoutConfirmRPEIntent: LiveActivityIntent {
+    public init() {}
+    public static var title: LocalizedStringResource { "Confirm RPE" }
+    public static var description: IntentDescription { "Confirm RPE selection and start rest timer" }
+    public static var openAppWhenRun: Bool = false
 
-    func perform() async throws -> some IntentResult {
+    public func perform() async throws -> some IntentResult {
         print("🟢 [WorkoutConfirmRPEIntent] perform() called!")
 
         let userDefaults = UserDefaults(suiteName: sharedSuiteName)
@@ -430,12 +366,13 @@ struct WorkoutConfirmRPEIntent: LiveActivityIntent {
 
 // MARK: - Pause/Resume Rest Intent
 @available(iOS 17.0, *)
-struct WorkoutPauseResumeIntent: LiveActivityIntent {
-    static var title: LocalizedStringResource { "Pause/Resume" }
-    static var description: IntentDescription { "Pause or resume the rest timer" }
-    static var openAppWhenRun: Bool = false
+public struct WorkoutPauseResumeIntent: LiveActivityIntent {
+    public init() {}
+    public static var title: LocalizedStringResource { "Pause/Resume" }
+    public static var description: IntentDescription { "Pause or resume the rest timer" }
+    public static var openAppWhenRun: Bool = false
 
-    func perform() async throws -> some IntentResult {
+    public func perform() async throws -> some IntentResult {
         print("🟢 [WorkoutPauseResumeIntent] perform() called!")
 
         // 1. Update Live Activity and handle notification
@@ -622,6 +559,10 @@ private func cancelRestTimerNotification() async {
 /// Shared helper: saves event to UserDefaults and posts Darwin notification.
 /// Used by both WorkoutSession intents (iOS 17+) and GymBroTimer intents (iOS 16.1+).
 /// Must be non-private so AppIntent.swift can call it from the same target.
+///
+/// ARCH NOTE: With LiveActivityIntent, perform() runs in the MAIN APP PROCESS.
+/// The Darwin notification is now reliable (delivered in-process to WorkoutSessionManager's
+/// observer). UserDefaults save acts as safety net for checkPendingEvents() on app resume.
 @available(iOS 16.1, *)
 func saveEventToUserDefaults(
     eventType: WorkoutSessionEventType,

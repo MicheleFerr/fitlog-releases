@@ -23,11 +23,12 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
 // MARK: - Live Activity Interactive Intents
 
 @available(iOS 16.1, *)
-struct AddTimeIntent: LiveActivityIntent {
-    static var title: LocalizedStringResource { "Add Time" }
-    static var description: IntentDescription { "Add 30 seconds to the rest timer" }
-    
-    func perform() async throws -> some IntentResult {
+public struct AddTimeIntent: LiveActivityIntent {
+    public init() {}
+    public static var title: LocalizedStringResource { "Add Time" }
+    public static var description: IntentDescription { "Add 15 seconds to the rest timer" }
+
+    public func perform() async throws -> some IntentResult {
         // Find the current activity and update it directly
         if let activity = Activity<GymBroTimerAttributes>.activities.first {
             let currentState = activity.content.state
@@ -96,11 +97,12 @@ struct AddTimeIntent: LiveActivityIntent {
 }
 
 @available(iOS 16.1, *)
-struct PauseResumeIntent: LiveActivityIntent {
-    static var title: LocalizedStringResource { "Pause/Resume" }
-    static var description: IntentDescription { "Pause or resume the rest timer" }
-    
-    func perform() async throws -> some IntentResult {
+public struct PauseResumeIntent: LiveActivityIntent {
+    public init() {}
+    public static var title: LocalizedStringResource { "Pause/Resume" }
+    public static var description: IntentDescription { "Pause or resume the rest timer" }
+
+    public func perform() async throws -> some IntentResult {
         // Find the current activity and toggle pause/resume
         if let activity = Activity<GymBroTimerAttributes>.activities.first {
             let currentState = activity.content.state
@@ -156,11 +158,12 @@ struct PauseResumeIntent: LiveActivityIntent {
 }
 
 @available(iOS 16.1, *)
-struct SkipTimerIntent: LiveActivityIntent {
-    static var title: LocalizedStringResource { "Skip Timer" }
-    static var description: IntentDescription { "Skip the current rest timer" }
+public struct SkipTimerIntent: LiveActivityIntent {
+    public init() {}
+    public static var title: LocalizedStringResource { "Skip Timer" }
+    public static var description: IntentDescription { "Skip the current rest timer" }
 
-    func perform() async throws -> some IntentResult {
+    public func perform() async throws -> some IntentResult {
         // Find the current activity and skip timer
         if let activity = Activity<GymBroTimerAttributes>.activities.first {
             let currentState = activity.content.state
@@ -205,11 +208,12 @@ struct SkipTimerIntent: LiveActivityIntent {
 }
 
 @available(iOS 16.1, *)
-struct CompleteSetIntent: LiveActivityIntent {
-    static var title: LocalizedStringResource { "Complete Set" }
-    static var description: IntentDescription { "Mark the current set as complete" }
-    
-    func perform() async throws -> some IntentResult {
+public struct CompleteSetIntent: LiveActivityIntent {
+    public init() {}
+    public static var title: LocalizedStringResource { "Complete Set" }
+    public static var description: IntentDescription { "Mark the current set as complete" }
+
+    public func perform() async throws -> some IntentResult {
         // Find the current activity and advance to next set
         if let activity = Activity<GymBroTimerAttributes>.activities.first {
             let currentState = activity.content.state

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/data/platform_channels.dart';
 
@@ -114,6 +113,8 @@ class WorkoutSessionLAService {
 
   static const _channel = MethodChannel(PlatformChannels.workoutSession);
 
+  // Singleton service — dispose not needed, lives for app lifetime.
+  // _eventController.close() would break listeners if called prematurely.
   final _eventController = StreamController<WorkoutSessionEvent>.broadcast();
 
   /// Stream of events from Live Activity interactions (button taps)
@@ -139,7 +140,7 @@ class WorkoutSessionLAService {
     _channel.setMethodCallHandler(_handleMethodCall);
     _isInitialized = true;
 
-    debugPrint('[WorkoutSessionLA] Service initialized');
+    print('[WorkoutSessionLA] Service initialized');
   }
 
   /// Handle method calls from iOS (events from button taps)
@@ -147,19 +148,19 @@ class WorkoutSessionLAService {
     switch (call.method) {
       case 'onWorkoutSessionEvent':
         final eventMap = call.arguments as Map<dynamic, dynamic>;
-        debugPrint(
+        print(
           '[WorkoutSessionLA] 📥 onWorkoutSessionEvent received from iOS!',
         );
-        debugPrint('[WorkoutSessionLA] 📥 Raw event data: $eventMap');
+        print('[WorkoutSessionLA] 📥 Raw event data: $eventMap');
         final event = WorkoutSessionEvent.fromMap(eventMap);
-        debugPrint(
+        print(
           '[WorkoutSessionLA] 📥 Parsed event type: ${event.eventType}',
         );
         _eventController.add(event);
-        debugPrint('[WorkoutSessionLA] 📥 Event added to stream controller');
+        print('[WorkoutSessionLA] 📥 Event added to stream controller');
         break;
       default:
-        debugPrint('[WorkoutSessionLA] ⚠️ Unknown method call: ${call.method}');
+        print('[WorkoutSessionLA] ⚠️ Unknown method call: ${call.method}');
     }
   }
 
@@ -196,10 +197,10 @@ class WorkoutSessionLAService {
           });
 
       _currentActivityId = activityId;
-      debugPrint('[WorkoutSessionLA] Session started: $activityId');
+      print('[WorkoutSessionLA] Session started: $activityId');
       return activityId;
     } on PlatformException catch (e) {
-      debugPrint('[WorkoutSessionLA] Failed to start session: ${e.message}');
+      print('[WorkoutSessionLA] Failed to start session: ${e.message}');
       return null;
     }
   }
@@ -228,10 +229,10 @@ class WorkoutSessionLAService {
         if (totalExercises != null) 'totalExercises': totalExercises,
       });
 
-      debugPrint('[WorkoutSessionLA] Session updated');
+      print('[WorkoutSessionLA] Session updated');
       return result ?? false;
     } on PlatformException catch (e) {
-      debugPrint('[WorkoutSessionLA] Failed to update session: ${e.message}');
+      print('[WorkoutSessionLA] Failed to update session: ${e.message}');
       return false;
     }
   }
@@ -259,12 +260,12 @@ class WorkoutSessionLAService {
         if (targetReps != null) 'targetReps': targetReps,
       });
 
-      debugPrint(
+      print(
         '[WorkoutSessionLA] Transitioned to REST ($restDuration seconds)',
       );
       return result ?? false;
     } on PlatformException catch (e) {
-      debugPrint(
+      print(
         '[WorkoutSessionLA] Failed to transition to rest: ${e.message}',
       );
       return false;
@@ -293,10 +294,10 @@ class WorkoutSessionLAService {
           'completedExercises': completedExercises,
       });
 
-      debugPrint('[WorkoutSessionLA] Transitioned to EXERCISE');
+      print('[WorkoutSessionLA] Transitioned to EXERCISE');
       return result ?? false;
     } on PlatformException catch (e) {
-      debugPrint(
+      print(
         '[WorkoutSessionLA] Failed to transition to exercise: ${e.message}',
       );
       return false;
@@ -309,10 +310,10 @@ class WorkoutSessionLAService {
 
     try {
       final result = await _channel.invokeMethod<bool>('transitionToRPE');
-      debugPrint('[WorkoutSessionLA] Transitioned to RPE');
+      print('[WorkoutSessionLA] Transitioned to RPE');
       return result ?? false;
     } on PlatformException catch (e) {
-      debugPrint(
+      print(
         '[WorkoutSessionLA] Failed to transition to RPE: ${e.message}',
       );
       return false;
@@ -331,14 +332,14 @@ class WorkoutSessionLAService {
       final result = await _channel.invokeMethod<bool>('syncRestEndTime', {
         'endTimeMs': absoluteEndTime.millisecondsSinceEpoch.toDouble(),
       });
-      debugPrint(
+      print(
         '[WorkoutSessionLA] 🔄 Synced absolute end time: $absoluteEndTime',
       );
       return result ?? false;
     } catch (e) {
       // Catch ALL exceptions (PlatformException, MissingPluginException, etc.)
       // to prevent this from breaking the caller's flow
-      debugPrint(
+      print(
         '[WorkoutSessionLA] ⚠️ Failed to sync rest end time: $e',
       );
       return false;
@@ -355,12 +356,12 @@ class WorkoutSessionLAService {
       final result = await _channel.invokeMethod<bool>('extendRestTimer', {
         'additionalSeconds': additionalSeconds,
       });
-      debugPrint(
+      print(
         '[WorkoutSessionLA] Extended rest timer by $additionalSeconds seconds',
       );
       return result ?? false;
     } on PlatformException catch (e) {
-      debugPrint(
+      print(
         '[WorkoutSessionLA] Failed to extend rest timer: ${e.message}',
       );
       return false;
@@ -374,16 +375,16 @@ class WorkoutSessionLAService {
     if (!Platform.isIOS || _currentActivityId == null) return false;
 
     try {
-      debugPrint(
+      print(
         '[WorkoutSessionLA] ⏸️ Pausing rest timer with $remainingSeconds seconds remaining',
       );
       final result = await _channel.invokeMethod<bool>('pauseRestTimer', {
         'remainingSeconds': remainingSeconds,
       });
-      debugPrint('[WorkoutSessionLA] ⏸️ Pause result: $result');
+      print('[WorkoutSessionLA] ⏸️ Pause result: $result');
       return result ?? false;
     } on PlatformException catch (e) {
-      debugPrint(
+      print(
         '[WorkoutSessionLA] ❌ Failed to pause rest timer: ${e.message}',
       );
       return false;
@@ -397,16 +398,16 @@ class WorkoutSessionLAService {
     if (!Platform.isIOS || _currentActivityId == null) return false;
 
     try {
-      debugPrint(
+      print(
         '[WorkoutSessionLA] ▶️ Resuming rest timer with $remainingSeconds seconds remaining',
       );
       final result = await _channel.invokeMethod<bool>('resumeRestTimer', {
         'remainingSeconds': remainingSeconds,
       });
-      debugPrint('[WorkoutSessionLA] ▶️ Resume result: $result');
+      print('[WorkoutSessionLA] ▶️ Resume result: $result');
       return result ?? false;
     } on PlatformException catch (e) {
-      debugPrint(
+      print(
         '[WorkoutSessionLA] ❌ Failed to resume rest timer: ${e.message}',
       );
       return false;
@@ -426,12 +427,12 @@ class WorkoutSessionLAService {
         'setCurrentRestDuration',
         {'duration': durationSeconds},
       );
-      debugPrint(
+      print(
         '[WorkoutSessionLA] Set current rest duration: ${durationSeconds}s',
       );
       return result ?? false;
     } on PlatformException catch (e) {
-      debugPrint(
+      print(
         '[WorkoutSessionLA] Failed to set rest duration: ${e.message}',
       );
       return false;
@@ -450,10 +451,10 @@ class WorkoutSessionLAService {
         'setRpeTrackingEnabled',
         {'enabled': enabled},
       );
-      debugPrint('[WorkoutSessionLA] Set RPE tracking enabled: $enabled');
+      print('[WorkoutSessionLA] Set RPE tracking enabled: $enabled');
       return result ?? false;
     } on PlatformException catch (e) {
-      debugPrint('[WorkoutSessionLA] Failed to set RPE setting: ${e.message}');
+      print('[WorkoutSessionLA] Failed to set RPE setting: ${e.message}');
       return false;
     }
   }
@@ -466,10 +467,10 @@ class WorkoutSessionLAService {
       final result = await _channel.invokeMethod<bool>('updateSelectedRPE', {
         'rpe': rpe,
       });
-      debugPrint('[WorkoutSessionLA] Selected RPE updated to $rpe');
+      print('[WorkoutSessionLA] Selected RPE updated to $rpe');
       return result ?? false;
     } on PlatformException catch (e) {
-      debugPrint('[WorkoutSessionLA] Failed to update RPE: ${e.message}');
+      print('[WorkoutSessionLA] Failed to update RPE: ${e.message}');
       return false;
     }
   }
@@ -486,10 +487,10 @@ class WorkoutSessionLAService {
       });
 
       _currentActivityId = null;
-      debugPrint('[WorkoutSessionLA] Session ended');
+      print('[WorkoutSessionLA] Session ended');
       return result ?? true;
     } on PlatformException catch (e) {
-      debugPrint('[WorkoutSessionLA] Failed to end session: ${e.message}');
+      print('[WorkoutSessionLA] Failed to end session: ${e.message}');
       _currentActivityId = null;
       return false;
     }
@@ -505,7 +506,7 @@ class WorkoutSessionLAService {
       );
       return result ?? false;
     } on PlatformException catch (e) {
-      debugPrint(
+      print(
         '[WorkoutSessionLA] Failed to check session status: ${e.message}',
       );
       return false;
@@ -523,7 +524,7 @@ class WorkoutSessionLAService {
       }
       return null;
     } on PlatformException catch (e) {
-      debugPrint(
+      print(
         '[WorkoutSessionLA] Failed to get session state: ${e.message}',
       );
       return null;
@@ -543,15 +544,15 @@ class WorkoutSessionLAService {
     try {
       final result = await _channel.invokeMethod<Map>('checkPendingEvents');
       if (result != null) {
-        debugPrint(
+        print(
           '[WorkoutSessionLA] 📬 Found pending event: ${result['eventType']}',
         );
         return Map<String, dynamic>.from(result);
       }
-      debugPrint('[WorkoutSessionLA] 📭 No pending events');
+      print('[WorkoutSessionLA] 📭 No pending events');
       return null;
     } on PlatformException catch (e) {
-      debugPrint(
+      print(
         '[WorkoutSessionLA] Failed to check pending events: ${e.message}',
       );
       return null;
@@ -565,15 +566,11 @@ class WorkoutSessionLAService {
       try {
         await endSession(dismissPolicy: 'immediate');
       } catch (e) {
-        if (kDebugMode) {
-          debugPrint('[WorkoutSessionLA] Error ending session on logout: $e');
-        }
+        print('[WorkoutSessionLA] Error ending session on logout: $e');
       }
     }
     _currentActivityId = null;
-    if (kDebugMode) {
-      debugPrint('[WorkoutSessionLA] 🔐 Reset on logout');
-    }
+    print('[WorkoutSessionLA] 🔐 Reset on logout');
   }
 
   /// Dispose of resources

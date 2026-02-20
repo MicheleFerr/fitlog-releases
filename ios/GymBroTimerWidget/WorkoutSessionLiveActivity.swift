@@ -215,10 +215,10 @@ struct RestModeView: View {
                 }
                 .buttonStyle(.plain)
 
-                Button(intent: WorkoutAddTimeIntent()) {
+                Button(intent: WorkoutExtendRestIntent()) {
                     HStack(spacing: 4) {
                         Image(systemName: "plus")
-                        Text("15")
+                        Text("+15")
                             .fontWeight(.medium)
                     }
                     .frame(maxWidth: .infinity, minHeight: 44)
