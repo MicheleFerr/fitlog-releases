@@ -100,14 +100,13 @@ Includes:
 
 #### Implement a new feature
 1. Read [`CLAUDE.md`](../CLAUDE.md) for project rules
-2. Check [`CODE_PATTERNS.md`](CODE_PATTERNS.md) for similar implementations
-3. Follow [`DEVELOPMENT_RULES.md`](DEVELOPMENT_RULES.md) checklist
+2. Check existing code in `lib/features/` for similar implementations
+3. Run `/persona-check` for UX impact analysis
 
 #### Fix a bug
 1. Search git log for context: `git log --grep="<bug>" --oneline`
 2. Check CLAUDE.md debug section
-3. Review [`CODE_PATTERNS.md`](CODE_PATTERNS.md) for best practices
-4. Add tests before fixing
+3. Add tests before fixing
 
 #### Understand the onboarding system
 1. Start: [`ONBOARDING_FINAL_SUMMARY.md`](ONBOARDING_FINAL_SUMMARY.md) (high-level overview)
@@ -118,13 +117,12 @@ Includes:
 #### Make design decisions
 1. Review [`USER_PERSONAS.md`](USER_PERSONAS.md) for impact analysis
 2. Check [`BRAND_GUIDELINES.md`](BRAND_GUIDELINES.md) for visual identity
-3. Check [`DESIGN_GUIDELINES.md`](DESIGN_GUIDELINES.md)
-4. Reference [`architecture/OVERVIEW.md`](architecture/OVERVIEW.md)
+3. Run `/persona-check` for 5-persona analysis
 
 #### Improve performance
 1. Use tool: `.claude/scripts/performance-check.sh lib/features/<feature>/`
-2. Review performance section in [`CLAUDE.md`](../CLAUDE.md)
-3. Profile with DevTools (see [`DEVELOPMENT_RULES.md`](DEVELOPMENT_RULES.md))
+2. Run `/performance-rules` for anti-pattern reference
+3. Profile with Flutter DevTools
 
 ---
 
@@ -225,25 +223,15 @@ git commit -m "feat: ..."
 
 ### For New Developers
 
-1. **Read First**:
-   - [`CLAUDE.md`](../CLAUDE.md) - Project rules (15 min)
-   - [`CODE_PATTERNS.md`](CODE_PATTERNS.md) - Common patterns (20 min)
-
-2. **Explore Code**:
-   - Start with simple widgets: `lib/features/onboarding/presentation/widgets/initial/`
-   - Review providers: `lib/features/*/presentation/providers/`
-   - Check tests: `test/features/onboarding/`
-
-3. **Deep Dive** (if working on feature):
-   - Architecture: [`architecture/OVERVIEW.md`](architecture/OVERVIEW.md)
-   - Patterns: [`CODE_PATTERNS.md`](CODE_PATTERNS.md)
-   - Tests: Look at existing test patterns
+1. **Read First**: [`CLAUDE.md`](../CLAUDE.md) - Project rules
+2. **Explore Code**: `lib/features/*/presentation/` for widgets, `*/providers/` for state
+3. **Check Tests**: `test/features/*/` for expected behavior
 
 ### For Architecture Decisions
 
 1. Read user personas: [`USER_PERSONAS.md`](USER_PERSONAS.md)
-2. Check architecture: [`architecture/OVERVIEW.md`](architecture/OVERVIEW.md)
-3. Review decisions: [`CLAUDE.md`](../CLAUDE.md#tier-system---dual-architecture)
+2. Review tier system: run `/tier-system`
+3. Check CLAUDE.md architecture section
 
 ### For Debugging
 
@@ -313,13 +301,12 @@ Before shipping a feature:
 
 ---
 
-## 📞 Getting Help
+## Getting Help
 
 1. **Code Review Questions?** → Check similar code in codebase
-2. **Architecture Decisions?** → Review [`architecture/OVERVIEW.md`](architecture/OVERVIEW.md)
-3. **Common Patterns?** → See [`CODE_PATTERNS.md`](CODE_PATTERNS.md)
-4. **Bug Debugging?** → Check git log, test files, CLAUDE.md
-5. **Design System?** → [`DESIGN_GUIDELINES.md`](DESIGN_GUIDELINES.md)
+2. **Architecture Decisions?** → [`CLAUDE.md`](../CLAUDE.md) + [`USER_PERSONAS.md`](USER_PERSONAS.md)
+3. **Bug Debugging?** → Check git log, test files, use `/systematic-debug`
+4. **Design System?** → [`BRAND_GUIDELINES.md`](BRAND_GUIDELINES.md)
 
 ---
 
@@ -348,6 +335,6 @@ When adding documentation:
 
 ---
 
-**Last Updated**: 2026-02-03 | **Status**: ✅ Production Ready
+**Last Updated**: 2026-02-20
 
 For questions, refer to [`CLAUDE.md`](../CLAUDE.md) or git log.
