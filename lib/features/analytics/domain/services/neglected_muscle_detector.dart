@@ -66,7 +66,7 @@ class NeglectedMuscleDetector {
   /// - trap → back (upper back is part of back group)
   /// - add/abdu → glutes (hip complex)
   /// - coll → shoulders (neck training often uses shoulder exercises)
-  static const Map<String, String> _abbrToDetectorKey = {
+  static const Map<String, String> abbrToDetectorKey = {
     'pett': 'chest',
     'lat': 'back',
     'trap': 'back', // traps group con back
@@ -128,7 +128,7 @@ class NeglectedMuscleDetector {
     final normalizedVolumes = <String, double>{};
     for (final entry in balance.muscleVolumePercentages.entries) {
       final rawKey = entry.key.toLowerCase();
-      final detectorKey = _abbrToDetectorKey[rawKey] ?? rawKey;
+      final detectorKey = abbrToDetectorKey[rawKey] ?? rawKey;
       // Aggregate volumes for keys that map to the same detector key (e.g., trap + lat → back)
       normalizedVolumes[detectorKey] =
           (normalizedVolumes[detectorKey] ?? 0.0) + entry.value;

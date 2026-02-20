@@ -317,16 +317,19 @@ class ExerciseSuggestionEngine {
     }
   }
 
-  /// Check if exercise name matches any excluded exercise (case-insensitive)
+  /// Check if exercise name matches any excluded exercise (exact match, case-insensitive)
+  ///
+  /// Uses exact match only. Previous bidirectional `contains` matching was
+  /// too aggressive: e.g., "Front Squat con Bilanciere" was excluded when
+  /// the template had "Squat con Bilanciere" because the name contained it
+  /// as a substring. This disproportionately affected quads/glutes where
+  /// Italian exercise names share common suffixes.
   bool _isExerciseExcluded(String exerciseName, Set<String> excludeSet) {
     if (excludeSet.isEmpty) return false;
 
     final lowerName = exerciseName.toLowerCase();
     return excludeSet.any(
-      (excluded) =>
-          excluded.toLowerCase() == lowerName ||
-          lowerName.contains(excluded.toLowerCase()) ||
-          excluded.toLowerCase().contains(lowerName),
+      (excluded) => excluded.toLowerCase() == lowerName,
     );
   }
 

@@ -184,16 +184,24 @@ class TemplateAwareBalanceService {
   }
 
   /// Add tracking for a muscle
+  ///
+  /// Normalizes muscle abbreviation codes (e.g., 'quad', 'glut') to
+  /// detector keys (e.g., 'quads', 'glutes') so that template coverage
+  /// lookups match NeglectedMuscle.muscleName keys.
   void _addMuscleTracking({
     required Map<String, _MuscleTracker> muscleTrackers,
     required String muscleName,
     required String templateName,
     required int setsCount,
   }) {
-    muscleTrackers.putIfAbsent(muscleName, () => _MuscleTracker());
-    muscleTrackers[muscleName]!.templateNames.add(templateName);
-    muscleTrackers[muscleName]!.exerciseCount++;
-    muscleTrackers[muscleName]!.totalSets += setsCount;
+    // Normalize to detector key for consistency with NeglectedMuscleDetector
+    final normalizedName =
+        NeglectedMuscleDetector.abbrToDetectorKey[muscleName] ?? muscleName;
+
+    muscleTrackers.putIfAbsent(normalizedName, () => _MuscleTracker());
+    muscleTrackers[normalizedName]!.templateNames.add(templateName);
+    muscleTrackers[normalizedName]!.exerciseCount++;
+    muscleTrackers[normalizedName]!.totalSets += setsCount;
   }
 
   /// Map exercise category to muscle group (fallback)
