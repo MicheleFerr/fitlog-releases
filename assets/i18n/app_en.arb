@@ -6919,6 +6919,10 @@
   "@apply": {
     "description": "Button to apply selected weight increase percentage"
   },
+  "saveAsDefault": "Save as Default",
+  "@saveAsDefault": {
+    "description": "Button to save exercise filters as default"
+  },
   "confirmDeleteMultiple": "Delete {count} exercises?",
   "@confirmDeleteMultiple": {
     "description": "Confirm delete multiple exercises",

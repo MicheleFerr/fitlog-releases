@@ -5263,6 +5263,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get apply => 'Apply';
 
   @override
+  String get saveAsDefault => 'Save as Default';
+
+  @override
   String confirmDeleteMultiple(int count) {
     return 'Delete $count exercises?';
   }

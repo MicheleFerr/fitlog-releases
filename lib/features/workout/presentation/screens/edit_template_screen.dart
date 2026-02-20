@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/minimal_set_edit_sheet.dart';
@@ -663,8 +664,10 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
               }
 
               // Compact inline set row (~38px)
+              final mode = exerciseTemplate.countingMode ?? ExerciseCountingMode.weighted;
               final isWeightEmpty = (set.targetWeight ?? 0) == 0;
               final isRepsEmpty = (set.targetReps ?? 0) == 0 && !set.hasRepRange;
+              final isSecondsEmpty = (set.targetSeconds ?? 0) == 0;
 
               return GestureDetector(
                 onTap: () => _showEditTemplateSetModal(exerciseIndex, setIndex),
@@ -697,88 +700,132 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
                           ),
                         ),
                         const SizedBox(width: 8),
-                        // Weight field with pulse if empty
-                        Expanded(
-                          child: AnimatedBuilder(
-                            animation: _pulseAnimation,
-                            builder: (context, child) {
-                              return Container(
-                                height: 30,
-                                padding: const EdgeInsets.symmetric(horizontal: 8),
-                                decoration: BoxDecoration(
-                                  color: context.colors.surfaceContainerHighest.withValues(
-                                    alpha: isWeightEmpty ? _pulseAnimation.value * 0.3 : 0.5,
+                        // Weight field (only for weighted mode)
+                        if (mode.requiresWeight) ...[
+                          Expanded(
+                            child: AnimatedBuilder(
+                              animation: _pulseAnimation,
+                              builder: (context, child) {
+                                return Container(
+                                  height: 30,
+                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                                  decoration: BoxDecoration(
+                                    color: context.colors.surfaceContainerHighest.withValues(
+                                      alpha: isWeightEmpty ? _pulseAnimation.value * 0.3 : 0.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: isWeightEmpty
+                                        ? Border.all(
+                                            color: context.colors.primary.withValues(
+                                              alpha: _pulseAnimation.value * 0.5,
+                                            ),
+                                          )
+                                        : null,
                                   ),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: isWeightEmpty
-                                      ? Border.all(
-                                          color: context.colors.primary.withValues(
-                                            alpha: _pulseAnimation.value * 0.5,
-                                          ),
-                                        )
-                                      : null,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    isWeightEmpty ? '-' : '${set.targetWeight?.toStringAsFixed(1)} kg',
-                                    style: context.textTheme.bodySmall?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: isWeightEmpty
-                                          ? context.colors.onSurface.withValues(alpha: 0.3)
-                                          : context.colors.onSurface,
+                                  child: Center(
+                                    child: Text(
+                                      isWeightEmpty ? '-' : '${set.targetWeight?.toStringAsFixed(1)} kg',
+                                      style: context.textTheme.bodySmall?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: isWeightEmpty
+                                            ? context.colors.onSurface.withValues(alpha: 0.3)
+                                            : context.colors.onSurface,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Text(
-                            '×',
-                            style: context.textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: context.colors.onSurface.withValues(alpha: 0.5),
+                                );
+                              },
                             ),
                           ),
-                        ),
-                        // Reps field with pulse if empty
-                        Expanded(
-                          child: AnimatedBuilder(
-                            animation: _pulseAnimation,
-                            builder: (context, child) {
-                              return Container(
-                                height: 30,
-                                padding: const EdgeInsets.symmetric(horizontal: 8),
-                                decoration: BoxDecoration(
-                                  color: context.colors.surfaceContainerHighest.withValues(
-                                    alpha: isRepsEmpty ? _pulseAnimation.value * 0.3 : 0.5,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: Text(
+                              '×',
+                              style: context.textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: context.colors.onSurface.withValues(alpha: 0.5),
+                              ),
+                            ),
+                          ),
+                        ],
+                        // Reps field (for weighted + reps modes)
+                        if (mode.requiresReps)
+                          Expanded(
+                            child: AnimatedBuilder(
+                              animation: _pulseAnimation,
+                              builder: (context, child) {
+                                return Container(
+                                  height: 30,
+                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                                  decoration: BoxDecoration(
+                                    color: context.colors.surfaceContainerHighest.withValues(
+                                      alpha: isRepsEmpty ? _pulseAnimation.value * 0.3 : 0.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: isRepsEmpty
+                                        ? Border.all(
+                                            color: context.colors.secondary.withValues(
+                                              alpha: _pulseAnimation.value * 0.5,
+                                            ),
+                                          )
+                                        : null,
                                   ),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: isRepsEmpty
-                                      ? Border.all(
-                                          color: context.colors.secondary.withValues(
-                                            alpha: _pulseAnimation.value * 0.5,
-                                          ),
-                                        )
-                                      : null,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    isRepsEmpty ? '-' : '${set.repsDisplay} rep',
-                                    style: context.textTheme.bodySmall?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: isRepsEmpty
-                                          ? context.colors.onSurface.withValues(alpha: 0.3)
-                                          : context.colors.onSurface,
+                                  child: Center(
+                                    child: Text(
+                                      isRepsEmpty ? '-' : '${set.repsDisplay} rep',
+                                      style: context.textTheme.bodySmall?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: isRepsEmpty
+                                            ? context.colors.onSurface.withValues(alpha: 0.3)
+                                            : context.colors.onSurface,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
-                        ),
+                        // Duration field (for time mode)
+                        if (mode.requiresTime)
+                          Expanded(
+                            child: AnimatedBuilder(
+                              animation: _pulseAnimation,
+                              builder: (context, child) {
+                                final secs = set.targetSeconds ?? 0;
+                                final display = secs >= 60
+                                    ? '${secs ~/ 60}m ${secs % 60 > 0 ? '${secs % 60}s' : ''}'.trim()
+                                    : '${secs}s';
+                                return Container(
+                                  height: 30,
+                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                                  decoration: BoxDecoration(
+                                    color: context.colors.surfaceContainerHighest.withValues(
+                                      alpha: isSecondsEmpty ? _pulseAnimation.value * 0.3 : 0.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: isSecondsEmpty
+                                        ? Border.all(
+                                            color: context.colors.secondary.withValues(
+                                              alpha: _pulseAnimation.value * 0.5,
+                                            ),
+                                          )
+                                        : null,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      isSecondsEmpty ? '-' : display,
+                                      style: context.textTheme.bodySmall?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: isSecondsEmpty
+                                            ? context.colors.onSurface.withValues(alpha: 0.3)
+                                            : context.colors.onSurface,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
                         // Remove set
                         if (exerciseTemplate.sets.length > 1)
                           SizedBox(
@@ -867,6 +914,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
             targetMinReps: exercise.sets[j].targetMinReps,
             targetMaxReps: exercise.sets[j].targetMaxReps,
             targetRpe: exercise.sets[j].targetRpe,
+            targetSeconds: exercise.sets[j].targetSeconds,
             notes: exercise.sets[j].notes,
           ));
         }
@@ -983,6 +1031,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       targetReps: lastSet?.targetReps ?? 0,
       targetMinReps: lastSet?.targetMinReps,
       targetMaxReps: lastSet?.targetMaxReps,
+      targetSeconds: lastSet?.targetSeconds,
     );
 
     setState(() {
@@ -1008,6 +1057,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
         targetMinReps: updatedSets[i].targetMinReps,
         targetMaxReps: updatedSets[i].targetMaxReps,
         targetRpe: updatedSets[i].targetRpe,
+        targetSeconds: updatedSets[i].targetSeconds,
         notes: updatedSets[i].notes,
       );
     }
@@ -1028,6 +1078,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       targetMinReps: updatedSets[setIndex].targetMinReps,
       targetMaxReps: updatedSets[setIndex].targetMaxReps,
       targetRpe: updatedSets[setIndex].targetRpe,
+      targetSeconds: updatedSets[setIndex].targetSeconds,
       notes: updatedSets[setIndex].notes,
     );
 
@@ -1053,6 +1104,27 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       targetMinReps: minReps,
       targetMaxReps: maxReps,
       targetRpe: updatedSets[setIndex].targetRpe,
+      targetSeconds: updatedSets[setIndex].targetSeconds,
+      notes: updatedSets[setIndex].notes,
+    );
+
+    setState(() {
+      _exercises[exerciseIndex] = exerciseTemplate.copyWith(sets: updatedSets);
+    });
+    _markAsChanged();
+  }
+
+  void _updateSetSeconds(int exerciseIndex, int setIndex, int? seconds) {
+    final exerciseTemplate = _exercises[exerciseIndex];
+    final updatedSets = List<SetTemplate>.from(exerciseTemplate.sets);
+    updatedSets[setIndex] = SetTemplate(
+      setNumber: updatedSets[setIndex].setNumber,
+      targetWeight: updatedSets[setIndex].targetWeight,
+      targetReps: updatedSets[setIndex].targetReps,
+      targetMinReps: updatedSets[setIndex].targetMinReps,
+      targetMaxReps: updatedSets[setIndex].targetMaxReps,
+      targetRpe: updatedSets[setIndex].targetRpe,
+      targetSeconds: seconds,
       notes: updatedSets[setIndex].notes,
     );
 
@@ -1369,6 +1441,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       targetMinReps: s.targetMinReps,
       targetMaxReps: s.targetMaxReps,
       targetRpe: s.targetRpe,
+      targetSeconds: s.targetSeconds,
       notes: s.notes,
     )).toList();
     setState(() {
@@ -1384,6 +1457,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
   void _showEditTemplateSetModal(int exerciseIndex, int setIndex) {
     final exercise = _exercises[exerciseIndex];
     final set = exercise.sets[setIndex];
+    final mode = exercise.countingMode ?? ExerciseCountingMode.weighted;
 
     // Bridge: convert SetTemplate → ExerciseSet for the modal
     final exerciseSet = ExerciseSet(
@@ -1392,6 +1466,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       reps: set.targetReps,
       minReps: set.targetMinReps,
       maxReps: set.targetMaxReps,
+      seconds: set.targetSeconds,
     );
 
     final allSets = exercise.sets.map((s) => ExerciseSet(
@@ -1400,6 +1475,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       reps: s.targetReps,
       minReps: s.targetMinReps,
       maxReps: s.targetMaxReps,
+      seconds: s.targetSeconds,
     )).toList();
 
     final previousSet = setIndex > 0
@@ -1409,8 +1485,22 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
             reps: exercise.sets[setIndex - 1].targetReps,
             minReps: exercise.sets[setIndex - 1].targetMinReps,
             maxReps: exercise.sets[setIndex - 1].targetMaxReps,
+            seconds: exercise.sets[setIndex - 1].targetSeconds,
           )
         : null;
+
+    void saveSet(int exIdx, int sIdx, ExerciseSet updatedSet) {
+      if (mode.requiresWeight) {
+        _updateSetWeight(exIdx, sIdx, updatedSet.weight ?? 0);
+      }
+      if (mode.requiresReps) {
+        _updateSetReps(exIdx, sIdx, updatedSet.reps,
+            minReps: updatedSet.minReps, maxReps: updatedSet.maxReps);
+      }
+      if (mode.requiresTime) {
+        _updateSetSeconds(exIdx, sIdx, updatedSet.seconds);
+      }
+    }
 
     context.showMinimalSetEditSheet(
       exerciseSet: exerciseSet,
@@ -1418,34 +1508,23 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       totalSets: exercise.sets.length,
       allSets: allSets,
       previousSet: previousSet,
-      onSave: (updatedSet) {
-        _updateSetWeight(exerciseIndex, setIndex, updatedSet.weight ?? 0);
-        _updateSetReps(exerciseIndex, setIndex, updatedSet.reps,
-            minReps: updatedSet.minReps, maxReps: updatedSet.maxReps);
-      },
+      countingMode: mode,
+      onSave: (updatedSet) => saveSet(exerciseIndex, setIndex, updatedSet),
       onSaveAndNext: setIndex < exercise.sets.length - 1
           ? (updatedSet) {
-              _updateSetWeight(exerciseIndex, setIndex, updatedSet.weight ?? 0);
-              _updateSetReps(exerciseIndex, setIndex, updatedSet.reps,
-                  minReps: updatedSet.minReps, maxReps: updatedSet.maxReps);
+              saveSet(exerciseIndex, setIndex, updatedSet);
               Future.microtask(() => _showEditTemplateSetModal(exerciseIndex, setIndex + 1));
             }
           : null,
       onSaveAndPrevious: setIndex > 0
           ? (updatedSet) {
-              _updateSetWeight(exerciseIndex, setIndex, updatedSet.weight ?? 0);
-              _updateSetReps(exerciseIndex, setIndex, updatedSet.reps,
-                  minReps: updatedSet.minReps, maxReps: updatedSet.maxReps);
+              saveSet(exerciseIndex, setIndex, updatedSet);
               Future.microtask(() => _showEditTemplateSetModal(exerciseIndex, setIndex - 1));
             }
           : null,
       onApplyToAll: (updatedSet) {
-        final w = updatedSet.weight ?? 0;
-        final r = updatedSet.reps; // ✅ Nullable in range mode
         for (int i = 0; i < exercise.sets.length; i++) {
-          _updateSetWeight(exerciseIndex, i, w);
-          _updateSetReps(exerciseIndex, i, r,
-              minReps: updatedSet.minReps, maxReps: updatedSet.maxReps);
+          saveSet(exerciseIndex, i, updatedSet);
         }
       },
     );

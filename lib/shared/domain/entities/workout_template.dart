@@ -721,6 +721,7 @@ class SetTemplate {
     this.targetMinReps,
     this.targetMaxReps,
     this.targetRpe,
+    this.targetSeconds,
     this.restSeconds,
     this.notes,
   });
@@ -755,6 +756,12 @@ class SetTemplate {
         ? rpeRaw
         : (rpeRaw is String ? int.tryParse(rpeRaw) : null);
 
+    // Parse targetSeconds for time-based exercises
+    final targetSecondsRaw = json['targetSeconds'] ?? json['seconds'];
+    final targetSeconds = targetSecondsRaw is int
+        ? targetSecondsRaw
+        : (targetSecondsRaw is String ? int.tryParse(targetSecondsRaw) : null);
+
     // Parse restSeconds for RestPause sets
     final restSecondsRaw = json['restSeconds'];
     final restSeconds = restSecondsRaw is int
@@ -779,6 +786,7 @@ class SetTemplate {
       targetMinReps: targetMinReps,
       targetMaxReps: targetMaxReps,
       targetRpe: targetRpe,
+      targetSeconds: targetSeconds,
       restSeconds: restSeconds,
       notes: json['notes']?.toString(),
     );
@@ -789,6 +797,7 @@ class SetTemplate {
   final int? targetMinReps;
   final int? targetMaxReps;
   final int? targetRpe; // Rate of Perceived Exertion
+  final int? targetSeconds; // For time-based exercises (duration in seconds)
   final int? restSeconds; // For RestPause sets (seconds between mini-sets)
   final String? notes;
 
@@ -809,6 +818,7 @@ class SetTemplate {
       if (targetMinReps != null) 'targetMinReps': targetMinReps,
       if (targetMaxReps != null) 'targetMaxReps': targetMaxReps,
       'targetRpe': targetRpe,
+      if (targetSeconds != null) 'targetSeconds': targetSeconds,
       if (restSeconds != null) 'restSeconds': restSeconds,
       'notes': notes,
     };
@@ -822,6 +832,7 @@ class SetTemplate {
       reps: targetReps,
       minReps: targetMinReps,
       maxReps: targetMaxReps,
+      seconds: targetSeconds,
       notes: notes,
     );
   }

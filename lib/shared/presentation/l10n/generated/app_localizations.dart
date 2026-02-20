@@ -9743,6 +9743,12 @@ abstract class AppLocalizations {
   /// **'Apply'**
   String get apply;
 
+  /// Button to save exercise filters as default
+  ///
+  /// In en, this message translates to:
+  /// **'Save as Default'**
+  String get saveAsDefault;
+
   /// Confirm delete multiple exercises
   ///
   /// In en, this message translates to:

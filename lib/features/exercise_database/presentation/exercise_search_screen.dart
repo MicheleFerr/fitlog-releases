@@ -87,7 +87,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   final List<String> _selectedFocus = [];
   final List<String> _selectedMuscleGroups = [];
   List<String> _selectedEquipment = [];
-  String? _selectedType;
+  List<String> _selectedDifficulty = [];
+  List<String> _selectedType = [];
+  List<String> _selectedMovementPattern = [];
 
   bool _showSearch =
       true; // P1-3 FIX: Show search by default for faster logging
@@ -118,7 +120,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       },
     );
     _loadUsageStats();
-    _loadEquipmentFilter(); // Carica filtro attrezzatura persistito
+    _loadSavedFilters(); // Carica filtri persistiti
     // Exercise search tutorial removed - UX 2025: search UI is intuitive standard pattern
   }
 
@@ -490,7 +492,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     if (_selectedEquipment.isNotEmpty) count++;
     if (_selectedMuscleGroups.isNotEmpty) count++;
     if (_selectedFocus.isNotEmpty) count++;
-    if (_selectedType != null) count++;
+    if (_selectedDifficulty.isNotEmpty) count++;
+    if (_selectedType.isNotEmpty) count++;
+    if (_selectedMovementPattern.isNotEmpty) count++;
     return count;
   }
 
@@ -499,45 +503,62 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     final exercisesAsync = ref.read(jsonExerciseRepositoryProvider);
     final exercises = exercisesAsync.value ?? [];
 
+    final currentFilters = ExerciseFilters(
+      equipment: _selectedEquipment,
+      difficulty: _selectedDifficulty,
+      exerciseType: _selectedType,
+      movementPattern: _selectedMovementPattern,
+    );
+
     await ModalService.showSheet(
       context,
       isScrollControlled: true,
-      builder: (sheetContext) => _FilterBottomSheet(
+      builder: (sheetContext) => _ExerciseFilterSheet(
         exercises: exercises,
-        selectedEquipment: _selectedEquipment,
-        onApply: (equipment) async {
-          setState(() {
-            _selectedEquipment.clear();
-            _selectedEquipment.addAll(equipment);
-          });
-          // Persisti la selezione attrezzatura
-          await _saveEquipmentFilter(equipment);
+        currentFilters: currentFilters,
+        onApply: (filters) {
+          _applyFilters(filters);
         },
-        onReset: () async {
-          setState(() {
-            _selectedEquipment.clear();
-          });
-          await _saveEquipmentFilter([]);
+        onSave: (filters) async {
+          _applyFilters(filters);
+          await _saveFilters(filters);
         },
       ),
     );
   }
 
-  /// Salva il filtro attrezzatura in SharedPreferences
-  Future<void> _saveEquipmentFilter(List<String> equipment) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('exercise_equipment_filter', equipment);
+  void _applyFilters(ExerciseFilters filters) {
+    setState(() {
+      _selectedEquipment = List.from(filters.equipment);
+      _selectedDifficulty = List.from(filters.difficulty);
+      _selectedType = List.from(filters.exerciseType);
+      _selectedMovementPattern = List.from(filters.movementPattern);
+    });
   }
 
-  /// Carica il filtro attrezzatura da SharedPreferences
-  Future<void> _loadEquipmentFilter() async {
+  /// Salva i filtri in SharedPreferences
+  Future<void> _saveFilters(ExerciseFilters filters) async {
     final prefs = await SharedPreferences.getInstance();
-    final saved = prefs.getStringList('exercise_equipment_filter');
-    if (saved != null && saved.isNotEmpty) {
-      setState(() {
-        _selectedEquipment = saved;
-      });
-    }
+    await prefs.setStringList('exercise_equipment_filter', filters.equipment);
+    await prefs.setStringList('exercise_difficulty_filter', filters.difficulty);
+    await prefs.setStringList('exercise_type_filter', filters.exerciseType);
+    await prefs.setStringList('exercise_pattern_filter', filters.movementPattern);
+  }
+
+  /// Carica i filtri salvati da SharedPreferences
+  Future<void> _loadSavedFilters() async {
+    final prefs = await SharedPreferences.getInstance();
+    final equipment = prefs.getStringList('exercise_equipment_filter');
+    final difficulty = prefs.getStringList('exercise_difficulty_filter');
+    final type = prefs.getStringList('exercise_type_filter');
+    final pattern = prefs.getStringList('exercise_pattern_filter');
+
+    setState(() {
+      if (equipment != null && equipment.isNotEmpty) _selectedEquipment = equipment;
+      if (difficulty != null && difficulty.isNotEmpty) _selectedDifficulty = difficulty;
+      if (type != null && type.isNotEmpty) _selectedType = type;
+      if (pattern != null && pattern.isNotEmpty) _selectedMovementPattern = pattern;
+    });
   }
 
   @override
@@ -693,8 +714,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 ),
               ],
 
-              // Filter bar (hidden during fuzzy search)
-              if (!_useFuzzyResults) _buildFilterBar(),
+              // Filter bar removed - always show all exercises A-Z
 
               // Results
               Expanded(
@@ -1877,9 +1897,23 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         }
       }
 
+      // Difficulty filter
+      if (_selectedDifficulty.isNotEmpty) {
+        if (!_selectedDifficulty.contains(exercise.difficolta)) {
+          return false;
+        }
+      }
+
       // Type filter
-      if (_selectedType != null) {
-        if (exercise.tipoEsercizio != _selectedType) {
+      if (_selectedType.isNotEmpty) {
+        if (!_selectedType.contains(exercise.tipoEsercizio)) {
+          return false;
+        }
+      }
+
+      // Movement pattern filter
+      if (_selectedMovementPattern.isNotEmpty) {
+        if (!_selectedMovementPattern.contains(exercise.patternMovimento)) {
           return false;
         }
       }
@@ -2113,7 +2147,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       _selectedFocus.clear();
       _selectedMuscleGroups.clear();
       _selectedEquipment.clear();
-      _selectedType = null;
+      _selectedDifficulty.clear();
+      _selectedType.clear();
+      _selectedMovementPattern.clear();
       _searchQuery = '';
       _searchController.clear();
     });
@@ -2124,7 +2160,9 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     return _selectedFocus.isEmpty &&
         _selectedMuscleGroups.isEmpty &&
         _selectedEquipment.isEmpty &&
-        _selectedType == null &&
+        _selectedDifficulty.isEmpty &&
+        _selectedType.isEmpty &&
+        _selectedMovementPattern.isEmpty &&
         _searchQuery.isEmpty;
   }
 
@@ -2346,42 +2384,110 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 }
 
 /// Filter Bottom Sheet Widget - Solo attrezzatura
-class _FilterBottomSheet extends StatefulWidget {
-  const _FilterBottomSheet({
-    required this.exercises,
-    required this.selectedEquipment,
-    required this.onApply,
-    required this.onReset,
+class ExerciseFilters {
+  const ExerciseFilters({
+    this.equipment = const [],
+    this.difficulty = const [],
+    this.exerciseType = const [],
+    this.movementPattern = const [],
   });
-  final List<Exercise> exercises;
-  final List<String> selectedEquipment;
-  final Function(List<String> equipment) onApply;
-  final VoidCallback onReset;
 
-  @override
-  State<_FilterBottomSheet> createState() => _FilterBottomSheetState();
+  final List<String> equipment;
+  final List<String> difficulty;
+  final List<String> exerciseType;
+  final List<String> movementPattern;
+
+  bool get isEmpty =>
+      equipment.isEmpty &&
+      difficulty.isEmpty &&
+      exerciseType.isEmpty &&
+      movementPattern.isEmpty;
+
+  int get activeCount {
+    int count = 0;
+    if (equipment.isNotEmpty) count++;
+    if (difficulty.isNotEmpty) count++;
+    if (exerciseType.isNotEmpty) count++;
+    if (movementPattern.isNotEmpty) count++;
+    return count;
+  }
+
+  ExerciseFilters copyWith({
+    List<String>? equipment,
+    List<String>? difficulty,
+    List<String>? exerciseType,
+    List<String>? movementPattern,
+  }) {
+    return ExerciseFilters(
+      equipment: equipment ?? this.equipment,
+      difficulty: difficulty ?? this.difficulty,
+      exerciseType: exerciseType ?? this.exerciseType,
+      movementPattern: movementPattern ?? this.movementPattern,
+    );
+  }
 }
 
-class _FilterBottomSheetState extends State<_FilterBottomSheet> {
+class _ExerciseFilterSheet extends StatefulWidget {
+  const _ExerciseFilterSheet({
+    required this.exercises,
+    required this.currentFilters,
+    required this.onApply,
+    required this.onSave,
+  });
+  final List<Exercise> exercises;
+  final ExerciseFilters currentFilters;
+  final ValueChanged<ExerciseFilters> onApply;
+  final ValueChanged<ExerciseFilters> onSave;
+
+  @override
+  State<_ExerciseFilterSheet> createState() => _ExerciseFilterSheetState();
+}
+
+class _ExerciseFilterSheetState extends State<_ExerciseFilterSheet> {
   late List<String> _tempEquipment;
+  late List<String> _tempDifficulty;
+  late List<String> _tempExerciseType;
+  late List<String> _tempMovementPattern;
 
   @override
   void initState() {
     super.initState();
-    _tempEquipment = List.from(widget.selectedEquipment);
+    _tempEquipment = List.from(widget.currentFilters.equipment);
+    _tempDifficulty = List.from(widget.currentFilters.difficulty);
+    _tempExerciseType = List.from(widget.currentFilters.exerciseType);
+    _tempMovementPattern = List.from(widget.currentFilters.movementPattern);
+  }
+
+  ExerciseFilters _buildFilters() => ExerciseFilters(
+    equipment: List.from(_tempEquipment),
+    difficulty: List.from(_tempDifficulty),
+    exerciseType: List.from(_tempExerciseType),
+    movementPattern: List.from(_tempMovementPattern),
+  );
+
+  bool get _hasAnySelection =>
+      _tempEquipment.isNotEmpty ||
+      _tempDifficulty.isNotEmpty ||
+      _tempExerciseType.isNotEmpty ||
+      _tempMovementPattern.isNotEmpty;
+
+  List<String> _extractOptions(String Function(Exercise) getter) {
+    return widget.exercises
+        .map(getter)
+        .where((v) => v.isNotEmpty)
+        .toSet()
+        .toList()
+      ..sort();
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    final equipmentOptions =
-        widget.exercises
-            .map((e) => e.attrezzatura)
-            .where((a) => a.isNotEmpty) // Filtra valori vuoti
-            .toSet()
-            .toList()
-          ..sort();
+    final equipmentOptions = _extractOptions((e) => e.attrezzatura);
+    final difficultyOptions = _extractOptions((e) => e.difficolta);
+    final typeOptions = _extractOptions((e) => e.tipoEsercizio);
+    final patternOptions = _extractOptions((e) => e.patternMovimento);
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -2411,13 +2517,13 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                   Icon(AppIcons.filter, color: context.colors.primary),
                   const SizedBox(width: 12),
                   Text(
-                    l10n.equipment,
+                    l10n.filters,
                     style: context.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const Spacer(),
-                  if (_tempEquipment.isNotEmpty)
+                  if (_hasAnySelection)
                     Semantics(
                       label: l10n.reset,
                       button: true,
@@ -2425,6 +2531,9 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                         onPressed: () {
                           setState(() {
                             _tempEquipment.clear();
+                            _tempDifficulty.clear();
+                            _tempExerciseType.clear();
+                            _tempMovementPattern.clear();
                           });
                         },
                         icon: const Icon(AppIcons.clear),
@@ -2437,52 +2546,115 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
 
             const Divider(height: 1),
 
-            // Equipment chips
+            // Filter sections
             Flexible(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: equipmentOptions.map((equipment) {
-                    final isSelected = _tempEquipment.contains(equipment);
-                    return FilterChip(
-                      label: Text(equipment),
-                      selected: isSelected,
-                      onSelected: (selected) {
-                        setState(() {
-                          if (selected) {
-                            _tempEquipment.add(equipment);
-                          } else {
-                            _tempEquipment.remove(equipment);
-                          }
-                        });
-                      },
-                      backgroundColor: context.colors.surface,
-                      selectedColor: context.colors.primaryContainer,
-                    );
-                  }).toList(),
+                child: Column(
+                  children: [
+                    _buildFilterSection(
+                      title: l10n.equipment,
+                      options: equipmentOptions,
+                      selected: _tempEquipment,
+                    ),
+                    _buildFilterSection(
+                      title: l10n.difficulty,
+                      options: difficultyOptions,
+                      selected: _tempDifficulty,
+                    ),
+                    _buildFilterSection(
+                      title: l10n.exerciseType,
+                      options: typeOptions,
+                      selected: _tempExerciseType,
+                    ),
+                    _buildFilterSection(
+                      title: l10n.movementPattern,
+                      options: patternOptions,
+                      selected: _tempMovementPattern,
+                    ),
+                  ],
                 ),
               ),
             ),
 
-            // Apply button
+            // Dual CTA
             Padding(
               padding: const EdgeInsets.all(16),
-              child: SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: () {
-                    widget.onApply(_tempEquipment);
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(l10n.apply),
-                ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () {
+                        widget.onApply(_buildFilters());
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(l10n.apply),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        widget.onSave(_buildFilters());
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        l10n.saveAsDefault,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildFilterSection({
+    required String title,
+    required List<String> options,
+    required List<String> selected,
+  }) {
+    if (options.isEmpty) return const SizedBox.shrink();
+
+    final count = selected.length;
+    final subtitle = count > 0 ? ' ($count)' : '';
+
+    return ExpansionTile(
+      title: Text(
+        '$title$subtitle',
+        style: context.textTheme.titleSmall?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      initiallyExpanded: selected.isNotEmpty,
+      childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+      children: [
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: options.map((option) {
+            final isSelected = selected.contains(option);
+            return FilterChip(
+              label: Text(option),
+              selected: isSelected,
+              onSelected: (value) {
+                setState(() {
+                  if (value) {
+                    selected.add(option);
+                  } else {
+                    selected.remove(option);
+                  }
+                });
+              },
+              backgroundColor: context.colors.surface,
+              selectedColor: context.colors.primaryContainer,
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 }

@@ -1857,6 +1857,7 @@
   "selectField": "Seleziona Campo",
   "newValue": "Nuovo valore",
   "apply": "Applica",
+  "saveAsDefault": "Salva come Default",
   "confirmDeleteMultiple": "Eliminare {count} esercizi?",
   "updateExercise": "Aggiorna Esercizio",
   "createExercise": "Crea Esercizio",

@@ -5304,6 +5304,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get apply => 'Applica';
 
   @override
+  String get saveAsDefault => 'Salva come Default';
+
+  @override
   String confirmDeleteMultiple(int count) {
     return 'Eliminare $count esercizi?';
   }
