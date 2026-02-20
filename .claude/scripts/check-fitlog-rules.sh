@@ -74,6 +74,21 @@ if echo "$content" | grep -E 'Icon\s*\([^)]*size:\s*[0-9]+' > /dev/null 2>&1; th
     errors+="  - Hardcoded icon size - use AppIconSize.* instead\n"
 fi
 
+# Rule 8: StateProvider (removed in Riverpod 3.x)
+if echo "$content" | grep -E '\bStateProvider\s*<' > /dev/null 2>&1; then
+    errors+="  - StateProvider removed in Riverpod 3.x - use createStateProvider<T>(value) from state_provider_helper.dart\n"
+fi
+
+# Rule 9: Direct Hive.openBox (should use HiveBoxManagerEnhanced)
+if echo "$content" | grep -E '\bHive\.openBox\s*\(' > /dev/null 2>&1; then
+    errors+="  - Direct Hive.openBox() - use HiveBoxManagerEnhanced().openBox() instead\n"
+fi
+
+# Rule 10: Hardcoded route paths (should use AppRoutes constants)
+if echo "$content" | grep -E "context\.(go|push|goNamed|pushNamed)\s*\(\s*['\"]/" > /dev/null 2>&1; then
+    errors+="  - Hardcoded route path - use AppRoutes.* constants from app_routes.dart\n"
+fi
+
 # Output errors if any
 if [ -n "$errors" ]; then
     echo ""
