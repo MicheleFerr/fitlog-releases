@@ -31,6 +31,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exerc
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/mini_sparkline.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 
 /// Filter options for exercise list
 ///
@@ -424,6 +425,10 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
                 // PREMIUM: Quick stats preview + "View Details"
                 if (_showBars && ref.watch(analyticsViewModeProvider) == AnalyticsViewMode.detailed)
                   ProInsightsBadge(exerciseHistories: widget.exerciseHistories),
+
+                // History limit banner for free users
+                if (!ref.watch(hasUnlimitedHistoryProvider))
+                  _HistoryLimitBanner(),
 
                 // Results list
                 Expanded(
@@ -2081,6 +2086,65 @@ class _FilterChipItemState extends State<_FilterChipItem>
               ? context.colors.onPrimary
               : context.colors.onSurface,
           fontWeight: widget.selected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+    );
+  }
+}
+
+/// Banner informing free users that analytics data is limited to 3 months
+class _HistoryLimitBanner extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        context.pushNamed(AppRoutes.premiumName);
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.xs,
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        decoration: BoxDecoration(
+          color: colorScheme.tertiaryContainer.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: colorScheme.tertiary.withValues(alpha: 0.3),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              AppIcons.info,
+              color: colorScheme.tertiary,
+              size: AppIconSize.small,
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                context.l10n.historyLimitedTo3Months,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurface,
+                ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.xs),
+            Text(
+              context.l10n.unlockFullHistory,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: colorScheme.tertiary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
       ),
     );

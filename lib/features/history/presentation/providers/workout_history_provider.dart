@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/features/history/domain/entities/sync_status.dart';
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
 import 'package:gymbro_flutter_new/features/history/data/repositories/workout_history_repository_enhanced.dart';
@@ -450,10 +451,35 @@ final workoutHistoryFilterProvider = createStateProvider<WorkoutHistoryFilter>(
   const WorkoutHistoryFilter(),
 );
 
-/// Provider that combines filter and data
+/// Provider that combines filter and data, applying premium history cutoff
 final filteredWorkoutsProvider = Provider<List<WorkoutHistoryDetail>>((ref) {
   final filter = ref.watch(workoutHistoryFilterProvider);
-  return ref.watch(filteredWorkoutHistoryProvider(filter));
+  final allFiltered = ref.watch(filteredWorkoutHistoryProvider(filter));
+  final cutoff = ref.watch(historyCutoffDateProvider);
+
+  // Premium users: no cutoff, return all
+  if (cutoff == null) return allFiltered;
+
+  // Free users: only show workouts after cutoff
+  return allFiltered
+      .where((w) => w.completedAt.isAfter(cutoff))
+      .toList();
+});
+
+/// Count of workouts hidden by premium history cutoff
+///
+/// Shows 0 for premium users. For free users, counts workouts
+/// older than 3 months that are hidden behind the paywall.
+final hiddenWorkoutsCountProvider = Provider<int>((ref) {
+  final filter = ref.watch(workoutHistoryFilterProvider);
+  final allFiltered = ref.watch(filteredWorkoutHistoryProvider(filter));
+  final cutoff = ref.watch(historyCutoffDateProvider);
+
+  if (cutoff == null) return 0;
+
+  return allFiltered
+      .where((w) => !w.completedAt.isAfter(cutoff))
+      .length;
 });
 
 /// 🔧 PERF FIX: Memoized provider for grouped workouts by week

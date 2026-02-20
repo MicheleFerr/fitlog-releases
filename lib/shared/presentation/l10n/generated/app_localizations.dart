@@ -49627,6 +49627,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} total sets'**
   String totalSetsCount(int count);
+
+  /// Snackbar message when user selects RPE 10 (muscular failure)
+  ///
+  /// In en, this message translates to:
+  /// **'Failure reached — +30s rest recommended'**
+  String get rpe10RecoverySuggestion;
+
+  /// Button to apply +30s rest after RPE 10
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get rpe10Apply;
+
+  /// Count of workouts hidden behind premium paywall
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} hidden workouts'**
+  String hiddenWorkoutsCount(int count);
+
+  /// CTA to unlock full workout history with premium
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock full history'**
+  String get unlockFullHistory;
+
+  /// Banner text informing free users analytics are limited
+  ///
+  /// In en, this message translates to:
+  /// **'Data limited to 3 months'**
+  String get historyLimitedTo3Months;
+
+  /// Premium feature: unlimited workout history
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited history'**
+  String get unlimitedHistory;
+
+  /// Description of unlimited history premium feature
+  ///
+  /// In en, this message translates to:
+  /// **'Access all your workout data with no time limits'**
+  String get unlimitedHistoryDescription;
+
+  /// Premium feature: edit any workout
+  ///
+  /// In en, this message translates to:
+  /// **'Edit all workouts'**
+  String get editAllWorkouts;
+
+  /// Description of edit all workouts premium feature
+  ///
+  /// In en, this message translates to:
+  /// **'Modify any past workout, not just the most recent'**
+  String get editAllWorkoutsDescription;
+
+  /// Snackbar message when user tries to add warmup to an isolation exercise
+  ///
+  /// In en, this message translates to:
+  /// **'Isolation exercises don\'t need warmup sets'**
+  String get warmupNotNeededForIsolation;
+
+  /// Menu option to generate warmup sets for all exercises in the workout
+  ///
+  /// In en, this message translates to:
+  /// **'Generate All Warmups'**
+  String get generateAllWarmups;
+
+  /// Snackbar message after generating warmup for all exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup sets generated for {count} exercises'**
+  String allWarmupsGenerated(String count);
+
+  /// Snackbar message when no exercises qualify for warmup generation
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises need warmup sets'**
+  String get noExercisesNeedWarmup;
+
+  /// Menu option to open workout customization settings
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Settings'**
+  String get workoutSettings;
 }
 
 class _AppLocalizationsDelegate

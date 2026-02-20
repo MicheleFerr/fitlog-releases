@@ -30,6 +30,7 @@ import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak
 import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/measurement_repository_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/template_repository.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
@@ -84,6 +85,8 @@ AICoachServiceImpl aiCoachService(Ref ref) {
   final templateRepo = ref.watch(templateRepositoryProvider);
   final locale = ref.watch(localeProvider);
 
+  final historyDaysLimit = ref.watch(tierEntitlementsProvider).historyDaysLimit;
+
   final toolExecutor = AIToolExecutor(
     analyticsRepo: analyticsRepo,
     historyRepo: historyRepo,
@@ -92,6 +95,7 @@ AICoachServiceImpl aiCoachService(Ref ref) {
     measurementRepo: measurementRepo,
     templateRepo: templateRepo,
     locale: locale,
+    historyDaysLimit: historyDaysLimit,
   );
   final contextAggregator = AnalyticsAggregator(
     analyticsRepo: analyticsRepo,

@@ -45,8 +45,7 @@ final tierEntitlementsProvider = Provider<TierEntitlements>((ref) {
 class TierEntitlements {
   /// Create entitlements from XP tier only (legacy)
   TierEntitlements(this._tier)
-    : _quota = TemplateQuota.forUserTier(_tier),
-      _accountTier = AccountTier.free;
+    : _accountTier = AccountTier.free;
 
   /// Create consolidated entitlements (XP tier + Account tier)
   /// Takes the MAXIMUM of both tiers to ensure Premium users always
@@ -55,15 +54,10 @@ class TierEntitlements {
     required UserTier userTier,
     required AccountTier accountTier,
   }) : _tier = userTier,
-       _accountTier = accountTier,
-       _quota = TemplateQuota.consolidated(
-         userTier: userTier,
-         accountTier: accountTier,
-       );
+       _accountTier = accountTier;
 
   final UserTier _tier;
   final AccountTier _accountTier;
-  final TemplateQuota _quota;
 
   /// Current user tier (XP-based)
   UserTier get tier => _tier;
@@ -71,44 +65,55 @@ class TierEntitlements {
   /// Current account tier (Premium toggle)
   AccountTier get accountTier => _accountTier;
 
-  /// Maximum private templates user can create (consolidated from both tiers)
-  int get maxTemplates => _quota.maxPrivateTemplates;
+  // ============================================================
+  // HISTORY LIMIT (only premium gating)
+  // Free users: 90 days of history. Premium: unlimited.
+  // ============================================================
 
-  /// Maximum public templates user can share (consolidated from both tiers)
-  int get maxPublicTemplates => _quota.maxPublicTemplates;
+  /// Days of history available (null = unlimited for premium)
+  int? get historyDaysLimit =>
+      _accountTier != AccountTier.free ? null : 90;
 
-  /// Maximum custom single exercises user can create (consolidated from both tiers)
-  int get maxCustomSingleExercises =>
-      _accountTier != AccountTier.free
-          ? 999  // Premium/Pro users have unlimited
-          : _tier.maxCustomSingleExercises;
+  /// Cutoff date for history access (null = no cutoff for premium)
+  DateTime? get historyCutoffDate {
+    final limit = historyDaysLimit;
+    if (limit == null) return null;
+    return DateTime.now().subtract(Duration(days: limit));
+  }
 
-  /// Maximum custom superset templates user can create (consolidated from both tiers)
-  int get maxCustomSupersets =>
-      _accountTier != AccountTier.free
-          ? 999  // Premium/Pro users have unlimited
-          : _tier.maxCustomSupersets;
+  /// Whether user has unlimited history access
+  bool get hasUnlimitedHistory => historyDaysLimit == null;
 
-  /// Maximum custom dropset templates user can create (consolidated from both tiers)
-  int get maxCustomDropsets =>
-      _accountTier != AccountTier.free
-          ? 999  // Premium/Pro users have unlimited
-          : _tier.maxCustomDropsets;
+  // ============================================================
+  // ALL FEATURES NOW FREE (no XP gating)
+  // ============================================================
 
-  /// Maximum custom rest-pause templates user can create (consolidated from both tiers)
-  int get maxCustomRestPause =>
-      _accountTier != AccountTier.free
-          ? 999  // Premium/Pro users have unlimited
-          : _tier.maxCustomRestPause;
+  /// Maximum private templates (unlimited for all)
+  int get maxTemplates => 999;
+
+  /// Maximum public templates (unlimited for all)
+  int get maxPublicTemplates => 999;
+
+  /// Maximum custom single exercises (unlimited for all)
+  int get maxCustomSingleExercises => 999;
+
+  /// Maximum custom superset templates (unlimited for all)
+  int get maxCustomSupersets => 999;
+
+  /// Maximum custom dropset templates (unlimited for all)
+  int get maxCustomDropsets => 999;
+
+  /// Maximum custom rest-pause templates (unlimited for all)
+  int get maxCustomRestPause => 999;
 
   /// Whether to show banner ads (Premium/Pro users have no ads)
   bool get shouldShowAds => _accountTier == AccountTier.free && _tier.showAds;
 
-  /// Whether user has Pro Analytics access
-  bool get hasProAnalytics => _accountTier != AccountTier.free || _tier.hasProAnalytics;
+  /// Pro Analytics access (free for all)
+  bool get hasProAnalytics => true;
 
-  /// Whether user has Cloud Sync access
-  bool get hasCloudSync => _accountTier != AccountTier.free || _tier.hasCloudSync;
+  /// Cloud Sync access (free for all)
+  bool get hasCloudSync => true;
 
   /// Check if user can save another private template
   bool canSaveTemplate(int currentCount) => currentCount < maxTemplates;
@@ -276,5 +281,21 @@ final maxCustomDropsetsProvider = Provider<int>((ref) {
 final maxCustomRestPauseProvider = Provider<int>((ref) {
   return ref.watch(
     tierEntitlementsProvider.select((e) => e.maxCustomRestPause),
+  );
+});
+
+/// History cutoff date for free users (null = unlimited for premium)
+///
+/// Use this to filter history, analytics, and AI coach data.
+final historyCutoffDateProvider = Provider<DateTime?>((ref) {
+  return ref.watch(
+    tierEntitlementsProvider.select((e) => e.historyCutoffDate),
+  );
+});
+
+/// Whether user has unlimited history access
+final hasUnlimitedHistoryProvider = Provider<bool>((ref) {
+  return ref.watch(
+    tierEntitlementsProvider.select((e) => e.hasUnlimitedHistory),
   );
 });

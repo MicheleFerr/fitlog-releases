@@ -37,6 +37,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 
 /// Date range filter options
 enum DateRangeOption { today, thisWeek, thisMonth, allTime }
@@ -339,28 +340,12 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                         theme,
                         l10n,
                       )
-                    : RefreshIndicator(
-                        onRefresh: _onRefresh,
-                        color: colorScheme.primary,
-                        child: MaterialScrollList(
-                          padding: EdgeInsets.only(
-                            left: 16,
-                            right: 16,
-                            bottom: context.tabBarInset,
-                          ),
-                          itemCount: filteredByDateRange.length,
-                          itemBuilder: (context, index) {
-                            final workout = filteredByDateRange[index];
-                            return _buildSwipeableWorkoutCard(
-                              context,
-                              workout,
-                              colorScheme,
-                              theme,
-                              l10n,
-                              index,
-                            );
-                          },
-                        ),
+                    : _buildFlatListWithRefresh(
+                        context,
+                        filteredByDateRange,
+                        colorScheme,
+                        theme,
+                        l10n,
                       ),
               ),
             ),
@@ -464,6 +449,121 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     }
 
     return groups;
+  }
+
+  /// Flat list with pull-to-refresh and premium banner
+  Widget _buildFlatListWithRefresh(
+    BuildContext context,
+    List<WorkoutHistoryDetail> workouts,
+    ColorScheme colorScheme,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    final hiddenCount = ref.watch(hiddenWorkoutsCountProvider);
+
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      color: colorScheme.primary,
+      child: MaterialScrollList(
+        padding: EdgeInsets.only(
+          left: 16,
+          right: 16,
+          bottom: context.tabBarInset,
+        ),
+        itemCount: workouts.length + (hiddenCount > 0 ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (index < workouts.length) {
+            return _buildSwipeableWorkoutCard(
+              context,
+              workouts[index],
+              colorScheme,
+              theme,
+              l10n,
+              index,
+            );
+          }
+          // Premium upsell banner at the bottom
+          return _buildHiddenWorkoutsBanner(
+            context,
+            hiddenCount,
+            colorScheme,
+            theme,
+            l10n,
+          );
+        },
+      ),
+    );
+  }
+
+  /// Banner showing hidden workouts count with CTA to premium
+  Widget _buildHiddenWorkoutsBanner(
+    BuildContext context,
+    int hiddenCount,
+    ColorScheme colorScheme,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        context.pushNamed(AppRoutes.premiumName);
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              colorScheme.tertiaryContainer,
+              colorScheme.tertiaryContainer.withValues(alpha: 0.7),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: colorScheme.tertiary.withValues(alpha: 0.3),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              AppIcons.lock,
+              color: colorScheme.tertiary,
+              size: AppIconSize.medium,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.hiddenWorkoutsCount(hiddenCount),
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    l10n.unlockFullHistory,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.tertiary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              AppIcons.chevronRight,
+              color: colorScheme.tertiary,
+              size: AppIconSize.small,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   /// Build grouped list with collapsible sections

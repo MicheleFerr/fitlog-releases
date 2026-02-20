@@ -20949,5 +20949,20 @@
   "muscleNeglected": "Trascurato",
   "muscleOverview": "Panoramica Muscolare",
   "perTemplate": "Per Template",
-  "totalSetsCount": "{count} serie totali"
+  "totalSetsCount": "{count} serie totali",
+  "rpe10RecoverySuggestion": "Cedimento raggiunto — +30s riposo consigliato",
+  "rpe10Apply": "Applica",
+
+  "hiddenWorkoutsCount": "+{count} workout nascosti",
+  "unlockFullHistory": "Sblocca history completa",
+  "historyLimitedTo3Months": "Dati limitati a 3 mesi",
+  "unlimitedHistory": "History illimitata",
+  "unlimitedHistoryDescription": "Accedi a tutti i tuoi dati di allenamento senza limiti di tempo",
+  "editAllWorkouts": "Modifica tutti i workout",
+  "editAllWorkoutsDescription": "Modifica qualsiasi workout passato, non solo il più recente",
+  "warmupNotNeededForIsolation": "Gli esercizi di isolamento non necessitano di riscaldamento",
+  "generateAllWarmups": "Genera tutti i warmup",
+  "allWarmupsGenerated": "Warmup generati per {count} esercizi",
+  "noExercisesNeedWarmup": "Nessun esercizio necessita di warmup",
+  "workoutSettings": "Impostazioni workout"
 }

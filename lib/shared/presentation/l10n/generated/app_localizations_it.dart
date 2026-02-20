@@ -28036,4 +28036,54 @@ class AppLocalizationsIt extends AppLocalizations {
   String totalSetsCount(int count) {
     return '$count serie totali';
   }
+
+  @override
+  String get rpe10RecoverySuggestion =>
+      'Cedimento raggiunto — +30s riposo consigliato';
+
+  @override
+  String get rpe10Apply => 'Applica';
+
+  @override
+  String hiddenWorkoutsCount(int count) {
+    return '+$count workout nascosti';
+  }
+
+  @override
+  String get unlockFullHistory => 'Sblocca history completa';
+
+  @override
+  String get historyLimitedTo3Months => 'Dati limitati a 3 mesi';
+
+  @override
+  String get unlimitedHistory => 'History illimitata';
+
+  @override
+  String get unlimitedHistoryDescription =>
+      'Accedi a tutti i tuoi dati di allenamento senza limiti di tempo';
+
+  @override
+  String get editAllWorkouts => 'Modifica tutti i workout';
+
+  @override
+  String get editAllWorkoutsDescription =>
+      'Modifica qualsiasi workout passato, non solo il più recente';
+
+  @override
+  String get warmupNotNeededForIsolation =>
+      'Gli esercizi di isolamento non necessitano di riscaldamento';
+
+  @override
+  String get generateAllWarmups => 'Genera tutti i warmup';
+
+  @override
+  String allWarmupsGenerated(String count) {
+    return 'Warmup generati per $count esercizi';
+  }
+
+  @override
+  String get noExercisesNeedWarmup => 'Nessun esercizio necessita di warmup';
+
+  @override
+  String get workoutSettings => 'Impostazioni workout';
 }

@@ -37,6 +37,7 @@ class AIToolExecutor {
     this.measurementRepo,
     this.templateRepo,
     this.locale,
+    this.historyDaysLimit,
     ExerciseSearchService? exerciseSearchService,
   }) : exerciseSearchService = exerciseSearchService ?? ExerciseSearchService();
 
@@ -50,6 +51,9 @@ class AIToolExecutor {
 
   /// User's locale for localized exercise names
   final Locale? locale;
+
+  /// Max history days for free users (null = unlimited/premium)
+  final int? historyDaysLimit;
 
   /// Normalize string from AI (handles unicode escapes like \u00b0 → °)
   ///
@@ -121,9 +125,11 @@ class AIToolExecutor {
 
     // Handle weeksBack as either num or String (robust JSON parsing)
     final weeksBackRaw = args['weeksBack'];
-    final weeksBack = weeksBackRaw is num
+    final maxWeeks = historyDaysLimit != null ? (historyDaysLimit! ~/ 7) : 999;
+    final weeksBack = (weeksBackRaw is num
         ? weeksBackRaw.toInt()
-        : int.tryParse(weeksBackRaw?.toString() ?? '12') ?? 12;
+        : int.tryParse(weeksBackRaw?.toString() ?? '12') ?? 12)
+        .clamp(1, maxWeeks);
 
     if (rawExerciseName == null) {
       return jsonEncode({
@@ -311,9 +317,11 @@ class AIToolExecutor {
 
     // Handle weeksBack as either num or String (robust JSON parsing)
     final weeksBackRaw = args['weeksBack'];
-    final weeksBack = weeksBackRaw is num
+    final maxWeeks = historyDaysLimit != null ? (historyDaysLimit! ~/ 7) : 999;
+    final weeksBack = (weeksBackRaw is num
         ? weeksBackRaw.toInt()
-        : int.tryParse(weeksBackRaw?.toString() ?? '4') ?? 4;
+        : int.tryParse(weeksBackRaw?.toString() ?? '4') ?? 4)
+        .clamp(1, maxWeeks);
 
     try {
       // Get all exercise history from stream
@@ -818,9 +826,11 @@ class AIToolExecutor {
   Future<String> _getWorkoutHistory(Map<String, dynamic> args, String userId) async {
     // Handle daysBack and limit as either num or String
     final daysBackRaw = args['daysBack'];
-    final daysBack = daysBackRaw is num
+    final maxDays = historyDaysLimit ?? 999;
+    final daysBack = (daysBackRaw is num
         ? daysBackRaw.toInt()
-        : int.tryParse(daysBackRaw?.toString() ?? '7') ?? 7;
+        : int.tryParse(daysBackRaw?.toString() ?? '7') ?? 7)
+        .clamp(1, maxDays);
 
     final limitRaw = args['limit'];
     final limit = limitRaw is num

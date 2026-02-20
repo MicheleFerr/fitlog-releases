@@ -27765,4 +27765,54 @@ class AppLocalizationsEn extends AppLocalizations {
   String totalSetsCount(int count) {
     return '$count total sets';
   }
+
+  @override
+  String get rpe10RecoverySuggestion =>
+      'Failure reached — +30s rest recommended';
+
+  @override
+  String get rpe10Apply => 'Apply';
+
+  @override
+  String hiddenWorkoutsCount(int count) {
+    return '+$count hidden workouts';
+  }
+
+  @override
+  String get unlockFullHistory => 'Unlock full history';
+
+  @override
+  String get historyLimitedTo3Months => 'Data limited to 3 months';
+
+  @override
+  String get unlimitedHistory => 'Unlimited history';
+
+  @override
+  String get unlimitedHistoryDescription =>
+      'Access all your workout data with no time limits';
+
+  @override
+  String get editAllWorkouts => 'Edit all workouts';
+
+  @override
+  String get editAllWorkoutsDescription =>
+      'Modify any past workout, not just the most recent';
+
+  @override
+  String get warmupNotNeededForIsolation =>
+      'Isolation exercises don\'t need warmup sets';
+
+  @override
+  String get generateAllWarmups => 'Generate All Warmups';
+
+  @override
+  String allWarmupsGenerated(String count) {
+    return 'Warmup sets generated for $count exercises';
+  }
+
+  @override
+  String get noExercisesNeedWarmup => 'No exercises need warmup sets';
+
+  @override
+  String get workoutSettings => 'Workout Settings';
 }

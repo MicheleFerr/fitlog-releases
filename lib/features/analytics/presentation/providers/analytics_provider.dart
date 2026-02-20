@@ -12,6 +12,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/analytics_
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/workout_analytics_repository_impl.dart';
+import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 
 import 'package:flutter/foundation.dart';
 
@@ -153,10 +154,14 @@ final historicalWorkoutsProvider = FutureProvider.autoDispose<List<Workout>>((
       });
     }
 
+    // Apply premium history cutoff for free users
+    final historyCutoff = ref.watch(historyCutoffDateProvider);
+
     // Fetch completed workouts for analytics (this will trigger sync if needed)
     final workouts = await analyticsRepo.getHistoricalWorkouts(
       user.uid,
       limit: 100,
+      since: historyCutoff,
     );
 
     // Mark as completed (happens after async operation, so it's safe)

@@ -34093,5 +34093,73 @@
         "type": "int"
       }
     }
+  },
+  "rpe10RecoverySuggestion": "Failure reached — +30s rest recommended",
+  "@rpe10RecoverySuggestion": {
+    "description": "Snackbar message when user selects RPE 10 (muscular failure)"
+  },
+  "rpe10Apply": "Apply",
+  "@rpe10Apply": {
+    "description": "Button to apply +30s rest after RPE 10"
+  },
+
+  "hiddenWorkoutsCount": "+{count} hidden workouts",
+  "@hiddenWorkoutsCount": {
+    "description": "Count of workouts hidden behind premium paywall",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unlockFullHistory": "Unlock full history",
+  "@unlockFullHistory": {
+    "description": "CTA to unlock full workout history with premium"
+  },
+  "historyLimitedTo3Months": "Data limited to 3 months",
+  "@historyLimitedTo3Months": {
+    "description": "Banner text informing free users analytics are limited"
+  },
+  "unlimitedHistory": "Unlimited history",
+  "@unlimitedHistory": {
+    "description": "Premium feature: unlimited workout history"
+  },
+  "unlimitedHistoryDescription": "Access all your workout data with no time limits",
+  "@unlimitedHistoryDescription": {
+    "description": "Description of unlimited history premium feature"
+  },
+  "editAllWorkouts": "Edit all workouts",
+  "@editAllWorkouts": {
+    "description": "Premium feature: edit any workout"
+  },
+  "editAllWorkoutsDescription": "Modify any past workout, not just the most recent",
+  "@editAllWorkoutsDescription": {
+    "description": "Description of edit all workouts premium feature"
+  },
+  "warmupNotNeededForIsolation": "Isolation exercises don't need warmup sets",
+  "@warmupNotNeededForIsolation": {
+    "description": "Snackbar message when user tries to add warmup to an isolation exercise"
+  },
+  "generateAllWarmups": "Generate All Warmups",
+  "@generateAllWarmups": {
+    "description": "Menu option to generate warmup sets for all exercises in the workout"
+  },
+  "allWarmupsGenerated": "Warmup sets generated for {count} exercises",
+  "@allWarmupsGenerated": {
+    "description": "Snackbar message after generating warmup for all exercises",
+    "placeholders": {
+      "count": {
+        "type": "String",
+        "example": "3"
+      }
+    }
+  },
+  "noExercisesNeedWarmup": "No exercises need warmup sets",
+  "@noExercisesNeedWarmup": {
+    "description": "Snackbar message when no exercises qualify for warmup generation"
+  },
+  "workoutSettings": "Workout Settings",
+  "@workoutSettings": {
+    "description": "Menu option to open workout customization settings"
   }
 }
