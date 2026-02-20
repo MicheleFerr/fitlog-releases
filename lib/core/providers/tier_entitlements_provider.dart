@@ -45,7 +45,8 @@ final tierEntitlementsProvider = Provider<TierEntitlements>((ref) {
 class TierEntitlements {
   /// Create entitlements from XP tier only (legacy)
   TierEntitlements(this._tier)
-    : _accountTier = AccountTier.free;
+    : _quota = TemplateQuota.forUserTier(_tier),
+      _accountTier = AccountTier.free;
 
   /// Create consolidated entitlements (XP tier + Account tier)
   /// Takes the MAXIMUM of both tiers to ensure Premium users always
@@ -54,10 +55,15 @@ class TierEntitlements {
     required UserTier userTier,
     required AccountTier accountTier,
   }) : _tier = userTier,
-       _accountTier = accountTier;
+       _accountTier = accountTier,
+       _quota = TemplateQuota.consolidated(
+         userTier: userTier,
+         accountTier: accountTier,
+       );
 
   final UserTier _tier;
   final AccountTier _accountTier;
+  final TemplateQuota _quota;
 
   /// Current user tier (XP-based)
   UserTier get tier => _tier;
@@ -85,14 +91,14 @@ class TierEntitlements {
   bool get hasUnlimitedHistory => historyDaysLimit == null;
 
   // ============================================================
-  // ALL FEATURES NOW FREE (no XP gating)
+  // TEMPLATE LIMITS (XP tier gated)
   // ============================================================
 
-  /// Maximum private templates (unlimited for all)
-  int get maxTemplates => 999;
+  /// Maximum private templates (XP tier + account tier consolidated)
+  int get maxTemplates => _quota.maxPrivateTemplates;
 
-  /// Maximum public templates (unlimited for all)
-  int get maxPublicTemplates => 999;
+  /// Maximum public templates (XP tier + account tier consolidated)
+  int get maxPublicTemplates => _quota.maxPublicTemplates;
 
   /// Maximum custom single exercises (unlimited for all)
   int get maxCustomSingleExercises => 999;
