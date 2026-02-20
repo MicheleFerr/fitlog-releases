@@ -1650,9 +1650,66 @@ extension ConnectivityManager: WCSessionDelegate {
                     parseTemplates(templates)
                 }
 
+            case WatchMessageType.requestFullWorkoutSnapshot:
+                let snapshot = buildFullWorkoutSnapshot()
+                sendToiPhone(snapshot, critical: true, forceImmediate: true)
+
             default:
                 break
             }
+    }
+
+    /// Build a full snapshot of current Watch workout state for Phone crash recovery.
+    /// Serializes all @Published workout properties into a dictionary that the Phone
+    /// can use to merge with its stale Hive draft.
+    private func buildFullWorkoutSnapshot() -> [String: Any] {
+        var snapshot: [String: Any] = [
+            "type": WatchMessageType.fullWorkoutSnapshot,
+            "hasActiveWorkout": isWorkoutActive,
+            "timestamp": Date().timeIntervalSince1970,
+        ]
+
+        guard isWorkoutActive else { return snapshot }
+
+        snapshot["currentExerciseName"] = currentExerciseName
+        snapshot["currentExerciseIndex"] = currentExerciseIndex
+        snapshot["exerciseNames"] = exerciseNames
+        snapshot["currentSetNumber"] = currentSetNumber
+        snapshot["totalSets"] = totalSets
+        snapshot["targetWeight"] = targetWeight
+        snapshot["targetReps"] = targetReps
+        snapshot["setsCompleted"] = setsCompleted
+        snapshot["setsCompletedInExercise"] = setsCompletedInExercise
+
+        // Serialize allSetsTargets as array of dicts
+        snapshot["allSetsTargets"] = allSetsTargets.map { set -> [String: Any] in
+            var d: [String: Any] = [
+                "weight": set.weight,
+                "reps": set.reps,
+                "isCompleted": set.isCompleted,
+                "isWarmup": set.isWarmup,
+            ]
+            if let actualReps = set.actualReps {
+                d["actualReps"] = actualReps
+            }
+            return d
+        }
+
+        // Health metrics
+        snapshot["heartRate"] = currentHeartRate
+        snapshot["calories"] = 0.0  // Calories tracked via HealthKit, not stored here
+        snapshot["elapsedTime"] = 0.0  // Elapsed time tracked via HKWorkoutSession
+
+        // Advanced workout modes
+        snapshot["isSuperset"] = isSuperset
+        snapshot["isDropset"] = isDropset
+        snapshot["isRestPause"] = isRestPause
+
+        // Rest timer state
+        snapshot["restTimeRemaining"] = restTimeRemaining
+        snapshot["restTimeDuration"] = restTimeDuration
+
+        return snapshot
     }
 
     // Receive application context (state sync) - PRIMARY delivery method

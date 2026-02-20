@@ -61,4 +61,8 @@ enum WatchMessageType {
     // MARK: - Watch → iPhone (requests)
     static let requestWorkoutState = "requestWorkoutState"
     static let requestTemplates = "requestTemplates"
+
+    // MARK: - Recovery protocol (Phone crash recovery)
+    static let requestFullWorkoutSnapshot = "requestFullWorkoutSnapshot"
+    static let fullWorkoutSnapshot = "fullWorkoutSnapshot"
 }

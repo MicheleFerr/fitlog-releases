@@ -276,6 +276,9 @@ typedef OnRestPauseCompletedFromWatch =
       String? effortScale,
     });
 
+/// 📸 Recovery: Callback for full workout snapshot from Watch (crash recovery)
+typedef OnFullWorkoutSnapshotFromWatch = void Function(Map<String, dynamic> snapshot);
+
 /// Notifier that manages Apple Watch connectivity
 class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
   @override
@@ -315,6 +318,8 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
   // 🔥 REST-PAUSE callbacks
   OnRestPauseSetCompletedFromWatch? onRestPauseSetCompletedFromWatch;
   OnRestPauseCompletedFromWatch? onRestPauseCompletedFromWatch;
+  // 📸 Recovery callback
+  OnFullWorkoutSnapshotFromWatch? onFullWorkoutSnapshotFromWatch;
 
   /// Initialize watch connectivity
   Future<void> _initialize() async {
@@ -691,6 +696,15 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
         }
         return true;
 
+      case 'onFullWorkoutSnapshotFromWatch':
+        final args = call.arguments as Map<dynamic, dynamic>?;
+        if (args != null) {
+          final snapshot = Map<String, dynamic>.from(args);
+          _watchLog('⌚ [FLUTTER] 📸 Full workout snapshot from Watch (hasActive: ${snapshot['hasActiveWorkout']})');
+          onFullWorkoutSnapshotFromWatch?.call(snapshot);
+        }
+        return true;
+
       case 'onBackgroundDataReceived':
         // FIX: Handle transferUserInfo messages from Watch that arrived while app was dead.
         // These are queued by WCSession and delivered when app restarts.
@@ -887,6 +901,27 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
       if (kDebugMode) {
         _watchLog('Failed to open watch settings: $e');
       }
+    }
+  }
+
+  /// Request a full workout snapshot from Watch for crash recovery.
+  /// Returns true if the request was sent (Watch is reachable).
+  /// The actual snapshot arrives asynchronously via [onFullWorkoutSnapshotFromWatch].
+  Future<bool> requestWatchWorkoutSnapshot() async {
+    if (!Platform.isIOS) return false;
+
+    try {
+      final result = await _channel.invokeMethod<bool>(
+        'requestWatchWorkoutSnapshot',
+      );
+      _watchLog('⌚ [FLUTTER] Snapshot request result: $result');
+      return result ?? false;
+    } on PlatformException catch (e) {
+      _watchLog('⌚ [FLUTTER] Snapshot request failed: $e');
+      return false;
+    } catch (e) {
+      _watchLog('⌚ [FLUTTER] Snapshot request error: $e');
+      return false;
     }
   }
 

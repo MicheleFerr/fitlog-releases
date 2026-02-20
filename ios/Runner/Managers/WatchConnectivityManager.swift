@@ -287,6 +287,9 @@ final class WatchConnectivityManager: NSObject {
         case "clearPendingWatchCommands":
             handleClearPendingCommands(result: result)
 
+        case "requestWatchWorkoutSnapshot":
+            handleRequestWatchSnapshot(result: result)
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -944,6 +947,32 @@ final class WatchConnectivityManager: NSObject {
         result(true)
     }
 
+    // MARK: - Recovery Protocol
+
+    /// Request full workout snapshot from Watch for crash recovery.
+    /// Uses 2-message pattern: Phone sends request → Watch replies with separate message.
+    private func handleRequestWatchSnapshot(result: @escaping FlutterResult) {
+        guard let session = session, session.isReachable else {
+            Logger.shared.log(.info, "⌚ Watch not reachable for snapshot request", category: .general)
+            result(false)
+            return
+        }
+
+        let message: [String: Any] = [
+            "type": "requestFullWorkoutSnapshot",
+            "timestamp": Date().timeIntervalSince1970,
+        ]
+
+        session.sendMessage(message, replyHandler: { _ in
+            Logger.shared.log(.info, "⌚ Snapshot request sent to Watch", category: .general)
+        }) { error in
+            Logger.shared.log(.error, "⌚ Failed to send snapshot request: \(error)", category: .general)
+        }
+
+        // Return true = request sent (response comes as separate message)
+        result(true)
+    }
+
     // MARK: - Notify Flutter
     private func notifyFlutter(event: String, data: [String: Any]) {
         DispatchQueue.main.async { [weak self] in
@@ -1136,6 +1165,11 @@ extension WatchConnectivityManager: WCSessionDelegate {
         case "copyFromPreviousSet":
             Logger.shared.log(.info, "📋 Copy from previous set from Watch", category: .general)
             notifyFlutter(event: "onCopyFromPreviousSetFromWatch", data: message)
+            replyHandler(["success": true])
+
+        case "fullWorkoutSnapshot":
+            Logger.shared.log(.info, "📸 Full workout snapshot received from Watch for recovery", category: .general)
+            notifyFlutter(event: "onFullWorkoutSnapshotFromWatch", data: message)
             replyHandler(["success": true])
 
         default:

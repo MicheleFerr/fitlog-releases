@@ -35,6 +35,7 @@
 /// - AppLifecycleState.detached: App sta terminando (cleanup finale)
 library;
 
+import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
@@ -45,6 +46,7 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/shared/data/platform_channels.dart';
 import 'package:gymbro_flutter_new/shared/data/services/firestore_batch_writer.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_auto_save_provider.dart';
@@ -458,13 +460,28 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       debugPrint('💾 [AppLifecycle] Found recoverable draft! Waiting for Navigator...');
     }
 
+    // 📸 Try to get Watch snapshot for merge (runs in parallel with navigator wait)
+    // The Watch may have more recent data than the Hive draft (up to 30s stale)
+    Workout? draftWorkout;
+    try {
+      draftWorkout = await autoSave.recoverDraft();
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('💾 [AppLifecycle] Failed to load draft for merge: $e');
+      }
+    }
+
+    if (draftWorkout != null && Platform.isIOS) {
+      draftWorkout = await _requestAndMergeWatchSnapshot(draftWorkout);
+    }
+
     // Get localization
     final l10n = ref.read(appLocalizationsProvider);
 
     // CRITICAL FIX: Wait for Navigator to be ready before showing dialog.
     // AppLifecycleManager wraps MaterialApp, so Navigator doesn't exist until
     // MaterialApp is fully mounted. We use a retry loop with postFrameCallback.
-    await _showRecoveryDialogWhenReady(l10n, autoSave);
+    await _showRecoveryDialogWhenReady(l10n, autoSave, mergedDraft: draftWorkout);
   }
 
   /// Helper: Wait for Navigator to be ready, then show recovery dialog.
@@ -478,6 +495,7 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     AppLocalizations l10n,
     dynamic autoSave, {
     int retryCount = 0,
+    Workout? mergedDraft,
   }) async {
     const maxRetries = 20; // Max ~1s wait (20 frames at 60fps) - increased for cold starts
 
@@ -503,7 +521,7 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       // Retry on next frame
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          _showRecoveryDialogWhenReady(l10n, autoSave, retryCount: retryCount + 1);
+          _showRecoveryDialogWhenReady(l10n, autoSave, retryCount: retryCount + 1, mergedDraft: mergedDraft);
         }
       });
       return;
@@ -519,7 +537,7 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       final shouldRecover = await _showRecoveryDialog(navigatorContext, l10n);
       // Re-check contexts are still valid after async gap
       if (mounted && navigatorContext.mounted) {
-        await _handleRecoveryChoice(shouldRecover, autoSave, l10n, navigatorContext);
+        await _handleRecoveryChoice(shouldRecover, autoSave, l10n, navigatorContext, mergedDraft: mergedDraft);
       }
     } catch (e, stack) {
       // Catch any remaining Navigator errors (e.g., context became invalid)
@@ -563,11 +581,12 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     bool? shouldRecover,
     dynamic autoSave,
     AppLocalizations l10n,
-    BuildContext navigatorContext,
-  ) async {
+    BuildContext navigatorContext, {
+    Workout? mergedDraft,
+  }) async {
     if (shouldRecover == true) {
-      // Recover the draft
-      final recoveredWorkout = await autoSave.recoverDraft();
+      // Use pre-loaded merged draft if available, otherwise recover from storage
+      final recoveredWorkout = mergedDraft ?? await autoSave.recoverDraft();
       // Check both widget mounted and navigator context still valid after async gap
       if (recoveredWorkout != null && mounted && navigatorContext.mounted) {
         ref.read(currentWorkoutProvider.notifier).restoreFromDraft(recoveredWorkout);
@@ -591,6 +610,159 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       if (kDebugMode) {
         debugPrint('💾 [AppLifecycle] Draft discarded by user');
       }
+    }
+  }
+
+  /// 📸 Request a full workout snapshot from Watch and merge with draft.
+  ///
+  /// Uses a 2-message pattern (request → separate response) because the Watch
+  /// discards the replyHandler. Waits up to 3 seconds for the Watch response.
+  /// If Watch is unreachable or times out, returns the draft unchanged.
+  Future<Workout> _requestAndMergeWatchSnapshot(Workout draft) async {
+    try {
+      final watchNotifier = ref.read(watchConnectivityProvider.notifier);
+
+      // Setup Completer to receive async snapshot
+      final completer = Completer<Map<String, dynamic>?>();
+      Timer? timeoutTimer;
+
+      // Register one-shot callback
+      final previousCallback = watchNotifier.onFullWorkoutSnapshotFromWatch;
+      watchNotifier.onFullWorkoutSnapshotFromWatch = (snapshot) {
+        timeoutTimer?.cancel();
+        watchNotifier.onFullWorkoutSnapshotFromWatch = previousCallback;
+        if (!completer.isCompleted) {
+          completer.complete(snapshot);
+        }
+      };
+
+      // Send request to Watch
+      final sent = await watchNotifier.requestWatchWorkoutSnapshot();
+      if (!sent) {
+        // Watch not reachable, restore callback and return draft as-is
+        watchNotifier.onFullWorkoutSnapshotFromWatch = previousCallback;
+        if (kDebugMode) {
+          debugPrint('📸 [AppLifecycle] Watch not reachable, using draft as-is');
+        }
+        return draft;
+      }
+
+      // Start timeout
+      timeoutTimer = Timer(const Duration(seconds: 3), () {
+        watchNotifier.onFullWorkoutSnapshotFromWatch = previousCallback;
+        if (!completer.isCompleted) {
+          completer.complete(null);
+        }
+      });
+
+      final snapshot = await completer.future;
+
+      if (snapshot == null || snapshot['hasActiveWorkout'] != true) {
+        if (kDebugMode) {
+          debugPrint('📸 [AppLifecycle] No active Watch workout, using draft as-is');
+        }
+        return draft;
+      }
+
+      if (kDebugMode) {
+        debugPrint('📸 [AppLifecycle] Got Watch snapshot, merging with draft...');
+      }
+
+      return _mergeWatchSnapshotIntoDraft(snapshot, draft);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('📸 [AppLifecycle] Watch snapshot error: $e, using draft as-is');
+      }
+      return draft;
+    }
+  }
+
+  /// Merge Watch workout snapshot into Hive draft.
+  ///
+  /// The Watch knows which sets are completed (via its allSetsTargets).
+  /// The draft has the full Workout model. We update the draft's sets
+  /// based on Watch data for the current exercise.
+  Workout _mergeWatchSnapshotIntoDraft(
+    Map<String, dynamic> snapshot,
+    Workout draft,
+  ) {
+    try {
+      final exerciseIndex = snapshot['currentExerciseIndex'] as int? ?? 0;
+      final exerciseName = snapshot['currentExerciseName'] as String?;
+      final watchSets = snapshot['allSetsTargets'] as List<dynamic>?;
+
+      if (watchSets == null || watchSets.isEmpty) {
+        if (kDebugMode) {
+          debugPrint('📸 [Merge] No Watch sets data, returning draft');
+        }
+        return draft;
+      }
+
+      // Validate exercise index is within bounds
+      if (exerciseIndex < 0 || exerciseIndex >= draft.exercises.length) {
+        if (kDebugMode) {
+          debugPrint('📸 [Merge] Exercise index $exerciseIndex out of bounds (${draft.exercises.length}), skipping');
+        }
+        return draft;
+      }
+
+      final draftExercise = draft.exercises[exerciseIndex];
+
+      // Cross-check exercise name if available
+      if (exerciseName != null && draftExercise.name != exerciseName) {
+        if (kDebugMode) {
+          debugPrint('📸 [Merge] Exercise name mismatch: Watch="$exerciseName" vs Draft="${draftExercise.name}", skipping');
+        }
+        return draft;
+      }
+
+      // Merge sets: for each Watch set marked as completed, update draft
+      final updatedSets = List<ExerciseSet>.from(draftExercise.sets);
+      var mergeCount = 0;
+
+      for (var i = 0; i < watchSets.length && i < updatedSets.length; i++) {
+        final watchSet = watchSets[i] as Map<dynamic, dynamic>?;
+        if (watchSet == null) continue;
+
+        final watchCompleted = watchSet['isCompleted'] as bool? ?? false;
+        if (watchCompleted && !updatedSets[i].isCompleted) {
+          // Watch says completed but draft says not — update from Watch
+          final actualReps = (watchSet['actualReps'] as num?)?.toInt();
+          updatedSets[i] = updatedSets[i].copyWith(
+            isCompleted: true,
+            actualReps: actualReps ?? updatedSets[i].reps,
+          );
+          mergeCount++;
+        }
+      }
+
+      if (mergeCount == 0) {
+        if (kDebugMode) {
+          debugPrint('📸 [Merge] No new completions from Watch, draft is up-to-date');
+        }
+        return draft;
+      }
+
+      // Build updated exercise
+      final updatedExercise = draftExercise.copyWith(sets: updatedSets);
+
+      // Build updated exercises list
+      final updatedExercises = List<Exercise>.from(draft.exercises);
+      updatedExercises[exerciseIndex] = updatedExercise;
+
+      if (kDebugMode) {
+        debugPrint('📸 [Merge] Merged $mergeCount set completions from Watch for "${draftExercise.name}"');
+      }
+
+      return draft.copyWith(
+        exercises: updatedExercises,
+        updatedAt: DateTime.now(),
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('📸 [Merge] Error during merge: $e, returning draft');
+      }
+      return draft;
     }
   }
 
