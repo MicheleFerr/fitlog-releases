@@ -57,11 +57,10 @@ class WorkoutAutoSaveNotifier extends Notifier<WorkoutAutoSaveState> {
   late final Debouncer _saveDebouncer;
   Workout? _lastSavedWorkout;
 
-  // FIX #2: Reduced auto-save interval to prevent workout data loss
-  // Previous value (10 minutes) was too long - if iOS kills the app,
-  // user could lose up to 10 minutes of workout progress.
-  // 2 minutes is a better balance between battery usage and data safety.
-  static const Duration _autoSaveInterval = Duration(minutes: 2);
+  // FIX: Reduced auto-save interval to 30s to minimize data loss on iOS jettison.
+  // Previous: 10min → 2min → now 30s. The save is lightweight (Hive write, ~1ms)
+  // and only triggers if workout actually changed, so battery impact is negligible.
+  static const Duration _autoSaveInterval = Duration(seconds: 30);
   static const Duration _debounceDelay = Duration(seconds: 1);
 
   @override

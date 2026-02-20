@@ -20,6 +20,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/data/services/workout_session_la_service.dart'
     show WorkoutSessionMode;
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_auto_save_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart' show WorkoutStatus;
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/timer/domain/services/notification_service.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
@@ -146,6 +148,31 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         }
       }
     }
+
+    // FIX: Handle iOS memory warning — emergency save workout to prevent data loss
+    if (call.method == 'onMemoryWarning') {
+      if (kDebugMode) {
+        debugPrint('⚠️ [MEMORY WARNING] iOS memory pressure — emergency saving workout');
+      }
+      try {
+        final currentWorkout = ref.read(currentWorkoutProvider);
+        if (currentWorkout != null &&
+            (currentWorkout.status == WorkoutStatus.inProgress ||
+             currentWorkout.status == WorkoutStatus.paused)) {
+          final autoSave = ref.read(workoutAutoSaveProvider.notifier);
+          await autoSave.emergencySave(currentWorkout);
+          if (kDebugMode) {
+            debugPrint('✅ [MEMORY WARNING] Emergency save completed');
+          }
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('❌ [MEMORY WARNING] Emergency save failed: $e');
+        }
+      }
+      return null;
+    }
+
     return null;
   }
 

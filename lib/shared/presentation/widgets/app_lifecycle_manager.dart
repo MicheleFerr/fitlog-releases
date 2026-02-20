@@ -197,8 +197,8 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       if (kDebugMode) {
         debugPrint('📱 [AppLifecycle] App detaching, performing final cleanup');
       }
-      // Final cleanup se necessario
-      // Il dispose del provider gestirà il flush finale
+      // FIX: Emergency save on detached — iOS may kill without passing through paused
+      _emergencySaveCurrentWorkout();
     }
   }
 

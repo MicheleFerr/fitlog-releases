@@ -127,7 +127,27 @@ import FirebaseCore
         // AUTO-DISMISS: Clean up timer notifications older than 60 seconds
         DirectNotificationManager.shared.cleanupOldTimerNotifications(olderThanSeconds: 60)
     }
-    
+
+    // MARK: - Memory Warning
+
+    override func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
+        super.applicationDidReceiveMemoryWarning(application)
+
+        Logger.shared.log(.warning, "⚠️ Memory warning received — notifying Flutter and clearing caches", category: .general)
+
+        // Notify Flutter to emergency-save workout and shed memory
+        if let controller = window?.rootViewController as? FlutterViewController {
+            let channel = FlutterMethodChannel(
+                name: ChannelNames.unified,
+                binaryMessenger: controller.binaryMessenger
+            )
+            channel.invokeMethod("onMemoryWarning", arguments: nil)
+        }
+
+        // Clear native image caches
+        URLCache.shared.removeAllCachedResponses()
+    }
+
     // MARK: - Notification Categories Setup
     
     private func setupNotificationCategories() {

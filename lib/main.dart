@@ -139,8 +139,10 @@ void main() async {
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
   // Capture errors outside Flutter (async errors, platform errors)
+  // FIX: Use fatal: false — these are unhandled async errors, not actual crashes.
+  // fatal: true was making all errors appear as crashes in Crashlytics, masking real issues.
   PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: false);
     return true;
   };
   if (kDebugMode) {
@@ -396,9 +398,10 @@ void main() async {
 
   // Enable Firestore offline persistence for better performance and offline support
   // This allows the app to work offline and reduces Firebase read costs by 50-70%
+  // FIX: Limit cache to 100MB to prevent unbounded memory growth causing iOS jettison
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,
-    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+    cacheSizeBytes: 100 * 1024 * 1024, // 100MB (was CACHE_SIZE_UNLIMITED)
   );
 
   // Initialize GDPR Consent (PRIMA delle ads!)

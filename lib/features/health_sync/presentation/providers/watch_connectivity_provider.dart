@@ -691,6 +691,44 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
         }
         return true;
 
+      case 'onBackgroundDataReceived':
+        // FIX: Handle transferUserInfo messages from Watch that arrived while app was dead.
+        // These are queued by WCSession and delivered when app restarts.
+        final args = call.arguments as Map<dynamic, dynamic>?;
+        if (args != null) {
+          final type = args['type'] as String?;
+          _watchLog(
+            '⌚ [FLUTTER] 📦 Background data received from Watch: type=$type',
+          );
+          // Re-dispatch based on message type to the appropriate handler
+          switch (type) {
+            case 'setCompleted':
+              final effort = args['effort'] as int?;
+              final effortScale = args['effortScale'] as String?;
+              onSetCompletedFromWatch?.call(
+                effort: effort,
+                effortScale: effortScale,
+              );
+            case 'endWorkout':
+              final save = args['save'] as bool? ?? true;
+              onEndWorkoutFromWatch?.call(save: save);
+            case 'setModification':
+              final weight = (args['weight'] as num?)?.toDouble() ?? 0;
+              final reps = (args['reps'] as num?)?.toInt() ?? 0;
+              final setNumber = (args['setNumber'] as num?)?.toInt() ?? 1;
+              onSetModificationFromWatch?.call(weight, reps, setNumber: setNumber);
+            case 'skipRest':
+              onSkipRestFromWatch?.call();
+            case 'pauseWorkout':
+              onPauseWorkoutFromWatch?.call();
+            default:
+              _watchLog(
+                '⌚ [FLUTTER] 📦 Unhandled background data type: $type',
+              );
+          }
+        }
+        return true;
+
       default:
         _watchLog('⌚ [FLUTTER] Unknown method: ${call.method}');
         return null;

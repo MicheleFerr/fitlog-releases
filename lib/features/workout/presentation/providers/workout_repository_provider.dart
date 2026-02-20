@@ -45,12 +45,19 @@ final workoutRepositoryProvider = Provider<WorkoutRepository>((ref) {
   final auth = FirebaseAuth.instance;
   final analyticsRepository = ref.watch(analyticsRepositoryProvider);
 
-  return HybridWorkoutRepositoryImpl(
+  final repo = HybridWorkoutRepositoryImpl(
     localDataSource: localDataSource,
     remoteDataSource: remoteDataSource,
     auth: auth,
     analyticsRepository: analyticsRepository,
   );
+
+  // FIX: Dispose repository to cancel auth/connectivity subscriptions and sync timers
+  ref.onDispose(() {
+    repo.dispose();
+  });
+
+  return repo;
 });
 
 /// Provider for workout sync service (for premium users)

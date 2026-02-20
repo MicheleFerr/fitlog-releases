@@ -316,6 +316,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // Imposta il workout e lo avvia automaticamente
       state = workout.startWorkout();
 
+      // 💾 FIX: Start auto-save for template workouts (was missing, causing data loss on crash)
+      ref.read(workoutAutoSaveProvider.notifier).startAutoSave(state!);
+
       // 📊 Track workout started from template
       final analytics = ref.read(analyticsServiceProvider);
       final tracker = WorkoutEventTracker(analytics);
