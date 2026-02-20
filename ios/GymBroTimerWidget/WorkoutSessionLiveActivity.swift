@@ -148,7 +148,7 @@ struct RestModeView: View {
                    let endDate = context.state.restEndDate {
                     // Running: show countdown timer
                     // .id(endDate) forces SwiftUI to recreate the view when restEndDate changes
-                    // (e.g. after +30s tap), ensuring the timer animation restarts from new end time
+                    // (e.g. after +15s tap), ensuring the timer animation restarts from new end time
                     Text(timerInterval: startDate...endDate, countsDown: true)
                         .font(.system(size: 36, weight: .bold, design: .monospaced))
                         .foregroundColor(context.state.restUrgencyColor)
@@ -182,7 +182,7 @@ struct RestModeView: View {
                 )
                 .progressViewStyle(LinearProgressViewStyle())
                 .tint(context.state.restUrgencyColor)
-                .id(endDate)  // Force recreate when restEndDate changes (+30s)
+                .id(endDate)  // Force recreate when restEndDate changes (+15s)
             } else if context.state.isPaused {
                 // Show static progress bar when paused
                 let remaining = context.state.pausedRemainingSeconds ?? context.state.restRemainingSeconds
@@ -218,7 +218,7 @@ struct RestModeView: View {
                 Button(intent: WorkoutAddTimeIntent()) {
                     HStack(spacing: 4) {
                         Image(systemName: "plus")
-                        Text("+30s")
+                        Text("15")
                             .fontWeight(.medium)
                     }
                     .frame(maxWidth: .infinity, minHeight: 44)

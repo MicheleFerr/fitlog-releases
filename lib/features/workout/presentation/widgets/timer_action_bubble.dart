@@ -205,7 +205,7 @@ class _TimerActionBubbleState extends ConsumerState<TimerActionBubble>
                         label: context.l10n.timerActionExtend,
                         onTap: () {
                           HapticFeedback.mediumImpact();
-                          ref.read(unifiedTimerProvider.notifier).addTime(30);
+                          ref.read(unifiedTimerProvider.notifier).addTime(15);
                           _closeBubble();
                         },
                       ),

@@ -317,12 +317,12 @@ private struct TimerProgressBar: View {
                           }
                           .buttonStyle(.plain)
 
-                          // Add 30s Button
+                          // Add 15s Button
                           Button(intent: AddTimeIntent()) {
                               HStack(spacing: 6) {
                                   Image(systemName: "plus.circle.fill")
                                       .font(.system(size: 14, weight: .semibold))
-                                  Text("+30s")
+                                  Text("15")
                                       .font(.system(size: 14, weight: .semibold))
                               }
                               .frame(maxWidth: .infinity)

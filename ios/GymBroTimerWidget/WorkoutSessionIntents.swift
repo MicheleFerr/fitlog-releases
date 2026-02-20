@@ -213,8 +213,8 @@ struct WorkoutAddTimeIntent: LiveActivityIntent {
             // Only extend if in rest mode with valid dates
             if currentState.mode == .rest,
                let currentEndDate = currentState.restEndDate {
-                let newEndDate = currentEndDate.addingTimeInterval(30)
-                let newTotalSeconds = currentState.restTotalSeconds + 30
+                let newEndDate = currentEndDate.addingTimeInterval(15)
+                let newTotalSeconds = currentState.restTotalSeconds + 15
 
                 print("⏰ [WorkoutAddTimeIntent] Extending: oldEnd=\(currentEndDate), newEnd=\(newEndDate)")
                 print("   - isPaused: \(currentState.isPaused)")
@@ -228,8 +228,8 @@ struct WorkoutAddTimeIntent: LiveActivityIntent {
                 // because that's what the UI displays when paused
                 if currentState.isPaused {
                     let currentPausedRemaining = currentState.pausedRemainingSeconds ?? currentState.restRemainingSeconds
-                    updatedState.pausedRemainingSeconds = currentPausedRemaining + 30
-                    print("⏸️ [WorkoutAddTimeIntent] Timer is paused, updating pausedRemainingSeconds: \(currentPausedRemaining) -> \(currentPausedRemaining + 30)")
+                    updatedState.pausedRemainingSeconds = currentPausedRemaining + 15
+                    print("⏸️ [WorkoutAddTimeIntent] Timer is paused, updating pausedRemainingSeconds: \(currentPausedRemaining) -> \(currentPausedRemaining + 15)")
                 }
 
                 print("📊 [WorkoutAddTimeIntent] UPDATING to:")
@@ -286,7 +286,7 @@ struct WorkoutAddTimeIntent: LiveActivityIntent {
         saveEventToUserDefaults(
             eventType: .addTime,
             additionalData: [
-                "addedSeconds": 30,
+                "addedSeconds": 15,
                 "timestamp": Date().timeIntervalSince1970 * 1000
             ]
         )
@@ -619,8 +619,11 @@ private func cancelRestTimerNotification() async {
 }
 
 // MARK: - Helper Function
-@available(iOS 17.0, *)
-private func saveEventToUserDefaults(
+/// Shared helper: saves event to UserDefaults and posts Darwin notification.
+/// Used by both WorkoutSession intents (iOS 17+) and GymBroTimer intents (iOS 16.1+).
+/// Must be non-private so AppIntent.swift can call it from the same target.
+@available(iOS 16.1, *)
+func saveEventToUserDefaults(
     eventType: WorkoutSessionEventType,
     additionalData: [String: Any]
 ) {

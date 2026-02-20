@@ -482,8 +482,8 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
       // User tapped "Salta" - skip rest timer
       workoutNotifier.skipRestTimerFromLiveActivity();
     } else if (event.isAddTime) {
-      // User tapped "+30s" - extend rest timer
-      final addedSeconds = event.addedSeconds ?? 30;
+      // User tapped "+15s" - extend rest timer
+      final addedSeconds = event.addedSeconds ?? 15;
       debugPrint(
         '[WorkoutSessionLA] 📨 Received add_time event: +$addedSeconds seconds',
       );
@@ -512,6 +512,18 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
       final confirmedRPE = event.confirmedRPE;
       if (confirmedRPE != null) {
         workoutNotifier.confirmRPEFromLiveActivity(confirmedRPE);
+      }
+    } else if (event.isPauseResume) {
+      // User tapped pause/resume on Live Activity lock screen
+      debugPrint('[WorkoutSessionLA] ⏯️ Processing pause_resume event');
+      final timerNotifier = ref.read(unifiedTimerProvider.notifier);
+      final timerState = ref.read(unifiedTimerProvider);
+      if (timerState != null && timerState.isActive) {
+        if (timerState.isPaused) {
+          timerNotifier.resumeTimer();
+        } else {
+          timerNotifier.pauseTimer();
+        }
       }
     }
   }

@@ -26959,7 +26959,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timerActionPause => 'Pause';
 
   @override
-  String get timerActionExtend => '+15s';
+  String get timerActionExtend => '15';
 
   @override
   String get timerActionSkip => 'Skip';

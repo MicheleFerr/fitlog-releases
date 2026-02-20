@@ -48239,7 +48239,7 @@ abstract class AppLocalizations {
   /// Timer action bubble - extend button
   ///
   /// In en, this message translates to:
-  /// **'+15s'**
+  /// **'15'**
   String get timerActionExtend;
 
   /// Timer action bubble - skip button

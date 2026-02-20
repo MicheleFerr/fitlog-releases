@@ -27216,7 +27216,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get timerActionPause => 'Pausa';
 
   @override
-  String get timerActionExtend => '+15s';
+  String get timerActionExtend => '15';
 
   @override
   String get timerActionSkip => 'Salta';

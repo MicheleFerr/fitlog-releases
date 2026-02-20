@@ -31,7 +31,7 @@ struct AddTimeIntent: LiveActivityIntent {
         // Find the current activity and update it directly
         if let activity = Activity<GymBroTimerAttributes>.activities.first {
             let currentState = activity.content.state
-            let newRemainingSeconds = currentState.remainingSeconds + 30
+            let newRemainingSeconds = currentState.remainingSeconds + 15
             let newTotalSeconds = max(currentState.totalSeconds, newRemainingSeconds)
 
             // ✅ CRITICAL FIX: Recalculate startDate and endDate for native iOS timer
@@ -69,27 +69,25 @@ struct AddTimeIntent: LiveActivityIntent {
                 )
             )
             
-            // Salva evento per Flutter tramite UserDefaults condivisi
-            let userDefaults = UserDefaults(suiteName: "group.com.michele.gymbro.flutter")
-            let eventData: [String: Any] = [
-                "remainingSeconds": newRemainingSeconds,
-                "totalSeconds": newTotalSeconds,
-                "isRunning": currentState.isRunning,
-                "currentSet": currentState.currentSet,
-                "totalSets": currentState.totalSets,
-                "lastUpdated": Date().timeIntervalSince1970 * 1000,
-                "activityId": activity.id,
-                "eventType": "add_time"
-            ]
-            userDefaults?.set(eventData, forKey: "timer_event")
+            // 🔧 FIX: Use shared event pipeline (Darwin notification + correct UserDefaults key)
+            // Previously wrote to "timer_event" which nobody read. Now uses "workout_session_event"
+            // key + Darwin notification, same as WorkoutSessionIntents.swift.
+            saveEventToUserDefaults(
+                eventType: .addTime,
+                additionalData: [
+                    "addedSeconds": 15,
+                    "activityId": activity.id
+                ]
+            )
 
             // FIX C4: Cancel the original scheduled notification and reschedule it for the
             // new end time. Without this, the notification fires at the OLD time (before the
             // extended timer ends), causing a premature sound alert to the user.
             if currentState.isRunning {
+                let sharedDefaults = UserDefaults(suiteName: "group.com.michele.gymbro.flutter")
                 await rescheduleTimerNotification(
                     remainingSeconds: newRemainingSeconds,
-                    userDefaults: userDefaults
+                    userDefaults: sharedDefaults
                 )
             }
         }
@@ -142,19 +140,15 @@ struct PauseResumeIntent: LiveActivityIntent {
                 )
             )
             
-            // 🔥 NUOVO: Salva evento per Flutter tramite UserDefaults condivisi
-            let userDefaults = UserDefaults(suiteName: "group.com.michele.gymbro.flutter")
-            let eventData: [String: Any] = [
-                "remainingSeconds": currentState.remainingSeconds,
-                "totalSeconds": currentState.totalSeconds,
-                "isRunning": newIsRunning,
-                "currentSet": currentState.currentSet,
-                "totalSets": currentState.totalSets,
-                "lastUpdated": Date().timeIntervalSince1970 * 1000,
-                "activityId": activity.id,
-                "eventType": "pause_resume"
-            ]
-            userDefaults?.set(eventData, forKey: "timer_event")
+            // 🔧 FIX: Use shared event pipeline (Darwin notification + correct UserDefaults key)
+            saveEventToUserDefaults(
+                eventType: .pauseResume,
+                additionalData: [
+                    "isPaused": !newIsRunning,
+                    "remainingSeconds": currentState.remainingSeconds,
+                    "activityId": activity.id
+                ]
+            )
 
         }
         return .result()
@@ -191,21 +185,14 @@ struct SkipTimerIntent: LiveActivityIntent {
                 )
             )
 
-            // 🔥 CRITICAL: Signal skip to main app via UserDefaults
-            // The main app will cancel background audio when it detects this event
-            let userDefaults = UserDefaults(suiteName: "group.com.michele.gymbro.flutter")
-            let eventData: [String: Any] = [
-                "remainingSeconds": 0,
-                "totalSeconds": currentState.totalSeconds,
-                "isRunning": false,
-                "currentSet": currentState.currentSet,
-                "totalSets": currentState.totalSets,
-                "lastUpdated": Date().timeIntervalSince1970 * 1000,
-                "activityId": activity.id,
-                "eventType": "skip",
-                "audioSkipped": true  // Flag to indicate audio should not play
-            ]
-            userDefaults?.set(eventData, forKey: "timer_event")
+            // 🔧 FIX: Use shared event pipeline (Darwin notification + correct UserDefaults key)
+            saveEventToUserDefaults(
+                eventType: .skipRest,
+                additionalData: [
+                    "audioSkipped": true,
+                    "activityId": activity.id
+                ]
+            )
 
             // MEDIO-8 FIX: End the Live Activity immediately after skip.
             // Previously the activity was updated to remainingSeconds=0 but never
@@ -246,19 +233,13 @@ struct CompleteSetIntent: LiveActivityIntent {
                 )
             )
             
-            // 🔥 NUOVO: Salva evento per Flutter tramite UserDefaults condivisi
-            let userDefaults = UserDefaults(suiteName: "group.com.michele.gymbro.flutter")
-            let eventData: [String: Any] = [
-                "remainingSeconds": currentState.remainingSeconds,
-                "totalSeconds": currentState.totalSeconds,
-                "isRunning": currentState.isRunning,
-                "currentSet": nextSet,
-                "totalSets": currentState.totalSets,
-                "lastUpdated": Date().timeIntervalSince1970 * 1000,
-                "activityId": activity.id,
-                "eventType": "complete_set"
-            ]
-            userDefaults?.set(eventData, forKey: "timer_event")
+            // 🔧 FIX: Use shared event pipeline (Darwin notification + correct UserDefaults key)
+            saveEventToUserDefaults(
+                eventType: .completeSet,
+                additionalData: [
+                    "activityId": activity.id
+                ]
+            )
 
         }
         return .result()
