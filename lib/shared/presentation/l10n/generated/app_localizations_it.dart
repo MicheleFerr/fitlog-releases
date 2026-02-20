@@ -3836,7 +3836,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get insights => 'Insight';
 
   @override
-  String get muscleBalance => 'Bilanciamento Muscoli';
+  String get muscleBalance => 'Bilanciamento Muscolare';
 
   @override
   String get allExercises => 'Tutti gli esercizi';
@@ -6432,7 +6432,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get errorTitleValidation => 'Errore di Validazione';
 
   @override
-  String get pushPullRatio => 'Rapporto Spinta/Trazione';
+  String get pushPullRatio => 'Push/Pull';
 
   @override
   String get quadHamstringRatio => 'Rapporto Quadricipiti:Ischiocrurali';
@@ -22425,7 +22425,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get balanceRatingPoor => 'Scarso';
 
   @override
-  String get upperLowerRatio => 'Rapporto Superiore/Inferiore';
+  String get upperLowerRatio => 'Alto/Basso';
 
   @override
   String optimalRatio(String ratio) {
@@ -27216,7 +27216,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get timerActionPause => 'Pausa';
 
   @override
-  String get timerActionExtend => '+30s';
+  String get timerActionExtend => '+15s';
 
   @override
   String get timerActionSkip => 'Salta';
@@ -28009,4 +28009,28 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get noSelectedExercises => 'Nessun esercizio selezionato';
+
+  @override
+  String get addExercisesForMuscleAnalysis =>
+      'Aggiungi esercizi per vedere l\'analisi muscolare';
+
+  @override
+  String get muscleWarning => 'Sbilanciamento rilevato';
+
+  @override
+  String get muscleCovered => 'Coperto';
+
+  @override
+  String get muscleNeglected => 'Trascurato';
+
+  @override
+  String get muscleOverview => 'Panoramica Muscolare';
+
+  @override
+  String get perTemplate => 'Per Template';
+
+  @override
+  String totalSetsCount(int count) {
+    return '$count serie totali';
+  }
 }

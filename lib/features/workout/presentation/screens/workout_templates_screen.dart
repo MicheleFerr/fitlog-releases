@@ -37,6 +37,7 @@ import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/core/config/feature_flags.dart';
 import 'package:gymbro_flutter_new/features/workout_import/presentation/screens/workout_import_screen.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/all_templates_muscle_overview.dart';
 
 class WorkoutTemplatesScreen extends ConsumerStatefulWidget {
   const WorkoutTemplatesScreen({super.key});
@@ -318,12 +319,11 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
 
   Widget _buildAllTemplatesTab() {
     final searchQuery = ref.watch(templateSearchQueryProvider);
+    // Always load all templates for the muscle overview
+    final allTemplatesAsync = ref.watch(customWorkoutTemplatesProvider);
 
     if (searchQuery.isEmpty) {
-      // LEGACY SYSTEM: Usa il repository legacy
-      final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
-
-      return templatesAsync.when(
+      return allTemplatesAsync.when(
         loading: () => const Center(child: LoadingIndicator()),
         error: (error, stack) => Center(
           child: Column(
@@ -345,7 +345,12 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             ],
           ),
         ),
-        data: (templates) => _buildTemplatesList(templates),
+        data: (templates) => Column(
+          children: [
+            AllTemplatesMuscleOverview(templates: templates),
+            Expanded(child: _buildTemplatesList(templates)),
+          ],
+        ),
       );
     } else {
       final searchResultsAsync = ref.watch(templateSearchResultsProvider);
@@ -353,7 +358,15 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
       return searchResultsAsync.when(
         loading: () => const Center(child: LoadingIndicator()),
         error: (error, stack) => Center(child: Text(context.l10n.erroreError)),
-        data: (templates) => _buildTemplatesList(templates),
+        data: (filteredTemplates) {
+          final allTemplates = allTemplatesAsync.value ?? [];
+          return Column(
+            children: [
+              AllTemplatesMuscleOverview(templates: allTemplates),
+              Expanded(child: _buildTemplatesList(filteredTemplates)),
+            ],
+          );
+        },
       );
     }
   }

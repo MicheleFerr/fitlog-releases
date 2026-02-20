@@ -20397,7 +20397,7 @@
   "@timerActionPause": {
     "description": "Timer action bubble - pause button"
   },
-  "timerActionExtend": "+30s",
+  "timerActionExtend": "15",
   "@timerActionExtend": {
     "description": "Timer action bubble - extend button"
   },
@@ -20938,5 +20938,15 @@
   "exerciseFilterCreated": "Creati",
   "exerciseFilterSelected": "Già scelti",
   "noSelectedExercises": "Nessun esercizio selezionato",
-  "noCustomExercises": "Nessun esercizio creato"
+  "noCustomExercises": "Nessun esercizio creato",
+  "muscleBalance": "Bilanciamento Muscolare",
+  "pushPullRatio": "Push/Pull",
+  "upperLowerRatio": "Alto/Basso",
+  "addExercisesForMuscleAnalysis": "Aggiungi esercizi per vedere l'analisi muscolare",
+  "muscleWarning": "Sbilanciamento rilevato",
+  "muscleCovered": "Coperto",
+  "muscleNeglected": "Trascurato",
+  "muscleOverview": "Panoramica Muscolare",
+  "perTemplate": "Per Template",
+  "totalSetsCount": "{count} serie totali"
 }

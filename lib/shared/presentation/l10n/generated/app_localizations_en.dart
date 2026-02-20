@@ -6379,7 +6379,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorTitleValidation => 'Validation Error';
 
   @override
-  String get pushPullRatio => 'Push/Pull Ratio';
+  String get pushPullRatio => 'Push/Pull';
 
   @override
   String get quadHamstringRatio => 'Quad:Hamstring Ratio';
@@ -22220,7 +22220,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get balanceRatingPoor => 'Poor';
 
   @override
-  String get upperLowerRatio => 'Upper/Lower Ratio';
+  String get upperLowerRatio => 'Upper/Lower';
 
   @override
   String optimalRatio(String ratio) {
@@ -26959,7 +26959,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timerActionPause => 'Pause';
 
   @override
-  String get timerActionExtend => '+30s';
+  String get timerActionExtend => '+15s';
 
   @override
   String get timerActionSkip => 'Skip';
@@ -27738,4 +27738,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noSelectedExercises => 'No exercises selected yet';
+
+  @override
+  String get addExercisesForMuscleAnalysis =>
+      'Add exercises to see muscle analysis';
+
+  @override
+  String get muscleWarning => 'Imbalance detected';
+
+  @override
+  String get muscleCovered => 'Covered';
+
+  @override
+  String get muscleNeglected => 'Neglected';
+
+  @override
+  String get muscleOverview => 'Muscle Overview';
+
+  @override
+  String get perTemplate => 'Per Template';
+
+  @override
+  String totalSetsCount(int count) {
+    return '$count total sets';
+  }
 }

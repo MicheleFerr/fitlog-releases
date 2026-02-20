@@ -33095,7 +33095,7 @@
   "@timerActionPause": {
     "description": "Timer action bubble - pause button"
   },
-  "timerActionExtend": "+30s",
+  "timerActionExtend": "15",
   "@timerActionExtend": {
     "description": "Timer action bubble - extend button"
   },
@@ -34044,5 +34044,50 @@
   "noCustomExercises": "No custom exercises created yet",
   "@noCustomExercises": {
     "description": "Empty state when no custom exercises exist"
+  },
+  "muscleBalance": "Muscle Balance",
+  "@muscleBalance": {
+    "description": "Title for template muscle balance analysis section"
+  },
+  "pushPullRatio": "Push/Pull",
+  "@pushPullRatio": {
+    "description": "Label for push/pull muscle ratio"
+  },
+  "upperLowerRatio": "Upper/Lower",
+  "@upperLowerRatio": {
+    "description": "Label for upper/lower body muscle ratio"
+  },
+  "addExercisesForMuscleAnalysis": "Add exercises to see muscle analysis",
+  "@addExercisesForMuscleAnalysis": {
+    "description": "Empty state message for muscle analysis when no exercises are added"
+  },
+  "muscleWarning": "Imbalance detected",
+  "@muscleWarning": {
+    "description": "Warning message when muscle imbalance is detected"
+  },
+  "muscleCovered": "Covered",
+  "@muscleCovered": {
+    "description": "Label for muscles that are well covered in the template"
+  },
+  "muscleNeglected": "Neglected",
+  "@muscleNeglected": {
+    "description": "Label for muscles that are under-targeted in the template"
+  },
+  "muscleOverview": "Muscle Overview",
+  "@muscleOverview": {
+    "description": "Header for the aggregated muscle overview in the templates list"
+  },
+  "perTemplate": "Per Template",
+  "@perTemplate": {
+    "description": "Section header for per-template muscle breakdown"
+  },
+  "totalSetsCount": "{count} total sets",
+  "@totalSetsCount": {
+    "description": "Shows total number of sets across all templates",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

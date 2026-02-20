@@ -7061,7 +7061,7 @@ abstract class AppLocalizations {
   /// **'Insights'**
   String get insights;
 
-  /// Muscle balance feature title
+  /// Title for template muscle balance analysis section
   ///
   /// In en, this message translates to:
   /// **'Muscle Balance'**
@@ -11645,10 +11645,10 @@ abstract class AppLocalizations {
   /// **'Validation Error'**
   String get errorTitleValidation;
 
-  /// Title for push/pull muscle balance ratio
+  /// Label for push/pull muscle ratio
   ///
   /// In en, this message translates to:
-  /// **'Push/Pull Ratio'**
+  /// **'Push/Pull'**
   String get pushPullRatio;
 
   /// No description provided for @quadHamstringRatio.
@@ -39678,10 +39678,10 @@ abstract class AppLocalizations {
   /// **'Poor'**
   String get balanceRatingPoor;
 
-  /// Title for upper/lower body balance ratio
+  /// Label for upper/lower body muscle ratio
   ///
   /// In en, this message translates to:
-  /// **'Upper/Lower Ratio'**
+  /// **'Upper/Lower'**
   String get upperLowerRatio;
 
   /// Shows optimal ratio value
@@ -48239,7 +48239,7 @@ abstract class AppLocalizations {
   /// Timer action bubble - extend button
   ///
   /// In en, this message translates to:
-  /// **'+30s'**
+  /// **'+15s'**
   String get timerActionExtend;
 
   /// Timer action bubble - skip button
@@ -49579,6 +49579,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No exercises selected yet'**
   String get noSelectedExercises;
+
+  /// Empty state message for muscle analysis when no exercises are added
+  ///
+  /// In en, this message translates to:
+  /// **'Add exercises to see muscle analysis'**
+  String get addExercisesForMuscleAnalysis;
+
+  /// Warning message when muscle imbalance is detected
+  ///
+  /// In en, this message translates to:
+  /// **'Imbalance detected'**
+  String get muscleWarning;
+
+  /// Label for muscles that are well covered in the template
+  ///
+  /// In en, this message translates to:
+  /// **'Covered'**
+  String get muscleCovered;
+
+  /// Label for muscles that are under-targeted in the template
+  ///
+  /// In en, this message translates to:
+  /// **'Neglected'**
+  String get muscleNeglected;
+
+  /// Header for the aggregated muscle overview in the templates list
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Overview'**
+  String get muscleOverview;
+
+  /// Section header for per-template muscle breakdown
+  ///
+  /// In en, this message translates to:
+  /// **'Per Template'**
+  String get perTemplate;
+
+  /// Shows total number of sets across all templates
+  ///
+  /// In en, this message translates to:
+  /// **'{count} total sets'**
+  String totalSetsCount(int count);
 }
 
 class _AppLocalizationsDelegate
