@@ -2042,6 +2042,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         'totalSets': state!.totalSets ?? 1,
         'lastUpdated': DateTime.now().millisecondsSinceEpoch,
         'skipped': state!.skipped, // Send skip status to iOS
+        'soundName': state!.customSoundName ?? 'sound',
       });
     } catch (e, stackTrace) {
       debugPrint('⚠️ [UnifiedTimer] Error: $e');
