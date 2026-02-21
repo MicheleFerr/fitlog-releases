@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/utils/one_rm_calculator.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
@@ -97,29 +97,15 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Nome esercizio
             _buildExerciseNameCard(),
-
             const SizedBox(height: 24),
-
-            // Grafico ultimi 3 mesi con chips (singola metrica)
             _buildChartSection(),
-
             const SizedBox(height: 24),
-
-            // Grafico multi-metrica overlay
             _buildMultiMetricChartSection(),
-
             const SizedBox(height: 24),
-
-            // Record Personali
             _buildPersonalRecordsSection(),
-
             const SizedBox(height: 24),
-
-            // Livello di Forza (placeholder)
             _buildStrengthLevelSection(),
-
             const SizedBox(height: 16),
           ],
         ),
@@ -161,8 +147,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           ),
         ),
         const SizedBox(height: 12),
-
-        // Chips per selezione metrica
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -175,10 +159,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             ],
           ),
         ),
-
         const SizedBox(height: 16),
-
-        // Grafico con dati reali
         _buildChart(),
       ],
     );
@@ -215,7 +196,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     );
   }
 
-  /// Build sezione grafico multi-metrica con overlay
   Widget _buildMultiMetricChartSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,16 +208,12 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           ),
         ),
         const SizedBox(height: 12),
-
-        // Build multi-metric chart
         _buildMultiMetricChart(),
       ],
     );
   }
 
-  /// Build grafico multi-metrica con dati da tutti i metric provider
   Widget _buildMultiMetricChart() {
-    // Fetch data for all selected metrics
     final Map<String, AsyncValue<List<ChartDataPoint>>> metricDataMap = {};
 
     for (final metric in _selectedMultiMetrics) {
@@ -249,7 +225,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       metricDataMap[metric.key] = ref.watch(exerciseChartCleanProvider(params));
     }
 
-    // Check if all data is loaded
     final allLoaded = metricDataMap.values.every(
       (asyncValue) => asyncValue.hasValue,
     );
@@ -305,7 +280,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     }
 
     if (allLoaded) {
-      // Extract data from AsyncValue
       final Map<String, List<ChartDataPoint>> dataByMetric = {};
       metricDataMap.forEach((metric, asyncValue) {
         dataByMetric[metric] = asyncValue.value ?? [];
@@ -317,25 +291,20 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       );
     }
 
-    // Fallback (should not reach here)
     return const SizedBox.shrink();
   }
 
-  /// Build grafico con dati reali dal provider
   Widget _buildChart() {
-    // Crea parametri per chart data provider
     final params = ChartDataParams(
       exerciseName: widget.exerciseName,
       metric: _selectedChip.key,
-      days: 90, // Ultimi 3 mesi
+      days: 90,
     );
 
-    // Ottieni chart data dal provider
     final chartDataAsync = ref.watch(exerciseChartCleanProvider(params));
 
     return chartDataAsync.when(
       data: (dataPoints) {
-        // Render chart widget con dati
         return ExerciseMetricChart(
           dataPoints: dataPoints,
           metric: _selectedChip.key,
@@ -350,7 +319,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
         child: const Center(child: LoadingIndicator()),
       ),
       error: (error, stack) {
-        // Show error state
         return Container(
           height: 200,
           decoration: BoxDecoration(
@@ -401,10 +369,8 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           ),
         ),
         const SizedBox(height: 12),
-
         historyAsync.when(
           data: (historyMap) {
-            // Converti la mappa in lista di tutti i set
             final allSets = <ExerciseHistoryData>[];
             historyMap.forEach((date, sets) {
               allSets.addAll(sets);
@@ -424,7 +390,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               );
             }
 
-            // Calcola i veri record dalla cronologia
             final records = _calculateRecords(allSets);
 
             return GridView.count(
@@ -511,58 +476,51 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(icon, color: color, size: AppIconSize.large),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                style: context.textTheme.labelSmall?.copyWith(
-                  color: context.colors.onSurface.withValues(alpha: 0.7),
+                const SizedBox(height: 8),
+                Text(
+                  label,
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.colors.onSurface.withValues(alpha: 0.7),
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                value,
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: context.colors.onSurface,
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colors.onSurface,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 4),
-              SemanticIcon(
-                icon: AppIcons.infoOutline,
-                semanticLabel: 'Info outline',
-                size: AppIconSize.tiny,
-                color: context.colors.onSurface.withValues(alpha: 0.4),
-              ),
-            ],
+                const SizedBox(height: 4),
+                SemanticIcon(
+                  icon: AppIcons.infoOutline,
+                  semanticLabel: 'Info outline',
+                  size: AppIconSize.tiny,
+                  color: context.colors.onSurface.withValues(alpha: 0.4),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }
 
-  /// Check if a string looks like a UUID (contains dashes and is long)
   bool _looksLikeUuid(String? id) {
     if (id == null) return false;
-    // UUIDs are 36 characters with 4 dashes (8-4-4-4-12 format)
     return id.contains('-') && id.length >= 32;
   }
 
   Widget _buildStrengthLevelSection() {
-    // Ottieni mapping esercizio → strength standard
-    // If exerciseId looks like a UUID (from old workouts), lookup database ID by name
     final hasValidDatabaseId =
         widget.exerciseId != null && !_looksLikeUuid(widget.exerciseId);
 
-    // If we have a valid database ID, use it directly
-    // Otherwise, lookup the database ID from the exercise name
     if (hasValidDatabaseId) {
       return _buildStrengthLevelWithKey(widget.exerciseId!);
     }
 
-    // Fallback: lookup database ID by exercise name
     final databaseIdAsync = ref.watch(
       exerciseIdByNameProvider(widget.exerciseName),
     );
@@ -570,13 +528,12 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     return databaseIdAsync.when(
       data: (databaseId) {
         if (kDebugMode) {
-          debugPrint('🏋️ [STRENGTH LEVEL DEBUG] Database ID lookup by name:');
+          debugPrint('[STRENGTH LEVEL] Database ID lookup by name:');
           debugPrint('   Exercise name: ${widget.exerciseName}');
           debugPrint('   Found database ID: $databaseId');
         }
 
         if (databaseId == null) {
-          // No database ID found, show placeholder
           return _buildStrengthLevelCardWrapper(
             _buildStrengthLevelPlaceholder(),
           );
@@ -586,13 +543,12 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       },
       loading: () => _buildStrengthLevelCardWrapper(const LoadingIndicator()),
       error: (error, stack) {
-        if (kDebugMode) debugPrint('❌ Error looking up database ID: $error');
+        if (kDebugMode) debugPrint('Error looking up database ID: $error');
         return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
       },
     );
   }
 
-  /// Wrapper for the strength level card
   Widget _buildStrengthLevelCardWrapper(Widget child) {
     return Card(
       elevation: 2,
@@ -623,105 +579,55 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     );
   }
 
-  /// Build strength level section with a known database ID
   Widget _buildStrengthLevelWithKey(String lookupKey) {
     final mappingAsync = ref.watch(exerciseMappingByIdProvider(lookupKey));
-
-    // Ottieni cronologia per calcolare 1RM (always uses exerciseName)
     final historyAsync = ref.watch(
       exerciseHistoryDataGroupedProvider(widget.exerciseName),
     );
-
-    // Usa un bodyweight di riferimento standard (80kg) per i benchmark
     const standardBodyweight = 80.0;
 
     return _buildStrengthLevelCardWrapper(
-      // Calcola e mostra livello di forza
       mappingAsync.when(
         data: (mapping) {
           if (kDebugMode) {
             debugPrint(
-              '🏋️ [STRENGTH LEVEL DEBUG] Step 1 - Mapping received: $mapping',
+              '[STRENGTH LEVEL] Step 1 - Mapping received: $mapping',
             );
-            debugPrint('   Exercise: ${widget.exerciseName}');
-            debugPrint('   ExerciseId: ${widget.exerciseId}');
-            debugPrint('   LookupKey: $lookupKey');
-            debugPrint('   Mapping standardId: ${mapping?.standardId}');
           }
 
-          if (mapping == null) {
-            if (kDebugMode) debugPrint('   ❌ Mapping is null');
-            return _buildStrengthLevelPlaceholder();
-          }
-
-          // Check if standardId is null (happens with fallback mappings)
+          if (mapping == null) return _buildStrengthLevelPlaceholder();
           if (mapping.standardId == null) {
-            if (kDebugMode) debugPrint('   ❌ StandardId is null in mapping');
             return _buildStrengthLevelPlaceholder();
           }
 
-          // Ottieni lo strength standard usando il mapping
           final standardAsync = ref.watch(
             strengthStandardByIdProvider(mapping.standardId!),
           );
 
           return standardAsync.when(
             data: (standard) {
-              if (kDebugMode) {
-                debugPrint(
-                  '🏋️ [STRENGTH LEVEL DEBUG] Step 2 - Standard received: $standard',
-                );
-                debugPrint('   StandardId: ${mapping.standardId}');
-                debugPrint('   Standard name: ${standard?.name}');
-              }
+              if (standard == null) return _buildStrengthLevelPlaceholder();
 
-              if (standard == null) {
-                if (kDebugMode) debugPrint('   ❌ Standard is null');
-                return _buildStrengthLevelPlaceholder();
-              }
-
-              // Calcola 1RM dall'history
               return historyAsync.when(
                 data: (historyMap) {
                   final allSets = <ExerciseHistoryData>[];
                   historyMap.forEach((date, sets) => allSets.addAll(sets));
 
-                  if (kDebugMode) {
-                    debugPrint(
-                      '🏋️ [STRENGTH LEVEL DEBUG] Step 3 - History received',
-                    );
-                    debugPrint('   Total sets: ${allSets.length}');
-                  }
+                  if (allSets.isEmpty) return _buildStrengthLevelPlaceholder();
 
-                  if (allSets.isEmpty) {
-                    if (kDebugMode) debugPrint('   ❌ No sets in history');
-                    return _buildStrengthLevelPlaceholder();
-                  }
-
-                  // Calcola miglior 1RM
                   double best1RM = 0.0;
                   for (final set in allSets) {
                     if (set.weight != null &&
                         set.reps != null &&
                         set.reps! > 0) {
-                      final calculated1RM =
-                          OneRMCalculator.calculateBrzycki(
+                      final calculated1RM = calculate1RM(
                         set.weight!,
                         set.reps!,
                       );
-                      if (calculated1RM > best1RM) {
+                      if (calculated1RM != null && calculated1RM > best1RM) {
                         best1RM = calculated1RM;
                       }
                     }
-                  }
-
-                  if (kDebugMode) {
-                    debugPrint(
-                      '🏋️ [STRENGTH LEVEL DEBUG] Calculated 1RM: ${best1RM.toStringAsFixed(1)} kg',
-                    );
-                    debugPrint(
-                      '   User bodyweight: ${standardBodyweight.toStringAsFixed(1)} kg',
-                    );
                   }
 
                   return _buildStrengthLevelContent(
@@ -731,24 +637,15 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                   );
                 },
                 loading: () => const LoadingIndicator(),
-                error: (error, stack) {
-                  if (kDebugMode) debugPrint('   ❌ History error: $error');
-                  return _buildStrengthLevelPlaceholder();
-                },
+                error: (error, stack) => _buildStrengthLevelPlaceholder(),
               );
             },
             loading: () => const LoadingIndicator(),
-            error: (error, stack) {
-              if (kDebugMode) debugPrint('   ❌ Standard error: $error');
-              return _buildStrengthLevelPlaceholder();
-            },
+            error: (error, stack) => _buildStrengthLevelPlaceholder(),
           );
         },
         loading: () => const LoadingIndicator(),
-        error: (error, stack) {
-          if (kDebugMode) debugPrint('   ❌ Mapping error: $error');
-          return _buildStrengthLevelPlaceholder();
-        },
+        error: (error, stack) => _buildStrengthLevelPlaceholder(),
       ),
     );
   }
@@ -787,7 +684,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     required double userBodyweight,
     required double user1RM,
   }) {
-    // Calcola i livelli di riferimento per il bodyweight dell'utente
     const levels = ExperienceLevel.values;
     final levelValues = <ExperienceLevel, double>{};
 
@@ -801,7 +697,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       }
     }
 
-    // Determina il livello attuale dell'utente
     ExperienceLevel currentLevel = ExperienceLevel.untrained;
     double progressToNext = 0.0;
 
@@ -814,14 +709,14 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       if (user1RM >= levelValue) {
         currentLevel = level;
 
-        // Calcola progresso verso il livello successivo
         if (i < levels.length - 1) {
           final nextLevel = levels[i + 1];
           final nextValue = levelValues[nextLevel];
 
           if (nextValue != null && nextValue > levelValue) {
-            progressToNext = ((user1RM - levelValue) / (nextValue - levelValue))
-                .clamp(0.0, 1.0);
+            progressToNext =
+                ((user1RM - levelValue) / (nextValue - levelValue))
+                    .clamp(0.0, 1.0);
           }
         }
       } else {
@@ -835,7 +730,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 1RM utente
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -861,10 +755,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             ],
           ),
         ),
-
         const SizedBox(height: 16),
-
-        // Livello attuale
         Row(
           children: [
             Container(
@@ -896,10 +787,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               ),
           ],
         ),
-
         const SizedBox(height: 12),
-
-        // Progress bar
         if (currentLevel != ExperienceLevel.elite) ...[
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
@@ -912,8 +800,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           ),
           const SizedBox(height: 16),
         ],
-
-        // Tabella livelli
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -1007,9 +893,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     }
   }
 
-  // Calcola tutti i record dalla cronologia
   _Records _calculateRecords(List<ExerciseHistoryData> allSets) {
-    // Max Weight
     ExerciseHistoryData? maxWeightSet;
     double maxWeight = 0.0;
     for (final set in allSets) {
@@ -1019,23 +903,18 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       }
     }
 
-    // Best 1RM (calcolato da peso e reps)
     ExerciseHistoryData? best1RMSet;
     double best1RM = 0.0;
     for (final set in allSets) {
       if (set.weight != null && set.reps != null && set.reps! > 0) {
-        final calculated1RM = OneRMCalculator.calculateBrzycki(
-          set.weight!,
-          set.reps!,
-        );
-        if (calculated1RM > best1RM) {
+        final calculated1RM = calculate1RM(set.weight!, set.reps!);
+        if (calculated1RM != null && calculated1RM > best1RM) {
           best1RM = calculated1RM;
           best1RMSet = set;
         }
       }
     }
 
-    // Best Set Volume (peso × reps singola serie)
     ExerciseHistoryData? bestSetVolumeSet;
     double bestSetVolume = 0.0;
     for (final set in allSets) {
@@ -1048,7 +927,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       }
     }
 
-    // Best Session Volume (somma di tutti i set nella stessa sessione)
     final Map<String, double> sessionVolumes = {};
     final Map<String, DateTime> sessionDates = {};
     final Map<String, List<ExerciseHistoryData>> sessionSets = {};
@@ -1102,7 +980,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       bestSessionVolume: _RecordData(
         value: bestSessionVolume,
         date: bestSessionKey != null ? sessionDates[bestSessionKey] : null,
-        workoutName: bestSessionKey != null ? sessionWorkoutNames[bestSessionKey] : null,
+        workoutName: bestSessionKey != null
+            ? sessionWorkoutNames[bestSessionKey]
+            : null,
         sessionSets: bestSessionKey != null
             ? sessionSets[bestSessionKey]
             : null,
@@ -1110,7 +990,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     );
   }
 
-  // Mostra i dettagli del record in una modal
   void _showRecordDetails(String recordLabel, _RecordData recordData) {
     final locale = Localizations.localeOf(context).toString();
     final dateFormatter = DateFormat('EEEE, dd MMMM yyyy', locale);
@@ -1123,7 +1002,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
             Row(
               children: [
                 Icon(
@@ -1143,10 +1021,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 ),
               ],
             ),
-
             const SizedBox(height: 24),
-
-            // Valore record
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -1172,10 +1047,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 ],
               ),
             ),
-
             const SizedBox(height: 16),
-
-            // Data
             if (recordData.date != null) ...[
               _buildDetailRow(
                 AppIcons.calendarToday,
@@ -1184,8 +1056,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               ),
               const SizedBox(height: 12),
             ],
-
-            // Workout
             if (recordData.workoutName != null) ...[
               _buildDetailRow(
                 AppIcons.fitnessCenter,
@@ -1194,13 +1064,11 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               ),
               const SizedBox(height: 12),
             ],
-
-            // Dettagli set (se disponibili)
             if (recordData.weight != null && recordData.reps != null) ...[
               _buildDetailRow(
                 AppIcons.info,
                 context.l10n.setDetailLabel,
-                '${recordData.weight!.toStringAsFixed(1)} kg × ${recordData.reps} reps',
+                '${recordData.weight!.toStringAsFixed(1)} kg x ${recordData.reps} reps',
               ),
               if (recordData.isCalculated)
                 Padding(
@@ -1215,14 +1083,14 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 ),
               const SizedBox(height: 12),
             ],
-
-            // Dettagli sessione (se è un volume di sessione)
             if (recordData.sessionSets != null &&
                 recordData.sessionSets!.isNotEmpty) ...[
               const Divider(),
               const SizedBox(height: 8),
               Text(
-                context.l10n.sessionSetsCount(recordData.sessionSets!.length),
+                context.l10n.sessionSetsCount(
+                  recordData.sessionSets!.length,
+                ),
                 style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: context.colors.onSurface,
@@ -1259,7 +1127,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          '${set.weight?.toStringAsFixed(1) ?? '0'} kg × ${set.reps ?? 0} reps',
+                          '${set.weight?.toStringAsFixed(1) ?? '0'} kg x ${set.reps ?? 0} reps',
                           style: context.textTheme.bodyMedium,
                         ),
                       ),
@@ -1275,10 +1143,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 );
               }),
             ],
-
             const SizedBox(height: 24),
-
-            // Close button
             Builder(
               builder: (modalContext) => SizedBox(
                 width: double.infinity,
@@ -1328,7 +1193,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
   }
 }
 
-// Data class per i record
 class _RecordData {
   _RecordData({
     required this.value,
@@ -1348,7 +1212,6 @@ class _RecordData {
   final List<ExerciseHistoryData>? sessionSets;
 }
 
-// Container per tutti i record
 class _Records {
   _Records({
     required this.maxWeight,
