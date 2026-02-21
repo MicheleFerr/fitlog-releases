@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/utils/one_rm_calculator.dart';
 
 /// Schermata di dettaglio esercizio con 3 tab: Sommario, Cronologia, Istruzioni
 ///
@@ -113,7 +114,9 @@ class _WorkoutExerciseDetailScreenState
         }
       },
       loading: () {
-        // Still loading, do nothing
+        if (mounted) {
+          SnackBarService.showInfo(context, context.l10n.dataStillLoading);
+        }
       },
       error: (error, stack) {
         // Error loading data
@@ -150,7 +153,8 @@ class _WorkoutExerciseDetailScreenState
 
     for (final set in allSets) {
       if (set.weight != null && set.reps != null && set.reps! > 0) {
-        final calculated1RM = _calculate1RM(set.weight!, set.reps!);
+        final calculated1RM = calculate1RM(set.weight!, set.reps!);
+        if (calculated1RM == null) continue;
         if (calculated1RM > best1RM) {
           best1RM = calculated1RM;
           best1RMDate = set.date;
@@ -195,12 +199,6 @@ class _WorkoutExerciseDetailScreenState
       bestSetVolumeReps: bestSetVolumeReps,
       totalWorkouts: totalWorkouts,
     );
-  }
-
-  /// Calculate 1RM using Epley formula
-  double _calculate1RM(double weight, int reps) {
-    if (reps == 1) return weight;
-    return weight * (36 / (37 - reps));
   }
 
   @override
