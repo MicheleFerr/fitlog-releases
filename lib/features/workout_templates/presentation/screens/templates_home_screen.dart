@@ -2564,7 +2564,7 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
     return ClipRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
+        child: DecoratedBox(
           decoration: BoxDecoration(
             color: backgroundColor.withValues(alpha: 0.7),
           ),

@@ -5372,7 +5372,9 @@ String? _inferTutFromExercise({
   // Isometrico / Anti-Rotation / Core Stability: hold isometrico
   // formato 0-hold-0-hold (es. Pallof Press, Plank, Ab Wheel)
   if (pattern.contains('anti-rotation') ||
-      pattern.contains('core stability')) return '0-2-0-2';
+      pattern.contains('core stability')) {
+    return '0-2-0-2';
+  }
 
   // Powerlifting: velocità + elasticità (stretch-shortening cycle)
   if (pattern.contains('powerlifting')) return '2-1-2-0';
@@ -5394,7 +5396,9 @@ String? _inferTutFromExercise({
 
   // Isolation / Functional: flusso continuo, picco di contrazione
   if (pattern.contains('isolation') ||
-      pattern.contains('functional')) return '2-0-2-0';
+      pattern.contains('functional')) {
+    return '2-0-2-0';
+  }
 
   // Fallback su tipoEsercizio
   if (tipo == 'compound') return '3-1-2-0';

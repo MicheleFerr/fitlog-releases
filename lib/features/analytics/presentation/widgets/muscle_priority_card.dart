@@ -173,7 +173,7 @@ class _MusclePriorityCardState extends ConsumerState<MusclePriorityCard> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
       child: DropdownButtonFormField<String>(
-        value: _selectedTemplateId,
+        initialValue: _selectedTemplateId,
         decoration: InputDecoration(
           labelText: l10n.selectTemplate,
           border: const OutlineInputBorder(),

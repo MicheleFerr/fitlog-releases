@@ -2614,7 +2614,7 @@ class _PlatesCupertinoSheetState extends ConsumerState<_PlatesCupertinoSheet> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                Icon(AppIcons.calculateRounded, size: 20, color: CupertinoColors.activeBlue),
+                const Icon(AppIcons.calculateRounded, size: 20, color: CupertinoColors.activeBlue),
                 const SizedBox(width: 8),
                 Text(
                   'Dischi da caricare',
@@ -2805,7 +2805,7 @@ class _PlatesCupertinoSheetState extends ConsumerState<_PlatesCupertinoSheet> {
             decoration: BoxDecoration(
               color: const Color(0xFF9E9E9E),
               borderRadius: BorderRadius.circular(4),
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 2)],
+              boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 2)],
             ),
           ),
           // Right side plates
@@ -2864,7 +2864,7 @@ class _PlatesCupertinoSheetState extends ConsumerState<_PlatesCupertinoSheet> {
           const SizedBox(width: 12),
           // Count x weight
           Text(
-            '${count}×',
+            '$count×',
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w800,

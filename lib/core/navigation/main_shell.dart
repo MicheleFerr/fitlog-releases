@@ -499,7 +499,7 @@ class _NativeIOSTabBar extends StatelessWidget {
             icon: const CNSymbol('dumbbell', size: 15, weight: CNSymbolWeight.light),
           ),
           // Center "+" button item
-          CNTabBarItem(
+          const CNTabBarItem(
             label: '',
             icon: CNSymbol(
               'plus.circle.fill',

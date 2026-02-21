@@ -431,9 +431,9 @@ class ExerciseListItemHeader extends ConsumerWidget {
     }
 
     // Delete - always shown
-    items.add(CNPopupMenuItem(
+    items.add(const CNPopupMenuItem(
       label: 'Delete',
-      icon: const CNSymbol('trash', size: 14),
+      icon: CNSymbol('trash', size: 14),
     ));
 
     // Advanced options - conditional

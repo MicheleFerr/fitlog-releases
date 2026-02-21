@@ -113,7 +113,7 @@ class _HintSoftPulseState extends ConsumerState<HintSoftPulse>
         builder: (context, child) {
           return Transform.scale(
             scale: _scaleAnimation.value,
-            child: Container(
+            child: DecoratedBox(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(

@@ -12,17 +12,6 @@ part 'exercise_popularity_hive_model.g.dart';
 /// @see docs/design/EXERCISE_POPULARITY_RANKING.md
 @HiveType(typeId: 111)
 class ExercisePopularityHiveModel extends HiveObject {
-  /// Unique exercise identifier
-  @HiveField(0)
-  final String exerciseId;
-
-  /// Global usage count (number of times used in templates)
-  @HiveField(1)
-  final int count;
-
-  /// Timestamp of last update (for TTL check)
-  @HiveField(2)
-  final DateTime lastUpdated;
 
   ExercisePopularityHiveModel({
     required this.exerciseId,
@@ -42,6 +31,17 @@ class ExercisePopularityHiveModel extends HiveObject {
       lastUpdated: lastUpdated,
     );
   }
+  /// Unique exercise identifier
+  @HiveField(0)
+  final String exerciseId;
+
+  /// Global usage count (number of times used in templates)
+  @HiveField(1)
+  final int count;
+
+  /// Timestamp of last update (for TTL check)
+  @HiveField(2)
+  final DateTime lastUpdated;
 
   /// Check if cache entry is expired (>24h old)
   bool isExpired() {

@@ -206,22 +206,22 @@ class TabbedAnalyticsScreen extends ConsumerWidget {
   Widget _buildLoadingSkeleton() {
     return ListView(
       padding: const EdgeInsets.all(16),
-      children: [
+      children: const [
         // Hero card skeleton
-        const HeroCardSkeleton(),
-        const SizedBox(height: 16),
+        HeroCardSkeleton(),
+        SizedBox(height: 16),
 
         // Stats grid skeleton
-        const MetricGridSkeleton(itemCount: 4),
-        const SizedBox(height: 20),
+        MetricGridSkeleton(itemCount: 4),
+        SizedBox(height: 20),
 
         // Recent workouts skeleton
-        const WorkoutListSkeleton(itemCount: 3),
-        const SizedBox(height: 20),
+        WorkoutListSkeleton(itemCount: 3),
+        SizedBox(height: 20),
 
         // Chart skeleton
-        const ChartSkeleton(height: 200, showLegend: true),
-        const TabBarBottomPadding(),
+        ChartSkeleton(height: 200, showLegend: true),
+        TabBarBottomPadding(),
       ],
     );
   }

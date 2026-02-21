@@ -63,7 +63,7 @@ class MetricExplanationSheet extends StatelessWidget {
       snap: true,
       snapSizes: [0.6, safeMax],
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: context.colors.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),

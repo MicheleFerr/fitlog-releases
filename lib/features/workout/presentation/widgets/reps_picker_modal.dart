@@ -210,7 +210,7 @@ class _RepsPickerState extends State<_RepsPicker> {
   }
 
   Widget _buildModeToggle() {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(12),

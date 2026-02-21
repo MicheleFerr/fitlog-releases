@@ -17,10 +17,10 @@ import 'package:gymbro_flutter_new/features/onboarding/domain/registry/hint_regi
 /// This service is stateless regarding persistence - it reads from
 /// [TutorialState] and delegates writes to [TutorialStateNotifier].
 class DiscoverabilityHintService {
-  static DiscoverabilityHintService? _instance;
   factory DiscoverabilityHintService() =>
       _instance ??= DiscoverabilityHintService._();
   DiscoverabilityHintService._();
+  static DiscoverabilityHintService? _instance;
 
   /// Lock for thread-safe operations.
   final _lock = Lock();

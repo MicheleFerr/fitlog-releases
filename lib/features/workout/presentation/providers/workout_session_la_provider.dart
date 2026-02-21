@@ -726,7 +726,7 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
           targetExercise = exercise;
           targetSet = incompleteSets.first;
           print(
-            '[WorkoutSessionLA] 🔍 Fallback: ${exercise.name} set #${targetSet!.setNumber}',
+            '[WorkoutSessionLA] 🔍 Fallback: ${exercise.name} set #${targetSet.setNumber}',
           );
           break;
         }

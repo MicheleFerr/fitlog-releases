@@ -176,8 +176,8 @@ class _ExerciseCorrelationsSheetState
                   ),
             loading: () => CustomScrollView(
               controller: scrollController,
-              slivers: [
-                const SliverFillRemaining(
+              slivers: const [
+                SliverFillRemaining(
                   child: Center(child: LoadingIndicator()),
                 ),
               ],

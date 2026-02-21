@@ -17,6 +17,11 @@ import 'package:synchronized/synchronized.dart';
 ///
 /// @see docs/design/EXERCISE_POPULARITY_RANKING.md
 class ExercisePopularityCache {
+  factory ExercisePopularityCache() {
+    _instance ??= ExercisePopularityCache._();
+    return _instance!;
+  }
+  ExercisePopularityCache._();
   static const String _boxName = 'exercise_popularity';
   static const Duration _cacheDuration = Duration(days: 1);
 
@@ -26,11 +31,6 @@ class ExercisePopularityCache {
 
   /// Singleton instance (ensures single box opening)
   static ExercisePopularityCache? _instance;
-  factory ExercisePopularityCache() {
-    _instance ??= ExercisePopularityCache._();
-    return _instance!;
-  }
-  ExercisePopularityCache._();
 
   /// Initialize Hive box
   ///

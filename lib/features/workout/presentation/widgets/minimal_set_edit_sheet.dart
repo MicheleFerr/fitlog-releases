@@ -894,7 +894,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                 groupValue: _isRangeMode ? 1 : 0,
                 children: {
                   0: Text(context.l10n.reps),
-                  1: Text('Intervallo'),
+                  1: const Text('Intervallo'),
                 },
                 onValueChanged: (value) {
                   if (value != null) _toggleRepsMode(value);

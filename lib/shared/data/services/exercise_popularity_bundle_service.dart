@@ -21,12 +21,6 @@ import 'package:gymbro_flutter_new/shared/domain/entities/exercise_popularity_da
 ///
 /// @see docs/design/EXERCISE_POPULARITY_RANKING.md
 class ExercisePopularityBundleService {
-  final FirebaseFirestore _firestore;
-  final FirebaseStorage _storage;
-  final ExercisePopularityCache _cache;
-
-  static const String _bundlePath = 'bundles/latest.bundle';
-  static const String _lastDownloadKey = 'popularity_bundle_last_download';
 
   ExercisePopularityBundleService({
     required FirebaseFirestore firestore,
@@ -35,6 +29,12 @@ class ExercisePopularityBundleService {
   })  : _firestore = firestore,
         _storage = storage,
         _cache = cache;
+  final FirebaseFirestore _firestore;
+  final FirebaseStorage _storage;
+  final ExercisePopularityCache _cache;
+
+  static const String _bundlePath = 'bundles/latest.bundle';
+  static const String _lastDownloadKey = 'popularity_bundle_last_download';
 
   /// Sync popularity data from bundle
   ///

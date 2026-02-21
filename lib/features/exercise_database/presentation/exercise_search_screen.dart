@@ -100,7 +100,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   bool _useFuzzyResults = false;
 
   // Filter bar state
-  _ExerciseListFilter _activeFilter = _ExerciseListFilter.allAZ;
+  final _ExerciseListFilter _activeFilter = _ExerciseListFilter.allAZ;
 
   // ML-enhanced state (usage tracking)
   Set<String> _frequentExerciseIds = {};

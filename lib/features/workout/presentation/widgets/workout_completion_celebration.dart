@@ -752,7 +752,7 @@ class _WorkoutCompletionCelebrationState
                     : Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(AppIcons.share, size: AppIconSize.small),
+                          const Icon(AppIcons.share, size: AppIconSize.small),
                           const SizedBox(width: 4),
                           Text(context.l10n.shareResult),
                         ],
@@ -773,7 +773,7 @@ class _WorkoutCompletionCelebrationState
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(AppIcons.home, size: AppIconSize.small),
+                      const Icon(AppIcons.home, size: AppIconSize.small),
                       const SizedBox(width: 8),
                       Text(context.l10n.goHome),
                       if (_countdown > 0) ...[

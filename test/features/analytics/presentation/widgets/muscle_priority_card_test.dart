@@ -403,7 +403,7 @@ void main() {
     testWidgets('exercise shows as "in template" when ID matches selected template', (tester) async {
       const exerciseId = 'bench-press-123';
       final suggestions = [
-        ExerciseSuggestion(
+        const ExerciseSuggestion(
           exerciseId: exerciseId,
           exerciseName: 'Bench Press',
           targetMuscle: 'chest',
@@ -422,11 +422,11 @@ void main() {
         name: 'Push Day',
         description: 'Push workout',
         exercises: [
-          ExerciseTemplate(
+          const ExerciseTemplate(
             exerciseId: exerciseId,
             exerciseName: 'Bench Press',
             category: ExerciseCategory.chest,
-            sets: [const SetTemplate(setNumber: 1)],
+            sets: [SetTemplate(setNumber: 1)],
           ),
         ],
       );

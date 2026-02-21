@@ -162,6 +162,26 @@ class ExerciseCardSettings {
     this.footerExpanded = false,
   });
 
+  factory ExerciseCardSettings.fromJson(Map<String, dynamic> json) {
+    return ExerciseCardSettings(
+      gifSize: ExerciseGifSize.fromJson(json['gifSize'] ?? 'medium'),
+      density: ExerciseCardDensity.fromJson(json['density'] ?? 'standard'),
+      showInsight: json['showInsight'] ?? true,
+      showTimer: json['showTimer'] ?? true,
+      showPlates: json['showPlates'] ?? true,
+      showRpe: json['showRpe'] ?? true,
+      footerElements: (json['footerElements'] as List<dynamic>?)
+              ?.map((e) => ExerciseFooterElement.fromJson(e as String))
+              .toList() ??
+          const [
+            ExerciseFooterElement.tips,
+            ExerciseFooterElement.tut,
+            ExerciseFooterElement.notes,
+          ],
+      footerExpanded: json['footerExpanded'] ?? false,
+    );
+  }
+
   /// GIF display size
   @HiveField(0)
   final ExerciseGifSize gifSize;
@@ -233,26 +253,6 @@ class ExerciseCardSettings {
       'footerElements': footerElements.map((e) => e.toJson()).toList(),
       'footerExpanded': footerExpanded,
     };
-  }
-
-  factory ExerciseCardSettings.fromJson(Map<String, dynamic> json) {
-    return ExerciseCardSettings(
-      gifSize: ExerciseGifSize.fromJson(json['gifSize'] ?? 'medium'),
-      density: ExerciseCardDensity.fromJson(json['density'] ?? 'standard'),
-      showInsight: json['showInsight'] ?? true,
-      showTimer: json['showTimer'] ?? true,
-      showPlates: json['showPlates'] ?? true,
-      showRpe: json['showRpe'] ?? true,
-      footerElements: (json['footerElements'] as List<dynamic>?)
-              ?.map((e) => ExerciseFooterElement.fromJson(e as String))
-              .toList() ??
-          const [
-            ExerciseFooterElement.tips,
-            ExerciseFooterElement.tut,
-            ExerciseFooterElement.notes,
-          ],
-      footerExpanded: json['footerExpanded'] ?? false,
-    );
   }
 
   @override

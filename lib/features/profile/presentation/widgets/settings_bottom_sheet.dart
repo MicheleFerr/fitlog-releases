@@ -259,9 +259,9 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
     HapticFeedback.lightImpact();
     ModalService.showBottomSheet(
       context,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 8, bottom: 16),
-        child: const ExerciseCardSettingsSection(),
+      child: const SingleChildScrollView(
+        padding: EdgeInsets.only(top: 8, bottom: 16),
+        child: ExerciseCardSettingsSection(),
       ),
     );
   }

@@ -21,7 +21,6 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/template_view_screen.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/tab_bar_safe_area.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/template_muscle_analysis_widget.dart';
 import 'package:cupertino_native/cupertino_native.dart';
 

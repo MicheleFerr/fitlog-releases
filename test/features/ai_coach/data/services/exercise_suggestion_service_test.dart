@@ -5,6 +5,7 @@
 /// - Question detection (queries starting with question words return empty)
 /// - Sorting by session count and recency
 /// - Question generation for exercises with data
+library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/exercise_suggestion_service.dart';
@@ -74,7 +75,7 @@ void main() {
           userId: 'user1',
           query: 'panca',
         ),
-      ).thenAnswer((_) async => Left(CacheFailure('Test error')));
+      ).thenAnswer((_) async => const Left(CacheFailure('Test error')));
 
       final result = await service.getSuggestions(
         userId: 'user1',
@@ -115,7 +116,7 @@ void main() {
         ],
       );
 
-      final exerciseWithoutSessions = ExerciseHistory(
+      const exerciseWithoutSessions = ExerciseHistory(
         exerciseId: 'ex2',
         exerciseName: 'Panca Inclinata',
         muscleGroup: 'chest',
@@ -182,7 +183,7 @@ void main() {
     });
 
     test('does not generate questions for exercises without data', () async {
-      final exercise = ExerciseHistory(
+      const exercise = ExerciseHistory(
         exerciseId: 'ex1',
         exerciseName: 'Deadlift',
         muscleGroup: 'back',
@@ -194,7 +195,7 @@ void main() {
           userId: 'user1',
           query: 'deadlift',
         ),
-      ).thenAnswer((_) async => Right([exercise]));
+      ).thenAnswer((_) async => const Right([exercise]));
 
       final result = await service.getSuggestions(
         userId: 'user1',

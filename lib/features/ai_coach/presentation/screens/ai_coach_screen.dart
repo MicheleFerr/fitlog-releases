@@ -221,7 +221,7 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
           ),
 
           // Typing indicator
-          if (chatState.isLoading) AITypingIndicator(),
+          if (chatState.isLoading) const AITypingIndicator(),
 
           // Error message with retry button
           if (chatState.error != null)
