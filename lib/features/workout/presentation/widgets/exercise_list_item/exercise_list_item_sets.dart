@@ -742,6 +742,10 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       fontWeight: FontWeight.w500,
     );
 
+    // Fixed width for weight column — keeps × aligned vertically across sets
+    // TextAlign.start so weight hugs the set number circle
+    const double weightColumnWidth = 76;
+
     switch (_cachedCountingMode) {
       case ExerciseCountingMode.weighted:
         // Weighted: Show weight × reps (with placeholders for null values)
@@ -751,23 +755,30 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         // If both null, show a single placeholder prompting edit
         if (!hasWeight && !hasReps) {
           return [
-            Text(
-              '-- × -- reps',
-              style: placeholderStyle,
-              overflow: TextOverflow.ellipsis,
+            SizedBox(
+              width: weightColumnWidth,
+              child: Text(
+                '-- × -- reps',
+                style: placeholderStyle,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ];
         }
 
         return [
-          Text(
-            hasWeight
-                ? set.weight!.formatWeight(config.measurementUnit)
-                : '--',
-            style: (hasWeight ? valueStyle : placeholderStyle)?.copyWith(
-              fontFeatures: [const FontFeature.tabularFigures()],
+          SizedBox(
+            width: weightColumnWidth,
+            child: Text(
+              hasWeight
+                  ? set.weight!.formatWeight(config.measurementUnit)
+                  : '--',
+              style: (hasWeight ? valueStyle : placeholderStyle)?.copyWith(
+                fontFeatures: [const FontFeature.tabularFigures()],
+              ),
+              textAlign: TextAlign.start,
+              overflow: TextOverflow.ellipsis,
             ),
-            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(width: 6),
           Text('×', style: context.textTheme.bodySmall),
