@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/features/quick_actions/presentation/widgets/c
 import 'package:gymbro_flutter_new/features/quick_actions/presentation/widgets/log_measurements_popup.dart';
 import 'package:gymbro_flutter_new/features/quick_actions/presentation/widgets/quick_measurement_input_sheet.dart';
 import 'package:gymbro_flutter_new/features/quick_actions/presentation/widgets/smart_workout_card.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_auto_save_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout_import/presentation/screens/workout_import_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
@@ -57,6 +58,8 @@ class QuickActionsOverlayContent extends ConsumerWidget {
                   _handleTemplateSelected(context, ref, template),
               onViewAllTemplates: () => _handleFromTemplate(context),
               onEmpty: () => _handleEmptyWorkout(context, ref),
+              onResumeDraft: () => _handleResumeDraft(context, ref),
+              onDiscardDraft: () => _handleDiscardDraft(ref),
             ),
           ),
 
@@ -211,6 +214,29 @@ class QuickActionsOverlayContent extends ConsumerWidget {
         ),
       );
     });
+  }
+
+  /// Resume a pending workout draft
+  void _handleResumeDraft(BuildContext context, WidgetRef ref) {
+    HapticFeedback.mediumImpact();
+    onClose();
+    _postFrameNavigate(context, () async {
+      final autoSave = ref.read(workoutAutoSaveProvider.notifier);
+      final recovered = await autoSave.recoverDraft();
+      if (recovered != null) {
+        ref.read(currentWorkoutProvider.notifier).restoreFromDraft(recovered);
+        navigationShell.goBranch(1);
+      }
+    });
+  }
+
+  /// Discard the pending draft and refresh the UI
+  void _handleDiscardDraft(WidgetRef ref) {
+    HapticFeedback.lightImpact();
+    final autoSave = ref.read(workoutAutoSaveProvider.notifier);
+    autoSave.discardDraft();
+    // Invalidate to refresh the draft card
+    ref.invalidate(pendingDraftInfoProvider);
   }
 
   /// Navigate after the overlay is fully closed

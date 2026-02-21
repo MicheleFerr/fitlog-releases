@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/quick_actions/domain/services/split_detection_service.dart';
 import 'package:gymbro_flutter_new/features/quick_actions/presentation/providers/next_workout_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/features/quick_actions/presentation/widgets/from_template_popup.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_auto_save_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -23,6 +24,8 @@ class SmartWorkoutCard extends ConsumerWidget {
     required this.onTemplateSelected,
     required this.onViewAllTemplates,
     required this.onEmpty,
+    this.onResumeDraft,
+    this.onDiscardDraft,
     super.key,
   });
 
@@ -38,11 +41,18 @@ class SmartWorkoutCard extends ConsumerWidget {
   /// Called when user taps "Vuoto"
   final VoidCallback onEmpty;
 
+  /// Called when user taps "Resume" on a pending draft
+  final VoidCallback? onResumeDraft;
+
+  /// Called when user taps "Discard" on a pending draft
+  final VoidCallback? onDiscardDraft;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final suggestionAsync = ref.watch(nextWorkoutSuggestionProvider);
+    final draftAsync = ref.watch(pendingDraftInfoProvider);
 
-    return suggestionAsync.when(
+    final suggestionCard = suggestionAsync.when(
       loading: () => _buildCardContainer(
         context,
         child: const SizedBox(
@@ -52,6 +62,146 @@ class SmartWorkoutCard extends ConsumerWidget {
       ),
       error: (_, __) => _buildNewUserCard(context),
       data: (suggestion) => _buildSuggestionCard(context, suggestion),
+    );
+
+    // Show draft recovery card above suggestion card if draft exists
+    final draftCard = draftAsync.whenOrNull(
+      data: (info) => info != null
+          ? _buildDraftRecoveryCard(context, info)
+          : null,
+    );
+
+    if (draftCard != null) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          draftCard,
+          const SizedBox(height: 12),
+          suggestionCard,
+        ],
+      );
+    }
+
+    return suggestionCard;
+  }
+
+  Widget _buildDraftRecoveryCard(
+    BuildContext context,
+    PendingDraftInfo info,
+  ) {
+    // Minutes since workout started
+    final minutesAgo = info.startTime != null
+        ? DateTime.now().difference(info.startTime!).inMinutes
+        : null;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.amber.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.amber.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Header row: icon + title
+          Row(
+            children: [
+              Icon(
+                Icons.pause_circle_filled,
+                color: Colors.amber.shade300,
+                size: 28,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  context.l10n.pendingWorkout,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 8),
+
+          // Info: name + stats
+          Padding(
+            padding: const EdgeInsets.only(left: 38),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  info.workoutName,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.9),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  context.l10n.pendingWorkoutInfo(
+                    info.exerciseCount,
+                    info.completedSets,
+                    info.totalSets,
+                  ),
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.7),
+                  ),
+                ),
+                if (minutesAgo != null) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    context.l10n.pendingWorkoutStartedAgo(minutesAgo),
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.5),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Resume button
+          _buildCTAButton(
+            context,
+            label: context.l10n.resumeWorkout,
+            filled: true,
+            onTap: () => onResumeDraft?.call(),
+          ),
+
+          const SizedBox(height: 8),
+
+          // Discard button (subtle)
+          Center(
+            child: GestureDetector(
+              onTap: () {
+                HapticFeedback.lightImpact();
+                onDiscardDraft?.call();
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Text(
+                  context.l10n.discard,
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.4),
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.white.withValues(alpha: 0.4),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

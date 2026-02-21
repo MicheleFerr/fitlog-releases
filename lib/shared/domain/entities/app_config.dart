@@ -65,6 +65,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.defaultRestBetweenExercises = 90, // Default rest between exercises (inter-exercise timer)
     this.hasSeenRestPauseTutorial = false, // First-time Rest-Pause tutorial flag
     this.appThemeModeValue, // Custom theme mode: 'system'|'light'|'dark'|'ultraDark'|'pink'
+    this.showWeightVerification = true, // Show weight/reps verification in RPE selector
   });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) {
@@ -114,6 +115,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       defaultRestBetweenExercises: json['defaultRestBetweenExercises'] ?? 90,
       hasSeenRestPauseTutorial: json['hasSeenRestPauseTutorial'] ?? false,
       appThemeModeValue: json['appThemeModeValue'] as String?,
+      showWeightVerification: json['showWeightVerification'] ?? true,
     );
   }
   @HiveField(0)
@@ -287,6 +289,9 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
   @HiveField(55)
   final String? appThemeModeValue; // Custom theme mode string: 'system'|'light'|'dark'|'ultraDark'|'pink'
 
+  @HiveField(56)
+  final bool showWeightVerification; // Show weight/reps verification in RPE selector
+
   /// Get the effective AppThemeMode (backward compatible with ThemeMode)
   AppThemeMode get appThemeMode {
     if (appThemeModeValue != null) {
@@ -354,6 +359,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     int? defaultRestBetweenExercises,
     bool? hasSeenRestPauseTutorial,
     String? appThemeModeValue,
+    bool? showWeightVerification,
   }) {
     return AppConfig(
       languageCode: languageCode ?? this.languageCode,
@@ -411,6 +417,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       defaultRestBetweenExercises: defaultRestBetweenExercises ?? this.defaultRestBetweenExercises,
       hasSeenRestPauseTutorial: hasSeenRestPauseTutorial ?? this.hasSeenRestPauseTutorial,
       appThemeModeValue: appThemeModeValue ?? this.appThemeModeValue,
+      showWeightVerification: showWeightVerification ?? this.showWeightVerification,
     );
   }
 
@@ -446,6 +453,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       'defaultRestBetweenExercises': defaultRestBetweenExercises,
       'hasSeenRestPauseTutorial': hasSeenRestPauseTutorial,
       'appThemeModeValue': appThemeModeValue,
+      'showWeightVerification': showWeightVerification,
     };
   }
 

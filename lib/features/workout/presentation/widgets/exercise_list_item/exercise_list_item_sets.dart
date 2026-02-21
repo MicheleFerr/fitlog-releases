@@ -646,20 +646,52 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
               ],
 
               // Set details (adapted based on counting mode)
+              // Tapping the content area opens keyboard input directly
               Expanded(
-                child: Row(
-                  children: [
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => _quickEditSet(context, set, startInManualMode: true),
+                  child: Row(
+                    children: [
                     ..._buildSetDetailsForMode(set, config),
 
                     // NOTE: Lightbulb icon removed per user request
                     // Was showing when weight matched prefill suggestion
 
-                    // RPE indicator if completed
+                    // RPE indicator if completed (tappable to change)
                     if (set.isCompleted && set.rpe != null) ...[
                       const SizedBox(width: 8),
-                      RpeIndicator(rpe: set.rpe!),
+                      GestureDetector(
+                        onTap: () => _showQuickRpePicker(context, set),
+                        child: RpeIndicator(rpe: set.rpe!),
+                      ),
+                    ],
+                    // "Add RPE" button if completed without RPE
+                    if (set.isCompleted && set.rpe == null) ...[
+                      const SizedBox(width: 8),
+                      GestureDetector(
+                        onTap: () => _showQuickRpePicker(context, set),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: context.colors.primary.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: context.colors.primary.withValues(alpha: 0.3),
+                            ),
+                          ),
+                          child: Text(
+                            '+RPE',
+                            style: context.textTheme.labelSmall?.copyWith(
+                              color: context.colors.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ],
+                  ),
                 ),
               ),
 
@@ -1003,7 +1035,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     HapticFeedback.mediumImpact();
   }
 
-  void _quickEditSet(BuildContext context, ExerciseSet set) {
+  void _quickEditSet(BuildContext context, ExerciseSet set, {bool startInManualMode = false}) {
     final currentSetIndex = widget.exercise.sets.indexWhere(
       (s) => s.id == set.id,
     );
@@ -1038,7 +1070,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       suggestedWeight: prefill?.weight,
       suggestedSource: suggestedSource,
       recentWeights: recentWeightsWithDates,
-      countingMode: widget.exercise.countingMode, // ✅ NUOVO: Pass counting mode
+      countingMode: widget.exercise.countingMode,
+      startInManualMode: startInManualMode,
       onSave: (updatedSet) {
         final updatedSets = widget.exercise.sets.map((s) {
           return s.id == set.id ? updatedSet : s;
@@ -1098,6 +1131,196 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             }
           });
         }
+      },
+    );
+  }
+
+  /// Quick RPE picker - shows a compact bottom sheet with RPE chips (6-10)
+  void _showQuickRpePicker(BuildContext context, ExerciseSet set) {
+    HapticFeedback.selectionClick();
+    int? selectedRpe = set.rpe;
+
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: context.colors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (sheetContext, setSheetState) {
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Drag handle
+                    Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: sheetContext.colors.onSurfaceVariant.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'RPE',
+                      style: sheetContext.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // RPE chips row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: List.generate(5, (index) {
+                        final rpe = index + 6;
+                        final isSelected = selectedRpe == rpe;
+                        final color = RpeIndicator.getColor(sheetContext, rpe);
+
+                        return GestureDetector(
+                          onTap: () {
+                            HapticFeedback.selectionClick();
+                            setSheetState(() {
+                              selectedRpe = isSelected ? null : rpe;
+                            });
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 150),
+                            width: 52,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? color.withValues(alpha: 0.2)
+                                  : sheetContext.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                color: isSelected ? color : sheetContext.colors.outlineVariant,
+                                width: isSelected ? 2 : 1,
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                '$rpe',
+                                style: sheetContext.textTheme.titleLarge?.copyWith(
+                                  color: isSelected ? color : sheetContext.colors.onSurfaceVariant,
+                                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                    // RIR indicator
+                    if (selectedRpe != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        'RIR: ${10 - selectedRpe!}',
+                        style: sheetContext.textTheme.bodySmall?.copyWith(
+                          color: sheetContext.colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 16),
+                    // Confirm button
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        onPressed: () {
+                          Navigator.of(sheetContext).pop();
+                          _updateSetRpe(set, selectedRpe);
+                          // RPE 10 = failure → suggest extra recovery
+                          if (selectedRpe == 10) {
+                            _showRecoverySuggestion(set);
+                          }
+                        },
+                        child: Text(context.l10n.save),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  /// Update a single set's RPE value
+  void _updateSetRpe(ExerciseSet set, int? newRpe) {
+    // copyWith can't set nullable fields to null, so create new ExerciseSet when clearing
+    final ExerciseSet updatedSet;
+    if (newRpe != null) {
+      updatedSet = set.copyWith(rpe: newRpe);
+    } else {
+      updatedSet = ExerciseSet(
+        id: set.id,
+        setNumber: set.setNumber,
+        weight: set.weight,
+        reps: set.reps,
+        minReps: set.minReps,
+        maxReps: set.maxReps,
+        actualReps: set.actualReps,
+        rpe: null,
+        seconds: set.seconds,
+        distance: set.distance,
+        isCompleted: set.isCompleted,
+        notes: set.notes,
+        completedAt: set.completedAt,
+        setDurationMillis: set.setDurationMillis,
+        setStartedAt: set.setStartedAt,
+        isWarmup: set.isWarmup,
+        restTime: set.restTime,
+        restTimerSkipped: set.restTimerSkipped,
+        restTimerSecondsRemaining: set.restTimerSecondsRemaining,
+        restTimerSecondsAdded: set.restTimerSecondsAdded,
+        actualRestSeconds: set.actualRestSeconds,
+      );
+    }
+    final updatedSets = widget.exercise.sets.map((s) {
+      return s.id == set.id ? updatedSet : s;
+    }).toList();
+    final updatedExercise = widget.exercise.copyWith(sets: updatedSets);
+    widget.onExerciseUpdate(updatedExercise);
+  }
+
+  /// Show recovery suggestion snackbar when RPE 10 is selected (muscular failure).
+  /// Offers a one-tap "Apply" button to add +30s rest to the next incomplete set.
+  void _showRecoverySuggestion(ExerciseSet completedSet) {
+    // Find the next incomplete set after the current one
+    final currentIndex = widget.exercise.sets.indexWhere(
+      (s) => s.id == completedSet.id,
+    );
+    final nextIncompleteIndex = widget.exercise.sets.indexWhere(
+      (s) => !s.isCompleted && !s.isWarmup,
+      currentIndex + 1,
+    );
+
+    // No next set to apply recovery to
+    if (nextIncompleteIndex == -1) return;
+
+    HapticFeedback.heavyImpact();
+
+    SnackBarService.showCustom(
+      context,
+      message: context.l10n.rpe10RecoverySuggestion,
+      actionLabel: context.l10n.rpe10Apply,
+      duration: const Duration(seconds: 5),
+      onAction: () {
+        final nextSet = widget.exercise.sets[nextIncompleteIndex];
+        final currentRest = nextSet.restTime ?? widget.exercise.restTime ?? 90;
+        final updatedSet = nextSet.copyWith(restTime: currentRest + 30);
+
+        final updatedSets = List<ExerciseSet>.from(widget.exercise.sets);
+        updatedSets[nextIncompleteIndex] = updatedSet;
+        final updatedExercise = widget.exercise.copyWith(sets: updatedSets);
+        widget.onExerciseUpdate(updatedExercise);
+
+        HapticFeedback.mediumImpact();
       },
     );
   }

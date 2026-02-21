@@ -51,6 +51,7 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
   String get _firestoreCollection => 'exercises_${locale.languageCode}';
 
   Timer? _syncTimer;
+  bool _isSyncing = false; // Guard: prevents concurrent background syncs
   final StreamController<SyncStatus> _syncStatusController =
       StreamController.broadcast();
 
@@ -466,6 +467,9 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
 
   /// Sincronizzazione in background
   Future<void> _syncInBackground() async {
+    // Guard: skip if already syncing (prevents duplicate version checks on concurrent getExercises() calls)
+    if (_isSyncing) return;
+    _isSyncing = true;
     try {
       final hasUpdates = await checkAndApplyUpdates();
       if (hasUpdates) {
@@ -477,6 +481,8 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
       if (kDebugMode) {
         debugPrint('❌ Background sync failed: $e');
       }
+    } finally {
+      _isSyncing = false;
     }
   }
 

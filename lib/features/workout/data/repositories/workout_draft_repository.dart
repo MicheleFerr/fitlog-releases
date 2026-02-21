@@ -26,6 +26,9 @@ class WorkoutDraftRepository {
   /// Flag to track if already initialized successfully
   bool _initialized = false;
 
+  /// In-flight init future — prevents concurrent async inits (race condition fix)
+  Future<void>? _initFuture;
+
   /// Initialize the draft storage with corruption recovery
   Future<void> init() async {
     // ⚡ PERFORMANCE: Skip if already initialized (prevents 5x init messages)
@@ -41,6 +44,13 @@ class WorkoutDraftRepository {
       return;
     }
 
+    // FIX: Prevent concurrent async inits (race condition where multiple callers
+    // pass the _initialized check before any of them completes the async openBox)
+    _initFuture ??= _doInit();
+    return _initFuture;
+  }
+
+  Future<void> _doInit() async {
     try {
       if (!Hive.isBoxOpen(_boxName)) {
         _draftBox = await _boxManager.openBox<WorkoutDraft>(_boxName);
@@ -66,10 +76,13 @@ class WorkoutDraftRepository {
           '⚠️ [WorkoutDraftRepository] Box was corrupted and recovered: $e',
         );
       }
+      // Reset future so retry is possible
+      _initFuture = null;
       // Try again - box should be recreated
       try {
         _draftBox = await _boxManager.openBox<WorkoutDraft>(_boxName);
         _recoveredBox = await _boxManager.openBox('recovered_drafts');
+        _initialized = true;
       } catch (retryError) {
         _initFailed = true;
         if (kDebugMode) {

@@ -130,10 +130,23 @@ class TemplateRepository {
         .get();
 
     return snapshot.docs
-        .map(
-          (doc) => WorkoutTemplate.fromJson(doc.data() as Map<String, dynamic>),
-        )
+        .map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          return WorkoutTemplate.fromJson(_normalizeFirestoreData(data));
+        })
         .toList();
+  }
+
+  /// Converte i Timestamp di Firestore in stringhe ISO 8601 per il parser JSON
+  Map<String, dynamic> _normalizeFirestoreData(Map<String, dynamic> data) {
+    final result = Map<String, dynamic>.from(data);
+    for (final key in ['createdAt', 'updatedAt']) {
+      final value = result[key];
+      if (value is Timestamp) {
+        result[key] = value.toDate().toIso8601String();
+      }
+    }
+    return result;
   }
 
   // Helper methods

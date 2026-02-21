@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/rpe_indicator.dart';
 
 /// Custom scroll physics that accelerates when scrolling fast
 /// Based on: https://stackoverflow.com/questions/57671811/flutter-how-to-override-scroll-physics
@@ -60,6 +61,7 @@ class MinimalSetEditSheet extends StatefulWidget {
     this.suggestedReps,
     this.suggestedSource,
     this.countingMode = ExerciseCountingMode.weighted,
+    this.startInManualMode = false,
   });
 
   final ExerciseSet exerciseSet;
@@ -79,6 +81,7 @@ class MinimalSetEditSheet extends StatefulWidget {
   final int? suggestedReps; // Pre-fill reps from suggestion (e.g. warmup %)
   final String? suggestedSource; // Source label for the suggestion chip
   final ExerciseCountingMode countingMode; // How this exercise is tracked
+  final bool startInManualMode; // Open directly in keyboard mode
 
   @override
   State<MinimalSetEditSheet> createState() => _MinimalSetEditSheetState();
@@ -88,6 +91,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
   late double _weight;
   late int _reps;
   late int _seconds; // For time-based exercises
+  int? _selectedRpe; // RPE value (6-10)
   bool _isManualInput = false;
   bool _isWeightFastScrubActive = false;
   bool _isRepsFastScrubActive = false;
@@ -136,9 +140,11 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     print('   - onApplyToAll: ${widget.onApplyToAll != null ? "✅ presente" : "❌ null"}');
     print('   - _isFirstSet: $_isFirstSet');
 
+    _isManualInput = widget.startInManualMode;
     _weight = widget.exerciseSet.weight ?? 0;
     _reps = widget.exerciseSet.reps ?? 10;
     _seconds = widget.exerciseSet.seconds ?? 60;
+    _selectedRpe = widget.exerciseSet.rpe;
 
     // ✅ Initialize rep range mode from existing data
     final hasRange = widget.exerciseSet.minReps != null &&
@@ -272,7 +278,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
             minReps: _selectedMinReps,
             maxReps: _selectedMaxReps,
             actualReps: base.actualReps,
-            rpe: base.rpe,
+            rpe: _selectedRpe,
             seconds: null,
             distance: base.distance,
             isCompleted: base.isCompleted,
@@ -296,7 +302,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
             minReps: _selectedMinReps,
             maxReps: _selectedMaxReps,
             actualReps: base.actualReps,
-            rpe: base.rpe,
+            rpe: _selectedRpe,
             seconds: null,
             distance: base.distance,
             isCompleted: base.isCompleted,
@@ -320,7 +326,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
             minReps: null,
             maxReps: null,
             actualReps: base.actualReps,
-            rpe: base.rpe,
+            rpe: _selectedRpe,
             seconds: _seconds,
             distance: base.distance,
             isCompleted: base.isCompleted,
@@ -348,7 +354,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
             minReps: null, // ✅ Esplicitamente null in exact mode
             maxReps: null,
             actualReps: base.actualReps,
-            rpe: base.rpe,
+            rpe: _selectedRpe,
             seconds: null,
             distance: base.distance,
             isCompleted: base.isCompleted,
@@ -372,7 +378,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
             minReps: null,
             maxReps: null,
             actualReps: base.actualReps,
-            rpe: base.rpe,
+            rpe: _selectedRpe,
             seconds: null,
             distance: base.distance,
             isCompleted: base.isCompleted,
@@ -396,7 +402,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
             minReps: null,
             maxReps: null,
             actualReps: base.actualReps,
-            rpe: base.rpe,
+            rpe: _selectedRpe,
             seconds: _seconds,
             distance: base.distance,
             isCompleted: base.isCompleted,
@@ -619,25 +625,48 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
               // Dot indicators for sets
               if (_hasMultipleSets) _buildDotIndicators(),
 
-              // Suggested weight chip
-              if (widget.suggestedWeight != null) _buildSuggestionChip(),
+              // Suggestion + Recent weights block
+              if (widget.suggestedWeight != null ||
+                  (widget.recentWeights != null && widget.recentWeights!.isNotEmpty))
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (widget.suggestedWeight != null) _buildSuggestionChip(),
+                      if (widget.recentWeights != null && widget.recentWeights!.isNotEmpty)
+                        _buildRecentWeightsChips(),
+                      const SizedBox(height: 4),
+                    ],
+                  ),
+                ),
 
-              // Recent weights chips
-              if (widget.recentWeights != null &&
-                  widget.recentWeights!.isNotEmpty)
-                _buildRecentWeightsChips(),
-
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
 
               // Main content: Weight + Reps pickers
               _buildPickers(),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
+
+              // Thin divider
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Divider(
+                  height: 1,
+                  color: context.colors.outlineVariant.withValues(alpha: 0.5),
+                ),
+              ),
+
+              const SizedBox(height: 8),
 
               // Action buttons row (Apply to all / Copy previous)
               _buildActionRow(),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
 
               // Hint: swipe down to save
               Text(
@@ -1045,6 +1074,13 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                           onFastScrubEnd: () =>
                               setState(() => _isWeightFastScrubActive = false),
                           currentValue: _weight,
+                          onContainerTap: () {
+                            _weightTextController.text = _formatWeight(_weight);
+                            setState(() => _isManualInput = true);
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _weightFocusNode.requestFocus();
+                            });
+                          },
                         ),
                   ),
 
@@ -1099,6 +1135,13 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                                   setState(() => _isRepsFastScrubActive = false),
                               currentValue: _reps.toDouble(),
                               fastScrubOnRight: true,
+                              onContainerTap: () {
+                                _repsTextController.text = '$_reps';
+                                setState(() => _isManualInput = true);
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                  _repsFocusNode.requestFocus();
+                                });
+                              },
                             ),
                 ),
 
@@ -1141,7 +1184,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                             _secondsController.jumpToItem(index);
                             setState(() => _seconds = value);
                           },
-                          isFastScrubActive: false, // No separate state for now
+                          isFastScrubActive: false,
                           onFastScrubStart: () {},
                           onFastScrubEnd: () {},
                           currentValue: _seconds.toDouble(),
@@ -1230,6 +1273,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     VoidCallback? onFastScrubEnd,
     double currentValue = 0,
     bool fastScrubOnRight = false,
+    VoidCallback? onContainerTap,
   }) {
     return Column(
       children: [
@@ -1258,7 +1302,9 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                 ),
               // Main wheel picker
               Expanded(
-                child: DecoratedBox(
+                child: GestureDetector(
+                  onTap: onContainerTap,
+                  child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: context.colors.surfaceContainerHighest.withValues(
                       alpha: 0.3,
@@ -1302,6 +1348,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                     ],
                   ),
                 ),
+                ),
               ),
               // Fast scrub sidebar (RIGHT)
               if (showFastScrub && fastScrubValues != null && fastScrubOnRight)
@@ -1321,8 +1368,8 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     );
   }
 
-  /// Fast scrub sidebar - hidden by default, reveals values on drag
-  /// User drags up/down to quickly jump between values
+  /// Fast scrub sidebar - strip sottile a riposo, si espande al tocco/drag
+  /// Swipe su/giù per selezionare il valore velocemente
   Widget _buildFastScrubSidebar({
     required List<int> values,
     void Function(int value)? onSelect,
@@ -1339,13 +1386,10 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
         HapticFeedback.lightImpact();
       },
       onVerticalDragUpdate: (details) {
-        // Calculate which value based on Y position
-        final localY = details.localPosition.dy;
-        final itemHeight = 150 / values.length;
-        final index = (localY / itemHeight).clamp(0, values.length - 1).toInt();
+        final localY = details.localPosition.dy.clamp(0.0, 150.0);
+        final itemHeight = 150.0 / values.length;
+        final index = (localY / itemHeight).floor().clamp(0, values.length - 1);
         final selectedValue = values[index];
-
-        // Only update if value changed (prevents haptic spam)
         if (selectedValue != _lastFastScrubValue) {
           _lastFastScrubValue = selectedValue;
           onSelect?.call(selectedValue);
@@ -1360,55 +1404,63 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
         _lastFastScrubValue = null;
         onEnd?.call();
       },
+      onTapDown: (_) {
+        onStart?.call();
+      },
+      onTapUp: (_) {
+        onEnd?.call();
+      },
+      onTapCancel: () {
+        onEnd?.call();
+      },
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
+        duration: const Duration(milliseconds: 180),
         curve: Curves.easeOut,
-        width: isActive ? 36 : 12,
-        height: 150, // Fixed height to match picker height (prevents resize on expand/collapse)
+        width: isActive ? 34 : 10,
+        height: 150,
         margin: EdgeInsets.only(right: onRight ? 0 : 4, left: onRight ? 4 : 0),
-        decoration: isActive
-            ? BoxDecoration(
-                color: context.colors.primary.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: context.colors.primary.withValues(alpha: 0.3)),
-              )
-            : null,
+        decoration: BoxDecoration(
+          color: isActive
+              ? context.colors.primary.withValues(alpha: 0.12)
+              : context.colors.outlineVariant.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(8),
+          border: isActive
+              ? Border.all(
+                  color: context.colors.primary.withValues(alpha: 0.3),
+                  width: 1,
+                )
+              : null,
+        ),
+        clipBehavior: Clip.hardEdge,
         child: isActive
-            // Expanded: show values
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: values.map((value) {
-                  final isNearCurrent = (currentValue - value).abs() < 3;
-                  return AnimatedContainer(
-                    duration: const Duration(milliseconds: 100),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 1,
-                      horizontal: 2,
-                    ),
-                    decoration: isNearCurrent
-                        ? BoxDecoration(
-                            color: context.colors.primary.withValues(
-                              alpha: 0.3,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          )
-                        : null,
-                    child: Text(
-                      '$value',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        fontSize: 8,
-                        fontWeight: isNearCurrent
-                            ? FontWeight.bold
-                            : FontWeight.w500,
-                        color: isNearCurrent
-                            ? context.colors.primary
-                            : context.colors.onSurfaceVariant,
+                  final isNearCurrent = (currentValue - value).abs() < 5;
+                  return Expanded(
+                    child: Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      decoration: isNearCurrent
+                          ? BoxDecoration(
+                              color: context.colors.primary.withValues(alpha: 0.25),
+                            )
+                          : null,
+                      child: Text(
+                        '$value',
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.labelSmall?.copyWith(
+                          fontSize: 9,
+                          fontWeight: isNearCurrent ? FontWeight.bold : FontWeight.w500,
+                          color: isNearCurrent
+                              ? context.colors.primary
+                              : context.colors.onSurfaceVariant,
+                        ),
                       ),
                     ),
                   );
                 }).toList(),
               )
-            // Collapsed: transparent hit area (no visible indicator)
             : const SizedBox.expand(),
       ),
     );
@@ -1424,6 +1476,62 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
               ? context.colors.primary
               : context.colors.onSurface.withValues(alpha: 0.5),
         ),
+      ),
+    );
+  }
+
+  Widget _buildRpeSelector() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Row(
+        children: [
+          Text(
+            'RPE',
+            style: context.textTheme.labelMedium?.copyWith(
+              color: context.colors.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: List.generate(5, (index) {
+                  final rpe = index + 6; // RPE 6-10
+                  final isSelected = _selectedRpe == rpe;
+                  final color = RpeIndicator.getColor(context, rpe);
+
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: ChoiceChip(
+                      label: Text('$rpe'),
+                      selected: isSelected,
+                      selectedColor: color.withValues(alpha: 0.25),
+                      labelStyle: TextStyle(
+                        color: isSelected ? color : context.colors.onSurfaceVariant,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                      ),
+                      side: BorderSide(
+                        color: isSelected ? color : context.colors.outlineVariant,
+                      ),
+                      showCheckmark: false,
+                      visualDensity: VisualDensity.compact,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      onSelected: (selected) {
+                        HapticFeedback.selectionClick();
+                        setState(() {
+                          _selectedRpe = selected ? rpe : null;
+                        });
+                      },
+                    ),
+                  );
+                }),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1484,7 +1592,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     final repsText = suggestedReps != null ? ' × $suggestedReps' : '';
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+      padding: const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 0),
       child: Row(
         children: [
           ActionChip(
@@ -1557,7 +1665,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1660,6 +1768,7 @@ extension MinimalSetEditSheetExtension on BuildContext {
     int? suggestedReps,
     String? suggestedSource,
     ExerciseCountingMode countingMode = ExerciseCountingMode.weighted,
+    bool startInManualMode = false,
   }) {
     return ModalService.showSheet<void>(this,
       isScrollControlled: true,
@@ -1680,6 +1789,7 @@ extension MinimalSetEditSheetExtension on BuildContext {
         suggestedReps: suggestedReps,
         suggestedSource: suggestedSource,
         countingMode: countingMode,
+        startInManualMode: startInManualMode,
       ),
     );
   }

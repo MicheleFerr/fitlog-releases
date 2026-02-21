@@ -7,6 +7,56 @@ import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/services/request_throttler.dart';
 
+/// Info about a pending (not yet recovered) workout draft
+class PendingDraftInfo {
+  PendingDraftInfo({
+    required this.workoutName,
+    required this.exerciseCount,
+    required this.completedSets,
+    required this.totalSets,
+    required this.lastSaved,
+    this.startTime,
+  });
+
+  final String workoutName;
+  final int exerciseCount;
+  final int completedSets;
+  final int totalSets;
+  final DateTime? startTime;
+  final DateTime lastSaved;
+}
+
+/// Provider that exposes pending draft info for the Quick Actions UI.
+/// Returns null if there's no draft or if a workout is already active.
+final pendingDraftInfoProvider = FutureProvider<PendingDraftInfo?>((ref) async {
+  // If there's already an active workout, no draft to show
+  final current = ref.watch(currentWorkoutProvider);
+  if (current != null) return null;
+
+  final repo = ref.watch(workoutDraftRepositoryProvider);
+  final hasDraft = await repo.hasRecoverableDraft();
+  if (!hasDraft) return null;
+
+  final draft = await repo.getCurrentDraft();
+  if (draft == null) return null;
+
+  final workout = draft.toWorkout();
+  return PendingDraftInfo(
+    workoutName: workout.name,
+    exerciseCount: workout.exercises.length,
+    completedSets: workout.exercises.fold(
+      0,
+      (sum, e) => sum + e.sets.where((s) => s.isCompleted).length,
+    ),
+    totalSets: workout.exercises.fold(
+      0,
+      (sum, e) => sum + e.sets.length,
+    ),
+    startTime: workout.startTime,
+    lastSaved: draft.lastSaved,
+  );
+});
+
 /// Provider for the draft repository
 /// FIX: keepAlive() previene disposal/ricreazione che causava 5x init all'avvio
 final workoutDraftRepositoryProvider = Provider<WorkoutDraftRepository>((ref) {

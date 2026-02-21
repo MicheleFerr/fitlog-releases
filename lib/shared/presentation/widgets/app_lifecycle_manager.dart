@@ -162,8 +162,12 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       // 💾 FIX: Emergency save current workout (GLOBAL)
       // This ensures workout is saved regardless of which screen is visible
       _emergencySaveCurrentWorkout();
+    }
 
-      // 💾 Save template cache (moved from WorkoutScreen for centralization)
+    // 💾 Save template cache only on paused (actual background, not transient inactive)
+    // - avoids double-call (inactive fires before paused every time)
+    // - avoids calling before cache is initialized (first inactive often too early)
+    if (state == AppLifecycleState.paused) {
       _saveTemplateCacheOnBackground();
     }
 
@@ -497,7 +501,9 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     int retryCount = 0,
     Workout? mergedDraft,
   }) async {
-    const maxRetries = 20; // Max ~1s wait (20 frames at 60fps) - increased for cold starts
+    // Total wait: up to ~5s with exponential backoff (50ms → 100ms → 200ms → 400ms → 800ms → 800ms*N)
+    const maxRetries = 20;
+    const maxDelayMs = 800;
 
     if (!mounted) return;
 
@@ -511,19 +517,17 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       // Navigator not ready yet
       if (retryCount >= maxRetries) {
         if (kDebugMode) {
-          debugPrint('💾 [AppLifecycle] Navigator not available after $maxRetries retries, giving up');
-          debugPrint('💾 [AppLifecycle] rootNavigatorKey.currentState: $navigatorState');
-          debugPrint('💾 [AppLifecycle] rootNavigatorKey.currentContext: $navigatorContext');
+          debugPrint('💾 [AppLifecycle] Navigator not available after $maxRetries retries (~5s), giving up');
         }
         return;
       }
 
-      // Retry on next frame
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          _showRecoveryDialogWhenReady(l10n, autoSave, retryCount: retryCount + 1, mergedDraft: mergedDraft);
-        }
-      });
+      // Exponential backoff: 50ms → 100ms → 200ms → 400ms → 800ms (capped)
+      final delayMs = (50 * (1 << retryCount.clamp(0, 4))).clamp(50, maxDelayMs);
+      await Future<void>.delayed(Duration(milliseconds: delayMs));
+      if (mounted) {
+        _showRecoveryDialogWhenReady(l10n, autoSave, retryCount: retryCount + 1, mergedDraft: mergedDraft);
+      }
       return;
     }
 
@@ -534,10 +538,10 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
 
     try {
       // Use the context from rootNavigatorKey, not AppLifecycleManager's context
-      final shouldRecover = await _showRecoveryDialog(navigatorContext, l10n);
+      final choice = await _showRecoveryDialog(navigatorContext, l10n);
       // Re-check contexts are still valid after async gap
       if (mounted && navigatorContext.mounted) {
-        await _handleRecoveryChoice(shouldRecover, autoSave, l10n, navigatorContext, mergedDraft: mergedDraft);
+        await _handleRecoveryChoice(choice, autoSave, l10n, navigatorContext, mergedDraft: mergedDraft);
       }
     } catch (e, stack) {
       // Catch any remaining Navigator errors (e.g., context became invalid)
@@ -548,24 +552,34 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     }
   }
 
-  /// Show recovery dialog helper
-  Future<bool?> _showRecoveryDialog(
+  /// Show recovery dialog with 3 buttons: Discard / Not now / Resume
+  Future<_RecoveryChoice?> _showRecoveryDialog(
     BuildContext context,
     AppLocalizations l10n,
   ) async {
-    return showDialog<bool>(
+    return showDialog<_RecoveryChoice>(
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) => AlertDialog(
         title: Text(l10n.recoverWorkout),
         content: Text(l10n.recoverWorkoutMessage),
         actions: [
+          // "Scarta" — red, actually deletes draft
           TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: Text(l10n.discard),
+            onPressed: () => Navigator.of(dialogContext).pop(_RecoveryChoice.discard),
+            child: Text(
+              l10n.discard,
+              style: TextStyle(color: Theme.of(dialogContext).colorScheme.error),
+            ),
           ),
+          // "Non ora" — neutral, keeps draft in Hive
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(_RecoveryChoice.notNow),
+            child: Text(l10n.recoveryNotNow),
+          ),
+          // "Riprendi" — primary, restores workout
           FilledButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
+            onPressed: () => Navigator.of(dialogContext).pop(_RecoveryChoice.resume),
             child: Text(l10n.recover),
           ),
         ],
@@ -573,43 +587,52 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     );
   }
 
-  /// Handle recovery choice (recover or discard draft)
+  /// Handle recovery choice (resume, not now, or discard)
   ///
   /// CRITICAL FIX: Uses navigatorContext from rootNavigatorKey for navigation,
   /// not AppLifecycleManager's context (which is above MaterialApp).
   Future<void> _handleRecoveryChoice(
-    bool? shouldRecover,
+    _RecoveryChoice? choice,
     dynamic autoSave,
     AppLocalizations l10n,
     BuildContext navigatorContext, {
     Workout? mergedDraft,
   }) async {
-    if (shouldRecover == true) {
-      // Use pre-loaded merged draft if available, otherwise recover from storage
-      final recoveredWorkout = mergedDraft ?? await autoSave.recoverDraft();
-      // Check both widget mounted and navigator context still valid after async gap
-      if (recoveredWorkout != null && mounted && navigatorContext.mounted) {
-        ref.read(currentWorkoutProvider.notifier).restoreFromDraft(recoveredWorkout);
+    switch (choice) {
+      case _RecoveryChoice.resume:
+        // Use pre-loaded merged draft if available, otherwise recover from storage
+        final recoveredWorkout = mergedDraft ?? await autoSave.recoverDraft();
+        // Check both widget mounted and navigator context still valid after async gap
+        if (recoveredWorkout != null && mounted && navigatorContext.mounted) {
+          ref.read(currentWorkoutProvider.notifier).restoreFromDraft(recoveredWorkout);
 
-        if (kDebugMode) {
-          debugPrint('💾 [AppLifecycle] Draft recovered successfully!');
+          if (kDebugMode) {
+            debugPrint('💾 [AppLifecycle] Draft recovered successfully!');
+          }
+
+          SnackBarService.showSuccess(
+            navigatorContext,
+            l10n.workoutRecovered,
+          );
+
+          navigatorContext.go('/workout');
         }
 
-        // Show success snackbar using navigator context
-        SnackBarService.showSuccess(
-          navigatorContext,
-          l10n.workoutRecovered,
-        );
+      case _RecoveryChoice.notNow:
+        // Draft stays in Hive — user can resume later from Quick Actions "+"
+        if (kDebugMode) {
+          debugPrint('💾 [AppLifecycle] Draft kept for later (Not now)');
+        }
 
-        // Navigate to workout screen using navigator context
-        navigatorContext.go('/workout');
-      }
-    } else {
-      // Discard the draft
-      await autoSave.discardDraft();
-      if (kDebugMode) {
-        debugPrint('💾 [AppLifecycle] Draft discarded by user');
-      }
+      case _RecoveryChoice.discard:
+        await autoSave.discardDraft();
+        if (kDebugMode) {
+          debugPrint('💾 [AppLifecycle] Draft discarded by user');
+        }
+
+      case null:
+        // Dialog dismissed without choice — treat as "not now"
+        break;
     }
   }
 
@@ -849,3 +872,6 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
     return widget.child;
   }
 }
+
+/// Recovery dialog user choice
+enum _RecoveryChoice { resume, notNow, discard }
