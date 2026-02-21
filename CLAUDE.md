@@ -3,6 +3,10 @@
 Flutter | Clean Architecture + Riverpod 3.x | Testing Phase (1 user)
 Breaking changes OK. Refactoring aggressivi permessi.
 
+## WORKFLOW OBBLIGATORIO
+
+**Ogni feature, bugfix o modifica deve essere committata automaticamente al termine del lavoro**, senza attendere istruzioni esplicite dell'utente. Usa il formato standard git commit con prefisso semantico (`feat:`, `fix:`, `chore:`, ecc.).
+
 ## REGOLE CRITICHE (Pre-commit + hook enforced)
 
 | Regola | Corretto | Sbagliato |
