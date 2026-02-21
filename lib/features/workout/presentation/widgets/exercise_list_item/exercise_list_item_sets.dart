@@ -650,7 +650,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ..._buildSetDetailsForMode(set, config),
-                  // RPE indicator
+                  // RPE indicator — with spacing
+                  if (set.isCompleted)
+                    const SizedBox(width: 6),
                   if (set.isCompleted)
                     GestureDetector(
                       onTap: () => _showQuickRpePicker(context, set),
@@ -674,11 +676,13 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                               ),
                             ),
                     ),
-                  // Set duration chip
+                  // Set duration chip — with spacing
                   if (set.isCompleted &&
                       set.setDurationMillis != null &&
-                      (config.setDurationTracking ?? false))
+                      (config.setDurationTracking ?? false)) ...[
+                    const SizedBox(width: 4),
                     _buildSetDurationChip(set.setDurationMillis!),
+                  ],
                 ],
               ),
 
@@ -742,11 +746,6 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       fontWeight: FontWeight.w500,
     );
 
-    // Fixed width for weight column — keeps × aligned vertically across sets
-    // TextAlign.start so weight hugs the set number circle
-    // 58px fits up to "200.5 kg" / "440 lbs" at bodyMedium size
-    const double weightColumnWidth = 58;
-
     switch (_cachedCountingMode) {
       case ExerciseCountingMode.weighted:
         // Weighted: Show weight × reps (with placeholders for null values)
@@ -756,30 +755,23 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         // If both null, show a single placeholder prompting edit
         if (!hasWeight && !hasReps) {
           return [
-            SizedBox(
-              width: weightColumnWidth,
-              child: Text(
-                '-- × -- reps',
-                style: placeholderStyle,
-                overflow: TextOverflow.ellipsis,
-              ),
+            Text(
+              '-- × -- reps',
+              style: placeholderStyle,
+              overflow: TextOverflow.ellipsis,
             ),
           ];
         }
 
         return [
-          SizedBox(
-            width: weightColumnWidth,
-            child: Text(
-              hasWeight
-                  ? set.weight!.formatWeight(config.measurementUnit)
-                  : '--',
-              style: (hasWeight ? valueStyle : placeholderStyle)?.copyWith(
-                fontFeatures: [const FontFeature.tabularFigures()],
-              ),
-              textAlign: TextAlign.start,
-              overflow: TextOverflow.ellipsis,
+          Text(
+            hasWeight
+                ? set.weight!.formatWeight(config.measurementUnit)
+                : '--',
+            style: (hasWeight ? valueStyle : placeholderStyle)?.copyWith(
+              fontFeatures: [const FontFeature.tabularFigures()],
             ),
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(width: 4),
           Text('×', style: context.textTheme.bodySmall),
