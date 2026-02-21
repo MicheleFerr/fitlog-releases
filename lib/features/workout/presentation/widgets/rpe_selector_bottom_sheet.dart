@@ -162,6 +162,12 @@ class _RpeSelectorBottomSheetState
 
     _loadExerciseData(_currentExerciseSet);
 
+    // Initialize wheel controllers after _loadExerciseData sets _actualWeight/_actualReps
+    final weightIndex = (_actualWeight / 0.5).round().clamp(0, 600);
+    final repsIndex = _actualReps.clamp(0, 100);
+    _weightWheelController = FixedExtentScrollController(initialItem: weightIndex);
+    _repsWheelController = FixedExtentScrollController(initialItem: repsIndex);
+
     // Load saved preference for weight/reps verification toggle
     final config = ref.read(appConfigProvider);
     _showWeightAndReps = config.showWeightVerification;
@@ -221,6 +227,8 @@ class _RpeSelectorBottomSheetState
   @override
   void dispose() {
     _pageController?.dispose();
+    _weightWheelController.dispose();
+    _repsWheelController.dispose();
     super.dispose();
   }
 
