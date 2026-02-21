@@ -27885,4 +27885,44 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareResult => 'Share';
+
+  @override
+  String get strengthLevelNoData => 'No data available for this exercise';
+
+  @override
+  String get strengthLevelAvailableAfterWorkout =>
+      'Strength levels will be available after your first workout';
+
+  @override
+  String get your1RM => 'Your 1RM:';
+
+  @override
+  String benchmarkBodyweight(String weight) {
+    return 'Benchmarks based on ${weight}kg bodyweight';
+  }
+
+  @override
+  String get recordLabel => 'Record:';
+
+  @override
+  String get dateLabel => 'Date';
+
+  @override
+  String get setDetailLabel => 'Set';
+
+  @override
+  String sessionSetsCount(int count) {
+    return 'Session sets ($count):';
+  }
+
+  @override
+  String get calculatedWithBrzycki => '(Calculated with Brzycki formula)';
+
+  @override
+  String progressToNextLevel(String percent, String nextLevel) {
+    return '$percent% towards $nextLevel';
+  }
+
+  @override
+  String get dataStillLoading => 'Data is still loading...';
 }

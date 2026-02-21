@@ -20994,5 +20994,17 @@
     }
   },
   "shareResult": "Condividi",
-  "goHome": "Home"
+  "goHome": "Home",
+
+  "strengthLevelNoData": "Nessun dato disponibile per questo esercizio",
+  "strengthLevelAvailableAfterWorkout": "I livelli di forza saranno disponibili dopo il primo workout",
+  "your1RM": "Il tuo 1RM:",
+  "benchmarkBodyweight": "Benchmark basati su peso corporeo di {weight}kg",
+  "recordLabel": "Record:",
+  "dateLabel": "Data",
+  "setDetailLabel": "Set",
+  "sessionSetsCount": "Set della sessione ({count}):",
+  "calculatedWithBrzycki": "(Calcolato con formula di Brzycki)",
+  "progressToNextLevel": "{percent}% verso {nextLevel}",
+  "dataStillLoading": "Dati ancora in caricamento..."
 }

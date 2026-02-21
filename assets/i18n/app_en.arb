@@ -34279,5 +34279,60 @@
   "goHome": "Home",
   "@goHome": {
     "description": "Short button label to go to home"
+  },
+
+  "strengthLevelNoData": "No data available for this exercise",
+  "@strengthLevelNoData": {
+    "description": "Placeholder when no strength data exists"
+  },
+  "strengthLevelAvailableAfterWorkout": "Strength levels will be available after your first workout",
+  "@strengthLevelAvailableAfterWorkout": {
+    "description": "Hint text for strength level placeholder"
+  },
+  "your1RM": "Your 1RM:",
+  "@your1RM": {
+    "description": "Label for user estimated 1 rep max"
+  },
+  "benchmarkBodyweight": "Benchmarks based on {weight}kg bodyweight",
+  "@benchmarkBodyweight": {
+    "description": "Footer note for strength benchmark table",
+    "placeholders": {
+      "weight": {"type": "String"}
+    }
+  },
+  "recordLabel": "Record:",
+  "@recordLabel": {
+    "description": "Label for record value in detail modal"
+  },
+  "dateLabel": "Date",
+  "@dateLabel": {
+    "description": "Label for date field in record detail"
+  },
+  "setDetailLabel": "Set",
+  "@setDetailLabel": {
+    "description": "Label for set detail row in record modal"
+  },
+  "sessionSetsCount": "Session sets ({count}):",
+  "@sessionSetsCount": {
+    "description": "Header for session sets list in record detail",
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "calculatedWithBrzycki": "(Calculated with Brzycki formula)",
+  "@calculatedWithBrzycki": {
+    "description": "Note that 1RM was calculated using Brzycki formula"
+  },
+  "progressToNextLevel": "{percent}% towards {nextLevel}",
+  "@progressToNextLevel": {
+    "description": "Progress percentage towards next strength level",
+    "placeholders": {
+      "percent": {"type": "String"},
+      "nextLevel": {"type": "String"}
+    }
+  },
+  "dataStillLoading": "Data is still loading...",
+  "@dataStillLoading": {
+    "description": "Message when user tries action while data is loading"
   }
 }

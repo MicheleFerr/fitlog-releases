@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
@@ -17,6 +18,48 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/chart_data_p
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+
+/// Metric types for exercise charts.
+/// Internal [key] is used for data lookup; [label] for localized display.
+enum ChartMetric {
+  weight,
+  reps,
+  rpe;
+
+  /// Internal key used by ChartDataParams and MultiMetricChart.
+  String get key {
+    switch (this) {
+      case ChartMetric.weight:
+        return 'Peso';
+      case ChartMetric.reps:
+        return 'Reps';
+      case ChartMetric.rpe:
+        return 'RPE';
+    }
+  }
+
+  String label(BuildContext context) {
+    switch (this) {
+      case ChartMetric.weight:
+        return context.l10n.weight;
+      case ChartMetric.reps:
+        return context.l10n.reps;
+      case ChartMetric.rpe:
+        return context.l10n.rpe;
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case ChartMetric.weight:
+        return AppIcons.fitnessCenter;
+      case ChartMetric.reps:
+        return AppIcons.repeat;
+      case ChartMetric.rpe:
+        return AppIcons.trendingUp;
+    }
+  }
+}
 
 /// Tab Sommario: mostra stats, grafico, record personali e livello di forza
 class ExerciseSummaryTab extends ConsumerStatefulWidget {
@@ -36,22 +79,16 @@ class ExerciseSummaryTab extends ConsumerStatefulWidget {
 }
 
 class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
-  // Chip selezionato per il grafico: Peso, Reps, RPE
-  String _selectedChip = 'Peso';
+  ChartMetric _selectedChip = ChartMetric.weight;
 
-  // Metriche selezionate per il grafico multi-metrica (default: tutte)
-  final List<String> _selectedMultiMetrics = ['Peso', 'Reps', 'RPE'];
+  final List<ChartMetric> _selectedMultiMetrics = ChartMetric.values.toList();
 
   @override
   Widget build(BuildContext context) {
-    final statsAsync = ref.watch(
-      exerciseStatsFromActivitiesProvider(widget.exerciseName),
-    );
-
     return RefreshIndicator(
       onRefresh: () async {
         ref.invalidate(
-          exerciseStatsFromActivitiesProvider(widget.exerciseName),
+          exerciseHistoryDataGroupedProvider(widget.exerciseName),
         );
       },
       child: SingleChildScrollView(
@@ -76,7 +113,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             const SizedBox(height: 24),
 
             // Record Personali
-            _buildPersonalRecordsSection(statsAsync),
+            _buildPersonalRecordsSection(),
 
             const SizedBox(height: 24),
 
@@ -130,11 +167,11 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              _buildMetricChip('Peso', AppIcons.fitnessCenter),
+              _buildMetricChip(ChartMetric.weight),
               const SizedBox(width: 8),
-              _buildMetricChip('Reps', AppIcons.repeat),
+              _buildMetricChip(ChartMetric.reps),
               const SizedBox(width: 8),
-              _buildMetricChip('RPE', AppIcons.trendingUp),
+              _buildMetricChip(ChartMetric.rpe),
             ],
           ),
         ),
@@ -147,27 +184,27 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     );
   }
 
-  Widget _buildMetricChip(String label, IconData icon) {
-    final isSelected = _selectedChip == label;
+  Widget _buildMetricChip(ChartMetric metric) {
+    final isSelected = _selectedChip == metric;
 
     return FilterChip(
       label: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            icon,
-            size: 16,
+            metric.icon,
+            size: AppIconSize.tiny,
             color: isSelected
                 ? context.colors.onPrimary
                 : context.colors.onSurface,
           ),
           const SizedBox(width: 4),
-          Text(label),
+          Text(metric.label(context)),
         ],
       ),
       selected: isSelected,
       onSelected: (selected) {
-        setState(() => _selectedChip = label);
+        setState(() => _selectedChip = metric);
       },
       backgroundColor: context.colors.surfaceContainerHighest,
       selectedColor: context.colors.primary,
@@ -206,10 +243,10 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     for (final metric in _selectedMultiMetrics) {
       final params = ChartDataParams(
         exerciseName: widget.exerciseName,
-        metric: metric,
+        metric: metric.key,
         days: 90,
       );
-      metricDataMap[metric] = ref.watch(exerciseChartCleanProvider(params));
+      metricDataMap[metric.key] = ref.watch(exerciseChartCleanProvider(params));
     }
 
     // Check if all data is loaded
@@ -276,7 +313,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
 
       return MultiMetricChart(
         dataByMetric: dataByMetric,
-        selectedMetrics: _selectedMultiMetrics,
+        selectedMetrics: _selectedMultiMetrics.map((m) => m.key).toList(),
       );
     }
 
@@ -289,7 +326,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     // Crea parametri per chart data provider
     final params = ChartDataParams(
       exerciseName: widget.exerciseName,
-      metric: _selectedChip,
+      metric: _selectedChip.key,
       days: 90, // Ultimi 3 mesi
     );
 
@@ -301,7 +338,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
         // Render chart widget con dati
         return ExerciseMetricChart(
           dataPoints: dataPoints,
-          metric: _selectedChip,
+          metric: _selectedChip.key,
         );
       },
       loading: () => Container(
@@ -348,7 +385,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     );
   }
 
-  Widget _buildPersonalRecordsSection(AsyncValue<dynamic> statsAsync) {
+  Widget _buildPersonalRecordsSection() {
     final historyAsync = ref.watch(
       exerciseHistoryDataGroupedProvider(widget.exerciseName),
     );
@@ -451,26 +488,29 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: InkWell(
-        onTap: () => _showRecordDetails(label, recordData),
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            gradient: LinearGradient(
-              colors: [
-                color.withValues(alpha: 0.1),
-                color.withValues(alpha: 0.05),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+      child: Semantics(
+        label: '$label: $value',
+        button: true,
+        child: InkWell(
+          onTap: () => _showRecordDetails(label, recordData),
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: LinearGradient(
+                colors: [
+                  color.withValues(alpha: 0.1),
+                  color.withValues(alpha: 0.05),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
             ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: color, size: 28),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, color: color, size: AppIconSize.large),
               const SizedBox(height: 8),
               Text(
                 label,
@@ -498,6 +538,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             ],
           ),
         ),
+      ),
       ),
     );
   }
@@ -663,7 +704,8 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                     if (set.weight != null &&
                         set.reps != null &&
                         set.reps! > 0) {
-                      final calculated1RM = _calculate1RM(
+                      final calculated1RM =
+                          OneRMCalculator.calculateBrzycki(
                         set.weight!,
                         set.reps!,
                       );
@@ -722,7 +764,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
         ),
         const SizedBox(height: 12),
         Text(
-          'Nessun dato disponibile per questo esercizio',
+          context.l10n.strengthLevelNoData,
           style: context.textTheme.bodyMedium?.copyWith(
             color: context.colors.onSurface.withValues(alpha: 0.6),
           ),
@@ -730,7 +772,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
         ),
         const SizedBox(height: 4),
         Text(
-          'I livelli di forza saranno disponibili dopo il primo workout',
+          context.l10n.strengthLevelAvailableAfterWorkout,
           style: context.textTheme.bodySmall?.copyWith(
             color: context.colors.onSurface.withValues(alpha: 0.5),
           ),
@@ -804,7 +846,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Il tuo 1RM:',
+                context.l10n.your1RM,
                 style: context.textTheme.bodyLarge?.copyWith(
                   color: context.colors.onSurface.withValues(alpha: 0.7),
                 ),
@@ -843,7 +885,10 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             if (currentLevel != ExperienceLevel.elite && progressToNext > 0)
               Expanded(
                 child: Text(
-                  '${(progressToNext * 100).toStringAsFixed(0)}% verso ${levels[levels.indexOf(currentLevel) + 1].getLabel(locale)}',
+                  context.l10n.progressToNextLevel(
+                    (progressToNext * 100).toStringAsFixed(0),
+                    levels[levels.indexOf(currentLevel) + 1].getLabel(locale),
+                  ),
                   style: context.textTheme.bodySmall?.copyWith(
                     color: context.colors.onSurface.withValues(alpha: 0.6),
                   ),
@@ -931,7 +976,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               const Divider(height: 1),
               const SizedBox(height: 8),
               Text(
-                'Benchmark basati su peso corporeo di 80kg',
+                context.l10n.benchmarkBodyweight(
+                  userBodyweight.toStringAsFixed(0),
+                ),
                 style: context.textTheme.labelSmall?.copyWith(
                   color: context.colors.onSurface.withValues(alpha: 0.5),
                   fontStyle: FontStyle.italic,
@@ -960,12 +1007,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     }
   }
 
-  // Formula di Brzycki per calcolare 1RM
-  double _calculate1RM(double weight, int reps) {
-    if (reps == 1) return weight;
-    return weight * (36 / (37 - reps));
-  }
-
   // Calcola tutti i record dalla cronologia
   _Records _calculateRecords(List<ExerciseHistoryData> allSets) {
     // Max Weight
@@ -983,7 +1024,10 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     double best1RM = 0.0;
     for (final set in allSets) {
       if (set.weight != null && set.reps != null && set.reps! > 0) {
-        final calculated1RM = _calculate1RM(set.weight!, set.reps!);
+        final calculated1RM = OneRMCalculator.calculateBrzycki(
+          set.weight!,
+          set.reps!,
+        );
         if (calculated1RM > best1RM) {
           best1RM = calculated1RM;
           best1RMSet = set;
@@ -1008,6 +1052,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     final Map<String, double> sessionVolumes = {};
     final Map<String, DateTime> sessionDates = {};
     final Map<String, List<ExerciseHistoryData>> sessionSets = {};
+    final Map<String, String> sessionWorkoutNames = {};
 
     for (final set in allSets) {
       if (set.weight != null && set.reps != null) {
@@ -1018,6 +1063,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             (sessionVolumes[sessionKey] ?? 0.0) + volume;
         sessionDates[sessionKey] = set.date;
         sessionSets[sessionKey] = [...(sessionSets[sessionKey] ?? []), set];
+        sessionWorkoutNames[sessionKey] = set.workoutName;
       }
     }
 
@@ -1056,7 +1102,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       bestSessionVolume: _RecordData(
         value: bestSessionVolume,
         date: bestSessionKey != null ? sessionDates[bestSessionKey] : null,
-        workoutName: bestSessionKey?.split('_')[0],
+        workoutName: bestSessionKey != null ? sessionWorkoutNames[bestSessionKey] : null,
         sessionSets: bestSessionKey != null
             ? sessionSets[bestSessionKey]
             : null,
@@ -1066,7 +1112,8 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
 
   // Mostra i dettagli del record in una modal
   void _showRecordDetails(String recordLabel, _RecordData recordData) {
-    final dateFormatter = DateFormat('EEEE, dd MMMM yyyy', 'it_IT');
+    final locale = Localizations.localeOf(context).toString();
+    final dateFormatter = DateFormat('EEEE, dd MMMM yyyy', locale);
 
     ModalService.showBottomSheet(
       context,
@@ -1082,7 +1129,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 Icon(
                   AppIcons.emojiEvents,
                   color: context.colors.primary,
-                  size: 32,
+                  size: AppIconSize.xlarge,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -1110,7 +1157,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Record:',
+                    context.l10n.recordLabel,
                     style: context.textTheme.titleMedium?.copyWith(
                       color: context.colors.onSurface.withValues(alpha: 0.7),
                     ),
@@ -1132,7 +1179,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             if (recordData.date != null) ...[
               _buildDetailRow(
                 AppIcons.calendarToday,
-                'Data',
+                context.l10n.dateLabel,
                 dateFormatter.format(recordData.date!),
               ),
               const SizedBox(height: 12),
@@ -1142,7 +1189,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             if (recordData.workoutName != null) ...[
               _buildDetailRow(
                 AppIcons.fitnessCenter,
-                'Allenamento',
+                context.l10n.workout,
                 recordData.workoutName!,
               ),
               const SizedBox(height: 12),
@@ -1152,14 +1199,14 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             if (recordData.weight != null && recordData.reps != null) ...[
               _buildDetailRow(
                 AppIcons.info,
-                'Set',
+                context.l10n.setDetailLabel,
                 '${recordData.weight!.toStringAsFixed(1)} kg × ${recordData.reps} reps',
               ),
               if (recordData.isCalculated)
                 Padding(
                   padding: const EdgeInsets.only(left: 32, top: 4),
                   child: Text(
-                    '(Calcolato con formula di Brzycki)',
+                    context.l10n.calculatedWithBrzycki,
                     style: context.textTheme.labelSmall?.copyWith(
                       color: context.colors.onSurface.withValues(alpha: 0.5),
                       fontStyle: FontStyle.italic,
@@ -1175,7 +1222,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               const Divider(),
               const SizedBox(height: 8),
               Text(
-                'Set della sessione (${recordData.sessionSets!.length}):',
+                context.l10n.sessionSetsCount(recordData.sessionSets!.length),
                 style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: context.colors.onSurface,
@@ -1232,19 +1279,21 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             const SizedBox(height: 24),
 
             // Close button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: context.colors.primary,
-                  foregroundColor: context.colors.onPrimary,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+            Builder(
+              builder: (modalContext) => SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.of(modalContext).pop(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: context.colors.primary,
+                    foregroundColor: context.colors.onPrimary,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
+                  child: Text(context.l10n.closeButton),
                 ),
-                child: const Text('Chiudi'),
               ),
             ),
           ],
@@ -1256,7 +1305,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
   Widget _buildDetailRow(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(icon, size: 20, color: context.colors.primary),
+        Icon(icon, size: AppIconSize.small, color: context.colors.primary),
         const SizedBox(width: 12),
         Text(
           '$label:',

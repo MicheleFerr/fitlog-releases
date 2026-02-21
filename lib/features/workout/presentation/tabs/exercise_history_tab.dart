@@ -102,7 +102,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
           SemanticIcon(
             icon: AppIcons.history,
             semanticLabel: 'History',
-            size: AppIconSize.medium,
+            size: AppIconSize.emptyState,
             color: context.colors.onSurface.withValues(alpha: 0.3),
           ),
           const SizedBox(height: 16),

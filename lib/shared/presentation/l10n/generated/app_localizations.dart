@@ -49829,6 +49829,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share'**
   String get shareResult;
+
+  /// Placeholder when no strength data exists
+  ///
+  /// In en, this message translates to:
+  /// **'No data available for this exercise'**
+  String get strengthLevelNoData;
+
+  /// Hint text for strength level placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Strength levels will be available after your first workout'**
+  String get strengthLevelAvailableAfterWorkout;
+
+  /// Label for user estimated 1 rep max
+  ///
+  /// In en, this message translates to:
+  /// **'Your 1RM:'**
+  String get your1RM;
+
+  /// Footer note for strength benchmark table
+  ///
+  /// In en, this message translates to:
+  /// **'Benchmarks based on {weight}kg bodyweight'**
+  String benchmarkBodyweight(String weight);
+
+  /// Label for record value in detail modal
+  ///
+  /// In en, this message translates to:
+  /// **'Record:'**
+  String get recordLabel;
+
+  /// Label for date field in record detail
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get dateLabel;
+
+  /// Label for set detail row in record modal
+  ///
+  /// In en, this message translates to:
+  /// **'Set'**
+  String get setDetailLabel;
+
+  /// Header for session sets list in record detail
+  ///
+  /// In en, this message translates to:
+  /// **'Session sets ({count}):'**
+  String sessionSetsCount(int count);
+
+  /// Note that 1RM was calculated using Brzycki formula
+  ///
+  /// In en, this message translates to:
+  /// **'(Calculated with Brzycki formula)'**
+  String get calculatedWithBrzycki;
+
+  /// Progress percentage towards next strength level
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% towards {nextLevel}'**
+  String progressToNextLevel(String percent, String nextLevel);
+
+  /// Message when user tries action while data is loading
+  ///
+  /// In en, this message translates to:
+  /// **'Data is still loading...'**
+  String get dataStillLoading;
 }
 
 class _AppLocalizationsDelegate

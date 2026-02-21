@@ -194,7 +194,7 @@ class ExerciseAlternativesTab extends ConsumerWidget {
             SemanticIcon(
               icon: AppIcons.searchOff,
               semanticLabel: context.l10n.noAlternativesFound,
-              size: AppIconSize.medium,
+              size: AppIconSize.emptyState,
               color: context.colors.outline.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
@@ -219,28 +219,34 @@ class ExerciseAlternativesTab extends ConsumerWidget {
     );
   }
 
-  /// Get difficulty icon
+  /// Get difficulty icon (supports both IT and EN values)
   IconData _getDifficultyIcon(String difficulty) {
     switch (difficulty.toLowerCase()) {
       case 'principiante':
+      case 'beginner':
         return AppIcons.star;
       case 'intermedio':
+      case 'intermediate':
         return AppIcons.starHalf;
       case 'avanzato':
+      case 'advanced':
         return AppIcons.stars;
       default:
         return AppIcons.help;
     }
   }
 
-  /// Get difficulty color
+  /// Get difficulty color (supports both IT and EN values)
   Color _getDifficultyColor(BuildContext context, String difficulty) {
     switch (difficulty.toLowerCase()) {
       case 'principiante':
+      case 'beginner':
         return context.colors.success;
       case 'intermedio':
+      case 'intermediate':
         return context.colors.secondary;
       case 'avanzato':
+      case 'advanced':
         return context.colors.error;
       default:
         return context.colors.surfaceContainerHighest;

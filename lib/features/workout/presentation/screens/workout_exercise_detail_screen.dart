@@ -11,7 +11,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/utils/one_rm_calculator.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 
 /// Schermata di dettaglio esercizio con 3 tab: Sommario, Cronologia, Istruzioni
 ///
@@ -153,8 +153,10 @@ class _WorkoutExerciseDetailScreenState
 
     for (final set in allSets) {
       if (set.weight != null && set.reps != null && set.reps! > 0) {
-        final calculated1RM = calculate1RM(set.weight!, set.reps!);
-        if (calculated1RM == null) continue;
+        final calculated1RM = OneRMCalculator.calculateBrzycki(
+          set.weight!,
+          set.reps!,
+        );
         if (calculated1RM > best1RM) {
           best1RM = calculated1RM;
           best1RMDate = set.date;
