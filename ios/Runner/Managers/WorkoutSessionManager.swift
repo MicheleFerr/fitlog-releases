@@ -71,6 +71,8 @@ class WorkoutSessionManager: NSObject {
             isWorkoutSessionActive(result: result)
         case "getWorkoutSessionState":
             getWorkoutSessionState(result: result)
+        case "setNextExerciseInfo":
+            setNextExerciseInfo(call.arguments as? [String: Any], result: result)
         case "setCurrentRestDuration":
             setCurrentRestDuration(call.arguments as? [String: Any], result: result)
         case "setRpeTrackingEnabled":
@@ -669,6 +671,29 @@ class WorkoutSessionManager: NSObject {
             print("✅ [WorkoutSession] Rest timer resumed successfully")
             result(true)
         }
+    }
+
+    // MARK: - Set Next Exercise Info
+
+    /// Stores info about the next exercise/set in shared UserDefaults
+    /// This allows AppIntents to show the correct exercise name when transitioning to REST
+    private func setNextExerciseInfo(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
+        guard let args = arguments else {
+            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing arguments", details: nil))
+            return
+        }
+
+        let userDefaults = UserDefaults(suiteName: sharedSuiteName)
+        userDefaults?.set(args["exerciseName"] as? String ?? "", forKey: "next_exercise_name")
+        userDefaults?.set(args["currentSet"] as? Int ?? 1, forKey: "next_exercise_set")
+        userDefaults?.set(args["totalSets"] as? Int ?? 1, forKey: "next_exercise_total_sets")
+        userDefaults?.set(args["weight"] as? Double ?? 0.0, forKey: "next_exercise_weight")
+        userDefaults?.set(args["targetReps"] as? Int ?? 0, forKey: "next_exercise_target_reps")
+        userDefaults?.set(args["restDuration"] as? Int ?? 90, forKey: "next_exercise_rest_duration")
+        userDefaults?.set(args["isLastSetOfExercise"] as? Bool ?? false, forKey: "is_last_set_of_exercise")
+
+        Logger.shared.debug("📝 Stored next exercise info: \(args["exerciseName"] ?? "?")", category: .general)
+        result(true)
     }
 
     // MARK: - Set Current Rest Duration

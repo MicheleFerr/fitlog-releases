@@ -439,6 +439,47 @@ class WorkoutSessionLAService {
     }
   }
 
+  /// Store info about the next exercise/set in shared UserDefaults
+  ///
+  /// This allows AppIntents to read the correct next exercise info when
+  /// transitioning to REST mode, so the LA shows the right exercise name
+  /// even before Flutter can update it.
+  Future<bool> setNextExerciseInfo({
+    required String exerciseName,
+    required int currentSet,
+    required int totalSets,
+    required double weight,
+    required int targetReps,
+    required int restDuration,
+    required bool isLastSetOfExercise,
+  }) async {
+    if (!Platform.isIOS) return false;
+
+    try {
+      final result = await _channel.invokeMethod<bool>(
+        'setNextExerciseInfo',
+        {
+          'exerciseName': exerciseName,
+          'currentSet': currentSet,
+          'totalSets': totalSets,
+          'weight': weight,
+          'targetReps': targetReps,
+          'restDuration': restDuration,
+          'isLastSetOfExercise': isLastSetOfExercise,
+        },
+      );
+      print(
+        '[WorkoutSessionLA] Set next exercise info: $exerciseName set $currentSet/$totalSets',
+      );
+      return result ?? false;
+    } on PlatformException catch (e) {
+      print(
+        '[WorkoutSessionLA] Failed to set next exercise info: ${e.message}',
+      );
+      return false;
+    }
+  }
+
   /// Store the RPE tracking setting in shared UserDefaults
   ///
   /// This allows AppIntents to know whether to show RPE mode or go directly

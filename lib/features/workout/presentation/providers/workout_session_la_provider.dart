@@ -39,6 +39,7 @@ class WorkoutSessionLAState {
     this.activityId,
     this.mode = WorkoutSessionMode.exercise,
     this.currentExerciseName,
+    this.currentExerciseId,
     this.currentSetIndex = 1,
     this.totalSets = 1,
   });
@@ -46,6 +47,7 @@ class WorkoutSessionLAState {
   final String? activityId;
   final WorkoutSessionMode mode;
   final String? currentExerciseName;
+  final String? currentExerciseId;
   final int currentSetIndex;
   final int totalSets;
 
@@ -54,6 +56,7 @@ class WorkoutSessionLAState {
     String? activityId,
     WorkoutSessionMode? mode,
     String? currentExerciseName,
+    String? currentExerciseId,
     int? currentSetIndex,
     int? totalSets,
   }) {
@@ -62,6 +65,7 @@ class WorkoutSessionLAState {
       activityId: activityId ?? this.activityId,
       mode: mode ?? this.mode,
       currentExerciseName: currentExerciseName ?? this.currentExerciseName,
+      currentExerciseId: currentExerciseId ?? this.currentExerciseId,
       currentSetIndex: currentSetIndex ?? this.currentSetIndex,
       totalSets: totalSets ?? this.totalSets,
     );
@@ -170,37 +174,67 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
     }
 
     print(
-      '[WorkoutSessionLA] 📋 Looking for next incomplete set in ${workout.exercises.length} exercises',
+      '[WorkoutSessionLA] 📋 Looking for next incomplete set (currentExerciseId=${state.currentExerciseId})',
     );
 
-    // Find the current exercise and set
-    for (final exercise in workout.exercises) {
-      final incompleteSetIndex = exercise.sets.indexWhere(
-        (set) => !set.isCompleted,
-      );
+    // FIX: Use currentExerciseId to find the right exercise first
+    // instead of blindly picking the first exercise with incomplete sets
+    Exercise? targetExercise;
+    int targetSetIndex = -1;
 
-      if (incompleteSetIndex != -1) {
-        final completedExercises = workout.exercises
-            .where((e) => e.sets.every((s) => s.isCompleted))
-            .length;
-
-        print(
-          '[WorkoutSessionLA] ✅ Found next set: ${exercise.name} set #${incompleteSetIndex + 1}',
+    if (state.currentExerciseId != null) {
+      try {
+        final currentExercise = workout.exercises.firstWhere(
+          (e) => e.id == state.currentExerciseId,
         );
-
-        transitionToExercise(
-          exercise: exercise,
-          setIndex: incompleteSetIndex + 1,
-          completedExercises: completedExercises,
-          totalExercises: workout.exercises.length,
+        final incompleteIdx = currentExercise.sets.indexWhere(
+          (set) => !set.isCompleted,
         );
-        return;
+        if (incompleteIdx != -1) {
+          targetExercise = currentExercise;
+          targetSetIndex = incompleteIdx;
+          print(
+            '[WorkoutSessionLA] ✅ Current exercise still has incomplete sets: ${currentExercise.name} set #${incompleteIdx + 1}',
+          );
+        }
+      } catch (_) {
+        // Exercise not found by ID - fall through to scan
       }
     }
 
-    print(
-      '[WorkoutSessionLA] ⚠️ No incomplete sets found - workout may be complete',
-    );
+    // Fallback: scan all exercises for first incomplete set
+    if (targetExercise == null) {
+      for (final exercise in workout.exercises) {
+        final incompleteSetIndex = exercise.sets.indexWhere(
+          (set) => !set.isCompleted,
+        );
+        if (incompleteSetIndex != -1) {
+          targetExercise = exercise;
+          targetSetIndex = incompleteSetIndex;
+          print(
+            '[WorkoutSessionLA] 🔍 Fallback: found ${exercise.name} set #${incompleteSetIndex + 1}',
+          );
+          break;
+        }
+      }
+    }
+
+    if (targetExercise != null && targetSetIndex != -1) {
+      final completedExercises = workout.exercises
+          .where((e) => e.sets.every((s) => s.isCompleted))
+          .length;
+
+      transitionToExercise(
+        exercise: targetExercise,
+        setIndex: targetSetIndex + 1,
+        completedExercises: completedExercises,
+        totalExercises: workout.exercises.length,
+      );
+    } else {
+      print(
+        '[WorkoutSessionLA] ⚠️ No incomplete sets found - workout may be complete',
+      );
+    }
   }
 
   WorkoutSessionLAService get _service =>
@@ -268,6 +302,7 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
         activityId: activityId,
         mode: WorkoutSessionMode.exercise,
         currentExerciseName: firstExercise.name,
+        currentExerciseId: firstExercise.id,
         currentSetIndex: currentSetIndex,
         totalSets: firstExercise.sets.length,
       );
@@ -278,6 +313,9 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
 
       // Store RPE tracking setting so AppIntent knows whether to show RPE mode
       await _service.setRpeTrackingEnabled(rpeEnabled);
+
+      // Precompute next exercise info for AppIntent
+      await _computeAndStoreNextInfo(firstExercise, currentSetIndex, workout);
     } else {
       print(
         '[WorkoutSessionLA] ❌ Failed to start Live Activity (null activityId)',
@@ -317,6 +355,7 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
     state = state.copyWith(
       mode: WorkoutSessionMode.exercise,
       currentExerciseName: exercise.name,
+      currentExerciseId: exercise.id,
       currentSetIndex: currentSetIndex,
       totalSets: exercise.sets.length,
     );
@@ -324,6 +363,12 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
     // Update the rest duration for this exercise in UserDefaults
     final restDuration = exercise.restTime ?? 90;
     await _service.setCurrentRestDuration(restDuration);
+
+    // Precompute next exercise info for AppIntent
+    final workout = ref.read(currentWorkoutProvider);
+    if (workout != null) {
+      await _computeAndStoreNextInfo(exercise, currentSetIndex, workout);
+    }
   }
 
   /// Transition to rest mode after completing a set
@@ -368,6 +413,7 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
     state = state.copyWith(
       mode: WorkoutSessionMode.rest,
       currentExerciseName: nextExercise.name,
+      currentExerciseId: nextExercise.id,
       currentSetIndex: nextSetIndex,
       totalSets: nextExercise.sets.length,
     );
@@ -417,6 +463,7 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
       state = state.copyWith(
         mode: WorkoutSessionMode.exercise,
         currentExerciseName: exercise.name,
+        currentExerciseId: exercise.id,
         currentSetIndex: setIndex,
         totalSets: exercise.sets.length,
       );
@@ -424,11 +471,99 @@ class WorkoutSessionLANotifier extends Notifier<WorkoutSessionLAState> {
       // Update the rest duration for this exercise in UserDefaults
       final restDuration = exercise.restTime ?? 90;
       await _service.setCurrentRestDuration(restDuration);
+
+      // Precompute next exercise info for AppIntent
+      final workout = ref.read(currentWorkoutProvider);
+      if (workout != null) {
+        await _computeAndStoreNextInfo(exercise, setIndex, workout);
+      }
+
       print(
         '[WorkoutSessionLA] ✅ Transition to EXERCISE complete, rest duration set to ${restDuration}s',
       );
     } finally {
       _isTransitioningToExercise = false;
+    }
+  }
+
+  /// Precompute and store next exercise/set info in UserDefaults for AppIntent access
+  ///
+  /// When the AppIntent completes a set and transitions to REST, it needs to know
+  /// what exercise/set to display next. This method precomputes that info.
+  Future<void> _computeAndStoreNextInfo(
+    Exercise exercise,
+    int currentSetIndex,
+    Workout workout,
+  ) async {
+    final isLastSet = currentSetIndex >= exercise.sets.length;
+
+    if (!isLastSet) {
+      // Not the last set of this exercise → next is the same exercise, next set
+      final nextSetIdx = currentSetIndex; // 0-based index of next set
+      final nextSet = nextSetIdx < exercise.sets.length
+          ? exercise.sets[nextSetIdx]
+          : null;
+
+      await _service.setNextExerciseInfo(
+        exerciseName: exercise.name,
+        currentSet: currentSetIndex + 1,
+        totalSets: exercise.sets.length,
+        weight: nextSet?.weight ?? 0,
+        targetReps: nextSet?.reps ?? 0,
+        restDuration: exercise.restTime ?? 90,
+        isLastSetOfExercise: (currentSetIndex + 1) >= exercise.sets.length,
+      );
+    } else {
+      // Last set of this exercise → find the next exercise in the workout
+      final exerciseIndex = workout.exercises.indexWhere(
+        (e) => e.id == exercise.id,
+      );
+      Exercise? nextExercise;
+
+      // Look for the next exercise with incomplete sets
+      if (exerciseIndex != -1) {
+        for (var i = exerciseIndex + 1; i < workout.exercises.length; i++) {
+          final candidate = workout.exercises[i];
+          if (candidate.sets.any((s) => !s.isCompleted)) {
+            nextExercise = candidate;
+            break;
+          }
+        }
+      }
+
+      if (nextExercise != null) {
+        final firstIncomplete = nextExercise.sets.indexWhere(
+          (s) => !s.isCompleted,
+        );
+        final nextSetIdx = firstIncomplete == -1 ? 0 : firstIncomplete;
+        final nextSet = nextExercise.sets.isNotEmpty
+            ? nextExercise.sets[nextSetIdx]
+            : null;
+
+        // Use the inter-exercise rest (restAfterExercise) if available
+        final interExerciseRest = exercise.restAfterExercise ?? exercise.restTime ?? 90;
+
+        await _service.setNextExerciseInfo(
+          exerciseName: nextExercise.name,
+          currentSet: nextSetIdx + 1,
+          totalSets: nextExercise.sets.length,
+          weight: nextSet?.weight ?? 0,
+          targetReps: nextSet?.reps ?? 0,
+          restDuration: interExerciseRest,
+          isLastSetOfExercise: false,
+        );
+      } else {
+        // No more exercises — store current info as fallback
+        await _service.setNextExerciseInfo(
+          exerciseName: exercise.name,
+          currentSet: exercise.sets.length,
+          totalSets: exercise.sets.length,
+          weight: 0,
+          targetReps: 0,
+          restDuration: exercise.restTime ?? 90,
+          isLastSetOfExercise: true,
+        );
+      }
     }
   }
 
@@ -554,19 +689,47 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
       '[WorkoutSessionLA] 📋 Workout: ${workout.name}, exercises: ${workout.exercises.length}',
     );
 
-    // Find the first exercise with incomplete sets
+    // FIX: Use currentExerciseId from LA state to find the right exercise
+    final laState = ref.read(workoutSessionLAProvider);
+    final currentExerciseId = laState.currentExerciseId;
+    print(
+      '[WorkoutSessionLA] 🔍 LA currentExerciseId: $currentExerciseId',
+    );
+
     Exercise? targetExercise;
     ExerciseSet? targetSet;
 
-    for (final exercise in workout.exercises) {
-      final incompleteSets = exercise.sets.where((set) => !set.isCompleted);
-      print(
-        '[WorkoutSessionLA] 📊 Exercise ${exercise.name}: ${incompleteSets.length} incomplete sets',
-      );
-      if (incompleteSets.isNotEmpty) {
-        targetExercise = exercise;
-        targetSet = incompleteSets.first;
-        break;
+    // Try to find the exercise tracked by the LA first
+    if (currentExerciseId != null) {
+      try {
+        final currentExercise = workout.exercises.firstWhere(
+          (e) => e.id == currentExerciseId,
+        );
+        final incompleteSets = currentExercise.sets.where((set) => !set.isCompleted);
+        if (incompleteSets.isNotEmpty) {
+          targetExercise = currentExercise;
+          targetSet = incompleteSets.first;
+          print(
+            '[WorkoutSessionLA] ✅ Using LA-tracked exercise: ${currentExercise.name}',
+          );
+        }
+      } catch (_) {
+        // Exercise not found by ID - fall through
+      }
+    }
+
+    // Fallback: find the first exercise with incomplete sets
+    if (targetExercise == null || targetSet == null) {
+      for (final exercise in workout.exercises) {
+        final incompleteSets = exercise.sets.where((set) => !set.isCompleted);
+        if (incompleteSets.isNotEmpty) {
+          targetExercise = exercise;
+          targetSet = incompleteSets.first;
+          print(
+            '[WorkoutSessionLA] 🔍 Fallback: ${exercise.name} set #${targetSet!.setNumber}',
+          );
+          break;
+        }
       }
     }
 
@@ -682,16 +845,38 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
 
     print('[WorkoutSessionLA] 💪 Confirming RPE: $rpe');
 
-    // Find the first INCOMPLETE set (the one we're about to complete)
+    // FIX: Use currentExerciseId from LA state to find the right exercise
+    final laState = ref.read(workoutSessionLAProvider);
+    final currentExerciseId = laState.currentExerciseId;
+
     Exercise? targetExercise;
     ExerciseSet? targetSet;
 
-    for (final exercise in workout.exercises) {
-      final incompleteSets = exercise.sets.where((set) => !set.isCompleted);
-      if (incompleteSets.isNotEmpty) {
-        targetExercise = exercise;
-        targetSet = incompleteSets.first;
-        break;
+    // Try LA-tracked exercise first
+    if (currentExerciseId != null) {
+      try {
+        final currentExercise = workout.exercises.firstWhere(
+          (e) => e.id == currentExerciseId,
+        );
+        final incompleteSets = currentExercise.sets.where((set) => !set.isCompleted);
+        if (incompleteSets.isNotEmpty) {
+          targetExercise = currentExercise;
+          targetSet = incompleteSets.first;
+        }
+      } catch (_) {
+        // Exercise not found by ID - fall through
+      }
+    }
+
+    // Fallback: find first incomplete
+    if (targetExercise == null || targetSet == null) {
+      for (final exercise in workout.exercises) {
+        final incompleteSets = exercise.sets.where((set) => !set.isCompleted);
+        if (incompleteSets.isNotEmpty) {
+          targetExercise = exercise;
+          targetSet = incompleteSets.first;
+          break;
+        }
       }
     }
 
@@ -722,28 +907,57 @@ extension WorkoutProviderLAExtension on CurrentWorkoutNotifier {
     final workout = state;
     if (workout == null) return;
 
-    // Find current exercise and set
-    for (var i = 0; i < workout.exercises.length; i++) {
-      final exercise = workout.exercises[i];
-      final incompleteSetIndex = exercise.sets.indexWhere(
-        (set) => !set.isCompleted,
-      );
+    // FIX: Use currentExerciseId from LA state to find the right exercise
+    final laState = ref.read(workoutSessionLAProvider);
+    final currentExerciseId = laState.currentExerciseId;
+    Exercise? targetExercise;
+    int targetSetIndex = -1;
 
-      if (incompleteSetIndex != -1) {
-        final completedExercises = workout.exercises
-            .where((e) => e.sets.every((s) => s.isCompleted))
-            .length;
-
-        ref
-            .read(workoutSessionLAProvider.notifier)
-            .transitionToExercise(
-              exercise: exercise,
-              setIndex: incompleteSetIndex + 1,
-              completedExercises: completedExercises,
-              totalExercises: workout.exercises.length,
-            );
-        break;
+    // Try LA-tracked exercise first
+    if (currentExerciseId != null) {
+      try {
+        final currentExercise = workout.exercises.firstWhere(
+          (e) => e.id == currentExerciseId,
+        );
+        final incompleteIdx = currentExercise.sets.indexWhere(
+          (set) => !set.isCompleted,
+        );
+        if (incompleteIdx != -1) {
+          targetExercise = currentExercise;
+          targetSetIndex = incompleteIdx;
+        }
+      } catch (_) {
+        // Exercise not found by ID
       }
+    }
+
+    // Fallback: scan all exercises
+    if (targetExercise == null) {
+      for (final exercise in workout.exercises) {
+        final incompleteIdx = exercise.sets.indexWhere(
+          (set) => !set.isCompleted,
+        );
+        if (incompleteIdx != -1) {
+          targetExercise = exercise;
+          targetSetIndex = incompleteIdx;
+          break;
+        }
+      }
+    }
+
+    if (targetExercise != null && targetSetIndex != -1) {
+      final completedExercises = workout.exercises
+          .where((e) => e.sets.every((s) => s.isCompleted))
+          .length;
+
+      ref
+          .read(workoutSessionLAProvider.notifier)
+          .transitionToExercise(
+            exercise: targetExercise,
+            setIndex: targetSetIndex + 1,
+            completedExercises: completedExercises,
+            totalExercises: workout.exercises.length,
+          );
     }
   }
 }

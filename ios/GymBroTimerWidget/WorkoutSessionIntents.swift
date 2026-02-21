@@ -10,6 +10,15 @@ private let currentRestDurationKey = "current_exercise_rest_duration"
 private let rpeEnabledKey = "rpe_tracking_enabled"
 private let defaultRestDuration = 90 // Default 90 seconds if not set
 
+// Next exercise info keys (written by Flutter via setNextExerciseInfo)
+private let nextExerciseNameKey = "next_exercise_name"
+private let nextExerciseSetKey = "next_exercise_set"
+private let nextExerciseTotalSetsKey = "next_exercise_total_sets"
+private let nextExerciseWeightKey = "next_exercise_weight"
+private let nextExerciseTargetRepsKey = "next_exercise_target_reps"
+private let nextExerciseRestDurationKey = "next_exercise_rest_duration"
+private let isLastSetOfExerciseKey = "is_last_set_of_exercise"
+
 // MARK: - Timer Completion Notification
 private let timerNotificationIdentifier = "com.gymbro.rest_timer_completion"
 private let preferredSoundKey = "timer_notification_sound"
@@ -50,14 +59,27 @@ public struct WorkoutCompleteSetIntent: LiveActivityIntent {
             let currentState = activity.content.state
             print("📊 [WorkoutCompleteSetIntent] Current mode: \(currentState.mode)")
 
-            // Only transition if in exercise mode (not already in rest or RPE)
-            if currentState.mode == .exercise {
+            // FIX: Allow completion when in exercise mode OR when rest timer has expired
+            // This fixes the bug where tapping "Fatto" after timer expires does nothing
+            // because iOS mode is still .rest (Flutter's transitionToExercise was throttled)
+            let isRestComplete: Bool = {
+                if currentState.mode == .rest, let endDate = currentState.restEndDate {
+                    return Date() >= endDate && !currentState.isPaused
+                }
+                return false
+            }()
+            let isExerciseReady = currentState.mode == .exercise || isRestComplete
+
+            if isExerciseReady {
                 if rpeEnabled {
                     // If RPE is enabled, transition to RPE mode and let Flutter handle completion
                     print("🎯 [WorkoutCompleteSetIntent] RPE enabled - transitioning to RPE mode")
 
                     var updatedState = currentState
                     updatedState.mode = .rpe
+                    updatedState.restStartDate = nil
+                    updatedState.restEndDate = nil
+                    updatedState.restTotalSeconds = 0
                     updatedState.lastUpdated = Date()
 
                     await activity.update(
@@ -70,23 +92,45 @@ public struct WorkoutCompleteSetIntent: LiveActivityIntent {
                     // No RPE - transition directly to REST mode
                     print("✅ [WorkoutCompleteSetIntent] No RPE - transitioning to REST")
 
-                    let restDuration = userDefaults?.integer(forKey: currentRestDurationKey) ?? defaultRestDuration
-                    let actualRestDuration = restDuration > 0 ? restDuration : defaultRestDuration
+                    let isLastSet = currentState.currentSet >= currentState.totalSets
+                    var actualRestDuration: Int
+                    var updatedState = currentState
+                    updatedState.mode = .rest
+
+                    if isLastSet {
+                        // Last set of exercise: read next exercise info from UserDefaults
+                        let nextName = userDefaults?.string(forKey: nextExerciseNameKey)
+                        let nextSet = userDefaults?.integer(forKey: nextExerciseSetKey) ?? 1
+                        let nextTotalSets = userDefaults?.integer(forKey: nextExerciseTotalSetsKey)
+                        let nextWeight = userDefaults?.double(forKey: nextExerciseWeightKey)
+                        let nextReps = userDefaults?.integer(forKey: nextExerciseTargetRepsKey)
+                        let interRest = userDefaults?.integer(forKey: nextExerciseRestDurationKey)
+
+                        if let nextName = nextName, !nextName.isEmpty {
+                            print("📋 [WorkoutCompleteSetIntent] Last set → next exercise: \(nextName)")
+                            updatedState.exerciseName = nextName
+                            updatedState.currentSet = nextSet > 0 ? nextSet : 1
+                            if let ts = nextTotalSets, ts > 0 { updatedState.totalSets = ts }
+                            if let w = nextWeight { updatedState.weight = w }
+                            if let r = nextReps, r > 0 { updatedState.targetReps = r }
+                        }
+
+                        // Use inter-exercise rest duration if available
+                        let interRestDuration = (interRest ?? 0) > 0 ? interRest! : (userDefaults?.integer(forKey: currentRestDurationKey) ?? defaultRestDuration)
+                        actualRestDuration = interRestDuration > 0 ? interRestDuration : defaultRestDuration
+                    } else {
+                        // Not last set: increment set number, use current rest duration
+                        updatedState.currentSet = currentState.currentSet + 1
+                        let restDuration = userDefaults?.integer(forKey: currentRestDurationKey) ?? defaultRestDuration
+                        actualRestDuration = restDuration > 0 ? restDuration : defaultRestDuration
+                    }
 
                     let now = Date()
                     let endDate = now.addingTimeInterval(TimeInterval(actualRestDuration))
-
-                    var updatedState = currentState
-                    updatedState.mode = .rest
                     updatedState.restStartDate = now
                     updatedState.restEndDate = endDate
                     updatedState.restTotalSeconds = actualRestDuration
                     updatedState.lastUpdated = now
-
-                    // Increment set number for "next set" display
-                    if currentState.currentSet < currentState.totalSets {
-                        updatedState.currentSet = currentState.currentSet + 1
-                    }
 
                     // FIX: Use long staleDate (2 hours from now) to allow future updates
                     // iOS ignores updates on "stale" activities
@@ -102,13 +146,13 @@ public struct WorkoutCompleteSetIntent: LiveActivityIntent {
                     // iOS delivers this notification with sound even if app is killed
                     await scheduleRestTimerNotification(
                         duration: actualRestDuration,
-                        exerciseName: currentState.exerciseName
+                        exerciseName: updatedState.exerciseName
                     )
                     print("🔔 [WorkoutCompleteSetIntent] Timer notification scheduled from Intent!")
                 }
             } else {
-                // Mode is not .exercise - LA already in rest/RPE mode, don't send spurious event to Flutter
-                print("⚠️ [WorkoutCompleteSetIntent] Not in exercise mode (\(currentState.mode)) - skipping event")
+                // Mode is not ready - LA already in rest/RPE mode, don't send spurious event to Flutter
+                print("⚠️ [WorkoutCompleteSetIntent] Not in exercise-ready mode (\(currentState.mode)) - skipping event")
                 return .result()
             }
         }
@@ -310,24 +354,45 @@ public struct WorkoutConfirmRPEIntent: LiveActivityIntent {
             if currentState.mode == .rpe {
                 print("✅ [WorkoutConfirmRPEIntent] Mode is RPE, transitioning to REST")
 
-                let restDuration = userDefaults?.integer(forKey: currentRestDurationKey) ?? defaultRestDuration
-                let actualRestDuration = restDuration > 0 ? restDuration : defaultRestDuration
+                let isLastSet = currentState.currentSet >= currentState.totalSets
+                var actualRestDuration: Int
+                var updatedState = currentState
+                updatedState.mode = .rest
+                updatedState.selectedRPE = lastRPE
+
+                if isLastSet {
+                    // Last set of exercise: read next exercise info from UserDefaults
+                    let nextName = userDefaults?.string(forKey: nextExerciseNameKey)
+                    let nextSet = userDefaults?.integer(forKey: nextExerciseSetKey) ?? 1
+                    let nextTotalSets = userDefaults?.integer(forKey: nextExerciseTotalSetsKey)
+                    let nextWeight = userDefaults?.double(forKey: nextExerciseWeightKey)
+                    let nextReps = userDefaults?.integer(forKey: nextExerciseTargetRepsKey)
+                    let interRest = userDefaults?.integer(forKey: nextExerciseRestDurationKey)
+
+                    if let nextName = nextName, !nextName.isEmpty {
+                        print("📋 [WorkoutConfirmRPEIntent] Last set → next exercise: \(nextName)")
+                        updatedState.exerciseName = nextName
+                        updatedState.currentSet = nextSet > 0 ? nextSet : 1
+                        if let ts = nextTotalSets, ts > 0 { updatedState.totalSets = ts }
+                        if let w = nextWeight { updatedState.weight = w }
+                        if let r = nextReps, r > 0 { updatedState.targetReps = r }
+                    }
+
+                    let interRestDuration = (interRest ?? 0) > 0 ? interRest! : (userDefaults?.integer(forKey: currentRestDurationKey) ?? defaultRestDuration)
+                    actualRestDuration = interRestDuration > 0 ? interRestDuration : defaultRestDuration
+                } else {
+                    // Not last set: increment set number
+                    updatedState.currentSet = currentState.currentSet + 1
+                    let restDuration = userDefaults?.integer(forKey: currentRestDurationKey) ?? defaultRestDuration
+                    actualRestDuration = restDuration > 0 ? restDuration : defaultRestDuration
+                }
 
                 let now = Date()
                 let endDate = now.addingTimeInterval(TimeInterval(actualRestDuration))
-
-                var updatedState = currentState
-                updatedState.mode = .rest
                 updatedState.restStartDate = now
                 updatedState.restEndDate = endDate
                 updatedState.restTotalSeconds = actualRestDuration
-                updatedState.selectedRPE = lastRPE
                 updatedState.lastUpdated = now
-
-                // Increment set number for "next set" display
-                if currentState.currentSet < currentState.totalSets {
-                    updatedState.currentSet = currentState.currentSet + 1
-                }
 
                 // FIX: Use long staleDate (2 hours from now) to allow future updates
                 // iOS ignores updates on "stale" activities
@@ -344,7 +409,7 @@ public struct WorkoutConfirmRPEIntent: LiveActivityIntent {
                 // iOS delivers this notification with sound even if app is killed
                 await scheduleRestTimerNotification(
                     duration: actualRestDuration,
-                    exerciseName: currentState.exerciseName
+                    exerciseName: updatedState.exerciseName
                 )
                 print("🔔 [WorkoutConfirmRPEIntent] Timer notification scheduled from Intent!")
             }
