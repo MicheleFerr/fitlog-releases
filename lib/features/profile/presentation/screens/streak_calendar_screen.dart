@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/features/history/domain/entities/workout_hist
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 
 /// View modes for streak visualization
 enum _StreakViewMode { monthly, annual, multiYear }
@@ -67,34 +68,24 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
         ),
         actions: [
           // View mode dropdown
-          PopupMenuButton<_StreakViewMode>(
-            icon: const Icon(AppIcons.viewList, size: AppIconSize.medium),
-            tooltip: context.l10n.viewMode,
-            onSelected: (mode) {
-              HapticFeedback.selectionClick();
-              setState(() {
-                _viewMode = mode;
-              });
-            },
-            itemBuilder: (context) => _StreakViewMode.values.map((mode) {
-              return PopupMenuItem(
-                value: mode,
-                child: Row(
-                  children: [
-                    if (mode == _viewMode)
-                      Icon(
-                        AppIcons.check,
-                        size: AppIconSize.small,
-                        color: context.colors.primary,
-                      )
-                    else
-                      const SizedBox(width: AppIconSize.small),
-                    const SizedBox(width: 8),
-                    Text(mode.getLabel(context)),
-                  ],
-                ),
+          CNPopupMenuButton.icon(
+            buttonIcon: const CNSymbol('list.bullet', size: 16),
+            buttonStyle: CNButtonStyle.plain,
+            size: 32,
+            items: _StreakViewMode.values.map((mode) {
+              return CNPopupMenuItem(
+                label: mode.getLabel(context),
+                icon: mode == _viewMode
+                    ? const CNSymbol('checkmark', size: 14)
+                    : null,
               );
             }).toList(),
+            onSelected: (index) {
+              HapticFeedback.selectionClick();
+              setState(() {
+                _viewMode = _StreakViewMode.values[index];
+              });
+            },
           ),
         ],
       ),

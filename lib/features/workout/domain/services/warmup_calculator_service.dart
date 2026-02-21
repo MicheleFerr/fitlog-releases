@@ -1,20 +1,21 @@
+/// Context for warmup generation — determines protocol aggressiveness.
+enum WarmupContext {
+  /// Full warmup protocol — used for the first compound exercise
+  /// targeting a muscle group in a session.
+  firstCompound,
+
+  /// Abbreviated warmup — used when the muscle group has already been
+  /// warmed up by a previous exercise (e.g., Incline DB after Bench Press).
+  subsequent,
+}
+
 /// Science-based warmup calculator service.
 ///
-/// This service implements warmup protocols based on exercise science research
-/// from PMC (PubMed Central) and ScienceDirect. The key principle is that the
-/// LAST warmup set should reach 80% of working weight (not 90%), as research
-/// shows this optimally prepares neuromuscular pathways without inducing fatigue
-/// that could compromise working sets.
+/// Implements warmup protocols based on exercise science research.
+/// V1 (legacy): Higher volume, all exercises treated equally.
+/// V2: Reduced volume, context-aware (first compound vs subsequent).
 ///
-/// **Scientific Rationale:**
-/// - Warmup activates motor units progressively (Henneman's Size Principle)
-/// - 80% intensity maximizes neural activation without glycogen depletion
-/// - 90%+ sets can reduce force production in subsequent working sets
-/// - Barbell exercises benefit from technique rehearsal with empty bar
-///
-/// **References:**
-/// - McGowan et al. (2015). PMC - Warmup strategies for resistance training
-/// - Ribeiro et al. (2014). ScienceDirect - Effects of warmup intensity
+/// References: PMC7558980, McGowan 2015, Ribeiro 2014, SBS Dec 2024.
 class WarmupCalculatorService {
   /// Default available plates in kg (standard gym setup).
   static const List<double> defaultPlates = [
@@ -383,6 +384,196 @@ class WarmupCalculatorService {
     }
 
     return plateCounts;
+  }
+
+  /// Detects if an exercise uses a barbell based on its equipment field.
+  ///
+  /// More accurate than name-based heuristic [isLikelyBarbellExercise]
+  /// because it uses the structured `attrezzatura` field from the exercise DB.
+  ///
+  /// [attrezzatura] - The equipment string from exerciseData (e.g. 'Bilanciere')
+  ///
+  /// Returns `true` if the equipment indicates a barbell.
+  bool isBarbellByAttrezzatura(String? attrezzatura) {
+    if (attrezzatura == null || attrezzatura.isEmpty) return false;
+    final lower = attrezzatura.toLowerCase();
+    return lower == 'bilanciere' ||
+        lower == 'barbell' ||
+        lower == 'olympic barbell' ||
+        lower == 'ez bar' ||
+        lower == 'trap bar';
+  }
+
+  /// Science-based warmup V2 with reduced volume and context awareness.
+  ///
+  /// Key improvements over V1:
+  /// - **Fewer reps** at each intensity level (research: PMC7558980)
+  /// - **Higher percentages** for fewer sets (skip low-value light sets)
+  /// - **Context-aware**: `firstCompound` gets full protocol, `subsequent`
+  ///   gets a single abbreviated set (muscle group already warm)
+  ///
+  /// **"First Compound" protocol** (total reps by weight bracket):
+  /// | Target   | Sets | Detail                              | Total Reps |
+  /// |----------|------|-------------------------------------|------------|
+  /// | <40kg    | 1    | Bar ×5 or 50% ×5                   | 5          |
+  /// | 40-80kg  | 3    | Bar ×5, 60% ×3, 80% ×2             | 10         |
+  /// | 80-120kg | 4    | Bar ×5, 50% ×3, 70% ×2, 85% ×1    | 11         |
+  /// | >120kg   | 5    | Bar ×5, 40% ×3, 60% ×2, 75% ×1, 85% ×1 | 12    |
+  ///
+  /// **"Subsequent" protocol**: Always 1 set at 55% × 4 reps
+  List<WarmupSet> calculateWarmupSetsV2(
+    double targetWeight, {
+    WarmupContext warmupContext = WarmupContext.firstCompound,
+    required bool isBarbell,
+    List<double>? availablePlates,
+  }) {
+    if (targetWeight <= 0) return [];
+
+    final plates = availablePlates ?? defaultPlates;
+
+    // Subsequent exercises: abbreviated single set
+    if (warmupContext == WarmupContext.subsequent) {
+      final weight55 = targetWeight * 0.55;
+      final roundedWeight = isBarbell
+          ? weight55.clamp(defaultBarbellWeight, double.infinity)
+          : weight55;
+      return [
+        WarmupSet(
+          weight: roundToAvailablePlates(roundedWeight, availablePlates: plates),
+          reps: 4,
+          percentage: 55,
+        ),
+      ];
+    }
+
+    // First compound — full progressive protocol
+    final sets = <WarmupSet>[];
+
+    // Light weight (<40kg): 1 set
+    if (targetWeight < 40) {
+      if (isBarbell && targetWeight >= defaultBarbellWeight * 1.5) {
+        sets.add(const WarmupSet(
+          weight: defaultBarbellWeight,
+          reps: 5,
+          percentage: 0,
+        ));
+      } else {
+        final weight50 = targetWeight * 0.5;
+        sets.add(WarmupSet(
+          weight: roundToAvailablePlates(weight50, availablePlates: plates),
+          reps: 5,
+          percentage: 50,
+        ));
+      }
+      return sets;
+    }
+
+    // Medium weight (40-80kg): 3 sets — Bar ×5, 60% ×3, 80% ×2
+    if (targetWeight < 80) {
+      if (isBarbell) {
+        sets.add(const WarmupSet(
+          weight: defaultBarbellWeight,
+          reps: 5,
+          percentage: 0,
+        ));
+      } else {
+        final weight40 = targetWeight * 0.4;
+        sets.add(WarmupSet(
+          weight: roundToAvailablePlates(weight40, availablePlates: plates),
+          reps: 5,
+          percentage: 40,
+        ));
+      }
+
+      final weight60 = targetWeight * 0.6;
+      sets.add(WarmupSet(
+        weight: roundToAvailablePlates(weight60, availablePlates: plates),
+        reps: 3,
+        percentage: 60,
+      ));
+
+      final weight80 = targetWeight * 0.8;
+      sets.add(WarmupSet(
+        weight: roundToAvailablePlates(weight80, availablePlates: plates),
+        reps: 2,
+        percentage: 80,
+      ));
+
+      return sets;
+    }
+
+    // Heavy weight (80-120kg): 4 sets — Bar ×5, 50% ×3, 70% ×2, 85% ×1
+    if (targetWeight < 120) {
+      if (isBarbell) {
+        sets.add(const WarmupSet(
+          weight: defaultBarbellWeight,
+          reps: 5,
+          percentage: 0,
+        ));
+      }
+
+      final weight50 = targetWeight * 0.5;
+      sets.add(WarmupSet(
+        weight: roundToAvailablePlates(weight50, availablePlates: plates),
+        reps: 3,
+        percentage: 50,
+      ));
+
+      final weight70 = targetWeight * 0.7;
+      sets.add(WarmupSet(
+        weight: roundToAvailablePlates(weight70, availablePlates: plates),
+        reps: 2,
+        percentage: 70,
+      ));
+
+      final weight85 = targetWeight * 0.85;
+      sets.add(WarmupSet(
+        weight: roundToAvailablePlates(weight85, availablePlates: plates),
+        reps: 1,
+        percentage: 85,
+      ));
+
+      return sets;
+    }
+
+    // Very heavy (>120kg): 5 sets — Bar ×5, 40% ×3, 60% ×2, 75% ×1, 85% ×1
+    if (isBarbell) {
+      sets.add(const WarmupSet(
+        weight: defaultBarbellWeight,
+        reps: 5,
+        percentage: 0,
+      ));
+    }
+
+    final weight40 = targetWeight * 0.4;
+    sets.add(WarmupSet(
+      weight: roundToAvailablePlates(weight40, availablePlates: plates),
+      reps: 3,
+      percentage: 40,
+    ));
+
+    final weight60 = targetWeight * 0.6;
+    sets.add(WarmupSet(
+      weight: roundToAvailablePlates(weight60, availablePlates: plates),
+      reps: 2,
+      percentage: 60,
+    ));
+
+    final weight75 = targetWeight * 0.75;
+    sets.add(WarmupSet(
+      weight: roundToAvailablePlates(weight75, availablePlates: plates),
+      reps: 1,
+      percentage: 75,
+    ));
+
+    final weight85 = targetWeight * 0.85;
+    sets.add(WarmupSet(
+      weight: roundToAvailablePlates(weight85, availablePlates: plates),
+      reps: 1,
+      percentage: 85,
+    ));
+
+    return sets;
   }
 }
 

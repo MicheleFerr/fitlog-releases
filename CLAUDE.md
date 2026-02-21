@@ -16,6 +16,7 @@ Breaking changes OK. Refactoring aggressivi permessi.
 | **State** | `createStateProvider<T>(v)` | `StateProvider<T>()` (rimosso Riverpod 3.x) |
 | **Hive** | `HiveBoxManagerEnhanced().openBox()` | `Hive.openBox()` |
 | **Routes** | `AppRoutes.settingsName` | `'/profile/settings'` hardcoded |
+| **Action Sheet** | `CupertinoActionSheet` / `showCupertinoModalPopup` | `PopupMenuButton` / Material popup menu |
 
 ## iOS BUILD (CRITICAL)
 

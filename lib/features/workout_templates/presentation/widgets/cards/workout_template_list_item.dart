@@ -7,6 +7,7 @@
 /// - Last performed with status color
 library;
 
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -408,109 +409,41 @@ class _WorkoutTemplateListItemState
 
   /// Build popup menu for actions
   Widget _buildPopupMenu(BuildContext context, AppLocalizations l10n) {
-    return PopupMenuButton<String>(
-      icon: SemanticIcon(
-        icon: AppIcons.moreVert,
-        semanticLabel: l10n.more,
-        size: AppIconSize.small,
-      ),
-      onSelected: (value) {
-        if (value == 'start') widget.onStartWorkout();
-        if (value == 'duplicate') widget.onDuplicate();
-        if (value == 'share') widget.onShare();
-        if (value == 'make_public') widget.onMakePublic?.call();
-        if (value == 'delete') widget.onDelete();
-      },
-      itemBuilder: (context) => [
-        PopupMenuItem(
-          value: 'start',
-          child: Row(
-            children: [
-              SemanticIcon(
-                icon: AppIcons.play,
-                semanticLabel: l10n.startWorkout,
-                size: AppIconSize.small,
-                color: context.colors.primary,
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Text(
-                l10n.startWorkout,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colors.primary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+    return CNPopupMenuButton.icon(
+      buttonIcon: const CNSymbol('ellipsis', size: 16),
+      buttonStyle: CNButtonStyle.plain,
+      size: 32,
+      items: [
+        CNPopupMenuItem(
+          label: l10n.startWorkout,
+          icon: const CNSymbol('play', size: 14),
         ),
-        const PopupMenuDivider(),
-        PopupMenuItem(
-          value: 'duplicate',
-          child: Row(
-            children: [
-              SemanticIcon(
-                icon: AppIcons.copy,
-                semanticLabel: l10n.duplicate,
-                size: AppIconSize.small,
-                color: context.colors.onSurface,
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Text(l10n.duplicate, style: context.textTheme.bodyMedium),
-            ],
-          ),
+        CNPopupMenuItem(
+          label: l10n.duplicate,
+          icon: const CNSymbol('doc.on.doc', size: 14),
         ),
-        PopupMenuItem(
-          value: 'share',
-          child: Row(
-            children: [
-              SemanticIcon(
-                icon: AppIcons.share,
-                semanticLabel: l10n.share,
-                size: AppIconSize.small,
-                color: context.colors.onSurface,
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Text(l10n.share, style: context.textTheme.bodyMedium),
-            ],
-          ),
+        CNPopupMenuItem(
+          label: l10n.share,
+          icon: const CNSymbol('square.and.arrow.up', size: 14),
         ),
-        PopupMenuItem(
-          value: 'make_public',
-          child: Row(
-            children: [
-              SemanticIcon(
-                icon: AppIcons.public,
-                semanticLabel: l10n.makePublic,
-                size: AppIconSize.small,
-                color: context.colors.onSurface,
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Text(l10n.makePublic, style: context.textTheme.bodyMedium),
-            ],
-          ),
+        CNPopupMenuItem(
+          label: l10n.makePublic,
+          icon: const CNSymbol('globe', size: 14),
         ),
-        const PopupMenuDivider(),
-        PopupMenuItem(
-          value: 'delete',
-          child: Row(
-            children: [
-              SemanticIcon(
-                icon: AppIcons.delete,
-                semanticLabel: l10n.delete,
-                size: AppIconSize.small,
-                color: context.colors.error,
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Text(
-                l10n.delete,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colors.error,
-                ),
-              ),
-            ],
-          ),
+        CNPopupMenuItem(
+          label: l10n.delete,
+          icon: const CNSymbol('trash', size: 14),
         ),
       ],
+      onSelected: (index) {
+        switch (index) {
+          case 0: widget.onStartWorkout();
+          case 1: widget.onDuplicate();
+          case 2: widget.onShare();
+          case 3: widget.onMakePublic?.call();
+          case 4: widget.onDelete();
+        }
+      },
     );
   }
 }

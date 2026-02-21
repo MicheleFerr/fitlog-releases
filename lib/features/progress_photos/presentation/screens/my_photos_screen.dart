@@ -74,37 +74,38 @@ class _MyPhotosScreenState extends ConsumerState<MyPhotosScreen> {
             tooltip: _isGridView ? 'Timeline view' : 'Grid view',
           ),
           // Filter menu
-          PopupMenuButton<PhotoPose?>(
-            icon: Icon(
-              AppIcons.filter,
+          CNPopupMenuButton.icon(
+            buttonIcon: CNSymbol(
+              'line.3.horizontal.decrease',
+              size: 16,
               color: filterPose != null ? context.colors.primary : null,
             ),
-            tooltip: 'Filter by pose',
-            onSelected: (pose) {
-              ref.read(photoFilterPoseProvider.notifier).state = pose;
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(value: null, child: Text(context.l10n.allPoses)),
-              const PopupMenuDivider(),
+            buttonStyle: CNButtonStyle.plain,
+            size: 32,
+            items: [
+              CNPopupMenuItem(
+                label: context.l10n.allPoses,
+                icon: filterPose == null
+                    ? const CNSymbol('checkmark', size: 14)
+                    : null,
+              ),
               ...PhotoPose.values.map(
-                (pose) => PopupMenuItem(
-                  value: pose,
-                  child: Row(
-                    children: [
-                      if (pose == filterPose)
-                        Icon(
-                          AppIcons.check,
-                          size: 18,
-                          color: context.colors.primary,
-                        ),
-                      if (pose != filterPose) const SizedBox(width: 18),
-                      const SizedBox(width: 8),
-                      Text(pose.label),
-                    ],
-                  ),
+                (pose) => CNPopupMenuItem(
+                  label: pose.label,
+                  icon: pose == filterPose
+                      ? const CNSymbol('checkmark', size: 14)
+                      : null,
                 ),
               ),
             ],
+            onSelected: (index) {
+              if (index == 0) {
+                ref.read(photoFilterPoseProvider.notifier).state = null;
+              } else {
+                ref.read(photoFilterPoseProvider.notifier).state =
+                    PhotoPose.values[index - 1];
+              }
+            },
           ),
         ],
       ),

@@ -1109,38 +1109,28 @@ class _MeasurementListScreenState extends ConsumerState<MeasurementListScreen> {
                     padding: EdgeInsets.all(16),
                     child: LoadingIndicator(size: 20),
                   )
-                : PopupMenuButton<String>(
-                    icon: const Icon(AppIcons.healthAndSafety),
-                    tooltip: context.l10n.bodyMeasurementsSyncWithHealth,
-                    onSelected: (action) {
-                      if (action == 'import') {
-                        _importFromHealthPlatform();
-                      } else if (action == 'export') {
-                        _exportToHealthPlatform();
-                      }
-                    },
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: 'import',
-                        child: Row(
-                          children: [
-                            const Icon(AppIcons.download, size: 20),
-                            const SizedBox(width: 8),
-                            Text(context.l10n.bodyMeasurementsImportFromHealth),
-                          ],
-                        ),
+                : CNPopupMenuButton.icon(
+                    buttonIcon: const CNSymbol('heart.text.square', size: 16),
+                    buttonStyle: CNButtonStyle.plain,
+                    size: 32,
+                    items: [
+                      CNPopupMenuItem(
+                        label: context.l10n.bodyMeasurementsImportFromHealth,
+                        icon: const CNSymbol('square.and.arrow.down', size: 14),
                       ),
-                      PopupMenuItem(
-                        value: 'export',
-                        child: Row(
-                          children: [
-                            const Icon(AppIcons.upload, size: 20),
-                            const SizedBox(width: 8),
-                            Text(context.l10n.bodyMeasurementsExportToHealth),
-                          ],
-                        ),
+                      CNPopupMenuItem(
+                        label: context.l10n.bodyMeasurementsExportToHealth,
+                        icon: const CNSymbol('square.and.arrow.up', size: 14),
                       ),
                     ],
+                    onSelected: (index) {
+                      switch (index) {
+                        case 0:
+                          _importFromHealthPlatform();
+                        case 1:
+                          _exportToHealthPlatform();
+                      }
+                    },
                   ),
         ],
       ),

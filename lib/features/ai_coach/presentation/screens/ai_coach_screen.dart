@@ -9,6 +9,7 @@
 library;
 
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
@@ -21,6 +22,8 @@ import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/ai_typ
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/ai_coach_disclaimer_dialog.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/exercise_suggestions_provider.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/smart_suggestions_overlay.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
@@ -121,6 +124,12 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
     final chatState = ref.watch(aIChatProvider);
     final rateLimitAsync = ref.watch(aIRateLimitProvider);
 
+    // Detect active workout mini-bar to add extra bottom padding
+    final workout = ref.watch(currentWorkoutProvider);
+    final hasMiniBar = workout != null &&
+        (workout.status == WorkoutStatus.inProgress ||
+            workout.status == WorkoutStatus.paused);
+
     // Auto-scroll when new messages arrive — ref.listen evita side effect nel build()
     ref.listen<AIChatState>(aIChatProvider, (previous, next) {
       if (next.messages.length > _previousMessageCount) {
@@ -141,28 +150,12 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
             onPressed: () => _showClearDialog(context),
             tooltip: context.l10n.clearConversation,
           ),
-          PopupMenuButton<String>(
+          IconButton(
             icon: SemanticIcon.button(
               icon: AppIcons.moreVert,
               semanticLabel: 'More options',
             ),
-            onSelected: (value) {
-              if (value == 'sources') {
-                context.goNamed(AppRoutes.aiCoachDocumentsAttributionName);
-              }
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'sources',
-                child: Row(
-                  children: [
-                    const Icon(AppIcons.science, size: 20),
-                    const SizedBox(width: 12),
-                    Text(context.l10n.scientificSources),
-                  ],
-                ),
-              ),
-            ],
+            onPressed: () => _showOptionsSheet(context),
           ),
         ],
       ),
@@ -261,9 +254,12 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
 
           // Smart suggestions overlay + Input bar
           // Use tabBarInset to position above the overlay tab bar
-          Padding(
+          // Add extra padding when workout mini-bar is visible (56h + 8gap + 8breathing)
+          AnimatedPadding(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
             padding: EdgeInsets.only(
-              bottom: context.tabBarInset,
+              bottom: context.tabBarInset + (hasMiniBar ? 72.0 : 0.0),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -313,6 +309,39 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
 
     // Scroll to bottom
     _scrollToBottom();
+  }
+
+  void _showOptionsSheet(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext sheetContext) => CupertinoActionSheet(
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(sheetContext);
+              context.goNamed(AppRoutes.aiCoachDocumentsAttributionName);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(AppIcons.science, color: colorScheme.primary, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.scientificSources,
+                  style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () => Navigator.pop(sheetContext),
+          isDefaultAction: true,
+          child: Text(context.l10n.cancel),
+        ),
+      ),
+    );
   }
 
   void _showClearDialog(BuildContext context) {

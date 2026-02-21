@@ -8,6 +8,7 @@
 library;
 
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -120,65 +121,9 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
         ),
 
         // Export menu
-        PopupMenuButton<String>(
+        IconButton(
           icon: const Icon(AppIcons.moreVert),
-          onSelected: (value) => _handleMenuAction(value, context, l10n),
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              value: 'export_all',
-              child: Row(
-                children: [
-                  const Icon(AppIcons.download),
-                  const SizedBox(width: 8),
-                  Text(l10n.exportAllJson),
-                ],
-              ),
-            ),
-            PopupMenuItem(
-              value: 'export_selected',
-              enabled: state.hasSelection,
-              child: Row(
-                children: [
-                  const Icon(AppIcons.downloadDone),
-                  const SizedBox(width: 8),
-                  Text(l10n.exportSelectedJson),
-                ],
-              ),
-            ),
-            const PopupMenuDivider(),
-            PopupMenuItem(
-              value: 'import',
-              child: Row(
-                children: [
-                  const Icon(AppIcons.upload),
-                  const SizedBox(width: 8),
-                  Text(l10n.importJson),
-                ],
-              ),
-            ),
-            const PopupMenuDivider(),
-            PopupMenuItem(
-              value: 'refresh',
-              child: Row(
-                children: [
-                  const Icon(AppIcons.refresh),
-                  const SizedBox(width: 8),
-                  Text(l10n.refresh),
-                ],
-              ),
-            ),
-            const PopupMenuDivider(),
-            const PopupMenuItem(
-              value: 'migrate_analytics',
-              child: Row(
-                children: [
-                  Icon(AppIcons.analytics),
-                  SizedBox(width: 8),
-                  Text('Migrate Analytics'), // Hardcoded for now (admin only)
-                ],
-              ),
-            ),
-          ],
+          onPressed: () => _showActionsSheet(context, l10n, state),
         ),
       ],
     );
@@ -507,6 +452,97 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
         notifier.applyFilters(exerciseType: value);
         break;
     }
+  }
+
+  void _showActionsSheet(
+    BuildContext context,
+    AppLocalizations l10n,
+    DatabaseManagerState state,
+  ) {
+    final colorScheme = Theme.of(context).colorScheme;
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext sheetContext) => CupertinoActionSheet(
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(sheetContext);
+              _handleMenuAction('export_all', context, l10n);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(AppIcons.download, color: colorScheme.primary, size: 20),
+                const SizedBox(width: 8),
+                Text(l10n.exportAllJson, style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.w500)),
+              ],
+            ),
+          ),
+          if (state.hasSelection)
+            CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.pop(sheetContext);
+                _handleMenuAction('export_selected', context, l10n);
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(AppIcons.downloadDone, color: colorScheme.primary, size: 20),
+                  const SizedBox(width: 8),
+                  Text(l10n.exportSelectedJson, style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.w500)),
+                ],
+              ),
+            ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(sheetContext);
+              _handleMenuAction('import', context, l10n);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(AppIcons.upload, color: colorScheme.primary, size: 20),
+                const SizedBox(width: 8),
+                Text(l10n.importJson, style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.w500)),
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(sheetContext);
+              _handleMenuAction('refresh', context, l10n);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(AppIcons.refresh, color: colorScheme.primary, size: 20),
+                const SizedBox(width: 8),
+                Text(l10n.refresh, style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.w500)),
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(sheetContext);
+              _handleMenuAction('migrate_analytics', context, l10n);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(AppIcons.analytics, color: colorScheme.primary, size: 20),
+                const SizedBox(width: 8),
+                Text('Migrate Analytics', style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.w500)),
+              ],
+            ),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () => Navigator.pop(sheetContext),
+          isDefaultAction: true,
+          child: Text(l10n.cancel),
+        ),
+      ),
+    );
   }
 
   void _handleMenuAction(

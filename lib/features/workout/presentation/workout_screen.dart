@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,6 +41,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/watch_connectivity_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/services/workout_share_service.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/warmup_calculator_service.dart';
 
 // Sub-component imports
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen/widgets/welcome_view.dart';
@@ -610,7 +612,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
               ),
             ),
 
-          // Settings menu for workout customization (RPE, set duration, etc.)
+          // Overflow menu: CupertinoActionSheet (iOS native style)
           if (!state.isReorderMode)
             IconButton(
               icon: SemanticIcon(
@@ -618,7 +620,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                 size: AppIconSize.medium,
                 semanticLabel: l10n.settings,
               ),
-              onPressed: () => WorkoutCustomizationModalV3.show(context),
+              onPressed: () => _showWorkoutActionsSheet(context, workout),
             ),
         ],
       ),
@@ -646,11 +648,77 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     );
   }
 
+  /// Shows a CupertinoActionSheet with workout-level actions.
+  void _showWorkoutActionsSheet(BuildContext context, Workout workout) {
+    final l10n = AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext sheetContext) => CupertinoActionSheet(
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(sheetContext);
+              _generateAllWarmups(workout);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  AppIcons.whatshotOutlined,
+                  color: colorScheme.primary,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.generateAllWarmups,
+                  style: TextStyle(
+                    color: colorScheme.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(sheetContext);
+              WorkoutCustomizationModalV3.show(context);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  AppIcons.settings,
+                  color: colorScheme.secondary,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.workoutSettings,
+                  style: TextStyle(
+                    color: colorScheme.secondary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () => Navigator.pop(sheetContext),
+          isDefaultAction: true,
+          child: Text(l10n.cancel),
+        ),
+      ),
+    );
+  }
+
   /// Build floating action button based on state
-  /// ✅ IMPROVED: No FAB in reorder mode - "Done" is now in AppBar (iOS style)
+  /// No FAB in reorder mode - "Done" is now in AppBar (iOS style)
+  /// Normal mode: FAB is handled by _buildDraggableFAB() in the main Stack
   Widget? _buildFAB(WorkoutScreenState state) {
-    // No FAB in reorder mode - action buttons are in app bar
-    // Normal mode: FAB is handled by _buildDraggableFAB() in the main Stack
     return null;
   }
 
@@ -947,6 +1015,114 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   /// Template creation now happens only from "Le mie schede" section
   void _showCreateTemplateModal(BuildContext context) {
     context.go('/templates');
+  }
+
+  // ========================================================================
+  // BATCH WARMUP GENERATION
+  // ========================================================================
+
+  /// Generates warmup sets for all applicable exercises in the workout.
+  ///
+  /// Logic per exercise:
+  /// - Skip if already has warmup sets
+  /// - Skip if isolation/stretching/cardio (via movementType)
+  /// - Skip if no working sets or weight = 0
+  /// - First compound per category → full warmup protocol
+  /// - Subsequent same-category → abbreviated warmup (1 set)
+  void _generateAllWarmups(Workout workout) {
+    final warmupCalc = WarmupCalculatorService();
+    final notifier = ref.read(currentWorkoutProvider.notifier);
+    final categoriesWarmedUp = <ExerciseCategory>{};
+    var generatedCount = 0;
+
+    for (final exercise in workout.exercises) {
+      // Skip if already has warmup sets
+      if (exercise.sets.any((s) => s.isWarmup)) continue;
+
+      // Skip isolation/cardio based on movementType
+      final mt = exercise.movementType;
+      if (mt == MovementType.isolationLight) continue;
+
+      // Skip exercises without working sets or without weight
+      final workingSets = exercise.sets.where((s) => !s.isWarmup).toList();
+      if (workingSets.isEmpty) continue;
+      final targetWeight = workingSets.first.weight ?? 0.0;
+      if (targetWeight <= 0) continue;
+
+      // Determine warmup context based on category
+      final warmupContext = categoriesWarmedUp.contains(exercise.category)
+          ? WarmupContext.subsequent
+          : WarmupContext.firstCompound;
+
+      // Determine if barbell from exercise name (no _exerciseData at this level)
+      final isBarbell = warmupCalc.isLikelyBarbellExercise(exercise.name);
+
+      // Generate warmup sets
+      final warmupSets = warmupCalc.calculateWarmupSetsV2(
+        targetWeight,
+        warmupContext: warmupContext,
+        isBarbell: isBarbell,
+      );
+
+      if (warmupSets.isEmpty) continue;
+
+      // Convert WarmupSet → ExerciseSet
+      final warmupExerciseSets = warmupSets
+          .asMap()
+          .map((index, warmup) => MapEntry(
+                index,
+                ExerciseSet(
+                  setNumber: index + 1,
+                  weight: warmup.weight,
+                  reps: warmup.reps,
+                  isWarmup: true,
+                  isCompleted: false,
+                ),
+              ))
+          .values
+          .toList();
+
+      // Renumber working sets after warmup
+      final renumberedWorkingSets = workingSets
+          .asMap()
+          .map((index, set) => MapEntry(
+                index,
+                set.copyWith(
+                    setNumber: warmupExerciseSets.length + index + 1),
+              ))
+          .values
+          .toList();
+
+      // Apply
+      final updatedExercise = exercise.copyWith(
+        sets: [...warmupExerciseSets, ...renumberedWorkingSets],
+        updatedAt: DateTime.now(),
+      );
+      notifier.updateExercise(exercise.id, updatedExercise);
+
+      categoriesWarmedUp.add(exercise.category);
+      generatedCount++;
+    }
+
+    // Feedback
+    HapticFeedback.mediumImpact();
+    if (generatedCount > 0) {
+      SnackBarService.showSuccess(
+        context,
+        context.l10n.allWarmupsGenerated(generatedCount.toString()),
+      );
+    } else {
+      SnackBarService.showInfo(
+        context,
+        context.l10n.noExercisesNeedWarmup,
+      );
+    }
+
+    if (kDebugMode) {
+      debugPrint(
+        '🔥 [WorkoutScreen] Generated warmup for $generatedCount exercises',
+      );
+    }
   }
 
   // ========================================================================

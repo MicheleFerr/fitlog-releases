@@ -18,6 +18,7 @@ library;
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -2632,49 +2633,26 @@ class _CustomExerciseCard extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing: PopupMenuButton<String>(
-          onSelected: (value) {
-            if (value == 'edit') onTap();
-            if (value == 'delete') onDelete();
-          },
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            PopupMenuItem<String>(
-              value: 'edit',
-              child: Row(
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.edit,
-                    semanticLabel: l10n.edit,
-                    size: AppIconSize.small,
-                    color: context.colors.onSurface,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Text(l10n.edit, style: context.textTheme.bodyMedium),
-                ],
-              ),
+        trailing: CNPopupMenuButton.icon(
+          buttonIcon: const CNSymbol('ellipsis', size: 16),
+          buttonStyle: CNButtonStyle.plain,
+          size: 32,
+          items: [
+            CNPopupMenuItem(
+              label: l10n.edit,
+              icon: const CNSymbol('pencil', size: 14),
             ),
-            const PopupMenuDivider(),
-            PopupMenuItem<String>(
-              value: 'delete',
-              child: Row(
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.delete,
-                    semanticLabel: l10n.delete,
-                    size: AppIconSize.small,
-                    color: context.colors.error,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Text(
-                    l10n.delete,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colors.error,
-                    ),
-                  ),
-                ],
-              ),
+            CNPopupMenuItem(
+              label: l10n.delete,
+              icon: const CNSymbol('trash', size: 14),
             ),
           ],
+          onSelected: (index) {
+            switch (index) {
+              case 0: onTap();
+              case 1: onDelete();
+            }
+          },
         ),
       ),
     );
@@ -2730,49 +2708,26 @@ class _SupersetTemplateCard extends StatelessWidget {
             color: context.colors.onSurfaceVariant,
           ),
         ),
-        trailing: PopupMenuButton<String>(
-          onSelected: (value) {
-            if (value == 'edit') onTap();
-            if (value == 'delete') onDelete();
-          },
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            PopupMenuItem<String>(
-              value: 'edit',
-              child: Row(
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.edit,
-                    semanticLabel: l10n.edit,
-                    size: AppIconSize.small,
-                    color: context.colors.onSurface,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Text(l10n.edit, style: context.textTheme.bodyMedium),
-                ],
-              ),
+        trailing: CNPopupMenuButton.icon(
+          buttonIcon: const CNSymbol('ellipsis', size: 16),
+          buttonStyle: CNButtonStyle.plain,
+          size: 32,
+          items: [
+            CNPopupMenuItem(
+              label: l10n.edit,
+              icon: const CNSymbol('pencil', size: 14),
             ),
-            const PopupMenuDivider(),
-            PopupMenuItem<String>(
-              value: 'delete',
-              child: Row(
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.delete,
-                    semanticLabel: l10n.delete,
-                    size: AppIconSize.small,
-                    color: context.colors.error,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Text(
-                    l10n.delete,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colors.error,
-                    ),
-                  ),
-                ],
-              ),
+            CNPopupMenuItem(
+              label: l10n.delete,
+              icon: const CNSymbol('trash', size: 14),
             ),
           ],
+          onSelected: (index) {
+            switch (index) {
+              case 0: onTap();
+              case 1: onDelete();
+            }
+          },
         ),
       ),
     );
@@ -2831,49 +2786,26 @@ class _DropsetTemplateCard extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing: PopupMenuButton<String>(
-          onSelected: (value) {
-            if (value == 'edit') onTap();
-            if (value == 'delete') onDelete();
-          },
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            PopupMenuItem<String>(
-              value: 'edit',
-              child: Row(
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.edit,
-                    semanticLabel: l10n.edit,
-                    size: AppIconSize.small,
-                    color: context.colors.onSurface,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Text(l10n.edit, style: context.textTheme.bodyMedium),
-                ],
-              ),
+        trailing: CNPopupMenuButton.icon(
+          buttonIcon: const CNSymbol('ellipsis', size: 16),
+          buttonStyle: CNButtonStyle.plain,
+          size: 32,
+          items: [
+            CNPopupMenuItem(
+              label: l10n.edit,
+              icon: const CNSymbol('pencil', size: 14),
             ),
-            const PopupMenuDivider(),
-            PopupMenuItem<String>(
-              value: 'delete',
-              child: Row(
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.delete,
-                    semanticLabel: l10n.delete,
-                    size: AppIconSize.small,
-                    color: context.colors.error,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Text(
-                    l10n.delete,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colors.error,
-                    ),
-                  ),
-                ],
-              ),
+            CNPopupMenuItem(
+              label: l10n.delete,
+              icon: const CNSymbol('trash', size: 14),
             ),
           ],
+          onSelected: (index) {
+            switch (index) {
+              case 0: onTap();
+              case 1: onDelete();
+            }
+          },
         ),
       ),
     );
@@ -2932,49 +2864,26 @@ class _RestPauseTemplateCard extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing: PopupMenuButton<String>(
-          onSelected: (value) {
-            if (value == 'edit') onTap();
-            if (value == 'delete') onDelete();
-          },
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            PopupMenuItem<String>(
-              value: 'edit',
-              child: Row(
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.edit,
-                    semanticLabel: l10n.edit,
-                    size: AppIconSize.small,
-                    color: context.colors.onSurface,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Text(l10n.edit, style: context.textTheme.bodyMedium),
-                ],
-              ),
+        trailing: CNPopupMenuButton.icon(
+          buttonIcon: const CNSymbol('ellipsis', size: 16),
+          buttonStyle: CNButtonStyle.plain,
+          size: 32,
+          items: [
+            CNPopupMenuItem(
+              label: l10n.edit,
+              icon: const CNSymbol('pencil', size: 14),
             ),
-            const PopupMenuDivider(),
-            PopupMenuItem<String>(
-              value: 'delete',
-              child: Row(
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.delete,
-                    semanticLabel: l10n.delete,
-                    size: AppIconSize.small,
-                    color: context.colors.error,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Text(
-                    l10n.delete,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colors.error,
-                    ),
-                  ),
-                ],
-              ),
+            CNPopupMenuItem(
+              label: l10n.delete,
+              icon: const CNSymbol('trash', size: 14),
             ),
           ],
+          onSelected: (index) {
+            switch (index) {
+              case 0: onTap();
+              case 1: onDelete();
+            }
+          },
         ),
       ),
     );

@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 
 /// Input bar for composing and sending messages
 class ChatInputBar extends StatefulWidget {
@@ -102,53 +103,38 @@ class _ChatInputBarState extends State<ChatInputBar> {
   }
 
   Widget _buildAttachmentButton(BuildContext context) {
-    return PopupMenuButton<String>(
-      icon: Icon(AppIcons.attachFile, color: context.colors.onSurfaceVariant),
-      tooltip: context.l10n.attachFile,
-      enabled: !widget.isLoading,
-      onSelected: (value) {
-        switch (value) {
-          case 'camera':
+    return CNPopupMenuButton.icon(
+      buttonIcon: CNSymbol(
+        'paperclip',
+        size: 16,
+        color: context.colors.onSurfaceVariant,
+      ),
+      buttonStyle: CNButtonStyle.plain,
+      size: 32,
+      items: [
+        CNPopupMenuItem(
+          label: context.l10n.takePhoto,
+          icon: const CNSymbol('camera', size: 14),
+        ),
+        CNPopupMenuItem(
+          label: context.l10n.chooseFromGallery,
+          icon: const CNSymbol('photo', size: 14),
+        ),
+        CNPopupMenuItem(
+          label: context.l10n.shareWorkout,
+          icon: const CNSymbol('flame', size: 14),
+        ),
+      ],
+      onSelected: (index) {
+        switch (index) {
+          case 0:
             _pickImage(ImageSource.camera);
-          case 'gallery':
+          case 1:
             _pickImage(ImageSource.gallery);
-          case 'workout':
+          case 2:
             widget.onAttachWorkout();
         }
       },
-      itemBuilder: (context) => [
-        PopupMenuItem(
-          value: 'camera',
-          child: Row(
-            children: [
-              Icon(AppIcons.camera, color: context.colors.onSurface),
-              const SizedBox(width: AppSpacing.sm),
-              Text(context.l10n.takePhoto),
-            ],
-          ),
-        ),
-        PopupMenuItem(
-          value: 'gallery',
-          child: Row(
-            children: [
-              Icon(AppIcons.image, color: context.colors.onSurface),
-              const SizedBox(width: AppSpacing.sm),
-              Text(context.l10n.chooseFromGallery),
-            ],
-          ),
-        ),
-        const PopupMenuDivider(),
-        PopupMenuItem(
-          value: 'workout',
-          child: Row(
-            children: [
-              Icon(AppIcons.fitnessCenter, color: context.colors.onSurface),
-              const SizedBox(width: AppSpacing.sm),
-              Text(context.l10n.shareWorkout),
-            ],
-          ),
-        ),
-      ],
     );
   }
 

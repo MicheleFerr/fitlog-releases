@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/core/providers/state_provider_helper.dart';
 import 'dart:async';
 
 import 'package:cupertino_native/cupertino_native.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -229,30 +230,29 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
             onPressed: () => _showViewSettingsSheet(context, l10n),
           ),
           // Sort options
-          PopupMenuButton<WorkoutSortOption>(
-            icon: const SemanticIcon(
-              icon: AppIcons.sort,
-              semanticLabel: 'Sort',
-            ),
-            onSelected: (value) {
-              final currentFilter = ref.read(workoutHistoryFilterProvider);
-              ref.read(workoutHistoryFilterProvider.notifier).state =
-                  currentFilter.copyWith(sortBy: value);
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: WorkoutSortOption.dateDesc,
-                child: Text(l10n.sortByDate),
-              ),
-              PopupMenuItem(
-                value: WorkoutSortOption.duration,
-                child: Text(l10n.sortByDuration),
-              ),
-              PopupMenuItem(
-                value: WorkoutSortOption.volume,
-                child: Text(l10n.sortByVolume),
-              ),
+          CNPopupMenuButton.icon(
+            buttonIcon: const CNSymbol('arrow.up.arrow.down', size: 16),
+            buttonStyle: CNButtonStyle.plain,
+            size: 32,
+            items: [
+              CNPopupMenuItem(label: l10n.sortByDate, icon: const CNSymbol('calendar', size: 14)),
+              CNPopupMenuItem(label: l10n.sortByDuration, icon: const CNSymbol('clock', size: 14)),
+              CNPopupMenuItem(label: l10n.sortByVolume, icon: const CNSymbol('scalemass', size: 14)),
             ],
+            onSelected: (index) {
+              final currentFilter = ref.read(workoutHistoryFilterProvider);
+              switch (index) {
+                case 0:
+                  ref.read(workoutHistoryFilterProvider.notifier).state =
+                      currentFilter.copyWith(sortBy: WorkoutSortOption.dateDesc);
+                case 1:
+                  ref.read(workoutHistoryFilterProvider.notifier).state =
+                      currentFilter.copyWith(sortBy: WorkoutSortOption.duration);
+                case 2:
+                  ref.read(workoutHistoryFilterProvider.notifier).state =
+                      currentFilter.copyWith(sortBy: WorkoutSortOption.volume);
+              }
+            },
           ),
         ],
       ),
@@ -1628,74 +1628,16 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                   ),
 
                   // Menu
-                  PopupMenuButton<String>(
+                  IconButton(
                     icon: Icon(
                       AppIcons.moreVert,
                       color: colorScheme.onSurfaceVariant,
                       size: AppIconSize.small,
                     ),
                     padding: EdgeInsets.zero,
-                    onSelected: (action) {
-                      switch (action) {
-                        case 'edit':
-                          _editWorkout(context, workout, l10n);
-                          break;
-                        case 'delete':
-                          _deleteWorkout(context, workout, l10n);
-                          break;
-                      }
-                    },
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: 'edit',
-                        child: Row(
-                          children: [
-                            SemanticIcon(
-                              icon: canEdit ? AppIcons.edit : AppIcons.lock,
-                              semanticLabel: canEdit
-                                  ? l10n.editWorkout
-                                  : l10n.editWorkoutLocked,
-                              size: AppIconSize.small,
-                              color: canEdit
-                                  ? colorScheme.primary
-                                  : colorScheme.outline,
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                l10n.editWorkout,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: canEdit ? null : colorScheme.outline,
-                                ),
-                              ),
-                            ),
-                            if (!canEdit) ...[
-                              const SizedBox(width: 4),
-                              Icon(
-                                AppIcons.premium,
-                                size: AppIconSize.tiny,
-                                color: colorScheme.tertiary,
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                      PopupMenuItem(
-                        value: 'delete',
-                        child: Row(
-                          children: [
-                            SemanticIcon(
-                              icon: AppIcons.delete,
-                              semanticLabel: l10n.deleteWorkout,
-                              size: AppIconSize.small,
-                              color: colorScheme.error,
-                            ),
-                            const SizedBox(width: 12),
-                            Text(l10n.deleteWorkout),
-                          ],
-                        ),
-                      ),
-                    ],
+                    onPressed: () => _showWorkoutActionsSheet(
+                      context, workout, canEdit, colorScheme, l10n,
+                    ),
                   ),
                 ],
               ),
@@ -2048,6 +1990,74 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         },
       );
     }
+  }
+
+  void _showWorkoutActionsSheet(
+    BuildContext context,
+    WorkoutHistoryDetail workout,
+    bool canEdit,
+    ColorScheme colorScheme,
+    AppLocalizations l10n,
+  ) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext sheetContext) => CupertinoActionSheet(
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(sheetContext);
+              _editWorkout(context, workout, l10n);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  canEdit ? AppIcons.edit : AppIcons.lock,
+                  color: canEdit ? colorScheme.primary : colorScheme.outline,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.editWorkout,
+                  style: TextStyle(
+                    color: canEdit ? colorScheme.primary : colorScheme.outline,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                if (!canEdit) ...[
+                  const SizedBox(width: 8),
+                  Icon(
+                    AppIcons.premium,
+                    size: 16,
+                    color: colorScheme.tertiary,
+                  ),
+                ],
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.pop(sheetContext);
+              _deleteWorkout(context, workout, l10n);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(AppIcons.delete, color: colorScheme.error, size: 20),
+                const SizedBox(width: 8),
+                Text(l10n.deleteWorkout),
+              ],
+            ),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () => Navigator.pop(sheetContext),
+          isDefaultAction: true,
+          child: Text(l10n.cancel),
+        ),
+      ),
+    );
   }
 
   void _deleteWorkout(

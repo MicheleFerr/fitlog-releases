@@ -66,20 +66,39 @@ class _PhotoComparisonScreenState extends ConsumerState<PhotoComparisonScreen> {
               tooltip: 'Reset',
             ),
           if (!_selectionMode)
-            PopupMenuButton<PhotoPose?>(
-              icon: Icon(
-                AppIcons.filter,
+            CNPopupMenuButton.icon(
+              buttonIcon: CNSymbol(
+                'line.3.horizontal.decrease',
+                size: 16,
                 color: _filterPose != null ? context.colors.primary : null,
               ),
-              tooltip: 'Filter by pose',
-              onSelected: (pose) => setState(() => _filterPose = pose),
-              itemBuilder: (context) => [
-                PopupMenuItem(value: null, child: Text(context.l10n.allPoses)),
-                const PopupMenuDivider(),
+              buttonStyle: CNButtonStyle.plain,
+              size: 32,
+              items: [
+                CNPopupMenuItem(
+                  label: context.l10n.allPoses,
+                  icon: _filterPose == null
+                      ? const CNSymbol('checkmark', size: 14)
+                      : null,
+                ),
                 ...PhotoPose.values.map(
-                  (pose) => PopupMenuItem(value: pose, child: Text(pose.label)),
+                  (pose) => CNPopupMenuItem(
+                    label: pose.label,
+                    icon: pose == _filterPose
+                        ? const CNSymbol('checkmark', size: 14)
+                        : null,
+                  ),
                 ),
               ],
+              onSelected: (index) {
+                setState(() {
+                  if (index == 0) {
+                    _filterPose = null;
+                  } else {
+                    _filterPose = PhotoPose.values[index - 1];
+                  }
+                });
+              },
             ),
         ],
       ),

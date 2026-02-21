@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -95,33 +96,13 @@ class _TemplateViewContent extends ConsumerWidget {
         title: Text(template.name),
         actions: [
           // Edit action in menu
-          PopupMenuButton<String>(
+          IconButton(
             icon: SemanticIcon(
               icon: AppIcons.menu,
               semanticLabel: context.l10n.menuOptions,
               size: AppIconSize.medium,
             ),
-            onSelected: (value) {
-              if (value == 'edit') {
-                _navigateToEdit(context);
-              }
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'edit',
-                child: Row(
-                  children: [
-                    SemanticIcon(
-                      icon: AppIcons.edit,
-                      semanticLabel: context.l10n.edit,
-                      size: AppIconSize.small,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(context.l10n.edit),
-                  ],
-                ),
-              ),
-            ],
+            onPressed: () => _showActionsSheet(context),
           ),
         ],
       ),
@@ -284,6 +265,39 @@ class _TemplateViewContent extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showActionsSheet(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext sheetContext) => CupertinoActionSheet(
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(sheetContext);
+              _navigateToEdit(context);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(AppIcons.edit, color: colorScheme.primary, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.edit,
+                  style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () => Navigator.pop(sheetContext),
+          isDefaultAction: true,
+          child: Text(context.l10n.cancel),
+        ),
       ),
     );
   }
