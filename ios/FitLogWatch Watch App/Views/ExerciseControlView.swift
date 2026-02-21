@@ -18,6 +18,8 @@ struct ExerciseControlView: View {
     @State private var confirmationTask: Task<Void, Never>?
     @State private var showingFormCues = false
     @State private var showingEditReps = false  // ✅ Edit completed set reps
+    @State private var showingActualRepsPicker = false  // ⌚ Rep range: pick actual reps
+    @State private var pendingActualReps: Int? = nil  // ⌚ Rep range: stash reps before RPE
 
     // ✅ NEW: Track which set the user is currently viewing (1-indexed)
     // nil means viewing the current set (next to do)
@@ -219,6 +221,47 @@ struct ExerciseControlView: View {
         }
         // Fallback to current set's target
         return connectivity.targetReps
+    }
+
+    // ⌚ Rep range display text for the displayed set (e.g., "8-12" or "10")
+    private var displayedRepsText: String {
+        let setIndex = displayedSetNumber - 1 // 0-indexed
+        if setIndex >= 0 && setIndex < connectivity.allSetsTargets.count {
+            let set = connectivity.allSetsTargets[setIndex]
+            if let min = set.minReps, let max = set.maxReps, min != max {
+                return "\(min)-\(max)"
+            }
+            return "\(set.reps)"
+        }
+        // Fallback to connectivity computed display
+        return connectivity.repsDisplay
+    }
+
+    // ⌚ Whether the displayed set has a rep range
+    private var displayedSetHasRepRange: Bool {
+        let setIndex = displayedSetNumber - 1
+        if setIndex >= 0 && setIndex < connectivity.allSetsTargets.count {
+            let set = connectivity.allSetsTargets[setIndex]
+            return set.minReps != nil && set.maxReps != nil && set.minReps != set.maxReps
+        }
+        return connectivity.hasRepRange
+    }
+
+    // ⌚ Min/max reps for the displayed set (for picker)
+    private var displayedSetMinReps: Int {
+        let setIndex = displayedSetNumber - 1
+        if setIndex >= 0 && setIndex < connectivity.allSetsTargets.count {
+            return connectivity.allSetsTargets[setIndex].minReps ?? connectivity.allSetsTargets[setIndex].reps
+        }
+        return connectivity.minReps ?? connectivity.targetReps
+    }
+
+    private var displayedSetMaxReps: Int {
+        let setIndex = displayedSetNumber - 1
+        if setIndex >= 0 && setIndex < connectivity.allSetsTargets.count {
+            return connectivity.allSetsTargets[setIndex].maxReps ?? connectivity.allSetsTargets[setIndex].reps
+        }
+        return connectivity.maxReps ?? connectivity.targetReps
     }
 
     // MARK: - 🔥 Superset Header View
@@ -630,7 +673,8 @@ struct ExerciseControlView: View {
                             .font(.system(size: 12, weight: .medium))
                         Text("×")
                             .foregroundColor(.secondary)
-                        Text("\(displayedTargetReps) \(repsText)")
+                        // ⌚ Show rep range if available for displayed set
+                        Text("\(displayedRepsText) \(repsText)")
                             .font(.system(size: 12, weight: .medium))
                         // ✅ Pencil icon hint for edit (only for current set)
                         if isViewingCurrentSet {
@@ -653,7 +697,7 @@ struct ExerciseControlView: View {
                         }
                     }
                     .accessibilityElement(children: .combine)
-                    .accessibilityLabel(isItalian ? "Obiettivo: \(String(format: "%.1f", displayedTargetWeight)) chilogrammi per \(displayedTargetReps) ripetizioni\(isViewingCurrentSet ? ". Tocca per modificare" : "")" : "Target: \(String(format: "%.1f", displayedTargetWeight)) kilograms for \(displayedTargetReps) reps\(isViewingCurrentSet ? ". Tap to edit" : "")")
+                    .accessibilityLabel(isItalian ? "Obiettivo: \(String(format: "%.1f", displayedTargetWeight)) chilogrammi per \(displayedRepsText) ripetizioni\(isViewingCurrentSet ? ". Tocca per modificare" : "")" : "Target: \(String(format: "%.1f", displayedTargetWeight)) kilograms for \(displayedRepsText) reps\(isViewingCurrentSet ? ". Tap to edit" : "")")
                     .accessibilityHint(isViewingCurrentSet ? (isItalian ? "Tocca per modificare peso o ripetizioni" : "Tap to edit weight or reps") : "")
                 }
             }
@@ -714,7 +758,9 @@ struct ExerciseControlView: View {
                             completeRestPauseSet(effort: effort)
                         }
                     } else {
-                        completeSet(effort: effort)
+                        // ⌚ Pass pending actual reps from rep range picker (if any)
+                        completeSet(effort: effort, actualReps: pendingActualReps)
+                        pendingActualReps = nil
                     }
                 },
                 onSkip: {
@@ -737,7 +783,9 @@ struct ExerciseControlView: View {
                             completeRestPauseSet(effort: nil)
                         }
                     } else {
-                        completeSet(effort: nil)
+                        // ⌚ Pass pending actual reps from rep range picker (if any)
+                        completeSet(effort: nil, actualReps: pendingActualReps)
+                        pendingActualReps = nil
                     }
                 }
             )
@@ -770,6 +818,25 @@ struct ExerciseControlView: View {
                 },
                 onCancel: {
                     showingEditReps = false
+                }
+            )
+        }
+        // ⌚ Actual Reps Picker Sheet (for rep range exercises)
+        .sheet(isPresented: $showingActualRepsPicker) {
+            ActualRepsPickerView(
+                minReps: displayedSetMinReps,
+                maxReps: displayedSetMaxReps,
+                locale: connectivity.appLocale,
+                onSelect: { reps in
+                    showingActualRepsPicker = false
+                    if connectivity.rpeTrackingEnabled {
+                        // Stash reps, then show RPE picker
+                        pendingActualReps = reps
+                        showingEffortPicker = true
+                    } else {
+                        // No RPE → complete directly with actual reps
+                        completeSet(effort: nil, actualReps: reps)
+                    }
                 }
             )
         }
@@ -940,7 +1007,10 @@ struct ExerciseControlView: View {
                         WKInterfaceDevice.current().play(.click)
                         // Make sure we're completing the current set
                         viewingSetNumber = nil
-                        if connectivity.rpeTrackingEnabled {
+                        // ⌚ Rep range flow: show reps picker first, then RPE
+                        if displayedSetHasRepRange {
+                            showingActualRepsPicker = true
+                        } else if connectivity.rpeTrackingEnabled {
                             showingEffortPicker = true
                         } else {
                             completeSet(effort: nil)
@@ -979,9 +1049,9 @@ struct ExerciseControlView: View {
 
     // MARK: - Action Methods
 
-    private func completeSet(effort: Int?) {
+    private func completeSet(effort: Int?, actualReps: Int? = nil) {
         WKInterfaceDevice.current().play(.success)
-        connectivity.sendSetCompleted(effort: effort)
+        connectivity.sendSetCompleted(effort: effort, actualReps: actualReps)
         showingConfirmation = true
 
         // Cancel any existing confirmation task

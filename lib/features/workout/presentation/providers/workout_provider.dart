@@ -508,21 +508,25 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
                 'actualReps':
                     s.actualReps, // ✅ Reps effettive (null se non completato)
                 'isCompleted': s.isCompleted, // ✅ Stato completamento
+                'minReps': s.minReps, // ⌚ Rep range support
+                'maxReps': s.maxReps, // ⌚ Rep range support
               },
             )
             .toList();
+
+        final firstSet = firstExercise.sets.isNotEmpty
+            ? firstExercise.sets.first
+            : null;
 
         _getFormCuesAndNotifyWatch(
           exerciseName: firstExercise.name,
           exerciseId: firstExercise.id,
           currentSet: 1,
           totalSets: firstExercise.sets.length,
-          targetWeight: firstExercise.sets.isNotEmpty
-              ? firstExercise.sets.first.weight
-              : null,
-          targetReps: firstExercise.sets.isNotEmpty
-              ? firstExercise.sets.first.reps
-              : null,
+          targetWeight: firstSet?.weight,
+          targetReps: firstSet?.reps ?? firstSet?.minReps,
+          minReps: firstSet?.minReps, // ⌚ Rep range support
+          maxReps: firstSet?.maxReps, // ⌚ Rep range support
           setsCompleted: 0,
           rpeTrackingEnabled: rpeTrackingEnabled,
           effortScale: effortScale,
@@ -570,6 +574,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     required int totalSets,
     double? targetWeight,
     int? targetReps,
+    int? minReps, // ⌚ Rep range support
+    int? maxReps, // ⌚ Rep range support
     required int setsCompleted,
     int?
     setsCompletedInExercise, // ✅ Sets completed in current exercise (for edit UI)
@@ -698,6 +704,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         totalSets: totalSets,
         targetWeight: targetWeight,
         targetReps: targetReps,
+        minReps: minReps, // ⌚ Rep range support
+        maxReps: maxReps, // ⌚ Rep range support
         setsCompleted: setsCompleted,
         setsCompletedInExercise: setsCompletedInExercise ?? 0, // ✅ NEW
         lastCompletedReps: lastCompletedReps, // ✅ NEW
@@ -756,6 +764,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         totalSets: totalSets,
         targetWeight: targetWeight,
         targetReps: targetReps,
+        minReps: minReps, // ⌚ Rep range support
+        maxReps: maxReps, // ⌚ Rep range support
         setsCompleted: setsCompleted,
         setsCompletedInExercise: setsCompletedInExercise ?? 0, // ✅ NEW
         lastCompletedReps: lastCompletedReps, // ✅ NEW
@@ -925,6 +935,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
                 s.actualReps, // ✅ Reps effettive (null se non completato)
             'isCompleted': s.isCompleted, // ✅ Stato completamento
             'isWarmup': s.isWarmup, // ✅ Warmup flag per Watch
+            'minReps': s.minReps, // ⌚ Rep range support
+            'maxReps': s.maxReps, // ⌚ Rep range support
           },
         )
         .toList();
@@ -944,7 +956,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           : currentExercise.sets.length,
       totalSets: currentExercise.sets.length,
       targetWeight: currentSet?.weight,
-      targetReps: currentSet?.reps,
+      targetReps: currentSet?.reps ?? currentSet?.minReps, // ⌚ Fallback to minReps for rep range
+      minReps: currentSet?.minReps, // ⌚ Rep range support
+      maxReps: currentSet?.maxReps, // ⌚ Rep range support
       setsCompleted: completedSets,
       setsCompletedInExercise: setsCompletedInExercise, // ✅ NEW
       lastCompletedReps: lastCompletedReps, // ✅ NEW
@@ -2839,12 +2853,15 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   /// ⌚ Complete current set when triggered from Apple Watch
   /// - effort: Optional effort value (RPE 6-10 or RIR 0-4)
   /// - effortScale: "rpe" or "rir" to indicate how to interpret the effort value
-  void completeCurrentSetFromWatch({int? effort, String? effortScale}) {
+  void completeCurrentSetFromWatch({int? effort, String? effortScale, int? actualReps}) {
     debugPrint('⌚ [FLUTTER] completeCurrentSetFromWatch called');
     if (effort != null) {
       debugPrint(
         '⌚ [FLUTTER] Effort from Watch: $effort (${effortScale ?? "rpe"})',
       );
+    }
+    if (actualReps != null) {
+      debugPrint('⌚ [FLUTTER] Actual reps from Watch: $actualReps');
     }
 
     if (state == null) {
@@ -2928,6 +2945,32 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           updatedExercises[exerciseIndex] = updatedExercise;
           state = workout.copyWith(exercises: updatedExercises);
           debugPrint('⌚ [FLUTTER] ✅ Updated set with RPE $rpeValue');
+        }
+      }
+    }
+
+    // ⌚ If Watch sent actualReps (from rep range picker), set it on the set before completing
+    if (actualReps != null) {
+      // Re-read state in case RPE update modified it
+      final currentWorkout = state!;
+      final currentEx = currentWorkout.exercises.cast<Exercise?>().firstWhere(
+        (e) => e != null && e.id == currentExercise.id,
+        orElse: () => null,
+      );
+      if (currentEx != null) {
+        final setIdx = currentEx.sets.indexWhere((s) => s.id == currentSet.id);
+        if (setIdx >= 0) {
+          final updatedSet2 = currentEx.sets[setIdx].copyWith(actualReps: actualReps);
+          final updatedSets2 = List<ExerciseSet>.from(currentEx.sets);
+          updatedSets2[setIdx] = updatedSet2;
+          final updatedEx2 = currentEx.copyWith(sets: updatedSets2);
+          final exIdx = currentWorkout.exercises.indexWhere((e) => e.id == currentEx.id);
+          if (exIdx >= 0) {
+            final updatedExercises2 = List<Exercise>.from(currentWorkout.exercises);
+            updatedExercises2[exIdx] = updatedEx2;
+            state = currentWorkout.copyWith(exercises: updatedExercises2);
+            debugPrint('⌚ [FLUTTER] ✅ Updated set with actualReps $actualReps from Watch');
+          }
         }
       }
     }

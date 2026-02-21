@@ -144,8 +144,9 @@ final watchConnectivityProvider =
 /// Callback for when Watch completes a set
 /// - effort: Optional effort value (RPE 6-10 or RIR 0-4)
 /// - effortScale: "rpe" or "rir"
+/// - actualReps: Optional actual reps performed (from rep range picker on Watch)
 typedef OnSetCompletedFromWatch =
-    void Function({int? effort, String? effortScale});
+    void Function({int? effort, String? effortScale, int? actualReps});
 
 /// Callback for when Watch skips rest
 typedef OnSkipRestFromWatch = void Function();
@@ -358,14 +359,15 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
         final args = call.arguments as Map<dynamic, dynamic>?;
         final effort = args?['effort'] as int?;
         final effortScale = args?['effortScale'] as String?;
+        final actualReps = args?['actualReps'] as int?;
         if (effort != null) {
           _watchLog(
-            '⌚ [FLUTTER] ✅ Set completed from Watch with ${effortScale?.toUpperCase() ?? "RPE"}: $effort',
+            '⌚ [FLUTTER] ✅ Set completed from Watch with ${effortScale?.toUpperCase() ?? "RPE"}: $effort${actualReps != null ? ", actualReps: $actualReps" : ""}',
           );
         } else {
-          _watchLog('⌚ [FLUTTER] ✅ Set completed from Watch (no effort)');
+          _watchLog('⌚ [FLUTTER] ✅ Set completed from Watch (no effort)${actualReps != null ? ", actualReps: $actualReps" : ""}');
         }
-        onSetCompletedFromWatch?.call(effort: effort, effortScale: effortScale);
+        onSetCompletedFromWatch?.call(effort: effort, effortScale: effortScale, actualReps: actualReps);
         return true;
 
       case 'onSkipRestFromWatch':
@@ -719,9 +721,11 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
             case 'setCompleted':
               final effort = args['effort'] as int?;
               final effortScale = args['effortScale'] as String?;
+              final actualReps = args['actualReps'] as int?;
               onSetCompletedFromWatch?.call(
                 effort: effort,
                 effortScale: effortScale,
+                actualReps: actualReps,
               );
             case 'endWorkout':
               final save = args['save'] as bool? ?? true;
@@ -951,6 +955,8 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
     required int totalSets,
     double? targetWeight,
     int? targetReps,
+    int? minReps, // ⌚ Rep range support
+    int? maxReps, // ⌚ Rep range support
     int setsCompleted = 0,
     int setsCompletedInExercise = 0, // ✅ NEW
     int? lastCompletedReps, // ✅ NEW
@@ -1015,6 +1021,8 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
         'totalSets': totalSets,
         'targetWeight': targetWeight ?? 0.0,
         'targetReps': targetReps ?? 0,
+        if (minReps != null) 'minReps': minReps, // ⌚ Rep range support
+        if (maxReps != null) 'maxReps': maxReps, // ⌚ Rep range support
         'setsCompleted': setsCompleted,
         'setsCompletedInExercise': setsCompletedInExercise, // ✅ NEW
         'lastCompletedReps': lastCompletedReps ?? 0, // ✅ NEW
@@ -1104,6 +1112,8 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
     required int totalSets,
     double? targetWeight,
     int? targetReps,
+    int? minReps, // ⌚ Rep range support
+    int? maxReps, // ⌚ Rep range support
     int setsCompleted = 0,
     int setsCompletedInExercise = 0, // ✅ NEW
     int? lastCompletedReps, // ✅ NEW
@@ -1150,6 +1160,8 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
         'totalSets': totalSets,
         'targetWeight': targetWeight ?? 0.0,
         'targetReps': targetReps ?? 0,
+        if (minReps != null) 'minReps': minReps, // ⌚ Rep range support
+        if (maxReps != null) 'maxReps': maxReps, // ⌚ Rep range support
         'setsCompleted': setsCompleted,
         'setsCompletedInExercise': setsCompletedInExercise, // ✅ NEW
         'lastCompletedReps': lastCompletedReps ?? 0, // ✅ NEW

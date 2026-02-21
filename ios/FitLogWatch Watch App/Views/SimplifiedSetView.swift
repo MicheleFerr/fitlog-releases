@@ -76,7 +76,8 @@ struct SimplifiedSetView: View {
                     Text("×")
                         .font(.system(size: 20, weight: .medium))
                         .foregroundColor(.secondary)
-                    Text("\(connectivity.targetReps)")
+                    // ⌚ Show rep range if available
+                    Text(connectivity.repsDisplay)
                         .font(.system(size: 36, weight: .bold))
                 }
 
@@ -90,7 +91,7 @@ struct SimplifiedSetView: View {
                 showingQuickEdit = true
             }
             .accessibilityElement(children: .combine)
-            .accessibilityLabel(isItalian ? "\(formatWeight(connectivity.targetWeight)) chili per \(connectivity.targetReps) ripetizioni" : "\(formatWeight(connectivity.targetWeight)) kg for \(connectivity.targetReps) reps")
+            .accessibilityLabel(isItalian ? "\(formatWeight(connectivity.targetWeight)) chili per \(connectivity.repsDisplay) ripetizioni" : "\(formatWeight(connectivity.targetWeight)) kg for \(connectivity.repsDisplay) reps")
             .accessibilityHint(isItalian ? "Tocca per modificare peso e ripetizioni" : "Tap to edit weight and reps")
 
             Spacer()

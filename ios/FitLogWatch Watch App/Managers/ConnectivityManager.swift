@@ -32,6 +32,9 @@ class ConnectivityManager: NSObject, ObservableObject {
     @Published var totalSets = 0
     @Published var targetWeight: Double = 0
     @Published var targetReps = 0
+    // ⌚ Rep range support (e.g., 8-12 reps)
+    @Published var minReps: Int? = nil
+    @Published var maxReps: Int? = nil
     @Published var setsCompleted = 0
     // ✅ FIX: Sets completed in CURRENT EXERCISE (for edit UI set selector)
     @Published var setsCompletedInExercise = 0
@@ -47,9 +50,9 @@ class ConnectivityManager: NSObject, ObservableObject {
     @Published var totalExercises: Int = 0
 
     // ✅ FIX: All sets' targets for current exercise (for navigation between sets)
-    // Each element: (weight, reps, actualReps?, isCompleted) indexed by setNumber - 1
+    // Each element: (weight, reps, actualReps?, isCompleted, isWarmup, minReps?, maxReps?) indexed by setNumber - 1
     // actualReps is nil if set not completed, or the actual reps performed
-    @Published var allSetsTargets: [(weight: Double, reps: Int, actualReps: Int?, isCompleted: Bool, isWarmup: Bool)] = []
+    @Published var allSetsTargets: [(weight: Double, reps: Int, actualReps: Int?, isCompleted: Bool, isWarmup: Bool, minReps: Int?, maxReps: Int?)] = []
 
     // MARK: - 🔥 SUPERSET State (synced from iPhone)
     @Published var isSuperset = false
@@ -73,6 +76,17 @@ class ConnectivityManager: NSObject, ObservableObject {
     @Published var restPauseSets: [(reps: Int, restSeconds: Int, isCompleted: Bool)] = []
     @Published var currentRestPauseSet = 0  // 0-indexed
     @Published var totalRestPauseSets = 0
+
+    // MARK: - Rep Range Computed Properties
+    /// Whether current exercise uses a rep range (e.g., 8-12) instead of fixed reps
+    var hasRepRange: Bool { minReps != nil && maxReps != nil && minReps != maxReps }
+    /// Display string for reps: "8-12" for range, "\(targetReps)" for fixed
+    var repsDisplay: String {
+        if hasRepRange, let min = minReps, let max = maxReps {
+            return "\(min)-\(max)"
+        }
+        return "\(targetReps)"
+    }
 
     // MARK: - Workout Summary (shown after workout ends)
     @Published var showWorkoutSummary = false
@@ -536,7 +550,8 @@ class ConnectivityManager: NSObject, ObservableObject {
 
     /// Notify iPhone that set was completed from Watch
     /// ✅ FIX: Uses sendMessage with replyHandler to receive rest timer immediately
-    func sendSetCompleted(effort: Int? = nil) {
+    /// - actualReps: Optional actual reps performed (from rep range picker)
+    func sendSetCompleted(effort: Int? = nil, actualReps: Int? = nil) {
         var data: [String: Any] = [
             "type": WatchMessageType.setCompleted,
             "timestamp": Date().timeIntervalSince1970,
@@ -547,6 +562,10 @@ class ConnectivityManager: NSObject, ObservableObject {
         if let effort = effort {
             data["effort"] = effort
             data["effortScale"] = effortScale
+        }
+
+        if let actualReps = actualReps {
+            data["actualReps"] = actualReps
         }
 
         // ✅ FIX: Show optimistic timer immediately while waiting for confirmation
@@ -812,7 +831,9 @@ class ConnectivityManager: NSObject, ObservableObject {
                 reps: reps,
                 actualReps: currentTarget.actualReps,
                 isCompleted: currentTarget.isCompleted,
-                isWarmup: currentTarget.isWarmup
+                isWarmup: currentTarget.isWarmup,
+                minReps: currentTarget.minReps,
+                maxReps: currentTarget.maxReps
             )
             print("⌚ [WATCH] Updated allSetsTargets[\(setIndex)]: \(weight) kg × \(reps) reps")
         }
@@ -1047,6 +1068,8 @@ class ConnectivityManager: NSObject, ObservableObject {
             let setData = allSetsTargets[setIndex]
             targetWeight = setData.weight
             targetReps = setData.reps
+            minReps = setData.minReps
+            maxReps = setData.maxReps
             print("⌚ [SET] Jumped to set \(setNumber): \(setData.weight)kg × \(setData.reps) reps")
         } else {
             print("⌚ [SET] Jumped to set \(setNumber) (no local target data available)")
@@ -1078,7 +1101,9 @@ class ConnectivityManager: NSObject, ObservableObject {
                 reps: reps,
                 actualReps: currentTarget.actualReps,
                 isCompleted: currentTarget.isCompleted,
-                isWarmup: currentTarget.isWarmup
+                isWarmup: currentTarget.isWarmup,
+                minReps: currentTarget.minReps,
+                maxReps: currentTarget.maxReps
             )
         }
 
@@ -1113,7 +1138,9 @@ class ConnectivityManager: NSObject, ObservableObject {
                     reps: previousSet.reps,
                     actualReps: currentTarget.actualReps,
                     isCompleted: currentTarget.isCompleted,
-                    isWarmup: currentTarget.isWarmup
+                    isWarmup: currentTarget.isWarmup,
+                    minReps: currentTarget.minReps,
+                    maxReps: currentTarget.maxReps
                 )
             }
             print("⌚ [SET] Copied from previous set: \(previousSet.weight)kg × \(previousSet.reps) reps")
@@ -1340,6 +1367,9 @@ class ConnectivityManager: NSObject, ObservableObject {
         if let v = data.intValue(for: "totalSets") { totalSets = v }
         if let v = data.doubleValue(for: "targetWeight") { targetWeight = v }
         if let v = data.intValue(for: "targetReps") { targetReps = v }
+        // ⌚ Rep range support
+        minReps = data.intValue(for: "minReps")
+        maxReps = data.intValue(for: "maxReps")
         if let v = data.intValue(for: "setsCompleted") { setsCompleted = v }
         if let v = data.intValue(for: "setsCompletedInExercise") { setsCompletedInExercise = v }
         if let v = data.intValue(for: "lastCompletedReps") { lastCompletedReps = v }
@@ -1375,7 +1405,9 @@ class ConnectivityManager: NSObject, ObservableObject {
                     reps: reps,
                     actualReps: s.intValue(for: "actualReps"),
                     isCompleted: s.boolValue(for: "isCompleted") ?? false,
-                    isWarmup: s.boolValue(for: "isWarmup") ?? false
+                    isWarmup: s.boolValue(for: "isWarmup") ?? false,
+                    minReps: s.intValue(for: "minReps"),
+                    maxReps: s.intValue(for: "maxReps")
                 )
             }
             let completed = allSetsTargets.filter { $0.isCompleted }.count
@@ -1681,6 +1713,10 @@ extension ConnectivityManager: WCSessionDelegate {
         snapshot["setsCompleted"] = setsCompleted
         snapshot["setsCompletedInExercise"] = setsCompletedInExercise
 
+        // ⌚ Rep range support
+        if let minReps = minReps { snapshot["minReps"] = minReps }
+        if let maxReps = maxReps { snapshot["maxReps"] = maxReps }
+
         // Serialize allSetsTargets as array of dicts
         snapshot["allSetsTargets"] = allSetsTargets.map { set -> [String: Any] in
             var d: [String: Any] = [
@@ -1691,6 +1727,12 @@ extension ConnectivityManager: WCSessionDelegate {
             ]
             if let actualReps = set.actualReps {
                 d["actualReps"] = actualReps
+            }
+            if let minReps = set.minReps {
+                d["minReps"] = minReps
+            }
+            if let maxReps = set.maxReps {
+                d["maxReps"] = maxReps
             }
             return d
         }

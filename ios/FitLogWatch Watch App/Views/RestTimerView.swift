@@ -254,7 +254,8 @@ struct RestTimerView: View {
                     Text("×")
                         .font(.system(size: 14))
                         .foregroundColor(.secondary)
-                    Text("\(connectivity.targetReps) \(repsText)")
+                    // ⌚ Show rep range if available
+                    Text("\(connectivity.repsDisplay) \(repsText)")
                         .font(.system(size: 16, weight: .bold))
                 }
                 .foregroundColor(timerColor)
@@ -276,7 +277,7 @@ struct RestTimerView: View {
                 .fill(timerColor.opacity(0.15))
         )
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(connectivity.targetWeight > 0 ? (isItalian ? "Prossima serie: \(formatWeight(connectivity.targetWeight)) chilogrammi per \(connectivity.targetReps) ripetizioni. Serie \(connectivity.currentSetNumber) di \(connectivity.totalSets)" : "Next set: \(formatWeight(connectivity.targetWeight)) kilograms for \(connectivity.targetReps) reps. Set \(connectivity.currentSetNumber) of \(connectivity.totalSets)") : (isItalian ? "Nessun obiettivo impostato" : "No target set"))
+        .accessibilityLabel(connectivity.targetWeight > 0 ? (isItalian ? "Prossima serie: \(formatWeight(connectivity.targetWeight)) chilogrammi per \(connectivity.repsDisplay) ripetizioni. Serie \(connectivity.currentSetNumber) di \(connectivity.totalSets)" : "Next set: \(formatWeight(connectivity.targetWeight)) kilograms for \(connectivity.repsDisplay) reps. Set \(connectivity.currentSetNumber) of \(connectivity.totalSets)") : (isItalian ? "Nessun obiettivo impostato" : "No target set"))
     }
 
     // MARK: - Computed Properties
