@@ -1337,6 +1337,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
 
   /// Fast scrub sidebar - strip sottile a riposo, si espande al tocco/drag
   /// Swipe su/giù per selezionare il valore velocemente
+  /// Hit area is 44px wide (Apple HIG minimum) even when visual is narrow
   Widget _buildFastScrubSidebar({
     required List<int> values,
     void Function(int value)? onSelect,
@@ -1346,7 +1347,12 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     required double currentValue,
     bool onRight = false,
   }) {
+    const double hitAreaWidth = 44.0;
+    const double restVisualWidth = 14.0;
+    const double activeVisualWidth = 40.0;
+
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onVerticalDragStart: (_) {
         _lastFastScrubValue = null;
         onStart?.call();
@@ -1373,6 +1379,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
       },
       onTapDown: (_) {
         onStart?.call();
+        HapticFeedback.lightImpact();
       },
       onTapUp: (_) {
         onEnd?.call();
@@ -1380,55 +1387,75 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
       onTapCancel: () {
         onEnd?.call();
       },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        curve: Curves.easeOut,
-        width: isActive ? 34 : 10,
+      child: SizedBox(
+        width: isActive ? activeVisualWidth : hitAreaWidth,
         height: 150,
-        margin: EdgeInsets.only(right: onRight ? 0 : 4, left: onRight ? 4 : 0),
-        decoration: BoxDecoration(
-          color: isActive
-              ? context.colors.primary.withValues(alpha: 0.12)
-              : context.colors.outlineVariant.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(8),
-          border: isActive
-              ? Border.all(
-                  color: context.colors.primary.withValues(alpha: 0.3),
-                  width: 1,
-                )
-              : null,
-        ),
-        clipBehavior: Clip.hardEdge,
-        child: isActive
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: values.map((value) {
-                  final isNearCurrent = (currentValue - value).abs() < 5;
-                  return Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      decoration: isNearCurrent
-                          ? BoxDecoration(
-                              color: context.colors.primary.withValues(alpha: 0.25),
-                            )
-                          : null,
-                      child: Text(
-                        '$value',
-                        textAlign: TextAlign.center,
-                        style: context.textTheme.labelSmall?.copyWith(
-                          fontSize: 9,
-                          fontWeight: isNearCurrent ? FontWeight.bold : FontWeight.w500,
-                          color: isNearCurrent
-                              ? context.colors.primary
-                              : context.colors.onSurfaceVariant,
+        child: Align(
+          alignment: onRight ? Alignment.centerRight : Alignment.centerLeft,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOut,
+            width: isActive ? activeVisualWidth : restVisualWidth,
+            height: 150,
+            decoration: BoxDecoration(
+              color: isActive
+                  ? context.colors.primary.withValues(alpha: 0.12)
+                  : context.colors.outlineVariant.withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(8),
+              border: isActive
+                  ? Border.all(
+                      color: context.colors.primary.withValues(alpha: 0.3),
+                      width: 1,
+                    )
+                  : null,
+            ),
+            clipBehavior: Clip.hardEdge,
+            child: isActive
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: values.map((value) {
+                      final isNearCurrent = (currentValue - value).abs() < 5;
+                      return Expanded(
+                        child: Container(
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          decoration: isNearCurrent
+                              ? BoxDecoration(
+                                  color: context.colors.primary.withValues(alpha: 0.25),
+                                )
+                              : null,
+                          child: Text(
+                            '$value',
+                            textAlign: TextAlign.center,
+                            style: context.textTheme.labelSmall?.copyWith(
+                              fontSize: 10,
+                              fontWeight: isNearCurrent ? FontWeight.bold : FontWeight.w500,
+                              color: isNearCurrent
+                                  ? context.colors.primary
+                                  : context.colors.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  )
+                // Rest state: subtle dots to hint at interactivity
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(
+                      5,
+                      (_) => Container(
+                        width: 4,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: context.colors.outline.withValues(alpha: 0.4),
+                          shape: BoxShape.circle,
                         ),
                       ),
                     ),
-                  );
-                }).toList(),
-              )
-            : const SizedBox.expand(),
+                  ),
+          ),
+        ),
       ),
     );
   }
