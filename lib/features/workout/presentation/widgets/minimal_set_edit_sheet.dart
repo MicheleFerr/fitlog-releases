@@ -8,6 +8,7 @@
 library;
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
@@ -49,6 +50,18 @@ class FastScrollPhysics extends FixedExtentScrollPhysics {
 
   @override
   double get minFlingDistance => 5.0; // Shorter distance needed to trigger fling
+}
+
+/// Vertical drag recognizer that always wins the gesture arena.
+/// Prevents the modal bottom sheet's drag-to-dismiss from intercepting
+/// vertical drags on the fast scrub sidebar.
+class _EagerVerticalDragRecognizer extends VerticalDragGestureRecognizer {
+
+  @override
+  void rejectGesture(int pointer) {
+    // Instead of rejecting, always accept - this wins the gesture arena
+    acceptGesture(pointer);
+  }
 }
 
 /// Minimal set edit modal with PageView navigation between sets
@@ -167,7 +180,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
       0,
       _weightItemCount - 1,
     );
-    final repsIndex = (_reps - _repsMin).clamp(0, _selectedMaxReps - _repsMin);
+    final repsIndex = (_reps - _repsMin).clamp(0, _repsMax - _repsMin);
     final secondsIndex = ((_seconds - _minSeconds) ~/ _secondsStep).clamp(
       0,
       (_maxSeconds - _minSeconds) ~/ _secondsStep,
@@ -500,7 +513,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
           parsedReps >= _repsMin &&
           parsedReps <= _repsMax) {
         _reps = parsedReps;
-        final repsIndex = (_reps - _repsMin).clamp(0, _selectedMaxReps - _repsMin);
+        final repsIndex = (_reps - _repsMin).clamp(0, _repsMax - _repsMin);
         _repsController.jumpToItem(repsIndex);
       }
     }
@@ -552,7 +565,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
         0,
         _weightItemCount - 1,
       );
-      final repsIndex = (_reps - _repsMin).clamp(0, _selectedMaxReps - _repsMin);
+      final repsIndex = (_reps - _repsMin).clamp(0, _repsMax - _repsMin);
       _weightController.jumpToItem(weightIndex);
       _repsController.jumpToItem(repsIndex);
     });
@@ -1351,41 +1364,61 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     const double restVisualWidth = 14.0;
     const double activeVisualWidth = 40.0;
 
-    return GestureDetector(
+    // Use RawGestureDetector with eager recognizer to always win
+    // the gesture arena over the modal's drag-to-dismiss handler
+    return RawGestureDetector(
       behavior: HitTestBehavior.opaque,
-      onVerticalDragStart: (_) {
-        _lastFastScrubValue = null;
-        onStart?.call();
-        HapticFeedback.lightImpact();
-      },
-      onVerticalDragUpdate: (details) {
-        final localY = details.localPosition.dy.clamp(0.0, 150.0);
-        final itemHeight = 150.0 / values.length;
-        final index = (localY / itemHeight).floor().clamp(0, values.length - 1);
-        final selectedValue = values[index];
-        if (selectedValue != _lastFastScrubValue) {
-          _lastFastScrubValue = selectedValue;
-          onSelect?.call(selectedValue);
-          HapticFeedback.selectionClick();
-        }
-      },
-      onVerticalDragEnd: (_) {
-        _lastFastScrubValue = null;
-        onEnd?.call();
-      },
-      onVerticalDragCancel: () {
-        _lastFastScrubValue = null;
-        onEnd?.call();
-      },
-      onTapDown: (_) {
-        onStart?.call();
-        HapticFeedback.lightImpact();
-      },
-      onTapUp: (_) {
-        onEnd?.call();
-      },
-      onTapCancel: () {
-        onEnd?.call();
+      gestures: <Type, GestureRecognizerFactory>{
+        _EagerVerticalDragRecognizer:
+            GestureRecognizerFactoryWithHandlers<_EagerVerticalDragRecognizer>(
+          () => _EagerVerticalDragRecognizer(),
+          (instance) {
+            instance
+              ..onStart = (_) {
+                _lastFastScrubValue = null;
+                onStart?.call();
+                HapticFeedback.lightImpact();
+              }
+              ..onUpdate = (details) {
+                final localY = details.localPosition.dy.clamp(0.0, 150.0);
+                final itemHeight = 150.0 / values.length;
+                final index = (localY / itemHeight)
+                    .floor()
+                    .clamp(0, values.length - 1);
+                final selectedValue = values[index];
+                if (selectedValue != _lastFastScrubValue) {
+                  _lastFastScrubValue = selectedValue;
+                  onSelect?.call(selectedValue);
+                  HapticFeedback.selectionClick();
+                }
+              }
+              ..onEnd = (_) {
+                _lastFastScrubValue = null;
+                onEnd?.call();
+              }
+              ..onCancel = () {
+                _lastFastScrubValue = null;
+                onEnd?.call();
+              };
+          },
+        ),
+        TapGestureRecognizer:
+            GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
+          () => TapGestureRecognizer(),
+          (instance) {
+            instance
+              ..onTapDown = (_) {
+                onStart?.call();
+                HapticFeedback.lightImpact();
+              }
+              ..onTapUp = (_) {
+                onEnd?.call();
+              }
+              ..onTapCancel = () {
+                onEnd?.call();
+              };
+          },
+        ),
       },
       child: SizedBox(
         width: isActive ? activeVisualWidth : hitAreaWidth,
@@ -1625,7 +1658,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                   .clamp(0, _weightItemCount - 1);
               _weightController.jumpToItem(weightIndex);
               if (suggestedReps != null) {
-                final repsIndex = (suggestedReps - _repsMin).clamp(0, _selectedMaxReps - _repsMin);
+                final repsIndex = (suggestedReps - _repsMin).clamp(0, _repsMax - _repsMin);
                 _repsController.jumpToItem(repsIndex);
               }
             },
