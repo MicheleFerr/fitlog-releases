@@ -127,8 +127,9 @@ class EntitySnapshot {
   /// 3. Ritorna hex string (32 caratteri)
   static String _calculateChecksum(Map<String, dynamic> data) {
     // JSON encoding con sorted keys per determinismo
+    final sanitized = _sanitizeForJson(data);
     final sortedData = Map<String, dynamic>.fromEntries(
-      data.entries.toList()..sort((a, b) => a.key.compareTo(b.key)),
+      sanitized.entries.toList()..sort((a, b) => a.key.compareTo(b.key)),
     );
 
     final jsonString = jsonEncode(sortedData);
@@ -136,6 +137,26 @@ class EntitySnapshot {
     final digest = md5.convert(bytes);
 
     return digest.toString(); // Hex string (32 chars)
+  }
+
+  /// Recursively convert non-JSON-encodable types (Timestamp, DateTime)
+  static Map<String, dynamic> _sanitizeForJson(Map<String, dynamic> data) {
+    return data.map((key, value) => MapEntry(key, _sanitizeValue(value)));
+  }
+
+  static dynamic _sanitizeValue(dynamic value) {
+    if (value is Timestamp) {
+      return value.toDate().toIso8601String();
+    } else if (value is DateTime) {
+      return value.toIso8601String();
+    } else if (value is Map) {
+      return Map<String, dynamic>.from(value).map(
+        (k, v) => MapEntry(k, _sanitizeValue(v)),
+      );
+    } else if (value is List) {
+      return value.map(_sanitizeValue).toList();
+    }
+    return value;
   }
 }
 

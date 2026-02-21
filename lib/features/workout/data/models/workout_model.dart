@@ -803,6 +803,8 @@ class ExerciseSetModel {
       rpe: exerciseSet.rpe,
       notes: exerciseSet.notes,
       completedAt: exerciseSet.completedAt,
+      // Preserve isCompleted when completedAt is null (legacy/edge case)
+      isCompletedLegacy: exerciseSet.completedAt == null && exerciseSet.isCompleted,
       setDurationMillis: exerciseSet.setDurationMillis,
       setStartedAt: exerciseSet.setStartedAt,
       actualReps: exerciseSet.actualReps,
@@ -942,6 +944,7 @@ class ExerciseSetModel {
       'restTimeSeconds': restTime,
       'rpe': rpe,
       'notes': notes,
+      'isCompleted': isCompleted,
       'completedAt': completedAt?.toIso8601String(),
       // ✅ TUT & Advanced Tracking Fields
       'setDurationMillis': setDurationMillis,

@@ -57,7 +57,6 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
       final savedState = _onboardingBox.get('state');
       if (savedState != null) {
         state = savedState;
-        // ✅ FIX: Update cache with loaded state
         _cachedState = savedState;
         if (kDebugMode) {
           debugPrint(
@@ -67,8 +66,9 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
         // Validate and fix any inconsistencies
         await validateOnboardingState();
       } else {
-        // ✅ FIX: Cache default state too
-        _cachedState = state;
+        // Use default state directly instead of reading `state` getter
+        // (reading `state` during build() causes circular dependency error)
+        _cachedState = const OnboardingState();
         if (kDebugMode) {
           debugPrint(
             '📋 No saved onboarding state, checking for legacy migration',
@@ -81,8 +81,8 @@ class OnboardingStateNotifier extends Notifier<OnboardingState> {
         debugPrint('❌ Onboarding initialization failed: $e');
       }
       debugPrint('📍 Stack trace: $stackTrace');
-      // If there's an error, use default state
-      state = const OnboardingState();
+      // Don't read/write state here during initial build - just update cache
+      _cachedState = const OnboardingState();
     }
   }
 

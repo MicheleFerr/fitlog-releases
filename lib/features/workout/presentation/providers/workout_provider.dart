@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
@@ -1435,6 +1434,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       state = state!.completeWorkout();
 
+      // ⏱️ Stop rest timer to prevent ticks after workout ends
+      ref.read(unifiedTimerProvider.notifier).stopTimer();
+
       // Haptic feedback for workout completion
       HapticFeedbackService.workoutCompletion(ref);
 
@@ -2351,20 +2353,8 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       //   // Non-critical - workout is already saved
       // }
 
-      // 8. Navigate to workout completion summary screen (if context available)
-      if (context != null && context.mounted) {
-        // Use pushNamed to navigate to summary screen
-        unawaited(
-          context.pushNamed('workout-completion-summary', extra: workout),
-        );
-
-        if (kDebugMode) {
-          debugLog(
-            LogCategory.workout,
-            '📊 [WorkoutProvider] Navigated to completion summary screen',
-          );
-        }
-      }
+      // 8. Navigation is handled by WorkoutScreenController (not provider)
+      // Provider should not perform UI navigation (anti-pattern)
     } catch (e, stackTrace) {
       debugLog(LogCategory.workout, '❌ Critical error saving workout: $e');
       debugLog(LogCategory.workout, 'Stack: $stackTrace');
@@ -5030,8 +5020,9 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         cacheService.forceSave(); // Non-blocking, triggers immediate save
       }
 
-      // 📊 Track workout cancelled if there was an active workout
-      if (state != null) {
+      // 📊 Track workout cancelled only if NOT already completed
+      // completeWorkout() already tracks workout_completed, notifies Watch, and ends LA
+      if (state != null && !state!.isCompleted) {
         final analytics = ref.read(analyticsServiceProvider);
         final tracker = WorkoutEventTracker(analytics);
 
@@ -5041,12 +5032,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
           exerciseCount: state!.exercises.length,
         );
 
-        // ⌚ BUG FIX: Notify Watch to discard HKWorkoutSession
-        // Without this, Watch keeps its session running and SAVES to HealthKit
-        // when the session eventually ends, adding phantom workout minutes
+        // ⌚ Notify Watch to discard HKWorkoutSession (only for cancelled)
         ref.read(watchConnectivityProvider.notifier).notifyWorkoutEnded();
 
-        // 📱 End iOS 17+ Workout Session Live Activity
+        // 📱 End iOS 17+ Workout Session Live Activity (only for cancelled)
         if (Platform.isIOS) {
           ref
               .read(workoutSessionLAProvider.notifier)
@@ -5056,10 +5045,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
       state = null;
 
-      // 💾 BUG FIX #5: Stop auto-save and clear draft when workout is cancelled
+      // 💾 BUG FIX #5: Stop auto-save and clear draft when workout is cleared
       ref.read(workoutAutoSaveProvider.notifier).stopAutoSave(clearDraft: true);
 
-      // Disattiva wakelock quando si cancella il workout
+      // Disattiva wakelock (safe to call even if already stopped)
       ref.read(screenWakelockProvider.notifier).stopWakelock();
     } catch (e, stackTrace) {
       if (kDebugMode) {
