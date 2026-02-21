@@ -637,8 +637,16 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
             '⌚ [FLUTTER DEBUG] 📚 Found real TUT from database: $effectiveTut',
           );
         } else {
+          // 📚 Smart fallback based on exercise type and movement pattern
+          effectiveTut = _inferTutFromExercise(
+                tipoEsercizio: dbExercise.tipoEsercizio as String?,
+                patternMovimento: dbExercise.patternMovimento as String?,
+                defaultTut: tut,
+              ) ??
+              tut;
           debugPrint(
-            '⌚ [FLUTTER DEBUG] 📚 No database TUT found, using fallback: $tut',
+            '⌚ [FLUTTER DEBUG] 📚 No DB TUT → inferred: $effectiveTut '
+            '(tipo: ${dbExercise.tipoEsercizio}, pattern: ${dbExercise.patternMovimento})',
           );
         }
         // 📝 Form Cues fallback from database (noteTecniche)
@@ -5300,3 +5308,66 @@ final recentWorkoutsProvider = FutureProvider.autoDispose
             .toList(),
       );
     });
+
+/// Infers a sensible TUT string from exercise metadata when no explicit
+/// [tempoEsecuzione] is stored in the database.
+///
+/// Logic (priority: patternMovimento > tipoEsercizio > default):
+/// - Powerlifting / heavy compound patterns → 2-1-2-0 (controlled, short pause)
+/// - Push/Pull/Hinge/Squat/Lunge → 3-1-2-0 (hypertrophy standard)
+/// - Isolation / Functional → 2-0-2-0 (peak contraction focus)
+/// - Stretching / Flexibility → 1-0-3-0 (hold for stretch)
+/// - Cardio → 1-0-1-0 (explosive rhythm)
+/// - Unknown → [defaultTut] passed in (keeps existing behavior)
+/// Infers a sensible TUT string from exercise metadata when no explicit
+/// [tempoEsecuzione] is stored in the database.
+///
+/// Format: eccentrica-pausa_basso-concentrica-pausa_alto
+/// Priority: patternMovimento > tipoEsercizio > defaultTut
+///
+/// Sources: exercise science literature (Schoenfeld 2010, Pereira 2016)
+String? _inferTutFromExercise({
+  String? tipoEsercizio,
+  String? patternMovimento,
+  String? defaultTut,
+}) {
+  final pattern = patternMovimento?.toLowerCase() ?? '';
+  final tipo = tipoEsercizio?.toLowerCase() ?? '';
+
+  // Stretching/Flexibility: TUT non si applica a movimenti statici
+  if (pattern.contains('flexibility') || tipo == 'stretching') return null;
+
+  // Isometrico / Anti-Rotation / Core Stability: hold isometrico
+  // formato 0-hold-0-hold (es. Pallof Press, Plank, Ab Wheel)
+  if (pattern.contains('anti-rotation') ||
+      pattern.contains('core stability')) return '0-2-0-2';
+
+  // Powerlifting: velocità + elasticità (stretch-shortening cycle)
+  if (pattern.contains('powerlifting')) return '2-1-2-0';
+
+  // Squat / Lunge: eccentric e concentric lunghi per ipertrofia quad
+  if (pattern.contains('squat') || pattern.contains('lunge')) return '3-1-3-0';
+
+  // Hinge (RDL, Good Morning): NO pausa bassa con carico (rischio lesione ischio)
+  if (pattern.contains('hinge')) return '3-0-2-0';
+
+  // Pull (Rows, Pullup): controllo scapolare, eccentrico dominante
+  if (pattern.contains('pull')) return '3-1-2-0';
+
+  // Push (Bench, OHP): simmetrico, eccentrico moderato
+  if (pattern.contains('push')) return '2-1-2-0';
+
+  // Strength generico: sub-massimale con controllo
+  if (pattern.contains('strength')) return '3-1-2-0';
+
+  // Isolation / Functional: flusso continuo, picco di contrazione
+  if (pattern.contains('isolation') ||
+      pattern.contains('functional')) return '2-0-2-0';
+
+  // Fallback su tipoEsercizio
+  if (tipo == 'compound') return '3-1-2-0';
+  if (tipo == 'isolation') return '2-0-2-0';
+  if (tipo == 'cardio') return '1-0-1-0';
+
+  return defaultTut;
+}
