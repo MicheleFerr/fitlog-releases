@@ -204,30 +204,66 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
         return; // Don't save, user can modify the workout
       }
 
-      // User confirmed - now check template and save
+      // User confirmed - SAVE IMMEDIATELY before anything else
       if (kDebugMode) {
         debugPrint(
-          '✅ [WorkoutScreenController] User confirmed - proceeding with save',
+          '✅ [WorkoutScreenController] User confirmed - saving workout IMMEDIATELY',
         );
       }
 
-      // 🏆 Check for achievement unlocks after workout completion
+      // 💾 CRITICAL: Save workout FIRST - everything else is optional
+      if (context.mounted) {
+        ref.read(currentWorkoutProvider.notifier).completeWorkout(context);
+      }
+
+      // Re-read workout before optional post-save operations
+      final updatedWorkout = ref.read(currentWorkoutProvider);
+
+      // 📝 Template update (optional - failure doesn't affect saved workout)
+      if (updatedWorkout != null &&
+          updatedWorkout.templateId != null &&
+          updatedWorkout.templateId!.isNotEmpty &&
+          context.mounted) {
+        try {
+          final originalTemplate = await ref.read(
+            templateByIdProvider(updatedWorkout.templateId!).future,
+          );
+
+          if (originalTemplate != null && context.mounted) {
+            if (kDebugMode) {
+              debugPrint(
+                '📝 [WorkoutScreenController] Workout from template, showing save dialog',
+              );
+            }
+
+            await showTemplateSaveDialog(
+              context: context,
+              completedWorkout: updatedWorkout,
+              originalTemplate: originalTemplate,
+            );
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint(
+              '⚠️ [WorkoutScreenController] Template dialog failed (workout already saved): $e',
+            );
+          }
+        }
+      }
+
+      // 🏆 Achievement check (optional - failure doesn't affect saved workout)
       if (context.mounted) {
         try {
-          // Calculate workout metrics for achievement checking
           final user = await ref.read(currentUserProvider.future);
           if (user != null) {
-            // Get metrics for the completed workout
             final metricsUseCase = ref.read(
               calculateWorkoutMetricsUseCaseProvider,
             );
             final metrics = metricsUseCase.execute(workoutForCelebration);
 
-            // Check and unlock achievements
             final useCase = ref.read(checkAndUnlockAchievementsUseCaseProvider);
             final result = await useCase(user.uid, metrics);
 
-            // Extract achievements from Either result
             final unlockedAchievements = result.fold((failure) {
               if (kDebugMode) {
                 debugPrint(
@@ -237,18 +273,13 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
               return <Achievement>[];
             }, (achievements) => achievements);
 
-            // Award XP and show modal if achievements unlocked
             if (unlockedAchievements.isNotEmpty && context.mounted) {
               if (kDebugMode) {
                 debugPrint(
                   '🎉 [WorkoutScreenController] ${unlockedAchievements.length} achievements unlocked!',
                 );
-                for (final achievement in unlockedAchievements) {
-                  debugPrint('   - ${achievement.badgeType.name}');
-                }
               }
 
-              // Award XP for each unlocked achievement
               try {
                 for (final achievement in unlockedAchievements) {
                   final xpReward = achievement.badgeType.xpReward;
@@ -267,7 +298,6 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
                 }
               }
 
-              // Check context is still mounted before showing modal
               if (context.mounted) {
                 showAchievementUnlockModal(context, unlockedAchievements);
               }
@@ -276,50 +306,10 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
         } catch (e) {
           if (kDebugMode) {
             debugPrint(
-              '⚠️ [WorkoutScreenController] Failed to check achievements: $e',
+              '⚠️ [WorkoutScreenController] Failed to check achievements (workout already saved): $e',
             );
           }
         }
-      }
-
-      // Re-read workout after potential modifications
-      final updatedWorkout = ref.read(currentWorkoutProvider);
-
-      // Check if workout was started from a template
-      if (updatedWorkout != null &&
-          updatedWorkout.templateId != null &&
-          updatedWorkout.templateId!.isNotEmpty &&
-          context.mounted) {
-        // Fetch original template
-        final originalTemplate = await ref.read(
-          templateByIdProvider(updatedWorkout.templateId!).future,
-        );
-
-        if (originalTemplate != null && context.mounted) {
-          if (kDebugMode) {
-            debugPrint(
-              '📝 [WorkoutScreenController] Workout from template, showing save dialog',
-            );
-          }
-
-          // Show template save dialog
-          await showTemplateSaveDialog(
-            context: context,
-            completedWorkout: updatedWorkout,
-            originalTemplate: originalTemplate,
-          );
-
-          if (kDebugMode) {
-            debugPrint(
-              '📝 [WorkoutScreenController] Template save dialog completed',
-            );
-          }
-        }
-      }
-
-      // Complete workout (saves to database) - NOW after user confirmed
-      if (context.mounted) {
-        ref.read(currentWorkoutProvider.notifier).completeWorkout(context);
       }
 
       // Haptic feedback
