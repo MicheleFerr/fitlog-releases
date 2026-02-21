@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/utils/one_rm_calculator.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/chart_data_p
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/user_bodyweight_provider.dart';
 
 /// Metric types for exercise charts.
 /// Internal [key] is used for data lookup; [label] for localized display.
@@ -584,68 +585,70 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     final historyAsync = ref.watch(
       exerciseHistoryDataGroupedProvider(widget.exerciseName),
     );
-    const standardBodyweight = 80.0;
+    final bodyweightAsync = ref.watch(userBodyweightProvider);
+    final userBodyweight = bodyweightAsync.value ?? 80.0;
+
+    // Early return: mapping loading/error
+    if (mappingAsync.isLoading) {
+      return _buildStrengthLevelCardWrapper(const LoadingIndicator());
+    }
+    if (mappingAsync.hasError || !mappingAsync.hasValue) {
+      return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
+    }
+
+    final mapping = mappingAsync.value;
+    if (mapping == null || mapping.standardId == null) {
+      if (kDebugMode) {
+        debugPrint(
+          '[STRENGTH LEVEL] Mapping null or no standardId for: $lookupKey',
+        );
+      }
+      return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
+    }
+
+    // Now we have standardId - safe to watch
+    final standardAsync = ref.watch(
+      strengthStandardByIdProvider(mapping.standardId!),
+    );
+
+    // Early return: standard or history loading/error
+    if (standardAsync.isLoading || historyAsync.isLoading) {
+      return _buildStrengthLevelCardWrapper(const LoadingIndicator());
+    }
+    if (standardAsync.hasError || historyAsync.hasError) {
+      return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
+    }
+
+    final standard = standardAsync.value;
+    if (standard == null) {
+      return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
+    }
+
+    final historyMap = historyAsync.value!;
+    final allSets = <ExerciseHistoryData>[];
+    historyMap.forEach((date, sets) => allSets.addAll(sets));
+
+    if (allSets.isEmpty) {
+      return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
+    }
+
+    // Calculate best 1RM
+    double best1RM = 0.0;
+    for (final set in allSets) {
+      if (set.weight != null && set.reps != null && set.reps! > 0) {
+        final calculated = OneRMCalculator.calculateBrzycki(
+          set.weight!,
+          set.reps!,
+        );
+        if (calculated > best1RM) best1RM = calculated;
+      }
+    }
 
     return _buildStrengthLevelCardWrapper(
-      mappingAsync.when(
-        data: (mapping) {
-          if (kDebugMode) {
-            debugPrint(
-              '[STRENGTH LEVEL] Step 1 - Mapping received: $mapping',
-            );
-          }
-
-          if (mapping == null) return _buildStrengthLevelPlaceholder();
-          if (mapping.standardId == null) {
-            return _buildStrengthLevelPlaceholder();
-          }
-
-          final standardAsync = ref.watch(
-            strengthStandardByIdProvider(mapping.standardId!),
-          );
-
-          return standardAsync.when(
-            data: (standard) {
-              if (standard == null) return _buildStrengthLevelPlaceholder();
-
-              return historyAsync.when(
-                data: (historyMap) {
-                  final allSets = <ExerciseHistoryData>[];
-                  historyMap.forEach((date, sets) => allSets.addAll(sets));
-
-                  if (allSets.isEmpty) return _buildStrengthLevelPlaceholder();
-
-                  double best1RM = 0.0;
-                  for (final set in allSets) {
-                    if (set.weight != null &&
-                        set.reps != null &&
-                        set.reps! > 0) {
-                      final calculated1RM = calculate1RM(
-                        set.weight!,
-                        set.reps!,
-                      );
-                      if (calculated1RM != null && calculated1RM > best1RM) {
-                        best1RM = calculated1RM;
-                      }
-                    }
-                  }
-
-                  return _buildStrengthLevelContent(
-                    standard: standard,
-                    userBodyweight: standardBodyweight,
-                    user1RM: best1RM,
-                  );
-                },
-                loading: () => const LoadingIndicator(),
-                error: (error, stack) => _buildStrengthLevelPlaceholder(),
-              );
-            },
-            loading: () => const LoadingIndicator(),
-            error: (error, stack) => _buildStrengthLevelPlaceholder(),
-          );
-        },
-        loading: () => const LoadingIndicator(),
-        error: (error, stack) => _buildStrengthLevelPlaceholder(),
+      _buildStrengthLevelContent(
+        standard: standard,
+        userBodyweight: userBodyweight,
+        user1RM: best1RM,
       ),
     );
   }
@@ -907,8 +910,8 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     double best1RM = 0.0;
     for (final set in allSets) {
       if (set.weight != null && set.reps != null && set.reps! > 0) {
-        final calculated1RM = calculate1RM(set.weight!, set.reps!);
-        if (calculated1RM != null && calculated1RM > best1RM) {
+        final calculated1RM = OneRMCalculator.calculateBrzycki(set.weight!, set.reps!);
+        if (calculated1RM > best1RM) {
           best1RM = calculated1RM;
           best1RMSet = set;
         }

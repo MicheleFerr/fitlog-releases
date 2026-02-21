@@ -83,26 +83,8 @@ class _WorkoutExerciseDetailScreenState
           return;
         }
 
-        // Calculate personal records
-        final records = _calculateRecords(allSets, historyMap);
-
-        // Create PDF data
-        final pdfData = ExerciseRecordsData(
-          exerciseName: widget.exerciseName,
-          maxWeight: records.maxWeight,
-          maxWeightDate: records.maxWeightDate,
-          maxWeightReps: records.maxWeightReps,
-          best1RM: records.best1RM,
-          best1RMDate: records.best1RMDate,
-          best1RMWeight: records.best1RMWeight,
-          best1RMReps: records.best1RMReps,
-          bestSetVolume: records.bestSetVolume,
-          bestSetVolumeDate: records.bestSetVolumeDate,
-          bestSetVolumeWeight: records.bestSetVolumeWeight,
-          bestSetVolumeReps: records.bestSetVolumeReps,
-          totalWorkouts: records.totalWorkouts,
-          historyData: historyMap,
-        );
+        // Calculate personal records directly as ExerciseRecordsData
+        final pdfData = _calculateRecords(allSets, historyMap);
 
         // Share as PDF
         try {
@@ -128,7 +110,7 @@ class _WorkoutExerciseDetailScreenState
   }
 
   /// Calculate personal records from exercise history
-  _ExerciseRecords _calculateRecords(
+  ExerciseRecordsData _calculateRecords(
     List<ExerciseHistoryData> allSets,
     Map<DateTime, List<ExerciseHistoryData>> historyMap,
   ) {
@@ -184,10 +166,8 @@ class _WorkoutExerciseDetailScreenState
       }
     }
 
-    // Total workouts
-    final totalWorkouts = historyMap.length;
-
-    return _ExerciseRecords(
+    return ExerciseRecordsData(
+      exerciseName: widget.exerciseName,
       maxWeight: maxWeight,
       maxWeightDate: maxWeightDate,
       maxWeightReps: maxWeightReps,
@@ -199,7 +179,8 @@ class _WorkoutExerciseDetailScreenState
       bestSetVolumeDate: bestSetVolumeDate,
       bestSetVolumeWeight: bestSetVolumeWeight,
       bestSetVolumeReps: bestSetVolumeReps,
-      totalWorkouts: totalWorkouts,
+      totalWorkouts: historyMap.length,
+      historyData: historyMap,
     );
   }
 
@@ -276,36 +257,3 @@ class _WorkoutExerciseDetailScreenState
   }
 }
 
-/// Data class for exercise personal records
-class _ExerciseRecords {
-  _ExerciseRecords({
-    required this.maxWeight,
-    this.maxWeightDate,
-    this.maxWeightReps,
-    required this.best1RM,
-    this.best1RMDate,
-    this.best1RMWeight,
-    this.best1RMReps,
-    required this.bestSetVolume,
-    this.bestSetVolumeDate,
-    this.bestSetVolumeWeight,
-    this.bestSetVolumeReps,
-    required this.totalWorkouts,
-  });
-
-  final double maxWeight;
-  final DateTime? maxWeightDate;
-  final int? maxWeightReps;
-
-  final double best1RM;
-  final DateTime? best1RMDate;
-  final double? best1RMWeight;
-  final int? best1RMReps;
-
-  final double bestSetVolume;
-  final DateTime? bestSetVolumeDate;
-  final double? bestSetVolumeWeight;
-  final int? bestSetVolumeReps;
-
-  final int totalWorkouts;
-}
