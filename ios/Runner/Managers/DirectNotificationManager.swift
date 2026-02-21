@@ -225,7 +225,10 @@ final class DirectNotificationManager: NSObject {
                 print("   - Fires in: \(seconds) seconds")
                 print("   - Fire time: \(formatter.string(from: fireDate))")
                 print("   - Sound: \(soundName).caf")
-                print("   - App state: \(UIApplication.shared.applicationState == .active ? "Active" : UIApplication.shared.applicationState == .background ? "Background" : "Inactive")")
+                // FIX: UIApplication.applicationState must be accessed on main thread
+                DispatchQueue.main.async {
+                    print("   - App state: \(UIApplication.shared.applicationState == .active ? "Active" : UIApplication.shared.applicationState == .background ? "Background" : "Inactive")")
+                }
 
                 // Log a reminder when the notification should fire
                 DispatchQueue.main.asyncAfter(deadline: .now() + seconds) { [weak self] in
