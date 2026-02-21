@@ -32,13 +32,23 @@ class FastScrollPhysics extends FixedExtentScrollPhysics {
     ScrollMetrics position,
     double velocity,
   ) {
-    // Amplify velocity for faster scrolling when user scrolls quickly
-    final amplifiedVelocity = velocity.abs() > 500 ? velocity * 1.5 : velocity;
+    // Amplify velocity progressively for faster scrolling
+    final double amplifiedVelocity;
+    if (velocity.abs() > 1000) {
+      amplifiedVelocity = velocity * 2.5; // Very fast fling
+    } else if (velocity.abs() > 500) {
+      amplifiedVelocity = velocity * 1.8; // Fast fling
+    } else {
+      amplifiedVelocity = velocity;
+    }
     return super.createBallisticSimulation(position, amplifiedVelocity);
   }
 
   @override
-  double get minFlingVelocity => 50.0; // Lower threshold = easier to fling
+  double get minFlingVelocity => 30.0; // Lower threshold = easier to fling
+
+  @override
+  double get minFlingDistance => 5.0; // Shorter distance needed to trigger fling
 }
 
 /// Minimal set edit modal with PageView navigation between sets
@@ -112,6 +122,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
   final FocusNode _weightFocusNode = FocusNode();
   final FocusNode _repsFocusNode = FocusNode();
   final FocusNode _secondsFocusNode = FocusNode();
+  bool _hasSaved = false; // Prevents double-save on dismiss
 
   // Weight range: 0 to 400 in 0.25 increments = 1601 items
   static const double _minWeight = 0;
@@ -418,18 +429,9 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     }
   }
 
-  void _save() {
-    // Apply manual input if in manual mode
-    if (_isManualInput) {
-      _applyManualInputToWheel();
-    }
-    HapticFeedback.mediumImpact();
-    Navigator.of(context).pop();
-    widget.onSave(_createUpdatedSet());
-  }
-
   void _saveAndNext() {
     if (!_canSwipeNext) return;
+    _hasSaved = true;
     if (_isManualInput) _applyManualInputToWheel();
     HapticFeedback.lightImpact();
     Navigator.of(context).pop();
@@ -438,6 +440,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
 
   void _saveAndPrevious() {
     if (!_canSwipePrevious) return;
+    _hasSaved = true;
     if (_isManualInput) _applyManualInputToWheel();
     HapticFeedback.lightImpact();
     Navigator.of(context).pop();
@@ -524,6 +527,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
       return;
     }
 
+    _hasSaved = true;
     final updatedSet = _createUpdatedSet();
     print('🎯 _applyToAll: sto per chiamare callback con reps=${updatedSet.reps}, minReps=${updatedSet.minReps}, maxReps=${updatedSet.maxReps}');
 
@@ -566,14 +570,6 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     }
   }
 
-  void _handleVerticalSwipe(DragEndDetails details) {
-    const swipeThreshold = 300.0;
-    final velocity = details.primaryVelocity ?? 0;
-    if (velocity > swipeThreshold) {
-      _save();
-    }
-  }
-
   void _onWeightTextChanged(String value) {
     final weight = double.tryParse(value.replaceAll(',', '.'));
     if (weight != null && weight >= 0) {
@@ -603,10 +599,18 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onHorizontalDragEnd: _handleHorizontalSwipe,
-      onVerticalDragEnd: _handleVerticalSwipe,
-      child: DecoratedBox(
+    return PopScope(
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop && !_hasSaved) {
+          // Auto-save when sheet is dismissed by dragging down or tapping outside
+          _hasSaved = true;
+          if (_isManualInput) _applyManualInputToWheel();
+          widget.onSave(_createUpdatedSet());
+        }
+      },
+      child: GestureDetector(
+        onHorizontalDragEnd: _handleHorizontalSwipe,
+        child: DecoratedBox(
         decoration: BoxDecoration(
           color: context.colors.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -642,11 +646,17 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
 
               const SizedBox(height: 16),
 
-              // Hint: swipe down to save
-              Text(
-                '↓ Swipe down per salvare',
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: context.colors.outline,
+              // Hint: swipe down to save (tappable as shortcut)
+              GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 24),
+                  child: Text(
+                    '↓ ${context.l10n.swipeDownToSave}',
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.outline,
+                    ),
+                  ),
                 ),
               ),
 
@@ -655,6 +665,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
           ),
         ),
       ),
+    ),
     );
   }
 
