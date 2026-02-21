@@ -27858,4 +27858,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get metronomeStop => 'Stop';
+
+  @override
+  String get metronomeSettingTitle => 'TUT Metronome';
+
+  @override
+  String get metronomeSettingSubtitle =>
+      'Audible tick every second for tempo control';
 }

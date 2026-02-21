@@ -34234,5 +34234,13 @@
   "metronomeStop": "Stop",
   "@metronomeStop": {
     "description": "Label for stopping the TUT metronome"
+  },
+  "metronomeSettingTitle": "TUT Metronome",
+  "@metronomeSettingTitle": {
+    "description": "Title for TUT metronome toggle in workout settings"
+  },
+  "metronomeSettingSubtitle": "Audible tick every second for tempo control",
+  "@metronomeSettingSubtitle": {
+    "description": "Subtitle for TUT metronome toggle in workout settings"
   }
 }

@@ -28129,4 +28129,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get metronomeStop => 'Stop';
+
+  @override
+  String get metronomeSettingTitle => 'Metronomo TUT';
+
+  @override
+  String get metronomeSettingSubtitle =>
+      'Tick sonoro ogni secondo per il controllo del tempo';
 }

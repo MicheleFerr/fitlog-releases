@@ -66,6 +66,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.hasSeenRestPauseTutorial = false, // First-time Rest-Pause tutorial flag
     this.appThemeModeValue, // Custom theme mode: 'system'|'light'|'dark'|'ultraDark'|'pink'
     this.showWeightVerification = true, // Show weight/reps verification in RPE selector
+    this.metronomeEnabled = false, // TUT metronome disabled by default
   });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) {
@@ -116,6 +117,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       hasSeenRestPauseTutorial: json['hasSeenRestPauseTutorial'] ?? false,
       appThemeModeValue: json['appThemeModeValue'] as String?,
       showWeightVerification: json['showWeightVerification'] ?? true,
+      metronomeEnabled: json['metronomeEnabled'] ?? false,
     );
   }
   @HiveField(0)
@@ -292,6 +294,9 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
   @HiveField(56)
   final bool showWeightVerification; // Show weight/reps verification in RPE selector
 
+  @HiveField(57)
+  final bool metronomeEnabled; // TUT metronome toggle
+
   /// Get the effective AppThemeMode (backward compatible with ThemeMode)
   AppThemeMode get appThemeMode {
     if (appThemeModeValue != null) {
@@ -360,6 +365,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     bool? hasSeenRestPauseTutorial,
     String? appThemeModeValue,
     bool? showWeightVerification,
+    bool? metronomeEnabled,
   }) {
     return AppConfig(
       languageCode: languageCode ?? this.languageCode,
@@ -418,6 +424,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       hasSeenRestPauseTutorial: hasSeenRestPauseTutorial ?? this.hasSeenRestPauseTutorial,
       appThemeModeValue: appThemeModeValue ?? this.appThemeModeValue,
       showWeightVerification: showWeightVerification ?? this.showWeightVerification,
+      metronomeEnabled: metronomeEnabled ?? this.metronomeEnabled,
     );
   }
 
@@ -454,6 +461,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       'hasSeenRestPauseTutorial': hasSeenRestPauseTutorial,
       'appThemeModeValue': appThemeModeValue,
       'showWeightVerification': showWeightVerification,
+      'metronomeEnabled': metronomeEnabled,
     };
   }
 

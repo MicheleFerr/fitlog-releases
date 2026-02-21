@@ -83,13 +83,14 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       hasSeenRestPauseTutorial: fields[54] == null ? false : fields[54] as bool,
       appThemeModeValue: fields[55] as String?,
       showWeightVerification: fields[56] == null ? true : fields[56] as bool,
+      metronomeEnabled: fields[57] == null ? false : fields[57] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, AppConfig obj) {
     writer
-      ..writeByte(56)
+      ..writeByte(57)
       ..writeByte(0)
       ..write(obj.languageCode)
       ..writeByte(1)
@@ -201,7 +202,9 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       ..writeByte(55)
       ..write(obj.appThemeModeValue)
       ..writeByte(56)
-      ..write(obj.showWeightVerification);
+      ..write(obj.showWeightVerification)
+      ..writeByte(57)
+      ..write(obj.metronomeEnabled);
   }
 
   @override

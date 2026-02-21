@@ -878,6 +878,7 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     bool? autoAdjustRestTime,
     bool? autoAdjustWeightFromRpe,
     bool? autoAdjustRestFromRpe,
+    bool? metronomeEnabled,
   }) async {
     try {
       await _ensureInitialized();
@@ -893,6 +894,7 @@ class AppConfigNotifier extends Notifier<AppConfig> {
         autoAdjustRestTime: autoAdjustRestTime,
         autoAdjustWeightFromRpe: autoAdjustWeightFromRpe,
         autoAdjustRestFromRpe: autoAdjustRestFromRpe,
+        metronomeEnabled: metronomeEnabled,
       );
       await _saveConfig();
 

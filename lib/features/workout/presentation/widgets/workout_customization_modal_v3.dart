@@ -8,7 +8,7 @@
 /// are always enabled and not configurable by the user.
 library;
 
-import 'package:cupertino_native/cupertino_native.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,6 +46,7 @@ class _WorkoutCustomizationModalV3State
   late bool _autoAdjustWeightFromRpe;
   late bool _autoAdjustRestFromRpe;
   late bool _setDurationTracking;
+  late bool _metronomeEnabled;
 
   // === ASPETTO (from ExerciseCardSettings - single source of truth) ===
   late bool _showInsight;
@@ -59,6 +60,7 @@ class _WorkoutCustomizationModalV3State
   late bool _initialAutoAdjustWeightFromRpe;
   late bool _initialAutoAdjustRestFromRpe;
   late bool _initialSetDurationTracking;
+  late bool _initialMetronomeEnabled;
   late bool _initialShowInsight;
   late bool _initialShowTimer;
   late bool _initialShowPlates;
@@ -76,6 +78,7 @@ class _WorkoutCustomizationModalV3State
     _autoAdjustWeightFromRpe = config.autoAdjustWeightFromRpe ?? false;
     _autoAdjustRestFromRpe = config.autoAdjustRestFromRpe ?? false;
     _setDurationTracking = config.setDurationTracking ?? false;
+    _metronomeEnabled = config.metronomeEnabled;
 
     // Aspetto - reads from ExerciseCardSettings (single source of truth)
     _showInsight = cardSettings.showInsight;
@@ -90,6 +93,7 @@ class _WorkoutCustomizationModalV3State
     _initialAutoAdjustWeightFromRpe = _autoAdjustWeightFromRpe;
     _initialAutoAdjustRestFromRpe = _autoAdjustRestFromRpe;
     _initialSetDurationTracking = _setDurationTracking;
+    _initialMetronomeEnabled = _metronomeEnabled;
     _initialShowInsight = _showInsight;
     _initialShowTimer = _showTimer;
     _initialShowPlates = _showPlates;
@@ -104,6 +108,7 @@ class _WorkoutCustomizationModalV3State
     if (_autoAdjustWeightFromRpe != _initialAutoAdjustWeightFromRpe) changes++;
     if (_autoAdjustRestFromRpe != _initialAutoAdjustRestFromRpe) changes++;
     if (_setDurationTracking != _initialSetDurationTracking) changes++;
+    if (_metronomeEnabled != _initialMetronomeEnabled) changes++;
     if (_showInsight != _initialShowInsight) changes++;
     if (_showTimer != _initialShowTimer) changes++;
     if (_showPlates != _initialShowPlates) changes++;
@@ -260,6 +265,18 @@ class _WorkoutCustomizationModalV3State
                           value: _setDurationTracking,
                           onChanged: (v) {
                             setState(() => _setDurationTracking = v);
+                            _saveAll();
+                          },
+                        ),
+                        _buildDivider(),
+                        _buildToggleRow(
+                          context,
+                          icon: AppIcons.metronome,
+                          title: context.l10n.metronomeSettingTitle,
+                          subtitle: context.l10n.metronomeSettingSubtitle,
+                          value: _metronomeEnabled,
+                          onChanged: (v) {
+                            setState(() => _metronomeEnabled = v);
                             _saveAll();
                           },
                         ),
@@ -470,16 +487,30 @@ class _WorkoutCustomizationModalV3State
             ),
           ),
           const SizedBox(width: 8),
-          CNSwitch(value: value, onChanged: onChanged),
+          CupertinoSwitch(
+            value: value,
+            activeTrackColor: theme.colorScheme.primary,
+            onChanged: onChanged,
+          ),
         ],
       ),
     );
   }
 
-  /// Interface Size Selector (unified font + layout)
-  /// Replaces separate Font Size + Set Row Size controls
+  /// Interface Size Selector (unified font + layout) — Slider variant
   Widget _buildInterfaceSizeSelector(BuildContext context) {
     final theme = Theme.of(context);
+    const sizes = InterfaceSize.values; // [extraSmall, small, medium, mediumLarge, large]
+    final currentIndex = sizes.indexOf(_interfaceSize).toDouble();
+
+    // Labels for each stop
+    final labels = [
+      context.l10n.settingsFontSizeExtraSmall,
+      context.l10n.settingsFontSizeSmall,
+      context.l10n.settingsFontSizeNormal,
+      context.l10n.settingsFontSizeMediumLarge,
+      context.l10n.settingsFontSizeLarge,
+    ];
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -491,11 +522,24 @@ class _WorkoutCustomizationModalV3State
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  context.l10n.interfaceSize,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        context.l10n.interfaceSize,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      labels[currentIndex.round()],
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
                 Text(
                   context.l10n.interfaceSizeSubtitle,
@@ -503,45 +547,27 @@ class _WorkoutCustomizationModalV3State
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 8),
-                SegmentedButton<InterfaceSize>(
-                  segments: [
-                    ButtonSegment(
-                      value: InterfaceSize.extraSmall,
-                      label: Text(context.l10n.settingsFontSizeExtraSmall),
-                    ),
-                    ButtonSegment(
-                      value: InterfaceSize.small,
-                      label: Text(context.l10n.settingsFontSizeSmall),
-                    ),
-                    ButtonSegment(
-                      value: InterfaceSize.medium,
-                      label: Text(context.l10n.settingsFontSizeNormal),
-                    ),
-                    ButtonSegment(
-                      value: InterfaceSize.mediumLarge,
-                      label: Text(context.l10n.settingsFontSizeMediumLarge),
-                    ),
-                    ButtonSegment(
-                      value: InterfaceSize.large,
-                      label: Text(context.l10n.settingsFontSizeLarge),
-                    ),
-                  ],
-                  selected: {_interfaceSize},
-                  onSelectionChanged: (selected) {
-                    HapticFeedback.selectionClick();
-                    final newSize = selected.first;
-                    setState(() => _interfaceSize = newSize);
-
-                    // Save interface size - SetDisplayMode will automatically
-                    // derive from the new InterfaceSize.setRowMode
-                    ref
-                        .read(appConfigProvider.notifier)
-                        .setInterfaceSize(newSize);
-                  },
-                  style: const ButtonStyle(
-                    visualDensity: VisualDensity.compact,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                SliderTheme(
+                  data: SliderThemeData(
+                    activeTrackColor: theme.colorScheme.primary,
+                    inactiveTrackColor: theme.colorScheme.primary.withValues(alpha: 0.15),
+                    thumbColor: theme.colorScheme.primary,
+                    overlayColor: theme.colorScheme.primary.withValues(alpha: 0.12),
+                    trackHeight: 4,
+                  ),
+                  child: Slider(
+                    value: currentIndex,
+                    min: 0,
+                    max: (sizes.length - 1).toDouble(),
+                    divisions: sizes.length - 1,
+                    onChanged: (value) {
+                      HapticFeedback.selectionClick();
+                      final newSize = sizes[value.round()];
+                      setState(() => _interfaceSize = newSize);
+                      ref
+                          .read(appConfigProvider.notifier)
+                          .setInterfaceSize(newSize);
+                    },
                   ),
                 ),
               ],
@@ -574,6 +600,7 @@ class _WorkoutCustomizationModalV3State
           autoAdjustWeightFromRpe: _autoAdjustWeightFromRpe,
           autoAdjustRestFromRpe: _autoAdjustRestFromRpe,
           setDurationTracking: _setDurationTracking,
+          metronomeEnabled: _metronomeEnabled,
         );
 
     // Save appearance settings to ExerciseCardSettings (single source of truth)

@@ -694,8 +694,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Metronome button — only for incomplete sets
-                  if (!set.isCompleted)
+                  // Metronome button — only for incomplete sets when enabled in settings
+                  if (!set.isCompleted && ref.watch(appConfigProvider).metronomeEnabled)
                     _buildMetronomeButton(context, set),
                   // Completion checkmark — fixed width
                   SizedBox(

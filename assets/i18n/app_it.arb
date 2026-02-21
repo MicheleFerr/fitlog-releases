@@ -20976,5 +20976,7 @@
   "pendingWorkoutInfo": "{exerciseCount} esercizi · {completedSets}/{totalSets} set",
   "pendingWorkoutStartedAgo": "Iniziato {minutes} min fa",
   "metronomeStart": "Metronomo",
-  "metronomeStop": "Stop"
+  "metronomeStop": "Stop",
+  "metronomeSettingTitle": "Metronomo TUT",
+  "metronomeSettingSubtitle": "Tick sonoro ogni secondo per il controllo del tempo"
 }

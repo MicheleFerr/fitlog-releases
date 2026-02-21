@@ -49781,6 +49781,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stop'**
   String get metronomeStop;
+
+  /// Title for TUT metronome toggle in workout settings
+  ///
+  /// In en, this message translates to:
+  /// **'TUT Metronome'**
+  String get metronomeSettingTitle;
+
+  /// Subtitle for TUT metronome toggle in workout settings
+  ///
+  /// In en, this message translates to:
+  /// **'Audible tick every second for tempo control'**
+  String get metronomeSettingSubtitle;
 }
 
 class _AppLocalizationsDelegate
