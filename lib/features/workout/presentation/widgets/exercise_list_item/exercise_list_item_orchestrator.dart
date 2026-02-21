@@ -1800,7 +1800,6 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     final config = ref.watch(appConfigProvider);
 
     // ✅ Watch ExerciseCardSettings for visual toggles
-    final showPlates = ref.watch(showExercisePlatesProvider);
     final density = ref.watch(exerciseCardDensityProvider);
 
     // ✅ PERFORMANCE FIX: Watch ONLY the specific properties needed for rendering
@@ -2098,11 +2097,6 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                 onCollapseExercise: _handleCollapseExercise,
                                 tutorialFirstSetKey: widget.tutorialFirstSetKey,
                               ),
-                              // ✅ NEW: Plate Calculator chip - shows when enabled in ExerciseCardSettings
-                              if (showPlates)
-                                _PlateCalculatorChip(
-                                  exercise: widget.exercise,
-                                ),
                             ],
                           ),
                         )
@@ -2120,6 +2114,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     onEditNotes: _handleEditNotes,
                     onShowTutExplanationModal: _handleShowTutExplanationModal,
                     onShowTipsBottomSheet: () => _handleShowTipsBottomSheet(),
+                    onShowPlatesCalculator: _handleShowPlatesCalculator,
                   ),
 
                 // ✅ Collapsed summary: tonnage + muscle focus (no TUT/timer)
@@ -2465,4 +2460,66 @@ class _PlateCalculatorChip extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Top-level helper to open the plate calculator modal from any widget
+void _showPlatesModal(BuildContext context, double targetWeight) {
+  HapticFeedback.lightImpact();
+  ModalService.showSheet(
+    context,
+    isScrollControlled: true,
+    backgroundColor: context.colors.surface,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (sheetContext) => DraggableScrollableSheet(
+      initialChildSize: 0.7,
+      minChildSize: 0.5,
+      maxChildSize: 0.9,
+      expand: false,
+      builder: (context, scrollController) => Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            Row(
+              children: [
+                Icon(AppIcons.calculateRounded, color: context.colors.secondary, size: 24),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'Plate Calculator',
+                    style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(AppIcons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: SingleChildScrollView(
+                controller: scrollController,
+                child: PlateCalculatorWidget(
+                  targetWeight: targetWeight,
+                  onWeightChanged: (_) {},
+                  unit: 'kg',
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
