@@ -25,8 +25,11 @@ final class WatchConnectivityManager: NSObject {
     // P1-8 FIX: Pending reply handler for setCompleted — avoids 300ms fixed delay.
     // Saved when Watch sends setCompleted, fired as soon as Flutter updates rest timer state.
     // Fallback timer ensures the handler is always called even if Flutter doesn't respond.
+    // ✅ THREAD-SAFETY: All access MUST go through handlerQueue to prevent EXC_BAD_ACCESS.
+    // Written from WCSession delegate thread, read from main thread (in currentRestTimerState setter).
     private var pendingSetCompletedReplyHandler: (([String: Any]) -> Void)?
     private var pendingSetCompletedFallbackTimer: DispatchWorkItem?
+    private let handlerQueue = DispatchQueue(label: "com.gymbro.watch.handler")
 
     // ✅ Cache current workout state for Watch requests
     // Updated when workout starts/updates, cleared when workout ends
@@ -62,11 +65,13 @@ final class WatchConnectivityManager: NSObject {
                 UserDefaults.standard.removeObject(forKey: "WatchConnectivity_RestTimerState")
             }
             // P1-8 FIX: Fulfill pending setCompleted reply as soon as Flutter sets timer state
-            if let newState = newValue, let handler = pendingSetCompletedReplyHandler {
-                pendingSetCompletedFallbackTimer?.cancel()
-                pendingSetCompletedFallbackTimer = nil
-                pendingSetCompletedReplyHandler = nil
-                DispatchQueue.main.async {
+            // ✅ THREAD-SAFETY: Access handler through serial queue to prevent race with WCSession thread
+            if let newState = newValue {
+                handlerQueue.async { [self] in
+                    guard let handler = pendingSetCompletedReplyHandler else { return }
+                    pendingSetCompletedFallbackTimer?.cancel()
+                    pendingSetCompletedFallbackTimer = nil
+                    pendingSetCompletedReplyHandler = nil
                     handler(["success": true, "restTimer": newState])
                 }
             }
@@ -1247,47 +1252,55 @@ extension WatchConnectivityManager: WCSessionDelegate {
 
     /// Handle workout state request from Watch
     /// Returns cached workout state immediately for fast response
+    /// ✅ THREAD-SAFETY: Dispatches to main thread to avoid data race on shared state properties
     private func handleWorkoutStateRequest(
         _ message: [String: Any],
         replyHandler: @escaping ([String: Any]) -> Void
     ) {
         Logger.shared.log(.info, "📱 Watch requested workout state", category: .general)
 
-        // Check if we have a cached workout state
-        if let workoutState = currentWorkoutState {
-            // We have an active workout - send current state
-            var response = workoutState
-            response["timestamp"] = Date().timeIntervalSince1970
-
-            // Include rest timer if active AND not expired
-            // ✅ FIX: Check if timer has expired to prevent sending stale timer data
-            // This fixes the bug where warmup sets received timer from previous working set
-            if let timerState = currentRestTimerState,
-               let startTime = timerState["startTime"] as? TimeInterval,
-               let duration = timerState["duration"] as? Int {
-                let now = Date().timeIntervalSince1970
-                let expirationTime = startTime + Double(duration)
-
-                if now < expirationTime {
-                    // Timer is still active
-                    response["restTimer"] = timerState
-                    Logger.shared.log(.debug, "⏱️ Including active rest timer (\(Int(expirationTime - now))s remaining)", category: .general)
-                } else {
-                    // Timer has expired - clear the stale cache
-                    currentRestTimerState = nil
-                    Logger.shared.log(.debug, "⏱️ Rest timer expired, not including in response", category: .general)
-                }
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {
+                replyHandler(["isActive": false, "timestamp": Date().timeIntervalSince1970])
+                return
             }
 
-            Logger.shared.log(.info, "✅ Sending workout state to Watch: isActive=true, exercise=\(response["exerciseName"] ?? "unknown")", category: .general)
-            replyHandler(response)
-        } else {
-            // No active workout
-            Logger.shared.log(.info, "✅ Sending workout state to Watch: isActive=false (no active workout)", category: .general)
-            replyHandler([
-                "isActive": false,
-                "timestamp": Date().timeIntervalSince1970
-            ])
+            // Check if we have a cached workout state
+            if let workoutState = self.currentWorkoutState {
+                // We have an active workout - send current state
+                var response = workoutState
+                response["timestamp"] = Date().timeIntervalSince1970
+
+                // Include rest timer if active AND not expired
+                // ✅ FIX: Check if timer has expired to prevent sending stale timer data
+                // This fixes the bug where warmup sets received timer from previous working set
+                if let timerState = self.currentRestTimerState,
+                   let startTime = timerState["startTime"] as? TimeInterval,
+                   let duration = timerState["duration"] as? Int {
+                    let now = Date().timeIntervalSince1970
+                    let expirationTime = startTime + Double(duration)
+
+                    if now < expirationTime {
+                        // Timer is still active
+                        response["restTimer"] = timerState
+                        Logger.shared.log(.debug, "⏱️ Including active rest timer (\(Int(expirationTime - now))s remaining)", category: .general)
+                    } else {
+                        // Timer has expired - clear the stale cache
+                        self.currentRestTimerState = nil
+                        Logger.shared.log(.debug, "⏱️ Rest timer expired, not including in response", category: .general)
+                    }
+                }
+
+                Logger.shared.log(.info, "✅ Sending workout state to Watch: isActive=true, exercise=\(response["exerciseName"] ?? "unknown")", category: .general)
+                replyHandler(response)
+            } else {
+                // No active workout
+                Logger.shared.log(.info, "✅ Sending workout state to Watch: isActive=false (no active workout)", category: .general)
+                replyHandler([
+                    "isActive": false,
+                    "timestamp": Date().timeIntervalSince1970
+                ])
+            }
         }
 
         // Also notify Flutter in case it needs to update anything
@@ -1336,20 +1349,28 @@ extension WatchConnectivityManager: WCSessionDelegate {
         // P1-8 FIX: Callback pattern — reply as soon as Flutter updates currentRestTimerState.
         // No fixed delay: the currentRestTimerState setter will call this handler immediately.
         // 2-second fallback ensures the Watch is never left waiting.
-        pendingSetCompletedReplyHandler = { response in
-            Logger.shared.log(.info, "⏱️ setCompleted reply: \(response["restTimer"] != nil ? "with timer" : "no timer")", category: .general)
-            replyHandler(response)
-        }
+        // ✅ THREAD-SAFETY: All handler access through handlerQueue to prevent race condition.
+        // This method runs on WCSession delegate thread; the setter runs on main/Flutter thread.
+        handlerQueue.async { [weak self] in
+            guard let self = self else { return }
 
-        let fallback = DispatchWorkItem { [weak self] in
-            guard let self = self,
-                  let handler = self.pendingSetCompletedReplyHandler else { return }
-            self.pendingSetCompletedReplyHandler = nil
-            Logger.shared.log(.debug, "⏱️ setCompleted fallback reply (no timer from Flutter in 2s)", category: .general)
-            handler(["success": true])
+            self.pendingSetCompletedReplyHandler = { response in
+                Logger.shared.log(.info, "⏱️ setCompleted reply: \(response["restTimer"] != nil ? "with timer" : "no timer")", category: .general)
+                replyHandler(response)
+            }
+
+            let fallback = DispatchWorkItem { [weak self] in
+                guard let self = self else { return }
+                self.handlerQueue.async {
+                    guard let handler = self.pendingSetCompletedReplyHandler else { return }
+                    self.pendingSetCompletedReplyHandler = nil
+                    Logger.shared.log(.debug, "⏱️ setCompleted fallback reply (no timer from Flutter in 2s)", category: .general)
+                    handler(["success": true])
+                }
+            }
+            self.pendingSetCompletedFallbackTimer = fallback
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: fallback)
         }
-        pendingSetCompletedFallbackTimer = fallback
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: fallback)
     }
 
     /// Handle skip rest from Watch companion
@@ -1386,8 +1407,11 @@ extension WatchConnectivityManager: WCSessionDelegate {
         notifyFlutter(event: "onEndWorkoutFromWatch", data: message)
 
         // ✅ Clear workout state cache since workout is ending
-        currentWorkoutState = nil
-        currentRestTimerState = nil
+        // ✅ THREAD-SAFETY: Dispatch to main thread (setter also called from main via Flutter)
+        DispatchQueue.main.async { [weak self] in
+            self?.currentWorkoutState = nil
+            self?.currentRestTimerState = nil
+        }
 
         replyHandler(["success": true])
     }
