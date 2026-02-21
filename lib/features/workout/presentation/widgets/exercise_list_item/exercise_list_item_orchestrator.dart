@@ -2548,7 +2548,7 @@ class _PlatesCupertinoSheetState extends ConsumerState<_PlatesCupertinoSheet> {
   Color _plateColor(double kg) {
     if (kg >= 25) return const Color(0xFFD32F2F); // red
     if (kg >= 20) return const Color(0xFF1565C0); // blue
-    if (kg >= 15) return const Color(0xFFF9A825); // yellow
+    if (kg >= 15) return const Color(0xFFE65100); // orange
     if (kg >= 10) return const Color(0xFF2E7D32); // green
     if (kg >= 5)  return const Color(0xFF757575); // gray
     if (kg >= 2.5) return const Color(0xFFD32F2F); // light red
