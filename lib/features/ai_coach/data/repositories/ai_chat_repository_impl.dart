@@ -100,7 +100,7 @@ class AIChatRepositoryImpl implements AIChatRepository {
         return '';
       }
 
-      return response.choices.first.content ?? '';
+      return response.choices.first.content;
     } catch (e, stackTrace) {
       debugPrint('[AI_CHAT_REPO] ❌ OpenRouter API error: $e');
       debugPrint('[AI_CHAT_REPO] Stack trace: $stackTrace');

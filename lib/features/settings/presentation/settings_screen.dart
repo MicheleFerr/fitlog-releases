@@ -39,6 +39,8 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/features/settings/presentation/widgets/exercise_card_settings_section.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:cupertino_native/cupertino_native.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -1282,6 +1284,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 color: context.colors.primary,
               ),
               onTap: () => context.pushNamed('ai-coach'),
+            ),
+
+            const Divider(),
+
+            // Beta Feedback
+            _buildSettingTile(
+              context,
+              title: context.l10n.betaFeedback,
+              subtitle: context.l10n.betaFeedbackDesc,
+              leading: SemanticIcon(
+                icon: AppIcons.bugReport,
+                semanticLabel: context.l10n.betaFeedback,
+                size: AppIconSize.medium,
+                color: context.colors.primary,
+              ),
+              onTap: () => _launchBetaFeedbackEmail(context),
             ),
 
             const Divider(),
@@ -2604,6 +2622,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
+  Future<void> _launchBetaFeedbackEmail(BuildContext context) async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    final version = '${packageInfo.version}+${packageInfo.buildNumber}';
+    final device = Theme.of(context).platform.name;
+    final os = Theme.of(context).platform == TargetPlatform.iOS ? 'iOS' : 'Android';
+
+    final subject = Uri.encodeComponent(context.l10n.betaFeedbackSubject);
+    final body = Uri.encodeComponent(
+      context.l10n.betaFeedbackBody(version, device, os),
+    );
+
+    final uri = Uri.parse('mailto:michele.cozzolino93@gmail.com?subject=$subject&body=$body');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else if (context.mounted) {
+      SnackBarService.showError(context, 'Could not open email client');
+    }
+  }
+
   void _showResetTutorialsDialog(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
@@ -2687,11 +2724,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     if (fontSize < 1.01) return context.l10n.settingsFontSizeNormal;
     if (fontSize < 1.07) return context.l10n.settingsFontSizeMediumLarge;
     return context.l10n.settingsFontSizeLarge;
-  }
-
-  String _getFontSizeLabel(double fontSize) {
-    // Return the exact value for slider label
-    return fontSize.toStringAsFixed(2);
   }
 
   String _getLanguageText(String code) {

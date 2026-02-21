@@ -1,19 +1,19 @@
-# Terms of Service for GymBro TrackLog
+# Terms of Service for FitLog Pro
 
-**Last Updated: January 21, 2025**
-**Effective Date: January 21, 2025**
+**Last Updated: February 20, 2026**
+**Effective Date: February 20, 2026**
 
 ## 1. Agreement to Terms
 
-By downloading, installing, or using GymBro TrackLog ("GymBro", "the App", "Service"), you agree to be bound by these Terms of Service ("Terms"). If you disagree with any part of these terms, you do not have permission to access the Service.
+By downloading, installing, or using FitLog Pro ("FitLog Pro", "the App", "Service"), you agree to be bound by these Terms of Service ("Terms"). If you disagree with any part of these terms, you do not have permission to access the Service.
 
 **Developer**: Michele Cozzolino  
 **Contact**: michele.cozzolino93@gmail.com  
-**App Website**: https://gymbro.app
+**App Website**: https://fitlogpro.app
 
 ## 2. Definitions
 
-- **"Service"**: The GymBro TrackLog mobile application and all related services
+- **"Service"**: The FitLog Pro mobile application and all related services
 - **"User"**, **"You"**: The individual using the Service
 - **"Premium"**: Paid subscription tier with additional features
 - **"Content"**: Workout data, templates, and any information you create
@@ -33,7 +33,7 @@ By downloading, installing, or using GymBro TrackLog ("GymBro", "the App", "Serv
 - One person per account (no sharing)
 
 ### 3.3 Acceptable Use
-You agree to use GymBro only for:
+You agree to use FitLog Pro only for:
 - ✅ Personal fitness tracking
 - ✅ Creating workout routines
 - ✅ Tracking exercise progress
@@ -99,7 +99,7 @@ Premium features include:
 ## 6. Intellectual Property
 
 ### 6.1 App Ownership
-- GymBro TrackLog is owned by Michele Cozzolino
+- FitLog Pro is owned by Michele Cozzolino
 - All rights, title, and interest remain with us
 - Protected by copyright and other laws
 
@@ -122,7 +122,7 @@ Any feedback you provide becomes our property and may be used without compensati
 ## 7. Third-Party Services
 
 ### 7.1 Integration
-GymBro uses:
+FitLog Pro uses:
 - Firebase (Google) for authentication and storage
 - Apple/Google for payments
 - Crashlytics for error reporting
@@ -141,7 +141,7 @@ THE SERVICE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED
 
 ### 8.2 Fitness Disclaimer
 ⚠️ **IMPORTANT HEALTH WARNING**:
-- GymBro is NOT medical advice
+- FitLog Pro is NOT medical advice
 - Consult healthcare providers before starting any exercise program
 - We're not responsible for injuries from following workout routines
 - Listen to your body and exercise within your limits
@@ -169,7 +169,7 @@ WE'RE NOT LIABLE FOR:
 
 ## 10. Indemnification
 
-You agree to indemnify and hold harmless GymBro, its developer, and affiliates from any claims arising from:
+You agree to indemnify and hold harmless FitLog Pro, its developer, and affiliates from any claims arising from:
 - Your use of the Service
 - Violation of these Terms
 - Violation of any rights of another
@@ -209,7 +209,7 @@ We may terminate or suspend your account for:
 
 ## 13. Privacy
 
-Your use of GymBro is also governed by our Privacy Policy, available at [Privacy Policy Link].
+Your use of FitLog Pro is also governed by our Privacy Policy, available at [Privacy Policy Link].
 
 ## 14. Dispute Resolution
 
@@ -227,7 +227,7 @@ You waive any right to bring claims as a class or collective action.
 ## 15. General Provisions
 
 ### 15.1 Entire Agreement
-These Terms constitute the entire agreement between you and GymBro.
+These Terms constitute the entire agreement between you and FitLog Pro.
 
 ### 15.2 Severability
 If any provision is found unenforceable, the remaining provisions continue in effect.
@@ -245,14 +245,14 @@ Provisions that should survive termination will survive.
 
 For questions about these Terms:
 
-**Email**: legal@gymbro.app  
+**Email**: legal@fitlogpro.app  
 **Developer**: Michele Cozzolino  
-**Support**: support@gymbro.app  
+**Support**: support@fitlogpro.app  
 **Response Time**: 24-48 hours
 
 **Mailing Address**:
 ```
-GymBro TrackLog
+FitLog Pro
 c/o Michele Cozzolino
 [Address to be provided]
 European Union

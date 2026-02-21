@@ -22,7 +22,6 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/widge
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_search_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_fuzzy_matcher.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_usage_tracker.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_search_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/missing_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/presentation/widgets/custom_exercise_form_sheet.dart';
 import 'package:gymbro_flutter_new/features/custom_exercises/presentation/providers/custom_exercise_providers.dart';
@@ -812,44 +811,6 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  String _filterLabel(_ExerciseListFilter filter) {
-    final l10n = context.l10n;
-    switch (filter) {
-      case _ExerciseListFilter.allAZ:
-        return l10n.exerciseFilterAll;
-      case _ExerciseListFilter.created:
-        return l10n.exerciseFilterCreated;
-      case _ExerciseListFilter.selected:
-        final count = _selectedExercises.length;
-        return count > 0
-            ? '${l10n.exerciseFilterSelected} ($count)'
-            : l10n.exerciseFilterSelected;
-    }
-  }
-
-  Widget _buildFilterBar() {
-    return Container(
-      height: 48,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: _ExerciseListFilter.values.map((filter) {
-            final isSelected = _activeFilter == filter;
-            return Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: ChoiceChip(
-                label: Text(_filterLabel(filter)),
-                selected: isSelected,
-                onSelected: (_) => setState(() => _activeFilter = filter),
-              ),
-            );
-          }).toList(),
-        ),
       ),
     );
   }
@@ -2156,29 +2117,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     // Non cancellare il filtro attrezzatura persistito - l'utente lo gestisce dal bottom sheet
   }
 
-  bool _isAllFiltersEmpty() {
-    return _selectedFocus.isEmpty &&
-        _selectedMuscleGroups.isEmpty &&
-        _selectedEquipment.isEmpty &&
-        _selectedDifficulty.isEmpty &&
-        _selectedType.isEmpty &&
-        _selectedMovementPattern.isEmpty &&
-        _searchQuery.isEmpty;
-  }
-
   bool _isSmartFilter(String query) {
     return ExerciseSearchService.quickFilters.any(
       (filter) => filter['query'] == query.toLowerCase(),
     );
-  }
-
-  void _applySmartFilter(String query) {
-    setState(() {
-      _searchQuery = query;
-      _searchController.text = query;
-    });
-    // 🔥 FIX: Update provider to trigger improved search
-    ref.read(exerciseSearchQueryProvider.notifier).state = query;
   }
 
   void _addSelectedToWorkout() {

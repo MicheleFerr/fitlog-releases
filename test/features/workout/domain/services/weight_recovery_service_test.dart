@@ -413,35 +413,8 @@ void main() {
       });
     });
 
-    group('applyPreviousWeights with weightsOnly', () {
-      test('should apply only weights and NOT reps when weightsOnly is true', () {
-        final currentWorkout = _createWorkoutWithReps('Push Day', [
-          _createExerciseWithReps('Bench Press', [0, 0, 0], [8, 8, 8]),
-        ]);
-
-        final previousWorkout = _createWorkoutWithReps('Push Day', [
-          _createExerciseWithReps('Bench Press', [100, 105, 110], [12, 10, 8]),
-        ]);
-
-        final result = WeightRecoveryService.applyPreviousWeights(
-          currentWorkout: currentWorkout,
-          previousWorkout: previousWorkout,
-          multiplier: 1.0,
-          weightsOnly: true,
-        );
-
-        // Weights should be copied from previous
-        expect(result.exercises.first.sets[0].weight, equals(100));
-        expect(result.exercises.first.sets[1].weight, equals(105));
-        expect(result.exercises.first.sets[2].weight, equals(110));
-
-        // Reps should remain from current workout (NOT copied)
-        expect(result.exercises.first.sets[0].reps, equals(8));
-        expect(result.exercises.first.sets[1].reps, equals(8));
-        expect(result.exercises.first.sets[2].reps, equals(8));
-      });
-
-      test('should copy reps when weightsOnly is false (default)', () {
+    group('applyPreviousWeights copies weights and reps', () {
+      test('should copy both weights and reps from previous workout', () {
         final currentWorkout = _createWorkoutWithReps('Push Day', [
           _createExerciseWithReps('Bench Press', [0, 0, 0], [8, 8, 8]),
         ]);
@@ -481,7 +454,6 @@ void main() {
           currentWorkout: currentWorkout,
           previousWorkout: previousWorkout,
           multiplier: 1.0,
-          weightsOnly: true,
         );
 
         // Bench Press should get weights from previous

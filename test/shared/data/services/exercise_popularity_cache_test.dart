@@ -4,7 +4,6 @@ import 'package:hive_ce/hive.dart';
 import 'package:gymbro_flutter_new/shared/data/services/exercise_popularity_cache.dart';
 import 'package:gymbro_flutter_new/shared/data/models/exercise_popularity_hive_model.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise_popularity_data.dart';
-import 'package:path/path.dart' as path;
 
 void main() {
   late ExercisePopularityCache cache;

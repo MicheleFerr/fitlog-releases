@@ -2611,10 +2611,10 @@ abstract class AppLocalizations {
   /// **'Pause Workout'**
   String get pauseWorkout;
 
-  /// Resume workout button label
+  /// Button to resume a pending workout draft
   ///
   /// In en, this message translates to:
-  /// **'Resume Workout'**
+  /// **'RESUME'**
   String get resumeWorkout;
 
   /// End workout menu item
@@ -46934,6 +46934,30 @@ abstract class AppLocalizations {
   /// **'Read our terms of service'**
   String get termsOfServiceDesc;
 
+  /// Beta feedback tile title in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Send Feedback'**
+  String get betaFeedback;
+
+  /// Beta feedback tile subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Report bugs or suggest improvements'**
+  String get betaFeedbackDesc;
+
+  /// Email subject for beta feedback
+  ///
+  /// In en, this message translates to:
+  /// **'FitLog Pro Beta Feedback'**
+  String get betaFeedbackSubject;
+
+  /// Email body template for beta feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Hi FitLog Pro team,\n\n[Describe your feedback here]\n\n---\nApp Version: {version}\nDevice: {device}\nOS: {os}\n'**
+  String betaFeedbackBody(String version, String device, String os);
+
   /// No description provided for @madeWithLove.
   ///
   /// In en, this message translates to:
@@ -49711,6 +49735,34 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Workout Settings'**
   String get workoutSettings;
+
+  /// Button to dismiss recovery dialog without discarding draft
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get recoveryNotNow;
+
+  /// Title for draft recovery card in quick actions
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Workout'**
+  String get pendingWorkout;
+
+  /// Info line for pending workout draft
+  ///
+  /// In en, this message translates to:
+  /// **'{exerciseCount} exercises · {completedSets}/{totalSets} sets'**
+  String pendingWorkoutInfo(
+    int exerciseCount,
+    int completedSets,
+    int totalSets,
+  );
+
+  /// How long ago the pending workout was started
+  ///
+  /// In en, this message translates to:
+  /// **'Started {minutes} min ago'**
+  String pendingWorkoutStartedAgo(int minutes);
 }
 
 class _AppLocalizationsDelegate

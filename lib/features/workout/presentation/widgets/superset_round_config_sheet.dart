@@ -774,18 +774,6 @@ class _RoundConfig {
     return _RoundConfig(roundNumber: round.roundNumber, exercises: configs);
   }
 
-  factory _RoundConfig.defaultFor(
-    List<ExerciseDefinition> exercises,
-    int roundNumber,
-  ) {
-    return _RoundConfig(
-      roundNumber: roundNumber,
-      exercises: {
-        for (final ex in exercises)
-          ex.id: const _CellConfig(weight: 20, reps: 12),
-      },
-    );
-  }
   final int roundNumber;
   final Map<String, _CellConfig> exercises;
 

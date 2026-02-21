@@ -15,9 +15,6 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_usage_tracker.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_usage_model.dart';
 import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/dropset_template_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/rest_pause_template_repository.dart';
@@ -316,105 +313,6 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal>
           _buildExerciseSearchSection(),
         ],
       ),
-    );
-  }
-
-  /// P0: Build horizontal chips with recently used exercises
-  /// Allows one-tap addition to workout (UX for Chiara, Roberto personas)
-  Widget _buildRecentExercisesSection() {
-    final recentExercisesAsync = ref.watch(recentExercisesForModalProvider);
-
-    return recentExercisesAsync.when(
-      data: (recentExercises) {
-        if (recentExercises.isEmpty) return const SizedBox.shrink();
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  AppIcons.history,
-                  size: 16,
-                  color: context.colors.onSurfaceVariant,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  context.l10n.recentExercises,
-                  style: context.textTheme.labelMedium?.copyWith(
-                    color: context.colors.onSurfaceVariant,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 36,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: recentExercises.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
-                itemBuilder: (context, index) {
-                  final exercise = recentExercises[index];
-                  return ActionChip(
-                    label: Text(
-                      exercise.exerciseName,
-                      style: context.textTheme.labelMedium,
-                    ),
-                    onPressed: () => _addRecentExerciseToWorkout(exercise),
-                    backgroundColor: context.colors.surfaceContainerHighest,
-                    side: BorderSide.none,
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 16),
-          ],
-        );
-      },
-      loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
-    );
-  }
-
-  /// P0: Add a recent exercise directly to the workout
-  void _addRecentExerciseToWorkout(ExerciseUsageModel recentExercise) {
-    // Create a simple Exercise with default sets
-    final exercise = Exercise(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: recentExercise.exerciseName,
-      type: ExerciseType.single,
-      category: ExerciseCategory.other, // Default, can be refined later
-      sets: [
-        ExerciseSet(setNumber: 1, weight: 0, reps: 10),
-        ExerciseSet(setNumber: 2, weight: 0, reps: 10),
-        ExerciseSet(setNumber: 3, weight: 0, reps: 10),
-      ],
-    );
-
-    // Increment usage tracking
-    final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId != null) {
-      ExerciseUsageTracker().incrementUsage(
-        exerciseId: recentExercise.exerciseId,
-        exerciseName: recentExercise.exerciseName,
-        userId: userId,
-      );
-    }
-
-    // Add to workout
-    if (widget.onExerciseAdded != null) {
-      widget.onExerciseAdded!(exercise);
-    } else {
-      ref.read(currentWorkoutProvider.notifier).addExercise(exercise);
-    }
-
-    // Close modal and show success
-    Navigator.of(context).pop();
-    SnackBarService.showSuccess(
-      context,
-      context.l10n.exerciseAddedToWorkout(recentExercise.exerciseName),
     );
   }
 

@@ -130,10 +130,10 @@ class _RpeSelectorBottomSheetState
   int? _selectedRpe;
   int? _calculatedRir;
   bool _showWeightAndReps = true;
-  bool _isSetCompleted =
-      true; // ✅ FIX: Default to true (user is completing set)
-  bool _originallyCompleted =
-      false; // ✅ Track original completion state for button logic
+
+  // Wheel controllers for weight/reps pickers
+  late FixedExtentScrollController _weightWheelController;
+  late FixedExtentScrollController _repsWheelController;
 
   // ✅ NEW: For time-based exercises (counting mode = time)
   int _actualMinutes = 0;
@@ -161,6 +161,10 @@ class _RpeSelectorBottomSheetState
     }
 
     _loadExerciseData(_currentExerciseSet);
+
+    // Load saved preference for weight/reps verification toggle
+    final config = ref.read(appConfigProvider);
+    _showWeightAndReps = config.showWeightVerification;
   }
 
   void _loadExerciseData(ExerciseSet exerciseSet) {
@@ -171,19 +175,13 @@ class _RpeSelectorBottomSheetState
       _actualReps = storedData.actualReps;
       _actualWeight = storedData.actualWeight;
       _selectedRpe = storedData.rpe;
-      // ✅ For superset batch data, assume completion if data exists
-      _isSetCompleted = true; // Data exists = was completed
-      _originallyCompleted = true;
+      // Set is always completed when showing RPE selector
     } else {
       // Load from exercise set
       _actualReps = exerciseSet.actualReps ?? widget.targetReps;
       _actualWeight = exerciseSet.weight ?? 0.0;
       _selectedRpe = exerciseSet.rpe;
-      // ✅ FIX: Default to completed during workout so RPE is immediately visible and set is marked as done
-      // This prevents RPE from being -1 when user completes set without touching the completion toggle
-      _isSetCompleted = true; // Changed from: exerciseSet.isCompleted
-      _originallyCompleted =
-          exerciseSet.isCompleted; // ✅ Track original state (set once)
+      // Set is always completed when showing RPE selector
 
       // ✅ NEW: Initialize time variables for time-based exercises
       final totalSeconds =
@@ -192,6 +190,7 @@ class _RpeSelectorBottomSheetState
       _actualSeconds = totalSeconds % 60; // Remainder for seconds
     }
     _updateRir();
+
   }
 
   ExerciseSet _getExerciseSetForIndex(int index) {
@@ -652,6 +651,11 @@ class _RpeSelectorBottomSheetState
                     setState(() {
                       _showWeightAndReps = value;
                     });
+                    // Save preference
+                    final config = ref.read(appConfigProvider);
+                    ref.read(appConfigProvider.notifier).updateConfig(
+                      config.copyWith(showWeightVerification: value),
+                    );
                   },
                   activeTrackColor: colorScheme.primary,
                 ),
@@ -670,67 +674,6 @@ class _RpeSelectorBottomSheetState
                   colorScheme,
                 )
               : const SizedBox.shrink(),
-        ),
-
-        const SizedBox(height: 16),
-
-        // ✅ NEW: Set Completion Toggle
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: _isSetCompleted
-                ? colorScheme.tertiaryContainer.withValues(alpha: 0.3)
-                : colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: _isSetCompleted
-                  ? colorScheme.tertiary.withValues(alpha: 0.4)
-                  : colorScheme.outline.withValues(alpha: 0.2),
-              width: 1.5,
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    _isSetCompleted
-                        ? AppIcons.checkCircle
-                        : AppIcons.radioButtonUnchecked,
-                    size: 20,
-                    color: _isSetCompleted
-                        ? colorScheme.tertiary
-                        : colorScheme.onSurfaceVariant,
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    l10n.setCompleted,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: _isSetCompleted
-                          ? colorScheme.tertiary
-                          : colorScheme.onSurface,
-                    ),
-                  ),
-                ],
-              ),
-              Transform.scale(
-                scale: 0.9,
-                child: CupertinoSwitch(
-                  value: _isSetCompleted,
-                  onChanged: (value) {
-                    setState(() {
-                      _isSetCompleted = value;
-                    });
-                    HapticFeedback.lightImpact();
-                  },
-                  activeTrackColor: colorScheme.tertiary,
-                ),
-              ),
-            ],
-          ),
         ),
 
         const SizedBox(height: 16),
@@ -891,11 +834,11 @@ class _RpeSelectorBottomSheetState
               // ✅ Context-aware left button (Skip RPE / Cancel)
               Expanded(
                 child: Semantics(
-                  label: _originallyCompleted ? l10n.cancel : l10n.skipRpe,
+                  label: widget.set.isCompleted ? l10n.cancel : l10n.skipRpe,
                   button: true,
                   child: OutlinedButton(
                     onPressed: () {
-                    if (_originallyCompleted) {
+                    if (widget.set.isCompleted) {
                       // Set was already completed → "Cancel" button (safe exit)
                       Navigator.of(context).pop();
                       // Don't call onConfirm - just close without changes
@@ -927,7 +870,7 @@ class _RpeSelectorBottomSheetState
                     ),
                   ),
                   child: Text(
-                    _originallyCompleted ? l10n.cancel : l10n.skipRpe,
+                    widget.set.isCompleted ? l10n.cancel : l10n.skipRpe,
                     style: theme.textTheme.labelLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: colorScheme.onSurfaceVariant,
@@ -971,8 +914,7 @@ class _RpeSelectorBottomSheetState
                         : l10n.confirmSet,
                     button: true,
                     child: FilledButton(
-                      // ✅ Enable button if RPE selected OR user unchecked completion toggle (unmarca)
-                      onPressed: (_selectedRpe != null || !_isSetCompleted)
+                      onPressed: _selectedRpe != null
                         ? () {
                             HapticFeedback.mediumImpact();
                             if (widget.isPartOfSuperset) {
@@ -998,12 +940,7 @@ class _RpeSelectorBottomSheetState
                               }
                             } else {
                               Navigator.of(context).pop();
-                              // ✅ Pass rpe = -1 if user toggled OFF (unmarca set)
-                              // rpe = 0 if user skipped RPE but kept toggle ON
-                              // rpe > 0 if user selected RPE
-                              final rpeToSend = !_isSetCompleted
-                                  ? -1
-                                  : (_selectedRpe ?? 0);
+                              final rpeToSend = _selectedRpe ?? 0;
                               // ✅ NEW: Get correct data based on counting mode
                               final (actualReps, actualWeight) =
                                   _getConfirmData();
@@ -1465,9 +1402,12 @@ class _RpeSelectorBottomSheetState
     ColorScheme colorScheme,
   ) {
     final l10n = AppLocalizations.of(context);
+    const double wheelHeight = 120;
+    const double itemExtent = 36;
+
     return Container(
       margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -1485,7 +1425,7 @@ class _RpeSelectorBottomSheetState
       ),
       child: Row(
         children: [
-          // Weight Section
+          // Weight Wheel
           Expanded(
             child: Column(
               children: [
@@ -1507,103 +1447,52 @@ class _RpeSelectorBottomSheetState
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Decrease weight
-                    Semantics(
-                      label: 'Decrease weight by 2.5kg',
-                      button: true,
-                      child: InkWell(
-                        onTap: _actualWeight > 0
-                            ? () {
-                                HapticFeedback.lightImpact();
-                                setState(
-                                  () => _actualWeight = (_actualWeight - 2.5)
-                                      .clamp(0, 999),
-                                );
-                              }
-                            : null,
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: colorScheme.errorContainer.withValues(
-                              alpha: 0.2,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: SemanticIcon(
-                            icon: AppIcons.remove,
-                            semanticLabel: 'Remove',
-                            size: AppIconSize.small,
-                            color: colorScheme.error,
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Weight display
-                    Container(
-                      width: 70,
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                const SizedBox(height: 4),
+                SizedBox(
+                  height: wheelHeight,
+                  child: CupertinoPicker(
+                    scrollController: _weightWheelController,
+                    itemExtent: itemExtent,
+                    diameterRatio: 1.2,
+                    squeeze: 1.0,
+                    useMagnifier: true,
+                    magnification: 1.15,
+                    selectionOverlay: Container(
                       decoration: BoxDecoration(
-                        color: colorScheme.surface,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: _actualWeight == _currentExerciseSet.weight
-                              ? colorScheme.primary.withValues(alpha: 0.5)
-                              : colorScheme.outline.withValues(alpha: 0.2),
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            _actualWeight.toStringAsFixed(1),
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.onSurface,
-                            ),
+                        border: Border.symmetric(
+                          horizontal: BorderSide(
+                            color: colorScheme.primary.withValues(alpha: 0.3),
+                            width: 1,
                           ),
-                          Text(
-                            'kg',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              fontSize: 10,
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Increase weight
-                    Semantics(
-                      label: 'Increase weight by 2.5kg',
-                      button: true,
-                      child: InkWell(
-                        onTap: () {
-                          HapticFeedback.lightImpact();
-                          setState(() => _actualWeight += 2.5);
-                        },
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer.withValues(
-                            alpha: 0.3,
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: SemanticIcon(
-                          icon: AppIcons.add,
-                          semanticLabel: 'Add',
-                          size: AppIconSize.small,
-                          color: colorScheme.primary,
                         ),
                       ),
                     ),
+                    onSelectedItemChanged: (index) {
+                      HapticFeedback.selectionClick();
+                      setState(() {
+                        _actualWeight = index * 0.5;
+                      });
+                    },
+                    // 0 to 300kg in 0.5kg steps = 601 items
+                    children: List.generate(601, (index) {
+                      final weight = index * 0.5;
+                      final isTarget =
+                          weight == _currentExerciseSet.weight;
+                      return Center(
+                        child: Text(
+                          '${weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1)} kg',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: isTarget
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            color: isTarget
+                                ? colorScheme.primary
+                                : colorScheme.onSurface,
+                          ),
+                        ),
+                      );
+                    }),
                   ),
-                  ],
                 ),
               ],
             ),
@@ -1612,12 +1501,12 @@ class _RpeSelectorBottomSheetState
           // Divider
           Container(
             width: 1,
-            height: 60,
-            margin: const EdgeInsets.symmetric(horizontal: 8),
+            height: wheelHeight - 10,
+            margin: const EdgeInsets.symmetric(horizontal: 4),
             color: colorScheme.outline.withValues(alpha: 0.2),
           ),
 
-          // Reps Section
+          // Reps Wheel
           Expanded(
             child: Column(
               children: [
@@ -1639,100 +1528,50 @@ class _RpeSelectorBottomSheetState
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Decrease reps
-                    Semantics(
-                      label: 'Decrease reps by 1',
-                      button: true,
-                      child: InkWell(
-                        onTap: _actualReps > 0
-                            ? () {
-                                HapticFeedback.lightImpact();
-                                setState(() => _actualReps--);
-                              }
-                            : null,
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: colorScheme.errorContainer.withValues(
-                              alpha: 0.2,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: SemanticIcon(
-                            icon: AppIcons.remove,
-                            semanticLabel: 'Remove',
-                            size: AppIconSize.small,
-                            color: colorScheme.error,
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Reps display
-                    Container(
-                      width: 70,
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                const SizedBox(height: 4),
+                SizedBox(
+                  height: wheelHeight,
+                  child: CupertinoPicker(
+                    scrollController: _repsWheelController,
+                    itemExtent: itemExtent,
+                    diameterRatio: 1.2,
+                    squeeze: 1.0,
+                    useMagnifier: true,
+                    magnification: 1.15,
+                    selectionOverlay: Container(
                       decoration: BoxDecoration(
-                        color: colorScheme.surface,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: _actualReps == widget.targetReps
-                              ? colorScheme.primary.withValues(alpha: 0.5)
-                              : colorScheme.outline.withValues(alpha: 0.2),
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            '$_actualReps',
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.onSurface,
-                            ),
-                          ),
-                          Text(
-                            l10n.reps,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              fontSize: 10,
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Increase reps
-                    Semantics(
-                      label: 'Increase reps by 1',
-                      button: true,
-                      child: InkWell(
-                        onTap: () {
-                          HapticFeedback.lightImpact();
-                          setState(() => _actualReps++);
-                        },
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: colorScheme.primaryContainer.withValues(
-                              alpha: 0.3,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: SemanticIcon(
-                            icon: AppIcons.add,
-                            semanticLabel: 'Add',
-                            size: AppIconSize.small,
-                            color: colorScheme.primary,
+                        border: Border.symmetric(
+                          horizontal: BorderSide(
+                            color: colorScheme.primary.withValues(alpha: 0.3),
+                            width: 1,
                           ),
                         ),
                       ),
                     ),
-                  ],
+                    onSelectedItemChanged: (index) {
+                      HapticFeedback.selectionClick();
+                      setState(() {
+                        _actualReps = index;
+                      });
+                    },
+                    // 0 to 100 reps
+                    children: List.generate(101, (index) {
+                      final isTarget = index == widget.targetReps;
+                      return Center(
+                        child: Text(
+                          '$index ${l10n.reps}',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: isTarget
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            color: isTarget
+                                ? colorScheme.primary
+                                : colorScheme.onSurface,
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
                 ),
               ],
             ),
@@ -1742,16 +1581,19 @@ class _RpeSelectorBottomSheetState
     );
   }
 
-  /// ✅ FIX: Build reps-only section (for reps counting mode)
+  /// Build reps-only section (for reps counting mode) — Cupertino wheel
   Widget _buildRepsOnlySection(
     BuildContext context,
     ThemeData theme,
     ColorScheme colorScheme,
   ) {
     final l10n = AppLocalizations.of(context);
+    const double wheelHeight = 120;
+    const double itemExtent = 36;
+
     return Container(
       margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -1787,89 +1629,49 @@ class _RpeSelectorBottomSheetState
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Decrease reps
-              Semantics(
-                label: 'Decrease reps by 1',
-                button: true,
-                child: InkWell(
-                  onTap: _actualReps > 1
-                      ? () {
-                          HapticFeedback.lightImpact();
-                          setState(() => _actualReps--);
-                        }
-                      : null,
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: colorScheme.errorContainer.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: SemanticIcon(
-                      icon: AppIcons.remove,
-                      semanticLabel: 'Remove',
-                      size: AppIconSize.medium,
-                      color: colorScheme.error,
-                    ),
-                  ),
-                ),
-              ),
-              // Reps display
-              Container(
-                width: 100,
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                padding: const EdgeInsets.symmetric(vertical: 12),
+          const SizedBox(height: 4),
+          SizedBox(
+            height: wheelHeight,
+            child: CupertinoPicker(
+              scrollController: _repsWheelController,
+              itemExtent: itemExtent,
+              diameterRatio: 1.2,
+              squeeze: 1.0,
+              useMagnifier: true,
+              magnification: 1.15,
+              selectionOverlay: Container(
                 decoration: BoxDecoration(
-                  color: colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: _actualReps == widget.targetReps
-                        ? colorScheme.primary.withValues(alpha: 0.5)
-                        : colorScheme.outline.withValues(alpha: 0.2),
-                    width: 2,
-                  ),
-                ),
-                child: Text(
-                  '$_actualReps',
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.onSurface,
-                  ),
-                ),
-              ),
-              // Increase reps
-              Semantics(
-                label: 'Increase reps by 1',
-                button: true,
-                child: InkWell(
-                  onTap: _actualReps < 50
-                      ? () {
-                          HapticFeedback.lightImpact();
-                          setState(() => _actualReps++);
-                        }
-                      : null,
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer.withValues(alpha: 0.4),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: SemanticIcon(
-                      icon: AppIcons.add,
-                      semanticLabel: 'Add',
-                      size: AppIconSize.medium,
-                      color: colorScheme.primary,
+                  border: Border.symmetric(
+                    horizontal: BorderSide(
+                      color: colorScheme.primary.withValues(alpha: 0.3),
+                      width: 1,
                     ),
                   ),
                 ),
               ),
-            ],
+              onSelectedItemChanged: (index) {
+                HapticFeedback.selectionClick();
+                setState(() {
+                  _actualReps = index;
+                });
+              },
+              children: List.generate(101, (index) {
+                final isTarget = index == widget.targetReps;
+                return Center(
+                  child: Text(
+                    '$index ${l10n.reps}',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: isTarget
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                      color: isTarget
+                          ? colorScheme.primary
+                          : colorScheme.onSurface,
+                    ),
+                  ),
+                );
+              }),
+            ),
           ),
         ],
       ),

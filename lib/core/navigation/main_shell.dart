@@ -213,7 +213,7 @@ class _MainShellState extends ConsumerState<MainShell>
                     ),
                   );
                 },
-                child: _buildMiniBar(workout!, context),
+                child: _buildMiniBar(workout, context),
               ),
 
             // Quick actions overlay (above content, below tab bar in z-order)

@@ -85,11 +85,6 @@ class _HealthSyncSettingsScreenState
           _buildDataTypesSection(context, permissions),
           const SizedBox(height: 24),
 
-          // Auto-sync option — hidden until native background task is implemented
-          // TODO: Re-enable when iOS BGTaskScheduler / Android WorkManager are wired
-          // if (isConnected) ...[
-          //   _buildAutoSyncSection(context, backgroundSyncState),
-          // ],
           const TabBarBottomPadding(),
         ],
       ),
@@ -360,56 +355,6 @@ class _HealthSyncSettingsScreenState
     );
   }
 
-  Widget _buildAutoSyncSection(
-    BuildContext context,
-    BackgroundSyncState backgroundSyncState,
-  ) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final l10n = context.l10n;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.autoSyncDaily,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      l10n.autoSyncDescription,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurface.withValues(alpha: 0.6),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              CNSwitch(
-                value: backgroundSyncState.isScheduled,
-                onChanged: _handleBackgroundSyncToggle,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildNotAvailableState(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -626,38 +571,4 @@ class _HealthSyncSettingsScreenState
     await controller.requestPermissions(dataTypes: [dataType]);
   }
 
-  Future<void> _handleBackgroundSyncToggle(bool value) async {
-    unawaited(HapticFeedback.lightImpact());
-
-    final controller = ref.read(
-      healthBackgroundSyncControllerProvider.notifier,
-    );
-
-    try {
-      if (value) {
-        await controller.enableBackgroundSync();
-        if (mounted) {
-          SnackBarService.showSuccess(
-            context,
-            context.l10n.backgroundSyncEnabled,
-          );
-        }
-      } else {
-        await controller.disableBackgroundSync();
-        if (mounted) {
-          SnackBarService.showSuccess(
-            context,
-            context.l10n.backgroundSyncDisabled,
-          );
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        SnackBarService.showError(
-          context,
-          context.l10n.backgroundSyncToggleError,
-        );
-      }
-    }
-  }
 }

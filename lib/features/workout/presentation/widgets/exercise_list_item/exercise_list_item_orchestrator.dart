@@ -288,97 +288,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   }
 
   Future<void> _checkForCommunitySuggestions() async {
-    final weights = widget.exercise.sets
-        .map((s) => s.weight)
-        .whereType<double>()
-        .toList();
-
-    final minWeight = weights.isNotEmpty
-        ? weights.reduce((a, b) => a < b ? a : b)
-        : null;
-    final maxWeight = weights.isNotEmpty
-        ? weights.reduce((a, b) => a > b ? a : b)
-        : null;
-
-    final completedSets = widget.exercise.sets
-        .where((s) => s.isCompleted)
-        .length;
-
-    double totalVolume = 0;
-    for (final set in widget.exercise.sets) {
-      if (set.isCompleted && set.weight != null && set.reps != null) {
-        totalVolume += (set.weight! * set.reps!);
-      }
-    }
-
-    int exerciseHistoryCount = 0;
-    try {
-      final historyAsync = ref.read(
-        recentWeightsWithDetailsProvider(widget.exercise.name),
-      );
-      final history = historyAsync.value;
-      exerciseHistoryCount = history?.length ?? 0;
-    } catch (e) {
-      exerciseHistoryCount = 0;
-    }
-
-    // TEMPORARY: Community contributions feature disabled
+    // TEMPORARY: Disabled - community suggestions feature
     // TODO: Re-enable when community contributions are implemented
-    const contributions = <dynamic>[];
-    const userLevel = UserLevel.rookie;
-    const userContributionCount = 0;
-
-    final currentWorkout = ref.read(currentWorkoutProvider);
-    final workoutExercises = currentWorkout?.exercises ?? [];
-    final currentIndex = workoutExercises.indexWhere(
-      (e) => e.id == widget.exercise.id,
-    );
-    final isLastExercise = currentIndex == workoutExercises.length - 1;
-
-    final user = ref.read(firebaseUserProvider).asData?.value;
-    final accountAgeInDays = user?.metadata.creationTime != null
-        ? DateTime.now().difference(user!.metadata.creationTime!).inDays
-        : 0;
-
-    final totalWorkoutsCompleted = accountAgeInDays ~/ 3;
-    final workoutStartTime = currentWorkout?.startTime;
-
-    final averageWorkoutVolume = totalVolume > 0 ? totalVolume : 2000.0;
-
-    final uniqueExercisesCount = exerciseHistoryCount > 0
-        ? exerciseHistoryCount
-        : 5;
-
-    final workoutsPerWeek = accountAgeInDays > 0
-        ? (totalWorkoutsCompleted * 7.0) / accountAgeInDays
-        : 2.0;
-
-    final suggestionContext = SuggestionContext(
-      exercise: widget.exercise,
-      exerciseData: _exerciseData,
-      hasNotes: widget.exercise.notes?.isNotEmpty ?? false,
-      isFirstTime: _lastActivity == null,
-      completedSets: completedSets,
-      totalSets: widget.exercise.sets.length,
-      minWeight: minWeight,
-      maxWeight: maxWeight,
-      totalVolume: totalVolume,
-      exerciseHistoryCount: exerciseHistoryCount,
-      existingContributions: contributions,
-      userLevel: userLevel,
-      userContributionCount: userContributionCount,
-      accountAgeInDays: accountAgeInDays,
-      totalWorkoutsCompleted: totalWorkoutsCompleted,
-      averageWorkoutVolume: averageWorkoutVolume,
-      uniqueExercisesCount: uniqueExercisesCount,
-      workoutsPerWeek: workoutsPerWeek,
-      isLastExerciseInWorkout: isLastExercise,
-      currentExerciseIndex: currentIndex >= 0 ? currentIndex : 0,
-      totalExercisesInWorkout: workoutExercises.length,
-      workoutStartTime: workoutStartTime,
-    );
-
-// TEMPORARY: Disabled -     await _suggestionsNotifier.generateSuggestions(suggestionContext);
   }
 
   // ========================================================================
@@ -1250,22 +1161,87 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     }
   }
 
-  /// Add or edit warmup sets for the exercise
+  // === Warmup Helper Methods ===
+
+  /// Whether this exercise is a compound movement.
   ///
-  /// If warmup sets already exist: opens modal to EDIT them (not add more)
-  /// If no warmup sets: generates defaults based on target weight, opens modal to configure
+  /// Uses exerciseData['tipoEsercizio'] first (most accurate),
+  /// falls back to Exercise.movementType, defaults to true (safe).
+  bool _isCompoundExercise() {
+    // Check structured DB field first
+    final tipo = _exerciseData?['tipoEsercizio'] as String?;
+    if (tipo != null) {
+      return tipo == 'Compound' || tipo == 'compound';
+    }
+    // Fallback to Exercise entity movementType
+    final mt = widget.exercise.movementType;
+    if (mt != null) {
+      return mt == MovementType.compoundHeavy ||
+          mt == MovementType.compoundMedium;
+    }
+    // Safe default: assume compound (better to warmup unnecessarily)
+    return true;
+  }
+
+  /// Whether this exercise uses a barbell.
+  ///
+  /// Checks exerciseData['attrezzatura'] first, falls back to name heuristic.
+  bool _isBarbellExercise() {
+    final warmupCalc = WarmupCalculatorService();
+    final attrezzatura = _exerciseData?['attrezzatura'] as String?;
+    if (warmupCalc.isBarbellByAttrezzatura(attrezzatura)) return true;
+    return warmupCalc.isLikelyBarbellExercise(widget.exercise.name);
+  }
+
+  /// Whether this exercise needs warmup sets.
+  ///
+  /// Returns false for isolation, stretching, and cardio exercises.
+  /// Delegates to [_isCompoundExercise] for structured detection.
+  bool _needsWarmup() {
+    // Check explicit non-warmup types from DB
+    final tipo = _exerciseData?['tipoEsercizio'] as String?;
+    if (tipo != null) {
+      final lower = tipo.toLowerCase();
+      if (lower == 'stretching' || lower == 'cardio') return false;
+    }
+    // Use compound detection for the rest
+    return _isCompoundExercise();
+  }
+
+  /// Determines warmup context by checking if a previous exercise in this
+  /// workout already has warmup sets for the same muscle category.
+  WarmupContext _determineWarmupContext() {
+    final currentWorkout = ref.read(currentWorkoutProvider);
+    if (currentWorkout == null) return WarmupContext.firstCompound;
+
+    final exercises = currentWorkout.exercises;
+    final myCategory = widget.exercise.category;
+    final myIndex = exercises.indexWhere((e) => e.id == widget.exercise.id);
+
+    // Look at exercises before this one
+    for (var i = 0; i < myIndex; i++) {
+      final ex = exercises[i];
+      if (ex.category == myCategory && ex.sets.any((s) => s.isWarmup)) {
+        return WarmupContext.subsequent;
+      }
+    }
+    return WarmupContext.firstCompound;
+  }
+
+  /// Add or edit warmup sets for the exercise.
+  ///
+  /// **Edit path** (warmup already exist): opens modal to edit them.
+  /// **New path**: one-tap generation using V2 protocol with smart detection.
   void _handleAddWarmupSets() {
     // Check for existing warmup sets
-    final existingWarmupSets = widget.exercise.sets
-        .where((s) => s.isWarmup)
-        .toList();
-    final workingSets = widget.exercise.sets.where((s) => !s.isWarmup).toList();
+    final existingWarmupSets =
+        widget.exercise.sets.where((s) => s.isWarmup).toList();
+    final workingSets =
+        widget.exercise.sets.where((s) => !s.isWarmup).toList();
 
-    // If editing existing warmup sets
+    // If editing existing warmup sets — open modal
     if (existingWarmupSets.isNotEmpty) {
-      // Convert ExerciseSet to WarmupSet for the modal
       final warmupSetsForModal = existingWarmupSets.map((s) {
-        // Calculate percentage if we have working sets
         final targetWeight = workingSets.isNotEmpty
             ? workingSets.first.weight ?? 0.0
             : 0.0;
@@ -1283,7 +1259,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       return;
     }
 
-    // No existing warmup sets - generate new ones
+    // Guard: isolation exercises don't need warmup
+    if (!_needsWarmup()) {
+      SnackBarService.showInfo(
+        context,
+        context.l10n.warmupNotNeededForIsolation,
+      );
+      return;
+    }
+
+    // Guard: need working sets
     if (workingSets.isEmpty) {
       SnackBarService.showError(context, context.l10n.addWorkingSetFirst);
       return;
@@ -1291,22 +1276,23 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
     final targetWeight = workingSets.first.weight ?? 0.0;
 
+    // Guard: need a weight
     if (targetWeight <= 0) {
       SnackBarService.showError(context, context.l10n.setTargetWeightFirst);
       return;
     }
 
-    // Generate warmup sets using WarmupCalculatorService
+    // Generate V2 warmup sets with smart detection
     final warmupCalculator = WarmupCalculatorService();
-    final isBarbell = warmupCalculator.isLikelyBarbellExercise(
-      widget.exercise.name,
-    );
-    final generatedSets = warmupCalculator.calculateWarmupSets(
+    final warmupContext = _determineWarmupContext();
+    final generatedSets = warmupCalculator.calculateWarmupSetsV2(
       targetWeight,
-      isBarbell: isBarbell,
+      warmupContext: warmupContext,
+      isBarbell: _isBarbellExercise(),
     );
 
-    _showWarmupModal(generatedSets, isEditing: false);
+    // One-tap: apply directly without opening modal
+    _applyWarmupSets(generatedSets, isEditing: false);
   }
 
   /// Shows the warmup customization modal and handles the result
@@ -1798,22 +1784,6 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ PERFORMANCE FIX: Selective watching for only used config fields
-    // Previously watched entire appConfigProvider causing unnecessary rebuilds.
-    // Now we watch only the 4 specific fields used in this widget.
-    final autoCollapseCompleted = ref.watch(
-      appConfigProvider.select((c) => c.autoCollapseCompleted ?? false),
-    );
-    final showCollapseCountdown = ref.watch(
-      appConfigProvider.select((c) => c.showCollapseCountdown ?? false),
-    );
-    final autoAdjustRestFromRpe = ref.watch(
-      appConfigProvider.select((c) => c.autoAdjustRestFromRpe ?? false),
-    );
-    final hasSeenRestPauseTutorial = ref.watch(
-      appConfigProvider.select((c) => c.hasSeenRestPauseTutorial),
-    );
-
     // Watch full config for child widgets that need multiple properties
     final config = ref.watch(appConfigProvider);
 
@@ -2167,13 +2137,11 @@ class _CollapsedSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     // Calculate tonnage from completed non-warmup sets
     double tonnage = 0;
-    int completedSets = 0;
     for (final set in exercise.sets) {
       if (set.isCompleted && !set.isWarmup) {
         final weight = set.weight ?? 0;
         final reps = set.reps ?? 0;
         tonnage += weight * reps;
-        completedSets++;
       }
     }
 

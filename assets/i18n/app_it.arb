@@ -19651,6 +19651,10 @@
   "openSourceLicensesDesc": "Visualizza licenze di terze parti",
   "privacyPolicyDesc": "Leggi la nostra informativa privacy",
   "termsOfServiceDesc": "Leggi i termini di servizio",
+  "betaFeedback": "Invia Feedback",
+  "betaFeedbackDesc": "Segnala bug o suggerisci miglioramenti",
+  "betaFeedbackSubject": "FitLog Pro Beta Feedback",
+  "betaFeedbackBody": "Ciao team FitLog Pro,\n\n[Descrivi il tuo feedback qui]\n\n---\nVersione App: {version}\nDispositivo: {device}\nSO: {os}\n",
   "madeWithLove": "Fatto con amore in Italia",
   "exerciseDbAttribution": "GIF esercizi fornite da ExerciseDB (exercisedb.io)",
   "soundCredits": "Effetti Sonori",
@@ -20964,5 +20968,10 @@
   "generateAllWarmups": "Genera tutti i warmup",
   "allWarmupsGenerated": "Warmup generati per {count} esercizi",
   "noExercisesNeedWarmup": "Nessun esercizio necessita di warmup",
-  "workoutSettings": "Impostazioni workout"
+  "workoutSettings": "Impostazioni workout",
+  "recoveryNotNow": "Non ora",
+  "pendingWorkout": "Allenamento in sospeso",
+  "resumeWorkout": "RIPRENDI",
+  "pendingWorkoutInfo": "{exerciseCount} esercizi · {completedSets}/{totalSets} set",
+  "pendingWorkoutStartedAgo": "Iniziato {minutes} min fa"
 }

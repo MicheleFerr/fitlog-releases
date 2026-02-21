@@ -32253,6 +32253,27 @@
   "openSourceLicensesDesc": "View third-party licenses",
   "privacyPolicyDesc": "Read our privacy policy",
   "termsOfServiceDesc": "Read our terms of service",
+  "betaFeedback": "Send Feedback",
+  "@betaFeedback": {
+    "description": "Beta feedback tile title in settings"
+  },
+  "betaFeedbackDesc": "Report bugs or suggest improvements",
+  "@betaFeedbackDesc": {
+    "description": "Beta feedback tile subtitle"
+  },
+  "betaFeedbackSubject": "FitLog Pro Beta Feedback",
+  "@betaFeedbackSubject": {
+    "description": "Email subject for beta feedback"
+  },
+  "betaFeedbackBody": "Hi FitLog Pro team,\n\n[Describe your feedback here]\n\n---\nApp Version: {version}\nDevice: {device}\nOS: {os}\n",
+  "@betaFeedbackBody": {
+    "description": "Email body template for beta feedback",
+    "placeholders": {
+      "version": {"type": "String"},
+      "device": {"type": "String"},
+      "os": {"type": "String"}
+    }
+  },
   "madeWithLove": "Made with love in Italy",
   "exerciseDbAttribution": "Exercise demonstration GIFs provided by ExerciseDB (exercisedb.io)",
   "soundCredits": "Sound Effects",
@@ -34161,5 +34182,45 @@
   "workoutSettings": "Workout Settings",
   "@workoutSettings": {
     "description": "Menu option to open workout customization settings"
+  },
+  "recoveryNotNow": "Not now",
+  "@recoveryNotNow": {
+    "description": "Button to dismiss recovery dialog without discarding draft"
+  },
+  "pendingWorkout": "Pending Workout",
+  "@pendingWorkout": {
+    "description": "Title for draft recovery card in quick actions"
+  },
+  "resumeWorkout": "RESUME",
+  "@resumeWorkout": {
+    "description": "Button to resume a pending workout draft"
+  },
+  "pendingWorkoutInfo": "{exerciseCount} exercises · {completedSets}/{totalSets} sets",
+  "@pendingWorkoutInfo": {
+    "description": "Info line for pending workout draft",
+    "placeholders": {
+      "exerciseCount": {
+        "type": "int",
+        "example": "3"
+      },
+      "completedSets": {
+        "type": "int",
+        "example": "8"
+      },
+      "totalSets": {
+        "type": "int",
+        "example": "12"
+      }
+    }
+  },
+  "pendingWorkoutStartedAgo": "Started {minutes} min ago",
+  "@pendingWorkoutStartedAgo": {
+    "description": "How long ago the pending workout was started",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "example": "45"
+      }
+    }
   }
 }

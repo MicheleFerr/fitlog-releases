@@ -107,8 +107,6 @@ class _WorkoutDetailModalState extends State<WorkoutDetailModal> {
         pixelRatio: 3.0,
         delay: const Duration(milliseconds: 100),
       );
-      if (imageBytes == null) return;
-
       final tempDir = await getTemporaryDirectory();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final file = File('${tempDir.path}/workout_history_$timestamp.png');

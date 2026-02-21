@@ -1376,7 +1376,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pauseWorkout => 'Pause Workout';
 
   @override
-  String get resumeWorkout => 'Resume Workout';
+  String get resumeWorkout => 'RESUME';
 
   @override
   String get endWorkout => 'End Workout';
@@ -26252,6 +26252,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get termsOfServiceDesc => 'Read our terms of service';
 
   @override
+  String get betaFeedback => 'Send Feedback';
+
+  @override
+  String get betaFeedbackDesc => 'Report bugs or suggest improvements';
+
+  @override
+  String get betaFeedbackSubject => 'FitLog Pro Beta Feedback';
+
+  @override
+  String betaFeedbackBody(String version, String device, String os) {
+    return 'Hi FitLog Pro team,\n\n[Describe your feedback here]\n\n---\nApp Version: $version\nDevice: $device\nOS: $os\n';
+  }
+
+  @override
   String get madeWithLove => 'Made with love in Italy';
 
   @override
@@ -27815,4 +27829,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get workoutSettings => 'Workout Settings';
+
+  @override
+  String get recoveryNotNow => 'Not now';
+
+  @override
+  String get pendingWorkout => 'Pending Workout';
+
+  @override
+  String pendingWorkoutInfo(
+    int exerciseCount,
+    int completedSets,
+    int totalSets,
+  ) {
+    return '$exerciseCount exercises · $completedSets/$totalSets sets';
+  }
+
+  @override
+  String pendingWorkoutStartedAgo(int minutes) {
+    return 'Started $minutes min ago';
+  }
 }

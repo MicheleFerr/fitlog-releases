@@ -1472,7 +1472,7 @@ class _ExerciseHistoryCard extends ConsumerWidget {
       // Calculate average weight across sets
       final totalWeight = sets.fold<double>(
         0.0,
-        (sum, set) => sum + (set.weight ?? 0.0),
+        (sum, set) => sum + set.weight,
       );
       return totalWeight / sets.length;
     }).toList();

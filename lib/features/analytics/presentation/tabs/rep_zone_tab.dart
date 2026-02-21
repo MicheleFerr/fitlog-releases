@@ -26,7 +26,6 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_ana
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/rep_zone_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/rep_zone_optimization_sheet.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';

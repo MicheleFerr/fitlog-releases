@@ -740,7 +740,7 @@ class FirebaseWorkoutTemplateRepository
 
         final result = await TemplateCloudService.createTemplateFromJson(
           name: template.name,
-          description: template.description ?? '',
+          description: template.description,
           exercisesJson: exercisesJson,
           tags: template.tags,
           isPublic: template.isPublic,
@@ -758,9 +758,9 @@ class FirebaseWorkoutTemplateRepository
 
         // 🔧 Update local cache with the new ID from Cloud Function
         // The template ID might be different from the UUID generated client-side
-        if (result.templateId != null && result.templateId != template.id) {
+        if (result.templateId != template.id) {
           // Update local cache to use the server-generated ID
-          await _updateLocalTemplateId(template.id, result.templateId!);
+          await _updateLocalTemplateId(template.id, result.templateId);
         }
       } catch (e) {
         if (kDebugMode) {
@@ -1043,18 +1043,6 @@ class FirebaseWorkoutTemplateRepository
     final result = merged.values.toList();
     result.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
     return result;
-  }
-
-  /// Marca template per sync futuro
-  /// 🔐 Uses user-scoped key: 'pending_sync_{userId}'
-  Future<void> _markForSync(String templateId) async {
-    final prefs = await SharedPreferences.getInstance();
-    final syncKey = userCacheKeys.pendingSyncKey;
-    final pendingSync = prefs.getStringList(syncKey) ?? [];
-    if (!pendingSync.contains(templateId)) {
-      pendingSync.add(templateId);
-      await prefs.setStringList(syncKey, pendingSync);
-    }
   }
 
   /// Marca template per eliminazione futura

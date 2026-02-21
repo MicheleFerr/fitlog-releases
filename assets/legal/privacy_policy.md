@@ -1,13 +1,13 @@
-# Privacy Policy for GymBro TrackLog
+# Privacy Policy for FitLog Pro
 
-**Last Updated: December 31, 2025**
+**Last Updated: February 20, 2026**
 
 ## 1. Introduction
 
-Welcome to GymBro TrackLog ("GymBro", "we", "our", or "us"). We respect your privacy and are committed to protecting your personal data. This privacy policy explains how we collect, use, and safeguard your information when you use our mobile application.
+Welcome to FitLog Pro ("FitLog Pro", "we", "our", or "us"). We respect your privacy and are committed to protecting your personal data. This privacy policy explains how we collect, use, and safeguard your information when you use our mobile application.
 
 **Contact Information:**
-- Email: privacy@gymbro.app
+- Email: privacy@fitlogpro.app
 - Developer: Michele Cozzolino
 - Location: European Union (GDPR Compliant)
 
@@ -102,12 +102,12 @@ You have the right to:
 - **Restrict Processing**: Settings → Privacy Preferences → Restrict Processing
 
 **Contact Us:**
-- Email: privacy@gymbro.app
+- Email: privacy@fitlogpro.app
 - Response time: Within 30 days (typically 24-48 hours)
 
 ## 7. Children's Privacy
 
-GymBro is not intended for children under 13 (or 16 in EU). We do not knowingly collect data from children. If you believe we have collected data from a child, please contact us immediately.
+FitLog Pro is not intended for children under 13 (or 16 in EU). We do not knowingly collect data from children. If you believe we have collected data from a child, please contact us immediately.
 
 ## 8. International Data Transfers
 
@@ -159,7 +159,7 @@ We may update this policy periodically. We will notify you of material changes v
 
 ## 14. Open Source and Transparency
 
-GymBro believes in transparency:
+FitLog Pro believes in transparency:
 - Our privacy practices are open for review
 - We respond to all privacy inquiries
 - Annual transparency report available upon request
@@ -169,7 +169,7 @@ GymBro believes in transparency:
 For privacy concerns or questions:
 
 **Data Protection Officer**
-- Email: privacy@gymbro.app
+- Email: privacy@fitlogpro.app
 - Response time: 24-48 hours
 
 **Developer Contact**
@@ -179,14 +179,14 @@ For privacy concerns or questions:
 
 **Mailing Address**
 ```
-GymBro TrackLog
+FitLog Pro
 [Address to be provided]
 European Union
 ```
 
 ## 16. Consent
 
-By using GymBro TrackLog, you consent to this Privacy Policy. If you disagree with any part of this policy, please discontinue use of the application.
+By using FitLog Pro, you consent to this Privacy Policy. If you disagree with any part of this policy, please discontinue use of the application.
 
 ## Appendix A: Data Categories (GDPR Article 13/14)
 
@@ -210,5 +210,5 @@ By using GymBro TrackLog, you consent to this Privacy Policy. If you disagree wi
 ---
 
 **Privacy Policy Version**: 1.1.0
-**Effective Date**: December 31, 2025
+**Effective Date**: February 20, 2026
 **Language**: English (Translations available in Italian)
