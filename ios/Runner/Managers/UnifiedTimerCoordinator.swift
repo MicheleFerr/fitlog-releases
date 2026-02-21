@@ -45,7 +45,10 @@ final class UnifiedTimerCoordinator {
         unifiedChannel?.setMethodCallHandler { [weak self] (call, result) in
             self?.handleMethodCall(call, result: result)
         }
-        
+
+        // Pass unified channel to MetronomeManager for metronomeTick callbacks
+        MetronomeManager.shared.setChannel(unifiedChannel)
+
         // Also setup legacy channels for backward compatibility
         setupLegacyChannels(with: messenger)
         
@@ -153,6 +156,12 @@ final class UnifiedTimerCoordinator {
 
             case "endBackgroundTask":
                 self.handleEndBackgroundTask(call.arguments, result: mainResult)
+
+            case "startMetronome":
+                self.handleStartMetronome(call.arguments, result: mainResult)
+
+            case "stopMetronome":
+                self.handleStopMetronome(result: mainResult)
 
             default:
                 mainResult(FlutterMethodNotImplemented)
@@ -530,8 +539,24 @@ final class UnifiedTimerCoordinator {
         result(metrics)
     }
     
+    // MARK: - Metronome Methods
+
+    private func handleStartMetronome(_ arguments: Any?, result: @escaping FlutterResult) {
+        let args = arguments as? [String: Any]
+        let soundEnabled = args?["soundEnabled"] as? Bool ?? true
+        let hapticEnabled = args?["hapticEnabled"] as? Bool ?? true
+
+        MetronomeManager.shared.start(soundEnabled: soundEnabled, hapticEnabled: hapticEnabled)
+        result(true)
+    }
+
+    private func handleStopMetronome(result: @escaping FlutterResult) {
+        let elapsed = MetronomeManager.shared.stop()
+        result(elapsed)
+    }
+
     // MARK: - Public Methods
-    
+
     /// Check if audio should be played (prevents duplicates)
     func shouldPlayAudio() -> Bool {
         if let lastTime = lastAudioTriggerTime,

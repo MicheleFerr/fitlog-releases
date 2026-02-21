@@ -35,6 +35,7 @@
 		D10AC5CD2E4BA027009D8E78 /* BackgroundAudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10AC5CC2E4BA027009D8E78 /* BackgroundAudioManager.swift */; };
 		D10AC7342E4CD104009D8E78 /* silent_loop.wav in Resources */ = {isa = PBXBuildFile; fileRef = D10AC7332E4CD104009D8E78 /* silent_loop.wav */; };
 		D10AC7702E4CD2A1009D8E78 /* TimerSoundFix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10AC76F2E4CD2A1009D8E78 /* TimerSoundFix.swift */; };
+		09877C2F8B96415DA9A4E007 /* MetronomeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CEB8A679018445A886706E7 /* MetronomeManager.swift */; };
 		D10AC7722E4CD2BD009D8E78 /* BatteryOptimizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10AC7712E4CD2BD009D8E78 /* BatteryOptimizationManager.swift */; };
 		D10AC7742E4CD2C1009D8E78 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10AC7732E4CD2C1009D8E78 /* Logger.swift */; };
 		D10AC7762E4CD2CA009D8E78 /* NotificationPermissionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10AC7752E4CD2CA009D8E78 /* NotificationPermissionHelper.swift */; };
@@ -182,6 +183,7 @@
 		D10AC5CC2E4BA027009D8E78 /* BackgroundAudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundAudioManager.swift; sourceTree = "<group>"; };
 		D10AC7332E4CD104009D8E78 /* silent_loop.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = silent_loop.wav; sourceTree = "<group>"; };
 		D10AC76F2E4CD2A1009D8E78 /* TimerSoundFix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerSoundFix.swift; sourceTree = "<group>"; };
+		6CEB8A679018445A886706E7 /* MetronomeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetronomeManager.swift; sourceTree = "<group>"; };
 		D10AC7712E4CD2BD009D8E78 /* BatteryOptimizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryOptimizationManager.swift; sourceTree = "<group>"; };
 		D10AC7732E4CD2C1009D8E78 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		D10AC7752E4CD2CA009D8E78 /* NotificationPermissionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPermissionHelper.swift; sourceTree = "<group>"; };
@@ -443,6 +445,7 @@
 				3E9C4E78F11D4F929964F355 /* AudioDebugTestHandler.swift */,
 				D10AC5CC2E4BA027009D8E78 /* BackgroundAudioManager.swift */,
 				D10AC76F2E4CD2A1009D8E78 /* TimerSoundFix.swift */,
+				6CEB8A679018445A886706E7 /* MetronomeManager.swift */,
 				D15AD7F92E4B91F00029B4D4 /* PermissionManager.swift */,
 				D1A4AB2D2E72BD8C0037BF3A /* LockscreenAudioTest.swift */,
 				D17D7A6A2E77760100480A54 /* AdSupportManager.swift */,
@@ -831,6 +834,7 @@
 				D17D7A6F2E77760100480A54 /* KeyboardManager.swift in Sources */,
 				D1A4AB2E2E72BD8C0037BF3A /* LockscreenAudioTest.swift in Sources */,
 				D10AC7702E4CD2A1009D8E78 /* TimerSoundFix.swift in Sources */,
+				09877C2F8B96415DA9A4E007 /* MetronomeManager.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 				D15AD7F22E4B91C90029B4D4 /* AppDelegate.swift in Sources */,
 				D1A4A9082E6F84D90037BF3A /* DirectNotificationManager.swift in Sources */,

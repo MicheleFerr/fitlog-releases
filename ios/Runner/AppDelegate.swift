@@ -272,7 +272,10 @@ import FirebaseCore
         } else {
             legacyRegisterBackgroundTasks()
         }
-        
+
+        // Initialize MetronomeManager for TUT metronome
+        _ = MetronomeManager.shared
+
         Logger.shared.log(.info, "Managers initialized with feature flags")
         
         // Log feature flag status in debug
