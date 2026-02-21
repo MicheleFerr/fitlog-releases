@@ -260,8 +260,8 @@ class ExerciseListItemHeader extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SemanticIcon(
-                  icon: AppIcons.insights,
-                  semanticLabel: 'Insights',
+                  icon: AppIcons.analyticsRounded,
+                  semanticLabel: 'Analytics',
                   size: AppIconSize.tiny,
                   color: context.colors.primary,
                 ),

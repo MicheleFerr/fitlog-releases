@@ -1648,24 +1648,30 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: Center(
-        child: TextButton.icon(
-          onPressed: _onStartFirstSet,
-          icon: SemanticIcon(
-            icon: AppIcons.playArrow,
-            semanticLabel: 'Start',
-            size: AppIconSize.small,
-            color: context.colors.secondary,
-          ),
-          label: Text(context.l10n.startSet),
-          style: TextButton.styleFrom(
-            foregroundColor: context.colors.secondary,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 8,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Tooltip(
+          message: 'Prima di iniziare a tracciare il tuo tempo di un set, '
+              'premi questo pulsante per registrare la durata delle tue esecuzioni.',
+          preferBelow: true,
+          child: TextButton.icon(
+            onPressed: _onStartFirstSet,
+            icon: SemanticIcon(
+              icon: AppIcons.playArrow,
+              semanticLabel: 'Start',
+              size: AppIconSize.small,
+              color: context.colors.secondary,
             ),
-            textStyle: context.textTheme.labelLarge?.copyWith(
-              fontWeight: FontWeight.w500,
+            label: Text(context.l10n.startSet),
+            style: TextButton.styleFrom(
+              foregroundColor: context.colors.secondary,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 8,
+              ),
+              textStyle: context.textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ),

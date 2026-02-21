@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -366,15 +367,52 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   }
 
   void _handleShowPlatesCalculator() {
+    // Use first uncompleted working set weight, fallback to 60kg default
     final workingSets = widget.exercise.sets
-        .where((s) => !s.isWarmup && (double.tryParse(s.weight.toString()) ?? 0) > 0)
+        .where((s) => !s.isWarmup)
         .toList();
-    if (workingSets.isEmpty) return;
-    final nextSet = workingSets.where((s) => !s.isCompleted).firstOrNull;
-    final setToShow = nextSet ?? workingSets.first;
-    final targetWeight = double.tryParse(setToShow.weight.toString()) ?? 0;
-    if (targetWeight <= 0) return;
-    _showPlatesModal(context, targetWeight);
+    double targetWeight = 60.0;
+    if (workingSets.isNotEmpty) {
+      final nextSet = workingSets.where((s) => !s.isCompleted).firstOrNull;
+      final setToShow = nextSet ?? workingSets.first;
+      final w = double.tryParse(setToShow.weight.toString()) ?? 0;
+      if (w > 0) targetWeight = w;
+    }
+    _showPlatesCupertinoPopup(context, targetWeight);
+  }
+
+  /// Whether this exercise uses plate-loadable equipment
+  /// (barbell, EZ bar, trap bar, smith machine, leg press, hack squat, etc.)
+  bool _usesPlateLoadableEquipment() {
+    final attrezzatura = (_exerciseData?['attrezzatura'] as String? ?? '').toLowerCase();
+    // Barbell variants
+    if (attrezzatura == 'bilanciere' ||
+        attrezzatura == 'barbell' ||
+        attrezzatura == 'olympic barbell' ||
+        attrezzatura == 'ez bar' ||
+        attrezzatura == 'trap bar' ||
+        attrezzatura == 'smith machine' ||
+        attrezzatura == 'smith') {
+      return true;
+    }
+    // Plate-loaded machines
+    if (attrezzatura.contains('leg press') ||
+        attrezzatura.contains('hack squat') ||
+        attrezzatura.contains('pendulum') ||
+        attrezzatura.contains('plate-loaded') ||
+        attrezzatura.contains('macchina con dischi')) {
+      return true;
+    }
+    // Adjustable dumbbells
+    if (attrezzatura.contains('manubri componibili') ||
+        attrezzatura.contains('adjustable dumbbell')) {
+      return true;
+    }
+    // Fallback: name-based heuristic (barbell only)
+    if (attrezzatura.isEmpty) {
+      return WarmupCalculatorService().isLikelyBarbellExercise(widget.exercise.name);
+    }
+    return false;
   }
 
   /// Shows Tips bottom sheet with Info/Warmup/Prevention options
@@ -2115,6 +2153,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     onShowTutExplanationModal: _handleShowTutExplanationModal,
                     onShowTipsBottomSheet: () => _handleShowTipsBottomSheet(),
                     onShowPlatesCalculator: _handleShowPlatesCalculator,
+                    showPlatesCalculator: _usesPlateLoadableEquipment(),
                   ),
 
                 // ✅ Collapsed summary: tonnage + muscle focus (no TUT/timer)
@@ -2462,64 +2501,110 @@ class _PlateCalculatorChip extends ConsumerWidget {
   }
 }
 
-/// Top-level helper to open the plate calculator modal from any widget
-void _showPlatesModal(BuildContext context, double targetWeight) {
+/// Cupertino-style popup for plate calculator
+/// Shows a compact native iOS action sheet with plate breakdown
+void _showPlatesCupertinoPopup(BuildContext context, double targetWeight) {
   HapticFeedback.lightImpact();
-  ModalService.showSheet(
-    context,
-    isScrollControlled: true,
-    backgroundColor: context.colors.surface,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-    ),
-    builder: (sheetContext) => DraggableScrollableSheet(
-      initialChildSize: 0.7,
-      minChildSize: 0.5,
-      maxChildSize: 0.9,
-      expand: false,
-      builder: (context, scrollController) => Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              margin: const EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(
-                color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            Row(
-              children: [
-                Icon(AppIcons.calculateRounded, color: context.colors.secondary, size: 24),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    'Plate Calculator',
-                    style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(AppIcons.close),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: SingleChildScrollView(
-                controller: scrollController,
-                child: PlateCalculatorWidget(
-                  targetWeight: targetWeight,
-                  onWeightChanged: (_) {},
-                  unit: 'kg',
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
+  showCupertinoModalPopup<void>(
+    context: context,
+    builder: (ctx) => _PlatesCupertinoSheet(targetWeight: targetWeight),
   );
+}
+
+/// Compact Cupertino popup showing plates to load for a given weight
+class _PlatesCupertinoSheet extends ConsumerWidget {
+  const _PlatesCupertinoSheet({required this.targetWeight});
+
+  final double targetWeight;
+
+  static const List<double> _defaultPlates = [25, 20, 15, 10, 5, 2.5, 1.25, 0.5];
+  static const double _defaultBarbell = 20.0;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final config = ref.watch(appConfigProvider);
+    final availablePlates = config.availablePlates ?? _defaultPlates;
+    final barbellWeight = _defaultBarbell;
+
+    final plates = _calculatePlates(targetWeight, barbellWeight, availablePlates);
+    final weightStr = targetWeight == targetWeight.truncateToDouble()
+        ? targetWeight.truncate().toString()
+        : targetWeight.toStringAsFixed(1);
+
+    return CupertinoActionSheet(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(AppIcons.calculateRounded, size: 18, color: CupertinoColors.activeBlue),
+          const SizedBox(width: 8),
+          Text(
+            'Plate Calculator — ${weightStr}kg',
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+      message: _buildPlatesContent(context, plates, barbellWeight),
+      cancelButton: CupertinoActionSheetAction(
+        onPressed: () => Navigator.pop(context),
+        child: const Text('Chiudi'),
+      ),
+    );
+  }
+
+  Widget _buildPlatesContent(
+    BuildContext context,
+    Map<double, int> plates,
+    double barbellWeight,
+  ) {
+    final weightStr = targetWeight == targetWeight.truncateToDouble()
+        ? targetWeight.truncate().toString()
+        : targetWeight.toStringAsFixed(1);
+
+    if (plates.isEmpty) {
+      final onlyBarbell = targetWeight <= barbellWeight;
+      return Text(
+        onlyBarbell
+            ? 'Solo bilanciere (${barbellWeight.truncate()}kg)'
+            : 'Nessun disco necessario',
+        style: const TextStyle(fontSize: 15),
+      );
+    }
+
+    final plateLines = plates.entries
+        .map((e) {
+          final kg = e.key == e.key.truncateToDouble()
+              ? e.key.truncate().toString()
+              : e.key.toString();
+          return '${e.value}×${kg}kg  (per lato)';
+        })
+        .join('\n');
+
+    return Text(
+      'Bilanciere: ${barbellWeight.truncate()}kg\n$plateLines',
+      style: const TextStyle(fontSize: 15, height: 1.6),
+      textAlign: TextAlign.center,
+    );
+  }
+
+  Map<double, int> _calculatePlates(
+    double targetWeight,
+    double barbellWeight,
+    List<double> availablePlates,
+  ) {
+    if (targetWeight <= barbellWeight) return {};
+
+    final weightPerSide = (targetWeight - barbellWeight) / 2;
+    var remaining = weightPerSide;
+    final result = <double, int>{};
+
+    final sorted = List<double>.from(availablePlates)..sort((a, b) => b.compareTo(a));
+    for (final plate in sorted) {
+      final count = (remaining / plate).floor();
+      if (count > 0) {
+        result[plate] = count;
+        remaining -= count * plate;
+      }
+    }
+    return result;
+  }
 }

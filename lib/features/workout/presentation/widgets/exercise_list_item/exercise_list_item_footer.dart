@@ -34,6 +34,7 @@ class ExerciseListItemFooter extends ConsumerStatefulWidget {
     this.onShowTutExplanationModal,
     this.onShowTipsBottomSheet,
     this.onShowPlatesCalculator,
+    this.showPlatesCalculator = false,
   });
 
   final Exercise exercise;
@@ -42,6 +43,8 @@ class ExerciseListItemFooter extends ConsumerStatefulWidget {
   final VoidCallback? onShowTutExplanationModal;
   final VoidCallback? onShowTipsBottomSheet;
   final VoidCallback? onShowPlatesCalculator;
+  /// Whether to show the plate calculator chip (only for barbell/plate-loaded equipment)
+  final bool showPlatesCalculator;
 
   @override
   ConsumerState<ExerciseListItemFooter> createState() =>
@@ -68,7 +71,6 @@ class _ExerciseListItemFooterState
   @override
   Widget build(BuildContext context) {
     final footerElements = ref.watch(exerciseFooterElementsProvider);
-    final showPlates = ref.watch(showExercisePlatesProvider);
 
     // Don't render if no elements configured
     if (footerElements.isEmpty) {
@@ -76,19 +78,17 @@ class _ExerciseListItemFooterState
     }
 
     // Filter to elements that should be shown
-    // ALL elements are ALWAYS shown if configured - allows adding new content
     final activeElements = footerElements.where((element) {
       switch (element) {
         case ExerciseFooterElement.notes:
-          return true; // Always show - allows adding new notes
+          return true;
         case ExerciseFooterElement.tips:
-          return true; // Always show Tips (opens Info/Warmup/Prevention)
+          return true;
         case ExerciseFooterElement.tut:
-          return true; // Always show TUT (with default if not set)
+          return true;
       }
     }).toList();
 
-    // Don't render if no elements configured to show
     if (activeElements.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -103,13 +103,18 @@ class _ExerciseListItemFooterState
           color: context.colors.outlineVariant.withValues(alpha: 0.3),
         ),
 
-        // Collapsed view: chip row + expand button
+        // Collapsed view: plate chip (first) + other chips + expand button
         InkWell(
           onTap: _toggleExpanded,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               children: [
+                // ✅ Plate calculator chip — first position, only for barbell/plate equipment
+                if (widget.showPlatesCalculator && widget.onShowPlatesCalculator != null) ...[
+                  _PlateCalcChip(onTap: widget.onShowPlatesCalculator!),
+                  const SizedBox(width: 8),
+                ],
                 // Chips for each active element
                 Expanded(
                   child: Wrap(
@@ -125,20 +130,6 @@ class _ExerciseListItemFooterState
                     }).toList(),
                   ),
                 ),
-                // Plates calculator icon (shown when enabled in settings)
-                if (showPlates && widget.onShowPlatesCalculator != null) ...[
-                  GestureDetector(
-                    onTap: widget.onShowPlatesCalculator,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                      child: Icon(
-                        AppIcons.calculate,
-                        size: AppIconSize.small,
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                ],
                 // Expand/collapse icon
                 AnimatedRotation(
                   turns: _isExpanded ? 0.5 : 0,
@@ -224,13 +215,15 @@ class _FooterChip extends StatelessWidget {
               size: AppIconSize.tiny,
               color: context.colors.onSurfaceVariant,
             ),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              style: context.textTheme.labelSmall?.copyWith(
-                color: context.colors.onSurfaceVariant,
+            if (label.isNotEmpty) ...[
+              const SizedBox(width: 4),
+              Text(
+                label,
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ),
@@ -240,7 +233,8 @@ class _FooterChip extends StatelessWidget {
   (IconData, String) _getIconAndLabel(BuildContext context) {
     switch (element) {
       case ExerciseFooterElement.tips:
-        return (AppIcons.trendUp, context.l10n.tips);
+        // ✅ Tips: solo icona lampadina, nessun testo
+        return (AppIcons.lightbulb, '');
       case ExerciseFooterElement.tut:
         // Always show TUT value (use default 2-0-2-0 if not set)
         final tut = exercise.tut;
@@ -255,6 +249,36 @@ class _FooterChip extends StatelessWidget {
           hasNotes ? context.l10n.notes : context.l10n.addNote,
         );
     }
+  }
+}
+
+/// Compact plate calculator chip shown as first element in footer
+class _PlateCalcChip extends StatelessWidget {
+  const _PlateCalcChip({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: context.colors.secondaryContainer.withValues(alpha: 0.4),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: context.colors.secondary.withValues(alpha: 0.3),
+            width: 1,
+          ),
+        ),
+        child: Icon(
+          AppIcons.calculate,
+          size: AppIconSize.tiny,
+          color: context.colors.secondary,
+        ),
+      ),
+    );
   }
 }
 
