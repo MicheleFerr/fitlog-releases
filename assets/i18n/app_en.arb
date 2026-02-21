@@ -34226,5 +34226,13 @@
         "example": "45"
       }
     }
+  },
+  "metronomeStart": "Metronome",
+  "@metronomeStart": {
+    "description": "Label for starting the TUT metronome"
+  },
+  "metronomeStop": "Stop",
+  "@metronomeStop": {
+    "description": "Label for stopping the TUT metronome"
   }
 }

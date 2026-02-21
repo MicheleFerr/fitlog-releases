@@ -24,6 +24,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/rpe_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/progress_badge.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/metronome_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_counting_mode_service.dart';
 
@@ -689,10 +690,13 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
               // Flexible spacer
               const Expanded(child: SizedBox.shrink()),
 
-              // Right: checkmark + edit
+              // Right: metronome + checkmark + edit
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Metronome button — only for incomplete sets
+                  if (!set.isCompleted)
+                    _buildMetronomeButton(context, set),
                   // Completion checkmark — fixed width
                   SizedBox(
                     width: 20,
@@ -729,6 +733,73 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             ],
           ),
         ),
+        ),
+      ),
+    );
+  }
+
+  /// Build metronome toggle button for TUT tempo tracking
+  Widget _buildMetronomeButton(BuildContext context, ExerciseSet set) {
+    final metronome = ref.watch(metronomeProvider);
+    final isActive = metronome.isRunning &&
+        metronome.exerciseId == widget.exercise.id &&
+        metronome.setNumber == set.setNumber;
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 4),
+      child: GestureDetector(
+        onTap: () {
+          if (isActive) {
+            ref.read(metronomeProvider.notifier).stop();
+          } else {
+            ref.read(metronomeProvider.notifier).start(
+                  widget.exercise.id,
+                  set.setNumber,
+                );
+          }
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: EdgeInsets.symmetric(
+            horizontal: isActive ? 6 : 4,
+            vertical: 4,
+          ),
+          decoration: BoxDecoration(
+            color: isActive
+                ? context.colors.primary.withValues(alpha: 0.15)
+                : null,
+            borderRadius: BorderRadius.circular(8),
+            border: isActive
+                ? Border.all(
+                    color: context.colors.primary.withValues(alpha: 0.4),
+                  )
+                : null,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SemanticIcon(
+                icon: AppIcons.metronome,
+                semanticLabel: isActive
+                    ? context.l10n.metronomeStop
+                    : context.l10n.metronomeStart,
+                size: AppIconSize.small,
+                color: isActive
+                    ? context.colors.primary
+                    : context.colors.onSurfaceVariant,
+              ),
+              if (isActive) ...[
+                const SizedBox(width: 2),
+                Text(
+                  '${metronome.elapsedSeconds}s',
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.colors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
       ),
     );
@@ -1328,6 +1399,15 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     final isWarmupSet = set.isWarmup;
 
     if (!wasCompleted) {
+      // Auto-stop metronome if active for this set
+      if (ref.read(metronomeProvider).isRunning &&
+          ref.read(metronomeProvider.notifier).isRunningForSet(
+                widget.exercise.id,
+                set.setNumber,
+              )) {
+        ref.read(metronomeProvider.notifier).stop();
+      }
+
       // If RPE tracking is disabled OR it's a warmup set, complete directly
       if (!rpeEnabled || isWarmupSet) {
         double? duration;

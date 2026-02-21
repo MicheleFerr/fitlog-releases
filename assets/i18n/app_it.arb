@@ -20974,5 +20974,7 @@
   "pendingWorkout": "Allenamento in sospeso",
   "resumeWorkout": "RIPRENDI",
   "pendingWorkoutInfo": "{exerciseCount} esercizi · {completedSets}/{totalSets} set",
-  "pendingWorkoutStartedAgo": "Iniziato {minutes} min fa"
+  "pendingWorkoutStartedAgo": "Iniziato {minutes} min fa",
+  "metronomeStart": "Metronomo",
+  "metronomeStop": "Stop"
 }

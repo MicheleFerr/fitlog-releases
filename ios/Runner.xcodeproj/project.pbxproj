@@ -58,6 +58,7 @@
 		D1A4A9082E6F84D90037BF3A /* DirectNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A4A9072E6F84D90037BF3A /* DirectNotificationManager.swift */; };
 		D1A4A90A2E6F89790037BF3A /* NotificationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A4A9092E6F89790037BF3A /* NotificationDelegate.swift */; };
 		D1A4AB2C2E72B65D0037BF3A /* sound.caf in Resources */ = {isa = PBXBuildFile; fileRef = D1A4AB2B2E72B65D0037BF3A /* sound.caf */; };
+		D1METRO0012E88000100000001 /* metronome_tick.caf in Resources */ = {isa = PBXBuildFile; fileRef = D1METRO0012E88000100000002 /* metronome_tick.caf */; };
 		D1A4AB2E2E72BD8C0037BF3A /* LockscreenAudioTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A4AB2D2E72BD8C0037BF3A /* LockscreenAudioTest.swift */; };
 		D1AF57CA2E3B1101005C381A /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1AF57C92E3B1101005C381A /* WidgetKit.framework */; };
 		D1AF57CC2E3B1101005C381A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1AF57CB2E3B1101005C381A /* SwiftUI.framework */; };
@@ -208,6 +209,7 @@
 		D1A4A9072E6F84D90037BF3A /* DirectNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectNotificationManager.swift; sourceTree = "<group>"; };
 		D1A4A9092E6F89790037BF3A /* NotificationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDelegate.swift; sourceTree = "<group>"; };
 		D1A4AB2B2E72B65D0037BF3A /* sound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound.caf; sourceTree = "<group>"; };
+		D1METRO0012E88000100000002 /* metronome_tick.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = metronome_tick.caf; sourceTree = "<group>"; };
 		D1A4AB2D2E72BD8C0037BF3A /* LockscreenAudioTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockscreenAudioTest.swift; sourceTree = "<group>"; };
 		D1AF57C82E3B1101005C381A /* GymBroTimerWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GymBroTimerWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1AF57C92E3B1101005C381A /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -388,6 +390,7 @@
 				D1F551492E4CE7B900DA47B4 /* YehBuddie.wav */,
 				D10AC5C82E4B9DE1009D8E78 /* timer_complete.wav */,
 				D1A4AB2B2E72B65D0037BF3A /* sound.caf */,
+				D1METRO0012E88000100000002 /* metronome_tick.caf */,
 				D10AC7332E4CD104009D8E78 /* silent_loop.wav */,
 				D1AF6C102E3B135A0024614B /* LiveActivityHandler.swift */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
@@ -656,6 +659,7 @@
 				D1F5514C2E4CE7B900DA47B4 /* LightWeight.caf in Resources */,
 				D1F5514D2E4CE7B900DA47B4 /* YehBuddie.caf in Resources */,
 				D10AC5C72E4B9CAF009D8E78 /* timer_complete.caf in Resources */,
+				D1METRO0012E88000100000001 /* metronome_tick.caf in Resources */,
 				D10AC7342E4CD104009D8E78 /* silent_loop.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

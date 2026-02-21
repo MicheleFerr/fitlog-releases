@@ -49769,6 +49769,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Started {minutes} min ago'**
   String pendingWorkoutStartedAgo(int minutes);
+
+  /// Label for starting the TUT metronome
+  ///
+  /// In en, this message translates to:
+  /// **'Metronome'**
+  String get metronomeStart;
+
+  /// Label for stopping the TUT metronome
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get metronomeStop;
 }
 
 class _AppLocalizationsDelegate

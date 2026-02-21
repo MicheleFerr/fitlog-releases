@@ -28123,4 +28123,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String pendingWorkoutStartedAgo(int minutes) {
     return 'Iniziato $minutes min fa';
   }
+
+  @override
+  String get metronomeStart => 'Metronomo';
+
+  @override
+  String get metronomeStop => 'Stop';
 }

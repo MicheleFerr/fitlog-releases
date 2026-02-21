@@ -984,6 +984,9 @@ class AppIcons {
   /// ❓ Help outline
   static const IconData helpOutline = Icons.help;
 
+  /// 🎵 Metronome (TUT tempo tracking)
+  static const IconData metronome = Icons.graphic_eq;
+
   /// ⏰ Access time/Clock
   static const IconData accessTime = Icons.access_time;
 
