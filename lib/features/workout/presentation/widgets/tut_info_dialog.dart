@@ -10,6 +10,7 @@ void showTutInfoBottomSheet(BuildContext context, String tutValue) {
   ModalService.showSheet(
     context,
     isScrollControlled: true,
+    backgroundColor: Colors.transparent,
     builder: (context) => TutInfoBottomSheet(tutValue: tutValue),
   );
 }
