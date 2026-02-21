@@ -40,4 +40,5 @@ const _$MappingStatusEnumMap = {
   MappingStatus.auto: 'auto',
   MappingStatus.review: 'review',
   MappingStatus.fallback: 'fallback',
+  MappingStatus.verified: 'verified',
 };

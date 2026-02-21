@@ -399,7 +399,9 @@ final mappingStatisticsProvider = FutureProvider.autoDispose<MappingStatistics>(
     final mappings = await ref.watch(exerciseMappingsProvider.future);
 
     final autoCount = mappings
-        .where((m) => m.status == MappingStatus.auto)
+        .where((m) =>
+            m.status == MappingStatus.auto ||
+            m.status == MappingStatus.verified)
         .length;
     final reviewCount = mappings
         .where((m) => m.status == MappingStatus.review)

@@ -60,18 +60,25 @@ enum MappingStatus {
 
   /// Low confidence, use fallback (<60%)
   @JsonValue('fallback')
-  fallback;
+  fallback,
 
-  bool get isReliable => this == auto;
+  /// Manually verified correct mapping
+  @JsonValue('verified')
+  verified;
+
+  bool get isReliable => this == auto || this == verified;
   bool get needsReview => this == review;
   bool get isFallback => this == fallback;
+  bool get isVerified => this == verified;
 }
 
 /// Extension to help with mapping decisions
 extension ExerciseMappingExtension on ExerciseMapping {
   /// Whether this mapping can be used for weight suggestions
   bool get canSuggestWeight =>
-      status == MappingStatus.auto || status == MappingStatus.review;
+      status == MappingStatus.auto ||
+      status == MappingStatus.review ||
+      status == MappingStatus.verified;
 
   /// Confidence as percentage (0-100)
   double get confidencePercent => confidence * 100;
@@ -85,6 +92,8 @@ extension ExerciseMappingExtension on ExerciseMapping {
         return locale.startsWith('it') ? 'Da Verificare' : 'Review';
       case MappingStatus.fallback:
         return locale.startsWith('it') ? 'Default' : 'Fallback';
+      case MappingStatus.verified:
+        return locale.startsWith('it') ? 'Verificato' : 'Verified';
     }
   }
 
