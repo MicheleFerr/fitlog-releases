@@ -1995,6 +1995,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         'totalSets': state!.totalSets ?? 1,
         'lastUpdated': DateTime.now().millisecondsSinceEpoch,
         'workoutName': null, // Optional workout name
+        'soundName': state!.customSoundName ?? 'sound',
       });
 
       // CRITICAL: Save the activity ID for future updates
@@ -2020,13 +2021,10 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     }
 
     // 🚫 SKIP: If WorkoutSession Live Activity is active
-    try {
-      final workoutSessionLAState = ref.read(workoutSessionLAProvider);
-      if (workoutSessionLAState.isActive) {
-        return;
-      }
-    } catch (e) {
-      // If we can't read the provider, continue with old behavior
+    // Use service directly to avoid circular dependency with workoutSessionLAProvider
+    final laService = ref.read(workoutSessionLAServiceProvider);
+    if (laService.isActive) {
+      return;
     }
 
     try {
