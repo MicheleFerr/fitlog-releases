@@ -2378,6 +2378,12 @@ abstract class AppLocalizations {
   /// **'Brief pause at peak contraction to enhance muscle engagement'**
   String get tutTopPauseFullDescription;
 
+  /// Label for total TUT time per repetition
+  ///
+  /// In en, this message translates to:
+  /// **'per rep'**
+  String get tutTotalPerRep;
+
   /// TUT example
   ///
   /// In en, this message translates to:

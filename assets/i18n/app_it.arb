@@ -516,6 +516,7 @@
   "tutBottomPauseFullDescription": "Mantieni brevemente la posizione allungata per massimizzare l'attivazione muscolare",
   "tutConcentricFullDescription": "Solleva il peso con forza controllata, concentrandoti sulla contrazione muscolare",
   "tutTopPauseFullDescription": "Breve pausa al picco di contrazione per aumentare il coinvolgimento muscolare",
+  "tutTotalPerRep": "per ripetizione",
   "tutExample": "Esempio: 3-1-2-0",
   "tutExampleStandard": "Impiega {eccentric} secondi per abbassare, pausa {bottomPause} secondi in basso, {concentric} secondi per sollevare, poi pausa {topPause} secondi in alto.",
   "tutExampleExplosive": "Muoviti esplosivamente durante le fasi contrassegnate (X) mantenendo il controllo durante le fasi temporizzate.",

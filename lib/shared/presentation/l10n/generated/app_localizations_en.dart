@@ -1247,6 +1247,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Brief pause at peak contraction to enhance muscle engagement';
 
   @override
+  String get tutTotalPerRep => 'per rep';
+
+  @override
   String get tutExample => 'Example: 3-1-2-0';
 
   @override

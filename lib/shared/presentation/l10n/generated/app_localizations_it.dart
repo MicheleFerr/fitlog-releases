@@ -1256,6 +1256,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Breve pausa al picco di contrazione per aumentare il coinvolgimento muscolare';
 
   @override
+  String get tutTotalPerRep => 'per ripetizione';
+
+  @override
   String get tutExample => 'Esempio: 3-1-2-0';
 
   @override

@@ -1541,6 +1541,10 @@
   "@tutTopPauseFullDescription": {
     "description": "Full description of top pause phase"
   },
+  "tutTotalPerRep": "per rep",
+  "@tutTotalPerRep": {
+    "description": "Label for total TUT time per repetition"
+  },
   "tutExample": "Example: 3-1-2-0",
   "@tutExample": {
     "description": "TUT example"
