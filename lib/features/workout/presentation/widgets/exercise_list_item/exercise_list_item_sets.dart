@@ -645,78 +645,64 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                 const SizedBox(width: 8),
               ],
 
-              // Set details (adapted based on counting mode)
-              // Tapping the content area opens keyboard input directly
-              Expanded(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => _quickEditSet(context, set, startInManualMode: true),
-                  child: Row(
-                    children: [
-                    ..._buildSetDetailsForMode(set, config),
-
-                    // NOTE: Lightbulb icon removed per user request
-                    // Was showing when weight matched prefill suggestion
-
-                    // RPE indicator if completed (tappable to change)
-                    if (set.isCompleted && set.rpe != null) ...[
-                      const SizedBox(width: 8),
-                      GestureDetector(
-                        onTap: () => _showQuickRpePicker(context, set),
-                        child: RpeIndicator(rpe: set.rpe!),
-                      ),
-                    ],
-                    // "Add RPE" button if completed without RPE
-                    if (set.isCompleted && set.rpe == null) ...[
-                      const SizedBox(width: 8),
-                      GestureDetector(
-                        onTap: () => _showQuickRpePicker(context, set),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: context.colors.primary.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: context.colors.primary.withValues(alpha: 0.3),
-                            ),
-                          ),
-                          child: Text(
-                            '+RPE',
-                            style: context.textTheme.labelSmall?.copyWith(
-                              color: context.colors.primary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                  ),
-                ),
-              ),
-
-              // ✅ NEW: Visible action icons (edit + delete)
+              // Set details (adapted based on counting mode) + RPE + duration — all left-aligned
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Set duration indicator (when setDurationTracking enabled)
+                  ..._buildSetDetailsForMode(set, config),
+                  // RPE indicator
+                  if (set.isCompleted)
+                    GestureDetector(
+                      onTap: () => _showQuickRpePicker(context, set),
+                      child: set.rpe != null
+                          ? RpeIndicator(rpe: set.rpe!)
+                          : Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: context.colors.primary.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: context.colors.primary.withValues(alpha: 0.3),
+                                ),
+                              ),
+                              child: Text(
+                                '+RPE',
+                                style: context.textTheme.labelSmall?.copyWith(
+                                  color: context.colors.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                    ),
+                  // Set duration chip
                   if (set.isCompleted &&
                       set.setDurationMillis != null &&
-                      (config.setDurationTracking ?? false)) ...[
+                      (config.setDurationTracking ?? false))
                     _buildSetDurationChip(set.setDurationMillis!),
-                    const SizedBox(width: 8),
-                  ],
-                  // Completion checkmark
-                  if (set.isCompleted) ...[
-                    SemanticIcon(
-                      icon: AppIcons.checkCircle,
-                      semanticLabel: 'Completed',
-                      size: AppIconSize.small,
-                      color: context.colors.tertiary,
-                    ),
-                    const SizedBox(width: 8),
-                  ],
-                  // Edit button (delete via swipe left)
+                ],
+              ),
+
+              // Flexible spacer
+              const Expanded(child: SizedBox.shrink()),
+
+              // Right: checkmark + edit
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Completion checkmark — fixed width
+                  SizedBox(
+                    width: 20,
+                    child: set.isCompleted
+                        ? SemanticIcon(
+                            icon: AppIcons.checkCircle,
+                            semanticLabel: 'Completed',
+                            size: AppIconSize.small,
+                            color: context.colors.tertiary,
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                  const SizedBox(width: 8),
+                  // Edit button
                   Semantics(
                     label: context.l10n.edit,
                     button: true,
@@ -724,14 +710,14 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                       onTap: () => _quickEditSet(context, set),
                       borderRadius: BorderRadius.circular(8),
                       child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: SemanticIcon(
-                        icon: AppIcons.edit,
-                        semanticLabel: context.l10n.edit,
-                        size: AppIconSize.small,
-                        color: context.colors.primary,
+                        padding: const EdgeInsets.all(8),
+                        child: SemanticIcon(
+                          icon: AppIcons.edit,
+                          semanticLabel: context.l10n.edit,
+                          size: AppIconSize.small,
+                          color: context.colors.primary,
+                        ),
                       ),
-                    ),
                     ),
                   ),
                 ],
@@ -756,6 +742,10 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       fontWeight: FontWeight.w500,
     );
 
+    // Fixed width for the weight column so × and reps always stay aligned
+    // Accommodates up to "400.25 lbs" at bodyMedium size
+    const double weightColumnWidth = 76;
+
     switch (_cachedCountingMode) {
       case ExerciseCountingMode.weighted:
         // Weighted: Show weight × reps (with placeholders for null values)
@@ -765,23 +755,34 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         // If both null, show a single placeholder prompting edit
         if (!hasWeight && !hasReps) {
           return [
-            Text(
-              '-- × -- reps',
-              style: placeholderStyle,
+            SizedBox(
+              width: weightColumnWidth,
+              child: Text(
+                '-- × -- reps',
+                style: placeholderStyle,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ];
         }
 
         return [
-          Text(
-            hasWeight
-                ? set.weight!.formatWeight(config.measurementUnit)
-                : '--',
-            style: hasWeight ? valueStyle : placeholderStyle,
+          SizedBox(
+            width: weightColumnWidth,
+            child: Text(
+              hasWeight
+                  ? set.weight!.formatWeight(config.measurementUnit)
+                  : '--',
+              style: (hasWeight ? valueStyle : placeholderStyle)?.copyWith(
+                fontFeatures: [const FontFeature.tabularFigures()],
+              ),
+              textAlign: TextAlign.end,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 6),
           Text('×', style: context.textTheme.bodySmall),
-          const SizedBox(width: 4),
+          const SizedBox(width: 6),
           Text(
             hasReps
                 ? (set.actualReps != null && set.isCompleted
@@ -789,6 +790,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                     : '${set.repsDisplay} reps')
                 : '-- reps',
             style: hasReps ? valueStyle : placeholderStyle,
+            overflow: TextOverflow.ellipsis,
           ),
         ];
 
@@ -1035,7 +1037,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
     HapticFeedback.mediumImpact();
   }
 
-  void _quickEditSet(BuildContext context, ExerciseSet set, {bool startInManualMode = false}) {
+  void _quickEditSet(BuildContext context, ExerciseSet set) {
     final currentSetIndex = widget.exercise.sets.indexWhere(
       (s) => s.id == set.id,
     );
@@ -1070,8 +1072,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       suggestedWeight: prefill?.weight,
       suggestedSource: suggestedSource,
       recentWeights: recentWeightsWithDates,
-      countingMode: widget.exercise.countingMode,
-      startInManualMode: startInManualMode,
+      countingMode: widget.exercise.countingMode, // ✅ NUOVO: Pass counting mode
       onSave: (updatedSet) {
         final updatedSets = widget.exercise.sets.map((s) {
           return s.id == set.id ? updatedSet : s;

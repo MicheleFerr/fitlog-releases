@@ -61,7 +61,6 @@ class MinimalSetEditSheet extends StatefulWidget {
     this.suggestedReps,
     this.suggestedSource,
     this.countingMode = ExerciseCountingMode.weighted,
-    this.startInManualMode = false,
   });
 
   final ExerciseSet exerciseSet;
@@ -81,7 +80,6 @@ class MinimalSetEditSheet extends StatefulWidget {
   final int? suggestedReps; // Pre-fill reps from suggestion (e.g. warmup %)
   final String? suggestedSource; // Source label for the suggestion chip
   final ExerciseCountingMode countingMode; // How this exercise is tracked
-  final bool startInManualMode; // Open directly in keyboard mode
 
   @override
   State<MinimalSetEditSheet> createState() => _MinimalSetEditSheetState();
@@ -140,7 +138,6 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     print('   - onApplyToAll: ${widget.onApplyToAll != null ? "✅ presente" : "❌ null"}');
     print('   - _isFirstSet: $_isFirstSet');
 
-    _isManualInput = widget.startInManualMode;
     _weight = widget.exerciseSet.weight ?? 0;
     _reps = widget.exerciseSet.reps ?? 10;
     _seconds = widget.exerciseSet.seconds ?? 60;
@@ -625,48 +622,25 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
               // Dot indicators for sets
               if (_hasMultipleSets) _buildDotIndicators(),
 
-              // Suggestion + Recent weights block
-              if (widget.suggestedWeight != null ||
-                  (widget.recentWeights != null && widget.recentWeights!.isNotEmpty))
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (widget.suggestedWeight != null) _buildSuggestionChip(),
-                      if (widget.recentWeights != null && widget.recentWeights!.isNotEmpty)
-                        _buildRecentWeightsChips(),
-                      const SizedBox(height: 4),
-                    ],
-                  ),
-                ),
+              // Suggested weight chip
+              if (widget.suggestedWeight != null) _buildSuggestionChip(),
 
-              const SizedBox(height: 8),
+              // Recent weights chips
+              if (widget.recentWeights != null &&
+                  widget.recentWeights!.isNotEmpty)
+                _buildRecentWeightsChips(),
+
+              const SizedBox(height: 12),
 
               // Main content: Weight + Reps pickers
               _buildPickers(),
 
-              const SizedBox(height: 8),
-
-              // Thin divider
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Divider(
-                  height: 1,
-                  color: context.colors.outlineVariant.withValues(alpha: 0.5),
-                ),
-              ),
-
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
 
               // Action buttons row (Apply to all / Copy previous)
               _buildActionRow(),
 
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
 
               // Hint: swipe down to save
               Text(
@@ -1074,13 +1048,6 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                           onFastScrubEnd: () =>
                               setState(() => _isWeightFastScrubActive = false),
                           currentValue: _weight,
-                          onContainerTap: () {
-                            _weightTextController.text = _formatWeight(_weight);
-                            setState(() => _isManualInput = true);
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              _weightFocusNode.requestFocus();
-                            });
-                          },
                         ),
                   ),
 
@@ -1135,13 +1102,6 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                                   setState(() => _isRepsFastScrubActive = false),
                               currentValue: _reps.toDouble(),
                               fastScrubOnRight: true,
-                              onContainerTap: () {
-                                _repsTextController.text = '$_reps';
-                                setState(() => _isManualInput = true);
-                                WidgetsBinding.instance.addPostFrameCallback((_) {
-                                  _repsFocusNode.requestFocus();
-                                });
-                              },
                             ),
                 ),
 
@@ -1273,7 +1233,6 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     VoidCallback? onFastScrubEnd,
     double currentValue = 0,
     bool fastScrubOnRight = false,
-    VoidCallback? onContainerTap,
   }) {
     return Column(
       children: [
@@ -1302,9 +1261,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                 ),
               // Main wheel picker
               Expanded(
-                child: GestureDetector(
-                  onTap: onContainerTap,
-                  child: DecoratedBox(
+                child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: context.colors.surfaceContainerHighest.withValues(
                       alpha: 0.3,
@@ -1347,7 +1304,6 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
                       ),
                     ],
                   ),
-                ),
                 ),
               ),
               // Fast scrub sidebar (RIGHT)
@@ -1592,7 +1548,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     final repsText = suggestedReps != null ? ' × $suggestedReps' : '';
 
     return Padding(
-      padding: const EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 0),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
       child: Row(
         children: [
           ActionChip(
@@ -1665,7 +1621,7 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1768,7 +1724,6 @@ extension MinimalSetEditSheetExtension on BuildContext {
     int? suggestedReps,
     String? suggestedSource,
     ExerciseCountingMode countingMode = ExerciseCountingMode.weighted,
-    bool startInManualMode = false,
   }) {
     return ModalService.showSheet<void>(this,
       isScrollControlled: true,
@@ -1789,7 +1744,6 @@ extension MinimalSetEditSheetExtension on BuildContext {
         suggestedReps: suggestedReps,
         suggestedSource: suggestedSource,
         countingMode: countingMode,
-        startInManualMode: startInManualMode,
       ),
     );
   }
