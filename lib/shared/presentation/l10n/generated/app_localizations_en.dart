@@ -8963,7 +8963,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error => 'Error';
 
   @override
-  String get goHome => 'Go Home';
+  String get goHome => 'Home';
 
   @override
   String errorLoading(String error) {
@@ -15781,7 +15781,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reference => '📚 \$reference';
 
   @override
-  String get setsCompleted => 'Sets Completed';
+  String setsCompleted(int count) {
+    return '$count sets';
+  }
 
   @override
   String get streakAttuale2 => 'Streak attuale';
@@ -27865,4 +27867,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get metronomeSettingSubtitle =>
       'Audible tick every second for tempo control';
+
+  @override
+  String get celebrationMotivational1 => 'Amazing work! You crushed it!';
+
+  @override
+  String get celebrationMotivational2 => 'Another step towards your goals!';
+
+  @override
+  String get celebrationMotivational3 => 'Consistency is your superpower!';
+
+  @override
+  String get celebrationMotivational4 => 'Your future self will thank you!';
+
+  @override
+  String get celebrationMotivational5 => 'Strong body, strong mind!';
+
+  @override
+  String get shareResult => 'Share';
 }

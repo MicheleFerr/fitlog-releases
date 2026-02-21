@@ -34242,5 +34242,42 @@
   "metronomeSettingSubtitle": "Audible tick every second for tempo control",
   "@metronomeSettingSubtitle": {
     "description": "Subtitle for TUT metronome toggle in workout settings"
+  },
+  "celebrationMotivational1": "Amazing work! You crushed it!",
+  "@celebrationMotivational1": {
+    "description": "Motivational message 1 for workout completion"
+  },
+  "celebrationMotivational2": "Another step towards your goals!",
+  "@celebrationMotivational2": {
+    "description": "Motivational message 2 for workout completion"
+  },
+  "celebrationMotivational3": "Consistency is your superpower!",
+  "@celebrationMotivational3": {
+    "description": "Motivational message 3 for workout completion"
+  },
+  "celebrationMotivational4": "Your future self will thank you!",
+  "@celebrationMotivational4": {
+    "description": "Motivational message 4 for workout completion"
+  },
+  "celebrationMotivational5": "Strong body, strong mind!",
+  "@celebrationMotivational5": {
+    "description": "Motivational message 5 for workout completion"
+  },
+  "setsCompleted": "{count} sets",
+  "@setsCompleted": {
+    "description": "Number of sets completed",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shareResult": "Share",
+  "@shareResult": {
+    "description": "Button to share workout result"
+  },
+  "goHome": "Home",
+  "@goHome": {
+    "description": "Short button label to go to home"
   }
 }

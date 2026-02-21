@@ -20978,5 +20978,21 @@
   "metronomeStart": "Metronomo",
   "metronomeStop": "Stop",
   "metronomeSettingTitle": "Metronomo TUT",
-  "metronomeSettingSubtitle": "Tick sonoro ogni secondo per il controllo del tempo"
+  "metronomeSettingSubtitle": "Tick sonoro ogni secondo per il controllo del tempo",
+  "celebrationMotivational1": "Fantastico! Hai spaccato!",
+  "celebrationMotivational2": "Un altro passo verso i tuoi obiettivi!",
+  "celebrationMotivational3": "La costanza è il tuo superpotere!",
+  "celebrationMotivational4": "Il te stesso del futuro ti ringrazierà!",
+  "celebrationMotivational5": "Corpo forte, mente forte!",
+  "setsCompleted": "{count} serie",
+  "@setsCompleted": {
+    "description": "Numero di serie completate",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shareResult": "Condividi",
+  "goHome": "Home"
 }

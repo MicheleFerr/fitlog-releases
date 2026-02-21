@@ -13,6 +13,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/workout/services/workout_share_service.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -44,21 +45,29 @@ class _WorkoutCompletionCelebrationState
     with TickerProviderStateMixin {
   late AnimationController _mainController;
   late AnimationController _confettiController;
+  late AnimationController _pulseController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
+  late Animation<double> _pulseAnimation;
 
   // Countdown
   int _countdown = 5;
   Timer? _countdownTimer;
   bool _isCancelled = false;
+  bool _isSharing = false;
 
   // Confetti particles
   final List<_ConfettiParticle> _particles = [];
   final math.Random _random = math.Random();
 
+  // Motivational message index (random per session)
+  late int _motivationalIndex;
+
   @override
   void initState() {
     super.initState();
+
+    _motivationalIndex = _random.nextInt(5);
 
     // Main animation for card
     _mainController = AnimationController(
@@ -83,12 +92,22 @@ class _WorkoutCompletionCelebrationState
       vsync: this,
     );
 
+    // Pulse animation for trophy
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.08).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+
     // Generate confetti particles
     _generateConfetti();
 
     // Start animations
     _mainController.forward();
     _confettiController.repeat();
+    _pulseController.repeat(reverse: true);
 
     // Haptic feedback
     HapticFeedback.heavyImpact();
@@ -138,6 +157,7 @@ class _WorkoutCompletionCelebrationState
     _countdownTimer?.cancel();
     _mainController.dispose();
     _confettiController.dispose();
+    _pulseController.dispose();
     super.dispose();
   }
 
@@ -156,6 +176,78 @@ class _WorkoutCompletionCelebrationState
     });
   }
 
+  Future<void> _share() async {
+    if (_isSharing) return;
+    // Pause countdown while sharing
+    _isCancelled = true;
+    _countdownTimer?.cancel();
+    setState(() => _isSharing = true);
+
+    HapticFeedback.lightImpact();
+
+    final success = await WorkoutShareService.shareWorkout(
+      context: context,
+      workout: widget.workout,
+      userName: '',
+      elapsedDuration: widget.workout.duration ?? Duration.zero,
+    );
+
+    if (!mounted) return;
+    setState(() => _isSharing = false);
+
+    // Resume countdown after share
+    if (success) {
+      _isCancelled = false;
+      _startCountdown();
+    } else {
+      _isCancelled = false;
+      _startCountdown();
+    }
+  }
+
+  String _getMotivationalMessage(BuildContext context) {
+    final l10n = context.l10n;
+    return switch (_motivationalIndex) {
+      0 => l10n.celebrationMotivational1,
+      1 => l10n.celebrationMotivational2,
+      2 => l10n.celebrationMotivational3,
+      3 => l10n.celebrationMotivational4,
+      _ => l10n.celebrationMotivational5,
+    };
+  }
+
+  // --- Computed stats ---
+
+  int get _exerciseCount => widget.workout.exercises.length;
+
+  int get _setsCount => widget.workout.exercises.fold<int>(
+        0,
+        (total, ex) => total + ex.sets.where((s) => s.isCompleted).length,
+      );
+
+  double get _totalVolume => widget.workout.exercises.fold<double>(
+        0,
+        (total, ex) =>
+            total +
+            ex.sets
+                .where((s) => s.isCompleted && !s.isWarmup)
+                .fold<double>(
+                  0,
+                  (sum, s) =>
+                      sum + (s.weight ?? 0) * (s.actualReps ?? s.reps ?? 0),
+                ),
+      );
+
+  double get _avgRpe {
+    final rpes = widget.workout.exercises
+        .expand((e) => e.sets)
+        .where((s) => s.isCompleted && !s.isWarmup && s.rpe != null)
+        .map((s) => s.rpe!)
+        .toList();
+    if (rpes.isEmpty) return 0;
+    return rpes.reduce((a, b) => a + b) / rpes.length;
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeColors = _getThemeColors(context);
@@ -171,7 +263,7 @@ class _WorkoutCompletionCelebrationState
             child: GestureDetector(
               onTap: () {}, // Don't dismiss on tap
               child: Container(
-                color: colorScheme.onSurface.withValues(alpha: 0.7),
+                color: colorScheme.scrim.withValues(alpha: 0.6),
               ),
             ),
           ),
@@ -225,80 +317,42 @@ class _WorkoutCompletionCelebrationState
     final maxCardHeight = screenHeight * 0.75;
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 24),
       constraints: BoxConstraints(maxHeight: maxCardHeight),
       decoration: BoxDecoration(
-        // ✅ Solid background with proper border
         color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: colorScheme.primary.withValues(alpha: 0.5),
-          width: 2,
-        ),
+        borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: colorScheme.primary.withValues(alpha: 0.3),
-            blurRadius: 24,
-            offset: const Offset(0, 12),
+            color: colorScheme.primary.withValues(alpha: 0.25),
+            blurRadius: 40,
+            offset: const Offset(0, 16),
+            spreadRadius: 0,
+          ),
+          BoxShadow(
+            color: colorScheme.shadow.withValues(alpha: 0.1),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
+      clipBehavior: Clip.antiAlias,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Header with gradient
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [colorScheme.primary, colorScheme.secondary],
-              ),
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(22),
-              ),
-            ),
-            child: Column(
-              children: [
-                // Trophy icon
-                _buildAnimatedIcon(context),
-                const SizedBox(height: 12),
-                // Title
-                Text(
-                  context.l10n.workoutComplete,
-                  style: context.textTheme.headlineSmall?.copyWith(
-                    color: colorScheme.onPrimary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 4),
-                // Workout name
-                Text(
-                  widget.workout.name,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    color: colorScheme.onPrimary.withValues(alpha: 0.9),
-                    fontWeight: FontWeight.w500,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
+          _buildHeader(context),
 
-          // Exercise list (scrollable)
+          // Content (scrollable)
           Flexible(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Stats summary row
-                  _buildStatsRow(context),
-                  const SizedBox(height: 16),
+                  // Stats grid
+                  _buildStatsGrid(context),
+                  const SizedBox(height: 20),
 
                   // Exercise details header
                   Text(
@@ -310,200 +364,201 @@ class _WorkoutCompletionCelebrationState
                   ),
                   const SizedBox(height: 8),
 
-                  // Exercise list with details
+                  // Exercise compact list
                   ...widget.workout.exercises.map(
-                    (exercise) => _buildExerciseDetail(context, exercise),
+                    (exercise) => _buildExerciseCompact(context, exercise),
                   ),
+                  const SizedBox(height: 8),
                 ],
               ),
             ),
           ),
 
-          // Footer with countdown and buttons
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(22),
-              ),
-            ),
-            child: Column(
-              children: [
-                // Countdown text
-                _buildCountdownIndicator(context),
-                const SizedBox(height: 12),
-
-                // Action buttons
-                Row(
-                  children: [
-                    // Cancel button
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: _cancel,
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: Text(context.l10n.cancel),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    // Continue button
-                    Expanded(
-                      flex: 2,
-                      child: FilledButton(
-                        onPressed: _dismiss,
-                        style: FilledButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: Text(context.l10n.continueToHome),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          // Footer with share, countdown, and buttons
+          _buildFooter(context),
         ],
       ),
     );
   }
 
-  Widget _buildCountdownIndicator(BuildContext context) {
+  Widget _buildHeader(BuildContext context) {
     final colorScheme = context.colors;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          AppIcons.timer,
-          size: AppIconSize.small,
-          color: colorScheme.onSurfaceVariant,
-        ),
-        const SizedBox(width: 8),
-        Text(
-          context.l10n.redirectingToHome(_countdown.toString()),
-          style: context.textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(width: 8),
-        // Animated countdown number
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          transitionBuilder: (child, animation) {
-            return ScaleTransition(
-              scale: animation,
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          child: Container(
-            key: ValueKey(_countdown),
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              color: colorScheme.primary.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                '$_countdown',
-                style: context.textTheme.titleMedium?.copyWith(
-                  color: colorScheme.primary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAnimatedIcon(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _mainController,
-      builder: (context, child) {
-        final pulse =
-            (math.sin(_mainController.value * math.pi * 4) * 0.1) + 1.0;
-        final onPrimaryColor = context.colors.onPrimary;
-        return Transform.scale(
-          scale: pulse,
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: onPrimaryColor.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: onPrimaryColor.withValues(alpha: 0.3),
-                  blurRadius: 20,
-                  spreadRadius: 2,
-                ),
-              ],
-            ),
-            child: Icon(
-              AppIcons.checkCircle,
-              size: AppIconSize.xlarge,
-              color: onPrimaryColor,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildStatsRow(BuildContext context) {
-    final colorScheme = context.colors;
-    final exerciseCount = widget.workout.exercises.length;
-    final setsCount = widget.workout.exercises.fold<int>(
-      0,
-      (total, ex) => total + ex.sets.where((s) => s.isCompleted).length,
-    );
-    final duration = widget.workout.duration ?? Duration.zero;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
       decoration: BoxDecoration(
-        color: colorScheme.primaryContainer.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: colorScheme.primary.withValues(alpha: 0.2)),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colorScheme.primary,
+            colorScheme.primary.withValues(alpha: 0.85),
+            colorScheme.secondary,
+          ],
+          stops: const [0.0, 0.6, 1.0],
+        ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Column(
         children: [
-          _buildStat(
-            context,
-            icon: AppIcons.workout,
-            value: '$exerciseCount',
-            label: context.l10n.exercises,
+          // Trophy icon with animated pulse
+          ScaleTransition(
+            scale: _pulseAnimation,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: colorScheme.onPrimary.withValues(alpha: 0.2),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: colorScheme.onPrimary.withValues(alpha: 0.15),
+                    blurRadius: 24,
+                    spreadRadius: 4,
+                  ),
+                ],
+              ),
+              child: Icon(
+                AppIcons.trophy,
+                size: AppIconSize.xxlarge,
+                color: colorScheme.onPrimary,
+              ),
+            ),
           ),
-          _buildDivider(context),
-          _buildStat(
-            context,
-            icon: AppIcons.repeat,
-            value: '$setsCount',
-            label: context.l10n.sets,
+          const SizedBox(height: 16),
+
+          // Title
+          Text(
+            context.l10n.workoutComplete,
+            style: context.textTheme.headlineSmall?.copyWith(
+              color: colorScheme.onPrimary,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
           ),
-          _buildDivider(context),
-          _buildStat(
-            context,
-            icon: AppIcons.timer,
-            value: _formatDuration(duration),
-            label: context.l10n.duration,
+          const SizedBox(height: 4),
+
+          // Workout name
+          Text(
+            widget.workout.name,
+            style: context.textTheme.titleMedium?.copyWith(
+              color: colorScheme.onPrimary.withValues(alpha: 0.85),
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 8),
+
+          // Motivational message
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            decoration: BoxDecoration(
+              color: colorScheme.onPrimary.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              _getMotivationalMessage(context),
+              style: context.textTheme.labelMedium?.copyWith(
+                color: colorScheme.onPrimary.withValues(alpha: 0.9),
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildStat(
+  Widget _buildStatsGrid(BuildContext context) {
+    final colorScheme = context.colors;
+    final measurementUnit = ref.watch(
+      appConfigProvider.select((c) => c.measurementUnit),
+    );
+    final duration = widget.workout.duration ?? Duration.zero;
+    final hasRpe = _avgRpe > 0;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          // First row: Exercises, Sets, Duration
+          Row(
+            children: [
+              Expanded(
+                child: _buildStatItem(
+                  context,
+                  icon: AppIcons.workout,
+                  value: '$_exerciseCount',
+                  label: context.l10n.exercises,
+                ),
+              ),
+              _buildStatDivider(context),
+              Expanded(
+                child: _buildStatItem(
+                  context,
+                  icon: AppIcons.repeat,
+                  value: '$_setsCount',
+                  label: context.l10n.sets,
+                ),
+              ),
+              _buildStatDivider(context),
+              Expanded(
+                child: _buildStatItem(
+                  context,
+                  icon: AppIcons.timer,
+                  value: _formatDuration(duration),
+                  label: context.l10n.duration,
+                ),
+              ),
+            ],
+          ),
+
+          // Divider between rows
+          if (_totalVolume > 0 || hasRpe) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Divider(
+                height: 1,
+                color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+              ),
+            ),
+
+            // Second row: Volume and avg RPE
+            Row(
+              children: [
+                if (_totalVolume > 0)
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      icon: AppIcons.workout,
+                      value: _formatVolume(_totalVolume, measurementUnit),
+                      label: context.l10n.totalVolume,
+                    ),
+                  ),
+                if (_totalVolume > 0 && hasRpe) _buildStatDivider(context),
+                if (hasRpe)
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      icon: AppIcons.star,
+                      value: _avgRpe.toStringAsFixed(1),
+                      label: context.l10n.averageRpe,
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatItem(
     BuildContext context, {
     required IconData icon,
     required String value,
@@ -533,160 +588,256 @@ class _WorkoutCompletionCelebrationState
     );
   }
 
-  Widget _buildDivider(BuildContext context) {
+  Widget _buildStatDivider(BuildContext context) {
     return Container(
-      height: 40,
+      height: 36,
       width: 1,
-      color: context.colors.outlineVariant,
+      color: context.colors.outlineVariant.withValues(alpha: 0.5),
     );
   }
 
-  Widget _buildExerciseDetail(BuildContext context, Exercise exercise) {
+  Widget _buildExerciseCompact(BuildContext context, Exercise exercise) {
     final colorScheme = context.colors;
-    // PERFORMANCE FIX: Selective watching for only used field
     final measurementUnit = ref.watch(
       appConfigProvider.select((c) => c.measurementUnit),
     );
-    final useRir = ref.watch(useRirModeProvider);
-    final completedSets = exercise.sets.where((s) => s.isCompleted).toList();
+    final completedSets =
+        exercise.sets.where((s) => s.isCompleted && !s.isWarmup).toList();
 
     if (completedSets.isEmpty) return const SizedBox.shrink();
 
+    // Find best set (highest volume = weight * reps)
+    final bestSet = completedSets.reduce((best, current) {
+      final bestVol =
+          (best.weight ?? 0) * (best.actualReps ?? best.reps ?? 0);
+      final currentVol =
+          (current.weight ?? 0) * (current.actualReps ?? current.reps ?? 0);
+      return currentVol > bestVol ? current : best;
+    });
+
+    final bestWeight = bestSet.weight;
+    final bestReps = bestSet.actualReps ?? bestSet.reps;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
           // Exercise name
-          Text(
-            exercise.name,
-            style: context.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: colorScheme.onSurface,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  exercise.name,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                // Best set info
+                if (bestWeight != null && bestWeight > 0)
+                  Text(
+                    '${ bestWeight % 1 == 0 ? bestWeight.toInt() : bestWeight.toStringAsFixed(1)} $measurementUnit × $bestReps',
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+              ],
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 8),
 
-          // Sets table
-          ...completedSets.asMap().entries.map((entry) {
-            final index = entry.key;
-            final set = entry.value;
-            final isWarmup = set.isWarmup;
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-              child: Row(
-                children: [
-                  // Set number
-                  Container(
-                    width: 24,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      color: isWarmup
-                          ? context.warningColor.withValues(alpha: 0.2)
-                          : colorScheme.primary.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        isWarmup ? 'W' : '${index + 1}',
-                        style: context.textTheme.labelSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: isWarmup
-                              ? context.warningColor
-                              : colorScheme.primary,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-
-                  // Weight (if applicable)
-                  if (set.weight != null) ...[
-                    SizedBox(
-                      width: 60,
-                      child: Text(
-                        '${set.weight?.toStringAsFixed(1) ?? "-"} $measurementUnit',
-                        style: context.textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      ' × ',
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-
-                  // Reps
-                  SizedBox(
-                    width: 50,
-                    child: Text(
-                      '${set.actualReps ?? set.reps ?? "-"} reps',
-                      style: context.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-
-                  const Spacer(),
-
-                  // RPE/RIR (if available)
-                  if (set.rpe != null) ...[
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _getRpeColor(set.rpe!).withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        useRir ? 'RIR ${10 - set.rpe!}' : 'RPE ${set.rpe}',
-                        style: context.textTheme.labelSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: _getRpeColor(set.rpe!),
-                          fontSize: 10,
-                        ),
-                      ),
-                    ),
-                  ],
-
-                  // Checkmark
-                  const SizedBox(width: 8),
-                  Icon(
-                    AppIcons.checkCircle,
-                    size: AppIconSize.tiny,
-                    color: colorScheme.tertiary,
-                  ),
-                ],
+          // Sets count badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              context.l10n.setsCompleted(completedSets.length),
+              style: context.textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: colorScheme.primary,
               ),
-            );
-          }),
+            ),
+          ),
+
+          const SizedBox(width: 8),
+
+          // Checkmark
+          Icon(
+            AppIcons.checkCircle,
+            size: AppIconSize.small,
+            color: context.successColor,
+          ),
         ],
       ),
     );
   }
 
-  Color _getRpeColor(int rpe) {
-    if (rpe >= 9) return const Color(0xFFE53935); // Red - very hard
-    if (rpe >= 8) return const Color(0xFFFF9800); // Orange - hard
-    if (rpe >= 7) return const Color(0xFFFFC107); // Yellow - moderate
-    return const Color(0xFF4CAF50); // Green - easy
+  Widget _buildFooter(BuildContext context) {
+    final colorScheme = context.colors;
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        border: Border(
+          top: BorderSide(
+            color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+          ),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Countdown text
+          _buildCountdownIndicator(context),
+          const SizedBox(height: 12),
+
+          // Action buttons
+          Row(
+            children: [
+              // Cancel button
+              OutlinedButton(
+                onPressed: _cancel,
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                    horizontal: 16,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  side: BorderSide(
+                    color: colorScheme.outline.withValues(alpha: 0.5),
+                  ),
+                ),
+                child: Text(context.l10n.cancel),
+              ),
+              const SizedBox(width: 8),
+
+              // Share button
+              OutlinedButton(
+                onPressed: _isSharing ? null : _share,
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                    horizontal: 16,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  side: BorderSide(
+                    color: colorScheme.primary.withValues(alpha: 0.5),
+                  ),
+                ),
+                child: _isSharing
+                    ? SizedBox(
+                        width: AppIconSize.small,
+                        height: AppIconSize.small,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: colorScheme.primary,
+                        ),
+                      )
+                    : Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(AppIcons.share, size: AppIconSize.small),
+                          const SizedBox(width: 4),
+                          Text(context.l10n.shareResult),
+                        ],
+                      ),
+              ),
+              const SizedBox(width: 8),
+
+              // Primary: Go Home with countdown
+              Expanded(
+                child: FilledButton(
+                  onPressed: _dismiss,
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(AppIcons.home, size: AppIconSize.small),
+                      const SizedBox(width: 8),
+                      Text(context.l10n.goHome),
+                      if (_countdown > 0) ...[
+                        const SizedBox(width: 6),
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child: Container(
+                            key: ValueKey(_countdown),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 1,
+                            ),
+                            decoration: BoxDecoration(
+                              color: colorScheme.onPrimary.withValues(
+                                alpha: 0.25,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              '$_countdown',
+                              style: context.textTheme.labelSmall?.copyWith(
+                                color: colorScheme.onPrimary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCountdownIndicator(BuildContext context) {
+    final colorScheme = context.colors;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          AppIcons.timer,
+          size: AppIconSize.tiny,
+          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          context.l10n.redirectingToHome(_countdown.toString()),
+          style: context.textTheme.labelSmall?.copyWith(
+            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _formatVolume(double volume, String unit) {
+    if (volume >= 1000) return '${(volume / 1000).toStringAsFixed(1)}t';
+    return '${volume.toInt()} $unit';
   }
 
   String _formatDuration(Duration duration) {

@@ -16100,10 +16100,10 @@ abstract class AppLocalizations {
   /// **'Error'**
   String get error;
 
-  /// Go home button
+  /// Short button label to go to home
   ///
   /// In en, this message translates to:
-  /// **'Go Home'**
+  /// **'Home'**
   String get goHome;
 
   /// Error loading message
@@ -28122,11 +28122,11 @@ abstract class AppLocalizations {
   /// **'📚 \$reference'**
   String get reference;
 
-  /// From quick wins migration - 1 occurrences
+  /// Number of sets completed
   ///
   /// In en, this message translates to:
-  /// **'Sets Completed'**
-  String get setsCompleted;
+  /// **'{count} sets'**
+  String setsCompleted(int count);
 
   /// From quick wins migration - 1 occurrences
   ///
@@ -49793,6 +49793,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Audible tick every second for tempo control'**
   String get metronomeSettingSubtitle;
+
+  /// Motivational message 1 for workout completion
+  ///
+  /// In en, this message translates to:
+  /// **'Amazing work! You crushed it!'**
+  String get celebrationMotivational1;
+
+  /// Motivational message 2 for workout completion
+  ///
+  /// In en, this message translates to:
+  /// **'Another step towards your goals!'**
+  String get celebrationMotivational2;
+
+  /// Motivational message 3 for workout completion
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency is your superpower!'**
+  String get celebrationMotivational3;
+
+  /// Motivational message 4 for workout completion
+  ///
+  /// In en, this message translates to:
+  /// **'Your future self will thank you!'**
+  String get celebrationMotivational4;
+
+  /// Motivational message 5 for workout completion
+  ///
+  /// In en, this message translates to:
+  /// **'Strong body, strong mind!'**
+  String get celebrationMotivational5;
+
+  /// Button to share workout result
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get shareResult;
 }
 
 class _AppLocalizationsDelegate
