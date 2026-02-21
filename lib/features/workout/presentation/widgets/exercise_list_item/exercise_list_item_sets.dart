@@ -742,10 +742,6 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       fontWeight: FontWeight.w500,
     );
 
-    // Fixed width for the weight column so × and reps always stay aligned
-    // Accommodates up to "400.25 lbs" at bodyMedium size
-    const double weightColumnWidth = 76;
-
     switch (_cachedCountingMode) {
       case ExerciseCountingMode.weighted:
         // Weighted: Show weight × reps (with placeholders for null values)
@@ -755,30 +751,23 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         // If both null, show a single placeholder prompting edit
         if (!hasWeight && !hasReps) {
           return [
-            SizedBox(
-              width: weightColumnWidth,
-              child: Text(
-                '-- × -- reps',
-                style: placeholderStyle,
-                overflow: TextOverflow.ellipsis,
-              ),
+            Text(
+              '-- × -- reps',
+              style: placeholderStyle,
+              overflow: TextOverflow.ellipsis,
             ),
           ];
         }
 
         return [
-          SizedBox(
-            width: weightColumnWidth,
-            child: Text(
-              hasWeight
-                  ? set.weight!.formatWeight(config.measurementUnit)
-                  : '--',
-              style: (hasWeight ? valueStyle : placeholderStyle)?.copyWith(
-                fontFeatures: [const FontFeature.tabularFigures()],
-              ),
-              textAlign: TextAlign.end,
-              overflow: TextOverflow.ellipsis,
+          Text(
+            hasWeight
+                ? set.weight!.formatWeight(config.measurementUnit)
+                : '--',
+            style: (hasWeight ? valueStyle : placeholderStyle)?.copyWith(
+              fontFeatures: [const FontFeature.tabularFigures()],
             ),
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(width: 6),
           Text('×', style: context.textTheme.bodySmall),
