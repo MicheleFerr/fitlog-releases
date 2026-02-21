@@ -321,7 +321,7 @@ class AIChat extends _$AIChat {
         parameters: {
           'message_count': trimmedMessages.length,
           'function_calls_used': response.toolCall != null ? 1 : 0,
-          'has_tool_call': response.toolCall != null,
+          'has_tool_call': response.toolCall != null ? 1 : 0,
           'tool_name': response.toolCall?.name ?? 'none',
         },
       );
