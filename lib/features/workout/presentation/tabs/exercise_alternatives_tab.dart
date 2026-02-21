@@ -27,7 +27,7 @@ class ExerciseAlternativesTab extends ConsumerWidget {
         }
 
         return SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + context.tabBarInset),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

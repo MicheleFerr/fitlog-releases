@@ -94,7 +94,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + context.tabBarInset),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -518,6 +518,12 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     final hasValidDatabaseId =
         widget.exerciseId != null && !_looksLikeUuid(widget.exerciseId);
 
+    if (kDebugMode) {
+      debugPrint('[STRENGTH LEVEL] exerciseId=${widget.exerciseId}, '
+          'isUuid=${_looksLikeUuid(widget.exerciseId)}, '
+          'hasValidDbId=$hasValidDatabaseId');
+    }
+
     if (hasValidDatabaseId) {
       return _buildStrengthLevelWithKey(widget.exerciseId!);
     }
@@ -529,9 +535,8 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     return databaseIdAsync.when(
       data: (databaseId) {
         if (kDebugMode) {
-          debugPrint('[STRENGTH LEVEL] Database ID lookup by name:');
-          debugPrint('   Exercise name: ${widget.exerciseName}');
-          debugPrint('   Found database ID: $databaseId');
+          debugPrint('[STRENGTH LEVEL] Name lookup: '
+              '"${widget.exerciseName}" -> databaseId=$databaseId');
         }
 
         if (databaseId == null) {
@@ -544,7 +549,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       },
       loading: () => _buildStrengthLevelCardWrapper(const LoadingIndicator()),
       error: (error, stack) {
-        if (kDebugMode) debugPrint('Error looking up database ID: $error');
+        if (kDebugMode) {
+          debugPrint('[STRENGTH LEVEL] Error looking up database ID: $error');
+        }
         return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
       },
     );
@@ -593,17 +600,26 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       return _buildStrengthLevelCardWrapper(const LoadingIndicator());
     }
     if (mappingAsync.hasError || !mappingAsync.hasValue) {
+      if (kDebugMode) {
+        debugPrint('[STRENGTH LEVEL] Mapping error/no value for: $lookupKey '
+            '(hasError=${mappingAsync.hasError}, hasValue=${mappingAsync.hasValue})');
+        if (mappingAsync.hasError) debugPrint('   Error: ${mappingAsync.error}');
+      }
       return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
     }
 
     final mapping = mappingAsync.value;
     if (mapping == null || mapping.standardId == null) {
       if (kDebugMode) {
-        debugPrint(
-          '[STRENGTH LEVEL] Mapping null or no standardId for: $lookupKey',
-        );
+        debugPrint('[STRENGTH LEVEL] Mapping null or no standardId for: '
+            '$lookupKey (mapping=$mapping, standardId=${mapping?.standardId})');
       }
       return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
+    }
+
+    if (kDebugMode) {
+      debugPrint('[STRENGTH LEVEL] Mapping found: '
+          'exerciseId=$lookupKey -> standardId=${mapping.standardId}');
     }
 
     // Now we have standardId - safe to watch
@@ -616,11 +632,19 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       return _buildStrengthLevelCardWrapper(const LoadingIndicator());
     }
     if (standardAsync.hasError || historyAsync.hasError) {
+      if (kDebugMode) {
+        debugPrint('[STRENGTH LEVEL] Standard/history error '
+            '(std=${standardAsync.hasError}, hist=${historyAsync.hasError})');
+      }
       return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
     }
 
     final standard = standardAsync.value;
     if (standard == null) {
+      if (kDebugMode) {
+        debugPrint('[STRENGTH LEVEL] Standard is null '
+            'for standardId=${mapping.standardId}');
+      }
       return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
     }
 

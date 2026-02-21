@@ -56,7 +56,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
             );
           },
           child: ListView.builder(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + context.tabBarInset),
             itemCount: historyList.length,
             itemBuilder: (context, index) {
               final dateGroup = historyList[index];
