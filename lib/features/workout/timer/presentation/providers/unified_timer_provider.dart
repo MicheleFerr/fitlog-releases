@@ -1082,6 +1082,27 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         }
       }
 
+      // ✅ FIX: Start duration tracking for NEXT set when timer is skipped
+      // Without this, the set duration would include the rest timer time
+      if (_currentExerciseId != null && state?.currentSet != null) {
+        try {
+          final durationTracker = ref.read(setDurationTrackerProvider);
+          final nextSetNumber = state!.currentSet! + 1;
+          durationTracker.startSet(_currentExerciseId!, nextSetNumber);
+          if (kDebugMode) {
+            debugPrint(
+              '✅ [TIMER SKIP] Called startSet for exercise $_currentExerciseId, set $nextSetNumber (after skipping timer for set ${state!.currentSet})',
+            );
+          }
+        } catch (durationError) {
+          if (kDebugMode) {
+            debugPrint(
+              '❌ [TIMER SKIP] Error calling startSet: $durationError',
+            );
+          }
+        }
+      }
+
       await _saveState(immediate: true); // FIX C13: skip must persist immediately
 
       // Timer skipped - no audio will play
