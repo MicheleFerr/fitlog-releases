@@ -387,7 +387,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
   }
 
-  void startWorkout() {
+  Future<void> startWorkout() async {
     if (state != null) {
       // 📊 Track workout started
       final analytics = ref.read(analyticsServiceProvider);
@@ -399,6 +399,15 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         workoutName: state!.name,
         source: 'manual_start',
       );
+
+      // Auto-fill weights from history for free workouts (silent)
+      final userId = ref.read(authServiceProvider).currentUser?.uid;
+      if (userId != null && state!.templateId == null) {
+        state = await ref.read(weightAutoFillServiceProvider).fillFromHistory(
+          workout: state!,
+          userId: userId,
+        );
+      }
 
       state = state!.startWorkout();
 
