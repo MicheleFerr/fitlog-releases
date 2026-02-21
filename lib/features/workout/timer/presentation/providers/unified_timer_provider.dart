@@ -1926,13 +1926,12 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     // 🚫 SKIP: If WorkoutSession Live Activity is active, don't start the old timer LA
     // Instead, transition the WorkoutSession LA to REST mode
     try {
-      // FIX: Use Future.microtask to break circular dependency.
-      // WorkoutSessionLANotifier.build() does ref.listen(unifiedTimerProvider),
-      // so reading workoutSessionLAProvider during timer execution can trigger
-      // a circular dependency if the LA provider hasn't been initialized yet.
-      await Future.microtask(() {});
-      final workoutSessionLAState = ref.read(workoutSessionLAProvider);
-      if (workoutSessionLAState.isActive) {
+      // FIX: Read the SERVICE directly instead of the Notifier provider to break
+      // circular dependency. WorkoutSessionLANotifier.build() does
+      // ref.listen(unifiedTimerProvider), so reading workoutSessionLAProvider
+      // would trigger its build and create a cycle.
+      final laService = ref.read(workoutSessionLAServiceProvider);
+      if (laService.isActive) {
         if (kDebugMode) {
           debugPrint(
             '📱 [TIMER-LA] WorkoutSession LA is active - transitioning to REST mode',
@@ -1952,7 +1951,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           targetExercise ??= workout.exercises.firstOrNull;
 
           if (targetExercise != null) {
-            // Transition WorkoutSession LA to REST mode
+            // Transition WorkoutSession LA to REST mode via notifier
             await ref
                 .read(workoutSessionLAProvider.notifier)
                 .transitionToRest(
