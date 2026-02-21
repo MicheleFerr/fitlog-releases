@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/features/workout/data/services/workout_sessio
     show WorkoutSessionMode;
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_auto_save_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/metronome_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart' show WorkoutStatus;
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/timer/domain/services/notification_service.dart';
@@ -145,6 +146,18 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           }
         } catch (e) {
           debugPrint('❌ [iOS AUDIO] Error transitioning LA to exercise: $e');
+        }
+      }
+    }
+
+    // Route metronome tick events from the native iOS side to MetronomeNotifier.
+    if (call.method == 'metronomeTick') {
+      final seconds = call.arguments as int? ?? 0;
+      try {
+        ref.read(metronomeProvider.notifier).updateFromNative(seconds);
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('[Metronome] Error updating from native: $e');
         }
       }
     }
