@@ -1,3 +1,5 @@
+import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
+
 /// Context for warmup generation — determines protocol aggressiveness.
 enum WarmupContext {
   /// Full warmup protocol — used for the first compound exercise
@@ -7,6 +9,10 @@ enum WarmupContext {
   /// Abbreviated warmup — used when the muscle group has already been
   /// warmed up by a previous exercise (e.g., Incline DB after Bench Press).
   subsequent,
+
+  /// No warmup needed — the exact same muscle group was already trained
+  /// (not just synergistic, but direct match). Skip warmup entirely.
+  alreadyWarm,
 }
 
 /// Science-based warmup calculator service.
@@ -17,6 +23,51 @@ enum WarmupContext {
 ///
 /// References: PMC7558980, McGowan 2015, Ribeiro 2014, SBS Dec 2024.
 class WarmupCalculatorService {
+  /// Synergistic muscle groups — maps each category to categories it
+  /// partially warms up via compound movements.
+  ///
+  /// Science basis:
+  /// - Chest pressing → shoulders (anterior deltoid) + arms (triceps)
+  /// - Back pulling → arms (biceps) + shoulders (rear deltoid)
+  /// - Shoulder pressing → arms (triceps) + chest (clavicular head)
+  /// - Legs (squat/deadlift) → abs (core stabilization)
+  static const Map<ExerciseCategory, Set<ExerciseCategory>>
+      synergisticCategories = {
+    ExerciseCategory.chest: {ExerciseCategory.shoulders, ExerciseCategory.arms},
+    ExerciseCategory.back: {ExerciseCategory.arms, ExerciseCategory.shoulders},
+    ExerciseCategory.shoulders: {ExerciseCategory.arms, ExerciseCategory.chest},
+    ExerciseCategory.legs: {ExerciseCategory.abs},
+  };
+
+  /// Determines warmup context for an exercise given previously trained
+  /// categories in the session.
+  ///
+  /// Returns:
+  /// - [WarmupContext.alreadyWarm] — same category was already trained
+  ///   (muscle is fully irrorated, no warmup needed)
+  /// - [WarmupContext.subsequent] — a synergistic category was trained
+  ///   (muscle partially warm, 1 abbreviated set)
+  /// - [WarmupContext.firstCompound] — no prior work for this muscle group
+  static WarmupContext determineContext(
+    ExerciseCategory category,
+    Set<ExerciseCategory> categoriesAlreadyTrained,
+  ) {
+    // Direct match: same muscle group already trained → skip warmup
+    if (categoriesAlreadyTrained.contains(category)) {
+      return WarmupContext.alreadyWarm;
+    }
+
+    // Synergistic match: a category that warms this one was trained
+    for (final trained in categoriesAlreadyTrained) {
+      final synergies = synergisticCategories[trained];
+      if (synergies != null && synergies.contains(category)) {
+        return WarmupContext.subsequent;
+      }
+    }
+
+    return WarmupContext.firstCompound;
+  }
+
   /// Default available plates in kg (standard gym setup).
   static const List<double> defaultPlates = [
     25.0,
@@ -429,9 +480,12 @@ class WarmupCalculatorService {
   }) {
     if (targetWeight <= 0) return [];
 
+    // Already warm: same muscle group was directly trained → no warmup needed
+    if (warmupContext == WarmupContext.alreadyWarm) return [];
+
     final plates = availablePlates ?? defaultPlates;
 
-    // Subsequent exercises: abbreviated single set
+    // Subsequent exercises (synergistic warmup): abbreviated single set
     if (warmupContext == WarmupContext.subsequent) {
       final weight55 = targetWeight * 0.55;
       final roundedWeight = isBarbell

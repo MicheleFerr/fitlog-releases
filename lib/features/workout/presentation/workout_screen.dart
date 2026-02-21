@@ -1027,8 +1027,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
   /// - Skip if already has warmup sets
   /// - Skip if isolation/stretching/cardio (via movementType)
   /// - Skip if no working sets or weight = 0
+  /// - Same category already trained → skip (muscle already irrorated)
+  /// - Synergistic category trained → abbreviated warmup (1 set)
   /// - First compound per category → full warmup protocol
-  /// - Subsequent same-category → abbreviated warmup (1 set)
   void _generateAllWarmups(Workout workout) {
     final warmupCalc = WarmupCalculatorService();
     final notifier = ref.read(currentWorkoutProvider.notifier);
@@ -1049,10 +1050,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       final targetWeight = workingSets.first.weight ?? 0.0;
       if (targetWeight <= 0) continue;
 
-      // Determine warmup context based on category
-      final warmupContext = categoriesWarmedUp.contains(exercise.category)
-          ? WarmupContext.subsequent
-          : WarmupContext.firstCompound;
+      // Determine warmup context: direct match → skip, synergistic → abbreviated
+      final warmupContext = WarmupCalculatorService.determineContext(
+        exercise.category,
+        categoriesWarmedUp,
+      );
 
       // Determine if barbell from exercise name (no _exerciseData at this level)
       final isBarbell = warmupCalc.isLikelyBarbellExercise(exercise.name);
@@ -1063,6 +1065,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
         warmupContext: warmupContext,
         isBarbell: isBarbell,
       );
+
+      // Always track that this category has been trained (even if skipped)
+      categoriesWarmedUp.add(exercise.category);
 
       if (warmupSets.isEmpty) continue;
 
@@ -1100,7 +1105,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       );
       notifier.updateExercise(exercise.id, updatedExercise);
 
-      categoriesWarmedUp.add(exercise.category);
       generatedCount++;
     }
 

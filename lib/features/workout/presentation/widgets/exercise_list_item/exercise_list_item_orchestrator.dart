@@ -1258,8 +1258,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     return _isCompoundExercise();
   }
 
-  /// Determines warmup context by checking if a previous exercise in this
-  /// workout already has warmup sets for the same muscle category.
+  /// Determines warmup context by checking if previous exercises in this
+  /// workout have already trained the same or synergistic muscle groups.
+  ///
+  /// Uses [WarmupCalculatorService.determineContext] which considers:
+  /// - Direct match (same category) → [WarmupContext.alreadyWarm] (skip)
+  /// - Synergistic match (e.g. chest→shoulders) → [WarmupContext.subsequent]
+  /// - No prior work → [WarmupContext.firstCompound]
   WarmupContext _determineWarmupContext() {
     final currentWorkout = ref.read(currentWorkoutProvider);
     if (currentWorkout == null) return WarmupContext.firstCompound;
@@ -1268,14 +1273,20 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     final myCategory = widget.exercise.category;
     final myIndex = exercises.indexWhere((e) => e.id == widget.exercise.id);
 
-    // Look at exercises before this one
+    // Collect categories trained before this exercise
+    // An exercise counts as "trained" if it has any non-warmup sets
+    final categoriesTrained = <ExerciseCategory>{};
     for (var i = 0; i < myIndex; i++) {
       final ex = exercises[i];
-      if (ex.category == myCategory && ex.sets.any((s) => s.isWarmup)) {
-        return WarmupContext.subsequent;
+      if (ex.sets.any((s) => !s.isWarmup)) {
+        categoriesTrained.add(ex.category);
       }
     }
-    return WarmupContext.firstCompound;
+
+    return WarmupCalculatorService.determineContext(
+      myCategory,
+      categoriesTrained,
+    );
   }
 
   /// Add or edit warmup sets for the exercise.
