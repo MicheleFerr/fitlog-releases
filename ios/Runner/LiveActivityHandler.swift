@@ -572,12 +572,14 @@ class LiveActivityHandler: NSObject {
         
         // Find the activity by ID
         let activity = Activity<GymBroTimerAttributes>.activities.first { $0.id == activityId }
-        
+
         guard let activity = activity else {
-            result(FlutterError(code: "ACTIVITY_NOT_FOUND", message: "Activity not found", details: nil))
+            // Activity may have been cleaned up by iOS already
+            Logger.shared.debug("ℹ️ Live Activity '\(activityId)' not found for update (stale)", category: .general)
+            result(true)
             return
         }
-        
+
         // Extract update parameters
         guard let remainingSeconds = args["remainingSeconds"] as? Int,
               let totalSeconds = args["totalSeconds"] as? Int,
@@ -940,12 +942,14 @@ class LiveActivityHandler: NSObject {
         
         // Find the activity by ID
         let activity = Activity<GymBroTimerAttributes>.activities.first { $0.id == activityId }
-        
+
         guard let activity = activity else {
-            result(FlutterError(code: "ACTIVITY_NOT_FOUND", message: "Activity not found", details: nil))
+            // Activity already ended or cleaned up by iOS - this is the desired end state
+            Logger.shared.debug("ℹ️ Live Activity '\(activityId)' not found (already ended)", category: .general)
+            result(true)
             return
         }
-        
+
         // Create final content state
         let finalContentState = GymBroTimerAttributes.ContentState(
             remainingSeconds: 0,

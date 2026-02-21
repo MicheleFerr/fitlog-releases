@@ -810,6 +810,13 @@ service cloud.firestore {
           request.auth.uid == userId;
       }
 
+      // ============= ACHIEVEMENTS SUBCOLLECTION =============
+      // Path: users/{userId}/achievements/{achievementId}
+      // Added: 2026-02-21 - Fix permission denied for achievement checks
+      match /achievements/{achievementId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
       // ============= USER SETTINGS SUBCOLLECTION (NOTIFICATION SETTINGS) =============
       // Path: users/{userId}/settings/notifications
       // Added: 2025-11-25 for notification system v2.0

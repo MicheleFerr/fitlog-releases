@@ -195,19 +195,21 @@ final historicalSleepProvider = FutureProvider.autoDispose<List<double>?>((
 /// - Historical workout data - for baselines
 final personalCalibrationProvider =
     FutureProvider.autoDispose<PersonalCalibration>((ref) async {
-      // Get current user ID
+      // FIX: Read ALL dependencies synchronously BEFORE any async work
+      // This prevents "Cannot use Ref after disposed" race condition
       final userAsync = ref.watch(firebaseUserProvider);
       final userId = userAsync.value?.uid ?? 'anonymous';
-
-      // Get user questionnaire if available
       final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
 
-      // Get HealthKit data (sleep, HRV, resting HR)
-      final healthData = await ref.watch(healthDataSnapshotProvider.future);
+      // Collect all futures synchronously (no await between ref.watch calls)
+      final healthDataFuture = ref.watch(healthDataSnapshotProvider.future);
+      final historicalHrvFuture = ref.watch(historicalHrvProvider.future);
+      final historicalSleepFuture = ref.watch(historicalSleepProvider.future);
 
-      // Get historical HRV and sleep data for baselines
-      final historicalHrv = await ref.watch(historicalHrvProvider.future);
-      final historicalSleep = await ref.watch(historicalSleepProvider.future);
+      // Now await all futures (ref.watch calls are done, safe to await)
+      final healthData = await healthDataFuture;
+      final historicalHrv = await historicalHrvFuture;
+      final historicalSleep = await historicalSleepFuture;
 
       // Calculate calibration
       final calibration = CalibrationService.calculateCalibration(

@@ -2058,15 +2058,50 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
   /// Stop iOS Live Activity
   Future<void> _stopLiveActivity({String dismissalPolicy = 'immediate'}) async {
+    // Guard: skip if no Live Activity is active or no valid ID
+    if (state?.liveActivityActive != true || state?.liveActivityId == null) {
+      debugPrint('ℹ️ [UnifiedTimer] No active Live Activity to stop');
+      // Still clear state in case of stale flags
+      if (state != null && state!.liveActivityActive) {
+        state = state!.copyWith(
+          liveActivityActive: false,
+          liveActivityId: null,
+        );
+        await _saveState();
+      }
+      return;
+    }
+
     try {
       // Use the correct channel for Live Activities
       await _unifiedChannel.invokeMethod('endLiveActivity', {
-        'activityId':
-            state?.liveActivityId ?? 'current', // Use saved ID or fallback
+        'activityId': state!.liveActivityId,
         'dismissalPolicy': dismissalPolicy,
       });
 
       // Clear the activity ID from state
+      state = state!.copyWith(
+        liveActivityActive: false,
+        liveActivityId: null,
+      );
+      await _saveState();
+    } catch (e, stackTrace) {
+      // ACTIVITY_NOT_FOUND is expected when activity was already cleaned up by iOS
+      final isActivityNotFound = e is PlatformException && e.code == 'ACTIVITY_NOT_FOUND';
+      if (isActivityNotFound) {
+        debugPrint('ℹ️ [UnifiedTimer] Live Activity already ended (expected)');
+      } else {
+        debugPrint('⚠️ [UnifiedTimer] Error stopping Live Activity: $e');
+        unawaited(
+          FirebaseCrashlytics.instance.recordError(
+            e,
+            stackTrace,
+            reason: 'UnifiedTimer operation failed',
+            fatal: false,
+          ),
+        );
+      }
+      // Always clear state regardless of error
       if (state != null) {
         state = state!.copyWith(
           liveActivityActive: false,
@@ -2074,16 +2109,6 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         );
         await _saveState();
       }
-    } catch (e, stackTrace) {
-      debugPrint('⚠️ [UnifiedTimer] Error: $e');
-      unawaited(
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          stackTrace,
-          reason: 'UnifiedTimer operation failed',
-          fatal: false,
-        ),
-      );
     }
   }
 
