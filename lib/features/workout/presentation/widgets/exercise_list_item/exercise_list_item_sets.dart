@@ -744,7 +744,8 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
 
     // Fixed width for weight column — keeps × aligned vertically across sets
     // TextAlign.start so weight hugs the set number circle
-    const double weightColumnWidth = 76;
+    // 58px fits up to "200.5 kg" / "440 lbs" at bodyMedium size
+    const double weightColumnWidth = 58;
 
     switch (_cachedCountingMode) {
       case ExerciseCountingMode.weighted:
@@ -780,9 +781,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: 4),
           Text('×', style: context.textTheme.bodySmall),
-          const SizedBox(width: 6),
+          const SizedBox(width: 4),
           Text(
             hasReps
                 ? (set.actualReps != null && set.isCompleted
