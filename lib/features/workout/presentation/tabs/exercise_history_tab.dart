@@ -20,6 +20,14 @@ class ExerciseHistoryTab extends ConsumerStatefulWidget {
 
 class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
   final Map<String, bool> _expandedDates = {};
+  late DateFormat _dateFormatter;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final locale = Localizations.localeOf(context).toString();
+    _dateFormatter = DateFormat('EEEE, dd MMMM yyyy', locale);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +44,9 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
         // Converti la mappa in lista ordinata per data
         final historyList =
             historyMap.entries.map((entry) {
-              return {'date': entry.key, 'items': entry.value};
+              return (date: entry.key, items: entry.value);
             }).toList()..sort(
-              (a, b) =>
-                  (b['date'] as DateTime).compareTo(a['date'] as DateTime),
+              (a, b) => b.date.compareTo(a.date),
             );
 
         return RefreshIndicator(
@@ -53,8 +60,8 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
             itemCount: historyList.length,
             itemBuilder: (context, index) {
               final dateGroup = historyList[index];
-              final date = dateGroup['date'] as DateTime;
-              final items = dateGroup['items'] as List;
+              final date = dateGroup.date;
+              final items = dateGroup.items;
               final dateKey = date.toIso8601String();
               final isExpanded = _expandedDates[dateKey] ?? false;
 
@@ -120,17 +127,16 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
 
   Widget _buildDateGroup(
     DateTime date,
-    List items,
+    List<ExerciseHistoryData> items,
     bool isExpanded,
     String dateKey,
   ) {
-    final dateFormatter = DateFormat('EEEE, dd MMMM yyyy', 'it_IT');
-    final formattedDate = dateFormatter.format(date);
+    final formattedDate = _dateFormatter.format(date);
 
     // Calcola totali per questa data
     final totalSets = items.length;
     final totalVolume = items.fold<double>(0, (sum, item) {
-      final weight = double.tryParse(item.weight?.toString() ?? '0') ?? 0;
+      final weight = item.weight ?? 0.0;
       final reps = item.reps ?? 0;
       return sum + (weight * reps);
     });
@@ -163,7 +169,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                     child: Icon(
                       AppIcons.calendarToday,
                       color: context.colors.primary,
-                      size: 20,
+                      size: AppIconSize.small,
                     ),
                   ),
 

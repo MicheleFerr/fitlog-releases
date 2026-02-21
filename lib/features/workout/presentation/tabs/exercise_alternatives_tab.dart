@@ -3,56 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/alternative_exercises_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_widget.dart';
-
-/// Provider per filtrare esercizi alternativi basati sulla categoria
-final alternativeExercisesProvider = FutureProvider.autoDispose
-    .family<List<Exercise>, String>((ref, currentExerciseName) async {
-      // Get all exercises from hybrid repository
-      final allExercises = await ref.read(allExercisesProvider.future);
-
-      // Find the current exercise to get its category
-      final currentExercise = allExercises
-          .where((ex) => ex.nome == currentExerciseName)
-          .firstOrNull;
-
-      if (currentExercise == null || currentExercise.focus.isEmpty) {
-        // If current exercise not found or no focus, return empty list
-        return [];
-      }
-
-      // Get category from focus using the converter
-      final category = ExerciseConverter.mapFocusToCategory(
-        currentExercise.focus,
-      );
-
-      // Filter exercises by same category, excluding current exercise
-      final alternatives = allExercises.where((ex) {
-        if (ex.nome == currentExerciseName) {
-          return false; // Exclude current exercise
-        }
-        if (ex.focus.isEmpty) return false; // Skip exercises without focus
-
-        final exCategory = ExerciseConverter.mapFocusToCategory(ex.focus);
-        return exCategory == category;
-      }).toList();
-
-      // Sort by difficulty and limit to top 8 alternatives
-      alternatives.sort((a, b) {
-        final diffOrder = ['Principiante', 'Intermedio', 'Avanzato'];
-        final aIndex = diffOrder.indexOf(a.difficolta);
-        final bIndex = diffOrder.indexOf(b.difficolta);
-        if (aIndex != bIndex) return aIndex.compareTo(bIndex);
-        return a.nome.compareTo(b.nome);
-      });
-
-      return alternatives.take(8).toList();
-    });
 
 /// Tab Esercizi Alternativi: mostra esercizi simili nella stessa categoria
 class ExerciseAlternativesTab extends ConsumerWidget {
@@ -82,7 +37,7 @@ class ExerciseAlternativesTab extends ConsumerWidget {
                   Icon(
                     AppIcons.swapHoriz,
                     color: context.colors.primary,
-                    size: 28,
+                    size: AppIconSize.large,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -214,7 +169,7 @@ class ExerciseAlternativesTab extends ConsumerWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: color),
+          Icon(icon, size: AppIconSize.tiny, color: color),
           const SizedBox(width: 4),
           Text(
             label,
