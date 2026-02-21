@@ -642,7 +642,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 6),
               ],
 
               // Set details (adapted based on counting mode) + RPE + duration — all left-aligned
