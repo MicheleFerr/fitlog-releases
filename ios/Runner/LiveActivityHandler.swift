@@ -130,8 +130,9 @@ class LiveActivityHandler: NSObject {
 
         // End all activities
         Task {
+            // End GymBroTimer activities
             for activity in activities {
-                Logger.shared.debug("🏁 Ending Live Activity: \(activity.id)", category: .general)
+                Logger.shared.debug("🏁 Ending GymBroTimer Live Activity: \(activity.id)", category: .general)
 
                 // Cancel background audio for this activity
                 BackgroundAudioManager.shared.cancelScheduledAudio()
@@ -157,7 +158,12 @@ class LiveActivityHandler: NSObject {
                     dismissalPolicy: .immediate
                 )
 
-                Logger.shared.debug("✅ Live Activity ended: \(activity.id)", category: .general)
+                Logger.shared.debug("✅ GymBroTimer Live Activity ended: \(activity.id)", category: .general)
+            }
+
+            // Also end any orphaned WorkoutSession activities (e.g. after hot restart in debug mode)
+            if #available(iOS 17.0, *) {
+                await WorkoutSessionManager.shared.endAllSessionsForCleanup()
             }
 
             // Clear current activity reference

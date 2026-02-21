@@ -877,6 +877,12 @@ class WorkoutSessionManager: NSObject {
             Logger.shared.debug("🧹 Ended \(activities.count) existing WorkoutSession activities", category: .general)
         }
     }
+
+    /// Public cleanup: ends all WorkoutSession activities (including orphaned ones after hot restart).
+    /// Called by LiveActivityHandler.endAllActiveLiveActivitiesDirectly to prevent double-LA stacking.
+    func endAllSessionsForCleanup() async {
+        await endAllExistingSessions()
+    }
 }
 
 // MARK: - iOS 16 Fallback
