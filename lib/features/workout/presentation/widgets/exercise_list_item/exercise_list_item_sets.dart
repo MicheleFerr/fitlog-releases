@@ -25,6 +25,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:gymbro_flutter_new/shared/presentation/widgets/rpe_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/progress_badge.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/metronome_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/rpe_autoregulation_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_counting_mode_service.dart';
 
@@ -1598,6 +1599,16 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
 
           widget.onSetToggleComplete(updatedSet);
 
+          // ✅ FIX: Auto-adjust weight for remaining sets based on RPE
+          // Mirrors the auto-adjust behavior of rest timer in _handleStartRestTimer
+          if (rpe > 0 && actualWeight > 0) {
+            _autoAdjustWeightFromRpe(
+              completedSetId: set.id,
+              actualWeight: actualWeight,
+              actualRpe: rpe,
+            );
+          }
+
           // Haptic feedback
           try {
             HapticFeedbackService.setCompletion(ref);
@@ -1649,6 +1660,86 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         context,
         '${context.l10n.rpeAutoregulation}: ${context.l10n.weightAdjustedTo} ${suggestedWeight.toStringAsFixed(1)} ${widget.config.measurementUnit}',
       );
+    }
+  }
+
+  /// ✅ FIX: Auto-adjust weight for remaining sets based on RPE
+  ///
+  /// Mirrors the auto-adjust behavior of rest timer in _handleStartRestTimer.
+  /// Called after set completion when RPE is provided, calculates weight
+  /// adjustment using RPEAutoregulationService and applies to all remaining
+  /// incomplete sets.
+  void _autoAdjustWeightFromRpe({
+    required String completedSetId,
+    required double actualWeight,
+    required double actualRpe,
+  }) {
+    final config = ref.read(appConfigProvider);
+
+    // Check if auto-adjust is enabled
+    if (!(config.autoAdjustWeightFromRpe ?? false)) return;
+
+    final useRir = ref.read(useRirModeProvider);
+
+    // Same defaults as RPE selector bottom sheet
+    const defaultRPEMin = 7.0;
+    const defaultRPEMax = 9.0;
+    const defaultRIR = 2;
+
+    final WeightAdjustment adjustment;
+
+    if (!useRir) {
+      // RPE mode
+      final targetMin = widget.exercise.targetRPEMin ?? defaultRPEMin;
+      final targetMax = widget.exercise.targetRPEMax ?? defaultRPEMax;
+
+      adjustment = RPEAutoregulationService.calculateRPEAdjustment(
+        currentWeight: actualWeight,
+        actualRPE: actualRpe,
+        targetRPEMin: targetMin,
+        targetRPEMax: targetMax,
+      );
+    } else {
+      // RIR mode
+      final targetRIR = widget.exercise.targetRIR ?? defaultRIR;
+      final actualRIR = RPEAutoregulationService.rpeToRIR(actualRpe);
+
+      adjustment = RPEAutoregulationService.calculateRIRAdjustment(
+        currentWeight: actualWeight,
+        actualRIR: actualRIR,
+        targetRIR: targetRIR,
+      );
+    }
+
+    // Only apply if there's an actual adjustment
+    if (adjustment.shouldMaintain) return;
+
+    // Apply adjusted weight to all remaining incomplete sets
+    final updatedSets = List<ExerciseSet>.from(widget.exercise.sets);
+    bool hasUpdated = false;
+
+    for (int i = 0; i < updatedSets.length; i++) {
+      if (!updatedSets[i].isCompleted && updatedSets[i].id != completedSetId) {
+        updatedSets[i] = updatedSets[i].copyWith(
+          weight: adjustment.adjustedWeight,
+        );
+        hasUpdated = true;
+      }
+    }
+
+    if (hasUpdated) {
+      final updatedExercise = widget.exercise.copyWith(sets: updatedSets);
+      widget.onExerciseUpdate(updatedExercise);
+
+      // Show feedback (mirrors rest timer feedback pattern)
+      if (mounted) {
+        final sign = adjustment.shouldIncrease ? '+' : '';
+        final pct = adjustment.adjustmentPercent.toStringAsFixed(0);
+        SnackBarService.showInfo(
+          context,
+          '⚖️ ${context.l10n.rpeAutoregulation}: ${actualWeight.toStringAsFixed(1)} → ${adjustment.adjustedWeight.toStringAsFixed(1)} ${widget.config.measurementUnit} ($sign$pct%)',
+        );
+      }
     }
   }
 
