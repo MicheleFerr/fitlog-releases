@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/exercise_card_s
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/gym_equipment_profiles_provider.dart';
 
 /// Collapsible footer for Exercise Card
 ///
@@ -32,6 +33,7 @@ class ExerciseListItemFooter extends ConsumerStatefulWidget {
     this.onEditNotes,
     this.onShowTutExplanationModal,
     this.onShowTipsBottomSheet,
+    this.onShowPlatesCalculator,
   });
 
   final Exercise exercise;
@@ -39,6 +41,7 @@ class ExerciseListItemFooter extends ConsumerStatefulWidget {
   final VoidCallback? onEditNotes;
   final VoidCallback? onShowTutExplanationModal;
   final VoidCallback? onShowTipsBottomSheet;
+  final VoidCallback? onShowPlatesCalculator;
 
   @override
   ConsumerState<ExerciseListItemFooter> createState() =>
@@ -65,6 +68,7 @@ class _ExerciseListItemFooterState
   @override
   Widget build(BuildContext context) {
     final footerElements = ref.watch(exerciseFooterElementsProvider);
+    final showPlates = ref.watch(showExercisePlatesProvider);
 
     // Don't render if no elements configured
     if (footerElements.isEmpty) {
@@ -121,6 +125,20 @@ class _ExerciseListItemFooterState
                     }).toList(),
                   ),
                 ),
+                // Plates calculator icon (shown when enabled in settings)
+                if (showPlates && widget.onShowPlatesCalculator != null) ...[
+                  GestureDetector(
+                    onTap: widget.onShowPlatesCalculator,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                      child: Icon(
+                        AppIcons.calculate,
+                        size: AppIconSize.small,
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
                 // Expand/collapse icon
                 AnimatedRotation(
                   turns: _isExpanded ? 0.5 : 0,
@@ -222,7 +240,7 @@ class _FooterChip extends StatelessWidget {
   (IconData, String) _getIconAndLabel(BuildContext context) {
     switch (element) {
       case ExerciseFooterElement.tips:
-        return (AppIcons.lightbulb, context.l10n.tips);
+        return (AppIcons.trendUp, context.l10n.tips);
       case ExerciseFooterElement.tut:
         // Always show TUT value (use default 2-0-2-0 if not set)
         final tut = exercise.tut;
@@ -272,7 +290,7 @@ class _FooterExpandedContent extends StatelessWidget {
               hasTips) ...[
             _buildSection(
               context,
-              icon: AppIcons.lightbulb,
+              icon: AppIcons.trendUp,
               title: context.l10n.tips,
               content: formCues!,
             ),

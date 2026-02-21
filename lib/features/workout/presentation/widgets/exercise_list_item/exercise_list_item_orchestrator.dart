@@ -365,6 +365,18 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     showTutInfoBottomSheet(context, tutValue);
   }
 
+  void _handleShowPlatesCalculator() {
+    final workingSets = widget.exercise.sets
+        .where((s) => !s.isWarmup && (double.tryParse(s.weight.toString()) ?? 0) > 0)
+        .toList();
+    if (workingSets.isEmpty) return;
+    final nextSet = workingSets.where((s) => !s.isCompleted).firstOrNull;
+    final setToShow = nextSet ?? workingSets.first;
+    final targetWeight = double.tryParse(setToShow.weight.toString()) ?? 0;
+    if (targetWeight <= 0) return;
+    _showPlatesModal(context, targetWeight);
+  }
+
   /// Shows Tips bottom sheet with Info/Warmup/Prevention options
   /// Part of Exercise Card redesign - Tips moved from header to footer
   void _handleShowTipsBottomSheet() async {
