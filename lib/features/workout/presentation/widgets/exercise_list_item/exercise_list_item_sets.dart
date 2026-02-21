@@ -1605,7 +1605,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
             _autoAdjustWeightFromRpe(
               completedSetId: set.id,
               actualWeight: actualWeight,
-              actualRpe: rpe,
+              actualRpe: rpe.toDouble(),
             );
           }
 
