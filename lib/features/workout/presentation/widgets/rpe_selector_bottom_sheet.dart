@@ -46,10 +46,14 @@ class SupersetExerciseCompleteData {
     required this.actualReps,
     required this.actualWeight,
     required this.rpe,
+    this.actualMinutes = 0,
+    this.actualSeconds = 0,
   });
   final int actualReps;
   final double actualWeight;
   final int rpe;
+  final int actualMinutes;
+  final int actualSeconds;
 }
 
 class RpeSelectorBottomSheet extends ConsumerStatefulWidget {
@@ -181,22 +185,21 @@ class _RpeSelectorBottomSheetState
       _actualReps = storedData.actualReps;
       _actualWeight = storedData.actualWeight;
       _selectedRpe = storedData.rpe;
-      // Set is always completed when showing RPE selector
+      // Restore time data if saved
+      _actualMinutes = storedData.actualMinutes;
+      _actualSeconds = storedData.actualSeconds;
     } else {
       // Load from exercise set
       _actualReps = exerciseSet.actualReps ?? widget.targetReps;
       _actualWeight = exerciseSet.weight ?? 0.0;
       _selectedRpe = exerciseSet.rpe;
-      // Set is always completed when showing RPE selector
 
-      // ✅ NEW: Initialize time variables for time-based exercises
-      final totalSeconds =
-          exerciseSet.seconds ?? 60; // Default 60 seconds if not set
-      _actualMinutes = totalSeconds ~/ 60; // Integer division for minutes
-      _actualSeconds = totalSeconds % 60; // Remainder for seconds
+      // Initialize time variables for time-based exercises
+      final totalSeconds = exerciseSet.seconds ?? 60;
+      _actualMinutes = totalSeconds ~/ 60;
+      _actualSeconds = totalSeconds % 60;
     }
     _updateRir();
-
   }
 
   ExerciseSet _getExerciseSetForIndex(int index) {
@@ -241,6 +244,12 @@ class _RpeSelectorBottomSheetState
       _loadExerciseData(_currentExerciseSet);
     });
 
+    // Sync wheel positions to reflect the newly loaded exercise data
+    _weightWheelController.jumpToItem(
+      (_actualWeight / 0.5).round().clamp(0, 600),
+    );
+    _repsWheelController.jumpToItem(_actualReps.clamp(0, 100));
+
     HapticFeedback.lightImpact();
   }
 
@@ -281,6 +290,8 @@ class _RpeSelectorBottomSheetState
             actualReps: _actualReps,
             actualWeight: _actualWeight,
             rpe: rpe,
+            actualMinutes: _actualMinutes,
+            actualSeconds: _actualSeconds,
           );
     }
   }
@@ -1878,7 +1889,7 @@ class _RpeSelectorBottomSheetState
                                 HapticFeedback.lightImpact();
                                 setState(
                                   () => _actualSeconds = (_actualSeconds - 5)
-                                      .clamp(0, 60),
+                                      .clamp(0, 59),
                                 );
                               }
                             : null,
@@ -1936,12 +1947,12 @@ class _RpeSelectorBottomSheetState
                       label: 'Increase seconds by 5',
                       button: true,
                       child: InkWell(
-                        onTap: _actualSeconds < 60
+                        onTap: _actualSeconds < 59
                             ? () {
                                 HapticFeedback.lightImpact();
                                 setState(
                                   () => _actualSeconds = (_actualSeconds + 5)
-                                      .clamp(0, 60),
+                                      .clamp(0, 59),
                                 );
                               }
                             : null,
