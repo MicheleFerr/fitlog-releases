@@ -5609,6 +5609,22 @@
   "@multiMetricComparison": {
     "description": "Title for multi-metric overlay chart section"
   },
+  "chartTrend": "Trend",
+  "@chartTrend": {
+    "description": "Title for unified chart section with trend data"
+  },
+  "chartModeSingle": "Single",
+  "@chartModeSingle": {
+    "description": "Label for single metric chart mode toggle"
+  },
+  "chartModeComparison": "Comparison",
+  "@chartModeComparison": {
+    "description": "Label for comparison chart mode toggle"
+  },
+  "performance": "Performance",
+  "@performance": {
+    "description": "Title for unified performance section with records and strength level"
+  },
   "volumeHeatmap": "Volume Heatmap",
   "@volumeHeatmap": {
     "description": "Volume heatmap chart title"

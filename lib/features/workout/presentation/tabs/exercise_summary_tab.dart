@@ -10,6 +10,8 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_border_radius.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_chart_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_metric_chart.dart';
@@ -62,6 +64,9 @@ enum ChartMetric {
   }
 }
 
+/// Chart display mode for the unified chart section.
+enum _ChartMode { single, comparison }
+
 /// Tab Sommario: mostra stats, grafico, record personali e livello di forza
 class ExerciseSummaryTab extends ConsumerStatefulWidget {
   const ExerciseSummaryTab({
@@ -81,6 +86,7 @@ class ExerciseSummaryTab extends ConsumerStatefulWidget {
 
 class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
   ChartMetric _selectedChip = ChartMetric.weight;
+  _ChartMode _chartMode = _ChartMode.single;
 
   final List<ChartMetric> _selectedMultiMetrics = ChartMetric.values.toList();
 
@@ -94,75 +100,93 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + context.tabBarInset),
+        padding: EdgeInsets.fromLTRB(
+          AppSpacing.md, AppSpacing.md, AppSpacing.md,
+          AppSpacing.md + context.tabBarInset,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildExerciseNameCard(),
-            const SizedBox(height: 24),
-            _buildChartSection(),
-            const SizedBox(height: 24),
-            _buildMultiMetricChartSection(),
-            const SizedBox(height: 24),
-            _buildPersonalRecordsSection(),
-            const SizedBox(height: 24),
-            _buildStrengthLevelSection(),
-            const SizedBox(height: 16),
+            _buildUnifiedChartSection(),
+            const SizedBox(height: AppSpacing.xl),
+            _buildPerformanceSection(),
+            const SizedBox(height: AppSpacing.md),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildExerciseNameCard() {
+  // ==========================================================================
+  // CHANGE #2: Unified chart section with toggle
+  // ==========================================================================
+
+  Widget _buildUnifiedChartSection() {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.mdRadius),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: AppSpacing.card,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.exerciseName,
-              style: context.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: context.colors.onSurface,
+            // Header
+            Row(
+              children: [
+                Icon(AppIcons.barChart, color: context.colors.primary),
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  context.l10n.chartTrend,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colors.onSurface,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            // Toggle
+            SizedBox(
+              width: double.infinity,
+              child: SegmentedButton<_ChartMode>(
+                segments: [
+                  ButtonSegment(
+                    value: _ChartMode.single,
+                    label: Text(context.l10n.chartModeSingle),
+                  ),
+                  ButtonSegment(
+                    value: _ChartMode.comparison,
+                    label: Text(context.l10n.chartModeComparison),
+                  ),
+                ],
+                selected: {_chartMode},
+                onSelectionChanged: (newSelection) {
+                  setState(() => _chartMode = newSelection.first);
+                },
               ),
             ),
+            const SizedBox(height: AppSpacing.md),
+            // Content based on mode
+            if (_chartMode == _ChartMode.single) ...[
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _buildMetricChip(ChartMetric.weight),
+                    const SizedBox(width: AppSpacing.xs),
+                    _buildMetricChip(ChartMetric.reps),
+                    const SizedBox(width: AppSpacing.xs),
+                    _buildMetricChip(ChartMetric.rpe),
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              _buildChart(),
+            ] else
+              _buildMultiMetricChart(),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildChartSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          context.l10n.last3MonthsChart,
-          style: context.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: context.colors.onSurface,
-          ),
-        ),
-        const SizedBox(height: 12),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              _buildMetricChip(ChartMetric.weight),
-              const SizedBox(width: 8),
-              _buildMetricChip(ChartMetric.reps),
-              const SizedBox(width: 8),
-              _buildMetricChip(ChartMetric.rpe),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        _buildChart(),
-      ],
     );
   }
 
@@ -180,7 +204,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 ? context.colors.onPrimary
                 : context.colors.onSurface,
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: AppSpacing.xxs),
           Text(metric.label(context)),
         ],
       ),
@@ -194,23 +218,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
         color: isSelected ? context.colors.onPrimary : context.colors.onSurface,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
-    );
-  }
-
-  Widget _buildMultiMetricChartSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          context.l10n.multiMetricComparison,
-          style: context.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: context.colors.onSurface,
-          ),
-        ),
-        const SizedBox(height: 12),
-        _buildMultiMetricChart(),
-      ],
     );
   }
 
@@ -241,7 +248,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
         height: 250,
         decoration: BoxDecoration(
           color: context.colors.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: AppBorderRadius.smRadius,
         ),
         child: const Center(child: LoadingIndicator()),
       );
@@ -252,7 +259,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
         height: 250,
         decoration: BoxDecoration(
           color: context.colors.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: AppBorderRadius.smRadius,
           border: Border.all(
             color: context.colors.outline.withValues(alpha: 0.2),
           ),
@@ -267,7 +274,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 size: AppIconSize.xxlarge,
                 color: context.colors.error.withValues(alpha: 0.5),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.xs),
               Text(
                 context.l10n.errorLoadingData,
                 style: context.textTheme.bodyMedium?.copyWith(
@@ -315,7 +322,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
         height: 200,
         decoration: BoxDecoration(
           color: context.colors.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: AppBorderRadius.smRadius,
         ),
         child: const Center(child: LoadingIndicator()),
       ),
@@ -324,7 +331,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           height: 200,
           decoration: BoxDecoration(
             color: context.colors.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: AppBorderRadius.smRadius,
             border: Border.all(
               color: context.colors.outline.withValues(alpha: 0.2),
             ),
@@ -339,7 +346,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                   size: AppIconSize.xxlarge,
                   color: context.colors.error.withValues(alpha: 0.5),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.xs),
                 Text(
                   context.l10n.errorLoadingData,
                   style: context.textTheme.bodyMedium?.copyWith(
@@ -354,95 +361,144 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     );
   }
 
-  Widget _buildPersonalRecordsSection() {
+  // ==========================================================================
+  // CHANGE #4: Unified Performance section (Records + Strength Level)
+  // ==========================================================================
+
+  Widget _buildPerformanceSection() {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.mdRadius),
+      child: Padding(
+        padding: AppSpacing.card,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Records sub-header
+            Row(
+              children: [
+                Icon(AppIcons.emojiEvents, color: context.colors.primary),
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  context.l10n.personalRecords,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colors.onSurface,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            // Records grid
+            _buildPersonalRecordsContent(),
+            // Divider
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+              child: Divider(),
+            ),
+            // Strength Level sub-header
+            Row(
+              children: [
+                Icon(AppIcons.emojiEvents, color: context.colors.secondary),
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  context.l10n.strengthLevel,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colors.onSurface,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            // Strength Level content
+            _buildStrengthLevelContent2(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPersonalRecordsContent() {
     final historyAsync = ref.watch(
       exerciseHistoryDataGroupedProvider(widget.exerciseName),
     );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          context.l10n.personalRecords,
-          style: context.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: context.colors.onSurface,
-          ),
-        ),
-        const SizedBox(height: 12),
-        historyAsync.when(
-          data: (historyMap) {
-            final allSets = <ExerciseHistoryData>[];
-            historyMap.forEach((date, sets) {
-              allSets.addAll(sets);
-            });
+    return historyAsync.when(
+      data: (historyMap) {
+        final allSets = <ExerciseHistoryData>[];
+        historyMap.forEach((date, sets) {
+          allSets.addAll(sets);
+        });
 
-            if (allSets.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: Text(
-                    context.l10n.noHistoryYet,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colors.onSurface.withValues(alpha: 0.5),
-                    ),
-                  ),
+        if (allSets.isEmpty) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.xxl),
+              child: Text(
+                context.l10n.noHistoryYet,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colors.onSurface.withValues(alpha: 0.5),
                 ),
-              );
-            }
-
-            final records = _calculateRecords(allSets);
-
-            return GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 1.5,
-              children: [
-                _buildInteractiveRecordCard(
-                  context.l10n.maxWeight,
-                  '${records.maxWeight.value.toStringAsFixed(1)} kg',
-                  AppIcons.fitnessCenter,
-                  context.colors.primary,
-                  records.maxWeight,
-                ),
-                _buildInteractiveRecordCard(
-                  context.l10n.best1RM,
-                  '${records.best1RM.value.toStringAsFixed(1)} kg',
-                  AppIcons.star,
-                  context.colors.secondary,
-                  records.best1RM,
-                ),
-                _buildInteractiveRecordCard(
-                  context.l10n.bestSetVolume,
-                  '${records.bestSetVolume.value.toStringAsFixed(0)} kg',
-                  AppIcons.trendingUp,
-                  context.colors.tertiary,
-                  records.bestSetVolume,
-                ),
-                _buildInteractiveRecordCard(
-                  context.l10n.bestSessionVolume,
-                  '${records.bestSessionVolume.value.toStringAsFixed(0)} kg',
-                  AppIcons.workspaces,
-                  context.colors.secondary,
-                  records.bestSessionVolume,
-                ),
-              ],
-            );
-          },
-          loading: () => const LoadingIndicator(),
-          error: (error, stack) => Center(
-            child: Text(
-              context.l10n.errorLoadingData,
-              style: TextStyle(color: context.colors.error),
+              ),
             ),
-          ),
+          );
+        }
+
+        final records = _calculateRecords(allSets);
+
+        return GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: AppSpacing.sm,
+          crossAxisSpacing: AppSpacing.sm,
+          childAspectRatio: 1.5,
+          children: [
+            _buildInteractiveRecordCard(
+              context.l10n.maxWeight,
+              '${records.maxWeight.value.toStringAsFixed(1)} kg',
+              AppIcons.fitnessCenter,
+              context.colors.primary,
+              records.maxWeight,
+            ),
+            _buildInteractiveRecordCard(
+              context.l10n.best1RM,
+              '${records.best1RM.value.toStringAsFixed(1)} kg',
+              AppIcons.star,
+              context.colors.secondary,
+              records.best1RM,
+            ),
+            _buildInteractiveRecordCard(
+              context.l10n.bestSetVolume,
+              '${records.bestSetVolume.value.toStringAsFixed(0)} kg',
+              AppIcons.trendingUp,
+              context.colors.tertiary,
+              records.bestSetVolume,
+            ),
+            _buildInteractiveRecordCard(
+              context.l10n.bestSessionVolume,
+              '${records.bestSessionVolume.value.toStringAsFixed(0)} kg',
+              AppIcons.workspaces,
+              context.colors.secondary,
+              records.bestSessionVolume,
+            ),
+          ],
+        );
+      },
+      loading: () => const LoadingIndicator(),
+      error: (error, stack) => Center(
+        child: Text(
+          context.l10n.errorLoadingData,
+          style: TextStyle(color: context.colors.error),
         ),
-      ],
+      ),
     );
   }
+
+  // ==========================================================================
+  // CHANGE #3: Enhanced record cards with pronounced colors
+  // ==========================================================================
 
   Widget _buildInteractiveRecordCard(
     String label,
@@ -451,70 +507,66 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     Color color,
     _RecordData recordData,
   ) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Semantics(
-        label: '$label: $value',
-        button: true,
-        child: InkWell(
-          onTap: () => _showRecordDetails(label, recordData),
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              gradient: LinearGradient(
-                colors: [
-                  color.withValues(alpha: 0.1),
-                  color.withValues(alpha: 0.05),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, color: color, size: AppIconSize.large),
-                const SizedBox(height: 8),
-                Text(
-                  label,
-                  style: context.textTheme.labelSmall?.copyWith(
-                    color: context.colors.onSurface.withValues(alpha: 0.7),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: context.colors.onSurface,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 4),
-                SemanticIcon(
-                  icon: AppIcons.infoOutline,
-                  semanticLabel: 'Info outline',
-                  size: AppIconSize.tiny,
-                  color: context.colors.onSurface.withValues(alpha: 0.4),
-                ),
+    return Semantics(
+      label: '$label: $value',
+      button: true,
+      child: InkWell(
+        onTap: () => _showRecordDetails(label, recordData),
+        borderRadius: AppBorderRadius.smRadius,
+        child: Container(
+          padding: const EdgeInsets.all(AppSpacing.sm),
+          decoration: BoxDecoration(
+            borderRadius: AppBorderRadius.smRadius,
+            gradient: LinearGradient(
+              colors: [
+                color.withValues(alpha: 0.15),
+                color.withValues(alpha: 0.08),
               ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
+            border: Border.all(
+              color: color.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: color, size: AppIconSize.xlarge),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                label,
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: context.colors.onSurface.withValues(alpha: 0.7),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: AppSpacing.xxs),
+              Text(
+                value,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.colors.onSurface,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
+  // ==========================================================================
+  // Strength Level (inner content for unified performance section)
+  // ==========================================================================
+
   bool _looksLikeUuid(String? id) {
     if (id == null) return false;
     return id.contains('-') && id.length >= 32;
   }
 
-  Widget _buildStrengthLevelSection() {
+  Widget _buildStrengthLevelContent2() {
     final hasValidDatabaseId =
         widget.exerciseId != null && !_looksLikeUuid(widget.exerciseId);
 
@@ -540,50 +592,18 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
         }
 
         if (databaseId == null) {
-          return _buildStrengthLevelCardWrapper(
-            _buildStrengthLevelPlaceholder(),
-          );
+          return _buildStrengthLevelPlaceholder();
         }
 
         return _buildStrengthLevelWithKey(databaseId);
       },
-      loading: () => _buildStrengthLevelCardWrapper(const LoadingIndicator()),
+      loading: () => const LoadingIndicator(),
       error: (error, stack) {
         if (kDebugMode) {
           debugPrint('[STRENGTH LEVEL] Error looking up database ID: $error');
         }
-        return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
+        return _buildStrengthLevelPlaceholder();
       },
-    );
-  }
-
-  Widget _buildStrengthLevelCardWrapper(Widget child) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(AppIcons.emojiEvents, color: context.colors.primary),
-                const SizedBox(width: 8),
-                Text(
-                  context.l10n.strengthLevel,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: context.colors.onSurface,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            child,
-          ],
-        ),
-      ),
     );
   }
 
@@ -597,7 +617,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
 
     // Early return: mapping loading/error
     if (mappingAsync.isLoading) {
-      return _buildStrengthLevelCardWrapper(const LoadingIndicator());
+      return const LoadingIndicator();
     }
     if (mappingAsync.hasError || !mappingAsync.hasValue) {
       if (kDebugMode) {
@@ -605,7 +625,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             '(hasError=${mappingAsync.hasError}, hasValue=${mappingAsync.hasValue})');
         if (mappingAsync.hasError) debugPrint('   Error: ${mappingAsync.error}');
       }
-      return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
+      return _buildStrengthLevelPlaceholder();
     }
 
     final mapping = mappingAsync.value;
@@ -614,7 +634,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
         debugPrint('[STRENGTH LEVEL] Mapping null or no standardId for: '
             '$lookupKey (mapping=$mapping, standardId=${mapping?.standardId})');
       }
-      return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
+      return _buildStrengthLevelPlaceholder();
     }
 
     if (kDebugMode) {
@@ -629,14 +649,14 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
 
     // Early return: standard or history loading/error
     if (standardAsync.isLoading || historyAsync.isLoading) {
-      return _buildStrengthLevelCardWrapper(const LoadingIndicator());
+      return const LoadingIndicator();
     }
     if (standardAsync.hasError || historyAsync.hasError) {
       if (kDebugMode) {
         debugPrint('[STRENGTH LEVEL] Standard/history error '
             '(std=${standardAsync.hasError}, hist=${historyAsync.hasError})');
       }
-      return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
+      return _buildStrengthLevelPlaceholder();
     }
 
     final standard = standardAsync.value;
@@ -645,7 +665,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
         debugPrint('[STRENGTH LEVEL] Standard is null '
             'for standardId=${mapping.standardId}');
       }
-      return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
+      return _buildStrengthLevelPlaceholder();
     }
 
     final historyMap = historyAsync.value!;
@@ -653,7 +673,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     historyMap.forEach((date, sets) => allSets.addAll(sets));
 
     if (allSets.isEmpty) {
-      return _buildStrengthLevelCardWrapper(_buildStrengthLevelPlaceholder());
+      return _buildStrengthLevelPlaceholder();
     }
 
     // Calculate best 1RM
@@ -668,12 +688,10 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       }
     }
 
-    return _buildStrengthLevelCardWrapper(
-      _buildStrengthLevelContent(
-        standard: standard,
-        userBodyweight: userBodyweight,
-        user1RM: best1RM,
-      ),
+    return _buildStrengthLevelContent(
+      standard: standard,
+      userBodyweight: userBodyweight,
+      user1RM: best1RM,
     );
   }
 
@@ -686,7 +704,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           size: AppIconSize.xxlarge,
           color: context.colors.onSurface.withValues(alpha: 0.3),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.sm),
         Text(
           context.l10n.strengthLevelNoData,
           style: context.textTheme.bodyMedium?.copyWith(
@@ -694,7 +712,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           ),
           textAlign: TextAlign.center,
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: AppSpacing.xxs),
         Text(
           context.l10n.strengthLevelAvailableAfterWorkout,
           style: context.textTheme.bodySmall?.copyWith(
@@ -758,10 +776,10 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(AppSpacing.sm),
           decoration: BoxDecoration(
             color: levelColor.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: AppBorderRadius.smRadius,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -782,14 +800,17 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.md),
         Row(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.sm,
+                vertical: 6,
+              ),
               decoration: BoxDecoration(
                 color: levelColor,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: AppBorderRadius.xsRadius,
               ),
               child: Text(
                 currentLevel.getLabel(locale).toUpperCase(),
@@ -799,7 +820,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSpacing.xs),
             if (currentLevel != ExperienceLevel.elite && progressToNext > 0)
               Expanded(
                 child: Text(
@@ -814,10 +835,10 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.sm),
         if (currentLevel != ExperienceLevel.elite) ...[
           ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: AppBorderRadius.xsRadius,
             child: LinearProgressIndicator(
               value: progressToNext,
               minHeight: 8,
@@ -825,15 +846,15 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               valueColor: AlwaysStoppedAnimation<Color>(levelColor),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
         ],
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(AppSpacing.sm),
           decoration: BoxDecoration(
             color: context.colors.surfaceContainerHighest.withValues(
               alpha: 0.5,
             ),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: AppBorderRadius.smRadius,
           ),
           child: Column(
             children: [
@@ -845,7 +866,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 final color = _getLevelColor(level);
 
                 return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
                   child: Row(
                     children: [
                       Container(
@@ -858,7 +879,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                           shape: BoxShape.circle,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: Text(
                           level.getLabel(locale),
@@ -885,9 +906,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                   ),
                 );
               }),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.xs),
               const Divider(height: 1),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.xs),
               Text(
                 context.l10n.benchmarkBodyweight(
                   userBodyweight.toStringAsFixed(0),
@@ -919,6 +940,10 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
         return context.colors.tertiary;
     }
   }
+
+  // ==========================================================================
+  // Record calculation + details bottom sheet
+  // ==========================================================================
 
   _Records _calculateRecords(List<ExerciseHistoryData> allSets) {
     ExerciseHistoryData? maxWeightSet;
@@ -1024,7 +1049,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     ModalService.showBottomSheet(
       context,
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSpacing.xl),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1036,7 +1061,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                   color: context.colors.primary,
                   size: AppIconSize.xlarge,
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
                     recordLabel,
@@ -1048,12 +1073,12 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.xl),
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: AppSpacing.card,
               decoration: BoxDecoration(
                 color: context.colors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: AppBorderRadius.smRadius,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1074,14 +1099,14 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             if (recordData.date != null) ...[
               _buildDetailRow(
                 AppIcons.calendarToday,
                 context.l10n.dateLabel,
                 dateFormatter.format(recordData.date!),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.sm),
             ],
             if (recordData.workoutName != null) ...[
               _buildDetailRow(
@@ -1089,7 +1114,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 context.l10n.workout,
                 recordData.workoutName!,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.sm),
             ],
             if (recordData.weight != null && recordData.reps != null) ...[
               _buildDetailRow(
@@ -1099,7 +1124,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               ),
               if (recordData.isCalculated)
                 Padding(
-                  padding: const EdgeInsets.only(left: 32, top: 4),
+                  padding: const EdgeInsets.only(left: AppSpacing.xxl, top: AppSpacing.xxs),
                   child: Text(
                     context.l10n.calculatedWithBrzycki,
                     style: context.textTheme.labelSmall?.copyWith(
@@ -1108,12 +1133,12 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                     ),
                   ),
                 ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.sm),
             ],
             if (recordData.sessionSets != null &&
                 recordData.sessionSets!.isNotEmpty) ...[
               const Divider(),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.xs),
               Text(
                 context.l10n.sessionSetsCount(
                   recordData.sessionSets!.length,
@@ -1123,13 +1148,13 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                   color: context.colors.onSurface,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.sm),
               ...recordData.sessionSets!.asMap().entries.map((entry) {
                 final index = entry.key + 1;
                 final set = entry.value;
                 final setVolume = (set.weight ?? 0.0) * (set.reps ?? 0);
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.xs),
                   child: Row(
                     children: [
                       Container(
@@ -1139,7 +1164,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                           color: context.colors.secondary.withValues(
                             alpha: 0.1,
                           ),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: AppBorderRadius.xsRadius,
                         ),
                         child: Center(
                           child: Text(
@@ -1151,7 +1176,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: Text(
                           '${set.weight?.toStringAsFixed(1) ?? '0'} kg x ${set.reps ?? 0} reps',
@@ -1170,7 +1195,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 );
               }),
             ],
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.xl),
             Builder(
               builder: (modalContext) => SizedBox(
                 width: double.infinity,
@@ -1179,9 +1204,9 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: context.colors.primary,
                     foregroundColor: context.colors.onPrimary,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: AppBorderRadius.smRadius,
                     ),
                   ),
                   child: Text(context.l10n.closeButton),
@@ -1198,14 +1223,14 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     return Row(
       children: [
         Icon(icon, size: AppIconSize.small, color: context.colors.primary),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSpacing.sm),
         Text(
           '$label:',
           style: context.textTheme.bodyMedium?.copyWith(
             color: context.colors.onSurface.withValues(alpha: 0.7),
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppSpacing.xs),
         Expanded(
           child: Text(
             value,

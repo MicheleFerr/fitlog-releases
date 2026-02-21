@@ -4320,6 +4320,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get multiMetricComparison => 'Confronto Multi-Metrica';
 
   @override
+  String get chartTrend => 'Andamento';
+
+  @override
+  String get chartModeSingle => 'Singola';
+
+  @override
+  String get chartModeComparison => 'Confronto';
+
+  @override
+  String get performance => 'Performance';
+
+  @override
   String get volumeHeatmap => 'Mappa di Calore del Volume';
 
   @override

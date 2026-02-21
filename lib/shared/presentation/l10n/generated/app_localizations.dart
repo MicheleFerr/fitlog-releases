@@ -7931,6 +7931,30 @@ abstract class AppLocalizations {
   /// **'Multi-Metric Comparison'**
   String get multiMetricComparison;
 
+  /// Title for unified chart section with trend data
+  ///
+  /// In en, this message translates to:
+  /// **'Trend'**
+  String get chartTrend;
+
+  /// Label for single metric chart mode toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Single'**
+  String get chartModeSingle;
+
+  /// Label for comparison chart mode toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Comparison'**
+  String get chartModeComparison;
+
+  /// Title for unified performance section with records and strength level
+  ///
+  /// In en, this message translates to:
+  /// **'Performance'**
+  String get performance;
+
   /// Volume heatmap chart title
   ///
   /// In en, this message translates to:
