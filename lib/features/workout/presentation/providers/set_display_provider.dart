@@ -27,8 +27,8 @@ extension SetDisplayModeExtension on SetDisplayMode {
 
   /// Horizontal padding for the set row
   double get horizontalPadding => switch (this) {
-    SetDisplayMode.compact => 8.0,
-    SetDisplayMode.comfortable => 12.0,
+    SetDisplayMode.compact => 6.0,
+    SetDisplayMode.comfortable => 8.0,
   };
 
   /// Bottom margin between sets

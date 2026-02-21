@@ -621,7 +621,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                         ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 8),
 
               // Warmup badge
               if (isWarmup) ...[
