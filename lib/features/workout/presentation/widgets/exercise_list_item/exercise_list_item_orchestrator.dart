@@ -2511,100 +2511,423 @@ void _showPlatesCupertinoPopup(BuildContext context, double targetWeight) {
   );
 }
 
-/// Compact Cupertino popup showing plates to load for a given weight
-class _PlatesCupertinoSheet extends ConsumerWidget {
+/// Visual Cupertino plate calculator popup
+/// Palestra-first UX: colori immediati, font grande, visual dischi
+class _PlatesCupertinoSheet extends ConsumerStatefulWidget {
   const _PlatesCupertinoSheet({required this.targetWeight});
-
   final double targetWeight;
 
-  static const List<double> _defaultPlates = [25, 20, 15, 10, 5, 2.5, 1.25, 0.5];
-  static const double _defaultBarbell = 20.0;
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final config = ref.watch(appConfigProvider);
-    final availablePlates = config.availablePlates ?? _defaultPlates;
-    final barbellWeight = _defaultBarbell;
+  ConsumerState<_PlatesCupertinoSheet> createState() => _PlatesCupertinoSheetState();
+}
 
-    final plates = _calculatePlates(targetWeight, barbellWeight, availablePlates);
-    final weightStr = targetWeight == targetWeight.truncateToDouble()
-        ? targetWeight.truncate().toString()
-        : targetWeight.toStringAsFixed(1);
+class _PlatesCupertinoSheetState extends ConsumerState<_PlatesCupertinoSheet> {
+  static const List<double> _defaultPlates = [25, 20, 15, 10, 5, 2.5, 1.25, 0.5];
+  // Standard barbell options
+  static const List<double?> _barbellOptions = [20.0, 15.0, null]; // null = no bar
 
-    return CupertinoActionSheet(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(AppIcons.calculateRounded, size: 18, color: CupertinoColors.activeBlue),
-          const SizedBox(width: 8),
-          Text(
-            'Plate Calculator — ${weightStr}kg',
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
-        ],
-      ),
-      message: _buildPlatesContent(context, plates, barbellWeight),
-      cancelButton: CupertinoActionSheetAction(
-        onPressed: () => Navigator.pop(context),
-        child: const Text('Chiudi'),
-      ),
-    );
-  }
+  double? _barbellWeight = 20.0;
 
-  Widget _buildPlatesContent(
-    BuildContext context,
-    Map<double, int> plates,
-    double barbellWeight,
-  ) {
-    final weightStr = targetWeight == targetWeight.truncateToDouble()
-        ? targetWeight.truncate().toString()
-        : targetWeight.toStringAsFixed(1);
-
-    if (plates.isEmpty) {
-      final onlyBarbell = targetWeight <= barbellWeight;
-      return Text(
-        onlyBarbell
-            ? 'Solo bilanciere (${barbellWeight.truncate()}kg)'
-            : 'Nessun disco necessario',
-        style: const TextStyle(fontSize: 15),
-      );
-    }
-
-    final plateLines = plates.entries
-        .map((e) {
-          final kg = e.key == e.key.truncateToDouble()
-              ? e.key.truncate().toString()
-              : e.key.toString();
-          return '${e.value}×${kg}kg  (per lato)';
-        })
-        .join('\n');
-
-    return Text(
-      'Bilanciere: ${barbellWeight.truncate()}kg\n$plateLines',
-      style: const TextStyle(fontSize: 15, height: 1.6),
-      textAlign: TextAlign.center,
-    );
-  }
-
-  Map<double, int> _calculatePlates(
-    double targetWeight,
-    double barbellWeight,
-    List<double> availablePlates,
-  ) {
-    if (targetWeight <= barbellWeight) return {};
-
-    final weightPerSide = (targetWeight - barbellWeight) / 2;
-    var remaining = weightPerSide;
+  Map<double, int> _calcPlates(List<double> available) {
+    final bar = _barbellWeight ?? 0.0;
+    if (widget.targetWeight <= bar) return {};
+    final perSide = (widget.targetWeight - bar) / 2;
+    var remaining = perSide;
     final result = <double, int>{};
-
-    final sorted = List<double>.from(availablePlates)..sort((a, b) => b.compareTo(a));
-    for (final plate in sorted) {
-      final count = (remaining / plate).floor();
-      if (count > 0) {
-        result[plate] = count;
-        remaining -= count * plate;
+    final sorted = List<double>.from(available)..sort((a, b) => b.compareTo(a));
+    for (final p in sorted) {
+      final n = (remaining / p).floor();
+      if (n > 0) {
+        result[p] = n;
+        remaining -= n * p;
       }
     }
     return result;
+  }
+
+  Color _plateColor(double kg) {
+    if (kg >= 25) return const Color(0xFFD32F2F); // red
+    if (kg >= 20) return const Color(0xFF1565C0); // blue
+    if (kg >= 15) return const Color(0xFFF9A825); // yellow
+    if (kg >= 10) return const Color(0xFF2E7D32); // green
+    if (kg >= 5)  return const Color(0xFF757575); // gray
+    if (kg >= 2.5) return const Color(0xFFD32F2F); // light red
+    return const Color(0xFF90A4AE); // silver
+  }
+
+  double _plateHeight(double kg) {
+    if (kg >= 25) return 64;
+    if (kg >= 20) return 56;
+    if (kg >= 15) return 50;
+    if (kg >= 10) return 44;
+    if (kg >= 5)  return 36;
+    if (kg >= 2.5) return 30;
+    return 24;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final config = ref.watch(appConfigProvider);
+    final available = config.availablePlates ?? _defaultPlates;
+    final plates = _calcPlates(available);
+    final weightStr = widget.targetWeight == widget.targetWeight.truncateToDouble()
+        ? widget.targetWeight.truncate().toString()
+        : widget.targetWeight.toStringAsFixed(1);
+
+    return Container(
+      decoration: const BoxDecoration(
+        color: CupertinoColors.systemBackground,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).padding.bottom + 8,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Handle
+          Container(
+            width: 36,
+            height: 4,
+            margin: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: CupertinoColors.systemGrey4,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+
+          // Titolo con peso
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Icon(AppIcons.calculateRounded, size: 20, color: CupertinoColors.activeBlue),
+                const SizedBox(width: 8),
+                Text(
+                  'Dischi da caricare',
+                  style: CupertinoTheme.of(context).textTheme.navTitleTextStyle.copyWith(
+                    fontSize: 17,
+                  ),
+                ),
+                const Spacer(),
+                // Peso totale in evidenza
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: CupertinoColors.activeBlue.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    '${weightStr}kg',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: CupertinoColors.activeBlue,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // ── Selettore bilanciere ──
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Text(
+                  'Bilanciere',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: CupertinoColors.secondaryLabel.resolveFrom(context),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                ..._barbellOptions.map((opt) {
+                  final selected = opt == _barbellWeight;
+                  final label = opt == null ? 'No bar' : '${opt.truncate()}kg';
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: GestureDetector(
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        setState(() => _barbellWeight = opt);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: selected
+                              ? CupertinoColors.activeBlue
+                              : CupertinoColors.systemGrey5.resolveFrom(context),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: selected ? CupertinoColors.white : CupertinoColors.label.resolveFrom(context),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // ── Visual bilanciere con dischi ──
+          _buildBarbellVisual(plates),
+
+          const SizedBox(height: 16),
+
+          // ── Lista dischi (per lato) ──
+          if (plates.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: Text(
+                _barbellWeight != null
+                    ? 'Solo bilanciere ${_barbellWeight!.truncate()}kg'
+                    : 'Nessun disco',
+                style: const TextStyle(
+                  fontSize: 17,
+                  color: CupertinoColors.systemGrey,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Per lato:',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: CupertinoColors.secondaryLabel.resolveFrom(context),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ...plates.entries.map((e) => _buildPlateRow(context, e.key, e.value)),
+                ],
+              ),
+            ),
+
+          const SizedBox(height: 12),
+
+          // ── Configura dischi ──
+          CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              Navigator.pop(context);
+              _showFullPlateSheet(context, widget.targetWeight);
+            },
+            child: Text(
+              'Configura dischi disponibili →',
+              style: TextStyle(
+                fontSize: 14,
+                color: CupertinoColors.activeBlue.resolveFrom(context),
+              ),
+            ),
+          ),
+
+          // ── Chiudi ──
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+            child: SizedBox(
+              width: double.infinity,
+              child: CupertinoButton(
+                color: CupertinoColors.systemGrey5.resolveFrom(context),
+                borderRadius: BorderRadius.circular(14),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  'Chiudi',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                    color: CupertinoColors.label.resolveFrom(context),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBarbellVisual(Map<double, int> plates) {
+    // Expand plates into ordered list (biggest first, repeated by count)
+    final plateList = <double>[];
+    for (final entry in plates.entries) {
+      for (var i = 0; i < entry.value; i++) {
+        plateList.add(entry.key);
+      }
+    }
+
+    return SizedBox(
+      height: 72,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Left side plates (reversed so biggest is closest to barbell)
+          ...plateList.reversed.map((kg) => _buildPlateVisual(kg)),
+          // Barbell
+          Container(
+            width: 48,
+            height: 8,
+            margin: const EdgeInsets.symmetric(horizontal: 2),
+            decoration: BoxDecoration(
+              color: const Color(0xFF9E9E9E),
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 2)],
+            ),
+          ),
+          // Right side plates
+          ...plateList.map((kg) => _buildPlateVisual(kg)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPlateVisual(double kg) {
+    final color = _plateColor(kg);
+    final height = _plateHeight(kg);
+
+    return Container(
+      width: 10,
+      height: height,
+      margin: const EdgeInsets.symmetric(horizontal: 1.5),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(3),
+        boxShadow: [
+          BoxShadow(color: color.withValues(alpha: 0.4), blurRadius: 2, offset: const Offset(0, 1)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPlateRow(BuildContext context, double kg, int count) {
+    final color = _plateColor(kg);
+    final kgStr = kg == kg.truncateToDouble() ? kg.truncate().toString() : kg.toString();
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        children: [
+          // Colored plate badge
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(
+              child: Text(
+                kgStr,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          // Count x weight
+          Text(
+            '${count}×',
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w800,
+              color: CupertinoColors.label,
+            ),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '${kgStr}kg',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: CupertinoColors.secondaryLabel.resolveFrom(context),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showFullPlateSheet(BuildContext context, double targetWeight) {
+    ModalService.showSheet(
+      context,
+      isScrollControlled: true,
+      backgroundColor: context.colors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.5,
+        maxChildSize: 0.9,
+        expand: false,
+        builder: (ctx, scrollController) => Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Row(
+                children: [
+                  Icon(AppIcons.calculateRounded, color: context.colors.secondary, size: 24),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Configura Plate Calculator',
+                      style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(AppIcons.close),
+                    onPressed: () => Navigator.pop(ctx),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: PlateCalculatorWidget(
+                    targetWeight: targetWeight,
+                    onWeightChanged: (_) {},
+                    unit: 'kg',
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
