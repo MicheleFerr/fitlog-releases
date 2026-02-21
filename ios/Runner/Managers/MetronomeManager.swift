@@ -10,9 +10,9 @@ import Flutter
 /// each tick. Each tick invokes the Flutter method `metronomeTick` with the current
 /// elapsed-seconds count so the Dart layer can drive the TUT phase display.
 ///
-/// Audio session config mirrors TimerSoundFix and UnifiedTimerCoordinator:
-/// .playback + .mixWithOthers to bypass the mute switch without interrupting
-/// background music.
+/// Audio session uses .playback + .duckOthers to bypass the mute switch and
+/// reduce background music volume while the metronome is active. On stop,
+/// the session is restored to .mixWithOthers so music returns to full volume.
 final class MetronomeManager {
 
     // MARK: - Singleton
@@ -104,6 +104,7 @@ final class MetronomeManager {
             self.timer?.cancel()
             self.timer = nil
             self.isRunning = false
+            self.restoreAudioSession()
 
             let elapsed = self.elapsedSeconds
             Logger.shared.log(.info, "[Metronome] Stopped — elapsed: \(elapsed)s", category: .audioSession)
@@ -174,16 +175,28 @@ final class MetronomeManager {
     // MARK: - Audio Session
 
     /// Configure the audio session to play the tick even when the device is muted.
-    /// Uses .playback + .mixWithOthers — consistent with UnifiedTimerCoordinator and
-    /// TimerSoundFix to avoid OSStatus -50 from conflicting options.
+    /// Uses .playback + .duckOthers so background music volume is reduced while
+    /// the metronome is active, making the tick clearly audible over music.
     private func configureAudioSession() {
         do {
             let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            try session.setCategory(.playback, mode: .default, options: [.duckOthers])
             try session.setActive(true)
-            Logger.shared.log(.debug, "[Metronome] Audio session configured (.playback + .mixWithOthers)", category: .audioSession)
+            Logger.shared.log(.debug, "[Metronome] Audio session configured (.playback + .duckOthers)", category: .audioSession)
         } catch {
             Logger.shared.log(.error, "[Metronome] Audio session configuration failed: \(error)", category: .audioSession)
+        }
+    }
+
+    /// Restore the audio session to .mixWithOthers so background music returns
+    /// to full volume after the metronome stops.
+    private func restoreAudioSession() {
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            Logger.shared.log(.debug, "[Metronome] Audio session restored (.playback + .mixWithOthers)", category: .audioSession)
+        } catch {
+            Logger.shared.log(.error, "[Metronome] Audio session restore failed: \(error)", category: .audioSession)
         }
     }
 }
