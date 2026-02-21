@@ -112,6 +112,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_usage_tracker.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/workout_session_la_service.dart'
     show WorkoutSessionMode;
+// ⚖️ Weight Auto-Fill for pre-filling sets from previous session
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/weight_auto_fill_provider.dart';
 
 // Hybrid Exercise Activity Repository provider
 final hybridExerciseActivityRepositoryProvider =
@@ -311,6 +313,24 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
         }
 
         workout = workout.copyWith(exercises: localizedExercises);
+      }
+
+      // ⚖️ Auto-fill weights from previous template session (silent, no UI feedback)
+      // NOTE: _fetchPreviousTemplateWorkout returns null for now because WorkoutModel
+      // does not persist templateId to Firestore, so querying by templateId is not
+      // yet possible. The service handles null gracefully (returns workout unchanged).
+      final userId = ref.read(authServiceProvider).currentUser?.uid;
+      if (userId != null) {
+        final previousWorkout = await _fetchPreviousTemplateWorkout(
+          templateId: workoutTemplate.id,
+          userId: userId,
+        );
+        workout = await ref
+            .read(weightAutoFillServiceProvider)
+            .fillFromTemplate(
+              workout: workout,
+              previousWorkout: previousWorkout,
+            );
       }
 
       // Imposta il workout e lo avvia automaticamente
@@ -5105,6 +5125,26 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       return exercise.restPauseSets.length;
     }
     return exercise.sets.length;
+  }
+
+  /// ⚖️ Fetches the most recent completed workout for a given template.
+  ///
+  /// Returns null if no previous workout is found or if a query error occurs.
+  ///
+  /// NOTE: Currently returns null because WorkoutModel does not persist
+  /// templateId to Firestore yet. Once WorkoutModel.toJson() includes
+  /// templateId, this method can query Firestore with:
+  ///   .where('templateId', isEqualTo: templateId)
+  ///   .where('status', isEqualTo: 'completed')
+  ///   .orderBy('endTime', descending: true)
+  ///   .limit(1)
+  Future<Workout?> _fetchPreviousTemplateWorkout({
+    required String templateId,
+    required String userId,
+  }) async {
+    // templateId is not yet persisted in Firestore by WorkoutModel.toJson(),
+    // so the query would return no results. Return null until that is fixed.
+    return null;
   }
 
   /// 🌍 Localizes exercise name by looking up in exercise database
