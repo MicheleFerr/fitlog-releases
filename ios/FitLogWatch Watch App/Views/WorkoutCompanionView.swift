@@ -15,10 +15,10 @@ struct WorkoutCompanionView: View {
     @EnvironmentObject var workoutManager: WorkoutManager
     // 🆕 NEW 4-TAB STRUCTURE:
     // Tab 0: AdvancedInfoView (TUT, HR zone, form cues, exercise details)
-    // Tab 1: SimplifiedSetView (DEFAULT - simple set logging for beginners)
+    // Tab 1: ExerciseControlView (superset/dropset/rest-pause) OR SimplifiedSetView (DEFAULT - set singoli)
     // Tab 2: RestTimerView (rest timer with Quick Add Time)
     // Tab 3: StatsView (HR, calories, duration, end workout)
-    @State private var selectedTab = 1  // DEFAULT: SimplifiedSetView (Tab 1)
+    @State private var selectedTab = 1  // DEFAULT: Tab 1
     @State private var tabSwitchTask: Task<Void, Never>?
 
     var body: some View {
@@ -29,10 +29,20 @@ struct WorkoutCompanionView: View {
                 .environmentObject(workoutManager)
                 .tag(0)
 
-            // Tab 1: Simplified Set View (DEFAULT) - for beginners
-            SimplifiedSetView()
-                .environmentObject(connectivity)
-                .tag(1)
+            // Tab 1: Set view - ExerciseControlView per superset/dropset/rest-pause,
+            // SimplifiedSetView per set normali (beginner-friendly)
+            Group {
+                if connectivity.isSuperset || connectivity.isDropset || connectivity.isRestPause {
+                    ExerciseControlView()
+                        .environmentObject(connectivity)
+                        .environmentObject(workoutManager)
+                } else {
+                    SimplifiedSetView()
+                        .environmentObject(connectivity)
+                        .environmentObject(workoutManager)
+                }
+            }
+            .tag(1)
 
             // Tab 2: Rest Timer (mirrors Live Activity)
             RestTimerView()
