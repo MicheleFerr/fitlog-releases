@@ -2295,9 +2295,25 @@
   "@playingPreview": {
     "description": "Message when playing sound preview"
   },
-  "statisticsDashboard": "Statistics Dashboard",
+  "statisticsDashboard": "Dashboard",
   "@statisticsDashboard": {
-    "description": "Statistics dashboard screen title"
+    "description": "Statistics dashboard tab label"
+  },
+  "statisticsAnalytics": "Analytics",
+  "@statisticsAnalytics": {
+    "description": "Statistics analytics tab label"
+  },
+  "statisticsExercises": "Exercises",
+  "@statisticsExercises": {
+    "description": "Statistics exercises tab label"
+  },
+  "weeklyMuscleMap": "Weekly Muscle Map",
+  "@weeklyMuscleMap": {
+    "description": "Weekly muscle map card header in statistics dashboard"
+  },
+  "musclesTrainedThisWeek": "Muscles trained this week",
+  "@musclesTrainedThisWeek": {
+    "description": "Label for muscles trained this week in muscle map"
   },
   "workoutAnalytics": "Workout Analytics",
   "@workoutAnalytics": {
@@ -19376,10 +19392,9 @@
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
   },
-  "noWorkoutDataThisWeek": "No workout data this week",
+  "noWorkoutDataThisWeek": "No workouts this week. Start training to see your muscle map!",
   "@noWorkoutDataThisWeek": {
-    "description": "From quick wins migration - 1 occurrences",
-    "context": "Found in: lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
+    "description": "Empty state message when no workouts this week"
   },
   "completeWorkoutsToSeeYourProgress": "Complete workouts to see your progress",
   "@completeWorkoutsToSeeYourProgress": {

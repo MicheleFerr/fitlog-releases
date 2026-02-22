@@ -3445,11 +3445,35 @@ abstract class AppLocalizations {
   /// **'Playing preview'**
   String get playingPreview;
 
-  /// Statistics dashboard screen title
+  /// Statistics dashboard tab label
   ///
   /// In en, this message translates to:
-  /// **'Statistics Dashboard'**
+  /// **'Dashboard'**
   String get statisticsDashboard;
+
+  /// Statistics analytics tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics'**
+  String get statisticsAnalytics;
+
+  /// Statistics exercises tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Exercises'**
+  String get statisticsExercises;
+
+  /// Weekly muscle map card header in statistics dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Muscle Map'**
+  String get weeklyMuscleMap;
+
+  /// Label for muscles trained this week in muscle map
+  ///
+  /// In en, this message translates to:
+  /// **'Muscles trained this week'**
+  String get musclesTrainedThisWeek;
 
   /// Workout analytics section title
   ///
@@ -28002,10 +28026,10 @@ abstract class AppLocalizations {
   /// **'Sync to Cloud'**
   String get syncToCloud;
 
-  /// From quick wins migration - 1 occurrences
+  /// Empty state message when no workouts this week
   ///
   /// In en, this message translates to:
-  /// **'No workout data this week'**
+  /// **'No workouts this week. Start training to see your muscle map!'**
   String get noWorkoutDataThisWeek;
 
   /// From quick wins migration - 1 occurrences

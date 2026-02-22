@@ -1824,7 +1824,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get playingPreview => 'Riproduzione anteprima';
 
   @override
-  String get statisticsDashboard => 'Dashboard Statistiche';
+  String get statisticsDashboard => 'Dashboard';
+
+  @override
+  String get statisticsAnalytics => 'Analytics';
+
+  @override
+  String get statisticsExercises => 'Esercizi';
+
+  @override
+  String get weeklyMuscleMap => 'Mappa Muscolare Settimanale';
+
+  @override
+  String get musclesTrainedThisWeek => 'Muscoli allenati questa settimana';
 
   @override
   String get workoutAnalytics => 'Analisi Allenamenti';
@@ -15864,7 +15876,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get syncToCloud => 'Sync to Cloud';
 
   @override
-  String get noWorkoutDataThisWeek => 'No workout data this week';
+  String get noWorkoutDataThisWeek =>
+      'Nessun allenamento questa settimana. Inizia ad allenarti per vedere la mappa muscolare!';
 
   @override
   String get completeWorkoutsToSeeYourProgress =>

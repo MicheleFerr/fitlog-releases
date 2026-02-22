@@ -692,7 +692,11 @@
   "currentSound": "Attuale",
   "playPreview": "Anteprima",
   "playingPreview": "Riproduzione anteprima",
-  "statisticsDashboard": "Dashboard Statistiche",
+  "statisticsDashboard": "Dashboard",
+  "statisticsAnalytics": "Analytics",
+  "statisticsExercises": "Esercizi",
+  "weeklyMuscleMap": "Mappa Muscolare Settimanale",
+  "musclesTrainedThisWeek": "Muscoli allenati questa settimana",
   "workoutAnalytics": "Analisi Allenamenti",
   "progressTracking": "Monitoraggio Progressi",
   "detailedAnalytics": "Analisi Dettagliate",
@@ -7491,10 +7495,9 @@
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
   },
-  "noWorkoutDataThisWeek": "No workout data this week",
+  "noWorkoutDataThisWeek": "Nessun allenamento questa settimana. Inizia ad allenarti per vedere la mappa muscolare!",
   "@noWorkoutDataThisWeek": {
-    "description": "From quick wins migration - 1 occurrences",
-    "context": "Found in: lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
+    "description": "Empty state message when no workouts this week"
   },
   "completeWorkoutsToSeeYourProgress": "Complete workouts to see your progress",
   "@completeWorkoutsToSeeYourProgress": {
