@@ -376,31 +376,15 @@ class FirebaseWorkoutTemplateRepository
             );
           }
 
-          // Convert ExerciseTemplate to Exercise for Cloud Function
-          final exercises = template.exercises.map((exTemplate) {
-            return Exercise(
-              id: exTemplate.exerciseId,
-              name: exTemplate.exerciseName,
-              category: exTemplate.category,
-              type: exTemplate.type,
-              sets: exTemplate.sets.map((setTemplate) {
-                return ExerciseSet(
-                  id: 'set_${setTemplate.setNumber}',
-                  setNumber: setTemplate.setNumber,
-                  weight: setTemplate.targetWeight ?? 0,
-                  reps: setTemplate.targetReps,
-                  notes: setTemplate.notes,
-                );
-              }).toList(),
-              notes: exTemplate.notes,
-              restTime: exTemplate.restTime,
-            );
-          }).toList();
+          // ✅ FIX: Use ExerciseTemplate.toJson() to preserve superset/dropset/restpause data
+          // Previous code created plain Exercise objects, losing subExercises and supersetSets
+          final exercisesJson =
+              template.exercises.map((e) => e.toJson()).toList();
 
-          final result = await TemplateCloudService.createTemplate(
+          final result = await TemplateCloudService.createTemplateFromJson(
             name: template.name,
             description: template.description,
-            exercises: exercises,
+            exercisesJson: exercisesJson,
             tags: template.tags,
             isPublic: template.isPublic,
           );
@@ -435,26 +419,9 @@ class FirebaseWorkoutTemplateRepository
 
         // 🔄 EXPONENTIAL BACKOFF RETRY: Add to cloud sync service for automatic retry
         // with exponential backoff: 3s, 6s, 12s, 24s, 48s
-        // Convert ExerciseTemplate to Exercise format for cloud sync
-        final exercisesForSync = template.exercises.map((exTemplate) {
-          return {
-            'id': exTemplate.exerciseId,
-            'name': exTemplate.exerciseName,
-            'category': exTemplate.category,
-            'type': exTemplate.type,
-            'sets': exTemplate.sets
-                .map((setTemplate) => {
-                      'id': 'set_${setTemplate.setNumber}',
-                      'setNumber': setTemplate.setNumber,
-                      'weight': setTemplate.targetWeight ?? 0,
-                      'reps': setTemplate.targetReps,
-                      'notes': setTemplate.notes,
-                    })
-                .toList(),
-            'notes': exTemplate.notes,
-            'restTime': exTemplate.restTime,
-          };
-        }).toList();
+        // ✅ FIX: Use ExerciseTemplate.toJson() to preserve superset/dropset/restpause data
+        final exercisesForSync =
+            template.exercises.map((e) => e.toJson()).toList();
 
         final templateData = {
           'name': template.name,
