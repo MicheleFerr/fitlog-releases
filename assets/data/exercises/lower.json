@@ -275,7 +275,8 @@
     "muscoliSecondari": [
       "ABDU",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -302,7 +303,8 @@
       "FEMO",
       "POLP",
       "CORE",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -382,7 +384,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/bulgariansplit.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -412,7 +415,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/bulgariansplit.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -443,7 +447,8 @@
     "muscoliSecondari": [
       "GLUT",
       "FEMO",
-      "CORE"
+      "CORE",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -473,7 +478,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/bulgariansplit.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -503,7 +509,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -531,6 +538,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/py1HSzx.gif",
     "muscoliSecondari": [
+      "ADD",
       "FEMO",
       "POLP",
       "QUAD"
@@ -563,7 +571,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -593,7 +602,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -623,7 +633,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -653,7 +664,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -679,7 +691,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -709,7 +722,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -742,7 +756,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -773,7 +788,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -804,7 +820,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -834,7 +851,8 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Elevated_Back_Lunge/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -889,6 +907,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/ecl28tP.gif",
     "muscoliSecondari": [
+      "ADD",
       "FEMO",
       "POLP",
       "QUAD"
@@ -921,7 +940,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -952,7 +972,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -1658,7 +1679,8 @@
     "muscoliSecondari": [
       "FEMO",
       "CORE",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -1689,7 +1711,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -1719,7 +1742,8 @@
     "muscoliSecondari": [
       "FEMO",
       "CORE",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -1780,7 +1804,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -2904,7 +2929,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -3505,7 +3531,8 @@
       "GLUT",
       "FEMO",
       "LOMB",
-      "TRAP"
+      "TRAP",
+      "ADD"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -3532,7 +3559,8 @@
       "AVA",
       "GLUT",
       "FEMO",
-      "LOMB"
+      "LOMB",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -4361,7 +4389,8 @@
     "muscoliSecondari": [
       "FEMO",
       "CORE",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -4499,7 +4528,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/hacksquat.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -4528,7 +4558,8 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/hacksquat.gif",
     "muscoliSecondari": [
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -4559,7 +4590,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -4585,7 +4617,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -4725,7 +4758,8 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Hip_Thrust/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -4750,7 +4784,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/Pjbc0Kt.gif",
     "muscoliSecondari": [
       "FEMO",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -5200,7 +5235,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -5343,7 +5379,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -5374,7 +5411,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -5482,6 +5520,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/HUEqZ1y.gif",
     "muscoliSecondari": [
+      "ADD",
       "FEMO",
       "GLUT"
     ],
@@ -5512,6 +5551,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/W31mMjd.gif",
     "muscoliSecondari": [
+      "ADD",
       "FEMO",
       "GLUT"
     ],
@@ -5780,7 +5820,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -5811,7 +5852,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -5842,7 +5884,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -5873,7 +5916,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -5904,7 +5948,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -5934,7 +5979,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/V07qpXy.gif",
     "muscoliSecondari": [
       "FEMO",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -5964,7 +6010,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -5995,7 +6042,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -6025,7 +6073,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -6059,7 +6108,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -6118,7 +6168,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -6259,7 +6310,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/ia6kIIl.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -6289,7 +6341,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/v6EKk0O.gif",
     "muscoliSecondari": [
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -6419,7 +6472,8 @@
       "CORE",
       "DELT",
       "FEMO",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -6746,7 +6800,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -6772,7 +6827,8 @@
     "muscoliSecondari": [
       "FEMO",
       "CORE",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -6853,7 +6909,8 @@
       "POLP",
       "GLUT",
       "FEMO",
-      "LOMB"
+      "LOMB",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -7107,7 +7164,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -7215,7 +7273,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -7241,7 +7300,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -7289,7 +7349,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -7508,7 +7569,8 @@
     "muscoliSecondari": [
       "FEMO",
       "GLUT",
-      "POLP"
+      "POLP",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -7566,7 +7628,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/hacksquat.gif",
     "muscoliSecondari": [
       "QUAD",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -8975,7 +9038,8 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/DoEYq4s.gif",
     "muscoliSecondari": [
-      "CORE"
+      "CORE",
+      "ADD"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Isolation",
@@ -9018,7 +9082,8 @@
     ],
     "countingMode": "reps",
     "muscoliSecondari": [
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -9033,7 +9098,8 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/0lQnxMZ.gif",
     "muscoliSecondari": [
-      "CORE"
+      "CORE",
+      "ADD"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Isolation",
@@ -9093,7 +9159,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -9147,7 +9214,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9469,7 +9537,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -9499,7 +9568,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/arsYEd3.gif",
     "muscoliSecondari": [
       "FEMO",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9529,7 +9599,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/HBYyX94.gif",
     "muscoliSecondari": [
       "FEMO",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9559,7 +9630,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/y8bYM8w.gif",
     "muscoliSecondari": [
       "FEMO",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9589,7 +9661,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/wWFspEi.gif",
     "muscoliSecondari": [
       "FEMO",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9618,7 +9691,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/gGNQmVt.gif",
     "muscoliSecondari": [
       "FEMO",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9648,7 +9722,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/qx4fgX7.gif",
     "muscoliSecondari": [
       "FEMO",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9707,7 +9782,8 @@
       "CORE",
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9739,7 +9815,8 @@
       "CORE",
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9769,7 +9846,8 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Squats_With_Two_Kettlebells/0.jpg",
     "muscoliSecondari": [
       "POLP",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9794,7 +9872,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/r5DgrW9.gif",
     "muscoliSecondari": [
       "FEMO",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9825,7 +9904,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9855,7 +9935,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9942,7 +10023,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -9973,7 +10055,8 @@
       "CORE",
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10005,7 +10088,8 @@
       "CORE",
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10037,7 +10121,8 @@
       "POLP",
       "GLUT",
       "FEMO",
-      "LOMB"
+      "LOMB",
+      "ADD"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -10063,7 +10148,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10093,7 +10179,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10125,7 +10212,8 @@
       "CORE",
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10157,7 +10245,8 @@
       "CORE",
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10219,7 +10308,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10251,7 +10341,8 @@
       "CORE",
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10281,7 +10372,8 @@
     "muscoliSecondari": [
       "CORE",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10308,7 +10400,8 @@
       "CORE",
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10369,7 +10462,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10400,7 +10494,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -10426,7 +10521,8 @@
     "muscoliSecondari": [
       "GLUT",
       "FEMO",
-      "POLP"
+      "POLP",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10456,7 +10552,8 @@
     "muscoliSecondari": [
       "GLUT",
       "FEMO",
-      "POLP"
+      "POLP",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10486,7 +10583,8 @@
     "muscoliSecondari": [
       "GLUT",
       "FEMO",
-      "POLP"
+      "POLP",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10517,7 +10615,8 @@
     "muscoliSecondari": [
       "GLUT",
       "FEMO",
-      "POLP"
+      "POLP",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10549,7 +10648,8 @@
       "GLUT",
       "FEMO",
       "LOMB",
-      "TRAP"
+      "TRAP",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10575,7 +10675,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10607,7 +10708,8 @@
       "CORE",
       "FEMO",
       "GLUT",
-      "DELT"
+      "DELT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10638,7 +10740,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -10668,7 +10771,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10698,7 +10802,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10730,7 +10835,8 @@
       "POLP",
       "GLUT",
       "FEMO",
-      "LOMB"
+      "LOMB",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10756,7 +10862,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -10786,7 +10893,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10817,7 +10925,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10849,7 +10958,8 @@
       "FEMO",
       "LAT",
       "QUAD",
-      "TRAP"
+      "TRAP",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10881,7 +10991,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -10912,7 +11023,8 @@
       "POLP",
       "GLUT",
       "FEMO",
-      "LOMB"
+      "LOMB",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10938,7 +11050,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -10998,7 +11111,8 @@
       "CORE",
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11028,7 +11142,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11071,7 +11186,8 @@
     ],
     "countingMode": "weighted",
     "muscoliSecondari": [
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "version": "1.0.2",
     "versionHistory": [
@@ -11088,7 +11204,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11117,6 +11234,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/dzz6BiV.gif",
     "muscoliSecondari": [
+      "ADD",
       "FEMO",
       "POLP",
       "QUAD"
@@ -11149,7 +11267,8 @@
     "muscoliSecondari": [
       "CORE",
       "FEMO",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11182,7 +11301,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11215,7 +11335,8 @@
       "CORE",
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11247,7 +11368,8 @@
       "CORE",
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11277,7 +11399,8 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single-Leg_High_Box_Squat/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11302,7 +11425,8 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Squat/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11328,7 +11452,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11358,7 +11483,8 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Squat_with_Dumbbells/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11384,7 +11510,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11414,7 +11541,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11446,7 +11574,8 @@
       "POLP",
       "GLUT",
       "FEMO",
-      "LOMB"
+      "LOMB",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11503,7 +11632,8 @@
       "POLP",
       "GLUT",
       "FEMO",
-      "LOMB"
+      "LOMB",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11529,7 +11659,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -11583,7 +11714,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11643,7 +11775,8 @@
       "POLP",
       "GLUT",
       "FEMO",
-      "DELT"
+      "DELT",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11669,7 +11802,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11702,7 +11836,8 @@
       "CORE",
       "POLP",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11729,7 +11864,8 @@
       "POLP",
       "GLUT",
       "FEMO",
-      "DELT"
+      "DELT",
+      "ADD"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -11783,7 +11919,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11813,7 +11950,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11844,7 +11982,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11874,7 +12013,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -11901,7 +12041,8 @@
       "POLP",
       "GLUT",
       "FEMO",
-      "LOMB"
+      "LOMB",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11927,7 +12068,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -11957,7 +12099,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -11987,7 +12130,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -12041,7 +12185,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12067,7 +12212,8 @@
     "muscoliSecondari": [
       "CORE",
       "FEMO",
-      "LOMB"
+      "LOMB",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12092,7 +12238,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/echClj7.gif",
     "muscoliSecondari": [
       "FEMO",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12122,7 +12269,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/oR7O9LW.gif",
     "muscoliSecondari": [
       "FEMO",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12150,7 +12298,9 @@
     "nome": "Squat per Gambe anteriori",
     "focus": "QUAD",
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Quadriceps-SMR/0.jpg",
-    "muscoliSecondari": [],
+    "muscoliSecondari": [
+      "ADD"
+    ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Isolation",
     "attrezzatura": "Foam Roller",
@@ -12176,7 +12326,8 @@
       "FEMO",
       "POLP",
       "GLUT",
-      "CORE"
+      "CORE",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12206,7 +12357,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12237,7 +12389,8 @@
     "muscoliSecondari": [
       "CORE",
       "DELT",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -12299,7 +12452,8 @@
       "POLP",
       "GLUT",
       "FEMO",
-      "LOMB"
+      "LOMB",
+      "ADD"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
@@ -12324,7 +12478,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/GUT8I22.gif",
     "muscoliSecondari": [
       "FEMO",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12352,7 +12507,8 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/lHeUULr.gif",
     "muscoliSecondari": [
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12380,7 +12536,8 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/kuMiR2T.gif",
     "muscoliSecondari": [
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12408,7 +12565,8 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/5eLRITT.gif",
     "muscoliSecondari": [
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12464,7 +12622,8 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/PDHE73u.gif",
     "muscoliSecondari": [
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12551,7 +12710,8 @@
     "muscoliSecondari": [
       "LAT",
       "TRAP",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12579,7 +12739,8 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/oom75KC.gif",
     "muscoliSecondari": [
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12608,7 +12769,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/UfePqpx.gif",
     "muscoliSecondari": [
       "FEMO",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12723,7 +12885,8 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/2Ty4idJ.gif",
     "muscoliSecondari": [
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12778,7 +12941,8 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/o6LqKKP.gif",
     "muscoliSecondari": [
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12807,7 +12971,8 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/wQ2c4XD.gif",
     "muscoliSecondari": [
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12836,7 +13001,8 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/rR0LJzx.gif",
     "muscoliSecondari": [
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12866,7 +13032,8 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/daBmy1Y.gif",
     "muscoliSecondari": [
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12894,6 +13061,7 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/KgI0tqW.gif",
     "muscoliSecondari": [
+      "ADD",
       "FEMO",
       "QUAD"
     ],
@@ -12954,7 +13122,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/2DxtqHL.gif",
     "muscoliSecondari": [
       "FEMO",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -12983,7 +13152,8 @@
     "imageUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leverage_Deadlift/0.jpg",
     "muscoliSecondari": [
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -13029,7 +13199,8 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/gEyURal.gif",
     "muscoliSecondari": [
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13057,7 +13228,8 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/gKozT8X.gif",
     "muscoliSecondari": [
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13086,7 +13258,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/eGDudUV.gif",
     "muscoliSecondari": [
       "FEMO",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13115,7 +13288,8 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/nUwVh7b.gif",
     "muscoliSecondari": [
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13144,7 +13318,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/jQGwmxN.gif",
     "muscoliSecondari": [
       "FEMO",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13174,7 +13349,8 @@
     "focus": "GLUT",
     "imageUrl": "https://static.exercisedb.dev/media/ila4NZS.gif",
     "muscoliSecondari": [
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13262,7 +13438,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -13293,7 +13470,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13319,7 +13497,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13348,7 +13527,8 @@
     "imageUrl": "https://static.exercisedb.dev/media/QjE2DcA.gif",
     "muscoliSecondari": [
       "FEMO",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13381,7 +13561,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13411,7 +13592,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13443,7 +13625,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -13475,7 +13658,8 @@
     "muscoliSecondari": [
       "FEMO",
       "POLP",
-      "QUAD"
+      "QUAD",
+      "ADD"
     ],
     "difficolta": "Intermedio",
     "tipoEsercizio": "Compound",
@@ -14244,6 +14428,7 @@
     "focus": "QUAD",
     "imageUrl": "https://static.exercisedb.dev/media/s7HX1BY.gif",
     "muscoliSecondari": [
+      "ADD",
       "FEMO",
       "GLUT"
     ],
@@ -14354,7 +14539,8 @@
     "muscoliSecondari": [
       "FEMO",
       "CORE",
-      "GLUT"
+      "GLUT",
+      "ADD"
     ],
     "difficolta": "Principiante",
     "tipoEsercizio": "Compound",
@@ -14747,7 +14933,8 @@
     "muscoliSecondari": [
       "POLP",
       "GLUT",
-      "FEMO"
+      "FEMO",
+      "ADD"
     ],
     "difficolta": "Avanzato",
     "tipoEsercizio": "Compound",
