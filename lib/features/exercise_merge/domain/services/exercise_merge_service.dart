@@ -29,6 +29,16 @@ class ExerciseMergeService {
   /// Soglia per match di alta qualità (75%)
   static const double _highQualityThreshold = 0.75;
 
+  /// Normalizza stringa per confronto nomi esercizi.
+  /// Rimuove simboli speciali (°), normalizza spazi, lowercase.
+  static String _normalizeForComparison(String text) {
+    return text
+        .toLowerCase()
+        .replaceAll('°', '')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
+  }
+
   /// Trova tutti gli esercizi custom che potrebbero essere mergati
   ///
   /// [exerciseHistories] - Storico esercizi dell'utente
@@ -41,18 +51,26 @@ class ExerciseMergeService {
   }) async {
     final candidates = <MergeCandidate>[];
 
-    // Crea set di nomi esercizi del database (lowercase per confronto)
+    // Crea set di nomi esercizi del database (normalizzati: no °, lowercase)
     final databaseNames = databaseExercises
-        .map((e) => e.nome.toLowerCase())
+        .map((e) => _normalizeForComparison(e.nome))
         .toSet();
+
+    // Crea set di ID esercizi del database
+    final databaseIds = databaseExercises.map((e) => e.id).toSet();
 
     // Trova esercizi senza match esatto
     for (final history in exerciseHistories) {
       final exerciseName = history.exerciseName;
-      final normalizedName = exerciseName.toLowerCase();
 
-      // Skip se ha match esatto nel database
-      if (databaseNames.contains(normalizedName)) {
+      // Skip se l'exerciseId corrisponde a un esercizio del database
+      // (l'utente l'ha preso direttamente dal database)
+      if (databaseIds.contains(history.exerciseId)) {
+        continue;
+      }
+
+      // Skip se ha match esatto nel database (normalizzato: ignora °, case)
+      if (databaseNames.contains(_normalizeForComparison(exerciseName))) {
         continue;
       }
 
