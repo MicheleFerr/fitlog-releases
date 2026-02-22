@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_selector_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_display_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/timer/presentation/providers/unified_timer_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -794,6 +795,15 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
       isCompleted: false,
     );
 
+    // Pre-cattura variabili timer PRIMA del show: il widget potrebbe essere smontato
+    // quando il callback viene chiamato (dopo che l'utente completa il RPE)
+    final timerActions = ref.read(tier1TimerActionsProvider);
+    final restDuration = widget.superset.restTime ?? 90;
+    final supersetName = widget.superset.name;
+    final isLastRound = supersetSet.setNumber >= widget.superset.supersetSets.length;
+    final nextRound = supersetSet.setNumber + 1;
+    final totalRounds = widget.superset.supersetSets.length;
+
     // ✅ Open RpeSelectorBottomSheet directly with superset mode (swipe navigation)
     RpeSelectorBottomSheet.show(
       context: context,
@@ -803,7 +813,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
 
       // ✅ SUPERSET MODE - enables swipe left/right between exercises
       isPartOfSuperset: true,
-      supersetName: widget.superset.name,
+      supersetName: supersetName,
       supersetExercises: widget.superset.exercises,
       supersetSet: supersetSet,
       currentExerciseIndex: 0,
@@ -811,6 +821,15 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
       // ✅ Callback quando TUTTI gli esercizi del round sono completati
       onSupersetCompleteAll: (completeDataMap) {
         _handleRoundCompletion(supersetSet, completeDataMap);
+        // ✅ FIX Bug 1: Avvia timer riposo dopo completamento round (se non ultimo)
+        if (!isLastRound) {
+          timerActions.startExerciseRest(
+            seconds: restDuration,
+            exerciseName: '$supersetName - Round $nextRound',
+            currentSet: nextRound,
+            totalSets: totalRounds,
+          );
+        }
       },
 
       // ✅ Callback per singolo esercizio (non usato in superset mode)

@@ -2871,19 +2871,82 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
     final workout = state!;
 
-    // Find current exercise (first with incomplete sets)
-    final currentExercise = workout.exercises.cast<Exercise?>().firstWhere(
-      (e) => e != null && e.sets.any((s) => !s.isCompleted),
-      orElse: () => null,
-    );
+    // ✅ FIX Bug 3: Find current exercise handling ALL exercise types
+    // SupersetExercise has sets=[] so we must check supersetSets
+    Exercise? currentExercise;
+    for (final exercise in workout.exercises) {
+      if (exercise is SupersetExercise) {
+        if (exercise.supersetSets.any((s) => !s.isCompleted)) {
+          currentExercise = exercise;
+          break;
+        }
+      } else if (exercise is DropSetExercise) {
+        if (exercise.stages.any((s) => !s.isCompleted)) {
+          currentExercise = exercise;
+          break;
+        }
+      } else if (exercise is RestPauseExercise) {
+        if (exercise.restPauseSets.any((s) => !s.isCompleted)) {
+          currentExercise = exercise;
+          break;
+        }
+      } else {
+        if (exercise.sets.any((s) => !s.isCompleted)) {
+          currentExercise = exercise;
+          break;
+        }
+      }
+    }
 
     if (currentExercise == null) {
       debugPrint('⌚ [FLUTTER] ❌ No exercise with incomplete sets');
       return;
     }
+    // Final binding for null-safety promotion in closures
+    final activeExercise = currentExercise;
+
+    // ✅ FIX Bug 3: If current exercise is a superset, delegate to superset handler
+    if (currentExercise is SupersetExercise) {
+      final superset = currentExercise;
+      final currentRoundIndex = superset.supersetSets.indexWhere((s) => !s.isCompleted);
+      debugPrint('⌚ [FLUTTER] 🔥 Current exercise is superset, delegating to _completeSupersetRoundFromWatch');
+      _completeSupersetRoundFromWatch(
+        roundNumber: currentRoundIndex >= 0 ? currentRoundIndex + 1 : 1,
+        totalRounds: superset.supersetSets.length,
+        exercises: superset.exercises.map((e) => e.name).toList(),
+        effort: effort,
+        effortScale: effortScale,
+      );
+      return;
+    }
+
+    // ✅ FIX: If current exercise is a dropset, delegate to dropset handler
+    if (currentExercise is DropSetExercise) {
+      debugPrint('⌚ [FLUTTER] 🔥 Current exercise is dropset, delegating to _completeDropsetFromWatch');
+      _completeDropsetFromWatch(
+        totalStages: currentExercise.stages.length,
+        actualReps: actualReps,
+        effort: effort,
+        effortScale: effortScale,
+      );
+      return;
+    }
+
+    // ✅ FIX: If current exercise is a rest-pause, delegate to rest-pause handler
+    if (currentExercise is RestPauseExercise) {
+      debugPrint('⌚ [FLUTTER] 🔥 Current exercise is rest-pause, delegating to _completeRestPauseFromWatch');
+      _completeRestPauseFromWatch(
+        totalSets: currentExercise.restPauseSets.length,
+        weight: currentExercise.weight,
+        actualReps: actualReps,
+        effort: effort,
+        effortScale: effortScale,
+      );
+      return;
+    }
 
     // Find first incomplete set
-    final currentSet = currentExercise.sets.cast<ExerciseSet?>().firstWhere(
+    final currentSet = activeExercise.sets.cast<ExerciseSet?>().firstWhere(
       (s) => s != null && !s.isCompleted,
       orElse: () => null,
     );
@@ -2908,10 +2971,10 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     _lastCompletedSetId = currentSet.id;
 
     debugPrint(
-      '⌚ [FLUTTER] ✅ Completing set ${currentSet.setNumber} of ${currentExercise.name}',
+      '⌚ [FLUTTER] ✅ Completing set ${currentSet.setNumber} of ${activeExercise.name}',
     );
     debugPrint(
-      '⌚ [FLUTTER] Exercise ID: ${currentExercise.id}, Set ID: ${currentSet.id}',
+      '⌚ [FLUTTER] Exercise ID: ${activeExercise.id}, Set ID: ${currentSet.id}',
     );
 
     // Convert RIR to RPE if needed (RIR 0-4 → RPE 10-6)
@@ -2930,15 +2993,15 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     if (rpeValue != null) {
       // Update set with RPE value
       final updatedSet = currentSet.copyWith(rpe: rpeValue);
-      final setIndex = currentExercise.sets.indexWhere(
+      final setIndex = activeExercise.sets.indexWhere(
         (s) => s.id == currentSet.id,
       );
       if (setIndex >= 0) {
-        final updatedSets = List<ExerciseSet>.from(currentExercise.sets);
+        final updatedSets = List<ExerciseSet>.from(activeExercise.sets);
         updatedSets[setIndex] = updatedSet;
-        final updatedExercise = currentExercise.copyWith(sets: updatedSets);
+        final updatedExercise = activeExercise.copyWith(sets: updatedSets);
         final exerciseIndex = workout.exercises.indexWhere(
-          (e) => e.id == currentExercise.id,
+          (e) => e.id == activeExercise.id,
         );
         if (exerciseIndex >= 0) {
           final updatedExercises = List<Exercise>.from(workout.exercises);
@@ -2954,7 +3017,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
       // Re-read state in case RPE update modified it
       final currentWorkout = state!;
       final currentEx = currentWorkout.exercises.cast<Exercise?>().firstWhere(
-        (e) => e != null && e.id == currentExercise.id,
+        (e) => e != null && e.id == activeExercise.id,
         orElse: () => null,
       );
       if (currentEx != null) {
@@ -2977,7 +3040,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
 
     // Use existing completeSet method
     debugPrint('⌚ [FLUTTER] 🎯 Calling completeSet...');
-    completeSet(currentExercise.id, currentSet.id);
+    completeSet(activeExercise.id, currentSet.id);
     debugPrint('⌚ [FLUTTER] ✅ completeSet finished');
 
     // Update Watch with new state

@@ -238,20 +238,22 @@ class _RpeSelectorBottomSheetState
   void _onPageChanged(int index) {
     if (!widget.isPartOfSuperset) return;
 
-    setState(() {
-      _currentExerciseIndex = index;
-      _currentExerciseSet = _getExerciseSetForIndex(index);
-      _loadExerciseData(_currentExerciseSet);
-    });
+    // ✅ FIX Bug 2: Ricrea i controller con la posizione iniziale corretta
+    // invece di jumpToItem che causa freeze visivo con CupertinoPicker
+    _currentExerciseIndex = index;
+    _currentExerciseSet = _getExerciseSetForIndex(index);
+    _loadExerciseData(_currentExerciseSet);
 
-    // Sync wheel positions after the rebuild completes to avoid layout conflicts
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      _weightWheelController.jumpToItem(
-        (_actualWeight / 0.5).round().clamp(0, 600),
-      );
-      _repsWheelController.jumpToItem(_actualReps.clamp(0, 100));
-    });
+    // Dispose vecchi controller e ricrea con nuove posizioni
+    _weightWheelController.dispose();
+    _repsWheelController.dispose();
+
+    final weightIndex = (_actualWeight / 0.5).round().clamp(0, 600);
+    final repsIndex = _actualReps.clamp(0, 100);
+    _weightWheelController = FixedExtentScrollController(initialItem: weightIndex);
+    _repsWheelController = FixedExtentScrollController(initialItem: repsIndex);
+
+    setState(() {});
 
     HapticFeedback.lightImpact();
   }
