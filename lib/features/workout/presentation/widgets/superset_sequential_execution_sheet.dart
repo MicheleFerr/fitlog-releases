@@ -93,6 +93,15 @@ class _SupersetSequentialExecutionSheetState
       isCompleted: false,
     );
 
+    // Pre-cattura variabili timer PRIMA del pop: il widget sarà smontato
+    // quando il callback viene chiamato (dopo che l'utente completa il RPE)
+    final timerActions = ref.read(tier1TimerActionsProvider);
+    final restDuration = widget.superset.restTime ?? 90;
+    final restLabel = context.l10n.supersetRestLabel(widget.superset.name);
+    final nextRound = widget.roundIndex + 2;
+    final totalRounds = widget.superset.supersetSets.length;
+    final isLastRound = _isLastRound;
+
     // ✅ FIX: Chiudi questo modal PRIMA di aprire il RPE selector
     // Altrimenti due modal sovrapposti causano freeze
     Navigator.of(context).pop();
@@ -120,6 +129,16 @@ class _SupersetSequentialExecutionSheetState
       // ✅ Callback quando TUTTI gli esercizi sono completati
       onSupersetCompleteAll: (completeDataMap) {
         _handleRoundCompletion(completeDataMap);
+        // Avvia timer con variabili pre-catturate: il widget è già smontato
+        // quindi non possiamo usare mounted/ref qui
+        if (!isLastRound) {
+          timerActions.startExerciseRest(
+            seconds: restDuration,
+            exerciseName: restLabel,
+            currentSet: nextRound,
+            totalSets: totalRounds,
+          );
+        }
       },
 
       // ✅ Callback per singolo esercizio (non usato in superset mode)
@@ -175,15 +194,13 @@ class _SupersetSequentialExecutionSheetState
       // Era l'ultimo round → completa tutto
       widget.onAllRoundsCompleted?.call();
 
-      // ✅ FIX: Non chiudere modal (già chiuso), solo mostra feedback
       // Il SupersetSequentialExecutionSheet è già stato chiuso in _executeRound()
       if (mounted) {
         SnackBarService.showSuccess(context, context.l10n.supersetCompleted);
       }
-    } else {
-      // Avvia timer riposo tra round
-      _startRestTimer();
     }
+    // Il timer di riposo viene avviato direttamente in _executeRound()
+    // con variabili pre-catturate, perché questo widget è smontato
   }
 
   /// Avvia timer usando tier1TimerActions (stesso dell'app)

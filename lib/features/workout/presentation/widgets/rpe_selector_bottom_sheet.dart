@@ -244,11 +244,14 @@ class _RpeSelectorBottomSheetState
       _loadExerciseData(_currentExerciseSet);
     });
 
-    // Sync wheel positions to reflect the newly loaded exercise data
-    _weightWheelController.jumpToItem(
-      (_actualWeight / 0.5).round().clamp(0, 600),
-    );
-    _repsWheelController.jumpToItem(_actualReps.clamp(0, 100));
+    // Sync wheel positions after the rebuild completes to avoid layout conflicts
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _weightWheelController.jumpToItem(
+        (_actualWeight / 0.5).round().clamp(0, 600),
+      );
+      _repsWheelController.jumpToItem(_actualReps.clamp(0, 100));
+    });
 
     HapticFeedback.lightImpact();
   }
