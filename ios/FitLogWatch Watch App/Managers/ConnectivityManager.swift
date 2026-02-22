@@ -723,13 +723,18 @@ class ConnectivityManager: NSObject, ObservableObject {
     }
 
     /// 🔥 DROPSET: Notify iPhone that entire dropset is completed
-    func sendDropsetCompleted(effort: Int? = nil) {
+    /// - actualLastStageReps: Actual reps performed on the last stage (from reps picker)
+    func sendDropsetCompleted(effort: Int? = nil, actualLastStageReps: Int? = nil) {
         var data: [String: Any] = [
             "type": WatchMessageType.dropsetCompleted,
             "timestamp": Date().timeIntervalSince1970,
             "exerciseName": currentExerciseName,
             "totalStages": totalDropsetStages
         ]
+
+        if let reps = actualLastStageReps {
+            data["actualReps"] = reps
+        }
 
         if let effort = effort {
             data["effort"] = effort
@@ -739,7 +744,7 @@ class ConnectivityManager: NSObject, ObservableObject {
         sendToiPhone(data, critical: true, forceImmediate: true)
         WKInterfaceDevice.current().play(.success)
 
-        print("⌚ [DROPSET] Completed all \(totalDropsetStages) stages with RPE: \(effort ?? -1)")
+        print("⌚ [DROPSET] Completed all \(totalDropsetStages) stages, last stage reps: \(actualLastStageReps ?? -1), RPE: \(effort ?? -1)")
     }
 
     /// 🔥 REST-PAUSE: Notify iPhone that a rest-pause set was completed
@@ -773,7 +778,8 @@ class ConnectivityManager: NSObject, ObservableObject {
     }
 
     /// 🔥 REST-PAUSE: Notify iPhone that entire rest-pause exercise is completed
-    func sendRestPauseCompleted(effort: Int? = nil) {
+    /// - actualLastSetReps: Actual reps performed on the last mini-set (from reps picker)
+    func sendRestPauseCompleted(effort: Int? = nil, actualLastSetReps: Int? = nil) {
         var data: [String: Any] = [
             "type": WatchMessageType.restPauseCompleted,
             "timestamp": Date().timeIntervalSince1970,
@@ -781,6 +787,10 @@ class ConnectivityManager: NSObject, ObservableObject {
             "totalSets": totalRestPauseSets,
             "weight": restPauseWeight
         ]
+
+        if let reps = actualLastSetReps {
+            data["actualReps"] = reps
+        }
 
         if let effort = effort {
             data["effort"] = effort

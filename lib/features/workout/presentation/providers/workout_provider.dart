@@ -3829,6 +3829,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   /// Handle entire dropset completion from Watch (all stages done at once)
   void _completeDropsetFromWatch({
     required int totalStages,
+    int? actualReps,
     int? effort,
     String? effortScale,
   }) {
@@ -3868,10 +3869,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     // Mark all remaining stages as completed
+    // actualReps from Watch picker applies to the last remaining stage
+    final incompleteStages = currentDropset.stages.where((s) => !s.isCompleted).toList();
+    final isLastStage = incompleteStages.length == 1;
     final updatedStages = currentDropset.stages.map((stage) {
       if (!stage.isCompleted) {
         return stage.copyWith(
-          actualReps: stage.reps, // Use target reps as actual
+          // Use actual reps from Watch picker for the last stage, else target reps
+          actualReps: (isLastStage && actualReps != null) ? actualReps : stage.reps,
           rpe: rpeValue,
           isCompleted: true,
           completedAt: DateTime.now(),
@@ -4063,6 +4068,7 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
   void _completeRestPauseFromWatch({
     required int totalSets,
     required double weight,
+    int? actualReps,
     int? effort,
     String? effortScale,
   }) {
@@ -4102,10 +4108,14 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
     }
 
     // Mark all remaining sets as completed
+    // actualReps from Watch picker applies to the last remaining mini-set
+    final incompleteSets = currentRestPause.restPauseSets.where((s) => !s.isCompleted).toList();
+    final isLastSet = incompleteSets.length == 1;
     final updatedSets = currentRestPause.restPauseSets.map((set) {
       if (!set.isCompleted) {
         return set.copyWith(
-          actualReps: set.reps, // Use target reps as actual
+          // Use actual reps from Watch picker for the last set, else target reps
+          actualReps: (isLastSet && actualReps != null) ? actualReps : set.reps,
           rpe: rpeValue,
           isCompleted: true,
           completedAt: DateTime.now(),

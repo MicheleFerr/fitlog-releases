@@ -242,10 +242,15 @@ typedef OnDropsetStageCompletedFromWatch =
 
 /// 🔥 DROPSET: Callback for when Watch completes entire dropset (all stages)
 /// - totalStages: Total stages completed
+/// - actualReps: Actual reps performed on the last stage (from reps picker)
 /// - effort: Optional effort value for entire dropset
 /// - effortScale: "rpe" or "rir"
-typedef OnDropsetCompletedFromWatch =
-    void Function({required int totalStages, int? effort, String? effortScale});
+typedef OnDropsetCompletedFromWatch = void Function({
+  required int totalStages,
+  int? actualReps,
+  int? effort,
+  String? effortScale,
+});
 
 /// 🔥 REST-PAUSE: Callback for when Watch completes a single rest-pause mini-set
 /// - setIndex: 0-indexed set number
@@ -267,15 +272,16 @@ typedef OnRestPauseSetCompletedFromWatch =
 /// 🔥 REST-PAUSE: Callback for when Watch completes entire rest-pause (all mini-sets)
 /// - totalSets: Total mini-sets completed
 /// - weight: Weight used
+/// - actualReps: Actual reps performed on the last mini-set (from reps picker)
 /// - effort: Optional effort value for entire rest-pause
 /// - effortScale: "rpe" or "rir"
-typedef OnRestPauseCompletedFromWatch =
-    void Function({
-      required int totalSets,
-      required double weight,
-      int? effort,
-      String? effortScale,
-    });
+typedef OnRestPauseCompletedFromWatch = void Function({
+  required int totalSets,
+  required double weight,
+  int? actualReps,
+  int? effort,
+  String? effortScale,
+});
 
 /// 📸 Recovery: Callback for full workout snapshot from Watch (crash recovery)
 typedef OnFullWorkoutSnapshotFromWatch = void Function(Map<String, dynamic> snapshot);
@@ -571,21 +577,23 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
         final args = call.arguments as Map<dynamic, dynamic>?;
         if (args != null) {
           final totalStages = (args['totalStages'] as num?)?.toInt() ?? 0;
+          final actualReps = (args['actualReps'] as num?)?.toInt();
           final effort = args['effort'] as int?;
           final effortScale = args['effortScale'] as String?;
 
           if (effort != null) {
             _watchLog(
-              '⌚ [FLUTTER] 🔥 Dropset completed ($totalStages stages) with ${effortScale?.toUpperCase() ?? "RPE"}: $effort',
+              '⌚ [FLUTTER] 🔥 Dropset completed ($totalStages stages, last reps: ${actualReps ?? "?"}) with ${effortScale?.toUpperCase() ?? "RPE"}: $effort',
             );
           } else {
             _watchLog(
-              '⌚ [FLUTTER] 🔥 Dropset completed ($totalStages stages)',
+              '⌚ [FLUTTER] 🔥 Dropset completed ($totalStages stages, last reps: ${actualReps ?? "?"})',
             );
           }
 
           onDropsetCompletedFromWatch?.call(
             totalStages: totalStages,
+            actualReps: actualReps,
             effort: effort,
             effortScale: effortScale,
           );
@@ -629,22 +637,24 @@ class WatchConnectivityNotifier extends Notifier<WatchConnectivityData> {
         if (args != null) {
           final totalSets = (args['totalSets'] as num?)?.toInt() ?? 0;
           final weight = (args['weight'] as num?)?.toDouble() ?? 0;
+          final actualReps = (args['actualReps'] as num?)?.toInt();
           final effort = args['effort'] as int?;
           final effortScale = args['effortScale'] as String?;
 
           if (effort != null) {
             _watchLog(
-              '⌚ [FLUTTER] 🔥 Rest-Pause completed ($totalSets sets, ${weight}kg) with ${effortScale?.toUpperCase() ?? "RPE"}: $effort',
+              '⌚ [FLUTTER] 🔥 Rest-Pause completed ($totalSets sets, ${weight}kg, last reps: ${actualReps ?? "?"}) with ${effortScale?.toUpperCase() ?? "RPE"}: $effort',
             );
           } else {
             _watchLog(
-              '⌚ [FLUTTER] 🔥 Rest-Pause completed ($totalSets sets, ${weight}kg)',
+              '⌚ [FLUTTER] 🔥 Rest-Pause completed ($totalSets sets, ${weight}kg, last reps: ${actualReps ?? "?"})',
             );
           }
 
           onRestPauseCompletedFromWatch?.call(
             totalSets: totalSets,
             weight: weight,
+            actualReps: actualReps,
             effort: effort,
             effortScale: effortScale,
           );

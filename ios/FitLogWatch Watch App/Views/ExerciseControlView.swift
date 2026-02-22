@@ -264,6 +264,19 @@ struct ExerciseControlView: View {
         return connectivity.maxReps ?? connectivity.targetReps
     }
 
+    // ⌚ Target reps for the reps picker (depends on exercise type)
+    private var targetRepsForPicker: Int {
+        if connectivity.isDropset {
+            let stage = connectivity.dropsetStages[safe: connectivity.currentDropsetStage]
+            return stage?.reps ?? 1
+        } else if connectivity.isRestPause {
+            let set = connectivity.restPauseSets[safe: connectivity.currentRestPauseSet]
+            return set?.reps ?? 1
+        } else {
+            return displayedSetHasRepRange ? displayedSetMinReps : displayedTargetReps
+        }
+    }
+
     // MARK: - 🔥 Superset Header View
     /// Compact header showing superset name and round progress
     /// Design: Orange theme (matches Flutter app's secondaryOrange), glanceable info per Apple Watch HIG
@@ -740,50 +753,48 @@ struct ExerciseControlView: View {
                 locale: connectivity.appLocale,
                 onSelect: { effort in
                     showingEffortPicker = false
-                    // Handle based on exercise type
                     if connectivity.isSuperset {
                         completeSupersetRound(effort: effort)
                     } else if connectivity.isDropset {
-                        // 🔻 DROPSET: Complete with effort
+                        // 🔻 DROPSET: pass pending actual reps (set by reps picker)
                         if isLastDropsetStage {
-                            completeDropset(effort: effort)
+                            completeDropset(effort: effort, actualReps: pendingActualReps)
                         } else {
-                            completeDropsetStage(effort: effort)
+                            completeDropsetStage(effort: effort, actualReps: pendingActualReps)
                         }
+                        pendingActualReps = nil
                     } else if connectivity.isRestPause {
-                        // 💪 REST-PAUSE: Complete with effort
+                        // 💪 REST-PAUSE: pass pending actual reps
                         if isLastRestPauseSet {
-                            completeRestPause(effort: effort)
+                            completeRestPause(effort: effort, actualReps: pendingActualReps)
                         } else {
-                            completeRestPauseSet(effort: effort)
+                            completeRestPauseSet(effort: effort, actualReps: pendingActualReps)
                         }
+                        pendingActualReps = nil
                     } else {
-                        // ⌚ Pass pending actual reps from rep range picker (if any)
                         completeSet(effort: effort, actualReps: pendingActualReps)
                         pendingActualReps = nil
                     }
                 },
                 onSkip: {
                     showingEffortPicker = false
-                    // Handle based on exercise type
                     if connectivity.isSuperset {
                         completeSupersetRound(effort: nil)
                     } else if connectivity.isDropset {
-                        // 🔻 DROPSET: Complete without effort
                         if isLastDropsetStage {
-                            completeDropset(effort: nil)
+                            completeDropset(effort: nil, actualReps: pendingActualReps)
                         } else {
-                            completeDropsetStage(effort: nil)
+                            completeDropsetStage(effort: nil, actualReps: pendingActualReps)
                         }
+                        pendingActualReps = nil
                     } else if connectivity.isRestPause {
-                        // 💪 REST-PAUSE: Complete without effort
                         if isLastRestPauseSet {
-                            completeRestPause(effort: nil)
+                            completeRestPause(effort: nil, actualReps: pendingActualReps)
                         } else {
-                            completeRestPauseSet(effort: nil)
+                            completeRestPauseSet(effort: nil, actualReps: pendingActualReps)
                         }
+                        pendingActualReps = nil
                     } else {
-                        // ⌚ Pass pending actual reps from rep range picker (if any)
                         completeSet(effort: nil, actualReps: pendingActualReps)
                         pendingActualReps = nil
                     }
@@ -821,22 +832,42 @@ struct ExerciseControlView: View {
                 }
             )
         }
-        // ⌚ Actual Reps Picker Sheet (always shown when completing a set)
+        // ⌚ Actual Reps Picker Sheet (always shown when completing a set/stage)
         .sheet(isPresented: $showingActualRepsPicker) {
+            let isSpecialType = connectivity.isDropset || connectivity.isRestPause
             ActualRepsPickerView(
-                targetReps: displayedSetHasRepRange ? displayedSetMinReps : displayedTargetReps,
-                minReps: displayedSetHasRepRange ? displayedSetMinReps : nil,
-                maxReps: displayedSetHasRepRange ? displayedSetMaxReps : nil,
+                targetReps: targetRepsForPicker,
+                minReps: (!isSpecialType && displayedSetHasRepRange) ? displayedSetMinReps : nil,
+                maxReps: (!isSpecialType && displayedSetHasRepRange) ? displayedSetMaxReps : nil,
                 locale: connectivity.appLocale,
                 onSelect: { reps in
                     showingActualRepsPicker = false
-                    if connectivity.rpeTrackingEnabled {
-                        // Stash reps, then show RPE picker
-                        pendingActualReps = reps
-                        showingEffortPicker = true
+                    if connectivity.isDropset {
+                        if connectivity.rpeTrackingEnabled && isLastDropsetStage {
+                            pendingActualReps = reps
+                            showingEffortPicker = true
+                        } else if isLastDropsetStage {
+                            completeDropset(effort: nil, actualReps: reps)
+                        } else {
+                            completeDropsetStage(effort: nil, actualReps: reps)
+                        }
+                    } else if connectivity.isRestPause {
+                        if connectivity.rpeTrackingEnabled && isLastRestPauseSet {
+                            pendingActualReps = reps
+                            showingEffortPicker = true
+                        } else if isLastRestPauseSet {
+                            completeRestPause(effort: nil, actualReps: reps)
+                        } else {
+                            completeRestPauseSet(effort: nil, actualReps: reps)
+                        }
                     } else {
-                        // No RPE → complete directly with actual reps
-                        completeSet(effort: nil, actualReps: reps)
+                        // Normal set
+                        if connectivity.rpeTrackingEnabled {
+                            pendingActualReps = reps
+                            showingEffortPicker = true
+                        } else {
+                            completeSet(effort: nil, actualReps: reps)
+                        }
                     }
                 }
             )
@@ -940,14 +971,8 @@ struct ExerciseControlView: View {
                 } else if connectivity.isDropset {
                     Button(action: {
                         WKInterfaceDevice.current().play(.click)
-                        if connectivity.rpeTrackingEnabled && isLastDropsetStage {
-                            // Ask for RPE only on last stage
-                            showingEffortPicker = true
-                        } else if isLastDropsetStage {
-                            completeDropset(effort: nil)
-                        } else {
-                            completeDropsetStage(effort: nil)
-                        }
+                        // ⌚ Always show reps picker first
+                        showingActualRepsPicker = true
                     }) {
                         HStack(spacing: 6) {
                             Image(systemName: showingConfirmation ? "checkmark" : "checkmark.circle.fill")
@@ -973,14 +998,8 @@ struct ExerciseControlView: View {
                 } else if connectivity.isRestPause {
                     Button(action: {
                         WKInterfaceDevice.current().play(.click)
-                        if connectivity.rpeTrackingEnabled && isLastRestPauseSet {
-                            // Ask for RPE only on last set
-                            showingEffortPicker = true
-                        } else if isLastRestPauseSet {
-                            completeRestPause(effort: nil)
-                        } else {
-                            completeRestPauseSet(effort: nil)
-                        }
+                        // ⌚ Always show reps picker first
+                        showingActualRepsPicker = true
                     }) {
                         HStack(spacing: 6) {
                             Image(systemName: showingConfirmation ? "checkmark" : "checkmark.circle.fill")
@@ -1163,15 +1182,15 @@ struct ExerciseControlView: View {
     }
 
     /// Complete current dropset stage
-    private func completeDropsetStage(effort: Int?) {
+    private func completeDropsetStage(effort: Int?, actualReps: Int? = nil) {
         let currentStage = connectivity.currentDropsetStage
         let stageData = connectivity.dropsetStages[safe: currentStage]
-        let actualReps = stageData?.reps ?? 0
+        let reps = actualReps ?? stageData?.reps ?? 0
 
         WKInterfaceDevice.current().play(.success)
         connectivity.sendDropsetStageCompleted(
             stageIndex: currentStage,
-            actualReps: actualReps,
+            actualReps: reps,
             effort: effort
         )
 
@@ -1190,9 +1209,9 @@ struct ExerciseControlView: View {
     }
 
     /// Complete entire dropset (last stage)
-    private func completeDropset(effort: Int?) {
+    private func completeDropset(effort: Int?, actualReps: Int? = nil) {
         WKInterfaceDevice.current().play(.success)
-        connectivity.sendDropsetCompleted(effort: effort)
+        connectivity.sendDropsetCompleted(effort: effort, actualLastStageReps: actualReps)
 
         showingConfirmation = true
 
@@ -1211,15 +1230,15 @@ struct ExerciseControlView: View {
     // MARK: - 💪 REST-PAUSE Functions
 
     /// Complete current rest-pause set
-    private func completeRestPauseSet(effort: Int?) {
+    private func completeRestPauseSet(effort: Int?, actualReps: Int? = nil) {
         let currentSet = connectivity.currentRestPauseSet
         let setData = connectivity.restPauseSets[safe: currentSet]
-        let actualReps = setData?.reps ?? 0
+        let reps = actualReps ?? setData?.reps ?? 0
 
         WKInterfaceDevice.current().play(.success)
         connectivity.sendRestPauseSetCompleted(
             setIndex: currentSet,
-            actualReps: actualReps,
+            actualReps: reps,
             effort: effort
         )
 
@@ -1238,9 +1257,9 @@ struct ExerciseControlView: View {
     }
 
     /// Complete entire rest-pause (last set)
-    private func completeRestPause(effort: Int?) {
+    private func completeRestPause(effort: Int?, actualReps: Int? = nil) {
         WKInterfaceDevice.current().play(.success)
-        connectivity.sendRestPauseCompleted(effort: effort)
+        connectivity.sendRestPauseCompleted(effort: effort, actualLastSetReps: actualReps)
 
         showingConfirmation = true
 
