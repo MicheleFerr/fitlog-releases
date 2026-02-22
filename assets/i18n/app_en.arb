@@ -34365,5 +34365,22 @@
   "dataStillLoading": "Data is still loading...",
   "@dataStillLoading": {
     "description": "Message when user tries action while data is loading"
+  },
+  "weeklyVolumeCard": "Weekly Volume",
+  "@weeklyVolumeCard": {
+    "description": "Title for the weekly volume card in dashboard"
+  },
+  "repZoneCard": "Training Zones",
+  "@repZoneCard": {
+    "description": "Title for the rep zone distribution card in dashboard"
+  },
+  "dominantZoneLabel": "Main focus: {zone}",
+  "@dominantZoneLabel": {
+    "description": "Label showing the dominant training zone",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
   }
 }

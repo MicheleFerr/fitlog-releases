@@ -49943,6 +49943,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Data is still loading...'**
   String get dataStillLoading;
+
+  /// Title for the weekly volume card in dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Volume'**
+  String get weeklyVolumeCard;
+
+  /// Title for the rep zone distribution card in dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Training Zones'**
+  String get repZoneCard;
+
+  /// Label showing the dominant training zone
+  ///
+  /// In en, this message translates to:
+  /// **'Main focus: {zone}'**
+  String dominantZoneLabel(String zone);
 }
 
 class _AppLocalizationsDelegate

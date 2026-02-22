@@ -24,6 +24,10 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_border_radius.d
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/rep_zone_suggestion.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/rep_zone_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Dashboard Tab - Main overview tab for Statistics page
@@ -51,6 +55,10 @@ class DashboardTab extends ConsumerWidget {
         QuickStatsSummary(exerciseHistories: exerciseHistories),
         const SizedBox(height: AppSpacing.sm),
         _MuscleBodyMapCard(exerciseHistories: exerciseHistories),
+        const SizedBox(height: AppSpacing.sm),
+        _VolumeCard(exerciseHistories: exerciseHistories),
+        const SizedBox(height: AppSpacing.sm),
+        _RepZoneCard(exerciseHistories: exerciseHistories),
       ],
     );
   }
@@ -843,6 +851,358 @@ class _MuscleBodyMapCard extends StatelessWidget {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// Volume Card
+// ============================================================================
+
+/// Card showing weekly volume in kg with a 4-week sparkline and trend badge
+class _VolumeCard extends StatelessWidget {
+  const _VolumeCard({required this.exerciseHistories});
+
+  final List<ExerciseHistory> exerciseHistories;
+
+  /// Calcola il volume totale (kg) per una finestra temporale
+  double _volumeForWindow(DateTime start, DateTime end) {
+    double total = 0;
+    for (final history in exerciseHistories) {
+      for (final session in history.sessions) {
+        if (!session.date.isBefore(start) && !session.date.isAfter(end)) {
+          total += session.totalVolume;
+        }
+      }
+    }
+    return total;
+  }
+
+  /// Volume kg questa settimana (last 7 days)
+  double _calculateWeeklyVolumeKg() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final weekStart = today.subtract(const Duration(days: 6));
+    return _volumeForWindow(weekStart, today.add(const Duration(days: 1)));
+  }
+
+  /// Ultime 4 settimane per sparkline (oldest → newest)
+  List<double> _calculateWeeklyVolumeHistory() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final result = <double>[];
+    for (int i = 3; i >= 0; i--) {
+      final end = today.subtract(Duration(days: i * 7));
+      final start = end.subtract(const Duration(days: 6));
+      result.add(_volumeForWindow(start, end.add(const Duration(days: 1))));
+    }
+    return result;
+  }
+
+  /// Trend % vs settimana scorsa
+  double _calculateTrendPercent() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final thisWeekStart = today.subtract(const Duration(days: 6));
+    final prevWeekEnd = today.subtract(const Duration(days: 7));
+    final prevWeekStart = today.subtract(const Duration(days: 13));
+
+    final thisWeek =
+        _volumeForWindow(thisWeekStart, today.add(const Duration(days: 1)));
+    final prevWeek =
+        _volumeForWindow(prevWeekStart, prevWeekEnd.add(const Duration(days: 1)));
+
+    if (prevWeek == 0) return 0;
+    return ((thisWeek - prevWeek) / prevWeek) * 100;
+  }
+
+  String _formatVolume(double kg) {
+    if (kg >= 1000) {
+      return '${(kg / 1000).toStringAsFixed(1)}t';
+    }
+    return '${kg.toStringAsFixed(0)} kg';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final weeklyKg = _calculateWeeklyVolumeKg();
+    final history = _calculateWeeklyVolumeHistory();
+    final trend = _calculateTrendPercent();
+
+    final maxVal = history.isEmpty
+        ? 1.0
+        : history.reduce((a, b) => a > b ? a : b);
+    final effectiveMax = maxVal == 0 ? 1.0 : maxVal;
+
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.mdRadius),
+      child: InkWell(
+        borderRadius: AppBorderRadius.mdRadius,
+        onTap: () {
+          ModalService.showSheet(
+            context,
+            isScrollControlled: true,
+            builder: (_) => DraggableScrollableSheet(
+              initialChildSize: 0.8,
+              minChildSize: 0.8,
+              maxChildSize: 1.0,
+              expand: false,
+              snap: true,
+              builder: (ctx, scrollController) => VolumeModal(
+                exerciseHistories: exerciseHistories,
+                volumeProgression: trend,
+                scrollController: scrollController,
+              ),
+            ),
+          );
+        },
+        child: Padding(
+          padding: AppSpacing.card,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Row(
+                children: [
+                  Icon(AppIcons.exercise, color: context.colors.primary),
+                  const SizedBox(width: AppSpacing.xs),
+                  Text(
+                    context.l10n.weeklyVolumeCard,
+                    style: context.textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.sm),
+
+              if (weeklyKg == 0)
+                Text(
+                  context.l10n.noWorkoutDataThisWeek,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                )
+              else ...[
+                // Value + trend badge
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      _formatVolume(weeklyKg),
+                      style: context.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: context.colors.onSurface,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    if (trend != 0)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: trend >= 0
+                              ? context.colors.successContainer
+                              : context.colors.errorContainer,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          trend >= 0
+                              ? '+${trend.toStringAsFixed(0)}%'
+                              : '${trend.toStringAsFixed(0)}%',
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: trend >= 0
+                                ? context.colors.success
+                                : context.colors.error,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.sm),
+
+                // Sparkline — 4 settimane
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: history.map((val) {
+                    final height = (val / effectiveMax) * 40;
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        child: Container(
+                          height: height.clamp(4.0, 40.0),
+                          decoration: BoxDecoration(
+                            color: context.colors.primary
+                                .withValues(alpha: val == maxVal ? 1.0 : 0.45),
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// Rep Zone Card
+// ============================================================================
+
+/// Card showing rep zone distribution (Strength / Hypertrophy / Endurance)
+class _RepZoneCard extends ConsumerWidget {
+  const _RepZoneCard({required this.exerciseHistories});
+
+  final List<ExerciseHistory> exerciseHistories;
+
+  Color _zoneColor(RepZone zone, BuildContext context) {
+    switch (zone) {
+      case RepZone.strength:
+        return context.colors.primary;
+      case RepZone.hypertrophy:
+        return context.colors.tertiary;
+      case RepZone.endurance:
+        return context.colors.secondary;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final analysis = ref.watch(repZoneAnalysisProvider(exerciseHistories));
+
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      shape: RoundedRectangleBorder(borderRadius: AppBorderRadius.mdRadius),
+      child: InkWell(
+        borderRadius: AppBorderRadius.mdRadius,
+        onTap: () => context.push(AppRoutes.proAnalyticsPath),
+        child: Padding(
+          padding: AppSpacing.card,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Row(
+                children: [
+                  Icon(AppIcons.analytics, color: context.colors.primary),
+                  const SizedBox(width: AppSpacing.xs),
+                  Text(
+                    context.l10n.repZoneCard,
+                    style: context.textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.sm),
+
+              if (analysis.totalSets == 0)
+                Text(
+                  context.l10n.noWorkoutDataThisWeek,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                )
+              else ...[
+                // Zone strip
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: Row(
+                    children: [
+                      for (final zone in RepZone.values)
+                        _buildZoneSegment(context, zone, analysis),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+
+                // Legend row
+                Row(
+                  children: RepZone.values.map((zone) {
+                    final pct = analysis.getPercentage(zone);
+                    return Expanded(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: _zoneColor(zone, context),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 3),
+                          Flexible(
+                            child: Text(
+                              '${zone.label} ${pct.toStringAsFixed(0)}%',
+                              style: context.textTheme.labelSmall?.copyWith(
+                                fontSize: 10,
+                                color: context.colors.onSurfaceVariant,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+
+                // Dominant zone label
+                if (analysis.dominantZone != null)
+                  Text(
+                    context.l10n
+                        .dominantZoneLabel(analysis.dominantZone!.label),
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildZoneSegment(
+    BuildContext context,
+    RepZone zone,
+    RepZoneAnalysis analysis,
+  ) {
+    final pct = analysis.getPercentage(zone);
+    if (pct < 1) return const SizedBox.shrink();
+
+    return Expanded(
+      flex: pct.round().clamp(1, 100),
+      child: Container(
+        height: 28,
+        color: _zoneColor(zone, context),
+        alignment: Alignment.center,
+        child: pct >= 10
+            ? Text(
+                '${pct.toStringAsFixed(0)}%',
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 11,
+                ),
+              )
+            : null,
       ),
     );
   }

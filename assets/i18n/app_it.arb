@@ -21013,5 +21013,8 @@
   "sessionSetsCount": "Set della sessione ({count}):",
   "calculatedWithBrzycki": "(Calcolato con formula di Brzycki)",
   "progressToNextLevel": "{percent}% verso {nextLevel}",
-  "dataStillLoading": "Dati ancora in caricamento..."
+  "dataStillLoading": "Dati ancora in caricamento...",
+  "weeklyVolumeCard": "Volume settimanale",
+  "repZoneCard": "Zone di allenamento",
+  "dominantZoneLabel": "Focus principale: {zone}"
 }

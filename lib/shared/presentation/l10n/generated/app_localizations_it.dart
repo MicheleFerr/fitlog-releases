@@ -28224,4 +28224,15 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get dataStillLoading => 'Dati ancora in caricamento...';
+
+  @override
+  String get weeklyVolumeCard => 'Volume settimanale';
+
+  @override
+  String get repZoneCard => 'Zone di allenamento';
+
+  @override
+  String dominantZoneLabel(String zone) {
+    return 'Focus principale: $zone';
+  }
 }
