@@ -508,15 +508,18 @@ class CurrentWorkoutNotifier extends Notifier<Workout?> {
                 'actualReps':
                     s.actualReps, // ✅ Reps effettive (null se non completato)
                 'isCompleted': s.isCompleted, // ✅ Stato completamento
+                'isWarmup': s.isWarmup, // ⌚ Warmup flag (mancava in startup)
                 'minReps': s.minReps, // ⌚ Rep range support
                 'maxReps': s.maxReps, // ⌚ Rep range support
               },
             )
             .toList();
 
-        final firstSet = firstExercise.sets.isNotEmpty
-            ? firstExercise.sets.first
-            : null;
+        // Usa il primo set non completato (non necessariamente il primo in assoluto)
+        // per evitare di inviare dati 0x0 se il primo set è già completato o è warmup
+        final firstSet =
+            firstExercise.sets.where((s) => !s.isCompleted).firstOrNull ??
+            (firstExercise.sets.isNotEmpty ? firstExercise.sets.first : null);
 
         _getFormCuesAndNotifyWatch(
           exerciseName: firstExercise.name,

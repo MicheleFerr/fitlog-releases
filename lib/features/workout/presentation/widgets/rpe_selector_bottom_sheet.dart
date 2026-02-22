@@ -874,6 +874,16 @@ class _RpeSelectorBottomSheetState
                             widget.onSupersetCompleteAll != null) {
                           Navigator.of(context).pop();
                           widget.onSupersetCompleteAll!(_supersetCompleteData);
+                        } else {
+                          // Avanza al prossimo esercizio (stesso comportamento di Conferma)
+                          if (_currentExerciseIndex <
+                              (widget.supersetExercises?.length ?? 0) - 1) {
+                            _pageController?.animateToPage(
+                              _currentExerciseIndex + 1,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          }
                         }
                       } else {
                         Navigator.of(context).pop();
@@ -2032,13 +2042,15 @@ class _RpeSelectorBottomSheetState
     if (widget.isPartOfSuperset) {
       return SizedBox(
         // Use fixed height for superset mode (PageView can't calculate intrinsic height)
-        height: MediaQuery.of(context).size.height * 0.75,
+        height: MediaQuery.of(context).size.height * 0.85,
         child: PageView.builder(
           controller: _pageController,
           itemCount: widget.supersetExercises?.length ?? 0,
           onPageChanged: _onPageChanged,
           itemBuilder: (context, index) {
-            return mainContent;
+            // Wrap in SingleChildScrollView to handle overflow when RPE
+            // autoregulation card is visible (prevents BOTTOM OVERFLOWED error)
+            return SingleChildScrollView(child: mainContent);
           },
         ),
       );
