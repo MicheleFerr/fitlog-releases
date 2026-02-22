@@ -18,7 +18,7 @@ struct ExerciseControlView: View {
     @State private var confirmationTask: Task<Void, Never>?
     @State private var showingFormCues = false
     @State private var showingEditReps = false  // ✅ Edit completed set reps
-    @State private var showingActualRepsPicker = false  // ⌚ Rep range: pick actual reps
+    @State private var showingActualRepsPicker = false  // ⌚ Always shown after tapping Complete: user confirms actual reps performed
     @State private var pendingActualReps: Int? = nil  // ⌚ Rep range: stash reps before RPE
 
     // ✅ NEW: Track which set the user is currently viewing (1-indexed)
@@ -821,11 +821,12 @@ struct ExerciseControlView: View {
                 }
             )
         }
-        // ⌚ Actual Reps Picker Sheet (for rep range exercises)
+        // ⌚ Actual Reps Picker Sheet (always shown when completing a set)
         .sheet(isPresented: $showingActualRepsPicker) {
             ActualRepsPickerView(
-                minReps: displayedSetMinReps,
-                maxReps: displayedSetMaxReps,
+                targetReps: displayedSetHasRepRange ? displayedSetMinReps : displayedTargetReps,
+                minReps: displayedSetHasRepRange ? displayedSetMinReps : nil,
+                maxReps: displayedSetHasRepRange ? displayedSetMaxReps : nil,
                 locale: connectivity.appLocale,
                 onSelect: { reps in
                     showingActualRepsPicker = false
@@ -1007,14 +1008,8 @@ struct ExerciseControlView: View {
                         WKInterfaceDevice.current().play(.click)
                         // Make sure we're completing the current set
                         viewingSetNumber = nil
-                        // ⌚ Rep range flow: show reps picker first, then RPE
-                        if displayedSetHasRepRange {
-                            showingActualRepsPicker = true
-                        } else if connectivity.rpeTrackingEnabled {
-                            showingEffortPicker = true
-                        } else {
-                            completeSet(effort: nil)
-                        }
+                        // ⌚ Always show reps picker first: user confirms actual reps performed
+                        showingActualRepsPicker = true
                     }) {
                         HStack(spacing: 6) {
                             Image(systemName: showingConfirmation ? "checkmark" : "checkmark.circle.fill")

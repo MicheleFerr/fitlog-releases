@@ -2,15 +2,18 @@
 //  ActualRepsPickerView.swift
 //  FitLogWatch Watch App
 //
-//  Crown-based picker for selecting actual reps performed within a rep range.
-//  Shown after completing a set when the exercise uses a rep range (e.g., 8-12).
+//  Picker for actual reps performed after completing a set.
+//  Shows target reps pre-filled with - / + buttons and Digital Crown support.
+//  Used for all set types: fixed reps and rep range exercises.
 //
 
 import SwiftUI
+import WatchKit
 
 struct ActualRepsPickerView: View {
-    let minReps: Int
-    let maxReps: Int
+    let targetReps: Int       // Default starting value (pre-filled from exercise target)
+    let minReps: Int?         // Rep range lower bound (nil if not a range)
+    let maxReps: Int?         // Rep range upper bound (nil if not a range)
     let locale: String
     let onSelect: (Int) -> Void
 
@@ -22,39 +25,99 @@ struct ActualRepsPickerView: View {
     private var isItalian: Bool { locale == "it" }
     private var headerText: String { isItalian ? "Quante reps?" : "How many reps?" }
     private var confirmText: String { isItalian ? "Conferma" : "Confirm" }
-    private var rangeText: String { "\(minReps)-\(maxReps)" }
 
-    init(minReps: Int, maxReps: Int, locale: String, onSelect: @escaping (Int) -> Void) {
+    private var hasRepRange: Bool {
+        if let min = minReps, let max = maxReps { return min != max }
+        return false
+    }
+
+    private var contextText: String {
+        if let min = minReps, let max = maxReps, min != max {
+            return "\(min)-\(max)"
+        }
+        return "Target: \(targetReps)"
+    }
+
+    private var crownMaxValue: Double {
+        if let maxR = maxReps, hasRepRange {
+            return Double(Swift.max(maxR + 15, 40))
+        }
+        return Double(Swift.max(targetReps + 20, 40))
+    }
+
+    init(targetReps: Int, minReps: Int? = nil, maxReps: Int? = nil, locale: String, onSelect: @escaping (Int) -> Void) {
+        self.targetReps = targetReps
         self.minReps = minReps
         self.maxReps = maxReps
         self.locale = locale
         self.onSelect = onSelect
-        // Default to minReps (conservative)
-        _selectedReps = State(initialValue: minReps)
-        _crownValue = State(initialValue: Double(minReps))
+        let safeDefault = max(1, targetReps)
+        _selectedReps = State(initialValue: safeDefault)
+        _crownValue = State(initialValue: Double(safeDefault))
     }
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 6) {
             // Header
             Text(headerText)
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundColor(.secondary)
                 .padding(.top, 4)
 
-            // Range indicator
-            Text(rangeText)
+            // Context: range or target
+            Text(contextText)
                 .font(.system(size: 11, weight: .medium))
                 .foregroundColor(.secondary.opacity(0.7))
 
-            // Large reps display
-            Text("\(selectedReps)")
-                .font(.system(size: 56, weight: .bold, design: .rounded))
-                .foregroundColor(colorForReps(selectedReps))
-                .animation(.easeOut(duration: 0.15), value: selectedReps)
-                .accessibilityLabel("\(selectedReps) reps")
+            // - [number] + row
+            HStack(spacing: 0) {
+                // Minus button
+                Button(action: {
+                    guard selectedReps > 1 else { return }
+                    WKInterfaceDevice.current().play(.click)
+                    selectedReps -= 1
+                    crownValue = Double(selectedReps)
+                }) {
+                    Image(systemName: "minus")
+                        .font(.system(size: 22, weight: .bold))
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .foregroundColor(selectedReps > 1 ? .primary : .secondary.opacity(0.3))
+                .disabled(selectedReps <= 1)
+                .accessibilityLabel(isItalian ? "Diminuisci" : "Decrease")
 
-            // Reps label
+                Spacer()
+
+                // Reps value
+                Text("\(selectedReps)")
+                    .font(.system(size: 52, weight: .bold, design: .rounded))
+                    .foregroundColor(colorForReps(selectedReps))
+                    .animation(.easeOut(duration: 0.1), value: selectedReps)
+                    .monospacedDigit()
+                    .accessibilityLabel("\(selectedReps) \(isItalian ? "ripetizioni" : "reps")")
+
+                Spacer()
+
+                // Plus button
+                Button(action: {
+                    WKInterfaceDevice.current().play(.click)
+                    selectedReps += 1
+                    crownValue = Double(selectedReps)
+                }) {
+                    Image(systemName: "plus")
+                        .font(.system(size: 22, weight: .bold))
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .foregroundColor(.primary)
+                .accessibilityLabel(isItalian ? "Aumenta" : "Increase")
+            }
+            .padding(.horizontal, 4)
+
+            // "ripetizioni" label
             Text(isItalian ? "ripetizioni" : "reps")
                 .font(.system(size: 12, weight: .medium))
                 .foregroundColor(.secondary)
@@ -76,46 +139,42 @@ struct ActualRepsPickerView: View {
         .focused($isFocused)
         .digitalCrownRotation(
             $crownValue,
-            from: Double(minReps),
-            through: Double(maxReps),
+            from: 1.0,
+            through: crownMaxValue,
             by: 1.0,
             sensitivity: .medium,
             isContinuous: false,
             isHapticFeedbackEnabled: true
         )
         .onChange(of: crownValue) { _, newValue in
-            let clamped = Int(newValue.rounded()).clamped(to: minReps...maxReps)
-            if clamped != selectedReps {
-                selectedReps = clamped
+            let newReps = max(1, Int(newValue.rounded()))
+            if newReps != selectedReps {
+                selectedReps = newReps
             }
         }
         .onAppear {
             isFocused = true
         }
         .accessibilityElement(children: .contain)
-        .accessibilityLabel(isItalian ? "Seleziona ripetizioni effettuate" : "Select actual reps performed")
+        .accessibilityLabel(isItalian ? "Inserisci ripetizioni effettuate" : "Enter actual reps performed")
     }
 
-    /// Color based on where the reps fall in the range
+    /// Color based on performance vs target
     private func colorForReps(_ reps: Int) -> Color {
-        let range = maxReps - minReps
-        guard range > 0 else { return .blue }
-
-        let position = Double(reps - minReps) / Double(range)
-        if position <= 0.33 {
-            return .orange  // Low end of range
-        } else if position <= 0.66 {
-            return .blue    // Mid range
+        if hasRepRange, let min = minReps, let max = maxReps {
+            if reps < min { return .orange }
+            if reps > max { return .blue }
+            let range = max - min
+            guard range > 0 else { return .green }
+            let position = Double(reps - min) / Double(range)
+            if position <= 0.33 { return .orange }
+            else if position <= 0.66 { return .blue }
+            else { return .green }
         } else {
-            return .green   // High end of range
+            // Fixed target: color relative to target
+            if reps < targetReps { return .orange }   // Below target
+            if reps == targetReps { return .green }   // On target
+            return .blue                               // Above target
         }
-    }
-}
-
-// MARK: - Int clamping helper
-
-private extension Int {
-    func clamped(to range: ClosedRange<Int>) -> Int {
-        return Swift.min(Swift.max(self, range.lowerBound), range.upperBound)
     }
 }
