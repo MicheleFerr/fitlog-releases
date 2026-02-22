@@ -37,6 +37,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
   late List<ExerciseTemplate> _exercises;
+  late List<int> _exerciseKeyIds;
+  int _nextExerciseKeyId = 0;
   bool _isLoading = false;
   bool _hasChanges = false;
   // Track which exercises are expanded
@@ -61,6 +63,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       text: widget.template.description,
     );
     _exercises = List.from(widget.template.exercises);
+    _exerciseKeyIds = List.generate(_exercises.length, (_) => _nextExerciseKeyId++);
 
     // Start first exercise expanded for immediate feedback
     if (_exercises.isNotEmpty) {
@@ -338,10 +341,10 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
     final isExpanded = _expandedExercises[index] ?? false;
 
     return Padding(
-      key: Key('exercise_$index'),
+      key: Key('exercise_${_exerciseKeyIds[index]}'),
       padding: const EdgeInsets.only(bottom: 12),
       child: Dismissible(
-        key: Key('dismissible_exercise_$index'),
+        key: Key('dismissible_exercise_${_exerciseKeyIds[index]}'),
         direction: DismissDirection.endToStart,
         background: Container(
           alignment: Alignment.centerRight,
@@ -1015,6 +1018,8 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
       }
       final exercise = _exercises.removeAt(oldIndex);
       _exercises.insert(newIndex, exercise);
+      final keyId = _exerciseKeyIds.removeAt(oldIndex);
+      _exerciseKeyIds.insert(newIndex, keyId);
     });
     _markAsChanged();
   }
@@ -1328,6 +1333,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
 
     setState(() {
       _exercises.add(exerciseTemplate);
+      _exerciseKeyIds.add(_nextExerciseKeyId++);
     });
     _markAsChanged();
   }
@@ -1336,6 +1342,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen>
     if (index >= 0 && index < _exercises.length) {
       setState(() {
         _exercises.removeAt(index);
+        _exerciseKeyIds.removeAt(index);
       });
       _markAsChanged();
     }
