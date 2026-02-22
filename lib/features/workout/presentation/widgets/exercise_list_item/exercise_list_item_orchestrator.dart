@@ -1555,8 +1555,34 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     );
 
     if (firstIncompleteIndex == -1) {
-      // All stages completed - show completion message
-      SnackBarService.showSuccess(context, context.l10n.dropsetCompleted);
+      // All stages completed - user wants to retry: reset all stages and restart
+      final resetStages = dropsetExercise.stages
+          .map(
+            (stage) => DropSetStage(
+              weight: stage.weight,
+              reps: stage.reps,
+              minReps: stage.minReps,
+              maxReps: stage.maxReps,
+              isCompleted: false,
+            ),
+          )
+          .toList();
+
+      final resetExercise = DropSetExercise(
+        id: dropsetExercise.id,
+        name: dropsetExercise.name,
+        category: dropsetExercise.category,
+        stages: resetStages,
+        notes: dropsetExercise.notes,
+        restTime: dropsetExercise.restTime,
+      );
+
+      widget.onExerciseUpdate?.call(resetExercise);
+
+      _executeDropSetStage(
+        dropsetExercise: resetExercise,
+        stageIndex: 0,
+      );
       return;
     }
 
