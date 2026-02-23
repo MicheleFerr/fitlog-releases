@@ -174,6 +174,10 @@ class _TemplateMuscleAnalysisSectionState
         // Muscle chips
         _buildMuscleChips(context, analysis),
 
+        const SizedBox(height: 10),
+
+        _buildExerciseBreakdownAction(context, analysis),
+
         const SizedBox(height: 8),
       ],
     );
@@ -307,6 +311,185 @@ class _TemplateMuscleAnalysisSectionState
         '$displayName ${percentage.toStringAsFixed(0)}%',
         style: context.textTheme.labelSmall?.copyWith(
           color: color,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExerciseBreakdownAction(
+    BuildContext context,
+    TemplateMuscleAnalysis analysis,
+  ) {
+    if (analysis.exerciseBreakdown.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return InkWell(
+      onTap: () => _showExerciseBreakdownBottomSheet(context, analysis),
+      borderRadius: BorderRadius.circular(10),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          children: [
+            Icon(
+              AppIcons.info,
+              size: AppIconSize.small,
+              color: context.colors.primary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              context.l10n.exerciseBreakdown,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const Spacer(),
+            Text(
+              context.l10n.viewDetails,
+              style: context.textTheme.labelSmall?.copyWith(
+                color: context.colors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(
+              AppIcons.chevronRight,
+              size: AppIconSize.tiny,
+              color: context.colors.primary,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showExerciseBreakdownBottomSheet(
+    BuildContext context,
+    TemplateMuscleAnalysis analysis,
+  ) {
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        sheetContext.l10n.exerciseBreakdown,
+                        style: sheetContext.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(sheetContext).pop(),
+                      child: Text(sheetContext.l10n.close),
+                    ),
+                  ],
+                ),
+                Flexible(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: analysis.exerciseBreakdown.length,
+                    padding: const EdgeInsets.only(bottom: 12),
+                    separatorBuilder: (_, __) => const SizedBox(height: 8),
+                    itemBuilder: (context, index) {
+                      final breakdown = analysis.exerciseBreakdown[index];
+                      return Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: sheetContext.colors.surfaceContainerHighest
+                              .withValues(alpha: 0.45),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: sheetContext.colors.outline
+                                .withValues(alpha: 0.15),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    breakdown.exerciseName,
+                                    style: sheetContext.textTheme.bodyMedium
+                                        ?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  sheetContext.l10n.setsCount(breakdown.sets),
+                                  style: sheetContext.textTheme.labelSmall
+                                      ?.copyWith(
+                                    color: sheetContext.colors.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              '${sheetContext.l10n.total} ${breakdown.totalPercentage.toStringAsFixed(1)}%',
+                              style: sheetContext.textTheme.labelSmall?.copyWith(
+                                color: sheetContext.colors.onSurfaceVariant,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Wrap(
+                              spacing: 6,
+                              runSpacing: 6,
+                              children: [
+                                for (final contribution
+                                    in breakdown.contributions)
+                                  _buildContributionChip(
+                                    sheetContext,
+                                    muscle: contribution.muscleId,
+                                    percentage: contribution.percentage,
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildContributionChip(
+    BuildContext context, {
+    required String muscle,
+    required double percentage,
+  }) {
+    final displayName = MuscleAbbreviationMapper.codeToDisplayName(muscle);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+      decoration: BoxDecoration(
+        color: context.colors.primary.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Text(
+        '$displayName ${percentage.toStringAsFixed(1)}%',
+        style: context.textTheme.labelSmall?.copyWith(
+          color: context.colors.primary,
           fontWeight: FontWeight.w600,
         ),
       ),

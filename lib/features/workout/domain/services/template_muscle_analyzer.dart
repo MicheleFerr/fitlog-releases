@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_map
 class TemplateMuscleAnalysis {
   const TemplateMuscleAnalysis({
     required this.musclePercentages,
+    required this.exerciseBreakdown,
     required this.pushPullRatio,
     required this.upperLowerRatio,
     required this.pushPullWarning,
@@ -26,6 +27,9 @@ class TemplateMuscleAnalysis {
 
   /// Muscle percentages normalized to heatmap keys (0-100 scale)
   final Map<String, double> musclePercentages;
+
+  /// Per-exercise contribution breakdown on the template total volume
+  final List<ExerciseContributionBreakdown> exerciseBreakdown;
 
   /// Push/Pull ratio (optimal: 1.0)
   final double pushPullRatio;
@@ -59,6 +63,7 @@ class TemplateMuscleAnalysis {
 
   static const empty = TemplateMuscleAnalysis(
     musclePercentages: {},
+    exerciseBreakdown: [],
     pushPullRatio: 0,
     upperLowerRatio: 0,
     pushPullWarning: false,
@@ -68,6 +73,35 @@ class TemplateMuscleAnalysis {
     missingMuscles: [],
     totalSets: 0,
   );
+}
+
+/// Contribution of a single muscle for one exercise.
+class ExerciseMuscleContribution {
+  const ExerciseMuscleContribution({
+    required this.muscleId,
+    required this.percentage,
+  });
+
+  /// Canonical muscle ID (e.g., QUAD, FEMO).
+  final String muscleId;
+
+  /// Percentage contribution on total template volume.
+  final double percentage;
+}
+
+/// Volume contribution details for one exercise.
+class ExerciseContributionBreakdown {
+  const ExerciseContributionBreakdown({
+    required this.exerciseName,
+    required this.sets,
+    required this.totalPercentage,
+    required this.contributions,
+  });
+
+  final String exerciseName;
+  final int sets;
+  final double totalPercentage;
+  final List<ExerciseMuscleContribution> contributions;
 }
 
 /// Analyzes muscle coverage from template exercises
@@ -145,6 +179,7 @@ class TemplateMuscleAnalyzer {
 
     // Accumulate volume per canonical muscle ID
     final muscleVolume = <String, double>{};
+    final rawExerciseBreakdowns = <_RawExerciseBreakdown>[];
     int totalSets = 0;
 
     for (final exercise in exercises) {
@@ -152,23 +187,31 @@ class TemplateMuscleAnalyzer {
       if (sets == 0) continue;
       totalSets += sets;
 
-      // Try to get muscle data from the map
-      final muscleData = _findMuscleData(exercise, muscleMap);
+      final exerciseDistribution = _buildExerciseDistribution(
+        exercise,
+        sets: sets.toDouble(),
+        muscleMap: muscleMap,
+      );
 
-      if (muscleData != null && muscleData.hasData) {
-        // EMG-weighted distribution: 70% primary, 30% secondary
-        _distributeMuscleVolume(muscleVolume, muscleData, sets.toDouble());
-      } else {
-        // Fallback: use ExerciseCategory → muscle group
-        _distributeFallbackVolume(muscleVolume, exercise, sets.toDouble());
+      if (exerciseDistribution.isEmpty) continue;
+
+      for (final entry in exerciseDistribution.entries) {
+        muscleVolume[entry.key] = (muscleVolume[entry.key] ?? 0) + entry.value;
       }
+
+      rawExerciseBreakdowns.add(
+        _RawExerciseBreakdown(
+          exerciseName: exercise.exerciseName,
+          sets: sets,
+          muscleVolume: exerciseDistribution,
+        ),
+      );
     }
 
     if (totalSets == 0) return TemplateMuscleAnalysis.empty;
 
     // Calculate percentages
-    final totalVolume =
-        muscleVolume.values.fold(0.0, (sum, v) => sum + v);
+    final totalVolume = muscleVolume.values.fold(0.0, (sum, v) => sum + v);
     final musclePercentages = <String, double>{};
 
     if (totalVolume > 0) {
@@ -229,8 +272,39 @@ class TemplateMuscleAnalyzer {
           (heatmapPercentages[heatmapKey] ?? 0) + entry.value;
     }
 
+    // Build per-exercise percentages on total volume
+    final exerciseBreakdown = <ExerciseContributionBreakdown>[];
+    if (totalVolume > 0) {
+      for (final raw in rawExerciseBreakdowns) {
+        final exerciseTotalVolume = raw.muscleVolume.values.fold(
+          0.0,
+          (sum, v) => sum + v,
+        );
+
+        final contributions = raw.muscleVolume.entries
+            .map(
+              (entry) => ExerciseMuscleContribution(
+                muscleId: entry.key,
+                percentage: (entry.value / totalVolume) * 100,
+              ),
+            )
+            .toList()
+          ..sort((a, b) => b.percentage.compareTo(a.percentage));
+
+        exerciseBreakdown.add(
+          ExerciseContributionBreakdown(
+            exerciseName: raw.exerciseName,
+            sets: raw.sets,
+            totalPercentage: (exerciseTotalVolume / totalVolume) * 100,
+            contributions: contributions,
+          ),
+        );
+      }
+    }
+
     return TemplateMuscleAnalysis(
       musclePercentages: heatmapPercentages,
+      exerciseBreakdown: exerciseBreakdown,
       pushPullRatio: pushPullRatio.toDouble(),
       upperLowerRatio: upperLowerRatio.toDouble(),
       pushPullWarning: pushPullRatio > 1.5 || (pushPullRatio > 0 && pushPullRatio < 0.67),
@@ -240,6 +314,23 @@ class TemplateMuscleAnalyzer {
       missingMuscles: missing,
       totalSets: totalSets,
     );
+  }
+
+  static Map<String, double> _buildExerciseDistribution(
+    ExerciseTemplate exercise, {
+    required double sets,
+    required Map<String, ExerciseMuscleData>? muscleMap,
+  }) {
+    final distribution = <String, double>{};
+    final muscleData = _findMuscleData(exercise, muscleMap);
+
+    if (muscleData != null && muscleData.hasData) {
+      _distributeMuscleVolume(distribution, muscleData, sets);
+      return distribution;
+    }
+
+    _distributeFallbackVolume(distribution, exercise, sets);
+    return distribution;
   }
 
   /// Find muscle data for an exercise, trying multiple name variants
@@ -333,4 +424,16 @@ class TemplateMuscleAnalyzer {
       ExerciseCategory.other => [],
     };
   }
+}
+
+class _RawExerciseBreakdown {
+  const _RawExerciseBreakdown({
+    required this.exerciseName,
+    required this.sets,
+    required this.muscleVolume,
+  });
+
+  final String exerciseName;
+  final int sets;
+  final Map<String, double> muscleVolume;
 }
