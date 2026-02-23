@@ -1,7 +1,8 @@
 /// Template Muscle Analysis Widget
 ///
-/// Expandable section in the template editor showing muscle coverage,
-/// push/pull and upper/lower ratios, and a body heatmap.
+/// Section in the template editor that opens a bottom sheet with
+/// muscle coverage, push/pull and upper/lower ratios, body heatmap,
+/// and per-exercise contribution details.
 library;
 
 import 'package:flutter/material.dart';
@@ -12,10 +13,13 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/template_mus
 import 'package:gymbro_flutter_new/shared/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/domain/mappers/muscle_abbreviation_mapper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
-/// Expandable muscle balance analysis section for the template editor
+/// Muscle balance section for the template editor.
+///
+/// The section itself is a compact row; tapping it opens a bottom sheet
+/// with full analysis and an internal dropdown for exercise details.
 class TemplateMuscleAnalysisSection extends ConsumerStatefulWidget {
   const TemplateMuscleAnalysisSection({
     required this.exercises,
@@ -31,11 +35,8 @@ class TemplateMuscleAnalysisSection extends ConsumerStatefulWidget {
 
 class _TemplateMuscleAnalysisSectionState
     extends ConsumerState<TemplateMuscleAnalysisSection> {
-  bool _isExpanded = false;
-
   @override
   Widget build(BuildContext context) {
-    // Empty state
     if (widget.exercises.isEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -71,21 +72,7 @@ class _TemplateMuscleAnalysisSectionState
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          // Header - always visible
-          _buildHeader(context, analysis),
-          // Expandable content
-          AnimatedCrossFade(
-            firstChild: const SizedBox.shrink(),
-            secondChild: _buildExpandedContent(context, analysis),
-            crossFadeState: _isExpanded
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-            duration: const Duration(milliseconds: 250),
-          ),
-        ],
-      ),
+      child: _buildHeader(context, analysis),
     );
   }
 
@@ -94,17 +81,17 @@ class _TemplateMuscleAnalysisSectionState
         ? context.colors.warning
         : context.colors.success;
 
-    return GestureDetector(
-      onTap: () => setState(() => _isExpanded = !_isExpanded),
-      behavior: HitTestBehavior.opaque,
+    return InkWell(
+      onTap: () => _showMuscleBalanceBottomSheet(context, analysis),
+      borderRadius: BorderRadius.circular(10),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           children: [
             Icon(
-              _isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
+              AppIcons.workout,
               size: AppIconSize.small,
-              color: context.colors.onSurface.withValues(alpha: 0.6),
+              color: context.colors.onSurfaceVariant,
             ),
             const SizedBox(width: 8),
             Text(
@@ -124,37 +111,130 @@ class _TemplateMuscleAnalysisSectionState
             ),
             if (analysis.hasWarnings) ...[
               const SizedBox(width: 6),
-              Text(
-                context.l10n.muscleWarning,
-                style: context.textTheme.labelSmall?.copyWith(
-                  color: context.colors.warning,
+              Flexible(
+                child: Text(
+                  context.l10n.muscleWarning,
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.colors.warning,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
+            const Spacer(),
+            Text(
+              context.l10n.viewDetails,
+              style: context.textTheme.labelSmall?.copyWith(
+                color: context.colors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(
+              AppIcons.chevronRight,
+              size: AppIconSize.tiny,
+              color: context.colors.primary,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildExpandedContent(
+  Future<void> _showMuscleBalanceBottomSheet(
+    BuildContext context,
+    TemplateMuscleAnalysis analysis,
+  ) {
+    final statusColor = analysis.hasWarnings
+        ? context.colors.warning
+        : context.colors.success;
+
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) {
+        return FractionallySizedBox(
+          heightFactor: 0.9,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Text(
+                              sheetContext.l10n.muscleBalance,
+                              style: sheetContext.textTheme.titleMedium
+                                  ?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                color: statusColor,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            if (analysis.hasWarnings) ...[
+                              const SizedBox(width: 6),
+                              Flexible(
+                                child: Text(
+                                  sheetContext.l10n.muscleWarning,
+                                  style: sheetContext.textTheme.labelSmall
+                                      ?.copyWith(
+                                    color: sheetContext.colors.warning,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(sheetContext).pop(),
+                        child: Text(sheetContext.l10n.close),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _buildBottomSheetContent(sheetContext, analysis),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildBottomSheetContent(
     BuildContext context,
     TemplateMuscleAnalysis analysis,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Body Heatmap
         SizedBox(
           height: 250,
           child: ProfessionalBodyHeatmap(
             heatValues: MuscleHeatValues(analysis.musclePercentages),
           ),
         ),
-
         const SizedBox(height: 12),
-
-        // Ratio bars
         _buildRatioBar(
           context,
           label: context.l10n.pushPullRatio,
@@ -168,16 +248,10 @@ class _TemplateMuscleAnalysisSectionState
           ratio: analysis.upperLowerRatio,
           hasWarning: analysis.upperLowerWarning,
         ),
-
         const SizedBox(height: 12),
-
-        // Muscle chips
         _buildMuscleChips(context, analysis),
-
-        const SizedBox(height: 10),
-
-        _buildExerciseBreakdownAction(context, analysis),
-
+        const SizedBox(height: 12),
+        _buildExerciseBreakdownDropdown(context, analysis),
         const SizedBox(height: 8),
       ],
     );
@@ -189,8 +263,6 @@ class _TemplateMuscleAnalysisSectionState
     required double ratio,
     required bool hasWarning,
   }) {
-    // ratio of 1.0 = balanced (0.5 on the bar)
-    // ratio of 2.0+ = fully left, ratio of 0.0 = fully right
     final clampedRatio = ratio.clamp(0.0, 3.0);
     final barFraction = (clampedRatio / (clampedRatio + 1.0)).clamp(0.0, 1.0);
 
@@ -215,11 +287,9 @@ class _TemplateMuscleAnalysisSectionState
               height: 8,
               child: Stack(
                 children: [
-                  // Background
                   Container(
                     color: context.colors.surfaceContainerHighest,
                   ),
-                  // Fill
                   FractionallySizedBox(
                     widthFactor: barFraction,
                     child: Container(color: barColor),
@@ -265,7 +335,6 @@ class _TemplateMuscleAnalysisSectionState
       spacing: 6,
       runSpacing: 6,
       children: [
-        // Covered muscles
         for (final muscle in analysis.coveredMuscles)
           _buildMuscleChip(
             context,
@@ -275,7 +344,6 @@ class _TemplateMuscleAnalysisSectionState
                 0,
             isCovered: true,
           ),
-        // Neglected muscles
         for (final muscle in analysis.neglectedMuscles)
           _buildMuscleChip(
             context,
@@ -317,7 +385,7 @@ class _TemplateMuscleAnalysisSectionState
     );
   }
 
-  Widget _buildExerciseBreakdownAction(
+  Widget _buildExerciseBreakdownDropdown(
     BuildContext context,
     TemplateMuscleAnalysis analysis,
   ) {
@@ -325,152 +393,102 @@ class _TemplateMuscleAnalysisSectionState
       return const SizedBox.shrink();
     }
 
-    return InkWell(
-      onTap: () => _showExerciseBreakdownBottomSheet(context, analysis),
-      borderRadius: BorderRadius.circular(10),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.35),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: context.colors.outline.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          dividerColor: context.colors.outline.withValues(alpha: 0.0),
+        ),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: 12),
+          childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+          title: Text(
+            context.l10n.exerciseBreakdown,
+            style: context.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          subtitle: Text(
+            context.l10n.viewDetails,
+            style: context.textTheme.labelSmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
           children: [
-            Icon(
-              AppIcons.info,
-              size: AppIconSize.small,
-              color: context.colors.primary,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              context.l10n.exerciseBreakdown,
-              style: context.textTheme.bodySmall?.copyWith(
-                color: context.colors.primary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const Spacer(),
-            Text(
-              context.l10n.viewDetails,
-              style: context.textTheme.labelSmall?.copyWith(
-                color: context.colors.primary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(width: 4),
-            Icon(
-              AppIcons.chevronRight,
-              size: AppIconSize.tiny,
-              color: context.colors.primary,
-            ),
+            for (int i = 0; i < analysis.exerciseBreakdown.length; i++) ...[
+              _buildBreakdownCard(context, analysis.exerciseBreakdown[i]),
+              if (i != analysis.exerciseBreakdown.length - 1)
+                const SizedBox(height: 8),
+            ],
           ],
         ),
       ),
     );
   }
 
-  Future<void> _showExerciseBreakdownBottomSheet(
+  Widget _buildBreakdownCard(
     BuildContext context,
-    TemplateMuscleAnalysis analysis,
+    ExerciseContributionBreakdown breakdown,
   ) {
-    return showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (sheetContext) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        sheetContext.l10n.exerciseBreakdown,
-                        style: sheetContext.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.of(sheetContext).pop(),
-                      child: Text(sheetContext.l10n.close),
-                    ),
-                  ],
-                ),
-                Flexible(
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: analysis.exerciseBreakdown.length,
-                    padding: const EdgeInsets.only(bottom: 12),
-                    separatorBuilder: (_, __) => const SizedBox(height: 8),
-                    itemBuilder: (context, index) {
-                      final breakdown = analysis.exerciseBreakdown[index];
-                      return Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: sheetContext.colors.surfaceContainerHighest
-                              .withValues(alpha: 0.45),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: sheetContext.colors.outline
-                                .withValues(alpha: 0.15),
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    breakdown.exerciseName,
-                                    style: sheetContext.textTheme.bodyMedium
-                                        ?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  sheetContext.l10n.setsCount(breakdown.sets),
-                                  style: sheetContext.textTheme.labelSmall
-                                      ?.copyWith(
-                                    color: sheetContext.colors.onSurfaceVariant,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              '${sheetContext.l10n.total} ${breakdown.totalPercentage.toStringAsFixed(1)}%',
-                              style: sheetContext.textTheme.labelSmall?.copyWith(
-                                color: sheetContext.colors.onSurfaceVariant,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Wrap(
-                              spacing: 6,
-                              runSpacing: 6,
-                              children: [
-                                for (final contribution
-                                    in breakdown.contributions)
-                                  _buildContributionChip(
-                                    sheetContext,
-                                    muscle: contribution.muscleId,
-                                    percentage: contribution.percentage,
-                                  ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: context.colors.surface.withValues(alpha: 0.8),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: context.colors.outline.withValues(alpha: 0.15),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  breakdown.exerciseName,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              ],
+              ),
+              Text(
+                context.l10n.setsCount(breakdown.sets),
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            '${context.l10n.total} ${breakdown.totalPercentage.toStringAsFixed(1)}%',
+            style: context.textTheme.labelSmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
             ),
           ),
-        );
-      },
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [
+              for (final contribution in breakdown.contributions)
+                _buildContributionChip(
+                  context,
+                  muscle: contribution.muscleId,
+                  percentage: contribution.percentage,
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
