@@ -85,7 +85,7 @@ class ExerciseMuscleContribution {
   /// Canonical muscle ID (e.g., QUAD, FEMO).
   final String muscleId;
 
-  /// Percentage contribution on total template volume.
+  /// Percentage contribution within the exercise (0-100).
   final double percentage;
 }
 
@@ -285,7 +285,9 @@ class TemplateMuscleAnalyzer {
             .map(
               (entry) => ExerciseMuscleContribution(
                 muscleId: entry.key,
-                percentage: (entry.value / totalVolume) * 100,
+                percentage: exerciseTotalVolume > 0
+                    ? (entry.value / exerciseTotalVolume) * 100
+                    : 0,
               ),
             )
             .toList()
