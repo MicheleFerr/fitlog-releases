@@ -878,6 +878,13 @@ class ConnectivityManager: NSObject, ObservableObject {
 
         sendToiPhone(data, critical: true, forceImmediate: true)
         WKInterfaceDevice.current().play(.stop)
+
+        // FIX: Pause the rest timer when workout is paused
+        if restTimer != nil {
+            isTimerPaused = true
+            restTimer?.invalidate()
+            restTimer = nil
+        }
     }
 
     /// Notify iPhone to end/stop the current workout
@@ -1051,6 +1058,8 @@ class ConnectivityManager: NSObject, ObservableObject {
 
         // Start local timer immediately for responsive UI
         // This mirrors the timer that will be started on iPhone
+        isTimerPaused = false
+        isTimerSkipped = false
         startRestTimer(duration: duration)
         shouldShowTimer = true
 
@@ -1625,6 +1634,14 @@ extension ConnectivityManager: WCSessionDelegate {
                 shouldShowTimer = false
                 shouldNavigateToExercise = false
                 WKInterfaceDevice.current().play(.success)
+
+            case WatchMessageType.workoutPaused:
+                // FIX: Pause rest timer when workout is paused from iPhone
+                if restTimer != nil {
+                    isTimerPaused = true
+                    restTimer?.invalidate()
+                    restTimer = nil
+                }
 
             case WatchMessageType.workoutUpdate:
                 handleWorkoutUpdate(message)

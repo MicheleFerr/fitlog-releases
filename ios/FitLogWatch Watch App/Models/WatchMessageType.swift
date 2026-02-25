@@ -15,6 +15,7 @@ enum WatchMessageType {
     // MARK: - iPhone → Watch (workout lifecycle)
     static let workoutStarted = "workoutStarted"
     static let workoutEnded = "workoutEnded"
+    static let workoutPaused = "workoutPaused"
     static let workoutUpdate = "workoutUpdate"
 
     // MARK: - iPhone → Watch (rest timer)
