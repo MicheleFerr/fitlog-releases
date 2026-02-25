@@ -1627,10 +1627,10 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         // iOS: ONLY use native audio through unified coordinator
         // This prevents duplicate audio by having a single playback path
         try {
-          // Check if audio was already played in the last 3 seconds
+          // Check if audio was already played in the last 5 seconds
           final hasPlayed = await _unifiedChannel.invokeMethod<bool>(
             'hasAudioPlayedRecently',
-            {'seconds': 3.0},
+            {'seconds': 5.0},
           );
 
           if (hasPlayed == true) {
