@@ -482,7 +482,7 @@ final class BackgroundAudioManager {
             // Check deduplication INSIDE critical section
             if let lastTimestamp = audioPlayedTimestamp {
                 let elapsed = Date().timeIntervalSince(lastTimestamp)
-                if elapsed < 2.0 {
+                if elapsed < 5.0 {
                     // Deduplicate - log and return false
                     Logger.shared.log(.debug, "⚠️ [TIMER-DEBUG] DEDUPLICATION: Audio already played \(elapsed)s ago, skipping duplicate", category: .audioSession)
 
@@ -490,7 +490,7 @@ final class BackgroundAudioManager {
                         traceId: traceId,
                         path: .deduplication,
                         action: .blocked,
-                        metadata: ["timeSinceLastPlay": elapsed, "threshold": 2.0]
+                        metadata: ["timeSinceLastPlay": elapsed, "threshold": 5.0]
                     )
                     return false
                 }
@@ -1229,7 +1229,7 @@ final class BackgroundAudioManager {
         // This prevents interrupting the sound while it's still playing
         if let player = audioPlayer, player.isPlaying {
             // Check if sound was played recently (< 3 seconds ago)
-            if let lastPlayed = audioPlayedTimestamp, Date().timeIntervalSince(lastPlayed) < 3.0 {
+            if let lastPlayed = audioPlayedTimestamp, Date().timeIntervalSince(lastPlayed) < 5.0 {
                 Logger.shared.log(.debug, """
                     🔊 [PROTECTION] Audio player is currently playing completion sound - NOT stopping it
                     - Time since playback started: \(Date().timeIntervalSince(lastPlayed))s

@@ -25,6 +25,18 @@ final class DirectNotificationManager: NSObject {
     // objc_setAssociatedObject was overwriting previous player, killing it mid-playback.
     private var activePlayers: [AVAudioPlayer] = []
 
+    /// Safety cleanup: remove finished players and cap array size.
+    /// Called before each new playback to prevent unbounded growth when individual
+    /// completion timers fail to fire (e.g., play() returns false or duration is 0).
+    private func cleanupActivePlayers() {
+        activePlayers.removeAll { !$0.isPlaying }
+        // Safety cap: keep at most 5 players (in case cleanup timers didn't fire)
+        if activePlayers.count > 5 {
+            let excess = activePlayers.count - 5
+            activePlayers.removeFirst(excess)
+        }
+    }
+
     private override init() {
         super.init()
         setupNotificationDelegate()
@@ -941,7 +953,7 @@ extension DirectNotificationManager: UNUserNotificationCenterDelegate {
             // ✅ AUDIO-MUTEX: Check if BackgroundAudioManager already played sound recently.
             // This prevents double-sound when both the dispatch timer (playCompletionSound)
             // and the backup notification fire close together in foreground.
-            let audioAlreadyPlayed = BackgroundAudioManager.shared.wasAudioPlayedRecently(withinSeconds: 3.0)
+            let audioAlreadyPlayed = BackgroundAudioManager.shared.wasAudioPlayedRecently(withinSeconds: 5.0)
 
             if audioAlreadyPlayed {
                 print("   🔇 [AUDIO-MUTEX] Audio already played by BackgroundAudioManager — suppressing notification sound")
@@ -1019,6 +1031,9 @@ extension DirectNotificationManager: UNUserNotificationCenterDelegate {
     // Uses activePlayers array instead of objc_setAssociatedObject to prevent
     // ARC from killing a player while it's still playing.
     private func playNotificationAudio(soundName: String) {
+        // Safety cleanup: evict finished players and cap array before adding a new one
+        cleanupActivePlayers()
+
         // Configure audio session synchronously BEFORE creating player
         do {
             let session = AVAudioSession.sharedInstance()

@@ -311,7 +311,7 @@ final class UnifiedTimerCoordinator {
         // The dispatch timer (Path A) fires playCompletionSound() at the same time as
         // Flutter's Dart ticker reaches 0 and calls this method (Path C).
         // Without this check, BOTH play simultaneously = double sound.
-        if backgroundAudio.wasAudioPlayedRecently(withinSeconds: 3.0) {
+        if backgroundAudio.wasAudioPlayedRecently(withinSeconds: 5.0) {
             Logger.shared.log(.info, "🔇 [AUDIO-MUTEX] BackgroundAudioManager already played sound — skipping Flutter-triggered playback", category: .audioSession)
             result("skipped_primary_already_played")
             return
