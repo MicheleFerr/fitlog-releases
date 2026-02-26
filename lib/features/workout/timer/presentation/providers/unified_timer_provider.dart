@@ -900,6 +900,20 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         '[UnifiedTimer] ✅ Time added: newRemaining=${newRemainingSeconds}s, newTotal=${newTotalDurationSeconds}s, secondsAdded=${newSecondsAdded}s, cachedEndTime updated',
       );
 
+      // FIX: Cancel old scheduled audio/notification and reschedule with new duration.
+      // Without this, the old iOS notification fires at original endTime → double sound.
+      if (Platform.isIOS && newRemainingSeconds > 5) {
+        try {
+          await _unifiedChannel.invokeMethod('cancelBackgroundAudio');
+          await _scheduleCompletion();
+          print(
+            '[UnifiedTimer] ✅ Rescheduled iOS completion for +${seconds}s extension',
+          );
+        } catch (e) {
+          debugPrint('[UnifiedTimer] ⚠️ Failed to reschedule completion: $e');
+        }
+      }
+
       // Sync to Live Activity + Watch
       if (Platform.isIOS) {
         // Check which Live Activity system is active
@@ -917,10 +931,8 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           // Provider not available, use legacy system
         }
 
+        // Sync Live Activity
         if (workoutSessionLAActive) {
-          // Workout Session LA is active — always sync absolute end time.
-          // The intent only signals Flutter; the actual LA update is done here
-          // via the proven MethodChannel → WorkoutSessionManager path.
           final newEndTime = state!.endTime;
           if (newEndTime != null) {
             print(
@@ -930,25 +942,23 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
             await wsLAService.syncRestEndTime(newEndTime);
             print('[UnifiedTimer] ✅ LA end time synced');
           }
-
-          // Notify Apple Watch
-          // ✅ FIX: Send REMAINING time (not total) for accurate Watch sync
-          await ref
-              .read(watchConnectivityProvider.notifier)
-              .sendRestTimerExtended(
-                seconds,
-                newRemainingSeconds, // REMAINING, not total!
-              );
-          print(
-            '[UnifiedTimer] ✅ Synced: LA ✓ Watch notification sent (remaining=${newRemainingSeconds}s)',
-          );
         } else if (state!.liveActivityActive) {
-          // Legacy timer LA is active
           print('[UnifiedTimer] 📡 Using legacy LA update');
           await _updateLiveActivity();
-        } else {
-          print('[UnifiedTimer] ⚠️ No LA active, skipping LA/Watch sync');
         }
+
+        // FIX: Always notify Apple Watch, regardless of Live Activity state.
+        // Previously Watch sync only happened inside workoutSessionLAActive block,
+        // so Watch would not get the extension if no LA was active.
+        await ref
+            .read(watchConnectivityProvider.notifier)
+            .sendRestTimerExtended(
+              seconds,
+              newRemainingSeconds,
+            );
+        print(
+          '[UnifiedTimer] ⌚ Watch notified: +${seconds}s (remaining=${newRemainingSeconds}s)',
+        );
       }
 
       await _saveState();
