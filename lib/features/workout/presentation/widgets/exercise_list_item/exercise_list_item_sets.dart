@@ -87,6 +87,9 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
   // inside _buildSetDetailsForMode() which was executed for EVERY set on EVERY rebuild.
   late ExerciseCountingMode _cachedCountingMode;
 
+  /// Whether the compact warmup summary is expanded to show individual rows
+  bool _warmupExpanded = false;
+
   // NOTE: _firstSetManuallyStarted removed - we now use setStartedAt from the set itself
   // This makes the state persistent across widget rebuilds
 
@@ -347,9 +350,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
         // ✅ TUT: Show "Start Set" button when setDurationTracking is ON
         // and user hasn't started the first set yet
         _buildStartSetButtonIfNeeded(context, config),
-        ...widget.exercise.sets.asMap().entries.map(
-          (entry) => _buildSetItem(context, entry.key, entry.value, config),
-        ),
+        ..._buildSetRows(context, config),
         const SizedBox(height: 4),
         // Add set button (with smooth animated collapse button when completed)
         ClipRect(
@@ -452,6 +453,108 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
                 color: context.colors.onSurfaceVariant,
                 fontWeight: FontWeight.w500,
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Builds set rows with warmup compacting:
+  /// If all warmup sets are completed, show a compact summary instead of individual rows.
+  /// Working sets are always shown individually.
+  List<Widget> _buildSetRows(BuildContext context, AppConfig config) {
+    final sets = widget.exercise.sets;
+    final warmupSets = sets.where((s) => s.isWarmup).toList();
+    final allWarmupCompleted = warmupSets.isNotEmpty &&
+        warmupSets.every((s) => s.isCompleted);
+    final shouldCompact = allWarmupCompleted && !_warmupExpanded;
+
+    final widgets = <Widget>[];
+    bool warmupSummaryAdded = false;
+
+    for (final entry in sets.asMap().entries) {
+      final index = entry.key;
+      final set = entry.value;
+
+      if (set.isWarmup && shouldCompact) {
+        // Show compact summary only once for all warmup sets
+        if (!warmupSummaryAdded) {
+          widgets.add(_buildCompactWarmupSummary(context, warmupSets));
+          warmupSummaryAdded = true;
+        }
+        // Skip individual warmup rows
+        continue;
+      }
+
+      widgets.add(_buildSetItem(context, index, set, config));
+    }
+
+    return widgets;
+  }
+
+  /// Compact warmup summary row shown when all warmup sets are completed
+  Widget _buildCompactWarmupSummary(
+    BuildContext context,
+    List<ExerciseSet> warmupSets,
+  ) {
+    final displayMode = ref.watch(setDisplayProvider);
+
+    return GestureDetector(
+      onTap: () {
+        setState(() => _warmupExpanded = true);
+        HapticFeedback.lightImpact();
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: displayMode.bottomMargin),
+        padding: EdgeInsets.symmetric(
+          horizontal: displayMode.horizontalPadding,
+          vertical: displayMode.verticalPadding,
+        ),
+        decoration: BoxDecoration(
+          color: context.warningContainer.withValues(alpha: 0.4),
+          borderRadius: BorderRadius.circular(displayMode.borderRadius),
+          border: Border.all(
+            color: context.warningColor.withValues(alpha: 0.2),
+          ),
+        ),
+        child: Row(
+          children: [
+            // Flame icon
+            Container(
+              width: displayMode.circleSize,
+              height: displayMode.circleSize,
+              decoration: BoxDecoration(
+                color: context.warningColor.withValues(alpha: 0.3),
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: SemanticIcon(
+                  icon: AppIcons.streak,
+                  semanticLabel: 'Warmup complete',
+                  size: AppIconSize.tiny,
+                  color: context.warningColor,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            // Summary text
+            Expanded(
+              child: Text(
+                context.l10n.warmupCompactSummary(
+                  warmupSets.length.toString(),
+                ),
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.warningColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            // Chevron to expand
+            Icon(
+              AppIcons.expandMore,
+              size: AppIconSize.small,
+              color: context.warningColor.withValues(alpha: 0.6),
             ),
           ],
         ),

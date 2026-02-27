@@ -38646,6 +38646,18 @@ abstract class AppLocalizations {
   /// **'Warmup complete! Ready for working sets'**
   String get warmupCompletedMessage;
 
+  /// Compact summary when all warmup sets are completed
+  ///
+  /// In en, this message translates to:
+  /// **'{count} warmup sets done'**
+  String warmupCompactSummary(String count);
+
+  /// Exercise total volume in kg
+  ///
+  /// In en, this message translates to:
+  /// **'Volume: {volume}kg'**
+  String exerciseVolume(String volume);
+
   /// Tip for initial warmup sets (40%)
   ///
   /// In en, this message translates to:

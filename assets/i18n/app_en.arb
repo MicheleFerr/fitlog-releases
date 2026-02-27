@@ -26844,6 +26844,24 @@
   "@warmupCompletedMessage": {
     "description": "Message shown when all warmup sets are completed"
   },
+  "warmupCompactSummary": "{count} warmup sets done",
+  "@warmupCompactSummary": {
+    "description": "Compact summary when all warmup sets are completed",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "exerciseVolume": "Volume: {volume}kg",
+  "@exerciseVolume": {
+    "description": "Exercise total volume in kg",
+    "placeholders": {
+      "volume": {
+        "type": "String"
+      }
+    }
+  },
   "warmupTipForm": "Focus on form and technique",
   "@warmupTipForm": {
     "description": "Tip for initial warmup sets (40%)"

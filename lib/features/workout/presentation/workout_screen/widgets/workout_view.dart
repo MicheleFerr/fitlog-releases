@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/adaptive_banner_ad.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/material_scroll_list.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/core/navigation/main_shell.dart';
 
 /// Main workout view displaying the active workout with exercises.
 ///
@@ -82,12 +83,19 @@ class WorkoutView extends ConsumerStatefulWidget {
 
 class _WorkoutViewState extends ConsumerState<WorkoutView> {
   final GlobalKey _headerKey = GlobalKey();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     // Measure header after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) => _measureHeader());
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _measureHeader() {
@@ -100,9 +108,24 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
     }
   }
 
+  void _scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
+
+    // Listen for same-tab tap signal to scroll to top
+    ref.listen(sameTabTapSignalProvider, (previous, next) {
+      _scrollToTop();
+    });
 
     // Debug logging in development mode
     if (kDebugMode) {
@@ -183,6 +206,7 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
     return ScrollConfiguration(
       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
       child: MaterialScrollList(
+      controller: _scrollController,
       itemCount: widget.workout.exercises.length,
       // List is now below header in Column, no need for header padding
       padding: EdgeInsets.only(

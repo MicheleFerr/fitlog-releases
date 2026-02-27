@@ -21838,6 +21838,16 @@ class AppLocalizationsIt extends AppLocalizations {
       'Riscaldamento completato! Pronto per le serie di lavoro';
 
   @override
+  String warmupCompactSummary(String count) {
+    return '$count serie di riscaldamento completate';
+  }
+
+  @override
+  String exerciseVolume(String volume) {
+    return 'Volume: ${volume}kg';
+  }
+
+  @override
   String get warmupTipForm => 'Concentrati su forma e tecnica';
 
   @override

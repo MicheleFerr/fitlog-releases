@@ -70,6 +70,19 @@ const _kPlusButtonTabIndex = 2;
 /// Global key for bottom navigation bar - used by home tour
 final bottomNavKeyProvider = Provider<GlobalKey>((ref) => GlobalKey());
 
+/// Signal provider: incremented when user taps the already-active tab.
+/// Screens can watch this to scroll to top on same-tab tap.
+final sameTabTapSignalProvider = NotifierProvider<_SameTabTapNotifier, int>(
+  _SameTabTapNotifier.new,
+);
+
+class _SameTabTapNotifier extends Notifier<int> {
+  @override
+  int build() => 0;
+
+  void signal() => state = state + 1;
+}
+
 /// Main shell widget containing bottom navigation and branch content
 ///
 /// Uses [StatefulNavigationShell] to preserve branch state when switching tabs.
@@ -77,10 +90,7 @@ final bottomNavKeyProvider = Provider<GlobalKey>((ref) => GlobalKey());
 /// On Android: custom floating bottom nav bar with backdrop blur.
 /// Shows WorkoutMiniBar when workout is active and user is not on workout tab.
 class MainShell extends ConsumerStatefulWidget {
-  const MainShell({
-    required this.navigationShell,
-    super.key,
-  });
+  const MainShell({required this.navigationShell, super.key});
 
   final StatefulNavigationShell navigationShell;
 
@@ -130,7 +140,9 @@ class _MainShellState extends ConsumerState<MainShell>
     final workout = ref.watch(currentWorkoutProvider);
     final currentIndex = widget.navigationShell.currentIndex;
     final isIOS = Platform.isIOS;
-    final bottomSafeArea = MediaQuery.of(context).viewPadding.bottom;
+    final existingMediaQuery = MediaQuery.of(context);
+    final bottomSafeArea = existingMediaQuery.viewPadding.bottom;
+    final keyboardVisible = existingMediaQuery.viewInsets.bottom > 0;
 
     // Reset tracking if workout changed or ended
     if (workout?.id != _lastWorkoutId) {
@@ -151,27 +163,28 @@ class _MainShellState extends ConsumerState<MainShell>
     // - Workout is in progress or paused
     // - User is NOT on workout tab (index 1)
     // - User has visited workout screen at least once (exited from it)
-    final showMiniBar = workout != null &&
+    final showMiniBar =
+        workout != null &&
         (workout.status == WorkoutStatus.inProgress ||
             workout.status == WorkoutStatus.paused) &&
         currentIndex != 1 &&
-        _hasVisitedWorkoutScreen;
+        _hasVisitedWorkoutScreen &&
+        !keyboardVisible;
 
     // Calculate total nav bar height (content + safe area)
     final navBarTotalHeight = isIOS
         ? _kIOSTabBarHeight + bottomSafeArea
         : _kAndroidNavBarHeight + _kAndroidNavBarBottomMargin + bottomSafeArea;
+    final effectiveNavBarInset = keyboardVisible ? 0.0 : navBarTotalHeight;
 
     // Inject adjusted MediaQuery so scroll views add bottom inset for nav bar.
     // IMPORTANT: Zero out viewInsets.bottom because MainShell's Scaffold already
     // handles keyboard resize via resizeToAvoidBottomInset. Preserving viewInsets
     // would cause child Scaffolds to double-resize, creating a black gap.
-    final existingMediaQuery = MediaQuery.of(context);
-    final keyboardVisible = existingMediaQuery.viewInsets.bottom > 0;
     final adjustedMediaQuery = existingMediaQuery.copyWith(
       padding: existingMediaQuery.padding.copyWith(
-        // When keyboard covers the nav bar, no need for extra bottom padding
-        bottom: keyboardVisible ? 0 : navBarTotalHeight,
+        // When keyboard covers the nav bar, no need for extra bottom inset.
+        bottom: effectiveNavBarInset,
       ),
       viewInsets: existingMediaQuery.viewInsets.copyWith(
         bottom: 0, // MainShell Scaffold handles this
@@ -188,15 +201,15 @@ class _MainShellState extends ConsumerState<MainShell>
             // TabBarInset exposes navBarTotalHeight to all descendants
             // so they can add transparent bottom padding dynamically.
             TabBarInset(
-              height: navBarTotalHeight,
+              height: effectiveNavBarInset,
               child: MediaQuery(
                 data: adjustedMediaQuery,
                 child: widget.navigationShell,
               ),
             ),
 
-            // Floating mini-bar positioned just above nav bar
-            // Hidden when a bottom sheet is open (like the tab bar)
+            // Floating mini-bar positioned just above nav bar.
+            // Hidden while keyboard is visible.
             if (showMiniBar)
               ValueListenableBuilder<int>(
                 valueListenable: ModalService.openSheetCount,
@@ -223,17 +236,18 @@ class _MainShellState extends ConsumerState<MainShell>
                   animation: _overlayAnimation,
                   onClose: _closeQuickActions,
                   navigationShell: widget.navigationShell,
-                  bottomOffset: navBarTotalHeight,
+                  bottomOffset: effectiveNavBarInset,
                 ),
               ),
 
             // Bottom navigation bar - hidden when a bottom sheet is open
+            // or while keyboard is visible.
             // Tab indices: [Home(0), Workout(1), +(2), Profile(3), AI Coach(4)]
             // Branch indices: [Home(0), Workout(1), Profile(2), AI Coach(3)]
             ValueListenableBuilder<int>(
               valueListenable: ModalService.openSheetCount,
               builder: (context, sheetCount, child) {
-                final isHidden = sheetCount > 0;
+                final isHidden = sheetCount > 0 || keyboardVisible;
                 // Map branch index → tab display index (skip + button at 2)
                 final tabDisplayIndex = currentIndex < _kPlusButtonTabIndex
                     ? currentIndex
@@ -290,10 +304,7 @@ class _MainShellState extends ConsumerState<MainShell>
       shouldShowHintProvider(HintRegistry.swipeMiniBar.hintId),
     );
     if (showHint) {
-      return HintPeek(
-        hint: HintRegistry.swipeMiniBar,
-        child: miniBar,
-      );
+      return HintPeek(hint: HintRegistry.swipeMiniBar, child: miniBar);
     }
     return miniBar;
   }
@@ -363,6 +374,11 @@ class _MainShellState extends ConsumerState<MainShell>
   void _onDestinationSelected(BuildContext context, int index) {
     HapticFeedback.lightImpact();
 
+    // Signal same-tab tap so screens can scroll to top
+    if (index == widget.navigationShell.currentIndex) {
+      ref.read(sameTabTapSignalProvider.notifier).signal();
+    }
+
     widget.navigationShell.goBranch(
       index,
       initialLocation: index == widget.navigationShell.currentIndex,
@@ -385,9 +401,7 @@ class _MainShellState extends ConsumerState<MainShell>
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            style: TextButton.styleFrom(
-              foregroundColor: context.colors.error,
-            ),
+            style: TextButton.styleFrom(foregroundColor: context.colors.error),
             child: Text(context.l10n.discard),
           ),
         ],
@@ -492,30 +506,46 @@ class _NativeIOSTabBar extends StatelessWidget {
         items: [
           CNTabBarItem(
             label: context.l10n.home,
-            icon: const CNSymbol('house', size: 15, weight: CNSymbolWeight.light),
+            icon: const CNSymbol(
+              'house',
+              size: 15,
+              weight: CNSymbolWeight.light,
+            ),
           ),
           CNTabBarItem(
             label: context.l10n.workout,
-            icon: const CNSymbol('dumbbell', size: 15, weight: CNSymbolWeight.light),
+            icon: const CNSymbol(
+              'dumbbell',
+              size: 15,
+              weight: CNSymbolWeight.light,
+            ),
           ),
           // Center "+" button item
-          const CNTabBarItem(
+          CNTabBarItem(
             label: '',
-            icon: CNSymbol(
+            icon: const CNSymbol(
               'plus.circle.fill',
-              size: 22,
+              size: 25,
               weight: CNSymbolWeight.medium,
               color: _kCenterButtonColor,
             ),
           ),
           CNTabBarItem(
             label: context.l10n.profile,
-            icon: const CNSymbol('person', size: 15, weight: CNSymbolWeight.light),
+            icon: const CNSymbol(
+              'person',
+              size: 15,
+              weight: CNSymbolWeight.light,
+            ),
           ),
           if (FeatureFlags.aiCoachEnabled)
             CNTabBarItem(
               label: context.l10n.aiCoach,
-              icon: const CNSymbol('brain.head.profile', size: 15, weight: CNSymbolWeight.light),
+              icon: const CNSymbol(
+                'brain.head.profile',
+                size: 15,
+                weight: CNSymbolWeight.light,
+              ),
             ),
         ],
         currentIndex: currentIndex,
@@ -580,6 +610,7 @@ class _FloatingBottomNavBar extends StatelessWidget {
               // Center + button
               _FloatingPlusItem(
                 onTap: () => onTap(_kPlusButtonTabIndex),
+                semanticLabel: context.l10n.quickActions,
               ),
               // Items after the + button
               for (var i = _kPlusButtonTabIndex; i < items.length; i++)
@@ -655,26 +686,27 @@ class _FloatingNavItem extends StatelessWidget {
 
 /// Styled "+" button for the Android floating nav bar.
 class _FloatingPlusItem extends StatelessWidget {
-  const _FloatingPlusItem({required this.onTap});
+  const _FloatingPlusItem({required this.onTap, required this.semanticLabel});
 
   final VoidCallback onTap;
+  final String semanticLabel;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: const BoxDecoration(
-          color: _kCenterButtonColor,
-          shape: BoxShape.circle,
-        ),
-        child: const Icon(
-          AppIcons.add,
-          color: Colors.white,
-          size: 22,
+    return Semantics(
+      label: semanticLabel,
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          width: 40,
+          height: 40,
+          decoration: const BoxDecoration(
+            color: _kCenterButtonColor,
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(AppIcons.add, color: Colors.white, size: 24),
         ),
       ),
     );
@@ -712,9 +744,7 @@ class _QuickActionsOverlay extends StatelessWidget {
                 onTap: onClose,
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
-                  child: Container(
-                    color: Colors.black.withValues(alpha: 0.75),
-                  ),
+                  child: Container(color: Colors.black.withValues(alpha: 0.75)),
                 ),
               ),
             ),

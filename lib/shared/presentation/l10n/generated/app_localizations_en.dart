@@ -21637,6 +21637,16 @@ class AppLocalizationsEn extends AppLocalizations {
       'Warmup complete! Ready for working sets';
 
   @override
+  String warmupCompactSummary(String count) {
+    return '$count warmup sets done';
+  }
+
+  @override
+  String exerciseVolume(String volume) {
+    return 'Volume: ${volume}kg';
+  }
+
+  @override
   String get warmupTipForm => 'Focus on form and technique';
 
   @override

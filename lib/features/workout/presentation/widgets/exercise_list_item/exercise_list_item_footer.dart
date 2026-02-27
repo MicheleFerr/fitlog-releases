@@ -102,14 +102,17 @@ class _ExerciseListItemFooterState
           color: context.colors.outlineVariant.withValues(alpha: 0.3),
         ),
 
-        // Collapsed view: plate chip (first) + other chips + expand button
+        // Collapsed view: volume + plate chip + other chips + expand button
         InkWell(
           onTap: _toggleExpanded,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               children: [
-                // ✅ Plate calculator chip — first position, only for barbell/plate equipment
+                // Volume chip — shows total volume of completed working sets
+                _VolumeChip(exercise: widget.exercise),
+                const SizedBox(width: 8),
+                // ✅ Plate calculator chip — only for barbell/plate equipment
                 if (widget.showPlatesCalculator && widget.onShowPlatesCalculator != null) ...[
                   _PlateCalcChip(onTap: widget.onShowPlatesCalculator!),
                   const SizedBox(width: 8),
@@ -276,6 +279,59 @@ class _PlateCalcChip extends StatelessWidget {
           size: AppIconSize.tiny,
           color: context.colors.secondary,
         ),
+      ),
+    );
+  }
+}
+
+/// Volume chip showing total working set volume
+class _VolumeChip extends StatelessWidget {
+  const _VolumeChip({required this.exercise});
+
+  final Exercise exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    // Calculate total volume from completed non-warmup sets
+    double volume = 0;
+    for (final set in exercise.sets) {
+      if (set.isCompleted && !set.isWarmup) {
+        final weight = set.weight ?? 0;
+        final reps = set.actualReps ?? set.reps ?? 0;
+        volume += weight * reps;
+      }
+    }
+
+    if (volume <= 0) return const SizedBox.shrink();
+
+    // Format volume
+    final volumeStr = volume == volume.truncateToDouble()
+        ? volume.truncate().toString()
+        : volume.toStringAsFixed(1);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: context.colors.primaryContainer.withValues(alpha: 0.4),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            AppIcons.workout,
+            size: AppIconSize.tiny,
+            color: context.colors.primary,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '${volumeStr}kg',
+            style: context.textTheme.labelSmall?.copyWith(
+              color: context.colors.primary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
