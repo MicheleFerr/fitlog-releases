@@ -663,7 +663,7 @@ void main() {
             createSet(weight: '100', reps: '8'),
             createSet(weight: '100', reps: '6'),
           ],
-          createdAt: DateTime(2024, 1, 1),
+          createdAt: DateTime.now(),
         ),
         createActivity(
           exerciseName: 'Squat',
@@ -672,7 +672,7 @@ void main() {
             createSet(weight: '140', reps: '10'),
             createSet(weight: '140', reps: '8'),
           ],
-          createdAt: DateTime(2024, 1, 1),
+          createdAt: DateTime.now(),
         ),
       ];
 

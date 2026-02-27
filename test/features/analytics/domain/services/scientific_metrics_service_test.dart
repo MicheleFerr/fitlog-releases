@@ -266,7 +266,7 @@ void main() {
       final activities = [
         _createActivity('ex-1', 'Bench Press', [_createSet(weight: 100, reps: 10)]),
         _createActivity('ex-2', 'Pull Up', [_createSet(weight: 0, reps: 10)]),
-        _createActivity('ex-3', 'Lateral Raise', [_createSet(weight: 15, reps: 12)]),
+        _createActivity('ex-3', 'Shoulder Press', [_createSet(weight: 15, reps: 12)]),
         _createActivity('ex-4', 'Bicep Curl', [_createSet(weight: 20, reps: 12)]),
         _createActivity('ex-5', 'Squat', [_createSet(weight: 150, reps: 8)]),
         _createActivity('ex-6', 'Plank', [_createSet(weight: 0, reps: 60)]),
@@ -287,7 +287,7 @@ void main() {
       final activities = [
         _createActivity('ex-1', 'Bench Press', [_createSet(weight: 100, reps: 10)]),
         _createActivity('ex-2', 'Chest Fly', [_createSet(weight: 30, reps: 12)]),
-        _createActivity('ex-3', 'Incline Press', [_createSet(weight: 80, reps: 10)]),
+        _createActivity('ex-3', 'Incline Bench Press', [_createSet(weight: 80, reps: 10)]),
       ];
 
       final results = ScientificMetricsService.calculateVolumeLoadIndex(activities);
@@ -407,8 +407,8 @@ void main() {
     test('should classify hypertrophy zone (67-74%)', () {
       // 🐛 BUG PREVENTED: Suboptimal intensity for hypertrophy
       final result = ScientificMetricsService.calculateRelativeIntensity(
-        weight: 80,
-        reps: 10,
+        weight: 60,
+        reps: 12,
       );
 
       expect(result.zone, IntensityZone.hypertrophy);

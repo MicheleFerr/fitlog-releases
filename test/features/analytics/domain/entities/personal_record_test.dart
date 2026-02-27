@@ -195,7 +195,8 @@ void main() {
     });
 
     test('should detect near PR status', () {
-      // Arrange
+      // Arrange - must provide all 5 PR types to prevent false "new PR" detection
+      final achievedAt = DateTime.now().subtract(const Duration(days: 7));
       final historicalPRs = {
         'ex1': [
           PersonalRecord(
@@ -204,7 +205,44 @@ void main() {
             exerciseId: 'ex1',
             type: PRType.weight,
             value: 100,
-            achievedAt: DateTime.now().subtract(const Duration(days: 7)),
+            achievedAt: achievedAt,
+            workoutId: 'old_workout',
+          ),
+          PersonalRecord(
+            id: 'pr2',
+            exerciseName: 'Squat',
+            exerciseId: 'ex1',
+            type: PRType.volume,
+            value: 600, // > 97*5=485
+            achievedAt: achievedAt,
+            workoutId: 'old_workout',
+          ),
+          PersonalRecord(
+            id: 'pr3',
+            exerciseName: 'Squat',
+            exerciseId: 'ex1',
+            type: PRType.reps,
+            value: 8, // > 5 reps
+            weight: 97, // must match set weight within 2.5kg for reps PR filter
+            achievedAt: achievedAt,
+            workoutId: 'old_workout',
+          ),
+          PersonalRecord(
+            id: 'pr4',
+            exerciseName: 'Squat',
+            exerciseId: 'ex1',
+            type: PRType.oneRM,
+            value: 130, // > 97*(1+5/30)=113.2
+            achievedAt: achievedAt,
+            workoutId: 'old_workout',
+          ),
+          PersonalRecord(
+            id: 'pr5',
+            exerciseName: 'Squat',
+            exerciseId: 'ex1',
+            type: PRType.totalVolume,
+            value: 600, // > 485
+            achievedAt: achievedAt,
             workoutId: 'old_workout',
           ),
         ],

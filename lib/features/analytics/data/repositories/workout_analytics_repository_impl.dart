@@ -213,6 +213,8 @@ class WorkoutAnalyticsRepositoryImpl
           totalCount: firebaseCount,
           onProgress: _syncProgressCallback,
         );
+        // Invalidate local cache after sync so we re-read fresh data from Hive
+        _localWorkoutsCache.remove(userId);
       } else {
         if (kDebugMode) {
           debugPrint('✅ [Analytics] Hive is up to date ($hiveCount workouts)');

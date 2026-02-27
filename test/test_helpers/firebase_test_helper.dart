@@ -57,7 +57,7 @@ class MockFirebaseAppPlatform extends FirebaseAppPlatform {
 Future<void> setupTestEnvironment() async {
   setupFirebaseCoreMocks();
   await Firebase.initializeApp();
-  await Hive.initFlutter('./test/hive_test');
+  Hive.init('./test/hive_test');
   await HiveBoxManagerEnhanced.initialize();
 }
 
