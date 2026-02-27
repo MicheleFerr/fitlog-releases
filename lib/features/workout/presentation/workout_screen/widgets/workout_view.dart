@@ -85,6 +85,9 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
   final GlobalKey _headerKey = GlobalKey();
   final ScrollController _scrollController = ScrollController();
 
+  /// Keys for each exercise card — used to scroll to a specific exercise
+  final Map<String, GlobalKey> _exerciseKeys = {};
+
   @override
   void initState() {
     super.initState();
@@ -108,23 +111,64 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
     }
   }
 
-  void _scrollToTop() {
-    if (_scrollController.hasClients) {
-      _scrollController.animateTo(
-        0,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
+  bool get _isNearTop {
+    if (!_scrollController.hasClients) return true;
+    return _scrollController.offset < 50;
+  }
+
+  /// First tap: scroll to top. Second tap (already at top): scroll to first incomplete exercise.
+  void _handleSameTabTap() {
+    if (!_scrollController.hasClients) return;
+
+    if (_isNearTop) {
+      _scrollToFirstIncomplete();
+    } else {
+      _scrollToTop();
     }
+  }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  }
+
+  void _scrollToFirstIncomplete() {
+    // Find first exercise with incomplete sets
+    final exercises = widget.workout.exercises;
+    for (final exercise in exercises) {
+      final hasIncomplete = exercise.sets.any((s) => !s.isCompleted);
+      if (hasIncomplete) {
+        final key = _exerciseKeys[exercise.id];
+        if (key?.currentContext != null) {
+          Scrollable.ensureVisible(
+            key!.currentContext!,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeOutCubic,
+            alignment: 0.1, // Slight offset from top
+          );
+        }
+        return;
+      }
+    }
+    // All complete — just scroll to top
+    _scrollToTop();
+  }
+
+  /// Get or create a GlobalKey for the exercise card
+  GlobalKey _keyForExercise(String exerciseId) {
+    return _exerciseKeys.putIfAbsent(exerciseId, () => GlobalKey());
   }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colors;
 
-    // Listen for same-tab tap signal to scroll to top
+    // Listen for same-tab tap: first tap → top, second tap → first incomplete exercise
     ref.listen(sameTabTapSignalProvider, (previous, next) {
-      _scrollToTop();
+      _handleSameTabTap();
     });
 
     // Debug logging in development mode
@@ -219,7 +263,7 @@ class _WorkoutViewState extends ConsumerState<WorkoutView> {
         final exercise = widget.workout.exercises[index];
 
         return Padding(
-          key: ValueKey(exercise.id), // Key for better performance
+          key: _keyForExercise(exercise.id),
           padding: const EdgeInsets.only(bottom: AppSpacing.sm),
           // RepaintBoundary isolates each exercise card from repaints
           // in other parts of the list (e.g., timer tick updates)
