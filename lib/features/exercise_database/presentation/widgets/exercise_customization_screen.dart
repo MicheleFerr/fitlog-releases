@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,6 +47,56 @@ class _ExerciseCustomizationScreenState
     extends ConsumerState<ExerciseCustomizationScreen> {
   late List<ExerciseCustomization> _customizations;
 
+  List<_CustomizationPreset> _parsePresetCsv(
+    String csv, {
+    required List<_CustomizationPreset> fallback,
+  }) {
+    final tokens = csv.split(',');
+    final parsed = <_CustomizationPreset>[];
+    for (final token in tokens) {
+      final parts = token.trim().toLowerCase().split('x');
+      if (parts.length != 2) continue;
+      final sets = int.tryParse(parts[0]);
+      final value = int.tryParse(parts[1]);
+      if (sets == null || value == null) continue;
+      parsed.add(_CustomizationPreset(sets: sets, value: value));
+    }
+    return parsed.length == 3 ? parsed : fallback;
+  }
+
+  List<_CustomizationPreset> _presetsForMode(ExerciseCountingMode mode) {
+    final config = ref.read(appConfigProvider);
+    switch (mode) {
+      case ExerciseCountingMode.weighted:
+        return _parsePresetCsv(
+          config.defaultWeightedPresets,
+          fallback: const [
+            _CustomizationPreset(sets: 3, value: 10),
+            _CustomizationPreset(sets: 4, value: 8),
+            _CustomizationPreset(sets: 5, value: 5),
+          ],
+        );
+      case ExerciseCountingMode.reps:
+        return _parsePresetCsv(
+          config.defaultRepsPresets,
+          fallback: const [
+            _CustomizationPreset(sets: 3, value: 15),
+            _CustomizationPreset(sets: 4, value: 12),
+            _CustomizationPreset(sets: 2, value: 20),
+          ],
+        );
+      case ExerciseCountingMode.time:
+        return _parsePresetCsv(
+          config.defaultTimePresets,
+          fallback: const [
+            _CustomizationPreset(sets: 3, value: 30),
+            _CustomizationPreset(sets: 3, value: 60),
+            _CustomizationPreset(sets: 4, value: 45),
+          ],
+        );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -56,31 +105,28 @@ class _ExerciseCustomizationScreenState
       final countingMode =
           widget.countingModeOverrides?[exercise.id] ?? exercise.countingMode;
 
-      // ✅ NUOVO: Create default sets based on counting mode
-      List<SetCustomization> defaultSets;
-      switch (countingMode) {
-        case ExerciseCountingMode.weighted:
-          defaultSets = [
-            SetCustomization(setNumber: 1, weight: 0, reps: 10),
-            SetCustomization(setNumber: 2, weight: 0, reps: 10),
-            SetCustomization(setNumber: 3, weight: 0, reps: 10),
-          ];
-          break;
-        case ExerciseCountingMode.reps:
-          defaultSets = [
-            SetCustomization(setNumber: 1, weight: 0, reps: 15),
-            SetCustomization(setNumber: 2, weight: 0, reps: 15),
-            SetCustomization(setNumber: 3, weight: 0, reps: 15),
-          ];
-          break;
-        case ExerciseCountingMode.time:
-          defaultSets = [
-            SetCustomization(setNumber: 1, seconds: 60),
-            SetCustomization(setNumber: 2, seconds: 60),
-            SetCustomization(setNumber: 3, seconds: 60),
-          ];
-          break;
-      }
+      final firstPreset = _presetsForMode(countingMode).first;
+      final defaultSets = List.generate(firstPreset.sets, (i) {
+        switch (countingMode) {
+          case ExerciseCountingMode.weighted:
+            return SetCustomization(
+              setNumber: i + 1,
+              weight: 0,
+              reps: firstPreset.value,
+            );
+          case ExerciseCountingMode.reps:
+            return SetCustomization(
+              setNumber: i + 1,
+              weight: 0,
+              reps: firstPreset.value,
+            );
+          case ExerciseCountingMode.time:
+            return SetCustomization(
+              setNumber: i + 1,
+              seconds: firstPreset.value,
+            );
+        }
+      });
 
       return ExerciseCustomization(
         exercise: exercise,
@@ -183,7 +229,9 @@ class _ExerciseCustomizationScreenState
                       child: Icon(
                         AppIcons.dragHandle,
                         size: AppIconSize.small,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                       ),
                     ),
                   ),
@@ -263,11 +311,17 @@ class _ExerciseCustomizationScreenState
             Row(
               children: [
                 Expanded(
-                  child: _buildRestTimerPickerCompact(customization, exerciseIndex),
+                  child: _buildRestTimerPickerCompact(
+                    customization,
+                    exerciseIndex,
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: _buildRestAfterExercisePickerCompact(customization, exerciseIndex),
+                  child: _buildRestAfterExercisePickerCompact(
+                    customization,
+                    exerciseIndex,
+                  ),
                 ),
               ],
             ),
@@ -284,9 +338,9 @@ class _ExerciseCustomizationScreenState
               children: [
                 Text(
                   context.l10n.sets.toUpperCase(),
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 8),
                 // Quick Presets
@@ -297,7 +351,10 @@ class _ExerciseCustomizationScreenState
                 GestureDetector(
                   onTap: () => _addSet(exerciseIndex),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 2,
+                    ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -309,10 +366,11 @@ class _ExerciseCustomizationScreenState
                         const SizedBox(width: 2),
                         Text(
                           context.l10n.addSet,
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
                         ),
                       ],
                     ),
@@ -356,8 +414,12 @@ class _ExerciseCustomizationScreenState
           child: _buildCountingModeButton(
             label: '${l10n.weight} × ${l10n.reps}',
             icon: AppIcons.fitnessCenter,
-            isSelected: customization.countingMode == ExerciseCountingMode.weighted,
-            onTap: () => _changeCountingMode(exerciseIndex, ExerciseCountingMode.weighted),
+            isSelected:
+                customization.countingMode == ExerciseCountingMode.weighted,
+            onTap: () => _changeCountingMode(
+              exerciseIndex,
+              ExerciseCountingMode.weighted,
+            ),
           ),
         ),
         const SizedBox(width: 6),
@@ -366,7 +428,8 @@ class _ExerciseCustomizationScreenState
             label: l10n.reps,
             icon: AppIcons.repeat,
             isSelected: customization.countingMode == ExerciseCountingMode.reps,
-            onTap: () => _changeCountingMode(exerciseIndex, ExerciseCountingMode.reps),
+            onTap: () =>
+                _changeCountingMode(exerciseIndex, ExerciseCountingMode.reps),
           ),
         ),
         const SizedBox(width: 6),
@@ -375,7 +438,8 @@ class _ExerciseCustomizationScreenState
             label: l10n.duration,
             icon: AppIcons.timer,
             isSelected: customization.countingMode == ExerciseCountingMode.time,
-            onTap: () => _changeCountingMode(exerciseIndex, ExerciseCountingMode.time),
+            onTap: () =>
+                _changeCountingMode(exerciseIndex, ExerciseCountingMode.time),
           ),
         ),
       ],
@@ -452,12 +516,18 @@ class _ExerciseCustomizationScreenState
   }
 
   /// Show rest time picker dialog
-  void _showRestTimePicker(int exerciseIndex, ExerciseCustomization customization) {
+  void _showRestTimePicker(
+    int exerciseIndex,
+    ExerciseCustomization customization,
+  ) {
     final l10n = context.l10n;
     final initialSeconds = customization.restTime ?? 90;
 
-    ModalService.showSheet(context,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+    ModalService.showSheet(
+      context,
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       isScrollControlled: true,
       builder: (context) => _RestTimePickerSheet(
         title: l10n.restTimer,
@@ -465,10 +535,8 @@ class _ExerciseCustomizationScreenState
         initialSeconds: initialSeconds,
         onConfirm: (seconds) {
           setState(() {
-            _customizations[exerciseIndex] =
-                _customizations[exerciseIndex].copyWith(
-              restTime: seconds,
-            );
+            _customizations[exerciseIndex] = _customizations[exerciseIndex]
+                .copyWith(restTime: seconds);
           });
         },
       ),
@@ -483,10 +551,14 @@ class _ExerciseCustomizationScreenState
     final l10n = context.l10n;
     final appConfig = ref.read(appConfigProvider);
     final initialSeconds =
-        customization.restAfterExercise ?? appConfig.defaultRestBetweenExercises;
+        customization.restAfterExercise ??
+        appConfig.defaultRestBetweenExercises;
 
-    ModalService.showSheet(context,
-      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0),
+    ModalService.showSheet(
+      context,
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.surface.withValues(alpha: 0),
       isScrollControlled: true,
       builder: (context) => _RestTimePickerSheet(
         title: l10n.restBetweenExercises,
@@ -494,10 +566,8 @@ class _ExerciseCustomizationScreenState
         initialSeconds: initialSeconds,
         onConfirm: (seconds) {
           setState(() {
-            _customizations[exerciseIndex] =
-                _customizations[exerciseIndex].copyWith(
-              restAfterExercise: seconds,
-            );
+            _customizations[exerciseIndex] = _customizations[exerciseIndex]
+                .copyWith(restAfterExercise: seconds);
           });
         },
       ),
@@ -572,8 +642,8 @@ class _ExerciseCustomizationScreenState
                     setState(() {
                       _customizations[exerciseIndex] =
                           _customizations[exerciseIndex].copyWith(
-                        clearRestTime: true,
-                      );
+                            clearRestTime: true,
+                          );
                     });
                   },
                   child: Padding(
@@ -662,8 +732,8 @@ class _ExerciseCustomizationScreenState
                     setState(() {
                       _customizations[exerciseIndex] =
                           _customizations[exerciseIndex].copyWith(
-                        clearRestAfterExercise: true,
-                      );
+                            clearRestAfterExercise: true,
+                          );
                     });
                   },
                   child: Padding(
@@ -689,7 +759,8 @@ class _ExerciseCustomizationScreenState
   ) {
     final theme = Theme.of(context);
     final l10n = context.l10n;
-    final hasNotes = customization.notes != null && customization.notes!.isNotEmpty;
+    final hasNotes =
+        customization.notes != null && customization.notes!.isNotEmpty;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -698,9 +769,12 @@ class _ExerciseCustomizationScreenState
         InkWell(
           onTap: () {
             setState(() {
-              _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
-                notesExpanded: !(_customizations[exerciseIndex].notesExpanded ?? hasNotes),
-              );
+              _customizations[exerciseIndex] = _customizations[exerciseIndex]
+                  .copyWith(
+                    notesExpanded:
+                        !(_customizations[exerciseIndex].notesExpanded ??
+                            hasNotes),
+                  );
             });
           },
           borderRadius: BorderRadius.circular(8),
@@ -762,15 +836,16 @@ class _ExerciseCustomizationScreenState
                 ),
               ),
               isDense: true,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 10,
+              ),
             ),
             maxLines: 2,
             onChanged: (value) {
               setState(() {
-                _customizations[exerciseIndex] =
-                    _customizations[exerciseIndex].copyWith(
-                      notes: value.isEmpty ? null : value,
-                    );
+                _customizations[exerciseIndex] = _customizations[exerciseIndex]
+                    .copyWith(notes: value.isEmpty ? null : value);
               });
             },
           ),
@@ -811,16 +886,20 @@ class _ExerciseCustomizationScreenState
         final daysAgoText = daysAgo == 0
             ? context.l10n.today
             : daysAgo == 1
-                ? context.l10n.yesterday
-                : '${daysAgo}d fa';
+            ? context.l10n.yesterday
+            : '${daysAgo}d fa';
 
         // Format sets summary (e.g., "3×8 @ 60kg")
         final numSets = lastSets.length;
         final avgReps = lastSets.isNotEmpty
-            ? (lastSets.map((s) => s.reps ?? 0).reduce((a, b) => a + b) / numSets).round()
+            ? (lastSets.map((s) => s.reps ?? 0).reduce((a, b) => a + b) /
+                      numSets)
+                  .round()
             : 0;
         final maxWeight = lastSets.isNotEmpty
-            ? lastSets.map((s) => s.weight ?? 0.0).reduce((a, b) => a > b ? a : b)
+            ? lastSets
+                  .map((s) => s.weight ?? 0.0)
+                  .reduce((a, b) => a > b ? a : b)
             : 0.0;
 
         final summaryText = maxWeight > 0
@@ -882,7 +961,10 @@ class _ExerciseCustomizationScreenState
               GestureDetector(
                 onTap: () => _applyLastWorkoutConfig(exerciseIndex, lastSets),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primaryContainer,
                     borderRadius: BorderRadius.circular(12),
@@ -905,7 +987,10 @@ class _ExerciseCustomizationScreenState
   }
 
   /// Applica la configurazione dell'ultimo allenamento
-  void _applyLastWorkoutConfig(int exerciseIndex, List<ExerciseHistoryData> lastSets) {
+  void _applyLastWorkoutConfig(
+    int exerciseIndex,
+    List<ExerciseHistoryData> lastSets,
+  ) {
     setState(() {
       final newSets = lastSets.asMap().entries.map((entry) {
         return SetCustomization(
@@ -920,10 +1005,7 @@ class _ExerciseCustomizationScreenState
       );
     });
 
-    SnackBarService.showSuccess(
-      context,
-      context.l10n.previousWeightsLoaded,
-    );
+    SnackBarService.showSuccess(context, context.l10n.previousWeightsLoaded);
   }
 
   /// Quick Set Presets - bottoni per configurazioni veloci
@@ -934,24 +1016,16 @@ class _ExerciseCustomizationScreenState
     final theme = Theme.of(context);
     final countingMode = customization.countingMode;
 
-    // Presets diversi in base al counting mode
-    final presets = countingMode == ExerciseCountingMode.time
-        ? [
-            (sets: 3, value: 30, label: '3×30s'),
-            (sets: 3, value: 60, label: '3×60s'),
-            (sets: 4, value: 45, label: '4×45s'),
-          ]
-        : [
-            (sets: 3, value: 10, label: '3×10'),
-            (sets: 4, value: 8, label: '4×8'),
-            (sets: 5, value: 5, label: '5×5'),
-          ];
+    final presets = _presetsForMode(countingMode);
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: presets.map((preset) {
-          final isSelected = customization.sets.length == preset.sets &&
+          final label =
+              '${preset.sets}×${preset.value}${countingMode == ExerciseCountingMode.time ? 's' : ''}';
+          final isSelected =
+              customization.sets.length == preset.sets &&
               (countingMode == ExerciseCountingMode.time
                   ? customization.sets.every((s) => s.seconds == preset.value)
                   : customization.sets.every((s) => s.reps == preset.value));
@@ -959,7 +1033,8 @@ class _ExerciseCustomizationScreenState
           return Padding(
             padding: const EdgeInsets.only(right: 6),
             child: GestureDetector(
-              onTap: () => _applySetPreset(exerciseIndex, preset.sets, preset.value),
+              onTap: () =>
+                  _applySetPreset(exerciseIndex, preset.sets, preset.value),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -975,7 +1050,7 @@ class _ExerciseCustomizationScreenState
                   ),
                 ),
                 child: Text(
-                  preset.label,
+                  label,
                   style: theme.textTheme.labelSmall?.copyWith(
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                     color: isSelected
@@ -1006,11 +1081,7 @@ class _ExerciseCustomizationScreenState
             seconds: value,
           );
         } else {
-          return SetCustomization(
-            setNumber: i + 1,
-            weight: 0,
-            reps: value,
-          );
+          return SetCustomization(setNumber: i + 1, weight: 0, reps: value);
         }
       });
 
@@ -1024,7 +1095,9 @@ class _ExerciseCustomizationScreenState
   void _changeCountingMode(int exerciseIndex, ExerciseCountingMode newMode) {
     // Safety check per evitare crash
     if (exerciseIndex < 0 || exerciseIndex >= _customizations.length) {
-      debugPrint('❌ [CustomizationScreen] Invalid exerciseIndex: $exerciseIndex');
+      debugPrint(
+        '❌ [CustomizationScreen] Invalid exerciseIndex: $exerciseIndex',
+      );
       return;
     }
 
@@ -1039,50 +1112,48 @@ class _ExerciseCustomizationScreenState
 
     try {
       setState(() {
-      // Update counting mode
-      _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
-        countingMode: newMode,
-      );
+        // Update counting mode
+        _customizations[exerciseIndex] = _customizations[exerciseIndex]
+            .copyWith(countingMode: newMode);
 
-      // Reset sets to default values for new counting mode
-      final List<SetCustomization> newSets;
-      switch (newMode) {
-        case ExerciseCountingMode.weighted:
-          newSets = _customizations[exerciseIndex].sets.map((set) {
-            return SetCustomization(
-              setNumber: set.setNumber,
-              weight: set.weight, // Keep existing weight
-              reps: set.reps, // Keep existing reps
-              seconds: null, // Clear seconds
-            );
-          }).toList();
-          break;
-        case ExerciseCountingMode.reps:
-          newSets = _customizations[exerciseIndex].sets.map((set) {
-            return SetCustomization(
-              setNumber: set.setNumber,
-              weight: 0, // Clear weight (set to 0)
-              reps: set.reps, // Keep existing reps
-              seconds: null, // Clear seconds
-            );
-          }).toList();
-          break;
-        case ExerciseCountingMode.time:
-          newSets = _customizations[exerciseIndex].sets.map((set) {
-            return SetCustomization(
-              setNumber: set.setNumber,
-              weight: 0, // Clear weight (set to 0)
-              reps: 1, // Set to 1 (will be ignored in time mode)
-              seconds: set.seconds ?? 60, // Use existing or default to 60s
-            );
-          }).toList();
-          break;
-      }
+        // Reset sets to default values for new counting mode
+        final List<SetCustomization> newSets;
+        switch (newMode) {
+          case ExerciseCountingMode.weighted:
+            newSets = _customizations[exerciseIndex].sets.map((set) {
+              return SetCustomization(
+                setNumber: set.setNumber,
+                weight: set.weight, // Keep existing weight
+                reps: set.reps, // Keep existing reps
+                seconds: null, // Clear seconds
+              );
+            }).toList();
+            break;
+          case ExerciseCountingMode.reps:
+            newSets = _customizations[exerciseIndex].sets.map((set) {
+              return SetCustomization(
+                setNumber: set.setNumber,
+                weight: 0, // Clear weight (set to 0)
+                reps: set.reps, // Keep existing reps
+                seconds: null, // Clear seconds
+              );
+            }).toList();
+            break;
+          case ExerciseCountingMode.time:
+            newSets = _customizations[exerciseIndex].sets.map((set) {
+              return SetCustomization(
+                setNumber: set.setNumber,
+                weight: 0, // Clear weight (set to 0)
+                reps: 1, // Set to 1 (will be ignored in time mode)
+                seconds: set.seconds ?? 60, // Use existing or default to 60s
+              );
+            }).toList();
+            break;
+        }
 
-      _customizations[exerciseIndex] = _customizations[exerciseIndex].copyWith(
-        sets: newSets,
-      );
-    });
+        _customizations[exerciseIndex] = _customizations[exerciseIndex]
+            .copyWith(sets: newSets);
+      });
     } catch (e, stack) {
       debugPrint('❌ [CustomizationScreen] Error in _changeCountingMode: $e');
       debugPrint('❌ Stack trace: $stack');
@@ -1331,8 +1402,8 @@ class _ExerciseCustomizationScreenState
       notes: customization.notes,
       countingMode: customization.countingMode,
       restTime: customization.restTime, // Custom rest time (null = use default)
-      restAfterExercise:
-          customization.restAfterExercise, // Rest after exercise (null = use global)
+      restAfterExercise: customization
+          .restAfterExercise, // Rest after exercise (null = use global)
     );
     if (kDebugMode) {
       debugPrint(
@@ -1380,10 +1451,7 @@ class _ExerciseCustomizationScreenState
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: color.withValues(alpha: 0.3),
-              width: 1,
-            ),
+            border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -1437,11 +1505,8 @@ class _ExerciseCustomizationScreenState
           '${AppLocalizations.of(context).weight}: $weightDisplay, ${AppLocalizations.of(context).reps}: ${setCustomization.repsDisplay}',
       button: true,
       child: InkWell(
-        onTap: () => _showWeightRepsPicker(
-          exerciseIndex,
-          setIndex,
-          setCustomization,
-        ),
+        onTap: () =>
+            _showWeightRepsPicker(exerciseIndex, setIndex, setCustomization),
         borderRadius: BorderRadius.circular(8),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -1572,7 +1637,9 @@ class _ExerciseCustomizationScreenState
         ? WorkoutExercise.ExerciseSet(
             setNumber: sets[setIndex - 1].setNumber,
             weight: sets[setIndex - 1].weight,
-            reps: sets[setIndex - 1].hasRepRange ? null : sets[setIndex - 1].reps,
+            reps: sets[setIndex - 1].hasRepRange
+                ? null
+                : sets[setIndex - 1].reps,
             minReps: sets[setIndex - 1].minReps,
             maxReps: sets[setIndex - 1].maxReps,
           )
@@ -1585,7 +1652,8 @@ class _ExerciseCustomizationScreenState
       measurementUnit: weightUnit,
       previousSet: previousSet,
       allSets: allSets,
-      countingMode: _customizations[exerciseIndex].countingMode, // ✅ NUOVO: Pass counting mode
+      countingMode: _customizations[exerciseIndex]
+          .countingMode, // ✅ NUOVO: Pass counting mode
       onSave: (updatedSet) {
         _updateSetFromMinimalSheet(exerciseIndex, setIndex, updatedSet);
       },
@@ -1645,7 +1713,8 @@ class _ExerciseCustomizationScreenState
       );
       final countingMode = _customizations[exerciseIndex].countingMode;
 
-      final hasRange = updatedSet.minReps != null &&
+      final hasRange =
+          updatedSet.minReps != null &&
           updatedSet.maxReps != null &&
           updatedSet.minReps != updatedSet.maxReps;
 
@@ -1676,7 +1745,8 @@ class _ExerciseCustomizationScreenState
       );
       final countingMode = _customizations[exerciseIndex].countingMode;
 
-      final hasRange = updatedSet.minReps != null &&
+      final hasRange =
+          updatedSet.minReps != null &&
           updatedSet.maxReps != null &&
           updatedSet.minReps != updatedSet.maxReps;
 
@@ -1685,9 +1755,13 @@ class _ExerciseCustomizationScreenState
           setNumber: currentSets[i].setNumber,
           weight: countingMode.requiresWeight ? (updatedSet.weight ?? 0) : 0,
           reps: countingMode.requiresReps
-              ? (hasRange ? (updatedSet.minReps ?? 10) : (updatedSet.reps ?? 10))
+              ? (hasRange
+                    ? (updatedSet.minReps ?? 10)
+                    : (updatedSet.reps ?? 10))
               : 0,
-          seconds: countingMode.requiresTime ? (updatedSet.seconds ?? 60) : null,
+          seconds: countingMode.requiresTime
+              ? (updatedSet.seconds ?? 60)
+              : null,
           minReps: hasRange ? updatedSet.minReps : null,
           maxReps: hasRange ? updatedSet.maxReps : null,
         );
@@ -1716,7 +1790,8 @@ class _ExerciseCustomizationScreenState
       initialItem: selectedReps - 1,
     );
 
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
       isScrollControlled: true,
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Container(
@@ -1778,7 +1853,9 @@ class _ExerciseCustomizationScreenState
                       color: isSelected
                           ? theme.colorScheme.onSecondaryContainer
                           : theme.colorScheme.onSurface,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                   );
                 }).toList(),
@@ -1928,14 +2005,15 @@ class _ExerciseCustomizationScreenState
       );
     });
 
-    SnackBarService.showSuccess(
-      context,
-      context.l10n.applyToAll,
-    );
+    SnackBarService.showSuccess(context, context.l10n.applyToAll);
   }
 
   /// Apply reps to following sets (from setIndex onwards)
-  void _applyRepsToFollowingSets(int exerciseIndex, int fromSetIndex, int reps) {
+  void _applyRepsToFollowingSets(
+    int exerciseIndex,
+    int fromSetIndex,
+    int reps,
+  ) {
     setState(() {
       final currentSets = List<SetCustomization>.from(
         _customizations[exerciseIndex].sets,
@@ -1964,7 +2042,8 @@ class _ExerciseCustomizationScreenState
       initialItem: (selectedSeconds / 5).round() - 1, // 5s increments
     );
 
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Container(
           height: 350,
@@ -2081,7 +2160,6 @@ class _ExerciseCustomizationScreenState
       ),
     );
   }
-
 }
 
 // Data Classes
@@ -2143,9 +2221,7 @@ class _RestTimePickerSheetState extends State<_RestTimePickerSheet> {
           // Title
           Text(
             widget.title,
-            style: textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
@@ -2171,9 +2247,7 @@ class _RestTimePickerSheetState extends State<_RestTimePickerSheet> {
           Row(
             children: [
               Expanded(
-                child: Divider(
-                  color: colors.outline.withValues(alpha: 0.3),
-                ),
+                child: Divider(color: colors.outline.withValues(alpha: 0.3)),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -2185,9 +2259,7 @@ class _RestTimePickerSheetState extends State<_RestTimePickerSheet> {
                 ),
               ),
               Expanded(
-                child: Divider(
-                  color: colors.outline.withValues(alpha: 0.3),
-                ),
+                child: Divider(color: colors.outline.withValues(alpha: 0.3)),
               ),
             ],
           ),
@@ -2232,7 +2304,8 @@ class _RestTimePickerSheetState extends State<_RestTimePickerSheet> {
               button: true,
               child: FilledButton(
                 onPressed: () {
-                  final totalSeconds = (_selectedMinutes * 60) + _selectedSeconds;
+                  final totalSeconds =
+                      (_selectedMinutes * 60) + _selectedSeconds;
                   if (totalSeconds > 0) {
                     HapticFeedback.mediumImpact();
                     widget.onConfirm(totalSeconds);
@@ -2274,9 +2347,7 @@ class _RestTimePickerSheetState extends State<_RestTimePickerSheet> {
         decoration: BoxDecoration(
           color: colors.primaryContainer.withValues(alpha: 0.4),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: colors.primary.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: colors.primary.withValues(alpha: 0.3)),
         ),
         child: Text(
           label,
@@ -2303,9 +2374,7 @@ class _RestTimePickerSheetState extends State<_RestTimePickerSheet> {
       children: [
         Text(
           label,
-          style: textTheme.labelSmall?.copyWith(
-            color: colors.onSurfaceVariant,
-          ),
+          style: textTheme.labelSmall?.copyWith(color: colors.onSurfaceVariant),
         ),
         const SizedBox(height: 8),
         DecoratedBox(
@@ -2378,7 +2447,8 @@ class ExerciseCustomization {
   final String? notes;
   final ExerciseCountingMode countingMode;
   final int? restTime; // Rest time in seconds (null = use default)
-  final int? restAfterExercise; // Rest time AFTER exercise (null = use global default)
+  final int?
+  restAfterExercise; // Rest time AFTER exercise (null = use global default)
   final bool? notesExpanded; // UI state: notes section expanded
 
   ExerciseCustomization copyWith({
@@ -2427,8 +2497,7 @@ class SetCustomization {
       minReps != null && maxReps != null && minReps != maxReps;
 
   /// Display string: "8-10" se range, altrimenti "10"
-  String get repsDisplay =>
-      hasRepRange ? '$minReps-$maxReps' : '$reps';
+  String get repsDisplay => hasRepRange ? '$minReps-$maxReps' : '$reps';
 
   SetCustomization copyWith({
     int? setNumber,
@@ -2448,4 +2517,11 @@ class SetCustomization {
       maxReps: clearRepRange ? null : (maxReps ?? this.maxReps),
     );
   }
+}
+
+class _CustomizationPreset {
+  const _CustomizationPreset({required this.sets, required this.value});
+
+  final int sets;
+  final int value;
 }

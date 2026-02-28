@@ -8,10 +8,14 @@
 /// workout routine using the guided wizard.
 library;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_choice_service.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -138,8 +142,9 @@ class TemplateWizardReminderCard extends ConsumerWidget {
                     FilledButton.tonal(
                       onPressed: () => _onStartWizard(context, ref),
                       style: FilledButton.styleFrom(
-                        backgroundColor:
-                            colorScheme.tertiary.withValues(alpha: 0.15),
+                        backgroundColor: colorScheme.tertiary.withValues(
+                          alpha: 0.15,
+                        ),
                         foregroundColor: colorScheme.tertiary,
                       ),
                       child: Text(l10n.templateWizardReminderAction),
@@ -156,14 +161,29 @@ class TemplateWizardReminderCard extends ConsumerWidget {
 
   void _onDismiss(BuildContext context, WidgetRef ref) {
     HapticFeedback.lightImpact();
-    ref.read(onboardingChoiceServiceProvider)?.dismissTemplateWizardReminder();
+    final service = ref.read(onboardingChoiceServiceProvider);
+    if (service != null) {
+      unawaited(service.dismissTemplateWizardReminder());
+    }
+
+    ref.invalidate(templateWizardDismissedProvider);
+    ref.invalidate(shouldShowTemplateWizardReminderProvider);
   }
 
   void _onStartWizard(BuildContext context, WidgetRef ref) {
     HapticFeedback.mediumImpact();
-    // TODO: Navigate to template wizard when implemented
-    // For now, mark as completed and go to templates
-    ref.read(onboardingChoiceServiceProvider)?.setTemplateWizardCompleted(true);
-    // context.push('/templates/create-wizard');
+
+    // Avoid overlap between Home Tour and Templates guided tour.
+    ref.read(homeTourProvider.notifier).stopTour();
+
+    // Mark the user's intent as "guided" and start the guided templates tour.
+    final service = ref.read(onboardingChoiceServiceProvider);
+    if (service != null) {
+      unawaited(service.setChoice(OnboardingChoice.guided));
+    }
+    ref.invalidate(onboardingChoiceProvider);
+    ref.invalidate(shouldShowTemplateWizardReminderProvider);
+
+    context.push('/templates?showTour=true');
   }
 }

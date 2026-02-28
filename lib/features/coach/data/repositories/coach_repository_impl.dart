@@ -34,6 +34,9 @@ class CoachRepositoryImpl
   CollectionReference<Map<String, dynamic>> get _users =>
       _firestore.collection('users');
 
+  CollectionReference<Map<String, dynamic>> get _coachPublicProfiles =>
+      _firestore.collection('coach_public_profiles');
+
   // ============================================================
   // ATHLETE MANAGEMENT (Coach perspective)
   // ============================================================
@@ -410,6 +413,7 @@ class CoachRepositoryImpl
       await _delegations
           .doc(relationshipId)
           .update({
+            'userId': athleteId,
             'athleteId': athleteId,
             'athleteName': athleteName,
             'athleteHasApp': true,
@@ -581,8 +585,8 @@ class CoachRepositoryImpl
   @override
   Future<CoachInfo?> findCoachByCode(String code) async {
     final result = await handleFirebaseOperation<CoachInfo?>(() async {
-      final snapshot = await _users
-          .where('preferences.coachCode', isEqualTo: code.toUpperCase())
+      final snapshot = await _coachPublicProfiles
+          .where('coachCode', isEqualTo: code.toUpperCase())
           .limit(1)
           .get();
 
@@ -592,9 +596,9 @@ class CoachRepositoryImpl
       final data = doc.data();
 
       return CoachInfo(
-        coachId: doc.id,
-        coachEmail: data['email'] as String? ?? '',
-        coachName: data['displayName'] as String? ?? 'Coach',
+        coachId: data['coachId'] as String? ?? doc.id,
+        coachEmail: data['coachEmail'] as String? ?? '',
+        coachName: data['coachName'] as String? ?? 'Coach',
         photoUrl: data['photoURL'] as String?,
       );
     }, operationName: 'findCoachByCode');
@@ -616,11 +620,25 @@ class CoachRepositoryImpl
   @override
   Future<String> getOrCreateCoachCode(String coachId) async {
     final result = await handleFirebaseOperation<String>(() async {
+      // Prefer dedicated public profile collection (secure lookup source).
+      final publicProfileDoc = await _coachPublicProfiles.doc(coachId).get();
+      final publicCode = publicProfileDoc.data()?['coachCode'] as String?;
+      if (publicCode != null && publicCode.isNotEmpty) {
+        return publicCode;
+      }
+
       final doc = await _users.doc(coachId).get();
       final preferences = doc.data()?['preferences'] as Map<String, dynamic>?;
       final existingCode = preferences?['coachCode'] as String?;
 
       if (existingCode != null && existingCode.isNotEmpty) {
+        await _upsertCoachPublicProfile(
+          coachId: coachId,
+          coachCode: existingCode,
+          coachEmail: doc.data()?['email'] as String?,
+          coachName: doc.data()?['displayName'] as String?,
+          photoUrl: doc.data()?['photoURL'] as String?,
+        );
         return existingCode;
       }
 
@@ -653,6 +671,15 @@ class CoachRepositoryImpl
         'preferences.coachCode': code,
         'preferences.coachCodeGeneratedAt': FieldValue.serverTimestamp(),
       });
+
+      final userDoc = await _users.doc(coachId).get();
+      await _upsertCoachPublicProfile(
+        coachId: coachId,
+        coachCode: code,
+        coachEmail: userDoc.data()?['email'] as String?,
+        coachName: userDoc.data()?['displayName'] as String?,
+        photoUrl: userDoc.data()?['photoURL'] as String?,
+      );
 
       if (kDebugMode) {
         debugPrint('[CoachRepo] Generated coach code: $code');
@@ -803,21 +830,52 @@ class CoachRepositoryImpl
     String coachEmail,
     String athleteId,
   ) async {
-    // First get athlete email
-    final athleteDoc = await _users.doc(athleteId).get();
-    final athleteEmail = athleteDoc.data()?['email'] as String?;
-    if (athleteEmail == null) return null;
-
-    // Find the relationship
-    final snapshot = await _delegations
+    // Preferred schema: athleteId field
+    final byAthleteId = await _delegations
         .where('coachEmail', isEqualTo: coachEmail)
-        .where('athleteEmail', isEqualTo: athleteEmail)
+        .where('athleteId', isEqualTo: athleteId)
         .where('status', isEqualTo: 'active')
         .limit(1)
         .get();
 
-    if (snapshot.docs.isEmpty) return null;
-    return CoachRelationship.fromFirestore(snapshot.docs.first);
+    if (byAthleteId.docs.isNotEmpty) {
+      return CoachRelationship.fromFirestore(byAthleteId.docs.first);
+    }
+
+    // Legacy fallback: userId field
+    final byUserId = await _delegations
+        .where('coachEmail', isEqualTo: coachEmail)
+        .where('userId', isEqualTo: athleteId)
+        .where('status', isEqualTo: 'active')
+        .limit(1)
+        .get();
+
+    if (byUserId.docs.isNotEmpty) {
+      return CoachRelationship.fromFirestore(byUserId.docs.first);
+    }
+
+    return null;
+  }
+
+  Future<void> _upsertCoachPublicProfile({
+    required String coachId,
+    required String coachCode,
+    required String? coachEmail,
+    required String? coachName,
+    required String? photoUrl,
+  }) async {
+    if (coachEmail == null || coachEmail.isEmpty) {
+      return;
+    }
+
+    await _coachPublicProfiles.doc(coachId).set({
+      'coachId': coachId,
+      'coachCode': coachCode.toUpperCase(),
+      'coachEmail': coachEmail,
+      'coachName': (coachName ?? 'Coach').trim(),
+      'photoURL': photoUrl,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
   }
 
   int _countTotalSets(List<dynamic> exercises) {

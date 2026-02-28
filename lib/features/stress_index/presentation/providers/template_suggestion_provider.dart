@@ -58,6 +58,11 @@ final stressRefreshTriggerProvider = StreamProvider.autoDispose<int>((ref) {
 final healthDataSnapshotProvider = FutureProvider.autoDispose<HealthDataSnapshot>((
   ref,
 ) async {
+  // Keep cached snapshot alive for a short window to avoid repeated HealthKit I/O.
+  final link = ref.keepAlive();
+  final cacheTimer = Timer(const Duration(minutes: 5), link.close);
+  ref.onDispose(cacheTimer.cancel);
+
   final datasource = ref.watch(healthKitDatasourceProvider);
 
   // Check if HealthKit is available (iOS only)
@@ -70,14 +75,14 @@ final healthDataSnapshotProvider = FutureProvider.autoDispose<HealthDataSnapshot
 
   try {
     // Initialize HealthKit (request permissions if needed)
-    await datasource.initialize();
+    await datasource.initialize().timeout(const Duration(seconds: 5));
 
     // Fetch all needed data in parallel for efficiency
     final results = await Future.wait([
       datasource.getSleepLastNight(),
       datasource.getHrvToday(),
       datasource.getRestingHeartRate(),
-    ]);
+    ]).timeout(const Duration(seconds: 6));
 
     final sleepData = results[0];
     final hrvData = results[1];
@@ -107,10 +112,6 @@ final healthDataSnapshotProvider = FutureProvider.autoDispose<HealthDataSnapshot
       debugPrint('  - HRV: ${hrvMs?.toStringAsFixed(0)}ms');
       debugPrint('  - Resting HR: ${restingHr?.toStringAsFixed(0)}bpm');
     }
-
-    // 🔧 PERF FIX: Cache for 5 minutes - health data doesn't change frequently
-    final link = ref.keepAlive();
-    Timer(const Duration(minutes: 5), link.close);
 
     return HealthDataSnapshot(
       sleepHoursLastNight: sleepHours,
@@ -317,26 +318,18 @@ final templateSuggestionProvider =
           return null;
         }
 
-        // Get exercise definition map
-        final exerciseMap = await ref.watch(
-          exerciseDefinitionMapProvider.future,
-        );
-
-        // Get muscle recovery history
-        final muscleHistory = await ref.watch(
-          muscleRecoveryHistoryProvider.future,
-        );
-
-        // Get personal calibration
-        final calibration = await ref.watch(personalCalibrationProvider.future);
-
-        // Get current stress level
+        // Read all dependencies before async gaps to avoid disposed-ref races.
+        final exerciseMapFuture = ref.watch(exerciseDefinitionMapProvider.future);
+        final muscleHistoryFuture = ref.watch(muscleRecoveryHistoryProvider.future);
+        final calibrationFuture = ref.watch(personalCalibrationProvider.future);
+        final healthDataFuture = ref.watch(healthDataSnapshotProvider.future);
         final stressState = ref.watch(stressIndexNotifierProvider);
-        final currentStress =
-            stressState.value?.latestResult?.displayScore ?? 0;
+        final currentStress = stressState.value?.latestResult?.displayScore ?? 0;
 
-        // Get HealthKit data for today
-        final healthData = await ref.watch(healthDataSnapshotProvider.future);
+        final exerciseMap = await exerciseMapFuture;
+        final muscleHistory = await muscleHistoryFuture;
+        final calibration = await calibrationFuture;
+        final healthData = await healthDataFuture;
 
         // Analyze all templates
         final analyses = TemplateStressAnalyzer.analyzeAllTemplates(
@@ -409,19 +402,17 @@ final smartTemplateSuggestionProvider =
       return [];
     }
 
-    // Get exercise definition map
-    final exerciseMap = await ref.watch(exerciseDefinitionMapProvider.future);
+    // Read all dependencies before async gaps to avoid disposed-ref races.
+    final exerciseMapFuture = ref.watch(exerciseDefinitionMapProvider.future);
+    final muscleHistoryFuture = ref.watch(muscleRecoveryHistoryProvider.future);
+    final calibrationFuture = ref.watch(personalCalibrationProvider.future);
+    final healthDataFuture = ref.watch(healthDataSnapshotProvider.future);
+    final historyAsync = ref.watch(workoutHistoryProvider);
 
-    // Get muscle recovery state
-    final muscleHistory = await ref.watch(
-      muscleRecoveryHistoryProvider.future,
-    );
-
-    // Get personal calibration
-    final calibration = await ref.watch(personalCalibrationProvider.future);
-
-    // Get HealthKit data
-    final healthData = await ref.watch(healthDataSnapshotProvider.future);
+    final exerciseMap = await exerciseMapFuture;
+    final muscleHistory = await muscleHistoryFuture;
+    final calibration = await calibrationFuture;
+    final healthData = await healthDataFuture;
 
     // Build muscle recovery map for scoring
     final muscleRecovery = <String, MuscleReadinessData>{};
@@ -443,7 +434,6 @@ final smartTemplateSuggestionProvider =
     }
 
     // Get workout history for volume tracking and patterns
-    final historyAsync = ref.watch(workoutHistoryProvider);
     final history = historyAsync.value ?? [];
 
     // NEW: Calculate weekly volume tracker

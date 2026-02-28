@@ -34,6 +34,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_orchestrator.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -305,8 +306,7 @@ class _WorkoutCompletionSummaryScreenState
                   // View Details Button
                   FilledButton.icon(
                     onPressed: () {
-                      // TODO: Navigate to workout history detail
-                      context.pop();
+                      context.goNamed(AppRoutes.workoutHistoryName);
                     },
                     icon: const SemanticIcon(
                       icon: AppIcons.analytics,

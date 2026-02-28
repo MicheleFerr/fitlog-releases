@@ -40,6 +40,7 @@
 library;
 
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/models/exercise_preferences_model.dart';
@@ -78,12 +79,19 @@ class ExercisePreferencesRepository implements IExercisePreferencesRepository {
   /// Document reference for current user
   DocumentReference get _userDoc => _collection.doc(_userId);
 
+  bool get _isAuthorizedSession {
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+    return currentUid != null && currentUid == _userId;
+  }
+
   /// Get exercise preferences (1 read operation)
   ///
   /// Returns null if document doesn't exist (first time user)
   ///
   /// **Firestore Cost**: 1 read
   Future<ExercisePreferencesModel?> getPreferences() async {
+    if (!_isAuthorizedSession) return null;
+
     try {
       final doc = await _userDoc.get();
 
@@ -115,13 +123,19 @@ class ExercisePreferencesRepository implements IExercisePreferencesRepository {
   /// **Optimization**: Only call this when Analytics screen is visible
   /// (avoid background reads)
   Stream<ExercisePreferencesModel?> watchPreferences() {
-    return _userDoc.snapshots().map((doc) {
-      if (!doc.exists) return null;
+    return FirebaseAuth.instance.authStateChanges().asyncExpand((user) {
+      if (user == null || user.uid != _userId) {
+        return Stream<ExercisePreferencesModel?>.value(null);
+      }
 
-      final data = doc.data() as Map<String, dynamic>?;
-      if (data == null) return null;
+      return _userDoc.snapshots().map((doc) {
+        if (!doc.exists) return null;
 
-      return ExercisePreferencesModel.fromJson(data);
+        final data = doc.data() as Map<String, dynamic>?;
+        if (data == null) return null;
+
+        return ExercisePreferencesModel.fromJson(data);
+      });
     });
   }
 
@@ -140,6 +154,8 @@ class ExercisePreferencesRepository implements IExercisePreferencesRepository {
   /// - favorites: Complete set of favorite exercise names
   @override
   Future<void> setFavorites(Set<String> favorites) async {
+    if (!_isAuthorizedSession) return;
+
     // Cancel previous debounce timer
     _debounceTimer?.cancel();
 
@@ -148,6 +164,7 @@ class ExercisePreferencesRepository implements IExercisePreferencesRepository {
 
     // Start new debounce timer (500ms)
     _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
+      if (!_isAuthorizedSession) return;
       if (_pendingFavorites == null) return;
 
       try {
@@ -271,11 +288,14 @@ class ExercisePreferencesRepository implements IExercisePreferencesRepository {
     required List<String> favorites,
     required Map<String, String> countingModeOverrides,
   }) async {
+    if (!_isAuthorizedSession) return;
+
     // Cancel previous debounce timer
     _debounceTimer?.cancel();
 
     // Start new debounce timer (500ms)
     _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
+      if (!_isAuthorizedSession) return;
       try {
         final model = ExercisePreferencesModel(
           favorites: favorites,

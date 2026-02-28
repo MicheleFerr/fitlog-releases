@@ -427,10 +427,6 @@ class _WorkoutTemplateListItemState
           icon: const CNSymbol('square.and.arrow.up', size: 14),
         ),
         CNPopupMenuItem(
-          label: l10n.makePublic,
-          icon: const CNSymbol('globe', size: 14),
-        ),
-        CNPopupMenuItem(
           label: l10n.delete,
           icon: const CNSymbol('trash', size: 14),
         ),
@@ -440,8 +436,7 @@ class _WorkoutTemplateListItemState
           case 0: widget.onStartWorkout();
           case 1: widget.onDuplicate();
           case 2: widget.onShare();
-          case 3: widget.onMakePublic?.call();
-          case 4: widget.onDelete();
+          case 3: widget.onDelete();
         }
       },
     );

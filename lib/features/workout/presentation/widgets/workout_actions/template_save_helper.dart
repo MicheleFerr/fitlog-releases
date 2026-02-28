@@ -14,6 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
@@ -116,7 +117,7 @@ class TemplateSaveHelper {
           FilledButton(
             onPressed: () {
               Navigator.of(context).pop();
-              // TODO: Navigate to premium screen
+              context.pushNamed(AppRoutes.premiumName);
             },
             child: Text(AppLocalizations.of(context).upgrade),
           ),
@@ -407,7 +408,7 @@ class TemplateSaveHelper {
             FilledButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                // TODO: Navigate to premium
+                context.pushNamed(AppRoutes.premiumName);
               },
               child: Text(AppLocalizations.of(context).upgrade),
             ),

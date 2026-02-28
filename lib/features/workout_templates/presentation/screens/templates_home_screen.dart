@@ -70,10 +70,15 @@ import 'package:gymbro_flutter_new/features/workout_import/presentation/screens/
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/cards/discover_template_card.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/for_you_section.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/templates_tour_service.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 
 class TemplatesHomeScreen extends ConsumerStatefulWidget {
-  const TemplatesHomeScreen({super.key, this.showTour = false, this.initialTab});
+  const TemplatesHomeScreen({
+    super.key,
+    this.showTour = false,
+    this.initialTab,
+  });
 
   /// Whether to show the guided tour when screen opens
   final bool showTour;
@@ -100,6 +105,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   // Tour GlobalKeys for guided onboarding
   // ═══════════════════════════════════════════════════════════════════════════
   final _myTemplatesTabKey = GlobalKey();
+  final _exercisesTabKey = GlobalKey();
   final _discoverTabKey = GlobalKey();
   final _createButtonKey = GlobalKey();
 
@@ -139,6 +145,9 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       }
     });
 
+    // Home Tour is contextual to Home screen only.
+    ref.read(homeTourProvider.notifier).stopTour();
+
     // Start tour if requested (after frame to ensure keys are attached)
     if (widget.showTour) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -162,6 +171,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
         context: context,
         targetKeys: {
           TemplatesTourStep.myTemplates: _myTemplatesTabKey,
+          TemplatesTourStep.exercises: _exercisesTabKey,
           TemplatesTourStep.discover: _discoverTabKey,
           TemplatesTourStep.createButton: _createButtonKey,
         },
@@ -212,8 +222,12 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   if (_tabController.index == 0)
                     IconButton(
                       icon: SemanticIcon(
-                        icon: _isGridView ? AppIcons.viewList : AppIcons.gridView,
-                        semanticLabel: _isGridView ? l10n.listView : l10n.gridView,
+                        icon: _isGridView
+                            ? AppIcons.viewList
+                            : AppIcons.gridView,
+                        semanticLabel: _isGridView
+                            ? l10n.listView
+                            : l10n.gridView,
                         size: AppIconSize.medium,
                         color: context.colors.onSurfaceVariant,
                       ),
@@ -261,7 +275,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     ),
                     tabs: [
                       Tab(key: _myTemplatesTabKey, text: l10n.myTemplates),
-                      Tab(text: l10n.exercises),
+                      Tab(key: _exercisesTabKey, text: l10n.exercises),
                       Tab(key: _discoverTabKey, text: l10n.discover),
                     ],
                   ),
@@ -436,7 +450,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       // Create and start workout from template with templateId for duration tracking
       final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
       workoutNotifier.createWorkout(template.name, templateId: template.id);
-      workoutNotifier.startWorkout();
+      unawaited(workoutNotifier.startWorkout());
 
       // Add exercises from template
       final exercises = template.toWorkoutExercises();
@@ -742,147 +756,144 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           ),
 
           // Workout Templates (filtered by category)
-            defaultTemplatesAsync.when(
-              loading: () => const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.all(AppSpacing.lg),
-                  child: Center(child: LoadingIndicator()),
-                ),
+          defaultTemplatesAsync.when(
+            loading: () => const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.all(AppSpacing.lg),
+                child: Center(child: LoadingIndicator()),
               ),
-              error: (error, _) => SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
-                  child: Center(child: Text(l10n.errorLoadingTemplates)),
-                ),
+            ),
+            error: (error, _) => SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Center(child: Text(l10n.errorLoadingTemplates)),
               ),
-              data: (templates) {
-                if (templates.isEmpty) {
-                  return SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.lg),
-                      child: Center(child: Text(l10n.noTemplatesFound)),
-                    ),
-                  );
-                }
-
-                // Group templates by category
-                final categories =
-                    <String, List<workout_template.WorkoutTemplate>>{};
-                for (final t in templates) {
-                  final cat = t.category ?? 'other';
-                  categories.putIfAbsent(cat, () => []).add(t);
-                }
-
-                // Category display info
-                final categoryInfo = {
-                  'beginner': (l10n.beginner, AppIcons.school),
-                  'intermediate': (l10n.intermediate, AppIcons.trendUp),
-                  'advanced': (l10n.advanced, AppIcons.localFireDepartment),
-                  'home': (l10n.homeWorkouts, AppIcons.home),
-                  'dumbbell': (l10n.dumbbellOnly, AppIcons.workout),
-                  'express': (l10n.express, AppIcons.timer),
-                  'specialty': (l10n.specialty, AppIcons.star),
-                };
-
-                // Order of categories (UX-optimized: quick wins first, intimidating last)
-                // 1. Express: ⚡ Quick wins for everyone (Chiara's priority)
-                // 2. Beginner: 🌱 Non-intimidating for Marco
-                // 3. Home: 🏠 Accessible (no gym needed)
-                // 4. Dumbbell: 💪 Minimal equipment
-                // 5. Intermediate: 📈 Growth path
-                // 6. Specialty: ⭐ Niche programs
-                // 7. Advanced: 🔥 Last - for those seeking challenge
-                final orderedCategories = [
-                  'express',
-                  'beginner',
-                  'home',
-                  'dumbbell',
-                  'intermediate',
-                  'specialty',
-                  'advanced',
-                ];
-
-                // Filter categories based on selection
-                final categoriesToShow = _selectedCategory != null
-                    ? [_selectedCategory!]
-                    : orderedCategories;
-
-                return SliverPadding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm,
-                  ),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      final categoryKey = categoriesToShow[index];
-                      final categoryTemplates = categories[categoryKey];
-                      if (categoryTemplates == null ||
-                          categoryTemplates.isEmpty) {
-                        return const SizedBox.shrink();
-                      }
-
-                      final (categoryName, categoryIcon) =
-                          categoryInfo[categoryKey] ??
-                          (categoryKey, AppIcons.workout);
-
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Compact category header (only show if viewing all)
-                          if (_selectedCategory == null)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: AppSpacing.sm,
-                              ),
-                              child: Row(
-                                children: [
-                                  SemanticIcon(
-                                    icon: categoryIcon,
-                                    semanticLabel: categoryName,
-                                    size: AppIconSize.small,
-                                    color: context.colors.primary,
-                                  ),
-                                  const SizedBox(width: AppSpacing.sm),
-                                  Text(
-                                    categoryName,
-                                    style: context.textTheme.titleSmall
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    '${categoryTemplates.length}',
-                                    style: context.textTheme.labelMedium
-                                        ?.copyWith(
-                                          color:
-                                              context.colors.onSurfaceVariant,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                          // UX REDESIGN: Vertical list with large cards
-                          // Replaces horizontal scroll of small cards
-                          // Better readability and touch targets
-                          ...categoryTemplates.map(
-                            (template) => DiscoverTemplateCard(
-                              template: template,
-                              onTap: () => _previewDefaultTemplate(
-                                context,
-                                template,
-                              ),
-                              onUse: () =>
-                                  _useDefaultTemplate(context, template),
-                            ),
-                          ),
-                          const SizedBox(height: AppSpacing.md),
-                        ],
-                      );
-                    }, childCount: categoriesToShow.length),
+            ),
+            data: (templates) {
+              if (templates.isEmpty) {
+                return SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.lg),
+                    child: Center(child: Text(l10n.noTemplatesFound)),
                   ),
                 );
-              },
-            ),
+              }
+
+              // Group templates by category
+              final categories =
+                  <String, List<workout_template.WorkoutTemplate>>{};
+              for (final t in templates) {
+                final cat = t.category ?? 'other';
+                categories.putIfAbsent(cat, () => []).add(t);
+              }
+
+              // Category display info
+              final categoryInfo = {
+                'beginner': (l10n.beginner, AppIcons.school),
+                'intermediate': (l10n.intermediate, AppIcons.trendUp),
+                'advanced': (l10n.advanced, AppIcons.localFireDepartment),
+                'home': (l10n.homeWorkouts, AppIcons.home),
+                'dumbbell': (l10n.dumbbellOnly, AppIcons.workout),
+                'express': (l10n.express, AppIcons.timer),
+                'specialty': (l10n.specialty, AppIcons.star),
+              };
+
+              // Order of categories (UX-optimized: quick wins first, intimidating last)
+              // 1. Express: ⚡ Quick wins for everyone (Chiara's priority)
+              // 2. Beginner: 🌱 Non-intimidating for Marco
+              // 3. Home: 🏠 Accessible (no gym needed)
+              // 4. Dumbbell: 💪 Minimal equipment
+              // 5. Intermediate: 📈 Growth path
+              // 6. Specialty: ⭐ Niche programs
+              // 7. Advanced: 🔥 Last - for those seeking challenge
+              final orderedCategories = [
+                'express',
+                'beginner',
+                'home',
+                'dumbbell',
+                'intermediate',
+                'specialty',
+                'advanced',
+              ];
+
+              // Filter categories based on selection
+              final categoriesToShow = _selectedCategory != null
+                  ? [_selectedCategory!]
+                  : orderedCategories;
+
+              return SliverPadding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.sm,
+                ),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final categoryKey = categoriesToShow[index];
+                    final categoryTemplates = categories[categoryKey];
+                    if (categoryTemplates == null ||
+                        categoryTemplates.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+
+                    final (categoryName, categoryIcon) =
+                        categoryInfo[categoryKey] ??
+                        (categoryKey, AppIcons.workout);
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Compact category header (only show if viewing all)
+                        if (_selectedCategory == null)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.sm,
+                            ),
+                            child: Row(
+                              children: [
+                                SemanticIcon(
+                                  icon: categoryIcon,
+                                  semanticLabel: categoryName,
+                                  size: AppIconSize.small,
+                                  color: context.colors.primary,
+                                ),
+                                const SizedBox(width: AppSpacing.sm),
+                                Text(
+                                  categoryName,
+                                  style: context.textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  '${categoryTemplates.length}',
+                                  style: context.textTheme.labelMedium
+                                      ?.copyWith(
+                                        color: context.colors.onSurfaceVariant,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                        // UX REDESIGN: Vertical list with large cards
+                        // Replaces horizontal scroll of small cards
+                        // Better readability and touch targets
+                        ...categoryTemplates.map(
+                          (template) => DiscoverTemplateCard(
+                            template: template,
+                            onTap: () =>
+                                _previewDefaultTemplate(context, template),
+                            onUse: () => _useDefaultTemplate(context, template),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                      ],
+                    );
+                  }, childCount: categoriesToShow.length),
+                ),
+              );
+            },
+          ),
 
           // ═══════════════════════════════════════════════════════════════════
           // ADVANCED TECHNIQUES SECTION (integrated at bottom of unified feed)
@@ -945,78 +956,78 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           // Superset Templates (Custom first, then Predefined)
           // ═══════════════════════════════════════════════════════════════════
           _buildAdvancedTechniqueWithCustom<SupersetTemplate>(
-              context: context,
-              title: l10n.superset,
-              icon: AppIcons.link,
-              color: context.colors.secondary,
-              customAsync: customSupersetsAsync,
-              predefinedAsync: predefinedSupersetsAsync,
-              isExpanded: _isSupersetsExpanded,
-              onToggleExpanded: () =>
-                  setState(() => _isSupersetsExpanded = !_isSupersetsExpanded),
-              customCardBuilder: (template) => CompactSupersetCard(
-                template: template,
-                onTap: () => _previewPredefinedSuperset(context, template),
-                onUse: () => _usePredefinedSuperset(context, template),
-                isCustom: true,
-              ),
-              predefinedCardBuilder: (template) => CompactSupersetCard(
-                template: template,
-                onTap: () => _previewPredefinedSuperset(context, template),
-                onUse: () => _usePredefinedSuperset(context, template),
-              ),
+            context: context,
+            title: l10n.superset,
+            icon: AppIcons.link,
+            color: context.colors.secondary,
+            customAsync: customSupersetsAsync,
+            predefinedAsync: predefinedSupersetsAsync,
+            isExpanded: _isSupersetsExpanded,
+            onToggleExpanded: () =>
+                setState(() => _isSupersetsExpanded = !_isSupersetsExpanded),
+            customCardBuilder: (template) => CompactSupersetCard(
+              template: template,
+              onTap: () => _previewPredefinedSuperset(context, template),
+              onUse: () => _usePredefinedSuperset(context, template),
+              isCustom: true,
             ),
-
-            // ═══════════════════════════════════════════════════════════════════
-            // Dropset Templates (Custom first, then Predefined)
-            // ═══════════════════════════════════════════════════════════════════
-            _buildAdvancedTechniqueWithCustom<DropsetTemplate>(
-              context: context,
-              title: l10n.dropset,
-              icon: AppIcons.trendDown,
-              color: context.colors.tertiary,
-              customAsync: customDropsetsAsync,
-              predefinedAsync: predefinedDropsetsAsync,
-              isExpanded: _isDropsetsExpanded,
-              onToggleExpanded: () =>
-                  setState(() => _isDropsetsExpanded = !_isDropsetsExpanded),
-              customCardBuilder: (template) => CompactDropsetCard(
-                template: template,
-                onTap: () => _previewPredefinedDropset(context, template),
-                onUse: () => _usePredefinedDropset(context, template),
-                isCustom: true,
-              ),
-              predefinedCardBuilder: (template) => CompactDropsetCard(
-                template: template,
-                onTap: () => _previewPredefinedDropset(context, template),
-                onUse: () => _usePredefinedDropset(context, template),
-              ),
+            predefinedCardBuilder: (template) => CompactSupersetCard(
+              template: template,
+              onTap: () => _previewPredefinedSuperset(context, template),
+              onUse: () => _usePredefinedSuperset(context, template),
             ),
+          ),
 
-            // ═══════════════════════════════════════════════════════════════════
-            // Rest-Pause Templates (Custom first, then Predefined)
-            // ═══════════════════════════════════════════════════════════════════
-            _buildAdvancedTechniqueWithCustom<RestPauseTemplate>(
-              context: context,
-              title: l10n.restPause,
-              icon: AppIcons.timer,
-              color: context.colors.error,
-              customAsync: customRestPauseAsync,
-              predefinedAsync: predefinedRestPauseAsync,
-              isExpanded: _isRestPauseExpanded,
-              onToggleExpanded: () =>
-                  setState(() => _isRestPauseExpanded = !_isRestPauseExpanded),
-              customCardBuilder: (template) => CompactRestPauseCard(
-                template: template,
-                onTap: () => _previewPredefinedRestPause(context, template),
-                onUse: () => _usePredefinedRestPause(context, template),
-                isCustom: true,
-              ),
-              predefinedCardBuilder: (template) => CompactRestPauseCard(
-                template: template,
-                onTap: () => _previewPredefinedRestPause(context, template),
-                onUse: () => _usePredefinedRestPause(context, template),
-              ),
+          // ═══════════════════════════════════════════════════════════════════
+          // Dropset Templates (Custom first, then Predefined)
+          // ═══════════════════════════════════════════════════════════════════
+          _buildAdvancedTechniqueWithCustom<DropsetTemplate>(
+            context: context,
+            title: l10n.dropset,
+            icon: AppIcons.trendDown,
+            color: context.colors.tertiary,
+            customAsync: customDropsetsAsync,
+            predefinedAsync: predefinedDropsetsAsync,
+            isExpanded: _isDropsetsExpanded,
+            onToggleExpanded: () =>
+                setState(() => _isDropsetsExpanded = !_isDropsetsExpanded),
+            customCardBuilder: (template) => CompactDropsetCard(
+              template: template,
+              onTap: () => _previewPredefinedDropset(context, template),
+              onUse: () => _usePredefinedDropset(context, template),
+              isCustom: true,
+            ),
+            predefinedCardBuilder: (template) => CompactDropsetCard(
+              template: template,
+              onTap: () => _previewPredefinedDropset(context, template),
+              onUse: () => _usePredefinedDropset(context, template),
+            ),
+          ),
+
+          // ═══════════════════════════════════════════════════════════════════
+          // Rest-Pause Templates (Custom first, then Predefined)
+          // ═══════════════════════════════════════════════════════════════════
+          _buildAdvancedTechniqueWithCustom<RestPauseTemplate>(
+            context: context,
+            title: l10n.restPause,
+            icon: AppIcons.timer,
+            color: context.colors.error,
+            customAsync: customRestPauseAsync,
+            predefinedAsync: predefinedRestPauseAsync,
+            isExpanded: _isRestPauseExpanded,
+            onToggleExpanded: () =>
+                setState(() => _isRestPauseExpanded = !_isRestPauseExpanded),
+            customCardBuilder: (template) => CompactRestPauseCard(
+              template: template,
+              onTap: () => _previewPredefinedRestPause(context, template),
+              onUse: () => _usePredefinedRestPause(context, template),
+              isCustom: true,
+            ),
+            predefinedCardBuilder: (template) => CompactRestPauseCard(
+              template: template,
+              onTap: () => _previewPredefinedRestPause(context, template),
+              onUse: () => _usePredefinedRestPause(context, template),
+            ),
           ),
 
           // Bottom padding for tab bar overlay
@@ -1332,7 +1343,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
     final parentContext = context;
 
     // Show template preview bottom sheet
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (modalContext) => TemplatePreviewSheet(
@@ -1538,7 +1550,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
           FilledButton(
             onPressed: () {
               Navigator.of(context).pop();
-              // TODO: Navigate to premium upgrade
+              context.pushNamed(AppRoutes.premiumName);
             },
             child: Text(l10n.upgrade),
           ),
@@ -1590,7 +1602,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   ) {
     HapticFeedback.lightImpact();
 
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (modalContext) => SupersetPreviewSheet(
@@ -1626,8 +1639,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
     // Check quota
     final entitlements = ref.read(tierEntitlementsProvider);
-    final existing =
-        ref.read(customSupersetTemplatesProvider).value ?? [];
+    final existing = ref.read(customSupersetTemplatesProvider).value ?? [];
     if (existing.length >= entitlements.maxCustomSupersets) {
       if (context.mounted) {
         SnackBarService.showWarning(context, l10n.quotaExceeded);
@@ -1673,7 +1685,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   ) {
     HapticFeedback.lightImpact();
 
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (modalContext) => DropsetPreviewSheet(
@@ -1755,7 +1768,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
   ) {
     HapticFeedback.lightImpact();
 
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (modalContext) => RestPausePreviewSheet(
@@ -1791,8 +1805,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
     // Check quota
     final entitlements = ref.read(tierEntitlementsProvider);
-    final existing =
-        ref.read(customRestPauseTemplatesProvider).value ?? [];
+    final existing = ref.read(customRestPauseTemplatesProvider).value ?? [];
     if (existing.length >= entitlements.maxCustomRestPause) {
       if (context.mounted) {
         SnackBarService.showWarning(context, l10n.quotaExceeded);
@@ -2106,7 +2119,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
     HapticFeedback.mediumImpact();
 
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
@@ -2355,7 +2369,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
         ),
         actionLabel: l10n.upgrade,
         onAction: () {
-          // TODO: Navigate to premium screen
+          context.pushNamed(AppRoutes.premiumName);
         },
       );
       return;
@@ -2431,7 +2445,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
         message: l10n.maxTemplatesReached,
         actionLabel: l10n.upgrade,
         onAction: () {
-          // TODO: Navigate to premium screen
+          context.pushNamed(AppRoutes.premiumName);
         },
       );
       return;
@@ -2439,7 +2453,8 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 
     HapticFeedback.mediumImpact();
 
-    ModalService.showSheet(context,
+    ModalService.showSheet(
+      context,
       backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -2580,6 +2595,7 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
         backgroundColor != oldDelegate.backgroundColor;
   }
 }
+
 class _CustomExerciseCard extends StatelessWidget {
   const _CustomExerciseCard({
     required this.exercise,
@@ -2649,8 +2665,10 @@ class _CustomExerciseCard extends StatelessWidget {
           ],
           onSelected: (index) {
             switch (index) {
-              case 0: onTap();
-              case 1: onDelete();
+              case 0:
+                onTap();
+              case 1:
+                onDelete();
             }
           },
         ),
@@ -2658,6 +2676,7 @@ class _CustomExerciseCard extends StatelessWidget {
     );
   }
 }
+
 /// Card for displaying a superset template
 class _SupersetTemplateCard extends StatelessWidget {
   const _SupersetTemplateCard({
@@ -2724,8 +2743,10 @@ class _SupersetTemplateCard extends StatelessWidget {
           ],
           onSelected: (index) {
             switch (index) {
-              case 0: onTap();
-              case 1: onDelete();
+              case 0:
+                onTap();
+              case 1:
+                onDelete();
             }
           },
         ),
@@ -2802,8 +2823,10 @@ class _DropsetTemplateCard extends StatelessWidget {
           ],
           onSelected: (index) {
             switch (index) {
-              case 0: onTap();
-              case 1: onDelete();
+              case 0:
+                onTap();
+              case 1:
+                onDelete();
             }
           },
         ),
@@ -2880,8 +2903,10 @@ class _RestPauseTemplateCard extends StatelessWidget {
           ],
           onSelected: (index) {
             switch (index) {
-              case 0: onTap();
-              case 1: onDelete();
+              case 0:
+                onTap();
+              case 1:
+                onDelete();
             }
           },
         ),

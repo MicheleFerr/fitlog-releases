@@ -42,6 +42,7 @@ library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/exercise_preferences_repository.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_providers_shared.dart';
 
 /// Notifier for managing favorite exercises
 ///
@@ -55,6 +56,11 @@ import 'package:gymbro_flutter_new/features/analytics/data/repositories/exercise
 class FavoriteExercisesNotifier extends Notifier<Set<String>> {
   @override
   Set<String> build() {
+    final firebaseUser = ref.watch(firebaseUserProvider).value;
+    if (firebaseUser == null) {
+      return {};
+    }
+
     // Listen to Firestore stream for real-time sync
     // This keeps local state in sync with Firestore changes from other devices
     ref.listen(favoriteExercisesStreamProvider, (previous, next) {
@@ -202,7 +208,7 @@ class FavoriteExercisesNotifier extends Notifier<Set<String>> {
 /// - Uses favoriteExercisesStreamProvider for real-time sync
 /// - Automatically syncs with other devices/sessions
 final favoriteExercisesNotifierProvider =
-    NotifierProvider<FavoriteExercisesNotifier, Set<String>>(
+    NotifierProvider.autoDispose<FavoriteExercisesNotifier, Set<String>>(
       FavoriteExercisesNotifier.new,
     );
 

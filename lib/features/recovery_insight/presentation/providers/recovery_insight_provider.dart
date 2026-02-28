@@ -8,6 +8,8 @@
 /// - Sleep-workout correlation (Pro)
 library;
 
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:health/health.dart' show NumericHealthValue;
@@ -332,14 +334,36 @@ final recoveryInsightProvider = FutureProvider.autoDispose<RecoveryInsight>((
   ref,
 ) async {
   final service = ref.watch(sleepWorkoutCorrelationServiceProvider);
-  final sleepRecords = await ref.watch(sleepRecordsProvider.future);
+  List<SleepRecord> sleepRecords;
+  try {
+    sleepRecords = await ref
+        .watch(sleepRecordsProvider.future)
+        .timeout(const Duration(seconds: 8));
+  } on TimeoutException {
+    if (kDebugMode) {
+      debugPrint('[RecoveryInsight] Timeout fetching sleep records');
+    }
+    sleepRecords = [];
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('[RecoveryInsight] Error fetching sleep records: $e');
+    }
+    sleepRecords = [];
+  }
   final isPro = ref.watch(isPremiumUserProvider);
 
   // Get workout history
   List workoutHistory;
   try {
-    final historyDetails = await ref.watch(workoutHistoryProvider.future);
+    final historyDetails = await ref
+        .watch(workoutHistoryProvider.future)
+        .timeout(const Duration(seconds: 6));
     workoutHistory = historyDetails.map((h) => h.toWorkout()).toList();
+  } on TimeoutException {
+    if (kDebugMode) {
+      debugPrint('[RecoveryInsight] Timeout fetching workout history');
+    }
+    workoutHistory = [];
   } catch (e) {
     if (kDebugMode) {
       debugPrint('[RecoveryInsight] Error fetching workout history: $e');
@@ -350,9 +374,9 @@ final recoveryInsightProvider = FutureProvider.autoDispose<RecoveryInsight>((
   // Get user's body weight for bodyweight exercise volume calculation
   double? userBodyWeightKg;
   try {
-    final weightMeasurements = await ref.watch(
-      bodyMeasurementsProvider(HealthDataType.bodyWeight).future,
-    );
+    final weightMeasurements = await ref
+        .watch(bodyMeasurementsProvider(HealthDataType.bodyWeight).future)
+        .timeout(const Duration(seconds: 4));
     if (weightMeasurements.isNotEmpty) {
       // Get most recent measurement
       final latestWeight = weightMeasurements.first;

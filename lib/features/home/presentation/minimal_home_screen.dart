@@ -60,6 +60,11 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
   final _xpProgressKey = GlobalKey();
   final _myTemplatesKey = GlobalKey();
 
+  bool _isCurrentRoute() {
+    final route = ModalRoute.of(context);
+    return route?.isCurrent ?? true;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -70,6 +75,8 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
   }
 
   void _checkAutoStartTour() {
+    if (!_isCurrentRoute()) return;
+
     final tourState = ref.read(homeTourProvider);
     // Start tour if it's active (triggered from onboarding or dev tools)
     if (tourState.isActive) {
@@ -78,6 +85,8 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
   }
 
   void _showHomeTour() {
+    if (!_isCurrentRoute()) return;
+
     final tourNotifier = ref.read(homeTourProvider.notifier);
     tourNotifier.showTour(
       context: context,
@@ -119,7 +128,11 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
       backgroundColor: context.colors.surface,
       floatingActionButton: isDeveloper
           ? CNButton.icon(
-              icon: const CNSymbol('terminal', size: 20, weight: CNSymbolWeight.medium),
+              icon: const CNSymbol(
+                'terminal',
+                size: 20,
+                weight: CNSymbolWeight.medium,
+              ),
               onPressed: () => _showDeveloperTools(context),
               style: CNButtonStyle.glass,
               size: 56,
@@ -170,22 +183,20 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
               ),
             ),
             actions: [
-              GestureDetector(
-                onTap: () => showSettingsBottomSheet(context),
-                behavior: HitTestBehavior.opaque,
-                child: Semantics(
-                  label: context.l10n.settings,
-                  button: true,
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.sm),
-                    child: CNIcon(
-                      symbol: CNSymbol(
-                        'gearshape',
-                        size: 22,
-                        weight: CNSymbolWeight.light,
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                    ),
+              IconButton(
+                tooltip: context.l10n.settings,
+                onPressed: () => showSettingsBottomSheet(context),
+                padding: const EdgeInsets.all(12),
+                constraints: const BoxConstraints(
+                  minWidth: 48,
+                  minHeight: 48,
+                ),
+                icon: CNIcon(
+                  symbol: CNSymbol(
+                    'gearshape',
+                    size: 22,
+                    weight: CNSymbolWeight.light,
+                    color: context.colors.onSurfaceVariant,
                   ),
                 ),
               ),
@@ -201,6 +212,10 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                 // 0. Personalized Greeting with Motivational Quote
                 _buildGreetingSection(context, ref),
                 const SizedBox(height: 16),
+
+                // 0.25 Start Workout Card (primary CTA)
+                const RepaintBoundary(child: StartWorkoutCard()),
+                const SizedBox(height: 20),
 
                 // 0.5 XP Progress Bar (Hidden in Ghost Mode)
                 if (!ref.watch(shouldHideXPProvider)) ...[
@@ -245,20 +260,12 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
                 const SizedBox(height: 20),
 
                 // 0.95 Template Suggestion (AI-powered workout recommendation)
-                const RepaintBoundary(
-                  child: TemplateSuggestionCard(),
-                ),
+                const RepaintBoundary(child: TemplateSuggestionCard()),
                 const SizedBox(height: 16),
 
                 // 0.96 Exercise Merge Suggestion (consolidate custom exercises)
                 const MergeSuggestionCard(),
                 const SizedBox(height: 20),
-
-                // 1. Start Workout Card (Hero)
-                const RepaintBoundary(
-                  child: StartWorkoutCard(),
-                ),
-                const SizedBox(height: 24),
 
                 // 2. Activity Rings (HealthKit Integration)
                 const RepaintBoundary(
@@ -379,7 +386,8 @@ class _MinimalHomeScreenState extends ConsumerState<MinimalHomeScreen> {
   }
 
   void _showDeveloperTools(BuildContext context) {
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       builder: (context) => const _DeveloperToolsSheet(),
     );
   }
@@ -647,57 +655,57 @@ class _DeveloperToolItem extends StatelessWidget {
           onTap: onTap,
           borderRadius: AppBorderRadius.smRadius,
           child: Container(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          decoration: BoxDecoration(
-            color: context.colors.surfaceContainerHighest,
-            borderRadius: AppBorderRadius.smRadius,
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(AppSpacing.sm),
-                decoration: BoxDecoration(
-                  color: context.colors.tertiary.withValues(alpha: 0.1),
-                  borderRadius: AppBorderRadius.smRadius,
+            padding: const EdgeInsets.all(AppSpacing.md),
+            decoration: BoxDecoration(
+              color: context.colors.surfaceContainerHighest,
+              borderRadius: AppBorderRadius.smRadius,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(AppSpacing.sm),
+                  decoration: BoxDecoration(
+                    color: context.colors.tertiary.withValues(alpha: 0.1),
+                    borderRadius: AppBorderRadius.smRadius,
+                  ),
+                  child: SemanticIcon(
+                    icon: icon,
+                    semanticLabel: title,
+                    size: AppIconSize.medium,
+                    color: context.colors.tertiary,
+                  ),
                 ),
-                child: SemanticIcon(
-                  icon: icon,
-                  semanticLabel: title,
-                  size: AppIconSize.medium,
-                  color: context.colors.tertiary,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: context.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: context.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: context.colors.onSurfaceVariant,
+                      const SizedBox(height: 2),
+                      Text(
+                        subtitle,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              SemanticIcon(
-                icon: AppIcons.chevronRight,
-                semanticLabel: 'Open',
-                size: AppIconSize.small,
-                color: context.colors.onSurfaceVariant,
-              ),
-            ],
+                SemanticIcon(
+                  icon: AppIcons.chevronRight,
+                  semanticLabel: 'Open',
+                  size: AppIconSize.small,
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -816,58 +824,62 @@ class _AdminFeedbackCard extends StatelessWidget {
           child: InkWell(
             onTap: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const ExerciseFeedbackScreen()),
+                MaterialPageRoute(
+                  builder: (_) => const ExerciseFeedbackScreen(),
+                ),
               );
             },
             borderRadius: AppBorderRadius.mdRadius,
             child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(AppSpacing.sm),
-                  decoration: BoxDecoration(
-                    color: context.colors.surface.withValues(alpha: 0.2),
-                    borderRadius: AppBorderRadius.smRadius,
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.sm),
+                    decoration: BoxDecoration(
+                      color: context.colors.surface.withValues(alpha: 0.2),
+                      borderRadius: AppBorderRadius.smRadius,
+                    ),
+                    child: SemanticIcon(
+                      icon: AppIcons.flagCircle,
+                      semanticLabel: 'Admin',
+                      color: context.colors.surface,
+                      size: AppIconSize.medium,
+                    ),
                   ),
-                  child: SemanticIcon(
-                    icon: AppIcons.flagCircle,
-                    semanticLabel: 'Admin',
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '🔧 Exercise Feedback',
+                          style: context.textTheme.titleSmall?.copyWith(
+                            color: context.colors.surface,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          context.l10n.manageExerciseReports,
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: context.colors.surface.withValues(
+                              alpha: 0.8,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SemanticIcon(
+                    icon: AppIcons.chevronRight,
+                    semanticLabel: context.l10n.viewAll,
+                    size: AppIconSize.small,
                     color: context.colors.surface,
-                    size: AppIconSize.medium,
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '🔧 Exercise Feedback',
-                        style: context.textTheme.titleSmall?.copyWith(
-                          color: context.colors.surface,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        context.l10n.manageExerciseReports,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: context.colors.surface.withValues(alpha: 0.8),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SemanticIcon(
-                  icon: AppIcons.chevronRight,
-                  semanticLabel: context.l10n.viewAll,
-                  size: AppIconSize.small,
-                  color: context.colors.surface,
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
         ),
       ),
     );

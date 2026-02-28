@@ -39,6 +39,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 
 /// Date range filter options
 enum DateRangeOption { today, thisWeek, thisMonth, allTime }
@@ -1259,9 +1260,16 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     WorkoutHistoryDetail workout,
     AppLocalizations l10n,
   ) async {
-    // Navigate to start workout from template
-    SnackBarService.showSuccess(context, l10n.workoutRepeated);
-    // TODO: Implement actual repeat functionality (create workout from history)
+    try {
+      await ref.read(currentWorkoutProvider.notifier).startFromHistory(workout);
+      if (!context.mounted) return;
+
+      SnackBarService.showSuccess(context, l10n.workoutRepeated);
+      context.go(AppRoutes.workoutPath);
+    } catch (e) {
+      if (!context.mounted) return;
+      SnackBarService.showError(context, l10n.errorWithMessage(e.toString()));
+    }
   }
 
   Future<bool> _confirmDelete(
@@ -1908,8 +1916,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
           ElevatedButton.icon(
             onPressed: () {
               Navigator.pop(context);
-              // TODO: Navigate to premium/subscription screen when ready
-              SnackBarService.showSuccess(context, l10n.premiumComingSoon);
+              context.pushNamed(AppRoutes.premiumName);
             },
             icon: const Icon(AppIcons.premium, size: AppIconSize.small),
             label: Text(l10n.upgradeToPremium),

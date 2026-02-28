@@ -25,13 +25,11 @@ class StartWorkoutCard extends ConsumerWidget {
         currentWorkout != null &&
         currentWorkout.status == WorkoutStatus.inProgress;
 
-    // Only show card when workout is active - templates section handles starting new workouts
     if (isWorkoutActive) {
       return _ActiveWorkoutCard(workout: currentWorkout);
     }
 
-    // No card when no workout - templates carousel is the primary CTA
-    return const SizedBox.shrink();
+    return const _InactiveWorkoutCard();
   }
 }
 
@@ -241,6 +239,84 @@ class _ActiveWorkoutCard extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Card per avviare rapidamente un workout quando non ce n'e uno attivo.
+class _InactiveWorkoutCard extends StatelessWidget {
+  const _InactiveWorkoutCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      decoration: BoxDecoration(
+        color: context.colors.primaryContainer.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(AppSpacing.md),
+        border: Border.all(
+          color: context.colors.primary.withValues(alpha: 0.25),
+          width: 1,
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(AppSpacing.md),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppSpacing.md),
+          onTap: () {
+            HapticFeedback.mediumImpact();
+            context.go('/workout');
+          },
+          child: Padding(
+            padding: AppSpacing.card,
+            child: Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: context.colors.primary.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(AppSpacing.sm),
+                  ),
+                  child: SemanticIcon(
+                    icon: AppIcons.play,
+                    semanticLabel: context.l10n.startWorkout,
+                    size: AppIconSize.small,
+                    color: context.colors.primary,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.l10n.startNow,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        context.l10n.startImmediately,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SemanticIcon(
+                  icon: AppIcons.arrowForwardIos,
+                  semanticLabel: context.l10n.startWorkout,
+                  size: AppIconSize.tiny,
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

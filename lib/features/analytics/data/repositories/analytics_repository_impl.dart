@@ -44,6 +44,7 @@ library;
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:gymbro_flutter_new/core/data/mixins/firebase_error_mapper_mixin.dart';
@@ -62,9 +63,17 @@ class AnalyticsRepositoryImpl
     required FirebaseFirestore firestore,
     required Box<Map<dynamic, dynamic>> cacheBox,
   }) : _firestore = firestore,
-       _cacheBox = cacheBox;
+       _cacheBox = cacheBox,
+       _currentAuthUid = FirebaseAuth.instance.currentUser?.uid {
+    _authSubscription = FirebaseAuth.instance.authStateChanges().listen(
+      _handleAuthStateChanged,
+    );
+  }
   final FirebaseFirestore _firestore;
   final Box<Map<dynamic, dynamic>> _cacheBox;
+  final String? _initialAuthUid = FirebaseAuth.instance.currentUser?.uid;
+  late final StreamSubscription<User?> _authSubscription;
+  String? _currentAuthUid;
 
   /// Cache TTL: 5 minutes
   static const _cacheTTL = Duration(minutes: 5);
@@ -72,11 +81,43 @@ class AnalyticsRepositoryImpl
   /// Active stream subscriptions per user (for proper disposal)
   /// Key: userId, Value: Firestore subscription
   final Map<String, StreamSubscription<QuerySnapshot<Map<String, dynamic>>>>
-      _activeListeners = {};
+  _activeListeners = {};
 
   /// Stream controllers for each user (to properly close streams)
   final Map<String, StreamController<Either<Failure, List<ExerciseHistory>>>>
-      _streamControllers = {};
+  _streamControllers = {};
+
+  void _handleAuthStateChanged(User? user) {
+    final nextUid = user?.uid;
+
+    // No-op if auth identity didn't change.
+    if (nextUid == _currentAuthUid) {
+      return;
+    }
+
+    if (kDebugMode) {
+      debugPrint(
+        '🔄 [ANALYTICS] Auth changed '
+        '(from ${_currentAuthUid ?? _initialAuthUid ?? "none"} to ${nextUid ?? "none"}), '
+        'closing active analytics listeners',
+      );
+    }
+
+    _closeAllActiveStreams();
+    _currentAuthUid = nextUid;
+  }
+
+  void _closeAllActiveStreams() {
+    for (final subscription in _activeListeners.values) {
+      unawaited(subscription.cancel());
+    }
+    _activeListeners.clear();
+
+    for (final controller in _streamControllers.values) {
+      controller.close();
+    }
+    _streamControllers.clear();
+  }
 
   /// Get all exercise history for a user with real-time sync
   ///
@@ -97,6 +138,29 @@ class AnalyticsRepositoryImpl
   Stream<Either<Failure, List<ExerciseHistory>>> getExerciseHistory(
     String userId,
   ) {
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUid == null) {
+      if (kDebugMode) {
+        debugPrint(
+          '⚠️ [ANALYTICS] Skip analytics stream: user not authenticated',
+        );
+      }
+      return Stream.value(
+        const Left(AuthenticationFailure('User not authenticated')),
+      );
+    }
+
+    if (currentUid != userId) {
+      if (kDebugMode) {
+        debugPrint(
+          '⚠️ [ANALYTICS] Skip analytics stream: UID mismatch (current=$currentUid, requested=$userId)',
+        );
+      }
+      return Stream.value(
+        const Left(AuthenticationFailure('Authenticated user mismatch')),
+      );
+    }
+
     // Cancel any existing listener for this user (prevent memory leak)
     _activeListeners[userId]?.cancel();
     _streamControllers[userId]?.close();
@@ -119,56 +183,59 @@ class AnalyticsRepositoryImpl
         .collection('analytics')
         .snapshots()
         .listen(
-      (snapshot) {
-        try {
-          if (kDebugMode) {
-            debugPrint(
-              '📊 [ANALYTICS] Received snapshot: ${snapshot.docs.length} documents',
-            );
-            if (snapshot.docs.isEmpty) {
-              debugPrint(
-                '⚠️ [ANALYTICS] Empty analytics collection! Run migration to populate.',
+          (snapshot) {
+            try {
+              if (kDebugMode) {
+                debugPrint(
+                  '📊 [ANALYTICS] Received snapshot: ${snapshot.docs.length} documents',
+                );
+                if (snapshot.docs.isEmpty) {
+                  debugPrint(
+                    '⚠️ [ANALYTICS] Empty analytics collection! Run migration to populate.',
+                  );
+                } else {
+                  debugPrint(
+                    '📊 [ANALYTICS] Exercises found: ${snapshot.docs.map((d) => d.id).join(", ")}',
+                  );
+                }
+              }
+
+              final histories = snapshot.docs
+                  .map(
+                    (doc) => ExerciseHistoryModel.fromFirestore(doc).toDomain(),
+                  )
+                  .toList();
+
+              // Sort by exercise name alphabetically
+              histories.sort(
+                (a, b) => a.exerciseName.compareTo(b.exerciseName),
               );
-            } else {
-              debugPrint(
-                '📊 [ANALYTICS] Exercises found: ${snapshot.docs.map((d) => d.id).join(", ")}',
+
+              if (kDebugMode) {
+                debugPrint(
+                  '✅ [ANALYTICS] Returning ${histories.length} exercise histories',
+                );
+              }
+
+              controller.add(Right(histories));
+            } catch (e) {
+              if (kDebugMode) {
+                debugPrint('❌ [ANALYTICS] Parse error: $e');
+              }
+              controller.add(
+                Left(CacheFailure('Failed to parse analytics: $e')),
               );
             }
-          }
-
-          final histories = snapshot.docs
-              .map(
-                (doc) => ExerciseHistoryModel.fromFirestore(doc).toDomain(),
-              )
-              .toList();
-
-          // Sort by exercise name alphabetically
-          histories.sort(
-            (a, b) => a.exerciseName.compareTo(b.exerciseName),
-          );
-
-          if (kDebugMode) {
-            debugPrint(
-              '✅ [ANALYTICS] Returning ${histories.length} exercise histories',
+          },
+          onError: (Object e) {
+            if (kDebugMode) {
+              debugPrint('❌ [ANALYTICS] Stream error: $e');
+            }
+            controller.add(
+              Left(ServerFailure('Failed to fetch analytics: $e')),
             );
-          }
-
-          controller.add(Right(histories));
-        } catch (e) {
-          if (kDebugMode) {
-            debugPrint('❌ [ANALYTICS] Parse error: $e');
-          }
-          controller.add(Left(CacheFailure('Failed to parse analytics: $e')));
-        }
-      },
-      onError: (Object e) {
-        if (kDebugMode) {
-          debugPrint('❌ [ANALYTICS] Stream error: $e');
-        }
-        controller
-            .add(Left(ServerFailure('Failed to fetch analytics: $e')));
-      },
-    );
+          },
+        );
 
     return controller.stream;
   }
@@ -181,15 +248,8 @@ class AnalyticsRepositoryImpl
         '🧹 [ANALYTICS] Disposing ${_activeListeners.length} active listeners',
       );
     }
-    for (final subscription in _activeListeners.values) {
-      subscription.cancel();
-    }
-    _activeListeners.clear();
-
-    for (final controller in _streamControllers.values) {
-      controller.close();
-    }
-    _streamControllers.clear();
+    unawaited(_authSubscription.cancel());
+    _closeAllActiveStreams();
   }
 
   /// Cancel listener for a specific user

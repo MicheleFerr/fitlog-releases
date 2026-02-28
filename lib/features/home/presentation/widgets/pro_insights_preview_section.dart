@@ -289,24 +289,35 @@ class _MuscleMapPreview extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Title
+        // Title + contextual copy to avoid confusion with recovery status
         Row(
           children: [
             SemanticIcon(
               icon: AppIcons.accessibility,
-              semanticLabel: l10n.muscleBalance,
+              semanticLabel: l10n.muscleDistribution,
               size: AppIconSize.small,
               color: colorScheme.tertiary,
             ),
             const SizedBox(width: AppSpacing.xs),
-            Text(
-              l10n.muscleBalance,
-              style: context.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: colorScheme.onSurface,
+            Expanded(
+              child: Text(
+                l10n.muscleDistribution,
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: colorScheme.onSurface,
+                ),
               ),
             ),
           ],
+        ),
+        const SizedBox(height: AppSpacing.xxs),
+        Text(
+          l10n.muscleDistributionDesc,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: context.textTheme.bodySmall?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: AppSpacing.sm),
 
@@ -365,8 +376,64 @@ class _MuscleMapPreview extends ConsumerWidget {
             ],
           ),
         ),
+        const SizedBox(height: AppSpacing.xs),
+        _buildDominantFocusLabel(context, muscleActivity),
       ],
     );
+  }
+
+  Widget _buildDominantFocusLabel(
+    BuildContext context,
+    Map<String, double> muscleActivity,
+  ) {
+    final l10n = context.l10n;
+    final colorScheme = context.colors;
+
+    final entries = muscleActivity.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    if (entries.isEmpty || entries.first.value <= 0) {
+      return const SizedBox.shrink();
+    }
+
+    final dominantKey = entries.first.key;
+    final dominantLabel = _localizedGroupLabel(l10n, dominantKey);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.xs,
+        vertical: AppSpacing.xxs,
+      ),
+      decoration: BoxDecoration(
+        color: colorScheme.error.withValues(alpha: 0.12),
+        borderRadius: AppBorderRadius.xsRadius,
+      ),
+      child: Text(
+        l10n.dominantZoneLabel(dominantLabel),
+        style: context.textTheme.labelSmall?.copyWith(
+          color: colorScheme.error,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  String _localizedGroupLabel(dynamic l10n, String key) {
+    switch (key) {
+      case 'chest':
+        return l10n.muscleGroupChest;
+      case 'back':
+        return l10n.muscleGroupBack;
+      case 'shoulders':
+        return l10n.muscleGroupShoulders;
+      case 'arms':
+        return l10n.muscleGroupArms;
+      case 'legs':
+        return l10n.muscleGroupLegs;
+      case 'core':
+        return l10n.muscleCore;
+      default:
+        return key;
+    }
   }
 
   /// Group detailed muscle percentages into display categories

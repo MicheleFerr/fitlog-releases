@@ -73,8 +73,9 @@ class TabbedAnalyticsScreen extends ConsumerWidget {
           ),
           if (authState == AuthState.authenticated)
             AnimatedSearchIcon(
-              onPressed: () async {
-                // TODO: Re-implement search with the new data model
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                context.pushNamed(AppRoutes.exerciseProgressName);
               },
               showInitialAnimation: true,
             ),

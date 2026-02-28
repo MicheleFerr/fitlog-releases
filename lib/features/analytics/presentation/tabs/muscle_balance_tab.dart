@@ -58,6 +58,8 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
   late RatioBreakdownCalculator _ratioBreakdownCalculator;
   late BalanceTrendData _trendData;
   late RatioBreakdown _ratioBreakdown;
+  double _upperLowerDisplayRatio = 1.0;
+  bool _upperLowerDisplayWarning = false;
 
   @override
   void initState() {
@@ -77,18 +79,67 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
   }
 
   void _updateTrendData() {
+    final filteredForSelectedPeriod = _filterHistoriesForSelectedPeriod(
+      widget.exerciseHistories,
+    );
+
     setState(() {
       _trendData = _trendCalculator.calculateTrend(
         exerciseHistories: widget.exerciseHistories,
         period: _selectedPeriod,
         exerciseMuscleMap: widget.exerciseMuscleMap,
       );
-      // Use corrected breakdown to fix historical data issues
-      // (e.g., Leg Extension incorrectly categorized as chest)
+      // Keep breakdown aligned with selected period to avoid mismatched values
+      // between card ratio and exercise detail totals.
       _ratioBreakdown = _ratioBreakdownCalculator.calculateCorrectedBreakdown(
-        widget.exerciseHistories,
+        filteredForSelectedPeriod,
       );
+
+      // Display ratio from the same totals shown in the expanded breakdown.
+      final upperTotal = _ratioBreakdown.upperBreakdown.totalVolume;
+      final lowerTotal = _ratioBreakdown.lowerBreakdown.totalVolume;
+      _upperLowerDisplayRatio = lowerTotal > 0 ? upperTotal / lowerTotal : 0.0;
+      _upperLowerDisplayWarning =
+          _upperLowerDisplayRatio > 1.5 || _upperLowerDisplayRatio < 0.7;
     });
+  }
+
+  List<ExerciseHistory> _filterHistoriesForSelectedPeriod(
+    List<ExerciseHistory> histories,
+  ) {
+    final now = DateTime.now();
+    final start = _getPeriodStartDate(now, _selectedPeriod);
+
+    return histories
+        .map((history) {
+          final filteredSessions = history.sessions.where((session) {
+            return session.date.isAfter(start) && session.date.isBefore(now);
+          }).toList();
+
+          return ExerciseHistory(
+            exerciseId: history.exerciseId,
+            exerciseName: history.exerciseName,
+            muscleGroup: history.muscleGroup,
+            sessions: filteredSessions,
+          );
+        })
+        .where((history) => history.sessions.isNotEmpty)
+        .toList();
+  }
+
+  DateTime _getPeriodStartDate(DateTime now, TimePeriod period) {
+    switch (period) {
+      case TimePeriod.last7Days:
+        return now.subtract(const Duration(days: 7));
+      case TimePeriod.last30Days:
+        return now.subtract(const Duration(days: 30));
+      case TimePeriod.last3Months:
+        return DateTime(now.year, now.month - 3, now.day);
+      case TimePeriod.lastYear:
+        return DateTime(now.year - 1, now.month, now.day);
+      case TimePeriod.allTime:
+        return DateTime(2000, 1, 1);
+    }
   }
 
   void _onPeriodChanged(TimePeriod? newPeriod) {
@@ -172,8 +223,8 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
           ExpandableRatioCard(
             icon: AppIcons.accessibility,
             title: l10n.upperLowerRatio,
-            ratio: balance.upperLowerRatio,
-            hasWarning: balance.upperLowerWarning,
+            ratio: _upperLowerDisplayRatio,
+            hasWarning: _upperLowerDisplayWarning,
             description: l10n.upperLowerDescription,
             firstCategory: _ratioBreakdown.upperBreakdown,
             secondCategory: _ratioBreakdown.lowerBreakdown,
@@ -182,9 +233,15 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
           ),
 
           // Warnings section
-          if (balance.hasWarnings) ...[
+          if (balance.pushPullWarning ||
+              _upperLowerDisplayWarning ||
+              balance.neglectedMuscles.isNotEmpty) ...[
             const SizedBox(height: 24),
-            _buildWarningsSection(context, balance),
+            _buildWarningsSection(
+              context,
+              balance,
+              upperLowerWarningOverride: _upperLowerDisplayWarning,
+            ),
           ],
 
           // Muscle Heatmap - Anatomical Body View
@@ -429,8 +486,9 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
 
   Widget _buildWarningsSection(
     BuildContext context,
-    MuscleBalanceMetrics balance,
-  ) {
+    MuscleBalanceMetrics balance, {
+    bool? upperLowerWarningOverride,
+  }) {
     final l10n = context.l10n;
     final colorScheme = context.colors;
 
@@ -440,7 +498,9 @@ class _MuscleBalanceTabState extends State<MuscleBalanceTab> {
       warnings.add(l10n.pushPullImbalance);
     }
 
-    if (balance.upperLowerWarning) {
+    final hasUpperLowerWarning =
+        upperLowerWarningOverride ?? balance.upperLowerWarning;
+    if (hasUpperLowerWarning) {
       warnings.add(l10n.upperLowerImbalance);
     }
 

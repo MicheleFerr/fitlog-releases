@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_sync_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_version_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_cache_manager.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_providers_shared.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/sync_status.dart';
@@ -90,6 +91,18 @@ final exerciseSyncServiceProvider = Provider<ExerciseSyncService>((ref) {
 /// Provider per inizializzare ExerciseSyncService
 /// DEVE essere watchato nell'app per avviare la sincronizzazione automatica
 final exerciseSyncInitProvider = FutureProvider<void>((ref) async {
+  final authState = ref.watch(authStateProvider);
+
+  // Avoid protected remote sync calls while user is logged out.
+  if (authState != AuthState.authenticated) {
+    if (kDebugMode) {
+      debugPrint(
+        '⏸️ [SYNC] Skipping ExerciseSyncService init (authState: $authState)',
+      );
+    }
+    return;
+  }
+
   // ignore: avoid_print
   debugPrint('🔄 [SYNC] Starting ExerciseSyncService initialization...');
   try {

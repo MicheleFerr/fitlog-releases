@@ -999,16 +999,11 @@ class HybridWorkoutRepositoryImpl
 
       // Process each exercise
       for (final exercise in workout.exercises) {
-        // Filter completed sets with valid data
+        // Filter effective working sets (exclude warmups).
+        // When RPE exists, keep only hard sets (RPE >= 7).
+        // When RPE is missing, fallback to include the set to preserve backward compatibility.
         final completedSets = exercise.sets
-            .where(
-              (set) =>
-                  set.isCompleted &&
-                  set.weight != null &&
-                  set.weight! > 0 &&
-                  (set.actualReps ?? set.reps) != null &&
-                  (set.actualReps ?? set.reps)! > 0,
-            )
+            .where((set) => _isEffectiveWorkingSet(set))
             .toList();
 
         // Skip exercises with no valid sets
@@ -1048,26 +1043,27 @@ class HybridWorkoutRepositoryImpl
                 session: session,
               )
               .then((result) {
-            result.fold(
-              (failure) {
-                // LOG FAILURE - This is critical for debugging sync issues!
-                debugPrint(
-                  '❌ [ANALYTICS_SYNC] FAILED to sync "${exercise.name}": ${failure.message}',
+                result.fold(
+                  (failure) {
+                    // LOG FAILURE - This is critical for debugging sync issues!
+                    debugPrint(
+                      '❌ [ANALYTICS_SYNC] FAILED to sync "${exercise.name}": ${failure.message}',
+                    );
+                  },
+                  (_) {
+                    debugPrint(
+                      '✅ [ANALYTICS_SYNC] Synced "${exercise.name}" successfully',
+                    );
+                  },
                 );
-              },
-              (_) {
+              })
+              .catchError((Object error, StackTrace stackTrace) {
+                // Catch any unhandled errors
                 debugPrint(
-                  '✅ [ANALYTICS_SYNC] Synced "${exercise.name}" successfully',
+                  '❌ [ANALYTICS_SYNC] Exception syncing "${exercise.name}": $error',
                 );
-              },
-            );
-          }).catchError((Object error, StackTrace stackTrace) {
-            // Catch any unhandled errors
-            debugPrint(
-              '❌ [ANALYTICS_SYNC] Exception syncing "${exercise.name}": $error',
-            );
-            debugPrint('   Stack: $stackTrace');
-          }),
+                debugPrint('   Stack: $stackTrace');
+              }),
         );
       }
 
@@ -1081,6 +1077,27 @@ class HybridWorkoutRepositoryImpl
       );
       debugPrint('   Stack: $stackTrace');
     }
+  }
+
+  /// True if a set should count toward effective analytics volume.
+  bool _isEffectiveWorkingSet(ExerciseSet set) {
+    if (!set.isCompleted || set.isWarmup) return false;
+
+    final reps = set.actualReps ?? set.reps ?? 0;
+    final weight = set.weight ?? 0.0;
+    if (reps <= 0 || weight <= 0) return false;
+
+    // RPE = 0 is used as "missing/skipped" in parts of the app.
+    final rpe = set.rpe;
+    final hasValidRpe = rpe != null && rpe > 0;
+
+    // Count only hard sets when RPE is available.
+    if (hasValidRpe) {
+      return rpe >= 7;
+    }
+
+    // Backward-compatible fallback for historical data without RPE.
+    return true;
   }
 
   /// Dispose of resources

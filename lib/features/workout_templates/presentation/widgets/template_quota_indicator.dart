@@ -15,6 +15,8 @@ library;
 
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class TemplateQuotaIndicator extends StatelessWidget {
@@ -163,7 +165,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
                           ),
                           FilledButton.tonal(
                             onPressed: () {
-                              // TODO: Navigate to premium
+                              context.pushNamed(AppRoutes.premiumName);
                             },
                             child: const Text('Upgrade'),
                           ),
