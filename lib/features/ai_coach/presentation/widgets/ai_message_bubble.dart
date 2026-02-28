@@ -49,7 +49,6 @@ class AIMessageBubble extends StatefulWidget {
 
 class _AIMessageBubbleState extends State<AIMessageBubble>
     with SingleTickerProviderStateMixin {
-  bool _showActions = false;
   late final AnimationController _entryController;
   late final Animation<double> _fadeAnimation;
   late final Animation<Offset> _slideAnimation;
@@ -756,10 +755,6 @@ class _AIMessageBubbleState extends State<AIMessageBubble>
                     ),
                   ),
 
-                  // Action buttons (for AI messages)
-                  if (!widget.isFromUser && _showActions)
-                    _buildActionButtons(context),
-
                   // Quick actions row (always visible for AI)
                   if (!widget.isFromUser) _buildQuickActions(context),
 
@@ -929,21 +924,6 @@ class _AIMessageBubbleState extends State<AIMessageBubble>
     );
   }
 
-  Widget _buildActionButtons(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.xs),
-      child: Wrap(
-        spacing: AppSpacing.xs,
-        children: [
-          ActionChip(
-            avatar: const Icon(AppIcons.copy, size: 16),
-            label: Text(context.l10n.copy),
-            onPressed: _copyToClipboard,
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 class _InlineHeatmapData {
