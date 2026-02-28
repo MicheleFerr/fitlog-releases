@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_choice_service.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -82,7 +83,8 @@ class OnboardingChoiceScreen extends ConsumerWidget {
                 title: context.l10n.onboardingChoiceGuided,
                 description: context.l10n.onboardingChoiceGuidedDescription,
                 isPrimary: true,
-                onTap: () => _onChoiceSelected(context, ref, OnboardingChoice.guided),
+                onTap: () =>
+                    _onChoiceSelected(context, ref, OnboardingChoice.guided),
               ),
 
               const SizedBox(height: AppSpacing.md),
@@ -93,7 +95,8 @@ class OnboardingChoiceScreen extends ConsumerWidget {
                 title: context.l10n.onboardingChoiceExplore,
                 description: context.l10n.onboardingChoiceExploreDescription,
                 isPrimary: false,
-                onTap: () => _onChoiceSelected(context, ref, OnboardingChoice.explore),
+                onTap: () =>
+                    _onChoiceSelected(context, ref, OnboardingChoice.explore),
               ),
 
               const Spacer(flex: 1),
@@ -116,12 +119,23 @@ class OnboardingChoiceScreen extends ConsumerWidget {
 
     if (!context.mounted) return;
 
+    final homeTourNotifier = ref.read(homeTourProvider.notifier);
+
     if (choice == OnboardingChoice.guided) {
-      // Navigate to Templates screen with tour flag
-      // The templates screen will show a tour and mark wizard completed after
+      // Ensure home tour is not active before starting guided templates flow.
+      homeTourNotifier.stopTour();
+
+      // Navigate to Templates screen with tour flag.
+      // The templates screen will show a tour and mark wizard completed after.
       context.go('/templates?showTour=true');
     } else {
-      // Go to home - reminder card will show later
+      // Start Home Tour only for "explore" path.
+      final homeTourState = ref.read(homeTourProvider);
+      if (!homeTourState.hasCompletedTour) {
+        homeTourNotifier.startTour();
+      }
+
+      // Go to home - reminder card can show later if needed.
       context.go('/');
     }
   }
@@ -207,7 +221,9 @@ class _ChoiceCard extends StatelessWidget {
                       description,
                       style: context.textTheme.bodySmall?.copyWith(
                         color: isPrimary
-                            ? context.colors.onPrimaryContainer.withValues(alpha: 0.8)
+                            ? context.colors.onPrimaryContainer.withValues(
+                                alpha: 0.8,
+                              )
                             : context.colors.onSurfaceVariant,
                       ),
                     ),

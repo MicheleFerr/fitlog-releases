@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/initial/initial_onboarding_provider.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/initial_onboarding_style.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
@@ -35,7 +36,9 @@ class _WelcomeStepState extends ConsumerState<WelcomeStep> {
       duration: const Duration(milliseconds: 800),
       curve: Curves.easeInOut,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
+        padding: const EdgeInsets.symmetric(
+          horizontal: InitialOnboardingStyle.horizontalPadding,
+        ),
         child: Column(
           children: [
             const Spacer(flex: 2),
@@ -55,10 +58,14 @@ class _WelcomeStepState extends ConsumerState<WelcomeStep> {
                 ),
                 shape: BoxShape.circle,
               ),
-              child: const Center(
-                child: Text(
-                  '\u{1F4AA}', // 💪 emoji
-                  style: TextStyle(fontSize: 80),
+              child: Center(
+                child: Image.asset(
+                  'assets/images/splash_no_bkg.png',
+                  width: 124,
+                  height: 124,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, _, _) =>
+                      const Text('\u{1F4AA}', style: TextStyle(fontSize: 80)),
                 ),
               ),
             ),
@@ -91,63 +98,44 @@ class _WelcomeStepState extends ConsumerState<WelcomeStep> {
 
             // Feature list with colored backgrounds
             _FeatureItem(
-              icon: AppIcons.exercise,
+              assetPath: 'assets/images/welcome_track_workouts.png',
+              fallbackIcon: AppIcons.exercise,
               text: context.l10n.initialOnboardingFeature1,
-              backgroundColor: context.colors.primary,
             ),
             const SizedBox(height: 20),
             _FeatureItem(
-              icon: AppIcons.analytics,
+              assetPath: 'assets/images/welcome_advanced_analytics.png',
+              fallbackIcon: AppIcons.analytics,
               text: context.l10n.initialOnboardingFeature3,
-              backgroundColor: context.colors.secondary,
             ),
 
             const Spacer(flex: 3),
 
             // CTA Button with gradient feel
             // Accessibility: Semantic label for screen readers
-            SizedBox(
-              width: double.infinity,
-              child: Semantics(
-                label: context.l10n.initialOnboardingStart,
-                button: true,
-                child: FilledButton(
-                  onPressed: () {
-                    ref
-                        .read(initialOnboardingNotifierProvider.notifier)
-                        .nextStep();
-                  },
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 32,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 2,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        context.l10n.initialOnboardingStart,
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.3,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
+            Semantics(
+              label: context.l10n.initialOnboardingStart,
+              button: true,
+              child: FilledButton(
+                onPressed: () {
+                  ref
+                      .read(initialOnboardingNotifierProvider.notifier)
+                      .nextStep();
+                },
+                style: InitialOnboardingStyle.primaryButtonStyle(context),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(context.l10n.initialOnboardingStart),
+                    const SizedBox(width: 10),
                     Icon(
                       AppIcons.arrowForward,
-                      size: 22,
+                      size: 20,
                       color: context.colors.onPrimary,
                     ),
                   ],
                 ),
               ),
-                ),
             ),
 
             const SizedBox(height: 48),
@@ -161,30 +149,35 @@ class _WelcomeStepState extends ConsumerState<WelcomeStep> {
 /// Feature item with colored circle background
 class _FeatureItem extends StatelessWidget {
   const _FeatureItem({
-    required this.icon,
+    required this.assetPath,
+    required this.fallbackIcon,
     required this.text,
-    required this.backgroundColor,
   });
 
-  final IconData icon;
+  final String assetPath;
+  final IconData fallbackIcon;
   final String text;
-  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        // Colored circle background
-        Container(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            color: backgroundColor.withValues(alpha: 0.15),
-            shape: BoxShape.circle,
+        // Custom onboarding image (no container/background)
+        SizedBox(
+          width: 76,
+          height: 76,
+          child: Center(
+            child: Image.asset(
+              assetPath,
+              width: 68,
+              height: 68,
+              fit: BoxFit.contain,
+              errorBuilder: (_, __, ___) =>
+                  Icon(fallbackIcon, color: context.colors.primary, size: 30),
+            ),
           ),
-          child: Icon(icon, color: backgroundColor, size: 26),
         ),
-        const SizedBox(width: 20),
+        const SizedBox(width: 16),
         Expanded(
           child: Text(
             text,

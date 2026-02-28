@@ -3,12 +3,14 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/body_measurement.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_permission_status.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_sync_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/initial/initial_onboarding_provider.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/initial_onboarding_style.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -26,6 +28,11 @@ class BodyDataStep extends ConsumerStatefulWidget {
 }
 
 class _BodyDataStepState extends ConsumerState<BodyDataStep> {
+  static const Color _brandForeground = Color(0xFF1F1F1F);
+  static const Color _brandDisabledBackground = Color(0xFFE8EAED);
+  static const Color _brandDisabledForeground = Color(0xFF5F6368);
+  static const Color _selectedBorderColor = Color(0xFF22C55E);
+
   final _weightController = TextEditingController();
   final _weightFocusNode = FocusNode();
   bool _isImportingFromHealth = false;
@@ -65,27 +72,27 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
               child: GestureDetector(
                 onTap: () => _showWeightPresets(context),
                 child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      AppIcons.weight,
-                      size: 20,
-                      color: context.colors.primary,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      context.l10n.initialOnboardingQuickSelect,
-                      style: context.textTheme.bodyMedium?.copyWith(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        AppIcons.weight,
+                        size: 20,
                         color: context.colors.primary,
-                        fontWeight: FontWeight.w600,
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 4),
+                      Text(
+                        context.l10n.initialOnboardingQuickSelect,
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: context.colors.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
             ),
             // Spacer
             (node) => const Expanded(child: SizedBox()),
@@ -97,16 +104,16 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
               child: GestureDetector(
                 onTap: () => node.unfocus(),
                 child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  context.l10n.done,
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: context.colors.primary,
-                    fontWeight: FontWeight.w600,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    context.l10n.done,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colors.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
-            ),
             ),
           ],
         ),
@@ -118,7 +125,8 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
     // Common body weights
     final presets = [50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110];
 
-    ModalService.showSheet<void>(context,
+    ModalService.showSheet<void>(
+      context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -174,35 +182,35 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
                         Navigator.pop(sheetContext);
                         _weightFocusNode.unfocus();
                       },
-                    child: Container(
-                      width: 64,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? context.colors.primary
-                            : context.colors.surfaceContainerHighest,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
+                      child: Container(
+                        width: 64,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 8,
+                        ),
+                        decoration: BoxDecoration(
                           color: isSelected
                               ? context.colors.primary
-                              : context.colors.outline.withValues(alpha: 0.3),
+                              : context.colors.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: isSelected
+                                ? context.colors.primary
+                                : context.colors.outline.withValues(alpha: 0.3),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        '$weight',
-                        textAlign: TextAlign.center,
-                        style: context.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: isSelected
-                              ? context.colors.onPrimary
-                              : context.colors.onSurface,
+                        child: Text(
+                          '$weight',
+                          textAlign: TextAlign.center,
+                          style: context.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: isSelected
+                                ? context.colors.onPrimary
+                                : context.colors.onSurface,
+                          ),
                         ),
                       ),
                     ),
-                  ),
                   );
                 }).toList(),
               ),
@@ -218,6 +226,13 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
   Widget build(BuildContext context) {
     final state = ref.watch(initialOnboardingNotifierProvider);
     final heightCm = state.heightCm ?? 175.0;
+    final permissionStatus = ref.watch(healthPermissionStatusProvider);
+    final isHealthConnectAvailable = Platform.isAndroid
+        ? permissionStatus.maybeWhen(
+            data: (status) => status.healthConnectAvailable,
+            orElse: () => true,
+          )
+        : true;
 
     return KeyboardActions(
       config: _buildKeyboardActionsConfig(context),
@@ -228,18 +243,21 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
             // Scrollable content
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: InitialOnboardingStyle.horizontalPadding,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 24),
+                    const SizedBox(height: InitialOnboardingStyle.topSpacing),
 
                     // Title
                     Text(
                       context.l10n.initialOnboardingBodyMeasurementsTitle,
                       style: context.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w800,
                         color: context.colors.onSurface,
+                        letterSpacing: -0.4,
                       ),
                     ),
 
@@ -250,9 +268,13 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
                       children: [
                         Expanded(
                           child: Text(
-                            context.l10n.initialOnboardingBodyMeasurementsSubtitle,
+                            context
+                                .l10n
+                                .initialOnboardingBodyMeasurementsSubtitle,
                             style: context.textTheme.bodyMedium?.copyWith(
-                              color: context.colors.onSurface.withValues(alpha: 0.7),
+                              color: context.colors.onSurface.withValues(
+                                alpha: 0.7,
+                              ),
                             ),
                           ),
                         ),
@@ -303,32 +325,33 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
                           : const SizedBox.shrink(),
                     ),
 
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 24),
 
                     // Height section
                     Text(
                       context.l10n.initialOnboardingHeightLabel,
                       style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                         color: context.colors.onSurface,
                       ),
                     ),
 
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 14),
 
                     // Height value display (larger, more prominent)
                     Center(
                       child: Text(
                         '${heightCm.round()} ${context.l10n.initialOnboardingHeightCm}',
                         style: context.textTheme.displayLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w800,
                           color: context.colors.primary,
-                          fontSize: 56,
+                          fontSize: 48,
+                          letterSpacing: -1.0,
                         ),
                       ),
                     ),
 
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 14),
 
                     // Centimeter-style ruler slider
                     _CentimeterRulerSlider(
@@ -340,18 +363,18 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
                       },
                     ),
 
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 24),
 
                     // Weight section
                     Text(
                       context.l10n.initialOnboardingWeightLabel,
                       style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                         color: context.colors.onSurface,
                       ),
                     ),
 
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 10),
 
                     // Weight text field
                     TextField(
@@ -362,17 +385,44 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
                       ),
                       textInputAction: TextInputAction.done,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d+\.?\d*'),
+                        ),
                       ],
                       decoration: InputDecoration(
                         hintText: '75',
                         suffixText: 'kg',
+                        filled: true,
+                        fillColor: context.colors.surface.withValues(
+                          alpha: 0.56,
+                        ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(
+                            InitialOnboardingStyle.cardRadius,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(
+                            InitialOnboardingStyle.cardRadius,
+                          ),
+                          borderSide: BorderSide(
+                            color: context.colors.outline.withValues(
+                              alpha: 0.2,
+                            ),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(
+                            InitialOnboardingStyle.cardRadius,
+                          ),
+                          borderSide: const BorderSide(
+                            color: _selectedBorderColor,
+                            width: 2,
+                          ),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16,
-                          vertical: 20,
+                          vertical: 14,
                         ),
                       ),
                       onChanged: (value) {
@@ -386,60 +436,158 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
                       onSubmitted: (_) => FocusScope.of(context).unfocus(),
                     ),
 
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 20),
 
-                    // HealthKit import card (iOS/macOS only) - separated
-                    if (Platform.isIOS || Platform.isMacOS)
+                    // Health import card (Apple Health / Health Connect)
+                    if (Platform.isIOS ||
+                        Platform.isMacOS ||
+                        Platform.isAndroid)
                       Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          border: Border.all(
-                            color: context.colors.outline.withValues(alpha: 0.3),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              context.colors.surface.withValues(alpha: 0.72),
+                              context.colors.surfaceContainerHighest.withValues(
+                                alpha: 0.3,
+                              ),
+                            ],
                           ),
-                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: context.colors.outline.withValues(
+                              alpha: 0.18,
+                            ),
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            InitialOnboardingStyle.cardRadius,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.14),
+                              blurRadius: 16,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
                         ),
-                        child: Row(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              AppIcons.healthAndSafety,
-                              size: 32,
-                              color: context.colors.primary,
+                            Text(
+                              Platform.isIOS || Platform.isMacOS
+                                  ? context.l10n.featureAppleHealth
+                                  : 'Health Connect',
+                              style: context.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Text(
-                                context.l10n.initialOnboardingImportHealthKit,
-                                style: context.textTheme.titleSmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
+                            const SizedBox(height: 6),
+                            Text(
+                              Platform.isAndroid && !isHealthConnectAvailable
+                                  ? context
+                                        .l10n
+                                        .bodyMeasurementsHealthConnectRequired
+                                  : context
+                                        .l10n
+                                        .bodyMeasurementsImportFromHealth,
+                              style: context.textTheme.bodySmall?.copyWith(
+                                color: context.colors.onSurface.withValues(
+                                  alpha: 0.72,
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 8),
-                            if (_isImportingFromHealth)
-                              const SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: LoadingIndicator(size: 20),
-                              )
-                            else
-                              FilledButton.tonal(
-                                onPressed: _importFromHealthKit,
-                                style: FilledButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: Text(context.l10n.importAction),
-                              ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              width: double.infinity,
+                              child:
+                                  Platform.isAndroid &&
+                                      !isHealthConnectAvailable
+                                  ? FilledButton.icon(
+                                      onPressed: _installHealthConnect,
+                                      icon: const Icon(
+                                        AppIcons.download,
+                                        size: 18,
+                                      ),
+                                      label: Text(
+                                        context
+                                            .l10n
+                                            .bodyMeasurementsInstallHealthConnect,
+                                      ),
+                                      style: FilledButton.styleFrom(
+                                        minimumSize: const Size.fromHeight(44),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            14,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : FilledButton.icon(
+                                      onPressed: _isImportingFromHealth
+                                          ? null
+                                          : _importFromHealth,
+                                      icon: _isImportingFromHealth
+                                          ? const SizedBox(
+                                              width: 18,
+                                              height: 18,
+                                              child: LoadingIndicator(
+                                                size: 18,
+                                                color: _brandForeground,
+                                              ),
+                                            )
+                                          : SvgPicture.asset(
+                                              Platform.isIOS || Platform.isMacOS
+                                                  ? 'assets/images/apple_logo.svg'
+                                                  : 'assets/images/google_logo.svg',
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.contain,
+                                              colorFilter:
+                                                  Platform.isIOS ||
+                                                      Platform.isMacOS
+                                                  ? ColorFilter.mode(
+                                                      context.colors.onSurface,
+                                                      BlendMode.srcIn,
+                                                    )
+                                                  : null,
+                                            ),
+                                      label: Text(
+                                        Platform.isIOS || Platform.isMacOS
+                                            ? context
+                                                  .l10n
+                                                  .bodyMeasurementsImportFromHealth
+                                            : _androidImportLabel(context),
+                                      ),
+                                      style: FilledButton.styleFrom(
+                                        minimumSize: const Size.fromHeight(44),
+                                        elevation: 0,
+                                        shadowColor: Colors.transparent,
+                                        backgroundColor: context.colors.surface
+                                            .withValues(alpha: 0.6),
+                                        foregroundColor:
+                                            context.colors.onSurface,
+                                        disabledBackgroundColor:
+                                            _brandDisabledBackground,
+                                        disabledForegroundColor:
+                                            _brandDisabledForeground,
+                                        side: BorderSide(
+                                          color: _selectedBorderColor
+                                              .withValues(alpha: 0.7),
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            14,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                            ),
                           ],
                         ),
                       ),
 
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 12),
                   ],
                 ),
               ),
@@ -448,29 +596,20 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
             // Continue button - fixed at bottom
             SafeArea(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(32, 0, 32, 16),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: state.canProceedFromStep(3)
-                        ? () => ref
-                              .read(initialOnboardingNotifierProvider.notifier)
-                              .nextStep()
-                        : null,
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      context.l10n.initialOnboardingContinue,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+                padding: const EdgeInsets.fromLTRB(
+                  InitialOnboardingStyle.horizontalPadding,
+                  0,
+                  InitialOnboardingStyle.horizontalPadding,
+                  16,
+                ),
+                child: FilledButton(
+                  onPressed: state.canProceedFromStep(3)
+                      ? () => ref
+                            .read(initialOnboardingNotifierProvider.notifier)
+                            .nextStep()
+                      : null,
+                  style: InitialOnboardingStyle.primaryButtonStyle(context),
+                  child: Text(context.l10n.initialOnboardingContinue),
                 ),
               ),
             ),
@@ -480,7 +619,32 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
     );
   }
 
-  Future<void> _importFromHealthKit() async {
+  String _androidImportLabel(BuildContext context) {
+    final isItalian = Localizations.localeOf(context).languageCode == 'it';
+    return isItalian
+        ? 'Importa da Health Connect'
+        : 'Import from Health Connect';
+  }
+
+  Future<void> _installHealthConnect() async {
+    if (!mounted) return;
+    final repository = ref.read(healthRepositoryProvider);
+    final result = await repository.installHealthConnect();
+    if (!mounted) return;
+
+    result.fold(
+      (failure) => SnackBarService.showError(context, failure.message),
+      (_) {
+        SnackBarService.showInfo(
+          context,
+          context.l10n.healthConnectInstallDescription,
+        );
+        ref.invalidate(healthPermissionStatusProvider);
+      },
+    );
+  }
+
+  Future<void> _importFromHealth() async {
     if (!mounted) return;
 
     debugPrint('[HealthKit] Starting weight + height import...');
@@ -507,24 +671,21 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
 
       // 2. Check if bodyWeight permission was granted (we need this for import)
       final permissionState = ref.read(healthPermissionControllerProvider);
-      final hasWeightPermission =
-          permissionState.when(
-            data: (status) => status.canSync(HealthDataType.bodyWeight),
-            loading: () => false,
-            error: (_, __) => false,
-          );
-      final hasHeightPermission =
-          permissionState.when(
-            data: (status) => status.canSync(HealthDataType.height),
-            loading: () => false,
-            error: (_, __) => false,
-          );
-      final hasWorkoutPermission =
-          permissionState.when(
-            data: (status) => status.canSync(HealthDataType.workout),
-            loading: () => false,
-            error: (_, __) => false,
-          );
+      final hasWeightPermission = permissionState.when(
+        data: (status) => status.canSync(HealthDataType.bodyWeight),
+        loading: () => false,
+        error: (_, __) => false,
+      );
+      final hasHeightPermission = permissionState.when(
+        data: (status) => status.canSync(HealthDataType.height),
+        loading: () => false,
+        error: (_, __) => false,
+      );
+      final hasWorkoutPermission = permissionState.when(
+        data: (status) => status.canSync(HealthDataType.workout),
+        loading: () => false,
+        error: (_, __) => false,
+      );
       debugPrint(
         '[HealthKit] Permissions granted - workout: $hasWorkoutPermission, '
         'bodyWeight: $hasWeightPermission, height: $hasHeightPermission',
@@ -533,7 +694,9 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
       // Need at least one of weight/height permission to proceed
       if (!hasWeightPermission && !hasHeightPermission) {
         // Permission denied - show dialog with option to open Settings
-        debugPrint('[HealthKit] Both weight and height permissions denied, showing dialog...');
+        debugPrint(
+          '[HealthKit] Both weight and height permissions denied, showing dialog...',
+        );
         if (mounted) {
           await _showPermissionDeniedDialog();
         }
@@ -554,7 +717,9 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
 
         if (!mounted) return;
 
-        debugPrint('[HealthKit] Fetching cached weight measurements (last 90 days)...');
+        debugPrint(
+          '[HealthKit] Fetching cached weight measurements (last 90 days)...',
+        );
         final weightResult = await repository.getMeasurements(
           dataType: HealthDataType.bodyWeight,
           startDate: DateTime.now().subtract(const Duration(days: 90)),
@@ -566,7 +731,9 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
             debugPrint('[HealthKit] ERROR: Failed to fetch weight - $failure');
           },
           (measurements) {
-            debugPrint('[HealthKit] Found ${measurements.length} weight measurements');
+            debugPrint(
+              '[HealthKit] Found ${measurements.length} weight measurements',
+            );
 
             if (measurements.isNotEmpty) {
               final latestWeight = measurements.first;
@@ -594,7 +761,9 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
 
         if (!mounted) return;
 
-        debugPrint('[HealthKit] Fetching cached height measurements (last 365 days)...');
+        debugPrint(
+          '[HealthKit] Fetching cached height measurements (last 365 days)...',
+        );
         final heightResult = await repository.getMeasurements(
           dataType: HealthDataType.height,
           startDate: DateTime.now().subtract(const Duration(days: 365)),
@@ -606,7 +775,9 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
             debugPrint('[HealthKit] ERROR: Failed to fetch height - $failure');
           },
           (measurements) {
-            debugPrint('[HealthKit] Found ${measurements.length} height measurements');
+            debugPrint(
+              '[HealthKit] Found ${measurements.length} height measurements',
+            );
 
             if (measurements.isNotEmpty) {
               final latestHeight = measurements.first;
@@ -705,10 +876,7 @@ class _BodyDataStepState extends ConsumerState<BodyDataStep> {
 
 /// iOS-style horizontal picker wheel for height selection
 class _CentimeterRulerSlider extends StatefulWidget {
-  const _CentimeterRulerSlider({
-    required this.value,
-    required this.onChanged,
-  });
+  const _CentimeterRulerSlider({required this.value, required this.onChanged});
 
   final double value;
   final ValueChanged<double> onChanged;
@@ -740,17 +908,27 @@ class _CentimeterRulerSliderState extends State<_CentimeterRulerSlider> {
     final totalItems = (_maxHeight - _minHeight).toInt() + 1;
 
     return Container(
-      height: 120,
+      height: 94,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(InitialOnboardingStyle.cardRadius),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            context.colors.surfaceContainerHighest.withValues(alpha: 0.24),
+            context.colors.surface.withValues(alpha: 0.16),
+          ],
+        ),
+        border: Border.all(
+          color: context.colors.outline.withValues(alpha: 0.14),
+        ),
       ),
       child: Stack(
         children: [
           // Selection highlight in center
           Center(
             child: Container(
-              height: 50,
+              height: 40,
               decoration: BoxDecoration(
                 color: context.colors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
@@ -767,7 +945,7 @@ class _CentimeterRulerSliderState extends State<_CentimeterRulerSlider> {
             quarterTurns: 3, // Rotate to make vertical picker horizontal
             child: ListWheelScrollView.useDelegate(
               controller: _scrollController,
-              itemExtent: 60, // Height of each item
+              itemExtent: 52, // Height of each item
               diameterRatio: 1.5, // Less curvature for subtle 3D effect
               perspective: 0.003, // Subtle perspective
               physics: const FixedExtentScrollPhysics(),
@@ -789,7 +967,7 @@ class _CentimeterRulerSliderState extends State<_CentimeterRulerSlider> {
                       child: AnimatedDefaultTextStyle(
                         duration: const Duration(milliseconds: 200),
                         style: context.textTheme.titleLarge!.copyWith(
-                          fontSize: isSelected ? 28 : (isMajor ? 20 : 16),
+                          fontSize: isSelected ? 22 : (isMajor ? 17 : 14),
                           fontWeight: isSelected
                               ? FontWeight.bold
                               : (isMajor ? FontWeight.w600 : FontWeight.normal),
@@ -813,4 +991,3 @@ class _CentimeterRulerSliderState extends State<_CentimeterRulerSlider> {
     );
   }
 }
-

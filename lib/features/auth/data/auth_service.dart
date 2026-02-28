@@ -92,13 +92,17 @@ class AuthService with RateLimiterMixin {
   }
 
   // Google Sign In (google_sign_in 7.x API)
-  Future<UserCredential?> signInWithGoogle() async {
+  Future<UserCredential?> signInWithGoogle({
+    bool forceAccountSelection = false,
+  }) async {
     try {
       // Ensure GoogleSignIn is initialized
       await initializeGoogleSignIn();
 
-      // Sign out first to ensure account picker shows
-      await _googleSignIn.signOut();
+      // Force account picker only when explicitly requested (e.g. sign-up flow).
+      if (forceAccountSelection) {
+        await _googleSignIn.signOut();
+      }
 
       // google_sign_in 7.x: Use authenticate() with scopeHint
       final GoogleSignInAccount googleUser;
@@ -116,15 +120,14 @@ class AuthService with RateLimiterMixin {
 
       // google_sign_in 7.x: authentication is now a sync getter
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+      final idToken = googleAuth.idToken;
+      if (idToken == null || idToken.isEmpty) {
+        throw Exception('Google Sign In failed: missing ID token');
+      }
 
-      // google_sign_in 7.x: accessToken requires authorization step
-      final authorization = await googleUser.authorizationClient
-          .authorizeScopes(['email', 'profile']);
-
-      // Create a new credential with idToken and accessToken
+      // For Firebase Auth, idToken is sufficient and avoids extra scope prompts.
       final credential = GoogleAuthProvider.credential(
-        accessToken: authorization.accessToken,
-        idToken: googleAuth.idToken,
+        idToken: idToken,
       );
 
       // Sign in to Firebase with the Google credential
@@ -208,24 +211,6 @@ class AuthService with RateLimiterMixin {
       throw Exception(_handleAuthException(e));
     } catch (e) {
       throw Exception('Apple Sign In failed: $e');
-    }
-  }
-
-  // Sign In Anonymously (Guest Mode)
-  Future<UserCredential?> signInAnonymously() async {
-    try {
-      final userCredential = await _auth.signInAnonymously();
-
-      // Create guest user document
-      if (userCredential.user != null) {
-        await _createUserDocument(userCredential.user!, isGuest: true);
-      }
-
-      return userCredential;
-    } on FirebaseAuthException catch (e) {
-      throw Exception(_handleAuthException(e));
-    } catch (e) {
-      throw Exception('Anonymous sign in failed: $e');
     }
   }
 
@@ -505,6 +490,8 @@ class AuthService with RateLimiterMixin {
           'notifications': true,
         },
         'stats': {'totalWorkouts': 0, 'totalExercises': 0, 'totalVolume': 0.0},
+        'onboardingCompleted': false,
+        'onboardingCompletedAt': null,
       }, SetOptions(merge: true));
     } catch (e) {
       // Don't throw - user creation is more important than document creation

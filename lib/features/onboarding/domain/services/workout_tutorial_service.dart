@@ -93,6 +93,13 @@ class WorkoutTutorialNotifier extends Notifier<WorkoutTutorialState> {
   static bool _isLoaded = false;
   static Completer<void>? _loadCompleter;
 
+  /// Reset static cache between tests to avoid cross-test state leakage.
+  static void clearCacheForTesting() {
+    _cachedState = null;
+    _isLoaded = false;
+    _loadCompleter = null;
+  }
+
   @override
   WorkoutTutorialState build() {
     // Load from SharedPreferences if no cache available

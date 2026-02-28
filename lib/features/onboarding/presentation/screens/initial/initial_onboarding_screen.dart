@@ -13,7 +13,7 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/init
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/features/onboarding/domain/services/home_tour_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// Main screen for initial onboarding flow (Yazio-inspired, 6 steps).
 ///
@@ -39,6 +39,26 @@ class _InitialOnboardingScreenState
   // CRITICAL: Local flag to prevent multiple completion calls
   // Riverpod state updates are async, so we need immediate synchronous protection
   bool _isHandlingCompletion = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+
+      final appLocale = ref.read(localeProvider);
+      final deviceLocale = WidgetsBinding.instance.platformDispatcher.locale;
+      final isItalianDevice = deviceLocale.languageCode.toLowerCase() == 'it';
+      final isAppItalian = appLocale.languageCode.toLowerCase() == 'it';
+
+      // Keep onboarding localized for Italian devices even if legacy config
+      // persisted an old English locale.
+      if (isItalianDevice && !isAppItalian) {
+        ref.read(appConfigProvider.notifier).setLanguage('it', 'IT');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +103,8 @@ class _InitialOnboardingScreenState
   }
 
   Future<void> _handleComplete() async {
+    final l10n = context.l10n;
+
     // RELEASE MODE DEBUG: Always print (remove if blocks)
     print('🔵 [Onboarding] _handleComplete called');
     print('   - _isHandlingCompletion (local): $_isHandlingCompletion');
@@ -109,7 +131,7 @@ class _InitialOnboardingScreenState
     final data = state.toOnboardingData();
     if (data == null) {
       print('❌ [Onboarding] Data incomplete - cannot proceed');
-      notifier.setError('Dati incompleti');
+      notifier.setError(l10n.errorInvalidInput);
       return;
     }
 
@@ -126,9 +148,6 @@ class _InitialOnboardingScreenState
 
       // Trigger callback if provided
       widget.onComplete?.call();
-
-      // Start home tour - will show automatically when Home renders
-      ref.read(homeTourProvider.notifier).startTour();
 
       // Wait for Riverpod state to propagate before navigating
       print('🏠 [Onboarding] Waiting for state propagation...');
@@ -149,7 +168,7 @@ class _InitialOnboardingScreenState
 
       print('❌ [Onboarding] Error during completion: $e');
       print('Stack: $stack');
-      notifier.setError('Errore durante il salvataggio: $e');
+      notifier.setError(l10n.errorSaving(e.toString()));
     }
   }
 }
@@ -189,9 +208,18 @@ class _LinearProgressBar extends StatelessWidget {
                       size: AppIconSize.small,
                     ),
                     padding: EdgeInsets.zero,
-                    tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                    tooltip: MaterialLocalizations.of(
+                      context,
+                    ).backButtonTooltip,
                   )
-                : const SizedBox.shrink(),
+                : Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Image.asset(
+                      'assets/images/splash_no_bkg.png',
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                    ),
+                  ),
           ),
 
           const SizedBox(width: 12),

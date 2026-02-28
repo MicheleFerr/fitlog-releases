@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/entities/initial/initial_onboarding_data.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/services/initial/onboarding_completion_identity_store.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/data/datasources/fitness_profile_local_datasource.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/providers/user_goals_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
@@ -50,7 +52,7 @@ class InitialOnboardingCompletionService {
       await _applyExperienceBasedDefaults(data);
 
       // 4. Mark onboarding as completed
-      await _markOnboardingCompleted();
+      await _markOnboardingCompleted(userId);
 
       // 5. Sync to Firestore in background (non-blocking)
       unawaited(_syncToFirestore(data, userId));
@@ -107,10 +109,11 @@ class InitialOnboardingCompletionService {
   }
 
   /// Mark onboarding as completed in AppConfig
-  Future<void> _markOnboardingCompleted() async {
+  Future<void> _markOnboardingCompleted(String userId) async {
     print('🔧 [CompletionService] Marking onboarding as completed...');
     final appConfigNotifier = _ref.read(appConfigProvider.notifier);
     await appConfigNotifier.setInitialOnboardingCompleted(true);
+    await OnboardingCompletionIdentityStore.setCompletedUserId(userId);
 
     print('✅ [CompletionService] Marked initial onboarding as completed');
   }
@@ -123,9 +126,22 @@ class InitialOnboardingCompletionService {
     String userId,
   ) async {
     try {
-      // TODO: Implement Firestore sync when needed
-      // For now, data is only stored locally
-      debugPrint('☁️ Firestore sync placeholder (not implemented)');
+      final authService = _ref.read(authServiceProvider);
+      await authService.updateUserDocument(userId, {
+        'onboardingCompleted': true,
+        'onboardingCompletedAt': FieldValue.serverTimestamp(),
+        'onboardingSummary': {
+          'goal': data.goal.name,
+          'sex': data.sex.name,
+          'age': data.age,
+          'heightCm': data.heightCm,
+          'bodyweightKg': data.bodyweightKg,
+          'experience': data.experience.name,
+          'workoutsPerWeek': data.workoutsPerWeek,
+          'completedAt': data.completedAt?.toIso8601String(),
+        },
+      });
+      debugPrint('☁️ Firestore onboarding sync completed');
     } catch (e) {
       // Log but don't throw - sync failures shouldn't block onboarding
       debugPrint('⚠️ Firestore sync failed (non-blocking): $e');

@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/widgets/auth_visual_scaffold.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/widgets/branded_auth_buttons.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/legal_document_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
-import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/legal_document_screen.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -18,8 +20,7 @@ class RegisterScreen extends ConsumerStatefulWidget {
   ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends ConsumerState<RegisterScreen>
-    with SingleTickerProviderStateMixin {
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -31,26 +32,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
   bool _showEmailForm = false;
   bool _tosAccepted = false;
 
-  // Animation controller for pulsing icon
-  late AnimationController _pulseController;
-  late Animation<double> _pulseAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _pulseController = AnimationController(
-      duration: const Duration(milliseconds: 2000),
-      vsync: this,
-    )..repeat(reverse: true);
-
-    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.15).animate(
-      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
-    );
-  }
-
   @override
   void dispose() {
-    _pulseController.dispose();
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -61,7 +44,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
   @override
   Widget build(BuildContext context) {
     final authController = ref.watch(authControllerProvider);
-    final colorScheme = context.colors;
 
     ref.listen<AsyncValue<void>>(authControllerProvider, (previous, next) {
       next.when(
@@ -80,215 +62,176 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
     });
 
     return Scaffold(
-      backgroundColor: colorScheme.surface,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(AppIcons.arrowBack, color: colorScheme.onSurface),
-          onPressed: () => context.pop(),
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: Column(
-            children: [
-              // Animated Logo with glow effect
-              _buildAnimatedLogo(colorScheme),
-
-              const SizedBox(height: AppSpacing.lg),
-
-              // Title
-              Text(
-                context.l10n.createAccount,
-                style: context.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.onSurface,
-                  letterSpacing: -0.5,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              AuthHeroAssets.register,
+              fit: BoxFit.cover,
+              errorBuilder: (_, _, _) =>
+                  Image.asset(AuthHeroAssets.fallback, fit: BoxFit.cover),
+            ),
+          ),
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.58),
+                    Colors.black.withValues(alpha: 0.28),
+                    Colors.black.withValues(alpha: 0.72),
+                  ],
+                  stops: const [0.0, 0.34, 1.0],
                 ),
               ),
-
-              const SizedBox(height: AppSpacing.xs),
-
-              // Subtitle
-              Text(
-                context.l10n.startTrackingJourney,
-                style: context.textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-                textAlign: TextAlign.center,
-              ),
-
-              const SizedBox(height: AppSpacing.xl),
-
-              // Stats Preview
-              _buildStatsPreview(colorScheme),
-
-              const SizedBox(height: AppSpacing.xl),
-
-              // Registration Options
-              if (_showEmailForm)
-                _buildEmailForm(authController, colorScheme)
-              else
-                _buildQuickRegisterOptions(authController, colorScheme),
-
-              const SizedBox(height: AppSpacing.lg),
-
-              // Already have account
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    context.l10n.alreadyHaveAccountPrompt,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: IgnorePointer(
+              child: Container(
+                height: 170,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0.55),
+                      Colors.black.withValues(alpha: 0.0),
+                    ],
                   ),
-                  TextButton(
-                    onPressed: () => context.pop(),
-                    child: Text(
-                      context.l10n.signIn,
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                ),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                AppSpacing.sm,
+                AppSpacing.md,
+                AppSpacing.md,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildTopHeader(context),
+                  const Spacer(),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 220),
+                    child: _showEmailForm
+                        ? _buildEmailForm(authController)
+                        : _buildBottomActions(authController),
                   ),
                 ],
               ),
-
-              const SizedBox(height: AppSpacing.lg),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAnimatedLogo(ColorScheme colorScheme) {
-    return AnimatedBuilder(
-      animation: _pulseAnimation,
-      builder: (context, child) {
-        return Container(
-          width: 100,
-          height: 100,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: RadialGradient(
-              colors: [
-                colorScheme.secondary.withValues(alpha: 0.3),
-                colorScheme.secondary.withValues(alpha: 0.1),
-                colorScheme.secondary.withValues(alpha: 0.0),
-              ],
-              stops: const [0.0, 0.7, 1.0],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: colorScheme.secondary.withValues(alpha: 0.4),
-                blurRadius: 25 * _pulseAnimation.value,
-                spreadRadius: 4 * _pulseAnimation.value,
-              ),
-            ],
-          ),
-          child: Transform.scale(
-            scale: _pulseAnimation.value,
-            child: Container(
-              margin: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: colorScheme.secondaryContainer,
-                border: Border.all(
-                  color: colorScheme.secondary.withValues(alpha: 0.5),
-                  width: 2,
-                ),
-              ),
-              child: Icon(
-                AppIcons.personAdd,
-                size: 32,
-                color: colorScheme.secondary,
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildStatsPreview(ColorScheme colorScheme) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.lg,
-        vertical: AppSpacing.md,
-      ),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.3),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _StatItem(
-            icon: AppIcons.workout,
-            value: '∞',
-            label: context.l10n.loginStatsWorkouts,
-            color: colorScheme.primary,
-          ),
-          _StatDivider(color: colorScheme.outlineVariant),
-          _StatItem(
-            icon: AppIcons.repeat,
-            value: '∞',
-            label: context.l10n.loginStatsSets,
-            color: colorScheme.secondary,
-          ),
-          _StatDivider(color: colorScheme.outlineVariant),
-          _StatItem(
-            icon: AppIcons.emojiEvents,
-            value: '∞',
-            label: context.l10n.loginStatsPRs,
-            color: colorScheme.tertiary,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildQuickRegisterOptions(
-    AsyncValue<void> authController,
-    ColorScheme colorScheme,
-  ) {
-    return Column(
+  Widget _buildTopHeader(BuildContext context) {
+    return Row(
       children: [
-        // ToS Acceptance Checkbox (shown for social signup too)
-        _buildTosCheckbox(colorScheme),
+        GestureDetector(
+          onTap: () => context.pop(),
+          child: ClipPath(
+            clipper: const _CutCornerClipper(cut: 14),
+            child: Container(
+              width: 74,
+              height: 74,
+              color: Colors.transparent,
+              alignment: Alignment.center,
+              child: Image.asset(
+                AuthHeroAssets.brandLogo,
+                fit: BoxFit.contain,
+                width: 72,
+                height: 72,
+                errorBuilder: (_, _, _) => Image.asset(
+                  AuthHeroAssets.fallback,
+                  fit: BoxFit.contain,
+                  width: 72,
+                  height: 72,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                context.l10n.createAccount,
+                style: context.textTheme.headlineSmall?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              Text(
+                context.l10n.startTrackingJourney,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.9),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
-        const SizedBox(height: AppSpacing.md),
-
-        // Google Sign Up
-        SizedBox(
-          width: double.infinity,
-          height: 56,
-          // Accessibility: Semantic label for screen readers
-          child: Semantics(
+  Widget _buildBottomActions(AsyncValue<void> authController) {
+    return Container(
+      key: const ValueKey('register_bottom_actions'),
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildTosCheckbox(),
+          const SizedBox(height: AppSpacing.sm),
+          BrandedGoogleAuthButton(
             label: context.l10n.continueWithGoogle,
-            child: FilledButton.icon(
+            isLoading: authController.isLoading,
+            onPressed: authController.isLoading || !_tosAccepted
+                ? null
+                : _handleGoogleSignUp,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          if (Platform.isIOS)
+            BrandedAppleAuthButton(
+              label: context.l10n.continueWithApple,
+              isLoading: authController.isLoading,
               onPressed: authController.isLoading || !_tosAccepted
                   ? null
-                  : _handleGoogleSignUp,
-              icon: authController.isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: LoadingIndicator(),
-                    )
-                  : const Icon(AppIcons.gMobiledata, size: 24),
+                  : _handleAppleSignUp,
+            ),
+          if (Platform.isIOS) const SizedBox(height: AppSpacing.sm),
+          SizedBox(
+            height: 56,
+            child: FilledButton.icon(
+              onPressed: authController.isLoading
+                  ? null
+                  : () => setState(() => _showEmailForm = true),
+              icon: const Icon(AppIcons.email),
               label: Text(
-                context.l10n.continueWithGoogle,
+                context.l10n.signUpWithEmail,
                 style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               style: FilledButton.styleFrom(
@@ -298,318 +241,246 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
               ),
             ),
           ),
-        ),
-
-        const SizedBox(height: AppSpacing.md),
-
-        // Apple Sign Up (iOS only)
-        if (Platform.isIOS) ...[
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            // Accessibility: Semantic label for screen readers
-            child: Semantics(
-              label: context.l10n.continueWithApple,
-              child: FilledButton.icon(
-                onPressed: authController.isLoading || !_tosAccepted
-                    ? null
-                    : _handleAppleSignUp,
-                style: FilledButton.styleFrom(
-                  backgroundColor: colorScheme.onSurface,
-                  foregroundColor: colorScheme.surface,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                context.l10n.alreadyHaveAccountPrompt,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.95),
                 ),
-                icon: authController.isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: LoadingIndicator(),
-                      )
-                    : const Icon(AppIcons.apple),
-                label: Text(
-                  context.l10n.continueWithApple,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
+              ),
+              GestureDetector(
+                onTap: () => context.pop(),
+                child: Text(
+                  context.l10n.signIn,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: Colors.blue.shade300,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-        ],
-
-        // Divider
-        Row(
-          children: [
-            Expanded(child: Divider(color: colorScheme.outlineVariant)),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-              child: Text(
-                context.l10n.orDivider,
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ),
-            Expanded(child: Divider(color: colorScheme.outlineVariant)),
-          ],
-        ),
-
-        const SizedBox(height: AppSpacing.md),
-
-        // Email Registration
-        SizedBox(
-          width: double.infinity,
-          height: 56,
-          child: OutlinedButton.icon(
-            onPressed: () => setState(() => _showEmailForm = true),
-            icon: Icon(AppIcons.email, color: colorScheme.primary),
-            label: Text(
-              context.l10n.signUpWithEmail,
-              style: context.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: colorScheme.primary,
-              ),
-            ),
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: colorScheme.primary),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildEmailForm(
-    AsyncValue<void> authController,
-    ColorScheme colorScheme,
-  ) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          // Name Field
-          TextFormField(
-            controller: _nameController,
-            decoration: InputDecoration(
-              labelText: context.l10n.fullName,
-              hintText: context.l10n.fullNameHint,
-              prefixIcon: const Icon(AppIcons.person),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(
-                  color: colorScheme.primary,
-                  width: 2.0,
-                ),
-              ),
-            ),
-            textInputAction: TextInputAction.next,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return context.l10n.nameRequired;
-              }
-              if (value.trim().length < 2) {
-                return context.l10n.nameMinLength;
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: AppSpacing.md),
-
-          // Email Field
-          TextFormField(
-            controller: _emailController,
-            decoration: InputDecoration(
-              labelText: context.l10n.emailLabel,
-              hintText: context.l10n.emailHint,
-              prefixIcon: const Icon(AppIcons.email),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(
-                  color: colorScheme.primary,
-                  width: 2.0,
-                ),
-              ),
-            ),
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return context.l10n.emailRequired;
-              }
-              if (!RegExp(
-                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-              ).hasMatch(value)) {
-                return context.l10n.emailInvalid;
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: AppSpacing.md),
-
-          // Password Field
-          TextFormField(
-            controller: _passwordController,
-            decoration: InputDecoration(
-              labelText: context.l10n.passwordLabel,
-              hintText: context.l10n.passwordHint,
-              prefixIcon: const Icon(AppIcons.lock),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(
-                  color: colorScheme.primary,
-                  width: 2.0,
-                ),
-              ),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  _obscurePassword
-                      ? AppIcons.visibility
-                      : AppIcons.visibilityOff,
-                ),
-                tooltip: _obscurePassword
-                    ? context.l10n.showPassword
-                    : context.l10n.hidePassword,
-                onPressed: () =>
-                    setState(() => _obscurePassword = !_obscurePassword),
-              ),
-            ),
-            obscureText: _obscurePassword,
-            textInputAction: TextInputAction.next,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return context.l10n.passwordRequired;
-              }
-              if (value.length < 6) {
-                return context.l10n.passwordMinLength;
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: AppSpacing.md),
-
-          // Confirm Password Field
-          TextFormField(
-            controller: _confirmPasswordController,
-            decoration: InputDecoration(
-              labelText: context.l10n.confirmPassword,
-              hintText: context.l10n.confirmPasswordHint,
-              prefixIcon: const Icon(AppIcons.lockOutline),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(
-                  color: colorScheme.primary,
-                  width: 2.0,
-                ),
-              ),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  _obscureConfirmPassword
-                      ? AppIcons.visibility
-                      : AppIcons.visibilityOff,
-                ),
-                tooltip: _obscureConfirmPassword
-                    ? context.l10n.showPassword
-                    : context.l10n.hidePassword,
-                onPressed: () => setState(
-                  () => _obscureConfirmPassword = !_obscureConfirmPassword,
-                ),
-              ),
-            ),
-            obscureText: _obscureConfirmPassword,
-            textInputAction: TextInputAction.done,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return context.l10n.confirmPasswordRequired;
-              }
-              if (value != _passwordController.text) {
-                return context.l10n.passwordsDoNotMatch;
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: AppSpacing.md),
-
-          // ToS Acceptance Checkbox
-          _buildTosCheckbox(colorScheme),
-
-          const SizedBox(height: AppSpacing.lg),
-
-          // Register Button
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            // Accessibility: Semantic label for screen readers
-            child: Semantics(
-              label: context.l10n.createAccount,
-              child: FilledButton(
-                onPressed: authController.isLoading || !_tosAccepted
-                    ? null
-                    : _handleRegister,
-                style: FilledButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                child: authController.isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: LoadingIndicator(),
-                      )
-                    : Text(
-                        context.l10n.createAccount,
-                        style: context.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-              ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-
-          // Back to options
-          // Accessibility: Semantic label for screen readers
-          Semantics(
-            label: context.l10n.backToOptions,
-            child: TextButton.icon(
-              onPressed: () => setState(() => _showEmailForm = false),
-              icon: const Icon(AppIcons.arrowBack),
-              label: Text(context.l10n.backToOptions),
-            ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTosCheckbox(ColorScheme colorScheme) {
+  Widget _buildEmailForm(AsyncValue<void> authController) {
+    return Container(
+      key: const ValueKey('register_email_form'),
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+      ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              context.l10n.registerQuickly,
+              style: context.textTheme.titleLarge?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            TextFormField(
+              controller: _nameController,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: context.l10n.fullName,
+                hintText: context.l10n.fullNameHint,
+                labelStyle: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.9),
+                ),
+                hintStyle: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.6),
+                ),
+                prefixIcon: const Icon(AppIcons.person, color: Colors.white),
+                filled: true,
+                fillColor: Colors.white.withValues(alpha: 0.12),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              textInputAction: TextInputAction.next,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return context.l10n.nameRequired;
+                }
+                if (value.trim().length < 2) {
+                  return context.l10n.nameMinLength;
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            TextFormField(
+              controller: _emailController,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: context.l10n.emailLabel,
+                hintText: context.l10n.emailHint,
+                labelStyle: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.9),
+                ),
+                hintStyle: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.6),
+                ),
+                prefixIcon: const Icon(AppIcons.email, color: Colors.white),
+                filled: true,
+                fillColor: Colors.white.withValues(alpha: 0.12),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return context.l10n.emailRequired;
+                }
+                if (!RegExp(
+                  r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                ).hasMatch(value)) {
+                  return context.l10n.emailInvalid;
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            TextFormField(
+              controller: _passwordController,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: context.l10n.passwordLabel,
+                hintText: context.l10n.passwordHint,
+                labelStyle: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.9),
+                ),
+                hintStyle: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.6),
+                ),
+                prefixIcon: const Icon(AppIcons.lock, color: Colors.white),
+                filled: true,
+                fillColor: Colors.white.withValues(alpha: 0.12),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscurePassword
+                        ? AppIcons.visibility
+                        : AppIcons.visibilityOff,
+                    color: Colors.white,
+                  ),
+                  onPressed: () =>
+                      setState(() => _obscurePassword = !_obscurePassword),
+                ),
+              ),
+              obscureText: _obscurePassword,
+              textInputAction: TextInputAction.next,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return context.l10n.passwordRequired;
+                }
+                if (value.length < 6) {
+                  return context.l10n.passwordMinLength;
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            TextFormField(
+              controller: _confirmPasswordController,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: context.l10n.confirmPassword,
+                hintText: context.l10n.confirmPasswordHint,
+                labelStyle: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.9),
+                ),
+                hintStyle: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.6),
+                ),
+                prefixIcon: const Icon(
+                  AppIcons.lockOutline,
+                  color: Colors.white,
+                ),
+                filled: true,
+                fillColor: Colors.white.withValues(alpha: 0.12),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureConfirmPassword
+                        ? AppIcons.visibility
+                        : AppIcons.visibilityOff,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => setState(
+                    () => _obscureConfirmPassword = !_obscureConfirmPassword,
+                  ),
+                ),
+              ),
+              obscureText: _obscureConfirmPassword,
+              textInputAction: TextInputAction.done,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return context.l10n.confirmPasswordRequired;
+                }
+                if (value != _passwordController.text) {
+                  return context.l10n.passwordsDoNotMatch;
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            _buildTosCheckbox(),
+            const SizedBox(height: AppSpacing.md),
+            SizedBox(
+              height: 54,
+              child: FilledButton(
+                onPressed: authController.isLoading || !_tosAccepted
+                    ? null
+                    : _handleRegister,
+                child: authController.isLoading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: LoadingIndicator(),
+                      )
+                    : Text(context.l10n.createAccount),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            TextButton(
+              onPressed: () => setState(() => _showEmailForm = false),
+              child: Text(
+                context.l10n.backToOptions,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTosCheckbox() {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        color: Colors.white.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: _tosAccepted
-              ? colorScheme.primary.withValues(alpha: 0.5)
-              : colorScheme.outlineVariant.withValues(alpha: 0.5),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
       ),
       child: InkWell(
         onTap: () => setState(() => _tosAccepted = !_tosAccepted),
@@ -634,7 +505,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                     Text(
                       context.l10n.iAcceptThe,
                       style: context.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                        color: Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
                     GestureDetector(
@@ -643,7 +514,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                       child: Text(
                         context.l10n.termsOfService,
                         style: context.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.primary,
+                          color: Colors.blue.shade300,
                           decoration: TextDecoration.underline,
                           fontWeight: FontWeight.w600,
                         ),
@@ -652,7 +523,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                     Text(
                       context.l10n.andThe,
                       style: context.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                        color: Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
                     GestureDetector(
@@ -661,7 +532,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                       child: Text(
                         context.l10n.privacyPolicy,
                         style: context.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.primary,
+                          color: Colors.blue.shade300,
                           decoration: TextDecoration.underline,
                           fontWeight: FontWeight.w600,
                         ),
@@ -698,53 +569,28 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
   }
 }
 
-/// Single stat item in the preview
-class _StatItem extends StatelessWidget {
-  const _StatItem({
-    required this.icon,
-    required this.value,
-    required this.label,
-    required this.color,
-  });
+class _CutCornerClipper extends CustomClipper<Path> {
+  const _CutCornerClipper({required this.cut});
 
-  final IconData icon;
-  final String value;
-  final String label;
-  final Color color;
+  final double cut;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: color, size: 28),
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          value,
-          style: context.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: context.colors.onSurface,
-          ),
-        ),
-        Text(
-          label,
-          style: context.textTheme.labelSmall?.copyWith(
-            color: context.colors.onSurfaceVariant,
-          ),
-        ),
-      ],
-    );
+  Path getClip(Size size) {
+    final path = Path()
+      ..moveTo(cut, 0)
+      ..lineTo(size.width - cut, 0)
+      ..lineTo(size.width, cut)
+      ..lineTo(size.width, size.height - cut)
+      ..lineTo(size.width - cut, size.height)
+      ..lineTo(cut, size.height)
+      ..lineTo(0, size.height - cut)
+      ..lineTo(0, cut)
+      ..close();
+    return path;
   }
-}
-
-/// Vertical divider between stats
-class _StatDivider extends StatelessWidget {
-  const _StatDivider({required this.color});
-
-  final Color color;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(height: 40, width: 1, color: color.withValues(alpha: 0.3));
+  bool shouldReclip(covariant _CutCornerClipper oldClipper) {
+    return oldClipper.cut != cut;
   }
 }

@@ -20,10 +20,13 @@ enum TemplatesTourStep {
   /// Step 1: My Templates tab - your personal templates
   myTemplates,
 
-  /// Step 2: Discover tab - explore templates from the community
+  /// Step 2: Exercises tab - manage custom exercises
+  exercises,
+
+  /// Step 3: Discover tab - explore templates from the community
   discover,
 
-  /// Step 3: Create button - how to create new templates
+  /// Step 4: Create button - how to create new templates
   createButton,
 
   /// Tour completed
@@ -133,6 +136,7 @@ class TemplatesTourNotifier extends Notifier<TemplatesTourState> {
   }) async {
     if (!state.isActive) return;
 
+    final totalSteps = TemplatesTourStep.values.length - 1;
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
@@ -184,7 +188,7 @@ class TemplatesTourNotifier extends Notifier<TemplatesTourState> {
                     children: [
                       // Step indicator
                       Text(
-                        '${_getStepNumber(step)}/3',
+                        '${_getStepNumber(step)}/$totalSteps',
                         style: textTheme.labelSmall?.copyWith(
                           color: colors.primary,
                           fontWeight: FontWeight.bold,
@@ -285,6 +289,13 @@ class TemplatesTourNotifier extends Notifier<TemplatesTourState> {
           contentAlign: ContentAlign.bottom,
           radius: 12,
         );
+      case TemplatesTourStep.exercises:
+        return _StepConfig(
+          title: l10n.customExercises,
+          message: l10n.exerciseNotFoundCreate,
+          contentAlign: ContentAlign.bottom,
+          radius: 12,
+        );
       case TemplatesTourStep.discover:
         return _StepConfig(
           title: l10n.tourDiscoverTitle,
@@ -327,8 +338,8 @@ class _StepConfig {
 /// Provider for templates tour state
 final templatesTourProvider =
     NotifierProvider<TemplatesTourNotifier, TemplatesTourState>(
-  TemplatesTourNotifier.new,
-);
+      TemplatesTourNotifier.new,
+    );
 
 /// Provider to check if templates tour is completed
 final templatesTourCompletedProvider = Provider<bool>((ref) {

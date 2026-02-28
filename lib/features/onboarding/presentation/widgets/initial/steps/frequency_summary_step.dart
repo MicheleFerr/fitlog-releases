@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/entities/initial/initial_onboarding_data.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/initial/initial_onboarding_provider.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/initial/initial_onboarding_style.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -19,11 +20,13 @@ class FrequencySummaryStep extends ConsumerWidget {
     final notifier = ref.read(initialOnboardingNotifierProvider.notifier);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
+      padding: const EdgeInsets.symmetric(
+        horizontal: InitialOnboardingStyle.horizontalPadding,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 24),
+          const SizedBox(height: InitialOnboardingStyle.topSpacing),
 
           // Title
           Text(
@@ -164,41 +167,27 @@ class FrequencySummaryStep extends ConsumerWidget {
 
           // Complete button
           // Accessibility: Semantic label for screen readers
-          SizedBox(
-            width: double.infinity,
-            child: Semantics(
-              label: context.l10n.initialOnboardingComplete,
-              button: true,
-              child: FilledButton(
-                onPressed: state.isCompleting || !state.isComplete
-                    ? null
-                    : onComplete,
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: state.isCompleting
-                    ? const LoadingIndicator(size: 24)
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            '\u{1F680}', // Rocket
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            context.l10n.initialOnboardingComplete,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
+          Semantics(
+            label: context.l10n.initialOnboardingComplete,
+            button: true,
+            child: FilledButton(
+              onPressed: state.isCompleting || !state.isComplete
+                  ? null
+                  : onComplete,
+              style: InitialOnboardingStyle.primaryButtonStyle(context),
+              child: state.isCompleting
+                  ? const LoadingIndicator(size: 24)
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          '\u{1F680}', // Rocket
+                          style: TextStyle(fontSize: 20),
                         ),
+                        const SizedBox(width: 8),
+                        Text(context.l10n.initialOnboardingComplete),
                       ],
                     ),
-              ),
             ),
           ),
 
@@ -277,15 +266,15 @@ class _FrequencySelector extends StatelessWidget {
           onTap: () => onChanged(day),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            width: 44,
-            height: 44,
+            width: 46,
+            height: 46,
             decoration: BoxDecoration(
               color: isSelected
                   ? context.colors.primary
                   : context.colors.surfaceContainerHighest.withValues(
                       alpha: 0.5,
                     ),
-              borderRadius: BorderRadius.circular(22),
+              borderRadius: BorderRadius.circular(23),
               border: Border.all(
                 color: isSelected
                     ? context.colors.primary
@@ -329,7 +318,10 @@ class _SummaryCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(InitialOnboardingStyle.cardRadius),
+        border: Border.all(
+          color: context.colors.outline.withValues(alpha: 0.18),
+        ),
       ),
       child: Row(
         children: [
