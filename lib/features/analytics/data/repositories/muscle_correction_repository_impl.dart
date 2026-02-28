@@ -21,12 +21,14 @@
 /// **Error Handling**:
 /// - Hive errors → LocalStorageFailure
 /// - Firestore errors → FirestoreFailure
-/// - All methods return Either<Failure, T>
+/// - All methods return Either of Failure or T
 library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:fpdart/fpdart.dart' hide State;
+import 'package:hive_ce/hive.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/local/hive_muscle_correction_adapter.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/muscle_correction.dart';
@@ -51,8 +53,23 @@ class MuscleCorrectionRepositoryImpl implements MuscleCorrectionRepository {
   /// Hive box name for corrections storage
   static const String _correctionsBoxName = 'corrections';
 
+  /// Returns the UID of the currently authenticated user.
+  ///
+  /// Exposed as an overridable getter so unit tests can inject a stub
+  /// without requiring a real Firebase project.
+  @visibleForTesting
+  String? get currentUserId => FirebaseAuth.instance.currentUser?.uid;
+
   /// Firestore collection name for admin feedback
   static const String _feedbackCollectionName = 'muscle_group_feedback';
+
+  /// Opens (or returns the already-open) corrections Hive box.
+  ///
+  /// Extracted as an overridable method so unit tests can inject a
+  /// [FakeHiveBox] without touching the real file system.
+  @visibleForTesting
+  Future<Box<Map<String, dynamic>>> openCorrectionsBox() =>
+      hiveBoxManager.openBox<Map<String, dynamic>>(_correctionsBoxName);
 
   @override
   Future<Either<Failure, Unit>> saveLocalCorrection(
@@ -60,9 +77,7 @@ class MuscleCorrectionRepositoryImpl implements MuscleCorrectionRepository {
   ) async {
     try {
       // Get or create Hive box
-      final box = await hiveBoxManager.openBox<Map<String, dynamic>>(
-        _correctionsBoxName,
-      );
+      final box = await openCorrectionsBox();
 
       // Store correction with exerciseName as key
       // This ensures one correction per exercise (latest wins)
@@ -80,9 +95,7 @@ class MuscleCorrectionRepositoryImpl implements MuscleCorrectionRepository {
   Future<Either<Failure, List<MuscleCorrection>>> getLocalCorrections() async {
     try {
       // Get Hive box
-      final box = await hiveBoxManager.openBox<Map<String, dynamic>>(
-        _correctionsBoxName,
-      );
+      final box = await openCorrectionsBox();
 
       // Retrieve all corrections from box
       final corrections = <MuscleCorrection>[];
@@ -118,7 +131,7 @@ class MuscleCorrectionRepositoryImpl implements MuscleCorrectionRepository {
   ) async {
     try {
       // Get current user ID
-      final userId = FirebaseAuth.instance.currentUser?.uid;
+      final userId = currentUserId;
       if (userId == null) {
         return left(
           const ServerFailure(
@@ -209,9 +222,7 @@ class MuscleCorrectionRepositoryImpl implements MuscleCorrectionRepository {
   ) async {
     try {
       // Get Hive box
-      final box = await hiveBoxManager.openBox<Map<String, dynamic>>(
-        _correctionsBoxName,
-      );
+      final box = await openCorrectionsBox();
 
       // Delete correction by exerciseName key
       await box.delete(exerciseName);

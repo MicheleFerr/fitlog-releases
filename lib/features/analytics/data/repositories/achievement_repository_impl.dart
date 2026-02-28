@@ -25,7 +25,9 @@ class AchievementRepositoryImpl
   static const _cacheExpiryDuration = Duration(hours: 1);
 
   /// Get Hive cache box (lazy initialization)
-  Future<Box<Map<dynamic, dynamic>>> _getCacheBox() async {
+  ///
+  /// Protected to allow override in tests without real Hive initialization.
+  Future<Box<Map<dynamic, dynamic>>> getCacheBox() async {
     if (!Hive.isBoxOpen(cacheBoxName)) {
       return await Hive.openBox<Map<dynamic, dynamic>>(cacheBoxName);
     }
@@ -163,7 +165,7 @@ class AchievementRepositoryImpl
   /// Get cached achievements
   Future<_CachedAchievements?> _getCachedAchievements(String userId) async {
     try {
-      final box = await _getCacheBox();
+      final box = await getCacheBox();
       final cacheKey = 'achievements:$userId:unlocked';
       final data = box.get(cacheKey);
 
@@ -192,7 +194,7 @@ class AchievementRepositoryImpl
     bool append = false,
   }) async {
     try {
-      final box = await _getCacheBox();
+      final box = await getCacheBox();
       final cacheKey = 'achievements:$userId:unlocked';
 
       List<Achievement> finalAchievements = achievements;
