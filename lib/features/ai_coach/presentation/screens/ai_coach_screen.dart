@@ -136,7 +136,7 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
     final distanceFromBottom =
         _scrollController.position.maxScrollExtent -
         _scrollController.position.pixels;
-    final nextNearBottom = distanceFromBottom <= 96;
+    final nextNearBottom = distanceFromBottom <= 48;
     if (nextNearBottom != _isNearBottom && mounted) {
       setState(() => _isNearBottom = nextNearBottom);
     }
@@ -267,10 +267,17 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
 
                       final isLastMessage =
                           index == chatState.messages.length - 1;
+
+                      // Show timestamp only when >5min gap from next message,
+                      // or for the last message
+                      final showTimestamp = isLastMessage ||
+                          _hasTimestampGap(chatState.messages, index);
+
                       return AIMessageBubble(
                         message: message,
                         isFromUser: message.role == MessageRole.user,
                         animate: isLastMessage,
+                        showTimestamp: showTimestamp,
                         onSuggestionTap: (exercise) {
                           if (message.isDisambiguation) {
                             // Disambiguation: send exercise name directly
@@ -335,7 +342,8 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildPersistentStarterBar(context),
+                if (chatState.messages.length <= 3)
+                  _buildPersistentStarterBar(context),
                 SmartSuggestionsOverlay(onSelect: _onSuggestionSelected),
                 AIInputBar(
                   onSend: (text) {
@@ -355,6 +363,15 @@ class _AICoachScreenState extends ConsumerState<AICoachScreen> {
         ],
       ),
     );
+  }
+
+  /// Returns true when there's a >5 min gap between message at [index]
+  /// and the next message.
+  bool _hasTimestampGap(List<AIMessage> messages, int index) {
+    if (index >= messages.length - 1) return true;
+    final current = messages[index].timestamp;
+    final next = messages[index + 1].timestamp;
+    return next.difference(current).inMinutes.abs() >= 5;
   }
 
   bool _shouldShowScrollToBottom(AIChatState chatState, bool keyboardVisible) {

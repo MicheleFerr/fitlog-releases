@@ -34,6 +34,7 @@ class AIMessageBubble extends StatefulWidget {
     required this.isFromUser,
     this.onSuggestionTap,
     this.animate = false,
+    this.showTimestamp = true,
   });
 
   final AIMessage message;
@@ -42,6 +43,9 @@ class AIMessageBubble extends StatefulWidget {
 
   /// Whether to animate the bubble entrance (for newly added messages)
   final bool animate;
+
+  /// Whether to show the timestamp below the bubble
+  final bool showTimestamp;
 
   @override
   State<AIMessageBubble> createState() => _AIMessageBubbleState();
@@ -370,7 +374,9 @@ class _AIMessageBubbleState extends State<AIMessageBubble>
 
     return Container(
       margin: const EdgeInsets.only(top: AppSpacing.sm),
-      constraints: const BoxConstraints(maxWidth: 340),
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.sizeOf(context).width * 0.85,
+      ),
       padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainer,
@@ -443,7 +449,9 @@ class _AIMessageBubbleState extends State<AIMessageBubble>
   ) {
     return Container(
       margin: const EdgeInsets.only(top: AppSpacing.sm),
-      constraints: const BoxConstraints(maxWidth: 340),
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.sizeOf(context).width * 0.85,
+      ),
       padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainer,
@@ -738,21 +746,22 @@ class _AIMessageBubbleState extends State<AIMessageBubble>
                       inlineTemplateAction,
                     ),
 
-                  // Timestamp
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: AppSpacing.xxs,
-                      left: AppSpacing.xs,
-                      right: AppSpacing.xs,
-                    ),
-                    child: Text(
-                      _formatTimestamp(widget.message.timestamp),
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: context.colors.onSurfaceVariant.withValues(
-                          alpha: 0.6,
+                  // Timestamp (shown only when there's a >5min gap)
+                  if (widget.showTimestamp)
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: AppSpacing.xxs,
+                        left: AppSpacing.xs,
+                        right: AppSpacing.xs,
+                      ),
+                      child: Text(
+                        _formatTimestamp(widget.message.timestamp),
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: context.colors.onSurfaceVariant.withValues(
+                            alpha: 0.6,
+                          ),
                         ),
                       ),
-                    ),
                   ),
 
                   // Quick actions row (always visible for AI)
