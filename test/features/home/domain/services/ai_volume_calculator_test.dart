@@ -205,7 +205,7 @@ void main() {
       test('should calculate volume for single muscle group', () {
         // Arrange
         final exercises = {
-          'Bench Press': createExercise(
+          'bench press': createExercise(
             nome: 'Bench Press',
             focus: ['Petto'],
           ),
@@ -239,7 +239,7 @@ void main() {
       test('should handle secondary muscles with half volume', () {
         // Arrange
         final exercises = {
-          'Bench Press': createExercise(
+          'bench press': createExercise(
             nome: 'Bench Press',
             focus: ['Petto'],
             muscoliSecondari: ['Spalle', 'Tricipiti'],
@@ -277,11 +277,11 @@ void main() {
       test('should accumulate volume from multiple activities', () {
         // Arrange
         final exercises = {
-          'Bench Press': createExercise(
+          'bench press': createExercise(
             nome: 'Bench Press',
             focus: ['Petto'],
           ),
-          'Incline Press': createExercise(
+          'incline press': createExercise(
             nome: 'Incline Press',
             focus: ['Petto'],
           ),
@@ -319,7 +319,7 @@ void main() {
       test('should skip incomplete sets', () {
         // Arrange
         final exercises = {
-          'Bench Press': createExercise(
+          'bench press': createExercise(
             nome: 'Bench Press',
             focus: ['Petto'],
           ),
@@ -375,7 +375,7 @@ void main() {
       test('should handle exercises with multiple primary muscles', () {
         // Arrange
         final exercises = {
-          'Deadlift': createExercise(
+          'deadlift': createExercise(
             nome: 'Deadlift',
             focus: ['Dorso', 'Gambe', 'Core'],
           ),
@@ -410,7 +410,7 @@ void main() {
       test('should handle zero weight sets (bodyweight)', () {
         // Arrange
         final exercises = {
-          'Pull Up': createExercise(
+          'pull up': createExercise(
             nome: 'Pull Up',
             focus: ['Dorso'],
           ),
