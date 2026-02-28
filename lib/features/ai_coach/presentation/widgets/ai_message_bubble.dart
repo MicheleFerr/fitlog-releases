@@ -808,7 +808,6 @@ class _AIMessageBubbleState extends State<AIMessageBubble>
         ),
       ),
     ),
-    ),
     );
   }
 
