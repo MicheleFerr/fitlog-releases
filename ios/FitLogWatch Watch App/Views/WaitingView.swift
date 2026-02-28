@@ -13,11 +13,10 @@ import SwiftUI
 struct WaitingView: View {
     @EnvironmentObject var connectivity: ConnectivityManager
 
-    // Localized strings (from Flutter app)
-    private var isItalian: Bool { connectivity.appLocale == "it" }
-    private var connectedText: String { isItalian ? "Connesso" : "Connected" }
-    private var waitingText: String { isItalian ? "In attesa..." : "Waiting..." }
-    private var startWorkoutText: String { isItalian ? "Inizia un allenamento\nsu iPhone" : "Start a workout on\nyour iPhone" }
+    private var locale: String { connectivity.appLocale }
+    private var connectedText: String { WatchStrings.connected(locale) }
+    private var waitingText: String { WatchStrings.waiting(locale) }
+    private var startWorkoutText: String { WatchStrings.startWorkoutOnIPhone(locale) }
 
     var body: some View {
         VStack(spacing: 12) {
@@ -32,7 +31,13 @@ struct WaitingView: View {
                     .foregroundColor(.secondary)
             }
             .accessibilityElement(children: .combine)
-            .accessibilityLabel(isItalian ? "Stato connessione: \(connectivity.isReachable ? connectedText : waitingText)" : "Connection status: \(connectivity.isReachable ? connectedText : waitingText)")
+            .accessibilityLabel(
+                WatchStrings.localized(
+                    locale,
+                    it: "Stato connessione: \(connectivity.isReachable ? connectedText : waitingText)",
+                    en: "Connection status: \(connectivity.isReachable ? connectedText : waitingText)"
+                )
+            )
 
             Spacer()
 
@@ -75,7 +80,13 @@ struct WaitingView: View {
                         .fill(Color.white.opacity(0.15))
                 )
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel(isItalian ? "Frequenza cardiaca: \(Int(connectivity.currentHeartRate)) battiti per minuto" : "Heart rate: \(Int(connectivity.currentHeartRate)) beats per minute")
+                .accessibilityLabel(
+                    WatchStrings.localized(
+                        locale,
+                        it: "Frequenza cardiaca: \(Int(connectivity.currentHeartRate)) battiti per minuto",
+                        en: "Heart rate: \(Int(connectivity.currentHeartRate)) beats per minute"
+                    )
+                )
             }
         }
         .padding()

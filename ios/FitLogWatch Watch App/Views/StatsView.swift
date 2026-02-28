@@ -15,16 +15,15 @@ struct StatsView: View {
     @EnvironmentObject var workoutManager: WorkoutManager
     @State private var showingEndOptions = false
 
-    // Localized strings (from Flutter app)
-    private var isItalian: Bool { connectivity.appLocale == "it" }
-    private var endWorkoutText: String { isItalian ? "Termina" : "End" }
-    private var confirmEndText: String { isItalian ? "Terminare allenamento?" : "End workout?" }
-    private var cancelText: String { isItalian ? "Annulla" : "Cancel" }
-    private var saveText: String { isItalian ? "Salva" : "Save" }
-    private var discardText: String { isItalian ? "Scarta" : "Discard" }
+    private var locale: String { connectivity.appLocale }
+    private var endWorkoutText: String { WatchStrings.end(locale) }
+    private var confirmEndText: String { WatchStrings.confirmEnd(locale) }
+    private var cancelText: String { WatchStrings.cancel(locale) }
+    private var saveText: String { WatchStrings.save(locale) }
+    private var discardText: String { WatchStrings.discard(locale) }
     private var kcalLabel: String { "kcal" }
-    private var timeLabel: String { isItalian ? "tempo" : "time" }
-    private var setsLabel: String { isItalian ? "serie" : "sets" }
+    private var timeLabel: String { WatchStrings.time(locale) }
+    private var setsLabel: String { WatchStrings.sets(locale) }
 
     var body: some View {
         VStack(spacing: 10) {
@@ -47,7 +46,13 @@ struct StatsView: View {
             }
             .accessibilityElement(children: .combine)
             .accessibilityAddTraits(.isHeader)
-            .accessibilityLabel(isItalian ? "Frequenza cardiaca: \(Int(workoutManager.heartRate)) battiti per minuto" : "Heart rate: \(Int(workoutManager.heartRate)) beats per minute")
+            .accessibilityLabel(
+                WatchStrings.localized(
+                    locale,
+                    it: "Frequenza cardiaca: \(Int(workoutManager.heartRate)) battiti per minuto",
+                    en: "Heart rate: \(Int(workoutManager.heartRate)) beats per minute"
+                )
+            )
 
             // Heart rate zone badge
             Text(workoutManager.currentHeartRateZone.rawValue)
@@ -59,7 +64,13 @@ struct StatsView: View {
                         .fill(workoutManager.currentHeartRateZone.color.opacity(0.2))
                 )
                 .foregroundColor(workoutManager.currentHeartRateZone.color)
-                .accessibilityLabel(isItalian ? "Zona di frequenza cardiaca: \(workoutManager.currentHeartRateZone.rawValue)" : "Heart rate zone: \(workoutManager.currentHeartRateZone.rawValue)")
+                .accessibilityLabel(
+                    WatchStrings.localized(
+                        locale,
+                        it: "Zona di frequenza cardiaca: \(workoutManager.currentHeartRateZone.rawValue)",
+                        en: "Heart rate zone: \(workoutManager.currentHeartRateZone.rawValue)"
+                    )
+                )
 
             Divider()
                 .padding(.horizontal)
@@ -73,7 +84,13 @@ struct StatsView: View {
                     label: kcalLabel
                 )
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel(isItalian ? "\(Int(workoutManager.activeCalories)) chilocalorie" : "\(Int(workoutManager.activeCalories)) kilocalories")
+                .accessibilityLabel(
+                    WatchStrings.localized(
+                        locale,
+                        it: "\(Int(workoutManager.activeCalories)) chilocalorie",
+                        en: "\(Int(workoutManager.activeCalories)) kilocalories"
+                    )
+                )
 
                 Divider()
                     .frame(height: 30)
@@ -96,7 +113,7 @@ struct StatsView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel(isItalian ? "Durata allenamento" : "Workout duration")
+                .accessibilityLabel(WatchStrings.localized(locale, it: "Durata allenamento", en: "Workout duration"))
 
                 Divider()
                     .frame(height: 30)
@@ -108,7 +125,13 @@ struct StatsView: View {
                     label: setsLabel
                 )
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel(isItalian ? "\(connectivity.setsCompleted) serie completate" : "\(connectivity.setsCompleted) sets completed")
+                .accessibilityLabel(
+                    WatchStrings.localized(
+                        locale,
+                        it: "\(connectivity.setsCompleted) serie completate",
+                        en: "\(connectivity.setsCompleted) sets completed"
+                    )
+                )
             }
 
             // End Workout Button
@@ -129,8 +152,14 @@ struct StatsView: View {
             .tint(.red)
             .padding(.horizontal, 20)
             .padding(.top, 4)
-            .accessibilityLabel(isItalian ? "Termina allenamento" : "End workout")
-            .accessibilityHint(isItalian ? "Tocca due volte per terminare e salvare o scartare l'allenamento" : "Double tap to end and save or discard workout")
+            .accessibilityLabel(WatchStrings.endWorkout(locale))
+            .accessibilityHint(
+                WatchStrings.localized(
+                    locale,
+                    it: "Tocca due volte per terminare e salvare o scartare l'allenamento",
+                    en: "Double tap to end and save or discard workout"
+                )
+            )
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 4)

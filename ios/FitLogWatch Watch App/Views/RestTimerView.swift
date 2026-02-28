@@ -21,10 +21,10 @@ struct QuickAddTimePickerView: View {
     @State private var crownValue: Double = 3
     @FocusState private var isFocused: Bool
 
-    private var isItalian: Bool { connectivity.appLocale == "it" }
-    private var titleText: String { isItalian ? "Aggiungi Tempo" : "Add Time" }
-    private var startText: String { isItalian ? "Avvia" : "Start" }
-    private var cancelText: String { isItalian ? "Annulla" : "Cancel" }
+    private var locale: String { connectivity.appLocale }
+    private var titleText: String { WatchStrings.addTime(locale) }
+    private var startText: String { WatchStrings.start(locale) }
+    private var cancelText: String { WatchStrings.cancel(locale) }
 
     var body: some View {
         VStack(spacing: 12) {
@@ -35,10 +35,16 @@ struct QuickAddTimePickerView: View {
             Text(formatTime(timeOptions[selectedIndex]))
                 .font(.system(size: 36, weight: .bold, design: .monospaced))
                 .foregroundColor(.blue)
-                .accessibilityLabel(isItalian ? "\(timeOptions[selectedIndex]) secondi" : "\(timeOptions[selectedIndex]) seconds")
+                .accessibilityLabel(
+                    WatchStrings.localized(
+                        locale,
+                        it: "\(timeOptions[selectedIndex]) secondi",
+                        en: "\(timeOptions[selectedIndex]) seconds"
+                    )
+                )
 
             // Crown hint
-            Text(isItalian ? "Usa Corona per regolare" : "Use Crown to adjust")
+            Text(WatchStrings.localized(locale, it: "Usa corona per regolare", en: "Use crown to adjust"))
                 .font(.system(size: 9))
                 .foregroundColor(.secondary)
 
@@ -96,14 +102,14 @@ struct RestTimerView: View {
     @EnvironmentObject var connectivity: ConnectivityManager
     @State private var showQuickAddTime = false
 
-    // Localized strings (from Flutter app)
-    private var isItalian: Bool { connectivity.appLocale == "it" }
-    private var skipText: String { isItalian ? "Salta" : "Skip" }
-    private var readyText: String { isItalian ? "Pronto!" : "Ready!" }
-    private var restText: String { isItalian ? "Riposo" : "Rest" }
-    private var nextSetText: String { isItalian ? "Prossima serie" : "Next set" }
-    private var repsText: String { isItalian ? "rip" : "reps" }
-    private var tapToAddTimeText: String { isItalian ? "Tocca per aggiungere tempo" : "Tap to add time" }
+    private var locale: String { connectivity.appLocale }
+    private var skipText: String { WatchStrings.skip(locale) }
+    private var readyText: String { WatchStrings.ready(locale) }
+    private var restText: String { WatchStrings.rest(locale) }
+    private var nextSetText: String { WatchStrings.nextSet(locale) }
+    private var repsText: String { WatchStrings.reps(locale) }
+    private var tapToAddTimeText: String { WatchStrings.tapToAddTime(locale) }
+    private var resumeText: String { WatchStrings.resume(locale) }
 
     var body: some View {
         VStack(spacing: 8) {
@@ -137,7 +143,13 @@ struct RestTimerView: View {
                     RoundedRectangle(cornerRadius: 6)
                         .fill(Color.orange.opacity(0.12))
                 )
-                .accessibilityLabel(isItalian ? "Superset: \(connectivity.supersetName ?? "Superset"), Round \(connectivity.supersetRound) di \(connectivity.totalSupersetRounds)" : "Superset: \(connectivity.supersetName ?? "Superset"), Round \(connectivity.supersetRound) of \(connectivity.totalSupersetRounds)")
+                .accessibilityLabel(
+                    WatchStrings.localized(
+                        locale,
+                        it: "Superset: \(connectivity.supersetName ?? "Superset"), Round \(connectivity.supersetRound) di \(connectivity.totalSupersetRounds)",
+                        en: "Superset: \(connectivity.supersetName ?? "Superset"), Round \(connectivity.supersetRound) of \(connectivity.totalSupersetRounds)"
+                    )
+                )
             }
 
             // Rest label with pause indicator
@@ -155,7 +167,7 @@ struct RestTimerView: View {
             }
             .accessibilityElement(children: .combine)
             .accessibilityAddTraits(.isHeader)
-            .accessibilityLabel(connectivity.isTimerPaused ? (isItalian ? "Riposo in pausa" : "Rest paused") : restText)
+            .accessibilityLabel(connectivity.isTimerPaused ? WatchStrings.localized(locale, it: "Riposo in pausa", en: "Rest paused") : restText)
 
             // Time display (no animation = battery savings)
             // ✅ Tappable when timer is at 00:00 to add more time
@@ -163,7 +175,13 @@ struct RestTimerView: View {
                 .font(.system(size: 52, weight: .bold))
                 .monospacedDigit()
                 .foregroundColor(timerTextColor)
-                .accessibilityLabel(isItalian ? "Tempo rimanente: \(formatTime(connectivity.restTimeRemaining))" : "Time remaining: \(formatTime(connectivity.restTimeRemaining))")
+                .accessibilityLabel(
+                    WatchStrings.localized(
+                        locale,
+                        it: "Tempo rimanente: \(formatTime(connectivity.restTimeRemaining))",
+                        en: "Time remaining: \(formatTime(connectivity.restTimeRemaining))"
+                    )
+                )
                 .onTapGesture {
                     if connectivity.restTimeRemaining == 0 {
                         WKInterfaceDevice.current().play(.click)
@@ -177,26 +195,85 @@ struct RestTimerView: View {
 
             Spacer()
 
-            // Skip button OR Ready message
-            if connectivity.restTimeRemaining > 0 && !connectivity.isTimerPaused {
-                Button(action: {
-                    connectivity.sendSkipRest()
-                    WKInterfaceDevice.current().play(.click)
-                }) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "forward.fill")
-                            .font(.system(size: 11))
-                        Text(skipText)
-                            .font(.system(size: 14, weight: .medium))
+            // Actions area
+            if connectivity.restTimeRemaining > 0 {
+                if connectivity.isTimerPaused {
+                    VStack(spacing: 6) {
+                        Button(action: {
+                            connectivity.startNewTimer(duration: connectivity.restTimeRemaining)
+                            WKInterfaceDevice.current().play(.start)
+                        }) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "play.fill")
+                                    .font(.system(size: 11))
+                                Text(resumeText)
+                                    .font(.system(size: 14, weight: .medium))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 36)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.green)
+                        .accessibilityLabel(resumeText)
+                        .accessibilityHint(
+                            WatchStrings.localized(
+                                locale,
+                                it: "Tocca due volte per riprendere il timer di recupero",
+                                en: "Double tap to resume the rest timer"
+                            )
+                        )
+
+                        Button(action: {
+                            connectivity.sendSkipRest()
+                            WKInterfaceDevice.current().play(.click)
+                        }) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "forward.fill")
+                                    .font(.system(size: 11))
+                                Text(skipText)
+                                    .font(.system(size: 12, weight: .medium))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 32)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.secondary)
+                        .accessibilityLabel(WatchStrings.skipRest(locale))
+                        .accessibilityHint(
+                            WatchStrings.localized(
+                                locale,
+                                it: "Tocca due volte per terminare il riposo e iniziare la serie successiva",
+                                en: "Double tap to end rest and start next set"
+                            )
+                        )
                     }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 36)
+                    .padding(.horizontal, 20)
+                } else {
+                    Button(action: {
+                        connectivity.sendSkipRest()
+                        WKInterfaceDevice.current().play(.click)
+                    }) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "forward.fill")
+                                .font(.system(size: 11))
+                            Text(skipText)
+                                .font(.system(size: 14, weight: .medium))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 36)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.secondary)
+                    .padding(.horizontal, 20)
+                    .accessibilityLabel(WatchStrings.skipRest(locale))
+                    .accessibilityHint(
+                        WatchStrings.localized(
+                            locale,
+                            it: "Tocca due volte per terminare il riposo e iniziare la serie successiva",
+                            en: "Double tap to end rest and start next set"
+                        )
+                    )
                 }
-                .buttonStyle(.bordered)
-                .tint(.secondary)
-                .padding(.horizontal, 20)
-                .accessibilityLabel(isItalian ? "Salta riposo" : "Skip rest")
-                .accessibilityHint(isItalian ? "Tocca due volte per terminare il riposo e iniziare la serie successiva" : "Double tap to end rest and start next set")
             } else if connectivity.restTimeRemaining == 0 {
                 // 🆕 Tappable "Ready!" area to add more time
                 VStack(spacing: 6) {
@@ -218,8 +295,8 @@ struct RestTimerView: View {
                     WKInterfaceDevice.current().play(.click)
                     showQuickAddTime = true
                 }
-                .accessibilityLabel(isItalian ? "Pronto per la prossima serie" : "Ready for next set")
-                .accessibilityHint(isItalian ? "Tocca per aggiungere altro tempo di riposo" : "Tap to add more rest time")
+                .accessibilityLabel(WatchStrings.localized(locale, it: "Pronto per la prossima serie", en: "Ready for next set"))
+                .accessibilityHint(WatchStrings.localized(locale, it: "Tocca per aggiungere altro tempo di riposo", en: "Tap to add more rest time"))
             }
 
             Spacer()
@@ -277,7 +354,15 @@ struct RestTimerView: View {
                 .fill(timerColor.opacity(0.15))
         )
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(connectivity.targetWeight > 0 ? (isItalian ? "Prossima serie: \(formatWeight(connectivity.targetWeight)) chilogrammi per \(connectivity.repsDisplay) ripetizioni. Serie \(connectivity.currentSetNumber) di \(connectivity.totalSets)" : "Next set: \(formatWeight(connectivity.targetWeight)) kilograms for \(connectivity.repsDisplay) reps. Set \(connectivity.currentSetNumber) of \(connectivity.totalSets)") : (isItalian ? "Nessun obiettivo impostato" : "No target set"))
+        .accessibilityLabel(
+            connectivity.targetWeight > 0
+                ? WatchStrings.localized(
+                    locale,
+                    it: "Prossima serie: \(formatWeight(connectivity.targetWeight)) chilogrammi per \(connectivity.repsDisplay) ripetizioni. Serie \(connectivity.currentSetNumber) di \(connectivity.totalSets)",
+                    en: "Next set: \(formatWeight(connectivity.targetWeight)) kilograms for \(connectivity.repsDisplay) reps. Set \(connectivity.currentSetNumber) of \(connectivity.totalSets)"
+                )
+                : WatchStrings.localized(locale, it: "Nessun obiettivo impostato", en: "No target set")
+        )
     }
 
     // MARK: - Computed Properties

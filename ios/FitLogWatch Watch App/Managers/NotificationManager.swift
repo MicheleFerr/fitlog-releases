@@ -50,14 +50,15 @@ final class NotificationManager {
     /// Show notification when workout starts on iPhone
     /// Uses localized messages based on ConnectivityManager's appLocale
     func showWorkoutStartedNotification(exerciseName: String) {
-        // Get locale from ConnectivityManager
-        let isItalian = ConnectivityManager.shared.appLocale == "it"
+        let locale = ConnectivityManager.shared.appLocale
 
         let content = UNMutableNotificationContent()
-        content.title = isItalian ? "Allenamento iniziato!" : "Workout Started!"
-        content.body = isItalian
-            ? "Usa il tuo Apple Watch per un'esperienza completa"
-            : "Use your Apple Watch for the full experience"
+        content.title = WatchStrings.localized(locale, it: "Allenamento iniziato!", en: "Workout Started!")
+        content.body = WatchStrings.localized(
+            locale,
+            it: "Usa il tuo Apple Watch per un'esperienza completa",
+            en: "Use your Apple Watch for the full experience"
+        )
         content.sound = .default
         content.categoryIdentifier = "WORKOUT_STARTED"
 

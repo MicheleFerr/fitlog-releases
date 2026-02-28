@@ -13,8 +13,7 @@ import SwiftUI
 struct WorkoutCompanionView: View {
     @EnvironmentObject var connectivity: ConnectivityManager
     @EnvironmentObject var workoutManager: WorkoutManager
-    // 🆕 NEW 4-TAB STRUCTURE:
-    // Tab 0: AdvancedInfoView (TUT, HR zone, form cues, exercise details)
+    // 🆕 NEW 3-TAB STRUCTURE (simplified UX):
     // Tab 1: ExerciseControlView (superset/dropset/rest-pause) OR SimplifiedSetView (DEFAULT - set singoli)
     // Tab 2: RestTimerView (rest timer with Quick Add Time)
     // Tab 3: StatsView (HR, calories, duration, end workout)
@@ -23,12 +22,6 @@ struct WorkoutCompanionView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            // Tab 0: Advanced Info (TUT, HR zone, form cues) - for power users
-            AdvancedInfoView()
-                .environmentObject(connectivity)
-                .environmentObject(workoutManager)
-                .tag(0)
-
             // Tab 1: Set view - ExerciseControlView per superset/dropset/rest-pause,
             // SimplifiedSetView per set normali (beginner-friendly)
             Group {

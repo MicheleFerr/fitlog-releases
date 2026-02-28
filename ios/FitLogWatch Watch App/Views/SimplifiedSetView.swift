@@ -19,12 +19,12 @@ struct SimplifiedSetView: View {
     @State private var showingConfirmation = false
     @State private var confirmationTask: Task<Void, Never>?
     @State private var showingQuickEdit = false  // 🆕 Tap-to-edit
+    @State private var showingSetPicker = false
 
-    // Localized strings
-    private var isItalian: Bool { connectivity.appLocale == "it" }
-    private var setText: String { isItalian ? "Serie" : "Set" }
-    private var doneText: String { isItalian ? "Fatto!" : "Done!" }
-    private var tapToEditText: String { isItalian ? "tocca per modificare" : "tap to edit" }
+    private var locale: String { connectivity.appLocale }
+    private var setText: String { WatchStrings.setLabel(locale) }
+    private var doneText: String { WatchStrings.done(locale) }
+    private var tapToEditText: String { WatchStrings.tapToEdit(locale) }
 
     var body: some View {
         VStack(spacing: 6) {
@@ -40,7 +40,13 @@ struct SimplifiedSetView: View {
                         .monospacedDigit()
                 }
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel(isItalian ? "Frequenza cardiaca \(Int(workoutManager.heartRate))" : "Heart rate \(Int(workoutManager.heartRate))")
+                .accessibilityLabel(
+                    WatchStrings.localized(
+                        locale,
+                        it: "Frequenza cardiaca \(Int(workoutManager.heartRate))",
+                        en: "Heart rate \(Int(workoutManager.heartRate))"
+                    )
+                )
 
                 Spacer()
             }
@@ -56,17 +62,42 @@ struct SimplifiedSetView: View {
                 .accessibilityAddTraits(.isHeader)
 
             // Set indicator: "Set 2/4" or "Warmup" for warmup sets
-            if connectivity.currentSetNumber - 1 >= 0 &&
-               connectivity.currentSetNumber - 1 < connectivity.allSetsTargets.count &&
-               connectivity.allSetsTargets[connectivity.currentSetNumber - 1].isWarmup {
-                Text(isItalian ? "Riscaldamento" : "Warmup")
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundColor(.orange)
-            } else {
-                Text("\(setText) \(connectivity.currentSetNumber)/\(connectivity.totalSets)")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(.secondary)
+            Button(action: {
+                WKInterfaceDevice.current().play(.click)
+                showingSetPicker = true
+            }) {
+                HStack(spacing: 4) {
+                    if connectivity.currentSetNumber - 1 >= 0 &&
+                        connectivity.currentSetNumber - 1 < connectivity.allSetsTargets.count &&
+                        connectivity.allSetsTargets[connectivity.currentSetNumber - 1].isWarmup {
+                        Text(WatchStrings.warmupLabel(locale))
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(.orange)
+                    } else {
+                        Text("\(setText) \(connectivity.currentSetNumber)/\(connectivity.totalSets)")
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundColor(.secondary)
+                    }
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 8, weight: .semibold))
+                        .foregroundColor(.secondary.opacity(0.8))
+                }
             }
+            .buttonStyle(.plain)
+            .accessibilityLabel(
+                WatchStrings.localized(
+                    locale,
+                    it: "Serie \(connectivity.currentSetNumber) di \(connectivity.totalSets)",
+                    en: "Set \(connectivity.currentSetNumber) of \(connectivity.totalSets)"
+                )
+            )
+            .accessibilityHint(
+                WatchStrings.localized(
+                    locale,
+                    it: "Tocca per selezionare un'altra serie",
+                    en: "Tap to select a different set"
+                )
+            )
 
             // Weight × Reps (LARGE, TAPPABLE to edit)
             VStack(spacing: 2) {
@@ -91,8 +122,14 @@ struct SimplifiedSetView: View {
                 showingQuickEdit = true
             }
             .accessibilityElement(children: .combine)
-            .accessibilityLabel(isItalian ? "\(formatWeight(connectivity.targetWeight)) chili per \(connectivity.repsDisplay) ripetizioni" : "\(formatWeight(connectivity.targetWeight)) kg for \(connectivity.repsDisplay) reps")
-            .accessibilityHint(isItalian ? "Tocca per modificare peso e ripetizioni" : "Tap to edit weight and reps")
+            .accessibilityLabel(
+                WatchStrings.localized(
+                    locale,
+                    it: "\(formatWeight(connectivity.targetWeight)) chili per \(connectivity.repsDisplay) ripetizioni",
+                    en: "\(formatWeight(connectivity.targetWeight)) kg for \(connectivity.repsDisplay) reps"
+                )
+            )
+            .accessibilityHint(WatchStrings.localized(locale, it: "Tocca per modificare peso e ripetizioni", en: "Tap to edit weight and reps"))
 
             Spacer()
 
@@ -106,7 +143,7 @@ struct SimplifiedSetView: View {
                         .font(.system(size: 18, weight: .bold))
                 }
                 .foregroundColor(.green)
-                .accessibilityLabel(isItalian ? "Serie completata" : "Set completed")
+                .accessibilityLabel(WatchStrings.localized(locale, it: "Serie completata", en: "Set completed"))
             } else {
                 Button(action: {
                     if connectivity.rpeTrackingEnabled {
@@ -120,8 +157,14 @@ struct SimplifiedSetView: View {
                         .foregroundColor(.green)
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel(isItalian ? "Completa serie" : "Complete set")
-                .accessibilityHint(isItalian ? "Tocca due volte per completare la serie corrente" : "Double tap to complete current set")
+                .accessibilityLabel(WatchStrings.completeSet(locale))
+                .accessibilityHint(
+                    WatchStrings.localized(
+                        locale,
+                        it: "Tocca due volte per completare la serie corrente",
+                        en: "Double tap to complete current set"
+                    )
+                )
             }
 
             Spacer()
@@ -145,6 +188,21 @@ struct SimplifiedSetView: View {
         .sheet(isPresented: $showingQuickEdit) {
             QuickEditSheetView(showCopyButtons: false)  // No copy buttons in simplified view
                 .environmentObject(connectivity)
+        }
+        .sheet(isPresented: $showingSetPicker) {
+            SetPickerSheetView(
+                totalSets: connectivity.totalSets,
+                currentSet: connectivity.currentSetNumber,
+                locale: connectivity.appLocale,
+                allSetsTargets: connectivity.allSetsTargets,
+                onSelect: { setNumber in
+                    showingSetPicker = false
+                    connectivity.jumpToSet(setNumber)
+                },
+                onCancel: {
+                    showingSetPicker = false
+                }
+            )
         }
     }
 

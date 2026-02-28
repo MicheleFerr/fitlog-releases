@@ -12,6 +12,13 @@ import Foundation
 /// Currently supports English (default) and Italian
 enum WatchStrings {
 
+    // MARK: - Generic Helper
+
+    /// Centralized locale switch for one-off strings not yet mapped as dedicated keys.
+    static func localized(_ locale: String, it: String, en: String) -> String {
+        locale == "it" ? it : en
+    }
+
     // MARK: - Connection & Waiting
 
     static func connected(_ locale: String) -> String {
@@ -104,6 +111,10 @@ enum WatchStrings {
 
     static func start(_ locale: String) -> String {
         locale == "it" ? "Avvia" : "Start"
+    }
+
+    static func resume(_ locale: String) -> String {
+        locale == "it" ? "Riprendi" : "Resume"
     }
 
     // MARK: - Stats

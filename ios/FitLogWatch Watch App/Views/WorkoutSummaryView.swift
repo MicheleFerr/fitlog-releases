@@ -13,16 +13,15 @@ import SwiftUI
 struct WorkoutSummaryView: View {
     @EnvironmentObject var connectivity: ConnectivityManager
 
-    // Localized strings
-    private var isItalian: Bool { connectivity.appLocale == "it" }
-    private var completedText: String { isItalian ? "Completato!" : "Completed!" }
-    private var discardedText: String { isItalian ? "Scartato" : "Discarded" }
-    private var savedText: String { isItalian ? "Salvato" : "Saved" }
-    private var setsLabel: String { isItalian ? "Serie" : "Sets" }
-    private var timeLabel: String { isItalian ? "Tempo" : "Time" }
+    private var locale: String { connectivity.appLocale }
+    private var completedText: String { WatchStrings.completed(locale) }
+    private var discardedText: String { WatchStrings.discarded(locale) }
+    private var savedText: String { WatchStrings.saved(locale) }
+    private var setsLabel: String { WatchStrings.localized(locale, it: "Serie", en: "Sets") }
+    private var timeLabel: String { WatchStrings.localized(locale, it: "Tempo", en: "Time") }
     private var caloriesLabel: String { "kcal" }
-    private var doneText: String { isItalian ? "Fatto" : "Done" }
-    private var checkPhoneText: String { isItalian ? "Controlla iPhone" : "Check iPhone" }
+    private var doneText: String { WatchStrings.localized(locale, it: "Fatto", en: "Done") }
+    private var checkPhoneText: String { WatchStrings.checkPhone(locale) }
 
     var body: some View {
         VStack(spacing: 12) {
@@ -44,7 +43,11 @@ struct WorkoutSummaryView: View {
                     .foregroundColor(.secondary)
             }
             .accessibilityElement(children: .combine)
-            .accessibilityLabel(connectivity.lastWorkoutSaved ? (isItalian ? "Allenamento completato e salvato" : "Workout completed and saved") : (isItalian ? "Allenamento scartato" : "Workout discarded"))
+            .accessibilityLabel(
+                connectivity.lastWorkoutSaved
+                    ? WatchStrings.localized(locale, it: "Allenamento completato e salvato", en: "Workout completed and saved")
+                    : WatchStrings.localized(locale, it: "Allenamento scartato", en: "Workout discarded")
+            )
 
             // Stats summary (only if saved)
             if connectivity.lastWorkoutSaved {
@@ -60,7 +63,13 @@ struct WorkoutSummaryView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .accessibilityElement(children: .combine)
-                    .accessibilityLabel(isItalian ? "\(connectivity.lastWorkoutSetsCompleted) serie" : "\(connectivity.lastWorkoutSetsCompleted) sets")
+                    .accessibilityLabel(
+                        WatchStrings.localized(
+                            locale,
+                            it: "\(connectivity.lastWorkoutSetsCompleted) serie",
+                            en: "\(connectivity.lastWorkoutSetsCompleted) sets"
+                        )
+                    )
 
                     Divider()
                         .frame(height: 30)
@@ -77,7 +86,13 @@ struct WorkoutSummaryView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .accessibilityElement(children: .combine)
-                    .accessibilityLabel(isItalian ? "Durata: \(formatDuration(connectivity.lastWorkoutDuration))" : "Duration: \(formatDuration(connectivity.lastWorkoutDuration))")
+                    .accessibilityLabel(
+                        WatchStrings.localized(
+                            locale,
+                            it: "Durata: \(formatDuration(connectivity.lastWorkoutDuration))",
+                            en: "Duration: \(formatDuration(connectivity.lastWorkoutDuration))"
+                        )
+                    )
 
                     Divider()
                         .frame(height: 30)
@@ -94,7 +109,13 @@ struct WorkoutSummaryView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .accessibilityElement(children: .combine)
-                    .accessibilityLabel(isItalian ? "\(Int(connectivity.lastWorkoutCalories)) chilocalorie" : "\(Int(connectivity.lastWorkoutCalories)) kilocalories")
+                    .accessibilityLabel(
+                        WatchStrings.localized(
+                            locale,
+                            it: "\(Int(connectivity.lastWorkoutCalories)) chilocalorie",
+                            en: "\(Int(connectivity.lastWorkoutCalories)) kilocalories"
+                        )
+                    )
                 }
                 .padding(.horizontal, 8)
             }
@@ -119,8 +140,14 @@ struct WorkoutSummaryView: View {
             .buttonStyle(.borderedProminent)
             .tint(.blue)
             .padding(.horizontal, 20)
-            .accessibilityLabel(isItalian ? "Fatto, chiudi riepilogo" : "Done, dismiss summary")
-            .accessibilityHint(isItalian ? "Tocca due volte per tornare alla schermata di attesa" : "Double tap to return to waiting screen")
+            .accessibilityLabel(WatchStrings.localized(locale, it: "Fatto, chiudi riepilogo", en: "Done, dismiss summary"))
+            .accessibilityHint(
+                WatchStrings.localized(
+                    locale,
+                    it: "Tocca due volte per tornare alla schermata di attesa",
+                    en: "Double tap to return to waiting screen"
+                )
+            )
         }
         .padding(.vertical, 8)
         // Auto-dismiss after 30 seconds - uses .task for automatic cancellation
