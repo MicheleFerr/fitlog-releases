@@ -8,6 +8,47 @@ import 'package:gymbro_flutter_new/features/ai_coach/domain/exceptions/ai_coach_
 import 'package:gymbro_flutter_new/firebase_options.dart';
 import 'package:integration_test/integration_test.dart';
 
+const _e2eAuthEmail = String.fromEnvironment('E2E_AUTH_EMAIL');
+const _e2eAuthPassword = String.fromEnvironment('E2E_AUTH_PASSWORD');
+const _e2eAuthCustomToken = String.fromEnvironment('E2E_AUTH_CUSTOM_TOKEN');
+
+Future<void> _ensureAuthenticatedForE2E() async {
+  final auth = FirebaseAuth.instance;
+
+  // Reuse current session when available to avoid unnecessary auth churn.
+  if (auth.currentUser != null) {
+    return;
+  }
+
+  if (_e2eAuthCustomToken.isNotEmpty) {
+    await auth.signInWithCustomToken(_e2eAuthCustomToken);
+    return;
+  }
+
+  if (_e2eAuthEmail.isNotEmpty && _e2eAuthPassword.isNotEmpty) {
+    await auth.signInWithEmailAndPassword(
+      email: _e2eAuthEmail,
+      password: _e2eAuthPassword,
+    );
+    return;
+  }
+
+  // Fallback for local debug runs: anonymous auth if enabled in Firebase.
+  try {
+    await auth.signInAnonymously();
+    return;
+  } on FirebaseAuthException catch (e) {
+    throw TestFailure(
+      'Nessuna autenticazione E2E disponibile e login anonimo fallito '
+      '(code: ${e.code}). '
+      'Fai login prima di avviare il test oppure passa '
+      '--dart-define=E2E_AUTH_EMAIL=... --dart-define=E2E_AUTH_PASSWORD=... '
+      'oppure --dart-define=E2E_AUTH_CUSTOM_TOKEN=...',
+    );
+  }
+
+}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -33,8 +74,7 @@ void main() {
 
       await AppCheckConfig.initialize();
 
-      await FirebaseAuth.instance.signOut();
-      await FirebaseAuth.instance.signInAnonymously();
+      await _ensureAuthenticatedForE2E();
 
       repository = AIChatRepositoryImpl();
     });

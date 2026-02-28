@@ -88,11 +88,7 @@ const List<Map<String, dynamic>> aiToolDefinitions = [
       'description':
           'Get recovery status based on recent workout frequency and rest days. '
           'Use this when the user asks about recovery or fatigue.',
-      'parameters': {
-        'type': 'object',
-        'properties': {},
-        'required': [],
-      },
+      'parameters': {'type': 'object', 'properties': {}, 'required': []},
     },
   },
   {
@@ -100,8 +96,8 @@ const List<Map<String, dynamic>> aiToolDefinitions = [
     'function': {
       'name': 'suggestWorkout',
       'description':
-          'Get personalized workout suggestions based on user\'s training history. '
-          'Use this when the user asks what workout to do or needs training advice.',
+          'Get HIGH-LEVEL workout direction based on user\'s training history (focus + intensity + recovery). '
+          'Use for quick directional advice. For a COMPLETE session plan with exercises/sets/reps, use generateTemplate.',
       'parameters': {
         'type': 'object',
         'properties': {
@@ -112,7 +108,8 @@ const List<Map<String, dynamic>> aiToolDefinitions = [
           },
           'difficulty': {
             'type': 'string',
-            'description': 'Difficulty level (e.g., "beginner", "intermediate", "advanced")',
+            'description':
+                'Difficulty level (e.g., "beginner", "intermediate", "advanced")',
           },
         },
         'required': [],
@@ -133,10 +130,7 @@ const List<Map<String, dynamic>> aiToolDefinitions = [
             'type': 'string',
             'description': 'Name of the lift (e.g., "Squat", "Panca piana")',
           },
-          'weight': {
-            'type': 'number',
-            'description': '1RM weight in kg',
-          },
+          'weight': {'type': 'number', 'description': '1RM weight in kg'},
           'bodyWeight': {
             'type': 'number',
             'description': 'User body weight in kg (default: 75)',
@@ -156,11 +150,7 @@ const List<Map<String, dynamic>> aiToolDefinitions = [
           'Get overall workout statistics including total workouts, average duration, '
           'volume, training consistency, and most frequent exercises. '
           'Use when user asks about their general training stats or progress overview.',
-      'parameters': {
-        'type': 'object',
-        'properties': {},
-        'required': [],
-      },
+      'parameters': {'type': 'object', 'properties': {}, 'required': []},
     },
   },
   {
@@ -192,11 +182,7 @@ const List<Map<String, dynamic>> aiToolDefinitions = [
           'Get the user\'s current workout streak (consecutive training days), '
           'best streak record, and total workout count. '
           'Use when user asks about consistency or training habit.',
-      'parameters': {
-        'type': 'object',
-        'properties': {},
-        'required': [],
-      },
+      'parameters': {'type': 'object', 'properties': {}, 'required': []},
     },
   },
   {
@@ -223,6 +209,136 @@ const List<Map<String, dynamic>> aiToolDefinitions = [
         },
         'required': [],
       },
+    },
+  },
+  {
+    'type': 'function',
+    'function': {
+      'name': 'getUserProfileContext',
+      'description':
+          'Get profile personalization context used by the coach: experience level, primary goal, weekly target, '
+          'latest body weight and missing fields. Use this before generating plans when personalization is incomplete.',
+      'parameters': {'type': 'object', 'properties': {}, 'required': []},
+    },
+  },
+  {
+    'type': 'function',
+    'function': {
+      'name': 'updateUserProfilePreferences',
+      'description':
+          'Update user personalization settings used by AI Coach. Use when the user provides or confirms '
+          'experience level, goal, or weekly training target.',
+      'parameters': {
+        'type': 'object',
+        'properties': {
+          'experienceLevel': {
+            'type': 'string',
+            'description':
+                'Experience level: beginner, some/intermediate, experienced/advanced, athlete.',
+          },
+          'goal': {
+            'type': 'string',
+            'description':
+                'Primary goal: muscle, strength, fat_loss, recomposition, endurance.',
+          },
+          'weeklyTarget': {
+            'type': 'integer',
+            'description': 'Target weekly workouts (2-7).',
+          },
+        },
+        'required': [],
+      },
+    },
+  },
+  {
+    'type': 'function',
+    'function': {
+      'name': 'getWeeklyCheckin',
+      'description':
+          'Generate a weekly coaching review with adherence score, volume trend, PR highlights, and automatic '
+          'adjustments for the upcoming week.',
+      'parameters': {'type': 'object', 'properties': {}, 'required': []},
+    },
+  },
+  {
+    'type': 'function',
+    'function': {
+      'name': 'getWorkoutPreferences',
+      'description':
+          'Get workout preference presets used by AI Coach and Settings (default sets, reps, rest timers). '
+          'Use for guided setup or when user asks to review current preferences.',
+      'parameters': {'type': 'object', 'properties': {}, 'required': []},
+    },
+  },
+  {
+    'type': 'function',
+    'function': {
+      'name': 'updateWorkoutPreferences',
+      'description':
+          'Update workout preference presets (defaultExerciseSets, defaultExerciseReps, defaultRestTime, defaultRestBetweenExercises). '
+          'Use when user confirms preferred setup like 5x5, 4x8, etc.',
+      'parameters': {
+        'type': 'object',
+        'properties': {
+          'defaultExerciseSets': {
+            'type': 'integer',
+            'description': 'Default sets per exercise (1-8).',
+          },
+          'defaultExerciseReps': {
+            'type': 'integer',
+            'description': 'Default reps per exercise (3-30).',
+          },
+          'defaultRestTime': {
+            'type': 'integer',
+            'description': 'Default rest between sets in seconds (30-300).',
+          },
+          'defaultRestBetweenExercises': {
+            'type': 'integer',
+            'description':
+                'Default rest between exercises in seconds (30-300).',
+          },
+        },
+        'required': [],
+      },
+    },
+  },
+  {
+    'type': 'function',
+    'function': {
+      'name': 'getAutoProgressionPlan',
+      'description':
+          'Autoregulated progression engine for a specific exercise. Uses recent performance trend to decide '
+          'whether to increase load, add reps, hold, or deload.',
+      'parameters': {
+        'type': 'object',
+        'properties': {
+          'exerciseName': {
+            'type': 'string',
+            'description': 'Exercise to analyze (required).',
+          },
+          'targetRepsMin': {
+            'type': 'integer',
+            'description': 'Lower bound of target rep range (default: 6).',
+            'default': 6,
+          },
+          'targetRepsMax': {
+            'type': 'integer',
+            'description': 'Upper bound of target rep range (default: 10).',
+            'default': 10,
+          },
+        },
+        'required': ['exerciseName'],
+      },
+    },
+  },
+  {
+    'type': 'function',
+    'function': {
+      'name': 'getAdherenceInsights',
+      'description':
+          'Analyze workout adherence and consistency over recent weeks. Returns dropout risk, likely barriers, '
+          'and practical actions to improve motivation and consistency.',
+      'parameters': {'type': 'object', 'properties': {}, 'required': []},
     },
   },
   // ========== Body Measurements ==========
@@ -258,10 +374,12 @@ const List<Map<String, dynamic>> aiToolDefinitions = [
     'function': {
       'name': 'addBodyMeasurement',
       'description':
-          'Add or update a body measurement for the user. '
+          'Add or update a body measurement for the user with explicit two-step confirmation. '
           'Use when user wants to log a measurement like: "Oggi peso 83kg", "Ho misurato la vita: 85cm", '
           '"Aggiorna il mio peso a 80kg". '
           'For bilateral measurements (bicep, thigh, calf, forearm), ask which side (left/right) if not specified. '
+          'Step 1 (prepare): call with metricType/value to prepare pending save and ask user confirmation. '
+          'Step 2 (commit): call with confirmed=true (without metricType/value) to save pending measurement. '
           'ALWAYS confirm with user before saving. Show what was saved after.',
       'parameters': {
         'type': 'object',
@@ -274,18 +392,27 @@ const List<Map<String, dynamic>> aiToolDefinitions = [
           },
           'value': {
             'type': 'number',
-            'description': 'Numeric value of the measurement (e.g., 83.5 for weight in kg)',
+            'description':
+                'Numeric value of the measurement (e.g., 83.5 for weight in kg)',
           },
           'unit': {
             'type': 'string',
-            'description': 'Unit of measurement (kg, cm, %). Default based on metricType.',
+            'description':
+                'Unit of measurement (kg, cm, %). Default based on metricType.',
           },
           'notes': {
             'type': 'string',
-            'description': 'Optional notes (e.g., "mattina a digiuno", "dopo pranzo")',
+            'description':
+                'Optional notes (e.g., "mattina a digiuno", "dopo pranzo")',
+          },
+          'confirmed': {
+            'type': 'boolean',
+            'description':
+                'Set true ONLY after the user explicitly confirms saving. '
+                'When true and metricType/value are omitted, the tool saves the pending measurement prepared earlier.',
           },
         },
-        'required': ['metricType', 'value'],
+        'required': [],
       },
     },
   },
@@ -333,14 +460,17 @@ const List<Map<String, dynamic>> aiToolDefinitions = [
       'name': 'getUserTemplates',
       'description':
           'Get the user\'s saved workout templates. Returns template names, '
-          'target muscles, exercise count, and category. '
-          'Use when suggesting workouts to reference user\'s existing templates.',
+          'target muscles, exercise count, category, and exercise preview. '
+          'Also returns per-template set distribution and aggregate muscle-balance summary across all templates. '
+          'Use when suggesting workouts to reference user\'s existing templates. '
+          'If user asks a deep analysis, follow with getTemplateDetails for each relevant template.',
       'parameters': {
         'type': 'object',
         'properties': {
           'category': {
             'type': 'string',
-            'description': 'Optional filter: strength, hypertrophy, cardio, etc.',
+            'description':
+                'Optional filter: strength, hypertrophy, cardio, etc.',
           },
         },
         'required': [],
@@ -364,6 +494,282 @@ const List<Map<String, dynamic>> aiToolDefinitions = [
             'type': 'string',
             'description':
                 'Name of the template to retrieve (case-insensitive, partial match supported)',
+          },
+        },
+        'required': ['templateName'],
+      },
+    },
+  },
+  {
+    'type': 'function',
+    'function': {
+      'name': 'addExerciseToTemplate',
+      'description':
+          'Add an exercise to one of the user\'s saved workout templates. '
+          'Two-step safety flow: first call with confirmed=false (or omitted) to preview the exact change, '
+          'then call again with confirmed=true only after the user explicitly confirms. '
+          'Use this when user asks to insert/add an exercise in a template.',
+      'parameters': {
+        'type': 'object',
+        'properties': {
+          'templateName': {
+            'type': 'string',
+            'description':
+                'Name of the template to modify (case-insensitive, partial match supported)',
+          },
+          'exerciseName': {
+            'type': 'string',
+            'description':
+                'Exercise to add (can be a query; tool resolves best database match)',
+          },
+          'sets': {
+            'type': 'integer',
+            'description': 'Number of sets to assign (default: 3, range: 1-8)',
+            'default': 3,
+          },
+          'reps': {
+            'type': 'integer',
+            'description': 'Target reps per set (default: 10, range: 3-30)',
+            'default': 10,
+          },
+          'restSeconds': {
+            'type': 'integer',
+            'description':
+                'Rest time for this exercise in seconds (default: 90, range: 20-300)',
+            'default': 90,
+          },
+          'notes': {
+            'type': 'string',
+            'description': 'Optional exercise notes for the template',
+          },
+          'allowDuplicate': {
+            'type': 'boolean',
+            'description':
+                'Set true to allow adding an exercise already present in the template',
+            'default': false,
+          },
+          'confirmed': {
+            'type': 'boolean',
+            'description':
+                'Must be true only after explicit user confirmation to commit the edit',
+            'default': false,
+          },
+        },
+        'required': ['templateName', 'exerciseName'],
+      },
+    },
+  },
+  {
+    'type': 'function',
+    'function': {
+      'name': 'replaceExerciseInTemplate',
+      'description':
+          'Replace an exercise inside one saved template. Two-step safety flow: '
+          'first call with confirmed=false (or omitted) to preview, then call with confirmed=true '
+          'only after explicit user confirmation.',
+      'parameters': {
+        'type': 'object',
+        'properties': {
+          'templateName': {
+            'type': 'string',
+            'description':
+                'Name of the template to modify (case-insensitive, partial match supported)',
+          },
+          'oldExerciseName': {
+            'type': 'string',
+            'description': 'Exercise currently in template to replace',
+          },
+          'newExerciseName': {
+            'type': 'string',
+            'description': 'New exercise to insert in place of old exercise',
+          },
+          'sets': {
+            'type': 'integer',
+            'description': 'Number of sets for new exercise (default: 3)',
+            'default': 3,
+          },
+          'reps': {
+            'type': 'integer',
+            'description': 'Target reps for new exercise (default: 10)',
+            'default': 10,
+          },
+          'restSeconds': {
+            'type': 'integer',
+            'description': 'Rest time in seconds (default: 90)',
+            'default': 90,
+          },
+          'notes': {
+            'type': 'string',
+            'description': 'Optional notes for the new exercise',
+          },
+          'confirmed': {
+            'type': 'boolean',
+            'description':
+                'Must be true only after explicit user confirmation to commit the replace',
+            'default': false,
+          },
+        },
+        'required': ['templateName', 'oldExerciseName', 'newExerciseName'],
+      },
+    },
+  },
+  {
+    'type': 'function',
+    'function': {
+      'name': 'removeExerciseFromTemplate',
+      'description':
+          'Remove an exercise from one saved template. Two-step safety flow: '
+          'first call with confirmed=false (or omitted) to preview removal, then confirmed=true after user confirmation.',
+      'parameters': {
+        'type': 'object',
+        'properties': {
+          'templateName': {
+            'type': 'string',
+            'description':
+                'Name of the template to modify (case-insensitive, partial match supported)',
+          },
+          'exerciseName': {
+            'type': 'string',
+            'description': 'Exercise to remove from the template',
+          },
+          'removeAllMatches': {
+            'type': 'boolean',
+            'description':
+                'If true removes all matching exercises, otherwise only first match',
+            'default': false,
+          },
+          'confirmed': {
+            'type': 'boolean',
+            'description':
+                'Must be true only after explicit user confirmation to commit the removal',
+            'default': false,
+          },
+        },
+        'required': ['templateName', 'exerciseName'],
+      },
+    },
+  },
+  {
+    'type': 'function',
+    'function': {
+      'name': 'updateTemplateRestTime',
+      'description':
+          'Update rest time in one saved template. Can target one exercise or all exercises. '
+          'Two-step safety flow: first call with confirmed=false (or omitted) to preview, then call with confirmed=true '
+          'only after explicit user confirmation.',
+      'parameters': {
+        'type': 'object',
+        'properties': {
+          'templateName': {
+            'type': 'string',
+            'description':
+                'Name of the template to modify (case-insensitive, partial match supported)',
+          },
+          'exerciseName': {
+            'type': 'string',
+            'description':
+                'Exercise to update. Optional only when applyToAllExercises=true',
+          },
+          'restSeconds': {
+            'type': 'integer',
+            'description':
+                'Target rest time in seconds (range: 20-300). Use this OR deltaSeconds',
+          },
+          'deltaSeconds': {
+            'type': 'integer',
+            'description':
+                'Increment/decrement to apply (e.g. +15, -15). Use this OR restSeconds',
+          },
+          'applyToAllExercises': {
+            'type': 'boolean',
+            'description':
+                'If true, applies rest time to every exercise in the template',
+            'default': false,
+          },
+          'updateAllMatches': {
+            'type': 'boolean',
+            'description':
+                'If true updates all matching exercises with the same name',
+            'default': false,
+          },
+          'confirmed': {
+            'type': 'boolean',
+            'description':
+                'Must be true only after explicit user confirmation to commit the edit',
+            'default': false,
+          },
+        },
+        'required': ['templateName'],
+      },
+    },
+  },
+  {
+    'type': 'function',
+    'function': {
+      'name': 'updateTemplateExerciseSetup',
+      'description':
+          'Update sets and reps in one saved template. Can target one exercise or all exercises. '
+          'Two-step safety flow: first call with confirmed=false (or omitted) to preview, then call with confirmed=true '
+          'only after explicit user confirmation.',
+      'parameters': {
+        'type': 'object',
+        'properties': {
+          'templateName': {
+            'type': 'string',
+            'description':
+                'Name of the template to modify (case-insensitive, partial match supported)',
+          },
+          'exerciseName': {
+            'type': 'string',
+            'description':
+                'Exercise to update. Optional only when applyToAllExercises=true',
+          },
+          'sets': {
+            'type': 'integer',
+            'description': 'Target number of sets (range: 1-8)',
+          },
+          'reps': {
+            'type': 'integer',
+            'description':
+                'Target reps per set (range: 3-30). Use this OR minReps/maxReps',
+          },
+          'minReps': {
+            'type': 'integer',
+            'description':
+                'Minimum reps for a rep range (e.g. 8 in 8-12). Use with maxReps',
+          },
+          'maxReps': {
+            'type': 'integer',
+            'description':
+                'Maximum reps for a rep range (e.g. 12 in 8-12). Use with minReps',
+          },
+          'deltaSets': {
+            'type': 'integer',
+            'description':
+                'Increment/decrement sets (e.g. +1, -1). Use this OR sets',
+          },
+          'deltaReps': {
+            'type': 'integer',
+            'description':
+                'Increment/decrement reps (e.g. +2, -2). Use this OR reps',
+          },
+          'applyToAllExercises': {
+            'type': 'boolean',
+            'description':
+                'If true, applies setup to every exercise in the template',
+            'default': false,
+          },
+          'updateAllMatches': {
+            'type': 'boolean',
+            'description':
+                'If true updates all matching exercises with the same name',
+            'default': false,
+          },
+          'confirmed': {
+            'type': 'boolean',
+            'description':
+                'Must be true only after explicit user confirmation to commit the edit',
+            'default': false,
           },
         },
         'required': ['templateName'],
@@ -424,6 +830,37 @@ const List<Map<String, dynamic>> aiToolDefinitions = [
           },
         },
         'required': ['exerciseName'],
+      },
+    },
+  },
+  // ========== Scientific Sources ==========
+  {
+    'type': 'function',
+    'function': {
+      'name': 'searchScientificSources',
+      'description':
+          'Search locally cached scientific papers and return short, citable references. '
+          'Use only when the user asks for evidence, studies, sources, or scientific citations.',
+      'parameters': {
+        'type': 'object',
+        'properties': {
+          'query': {
+            'type': 'string',
+            'description':
+                'Keywords to search in title/summary/keywords (e.g., "ipertrofia volume", "forza panca")',
+          },
+          'category': {
+            'type': 'string',
+            'description':
+                'Optional category filter (e.g., hypertrophy, strength, recovery)',
+          },
+          'limit': {
+            'type': 'integer',
+            'description': 'Max sources to return (default: 3, max: 5)',
+            'default': 3,
+          },
+        },
+        'required': [],
       },
     },
   },

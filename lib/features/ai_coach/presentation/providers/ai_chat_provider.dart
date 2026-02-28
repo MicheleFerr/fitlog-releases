@@ -10,53 +10,67 @@ library;
 import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gymbro_flutter_new/core/config/environment_config.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/analytics_aggregator.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/healthkit_datasource.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/repositories/ai_chat_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_coach_service_impl.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_tool_executor.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/analytics_debug_utility.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/document_sync_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/services/analytics_auto_sync_service.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/services/analytics_resync_service.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
-import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/ai_rate_limit_provider.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_quota.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/exceptions/ai_coach_exception.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak_provider.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/measurement_repository_provider.dart';
+import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/health_permission_provider.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/repositories/template_repository.dart';
 import 'package:gymbro_flutter_new/core/providers/tier_entitlements_provider.dart';
+import 'package:gymbro_flutter_new/shared/auth/providers/consolidated_user_provider.dart'
+    show userProfileProvider;
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
 part 'ai_chat_provider.g.dart';
 
+const _copyUnset = Object();
+const int aiCoachContextWindowMaxMessages = 40;
+
 /// Chat state
 class AIChatState {
-
   const AIChatState({
     required this.messages,
     this.isLoading = false,
     this.error,
+    this.quota,
   });
   final List<AIMessage> messages;
   final bool isLoading;
   final String? error;
+  final AIQuota? quota;
 
   AIChatState copyWith({
     List<AIMessage>? messages,
     bool? isLoading,
-    String? error,
+    Object? error = _copyUnset,
+    Object? quota = _copyUnset,
   }) {
     return AIChatState(
       messages: messages ?? this.messages,
       isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
+      error: identical(error, _copyUnset) ? this.error : error as String?,
+      quota: identical(quota, _copyUnset) ? this.quota : quota as AIQuota?,
     );
   }
 }
@@ -64,16 +78,7 @@ class AIChatState {
 /// AI Coach service provider
 @riverpod
 AICoachServiceImpl aiCoachService(Ref ref) {
-  // Get API key from environment config (.env or --dart-define)
-  final apiKey = EnvironmentConfig.openRouterApiKey;
-
-  if (apiKey == null || apiKey.isEmpty) {
-    throw Exception(
-      'OPENROUTER_API_KEY not configured. Add to .env or use --dart-define',
-    );
-  }
-
-  final chatRepository = AIChatRepositoryImpl(apiKey: apiKey);
+  final chatRepository = AIChatRepositoryImpl();
 
   // Wire real repositories for function calling and context aggregation
   final analyticsRepo = ref.watch(analyticsRepositoryProvider);
@@ -83,7 +88,13 @@ AICoachServiceImpl aiCoachService(Ref ref) {
   final workoutAnalyticsRepo = ref.watch(workoutAnalyticsRepositoryProvider);
   final measurementRepo = ref.watch(measurementRepositoryProvider);
   final templateRepo = ref.watch(templateRepositoryProvider);
+  final documentRepository = ref.watch(documentRepositoryProvider);
   final locale = ref.watch(localeProvider);
+  final healthRepo = ref.watch(healthRepositoryProvider);
+  final onboardingState = ref.watch(onboardingStateProvider);
+  final userProfile = ref.watch(userProfileProvider).value;
+  final appConfig = ref.watch(appConfigProvider);
+  final appConfigNotifier = ref.watch(appConfigProvider.notifier);
 
   final historyDaysLimit = ref.watch(tierEntitlementsProvider).historyDaysLimit;
 
@@ -94,13 +105,60 @@ AICoachServiceImpl aiCoachService(Ref ref) {
     streakRepo: streakRepo,
     measurementRepo: measurementRepo,
     templateRepo: templateRepo,
+    documentRepository: documentRepository,
     locale: locale,
     historyDaysLimit: historyDaysLimit,
+    healthRepo: healthRepo,
+    healthKitDatasource: HealthKitDatasource(),
+    onboardingState: onboardingState,
+    accountTier: userProfile?.accountTier.name ?? 'free',
+    getWorkoutPreferences: () async => {
+      'defaultExerciseSets': appConfig.defaultExerciseSets,
+      'defaultExerciseReps': appConfig.defaultExerciseReps,
+      'defaultRestTime': appConfig.defaultRestTime,
+      'defaultRestBetweenExercises': appConfig.defaultRestBetweenExercises,
+    },
+    updateWorkoutPreferences: (updates) async {
+      final sets = (updates['defaultExerciseSets'] as num?)?.toInt();
+      final reps = (updates['defaultExerciseReps'] as num?)?.toInt();
+      final restSet = (updates['defaultRestTime'] as num?)?.toInt();
+      final restExercise = (updates['defaultRestBetweenExercises'] as num?)
+          ?.toInt();
+
+      if (sets != null && reps != null) {
+        await appConfigNotifier.setDefaultExerciseSetup(sets: sets, reps: reps);
+      } else {
+        if (sets != null) {
+          await appConfigNotifier.setDefaultExerciseSets(sets);
+        }
+        if (reps != null) {
+          await appConfigNotifier.setDefaultExerciseReps(reps);
+        }
+      }
+
+      if (restSet != null) {
+        await appConfigNotifier.setDefaultRestTime(restSet);
+      }
+      if (restExercise != null) {
+        await appConfigNotifier.setDefaultRestBetweenExercises(restExercise);
+      }
+
+      final current = ref.read(appConfigProvider);
+      return {
+        'defaultExerciseSets': current.defaultExerciseSets,
+        'defaultExerciseReps': current.defaultExerciseReps,
+        'defaultRestTime': current.defaultRestTime,
+        'defaultRestBetweenExercises': current.defaultRestBetweenExercises,
+      };
+    },
   );
   final contextAggregator = AnalyticsAggregator(
     analyticsRepo: analyticsRepo,
     historyRepo: historyRepo,
     streakRepo: streakRepo,
+    measurementRepo: measurementRepo,
+    onboardingState: onboardingState,
+    accountTier: userProfile?.accountTier.name ?? 'free',
   );
 
   return AICoachServiceImpl(
@@ -113,11 +171,16 @@ AICoachServiceImpl aiCoachService(Ref ref) {
 /// AI Chat provider
 @riverpod
 class AIChat extends _$AIChat {
-  // Memory limit: keep last 10 messages (design requirement line 585)
-  static const int _maxMessages = 10;
+  // Memory limit: keep more context for immersive conversations.
+  static const int _maxMessages = aiCoachContextWindowMaxMessages;
+  static const String _historyBoxName = 'ai_chat_history';
+  static const Duration _historyTtl = Duration(days: 30);
+  static const Duration _sendMessageTimeout = Duration(seconds: 90);
 
   // Lock to prevent concurrent message sends
   bool _isSending = false;
+  bool _restoreStarted = false;
+  Box<dynamic>? _historyBox;
 
   // Track if auto-sync has been performed this session
   bool _hasAutoSynced = false;
@@ -131,11 +194,122 @@ class AIChat extends _$AIChat {
     // Schedule auto-sync in background (non-blocking)
     // This ensures analytics data is up-to-date when user opens AI Coach
     _scheduleAutoSync();
+    _restorePersistedConversation();
 
     // Initialize with disclaimer message
-    return AIChatState(
-      messages: [_buildDisclaimerMessage()],
-    );
+    return AIChatState(messages: [_buildDisclaimerMessage()]);
+  }
+
+  Future<String?> _resolveCurrentUserId() async {
+    // Fast-path: FirebaseAuth user is usually available immediately.
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+    if (firebaseUser != null) return firebaseUser.uid;
+
+    final cachedUser = ref.read(currentUserProvider).value;
+    if (cachedUser != null) return cachedUser.uid;
+
+    try {
+      final user = await ref
+          .read(currentUserProvider.future)
+          .timeout(const Duration(seconds: 4));
+      return user?.uid ?? FirebaseAuth.instance.currentUser?.uid;
+    } catch (_) {
+      return FirebaseAuth.instance.currentUser?.uid;
+    }
+  }
+
+  Future<Box<dynamic>> _openHistoryBox() async {
+    _historyBox ??= await Hive.openBox(_historyBoxName);
+    return _historyBox!;
+  }
+
+  String _historyKeyForUser(String userId) => 'messages_$userId';
+
+  Future<void> _restorePersistedConversation() async {
+    if (_restoreStarted) return;
+    _restoreStarted = true;
+
+    try {
+      final userId = await _resolveCurrentUserId();
+      if (userId == null) return;
+
+      final box = await _openHistoryBox();
+      final raw = box.get(_historyKeyForUser(userId));
+      if (raw is! List) return;
+
+      final cutoff = DateTime.now().subtract(_historyTtl);
+      final restored = <AIMessage>[];
+
+      for (final item in raw) {
+        if (item is! Map) continue;
+        try {
+          final message = AIMessage.fromJson(Map<String, dynamic>.from(item));
+          if (message.timestamp.isAfter(cutoff)) {
+            restored.add(message);
+          }
+        } catch (_) {
+          // Ignore corrupted entries and continue restoring what is valid.
+        }
+      }
+
+      if (restored.isEmpty) {
+        return;
+      }
+
+      final hasDisclaimer = restored.any((m) => m.id == 'disclaimer');
+      final normalized = <AIMessage>[
+        if (!hasDisclaimer) _buildDisclaimerMessage(),
+        ...restored.where((m) => m.id != 'disclaimer'),
+      ];
+
+      final trimmed = normalized.length > _maxMessages
+          ? normalized.sublist(normalized.length - _maxMessages)
+          : normalized;
+
+      state = state.copyWith(messages: trimmed);
+    } catch (e, stackTrace) {
+      await FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AI Coach conversation restore failed',
+        fatal: false,
+      );
+    }
+  }
+
+  Future<void> _persistConversation(List<AIMessage> messages) async {
+    final userId = await _resolveCurrentUserId();
+    if (userId == null) return;
+
+    try {
+      final box = await _openHistoryBox();
+      final serializable = messages.map((m) => m.toJson()).toList();
+      await box.put(_historyKeyForUser(userId), serializable);
+    } catch (e, stackTrace) {
+      await FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AI Coach conversation persist failed',
+        fatal: false,
+      );
+    }
+  }
+
+  Future<void> _clearPersistedConversation() async {
+    final userId = await _resolveCurrentUserId();
+    if (userId == null) return;
+
+    try {
+      final box = await _openHistoryBox();
+      await box.delete(_historyKeyForUser(userId));
+    } catch (e, stackTrace) {
+      await FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AI Coach persisted conversation clear failed',
+        fatal: false,
+      );
+    }
   }
 
   /// Schedule automatic analytics sync in background
@@ -150,11 +324,10 @@ class AIChat extends _$AIChat {
     // Run in background after a short delay to not block UI
     Future.delayed(const Duration(milliseconds: 500), () async {
       try {
-        final userAsync = await ref.read(currentUserProvider.future);
-        final userId = userAsync?.uid;
+        final userId = await _resolveCurrentUserId();
 
         if (userId == null) {
-          debugPrint('[AI_CHAT] ⏭️ Skipping auto-sync: user not authenticated');
+          _debugLog('[AI_CHAT] ⏭️ Skipping auto-sync: user not authenticated');
           return;
         }
 
@@ -172,16 +345,16 @@ class AIChat extends _$AIChat {
         );
 
         if (result.wasNeeded) {
-          debugPrint(
+          _debugLog(
             '[AI_CHAT] ✅ Auto-sync completed: '
             '${result.workoutsSynced} workouts, ${result.exercisesSynced} exercises',
           );
         } else {
-          debugPrint('[AI_CHAT] ✅ Analytics already up-to-date');
+          _debugLog('[AI_CHAT] ✅ Analytics already up-to-date');
         }
       } catch (e, stackTrace) {
         // Don't crash the app if auto-sync fails - just log it
-        debugPrint('[AI_CHAT] ⚠️ Auto-sync failed (non-critical): $e');
+        _debugLog('[AI_CHAT] ⚠️ Auto-sync failed (non-critical): $e');
         await FirebaseCrashlytics.instance.recordError(
           e,
           stackTrace,
@@ -198,43 +371,40 @@ class AIChat extends _$AIChat {
 
     // Prevent concurrent sends (race condition protection)
     if (_isSending) {
-      debugPrint('[AI_CHAT] ⚠️ Message send already in progress, ignoring');
+      _debugLog('[AI_CHAT] ⚠️ Message send already in progress, ignoring');
+      state = state.copyWith(
+        error:
+            'Attendi la risposta in corso prima di inviare un nuovo messaggio.',
+      );
       return;
     }
     _isSending = true;
 
     try {
-      // 1. Check rate limit
-      final rateLimit = await ref.read(aIRateLimitProvider.future);
-      if (rateLimit.isBlocked) {
-        state = state.copyWith(
-          error: rateLimit.message,
-        );
-        return;
-      }
-
-      // 2. Add user message immediately
+      // 1. Add user message immediately
       final userMessage = AIMessage(
         id: const Uuid().v4(),
         role: MessageRole.user,
         content: text.trim(),
         timestamp: DateTime.now(),
       );
+      final previousMessages = state.messages;
 
       state = state.copyWith(
-        messages: [...state.messages, userMessage],
+        messages: [...previousMessages, userMessage],
         isLoading: true,
         error: null,
       );
+      unawaited(_persistConversation(state.messages));
 
-      // 3. Get current user ID
-      final userAsync = await ref.read(currentUserProvider.future);
-      final userId = userAsync?.uid;
+      // 2. Get current user ID
+      final userId = await _resolveCurrentUserId();
 
       if (userId == null) {
         state = state.copyWith(
           isLoading: false,
-          error: 'Devi essere autenticato per usare l\'AI Coach',
+          error:
+              'Sessione non disponibile al momento. Riprova tra qualche secondo.',
         );
         return;
       }
@@ -246,7 +416,9 @@ class AIChat extends _$AIChat {
       // Usage: "/debug panca" to inspect analytics for "panca"
       if (trimmedText.startsWith('/debug ')) {
         final query = text.trim().substring(7).trim();
-        final debugOutput = await debugAnalytics(query.isEmpty ? 'panca' : query);
+        final debugOutput = await debugAnalytics(
+          query.isEmpty ? 'panca' : query,
+        );
 
         // Add debug response as AI message
         final debugMessage = AIMessage(
@@ -260,6 +432,7 @@ class AIChat extends _$AIChat {
           messages: [...state.messages, debugMessage],
           isLoading: false,
         );
+        unawaited(_persistConversation(state.messages));
         return;
       }
 
@@ -282,18 +455,26 @@ class AIChat extends _$AIChat {
           messages: [...state.messages, resyncMessage],
           isLoading: false,
         );
+        unawaited(_persistConversation(state.messages));
         return;
       }
 
-      // 4. Call AI service with real user ID
+      // 3. Call AI service with real user ID
       final service = ref.read(aiCoachServiceProvider);
-      final response = await service.sendMessage(
-        userMessage: text.trim(),
-        conversationHistory: state.messages,
-        userId: userId,
-      );
+      final response = await service
+          .sendMessage(
+            userMessage: text.trim(),
+            conversationHistory: previousMessages,
+            userId: userId,
+          )
+          .timeout(
+            _sendMessageTimeout,
+            onTimeout: () => throw TimeoutException(
+              'AI Coach response timeout after ${_sendMessageTimeout.inSeconds}s',
+            ),
+          );
 
-      // 5. Add AI response
+      // 4. Add AI response
       final aiMessage = AIMessage(
         id: const Uuid().v4(),
         role: MessageRole.assistant,
@@ -304,7 +485,7 @@ class AIChat extends _$AIChat {
         isDisambiguation: response.isDisambiguation,
       );
 
-      // 6. Apply memory limit: keep last 10 messages (design requirement line 585)
+      // 5. Apply memory limit: keep last 10 messages (design requirement line 585)
       final updatedMessages = [...state.messages, aiMessage];
       final trimmedMessages = updatedMessages.length > _maxMessages
           ? updatedMessages.sublist(updatedMessages.length - _maxMessages)
@@ -313,9 +494,11 @@ class AIChat extends _$AIChat {
       state = state.copyWith(
         messages: trimmedMessages,
         isLoading: false,
+        quota: response.quota,
       );
+      unawaited(_persistConversation(trimmedMessages));
 
-      // 7. Track analytics (design requirement: docs/AI_COACH_DESIGN.md line 671-681)
+      // 6. Track analytics (design requirement: docs/AI_COACH_DESIGN.md line 671-681)
       await FirebaseAnalytics.instance.logEvent(
         name: 'ai_coach_message_sent',
         parameters: {
@@ -323,11 +506,44 @@ class AIChat extends _$AIChat {
           'function_calls_used': response.toolCall != null ? 1 : 0,
           'has_tool_call': response.toolCall != null ? 1 : 0,
           'tool_name': response.toolCall?.name ?? 'none',
+          'quota_remaining': response.quota?.remainingToday ?? -1,
+          'quota_limit': response.quota?.limitPerDay ?? -1,
         },
       );
+    } on TimeoutException catch (e, stackTrace) {
+      await FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AI Coach response timeout',
+        information: [
+          'timeoutSeconds: ${_sendMessageTimeout.inSeconds}',
+          'messageLength: ${text.trim().length}',
+        ],
+      );
 
-      // 8. Increment rate limit counter
-      await ref.read(aIRateLimitProvider.notifier).incrementUsage();
+      state = state.copyWith(
+        isLoading: false,
+        error:
+            'La risposta sta impiegando troppo tempo. Riprova tra qualche secondo.',
+      );
+      unawaited(_persistConversation(state.messages));
+    } on AICoachException catch (e, stackTrace) {
+      await FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'AI Coach backend error',
+        information: [
+          'code: ${e.code}',
+          'technicalMessage: ${e.technicalMessage}',
+        ],
+      );
+
+      state = state.copyWith(
+        isLoading: false,
+        error: e.userMessage,
+        quota: e.quota ?? state.quota,
+      );
+      unawaited(_persistConversation(state.messages));
     } catch (e, stackTrace) {
       await FirebaseCrashlytics.instance.recordError(
         e,
@@ -339,6 +555,7 @@ class AIChat extends _$AIChat {
         isLoading: false,
         error: 'Errore durante l\'invio del messaggio. Riprova.',
       );
+      unawaited(_persistConversation(state.messages));
     } finally {
       _isSending = false;
     }
@@ -348,7 +565,10 @@ class AIChat extends _$AIChat {
   void clearMessages() {
     state = AIChatState(
       messages: [_buildDisclaimerMessage()],
+      quota: state.quota,
     );
+    unawaited(_clearPersistedConversation());
+    unawaited(_persistConversation(state.messages));
   }
 
   /// Build disclaimer message shown on first load
@@ -370,7 +590,7 @@ class AIChat extends _$AIChat {
 - Suggerimenti basati su scienza dello sport
 - Motivazione e supporto
 
-🔒 **Privacy**: Le tue chat NON vengono salvate.
+🔒 **Privacy**: Le tue chat vengono salvate solo in locale sul dispositivo.
 
 Chiedimi pure! 💪
 ''',
@@ -390,8 +610,7 @@ Chiedimi pure! 💪
   /// ```
   Future<String> debugAnalytics(String exerciseQuery) async {
     try {
-      final userAsync = await ref.read(currentUserProvider.future);
-      final userId = userAsync?.uid;
+      final userId = await _resolveCurrentUserId();
 
       if (userId == null) {
         return '❌ User not authenticated';
@@ -459,6 +678,12 @@ Chiedimi pure! 💪
       return buffer.toString();
     } catch (e) {
       return '❌ **Errore durante la ri-sincronizzazione:**\n\n$e';
+    }
+  }
+
+  void _debugLog(String message) {
+    if (kDebugMode) {
+      debugPrint(message);
     }
   }
 }

@@ -7,6 +7,7 @@
 /// **Feature**: AI Coach
 library;
 
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_quota.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
 
 /// AI Coach service interface
@@ -35,13 +36,14 @@ abstract class AICoachService {
 
 /// Response from AI service
 class AIServiceResponse {
-
   const AIServiceResponse({
     required this.content,
     this.toolCall,
     this.suggestions,
     this.isDisambiguation = false,
+    this.quota,
   });
+
   /// AI-generated text content
   final String content;
 
@@ -53,4 +55,7 @@ class AIServiceResponse {
 
   /// Whether suggestions are for disambiguation (multiple matching exercises)
   final bool isDisambiguation;
+
+  /// Latest daily quota snapshot from backend.
+  final AIQuota? quota;
 }

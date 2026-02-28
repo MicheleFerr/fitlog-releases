@@ -19,6 +19,7 @@ class AIInputBar extends StatefulWidget {
     super.key,
     required this.onSend,
     this.onTextChanged,
+    this.onFieldTap,
     this.isLoading = false,
   });
 
@@ -26,6 +27,9 @@ class AIInputBar extends StatefulWidget {
 
   /// Called when input text changes (for smart suggestions)
   final void Function(String text)? onTextChanged;
+
+  /// Called when the text field is tapped (useful for auto-scroll to bottom)
+  final VoidCallback? onFieldTap;
 
   final bool isLoading;
 
@@ -51,12 +55,13 @@ class _AIInputBarState extends State<AIInputBar> {
   }
 
   void _onTextChanged() {
-    final hasText = _controller.text.trim().isNotEmpty;
+    final text = _controller.text;
+    final hasText = text.trim().isNotEmpty;
     if (hasText != _hasText) {
       setState(() => _hasText = hasText);
     }
     // Notify parent for smart suggestions
-    widget.onTextChanged?.call(_controller.text);
+    widget.onTextChanged?.call(text);
   }
 
   void _handleSend() {
@@ -73,10 +78,7 @@ class _AIInputBarState extends State<AIInputBar> {
       decoration: BoxDecoration(
         color: context.colors.surface,
         border: Border(
-          top: BorderSide(
-            color: context.colors.outlineVariant,
-            width: 1,
-          ),
+          top: BorderSide(color: context.colors.outlineVariant, width: 1),
         ),
       ),
       child: Padding(
@@ -92,8 +94,11 @@ class _AIInputBarState extends State<AIInputBar> {
               child: TextField(
                 controller: _controller,
                 enabled: !widget.isLoading,
-                maxLines: null,
+                maxLines: 5,
+                minLines: 1,
+                textInputAction: TextInputAction.newline,
                 textCapitalization: TextCapitalization.sentences,
+                onTap: widget.onFieldTap,
                 decoration: InputDecoration(
                   hintText: context.l10n.aiCoachInputHint,
                   border: OutlineInputBorder(
@@ -104,7 +109,7 @@ class _AIInputBarState extends State<AIInputBar> {
                     vertical: AppSpacing.sm,
                   ),
                 ),
-                onSubmitted: (_) => _handleSend(),
+                // Send via button only — Enter inserts newline
               ),
             ),
             const SizedBox(width: AppSpacing.sm),

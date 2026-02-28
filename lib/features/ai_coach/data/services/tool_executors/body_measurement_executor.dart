@@ -164,7 +164,7 @@ class BodyMeasurementExecutor {
           });
         }
 
-        return _savePendingMeasurement(userId, pending);
+        return await _savePendingMeasurement(userId, pending);
       }
 
       // Handle Italian decimal separator (comma → dot) and parse
@@ -222,7 +222,7 @@ class BodyMeasurementExecutor {
             (pending.value - value).abs() < 0.0001 &&
             pending.unit == unit &&
             (pending.notes ?? '') == (notes ?? '')) {
-          return _savePendingMeasurement(userId, pending);
+          return await _savePendingMeasurement(userId, pending);
         }
       }
 

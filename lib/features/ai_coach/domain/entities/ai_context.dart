@@ -61,10 +61,13 @@ sealed class AIContext with _$AIContext {
   String toPromptString() {
     final buffer = StringBuffer();
     buffer.writeln('## User Context');
+    buffer.writeln('- Tier: $userTier');
     buffer.writeln('- Streak: $currentStreak days');
 
     if (lastWorkout != null) {
-      final hoursAgo = DateTime.now().difference(lastWorkout!.completedAt).inHours;
+      final hoursAgo = DateTime.now()
+          .difference(lastWorkout!.completedAt)
+          .inHours;
       buffer.writeln('- Last workout: ${lastWorkout!.name} (${hoursAgo}h ago)');
     } else {
       buffer.writeln('- Last workout: Never');
@@ -82,7 +85,7 @@ sealed class AIContext with _$AIContext {
       buffer.writeln('- Experience: $experienceLevel');
     }
     if (fitnessGoal != null) {
-      buffer.writeln('- Goal: $fitnessGoal');
+      buffer.writeln('- Goal: ${fitnessGoal!.replaceAll('|', ', ')}');
     }
 
     return buffer.toString();

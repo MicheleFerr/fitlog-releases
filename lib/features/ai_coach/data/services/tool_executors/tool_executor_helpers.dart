@@ -639,16 +639,23 @@ void debugLog(String message) {
 }
 
 /// Helper to record errors to Crashlytics with a reason.
+///
+/// Silently ignores errors if Crashlytics is not initialized (e.g. in tests).
 Future<void> recordToolError(
   Object error,
   StackTrace stackTrace, {
   required String reason,
 }) async {
-  await FirebaseCrashlytics.instance.recordError(
-    error,
-    stackTrace,
-    reason: reason,
-  );
+  try {
+    await FirebaseCrashlytics.instance.recordError(
+      error,
+      stackTrace,
+      reason: reason,
+    );
+  } catch (_) {
+    // Crashlytics may not be fully initialized in test/development environments.
+    // Errors are still visible in logs via the executor's catch block.
+  }
 }
 
 /// Encode an error result for a tool.

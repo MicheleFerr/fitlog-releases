@@ -17,7 +17,7 @@ part 'ai_rate_limit_provider.g.dart';
 /// Rate limit provider
 @riverpod
 class AIRateLimit extends _$AIRateLimit {
-  static const int _dailyLimit = 999999; // No practical limit (single-user testing)
+  static const int _dailyLimit = 20; // Free tier limit
   static const String _boxName = 'ai_rate_limit';
 
   late Box<dynamic> _box;
