@@ -20,6 +20,7 @@
 | Document | Purpose | Audience |
 |----------|---------|----------|
 | [`CLAUDE.md`](../CLAUDE.md) | **PROJECT RULES** - Must read first (includes code patterns & dev rules) | All developers |
+| [`FEATURES_REFERENCE.md`](FEATURES_REFERENCE.md) | **ALL 38 FEATURES** - Architecture, key files, purpose per feature | All developers |
 | [`BRAND_GUIDELINES.md`](BRAND_GUIDELINES.md) | **BRAND IDENTITY** - Colori, tipografia, icone, spacing, componenti | All developers |
 | [`BETA_LAUNCH_CHECKLIST.md`](BETA_LAUNCH_CHECKLIST.md) | Beta launch readiness checklist | All developers |
 | [`USER_PERSONAS.md`](USER_PERSONAS.md) | 5 user personas for UX decisions | All developers |
@@ -128,16 +129,29 @@ Includes:
 
 ## 🔍 Feature Map
 
-| Feature | Status | Key Files | Documentation |
-|---------|--------|-----------|-----------------|
-| **AI Coach Documents** | ✅ Backend Complete | `lib/features/ai_coach/` + Next.js API | [`AI_COACH_DOCUMENTS_IMPLEMENTATION.md`](AI_COACH_DOCUMENTS_IMPLEMENTATION.md) |
-| **Template Cloud Sync** | ✅ Complete | `lib/features/workout/data/services/` | [`TEMPLATE_CLOUD_SYNC_DOCUMENTATION.md`](TEMPLATE_CLOUD_SYNC_DOCUMENTATION.md) |
-| **Onboarding** | ✅ Complete | `lib/features/onboarding/` | [`ONBOARDING_COMPLETE_REFERENCE.md`](ONBOARDING_COMPLETE_REFERENCE.md) |
-| **Workouts** | 🟢 Active | `lib/features/workout/` | See code + tests |
-| **Analytics** | ✅ P1 UX Complete | `lib/features/analytics/` | [`../IMPLEMENTATION_PLAN_P1.md`](../IMPLEMENTATION_PLAN_P1.md) + [`research/`](research/) |
-| **AI Coach** | 🟢 Active | `lib/features/ai_coach/` | See code + tests |
-| **Health Sync** | 🟢 Active | `lib/features/health_sync/` | See code + tests |
-| **Settings** | 🟢 Active | `lib/features/settings/` | See code + tests |
+> Full reference for all 38 features: [`FEATURES_REFERENCE.md`](FEATURES_REFERENCE.md)
+
+| Feature | Status | Documentation |
+|---------|--------|---------------|
+| **AI Coach** | ✅ Complete | [`AI_COACH_DOCUMENTS_IMPLEMENTATION.md`](AI_COACH_DOCUMENTS_IMPLEMENTATION.md) |
+| **Analytics** | ✅ P1 Complete | [`../IMPLEMENTATION_PLAN_P1.md`](../IMPLEMENTATION_PLAN_P1.md) |
+| **Auth** | 🟢 Active | [`FEATURES_REFERENCE.md#auth`](FEATURES_REFERENCE.md#auth) |
+| **Body Measurements** | ✅ GDPR Complete | [`Privacy Policy`](../legal/PRIVACY_POLICY.md#appendix-body-measurements) |
+| **Chat** | 🟢 Active | [`FEATURES_REFERENCE.md#chat`](FEATURES_REFERENCE.md#chat) |
+| **Exercise Database** | ✅ Complete | [`design/EXERCISE_POPULARITY_RANKING.md`](design/EXERCISE_POPULARITY_RANKING.md) |
+| **Health Sync** | 🟢 Active | [`FEATURES_REFERENCE.md`](FEATURES_REFERENCE.md) |
+| **History** | 🟢 Active | [`FEATURES_REFERENCE.md#history`](FEATURES_REFERENCE.md#history) |
+| **Onboarding** | ✅ Complete | [`ONBOARDING_COMPLETE_REFERENCE.md`](ONBOARDING_COMPLETE_REFERENCE.md) |
+| **Predictive Balance** | 🟢 Active | [`FEATURES_REFERENCE.md#predictive-balance`](FEATURES_REFERENCE.md#predictive-balance) |
+| **Progress Photos** | 🟢 Active | [`FEATURES_REFERENCE.md#progress-photos`](FEATURES_REFERENCE.md#progress-photos) |
+| **Recovery Insight** | 🟢 Active | [`FEATURES_REFERENCE.md#recovery-insight`](FEATURES_REFERENCE.md#recovery-insight) |
+| **Scheduling** | 🟢 Active | [`FEATURES_REFERENCE.md#scheduling`](FEATURES_REFERENCE.md#scheduling) |
+| **Settings** | 🟢 Active | [`FEATURES_REFERENCE.md`](FEATURES_REFERENCE.md) |
+| **Strength Standards** | 🟢 Active | [`FEATURES_REFERENCE.md#strength-standards`](FEATURES_REFERENCE.md#strength-standards) |
+| **Stress Index** | 🟢 Active | [`FEATURES_REFERENCE.md#stress-index`](FEATURES_REFERENCE.md#stress-index) |
+| **Template Cloud Sync** | ✅ Complete | [`TEMPLATE_CLOUD_SYNC_DOCUMENTATION.md`](TEMPLATE_CLOUD_SYNC_DOCUMENTATION.md) |
+| **Workout** | 🟢 Active | [`FEATURES_REFERENCE.md`](FEATURES_REFERENCE.md) |
+| **Workout Templates** | 🟢 Active | [`FEATURES_REFERENCE.md`](FEATURES_REFERENCE.md) |
 
 ---
 
@@ -335,6 +349,6 @@ When adding documentation:
 
 ---
 
-**Last Updated**: 2026-02-20
+**Last Updated**: 2026-02-28
 
 For questions, refer to [`CLAUDE.md`](../CLAUDE.md) or git log.
