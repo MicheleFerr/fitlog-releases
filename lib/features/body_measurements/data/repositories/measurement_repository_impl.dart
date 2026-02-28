@@ -492,6 +492,69 @@ class MeasurementRepositoryImpl
     return right(null);
   }
 
+  @override
+  Future<Either<MeasurementFailure, int>> cleanupExpiredMeasurements(
+    String userId, {
+    int retentionDays = 30,
+  }) async {
+    try {
+      final cutoffDate = DateTime.now().subtract(
+        Duration(days: retentionDays),
+      );
+
+      final collection = _getMeasurementsCollection(userId);
+
+      // Query soft-deleted measurements past retention period
+      final snapshot = await collection
+          .where('isDeleted', isEqualTo: true)
+          .where('deletedAt', isLessThan: Timestamp.fromDate(cutoffDate))
+          .get();
+
+      if (snapshot.docs.isEmpty) {
+        return right(0);
+      }
+
+      // Batch delete (Firestore limit: 500 per batch)
+      var deleted = 0;
+      var batch = _firestore.batch();
+      var batchCount = 0;
+      const batchLimit = 450;
+
+      for (final doc in snapshot.docs) {
+        batch.delete(doc.reference);
+        batchCount++;
+        deleted++;
+
+        if (batchCount >= batchLimit) {
+          await batch.commit();
+          batch = _firestore.batch();
+          batchCount = 0;
+        }
+      }
+
+      if (batchCount > 0) {
+        await batch.commit();
+      }
+
+      // Also cleanup local storage
+      for (final doc in snapshot.docs) {
+        await _localDatasource.deleteMeasurement(
+          userId: userId,
+          measurementId: doc.id,
+        );
+      }
+
+      return right(deleted);
+    } catch (e) {
+      return left(
+        StorageFailure(
+          message: 'Failed to cleanup expired measurements: $e',
+          error: e,
+        ),
+      );
+    }
+  }
+
   // ========== Private Helper Methods ==========
 
   /// Map shared Failure to MeasurementFailure

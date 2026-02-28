@@ -260,6 +260,23 @@ abstract class MeasurementRepository {
   Future<Either<MeasurementFailure, DateTime?>> getLastSyncTimestamp(
     String userId,
   );
+
+  /// Cleanup expired soft-deleted measurements
+  ///
+  /// **GDPR Retention Policy**: Permanently deletes measurements
+  /// that were soft-deleted more than [retentionDays] ago.
+  ///
+  /// Parameters:
+  /// - [userId]: Firebase Auth UID
+  /// - [retentionDays]: Days to retain after soft-delete (default: 30)
+  ///
+  /// Returns:
+  /// - Right(int): Number of permanently deleted measurements
+  /// - Left(StorageFailure): Cleanup failed
+  Future<Either<MeasurementFailure, int>> cleanupExpiredMeasurements(
+    String userId, {
+    int retentionDays = 30,
+  });
 }
 
 /// SyncResult - Result of health platform synchronization

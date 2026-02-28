@@ -181,6 +181,78 @@ European Union
 
 By using GymBro TrackLog, you consent to this Privacy Policy. If you disagree with any part of this policy, please discontinue use of the application.
 
+## Appendix: Body Measurements — GDPR Data Processing
+
+### Data Collected
+
+| Field | Type | Purpose | Encrypted |
+|-------|------|---------|-----------|
+| Metric Type | enum | Identify measurement category | No (needed for queries) |
+| Value | double | User's body measurement | Yes (AES-256-GCM) |
+| Unit | string | Unit of measurement (kg, cm, %) | Yes (AES-256-GCM) |
+| Timestamp | datetime | When measurement was taken | No (needed for sorting) |
+| Source | enum | Origin: manual, HealthKit, etc. | Yes (AES-256-GCM) |
+| Notes | string | Optional user notes | Yes (AES-256-GCM) |
+
+### Metric Groups & Consent
+
+Body measurements use **granular, just-in-time consent** (GDPR Article 7):
+
+- **Essential** (6 metrics): Weight, Body Fat, Height, Lean Mass, BMI, BMR — requested during onboarding
+- **Measurements** (14 metrics): Circumferences (neck, chest, waist, etc.) — requested on first use
+- **Vitals** (3 metrics): Body Temp, Water Mass, Bone Mass — requested on first use
+
+Each group requires **explicit opt-in**. Default state is `notAsked` (no data collected until user consents).
+
+### Encryption
+
+All sensitive values are encrypted with **AES-256-GCM** before storage:
+- **Local storage**: Encrypted Hive database
+- **Cloud storage**: Encrypted Firestore documents
+- **Key management**: Device Secure Enclave (iOS) / Keystore (Android)
+- **Key rotation**: Every 90 days
+
+### Retention Policy
+
+- **Active measurements**: Retained while user account is active
+- **Soft-deleted measurements**: Retained 30 days, then permanently deleted
+- **Expired soft-deletes**: Cleaned up automatically via `cleanupExpiredMeasurements`
+- **Audit logs**: Retained 2 years after account deletion (GDPR Article 30)
+
+### User Rights
+
+| Right | Implementation | How to Exercise |
+|-------|---------------|-----------------|
+| **Access** (Art. 15) | View all measurements in-app | Settings > Privacy > View Data |
+| **Portability** (Art. 20) | `MeasurementExportService` exports JSON | Settings > Privacy > Export Data |
+| **Erasure** (Art. 17) | `MeasurementDeletionService` cascade-deletes all data | Settings > Privacy > Delete Data |
+| **Rectification** (Art. 16) | Edit any measurement in-app | Tap measurement > Edit |
+| **Restriction** (Art. 18) | Revoke consent per metric group | Settings > Privacy > Consent |
+| **Withdraw Consent** (Art. 7.3) | Revoke anytime, measurements scheduled for deletion | Settings > Privacy > Consent |
+
+### Export Format
+
+Data export (Right to Portability) produces a JSON file containing:
+- All measurements (value, unit, type, timestamp, source, notes)
+- Consent record (groups, granted dates, version)
+- Export metadata (timestamp, format version, GDPR article reference)
+
+### Firestore Security Rules
+
+- Users can only read/write their **own** measurements
+- Consent records are **never deletable** via client (audit trail preserved)
+- Rate limits: max 100 measurements/day, max 10 consent changes/day
+- Audit logs are **immutable** (append-only, no updates or deletes)
+
+### Audit Trail (GDPR Article 30)
+
+All data operations are logged with:
+- Action type, timestamp (UTC), affected metrics
+- IP address (masked: `192.168.1.***`)
+- Tamper-evident hash chain (SHA-256)
+
+---
+
 ## Appendix A: Data Categories (GDPR Article 13/14)
 
 | Category | Examples | Purpose | Legal Basis |
