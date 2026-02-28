@@ -207,6 +207,11 @@ void main() {
   });
 
   group('WorkoutTutorialState Integration Tests', () {
+    setUp(() {
+      WorkoutTutorialNotifier.clearCacheForTesting();
+      SharedPreferences.setMockInitialValues({});
+    });
+
     test('hasCompletedTutorial flag is persistent', () async {
       // Setup mock SharedPreferences
       SharedPreferences.setMockInitialValues({

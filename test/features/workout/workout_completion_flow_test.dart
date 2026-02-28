@@ -1,45 +1,72 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
+import 'package:gymbro_flutter_new/core/services/analytics/mock_analytics_service.dart';
+import 'package:gymbro_flutter_new/features/auth/data/auth_service.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_providers_shared.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 
 // Mock classes
-class MockHiveWorkoutDataSource extends Mock {}
-class MockFirebaseFirestore extends Mock {}
-class MockFirebaseAuth extends Mock {}
+class MockAuthService extends Mock implements AuthService {}
+
+class _TestAppConfigNotifier extends AppConfigNotifier {
+  @override
+  AppConfig build() => const AppConfig();
+}
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('Workout Completion Flow', () {
     late ProviderContainer container;
+    late MockAuthService mockAuthService;
+    late MockAnalyticsService mockAnalyticsService;
 
     setUp(() {
-      container = ProviderContainer();
+      mockAuthService = MockAuthService();
+      mockAnalyticsService = MockAnalyticsService();
+
+      when(() => mockAuthService.currentUser).thenReturn(null);
+
+      container = ProviderContainer(
+        overrides: [
+          analyticsServiceProvider.overrideWithValue(mockAnalyticsService),
+          authServiceProvider.overrideWithValue(mockAuthService),
+          appConfigProvider.overrideWith(_TestAppConfigNotifier.new),
+        ],
+      );
     });
 
     tearDown(() {
       container.dispose();
     });
 
-    test('CRITICO: completeWorkout should save to Firestore', () async {
+    test('CRITICO: completeWorkout should mark workout as completed', () async {
       // Arrange
       final notifier = container.read(currentWorkoutProvider.notifier);
       notifier.createWorkout('Test Workout');
-      notifier.addExercise(Exercise(
+      final exercise = Exercise(
         name: 'Squat',
         type: ExerciseType.single,
         category: ExerciseCategory.legs,
         sets: [ExerciseSet(setNumber: 1, weight: 100, reps: 10)],
-      ));
-      notifier.startWorkout();
+      );
+      final workout = container.read(currentWorkoutProvider);
+      expect(workout, isNotNull);
 
       // Act
-      notifier.completeWorkout();
+      final completedWorkout = workout!
+          .addExercise(exercise)
+          .startWorkout()
+          .completeWorkout();
 
       // Assert
-      final workout = container.read(currentWorkoutProvider);
-      expect(workout?.isCompleted, true);
-      expect(workout?.endTime, isNotNull);
+      expect(completedWorkout.isCompleted, true);
+      expect(completedWorkout.endTime, isNotNull);
 
       // TODO: Verificare salvataggio Firestore
       // TODO: Verificare aggiornamento stats utente

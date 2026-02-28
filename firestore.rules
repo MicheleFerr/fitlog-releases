@@ -25,6 +25,99 @@ service cloud.firestore {
       return request.auth.token.email != null && request.auth.token.email == docEmail;
     }
 
+    // Validate coach permission payload to prevent forged privilege flags
+    function isValidCoachPermissions(permissions) {
+      return permissions is map
+        && permissions.keys().hasAll([
+          'canViewDashboard',
+          'canEditWorkout',
+          'canViewHealth',
+          'canViewMeasurements'
+        ])
+        && permissions.keys().hasOnly([
+          'canViewDashboard',
+          'canEditWorkout',
+          'canViewHealth',
+          'canViewMeasurements'
+        ])
+        && permissions.canViewDashboard is bool
+        && permissions.canEditWorkout is bool
+        && permissions.canViewHealth is bool
+        && permissions.canViewMeasurements is bool;
+    }
+
+    // Delegation checks with explicit active status and scoped permissions.
+    // Supports both legacy IDs (coachEmail_athleteEmail) and current IDs (coachId_athleteId).
+    function hasActiveDashboardDelegationById(delegationId) {
+      let delegationPath = /databases/$(database)/documents/coach_delegations/$(delegationId);
+      let delegation = get(delegationPath).data;
+      return exists(delegationPath)
+        && delegation.status == 'active'
+        && delegation.permissions.canViewDashboard == true;
+    }
+
+    function hasActiveEditWorkoutDelegationById(delegationId) {
+      let delegationPath = /databases/$(database)/documents/coach_delegations/$(delegationId);
+      let delegation = get(delegationPath).data;
+      return exists(delegationPath)
+        && delegation.status == 'active'
+        && delegation.permissions.canEditWorkout == true;
+    }
+
+    function hasCoachDashboardAccessByAthleteEmail(athleteEmail) {
+      return isAuthenticated()
+        && athleteEmail != null
+        && (
+          hasActiveDashboardDelegationById(request.auth.uid + '_' + athleteEmail)
+          || (
+            request.auth.token.email != null
+            && hasActiveDashboardDelegationById(request.auth.token.email + '_' + athleteEmail)
+          )
+        );
+    }
+
+    function hasCoachEditWorkoutAccessByAthleteEmail(athleteEmail) {
+      return isAuthenticated()
+        && athleteEmail != null
+        && (
+          hasActiveEditWorkoutDelegationById(request.auth.uid + '_' + athleteEmail)
+          || (
+            request.auth.token.email != null
+            && hasActiveEditWorkoutDelegationById(request.auth.token.email + '_' + athleteEmail)
+          )
+        );
+    }
+
+    // Coach can read athlete-private top-level profile only with active delegation.
+    function hasCoachDashboardAccessByUserId(userId) {
+      return isAuthenticated()
+        && userId != null
+        && (
+          hasActiveDashboardDelegationById(request.auth.uid + '_' + userId)
+          || (
+            request.auth.token.email != null
+            && exists(/databases/$(database)/documents/settings/$(userId))
+            && get(/databases/$(database)/documents/settings/$(userId)).data.email != null
+            && hasCoachDashboardAccessByAthleteEmail(get(/databases/$(database)/documents/settings/$(userId)).data.email)
+          )
+        );
+    }
+
+    // Coach can edit athlete workouts only with active delegation + edit permission.
+    function hasCoachEditWorkoutAccessByUserId(userId) {
+      return isAuthenticated()
+        && userId != null
+        && (
+          hasActiveEditWorkoutDelegationById(request.auth.uid + '_' + userId)
+          || (
+            request.auth.token.email != null
+            && exists(/databases/$(database)/documents/settings/$(userId))
+            && get(/databases/$(database)/documents/settings/$(userId)).data.email != null
+            && hasCoachEditWorkoutAccessByAthleteEmail(get(/databases/$(database)/documents/settings/$(userId)).data.email)
+          )
+        );
+    }
+
     // ============================================================================
     // 🔐 GDPR-COMPLIANT BODY MEASUREMENTS HELPERS
     // ============================================================================
@@ -156,9 +249,9 @@ service cloud.firestore {
       allow update: if isAuthenticated() && (
         // Il proprietario può modificare
         isOwner(resource.data.userId) ||
-        // Altri possono solo votare o il sistema può aggiornare status
+        // Altri possono solo votare (status/trustScore gestiti lato server)
         (request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly(['upvotedBy', 'downvotedBy', 'upvotes', 'downvotes', 'updatedAt', 'status', 'trustScore']))
+          .hasOnly(['upvotedBy', 'downvotedBy', 'upvotes', 'downvotes', 'updatedAt']))
       );
       
       // Solo il proprietario può eliminare
@@ -171,16 +264,42 @@ service cloud.firestore {
       allow read: if true;
       
       // L'utente può creare/aggiornare le proprie statistiche
-      allow create: if isAuthenticated();
+      allow create: if isAuthenticated()
+        && request.auth.uid == userId
+        && request.resource.data.userId == request.auth.uid;
       allow update: if isAuthenticated() && (
         isOwner(userId) ||
-        // Permettiamo aggiornamenti di sistema per stats
+        // Permettiamo solo aggiornamenti di engagement non autorevoli
         request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly(['totalContributions', 'approvedContributions', 'totalUpvotes', 'totalDownvotes', 'badges', 'lastActivity'])
+          .hasOnly(['totalUpvotes', 'totalDownvotes', 'badges', 'lastActivity'])
       );
       
       // Nessuno può eliminare
       allow delete: if false;
+    }
+
+    // ============= PUBLIC COACH PROFILES (Coach code lookup) =============
+    match /coach_public_profiles/{coachId} {
+      // Authenticated users can find coach by code without accessing private /users docs
+      allow read: if isAuthenticated();
+
+      // Only coach owner can publish/update own coach code profile
+      allow create, update: if isOwner(coachId)
+        && request.resource.data.keys().hasAll([
+          'coachId',
+          'coachCode',
+          'coachEmail',
+          'coachName',
+          'updatedAt'
+        ])
+        && request.resource.data.coachId == coachId
+        && request.resource.data.coachCode is string
+        && request.resource.data.coachCode.size() == 6
+        && request.resource.data.coachEmail is string
+        && emailMatches(request.resource.data.coachEmail)
+        && request.resource.data.coachName is string;
+
+      allow delete: if isOwner(coachId) || isAdmin();
     }
     
     // ============= CONTRIBUTION REPORTS =============
@@ -229,9 +348,12 @@ service cloud.firestore {
       // ========================================
 
       // LIST (queries): Allow authenticated users to query templates
-      // This permits .where('userId', isEqualTo: uid).snapshots() listeners
-      // The query itself filters to only the user's own documents
-      allow list: if request.auth != null;
+      // Query results are still ownership/public constrained by rules.
+      allow list: if request.auth != null && (
+        ('userId' in resource.data && request.auth.uid == resource.data.userId) ||
+        ('coachId' in resource.data && request.auth.uid == resource.data.coachId) ||
+        ('isPublic' in resource.data && resource.data.isPublic == true)
+      );
 
       // GET (single document): User can read their own templates or public templates
       // IMPORTANT: Also allow reading non-existent documents (for existence checks before create)
@@ -324,7 +446,10 @@ service cloud.firestore {
       }
 
       // LIST: Coaches can list their own templates
-      allow list: if isAuthenticated();
+      allow list: if isAuthenticated() && (
+        resource.data.coachId == request.auth.uid ||
+        (resource.data.assignedTo != null && request.auth.uid in resource.data.assignedTo)
+      );
 
       // GET: Coach can read own template, athletes can read assigned templates
       allow get: if isAuthenticated() && (
@@ -353,22 +478,99 @@ service cloud.firestore {
       allow read: if request.auth != null &&
         (resource.data.userId == request.auth.uid ||
          resource.data.athleteId == request.auth.uid ||
-         resource.data.coachEmail == request.auth.token.email);
-      // Create: athlete or coach can create
-      allow create: if request.auth != null &&
-        (request.auth.uid == request.resource.data.userId ||
-         request.auth.uid == request.resource.data.athleteId ||
-         emailMatches(request.resource.data.coachEmail));
-      // Update: athlete or coach
-      allow update: if request.auth != null &&
-        (request.auth.uid == resource.data.userId ||
-         request.auth.uid == resource.data.athleteId ||
-         emailMatches(resource.data.coachEmail));
-      // Delete: athlete or coach
-      allow delete: if request.auth != null &&
-        (resource.data.userId == request.auth.uid ||
-         resource.data.athleteId == request.auth.uid ||
-         emailMatches(resource.data.coachEmail));
+         emailMatches(resource.data.coachEmail) ||
+         emailMatches(resource.data.athleteEmail));
+
+      // Create: strict validation to prevent forged delegations/escalation
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasAll([
+          'userId',
+          'athleteId',
+          'coachEmail',
+          'status',
+          'permissions',
+          'createdAt'
+        ])
+        && request.resource.data.userId is string
+        && request.resource.data.athleteId is string
+        && request.resource.data.coachEmail is string
+        && request.resource.data.status in ['pending', 'active', 'paused', 'ended']
+        && request.resource.data.createdAt is timestamp
+        && isValidCoachPermissions(request.resource.data.permissions)
+        && request.resource.data.userId == request.resource.data.athleteId
+        && (
+          // Coach invitation flow (legacy ID: coachEmail_athleteEmail)
+          (
+            emailMatches(request.resource.data.coachEmail)
+            && request.resource.data.status == 'pending'
+            && request.resource.data.athleteId == ''
+            && request.resource.data.userId == ''
+            && request.resource.data.athleteEmail is string
+            && delegationId == request.resource.data.coachEmail + '_' + request.resource.data.athleteEmail
+          )
+          ||
+          // Athlete link flow (new ID: coachId_athleteId)
+          (
+            request.resource.data.athleteId == request.auth.uid
+            && request.resource.data.userId == request.auth.uid
+            && request.resource.data.status == 'active'
+            && request.resource.data.coachId is string
+            && request.resource.data.athleteEmail is string
+            && emailMatches(request.resource.data.athleteEmail)
+            && delegationId == request.resource.data.coachId + '_' + request.auth.uid
+          )
+        );
+
+      // Update: constrained coach/athlete actions only
+      allow update: if request.auth != null && (
+        // Coach can update permissions/notes or end relationship
+        (
+          emailMatches(resource.data.coachEmail)
+          && request.resource.data.coachEmail == resource.data.coachEmail
+          && request.resource.data.userId == resource.data.userId
+          && request.resource.data.athleteId == resource.data.athleteId
+          && request.resource.data.athleteEmail == resource.data.athleteEmail
+          && isValidCoachPermissions(request.resource.data.permissions)
+          && (
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly(['permissions', 'coachNotes'])
+            || (
+              request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'endedAt'])
+              && request.resource.data.status == 'ended'
+            )
+          )
+        )
+        ||
+        // Athlete accepts invitation (pending -> active)
+        (
+          emailMatches(resource.data.athleteEmail)
+          && resource.data.status == 'pending'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'userId',
+            'athleteId',
+            'athleteName',
+            'athleteHasApp',
+            'status',
+            'connectedAt'
+          ])
+          && request.resource.data.userId == request.auth.uid
+          && request.resource.data.athleteId == request.auth.uid
+          && request.resource.data.status == 'active'
+          && request.resource.data.coachEmail == resource.data.coachEmail
+          && request.resource.data.permissions == resource.data.permissions
+        )
+        ||
+        // Athlete can end/decline relationship
+        (
+          (request.auth.uid == resource.data.userId ||
+           request.auth.uid == resource.data.athleteId ||
+           emailMatches(resource.data.athleteEmail))
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'endedAt'])
+          && request.resource.data.status == 'ended'
+        )
+      );
+
+      // Delete blocked to preserve relationship audit trail
+      allow delete: if false;
     }
 
     // ============= COACH NOTIFICATIONS =============
@@ -379,7 +581,7 @@ service cloud.firestore {
 
       // Permettere list/query per le proprie notifiche
       allow list: if request.auth != null &&
-        request.auth.token.email != null;
+        emailMatches(resource.data.coachEmail);
 
       // Solo l'atleta mittente può creare notifiche per il proprio coach
       // Validazione: l'email del mittente deve corrispondere all'utente autenticato
@@ -405,7 +607,7 @@ service cloud.firestore {
 
       // Permettere list/query per le proprie notifiche
       allow list: if request.auth != null &&
-        request.auth.token.email != null;
+        emailMatches(resource.data.athleteEmail);
 
       // Solo il coach mittente può creare notifiche per i propri atleti
       // Validazione: l'email del mittente deve corrispondere all'utente autenticato
@@ -448,7 +650,7 @@ service cloud.firestore {
       }
 
       // LIST: User can list their own conversations
-      allow list: if isAuthenticated();
+      allow list: if isAuthenticated() && request.auth.uid in resource.data.participants;
 
       // GET: User can read conversation they're part of
       allow get: if isAuthenticated() && (
@@ -525,26 +727,28 @@ service cloud.firestore {
     // ============= SESSION WORKOUTS - FIXED =============
     match /sessionWorkouts/{workoutId} {
       // Permetti list/query basate su email o userId
-      allow list: if request.auth != null;
+      allow list: if request.auth != null && (
+        emailMatches(resource.data.email) ||
+        request.auth.uid == resource.data.userId ||
+        request.auth.uid == resource.data.uid ||
+        (resource.data.userId != null &&
+         hasCoachDashboardAccessByUserId(resource.data.userId)) ||
+        (resource.data.userId == null &&
+         resource.data.email != null &&
+         hasCoachDashboardAccessByAthleteEmail(resource.data.email))
+      );
       
       allow read: if request.auth != null && (
         // Proprietario - safe email comparison (prevents null==null bypass)
         emailMatches(resource.data.email) ||
         request.auth.uid == resource.data.userId ||
         request.auth.uid == resource.data.uid ||
-        // Coach con delega - supporta sia userId che email
-        (request.auth.token.email != null && (
-          // Check con userId
-          (resource.data.userId != null &&
-           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.userId)) &&
-           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.userId)).data.permissions.canViewDashboard == true) ||
-          // Check con email dell'utente cercando nel documento settings
-          (resource.data.userId != null &&
-           exists(/databases/$(database)/documents/settings/$(resource.data.userId)) &&
-           get(/databases/$(database)/documents/settings/$(resource.data.userId)).data.email != null &&
-           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(resource.data.userId)).data.email)) &&
-           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(resource.data.userId)).data.email)).data.permissions.canViewDashboard == true)
-        ))
+        // Coach con delega attiva (supporta ID legacy e nuovi)
+        (resource.data.userId != null &&
+         hasCoachDashboardAccessByUserId(resource.data.userId)) ||
+        (resource.data.userId == null &&
+         resource.data.email != null &&
+         hasCoachDashboardAccessByAthleteEmail(resource.data.email))
       );
       
       allow create: if request.auth != null &&
@@ -561,18 +765,28 @@ service cloud.firestore {
     // ============= DROP SET ACTIVITY - MODIFICATO PER PERMETTERE UPDATE =============
     match /dropSetActivity/{activityId} {
       // Permetti list/query per utenti autenticati
-      allow list: if request.auth != null;
+      allow list: if request.auth != null && (
+        emailMatches(resource.data.email) ||
+        request.auth.uid == resource.data.userId ||
+        request.auth.uid == resource.data.uid ||
+        (resource.data.userId != null &&
+         hasCoachDashboardAccessByUserId(resource.data.userId)) ||
+        (resource.data.userId == null &&
+         resource.data.email != null &&
+         hasCoachDashboardAccessByAthleteEmail(resource.data.email))
+      );
       
       allow read: if request.auth != null && (
         // Proprietario
         emailMatches(resource.data.email) ||
         request.auth.uid == resource.data.userId ||
         request.auth.uid == resource.data.uid ||
-        // Coach con delega
-        (request.auth.token.email != null &&
+        // Coach con delega attiva
+        (resource.data.userId != null &&
+         hasCoachDashboardAccessByUserId(resource.data.userId)) ||
+        (resource.data.userId == null &&
          resource.data.email != null &&
-         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)) &&
-         get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true)
+         hasCoachDashboardAccessByAthleteEmail(resource.data.email))
       );
 
       allow create: if request.auth != null &&
@@ -595,18 +809,28 @@ service cloud.firestore {
     // ============= SUPERSET ACTIVITY =============
     match /supersetActivity/{activityId} {
       // Permetti list/query per utenti autenticati
-      allow list: if request.auth != null;
+      allow list: if request.auth != null && (
+        emailMatches(resource.data.email) ||
+        request.auth.uid == resource.data.userId ||
+        request.auth.uid == resource.data.uid ||
+        (resource.data.userId != null &&
+         hasCoachDashboardAccessByUserId(resource.data.userId)) ||
+        (resource.data.userId == null &&
+         resource.data.email != null &&
+         hasCoachDashboardAccessByAthleteEmail(resource.data.email))
+      );
       
       allow read: if request.auth != null && (
         // Proprietario
         emailMatches(resource.data.email) ||
         request.auth.uid == resource.data.userId ||
         request.auth.uid == resource.data.uid ||
-        // Coach con delega
-        (request.auth.token.email != null &&
+        // Coach con delega attiva
+        (resource.data.userId != null &&
+         hasCoachDashboardAccessByUserId(resource.data.userId)) ||
+        (resource.data.userId == null &&
          resource.data.email != null &&
-         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)) &&
-         get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true)
+         hasCoachDashboardAccessByAthleteEmail(resource.data.email))
       );
 
       allow create: if request.auth != null &&
@@ -622,18 +846,28 @@ service cloud.firestore {
     // ============= REST PAUSE ACTIVITY - MODIFICATO PER PERMETTERE UPDATE =============
     match /restPauseActivity/{activityId} {
       // Permetti list/query per utenti autenticati
-      allow list: if request.auth != null;
+      allow list: if request.auth != null && (
+        emailMatches(resource.data.email) ||
+        request.auth.uid == resource.data.userId ||
+        request.auth.uid == resource.data.uid ||
+        (resource.data.userId != null &&
+         hasCoachDashboardAccessByUserId(resource.data.userId)) ||
+        (resource.data.userId == null &&
+         resource.data.email != null &&
+         hasCoachDashboardAccessByAthleteEmail(resource.data.email))
+      );
       
       allow read: if request.auth != null && (
         // Proprietario
         emailMatches(resource.data.email) ||
         request.auth.uid == resource.data.userId ||
         request.auth.uid == resource.data.uid ||
-        // Coach con delega
-        (request.auth.token.email != null &&
+        // Coach con delega attiva
+        (resource.data.userId != null &&
+         hasCoachDashboardAccessByUserId(resource.data.userId)) ||
+        (resource.data.userId == null &&
          resource.data.email != null &&
-         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)) &&
-         get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true)
+         hasCoachDashboardAccessByAthleteEmail(resource.data.email))
       );
 
       allow create: if request.auth != null &&
@@ -658,12 +892,8 @@ service cloud.firestore {
       allow read: if request.auth != null && (
         // Proprietario
         request.auth.uid == userId ||
-        // Coach con delega - cerca l'email dell'utente nel documento settings
-        (request.auth.token.email != null &&
-         exists(/databases/$(database)/documents/settings/$(userId)) &&
-         get(/databases/$(database)/documents/settings/$(userId)).data.email != null &&
-         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
-         get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
+        // Coach con delega attiva
+        hasCoachDashboardAccessByUserId(userId)
       );
 
       allow write: if request.auth != null && request.auth.uid == userId;
@@ -673,12 +903,8 @@ service cloud.firestore {
         allow read: if request.auth != null && (
           // Proprietario
           request.auth.uid == userId ||
-          // Coach con delega
-          (request.auth.token.email != null &&
-           exists(/databases/$(database)/documents/settings/$(userId)) &&
-           get(/databases/$(database)/documents/settings/$(userId)).data.email != null &&
-           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
-           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
+          // Coach con delega attiva
+          hasCoachDashboardAccessByUserId(userId)
         );
 
         allow create, update: if request.auth != null && request.auth.uid == userId;
@@ -691,9 +917,11 @@ service cloud.firestore {
       allow read: if request.auth != null && (
         emailMatches(resource.data.utente) ||
         request.auth.uid == resource.data.userId ||
-        (request.auth.token.email != null &&
+        (resource.data.userId != null &&
+         hasCoachDashboardAccessByUserId(resource.data.userId)) ||
+        (resource.data.userId == null &&
          resource.data.utente != null &&
-         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.utente)))
+         hasCoachDashboardAccessByAthleteEmail(resource.data.utente))
       );
 
       allow create: if request.auth != null &&
@@ -703,10 +931,11 @@ service cloud.firestore {
       allow update: if request.auth != null && (
         emailMatches(resource.data.utente) ||
         request.auth.uid == resource.data.userId ||
-        (request.auth.token.email != null &&
+        (resource.data.userId != null &&
+         hasCoachEditWorkoutAccessByUserId(resource.data.userId)) ||
+        (resource.data.userId == null &&
          resource.data.utente != null &&
-         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.utente)) &&
-         get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.utente)).data.permissions.canEditWorkout == true)
+         hasCoachEditWorkoutAccessByAthleteEmail(resource.data.utente))
       );
 
       allow delete: if request.auth != null &&
@@ -716,7 +945,11 @@ service cloud.firestore {
 
     // ============= USERS =============
     match /users/{userId} {
-      allow read: if request.auth != null;
+      allow read: if request.auth != null && (
+        request.auth.uid == userId ||
+        isAdmin() ||
+        hasCoachDashboardAccessByUserId(userId)
+      );
       allow create: if request.auth != null && request.auth.uid == userId;
       allow update: if request.auth != null
         && request.auth.uid == userId
@@ -771,12 +1004,8 @@ service cloud.firestore {
         allow read: if request.auth != null && (
           // Proprietario
           request.auth.uid == userId ||
-          // Coach con delega
-          (request.auth.token.email != null &&
-           exists(/databases/$(database)/documents/settings/$(userId)) &&
-           get(/databases/$(database)/documents/settings/$(userId)).data.email != null &&
-           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
-           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
+          // Coach con delega attiva
+          hasCoachDashboardAccessByUserId(userId)
         );
 
         // ⚠️ NEW WRITES BLOCKED - Use /bodyMeasurements/{userId}/measurements/ instead
@@ -792,12 +1021,8 @@ service cloud.firestore {
         allow read: if request.auth != null && (
           // Proprietario
           request.auth.uid == userId ||
-          // Coach con delega
-          (request.auth.token.email != null &&
-           exists(/databases/$(database)/documents/settings/$(userId)) &&
-           get(/databases/$(database)/documents/settings/$(userId)).data.email != null &&
-           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
-           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
+          // Coach con delega attiva
+          hasCoachDashboardAccessByUserId(userId)
         );
 
         allow create: if request.auth != null &&
@@ -832,10 +1057,8 @@ service cloud.firestore {
       // Only owner or authorized coach can read settings
       allow read: if request.auth != null && (
         request.auth.uid == userId ||
-        // Coach delegation: allow if coach has valid delegation
-        (request.auth.token.email != null &&
-         resource.data.email != null &&
-         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)))
+        // Coach delegation: active status + dashboard permission required
+        hasCoachDashboardAccessByUserId(userId)
       );
 
       allow write: if request.auth != null && request.auth.uid == userId;
@@ -865,11 +1088,7 @@ service cloud.firestore {
       match /weightHistory/{entryId} {
         allow read: if request.auth != null && (
           request.auth.uid == userId ||
-          (request.auth.token.email != null &&
-           exists(/databases/$(database)/documents/settings/$(userId)) &&
-           get(/databases/$(database)/documents/settings/$(userId)).data.email != null &&
-           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
-           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
+          hasCoachDashboardAccessByUserId(userId)
         );
         
         allow create, update, delete: if request.auth != null && request.auth.uid == userId;
@@ -878,11 +1097,7 @@ service cloud.firestore {
       match /weightGoalHistory/{entryId} {
         allow read: if request.auth != null && (
           request.auth.uid == userId ||
-          (request.auth.token.email != null &&
-           exists(/databases/$(database)/documents/settings/$(userId)) &&
-           get(/databases/$(database)/documents/settings/$(userId)).data.email != null &&
-           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
-           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
+          hasCoachDashboardAccessByUserId(userId)
         );
         
         allow create, update, delete: if request.auth != null && request.auth.uid == userId;
@@ -1125,19 +1340,12 @@ service cloud.firestore {
         // Proprietario
         request.auth.uid == resource.data.userId ||
         emailMatches(resource.data.email) ||
-        // Coach con delega
-        (request.auth.token.email != null && (
-          // Check con email dell'utente
-          (resource.data.email != null &&
-           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)) &&
-           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true) ||
-          // Check con userId cercando email in settings
-          (resource.data.userId != null &&
-           exists(/databases/$(database)/documents/settings/$(resource.data.userId)) &&
-           get(/databases/$(database)/documents/settings/$(resource.data.userId)).data.email != null &&
-           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(resource.data.userId)).data.email)) &&
-           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(resource.data.userId)).data.email)).data.permissions.canViewDashboard == true)
-        ))
+        // Coach con delega attiva
+        (resource.data.userId != null &&
+         hasCoachDashboardAccessByUserId(resource.data.userId)) ||
+        (resource.data.userId == null &&
+         resource.data.email != null &&
+         hasCoachDashboardAccessByAthleteEmail(resource.data.email))
       );
       
       allow create: if request.auth != null &&
@@ -1580,9 +1788,8 @@ service cloud.firestore {
     // Added: 2025-12-06 - Fix for PR not being saved after workout completion
     // Fixed: 2025-12-10 - Split read into list/get for query support
     match /personalRecords/{recordId} {
-      // LIST: Allow queries - Firestore queries can't check resource.data
-      // Query must be constrained by userId client-side
-      allow list: if isAuthenticated();
+      // LIST: Query results are constrained to owner documents by rules.
+      allow list: if isAuthenticated() && resource.data.userId == request.auth.uid;
       // GET: User can read their own single PR document
       allow get: if isAuthenticated() && resource.data.userId == request.auth.uid;
       // User can create their own PRs
@@ -1793,7 +2000,7 @@ service cloud.firestore {
       allow read: if true;
 
       // Only system/admin can write
-      allow write: if isAuthenticated();
+      allow write: if isAdmin();
     }
 
     // Ice Breakers - Public ice breaker questions for chat
@@ -1806,7 +2013,7 @@ service cloud.firestore {
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['timesUsed', 'lastUsed']);
 
       // Only system/admin can create/delete
-      allow create, delete: if isAuthenticated();
+      allow create, delete: if isAdmin();
     }
 
     // ==========================================
