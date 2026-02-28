@@ -362,7 +362,7 @@ exports.createTemplate = (0, rateLimiterV1_1.withRateLimit)(async (request) => {
  * @param request - CallableRequest (empty data)
  * @returns Current quota status
  */
-exports.getTemplateQuota = (0, https_1.onCall)(async (request) => {
+exports.getTemplateQuota = (0, https_1.onCall)({ enforceAppCheck: true }, async (request) => {
     if (!request.auth) {
         throw new https_1.HttpsError('unauthenticated', 'User must be authenticated');
     }

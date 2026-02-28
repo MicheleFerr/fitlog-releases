@@ -109,7 +109,8 @@ exports.RATE_LIMITS = {
  * ```
  */
 function withRateLimit(handler, config) {
-    return (0, https_1.onCall)(async (request) => {
+    var _a;
+    return (0, https_1.onCall)(Object.assign(Object.assign({ enforceAppCheck: (_a = config.enforceAppCheck) !== null && _a !== void 0 ? _a : true }, (config.secrets ? { secrets: config.secrets } : {})), (config.timeoutSeconds ? { timeoutSeconds: config.timeoutSeconds } : {})), async (request) => {
         // Apply rate limiting BEFORE calling original handler
         await rateLimiter(request, config);
         // Call original handler if rate limit passed
@@ -196,11 +197,12 @@ async function checkRateLimit(trackingKey, identifier, maxRequests, windowMs, er
         if (error instanceof https_1.HttpsError) {
             throw error;
         }
-        // Fail-open: Log error but don't block request
-        console.error('❌ Rate limit check failed (allowing request)', {
+        // Fail-closed on infrastructure issues (secure-by-default).
+        console.error('❌ Rate limit check failed (blocking request)', {
             identifier,
             error: error instanceof Error ? error.message : String(error),
         });
+        throw new https_1.HttpsError('unavailable', 'Request temporarily blocked: security throttling service unavailable.');
     }
 }
 // ========================================

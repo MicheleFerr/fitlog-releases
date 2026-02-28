@@ -449,6 +449,7 @@ export const monitorSystemHealth = onSchedule(
  */
 export const exportUserNotificationData = onCall(
   {
+    enforceAppCheck: true,
     timeoutSeconds: 300,
     memory: '512MiB',
   },
@@ -495,6 +496,7 @@ export const exportUserNotificationData = onCall(
  */
 export const deleteUserNotificationData = onCall(
   {
+    enforceAppCheck: true,
     timeoutSeconds: 300,
     memory: '512MiB',
   },
@@ -546,6 +548,7 @@ interface MarketingCampaignData {
  */
 export const sendMarketingCampaign = onCall<MarketingCampaignData>(
   {
+    enforceAppCheck: true,
     timeoutSeconds: 540,
     memory: '1GiB',
   },
@@ -602,6 +605,7 @@ interface SystemAnalyticsData {
  */
 export const getSystemAnalytics = onCall<SystemAnalyticsData>(
   {
+    enforceAppCheck: true,
     timeoutSeconds: 120,
     memory: '512MiB',
   },

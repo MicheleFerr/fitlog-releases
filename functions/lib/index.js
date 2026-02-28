@@ -37,7 +37,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onTemplateCreated = exports.generatePopularityBundle = exports.gdprCleanupAuditLogs = exports.gdprGetAuditLog = exports.gdprAuditUserData = exports.gdprLogAdminAccess = exports.gdprHardDeletePhotos = exports.gdprCheckInactiveUsers = exports.getTemplateQuota = exports.createTemplate = exports.enforceConsentRateLimit = exports.enforceMeasurementRateLimit = exports.cleanupExpiredRateLimits = exports.rejectContribution = exports.approveContribution = exports.checkExpiredSubscriptions = exports.verifyPremiumPurchase = exports.setAccountTier = exports.checkAdminStatus = exports.setInitialAdmin = exports.revokeAdminRole = exports.setAdminRole = void 0;
+exports.aiCoachChatCompletion = exports.onTemplateCreated = exports.generatePopularityBundle = exports.gdprCleanupAuditLogs = exports.gdprGetAuditLog = exports.gdprAuditUserData = exports.gdprLogAdminAccess = exports.gdprHardDeletePhotos = exports.gdprCheckInactiveUsers = exports.getTemplateQuota = exports.createTemplate = exports.enforceConsentRateLimit = exports.enforceMeasurementRateLimit = exports.cleanupExpiredRateLimits = exports.rejectContribution = exports.approveContribution = exports.checkExpiredSubscriptions = exports.verifyPremiumPurchase = exports.setAccountTier = exports.checkAdminStatus = exports.setInitialAdmin = exports.revokeAdminRole = exports.setAdminRole = void 0;
 const admin = __importStar(require("firebase-admin"));
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -127,4 +127,10 @@ var generatePopularityBundle_1 = require("./scheduled/generatePopularityBundle")
 Object.defineProperty(exports, "generatePopularityBundle", { enumerable: true, get: function () { return generatePopularityBundle_1.generatePopularityBundle; } });
 var onTemplateCreated_1 = require("./triggers/onTemplateCreated");
 Object.defineProperty(exports, "onTemplateCreated", { enumerable: true, get: function () { return onTemplateCreated_1.onTemplateCreated; } });
+// ========================================
+// 🤖 AI Coach (Server-Side OpenRouter Proxy)
+// ========================================
+// Keeps OpenRouter key on backend and enforces App Check + rate limits.
+var chatCompletion_1 = require("./ai_coach/chatCompletion");
+Object.defineProperty(exports, "aiCoachChatCompletion", { enumerable: true, get: function () { return chatCompletion_1.aiCoachChatCompletion; } });
 //# sourceMappingURL=index.js.map

@@ -68,7 +68,7 @@ function ensureAppleReceiptConfigured() {
 /**
  * Verify premium purchase from iOS or Android
  */
-exports.verifyPremiumPurchase = (0, https_1.onCall)(async (request) => {
+exports.verifyPremiumPurchase = (0, https_1.onCall)({ enforceAppCheck: true }, async (request) => {
     // Verify authenticated user
     if (!request.auth) {
         throw new https_1.HttpsError('unauthenticated', 'User must be authenticated to verify purchase');

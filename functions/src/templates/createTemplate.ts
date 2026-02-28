@@ -429,7 +429,7 @@ export const createTemplate = withRateLimit<CreateTemplateData>(
  * @param request - CallableRequest (empty data)
  * @returns Current quota status
  */
-export const getTemplateQuota = onCall(async (request) => {
+export const getTemplateQuota = onCall({ enforceAppCheck: true }, async (request) => {
   if (!request.auth) {
     throw new HttpsError(
       'unauthenticated',

@@ -47,7 +47,7 @@ interface PurchaseData {
 /**
  * Verify premium purchase from iOS or Android
  */
-export const verifyPremiumPurchase = onCall<PurchaseData>(async (request) => {
+export const verifyPremiumPurchase = onCall<PurchaseData>({ enforceAppCheck: true }, async (request) => {
   // Verify authenticated user
   if (!request.auth) {
     throw new HttpsError(

@@ -112,3 +112,11 @@ export {
 export {
   onTemplateCreated,
 } from './triggers/onTemplateCreated';
+
+// ========================================
+// 🤖 AI Coach (Server-Side OpenRouter Proxy)
+// ========================================
+// Keeps OpenRouter key on backend and enforces App Check + rate limits.
+export {
+  aiCoachChatCompletion,
+} from './ai_coach/chatCompletion';

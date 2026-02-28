@@ -475,7 +475,7 @@ exports.setInitialAdmin = (0, https_1.onRequest)({ secrets: ['ADMIN_SETUP_TOKEN'
  * }
  * ```
  */
-exports.checkAdminStatus = (0, https_1.onCall)(async (request) => {
+exports.checkAdminStatus = (0, https_1.onCall)({ enforceAppCheck: true }, async (request) => {
     if (!request.auth) {
         throw new https_1.HttpsError('unauthenticated', 'User must be authenticated');
     }

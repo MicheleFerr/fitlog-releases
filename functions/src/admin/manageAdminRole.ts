@@ -520,7 +520,7 @@ export const setInitialAdmin = onRequest(
  * }
  * ```
  */
-export const checkAdminStatus = onCall(async (request) => {
+export const checkAdminStatus = onCall({ enforceAppCheck: true }, async (request) => {
   if (!request.auth) {
     throw new HttpsError(
       'unauthenticated',

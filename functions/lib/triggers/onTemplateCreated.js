@@ -2,7 +2,7 @@
 /**
  * Increment Exercise Popularity - Firestore Trigger
  *
- * Trigger: onCreate on /workout_templates/{templateId}
+ * Trigger: onCreate on /workoutTemplates/{templateId}
  * Purpose: Increment popularity count for each exercise in template
  *
  * When user saves a template, this increments the global usage counter
@@ -59,7 +59,7 @@ const admin = __importStar(require("firebase-admin"));
  *
  * Cost: ~$0.011/month (10k templates × avg 5 exercises × $0.108/100k writes)
  */
-exports.onTemplateCreated = (0, firestore_1.onDocumentCreated)('workout_templates/{templateId}', async (event) => {
+exports.onTemplateCreated = (0, firestore_1.onDocumentCreated)('workoutTemplates/{templateId}', async (event) => {
     const snapshot = event.data;
     if (!snapshot) {
         firebase_functions_1.logger.warn('No data in snapshot');

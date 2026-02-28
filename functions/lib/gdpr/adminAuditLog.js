@@ -59,7 +59,7 @@ const db = admin.firestore();
  * @param targetUserId - User ID being accessed
  * @param details - Additional details about the access
  */
-exports.gdprLogAdminAccess = (0, https_1.onCall)(async (request) => {
+exports.gdprLogAdminAccess = (0, https_1.onCall)({ enforceAppCheck: true }, async (request) => {
     var _a, _b;
     const data = request.data;
     // Verify admin authentication
@@ -144,7 +144,7 @@ exports.gdprAuditUserData = (0, firestore_1.onDocumentWritten)('users/{userId}',
  *
  * For GDPR Art. 15 (Right of Access) - users can request info about who accessed their data
  */
-exports.gdprGetAuditLog = (0, https_1.onCall)(async (request) => {
+exports.gdprGetAuditLog = (0, https_1.onCall)({ enforceAppCheck: true }, async (request) => {
     const data = request.data;
     // Verify authentication
     if (!request.auth) {

@@ -41,7 +41,7 @@ interface AdminAuditEntry {
  * @param targetUserId - User ID being accessed
  * @param details - Additional details about the access
  */
-export const gdprLogAdminAccess = onCall(async (request) => {
+export const gdprLogAdminAccess = onCall({ enforceAppCheck: true }, async (request) => {
   const data = request.data as {
     action: string;
     targetUserId?: string;
@@ -148,7 +148,7 @@ export const gdprAuditUserData = onDocumentWritten('users/{userId}', async (even
  *
  * For GDPR Art. 15 (Right of Access) - users can request info about who accessed their data
  */
-export const gdprGetAuditLog = onCall(async (request) => {
+export const gdprGetAuditLog = onCall({ enforceAppCheck: true }, async (request) => {
   const data = request.data as { userId: string };
 
   // Verify authentication

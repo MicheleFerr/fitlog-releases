@@ -41,6 +41,15 @@ export interface RateLimitConfig {
 
   /** Custom error message */
   errorMessage?: string;
+
+  /** Enforce Firebase App Check token validation (secure-by-default) */
+  enforceAppCheck?: boolean;
+
+  /** Optional runtime secrets to inject in Cloud Function environment */
+  secrets?: string[];
+
+  /** Optional Cloud Function timeout (seconds) */
+  timeoutSeconds?: number;
 }
 
 /**
@@ -107,13 +116,20 @@ export function withRateLimit<T = any, R = any>(
   handler: OnCallHandler<T, R>,
   config: RateLimitConfig
 ) {
-  return onCall<T>(async (request) => {
-    // Apply rate limiting BEFORE calling original handler
-    await rateLimiter(request, config);
+  return onCall<T>(
+    {
+      enforceAppCheck: config.enforceAppCheck ?? true,
+      ...(config.secrets ? { secrets: config.secrets } : {}),
+      ...(config.timeoutSeconds ? { timeoutSeconds: config.timeoutSeconds } : {}),
+    },
+    async (request) => {
+      // Apply rate limiting BEFORE calling original handler
+      await rateLimiter(request, config);
 
-    // Call original handler if rate limit passed
-    return handler(request);
-  });
+      // Call original handler if rate limit passed
+      return handler(request);
+    }
+  );
 }
 
 /**
@@ -227,11 +243,16 @@ async function checkRateLimit(
       throw error;
     }
 
-    // Fail-open: Log error but don't block request
-    console.error('❌ Rate limit check failed (allowing request)', {
+    // Fail-closed on infrastructure issues (secure-by-default).
+    console.error('❌ Rate limit check failed (blocking request)', {
       identifier,
       error: error instanceof Error ? error.message : String(error),
     });
+
+    throw new HttpsError(
+      'unavailable',
+      'Request temporarily blocked: security throttling service unavailable.'
+    );
   }
 }
 

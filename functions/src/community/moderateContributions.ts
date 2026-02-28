@@ -105,7 +105,7 @@ interface RejectContributionData {
  * }
  * ```
  */
-export const approveContribution = onCall<ApproveContributionData>(async (request) => {
+export const approveContribution = onCall<ApproveContributionData>({ enforceAppCheck: true }, async (request) => {
   // ========================================
   // 1. Authentication Check
   // ========================================
@@ -267,7 +267,7 @@ export const approveContribution = onCall<ApproveContributionData>(async (reques
  * }
  * ```
  */
-export const rejectContribution = onCall<RejectContributionData>(async (request) => {
+export const rejectContribution = onCall<RejectContributionData>({ enforceAppCheck: true }, async (request) => {
   // ========================================
   // 1. Authentication Check
   // ========================================

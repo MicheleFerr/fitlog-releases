@@ -130,7 +130,7 @@ async function updateUserStats(userId, status) {
  * }
  * ```
  */
-exports.approveContribution = (0, https_1.onCall)(async (request) => {
+exports.approveContribution = (0, https_1.onCall)({ enforceAppCheck: true }, async (request) => {
     // ========================================
     // 1. Authentication Check
     // ========================================
@@ -259,7 +259,7 @@ exports.approveContribution = (0, https_1.onCall)(async (request) => {
  * }
  * ```
  */
-exports.rejectContribution = (0, https_1.onCall)(async (request) => {
+exports.rejectContribution = (0, https_1.onCall)({ enforceAppCheck: true }, async (request) => {
     // ========================================
     // 1. Authentication Check
     // ========================================
