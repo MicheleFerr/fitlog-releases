@@ -26,8 +26,10 @@ import 'package:gymbro_flutter_new/features/ai_coach/data/services/tool_executor
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/tool_executors/recovery_stats_executor.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/tool_executors/search_executor.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/tool_executors/stats_profile_executor.dart';
-import 'package:gymbro_flutter_new/features/ai_coach/data/services/tool_executors/template_crud_executor.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/services/tool_executors/template_exercise_executor.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/tool_executors/template_generation_executor.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/services/tool_executors/template_query_executor.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/services/tool_executors/template_setup_executor.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/tool_executors/workout_suggestion_executor.dart';
 
 /// Thin dispatcher: routes tool calls to specialized executors.
@@ -101,7 +103,17 @@ class AIToolExecutor {
     }
 
     if (templateRepo != null) {
-      _templateCrud = TemplateCrudExecutor(
+      _templateQuery = TemplateQueryExecutor(
+        templateRepo: templateRepo!,
+        exerciseSearchService: this.exerciseSearchService,
+        locale: locale,
+      );
+      _templateExercise = TemplateExerciseExecutor(
+        templateRepo: templateRepo!,
+        exerciseSearchService: this.exerciseSearchService,
+        locale: locale,
+      );
+      _templateSetup = TemplateSetupExecutor(
         templateRepo: templateRepo!,
         exerciseSearchService: this.exerciseSearchService,
         locale: locale,
@@ -146,7 +158,9 @@ class AIToolExecutor {
   late final CoachingExecutor _coaching;
   late final TemplateGenerationExecutor _templateGeneration;
   BodyMeasurementExecutor? _bodyMeasurement;
-  TemplateCrudExecutor? _templateCrud;
+  TemplateQueryExecutor? _templateQuery;
+  TemplateExerciseExecutor? _templateExercise;
+  TemplateSetupExecutor? _templateSetup;
   late final SearchExecutor _search;
 
   /// Execute a tool by name with given arguments.
@@ -224,54 +238,54 @@ class AIToolExecutor {
 
       // ── Template CRUD ──
       case 'getUserTemplates':
-        if (_templateCrud == null) {
+        if (_templateQuery == null) {
           return Future.value(
             '{"error":"templateRepo not available","toolName":"getUserTemplates"}',
           );
         }
-        return _templateCrud!.getUserTemplates(arguments, userId);
+        return _templateQuery!.getUserTemplates(arguments, userId);
       case 'getTemplateDetails':
-        if (_templateCrud == null) {
+        if (_templateQuery == null) {
           return Future.value(
             '{"error":"templateRepo not available","toolName":"getTemplateDetails"}',
           );
         }
-        return _templateCrud!.getTemplateDetails(arguments, userId);
+        return _templateQuery!.getTemplateDetails(arguments, userId);
       case 'addExerciseToTemplate':
-        if (_templateCrud == null) {
+        if (_templateExercise == null) {
           return Future.value(
             '{"error":"templateRepo not available","toolName":"addExerciseToTemplate"}',
           );
         }
-        return _templateCrud!.addExerciseToTemplate(arguments, userId);
+        return _templateExercise!.addExerciseToTemplate(arguments, userId);
       case 'replaceExerciseInTemplate':
-        if (_templateCrud == null) {
+        if (_templateExercise == null) {
           return Future.value(
             '{"error":"templateRepo not available","toolName":"replaceExerciseInTemplate"}',
           );
         }
-        return _templateCrud!.replaceExerciseInTemplate(arguments, userId);
+        return _templateExercise!.replaceExerciseInTemplate(arguments, userId);
       case 'removeExerciseFromTemplate':
-        if (_templateCrud == null) {
+        if (_templateExercise == null) {
           return Future.value(
             '{"error":"templateRepo not available","toolName":"removeExerciseFromTemplate"}',
           );
         }
-        return _templateCrud!.removeExerciseFromTemplate(arguments, userId);
+        return _templateExercise!.removeExerciseFromTemplate(arguments, userId);
       case 'updateTemplateRestTime':
-        if (_templateCrud == null) {
+        if (_templateSetup == null) {
           return Future.value(
             '{"error":"templateRepo not available","toolName":"updateTemplateRestTime"}',
           );
         }
-        return _templateCrud!.updateTemplateRestTime(arguments, userId);
+        return _templateSetup!.updateTemplateRestTime(arguments, userId);
       case 'updateTemplateExerciseSetup':
-        if (_templateCrud == null) {
+        if (_templateSetup == null) {
           return Future.value(
             '{"error":"templateRepo not available","toolName":"updateTemplateExerciseSetup"}',
           );
         }
-        return _templateCrud!.updateTemplateExerciseSetup(arguments, userId);
+        return _templateSetup!.updateTemplateExerciseSetup(arguments, userId);
 
       // ── Search ──
       case 'searchExercises':
