@@ -59,6 +59,26 @@ All app icons and branding are **original designs** created for FitLog Pro.
 
 ---
 
+## Authentication Brand Logos
+
+### Google Sign-In Logo
+
+**File**: `assets/images/google_logo.svg`  
+**Source**: Google "G" logo (Wikimedia mirror of official brand asset)  
+**URL**: https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg  
+**Usage**: Login / registration buttons for Google authentication  
+**Trademark**: Google and the Google logo are trademarks of Google LLC.
+
+### Apple Sign-In Logo
+
+**File**: `assets/images/apple_logo.svg`  
+**Source**: Apple logo (Wikimedia mirror of official brand mark)  
+**URL**: https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg  
+**Usage**: Login / registration buttons for Apple authentication  
+**Trademark**: Apple and the Apple logo are trademarks of Apple Inc.
+
+---
+
 ## Third-Party Packages
 
 All Flutter/Dart packages are MIT, BSD, or Apache 2.0 licensed. See `flutter pub deps` for the complete list.
