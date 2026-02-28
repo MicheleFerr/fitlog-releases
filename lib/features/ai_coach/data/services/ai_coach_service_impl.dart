@@ -13,20 +13,38 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/analytics_aggregator.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/repositories/ai_chat_repository.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/exceptions/ai_coach_exception.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_safety_keywords.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_system_prompt.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_tool_definitions.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/services/ai_tool_executor.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_context.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_quota.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/services/ai_coach_service.dart';
 
 /// English indicators for language violation detection
 const _englishIndicators = [
-  'here is', 'here are', 'let me', 'i can help', 'based on',
-  'however', 'therefore', 'furthermore', 'in conclusion',
-  'workout', 'training', 'exercise', 'muscle', 'strength',
-  'should', 'could', 'would', 'the ', ' a ', ' an ',
+  'here is',
+  'here are',
+  'let me',
+  'i can help',
+  'based on',
+  'however',
+  'therefore',
+  'furthermore',
+  'in conclusion',
+  'workout',
+  'training',
+  'exercise',
+  'muscle',
+  'strength',
+  'should',
+  'could',
+  'would',
+  'the ',
+  ' a ',
+  ' an ',
 ];
 
 /// Implementation of AI Coach service
@@ -63,38 +81,58 @@ class AICoachServiceImpl implements AICoachService {
     required String userId,
   }) async {
     try {
-      debugPrint('[AI_COACH_SERVICE] 🚀 Starting sendMessage');
-      debugPrint('[AI_COACH_SERVICE] User: $userMessage');
+      _debugLog('[AI_COACH_SERVICE] 🚀 Starting sendMessage');
+      _debugLog(
+        '[AI_COACH_SERVICE] User message length: ${userMessage.length}',
+      );
 
       // 1. Safety check - block medical keywords
       final medicalBlock = _checkMedicalKeywords(userMessage);
       if (medicalBlock != null) {
-        debugPrint('[AI_COACH_SERVICE] 🚨 Medical keyword blocked');
+        _debugLog('[AI_COACH_SERVICE] 🚨 Medical keyword blocked');
         return AIServiceResponse(content: medicalBlock);
       }
 
       // 2. Build message list with context
-      final messages = await _buildMessages(userMessage, conversationHistory, userId);
-      debugPrint('[AI_COACH_SERVICE] 📝 Built ${messages.length} messages for AI');
+      final messages = await _buildMessages(
+        userMessage,
+        conversationHistory,
+        userId,
+      );
+      _debugLog(
+        '[AI_COACH_SERVICE] 📝 Built ${messages.length} messages for AI',
+      );
 
       // 3. Tool calling loop - max 3 iterations to reduce API costs
       // First request includes system prompt + context + history
       // Subsequent requests only include new messages (no system prompt repeat)
       final systemMessage = messages[0]; // Extract system prompt for reuse
-      var conversationMessages = messages.sublist(1); // History without system prompt
+      var conversationMessages = messages.sublist(
+        1,
+      ); // History without system prompt
 
       var iterations = 0;
       const maxIterations = 3; // Reduced from 5 to 3 for cost optimization
       List<String>? extractedSuggestions;
       bool extractedIsDisambiguation = false;
+      Map<String, double>? extractedMuscleHeatmap;
+      String? extractedUnderTrainedLabel;
+      String? extractedOverTrainedLabel;
+      Map<String, dynamic>? extractedTemplateActionCard;
+      AIQuota? latestQuota;
 
       while (iterations < maxIterations) {
-        debugPrint('[AI_COACH_SERVICE] 🔄 Iteration ${iterations + 1}/$maxIterations');
+        _debugLog(
+          '[AI_COACH_SERVICE] 🔄 Iteration ${iterations + 1}/$maxIterations',
+        );
 
         // Build request: system prompt only on first iteration, then conversation
         final requestMessages = iterations == 0
-          ? messages
-          : [systemMessage, ...conversationMessages]; // Reuse system message, no duplication
+            ? messages
+            : [
+                systemMessage,
+                ...conversationMessages,
+              ]; // Reuse system message, no duplication
 
         // Filter tools based on user message (optimization: reduce tokens)
         // CRITICAL: After 2 iterations, REMOVE tools to force a text response
@@ -103,29 +141,39 @@ class AICoachServiceImpl implements AICoachService {
             : _selectRelevantTools(userMessage);
 
         if (iterations >= 2) {
-          debugPrint('[AI_COACH_SERVICE] ⚠️ Iteration $iterations: Forcing text response (no tools)');
+          _debugLog(
+            '[AI_COACH_SERVICE] ⚠️ Iteration $iterations: Forcing text response (no tools)',
+          );
         } else {
-          debugPrint('[AI_COACH_SERVICE] 📋 Using ${relevantTools.length} relevant tools (of ${aiToolDefinitions.length})');
+          _debugLog(
+            '[AI_COACH_SERVICE] 📋 Using ${relevantTools.length} relevant tools (of ${aiToolDefinitions.length})',
+          );
         }
 
         // Call OpenRouter with filtered tool definitions
-        final response = await chatRepository.sendMessage(
+        final backendResponse = await chatRepository.sendMessage(
           model: _model,
           messages: requestMessages,
           tools: relevantTools.isNotEmpty ? relevantTools : null,
         );
+        latestQuota = backendResponse.quota ?? latestQuota;
+        final response = backendResponse.payload;
 
-        debugPrint('[AI_COACH_SERVICE] 📨 Got response: ${response.substring(0, response.length > 100 ? 100 : response.length)}...');
+        _debugLog(
+          '[AI_COACH_SERVICE] 📨 Got response: ${response.substring(0, response.length > 100 ? 100 : response.length)}...',
+        );
 
         // Check if AI wants to call tools
         if (response.startsWith('__TOOL_CALLS__:')) {
-          debugPrint('[AI_COACH_SERVICE] 🛠️ AI requested tool calls');
+          _debugLog('[AI_COACH_SERVICE] 🛠️ AI requested tool calls');
 
           // Extract and decode JSON tool calls (robust parsing)
           final toolCallsJsonStr = response.substring('__TOOL_CALLS__:'.length);
           final toolCallsJson = jsonDecode(toolCallsJsonStr) as List<dynamic>;
 
-          debugPrint('[AI_COACH_SERVICE] 🔧 Executing ${toolCallsJson.length} tool(s) in parallel');
+          _debugLog(
+            '[AI_COACH_SERVICE] 🔧 Executing ${toolCallsJson.length} tool(s) in parallel',
+          );
 
           // PERFORMANCE FIX: Execute tools in parallel with Future.wait
           // This reduces latency by ~60% when multiple tools are called
@@ -134,9 +182,12 @@ class AICoachServiceImpl implements AICoachService {
               try {
                 final toolCall = toolCallData as Map<String, dynamic>;
                 final toolName = toolCall['name'] as String? ?? 'unknown';
-                final args = toolCall['arguments'] as Map<String, dynamic>? ?? {};
+                final args =
+                    toolCall['arguments'] as Map<String, dynamic>? ?? {};
 
-                debugPrint('[AI_COACH_SERVICE] 🔨 Calling tool: $toolName with args: $args');
+                _debugLog(
+                  '[AI_COACH_SERVICE] 🔨 Calling tool: $toolName with args: $args',
+                );
 
                 // Execute tool with user context
                 final result = await toolExecutor.executeTool(
@@ -145,24 +196,53 @@ class AICoachServiceImpl implements AICoachService {
                   userId: userId,
                 );
 
-                debugPrint('[AI_COACH_SERVICE] ✅ Tool result: $result');
+                _debugLog('[AI_COACH_SERVICE] ✅ Tool result: $result');
 
                 // Extract suggestions and disambiguation from tool result
                 List<String>? foundSuggestions;
                 bool foundDisambiguation = false;
+                Map<String, double>? foundMuscleHeatmap;
+                String? foundUnderTrainedLabel;
+                String? foundOverTrainedLabel;
+                Map<String, dynamic>? foundTemplateActionCard;
                 try {
                   final resultJson = jsonDecode(result) as Map<String, dynamic>;
                   if (resultJson.containsKey('suggestions')) {
-                    final suggestions = (resultJson['suggestions'] as List<dynamic>)
-                        .cast<String>();
+                    final suggestions =
+                        (resultJson['suggestions'] as List<dynamic>)
+                            .cast<String>();
                     if (suggestions.isNotEmpty) {
                       foundSuggestions = suggestions;
-                      debugPrint('[AI_COACH_SERVICE] 💡 Found suggestions: $suggestions');
+                      _debugLog(
+                        '[AI_COACH_SERVICE] 💡 Found suggestions: $suggestions',
+                      );
                     }
                   }
-                  if (resultJson.containsKey('disambiguation') && resultJson['disambiguation'] == true) {
+                  if (resultJson.containsKey('disambiguation') &&
+                      resultJson['disambiguation'] == true) {
                     foundDisambiguation = true;
-                    debugPrint('[AI_COACH_SERVICE] 🔀 Disambiguation detected');
+                    _debugLog('[AI_COACH_SERVICE] 🔀 Disambiguation detected');
+                  }
+
+                  if (toolName == 'analyzeMuscleBalance') {
+                    final heatmap = _extractHeatmapValues(resultJson);
+                    if (heatmap.isNotEmpty) {
+                      foundMuscleHeatmap = heatmap;
+                      foundUnderTrainedLabel =
+                          resultJson['underTrainedLabel'] as String?;
+                      foundOverTrainedLabel =
+                          resultJson['overTrainedLabel'] as String?;
+                      _debugLog(
+                        '[AI_COACH_SERVICE] 🧠 Heatmap data extracted: ${heatmap.length} muscle groups',
+                      );
+                    }
+                  }
+
+                  final inlineCard = resultJson['inlineCard'];
+                  if (inlineCard is Map && inlineCard.isNotEmpty) {
+                    foundTemplateActionCard = inlineCard.map(
+                      (key, value) => MapEntry(key.toString(), value),
+                    );
                   }
                 } catch (_) {
                   // Tool result wasn't valid JSON or had no suggestions - that's fine
@@ -173,9 +253,13 @@ class AICoachServiceImpl implements AICoachService {
                   'result': result,
                   'suggestions': foundSuggestions,
                   'isDisambiguation': foundDisambiguation,
+                  'muscleHeatmap': foundMuscleHeatmap,
+                  'underTrainedLabel': foundUnderTrainedLabel,
+                  'overTrainedLabel': foundOverTrainedLabel,
+                  'templateActionCard': foundTemplateActionCard,
                 };
               } catch (e) {
-                debugPrint('[AI_COACH_SERVICE] ❌ Error executing tool: $e');
+                _debugLog('[AI_COACH_SERVICE] ❌ Error executing tool: $e');
                 return {
                   'tool': 'unknown',
                   'result': 'Error: $e',
@@ -193,6 +277,19 @@ class AICoachServiceImpl implements AICoachService {
             }
             if (toolResult['isDisambiguation'] == true) {
               extractedIsDisambiguation = true;
+            }
+            final heatmap = toolResult['muscleHeatmap'] as Map<String, double>?;
+            if (heatmap != null && heatmap.isNotEmpty) {
+              extractedMuscleHeatmap = heatmap;
+              extractedUnderTrainedLabel =
+                  toolResult['underTrainedLabel'] as String?;
+              extractedOverTrainedLabel =
+                  toolResult['overTrainedLabel'] as String?;
+            }
+            final actionCard =
+                toolResult['templateActionCard'] as Map<String, dynamic>?;
+            if (actionCard != null && actionCard.isNotEmpty) {
+              extractedTemplateActionCard = actionCard;
             }
           }
 
@@ -212,7 +309,8 @@ class AICoachServiceImpl implements AICoachService {
             },
             {
               'role': 'user',
-              'content': '''Tool results:
+              'content':
+                  '''Tool results:
 $toolResultsMessage
 
 ---
@@ -220,45 +318,85 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
             },
           ];
 
-          debugPrint('[AI_COACH_SERVICE] 📊 Added tool results to conversation');
+          _debugLog('[AI_COACH_SERVICE] 📊 Added tool results to conversation');
           iterations++;
           continue; // Loop again with updated messages
         } else {
           // Got final text response
-          debugPrint('[AI_COACH_SERVICE] ✅ Got final text response');
+          _debugLog('[AI_COACH_SERVICE] ✅ Got final text response');
+
+          if (iterations < maxIterations - 1 &&
+              relevantTools.isNotEmpty &&
+              _looksLikeToolCallLeak(response)) {
+            _debugLog(
+              '[AI_COACH_SERVICE] ⚠️ Detected leaked tool-intent text, forcing one more tool-calling attempt',
+            );
+
+            final sanitizedLeak = _sanitizeResponse(response);
+            conversationMessages = [
+              ...conversationMessages,
+              {'role': 'assistant', 'content': sanitizedLeak},
+              {
+                'role': 'user',
+                'content':
+                    'ISTRUZIONE CRITICA: La tua risposta precedente menzionava nomi di funzioni interne. '
+                    'NON menzionare MAI nomi di tool/funzioni (getRecoveryData, suggestWorkout, ecc.) all\'utente. '
+                    'Se ti servono dati, CHIAMA il tool direttamente ora. '
+                    'Se hai già i dati, rispondi direttamente in italiano presentando le informazioni in modo naturale, '
+                    'come se le avessi già. NON dire "la funzione X ti fornirà...".',
+              },
+            ];
+            iterations++;
+            continue;
+          }
 
           final sanitized = _sanitizeResponse(response);
+          final responseWithActionCard = _appendInlineTemplateActionMarker(
+            sanitized,
+            cardPayload: extractedTemplateActionCard,
+          );
+          final enrichedResponse = _appendInlineHeatmapMarker(
+            responseWithActionCard,
+            heatmapValues: extractedMuscleHeatmap,
+            underTrainedLabel: extractedUnderTrainedLabel,
+            overTrainedLabel: extractedOverTrainedLabel,
+          );
 
           // Check for language violations (monitoring only, doesn't block)
-          if (_detectEnglishContent(sanitized)) {
-            await _logLanguageViolation(sanitized);
+          if (_detectEnglishContent(enrichedResponse)) {
+            await _logLanguageViolation(enrichedResponse);
           }
 
           return AIServiceResponse(
-            content: sanitized,
+            content: enrichedResponse,
             suggestions: extractedSuggestions,
             isDisambiguation: extractedIsDisambiguation,
+            quota: latestQuota,
           );
         }
       }
 
       // Max iterations reached - return best effort response
-      debugPrint('[AI_COACH_SERVICE] ⚠️ Max iterations reached ($iterations)');
+      _debugLog('[AI_COACH_SERVICE] ⚠️ Max iterations reached ($iterations)');
 
-      return const AIServiceResponse(
-        content: '⚠️ Ho avuto difficoltà a completare l\'analisi. I dati raccolti suggeriscono: verificare con uno specialista se hai domande sulla tua progressione.',
+      return AIServiceResponse(
+        content:
+            '⚠️ Non sono riuscito a completare l\'analisi in modo affidabile. Per continuare senza fermarci, dimmi: 1) obiettivo principale, 2) tempo disponibile oggi, 3) attrezzatura disponibile.',
         suggestions: null,
+        quota: latestQuota,
       );
+    } on AICoachException {
+      rethrow;
     } catch (e, stackTrace) {
       // Log to Crashlytics
-      debugPrint('[AI_COACH_SERVICE] ❌ Error: $e');
-      debugPrint('[AI_COACH_SERVICE] Stack: $stackTrace');
+      _debugLog('[AI_COACH_SERVICE] ❌ Error: $e');
+      _debugLog('[AI_COACH_SERVICE] Stack: $stackTrace');
 
       await FirebaseCrashlytics.instance.recordError(
         e,
         stackTrace,
         reason: 'AI Coach service error',
-        information: ['userMessage: $userMessage'],
+        information: ['userMessageLength: ${userMessage.length}'],
       );
 
       // Conservative fallback
@@ -277,18 +415,21 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
     final now = DateTime.now();
 
     // Check if cache is valid
-    final cacheValid = _cachedContext != null &&
+    final cacheValid =
+        _cachedContext != null &&
         _contextCachedAt != null &&
         _cachedUserId == userId &&
         now.difference(_contextCachedAt!) < _contextCacheDuration;
 
     if (cacheValid) {
-      debugPrint('[AI_COACH] 📦 Using cached context (age: ${now.difference(_contextCachedAt!).inSeconds}s)');
+      _debugLog(
+        '[AI_COACH] 📦 Using cached context (age: ${now.difference(_contextCachedAt!).inSeconds}s)',
+      );
       return _cachedContext!;
     }
 
     // Fetch fresh context
-    debugPrint('[AI_COACH] 🔄 Fetching fresh context');
+    _debugLog('[AI_COACH] 🔄 Fetching fresh context');
     _cachedContext = await contextAggregator.aggregateContext(userId: userId);
     _contextCachedAt = now;
     _cachedUserId = userId;
@@ -306,7 +447,7 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
     _cachedContext = null;
     _contextCachedAt = null;
     _cachedUserId = null;
-    debugPrint('[AI_COACH] 🗑️ Context cache invalidated');
+    _debugLog('[AI_COACH] 🗑️ Context cache invalidated');
   }
 
   /// Build messages for OpenRouter API
@@ -326,16 +467,17 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
       },
 
       // Conversation history (only visible messages)
-      ...history.where((m) => m.isVisible).map((m) => {
-            'role': m.role == MessageRole.user ? 'user' : 'assistant',
-            'content': m.content,
-          }),
+      ...history
+          .where((m) => m.isVisible)
+          .map(
+            (m) => {
+              'role': m.role == MessageRole.user ? 'user' : 'assistant',
+              'content': _stripInlineUiMarkers(m.content),
+            },
+          ),
 
       // New user message
-      {
-        'role': 'user',
-        'content': userMsg,
-      },
+      {'role': 'user', 'content': userMsg},
     ];
   }
 
@@ -351,38 +493,120 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
 
     // Remove JSON tool call blocks with nested objects
     // More robust pattern that handles nested braces
-    cleaned = cleaned.replaceAll(
-      RegExp(
-        r'\{\s*"(?:name|type|function)"[^}]*\{[^}]*\}[^}]*\}',
-        caseSensitive: false,
-        multiLine: true,
-      ),
-      '',
-    ).trim();
+    cleaned = cleaned
+        .replaceAll(
+          RegExp(
+            r'\{\s*"(?:name|type|function)"[^}]*\{[^}]*\}[^}]*\}',
+            caseSensitive: false,
+            multiLine: true,
+          ),
+          '',
+        )
+        .trim();
 
     // Fallback: remove any remaining simple JSON objects
-    cleaned = cleaned.replaceAll(
-      RegExp(
-        r'\{[^{}]*"(?:type|name|function|parameters)"[^{}]*\}',
-        caseSensitive: false,
-      ),
-      '',
-    ).trim();
+    cleaned = cleaned
+        .replaceAll(
+          RegExp(
+            r'\{[^{}]*"(?:type|name|function|parameters)"[^{}]*\}',
+            caseSensitive: false,
+          ),
+          '',
+        )
+        .trim();
 
     // Remove markdown code blocks containing JSON (```json ... ```)
-    cleaned = cleaned.replaceAll(
-      RegExp(r'```json[\s\S]*?```', caseSensitive: false),
-      '',
-    ).trim();
+    cleaned = cleaned
+        .replaceAll(RegExp(r'```json[\s\S]*?```', caseSensitive: false), '')
+        .trim();
 
     // Remove __TOOL_CALLS__ markers that might leak through
     cleaned = cleaned.replaceAll(RegExp(r'__TOOL_CALLS__:.*'), '').trim();
     cleaned = cleaned.replaceAll('__INTERNAL_TOOL_CALL__', '').trim();
 
+    // Remove meta lines where model talks about function calls/JSON output
+    cleaned = cleaned
+        .replaceAll(
+          RegExp(
+            r'^.*(?:permettimi di chiamare la funzione|chiamare la funzione).*$',
+            caseSensitive: false,
+            multiLine: true,
+          ),
+          '',
+        )
+        .trim();
+    cleaned = cleaned
+        .replaceAll(
+          RegExp(
+            r'^.*(?:risposta in formato json|formato json).*$',
+            caseSensitive: false,
+            multiLine: true,
+          ),
+          '',
+        )
+        .trim();
+
+    // Remove lines where model describes tool names to the user
+    // e.g., "La funzione getRecoveryData ti fornirà informazioni..."
+    cleaned = cleaned
+        .replaceAll(
+          RegExp(
+            r'^.*(?:la funzione|la tool|il tool)\s+\w+\s+(?:ti fornirà|ti darà|ti mostrerà|fornirà|restituirà|permette di|serve per).*$',
+            caseSensitive: false,
+            multiLine: true,
+          ),
+          '',
+        )
+        .trim();
+
+    // Remove lines mentioning specific tool names in camelCase (leaked internal names)
+    cleaned = cleaned
+        .replaceAll(
+          RegExp(
+            r'^.*\b(?:get(?:RecoveryData|WeeklyVolume|WorkoutStats|PersonalRecords|Streak|WorkoutHistory|1RMHistory|BodyProgress|UserTemplates|TemplateDetails|AccessoryExercises|UserProfileContext|WorkoutPreferences|WeeklyCheckin|AutoProgressionPlan|AdherenceInsights)|suggestWorkout|generateTemplate|analyzeMuscleBalance|compareToStandards|addBodyMeasurement|searchExercises|searchScientificSources|addExerciseToTemplate|replaceExerciseInTemplate|removeExerciseFromTemplate|updateTemplateRestTime|updateTemplateExerciseSetup|updateUserProfilePreferences|updateWorkoutPreferences)\b.*$',
+            multiLine: true,
+          ),
+          '',
+        )
+        .trim();
+
     // Collapse multiple blank lines into one
     cleaned = cleaned.replaceAll(RegExp(r'\n{3,}'), '\n\n');
 
-    return cleaned.isEmpty ? 'Non ho dati sufficienti per rispondere. Prova a riformulare.' : cleaned;
+    return cleaned.isEmpty
+        ? 'Non ho dati sufficienti per rispondere. Prova a riformulare.'
+        : cleaned;
+  }
+
+  bool _looksLikeToolCallLeak(String response) {
+    final lower = response.toLowerCase();
+    final mentionsJson =
+        lower.contains('formato json') ||
+        lower.contains('json:') ||
+        lower.contains('```json');
+    final mentionsFunction =
+        lower.contains('chiamare la funzione') ||
+        lower.contains('la funzione') ||
+        lower.contains('funzione') ||
+        lower.contains('tool') ||
+        lower.contains('function');
+    final mentionsKnownTool = RegExp(
+      r'\b(get[a-z0-9_]+|addexercisetotemplate|replaceexerciseintemplate|removeexercisefromtemplate|updatetemplateresttime|updatetemplateexercisesetup|searchexercises|analyzemusclebalance|comparetostandards|generatetemplate|suggestworkout|addBodyMeasurement|getAccessoryExercises|searchScientificSources|getUserProfileContext|updateUserProfilePreferences|getWeeklyCheckin|getAutoProgressionPlan|getAdherenceInsights|getWorkoutPreferences|updateWorkoutPreferences)\b',
+      caseSensitive: false,
+    ).hasMatch(response);
+
+    // Also detect patterns like "ti fornirà informazioni" near tool names
+    final describesToolToUser =
+        mentionsKnownTool &&
+        (lower.contains('ti fornirà') ||
+            lower.contains('fornirà informazioni') ||
+            lower.contains('ti darà') ||
+            lower.contains('ti mostrerà') ||
+            lower.contains('questa funzione') ||
+            lower.contains('la funzione'));
+
+    return ((mentionsJson || mentionsFunction) && mentionsKnownTool) ||
+        describesToolToUser;
   }
 
   /// Detect if response contains too much English content
@@ -401,7 +625,7 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
 
   /// Log language violation to Crashlytics for monitoring
   Future<void> _logLanguageViolation(String response) async {
-    debugPrint('[AI_COACH] ⚠️ LANGUAGE VIOLATION detected');
+    _debugLog('[AI_COACH] ⚠️ LANGUAGE VIOLATION detected');
     await FirebaseCrashlytics.instance.recordError(
       Exception('AI Coach responded in English'),
       StackTrace.current,
@@ -427,127 +651,548 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
 
   /// Filter tool definitions based on user message content
   /// Reduces token consumption by only sending relevant tools (~30% savings)
+  Map<String, double> _extractHeatmapValues(Map<String, dynamic> resultJson) {
+    final rawBalance = resultJson['balance'];
+    if (rawBalance is! Map) return const {};
+
+    final heatmap = <String, double>{};
+
+    for (final entry in rawBalance.entries) {
+      final key = entry.key.toString().toLowerCase();
+      final value = entry.value;
+      if (value is! Map) continue;
+
+      final rawPercentage = value['percentage'];
+      final percentage = _safeToDouble(rawPercentage).clamp(0.0, 100.0);
+      if (percentage <= 0) continue;
+
+      switch (key) {
+        case 'chest':
+          heatmap['chest'] = percentage;
+          break;
+        case 'back':
+          heatmap['lats'] = percentage;
+          break;
+        case 'shoulders':
+          heatmap['shoulders'] = percentage;
+          break;
+        case 'core':
+          heatmap['abs'] = percentage;
+          break;
+        case 'glutes':
+          heatmap['glutes'] = percentage;
+          break;
+        case 'arms':
+          heatmap['biceps'] = percentage;
+          heatmap['triceps'] = percentage;
+          heatmap['forearms'] = percentage;
+          break;
+        case 'legs':
+          heatmap['quadriceps'] = percentage;
+          heatmap['hamstrings'] = percentage;
+          heatmap['calves'] = percentage;
+          break;
+        default:
+          // Ignore unsupported categories like "other" / "full_body"
+          break;
+      }
+    }
+
+    return heatmap;
+  }
+
+  double _safeToDouble(dynamic value) {
+    if (value is num) return value.toDouble();
+    return double.tryParse(value?.toString() ?? '0') ?? 0.0;
+  }
+
+  String _appendInlineHeatmapMarker(
+    String response, {
+    Map<String, double>? heatmapValues,
+    String? underTrainedLabel,
+    String? overTrainedLabel,
+  }) {
+    if (heatmapValues == null || heatmapValues.isEmpty) return response;
+
+    final payload = jsonEncode({
+      'values': heatmapValues,
+      'underTrained': underTrainedLabel,
+      'overTrained': overTrainedLabel,
+    });
+    return '$response\n\n[[MUSCLE_HEATMAP:$payload]]';
+  }
+
+  String _appendInlineTemplateActionMarker(
+    String response, {
+    Map<String, dynamic>? cardPayload,
+  }) {
+    if (cardPayload == null || cardPayload.isEmpty) return response;
+
+    final payload = jsonEncode(cardPayload);
+    return '$response\n\n[[TEMPLATE_ACTION_CARD:$payload]]';
+  }
+
+  String _stripInlineUiMarkers(String content) {
+    return content
+        .replaceAll(RegExp(r'\[\[MUSCLE_HEATMAP:(\{[\s\S]*?\})\]\]'), '')
+        .replaceAll(RegExp(r'\[\[TEMPLATE_ACTION_CARD:[\s\S]*?\]\]'), '')
+        .trim();
+  }
+
   List<Map<String, dynamic>> _selectRelevantTools(String userMessage) {
     final lowerMsg = userMessage.toLowerCase();
     final relevantTools = <Map<String, dynamic>>[];
+    final toolByName = <String, Map<String, dynamic>>{
+      for (final tool in aiToolDefinitions)
+        (tool['function'] as Map<String, dynamic>)['name'] as String: tool,
+    };
+
+    void addTool(String name) {
+      final tool = toolByName[name];
+      if (tool != null) {
+        relevantTools.add(tool);
+      }
+    }
+
+    void addTools(List<String> names) {
+      for (final name in names) {
+        addTool(name);
+      }
+    }
 
     // Define tool categories with keywords
-    // (toolNames defined below but used implicitly in tool selection logic)
     const performanceKeywords = [
-      'forza', 'massimale', 'panca', 'squat', 'stacco', 'ripetizioni', 'kg',
-      'incremento', 'progressive', 'carico', 'peso sollevato', '1rm', 'pr',
-      'personale', 'record', 'migliore', 'quanto sollevo', 'sollevo'
+      'forza',
+      'massimale',
+      'panca',
+      'squat',
+      'stacco',
+      'ripetizioni',
+      'kg',
+      'incremento',
+      'progressive',
+      'carico',
+      'peso sollevato',
+      '1rm',
+      'pr',
+      'personale',
+      'record',
+      'migliore',
+      'quanto sollevo',
+      'sollevo',
     ];
 
     const recoveryKeywords = [
-      'riposo', 'stanchezza', 'stanco', 'recupero', 'overtraining', 'frequenza',
-      'quanto mi alleno', 'giorni', 'ripresa', 'affaticamento', 'fatica',
-      'dormo', 'sonno', 'riposo'
+      'riposo',
+      'stanchezza',
+      'stanco',
+      'recupero',
+      'overtraining',
+      'frequenza',
+      'quanto mi alleno',
+      'giorni',
+      'ripresa',
+      'affaticamento',
+      'fatica',
+      'dormo',
+      'sonno',
+      'riposo',
     ];
 
     const planningKeywords = [
-      'cosa alleno', 'allenamento', 'scheda', 'esercizi', 'workout', 'routine',
-      'piano', 'cosa fare', 'che fare oggi', 'allenare', 'focus', 'muscolo',
-      'muscoli', 'sessione', 'programma',
-      'template', 'templates', 'i miei template', 'mie schede',
+      'cosa alleno',
+      'allenamento',
+      'allenarmi',
+      'scheda',
+      'esercizi',
+      'workout',
+      'routine',
+      'piano',
+      'cosa fare',
+      'che fare oggi',
+      'allenare',
+      'focus',
+      'muscolo',
+      'muscoli',
+      'sessione',
+      'programma',
+      'template',
+      'templates',
+      'i miei template',
+      'mie schede',
+      'domani',
+      'oggi',
+      'stasera',
+      'viaggio',
+      'trasferta',
+      'salto',
+      'saltato',
+      'poco tempo',
     ];
 
     const exerciseSearchKeywords = [
-      'esercizio', 'alternativa', 'alternative',
-      'sostituire', 'simile', 'cerca', 'trova', 'esiste',
+      'esercizio',
+      'alternativa',
+      'alternative',
+      'sostituire',
+      'simile',
+      'cerca',
+      'trova',
+      'esiste',
     ];
 
     const analysisKeywords = [
-      'bilancio', 'squilibrio', 'debole', 'trascurato', 'troppo', 'poco',
-      'difetto', 'compenso', 'asimmetria', 'muscoli', 'proporzionale',
-      'preferisco', 'preferito', 'forte', 'debole'
+      'bilancio',
+      'bilanciamento',
+      'squilibrio',
+      'debole',
+      'trascurato',
+      'troppo',
+      'poco',
+      'difetto',
+      'compenso',
+      'asimmetria',
+      'muscoli',
+      'proporzionale',
+      'preferisco',
+      'preferito',
+      'forte',
+      'debole',
     ];
 
     const bodyCompositionKeywords = [
-      'peso', 'pesato', 'circonferenza', 'grasso', 'magra', 'misure',
-      'body fat', 'bmi', 'composizione', 'misurazione', 'kg', 'percentuale',
-      'dimagrito', 'ingrassato', 'cambiato', 'girovita', 'cm'
+      'peso',
+      'pesato',
+      'circonferenza',
+      'grasso',
+      'magra',
+      'misure',
+      'body fat',
+      'bmi',
+      'composizione',
+      'misurazione',
+      'kg',
+      'percentuale',
+      'dimagrito',
+      'ingrassato',
+      'cambiato',
+      'girovita',
+      'cm',
+      'salva',
+      'salvare',
+      'confermo',
+      'conferma',
+      'procedi',
+    ];
+
+    const profileKeywords = [
+      'livello',
+      'esperienza',
+      'obiettivo',
+      'principiante',
+      'intermedio',
+      'avanzato',
+      'atleta',
+      'profilo',
+      'settimana',
+      'volte a settimana',
+      'personalizza',
+      'personalizzazione',
+      'preferenze',
+      'massa muscolare',
+      'dimagrimento',
+      'forza',
+      '5x5',
+      '4x8',
+      'set e reps',
+      'serie e ripetizioni',
+      'setup guidato',
+      'impostazioni',
+      'settings',
+    ];
+
+    const weeklyCheckKeywords = [
+      'check settimanale',
+      'check-in',
+      'settimana',
+      'questa settimana',
+      'settimana scorsa',
+      'riepilogo',
+      'review',
+      'aggiustamenti',
+    ];
+
+    const progressionKeywords = [
+      'progressione',
+      'stallo',
+      'plateau',
+      'deload',
+      'aumentare peso',
+      'quando aumento',
+      'autoregol',
+      'carico prossimo',
+    ];
+
+    const adherenceKeywords = [
+      'motivazione',
+      'aderenza',
+      'costanza',
+      'non riesco',
+      'saltare allenamenti',
+      'disciplina',
+      'giorni difficili',
+      'faccio fatica',
+      'routine',
+    ];
+
+    const templateDetailsKeywords = [
+      'dettagli template',
+      'dettaglio template',
+      'analizza template',
+      'analizzare template',
+      'analizzare i template',
+      'analisi template',
+      'template specifico',
+      'template presenti',
+      'template salvati',
+      'schede presenti',
+      'cosa c e nel template',
+      'esercizi nel template',
+      'contenuto template',
+      'struttura template',
+    ];
+
+    const templateEditKeywords = [
+      'aggiungi esercizio',
+      'aggiungere esercizio',
+      'inserisci esercizio',
+      'inserire esercizio',
+      'metti esercizio',
+      'sostituisci esercizio',
+      'sostituire esercizio',
+      'rimuovi esercizio',
+      'rimuovere esercizio',
+      'replace exercise',
+      'remove exercise',
+      'modifica template',
+      'modificare template',
+      'aggiorna template',
+      'cambia template',
+      'edit template',
+      'insert exercise',
+      'add exercise',
+      'tempo di recupero',
+      'tempi di recupero',
+      'recupero tra serie',
+      'secondi di recupero',
+      'rest time',
+      'rest timer',
+      'aumenta recupero',
+      'riduci recupero',
+      'modifica recupero',
+      'cambia recupero',
+      'modifica serie',
+      'cambia serie',
+      'aumenta serie',
+      'riduci serie',
+      'modifica ripetizioni',
+      'cambia ripetizioni',
+      'aumenta ripetizioni',
+      'riduci ripetizioni',
+      'set e reps',
+      'sets and reps',
+      'rep range',
+      'range ripetizioni',
+      'serie e ripetizioni',
+    ];
+
+    const accessoryKeywords = [
+      'accessori',
+      'accessorio',
+      'complementare',
+      'complementari',
+      'supporto',
+      'supportare',
+      'per migliorare',
+      'ausiliario',
+    ];
+
+    const scientificSourceKeywords = [
+      'fonte',
+      'fonti',
+      'studio',
+      'studi',
+      'scientifico',
+      'scientifiche',
+      'evidenza',
+      'evidence',
+      'paper',
+      'ricerca',
+      'ricerche',
+      'citazione',
+      'citazioni',
+      'bibliografia',
+      'meta-analisi',
+      'meta analisi',
+      'review scientifica',
     ];
 
     // Check which categories match
-    final hasPerformance = performanceKeywords.any((kw) => lowerMsg.contains(kw));
+    final hasPerformance = performanceKeywords.any(
+      (kw) => lowerMsg.contains(kw),
+    );
     final hasRecovery = recoveryKeywords.any((kw) => lowerMsg.contains(kw));
     final hasPlanning = planningKeywords.any((kw) => lowerMsg.contains(kw));
     final hasAnalysis = analysisKeywords.any((kw) => lowerMsg.contains(kw));
-    final hasBodyComposition = bodyCompositionKeywords.any((kw) => lowerMsg.contains(kw));
-    final hasExerciseSearch = exerciseSearchKeywords.any((kw) => lowerMsg.contains(kw));
-
-    // Add tools based on matched categories
-    // Tool indexes in aiToolDefinitions array:
-    // 0:get1RMHistory, 1:getWeeklyVolume, 2:analyzeMuscleBalance, 3:getRecoveryData
-    // 4:suggestWorkout, 5:compareToStandards, 6:getWorkoutStats, 7:getPersonalRecords
-    // 8:getStreak, 9:getWorkoutHistory, 10:getBodyProgress, 11:addBodyMeasurement
-    // 12:generateTemplate, 13:getUserTemplates, 14:searchExercises
+    final hasBodyComposition = bodyCompositionKeywords.any(
+      (kw) => lowerMsg.contains(kw),
+    );
+    final hasExerciseSearch = exerciseSearchKeywords.any(
+      (kw) => lowerMsg.contains(kw),
+    );
+    final hasTemplateDetails = templateDetailsKeywords.any(
+      (kw) => lowerMsg.contains(kw),
+    );
+    final hasTemplateEdit = templateEditKeywords.any(
+      (kw) => lowerMsg.contains(kw),
+    );
+    final hasAccessory = accessoryKeywords.any((kw) => lowerMsg.contains(kw));
+    final hasScientificSources = scientificSourceKeywords.any(
+      (kw) => lowerMsg.contains(kw),
+    );
+    final hasProfile = profileKeywords.any((kw) => lowerMsg.contains(kw));
+    final hasWeeklyCheck = weeklyCheckKeywords.any(
+      (kw) => lowerMsg.contains(kw),
+    );
+    final hasProgression = progressionKeywords.any(
+      (kw) => lowerMsg.contains(kw),
+    );
+    final hasAdherence = adherenceKeywords.any((kw) => lowerMsg.contains(kw));
 
     // Always include general stats tool as baseline
-    relevantTools.add(aiToolDefinitions[6]); // getWorkoutStats
+    addTool('getWorkoutStats');
+    addTool('getUserProfileContext');
 
     // Add tools based on categories
     if (hasPerformance) {
-      relevantTools.addAll([
-        aiToolDefinitions[0], // get1RMHistory
-        aiToolDefinitions[5], // compareToStandards
-        aiToolDefinitions[7], // getPersonalRecords
-        aiToolDefinitions[8], // getStreak
-        aiToolDefinitions[1], // getWeeklyVolume
+      addTools([
+        'get1RMHistory',
+        'compareToStandards',
+        'getPersonalRecords',
+        'getStreak',
+        'getWeeklyVolume',
       ]);
     }
 
     if (hasRecovery) {
-      relevantTools.addAll([
-        aiToolDefinitions[3], // getRecoveryData
-        aiToolDefinitions[9], // getWorkoutHistory
-      ]);
+      addTools(['getRecoveryData', 'getWorkoutHistory']);
     }
 
     if (hasPlanning) {
-      relevantTools.addAll([
-        aiToolDefinitions[4], // suggestWorkout
-        aiToolDefinitions[12], // generateTemplate
-        aiToolDefinitions[13], // getUserTemplates
-        aiToolDefinitions[1], // getWeeklyVolume
+      addTools([
+        'generateTemplate',
+        'suggestWorkout',
+        'getUserTemplates',
+        'getTemplateDetails',
+        'addExerciseToTemplate',
+        'replaceExerciseInTemplate',
+        'removeExerciseFromTemplate',
+        'updateTemplateRestTime',
+        'updateTemplateExerciseSetup',
+        'getWorkoutPreferences',
+        'updateWorkoutPreferences',
+        'getWeeklyVolume',
+        'getRecoveryData',
+      ]);
+    }
+
+    if (hasTemplateDetails) {
+      addTools(['getTemplateDetails', 'getUserTemplates']);
+    }
+
+    if (hasTemplateEdit) {
+      addTools([
+        'getUserTemplates',
+        'getTemplateDetails',
+        'searchExercises',
+        'addExerciseToTemplate',
+        'replaceExerciseInTemplate',
+        'removeExerciseFromTemplate',
+        'updateTemplateRestTime',
+        'updateTemplateExerciseSetup',
       ]);
     }
 
     if (hasAnalysis) {
-      relevantTools.add(aiToolDefinitions[2]); // analyzeMuscleBalance
+      addTool('analyzeMuscleBalance');
     }
 
     if (hasBodyComposition) {
-      relevantTools.addAll([
-        aiToolDefinitions[10], // getBodyProgress
-        aiToolDefinitions[11], // addBodyMeasurement
-      ]);
+      addTools(['getBodyProgress', 'addBodyMeasurement']);
     }
 
     if (hasExerciseSearch) {
-      relevantTools.add(aiToolDefinitions[14]); // searchExercises
+      addTool('searchExercises');
     }
 
-    // Default: if no category matched, include top 5 tools
-    if (relevantTools.length == 1) {
-      relevantTools.addAll([
-        aiToolDefinitions[1],  // getWeeklyVolume
-        aiToolDefinitions[9],  // getWorkoutHistory
-        aiToolDefinitions[7],  // getPersonalRecords
-        aiToolDefinitions[4],  // suggestWorkout
+    if (hasAccessory) {
+      addTools(['getAccessoryExercises', 'searchExercises']);
+    }
+
+    if (hasScientificSources) {
+      addTool('searchScientificSources');
+    }
+
+    if (hasProfile) {
+      addTools([
+        'getUserProfileContext',
+        'updateUserProfilePreferences',
+        'getWorkoutPreferences',
+        'updateWorkoutPreferences',
+      ]);
+    }
+
+    if (hasWeeklyCheck) {
+      addTools(['getWeeklyCheckin', 'getRecoveryData', 'getAdherenceInsights']);
+    }
+
+    if (hasProgression) {
+      addTools([
+        'getAutoProgressionPlan',
+        'get1RMHistory',
+        'getWorkoutHistory',
+        'getWeeklyVolume',
+      ]);
+    }
+
+    if (hasAdherence) {
+      addTools(['getAdherenceInsights', 'getWeeklyCheckin', 'suggestWorkout']);
+    }
+
+    // Default: if no specific category matched, include a broader fallback set
+    if (relevantTools.length <= 2) {
+      addTools([
+        'getWeeklyVolume',
+        'getWorkoutHistory',
+        'getPersonalRecords',
+        'suggestWorkout',
+        'getRecoveryData',
       ]);
     }
 
     // Remove duplicates while preserving order
     final seen = <String>{};
-    return relevantTools
-        .where((tool) {
-          final name = (tool['function']['name'] as String);
-          if (seen.contains(name)) return false;
-          seen.add(name);
-          return true;
-        })
-        .toList();
+    return relevantTools.where((tool) {
+      final name = (tool['function']['name'] as String);
+      if (seen.contains(name)) return false;
+      seen.add(name);
+      return true;
+    }).toList();
+  }
+
+  void _debugLog(String message) {
+    if (kDebugMode) {
+      debugPrint(message);
+    }
   }
 }
