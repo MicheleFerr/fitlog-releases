@@ -15,7 +15,8 @@ class BoxOpenException implements Exception {
   final Object? originalError;
 
   @override
-  String toString() => 'BoxOpenException($boxName): $message ${originalError != null ? '(caused by: $originalError)' : ''}';
+  String toString() =>
+      'BoxOpenException($boxName): $message ${originalError != null ? '(caused by: $originalError)' : ''}';
 }
 
 class BoxCorruptedException implements Exception {
@@ -25,7 +26,8 @@ class BoxCorruptedException implements Exception {
   final Object originalError;
 
   @override
-  String toString() => 'BoxCorruptedException($boxName): Box corrupted, recovery attempted. Original error: $originalError';
+  String toString() =>
+      'BoxCorruptedException($boxName): Box corrupted, recovery attempted. Original error: $originalError';
 }
 
 /// Enhanced HiveBoxManagerEnhanced with error handling, concurrent access safety, and encryption support
@@ -42,7 +44,8 @@ class HiveBoxManagerEnhanced {
   factory HiveBoxManagerEnhanced() => _instance;
   HiveBoxManagerEnhanced._internal();
   // Singleton pattern
-  static final HiveBoxManagerEnhanced _instance = HiveBoxManagerEnhanced._internal();
+  static final HiveBoxManagerEnhanced _instance =
+      HiveBoxManagerEnhanced._internal();
 
   // Track all open boxes (regular + lazy)
   final Map<String, Box> _openBoxes = {};
@@ -68,11 +71,28 @@ class HiveBoxManagerEnhanced {
   /// This reduces startup time by ~15s by avoiding encryption overhead during
   /// WebView initialization for GDPR consent.
   static const List<String> _sensitiveBoxes = [
-    'user_consents',       // GDPR consent history
-    'privacy',             // Privacy settings
+    'user_consents', // GDPR consent history
+    'privacy', // Privacy settings
     // 'app_config' removed - only UI preferences, no PII
-    'user_profile_cache',  // Cached user profile (email, displayName)
+    'user_profile_cache', // Cached user profile (email, displayName)
   ];
+
+  bool _isRecoverableSchemaError(Object error) {
+    final message = error.toString().toLowerCase();
+    return message.contains('not a subtype of') ||
+        message.contains('type cast') ||
+        message.contains('casterror') ||
+        message.contains('expected type');
+  }
+
+  Future<void> _deleteAndRecreateBox(String name) async {
+    if (Hive.isBoxOpen(name)) {
+      await Hive.box(name).close();
+    }
+    _openBoxes.remove(name);
+    _openLazyBoxes.remove(name);
+    await Hive.deleteBoxFromDisk(name);
+  }
 
   /// Initialize HiveBoxManagerEnhanced and pre-open critical boxes
   ///
@@ -86,13 +106,17 @@ class HiveBoxManagerEnhanced {
   static Future<void> initialize() async {
     if (_isHiveInitialized) {
       if (kDebugMode) {
-        debugPrint('📦 [HiveBoxManagerEnhanced] Already initialized (skipping)');
+        debugPrint(
+          '📦 [HiveBoxManagerEnhanced] Already initialized (skipping)',
+        );
       }
       return;
     }
 
     if (kDebugMode) {
-      debugPrint('📦 [HiveBoxManagerEnhanced] 🚀 Initializing with critical boxes...');
+      debugPrint(
+        '📦 [HiveBoxManagerEnhanced] 🚀 Initializing with critical boxes...',
+      );
     }
 
     // ✅ CRITICAL FIX: Set flag BEFORE opening boxes to avoid chicken-and-egg
@@ -108,37 +132,49 @@ class HiveBoxManagerEnhanced {
     final List<String> failedBoxes = [];
 
     try {
-      await _instance.openBox<dynamic>('privacy');  // Privacy Manager
+      await _instance.openBox<dynamic>('privacy'); // Privacy Manager
     } catch (e) {
       failedBoxes.add('privacy: $e');
       if (kDebugMode) {
-        debugPrint('📦 [HiveBoxManagerEnhanced] ❌ Failed to open box "privacy": $e');
+        debugPrint(
+          '📦 [HiveBoxManagerEnhanced] ❌ Failed to open box "privacy": $e',
+        );
       }
     }
 
     try {
-      await _instance.openBox<dynamic>('user_consents');  // Privacy/GDPR
+      await _instance.openBox<dynamic>('user_consents'); // Privacy/GDPR
     } catch (e) {
       failedBoxes.add('user_consents: $e');
       if (kDebugMode) {
-        debugPrint('📦 [HiveBoxManagerEnhanced] ❌ Failed to open box "user_consents": $e');
+        debugPrint(
+          '📦 [HiveBoxManagerEnhanced] ❌ Failed to open box "user_consents": $e',
+        );
       }
     }
 
     try {
       // ✅ FIX: Open analytics_cache with the correct generic type for the provider
-      await _instance.openBox<Map<dynamic, dynamic>>('analytics_cache');  // Analytics cache for AI coach
+      await _instance.openBox<Map<dynamic, dynamic>>(
+        'analytics_cache',
+      ); // Analytics cache for AI coach
     } catch (e) {
       failedBoxes.add('analytics_cache: $e');
       if (kDebugMode) {
-        debugPrint('📦 [HiveBoxManagerEnhanced] ❌ Failed to open box "analytics_cache": $e');
+        debugPrint(
+          '📦 [HiveBoxManagerEnhanced] ❌ Failed to open box "analytics_cache": $e',
+        );
       }
     }
 
     if (kDebugMode) {
-      debugPrint('📦 [HiveBoxManagerEnhanced] ✅ Initialized with ${_instance._openBoxes.length} critical boxes');
+      debugPrint(
+        '📦 [HiveBoxManagerEnhanced] ✅ Initialized with ${_instance._openBoxes.length} critical boxes',
+      );
       if (failedBoxes.isNotEmpty) {
-        debugPrint('📦 [HiveBoxManagerEnhanced] ⚠️ Failed boxes: ${failedBoxes.join(', ')}');
+        debugPrint(
+          '📦 [HiveBoxManagerEnhanced] ⚠️ Failed boxes: ${failedBoxes.join(', ')}',
+        );
       }
     }
   }
@@ -178,7 +214,9 @@ class HiveBoxManagerEnhanced {
     HiveCipher? cipher = encryptionCipher;
     if (_sensitiveBoxes.contains(name) && cipher == null) {
       if (kDebugMode) {
-        debugPrint('🔐 [HiveBoxManagerEnhanced] Box "$name" is sensitive → auto-encrypting with AES-256...');
+        debugPrint(
+          '🔐 [HiveBoxManagerEnhanced] Box "$name" is sensitive → auto-encrypting with AES-256...',
+        );
       }
       cipher = await HiveEncryptionManager.getEncryptionCipher();
     }
@@ -191,12 +229,15 @@ class HiveBoxManagerEnhanced {
     while (attempt < maxRetries) {
       try {
         if (kDebugMode && attempt > 0) {
-          debugPrint('📦 [HiveBoxManagerEnhanced] Retry $attempt/$maxRetries for box: "$name"');
+          debugPrint(
+            '📦 [HiveBoxManagerEnhanced] Retry $attempt/$maxRetries for box: "$name"',
+          );
         }
 
         box = await Hive.openBox<E>(
           name,
-          encryptionCipher: cipher,  // 🔐 Uses auto-encryption cipher for sensitive boxes
+          encryptionCipher:
+              cipher, // 🔐 Uses auto-encryption cipher for sensitive boxes
         );
 
         _openBoxes[name] = box;
@@ -209,7 +250,6 @@ class HiveBoxManagerEnhanced {
         }
 
         return box;
-
       } on HiveError catch (e) {
         lastError = e;
 
@@ -217,9 +257,10 @@ class HiveBoxManagerEnhanced {
         if (e.toString().contains('corrupted') ||
             e.toString().contains('invalid') ||
             e.toString().contains('format')) {
-
           if (kDebugMode) {
-            debugPrint('📦 [HiveBoxManagerEnhanced] ⚠️ Box "$name" corrupted, attempting recovery...');
+            debugPrint(
+              '📦 [HiveBoxManagerEnhanced] ⚠️ Box "$name" corrupted, attempting recovery...',
+            );
           }
 
           try {
@@ -227,16 +268,19 @@ class HiveBoxManagerEnhanced {
             await Hive.deleteBoxFromDisk(name);
 
             if (kDebugMode) {
-              debugPrint('📦 [HiveBoxManagerEnhanced] 🗑️ Deleted corrupted box "$name"');
+              debugPrint(
+                '📦 [HiveBoxManagerEnhanced] 🗑️ Deleted corrupted box "$name"',
+              );
             }
 
             // Retry opening (will create new box)
             attempt++;
             continue;
-
           } catch (deleteError) {
             if (kDebugMode) {
-              debugPrint('📦 [HiveBoxManagerEnhanced] ❌ Failed to delete corrupted box: $deleteError');
+              debugPrint(
+                '📦 [HiveBoxManagerEnhanced] ❌ Failed to delete corrupted box: $deleteError',
+              );
             }
             throw BoxCorruptedException(name, e);
           }
@@ -244,24 +288,54 @@ class HiveBoxManagerEnhanced {
 
         // Other HiveError - retry
         attempt++;
-        await Future.delayed(Duration(milliseconds: 100 * attempt)); // Exponential backoff
-
+        await Future.delayed(
+          Duration(milliseconds: 100 * attempt),
+        ); // Exponential backoff
       } on FileSystemException catch (e) {
         lastError = e;
 
         if (kDebugMode) {
-          debugPrint('📦 [HiveBoxManagerEnhanced] ❌ I/O error for box "$name": $e');
+          debugPrint(
+            '📦 [HiveBoxManagerEnhanced] ❌ I/O error for box "$name": $e',
+          );
         }
 
         // I/O error - retry with backoff
         attempt++;
         await Future.delayed(Duration(milliseconds: 100 * attempt));
-
       } catch (e) {
         lastError = e;
 
+        if (_isRecoverableSchemaError(e)) {
+          if (kDebugMode) {
+            debugPrint(
+              '📦 [HiveBoxManagerEnhanced] ⚠️ Schema/type mismatch in box "$name", attempting recovery...',
+            );
+          }
+
+          try {
+            await _deleteAndRecreateBox(name);
+            if (kDebugMode) {
+              debugPrint(
+                '📦 [HiveBoxManagerEnhanced] 🗑️ Recreated box "$name" after schema mismatch',
+              );
+            }
+            attempt++;
+            continue;
+          } catch (deleteError) {
+            if (kDebugMode) {
+              debugPrint(
+                '📦 [HiveBoxManagerEnhanced] ❌ Failed to recover schema-mismatched box: $deleteError',
+              );
+            }
+            throw BoxCorruptedException(name, e);
+          }
+        }
+
         if (kDebugMode) {
-          debugPrint('📦 [HiveBoxManagerEnhanced] ❌ Unexpected error opening box "$name": $e');
+          debugPrint(
+            '📦 [HiveBoxManagerEnhanced] ❌ Unexpected error opening box "$name": $e',
+          );
         }
 
         throw BoxOpenException(name, 'Unexpected error opening box', e);
@@ -302,7 +376,9 @@ class HiveBoxManagerEnhanced {
     HiveCipher? cipher = encryptionCipher;
     if (_sensitiveBoxes.contains(name) && cipher == null) {
       if (kDebugMode) {
-        debugPrint('🔐 [HiveBoxManagerEnhanced] Lazy box "$name" is sensitive → auto-encrypting with AES-256...');
+        debugPrint(
+          '🔐 [HiveBoxManagerEnhanced] Lazy box "$name" is sensitive → auto-encrypting with AES-256...',
+        );
       }
       cipher = await HiveEncryptionManager.getEncryptionCipher();
     }
@@ -316,7 +392,8 @@ class HiveBoxManagerEnhanced {
       try {
         box = await Hive.openLazyBox<E>(
           name,
-          encryptionCipher: cipher,  // 🔐 Uses auto-encryption cipher for sensitive boxes
+          encryptionCipher:
+              cipher, // 🔐 Uses auto-encryption cipher for sensitive boxes
         );
 
         _openLazyBoxes[name] = box;
@@ -329,14 +406,12 @@ class HiveBoxManagerEnhanced {
         }
 
         return box;
-
       } on HiveError catch (e) {
         lastError = e;
 
         // Handle corruption same as regular box
         if (e.toString().contains('corrupted') ||
             e.toString().contains('invalid')) {
-
           try {
             await Hive.deleteBoxFromDisk(name);
             attempt++;
@@ -348,7 +423,6 @@ class HiveBoxManagerEnhanced {
 
         attempt++;
         await Future.delayed(Duration(milliseconds: 100 * attempt));
-
       } catch (e) {
         lastError = e;
         attempt++;
@@ -409,28 +483,26 @@ class HiveBoxManagerEnhanced {
   }
 
   /// Batch put operation (70% faster than loop with put())
-  Future<void> putAll<T>(
-    String boxName,
-    Map<dynamic, T> entries,
-  ) async {
+  Future<void> putAll<T>(String boxName, Map<dynamic, T> entries) async {
     final box = await openBox<T>(boxName);
     await box.putAll(entries);
 
     if (kDebugMode) {
-      debugPrint('📦 [HiveBoxManagerEnhanced] ✅ Batch put ${entries.length} entries to "$boxName"');
+      debugPrint(
+        '📦 [HiveBoxManagerEnhanced] ✅ Batch put ${entries.length} entries to "$boxName"',
+      );
     }
   }
 
   /// Batch delete operation
-  Future<void> deleteAll(
-    String boxName,
-    List<dynamic> keys,
-  ) async {
+  Future<void> deleteAll(String boxName, List<dynamic> keys) async {
     final box = await openBox(boxName);
     await box.deleteAll(keys);
 
     if (kDebugMode) {
-      debugPrint('📦 [HiveBoxManagerEnhanced] ✅ Batch deleted ${keys.length} entries from "$boxName"');
+      debugPrint(
+        '📦 [HiveBoxManagerEnhanced] ✅ Batch deleted ${keys.length} entries from "$boxName"',
+      );
     }
   }
 
@@ -523,7 +595,9 @@ class HiveBoxManagerEnhanced {
         await box.close();
       } catch (e) {
         if (kDebugMode) {
-          debugPrint('📦 [HiveBoxManagerEnhanced] ⚠️ Error closing lazy box: $e');
+          debugPrint(
+            '📦 [HiveBoxManagerEnhanced] ⚠️ Error closing lazy box: $e',
+          );
         }
       }
     }
@@ -551,13 +625,16 @@ class HiveBoxManagerEnhanced {
   Future<void> clearAllUserData() async {
     if (kDebugMode) {
       debugPrint('🔐 [HiveBoxManagerEnhanced] Clearing all user data...');
-      debugPrint('🔐 [HiveBoxManagerEnhanced] Currently open boxes: ${_openBoxes.length}, lazy: ${_openLazyBoxes.length}');
+      debugPrint(
+        '🔐 [HiveBoxManagerEnhanced] Currently open boxes: ${_openBoxes.length}, lazy: ${_openLazyBoxes.length}',
+      );
     }
 
     // Boxes that contain device-level (not user-specific) data
     const systemBoxes = <String>{
-      'privacy',        // GDPR consent - device level, not user level
-      'user_consents',  // GDPR consent history - device level
+      'privacy', // GDPR consent - device level, not user level
+      'user_consents', // GDPR consent history - device level
+      'app_config', // App settings + onboarding completion guard
     };
 
     int clearedCount = 0;
@@ -571,12 +648,16 @@ class HiveBoxManagerEnhanced {
         await entry.value.clear();
         clearedCount++;
         if (kDebugMode) {
-          debugPrint('🗑️ [HiveBoxManagerEnhanced] Cleared box: "${entry.key}"');
+          debugPrint(
+            '🗑️ [HiveBoxManagerEnhanced] Cleared box: "${entry.key}"',
+          );
         }
       } catch (e) {
         failedCount++;
         if (kDebugMode) {
-          debugPrint('⚠️ [HiveBoxManagerEnhanced] Failed to clear box "${entry.key}": $e');
+          debugPrint(
+            '⚠️ [HiveBoxManagerEnhanced] Failed to clear box "${entry.key}": $e',
+          );
         }
       }
     }
@@ -589,12 +670,16 @@ class HiveBoxManagerEnhanced {
         await entry.value.clear();
         clearedCount++;
         if (kDebugMode) {
-          debugPrint('🗑️ [HiveBoxManagerEnhanced] Cleared lazy box: "${entry.key}"');
+          debugPrint(
+            '🗑️ [HiveBoxManagerEnhanced] Cleared lazy box: "${entry.key}"',
+          );
         }
       } catch (e) {
         failedCount++;
         if (kDebugMode) {
-          debugPrint('⚠️ [HiveBoxManagerEnhanced] Failed to clear lazy box "${entry.key}": $e');
+          debugPrint(
+            '⚠️ [HiveBoxManagerEnhanced] Failed to clear lazy box "${entry.key}": $e',
+          );
         }
       }
     }
@@ -614,7 +699,9 @@ class HiveBoxManagerEnhanced {
           await box.clear();
           clearedCount++;
           if (kDebugMode) {
-            debugPrint('🗑️ [HiveBoxManagerEnhanced] Opened and cleared unopened box: "$boxName"');
+            debugPrint(
+              '🗑️ [HiveBoxManagerEnhanced] Opened and cleared unopened box: "$boxName"',
+            );
           }
         }
         await box.close();
@@ -624,27 +711,33 @@ class HiveBoxManagerEnhanced {
           await Hive.deleteBoxFromDisk(boxName);
           clearedCount++;
           if (kDebugMode) {
-            debugPrint('🗑️ [HiveBoxManagerEnhanced] Deleted corrupted box from disk: "$boxName"');
+            debugPrint(
+              '🗑️ [HiveBoxManagerEnhanced] Deleted corrupted box from disk: "$boxName"',
+            );
           }
         } catch (deleteError) {
           failedCount++;
           if (kDebugMode) {
-            debugPrint('⚠️ [HiveBoxManagerEnhanced] Failed to clear/delete box "$boxName": $e / $deleteError');
+            debugPrint(
+              '⚠️ [HiveBoxManagerEnhanced] Failed to clear/delete box "$boxName": $e / $deleteError',
+            );
           }
         }
       }
     }
 
     if (kDebugMode) {
-      debugPrint('🔐 [HiveBoxManagerEnhanced] ✅ User data cleared: $clearedCount boxes, $failedCount failed');
+      debugPrint(
+        '🔐 [HiveBoxManagerEnhanced] ✅ User data cleared: $clearedCount boxes, $failedCount failed',
+      );
     }
   }
 
   /// Debug utilities
   List<String> get openBoxNames => [
-        ..._openBoxes.keys,
-        ..._openLazyBoxes.keys.map((name) => '$name (lazy)'),
-      ];
+    ..._openBoxes.keys,
+    ..._openLazyBoxes.keys.map((name) => '$name (lazy)'),
+  ];
 
   int get openBoxCount => _openBoxes.length + _openLazyBoxes.length;
 
@@ -668,9 +761,9 @@ class HiveBoxManagerEnhanced {
   @visibleForTesting
   void resetForTesting() {
     _isDisposed = false;
-    _openBoxes.clear();  // ✅ CRITICAL: Clear box tracking maps
+    _openBoxes.clear(); // ✅ CRITICAL: Clear box tracking maps
     _openLazyBoxes.clear();
-    _locks.clear();  // ✅ CRITICAL: Clear lock maps
+    _locks.clear(); // ✅ CRITICAL: Clear lock maps
     if (kDebugMode) {
       debugPrint('📦 [HiveBoxManagerEnhanced] 🔄 Reset for testing');
     }
@@ -684,7 +777,9 @@ class HiveBoxManagerEnhanced {
   static void resetInitializationForTesting() {
     _isHiveInitialized = false;
     if (kDebugMode) {
-      debugPrint('📦 [HiveBoxManagerEnhanced] 🔄 Reset initialization flag for testing');
+      debugPrint(
+        '📦 [HiveBoxManagerEnhanced] 🔄 Reset initialization flag for testing',
+      );
     }
   }
 }

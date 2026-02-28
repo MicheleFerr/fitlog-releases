@@ -7,7 +7,8 @@ import 'package:gymbro_flutter_new/shared/domain/entities/interface_size.dart';
 part 'app_config.g.dart';
 
 @HiveType(typeId: 0)
-class AppConfig { // Auto-adjust rest time based on RPE feedback
+class AppConfig {
+  // Auto-adjust rest time based on RPE feedback
 
   const AppConfig({
     this.languageCode = 'en',
@@ -55,17 +56,31 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.showPreventionIcon,
     this.autoAdjustWeightFromRpe,
     this.autoAdjustRestFromRpe,
-    this.effortScale = 'rpe', // 'rpe' or 'rir' - global effort tracking preference
-    this.autoPauseOnNavigateAway = true, // Auto-pause workout when navigating away from workout tab
-    this.initialOnboardingCompleted = false, // Initial onboarding not completed by default
-    this.skipExerciseDeleteConfirmation = false, // Show confirmation dialog by default (P0-2)
-    this.simpleMode = false, // Simple mode for elderly/accessibility users (P2-2)
-    this.keepScreenAwakeDuringWorkout = true, // Keep screen on during workout by default
+    this.effortScale =
+        'rpe', // 'rpe' or 'rir' - global effort tracking preference
+    this.autoPauseOnNavigateAway =
+        true, // Auto-pause workout when navigating away from workout tab
+    this.initialOnboardingCompleted =
+        false, // Initial onboarding not completed by default
+    this.skipExerciseDeleteConfirmation =
+        false, // Show confirmation dialog by default (P0-2)
+    this.simpleMode =
+        false, // Simple mode for elderly/accessibility users (P2-2)
+    this.keepScreenAwakeDuringWorkout =
+        true, // Keep screen on during workout by default
     this.interfaceSize, // Unified interface size (font + layout), null = use fontSize for backward compat
-    this.defaultRestBetweenExercises = 90, // Default rest between exercises (inter-exercise timer)
-    this.hasSeenRestPauseTutorial = false, // First-time Rest-Pause tutorial flag
+    this.defaultRestBetweenExercises =
+        90, // Default rest between exercises (inter-exercise timer)
+    this.defaultExerciseSets = 4, // Default sets per exercise template
+    this.defaultExerciseReps = 8, // Default reps per exercise template
+    this.defaultWeightedPresets = '3x10,4x8,5x5',
+    this.defaultRepsPresets = '3x15,4x12,2x20',
+    this.defaultTimePresets = '3x30,3x60,4x45',
+    this.hasSeenRestPauseTutorial =
+        false, // First-time Rest-Pause tutorial flag
     this.appThemeModeValue, // Custom theme mode: 'system'|'light'|'dark'|'ultraDark'|'pink'
-    this.showWeightVerification = true, // Show weight/reps verification in RPE selector
+    this.showWeightVerification =
+        true, // Show weight/reps verification in RPE selector
     this.metronomeEnabled = false, // TUT metronome disabled by default
   });
 
@@ -109,11 +124,18 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       betaModeEnabled: json['betaModeEnabled'] ?? false,
       effortScale: json['effortScale'] ?? 'rpe',
       initialOnboardingCompleted: json['initialOnboardingCompleted'] ?? false,
-      skipExerciseDeleteConfirmation: json['skipExerciseDeleteConfirmation'] ?? false,
+      skipExerciseDeleteConfirmation:
+          json['skipExerciseDeleteConfirmation'] ?? false,
       simpleMode: json['simpleMode'] ?? false,
-      keepScreenAwakeDuringWorkout: json['keepScreenAwakeDuringWorkout'] ?? true,
+      keepScreenAwakeDuringWorkout:
+          json['keepScreenAwakeDuringWorkout'] ?? true,
       interfaceSize: interfaceSize,
       defaultRestBetweenExercises: json['defaultRestBetweenExercises'] ?? 90,
+      defaultExerciseSets: json['defaultExerciseSets'] ?? 4,
+      defaultExerciseReps: json['defaultExerciseReps'] ?? 8,
+      defaultWeightedPresets: json['defaultWeightedPresets'] ?? '3x10,4x8,5x5',
+      defaultRepsPresets: json['defaultRepsPresets'] ?? '3x15,4x12,2x20',
+      defaultTimePresets: json['defaultTimePresets'] ?? '3x30,3x60,4x45',
       hasSeenRestPauseTutorial: json['hasSeenRestPauseTutorial'] ?? false,
       appThemeModeValue: json['appThemeModeValue'] as String?,
       showWeightVerification: json['showWeightVerification'] ?? true,
@@ -122,75 +144,77 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
   }
   @HiveField(0)
   final String languageCode;
-  
+
   @HiveField(1)
   final String countryCode;
-  
+
   @HiveField(2)
   final ThemeMode themeMode;
-  
+
   @HiveField(3)
   final String measurementUnit; // 'kg' or 'lbs'
-  
+
   @HiveField(4)
   final bool soundEnabled;
-  
+
   @HiveField(5)
   final bool vibrationsEnabled;
-  
+
   @HiveField(16)
   final String timerSound; // Nome del file audio
-  
+
   @HiveField(6)
   final int defaultRestTime; // seconds
-  
+
   @HiveField(7)
   final bool autoStartTimer;
-  
+
   @HiveField(13)
   final int strengthRestTime; // seconds for 1-5 reps
-  
+
   @HiveField(14)
   final int hypertrophyRestTime; // seconds for 6-12 reps
-  
+
   @HiveField(15)
   final int enduranceRestTime; // seconds for 13+ reps
-  
+
   @HiveField(8)
   final bool showIntensityTechniques;
-  
+
   @HiveField(9)
   final String primaryColor;
-  
+
   @HiveField(10)
   final bool enableLiveActivities;
-  
+
   @HiveField(11)
   final bool syncWithHealthKit;
-  
+
   @HiveField(12)
   @Deprecated('Use interfaceSize instead. Kept for backward compatibility.')
   final double fontSize; // Scale factor: 0.8 to 1.2
-  
+
   @HiveField(17)
   final String? preferredTemplateId; // ID del template preferito per quick start
-  
+
   @HiveField(18)
   final bool? rpeTracking; // Track RPE for sets
-  
+
   @HiveField(19)
   final bool? autoRestTimer; // Auto start rest timer
-  
+
   @HiveField(20)
   final bool? setDurationTracking; // Track set execution time
-  
+
   @HiveField(21)
   final bool? plateCalculator; // Show plate calculator
-  
+
   @HiveField(22)
-  @Deprecated('Warmup suggestions toggle removed - warmup sets always available via menu')
+  @Deprecated(
+    'Warmup suggestions toggle removed - warmup sets always available via menu',
+  )
   final bool? warmupSuggestions;
-  
+
   @HiveField(23)
   final List<double>? availablePlates; // Available plates in gym
 
@@ -286,15 +310,30 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
   final int defaultRestBetweenExercises; // Default rest between exercises in seconds
 
   @HiveField(54)
-  final bool hasSeenRestPauseTutorial; // Has seen Rest-Pause tutorial
+  final int defaultExerciseSets; // Default sets per exercise for quick presets
 
   @HiveField(55)
-  final String? appThemeModeValue; // Custom theme mode string: 'system'|'light'|'dark'|'ultraDark'|'pink'
+  final int defaultExerciseReps; // Default reps per exercise for quick presets
 
   @HiveField(56)
-  final bool showWeightVerification; // Show weight/reps verification in RPE selector
+  final bool hasSeenRestPauseTutorial; // Has seen Rest-Pause tutorial
 
   @HiveField(57)
+  final String defaultWeightedPresets; // CSV format: "3x10,4x8,5x5"
+
+  @HiveField(58)
+  final String defaultRepsPresets; // CSV format: "3x15,4x12,2x20"
+
+  @HiveField(59)
+  final String defaultTimePresets; // CSV format: "3x30,3x60,4x45" (seconds)
+
+  @HiveField(60)
+  final String? appThemeModeValue; // Custom theme mode string: 'system'|'light'|'dark'|'ultraDark'|'pink'
+
+  @HiveField(61)
+  final bool showWeightVerification; // Show weight/reps verification in RPE selector
+
+  @HiveField(62)
   final bool metronomeEnabled; // TUT metronome toggle
 
   /// Get the effective AppThemeMode (backward compatible with ThemeMode)
@@ -362,6 +401,11 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     bool? keepScreenAwakeDuringWorkout,
     InterfaceSize? interfaceSize,
     int? defaultRestBetweenExercises,
+    int? defaultExerciseSets,
+    int? defaultExerciseReps,
+    String? defaultWeightedPresets,
+    String? defaultRepsPresets,
+    String? defaultTimePresets,
     bool? hasSeenRestPauseTutorial,
     String? appThemeModeValue,
     bool? showWeightVerification,
@@ -380,7 +424,8 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       strengthRestTime: strengthRestTime ?? this.strengthRestTime,
       hypertrophyRestTime: hypertrophyRestTime ?? this.hypertrophyRestTime,
       enduranceRestTime: enduranceRestTime ?? this.enduranceRestTime,
-      showIntensityTechniques: showIntensityTechniques ?? this.showIntensityTechniques,
+      showIntensityTechniques:
+          showIntensityTechniques ?? this.showIntensityTechniques,
       primaryColor: primaryColor ?? this.primaryColor,
       enableLiveActivities: enableLiveActivities ?? this.enableLiveActivities,
       syncWithHealthKit: syncWithHealthKit ?? this.syncWithHealthKit,
@@ -393,16 +438,20 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       warmupSuggestions: warmupSuggestions, // Deprecated - ignored
       availablePlates: availablePlates ?? this.availablePlates,
       isProMode: isProMode ?? this.isProMode,
-      autoCollapseCompleted: autoCollapseCompleted ?? this.autoCollapseCompleted,
+      autoCollapseCompleted:
+          autoCollapseCompleted ?? this.autoCollapseCompleted,
       showTutInfo: showTutInfo ?? this.showTutInfo,
       showExerciseNotes: showExerciseNotes ?? this.showExerciseNotes,
-      showCommunitySuggestions: showCommunitySuggestions ?? this.showCommunitySuggestions,
+      showCommunitySuggestions:
+          showCommunitySuggestions ?? this.showCommunitySuggestions,
       showExerciseInsights: showExerciseInsights ?? this.showExerciseInsights,
       showCustomTimers: showCustomTimers ?? this.showCustomTimers,
       showAdvancedMenu: showAdvancedMenu ?? this.showAdvancedMenu,
-      showCollapseCountdown: showCollapseCountdown ?? this.showCollapseCountdown,
+      showCollapseCountdown:
+          showCollapseCountdown ?? this.showCollapseCountdown,
       simplifiedAnimations: simplifiedAnimations ?? this.simplifiedAnimations,
-      hasSeenWorkoutOnboarding: hasSeenWorkoutOnboarding ?? this.hasSeenWorkoutOnboarding,
+      hasSeenWorkoutOnboarding:
+          hasSeenWorkoutOnboarding ?? this.hasSeenWorkoutOnboarding,
       onboardingVersion: onboardingVersion ?? this.onboardingVersion,
       betaModeEnabled: betaModeEnabled ?? this.betaModeEnabled,
       enableApre: enableApre ?? this.enableApre,
@@ -411,19 +460,34 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       showQuickInfoIcon: showQuickInfoIcon ?? this.showQuickInfoIcon,
       showWarmupIcon: showWarmupIcon ?? this.showWarmupIcon,
       showPreventionIcon: showPreventionIcon ?? this.showPreventionIcon,
-      autoAdjustWeightFromRpe: autoAdjustWeightFromRpe ?? this.autoAdjustWeightFromRpe,
-      autoAdjustRestFromRpe: autoAdjustRestFromRpe ?? this.autoAdjustRestFromRpe,
+      autoAdjustWeightFromRpe:
+          autoAdjustWeightFromRpe ?? this.autoAdjustWeightFromRpe,
+      autoAdjustRestFromRpe:
+          autoAdjustRestFromRpe ?? this.autoAdjustRestFromRpe,
       effortScale: effortScale ?? this.effortScale,
-      autoPauseOnNavigateAway: autoPauseOnNavigateAway ?? this.autoPauseOnNavigateAway,
-      initialOnboardingCompleted: initialOnboardingCompleted ?? this.initialOnboardingCompleted,
-      skipExerciseDeleteConfirmation: skipExerciseDeleteConfirmation ?? this.skipExerciseDeleteConfirmation,
+      autoPauseOnNavigateAway:
+          autoPauseOnNavigateAway ?? this.autoPauseOnNavigateAway,
+      initialOnboardingCompleted:
+          initialOnboardingCompleted ?? this.initialOnboardingCompleted,
+      skipExerciseDeleteConfirmation:
+          skipExerciseDeleteConfirmation ?? this.skipExerciseDeleteConfirmation,
       simpleMode: simpleMode ?? this.simpleMode,
-      keepScreenAwakeDuringWorkout: keepScreenAwakeDuringWorkout ?? this.keepScreenAwakeDuringWorkout,
+      keepScreenAwakeDuringWorkout:
+          keepScreenAwakeDuringWorkout ?? this.keepScreenAwakeDuringWorkout,
       interfaceSize: interfaceSize ?? this.interfaceSize,
-      defaultRestBetweenExercises: defaultRestBetweenExercises ?? this.defaultRestBetweenExercises,
-      hasSeenRestPauseTutorial: hasSeenRestPauseTutorial ?? this.hasSeenRestPauseTutorial,
+      defaultRestBetweenExercises:
+          defaultRestBetweenExercises ?? this.defaultRestBetweenExercises,
+      defaultExerciseSets: defaultExerciseSets ?? this.defaultExerciseSets,
+      defaultExerciseReps: defaultExerciseReps ?? this.defaultExerciseReps,
+      defaultWeightedPresets:
+          defaultWeightedPresets ?? this.defaultWeightedPresets,
+      defaultRepsPresets: defaultRepsPresets ?? this.defaultRepsPresets,
+      defaultTimePresets: defaultTimePresets ?? this.defaultTimePresets,
+      hasSeenRestPauseTutorial:
+          hasSeenRestPauseTutorial ?? this.hasSeenRestPauseTutorial,
       appThemeModeValue: appThemeModeValue ?? this.appThemeModeValue,
-      showWeightVerification: showWeightVerification ?? this.showWeightVerification,
+      showWeightVerification:
+          showWeightVerification ?? this.showWeightVerification,
       metronomeEnabled: metronomeEnabled ?? this.metronomeEnabled,
     );
   }
@@ -458,6 +522,11 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       'keepScreenAwakeDuringWorkout': keepScreenAwakeDuringWorkout,
       'interfaceSize': interfaceSize?.toJson(),
       'defaultRestBetweenExercises': defaultRestBetweenExercises,
+      'defaultExerciseSets': defaultExerciseSets,
+      'defaultExerciseReps': defaultExerciseReps,
+      'defaultWeightedPresets': defaultWeightedPresets,
+      'defaultRepsPresets': defaultRepsPresets,
+      'defaultTimePresets': defaultTimePresets,
       'hasSeenRestPauseTutorial': hasSeenRestPauseTutorial,
       'appThemeModeValue': appThemeModeValue,
       'showWeightVerification': showWeightVerification,
@@ -491,6 +560,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
         other.preferredTemplateId == preferredTemplateId &&
         other.hasSeenWorkoutOnboarding == hasSeenWorkoutOnboarding &&
         other.onboardingVersion == onboardingVersion &&
+        other.initialOnboardingCompleted == initialOnboardingCompleted &&
         other.appThemeModeValue == appThemeModeValue;
   }
 
@@ -514,6 +584,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       preferredTemplateId,
       hasSeenWorkoutOnboarding,
       onboardingVersion,
+      initialOnboardingCompleted,
       appThemeModeValue,
     );
   }
@@ -522,28 +593,28 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
 // Predefined app configurations
 class AppConfigPresets {
   static const AppConfig defaultConfig = AppConfig();
-  
+
   static const AppConfig italianConfig = AppConfig(
     languageCode: 'it',
     countryCode: 'IT',
     measurementUnit: 'kg',
     defaultRestTime: 120,
   );
-  
+
   static const AppConfig americanConfig = AppConfig(
     languageCode: 'en',
     countryCode: 'US',
     measurementUnit: 'lbs',
     defaultRestTime: 90,
   );
-  
+
   static const AppConfig powerlifterConfig = AppConfig(
     defaultRestTime: 180,
     autoStartTimer: false,
     showIntensityTechniques: false,
     soundEnabled: true,
   );
-  
+
   static const AppConfig bodybuilderConfig = AppConfig(
     defaultRestTime: 75,
     autoStartTimer: true,
@@ -557,7 +628,8 @@ class AppConfigPresets {
   /// - Simplified animations
   /// - Sound/vibration enabled
   static const AppConfig simpleModeConfig = AppConfig(
-    interfaceSize: InterfaceSize.large, // Large text + comfortable spacing (1.1x)
+    interfaceSize:
+        InterfaceSize.large, // Large text + comfortable spacing (1.1x)
     fontSize: 1.1, // Kept for backward compatibility (updated to max value)
     simpleMode: true,
     simplifiedAnimations: true,

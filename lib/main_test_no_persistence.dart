@@ -113,15 +113,20 @@ void main() async {
   // TODO: Re-implement when notification system is rebuilt
   String? initialDeepLink;
 
-  // Initialize Firebase (handle Android auto-initialization)
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  } catch (e) {
-    // Firebase already initialized (common on Android with google-services.json)
-    if (!e.toString().contains('duplicate-app')) {
-      rethrow; // Re-throw if it's a different error
+  // Initialize Firebase only once (iOS AppDelegate/Android may already initialize)
+  if (Firebase.apps.isEmpty) {
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    } catch (e) {
+      // AppDelegate/SDK may have already configured [DEFAULT] before Dart boot.
+      final isDuplicateApp = e is FirebaseException
+          ? e.code == 'duplicate-app'
+          : e.toString().contains('duplicate-app');
+      if (!isDuplicateApp) {
+        rethrow;
+      }
     }
   }
 
@@ -288,7 +293,9 @@ void main() async {
 
     if (!alreadyMigrated) {
       if (kDebugMode) {
-        debugPrint('🔐 [Security] Starting one-time Hive encryption migration...');
+        debugPrint(
+          '🔐 [Security] Starting one-time Hive encryption migration...',
+        );
         debugPrint('   Migrating 4 sensitive boxes to AES-256 encryption');
       }
 
@@ -298,7 +305,9 @@ void main() async {
       if (kDebugMode) {
         debugPrint('🔐 [Security] Migration results:');
         results.forEach((boxName, migrated) {
-          final status = migrated ? '✅ Migrated' : '⚠️ Skipped (already encrypted or missing)';
+          final status = migrated
+              ? '✅ Migrated'
+              : '⚠️ Skipped (already encrypted or missing)';
           debugPrint('   - $boxName: $status');
         });
       }
@@ -309,7 +318,9 @@ void main() async {
 
       if (kDebugMode) {
         final migratedCount = results.values.where((v) => v).length;
-        debugPrint('🔐 [Security] ✅ Migration complete: $migratedCount/${results.length} boxes encrypted');
+        debugPrint(
+          '🔐 [Security] ✅ Migration complete: $migratedCount/${results.length} boxes encrypted',
+        );
         debugPrint('   Flag set: $migrationKey = true');
       }
 
@@ -320,7 +331,9 @@ void main() async {
       );
     } else {
       if (kDebugMode) {
-        debugPrint('🔐 [Security] Encryption already applied (skipping migration)');
+        debugPrint(
+          '🔐 [Security] Encryption already applied (skipping migration)',
+        );
       }
     }
   } catch (e, stackTrace) {
@@ -329,7 +342,9 @@ void main() async {
     if (kDebugMode) {
       debugPrint('❌ [Security] Hive encryption migration failed: $e');
       debugPrint('📍 Stack trace: $stackTrace');
-      debugPrint('⚠️ App will continue with unencrypted boxes (user data at risk!)');
+      debugPrint(
+        '⚠️ App will continue with unencrypted boxes (user data at risk!)',
+      );
     }
 
     // ✅ ADDED: Track migration failures in production
@@ -347,7 +362,12 @@ void main() async {
 
   // 🔐 SECURITY: Initialize Firebase App Check BEFORE any Firebase operations
   // This prevents API abuse from scraped/stolen API keys
-  await AppCheckConfig.initialize();
+  final appCheckReady = await AppCheckConfig.initialize();
+  if (!appCheckReady && !kDebugMode) {
+    throw StateError(
+      'Critical security initialization failed: Firebase App Check is required in production.',
+    );
+  }
 
   // 🔐 SECURITY: Initialize Device Security Checker
   // Detects jailbreak/root and provides security recommendations
@@ -415,8 +435,12 @@ void main() async {
     final requestConfiguration = RequestConfiguration(
       testDeviceIds: ['847b72988c2f5c8ba2c308cf222ace2c'],
     );
-    unawaited(MobileAds.instance.updateRequestConfiguration(requestConfiguration));
-    debugPrint('📱 AdMob test device configured: 847b72988c2f5c8ba2c308cf222ace2c');
+    unawaited(
+      MobileAds.instance.updateRequestConfiguration(requestConfiguration),
+    );
+    debugPrint(
+      '📱 AdMob test device configured: 847b72988c2f5c8ba2c308cf222ace2c',
+    );
   }
   await MobileAds.instance.initialize();
 
@@ -464,9 +488,7 @@ void main() async {
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
       ],
       // App lifecycle manager handles background/foreground transitions
-      child: const AppLifecycleManager(
-        child: FitLogApp(),
-      ),
+      child: const AppLifecycleManager(child: FitLogApp()),
     ),
   );
 }
@@ -505,7 +527,6 @@ Future<void> _initializeStorage() async {
   // ✅ NOTE: HiveBoxManagerEnhanced handles all Hive box initialization automatically
   // Boxes are opened on-demand when first accessed, no explicit init needed
   await Future.wait([
-
     // Exercise usage tracker (ML-enhanced fuzzy search)
     _safeInitialize(
       'ExerciseUsageTracker',
@@ -554,7 +575,8 @@ Future<void> _openBox<T>(String boxName) async {
     SecureLogger.debug('Box opened successfully', data: {'boxName': boxName});
   } catch (e, stackTrace) {
     // 🔐 SECURITY: Use SecureLogger with structured error data
-    SecureLogger.error('Failed to open box',
+    SecureLogger.error(
+      'Failed to open box',
       error: e,
       stackTrace: stackTrace,
       data: {'boxName': boxName},
@@ -562,7 +584,8 @@ Future<void> _openBox<T>(String boxName) async {
 
     // Handle corrupted boxes that need recovery
     if ((boxName == 'app_config' && e.toString().contains('typeId')) ||
-        (boxName == 'onboarding_state' && e.toString().contains('already open and of type Box<dynamic>'))) {
+        (boxName == 'onboarding_state' &&
+            e.toString().contains('already open and of type Box<dynamic>'))) {
       // Attempt to recover corrupted box
       try {
         // Close the box if it's open
@@ -600,7 +623,9 @@ Future<void> _preloadAppConfig() async {
       // Pre-populate the static cache in AppConfigNotifier
       AppConfigNotifier.preloadCache(savedConfig);
       if (kDebugMode) {
-        debugPrint('✅ [main] Pre-loaded AppConfig (initialOnboardingCompleted: ${savedConfig.initialOnboardingCompleted})');
+        debugPrint(
+          '✅ [main] Pre-loaded AppConfig (initialOnboardingCompleted: ${savedConfig.initialOnboardingCompleted})',
+        );
       }
     } else {
       if (kDebugMode) {

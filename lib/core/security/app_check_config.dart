@@ -45,6 +45,10 @@ import 'package:flutter/foundation.dart';
 class AppCheckConfig {
   AppCheckConfig._(); // Private constructor (static only)
 
+  static const String _webRecaptchaSiteKey = String.fromEnvironment(
+    'FIREBASE_APPCHECK_RECAPTCHA_SITE_KEY',
+  );
+
   // ✅ FIX #4: Cache activation state to avoid repeated initialization
   static bool _isActivated = false;
   static DateTime? _lastActivationAttempt;
@@ -88,6 +92,12 @@ class AppCheckConfig {
           debugPrint('🔐 [App Check] Initializing Firebase App Check (attempt $attempt/$maxAttempts)...');
         }
 
+        if (kIsWeb && _webRecaptchaSiteKey.isEmpty) {
+          throw StateError(
+            'Missing FIREBASE_APPCHECK_RECAPTCHA_SITE_KEY for Web App Check.',
+          );
+        }
+
         await FirebaseAppCheck.instance.activate(
           // iOS: Use debug provider in development, App Attest in release
           // ✅ SECURITY: App Attest verifies app is running on genuine Apple device
@@ -103,12 +113,10 @@ class AppCheckConfig {
               ? const AndroidDebugProvider()
               : const AndroidPlayIntegrityProvider(),
 
-          // Web: Use reCAPTCHA v3 (for web deployment)
-          // ⚠️ TODO: Replace with your actual reCAPTCHA site key from Firebase Console
-          // Get it from: Firebase Console → App Check → Web apps → reCAPTCHA v3
-          providerWeb: ReCaptchaV3Provider(
-            'your-recaptcha-v3-site-key-here',
-          ),
+          // Web: enforce explicit site key via --dart-define
+          providerWeb: kIsWeb
+              ? ReCaptchaV3Provider(_webRecaptchaSiteKey)
+              : null,
         );
 
         // ✅ FIX #4: Cache successful activation
@@ -158,8 +166,8 @@ class AppCheckConfig {
     }
 
     if (kDebugMode) {
-      debugPrint('⚠️ [App Check] All $maxAttempts attempts failed - continuing with placeholder tokens');
-      debugPrint('   ⚠️ Security reduced: API requests will use placeholder App Check tokens');
+      debugPrint('⚠️ [App Check] All $maxAttempts attempts failed.');
+      debugPrint('   ⚠️ Security reduced until App Check can be activated.');
     }
 
     return false;

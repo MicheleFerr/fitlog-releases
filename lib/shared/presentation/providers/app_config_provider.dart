@@ -23,7 +23,8 @@ class AppConfigNotifier extends Notifier<AppConfig> {
   // Set to TRUE to always see onboarding (for testing/development)
   // Set to FALSE for production behavior
   // ═══════════════════════════════════════════════════════════════════════════
-  static const bool _forceOnboardingDebug = false; // Set to true to force onboarding for testing
+  static const bool _forceOnboardingDebug =
+      false; // Set to true to force onboarding for testing
 
   // CRITICAL: Initialization tracking
   bool _isInitialized = false;
@@ -54,7 +55,9 @@ class AppConfigNotifier extends Notifier<AppConfig> {
   static void preloadCache(AppConfig config) {
     _cachedConfig = config;
     if (kDebugMode) {
-      debugPrint('[AppConfig] 🔧 Pre-loaded cache (initialOnboardingCompleted: ${config.initialOnboardingCompleted})');
+      debugPrint(
+        '[AppConfig] 🔧 Pre-loaded cache (initialOnboardingCompleted: ${config.initialOnboardingCompleted})',
+      );
     }
   }
 
@@ -123,13 +126,17 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     // 🔧 DEBUG: Force onboarding on every app start (for testing)
     if (_forceOnboardingDebug) {
       _cachedConfig = null; // Clear cache to force reload
-      debugPrint('🔧 [AppConfig] DEBUG MODE: Forcing onboarding (cache cleared)');
+      debugPrint(
+        '🔧 [AppConfig] DEBUG MODE: Forcing onboarding (cache cleared)',
+      );
     }
 
     // ✅ FIX: Return cached config if available (prevents onboarding restart)
     if (_cachedConfig != null) {
       if (kDebugMode) {
-        debugPrint('✅ [AppConfig] Returning cached config (initialOnboardingCompleted: ${_cachedConfig!.initialOnboardingCompleted})');
+        debugPrint(
+          '✅ [AppConfig] Returning cached config (initialOnboardingCompleted: ${_cachedConfig!.initialOnboardingCompleted})',
+        );
       }
       // Still trigger async init to ensure Hive box is ready
       _initCompleter = Completer<void>();
@@ -156,7 +163,9 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       final countryCode = deviceLocale.countryCode?.toUpperCase();
 
       if (kDebugMode) {
-        debugPrint('🌍 [AppConfig] Device locale detected: $languageCode-$countryCode');
+        debugPrint(
+          '🌍 [AppConfig] Device locale detected: $languageCode-$countryCode',
+        );
       }
 
       // Check if device locale is supported (en or it)
@@ -165,24 +174,22 @@ class AppConfigNotifier extends Notifier<AppConfig> {
         if (kDebugMode) {
           debugPrint('✅ [AppConfig] Using Italian locale for default config');
         }
-        return const AppConfig(
-          languageCode: 'it',
-          countryCode: 'IT',
-        );
+        return const AppConfig(languageCode: 'it', countryCode: 'IT');
       } else if (languageCode == 'en') {
         // English device - use English config with proper country code
         final effectiveCountryCode = countryCode ?? 'US';
         if (kDebugMode) {
-          debugPrint('✅ [AppConfig] Using English locale ($effectiveCountryCode) for default config');
+          debugPrint(
+            '✅ [AppConfig] Using English locale ($effectiveCountryCode) for default config',
+          );
         }
-        return AppConfig(
-          languageCode: 'en',
-          countryCode: effectiveCountryCode,
-        );
+        return AppConfig(languageCode: 'en', countryCode: effectiveCountryCode);
       } else {
         // Unsupported locale - fallback to English
         if (kDebugMode) {
-          debugPrint('⚠️ [AppConfig] Unsupported locale "$languageCode", defaulting to English');
+          debugPrint(
+            '⚠️ [AppConfig] Unsupported locale "$languageCode", defaulting to English',
+          );
         }
         return const AppConfig();
       }
@@ -210,7 +217,9 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       _isInitializing = true; // P0 FIX: Set lock
 
       if (kDebugMode) {
-        debugPrint('📱 [AppConfig] Starting initialization (attempt ${_initRetryCount + 1})');
+        debugPrint(
+          '📱 [AppConfig] Starting initialization (attempt ${_initRetryCount + 1})',
+        );
       }
 
       final boxManager = ref.read(hiveBoxManagerProvider);
@@ -220,16 +229,22 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       if (savedConfig != null) {
         // 🔧 DEBUG: Force onboarding to always show (for testing)
         if (_forceOnboardingDebug) {
-          final debugConfig = savedConfig.copyWith(initialOnboardingCompleted: false);
+          final debugConfig = savedConfig.copyWith(
+            initialOnboardingCompleted: false,
+          );
           state = debugConfig;
           _cachedConfig = debugConfig;
-          debugPrint('🔧 [AppConfig] DEBUG MODE: Forced initialOnboardingCompleted = false');
+          debugPrint(
+            '🔧 [AppConfig] DEBUG MODE: Forced initialOnboardingCompleted = false',
+          );
         } else {
           state = savedConfig;
           // ✅ FIX: Update cache with loaded config
           _cachedConfig = savedConfig;
           if (kDebugMode) {
-            debugPrint('✅ [AppConfig] Loaded saved configuration (initialOnboardingCompleted: ${savedConfig.initialOnboardingCompleted})');
+            debugPrint(
+              '✅ [AppConfig] Loaded saved configuration (initialOnboardingCompleted: ${savedConfig.initialOnboardingCompleted})',
+            );
           }
         }
       } else {
@@ -239,7 +254,9 @@ class AppConfigNotifier extends Notifier<AppConfig> {
         state = defaultConfig;
         _cachedConfig = defaultConfig;
         if (kDebugMode) {
-          debugPrint('📋 [AppConfig] No saved config, using defaults with device locale: ${defaultConfig.languageCode}-${defaultConfig.countryCode}');
+          debugPrint(
+            '📋 [AppConfig] No saved config, using defaults with device locale: ${defaultConfig.languageCode}-${defaultConfig.countryCode}',
+          );
         }
       }
 
@@ -252,12 +269,16 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        debugPrint('❌ [AppConfig] Initialization failed (attempt ${_initRetryCount + 1}): $e');
+        debugPrint(
+          '❌ [AppConfig] Initialization failed (attempt ${_initRetryCount + 1}): $e',
+        );
         debugPrint('📍 Stack trace: $stackTrace');
       }
 
-      // Use default config as fallback
-      state = const AppConfig();
+      // Use locale-aware config as fallback
+      final fallbackConfig = _getDefaultConfigWithDeviceLocale();
+      state = fallbackConfig;
+      _cachedConfig = fallbackConfig;
 
       // Complete with error to prevent hanging
       if (!_initCompleter!.isCompleted) {
@@ -270,13 +291,24 @@ class AppConfigNotifier extends Notifier<AppConfig> {
 
   /// CRITICAL: Ensure initialization before operations
   Future<void> _ensureInitialized() async {
-    if (_isInitialized) return;
+    if (_isInitialized && _configBox != null) return;
 
     if (_initRetryCount >= _maxInitRetries) {
       if (kDebugMode) {
-        debugPrint('❌ [AppConfig] Initialization failed after $_maxInitRetries attempts');
+        debugPrint(
+          '❌ [AppConfig] Initialization failed after $_maxInitRetries attempts',
+        );
       }
-      throw Exception('AppConfig initialization failed after $_maxInitRetries attempts');
+      throw Exception(
+        'AppConfig initialization failed after $_maxInitRetries attempts',
+      );
+    }
+
+    // Guard against cases where notifier methods are called before build()
+    // completed the async initialization wiring.
+    if (_initCompleter == null) {
+      _initCompleter = Completer<void>();
+      await _initializeConfig();
     }
 
     if (_initCompleter != null) {
@@ -290,32 +322,46 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       } catch (e) {
         _initRetryCount++;
         if (kDebugMode) {
-          debugPrint('⚠️ [AppConfig] Retrying initialization (attempt ${_initRetryCount + 1})');
+          debugPrint(
+            '⚠️ [AppConfig] Retrying initialization (attempt ${_initRetryCount + 1})',
+          );
         }
 
         _initCompleter = Completer<void>();
         await _initializeConfig();
       }
     }
+
+    // Last-resort lazy reopen: prevents "config box not initialized"
+    // during rare race conditions in startup/onboarding transitions.
+    if (_configBox == null) {
+      final boxManager = ref.read(hiveBoxManagerProvider);
+      _configBox = await boxManager.openBox<AppConfig>(_boxName);
+      _isInitialized = true;
+      if (kDebugMode) {
+        debugPrint('✅ [AppConfig] Lazy-opened config box');
+      }
+    }
   }
 
-  Future<void> _saveConfig() async {
+  Future<void> _saveConfig({bool rethrowOnError = false}) async {
     try {
       // CRITICAL: Ensure initialized before saving
       await _ensureInitialized();
 
       if (_isDisposed) {
-        if (kDebugMode) {
-          debugPrint('⚠️ [AppConfig] Cannot save: provider disposed');
-        }
-        return;
+        throw StateError('[AppConfig] Cannot save: provider disposed');
       }
 
       if (_configBox == null) {
-        if (kDebugMode) {
-          debugPrint('⚠️ [AppConfig] Cannot save: config box not initialized');
-        }
-        return;
+        final boxManager = ref.read(hiveBoxManagerProvider);
+        _configBox = await boxManager.openBox<AppConfig>(_boxName);
+      }
+
+      if (_configBox == null) {
+        throw StateError(
+          '[AppConfig] Cannot save: config box not initialized (after retry)',
+        );
       }
 
       await _configBox!.put('config', state);
@@ -324,14 +370,16 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       _cachedConfig = state;
 
       if (kDebugMode) {
-        debugPrint('✅ [AppConfig] Configuration saved successfully (initialOnboardingCompleted: ${state.initialOnboardingCompleted})');
+        debugPrint(
+          '✅ [AppConfig] Configuration saved successfully (initialOnboardingCompleted: ${state.initialOnboardingCompleted})',
+        );
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [AppConfig] Failed to save configuration: $e');
         debugPrint('📍 Stack trace: $stackTrace');
       }
-      // Don't rethrow - allow app to continue even if save fails
+      if (rethrowOnError) rethrow;
     }
   }
 
@@ -436,7 +484,9 @@ class AppConfigNotifier extends Notifier<AppConfig> {
 
       if (fontSize < 0.8 || fontSize > 1.1) {
         if (kDebugMode) {
-          debugPrint('⚠️ [AppConfig] Invalid font size: $fontSize (must be 0.8-1.1)');
+          debugPrint(
+            '⚠️ [AppConfig] Invalid font size: $fontSize (must be 0.8-1.1)',
+          );
         }
         return;
       }
@@ -447,14 +497,13 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       // Derive interfaceSize from the continuous value for layout mode
       final interfaceSize = InterfaceSize.fromFontSize(rounded);
 
-      state = state.copyWith(
-        fontSize: rounded,
-        interfaceSize: interfaceSize,
-      );
+      state = state.copyWith(fontSize: rounded, interfaceSize: interfaceSize);
       await _saveConfig();
 
       if (kDebugMode) {
-        debugPrint('✅ [AppConfig] Font size set to: $rounded (layout: ${interfaceSize.setRowMode})');
+        debugPrint(
+          '✅ [AppConfig] Font size set to: $rounded (layout: ${interfaceSize.setRowMode})',
+        );
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
@@ -473,13 +522,18 @@ class AppConfigNotifier extends Notifier<AppConfig> {
 
       state = state.copyWith(
         interfaceSize: interfaceSize,
-        fontSize: interfaceSize.fontSize, // Keep fontSize in sync for backward compat
+        fontSize:
+            interfaceSize.fontSize, // Keep fontSize in sync for backward compat
       );
       await _saveConfig();
 
       if (kDebugMode) {
-        debugPrint('✅ [AppConfig] Interface size set to: ${interfaceSize.name}');
-        debugPrint('   Font: ${interfaceSize.fontSize}x, Layout: ${interfaceSize.setRowMode}');
+        debugPrint(
+          '✅ [AppConfig] Interface size set to: ${interfaceSize.name}',
+        );
+        debugPrint(
+          '   Font: ${interfaceSize.fontSize}x, Layout: ${interfaceSize.setRowMode}',
+        );
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
@@ -631,7 +685,9 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       // Input validation
       if (seconds < 0 || seconds > 600) {
         if (kDebugMode) {
-          debugPrint('⚠️ [AppConfig] Invalid rest time: $seconds (must be 0-600)');
+          debugPrint(
+            '⚠️ [AppConfig] Invalid rest time: $seconds (must be 0-600)',
+          );
         }
         return;
       }
@@ -678,6 +734,119 @@ class AppConfigNotifier extends Notifier<AppConfig> {
         debugPrint(
           '❌ [AppConfig] Error setting default rest between exercises: $e',
         );
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
+  Future<void> setDefaultExerciseSets(int sets) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      if (sets < 1 || sets > 8) {
+        if (kDebugMode) {
+          debugPrint(
+            '⚠️ [AppConfig] Invalid default sets: $sets (must be 1-8)',
+          );
+        }
+        return;
+      }
+
+      state = state.copyWith(defaultExerciseSets: sets);
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint('✅ [AppConfig] Default exercise sets set to: $sets');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error setting default exercise sets: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
+  Future<void> setDefaultExerciseReps(int reps) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      if (reps < 3 || reps > 30) {
+        if (kDebugMode) {
+          debugPrint(
+            '⚠️ [AppConfig] Invalid default reps: $reps (must be 3-30)',
+          );
+        }
+        return;
+      }
+
+      state = state.copyWith(defaultExerciseReps: reps);
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint('✅ [AppConfig] Default exercise reps set to: $reps');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error setting default exercise reps: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
+  Future<void> setDefaultExerciseSetup({
+    required int sets,
+    required int reps,
+  }) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      final safeSets = sets.clamp(1, 8);
+      final safeReps = reps.clamp(3, 30);
+
+      state = state.copyWith(
+        defaultExerciseSets: safeSets,
+        defaultExerciseReps: safeReps,
+      );
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint(
+          '✅ [AppConfig] Default exercise setup set to: ${safeSets}x$safeReps',
+        );
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error setting default exercise setup: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
+  Future<void> setDefaultExercisePresets({
+    String? weightedPresets,
+    String? repsPresets,
+    String? timePresets,
+  }) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      state = state.copyWith(
+        defaultWeightedPresets: weightedPresets ?? state.defaultWeightedPresets,
+        defaultRepsPresets: repsPresets ?? state.defaultRepsPresets,
+        defaultTimePresets: timePresets ?? state.defaultTimePresets,
+      );
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint('✅ [AppConfig] Default exercise presets updated');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error setting default exercise presets: $e');
         debugPrint('📍 Stack trace: $stackTrace');
       }
     }
@@ -787,23 +956,41 @@ class AppConfigNotifier extends Notifier<AppConfig> {
 
   // Initial Onboarding settings
   Future<void> setInitialOnboardingCompleted(bool completed) async {
+    final previousState = state;
     try {
-      print('🔧 [AppConfig] setInitialOnboardingCompleted called with: $completed');
+      print(
+        '🔧 [AppConfig] setInitialOnboardingCompleted called with: $completed',
+      );
       await _ensureInitialized();
       if (_isDisposed) {
-        print('⚠️ [AppConfig] Provider disposed - cannot set onboarding completed');
-        return;
+        throw StateError(
+          '[AppConfig] Provider disposed - cannot set onboarding completed',
+        );
       }
 
-      print('🔧 [AppConfig] Current state.initialOnboardingCompleted: ${state.initialOnboardingCompleted}');
+      print(
+        '🔧 [AppConfig] Current state.initialOnboardingCompleted: ${state.initialOnboardingCompleted}',
+      );
       state = state.copyWith(initialOnboardingCompleted: completed);
-      print('✅ [AppConfig] State updated to: ${state.initialOnboardingCompleted}');
+      print(
+        '✅ [AppConfig] State updated to: ${state.initialOnboardingCompleted}',
+      );
 
-      await _saveConfig();
+      await _saveConfig(rethrowOnError: true);
+      final persisted = _configBox?.get('config');
+      if (persisted == null ||
+          persisted.initialOnboardingCompleted != completed) {
+        throw StateError(
+          '[AppConfig] Post-save verification failed for initialOnboardingCompleted',
+        );
+      }
       print('💾 [AppConfig] Config saved to Hive');
     } catch (e, stackTrace) {
+      final persisted = _configBox?.get('config');
+      state = persisted ?? previousState;
       print('❌ [AppConfig] Error setting initial onboarding completed: $e');
       print('📍 Stack trace: $stackTrace');
+      rethrow;
     }
   }
 
@@ -866,7 +1053,7 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       }
     }
   }
-  
+
   // Workout customization settings
   Future<void> updateWorkoutSettings({
     bool? rpeTracking,
@@ -952,7 +1139,7 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       }
     }
   }
-  
+
   // General update method
   Future<void> updateConfig(AppConfig newConfig) async {
     try {
@@ -1046,7 +1233,6 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       throw Exception('Invalid configuration format: $e');
     }
   }
-
 }
 
 // 🔧 PERF FIX: Helper providers use .select() to only rebuild when specific field changes
@@ -1129,7 +1315,9 @@ final vibrationsEnabledProvider = Provider<bool>((ref) {
 
 // Keep screen awake during workout provider
 final keepScreenAwakeProvider = Provider<bool>((ref) {
-  return ref.watch(appConfigProvider.select((c) => c.keepScreenAwakeDuringWorkout));
+  return ref.watch(
+    appConfigProvider.select((c) => c.keepScreenAwakeDuringWorkout),
+  );
 });
 
 // Utility functions

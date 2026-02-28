@@ -80,17 +80,28 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       defaultRestBetweenExercises: fields[53] == null
           ? 90
           : (fields[53] as num).toInt(),
-      hasSeenRestPauseTutorial: fields[54] == null ? false : fields[54] as bool,
-      appThemeModeValue: fields[55] as String?,
-      showWeightVerification: fields[56] == null ? true : fields[56] as bool,
-      metronomeEnabled: fields[57] == null ? false : fields[57] as bool,
+      defaultExerciseSets: fields[54] == null ? 4 : (fields[54] as num).toInt(),
+      defaultExerciseReps: fields[55] == null ? 8 : (fields[55] as num).toInt(),
+      hasSeenRestPauseTutorial: fields[56] == null ? false : fields[56] as bool,
+      defaultWeightedPresets: fields[57] == null
+          ? '3x10,4x8,5x5'
+          : fields[57] as String,
+      defaultRepsPresets: fields[58] == null
+          ? '3x15,4x12,2x20'
+          : fields[58] as String,
+      defaultTimePresets: fields[59] == null
+          ? '3x30,3x60,4x45'
+          : fields[59] as String,
+      appThemeModeValue: fields[60] as String?,
+      showWeightVerification: fields[61] == null ? true : fields[61] as bool,
+      metronomeEnabled: fields[62] == null ? false : fields[62] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, AppConfig obj) {
     writer
-      ..writeByte(57)
+      ..writeByte(62)
       ..writeByte(0)
       ..write(obj.languageCode)
       ..writeByte(1)
@@ -198,12 +209,22 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       ..writeByte(53)
       ..write(obj.defaultRestBetweenExercises)
       ..writeByte(54)
-      ..write(obj.hasSeenRestPauseTutorial)
+      ..write(obj.defaultExerciseSets)
       ..writeByte(55)
-      ..write(obj.appThemeModeValue)
+      ..write(obj.defaultExerciseReps)
       ..writeByte(56)
-      ..write(obj.showWeightVerification)
+      ..write(obj.hasSeenRestPauseTutorial)
       ..writeByte(57)
+      ..write(obj.defaultWeightedPresets)
+      ..writeByte(58)
+      ..write(obj.defaultRepsPresets)
+      ..writeByte(59)
+      ..write(obj.defaultTimePresets)
+      ..writeByte(60)
+      ..write(obj.appThemeModeValue)
+      ..writeByte(61)
+      ..write(obj.showWeightVerification)
+      ..writeByte(62)
       ..write(obj.metronomeEnabled);
   }
 

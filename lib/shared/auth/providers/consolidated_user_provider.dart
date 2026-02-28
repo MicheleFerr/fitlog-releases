@@ -33,6 +33,8 @@
 /// - Entity: UserProfile (stable version)
 library;
 
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -133,33 +135,60 @@ final isAuthenticatedProvider = Provider<bool>((ref) {
 ///
 /// Replaces: userProfileProvider, cachedUserProfileProvider,
 ///           unifiedUserProfileProvider, userStateProvider
-final userProfileProvider = StreamProvider<UserProfile?>((ref) async* {
+final userProfileProvider = StreamProvider<UserProfile?>((ref) {
   final firestore = FirebaseFirestore.instance;
   final cache = ref.watch(userProfileCacheProvider);
 
-  await for (final firebaseUser in FirebaseAuth.instance.authStateChanges()) {
-    if (firebaseUser == null) {
-      // User logged out, clear cache
-      cache.clearAll();
-      yield null;
-    } else {
-      // Check cache first and yield immediately for fast UI
-      final cachedProfile = cache.get(firebaseUser.uid);
-      if (cachedProfile != null) {
-        yield cachedProfile;
-        // DON'T continue - fall through to start Firestore listener
+  return Stream<UserProfile?>.multi((emitter) {
+    StreamSubscription<User?>? authSub;
+    StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? profileSub;
+
+    Future<void> emitFallback(User firebaseUser) async {
+      final fallbackProfile = UserProfile(
+        uid: firebaseUser.uid,
+        email: firebaseUser.email ?? '',
+        displayName: firebaseUser.displayName ?? 'GymBro User',
+        photoURL: firebaseUser.photoURL,
+        accountTier: AccountTier.free,
+        templateQuota: TemplateQuota.forTier(AccountTier.free),
+        createdAt: DateTime.now(),
+        lastLoginAt: DateTime.now(),
+        preferences: {},
+        stats: {},
+        isGuest: firebaseUser.isAnonymous,
+      );
+
+      cache.set(firebaseUser.uid, fallbackProfile);
+      if (!emitter.isClosed) {
+        emitter.add(fallbackProfile);
+      }
+    }
+
+    Future<void> switchToUser(User? firebaseUser) async {
+      await profileSub?.cancel();
+      profileSub = null;
+
+      if (firebaseUser == null) {
+        cache.clearAll();
+        if (!emitter.isClosed) {
+          emitter.add(null);
+        }
+        return;
+      }
+
+      final uid = firebaseUser.uid;
+      final docRef = firestore.collection('users').doc(uid);
+      final cachedProfile = cache.get(uid);
+
+      if (cachedProfile != null && !emitter.isClosed) {
+        emitter.add(cachedProfile);
       }
 
       try {
-        // Fetch current state from Firestore (skip if we already have cache)
         if (cachedProfile == null) {
-          final snapshot = await firestore
-              .collection('users')
-              .doc(firebaseUser.uid)
-              .get();
+          final snapshot = await docRef.get();
 
           if (!snapshot.exists) {
-            // Create basic profile from Firebase user
             final data = {
               'uid': firebaseUser.uid,
               'email': firebaseUser.email ?? '',
@@ -179,55 +208,57 @@ final userProfileProvider = StreamProvider<UserProfile?>((ref) async* {
               'isGuest': firebaseUser.isAnonymous,
             };
 
-            // Save to Firestore
-            await snapshot.reference.set(data);
-
-            // Create profile and cache it
+            await docRef.set(data);
             final profile = UserProfile.fromJson(data);
-            cache.set(firebaseUser.uid, profile);
-            yield profile;
+            cache.set(uid, profile);
+            if (!emitter.isClosed) {
+              emitter.add(profile);
+            }
           } else {
-            // Use existing profile
             final profile = UserProfile.fromFirestore(snapshot);
-            cache.set(firebaseUser.uid, profile);
-            yield profile;
+            cache.set(uid, profile);
+            if (!emitter.isClosed) {
+              emitter.add(profile);
+            }
           }
         }
 
-        // ALWAYS listen for real-time updates (even if we started from cache)
-        await for (final updateSnapshot
-            in firestore
-                .collection('users')
-                .doc(firebaseUser.uid)
-                .snapshots()) {
-          if (updateSnapshot.exists) {
+        profileSub = docRef.snapshots().listen(
+          (updateSnapshot) {
+            if (!updateSnapshot.exists) {
+              return;
+            }
+
             final updatedProfile = UserProfile.fromFirestore(updateSnapshot);
-            cache.set(firebaseUser.uid, updatedProfile);
-            yield updatedProfile;
-          }
-        }
-      } catch (error) {
-        // Fallback to basic profile
-        final fallbackProfile = UserProfile(
-          uid: firebaseUser.uid,
-          email: firebaseUser.email ?? '',
-          displayName: firebaseUser.displayName ?? 'GymBro User',
-          photoURL: firebaseUser.photoURL,
-          accountTier: AccountTier.free,
-          templateQuota: TemplateQuota.forTier(AccountTier.free),
-          createdAt: DateTime.now(),
-          lastLoginAt: DateTime.now(),
-          preferences: {},
-          stats: {},
-          isGuest: firebaseUser.isAnonymous,
+            cache.set(uid, updatedProfile);
+            if (!emitter.isClosed) {
+              emitter.add(updatedProfile);
+            }
+          },
+          onError: (Object error, StackTrace stackTrace) {
+            if (kDebugMode) {
+              debugPrint('[UserProfile] Snapshot stream error: $error');
+            }
+            unawaited(emitFallback(firebaseUser));
+          },
         );
-
-        // Cache fallback to avoid repeated errors
-        cache.set(firebaseUser.uid, fallbackProfile);
-        yield fallbackProfile;
+      } catch (error) {
+        if (kDebugMode) {
+          debugPrint('[UserProfile] Bootstrap error: $error');
+        }
+        await emitFallback(firebaseUser);
       }
     }
-  }
+
+    authSub = FirebaseAuth.instance.authStateChanges().listen((firebaseUser) {
+      unawaited(switchToUser(firebaseUser));
+    }, onError: emitter.addError);
+
+    emitter.onCancel = () async {
+      await profileSub?.cancel();
+      await authSub?.cancel();
+    };
+  });
 });
 
 /// ============================================================================
@@ -501,9 +532,7 @@ final userProfileNotifierProvider =
 /// 🔧 PERF FIX: Use .select() to only rebuild when accountTier changes
 final isPremiumUserProvider = Provider<bool>((ref) {
   final accountTier = ref.watch(
-    userProfileProvider.select(
-      (asyncValue) => asyncValue.value?.accountTier,
-    ),
+    userProfileProvider.select((asyncValue) => asyncValue.value?.accountTier),
   );
 
   return accountTier != AccountTier.free;
@@ -514,9 +543,7 @@ final isPremiumUserProvider = Provider<bool>((ref) {
 /// 🔧 PERF FIX: Use .select() to only rebuild when displayName changes
 final userDisplayNameProvider = Provider<String>((ref) {
   final displayName = ref.watch(
-    userProfileProvider.select(
-      (asyncValue) => asyncValue.value?.displayName,
-    ),
+    userProfileProvider.select((asyncValue) => asyncValue.value?.displayName),
   );
 
   return displayName ?? 'GymBro User';
@@ -548,9 +575,7 @@ final accountTierProvider = Provider<AccountTier>((ref) {
 /// 🔧 PERF FIX: Use .select() to only rebuild when templateQuota changes
 final templateQuotaProvider = Provider<TemplateQuota>((ref) {
   final templateQuota = ref.watch(
-    userProfileProvider.select(
-      (asyncValue) => asyncValue.value?.templateQuota,
-    ),
+    userProfileProvider.select((asyncValue) => asyncValue.value?.templateQuota),
   );
 
   return templateQuota ?? TemplateQuota.forTier(AccountTier.free);

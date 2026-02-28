@@ -12,11 +12,8 @@ class FeatureFlags {
 
   /// AI Coach feature flag
   ///
-  /// Enabled only if OpenRouter API key is configured.
-  /// This allows graceful degradation if key is missing.
-  static bool get aiCoachEnabled =>
-      EnvironmentConfig.openRouterApiKey != null &&
-      EnvironmentConfig.openRouterApiKey!.isNotEmpty;
+  /// Enabled by default: API key is managed server-side via Cloud Functions.
+  static bool get aiCoachEnabled => true;
 
   /// Workout Import from text/photo - requires OpenRouter API key
   /// TEMPORARILY DISABLED - Remove this line to re-enable
