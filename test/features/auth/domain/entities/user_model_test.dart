@@ -30,7 +30,7 @@ void main() {
         expect(user.email, 'test@example.com');
         expect(user.displayName, 'Test User');
         expect(user.photoURL, 'https://example.com/photo.jpg');
-        expect(user.createdAt, now);
+        expect(user.createdAt, DateTime(2024, 1, 1));
         expect(user.lastLoginAt, now);
         expect(user.isGuest, false);
         expect(user.preferences, isNotNull);

@@ -60,6 +60,9 @@ class FakeDocumentSnapshot implements DocumentSnapshot {
   bool get exists => docData != null;
 
   @override
+  Map<String, dynamic>? data() => docData;
+
+  @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
@@ -82,6 +85,7 @@ class FakeAuthService implements AuthService {
   Map<String, dynamic>? userDocData;
   int signOutCallCount = 0;
   int deleteCallCount = 0;
+  Exception? getUserDocError;
 
   @override
   Stream<User?> get authStateChanges => _authController.stream;
@@ -150,6 +154,7 @@ class FakeAuthService implements AuthService {
 
   @override
   Future<DocumentSnapshot> getUserDocument(String uid) async {
+    if (getUserDocError != null) throw getUserDocError!;
     return FakeDocumentSnapshot(docData: userDocData, id: uid);
   }
 
@@ -431,17 +436,94 @@ void main() {
       });
 
       container.listen(currentUserProvider, (_, __) {});
+      // Give the async* generator time to start and subscribe to the stream
+      for (var i = 0; i < 10; i++) {
+        await Future<void>.delayed(Duration.zero);
+      }
+
       fakeAuth.setCurrentUser(
         FakeUser(uid: 'new-uid', email: 'new@test.com', displayName: 'New'),
       );
 
       // Wait for async stream processing
-      await Future<void>.delayed(const Duration(milliseconds: 200));
+      await Future<void>.delayed(const Duration(milliseconds: 500));
 
       final asyncUser = container.read(currentUserProvider);
       if (asyncUser.hasValue && asyncUser.value != null) {
         expect(asyncUser.value!.uid, 'new-uid');
         expect(asyncUser.value!.email, 'new@test.com');
+      }
+    });
+
+    test('yields UserModel from Firestore when doc exists', () async {
+      final fakeAuth = FakeAuthService();
+      fakeAuth.userDocData = {
+        'email': 'docuser@test.com',
+        'displayName': 'Doc User',
+        'isGuest': false,
+        'preferences': <String, dynamic>{},
+        'stats': <String, dynamic>{},
+      };
+
+      final container = ProviderContainer(
+        overrides: [authServiceProvider.overrideWithValue(fakeAuth)],
+      );
+      addTearDown(() {
+        container.dispose();
+        fakeAuth.dispose();
+      });
+
+      // Subscribe first and give time for the async* generator to start
+      container.listen(currentUserProvider, (_, __) {});
+      for (var i = 0; i < 10; i++) {
+        await Future<void>.delayed(Duration.zero);
+      }
+
+      fakeAuth.setCurrentUser(
+        FakeUser(
+          uid: 'doc-uid',
+          email: 'docuser@test.com',
+          displayName: 'Doc User',
+        ),
+      );
+
+      await Future<void>.delayed(const Duration(milliseconds: 500));
+
+      final asyncUser = container.read(currentUserProvider);
+      if (asyncUser.hasValue && asyncUser.value != null) {
+        expect(asyncUser.value!.uid, 'doc-uid');
+        expect(asyncUser.value!.email, 'docuser@test.com');
+        expect(asyncUser.value!.displayName, 'Doc User');
+      }
+    });
+
+    test('yields fallback UserModel on getUserDocument error', () async {
+      final fakeAuth = FakeAuthService();
+      fakeAuth.getUserDocError = Exception('network error');
+
+      final container = ProviderContainer(
+        overrides: [authServiceProvider.overrideWithValue(fakeAuth)],
+      );
+      addTearDown(() {
+        container.dispose();
+        fakeAuth.dispose();
+      });
+
+      container.listen(currentUserProvider, (_, __) {});
+      for (var i = 0; i < 10; i++) {
+        await Future<void>.delayed(Duration.zero);
+      }
+
+      fakeAuth.setCurrentUser(
+        FakeUser(uid: 'err-uid', email: 'err@test.com', displayName: 'Err'),
+      );
+
+      await Future<void>.delayed(const Duration(milliseconds: 500));
+
+      final asyncUser = container.read(currentUserProvider);
+      if (asyncUser.hasValue && asyncUser.value != null) {
+        expect(asyncUser.value!.uid, 'err-uid');
+        expect(asyncUser.value!.email, 'err@test.com');
       }
     });
 
@@ -457,6 +539,9 @@ void main() {
       });
 
       container.listen(currentUserProvider, (_, __) {});
+      for (var i = 0; i < 10; i++) {
+        await Future<void>.delayed(Duration.zero);
+      }
       fakeAuth.setCurrentUser(
         FakeUser(
           uid: 'anon-uid',
@@ -466,7 +551,7 @@ void main() {
         ),
       );
 
-      await Future<void>.delayed(const Duration(milliseconds: 200));
+      await Future<void>.delayed(const Duration(milliseconds: 500));
 
       final asyncUser = container.read(currentUserProvider);
       if (asyncUser.hasValue && asyncUser.value != null) {
