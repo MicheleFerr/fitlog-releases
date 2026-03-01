@@ -10,11 +10,20 @@ import 'dart:math';
 import 'package:gymbro_flutter_new/core/services/rate_limiter.dart';
 
 class AuthService with RateLimiterMixin {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  // google_sign_in 7.x: Use singleton instance
-  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+  AuthService({
+    FirebaseAuth? auth,
+    FirebaseFirestore? firestore,
+    FirebaseStorage? storage,
+    GoogleSignIn? googleSignIn,
+  })  : _auth = auth ?? FirebaseAuth.instance,
+        _firestore = firestore ?? FirebaseFirestore.instance,
+        _storage = storage ?? FirebaseStorage.instance,
+        _googleSignIn = googleSignIn ?? GoogleSignIn.instance;
+
+  final FirebaseAuth _auth;
+  final FirebaseFirestore _firestore;
+  final FirebaseStorage _storage;
+  final GoogleSignIn _googleSignIn;
   static bool _googleSignInInitialized = false;
 
   /// Initialize GoogleSignIn (must be called once at app startup)
