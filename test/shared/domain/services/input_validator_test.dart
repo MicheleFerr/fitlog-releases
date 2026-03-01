@@ -535,4 +535,189 @@ void main() {
       expect(sanitized.contains(';'), false);
     });
   });
+
+  group('InputValidator - Static Methods', () {
+    test('sanitizeText empty returns empty', () {
+      expect(InputValidator.sanitizeText(''), '');
+    });
+
+    test('sanitizeText removes HTML tags', () {
+      final result = InputValidator.sanitizeText('<b>Bold</b>');
+      expect(result.contains('<b>'), false);
+    });
+
+    test('sanitizeText respects maxLength', () {
+      final result = InputValidator.sanitizeText('A' * 2000, maxLength: 10);
+      expect(result.length, lessThanOrEqualTo(10));
+    });
+
+    test('sanitizeText uses default max length', () {
+      final result = InputValidator.sanitizeText('A' * 1001);
+      expect(result.length, lessThanOrEqualTo(1000));
+    });
+
+    test('sanitizeText removes control characters', () {
+      final result = InputValidator.sanitizeText('Hello\x00World');
+      expect(result.contains('\x00'), false);
+    });
+
+    test('sanitizeName removes disallowed characters', () {
+      final result = InputValidator.sanitizeName('Bench Press!@#\$%^');
+      expect(result, isNotEmpty);
+      // Should keep alphanumeric and allowed punctuation
+      expect(result.contains('Bench'), true);
+    });
+
+    test('sanitizeName respects maxLength', () {
+      final result = InputValidator.sanitizeName('A' * 200, maxLength: 10);
+      expect(result.length, lessThanOrEqualTo(10));
+    });
+
+    test('sanitizeNumber valid double', () {
+      expect(InputValidator.sanitizeNumber('80.5'), 80.5);
+    });
+
+    test('sanitizeNumber with comma', () {
+      expect(InputValidator.sanitizeNumber('80,5'), 80.5);
+    });
+
+    test('sanitizeNumber invalid returns null', () {
+      expect(InputValidator.sanitizeNumber('abc'), isNull);
+    });
+
+    test('sanitizeNumber applies min bound', () {
+      expect(InputValidator.sanitizeNumber('-5', min: 0), 0);
+    });
+
+    test('sanitizeNumber applies max bound', () {
+      expect(InputValidator.sanitizeNumber('500', max: 100), 100);
+    });
+
+    test('sanitizeNumber trims whitespace', () {
+      expect(InputValidator.sanitizeNumber('  42  '), 42);
+    });
+
+    test('isValidEmail valid', () {
+      expect(InputValidator.isValidEmail('test@example.com'), true);
+      expect(InputValidator.isValidEmail('user.name@domain.co'), true);
+    });
+
+    test('isValidEmail empty', () {
+      expect(InputValidator.isValidEmail(''), false);
+    });
+
+    test('isValidEmail invalid formats', () {
+      expect(InputValidator.isValidEmail('notanemail'), false);
+      expect(InputValidator.isValidEmail('@domain.com'), false);
+      expect(InputValidator.isValidEmail('user@'), false);
+    });
+
+    test('sanitizeUrl valid https', () {
+      expect(
+        InputValidator.sanitizeUrl('https://example.com/image.jpg'),
+        'https://example.com/image.jpg',
+      );
+    });
+
+    test('sanitizeUrl rejects http', () {
+      expect(InputValidator.sanitizeUrl('http://example.com'), isNull);
+    });
+
+    test('sanitizeUrl rejects empty', () {
+      expect(InputValidator.sanitizeUrl(''), isNull);
+    });
+
+    test('sanitizeUrl trims whitespace', () {
+      expect(
+        InputValidator.sanitizeUrl('  https://example.com  '),
+        'https://example.com',
+      );
+    });
+
+    test('validateWorkoutData valid', () {
+      final result = InputValidator.validateWorkoutData(
+        workoutName: 'Push Day',
+        exerciseNames: ['Bench Press', 'Overhead Press'],
+      );
+      expect(result.isValid, true);
+      expect(result.errors, isEmpty);
+    });
+
+    test('validateWorkoutData empty name', () {
+      final result = InputValidator.validateWorkoutData(
+        workoutName: '',
+        exerciseNames: ['Bench Press'],
+      );
+      expect(result.isValid, false);
+      expect(result.errors, contains('Workout name cannot be empty'));
+    });
+
+    test('validateWorkoutData too long name', () {
+      final result = InputValidator.validateWorkoutData(
+        workoutName: 'A' * 101,
+        exerciseNames: ['Bench Press'],
+      );
+      expect(result.isValid, false);
+    });
+
+    test('validateWorkoutData no exercises', () {
+      final result = InputValidator.validateWorkoutData(
+        workoutName: 'Push Day',
+        exerciseNames: [],
+      );
+      expect(result.isValid, false);
+    });
+
+    test('validateWorkoutData empty exercise name', () {
+      final result = InputValidator.validateWorkoutData(
+        workoutName: 'Push Day',
+        exerciseNames: [''],
+      );
+      expect(result.isValid, false);
+      expect(result.errors, contains('Exercise name cannot be empty'));
+    });
+
+    test('validateWorkoutData too long notes', () {
+      final result = InputValidator.validateWorkoutData(
+        workoutName: 'Push Day',
+        notes: 'A' * 5001,
+        exerciseNames: ['Bench Press'],
+      );
+      expect(result.isValid, false);
+    });
+
+    test('validateWorkoutData null notes valid', () {
+      final result = InputValidator.validateWorkoutData(
+        workoutName: 'Push Day',
+        notes: null,
+        exerciseNames: ['Bench Press'],
+      );
+      expect(result.isValid, true);
+    });
+  });
+
+  group('ValidationException', () {
+    test('toString includes message', () {
+      final ex = ValidationException('test message');
+      expect(ex.toString(), 'ValidationException: test message');
+      expect(ex.message, 'test message');
+    });
+  });
+
+  group('ValidationResult', () {
+    test('valid result', () {
+      final result = ValidationResult(isValid: true, errors: []);
+      expect(result.isValid, true);
+      expect(result.errors, isEmpty);
+    });
+
+    test('invalid result with errors', () {
+      final result = ValidationResult(
+        isValid: false,
+        errors: ['Error 1', 'Error 2'],
+      );
+      expect(result.isValid, false);
+      expect(result.errors.length, 2);
+    });
+  });
 }

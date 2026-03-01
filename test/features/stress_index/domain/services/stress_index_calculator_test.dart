@@ -9,8 +9,13 @@
 library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/constants/stress_index_constants.dart';
+import 'package:gymbro_flutter_new/features/stress_index/domain/entities/muscle_stress_data.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/entities/stress_index_result.dart';
+import 'package:gymbro_flutter_new/features/stress_index/domain/services/fitness_fatigue_service.dart';
 import 'package:gymbro_flutter_new/features/stress_index/domain/services/stress_index_calculator.dart';
+import 'package:gymbro_flutter_new/features/stress_index/domain/entities/muscle_recovery_status.dart';
+import 'package:gymbro_flutter_new/features/stress_index/presentation/providers/stress_index_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/abstractions/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 
@@ -747,6 +752,419 @@ void main() {
       // Gains should be reduced but still above baseline
       expect(adjusted, lessThan(ffmSupercompensating));
       expect(adjusted, greaterThan(100.0));
+    });
+  });
+
+  // ============================================
+  // BODYWEIGHT EXERCISE TESTS
+  // ============================================
+
+  group('StressIndexCalculator - Bodyweight Exercises', () {
+    test('canCalculate returns true for bodyweight exercise with reps', () {
+      final workout = createWorkout(exercises: [
+        Exercise(
+          name: 'Push Up',
+          sets: [
+            ExerciseSet(setNumber: 1, reps: 20, isCompleted: true),
+          ],
+          category: ExerciseCategory.chest,
+          type: ExerciseType.single,
+          countingMode: ExerciseCountingMode.reps,
+        ),
+      ]);
+      expect(StressIndexCalculator.canCalculate(workout), isTrue);
+    });
+
+    test('calculate uses body weight for bodyweight exercises', () {
+      final workout = createWorkout(exercises: [
+        Exercise(
+          name: 'Pull Up',
+          sets: [
+            ExerciseSet(setNumber: 1, reps: 10, actualReps: 10, isCompleted: true),
+          ],
+          category: ExerciseCategory.back,
+          type: ExerciseType.single,
+          countingMode: ExerciseCountingMode.reps,
+        ),
+      ]);
+
+      final result = StressIndexCalculator.calculate(
+        workout,
+        userBodyWeightKg: 80,
+      );
+      expect(result.totalSets, 1);
+      expect(result.primaryScore, greaterThan(0));
+    });
+
+    test('calculate uses default 70kg when no body weight provided', () {
+      final workout = createWorkout(exercises: [
+        Exercise(
+          name: 'Push Up',
+          sets: [
+            ExerciseSet(setNumber: 1, reps: 15, actualReps: 15, isCompleted: true),
+          ],
+          category: ExerciseCategory.chest,
+          type: ExerciseType.single,
+          countingMode: ExerciseCountingMode.reps,
+        ),
+      ]);
+
+      final result = StressIndexCalculator.calculate(workout);
+      expect(result.totalSets, 1);
+      expect(result.primaryScore, greaterThan(0));
+    });
+  });
+
+  // ============================================
+  // RECOVERY STATUS TESTS
+  // ============================================
+
+  group('StressIndexCalculator.calculateRecoveryStatus', () {
+    test('returns empty map for no workouts', () {
+      final result = StressIndexCalculator.calculateRecoveryStatus([]);
+      expect(result, isEmpty);
+    });
+
+    test('calculates recovery for single workout', () {
+      final now = DateTime.now();
+      final workout = StressIndexResult(
+        primaryScore: 50,
+        fallbackScore: 45,
+        confidence: 1.0,
+        muscleBreakdown: {
+          'PETT': MuscleStressData(
+            muscleId: 'PETT',
+            displayName: 'Chest',
+            stressScore: 40,
+            setsCount: 4,
+            totalVolume: 3200,
+            avgRpe: 8.0,
+            recoveryHours: 60,
+            estimatedRecovery: now.add(const Duration(hours: 60)),
+          ),
+        },
+        totalSets: 4,
+        setsWithRpe: 4,
+        workoutId: 'w-1',
+        calculatedAt: now.subtract(const Duration(hours: 30)),
+        rawScore: 5000,
+      );
+
+      final result = StressIndexCalculator.calculateRecoveryStatus([workout]);
+      expect(result, contains('PETT'));
+      expect(result['PETT']!.recoveryPercentage, greaterThan(0));
+      expect(result['PETT']!.displayName, 'Chest');
+    });
+
+    test('uses most recent workout for each muscle', () {
+      final now = DateTime.now();
+      final olderWorkout = StressIndexResult(
+        primaryScore: 50,
+        fallbackScore: 45,
+        confidence: 1.0,
+        muscleBreakdown: {
+          'PETT': MuscleStressData(
+            muscleId: 'PETT',
+            displayName: 'Chest',
+            stressScore: 40,
+            setsCount: 4,
+            totalVolume: 3200,
+            avgRpe: 8.0,
+            recoveryHours: 60,
+            estimatedRecovery: now,
+          ),
+        },
+        totalSets: 4,
+        setsWithRpe: 4,
+        workoutId: 'w-1',
+        calculatedAt: now.subtract(const Duration(hours: 72)),
+        rawScore: 5000,
+      );
+      final newerWorkout = StressIndexResult(
+        primaryScore: 60,
+        fallbackScore: 55,
+        confidence: 1.0,
+        muscleBreakdown: {
+          'PETT': MuscleStressData(
+            muscleId: 'PETT',
+            displayName: 'Chest',
+            stressScore: 55,
+            setsCount: 6,
+            totalVolume: 4800,
+            avgRpe: 9.0,
+            recoveryHours: 60,
+            estimatedRecovery: now,
+          ),
+        },
+        totalSets: 6,
+        setsWithRpe: 6,
+        workoutId: 'w-2',
+        calculatedAt: now.subtract(const Duration(hours: 24)),
+        rawScore: 8000,
+      );
+
+      final result = StressIndexCalculator.calculateRecoveryStatus(
+        [olderWorkout, newerWorkout],
+      );
+      // Should use newer workout's stress score
+      expect(result['PETT']!.lastStressScore, 55);
+    });
+  });
+
+  // ============================================
+  // FFM STATE CONVERSION TESTS
+  // ============================================
+
+  group('StressIndexCalculator.ffmStateToRecoveryState', () {
+    test('supercompensation maps to fullyRecovered', () {
+      expect(
+        StressIndexCalculator.ffmStateToRecoveryState(
+            FFMRecoveryState.supercompensation),
+        RecoveryState.fullyRecovered,
+      );
+    });
+
+    test('optimal maps to fullyRecovered', () {
+      expect(
+        StressIndexCalculator.ffmStateToRecoveryState(
+            FFMRecoveryState.optimal),
+        RecoveryState.fullyRecovered,
+      );
+    });
+
+    test('acceptable maps to almostReady', () {
+      expect(
+        StressIndexCalculator.ffmStateToRecoveryState(
+            FFMRecoveryState.acceptable),
+        RecoveryState.almostReady,
+      );
+    });
+
+    test('suboptimal maps to recovering', () {
+      expect(
+        StressIndexCalculator.ffmStateToRecoveryState(
+            FFMRecoveryState.suboptimal),
+        RecoveryState.recovering,
+      );
+    });
+
+    test('overtraining maps to fatigued', () {
+      expect(
+        StressIndexCalculator.ffmStateToRecoveryState(
+            FFMRecoveryState.overtraining),
+        RecoveryState.fatigued,
+      );
+    });
+
+    test('critical maps to exhausted', () {
+      expect(
+        StressIndexCalculator.ffmStateToRecoveryState(
+            FFMRecoveryState.critical),
+        RecoveryState.exhausted,
+      );
+    });
+
+    test('untrained maps to fullyRecovered', () {
+      expect(
+        StressIndexCalculator.ffmStateToRecoveryState(
+            FFMRecoveryState.untrained),
+        RecoveryState.fullyRecovered,
+      );
+    });
+  });
+
+  // ============================================
+  // SLEEP CATEGORY/MODIFIER ALIASES
+  // ============================================
+
+  group('StressIndexCalculator.getSleepCategory', () {
+    test('alias returns same result as getSleepQualityCategory', () {
+      for (final hours in [3.0, 6.5, 8.0, 10.0]) {
+        expect(
+          StressIndexCalculator.getSleepCategory(hours),
+          StressIndexCalculator.getSleepQualityCategory(hours),
+        );
+      }
+    });
+  });
+
+  group('StressIndexCalculator.getSleepModifier', () {
+    test('critical sleep returns 0.70', () {
+      expect(StressIndexCalculator.getSleepModifier(3.5),
+          StressIndexConstants.sleepModifierCritical);
+    });
+
+    test('suboptimal sleep returns 0.85', () {
+      expect(StressIndexCalculator.getSleepModifier(6.5),
+          StressIndexConstants.sleepModifierSuboptimal);
+    });
+
+    test('optimal sleep returns 1.0', () {
+      expect(StressIndexCalculator.getSleepModifier(8.0),
+          StressIndexConstants.sleepModifierOptimal);
+    });
+
+    test('excessive sleep returns 0.95', () {
+      expect(StressIndexCalculator.getSleepModifier(10.0),
+          StressIndexConstants.sleepModifierExcessive);
+    });
+  });
+
+  // ============================================
+  // MOVEMENT MULTIPLIER TESTS
+  // ============================================
+
+  group('StressIndexCalculator - Movement Multiplier', () {
+    test('compound exercises produce more stress than isolation', () {
+      final compoundWorkout = createWorkout(exercises: [
+        createExercise(
+          name: 'Squat',
+          sets: [createSet(setNumber: 1, weight: 80, reps: 10, rpe: 8)],
+          movementType: MovementType.compoundHeavy,
+        ),
+      ]);
+
+      final isolationWorkout = createWorkout(exercises: [
+        createExercise(
+          name: 'Leg Extension',
+          sets: [createSet(setNumber: 1, weight: 80, reps: 10, rpe: 8)],
+          movementType: MovementType.isolationLight,
+        ),
+      ]);
+
+      final compoundResult = StressIndexCalculator.calculate(compoundWorkout);
+      final isolationResult = StressIndexCalculator.calculate(isolationWorkout);
+
+      expect(compoundResult.primaryScore,
+          greaterThan(isolationResult.primaryScore));
+    });
+  });
+
+  // ============================================
+  // MUSCLE MAP TESTS
+  // ============================================
+
+  group('StressIndexCalculator - exerciseMuscleMap', () {
+    test('uses muscle map when provided', () {
+      final workout = createWorkout(exercises: [
+        createExercise(
+          name: 'Bench Press',
+          sets: [createSet(setNumber: 1, weight: 80, reps: 10, rpe: 8)],
+        ),
+      ]);
+
+      final muscleMap = {
+        'Bench Press': ExerciseMuscleData(
+          exerciseName: 'Bench Press',
+          primary: ['PETT'],
+          secondary: ['TRIC', 'DELT_ANT'],
+          fileCategory: 'push_orizzontale',
+        ),
+      };
+
+      final result = StressIndexCalculator.calculate(
+        workout,
+        exerciseMuscleMap: muscleMap,
+      );
+
+      expect(result.muscleBreakdown, isNotEmpty);
+      expect(result.totalSets, 1);
+    });
+
+    test('falls back to category when muscle map has no match', () {
+      final workout = createWorkout(exercises: [
+        createExercise(
+          name: 'Unknown Exercise',
+          sets: [createSet(setNumber: 1, weight: 60, reps: 10, rpe: 7)],
+          category: ExerciseCategory.chest,
+        ),
+      ]);
+
+      final muscleMap = <String, ExerciseMuscleData>{};
+
+      final result = StressIndexCalculator.calculate(
+        workout,
+        exerciseMuscleMap: muscleMap,
+      );
+
+      expect(result.muscleBreakdown, isNotEmpty);
+    });
+  });
+
+  // ============================================
+  // STRESS INDEX RESULT ENTITY TESTS
+  // ============================================
+
+  group('StressIndexResult computed properties', () {
+    StressIndexResult makeResult({
+      double primaryScore = 50,
+      double fallbackScore = 45,
+      double confidence = 1.0,
+    }) {
+      return StressIndexResult(
+        primaryScore: primaryScore,
+        fallbackScore: fallbackScore,
+        confidence: confidence,
+        muscleBreakdown: {},
+        totalSets: 4,
+        setsWithRpe: 4,
+        workoutId: 'w-1',
+        calculatedAt: DateTime.now(),
+        rawScore: 5000,
+      );
+    }
+
+    test('displayScore uses primary when confidence >= 0.5', () {
+      final r = makeResult(primaryScore: 60, fallbackScore: 40, confidence: 0.5);
+      expect(r.displayScore, 60);
+    });
+
+    test('displayScore uses fallback when confidence < 0.5', () {
+      final r = makeResult(primaryScore: 60, fallbackScore: 40, confidence: 0.4);
+      expect(r.displayScore, 40);
+    });
+
+    test('isHighConfidence', () {
+      expect(makeResult(confidence: 0.80).isHighConfidence, true);
+      expect(makeResult(confidence: 0.79).isHighConfidence, false);
+    });
+
+    test('isMediumConfidence', () {
+      expect(makeResult(confidence: 0.60).isMediumConfidence, true);
+      expect(makeResult(confidence: 0.80).isMediumConfidence, false);
+      expect(makeResult(confidence: 0.49).isMediumConfidence, false);
+    });
+
+    test('isLowConfidence', () {
+      expect(makeResult(confidence: 0.30).isLowConfidence, true);
+      expect(makeResult(confidence: 0.50).isLowConfidence, false);
+    });
+
+    test('stressLevel light', () {
+      expect(makeResult(primaryScore: 20).stressLevel, StressLevel.light);
+    });
+
+    test('stressLevel moderate', () {
+      expect(makeResult(primaryScore: 45).stressLevel, StressLevel.moderate);
+    });
+
+    test('stressLevel hard', () {
+      expect(makeResult(primaryScore: 70).stressLevel, StressLevel.hard);
+    });
+
+    test('stressLevel veryHard', () {
+      expect(makeResult(primaryScore: 90).stressLevel, StressLevel.veryHard);
+    });
+
+    test('scoreRange high confidence shows single value', () {
+      final r = makeResult(primaryScore: 75, confidence: 0.85);
+      expect(r.scoreRange, '75');
+    });
+
+    test('scoreRange low confidence shows range', () {
+      final r = makeResult(primaryScore: 50, fallbackScore: 50, confidence: 0.4);
+      // displayScore = fallback = 50, so range = 45-55
+      expect(r.scoreRange, contains('-'));
     });
   });
 }

@@ -43,6 +43,7 @@ class BoxCorruptedException implements Exception {
 class HiveBoxManagerEnhanced {
   factory HiveBoxManagerEnhanced() => _instance;
   HiveBoxManagerEnhanced._internal();
+
   // Singleton pattern
   static final HiveBoxManagerEnhanced _instance =
       HiveBoxManagerEnhanced._internal();
