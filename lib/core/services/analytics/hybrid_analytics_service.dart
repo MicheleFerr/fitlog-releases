@@ -34,12 +34,12 @@ import 'package:gymbro_flutter_new/core/services/analytics/mock_analytics_servic
 /// - Exposes MockAnalyticsService public API for dashboard
 class HybridAnalyticsService implements IAnalyticsService {
   HybridAnalyticsService({
-    FirebaseAnalyticsService? firebaseService,
+    IAnalyticsService? firebaseService,
     MockAnalyticsService? mockService,
   })  : _firebaseService = firebaseService ?? FirebaseAnalyticsService(),
         _mockService = mockService ?? MockAnalyticsService();
 
-  final FirebaseAnalyticsService _firebaseService;
+  final IAnalyticsService _firebaseService;
   final MockAnalyticsService _mockService;
 
   // ===== PUBLIC API FOR ADMIN DASHBOARD =====
