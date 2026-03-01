@@ -28256,4 +28256,31 @@ class AppLocalizationsIt extends AppLocalizations {
   String dominantZoneLabel(String zone) {
     return 'Focus principale: $zone';
   }
+
+  @override
+  String get selectAPlan =>
+      'Scegli il tuo piano e sblocca tutte le funzionalità';
+
+  @override
+  String get purchaseSuccessful => 'Acquisto completato! Benvenuto in Premium';
+
+  @override
+  String get perMonth => 'Mensile';
+
+  @override
+  String get perYear => 'Annuale';
+
+  @override
+  String get oneTimePurchase => 'A vita';
+
+  @override
+  String get savingsPercent => 'Miglior Offerta';
+
+  @override
+  String subscriptionActiveUntil(String date) {
+    return 'Attivo fino al $date';
+  }
+
+  @override
+  String get subscriptionLifetime => 'Premium a Vita';
 }

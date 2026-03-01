@@ -49991,6 +49991,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Main focus: {zone}'**
   String dominantZoneLabel(String zone);
+
+  /// Subtitle on premium screen prompting plan selection
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your plan and unlock all features'**
+  String get selectAPlan;
+
+  /// Success message after purchase
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase successful! Welcome to Premium'**
+  String get purchaseSuccessful;
+
+  /// Monthly subscription label
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get perMonth;
+
+  /// Yearly subscription label
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get perYear;
+
+  /// Lifetime one-time purchase label
+  ///
+  /// In en, this message translates to:
+  /// **'Lifetime'**
+  String get oneTimePurchase;
+
+  /// Badge label for best value plan
+  ///
+  /// In en, this message translates to:
+  /// **'Best Value'**
+  String get savingsPercent;
+
+  /// Shows subscription expiration date
+  ///
+  /// In en, this message translates to:
+  /// **'Active until {date}'**
+  String subscriptionActiveUntil(String date);
+
+  /// Label for lifetime subscription status
+  ///
+  /// In en, this message translates to:
+  /// **'Lifetime Premium'**
+  String get subscriptionLifetime;
 }
 
 class _AppLocalizationsDelegate

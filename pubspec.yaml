@@ -127,7 +127,7 @@ dependencies:
   image_picker: ^1.2.1
   camera: ^0.11.1  # 📸 Ghost Overlay camera mode for progress photos
   flutter_image_compress: ^2.3.0  # 📸 WebP compression for progress photos (Coach Portal)
-  in_app_purchase: ^3.2.3
+  purchases_flutter: ^9.12.3
   battery_plus: ^7.0.0
   shimmer: ^3.0.0
 

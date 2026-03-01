@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/features/premium/presentation/providers/purchase_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/widgets/settings_shared_helpers.dart';
 
-/// Premium CTA settings section: upgrade prompt with "free during beta" badge.
-class SettingsPremiumSection extends StatelessWidget {
+/// Premium CTA settings section: shows subscription status or upgrade prompt.
+class SettingsPremiumSection extends ConsumerWidget {
   const SettingsPremiumSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statusAsync = ref.watch(subscriptionStatusProvider);
+    final isActive = statusAsync.value?.isActive ?? false;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -39,7 +44,9 @@ class SettingsPremiumSection extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        context.l10n.allFeaturesFreeInBeta,
+                        isActive
+                            ? context.l10n.subscriptionLifetime
+                            : context.l10n.allFeaturesFreeInBeta,
                         style: context.textTheme.bodySmall?.copyWith(
                           color: context.colors.primary,
                           fontWeight: FontWeight.w600,
@@ -55,11 +62,17 @@ class SettingsPremiumSection extends StatelessWidget {
             // Premium features tile
             buildSettingTile(
               context,
-              title: context.l10n.betaEarlyAdopterTitle,
-              subtitle: context.l10n.betaEarlyAdopterMessage,
+              title: isActive
+                  ? context.l10n.manageSubscription
+                  : context.l10n.betaEarlyAdopterTitle,
+              subtitle: isActive
+                  ? context.l10n.subscriptionLifetime
+                  : context.l10n.betaEarlyAdopterMessage,
               leading: SemanticIcon(
-                icon: AppIcons.unlock,
-                semanticLabel: context.l10n.betaEarlyAdopterTitle,
+                icon: isActive ? AppIcons.complete : AppIcons.unlock,
+                semanticLabel: isActive
+                    ? context.l10n.manageSubscription
+                    : context.l10n.betaEarlyAdopterTitle,
               ),
               onTap: () => context.pushNamed('premium'),
               trailing: Container(

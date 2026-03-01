@@ -252,6 +252,8 @@ class EnvironmentConfig {
       String.fromEnvironment('STRIPE_PUBLISHABLE_KEY');
   static const String _dartDefineOpenRouterKey =
       String.fromEnvironment('OPENROUTER_API_KEY');
+  static const String _dartDefineRevenueCatKey =
+      String.fromEnvironment('REVENUECAT_API_KEY');
 
   /// OpenAI API Key - Optional
   static String? get openAIApiKey =>
@@ -264,6 +266,10 @@ class EnvironmentConfig {
   /// OpenRouter API Key - For AI Coach feature
   static String? get openRouterApiKey =>
       _getOptional('OPENROUTER_API_KEY', _dartDefineOpenRouterKey);
+
+  /// RevenueCat API Key - For IAP/subscriptions
+  static String? get revenueCatApiKey =>
+      _getOptional('REVENUECAT_API_KEY', _dartDefineRevenueCatKey);
 
   // ════════════════════════════════════════════════════════════════════════
   // Environment Detection

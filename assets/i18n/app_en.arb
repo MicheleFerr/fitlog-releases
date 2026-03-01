@@ -1711,9 +1711,9 @@
   "@pauseWorkout": {
     "description": "Pause workout menu item"
   },
-  "resumeWorkout": "Resume Workout",
+  "resumeWorkout": "RESUME",
   "@resumeWorkout": {
-    "description": "Resume workout button label"
+    "description": "Button to resume a pending workout draft"
   },
   "endWorkout": "End Workout",
   "@endWorkout": {
@@ -1785,7 +1785,7 @@
   },
   "primaryColor": "Primary Color",
   "@primaryColor": {
-    "description": "Primary color setting label"
+    "description": "Label for primary color picker"
   },
   "choosePrimaryColor": "Choose Primary Color",
   "@choosePrimaryColor": {
@@ -1985,7 +1985,7 @@
   },
   "resetToDefaults": "Reset to Defaults",
   "@resetToDefaults": {
-    "description": "Button to restore default notification settings"
+    "description": "Button to restore default settings"
   },
   "resetToDefaultsDesc": "Restore all settings to default",
   "@resetToDefaultsDesc": {
@@ -2331,9 +2331,9 @@
   "@thisWeek": {
     "description": "Label for current week in charts"
   },
-  "totalVolume": "Total volume",
+  "totalVolume": "Total Volume",
   "@totalVolume": {
-    "description": "Total volume summary label"
+    "description": "Label for total volume in summary"
   },
   "consistency": "Consistency",
   "@consistency": {
@@ -3610,7 +3610,7 @@
   },
   "suggestedForToday": "Suggested for today",
   "@suggestedForToday": {
-    "description": "Suggested workout subtitle"
+    "description": "Label for AI-suggested template in workout tab"
   },
   "yourProgress": "Your Progress",
   "@yourProgress": {
@@ -4296,7 +4296,7 @@
   },
   "noTemplatesYet": "No templates yet",
   "@noTemplatesYet": {
-    "description": "Message when user has no templates"
+    "description": "Empty state message when user has no templates"
   },
   "difficulty": "Difficulty",
   "@difficulty": {
@@ -4945,7 +4945,7 @@
   },
   "other": "Other",
   "@other": {
-    "description": "Other exercise category"
+    "description": "Label for other/more options"
   },
   "personal": "Personal",
   "@personal": {
@@ -5045,7 +5045,7 @@
   },
   "muscleBalance": "Muscle Balance",
   "@muscleBalance": {
-    "description": "Muscle balance feature title"
+    "description": "Title for template muscle balance analysis section"
   },
   "allExercises": "All Exercises",
   "@allExercises": {
@@ -5695,7 +5695,7 @@
   },
   "restDay": "Rest Day",
   "@restDay": {
-    "description": "Label for rest day"
+    "description": "Rest day title when no workout suggested"
   },
   "exerciseCount": "{count, plural, =1{1 exercise} other{{count} exercises}}",
   "@exerciseCount": {
@@ -6163,11 +6163,11 @@
   },
   "today": "Today",
   "@today": {
-    "description": "Today"
+    "description": "Today relative time label"
   },
   "yesterday": "Yesterday",
   "@yesterday": {
-    "description": "Yesterday"
+    "description": "Yesterday relative time label"
   },
   "workoutDatabase": "Workout Database",
   "@workoutDatabase": {
@@ -6599,9 +6599,9 @@
   "@justNow": {
     "description": "Relative time for just now"
   },
-  "viewAll": "View All",
+  "viewAll": "View all",
   "@viewAll": {
-    "description": "View all button text"
+    "description": "Button to view all templates"
   },
   "viewFullHistory": "View Full History",
   "@viewFullHistory": {
@@ -8044,12 +8044,15 @@
       }
     }
   },
-  "exerciseReplacedSuccess": "Exercise replaced successfully in {count, plural, =1{1 template} other{{count} templates}}",
+  "exerciseReplacedSuccess": "{oldExercise} replaced with {newExercise}",
   "@exerciseReplacedSuccess": {
-    "description": "Success message after exercise replacement",
+    "description": "Success message after replacing exercise in superset",
     "placeholders": {
-      "count": {
-        "type": "int"
+      "oldExercise": {
+        "type": "String"
+      },
+      "newExercise": {
+        "type": "String"
       }
     }
   },
@@ -8385,7 +8388,7 @@
   "@errorTitleValidation": {
     "description": "Title for validation error dialogs"
   },
-  "pushPullRatio": "Push/Pull Ratio",
+  "pushPullRatio": "Push/Pull",
   "quadHamstringRatio": "Quad:Hamstring Ratio",
   "pushSetsLabel": "{count} Push sets",
   "pullSetsLabel": "{count} Pull sets",
@@ -10615,9 +10618,9 @@
   "@error": {
     "description": "Error title"
   },
-  "goHome": "Go Home",
+  "goHome": "Home",
   "@goHome": {
-    "description": "Go home button"
+    "description": "Short button label to go to home"
   },
   "errorLoading": "Error loading: {error}",
   "@errorLoading": {
@@ -11197,10 +11200,6 @@
   "resumeRestPause": "Resume Rest-Pause",
   "@resumeRestPause": {
     "description": "Button to resume paused rest-pause"
-  },
-  "totalVolume": "Volume",
-  "@totalVolume": {
-    "description": "Label for total volume stat"
   },
   "timeUnderTension": "Time",
   "@timeUnderTension": {
@@ -13352,31 +13351,45 @@
   "@lastSession": {
     "description": "Last session summary inline on card",
     "placeholders": {
-      "sets": { "type": "int" },
-      "reps": { "type": "int" },
-      "weight": { "type": "String" },
-      "timeAgo": { "type": "String" }
+      "sets": {
+        "type": "int"
+      },
+      "reps": {
+        "type": "int"
+      },
+      "weight": {
+        "type": "String"
+      },
+      "timeAgo": {
+        "type": "String"
+      }
     }
   },
   "lastSessionSimple": "Last: {timeAgo}",
   "@lastSessionSimple": {
     "description": "Last session fallback when no set data",
     "placeholders": {
-      "timeAgo": { "type": "String" }
+      "timeAgo": {
+        "type": "String"
+      }
     }
   },
   "insightImproving": "Weight up {percent}% recently",
   "@insightImproving": {
     "description": "Insight text when exercise is improving",
     "placeholders": {
-      "percent": { "type": "String" }
+      "percent": {
+        "type": "String"
+      }
     }
   },
   "insightDeclining": "Weight down {percent}% — try deload?",
   "@insightDeclining": {
     "description": "Insight text when exercise is declining",
     "placeholders": {
-      "percent": { "type": "String" }
+      "percent": {
+        "type": "String"
+      }
     }
   },
   "insightStable": "Consistent — ready to push heavier?",
@@ -13391,33 +13404,31 @@
   "@recentPR": {
     "description": "Badge text when exercise has a recent PR"
   },
-  "today": "Today",
-  "@today": {
-    "description": "Today relative time label"
-  },
-  "yesterday": "Yesterday",
-  "@yesterday": {
-    "description": "Yesterday relative time label"
-  },
-  "weeksAgo": "{count}w ago",
+  "weeksAgo": "{count} weeks ago",
   "@weeksAgo": {
-    "description": "Weeks ago short label",
+    "description": "Weeks ago",
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
-  "monthsAgo": "{count}mo ago",
+  "monthsAgo": "{count} months ago",
   "@monthsAgo": {
-    "description": "Months ago short label",
+    "description": "Months ago",
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "daysAgoShort": "{count}d ago",
   "@daysAgoShort": {
     "description": "Days ago short label",
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "weightSettings": "Weight Settings",
@@ -13456,9 +13467,9 @@
   "@availablePlates": {
     "description": "Available plates section title"
   },
-  "availablePlatesDescription": "Plates available in your gym",
+  "availablePlatesDescription": "Select plates available at this gym",
   "@availablePlatesDescription": {
-    "description": "Available plates section description"
+    "description": "Description for plate selection"
   },
   "useCustomIncrement": "Use Custom Increment",
   "@useCustomIncrement": {
@@ -15582,24 +15593,6 @@
       }
     }
   },
-  "weeksAgo": "{count} weeks ago",
-  "@weeksAgo": {
-    "description": "Weeks ago",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "monthsAgo": "{count} months ago",
-  "@monthsAgo": {
-    "description": "Months ago",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "dAgo": "{days}d ago",
   "@dAgo": {
     "description": "Short format for days ago",
@@ -17297,7 +17290,7 @@
   },
   "editProfile": "Edit Profile",
   "@editProfile": {
-    "description": "Button to edit user profile"
+    "description": "Title for edit profile screen"
   },
   "editTemplateDescription": "Edit template description",
   "@editTemplateDescription": {
@@ -19510,10 +19503,14 @@
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/analytics/presentation/widgets/scientific_muscle_balance_widget.dart"
   },
-  "setsCompleted": "Sets Completed",
+  "setsCompleted": "{count} sets",
   "@setsCompleted": {
-    "description": "From quick wins migration - 1 occurrences",
-    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_progress_indicators.dart"
+    "description": "Number of sets completed",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "streakAttuale2": "Streak attuale",
   "@streakAttuale2": {
@@ -24594,7 +24591,7 @@
   },
   "equipmentProfiles": "Equipment Profiles",
   "@equipmentProfiles": {
-    "description": "Equipment profiles screen title"
+    "description": "Title for gym equipment profiles screen"
   },
   "equipmentProfilesUnderConstruction": "Equipment profiles - Under construction",
   "@equipmentProfilesUnderConstruction": {
@@ -26192,7 +26189,7 @@
   },
   "profileUpdated": "Profile updated",
   "@profileUpdated": {
-    "description": "Message shown when profile is updated successfully"
+    "description": "Success message for profile update"
   },
   "errorSavingProfile": "Error saving profile",
   "@errorSavingProfile": {
@@ -27725,11 +27722,11 @@
     "description": "Balance rating: 0.0-3.9 score"
   },
   "@pushPullRatio": {
-    "description": "Title for push/pull muscle balance ratio"
+    "description": "Label for push/pull muscle ratio"
   },
-  "upperLowerRatio": "Upper/Lower Ratio",
+  "upperLowerRatio": "Upper/Lower",
   "@upperLowerRatio": {
-    "description": "Title for upper/lower body balance ratio"
+    "description": "Label for upper/lower body muscle ratio"
   },
   "optimalRatio": "Optimal: {ratio}",
   "@optimalRatio": {
@@ -28667,9 +28664,9 @@
   "@saveAndNext": {
     "description": "Button to save current set and move to next"
   },
-  "showRpe": "Add RPE",
+  "showRpe": "Show RPE",
   "@showRpe": {
-    "description": "Button to show RPE selector"
+    "description": "Toggle label for RPE input"
   },
   "tutorialWelcomeTitle": "Welcome to Your Workout!",
   "@tutorialWelcomeTitle": {
@@ -31131,7 +31128,7 @@
   "@forAthletesNotUsingApp": {
     "description": "Description for manual profile creation"
   },
-  "createProfile": "Create profile",
+  "createProfile": "Create Profile",
   "@createProfile": {
     "description": "Button to create profile"
   },
@@ -32157,10 +32154,6 @@
   "@tagline": {
     "description": "Label for tagline input"
   },
-  "primaryColor": "Primary Color",
-  "@primaryColor": {
-    "description": "Label for primary color picker"
-  },
   "logoUrl": "Logo URL",
   "@logoUrl": {
     "description": "Label for logo URL input"
@@ -32334,9 +32327,15 @@
   "@betaFeedbackBody": {
     "description": "Email body template for beta feedback",
     "placeholders": {
-      "version": {"type": "String"},
-      "device": {"type": "String"},
-      "os": {"type": "String"}
+      "version": {
+        "type": "String"
+      },
+      "device": {
+        "type": "String"
+      },
+      "os": {
+        "type": "String"
+      }
     }
   },
   "madeWithLove": "Made with love in Italy",
@@ -32671,9 +32670,9 @@
   "@noRestPauseTemplates": {
     "description": "Empty state for rest-pause templates section"
   },
-  "noCustomExercises": "No custom exercises yet",
+  "noCustomExercises": "No custom exercises created yet",
   "@noCustomExercises": {
-    "description": "Empty state for custom exercises section"
+    "description": "Empty state when no custom exercises exist"
   },
   "deleteTemplateConfirmation": "Are you sure you want to delete this template? This action cannot be undone.",
   "@deleteTemplateConfirmation": {
@@ -33177,10 +33176,6 @@
   "@lastUsedWeight": {
     "description": "Hint showing weight is from exercise history"
   },
-  "totalVolume": "Total Volume",
-  "@totalVolume": {
-    "description": "Label for total volume in summary"
-  },
   "timerActionPause": "Pause",
   "@timerActionPause": {
     "description": "Timer action bubble - pause button"
@@ -33286,10 +33281,6 @@
   "@showPlatesDescription": {
     "description": "Description for plates toggle"
   },
-  "showRpe": "Show RPE",
-  "@showRpe": {
-    "description": "Toggle label for RPE input"
-  },
   "showRpeDescription": "Display Rate of Perceived Exertion input in sets",
   "@showRpeDescription": {
     "description": "Description for RPE toggle"
@@ -33330,14 +33321,6 @@
   "@presetEfficient": {
     "description": "Preset for quick workouts - minimal info"
   },
-  "resetToDefaults": "Reset to Defaults",
-  "@resetToDefaults": {
-    "description": "Button to restore default settings"
-  },
-  "equipmentProfiles": "Equipment Profiles",
-  "@equipmentProfiles": {
-    "description": "Title for gym equipment profiles screen"
-  },
   "equipmentProfilesDescription": "Manage gym equipment configurations",
   "@equipmentProfilesDescription": {
     "description": "Description for equipment profiles"
@@ -33353,14 +33336,6 @@
   "defaultProfile": "Default",
   "@defaultProfile": {
     "description": "Label for default profile"
-  },
-  "createProfile": "Create Profile",
-  "@createProfile": {
-    "description": "Button to create profile"
-  },
-  "editProfile": "Edit Profile",
-  "@editProfile": {
-    "description": "Title for edit profile screen"
   },
   "deleteProfile": "Delete Profile",
   "@deleteProfile": {
@@ -33385,10 +33360,6 @@
   "availablePlatesTitle": "Available Plates",
   "@availablePlatesTitle": {
     "description": "Title for available plates section"
-  },
-  "availablePlatesDescription": "Select plates available at this gym",
-  "@availablePlatesDescription": {
-    "description": "Description for plate selection"
   },
   "setAsDefault": "Set as default profile",
   "@setAsDefault": {
@@ -33471,10 +33442,6 @@
       }
     }
   },
-  "profileUpdated": "Profile updated",
-  "@profileUpdated": {
-    "description": "Success message for profile update"
-  },
   "profileDeleted": "Profile deleted",
   "@profileDeleted": {
     "description": "Success message for profile deletion"
@@ -33482,10 +33449,6 @@
   "quickCreateTip": "Tip: You can also create profiles directly from the plate calculator",
   "@quickCreateTip": {
     "description": "Tip about quick profile creation"
-  },
-  "other": "Other",
-  "@other": {
-    "description": "Label for other/more options"
   },
   "selectBarbellWeight": "Select the default barbell weight:",
   "@selectBarbellWeight": {
@@ -33563,7 +33526,6 @@
   "@ghostModeKeepsXP": {
     "description": "Clarification that Ghost Mode doesn't stop XP accumulation"
   },
-
   "hintTapSet": "Tap the set to complete it",
   "@hintTapSet": {
     "description": "Hint message for tapping a set to complete it"
@@ -33616,7 +33578,6 @@
   "@hintSwipeHistoryCard": {
     "description": "Hint for swipe gesture on history workout cards"
   },
-
   "hintDiscoverScheduling": "Schedule workouts to build consistency",
   "@hintDiscoverScheduling": {
     "description": "Hint to discover workout scheduling feature"
@@ -33737,7 +33698,6 @@
   "@hintTapRepZoneToggle": {
     "description": "Hint for tapping rep zone toggle"
   },
-
   "selectExerciseToReplace": "Which exercise do you want to replace?",
   "@selectExerciseToReplace": {
     "description": "Title asking which exercise in the superset to replace"
@@ -33749,14 +33709,6 @@
   "replaceInAllRounds": "Replace in all rounds",
   "@replaceInAllRounds": {
     "description": "Button to confirm replacing exercise in all superset rounds"
-  },
-  "exerciseReplacedSuccess": "{oldExercise} replaced with {newExercise}",
-  "@exerciseReplacedSuccess": {
-    "description": "Success message after replacing exercise in superset",
-    "placeholders": {
-      "oldExercise": {"type": "String"},
-      "newExercise": {"type": "String"}
-    }
   },
   "chooseReplacement": "Choose replacement",
   "@chooseReplacement": {
@@ -33778,7 +33730,6 @@
   "@linkCopied": {
     "description": "Snackbar message when a link is copied to clipboard"
   },
-
   "progressionNew": "New!",
   "@progressionNew": {
     "description": "Badge for exercise with only 1 session"
@@ -33791,27 +33742,34 @@
   "@progressionUp": {
     "description": "Label for positive weekly volume progression",
     "placeholders": {
-      "percent": { "type": "String" }
+      "percent": {
+        "type": "String"
+      }
     }
   },
   "progressionDown": "-{percent}%",
   "@progressionDown": {
     "description": "Label for negative weekly volume progression",
     "placeholders": {
-      "percent": { "type": "String" }
+      "percent": {
+        "type": "String"
+      }
     }
   },
   "progressionResume": "Resume",
   "@progressionResume": {
     "description": "Label when exercise not done in >14 days"
   },
-
   "correlationNeedMoreSessions": "{current} of {required} sessions with RPE",
   "@correlationNeedMoreSessions": {
     "description": "Progress label for insufficient correlation data",
     "placeholders": {
-      "current": { "type": "int" },
-      "required": { "type": "int" }
+      "current": {
+        "type": "int"
+      },
+      "required": {
+        "type": "int"
+      }
     }
   },
   "correlationNeedMoreSessionsHint": "Log RPE after each set to unlock correlation insights",
@@ -33830,35 +33788,45 @@
   "@correlationStrongPositive": {
     "description": "Natural language for strong positive correlation",
     "placeholders": {
-      "metric": { "type": "String" }
+      "metric": {
+        "type": "String"
+      }
     }
   },
   "correlationStrongNegative": "When you increase {metric}, your effort perception (RPE) tends to decrease significantly",
   "@correlationStrongNegative": {
     "description": "Natural language for strong negative correlation",
     "placeholders": {
-      "metric": { "type": "String" }
+      "metric": {
+        "type": "String"
+      }
     }
   },
   "correlationModeratePositive": "There's a moderate link between {metric} and effort perception",
   "@correlationModeratePositive": {
     "description": "Natural language for moderate positive correlation",
     "placeholders": {
-      "metric": { "type": "String" }
+      "metric": {
+        "type": "String"
+      }
     }
   },
   "correlationModerateNegative": "There's a moderate inverse link between {metric} and effort perception",
   "@correlationModerateNegative": {
     "description": "Natural language for moderate negative correlation",
     "placeholders": {
-      "metric": { "type": "String" }
+      "metric": {
+        "type": "String"
+      }
     }
   },
   "correlationWeak": "{metric} and effort perception appear to be independent",
   "@correlationWeak": {
     "description": "Natural language for weak/no correlation",
     "placeholders": {
-      "metric": { "type": "String" }
+      "metric": {
+        "type": "String"
+      }
     }
   },
   "correlationTechnicalDetails": "Technical details",
@@ -33873,28 +33841,37 @@
   "@correlationMetricVolume": {
     "description": "Volume metric name for correlation messages"
   },
-
   "weeklySummaryStrong": "Fantastic week! {workouts} workouts, {prs} new PRs. Volume up {percent}%.",
   "@weeklySummaryStrong": {
     "description": "Summary banner for a strong week",
     "placeholders": {
-      "workouts": { "type": "int" },
-      "prs": { "type": "int" },
-      "percent": { "type": "String" }
+      "workouts": {
+        "type": "int"
+      },
+      "prs": {
+        "type": "int"
+      },
+      "percent": {
+        "type": "String"
+      }
     }
   },
   "weeklySummaryNormal": "Good week! {workouts} workouts completed. Keep it up!",
   "@weeklySummaryNormal": {
     "description": "Summary banner for a normal week",
     "placeholders": {
-      "workouts": { "type": "int" }
+      "workouts": {
+        "type": "int"
+      }
     }
   },
   "weeklySummaryWeak": "Quiet week. {workouts} workout completed. Every session counts!",
   "@weeklySummaryWeak": {
     "description": "Summary banner for a weak week",
     "placeholders": {
-      "workouts": { "type": "int" }
+      "workouts": {
+        "type": "int"
+      }
     }
   },
   "weeklySummaryFirstWeek": "Welcome to your stats! Complete your first workout to get started.",
@@ -33949,7 +33926,6 @@
   "@analyticsViewDetailed": {
     "description": "Tooltip for detailed view mode"
   },
-
   "workoutImportTitle": "Import Workout",
   "workoutImportFromText": "From Text",
   "workoutImportFromPhoto": "From Photo",
@@ -33962,13 +33938,17 @@
   "workoutImportExercisesFound": "{count} exercises found",
   "@workoutImportExercisesFound": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "workoutImportDaysFound": "{count} days found",
   "@workoutImportDaysFound": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "workoutImportConfidentMatch": "Confident",
@@ -33988,19 +33968,25 @@
   "workoutImportSets": "{count} sets",
   "@workoutImportSets": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "workoutImportReps": "{count} reps",
   "@workoutImportReps": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "workoutImportKg": "{weight} kg",
   "@workoutImportKg": {
     "placeholders": {
-      "weight": {"type": "String"}
+      "weight": {
+        "type": "String"
+      }
     }
   },
   "workoutImportMaxReps": "Max reps",
@@ -34009,10 +33995,11 @@
   "workoutImportDay": "Day {number}",
   "@workoutImportDay": {
     "placeholders": {
-      "number": {"type": "int"}
+      "number": {
+        "type": "int"
+      }
     }
   },
-
   "quickActionLogMeasurements": "Log Measurements",
   "quickActionEmptyWorkout": "Empty",
   "quickActionStart": "START",
@@ -34027,7 +34014,9 @@
   "quickActionNotTrainedSince": "not trained for {days}d",
   "@quickActionNotTrainedSince": {
     "placeholders": {
-      "days": {"type": "int"}
+      "days": {
+        "type": "int"
+      }
     }
   },
   "quickActionBasedOnSplit": "Based on your split:",
@@ -34035,9 +34024,15 @@
   "quickActionLastValue": "Last: {value} {unit} ({timeAgo})",
   "@quickActionLastValue": {
     "placeholders": {
-      "value": {"type": "String"},
-      "unit": {"type": "String"},
-      "timeAgo": {"type": "String"}
+      "value": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      },
+      "timeAgo": {
+        "type": "String"
+      }
     }
   },
   "quickActionSave": "Save",
@@ -34045,7 +34040,9 @@
   "quickActionTemplateLabel": "Template: {name}",
   "@quickActionTemplateLabel": {
     "placeholders": {
-      "name": {"type": "String"}
+      "name": {
+        "type": "String"
+      }
     }
   },
   "quickActionNoTemplates": "No templates yet",
@@ -34070,17 +34067,9 @@
   "@alreadyAdded": {
     "description": "Label for exercises already added to a template"
   },
-  "suggestedForToday": "Suggested for today",
-  "@suggestedForToday": {
-    "description": "Label for AI-suggested template in workout tab"
-  },
   "recentlyUsed": "Recently used",
   "@recentlyUsed": {
     "description": "Section header for recently used templates"
-  },
-  "viewAll": "View all",
-  "@viewAll": {
-    "description": "Button to view all templates"
   },
   "viewAllCount": "View all ({count})",
   "@viewAllCount": {
@@ -34103,17 +34092,9 @@
   "@restDaySuggestion": {
     "description": "Message shown when rest day is recommended"
   },
-  "noTemplatesYet": "No templates yet",
-  "@noTemplatesYet": {
-    "description": "Empty state message when user has no templates"
-  },
   "createFirstTemplateHint": "Create your first template to start",
   "@createFirstTemplateHint": {
     "description": "Hint message to create first template"
-  },
-  "restDay": "Rest Day",
-  "@restDay": {
-    "description": "Rest day title when no workout suggested"
   },
   "exerciseFilterAll": "All A-Z",
   "@exerciseFilterAll": {
@@ -34130,22 +34111,6 @@
   "noSelectedExercises": "No exercises selected yet",
   "@noSelectedExercises": {
     "description": "Empty state when no exercises are selected in the filter"
-  },
-  "noCustomExercises": "No custom exercises created yet",
-  "@noCustomExercises": {
-    "description": "Empty state when no custom exercises exist"
-  },
-  "muscleBalance": "Muscle Balance",
-  "@muscleBalance": {
-    "description": "Title for template muscle balance analysis section"
-  },
-  "pushPullRatio": "Push/Pull",
-  "@pushPullRatio": {
-    "description": "Label for push/pull muscle ratio"
-  },
-  "upperLowerRatio": "Upper/Lower",
-  "@upperLowerRatio": {
-    "description": "Label for upper/lower body muscle ratio"
   },
   "addExercisesForMuscleAnalysis": "Add exercises to see muscle analysis",
   "@addExercisesForMuscleAnalysis": {
@@ -34188,7 +34153,6 @@
   "@rpe10Apply": {
     "description": "Button to apply +30s rest after RPE 10"
   },
-
   "hiddenWorkoutsCount": "+{count} hidden workouts",
   "@hiddenWorkoutsCount": {
     "description": "Count of workouts hidden behind premium paywall",
@@ -34256,10 +34220,6 @@
   "@pendingWorkout": {
     "description": "Title for draft recovery card in quick actions"
   },
-  "resumeWorkout": "RESUME",
-  "@resumeWorkout": {
-    "description": "Button to resume a pending workout draft"
-  },
   "pendingWorkoutInfo": "{exerciseCount} exercises · {completedSets}/{totalSets} sets",
   "@pendingWorkoutInfo": {
     "description": "Info line for pending workout draft",
@@ -34324,24 +34284,10 @@
   "@celebrationMotivational5": {
     "description": "Motivational message 5 for workout completion"
   },
-  "setsCompleted": "{count} sets",
-  "@setsCompleted": {
-    "description": "Number of sets completed",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "shareResult": "Share",
   "@shareResult": {
     "description": "Button to share workout result"
   },
-  "goHome": "Home",
-  "@goHome": {
-    "description": "Short button label to go to home"
-  },
-
   "strengthLevelNoData": "No data available for this exercise",
   "@strengthLevelNoData": {
     "description": "Placeholder when no strength data exists"
@@ -34358,7 +34304,9 @@
   "@benchmarkBodyweight": {
     "description": "Footer note for strength benchmark table",
     "placeholders": {
-      "weight": {"type": "String"}
+      "weight": {
+        "type": "String"
+      }
     }
   },
   "recordLabel": "Record:",
@@ -34377,7 +34325,9 @@
   "@sessionSetsCount": {
     "description": "Header for session sets list in record detail",
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "calculatedWithBrzycki": "(Calculated with Brzycki formula)",
@@ -34388,8 +34338,12 @@
   "@progressToNextLevel": {
     "description": "Progress percentage towards next strength level",
     "placeholders": {
-      "percent": {"type": "String"},
-      "nextLevel": {"type": "String"}
+      "percent": {
+        "type": "String"
+      },
+      "nextLevel": {
+        "type": "String"
+      }
     }
   },
   "dataStillLoading": "Data is still loading...",
@@ -34412,5 +34366,42 @@
         "type": "String"
       }
     }
+  },
+  "selectAPlan": "Choose your plan and unlock all features",
+  "@selectAPlan": {
+    "description": "Subtitle on premium screen prompting plan selection"
+  },
+  "purchaseSuccessful": "Purchase successful! Welcome to Premium",
+  "@purchaseSuccessful": {
+    "description": "Success message after purchase"
+  },
+  "perMonth": "Monthly",
+  "@perMonth": {
+    "description": "Monthly subscription label"
+  },
+  "perYear": "Yearly",
+  "@perYear": {
+    "description": "Yearly subscription label"
+  },
+  "oneTimePurchase": "Lifetime",
+  "@oneTimePurchase": {
+    "description": "Lifetime one-time purchase label"
+  },
+  "savingsPercent": "Best Value",
+  "@savingsPercent": {
+    "description": "Badge label for best value plan"
+  },
+  "subscriptionActiveUntil": "Active until {date}",
+  "@subscriptionActiveUntil": {
+    "description": "Shows subscription expiration date",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionLifetime": "Lifetime Premium",
+  "@subscriptionLifetime": {
+    "description": "Label for lifetime subscription status"
   }
 }

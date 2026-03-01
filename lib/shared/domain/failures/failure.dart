@@ -106,3 +106,8 @@ class ConflictFailure extends Failure {
 class CancelledFailure extends Failure {
   const CancelledFailure(super.message, {super.code});
 }
+
+// Purchase/IAP failures
+class PurchaseFailure extends Failure {
+  const PurchaseFailure(super.message, {super.code});
+}

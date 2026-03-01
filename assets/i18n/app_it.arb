@@ -701,7 +701,7 @@
   "progressTracking": "Monitoraggio Progressi",
   "detailedAnalytics": "Analisi Dettagliate",
   "thisWeek": "Questa Settimana",
-  "totalVolume": "Volume totale",
+  "totalVolume": "Volume Totale",
   "consistency": "Costanza",
   "totalWorkouts": "Allenamenti Totali",
   "completedSessions": "Sessioni Completate",
@@ -1126,7 +1126,7 @@
   "clearAllFilters": "Rimuovi tutti i filtri",
   "minutes": "min",
   "meters": "m",
-  "noTemplatesYet": "Nessun template ancora",
+  "noTemplatesYet": "Non hai ancora template",
   "difficulty": "Difficoltà",
   "errorOccurred": "Si è verificato un errore durante il caricamento dell'allenamento",
   "ok": "OK",
@@ -1292,8 +1292,8 @@
   "overview": "Panoramica",
   "strength": "Forza",
   "insights": "Insight",
-  "muscleBalance": "Bilanciamento Muscoli",
-  "allExercises": "Tutti gli Esercizi",
+  "muscleBalance": "Bilanciamento Muscolare",
+  "allExercises": "Tutti gli esercizi",
   "trainingInsights": "Insight di Allenamento",
   "recommendations": "Raccomandazioni",
   "exerciseTrends": "Tendenze Esercizi",
@@ -1562,7 +1562,7 @@
   "today": "Oggi",
   "yesterday": "Ieri",
   "pause": "Pausa",
-  "resumeWorkout": "Riprendi Allenamento",
+  "resumeWorkout": "RIPRENDI",
   "stopWorkout": "Termina Allenamento",
   "cancelWorkout": "Annulla Allenamento",
   "discardWorkout": "Scarta Allenamento",
@@ -1608,7 +1608,7 @@
   "minutesRemaining": "{minutes} minuti rimanenti",
   "technique": "Tecnica",
   "selectTechnique": "Seleziona Tecnica",
-  "standardSet": "Serie Standard",
+  "standardSet": "Set Standard",
   "supersetWith": "Superset con",
   "addToSuperset": "Aggiungi al Superset",
   "removeFromSuperset": "Rimuovi dal Superset",
@@ -1784,7 +1784,7 @@
   "hoursAgo": "{hours}h fa",
   "minutesAgo": "{minutes}m fa",
   "justNow": "ora",
-  "viewAll": "Vedi Tutti",
+  "viewAll": "Vedi tutti",
   "viewFullHistory": "Vedi Cronologia Completa",
   "adminInfo": "Informazioni Admin",
   "welcomeAdmin": "Benvenuto, Admin!",
@@ -2234,7 +2234,7 @@
   "similarExercises": "Esercizi Simili",
   "selectTemplates": "Seleziona Schede da Aggiornare",
   "applyToTemplates": "Applica a {count, plural, =1{1 scheda} other{{count} schede}}",
-  "exerciseReplacedSuccess": "Esercizio sostituito con successo in {count, plural, =1{1 scheda} other{{count} schede}}",
+  "exerciseReplacedSuccess": "{oldExercise} sostituito con {newExercise}",
   "noSimilarExercises": "Nessun esercizio simile trovato",
   "selectAtLeastOneTemplate": "Seleziona almeno una scheda",
   "weightHandling": "Gestione Peso",
@@ -2295,7 +2295,7 @@
   "errorTitleAuth": "Errore di Autenticazione",
   "errorTitlePermission": "Errore di Permessi",
   "errorTitleValidation": "Errore di Validazione",
-  "pushPullRatio": "Rapporto Spinta/Trazione",
+  "pushPullRatio": "Push/Pull",
   "quadHamstringRatio": "Rapporto Quadricipiti:Ischiocrurali",
   "pushSetsLabel": "{count} serie Push",
   "pullSetsLabel": "{count} serie Pull",
@@ -3221,7 +3221,7 @@
   "setsLabel": "Serie",
   "addSetButton": "Aggiungi Serie",
   "removeSetTooltip": "Rimuovi Serie",
-  "weightHint": "Inserisci peso",
+  "weightHint": "es. 60kg",
   "repsHint": "Inserisci ripetizioni",
   "notesLabel": "Note (opzionale)",
   "exerciseAddedMessage": "Aggiunto {exerciseName} all'allenamento",
@@ -3292,7 +3292,7 @@
   "rpeTimerMore": "RPE, Timer, e altro",
   "completeWorkoutConfirm": "Sei sicuro di voler completare questo allenamento?",
   "error": "Errore",
-  "goHome": "Vai alla Home",
+  "goHome": "Home",
   "errorLoading": "Errore caricamento: {error}",
   "jsonFormat": "Formato JSON",
   "pasteJsonHere": "Incolla qui il JSON del tuo template di allenamento",
@@ -3311,7 +3311,6 @@
   "templateSlotsRemaining": "slot template rimanenti",
   "saveTemplate": "Salva Template",
   "templateSaved": "Template salvato con successo",
-  "weightHint": "es. 60kg",
   "appliedToAllSets": "Applicato a tutte le serie",
   "longPressToApplyAll": "Tieni premuto su peso o reps per applicare a tutte le serie",
   "autoPopulatedFromHistory": "Pre-compilato con i dati dell'ultimo allenamento",
@@ -3406,9 +3405,7 @@
   "pauseOrCancel": "Pausa o Annulla?",
   "pauseOrCancelMessage": "Puoi mettere in pausa e continuare dopo, o annullare e perdere i progressi.",
   "pauseAndContinueLater": "Pausa e Continua Dopo",
-  "cancelWorkout": "Annulla Allenamento",
   "resumeRestPause": "Riprendi Rest-Pause",
-  "totalVolume": "Volume",
   "timeUnderTension": "Tempo",
   "intensityBoost": "Intensità",
   "adjustTimer": "Regola Timer",
@@ -4485,31 +4482,45 @@
   "@lastSession": {
     "description": "Last session summary inline on card",
     "placeholders": {
-      "sets": { "type": "int" },
-      "reps": { "type": "int" },
-      "weight": { "type": "String" },
-      "timeAgo": { "type": "String" }
+      "sets": {
+        "type": "int"
+      },
+      "reps": {
+        "type": "int"
+      },
+      "weight": {
+        "type": "String"
+      },
+      "timeAgo": {
+        "type": "String"
+      }
     }
   },
   "lastSessionSimple": "Ultimo: {timeAgo}",
   "@lastSessionSimple": {
     "description": "Last session fallback when no set data",
     "placeholders": {
-      "timeAgo": { "type": "String" }
+      "timeAgo": {
+        "type": "String"
+      }
     }
   },
   "insightImproving": "Peso +{percent}% di recente",
   "@insightImproving": {
     "description": "Insight text when exercise is improving",
     "placeholders": {
-      "percent": { "type": "String" }
+      "percent": {
+        "type": "String"
+      }
     }
   },
   "insightDeclining": "Peso -{percent}% — prova un deload?",
   "@insightDeclining": {
     "description": "Insight text when exercise is declining",
     "placeholders": {
-      "percent": { "type": "String" }
+      "percent": {
+        "type": "String"
+      }
     }
   },
   "insightStable": "Costante — pronto per aumentare?",
@@ -4524,33 +4535,37 @@
   "@recentPR": {
     "description": "Badge text when exercise has a recent PR"
   },
-  "today": "Oggi",
   "@today": {
-    "description": "Today relative time label"
+    "description": "Today"
   },
-  "yesterday": "Ieri",
   "@yesterday": {
-    "description": "Yesterday relative time label"
+    "description": "Yesterday"
   },
-  "weeksAgo": "{count}sett fa",
+  "weeksAgo": "{count} settimane fa",
   "@weeksAgo": {
-    "description": "Weeks ago short label",
+    "description": "Weeks ago",
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
-  "monthsAgo": "{count}m fa",
+  "monthsAgo": "{count} mesi fa",
   "@monthsAgo": {
-    "description": "Months ago short label",
+    "description": "Months ago",
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "daysAgoShort": "{count}g fa",
   "@daysAgoShort": {
     "description": "Days ago short label",
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "weightSettings": "Impostazioni Peso",
@@ -4558,13 +4573,7 @@
     "description": "Weight settings screen title"
   },
   "@resetToDefaults": {
-    "description": "Pulsante per ripristinare impostazioni notifiche predefinite",
-    "placeholders": {
-      "mode": {
-        "type": "String",
-        "description": "Nome modalità (Base o Pro)"
-      }
-    }
+    "description": "Button to restore default settings"
   },
   "errorLoadingSettings": "Errore nel Caricamento",
   "@errorLoadingSettings": {
@@ -4597,9 +4606,9 @@
   "@availablePlates": {
     "description": "Available plates section title"
   },
-  "availablePlatesDescription": "Dischi disponibili nella tua palestra",
+  "availablePlatesDescription": "Seleziona i dischi disponibili in questa palestra",
   "@availablePlatesDescription": {
-    "description": "Available plates section description"
+    "description": "Description for plate selection"
   },
   "useCustomIncrement": "Usa Incremento Personalizzato",
   "@useCustomIncrement": {
@@ -5630,8 +5639,6 @@
   "timeRangeLabel90D": "90G",
   "timeRangeLabelAll": "Tutto",
   "daysAgo": "{count} giorni fa",
-  "weeksAgo": "{count} settimane fa",
-  "monthsAgo": "{count} mesi fa",
   "dAgo": "{days}g fa",
   "setsCountShort": "{count} serie",
   "volumeInTons": "{value}t volume",
@@ -7613,10 +7620,14 @@
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/analytics/presentation/widgets/scientific_muscle_balance_widget.dart"
   },
-  "setsCompleted": "Sets Completed",
+  "setsCompleted": "{count} serie",
   "@setsCompleted": {
-    "description": "From quick wins migration - 1 occurrences",
-    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_progress_indicators.dart"
+    "description": "Numero di serie completate",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "streakAttuale2": "Streak attuale",
   "@streakAttuale2": {
@@ -10596,12 +10607,6 @@
   "@totalWorkouts": {
     "description": "Etichetta per numero totale allenamenti"
   },
-  "@today": {
-    "description": "Today"
-  },
-  "@yesterday": {
-    "description": "Yesterday"
-  },
   "noRecordsYet": "Nessun record ancora",
   "@noRecordsYet": {
     "description": "Stato vuoto quando non esistono record personali"
@@ -11774,7 +11779,7 @@
     }
   },
   "@totalVolume": {
-    "description": "Etichetta riepilogo volume totale"
+    "description": "Label for total volume in summary"
   },
   "avgPerWorkout": "Media per Allenamento",
   "@avgPerWorkout": {
@@ -12259,14 +12264,6 @@
   "reportSubmittedSuccess": "🚨 Segnalazione inviata",
   "@reportSubmittedSuccess": {
     "description": "Success message after submitting report"
-  },
-  "@weeksAgo": {
-    "description": "Weeks ago",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
   },
   "@daysAgo": {
     "description": "Days ago",
@@ -12778,14 +12775,6 @@
       }
     }
   },
-  "@monthsAgo": {
-    "description": "Months ago",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "keepGoingAdvice": "Continua così",
   "@keepGoingAdvice": {
     "description": "Keep going advice"
@@ -13050,7 +13039,7 @@
   },
   "equipmentProfiles": "Profili Attrezzatura",
   "@equipmentProfiles": {
-    "description": "Titolo schermata profili attrezzatura"
+    "description": "Title for gym equipment profiles screen"
   },
   "equipmentProfilesUnderConstruction": "Profili attrezzatura - In costruzione",
   "@equipmentProfilesUnderConstruction": {
@@ -14675,7 +14664,7 @@
   },
   "profileUpdated": "Profilo aggiornato",
   "@profileUpdated": {
-    "description": "Messaggio mostrato quando il profilo viene aggiornato con successo"
+    "description": "Success message for profile update"
   },
   "errorSavingProfile": "Errore nel salvataggio del profilo",
   "@errorSavingProfile": {
@@ -15084,7 +15073,7 @@
     }
   },
   "@editProfile": {
-    "description": "Pulsante per modificare il profilo utente"
+    "description": "Title for edit profile screen"
   },
   "weeklyStatsExcellent": "Settimana incredibile! 5+ allenamenti mostrano vera dedizione!",
   "@weeklyStatsExcellent": {
@@ -16258,7 +16247,7 @@
   "@pushPullRatio": {
     "description": "Title for push/pull muscle balance ratio"
   },
-  "upperLowerRatio": "Rapporto Superiore/Inferiore",
+  "upperLowerRatio": "Alto/Basso",
   "@upperLowerRatio": {
     "description": "Title for upper/lower body balance ratio"
   },
@@ -16793,9 +16782,9 @@
   "@saveAndNext": {
     "description": "Button to save and edit next set"
   },
-  "showRpe": "Aggiungi RPE",
+  "showRpe": "Mostra RPE",
   "@showRpe": {
-    "description": "Button to show RPE section"
+    "description": "Toggle label for RPE input"
   },
   "tutorialWelcomeTitle": "Benvenuto nel Tuo Allenamento!",
   "@tutorialWelcomeTitle": {
@@ -18869,9 +18858,9 @@
   "@forAthletesNotUsingApp": {
     "description": "Descrizione per creazione profilo manuale"
   },
-  "createProfile": "Crea profilo",
+  "createProfile": "Crea Profilo",
   "@createProfile": {
-    "description": "Pulsante per creare profilo"
+    "description": "Button to create profile"
   },
   "weeklyCompliance": "Compliance Settimanale",
   "@weeklyCompliance": {
@@ -19575,7 +19564,6 @@
   "customizePdfBranding": "Personalizza il Branding PDF",
   "businessName": "Nome Attività",
   "tagline": "Slogan",
-  "primaryColor": "Colore Primario",
   "logoUrl": "URL Logo",
   "contactEmail": "Email di Contatto",
   "contactPhone": "Telefono di Contatto",
@@ -19884,7 +19872,7 @@
   "@noRestPauseTemplates": {
     "description": "Stato vuoto per sezione template rest-pause"
   },
-  "noCustomExercises": "Nessun esercizio personalizzato",
+  "noCustomExercises": "Nessun esercizio creato",
   "@noCustomExercises": {
     "description": "Stato vuoto per sezione esercizi personalizzati"
   },
@@ -20432,10 +20420,6 @@
   "@lastUsedWeight": {
     "description": "Hint showing weight is from exercise history"
   },
-  "totalVolume": "Volume Totale",
-  "@totalVolume": {
-    "description": "Label for total volume in summary"
-  },
   "timerActionPause": "Pausa",
   "@timerActionPause": {
     "description": "Timer action bubble - pause button"
@@ -20541,10 +20525,6 @@
   "@showPlatesDescription": {
     "description": "Description for plates toggle"
   },
-  "showRpe": "Mostra RPE",
-  "@showRpe": {
-    "description": "Toggle label for RPE input"
-  },
   "showRpeDescription": "Mostra l'input RPE (sforzo percepito) nelle serie",
   "@showRpeDescription": {
     "description": "Description for RPE toggle"
@@ -20585,14 +20565,6 @@
   "@presetEfficient": {
     "description": "Preset for quick workouts - minimal info"
   },
-  "resetToDefaults": "Ripristina Predefiniti",
-  "@resetToDefaults": {
-    "description": "Button to restore default settings"
-  },
-  "equipmentProfiles": "Profili Attrezzatura",
-  "@equipmentProfiles": {
-    "description": "Title for gym equipment profiles screen"
-  },
   "equipmentProfilesDescription": "Gestisci configurazioni attrezzatura palestra",
   "@equipmentProfilesDescription": {
     "description": "Description for equipment profiles"
@@ -20608,14 +20580,6 @@
   "defaultProfile": "Default",
   "@defaultProfile": {
     "description": "Label for default profile"
-  },
-  "createProfile": "Crea Profilo",
-  "@createProfile": {
-    "description": "Button to create profile"
-  },
-  "editProfile": "Modifica Profilo",
-  "@editProfile": {
-    "description": "Title for edit profile screen"
   },
   "deleteProfile": "Elimina Profilo",
   "@deleteProfile": {
@@ -20641,10 +20605,6 @@
   "@availablePlatesTitle": {
     "description": "Title for available plates section"
   },
-  "availablePlatesDescription": "Seleziona i dischi disponibili in questa palestra",
-  "@availablePlatesDescription": {
-    "description": "Description for plate selection"
-  },
   "setAsDefault": "Imposta come profilo default",
   "@setAsDefault": {
     "description": "Checkbox label for default profile"
@@ -20661,7 +20621,6 @@
   "@selectAllPlates": {
     "description": "Button to select all plates"
   },
-  "standardSet": "Set Standard",
   "@standardSet": {
     "description": "Button for standard plate set"
   },
@@ -20726,10 +20685,6 @@
       }
     }
   },
-  "profileUpdated": "Profilo aggiornato",
-  "@profileUpdated": {
-    "description": "Success message for profile update"
-  },
   "profileDeleted": "Profilo eliminato",
   "@profileDeleted": {
     "description": "Success message for profile deletion"
@@ -20738,7 +20693,6 @@
   "@quickCreateTip": {
     "description": "Tip about quick profile creation"
   },
-  "other": "Altro",
   "@other": {
     "description": "Label for other/more options"
   },
@@ -20818,7 +20772,6 @@
   "@ghostModeKeepsXP": {
     "description": "Clarification that Ghost Mode doesn't stop XP accumulation"
   },
-
   "hintTapSet": "Tocca il set per completarlo",
   "hintTapSetAccent": "Tocca il set",
   "hintSwipeForActions": "Scorri per azioni rapide",
@@ -20865,19 +20818,16 @@
   "selectExerciseToReplace": "Quale esercizio vuoi sostituire?",
   "keepWeightAndReps": "Mantieni peso e ripetizioni",
   "replaceInAllRounds": "Sostituisci in tutti i round",
-  "exerciseReplacedSuccess": "{oldExercise} sostituito con {newExercise}",
   "chooseReplacement": "Scegli sostituto",
   "dropSetTraining": "Allenamento Drop Set",
   "smartWeightHelper": "Calcolatore peso smart",
   "generatedSets": "Serie generate",
   "linkCopied": "Link copiato",
-
   "progressionNew": "Nuovo!",
   "progressionStable": "Stabile",
   "progressionUp": "+{percent}%",
   "progressionDown": "-{percent}%",
   "progressionResume": "Da riprendere",
-
   "correlationNeedMoreSessions": "{current} di {required} sessioni con RPE",
   "correlationNeedMoreSessionsHint": "Registra l'RPE dopo ogni serie per sbloccare le analisi di correlazione",
   "correlationEarlyPatterns": "Primi pattern emergenti",
@@ -20890,7 +20840,6 @@
   "correlationTechnicalDetails": "Dati tecnici",
   "correlationMetricWeight": "peso",
   "correlationMetricVolume": "volume",
-
   "weeklySummaryStrong": "Settimana fantastica! {workouts} allenamenti, {prs} nuovi PR. Volume in crescita del {percent}%.",
   "weeklySummaryNormal": "Buona settimana! {workouts} allenamenti completati. Continua così!",
   "weeklySummaryWeak": "Settimana tranquilla. {workouts} allenamento completato. Ogni sessione conta!",
@@ -20907,7 +20856,6 @@
   "analyticsSwitchToDetailed": "Passa a vista dettagliata",
   "analyticsViewSimple": "Vista semplice",
   "analyticsViewDetailed": "Vista dettagliata",
-
   "workoutImportTitle": "Importa Scheda",
   "workoutImportFromText": "Da Testo",
   "workoutImportFromPhoto": "Da Foto",
@@ -20940,7 +20888,6 @@
   "workoutImportSearchExercise": "Cerca esercizio...",
   "workoutImportPhotoHint": "Scatta una foto della tua scheda o seleziona dalla galleria",
   "workoutImportDay": "Giorno {number}",
-
   "quickActionLogMeasurements": "Log Misure",
   "quickActionEmptyWorkout": "Vuoto",
   "quickActionStart": "INIZIA",
@@ -20966,25 +20913,16 @@
   "muscleShoulders": "Spalle",
   "muscleRearDelts": "Deltoidi Posteriori",
   "alreadyAdded": "Aggiunto",
-  "suggestedForToday": "Suggerito per oggi",
   "recentlyUsed": "Ultimi usati",
-  "viewAll": "Vedi tutti",
   "viewAllCount": "Vedi tutti ({count})",
   "musclesRecovered": "Muscoli recuperati",
   "acceptable": "Accettabile",
   "restDaySuggestion": "Oggi è ideale per il recupero",
-  "noTemplatesYet": "Non hai ancora template",
   "createFirstTemplateHint": "Crea il tuo primo template per iniziare",
-  "restDay": "Giorno di Riposo",
-  "allExercises": "Tutti gli esercizi",
   "exerciseFilterAll": "Tutti A-Z",
   "exerciseFilterCreated": "Creati",
   "exerciseFilterSelected": "Già scelti",
   "noSelectedExercises": "Nessun esercizio selezionato",
-  "noCustomExercises": "Nessun esercizio creato",
-  "muscleBalance": "Bilanciamento Muscolare",
-  "pushPullRatio": "Push/Pull",
-  "upperLowerRatio": "Alto/Basso",
   "addExercisesForMuscleAnalysis": "Aggiungi esercizi per vedere l'analisi muscolare",
   "muscleWarning": "Sbilanciamento rilevato",
   "muscleCovered": "Coperto",
@@ -20994,7 +20932,6 @@
   "totalSetsCount": "{count} serie totali",
   "rpe10RecoverySuggestion": "Cedimento raggiunto — +30s riposo consigliato",
   "rpe10Apply": "Applica",
-
   "hiddenWorkoutsCount": "+{count} workout nascosti",
   "unlockFullHistory": "Sblocca history completa",
   "historyLimitedTo3Months": "Dati limitati a 3 mesi",
@@ -21009,7 +20946,6 @@
   "workoutSettings": "Impostazioni workout",
   "recoveryNotNow": "Non ora",
   "pendingWorkout": "Allenamento in sospeso",
-  "resumeWorkout": "RIPRENDI",
   "pendingWorkoutInfo": "{exerciseCount} esercizi · {completedSets}/{totalSets} set",
   "pendingWorkoutStartedAgo": "Iniziato {minutes} min fa",
   "metronomeStart": "Metronomo",
@@ -21021,18 +20957,7 @@
   "celebrationMotivational3": "La costanza è il tuo superpotere!",
   "celebrationMotivational4": "Il te stesso del futuro ti ringrazierà!",
   "celebrationMotivational5": "Corpo forte, mente forte!",
-  "setsCompleted": "{count} serie",
-  "@setsCompleted": {
-    "description": "Numero di serie completate",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "shareResult": "Condividi",
-  "goHome": "Home",
-
   "strengthLevelNoData": "Nessun dato disponibile per questo esercizio",
   "strengthLevelAvailableAfterWorkout": "I livelli di forza saranno disponibili dopo il primo workout",
   "your1RM": "Il tuo 1RM:",
@@ -21046,5 +20971,13 @@
   "dataStillLoading": "Dati ancora in caricamento...",
   "weeklyVolumeCard": "Volume settimanale",
   "repZoneCard": "Zone di allenamento",
-  "dominantZoneLabel": "Focus principale: {zone}"
+  "dominantZoneLabel": "Focus principale: {zone}",
+  "selectAPlan": "Scegli il tuo piano e sblocca tutte le funzionalità",
+  "purchaseSuccessful": "Acquisto completato! Benvenuto in Premium",
+  "perMonth": "Mensile",
+  "perYear": "Annuale",
+  "oneTimePurchase": "A vita",
+  "savingsPercent": "Miglior Offerta",
+  "subscriptionActiveUntil": "Attivo fino al {date}",
+  "subscriptionLifetime": "Premium a Vita"
 }
