@@ -9,7 +9,6 @@ import 'package:gymbro_flutter_new/features/strength_standards/data/datasources/
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/data/repositories/strength_standards_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/exercise_mapping.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/medical_clearance_questionnaire.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/questionnaire_analytics.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/strength_standard.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
@@ -229,65 +228,6 @@ class UserFitnessQuestionnaireNotifier
   }
 }
 
-/// Medical clearance questionnaire state notifier
-final medicalClearanceQuestionnaireProvider =
-    NotifierProvider<
-      MedicalClearanceQuestionnaireNotifier,
-      MedicalClearanceQuestionnaire?
-    >(MedicalClearanceQuestionnaireNotifier.new);
-
-/// Notifier for managing medical clearance questionnaire state
-class MedicalClearanceQuestionnaireNotifier
-    extends Notifier<MedicalClearanceQuestionnaire?> {
-  @override
-  MedicalClearanceQuestionnaire? build() {
-    return null;
-  }
-
-  /// Update medical clearance data
-  void updateClearance(MedicalClearanceQuestionnaire clearance) {
-    state = clearance;
-  }
-
-  /// Complete the medical clearance (set timestamp)
-  void completeClearance() {
-    if (state == null) return;
-    state = state!.copyWith(
-      completedAt: DateTime.now(),
-      userAcknowledgedRisks: true,
-    );
-  }
-
-  /// Clear medical clearance data
-  void clearClearance() {
-    state = null;
-  }
-
-  /// Load medical clearance from Hive persistence
-  Future<void> loadClearance() async {
-    final userId = ref.read(currentUserIdProvider);
-    if (userId == null) return;
-
-    final datasource = ref.read(fitnessProfileLocalDataSourceProvider);
-    final clearance = await datasource.getMedicalClearance(userId);
-
-    if (clearance != null) {
-      state = clearance;
-    }
-  }
-
-  /// Save medical clearance to Hive persistence
-  Future<void> saveClearance() async {
-    if (state == null) return;
-
-    final userId = ref.read(currentUserIdProvider);
-    if (userId == null) return;
-
-    final datasource = ref.read(fitnessProfileLocalDataSourceProvider);
-    await datasource.saveMedicalClearance(state!, userId);
-  }
-}
-
 // ============================================================================
 // PROVIDERS - WEIGHT SUGGESTIONS
 // ============================================================================
@@ -378,12 +318,6 @@ final fitnessProfileAutoLoadProvider = FutureProvider.autoDispose<void>((
     // Load questionnaire from Hive
     final notifier = ref.read(userFitnessQuestionnaireProvider.notifier);
     await notifier.loadQuestionnaire();
-
-    // Load medical clearance
-    final clearanceNotifier = ref.read(
-      medicalClearanceQuestionnaireProvider.notifier,
-    );
-    await clearanceNotifier.loadClearance();
   }
 });
 

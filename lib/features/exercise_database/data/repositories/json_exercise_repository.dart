@@ -52,58 +52,6 @@ class JsonExerciseRepository {
     }).toList();
   }
 
-  Future<List<Exercise>> getExercisesByFocus(List<String> focusGroups) async {
-    final exercises = await getAllExercises();
-    return exercises.where((exercise) {
-      return exercise.focus.any((focus) => focusGroups.contains(focus));
-    }).toList();
-  }
-
-  Future<List<Exercise>> getExercisesByEquipment(List<String> equipment) async {
-    final exercises = await getAllExercises();
-    return exercises.where((exercise) {
-      return equipment.contains(exercise.attrezzatura);
-    }).toList();
-  }
-
-  Future<List<Exercise>> getExercisesByDifficulty(
-    List<String> difficulties,
-  ) async {
-    final exercises = await getAllExercises();
-    return exercises.where((exercise) {
-      return difficulties.contains(exercise.difficolta);
-    }).toList();
-  }
-
-  Future<Exercise?> getExerciseById(String id) async {
-    final exercises = await getAllExercises();
-    try {
-      return exercises.firstWhere((exercise) => exercise.id == id);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // Get unique filter options
-  Future<List<String>> getUniqueFocusGroups() async {
-    final exercises = await getAllExercises();
-    return exercises.expand((e) => e.focus).toSet().toList()..sort();
-  }
-
-  Future<List<String>> getUniqueEquipment() async {
-    final exercises = await getAllExercises();
-    return exercises.map((e) => e.attrezzatura).toSet().toList()..sort();
-  }
-
-  Future<List<String>> getUniqueDifficulties() async {
-    final exercises = await getAllExercises();
-    return exercises.map((e) => e.difficolta).toSet().toList()..sort();
-  }
-
-  // Clear cache to force reload
-  void clearCache() {
-    _cachedExercises = null;
-  }
 }
 
 // Providers per il nuovo sistema

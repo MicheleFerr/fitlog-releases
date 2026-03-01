@@ -7,7 +7,6 @@ import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/data/datasources/fitness_profile_local_datasource.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/strength_standard.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/medical_clearance_questionnaire.dart';
 
 // ---------------------------------------------------------------------------
 // In-memory fake for Box<Map> — no Hive initialisation required
@@ -210,27 +209,6 @@ UserFitnessQuestionnaire _fullQuestionnaire() => UserFitnessQuestionnaire(
       selfReportCalibration: SelfReportCalibration.realistic,
     );
 
-MedicalClearanceQuestionnaire _clearClearance() =>
-    MedicalClearanceQuestionnaire(
-      userAcknowledgedRisks: true,
-      completedAt: DateTime(2024, 6, 14),
-    );
-
-MedicalClearanceQuestionnaire _highRiskClearance() =>
-    MedicalClearanceQuestionnaire(
-      hasHeartCondition: true,
-      hasChestPain: true,
-      hasDizzinessOrFainting: true,
-      isHighRiskAge: true,
-      hasFamilyHistory: true,
-      currentSmoker: true,
-      isObese: true,
-      hasDiabetes: true,
-      hasHighBloodPressure: true,
-      userAcknowledgedRisks: false,
-      completedAt: DateTime(2024, 5, 1),
-    );
-
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -376,98 +354,7 @@ void main() {
   });
 
   // =========================================================================
-  // saveMedicalClearance
-  // =========================================================================
-
-  group('saveMedicalClearance', () {
-    test('stores data under clearance_<userId> key', () async {
-      await dataSource.saveMedicalClearance(_clearClearance(), userId);
-
-      final box = fakeManager.boxFor(HiveBoxNames.medicalClearance);
-      expect(box.containsKey('clearance_$userId'), isTrue);
-    });
-
-    test('persists userId and lastModified fields', () async {
-      await dataSource.saveMedicalClearance(_clearClearance(), userId);
-
-      final box = fakeManager.boxFor(HiveBoxNames.medicalClearance);
-      final stored = box.get('clearance_$userId') as Map<String, dynamic>;
-
-      expect(stored['userId'], equals(userId));
-      expect(stored.containsKey('lastModified'), isTrue);
-    });
-
-    test('saves high-risk clearance without error', () async {
-      await dataSource.saveMedicalClearance(_highRiskClearance(), userId);
-
-      final result = await dataSource.getMedicalClearance(userId);
-      expect(result, isNotNull);
-      expect(result!.hasHeartCondition, isTrue);
-      expect(result.hasDiabetes, isTrue);
-    });
-
-    test('overwrites previous clearance for same userId', () async {
-      await dataSource.saveMedicalClearance(_clearClearance(), userId);
-
-      final updated = _clearClearance().copyWith(currentSmoker: true);
-      await dataSource.saveMedicalClearance(updated, userId);
-
-      final result = await dataSource.getMedicalClearance(userId);
-      expect(result!.currentSmoker, isTrue);
-    });
-
-    test('uses a separate box from fitness questionnaire', () async {
-      await dataSource.saveFitnessQuestionnaire(_minimalQuestionnaire(), userId);
-      await dataSource.saveMedicalClearance(_clearClearance(), userId);
-
-      final profileBox = fakeManager.boxFor(HiveBoxNames.fitnessProfile);
-      final clearanceBox = fakeManager.boxFor(HiveBoxNames.medicalClearance);
-
-      expect(profileBox.length, equals(1));
-      expect(clearanceBox.length, equals(1));
-    });
-  });
-
-  // =========================================================================
-  // getMedicalClearance
-  // =========================================================================
-
-  group('getMedicalClearance', () {
-    test('returns null when box is empty', () async {
-      final result = await dataSource.getMedicalClearance(userId);
-      expect(result, isNull);
-    });
-
-    test('returns saved clearance correctly', () async {
-      await dataSource.saveMedicalClearance(_clearClearance(), userId);
-
-      final result = await dataSource.getMedicalClearance(userId);
-      expect(result, isNotNull);
-      expect(result!.userAcknowledgedRisks, isTrue);
-    });
-
-    test('returns null when stored data causes a type cast error during parsing', () async {
-      // hasHeartCondition expects bool; supplying a non-castable value causes fromJson to throw.
-      final box = fakeManager.boxFor(HiveBoxNames.medicalClearance);
-      await box.put(
-        'clearance_$userId',
-        <String, dynamic>{'hasHeartCondition': 'not-a-bool-and-not-parseable-as-bool-by-json'},
-      );
-
-      // The data source catches the cast error and returns null gracefully.
-      final result = await dataSource.getMedicalClearance(userId);
-      expect(result, isNull);
-    });
-
-    test('returns null for unknown userId', () async {
-      await dataSource.saveMedicalClearance(_clearClearance(), userId);
-      final result = await dataSource.getMedicalClearance('stranger');
-      expect(result, isNull);
-    });
-  });
-
-  // =========================================================================
-  // hasFitnessProfile / hasMedicalClearance
+  // hasFitnessProfile
   // =========================================================================
 
   group('hasFitnessProfile', () {
@@ -487,25 +374,8 @@ void main() {
     });
   });
 
-  group('hasMedicalClearance', () {
-    test('returns false when no clearance exists', () async {
-      expect(await dataSource.hasMedicalClearance(userId), isFalse);
-    });
-
-    test('returns true after clearance saved', () async {
-      await dataSource.saveMedicalClearance(_clearClearance(), userId);
-      expect(await dataSource.hasMedicalClearance(userId), isTrue);
-    });
-
-    test('returns false after clearance cleared', () async {
-      await dataSource.saveMedicalClearance(_clearClearance(), userId);
-      await dataSource.clearMedicalClearance(userId);
-      expect(await dataSource.hasMedicalClearance(userId), isFalse);
-    });
-  });
-
   // =========================================================================
-  // clearFitnessProfile / clearMedicalClearance / clearAllUserData
+  // clearFitnessProfile / clearAllUserData
   // =========================================================================
 
   group('clearFitnessProfile', () {
@@ -534,37 +404,17 @@ void main() {
     });
   });
 
-  group('clearMedicalClearance', () {
-    test('removes clearance entry from box', () async {
-      await dataSource.saveMedicalClearance(_clearClearance(), userId);
-      await dataSource.clearMedicalClearance(userId);
-
-      final box = fakeManager.boxFor(HiveBoxNames.medicalClearance);
-      expect(box.containsKey('clearance_$userId'), isFalse);
-    });
-
-    test('does not throw when clearance does not exist', () async {
-      await expectLater(
-        dataSource.clearMedicalClearance('ghost_user'),
-        completes,
-      );
-    });
-  });
-
   group('clearAllUserData', () {
-    test('removes both profile and clearance for user', () async {
+    test('removes profile for user', () async {
       await dataSource.saveFitnessQuestionnaire(_minimalQuestionnaire(), userId);
-      await dataSource.saveMedicalClearance(_clearClearance(), userId);
 
       await dataSource.clearAllUserData(userId);
 
       expect(await dataSource.hasFitnessProfile(userId), isFalse);
-      expect(await dataSource.hasMedicalClearance(userId), isFalse);
     });
 
     test('does not affect other users data', () async {
       await dataSource.saveFitnessQuestionnaire(_minimalQuestionnaire(), 'user_A');
-      await dataSource.saveMedicalClearance(_clearClearance(), 'user_A');
       await dataSource.saveFitnessQuestionnaire(_minimalQuestionnaire(), 'user_B');
 
       await dataSource.clearAllUserData('user_A');
@@ -654,7 +504,7 @@ void main() {
       expect(result, isNull);
     });
 
-    test('returns export map when profile exists (no clearance)', () async {
+    test('returns export map when profile exists', () async {
       await dataSource.saveFitnessQuestionnaire(_minimalQuestionnaire(), userId);
 
       final result = await dataSource.exportFitnessData(userId);
@@ -663,15 +513,6 @@ void main() {
       expect(result['version'], equals('1.0.0'));
       expect(result.containsKey('exportDate'), isTrue);
       expect(result['fitnessProfile'], isNotNull);
-      expect(result['medicalClearance'], isNull);
-    });
-
-    test('includes medicalClearance when both records exist', () async {
-      await dataSource.saveFitnessQuestionnaire(_minimalQuestionnaire(), userId);
-      await dataSource.saveMedicalClearance(_clearClearance(), userId);
-
-      final result = await dataSource.exportFitnessData(userId);
-      expect(result!['medicalClearance'], isNotNull);
     });
 
     test('exportDate is a valid ISO-8601 string', () async {
@@ -690,7 +531,6 @@ void main() {
     test('imports fitness profile from exported map', () async {
       // Setup: save and export
       await dataSource.saveFitnessQuestionnaire(_fullQuestionnaire(), userId);
-      await dataSource.saveMedicalClearance(_clearClearance(), userId);
       final exported = await dataSource.exportFitnessData(userId);
       expect(exported, isNotNull);
 
@@ -705,49 +545,18 @@ void main() {
       expect(profile.benchPressMax, equals(55.0));
     });
 
-    test('imports medical clearance when present in map', () async {
-      await dataSource.saveFitnessQuestionnaire(_minimalQuestionnaire(), userId);
-      await dataSource.saveMedicalClearance(_highRiskClearance(), userId);
-      final exported = await dataSource.exportFitnessData(userId);
-
-      final newManager = _FakeHiveBoxManager();
-      final importedDs = FitnessProfileLocalDataSource(newManager);
-      await importedDs.importFitnessData(exported!, 'imported_user');
-
-      final clearance = await importedDs.getMedicalClearance('imported_user');
-      expect(clearance, isNotNull);
-      expect(clearance!.hasHeartCondition, isTrue);
-    });
-
-    test('skips medicalClearance import when field is null', () async {
-      final data = <String, dynamic>{
-        'userId': userId,
-        'fitnessProfile': _minimalQuestionnaire().toJson(),
-        'medicalClearance': null,
-        'version': '1.0.0',
-        'exportDate': DateTime.now().toIso8601String(),
-      };
-
-      await dataSource.importFitnessData(data, userId);
-
-      expect(await dataSource.hasFitnessProfile(userId), isTrue);
-      expect(await dataSource.hasMedicalClearance(userId), isFalse);
-    });
-
     test('skips fitnessProfile import when field is null', () async {
       final data = <String, dynamic>{
         'userId': userId,
         'fitnessProfile': null,
-        'medicalClearance': _clearClearance().toJson(),
         'version': '1.0.0',
         'exportDate': DateTime.now().toIso8601String(),
       };
 
       await dataSource.importFitnessData(data, userId);
 
-      // Profile should not exist, clearance should
+      // Profile should not exist
       expect(await dataSource.hasFitnessProfile(userId), isFalse);
-      expect(await dataSource.hasMedicalClearance(userId), isTrue);
     });
 
     test('import followed by export round-trips data without loss', () async {
@@ -778,16 +587,6 @@ void main() {
 
       await expectLater(
         dataSource.saveFitnessQuestionnaire(_minimalQuestionnaire(), userId),
-        throwsException,
-      );
-    });
-
-    test('saveMedicalClearance propagates openBox error', () async {
-      fakeManager.openErrors[HiveBoxNames.medicalClearance] =
-          Exception('cannot open medical_clearance box');
-
-      await expectLater(
-        dataSource.saveMedicalClearance(_clearClearance(), userId),
         throwsException,
       );
     });

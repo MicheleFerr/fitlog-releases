@@ -131,9 +131,6 @@ class HiveBoxNames {
   /// Fitness profile data
   static const String fitnessProfile = 'fitness_profile';
 
-  /// Medical clearance data
-  static const String medicalClearance = 'medical_clearance';
-
   // ═══════════════════════════════════════════════════════════
   // ⏱️ TIMER FEATURE
   // ═══════════════════════════════════════════════════════════
@@ -275,7 +272,6 @@ class HiveBoxNames {
         historyViewSettings,
         // Strength Standards
         fitnessProfile,
-        medicalClearance,
         // Timer
         timerStorage,
         // Notifications
