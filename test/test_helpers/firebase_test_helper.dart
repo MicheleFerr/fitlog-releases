@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
@@ -93,5 +94,35 @@ Future<void> cleanupTestEnvironment() async {
     await Hive.close();
   } catch (e) {
     // Ignore cleanup errors
+  }
+}
+
+/// Mock Firebase Auth Pigeon channels to prevent PlatformException
+///
+/// Firebase Auth uses Pigeon-generated code with BasicMessageChannel.
+/// The MethodChannelFirebaseAuth constructor eagerly calls
+/// registerIdTokenListener and registerAuthStateListener via Pigeon,
+/// which fails in tests without a native handler.
+/// This sets up mock binary message handlers for those channels.
+void setupFirebaseAuthPigeonMocks() {
+  final binding = TestWidgetsFlutterBinding.ensureInitialized();
+  final messenger = binding.defaultBinaryMessenger;
+
+  // The Pigeon channels for Firebase Auth
+  const channels = [
+    'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener',
+    'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener',
+  ];
+
+  for (final channelName in channels) {
+    messenger.setMockMessageHandler(channelName, (message) async {
+      // Return a valid Pigeon response: List<Object?> with a String channel name
+      // encoded with StandardMessageCodec
+      const codec = StandardMessageCodec();
+      final response = codec.encodeMessage(<Object?>[
+        'mock_event_channel_$channelName',
+      ]);
+      return response;
+    });
   }
 }

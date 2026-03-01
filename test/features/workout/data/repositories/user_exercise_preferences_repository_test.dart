@@ -4,6 +4,7 @@ import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/user_exercise_preferences_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/user_exercise_preferences.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import '../../../../test_helpers/firebase_test_helper.dart';
 
 // Mocks
 class MockHiveBoxManagerEnhanced extends Mock
@@ -20,6 +21,8 @@ void main() {
   late MockLazyBox mockBox;
 
   setUpAll(() {
+    setupFirebaseCoreMocks();
+    setupFirebaseAuthPigeonMocks();
     registerFallbackValue(FakeUserExercisePreferences());
   });
 
