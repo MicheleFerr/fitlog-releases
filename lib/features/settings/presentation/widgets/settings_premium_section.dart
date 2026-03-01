@@ -6,7 +6,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/widgets/settings_shared_helpers.dart';
 
-/// Premium CTA settings section: upgrade prompt with "coming soon" badge.
+/// Premium CTA settings section: upgrade prompt with "free during beta" badge.
 class SettingsPremiumSection extends StatelessWidget {
   const SettingsPremiumSection({super.key});
 
@@ -39,7 +39,7 @@ class SettingsPremiumSection extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        context.l10n.premiumComingSoonBadge,
+                        context.l10n.allFeaturesFreeInBeta,
                         style: context.textTheme.bodySmall?.copyWith(
                           color: context.colors.primary,
                           fontWeight: FontWeight.w600,
@@ -55,11 +55,11 @@ class SettingsPremiumSection extends StatelessWidget {
             // Premium features tile
             buildSettingTile(
               context,
-              title: context.l10n.unlockPremium,
-              subtitle: context.l10n.getUnlimitedAccess,
+              title: context.l10n.betaEarlyAdopterTitle,
+              subtitle: context.l10n.betaEarlyAdopterMessage,
               leading: SemanticIcon(
                 icon: AppIcons.unlock,
-                semanticLabel: context.l10n.unlockPremium,
+                semanticLabel: context.l10n.betaEarlyAdopterTitle,
               ),
               onTap: () => context.pushNamed('premium'),
               trailing: Container(

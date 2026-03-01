@@ -18,7 +18,7 @@ import 'package:gymbro_flutter_new/features/settings/presentation/widgets/settin
 import 'package:gymbro_flutter_new/features/settings/presentation/widgets/settings_help_section.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/widgets/settings_units_language_section.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/widgets/settings_data_section.dart';
-// import 'package:gymbro_flutter_new/features/settings/presentation/widgets/settings_premium_section.dart'; // hidden during free beta
+import 'package:gymbro_flutter_new/features/settings/presentation/widgets/settings_premium_section.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -175,11 +175,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               const SizedBox(height: 24),
             ],
 
-            // Premium CTA — hidden during free beta (no IAP implemented)
-            // if (sectionMatches(_searchQuery, keywords['premium']!)) ...[
-            //   const SettingsPremiumSection(),
-            //   const SizedBox(height: 24),
-            // ],
+            // Premium CTA — shows "free during beta" with upgrade path ready
+            if (sectionMatches(_searchQuery, keywords['premium']!)) ...[
+              const SettingsPremiumSection(),
+              const SizedBox(height: 24),
+            ],
 
             // Help & Info
             if (sectionMatches(_searchQuery, keywords['help']!)) ...[
