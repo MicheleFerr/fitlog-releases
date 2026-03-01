@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/cached_progress_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   // =========================================================================
   // DashboardStats
   // =========================================================================
@@ -319,6 +322,216 @@ void main() {
         final updated = stats.addWorkout('2024-01-03');
         expect(updated.weeklyFrequency, 0.0);
       });
+    });
+
+    group('toJson', () {
+      test('serializes all fields to correct types', () {
+        final stats = _make(
+          totalWorkouts: 15,
+          totalExercises: 45,
+          currentStreak: 3,
+          weeklyFrequency: 2.5,
+          totalVolume: 7500.0,
+          maxPR: 130.0,
+          prExercise: 'Squat',
+          workoutDates: {'2026-01-10': true},
+          lastCalculated: DateTime(2026, 2, 1),
+        );
+
+        final json = stats.toJson();
+        expect(json['totalWorkouts'], 15);
+        expect(json['totalExercises'], 45);
+        expect(json['currentStreak'], 3);
+        expect(json['weeklyFrequency'], 2.5);
+        expect(json['totalVolume'], 7500.0);
+        expect(json['maxPR'], 130.0);
+        expect(json['prExercise'], 'Squat');
+        expect(json['workoutDates'], {'2026-01-10': true});
+        expect(json['lastCalculated'], isA<String>());
+      });
+
+      test('toJson is valid JSON-encodable', () {
+        final stats = _make();
+        final json = stats.toJson();
+        // Should not throw
+        final encoded = jsonEncode(json);
+        expect(encoded, isNotEmpty);
+        // And should be decodable
+        final decoded = jsonDecode(encoded) as Map<String, dynamic>;
+        expect(decoded['totalWorkouts'], stats.totalWorkouts);
+      });
+    });
+
+    group('fromJson edge cases', () {
+      test('handles null values in all fields', () {
+        final stats = CachedDashboardStats.fromJson({
+          'totalWorkouts': null,
+          'totalExercises': null,
+          'currentStreak': null,
+          'weeklyFrequency': null,
+          'totalVolume': null,
+          'maxPR': null,
+          'prExercise': null,
+          'workoutDates': null,
+        });
+        expect(stats.totalWorkouts, 0);
+        expect(stats.totalExercises, 0);
+        expect(stats.currentStreak, 0);
+        expect(stats.weeklyFrequency, 0.0);
+        expect(stats.totalVolume, 0.0);
+        expect(stats.maxPR, 0.0);
+        expect(stats.prExercise, 'N/A');
+        expect(stats.workoutDates, isEmpty);
+      });
+
+      test('handles int totalVolume and maxPR', () {
+        final stats = CachedDashboardStats.fromJson({
+          'totalVolume': 5000,
+          'maxPR': 120,
+        });
+        expect(stats.totalVolume, 5000.0);
+        expect(stats.maxPR, 120.0);
+      });
+
+      test('handles lastCalculated ISO string', () {
+        final stats = CachedDashboardStats.fromJson({
+          'lastCalculated': '2026-01-15T10:30:00.000',
+        });
+        expect(stats.lastCalculated.year, 2026);
+        expect(stats.lastCalculated.month, 1);
+        expect(stats.lastCalculated.day, 15);
+      });
+
+      test('handles workoutDates with multiple entries', () {
+        final stats = CachedDashboardStats.fromJson({
+          'workoutDates': {
+            '2026-01-10': true,
+            '2026-01-11': true,
+            '2026-01-12': true,
+          },
+        });
+        expect(stats.workoutDates.length, 3);
+        expect(stats.workoutDates['2026-01-10'], isTrue);
+      });
+    });
+
+    group('addWorkout edge cases', () {
+      test('adding same date does not duplicate', () {
+        final stats = _make(
+          totalWorkouts: 5,
+          workoutDates: {'2026-02-20': true},
+        );
+        final updated = stats.addWorkout('2026-02-20');
+        // workoutDates should still have just one entry
+        expect(updated.workoutDates.length, 1);
+        // But totalWorkouts still increments (addWorkout always increments)
+        expect(updated.totalWorkouts, 6);
+      });
+
+      test('preserves totalExercises unchanged', () {
+        final stats = _make(totalExercises: 100);
+        final updated = stats.addWorkout('2026-02-20');
+        expect(updated.totalExercises, 100);
+      });
+
+      test('preserves totalVolume unchanged', () {
+        final stats = _make(totalVolume: 9999.9);
+        final updated = stats.addWorkout('2026-02-20');
+        expect(updated.totalVolume, 9999.9);
+      });
+    });
+
+    group('isValid boundary cases', () {
+      test('exactly 24h is not within first tier', () {
+        final stats = _make(
+          totalWorkouts: 1000,
+          lastCalculated: DateTime.now().subtract(const Duration(hours: 24)),
+        );
+        // 24h = 1 day, age.inHours >= 24, first check fails
+        // But 1 day < 3, and totalWorkouts >= 500, so checks < 7 with < 500 (false)
+        // Then < 30 days, so still valid
+        expect(stats.isValid, isTrue);
+      });
+
+      test('exactly 7 days with medium user', () {
+        final stats = _make(
+          totalWorkouts: 200,
+          lastCalculated: DateTime.now().subtract(const Duration(days: 7)),
+        );
+        // age.inDays == 7, first tier: inHours < 24? no
+        // second tier: inDays < 3? no. third: inDays < 7? no (== 7)
+        // fourth: inDays < 30? yes
+        expect(stats.isValid, isTrue);
+      });
+
+      test('exactly 30 days is invalid', () {
+        final stats = _make(
+          totalWorkouts: 1000,
+          lastCalculated: DateTime.now().subtract(const Duration(days: 30)),
+        );
+        // age.inDays == 30, inDays < 30 is false
+        expect(stats.isValid, isFalse);
+      });
+    });
+  });
+
+  // =========================================================================
+  // ProgressCacheRepository - static methods
+  // =========================================================================
+  group('ProgressCacheRepository', () {
+    group('clearOnLogout', () {
+      test('does not throw when no static state exists', () {
+        // Should safely handle empty state
+        expect(() => ProgressCacheRepository.clearOnLogout(), returnsNormally);
+      });
+
+      test('can be called multiple times safely', () {
+        ProgressCacheRepository.clearOnLogout();
+        ProgressCacheRepository.clearOnLogout();
+        ProgressCacheRepository.clearOnLogout();
+        // Should not throw
+      });
+    });
+  });
+
+  // =========================================================================
+  // ProgressCacheRepository with SharedPreferences
+  // =========================================================================
+  group('ProgressCacheRepository with SharedPreferences', () {
+    late SharedPreferences prefs;
+
+    Future<SharedPreferences> getPrefs(
+        [Map<String, Object> initial = const {}]) async {
+      SharedPreferences.setMockInitialValues(initial);
+      return SharedPreferences.getInstance();
+    }
+
+    setUp(() async {
+      // Clean static state before each test
+      ProgressCacheRepository.clearOnLogout();
+    });
+
+    test('constructor initializes without error', () async {
+      prefs = await getPrefs();
+      final repo = ProgressCacheRepository(prefs);
+      // Give time for async initialization
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      repo.dispose();
+    });
+
+    test('dispose does not throw', () async {
+      prefs = await getPrefs();
+      final repo = ProgressCacheRepository(prefs);
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      expect(() => repo.dispose(), returnsNormally);
+    });
+
+    test('dispose can be called safely', () async {
+      prefs = await getPrefs();
+      final repo = ProgressCacheRepository(prefs);
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      repo.dispose();
+      // After dispose, operations should be guarded
     });
   });
 }
