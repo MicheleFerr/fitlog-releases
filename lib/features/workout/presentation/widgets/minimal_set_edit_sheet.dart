@@ -7,6 +7,7 @@
 /// - "Large tappable buttons" - For use during workout
 library;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -156,11 +157,15 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     super.initState();
 
     // 🔍 DEBUG: Verifica callback
-    print('🎬 MinimalSetEditSheet.initState()');
-    print('   - currentSetIndex: ${widget.currentSetIndex}');
-    print('   - totalSets: ${widget.totalSets}');
-    print('   - onApplyToAll: ${widget.onApplyToAll != null ? "✅ presente" : "❌ null"}');
-    print('   - _isFirstSet: $_isFirstSet');
+    if (kDebugMode) {
+      debugPrint('🎬 MinimalSetEditSheet.initState()');
+      debugPrint('   - currentSetIndex: ${widget.currentSetIndex}');
+      debugPrint('   - totalSets: ${widget.totalSets}');
+      debugPrint(
+        '   - onApplyToAll: ${widget.onApplyToAll != null ? "✅ presente" : "❌ null"}',
+      );
+      debugPrint('   - _isFirstSet: $_isFirstSet');
+    }
 
     _weight = widget.exerciseSet.weight ?? 0;
     _reps = widget.exerciseSet.reps ?? 10;
@@ -280,11 +285,15 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
     final base = widget.exerciseSet;
 
     // 🔍 DEBUG: Log modalità e valori correnti
-    print('📝 _createUpdatedSet: _isRangeMode=$_isRangeMode');
-    if (_isRangeMode) {
-      print('📝 Range Mode: minReps=$_selectedMinReps, maxReps=$_selectedMaxReps');
-    } else {
-      print('📝 Exact Mode: reps=$_reps');
+    if (kDebugMode) {
+      debugPrint('📝 _createUpdatedSet: _isRangeMode=$_isRangeMode');
+      if (_isRangeMode) {
+        debugPrint(
+          '📝 Range Mode: minReps=$_selectedMinReps, maxReps=$_selectedMaxReps',
+        );
+      } else {
+        debugPrint('📝 Exact Mode: reps=$_reps');
+      }
     }
 
     if (_isRangeMode) {
@@ -536,19 +545,27 @@ class _MinimalSetEditSheetState extends State<MinimalSetEditSheet> {
 
   void _applyToAll() {
     if (widget.onApplyToAll == null) {
-      print('⚠️ _applyToAll: callback è null, esco');
+      if (kDebugMode) {
+        debugPrint('⚠️ _applyToAll: callback è null, esco');
+      }
       return;
     }
 
     _hasSaved = true;
     final updatedSet = _createUpdatedSet();
-    print('🎯 _applyToAll: sto per chiamare callback con reps=${updatedSet.reps}, minReps=${updatedSet.minReps}, maxReps=${updatedSet.maxReps}');
+    if (kDebugMode) {
+      debugPrint(
+        '🎯 _applyToAll: sto per chiamare callback con reps=${updatedSet.reps}, minReps=${updatedSet.minReps}, maxReps=${updatedSet.maxReps}',
+      );
+    }
 
     HapticFeedback.mediumImpact();
     Navigator.of(context).pop();
     widget.onApplyToAll!(updatedSet);
 
-    print('✅ _applyToAll: callback chiamato');
+    if (kDebugMode) {
+      debugPrint('✅ _applyToAll: callback chiamato');
+    }
   }
 
   void _copyPrevious() {

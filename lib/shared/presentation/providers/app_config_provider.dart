@@ -958,9 +958,11 @@ class AppConfigNotifier extends Notifier<AppConfig> {
   Future<void> setInitialOnboardingCompleted(bool completed) async {
     final previousState = state;
     try {
-      print(
-        '🔧 [AppConfig] setInitialOnboardingCompleted called with: $completed',
-      );
+      if (kDebugMode) {
+        debugPrint(
+          '🔧 [AppConfig] setInitialOnboardingCompleted called with: $completed',
+        );
+      }
       await _ensureInitialized();
       if (_isDisposed) {
         throw StateError(
@@ -968,13 +970,17 @@ class AppConfigNotifier extends Notifier<AppConfig> {
         );
       }
 
-      print(
-        '🔧 [AppConfig] Current state.initialOnboardingCompleted: ${state.initialOnboardingCompleted}',
-      );
+      if (kDebugMode) {
+        debugPrint(
+          '🔧 [AppConfig] Current state.initialOnboardingCompleted: ${state.initialOnboardingCompleted}',
+        );
+      }
       state = state.copyWith(initialOnboardingCompleted: completed);
-      print(
-        '✅ [AppConfig] State updated to: ${state.initialOnboardingCompleted}',
-      );
+      if (kDebugMode) {
+        debugPrint(
+          '✅ [AppConfig] State updated to: ${state.initialOnboardingCompleted}',
+        );
+      }
 
       await _saveConfig(rethrowOnError: true);
       final persisted = _configBox?.get('config');
@@ -984,12 +990,18 @@ class AppConfigNotifier extends Notifier<AppConfig> {
           '[AppConfig] Post-save verification failed for initialOnboardingCompleted',
         );
       }
-      print('💾 [AppConfig] Config saved to Hive');
+      if (kDebugMode) {
+        debugPrint('💾 [AppConfig] Config saved to Hive');
+      }
     } catch (e, stackTrace) {
       final persisted = _configBox?.get('config');
       state = persisted ?? previousState;
-      print('❌ [AppConfig] Error setting initial onboarding completed: $e');
-      print('📍 Stack trace: $stackTrace');
+      if (kDebugMode) {
+        debugPrint(
+          '❌ [AppConfig] Error setting initial onboarding completed: $e',
+        );
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
       rethrow;
     }
   }

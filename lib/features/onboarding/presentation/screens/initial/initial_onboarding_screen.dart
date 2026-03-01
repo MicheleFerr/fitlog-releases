@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -105,13 +106,18 @@ class _InitialOnboardingScreenState
   Future<void> _handleComplete() async {
     final l10n = context.l10n;
 
-    // RELEASE MODE DEBUG: Always print (remove if blocks)
-    print('🔵 [Onboarding] _handleComplete called');
-    print('   - _isHandlingCompletion (local): $_isHandlingCompletion');
+    if (kDebugMode) {
+      debugPrint('🔵 [Onboarding] _handleComplete called');
+      debugPrint(
+        '   - _isHandlingCompletion (local): $_isHandlingCompletion',
+      );
+    }
 
     // CRITICAL: Synchronous check with local flag (Riverpod state is async)
     if (_isHandlingCompletion) {
-      print('⚠️ [Onboarding] Already handling completion - BLOCKED');
+      if (kDebugMode) {
+        debugPrint('⚠️ [Onboarding] Already handling completion - BLOCKED');
+      }
       return;
     }
 
@@ -124,40 +130,56 @@ class _InitialOnboardingScreenState
       initialOnboardingCompletionServiceProvider,
     );
 
-    print('   - isCompleting (state): ${state.isCompleting}');
-    print('   - isComplete (state): ${state.isComplete}');
+    if (kDebugMode) {
+      debugPrint('   - isCompleting (state): ${state.isCompleting}');
+      debugPrint('   - isComplete (state): ${state.isComplete}');
+    }
 
     // Get onboarding data
     final data = state.toOnboardingData();
     if (data == null) {
-      print('❌ [Onboarding] Data incomplete - cannot proceed');
+      if (kDebugMode) {
+        debugPrint('❌ [Onboarding] Data incomplete - cannot proceed');
+      }
       notifier.setError(l10n.errorInvalidInput);
       return;
     }
 
     // Start completion (shows spinner, disables button)
-    print('🔄 [Onboarding] Starting completion...');
+    if (kDebugMode) {
+      debugPrint('🔄 [Onboarding] Starting completion...');
+    }
     notifier.startCompletion();
 
     try {
       // Save all data - this will set initialOnboardingCompleted = true
-      print('💾 [Onboarding] Saving data...');
+      if (kDebugMode) {
+        debugPrint('💾 [Onboarding] Saving data...');
+      }
       await completionService.complete(data);
 
-      print('✅ [Onboarding] Data saved successfully');
+      if (kDebugMode) {
+        debugPrint('✅ [Onboarding] Data saved successfully');
+      }
 
       // Trigger callback if provided
       widget.onComplete?.call();
 
       // Wait for Riverpod state to propagate before navigating
-      print('🏠 [Onboarding] Waiting for state propagation...');
+      if (kDebugMode) {
+        debugPrint('🏠 [Onboarding] Waiting for state propagation...');
+      }
       await Future.delayed(const Duration(milliseconds: 200));
 
       if (mounted && context.mounted) {
         // Navigate using GoRouter context extension (avoids circular import with app_router.dart)
-        print('🎯 [Onboarding] Navigating to choice screen...');
+        if (kDebugMode) {
+          debugPrint('🎯 [Onboarding] Navigating to choice screen...');
+        }
         context.go(AppRoutes.onboardingChoicePath);
-        print('✅ [Onboarding] Navigation to choice screen triggered');
+        if (kDebugMode) {
+          debugPrint('✅ [Onboarding] Navigation to choice screen triggered');
+        }
       }
 
       // Keep spinner visible until navigation completes
@@ -166,8 +188,10 @@ class _InitialOnboardingScreenState
       // Reset both flags on error to allow retry
       _isHandlingCompletion = false;
 
-      print('❌ [Onboarding] Error during completion: $e');
-      print('Stack: $stack');
+      if (kDebugMode) {
+        debugPrint('❌ [Onboarding] Error during completion: $e');
+        debugPrint('Stack: $stack');
+      }
       notifier.setError(l10n.errorSaving(e.toString()));
     }
   }

@@ -842,16 +842,20 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
   /// [fromLiveActivity] - Set to true when called from Live Activity button tap.
   /// This prevents double-updating the LA since the AppIntent already updated it.
   Future<void> addTime(int seconds, {bool fromLiveActivity = false}) async {
-    print(
-      '[UnifiedTimer] ⏰ addTime called: +$seconds seconds, fromLiveActivity=$fromLiveActivity',
-    );
+    if (kDebugMode) {
+      debugPrint(
+        '[UnifiedTimer] ⏰ addTime called: +$seconds seconds, fromLiveActivity=$fromLiveActivity',
+      );
+    }
 
     // FIX BUG-7: Debounce rapid taps from Live Activity (<800ms apart)
     if (fromLiveActivity) {
       final now = DateTime.now();
       if (_lastAddTimeFromLA != null &&
           now.difference(_lastAddTimeFromLA!).inMilliseconds < 800) {
-        print('[UnifiedTimer] ⚠️ addTime debounced — too soon from LA');
+        if (kDebugMode) {
+          debugPrint('[UnifiedTimer] ⚠️ addTime debounced — too soon from LA');
+        }
         return;
       }
       _lastAddTimeFromLA = now;
@@ -861,18 +865,24 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     await _ensureInitialized();
 
     if (_isDisposed) {
-      print('[UnifiedTimer] ❌ addTime: provider is disposed');
+      if (kDebugMode) {
+        debugPrint('[UnifiedTimer] ❌ addTime: provider is disposed');
+      }
       return;
     }
 
     if (state == null) {
-      print('[UnifiedTimer] ❌ addTime: state is null');
+      if (kDebugMode) {
+        debugPrint('[UnifiedTimer] ❌ addTime: state is null');
+      }
       return;
     }
 
-    print(
-      '[UnifiedTimer] 📊 Current state: isActive=${state!.isActive}, remaining=${state!.remainingSeconds}s, total=${state!.totalDurationSeconds}s',
-    );
+    if (kDebugMode) {
+      debugPrint(
+        '[UnifiedTimer] 📊 Current state: isActive=${state!.isActive}, remaining=${state!.remainingSeconds}s, total=${state!.totalDurationSeconds}s',
+      );
+    }
 
     try {
       // Add the extra seconds to both remaining and total duration
@@ -896,9 +906,11 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       // PERF: Sync ValueNotifier with new remaining seconds
       _remainingSecondsNotifier?.value = newRemainingSeconds;
 
-      print(
-        '[UnifiedTimer] ✅ Time added: newRemaining=${newRemainingSeconds}s, newTotal=${newTotalDurationSeconds}s, secondsAdded=${newSecondsAdded}s, cachedEndTime updated',
-      );
+      if (kDebugMode) {
+        debugPrint(
+          '[UnifiedTimer] ✅ Time added: newRemaining=${newRemainingSeconds}s, newTotal=${newTotalDurationSeconds}s, secondsAdded=${newSecondsAdded}s, cachedEndTime updated',
+        );
+      }
 
       // FIX: Cancel old scheduled audio/notification and reschedule with new duration.
       // Without this, the old iOS notification fires at original endTime → double sound.
@@ -906,9 +918,11 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         try {
           await _unifiedChannel.invokeMethod('cancelBackgroundAudio');
           await _scheduleCompletion();
-          print(
-            '[UnifiedTimer] ✅ Rescheduled iOS completion for +${seconds}s extension',
-          );
+          if (kDebugMode) {
+            debugPrint(
+              '[UnifiedTimer] ✅ Rescheduled iOS completion for +${seconds}s extension',
+            );
+          }
         } catch (e) {
           debugPrint('[UnifiedTimer] ⚠️ Failed to reschedule completion: $e');
         }
@@ -921,13 +935,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         try {
           final wsLAState = ref.read(workoutSessionLAProvider);
           workoutSessionLAActive = wsLAState.isActive;
-          print(
-            '[UnifiedTimer] 📊 Workout Session LA active: $workoutSessionLAActive',
-          );
+          if (kDebugMode) {
+            debugPrint(
+              '[UnifiedTimer] 📊 Workout Session LA active: $workoutSessionLAActive',
+            );
+          }
         } catch (e) {
-          print(
-            '[UnifiedTimer] ⚠️ Could not read workoutSessionLAProvider: $e',
-          );
+          if (kDebugMode) {
+            debugPrint(
+              '[UnifiedTimer] ⚠️ Could not read workoutSessionLAProvider: $e',
+            );
+          }
           // Provider not available, use legacy system
         }
 
@@ -935,15 +953,21 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         if (workoutSessionLAActive) {
           final newEndTime = state!.endTime;
           if (newEndTime != null) {
-            print(
-              '[UnifiedTimer] 📡 Syncing absolute end time to LA: $newEndTime',
-            );
+            if (kDebugMode) {
+              debugPrint(
+                '[UnifiedTimer] 📡 Syncing absolute end time to LA: $newEndTime',
+              );
+            }
             final wsLAService = ref.read(workoutSessionLAServiceProvider);
             await wsLAService.syncRestEndTime(newEndTime);
-            print('[UnifiedTimer] ✅ LA end time synced');
+            if (kDebugMode) {
+              debugPrint('[UnifiedTimer] ✅ LA end time synced');
+            }
           }
         } else if (state!.liveActivityActive) {
-          print('[UnifiedTimer] 📡 Using legacy LA update');
+          if (kDebugMode) {
+            debugPrint('[UnifiedTimer] 📡 Using legacy LA update');
+          }
           await _updateLiveActivity();
         }
 
@@ -956,16 +980,22 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
               seconds,
               newRemainingSeconds,
             );
-        print(
-          '[UnifiedTimer] ⌚ Watch notified: +${seconds}s (remaining=${newRemainingSeconds}s)',
-        );
+        if (kDebugMode) {
+          debugPrint(
+            '[UnifiedTimer] ⌚ Watch notified: +${seconds}s (remaining=${newRemainingSeconds}s)',
+          );
+        }
       }
 
       await _saveState();
-      print('[UnifiedTimer] ✅ addTime completed successfully');
+      if (kDebugMode) {
+        debugPrint('[UnifiedTimer] ✅ addTime completed successfully');
+      }
     } catch (e, stack) {
-      print('[UnifiedTimer] ❌ addTime error: $e');
-      print('[UnifiedTimer] ❌ Stack trace: $stack');
+      if (kDebugMode) {
+        debugPrint('[UnifiedTimer] ❌ addTime error: $e');
+        debugPrint('[UnifiedTimer] ❌ Stack trace: $stack');
+      }
     }
   }
 

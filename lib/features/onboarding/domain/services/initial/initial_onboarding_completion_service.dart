@@ -110,12 +110,18 @@ class InitialOnboardingCompletionService {
 
   /// Mark onboarding as completed in AppConfig
   Future<void> _markOnboardingCompleted(String userId) async {
-    print('🔧 [CompletionService] Marking onboarding as completed...');
+    if (kDebugMode) {
+      debugPrint('🔧 [CompletionService] Marking onboarding as completed...');
+    }
     final appConfigNotifier = _ref.read(appConfigProvider.notifier);
     await appConfigNotifier.setInitialOnboardingCompleted(true);
     await OnboardingCompletionIdentityStore.setCompletedUserId(userId);
 
-    print('✅ [CompletionService] Marked initial onboarding as completed');
+    if (kDebugMode) {
+      debugPrint(
+        '✅ [CompletionService] Marked initial onboarding as completed',
+      );
+    }
   }
 
   /// Sync data to Firestore in background
