@@ -30096,6 +30096,24 @@ abstract class AppLocalizations {
   /// **'In-app purchases coming soon!\nPremium features are currently in beta.'**
   String get inAppPurchasesComingSoon;
 
+  /// Message shown on premium screen during free beta period
+  ///
+  /// In en, this message translates to:
+  /// **'All features are currently free!'**
+  String get allFeaturesFreeInBeta;
+
+  /// Detailed message explaining free beta access
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for being an early adopter. All premium features are unlocked for free during the beta period.'**
+  String get betaEarlyAdopterMessage;
+
+  /// Title for the early adopter section on premium screen
+  ///
+  /// In en, this message translates to:
+  /// **'Early Adopter Perk'**
+  String get betaEarlyAdopterTitle;
+
   /// No description provided for @thankYouForBeingPremium.
   ///
   /// In en, this message translates to:

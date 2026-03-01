@@ -17003,6 +17003,17 @@ class AppLocalizationsIt extends AppLocalizations {
       'Acquisti in-app in arrivo!\nLe funzionalità premium sono attualmente in beta.';
 
   @override
+  String get allFeaturesFreeInBeta =>
+      'Tutte le funzionalità sono attualmente gratuite!';
+
+  @override
+  String get betaEarlyAdopterMessage =>
+      'Grazie per essere un early adopter. Tutte le funzionalità premium sono sbloccate gratuitamente durante il periodo beta.';
+
+  @override
+  String get betaEarlyAdopterTitle => 'Vantaggio Early Adopter';
+
+  @override
   String get thankYouForBeingPremium => 'Grazie per essere Premium!';
 
   @override

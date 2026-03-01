@@ -20935,6 +20935,18 @@
   "noAds": "No Ads",
   "enjoyAdFreeExperience": "Enjoy ad-free experience",
   "inAppPurchasesComingSoon": "In-app purchases coming soon!\nPremium features are currently in beta.",
+  "allFeaturesFreeInBeta": "All features are currently free!",
+  "@allFeaturesFreeInBeta": {
+    "description": "Message shown on premium screen during free beta period"
+  },
+  "betaEarlyAdopterMessage": "Thank you for being an early adopter. All premium features are unlocked for free during the beta period.",
+  "@betaEarlyAdopterMessage": {
+    "description": "Detailed message explaining free beta access"
+  },
+  "betaEarlyAdopterTitle": "Early Adopter Perk",
+  "@betaEarlyAdopterTitle": {
+    "description": "Title for the early adopter section on premium screen"
+  },
   "thankYouForBeingPremium": "Thank you for being Premium!",
   "gymbroPremium": "GymBro Premium",
   "youArePremium": "You are Premium!",

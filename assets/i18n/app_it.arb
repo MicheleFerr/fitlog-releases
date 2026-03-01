@@ -9021,6 +9021,18 @@
   "noAds": "Nessuna Pubblicità",
   "enjoyAdFreeExperience": "Goditi un'esperienza senza pubblicità",
   "inAppPurchasesComingSoon": "Acquisti in-app in arrivo!\nLe funzionalità premium sono attualmente in beta.",
+  "allFeaturesFreeInBeta": "Tutte le funzionalità sono attualmente gratuite!",
+  "@allFeaturesFreeInBeta": {
+    "description": "Message shown on premium screen during free beta period"
+  },
+  "betaEarlyAdopterMessage": "Grazie per essere un early adopter. Tutte le funzionalità premium sono sbloccate gratuitamente durante il periodo beta.",
+  "@betaEarlyAdopterMessage": {
+    "description": "Detailed message explaining free beta access"
+  },
+  "betaEarlyAdopterTitle": "Vantaggio Early Adopter",
+  "@betaEarlyAdopterTitle": {
+    "description": "Title for the early adopter section on premium screen"
+  },
   "thankYouForBeingPremium": "Grazie per essere Premium!",
   "youArePremium": "Sei Premium!",
   "youHaveAccessToAllFeatures": "Hai accesso a tutte le funzionalità",
