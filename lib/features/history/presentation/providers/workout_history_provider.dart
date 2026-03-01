@@ -45,7 +45,7 @@ final workoutHistoryProvider =
                 '❌ [WorkoutHistoryProvider] Stream error: ${failure.message}',
               );
             }
-            throw Exception(failure.message);
+            throw failure;
           },
           (workouts) {
             if (kDebugMode) {

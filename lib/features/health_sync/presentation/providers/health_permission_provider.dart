@@ -59,7 +59,7 @@ final healthPermissionStatusProvider = FutureProvider<HealthPermissionStatus>((
   final result = await repository.checkPermissionStatus();
 
   return result.fold(
-    (failure) => throw Exception(failure.toString()),
+    (failure) => throw failure,
     (status) => status,
   );
 });

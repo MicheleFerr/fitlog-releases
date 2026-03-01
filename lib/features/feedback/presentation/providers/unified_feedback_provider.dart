@@ -51,7 +51,7 @@ final userFeedbackProvider = FutureProvider.autoDispose
       final result = await repository.getUserFeedback(userId);
 
       return result.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (feedback) => feedback,
       );
     });
@@ -70,7 +70,7 @@ final userFeedbackByTypeProvider = FutureProvider.autoDispose
         );
 
         return result.fold(
-          (failure) => throw Exception(failure.message),
+          (failure) => throw failure,
           (feedback) => feedback,
         );
       },
@@ -86,7 +86,7 @@ final userFeedbackStreamProvider = StreamProvider.autoDispose
 
       return repository.watchUserFeedback(userId).map((either) {
         return either.fold(
-          (failure) => throw Exception(failure.message),
+          (failure) => throw failure,
           (feedback) => feedback,
         );
       });
@@ -121,7 +121,7 @@ final allFeedbackProvider = FutureProvider.autoDispose
       );
 
       return result.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (feedback) => feedback,
       );
     });
@@ -137,7 +137,7 @@ final pendingFeedbackProvider =
       final result = await repository.getPendingFeedback();
 
       return result.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (feedback) => feedback,
       );
     });
@@ -154,7 +154,7 @@ final pendingFeedbackCountStreamProvider = StreamProvider.autoDispose<int>((
 
   return repository.watchPendingFeedbackCount().map((either) {
     return either.fold(
-      (failure) => throw Exception(failure.message),
+      (failure) => throw failure,
       (count) => count,
     );
   });
@@ -176,7 +176,7 @@ final feedbackByTypeProvider = FutureProvider.autoDispose
       );
 
       return result.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (feedback) => feedback,
       );
     });
@@ -197,7 +197,7 @@ final feedbackByStatusProvider = FutureProvider.autoDispose
       );
 
       return result.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (feedback) => feedback,
       );
     });
@@ -212,7 +212,7 @@ final feedbackByIdProvider = FutureProvider.autoDispose
       final result = await repository.getFeedbackById(feedbackId);
 
       return result.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (feedback) => feedback,
       );
     });
@@ -227,7 +227,7 @@ final feedbackByTypeStreamProvider = StreamProvider.autoDispose
 
       return repository.watchFeedbackByType(type).map((either) {
         return either.fold(
-          (failure) => throw Exception(failure.message),
+          (failure) => throw failure,
           (feedback) => feedback,
         );
       });
@@ -255,7 +255,7 @@ final feedbackStatisticsProvider =
       final result = await repository.getFeedbackStatistics();
 
       return result.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (statistics) => statistics,
       );
     });
@@ -396,7 +396,7 @@ final submitFeedbackProvider = FutureProvider.autoDispose
       final result = await repository.submitFeedback(feedback);
 
       return result.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (feedbackId) => feedbackId,
       );
     });
@@ -425,7 +425,7 @@ final updateFeedbackStatusProvider = FutureProvider.autoDispose
       );
 
       return result.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (_) => null,
       );
     });
@@ -447,7 +447,7 @@ final updateFeedbackSeverityProvider = FutureProvider.autoDispose
       );
 
       return result.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (_) => null,
       );
     });
@@ -470,7 +470,7 @@ final addAdminNoteProvider = FutureProvider.autoDispose
       );
 
       return result.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (_) => null,
       );
     });
@@ -487,7 +487,7 @@ final deleteFeedbackProvider = FutureProvider.autoDispose.family<void, String>((
   final result = await repository.deleteFeedback(feedbackId);
 
   return result.fold(
-    (failure) => throw Exception(failure.message),
+    (failure) => throw failure,
     (_) => null,
   );
 });

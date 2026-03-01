@@ -389,7 +389,7 @@ class HealthRepositoryImpl
 
       // Propagate sync errors
       syncResult.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (_) => null,
       );
     }, operationName: 'retryFailedSync');

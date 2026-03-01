@@ -107,7 +107,7 @@ class ChatRepositoryImpl
     );
 
     final doc = getResult.fold(
-      (failure) => throw Exception(failure.message),
+      (failure) => throw failure,
       (doc) => doc,
     );
 
@@ -144,7 +144,7 @@ class ChatRepositoryImpl
       operationName: 'createConversation',
     );
 
-    createResult.fold((failure) => throw Exception(failure.message), (_) {
+    createResult.fold((failure) => throw failure, (_) {
       if (kDebugMode) {
         debugPrint('💬 [ChatRepo] Created conversation: $conversationId');
       }
@@ -168,7 +168,7 @@ class ChatRepositoryImpl
     );
 
     return result.fold(
-      (failure) => throw Exception(failure.message),
+      (failure) => throw failure,
       (doc) => doc.exists ? ChatConversation.fromFirestore(doc) : null,
     );
   }
@@ -251,7 +251,7 @@ class ChatRepositoryImpl
       operationName: 'sendTextMessage',
     );
 
-    result.fold((failure) => throw Exception(failure.message), (_) {
+    result.fold((failure) => throw failure, (_) {
       if (kDebugMode) {
         debugPrint('💬 [ChatRepo] Sent message: $messageId');
       }
@@ -293,7 +293,7 @@ class ChatRepositoryImpl
       );
     }, operationName: 'uploadFullImage');
 
-    uploadResult.fold((failure) => throw Exception(failure.message), (_) {});
+    uploadResult.fold((failure) => throw failure, (_) {});
 
     final imageUrlResult = await handleFirebaseOperation(
       () => imageRef.getDownloadURL(),
@@ -301,7 +301,7 @@ class ChatRepositoryImpl
     );
 
     final imageUrl = imageUrlResult.fold(
-      (failure) => throw Exception(failure.message),
+      (failure) => throw failure,
       (url) => url,
     );
 
@@ -314,7 +314,7 @@ class ChatRepositoryImpl
     }, operationName: 'uploadThumbnail');
 
     thumbUploadResult.fold(
-      (failure) => throw Exception(failure.message),
+      (failure) => throw failure,
       (_) {},
     );
 
@@ -324,7 +324,7 @@ class ChatRepositoryImpl
     );
 
     final thumbUrl = thumbUrlResult.fold(
-      (failure) => throw Exception(failure.message),
+      (failure) => throw failure,
       (url) => url,
     );
 
@@ -376,7 +376,7 @@ class ChatRepositoryImpl
       operationName: 'sendImageMessage',
     );
 
-    commitResult.fold((failure) => throw Exception(failure.message), (_) {
+    commitResult.fold((failure) => throw failure, (_) {
       if (kDebugMode) {
         debugPrint('💬 [ChatRepo] Sent image message: $messageId');
       }
@@ -454,7 +454,7 @@ class ChatRepositoryImpl
       operationName: 'sendWorkoutLink',
     );
 
-    result.fold((failure) => throw Exception(failure.message), (_) {
+    result.fold((failure) => throw failure, (_) {
       if (kDebugMode) {
         debugPrint(
           '💬 [ChatRepo] Sent workout link: $messageId (${workout.name})',
@@ -526,7 +526,7 @@ class ChatRepositoryImpl
       operationName: 'markAsRead',
     );
 
-    result.fold((failure) => throw Exception(failure.message), (_) {
+    result.fold((failure) => throw failure, (_) {
       if (kDebugMode) {
         debugPrint(
           '💬 [ChatRepo] Marked ${messageIds.length} messages as read',
@@ -554,7 +554,7 @@ class ChatRepositoryImpl
     );
 
     final snapshot = result.fold(
-      (failure) => throw Exception(failure.message),
+      (failure) => throw failure,
       (snapshot) => snapshot,
     );
 
@@ -611,7 +611,7 @@ class ChatRepositoryImpl
       operationName: 'deleteMessage',
     );
 
-    result.fold((failure) => throw Exception(failure.message), (_) {
+    result.fold((failure) => throw failure, (_) {
       if (kDebugMode) {
         debugPrint('💬 [ChatRepo] Soft deleted message: $messageId');
       }

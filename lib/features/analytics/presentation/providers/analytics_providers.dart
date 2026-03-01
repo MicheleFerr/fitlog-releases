@@ -131,7 +131,7 @@ final exerciseHistoryStreamProvider = StreamProvider.family
 
       return repository.getExerciseHistory(userId).map((either) {
         return either.fold(
-          (failure) => throw Exception(failure.message),
+          (failure) => throw failure,
           (histories) => histories,
         );
       });
@@ -170,7 +170,7 @@ final exerciseHistoryByNameProvider = FutureProvider.autoDispose
       );
 
       return result.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (history) => history,
       );
     });
@@ -213,7 +213,7 @@ final exerciseSessionsByTimeframeProvider = FutureProvider.autoDispose
       );
 
       return result.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (sessions) => sessions,
       );
     });
@@ -244,7 +244,7 @@ final searchExercisesProvider = FutureProvider.autoDispose
       );
 
       return result.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (histories) => histories,
       );
     });

@@ -49,7 +49,7 @@ final localCorrectionsProvider =
       final result = await repository.getLocalCorrections();
 
       return result.fold(
-        (failure) => throw Exception(failure.message),
+        (failure) => throw failure,
         (corrections) => corrections,
       );
     });
@@ -68,7 +68,7 @@ final feedbackStatusProvider = StreamProvider.family<FeedbackStatus, String>((
 
   return repository.watchFeedbackStatus(correctionId).map((either) {
     return either.fold(
-      (failure) => throw Exception(failure.message),
+      (failure) => throw failure,
       (status) => status,
     );
   });
