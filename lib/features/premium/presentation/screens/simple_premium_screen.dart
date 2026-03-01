@@ -225,8 +225,12 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
                       child: Text(context.l10n.restorePurchases),
                     ),
 
-                    // Extra bottom padding for sticky button
-                    SizedBox(height: hasPlans ? 100 : 40),
+                    // Extra bottom padding for sticky button + tab bar
+                    SizedBox(
+                      height: (hasPlans ? 100 : 16) +
+                          MediaQuery.of(context).padding.bottom +
+                          kBottomNavigationBarHeight,
+                    ),
                   ],
                 ),
               ),
@@ -241,7 +245,14 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
             right: 0,
             bottom: 0,
             child: Container(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 34),
+              padding: EdgeInsets.fromLTRB(
+                20,
+                12,
+                20,
+                MediaQuery.of(context).padding.bottom +
+                    kBottomNavigationBarHeight +
+                    12,
+              ),
               decoration: BoxDecoration(
                 color: context.colors.surface,
                 boxShadow: [
@@ -365,26 +376,35 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
 
   Widget _buildBetaFallback(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 24),
       decoration: BoxDecoration(
-        color: context.colors.primaryContainer.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          colors: [
+            context.colors.primary.withValues(alpha: 0.15),
+            context.colors.secondary.withValues(alpha: 0.10),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: context.colors.primary.withValues(alpha: 0.2),
+          color: context.colors.primary.withValues(alpha: 0.25),
+          width: 1.5,
         ),
       ),
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: context.colors.primary.withValues(alpha: 0.1),
+              color: context.colors.primary.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
             child: SemanticIcon(
               icon: AppIcons.celebration,
               semanticLabel: 'Celebration',
-              size: AppIconSize.xlarge,
+              size: AppIconSize.large,
               color: context.colors.primary,
             ),
           ),
@@ -393,16 +413,32 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
             context.l10n.betaEarlyAdopterTitle,
             style: context.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
-              color: context.colors.onPrimaryContainer,
+              color: context.colors.onSurface,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             context.l10n.youHaveAccessToAllFeatures,
-            style: context.textTheme.bodyLarge?.copyWith(
-              color: context.colors.onPrimaryContainer,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colors.onSurfaceVariant,
+              height: 1.4,
             ),
             textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: context.colors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              context.l10n.allFeaturesFreeInBeta,
+              style: context.textTheme.labelLarge?.copyWith(
+                color: context.colors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
         ],
       ),
