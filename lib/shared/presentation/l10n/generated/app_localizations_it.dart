@@ -16898,7 +16898,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get unlockYourFullPotential => 'Sblocca il Tuo Pieno Potenziale';
+  String get unlockYourFullPotential => 'Sblocca il tuo potenziale';
 
   @override
   String get syncAcrossAllDevices =>
@@ -28283,4 +28283,53 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get subscriptionLifetime => 'Premium a Vita';
+
+  @override
+  String get premiumHeroSubtitle =>
+      'Allenati in modo intelligente con strumenti avanzati, accesso illimitato e zero distrazioni';
+
+  @override
+  String get premiumAdvancedAnalytics => 'Analisi Avanzate';
+
+  @override
+  String get premiumAdvancedAnalyticsDesc =>
+      'Grafici dettagliati, trend e insights sulle performance';
+
+  @override
+  String get premiumAiCoachUnlimited => 'AI Coach Illimitato';
+
+  @override
+  String get premiumAiCoachUnlimitedDesc =>
+      'Consigli personalizzati senza limiti giornalieri';
+
+  @override
+  String get premiumCloudBackup => 'Backup Cloud';
+
+  @override
+  String get premiumCloudBackupDesc =>
+      'I tuoi dati, sempre al sicuro e sincronizzati';
+
+  @override
+  String get premiumProgressPhotos => 'Foto Progresso';
+
+  @override
+  String get premiumProgressPhotosDesc =>
+      'Monitora la tua trasformazione con confronti affiancati';
+
+  @override
+  String get premiumExportData => 'Esporta Dati';
+
+  @override
+  String get premiumExportDataDesc =>
+      'Esporta tutto lo storico allenamenti in CSV o PDF';
+
+  @override
+  String get continueWithPremium => 'Continua con Premium';
+
+  @override
+  String get everythingInFree => 'Tutto della versione Free, più:';
+
+  @override
+  String get joinThousandsOfAthletes =>
+      'Unisciti a migliaia di atleti che si allenano meglio';
 }

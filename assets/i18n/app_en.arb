@@ -34403,5 +34403,64 @@
   "subscriptionLifetime": "Lifetime Premium",
   "@subscriptionLifetime": {
     "description": "Label for lifetime subscription status"
+  },
+  "@unlockYourFullPotential": {
+    "description": "Premium hero title"
+  },
+  "premiumHeroSubtitle": "Train smarter with advanced tools, unlimited access, and zero distractions",
+  "@premiumHeroSubtitle": {
+    "description": "Premium hero subtitle"
+  },
+  "premiumAdvancedAnalytics": "Advanced Analytics",
+  "@premiumAdvancedAnalytics": {
+    "description": "Premium feature name"
+  },
+  "premiumAdvancedAnalyticsDesc": "Detailed charts, trends, and performance insights",
+  "@premiumAdvancedAnalyticsDesc": {
+    "description": "Premium feature description"
+  },
+  "premiumAiCoachUnlimited": "Unlimited AI Coach",
+  "@premiumAiCoachUnlimited": {
+    "description": "Premium feature name"
+  },
+  "premiumAiCoachUnlimitedDesc": "Personalized training advice with no daily limits",
+  "@premiumAiCoachUnlimitedDesc": {
+    "description": "Premium feature description"
+  },
+  "premiumCloudBackup": "Cloud Backup",
+  "@premiumCloudBackup": {
+    "description": "Premium feature name"
+  },
+  "premiumCloudBackupDesc": "Your data, always safe and synced across devices",
+  "@premiumCloudBackupDesc": {
+    "description": "Premium feature description"
+  },
+  "premiumProgressPhotos": "Progress Photos",
+  "@premiumProgressPhotos": {
+    "description": "Premium feature name"
+  },
+  "premiumProgressPhotosDesc": "Track your transformation with side-by-side comparisons",
+  "@premiumProgressPhotosDesc": {
+    "description": "Premium feature description"
+  },
+  "premiumExportData": "Data Export",
+  "@premiumExportData": {
+    "description": "Premium feature name"
+  },
+  "premiumExportDataDesc": "Export your entire workout history as CSV or PDF",
+  "@premiumExportDataDesc": {
+    "description": "Premium feature description"
+  },
+  "continueWithPremium": "Continue with Premium",
+  "@continueWithPremium": {
+    "description": "Purchase CTA button label"
+  },
+  "everythingInFree": "Everything in Free, plus:",
+  "@everythingInFree": {
+    "description": "Section header above premium feature list"
+  },
+  "joinThousandsOfAthletes": "Join thousands of athletes training smarter",
+  "@joinThousandsOfAthletes": {
+    "description": "Social proof text"
   }
 }

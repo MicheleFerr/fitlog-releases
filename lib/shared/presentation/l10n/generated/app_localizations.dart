@@ -29916,7 +29916,7 @@ abstract class AppLocalizations {
   /// **'Error: {error}'**
   String purchaseError(String error);
 
-  /// No description provided for @unlockYourFullPotential.
+  /// Premium hero title
   ///
   /// In en, this message translates to:
   /// **'Unlock Your Full Potential'**
@@ -50039,6 +50039,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Lifetime Premium'**
   String get subscriptionLifetime;
+
+  /// Premium hero subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Train smarter with advanced tools, unlimited access, and zero distractions'**
+  String get premiumHeroSubtitle;
+
+  /// Premium feature name
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Analytics'**
+  String get premiumAdvancedAnalytics;
+
+  /// Premium feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed charts, trends, and performance insights'**
+  String get premiumAdvancedAnalyticsDesc;
+
+  /// Premium feature name
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited AI Coach'**
+  String get premiumAiCoachUnlimited;
+
+  /// Premium feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized training advice with no daily limits'**
+  String get premiumAiCoachUnlimitedDesc;
+
+  /// Premium feature name
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud Backup'**
+  String get premiumCloudBackup;
+
+  /// Premium feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Your data, always safe and synced across devices'**
+  String get premiumCloudBackupDesc;
+
+  /// Premium feature name
+  ///
+  /// In en, this message translates to:
+  /// **'Progress Photos'**
+  String get premiumProgressPhotos;
+
+  /// Premium feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Track your transformation with side-by-side comparisons'**
+  String get premiumProgressPhotosDesc;
+
+  /// Premium feature name
+  ///
+  /// In en, this message translates to:
+  /// **'Data Export'**
+  String get premiumExportData;
+
+  /// Premium feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Export your entire workout history as CSV or PDF'**
+  String get premiumExportDataDesc;
+
+  /// Purchase CTA button label
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Premium'**
+  String get continueWithPremium;
+
+  /// Section header above premium feature list
+  ///
+  /// In en, this message translates to:
+  /// **'Everything in Free, plus:'**
+  String get everythingInFree;
+
+  /// Social proof text
+  ///
+  /// In en, this message translates to:
+  /// **'Join thousands of athletes training smarter'**
+  String get joinThousandsOfAthletes;
 }
 
 class _AppLocalizationsDelegate

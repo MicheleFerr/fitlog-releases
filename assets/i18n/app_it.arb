@@ -9001,7 +9001,7 @@
     "description": "Delete template action"
   },
   "purchaseError": "Errore: {error}",
-  "unlockYourFullPotential": "Sblocca il Tuo Pieno Potenziale",
+  "unlockYourFullPotential": "Sblocca il tuo potenziale",
   "syncAcrossAllDevices": "Sincronizza su tutti i dispositivi, accedi alle funzionalità della community e non perdere mai i tuoi progressi",
   "popular": "POPOLARE",
   "whatUsersSay": "Cosa Dicono gli Utenti",
@@ -20979,5 +20979,19 @@
   "oneTimePurchase": "A vita",
   "savingsPercent": "Miglior Offerta",
   "subscriptionActiveUntil": "Attivo fino al {date}",
-  "subscriptionLifetime": "Premium a Vita"
+  "subscriptionLifetime": "Premium a Vita",
+  "premiumHeroSubtitle": "Allenati in modo intelligente con strumenti avanzati, accesso illimitato e zero distrazioni",
+  "premiumAdvancedAnalytics": "Analisi Avanzate",
+  "premiumAdvancedAnalyticsDesc": "Grafici dettagliati, trend e insights sulle performance",
+  "premiumAiCoachUnlimited": "AI Coach Illimitato",
+  "premiumAiCoachUnlimitedDesc": "Consigli personalizzati senza limiti giornalieri",
+  "premiumCloudBackup": "Backup Cloud",
+  "premiumCloudBackupDesc": "I tuoi dati, sempre al sicuro e sincronizzati",
+  "premiumProgressPhotos": "Foto Progresso",
+  "premiumProgressPhotosDesc": "Monitora la tua trasformazione con confronti affiancati",
+  "premiumExportData": "Esporta Dati",
+  "premiumExportDataDesc": "Esporta tutto lo storico allenamenti in CSV o PDF",
+  "continueWithPremium": "Continua con Premium",
+  "everythingInFree": "Tutto della versione Free, più:",
+  "joinThousandsOfAthletes": "Unisciti a migliaia di atleti che si allenano meglio"
 }

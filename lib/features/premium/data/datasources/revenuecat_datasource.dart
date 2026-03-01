@@ -37,7 +37,7 @@ class RevenueCatDatasource {
 
   /// Returns the RC PurchaseResult which contains customerInfo + transaction
   Future<PurchaseResult> purchasePackage(Package package) async {
-    return Purchases.purchasePackage(package);
+    return Purchases.purchase(PurchaseParams.package(package));
   }
 
   Future<CustomerInfo> restorePurchases() async {

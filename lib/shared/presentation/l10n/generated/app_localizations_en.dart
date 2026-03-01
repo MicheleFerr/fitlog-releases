@@ -28007,4 +28007,53 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscriptionLifetime => 'Lifetime Premium';
+
+  @override
+  String get premiumHeroSubtitle =>
+      'Train smarter with advanced tools, unlimited access, and zero distractions';
+
+  @override
+  String get premiumAdvancedAnalytics => 'Advanced Analytics';
+
+  @override
+  String get premiumAdvancedAnalyticsDesc =>
+      'Detailed charts, trends, and performance insights';
+
+  @override
+  String get premiumAiCoachUnlimited => 'Unlimited AI Coach';
+
+  @override
+  String get premiumAiCoachUnlimitedDesc =>
+      'Personalized training advice with no daily limits';
+
+  @override
+  String get premiumCloudBackup => 'Cloud Backup';
+
+  @override
+  String get premiumCloudBackupDesc =>
+      'Your data, always safe and synced across devices';
+
+  @override
+  String get premiumProgressPhotos => 'Progress Photos';
+
+  @override
+  String get premiumProgressPhotosDesc =>
+      'Track your transformation with side-by-side comparisons';
+
+  @override
+  String get premiumExportData => 'Data Export';
+
+  @override
+  String get premiumExportDataDesc =>
+      'Export your entire workout history as CSV or PDF';
+
+  @override
+  String get continueWithPremium => 'Continue with Premium';
+
+  @override
+  String get everythingInFree => 'Everything in Free, plus:';
+
+  @override
+  String get joinThousandsOfAthletes =>
+      'Join thousands of athletes training smarter';
 }

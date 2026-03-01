@@ -37,7 +37,7 @@ class PurchaseActionNotifier extends Notifier<PurchaseActionState> {
       final userId = ref.read(currentUserIdProvider);
       if (userId == null) {
         const result = PurchaseError('User not authenticated');
-        state = PurchaseActionState(lastResult: result);
+        state = const PurchaseActionState(lastResult: result);
         return result;
       }
 
@@ -58,7 +58,7 @@ class PurchaseActionNotifier extends Notifier<PurchaseActionState> {
       final userId = ref.read(currentUserIdProvider);
       if (userId == null) {
         const result = PurchaseError('User not authenticated');
-        state = PurchaseActionState(lastResult: result);
+        state = const PurchaseActionState(lastResult: result);
         return result;
       }
 
