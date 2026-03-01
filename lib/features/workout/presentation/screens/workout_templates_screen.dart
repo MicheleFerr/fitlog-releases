@@ -908,7 +908,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
       }
 
       // Now start workout (with exercises already loaded)
-      workoutNotifier.startWorkout();
+      unawaited(workoutNotifier.startWorkout());
 
       // 🔧 FIX: Naviga PRIMA alla schermata workout
       // Così l'utente vede subito il risultato

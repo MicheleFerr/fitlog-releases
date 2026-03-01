@@ -426,7 +426,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     final hasWarmup = data != null && _hasWarmupData(data);
     final hasPrevention = data != null && _hasInjuryPreventionData(data);
 
-    ModalService.showSheet(context,
+    unawaited(ModalService.showSheet(context,
       backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -514,7 +514,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           ),
         ),
       ),
-    );
+    ));
   }
 
   /// Builds a single option row for the Tips bottom sheet

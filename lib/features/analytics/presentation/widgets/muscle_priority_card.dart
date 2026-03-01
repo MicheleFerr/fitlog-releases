@@ -10,6 +10,8 @@
 /// and horizontal grid of exercise compact cards.
 library;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -250,7 +252,7 @@ class _MusclePriorityCardState extends ConsumerState<MusclePriorityCard> {
         ref: ref,
       );
 
-      HapticFeedback.mediumImpact();
+      unawaited(HapticFeedback.mediumImpact());
       widget.onExerciseAdded?.call();
 
       // Refresh template coverage

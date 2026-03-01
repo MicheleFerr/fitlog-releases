@@ -69,9 +69,7 @@ class MeasurementExportService {
     // 2. Fetch consent record
     final consentResult = await _consentRepo.getConsent(userId);
     UserConsent? consent;
-    if (consentResult.isRight()) {
-      consent = consentResult.getOrElse((_) => throw StateError('unreachable'));
-    }
+    consent = consentResult.fold((_) => null, (value) => value);
 
     // 3. Build export structure
     final exportData = _buildExportData(
@@ -99,9 +97,7 @@ class MeasurementExportService {
 
     final consentResult = await _consentRepo.getConsent(userId);
     UserConsent? consent;
-    if (consentResult.isRight()) {
-      consent = consentResult.getOrElse((_) => throw StateError('unreachable'));
-    }
+    consent = consentResult.fold((_) => null, (value) => value);
 
     return right(_buildExportData(
       userId: userId,

@@ -183,7 +183,7 @@ class _WorkoutCompletionCelebrationState
     _countdownTimer?.cancel();
     setState(() => _isSharing = true);
 
-    HapticFeedback.lightImpact();
+    unawaited(HapticFeedback.lightImpact());
 
     final success = await WorkoutShareService.shareWorkout(
       context: context,

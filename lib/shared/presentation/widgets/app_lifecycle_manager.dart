@@ -526,7 +526,7 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       final delayMs = (50 * (1 << retryCount.clamp(0, 4))).clamp(50, maxDelayMs);
       await Future<void>.delayed(Duration(milliseconds: delayMs));
       if (mounted) {
-        _showRecoveryDialogWhenReady(l10n, autoSave, retryCount: retryCount + 1, mergedDraft: mergedDraft);
+        unawaited(_showRecoveryDialogWhenReady(l10n, autoSave, retryCount: retryCount + 1, mergedDraft: mergedDraft));
       }
       return;
     }

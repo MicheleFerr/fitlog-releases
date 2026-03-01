@@ -101,7 +101,7 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
       }
 
       // Activate workout
-      workoutNotifier.startWorkout();
+      unawaited(workoutNotifier.startWorkout());
 
       // Clear template selection
       state = state.copyWith(selectedTemplateId: null);

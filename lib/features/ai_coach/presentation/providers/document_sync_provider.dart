@@ -170,7 +170,7 @@ class DocumentSyncNotifier extends AsyncNotifier<DocumentSyncStatus> {
   Future<void> clearCache() async {
     final result = await _repository.clearCache();
 
-    result.fold(
+    await result.fold(
       (error) => throw Exception(error),
       (_) async {
         // Invalida tutti i provider che dipendono dalla cache documenti
