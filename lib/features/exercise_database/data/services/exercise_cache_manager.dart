@@ -47,7 +47,8 @@ class ExerciseCacheManager {
   /// v3: Major database update - 737 new exercises translated, total 2282 (2025-12-17)
   /// v4: Deep quality fix - 7 rounds of text corrections, 90% error reduction (2025-12-17)
   /// v5: Auto-detect countingMode for exercises_it.json (bodyweight→reps, isometric→time) (2025-12-29)
-  static const int _cacheSchemaVersion = 5;
+  /// v6: Add tempoEsecuzione (TUT) to all 2282 exercises (2026-03-03)
+  static const int _cacheSchemaVersion = 6;
 
   final HiveBoxManagerEnhanced _boxManager;
   late Box<Map> _exercisesBox;

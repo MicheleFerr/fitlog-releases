@@ -15,6 +15,7 @@ class ExerciseModel {
     this.noteTecniche,
     this.mobilitaPre,
     this.attivazionePre,
+    this.tempoEsecuzione,
   });
 
   factory ExerciseModel.fromEntity(Exercise exercise) {
@@ -32,6 +33,7 @@ class ExerciseModel {
       noteTecniche: exercise.noteTecniche,
       mobilitaPre: exercise.mobilitaPre,
       attivazionePre: exercise.attivazionePre,
+      tempoEsecuzione: exercise.tempoEsecuzione,
     );
   }
 
@@ -56,6 +58,9 @@ class ExerciseModel {
       attivazionePre: json['attivazionePre']?.isEmpty == true
           ? null
           : json['attivazionePre'],
+      tempoEsecuzione: json['tempoEsecuzione']?.isEmpty == true
+          ? null
+          : json['tempoEsecuzione'] as String?,
     );
   }
 
@@ -80,6 +85,7 @@ class ExerciseModel {
   final String? noteTecniche;
   final String? mobilitaPre;
   final String? attivazionePre;
+  final String? tempoEsecuzione;
 
   Exercise toEntity() {
     return Exercise(
@@ -96,6 +102,7 @@ class ExerciseModel {
       noteTecniche: noteTecniche,
       mobilitaPre: mobilitaPre,
       attivazionePre: attivazionePre,
+      tempoEsecuzione: tempoEsecuzione,
     );
   }
 
@@ -114,6 +121,7 @@ class ExerciseModel {
       'noteTecniche': noteTecniche,
       'mobilitaPre': mobilitaPre,
       'attivazionePre': attivazionePre,
+      'tempoEsecuzione': tempoEsecuzione,
     };
   }
 }
