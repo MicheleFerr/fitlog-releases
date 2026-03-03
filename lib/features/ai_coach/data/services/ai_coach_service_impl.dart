@@ -584,18 +584,25 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
         lower.contains('formato json') ||
         lower.contains('json:') ||
         lower.contains('```json');
-    final mentionsFunction =
+
+    // FIX: Tightened detection to reduce false positives.
+    // Old version matched generic words like "funzione" (Italian for "function")
+    // and any word starting with "get" (e.g., "getterai" = "you'll throw").
+    // New version only matches explicit tool-calling intent patterns.
+    final mentionsToolCalling =
         lower.contains('chiamare la funzione') ||
-        lower.contains('la funzione') ||
-        lower.contains('funzione') ||
-        lower.contains('tool') ||
-        lower.contains('function');
+        lower.contains('chiamo il tool') ||
+        lower.contains('uso il tool') ||
+        lower.contains('calling the function') ||
+        lower.contains('call the tool');
+
+    // FIX: Removed overly broad `get[a-z0-9_]+` pattern that matched
+    // Italian words. Now only matches exact known tool names (camelCase).
     final mentionsKnownTool = RegExp(
-      r'\b(get[a-z0-9_]+|addexercisetotemplate|replaceexerciseintemplate|removeexercisefromtemplate|updatetemplateresttime|updatetemplateexercisesetup|searchexercises|analyzemusclebalance|comparetostandards|generatetemplate|suggestworkout|addBodyMeasurement|getAccessoryExercises|searchScientificSources|getUserProfileContext|updateUserProfilePreferences|getWeeklyCheckin|getAutoProgressionPlan|getAdherenceInsights|getWorkoutPreferences|updateWorkoutPreferences)\b',
-      caseSensitive: false,
+      r'\b(addExerciseToTemplate|replaceExerciseInTemplate|removeExerciseFromTemplate|updateTemplateRestTime|updateTemplateExerciseSetup|searchExercises|analyzeMuscleBalance|compareToStandards|generateTemplate|suggestWorkout|addBodyMeasurement|getAccessoryExercises|searchScientificSources|getUserProfileContext|updateUserProfilePreferences|getWeeklyCheckin|getAutoProgressionPlan|getAdherenceInsights|getWorkoutPreferences|updateWorkoutPreferences|getRecoveryData|getLastWorkout|getCurrentStreak)',
     ).hasMatch(response);
 
-    // Also detect patterns like "ti fornirà informazioni" near tool names
+    // Detect patterns like "ti fornirà informazioni" near tool names
     final describesToolToUser =
         mentionsKnownTool &&
         (lower.contains('ti fornirà') ||
@@ -605,7 +612,7 @@ ISTRUZIONE: Ora hai i dati. Genera una risposta COMPLETA in italiano per l'utent
             lower.contains('questa funzione') ||
             lower.contains('la funzione'));
 
-    return ((mentionsJson || mentionsFunction) && mentionsKnownTool) ||
+    return ((mentionsJson || mentionsToolCalling) && mentionsKnownTool) ||
         describesToolToUser;
   }
 

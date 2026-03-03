@@ -131,46 +131,29 @@ mixin WorkoutSaveMixin on Notifier<Workout?>, WorkoutCoreMixin, WorkoutSaveCloud
           );
         }
 
-        // HISTORY: Also save to workout_history_enhanced box for history view
-        // FIX: History reads from this box, not from 'workouts'
-        // Without this, workout won't appear in history until Firebase sync
-        // FIX: Key format MUST match repository format: workout_{userId}_{workoutId}
-        // Without userId in key, repository's _getLocalWorkouts() won't find it!
+        // HISTORY: Save to workout_history_enhanced via repository
+        // FIX: Use repository.saveAndNotify() instead of opening box directly.
+        // This avoids duplicate box opens and leverages the repository's
+        // already-initialized Hive box + notifies stream listeners for UI update.
         try {
-          final boxManager = ref.read(hiveBoxManagerProvider);
-          final historyBox = await boxManager.openBox(
-            'workout_history_enhanced',
+          final historyRepo = ref.read(workoutHistoryRepositoryProvider);
+          await historyRepo.saveAndNotify(
+            workoutHistoryDetail,
+            userId: effectiveUserId,
           );
-          final historyKey =
-              'workout_${effectiveUserId}_${workoutHistoryDetail.id}';
-          await historyBox.put(historyKey, workoutHistoryDetail.toMap());
 
           if (kDebugMode) {
             debugLog(
               LogCategory.workout,
-              '✅ [WorkoutProvider] Workout saved to history box (key: $historyKey)',
+              '✅ [WorkoutProvider] Workout saved to history via repository',
             );
           }
-
-          // FIX: Notify history provider that new workout was added
-          // Without this, UI won't update until Firebase sync completes
-          try {
-            final historyRepo = ref.read(workoutHistoryRepositoryProvider);
-            await historyRepo.notifyLocalWorkoutAdded();
-          } catch (notifyError) {
-            if (kDebugMode) {
-              debugLog(
-                LogCategory.workout,
-                '⚠️ [WorkoutProvider] Failed to notify history: $notifyError',
-              );
-            }
-          }
-        } catch (historyBoxError) {
+        } catch (historyError) {
           // Non-critical: history will be populated from Firebase sync
           if (kDebugMode) {
             debugLog(
               LogCategory.workout,
-              '⚠️ [WorkoutProvider] Failed to save to history box: $historyBoxError',
+              '⚠️ [WorkoutProvider] Failed to save to history: $historyError',
             );
           }
         }

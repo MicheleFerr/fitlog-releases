@@ -45,6 +45,7 @@ class WorkoutHistoryRepositoryEnhanced {
   Box<dynamic>? _metadataBox;
 
   bool _isInitialized = false;
+  Completer<void>? _initCompleter;
 
   // Stream controllers for real-time updates
   final StreamController<List<WorkoutHistoryDetail>> _workoutsController =
@@ -79,8 +80,15 @@ class WorkoutHistoryRepositoryEnhanced {
   }
 
   /// Initialize the repository
+  ///
+  /// FIX: Uses Completer to prevent concurrent init race condition.
+  /// Constructor calls _initialize() (fire-and-forget), and _ensureInitialized()
+  /// may be called before it completes. Without dedup, both would open boxes twice.
   Future<void> _initialize() async {
     if (_isInitialized) return;
+    if (_initCompleter != null) return _initCompleter!.future;
+
+    _initCompleter = Completer<void>();
 
     try {
       // Open Hive boxes in parallel
@@ -94,10 +102,13 @@ class WorkoutHistoryRepositoryEnhanced {
       _metadataBox = results[2];
 
       _isInitialized = true;
+      _initCompleter!.complete();
 
       // Trigger initial sync if needed
       await _performInitialSyncIfNeeded();
     } catch (e) {
+      _initCompleter!.completeError(e);
+      _initCompleter = null; // Allow retry on next call
       if (kDebugMode) {
         debugPrint('❌ Error initializing WorkoutHistoryRepositoryEnhanced: $e');
       }
@@ -106,9 +117,8 @@ class WorkoutHistoryRepositoryEnhanced {
 
   /// Ensure repository is initialized
   Future<void> _ensureInitialized() async {
-    if (!_isInitialized) {
-      await _initialize();
-    }
+    if (_isInitialized) return;
+    await _initialize();
   }
 
   /// Check if initial sync has been completed
@@ -292,6 +302,25 @@ class WorkoutHistoryRepositoryEnhanced {
     // 🔥 FIX: Force immediate disk flush to prevent data loss
     // Ensures workout history is persisted even if app crashes/terminates
     await _historyBox!.flush();
+  }
+
+  /// Save workout to local history and notify listeners.
+  ///
+  /// Public wrapper for workout completion flow. Uses the repository's
+  /// already-initialized box instead of opening it directly.
+  Future<void> saveAndNotify(
+    WorkoutHistoryDetail workout, {
+    required String userId,
+  }) async {
+    await _ensureInitialized();
+
+    final key = 'workout_${userId}_${workout.id}';
+    await _historyBox!.put(key, workout.toMap());
+    await _historyBox!.flush();
+
+    // Notify stream listeners for immediate UI update
+    final workouts = await _getLocalWorkouts();
+    _workoutsController.add(workouts);
   }
 
   /// Get workouts from local storage

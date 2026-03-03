@@ -24,6 +24,12 @@ bool _appOpenLogged = false;
 /// Tracks if "initialization complete" has been logged (avoid log spam)
 bool _initCompleteLogged = false;
 
+/// Tracks the last user properties hash to avoid redundant setUserProperty calls.
+/// FIX: The FutureProvider re-executes when any of its 6 watched providers change
+/// during startup (e.g., userProfileProvider loading→data, authState changes).
+/// This dedup prevents 3x identical setUserProperty batches.
+int _lastPropertiesHash = 0;
+
 /// Analytics initialization provider
 ///
 /// Automatically sets user properties when the app starts and when they change.
@@ -137,6 +143,22 @@ Future<void> _setUserProperties({
     final fontSizeValue = config.fontSize.toString();
     final isAuthenticated = authState == AuthState.authenticated;
     final authValue = isAuthenticated ? 'authenticated' : 'unauthenticated';
+
+    // FIX: Dedup — skip if all values are identical to last call.
+    // The FutureProvider re-executes 3x during startup as watched providers
+    // transition (loading→data). This prevents 3 identical property batches.
+    final propertiesHash = Object.hash(
+      unitSystem,
+      themeModeString,
+      language,
+      premiumValue,
+      fontSizeValue,
+      authValue,
+    );
+    if (propertiesHash == _lastPropertiesHash) {
+      return; // Values unchanged — skip redundant setUserProperty calls
+    }
+    _lastPropertiesHash = propertiesHash;
 
     // FIX: Batch all setUserProperty calls in parallel with Future.wait
     // This reduces startup time by ~80ms (6 sequential calls → 1 parallel batch)

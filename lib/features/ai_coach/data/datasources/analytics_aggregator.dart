@@ -49,8 +49,10 @@ class AnalyticsAggregator {
       // Fetch all data in PARALLEL for better performance
       _debugLog('[AI_COACH] 📊 Fetching all context data in parallel...');
 
-      // Fetch in parallelo con variabili tipizzate — evita cast per indice fragili
-      final (streak, lastWorkout, top5, recovery) = await (
+      // FIX: Fetch ALL context data in parallel, including weightTag.
+      // Previously weightTag was fetched sequentially after the parallel batch,
+      // adding up to 4s latency. Now it runs concurrently with the others.
+      final (streak, lastWorkout, top5, recovery, weightTag) = await (
         _withTimeout<int>(
           label: 'getCurrentStreak',
           timeout: _contextTaskTimeout,
@@ -75,6 +77,12 @@ class AnalyticsAggregator {
           fallback: RecoveryStatus.green,
           task: () => getRecoveryStatus(userId),
         ),
+        _withTimeout<String?>(
+          label: '_resolveWeightTag',
+          timeout: _weightTagTimeout,
+          fallback: null,
+          task: () => _resolveWeightTag(userId),
+        ),
       ).wait;
 
       _debugLog('[AI_COACH] ✅ Parallel fetch complete:');
@@ -86,12 +94,6 @@ class AnalyticsAggregator {
       final experienceLevel = _resolveExperienceLevel();
       final fitnessGoal = _resolveFitnessGoal();
       final weeklyTarget = onboardingState?.weeklyWorkoutTarget;
-      final weightTag = await _withTimeout<String?>(
-        label: '_resolveWeightTag',
-        timeout: _weightTagTimeout,
-        fallback: null,
-        task: () => _resolveWeightTag(userId),
-      );
       final goalParts = <String>[
         if (fitnessGoal != null) fitnessGoal,
         if (weeklyTarget != null) 'weekly_target:$weeklyTarget',
