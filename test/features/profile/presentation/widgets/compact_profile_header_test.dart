@@ -225,44 +225,44 @@ void main() {
       expect(UserTier.silver.maxPublicTemplates, 3);
     });
 
-    test('gold maxPublicTemplates = 3', () {
-      expect(UserTier.gold.maxPublicTemplates, 3);
+    test('gold maxPublicTemplates = 5', () {
+      expect(UserTier.gold.maxPublicTemplates, 5);
     });
 
-    test('starter maxCustomSupersets = 3', () {
-      expect(UserTier.starter.maxCustomSupersets, 3);
+    test('starter maxCustomSupersets = 2', () {
+      expect(UserTier.starter.maxCustomSupersets, 2);
     });
 
-    test('bronze maxCustomSupersets = 5', () {
-      expect(UserTier.bronze.maxCustomSupersets, 5);
+    test('bronze maxCustomSupersets = 3', () {
+      expect(UserTier.bronze.maxCustomSupersets, 3);
     });
 
-    test('platinum maxCustomSupersets = 999', () {
-      expect(UserTier.platinum.maxCustomSupersets, 999);
+    test('platinum maxCustomSupersets = 10', () {
+      expect(UserTier.platinum.maxCustomSupersets, 10);
     });
 
-    test('starter maxCustomDropsets = 3', () {
-      expect(UserTier.starter.maxCustomDropsets, 3);
+    test('starter maxCustomDropsets = 2', () {
+      expect(UserTier.starter.maxCustomDropsets, 2);
     });
 
-    test('platinum maxCustomDropsets = 999', () {
-      expect(UserTier.platinum.maxCustomDropsets, 999);
+    test('platinum maxCustomDropsets = 10', () {
+      expect(UserTier.platinum.maxCustomDropsets, 10);
     });
 
-    test('starter maxCustomRestPause = 3', () {
-      expect(UserTier.starter.maxCustomRestPause, 3);
+    test('starter maxCustomRestPause = 2', () {
+      expect(UserTier.starter.maxCustomRestPause, 2);
     });
 
-    test('silver maxCustomRestPause = 7', () {
-      expect(UserTier.silver.maxCustomRestPause, 7);
+    test('silver maxCustomRestPause = 5', () {
+      expect(UserTier.silver.maxCustomRestPause, 5);
     });
 
-    test('gold maxCustomRestPause = 10', () {
-      expect(UserTier.gold.maxCustomRestPause, 10);
+    test('gold maxCustomRestPause = 7', () {
+      expect(UserTier.gold.maxCustomRestPause, 7);
     });
 
-    test('platinum maxCustomRestPause = 999', () {
-      expect(UserTier.platinum.maxCustomRestPause, 999);
+    test('platinum maxCustomRestPause = 10', () {
+      expect(UserTier.platinum.maxCustomRestPause, 10);
     });
 
     test('gold showAds = true', () {

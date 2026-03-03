@@ -71,26 +71,53 @@ void main() {
     });
 
     test('entitlements - starter', () {
-      expect(UserTier.starter.maxTemplates, 4);
-      expect(UserTier.starter.maxPublicTemplates, 2);
+      expect(UserTier.starter.maxTemplates, 3);
+      expect(UserTier.starter.maxPublicTemplates, 1);
       expect(UserTier.starter.maxCustomSingleExercises, 3);
+      expect(UserTier.starter.maxCustomSupersets, 2);
+      expect(UserTier.starter.maxCustomDropsets, 2);
+      expect(UserTier.starter.maxCustomRestPause, 2);
       expect(UserTier.starter.showAds, isTrue);
       expect(UserTier.starter.hasProAnalytics, isFalse);
       expect(UserTier.starter.hasCloudSync, isFalse);
     });
 
+    test('entitlements - bronze', () {
+      expect(UserTier.bronze.maxTemplates, 4);
+      expect(UserTier.bronze.maxPublicTemplates, 2);
+      expect(UserTier.bronze.maxCustomSingleExercises, 5);
+      expect(UserTier.bronze.maxCustomSupersets, 3);
+      expect(UserTier.bronze.maxCustomDropsets, 3);
+      expect(UserTier.bronze.maxCustomRestPause, 3);
+    });
+
+    test('entitlements - silver', () {
+      expect(UserTier.silver.maxTemplates, 5);
+      expect(UserTier.silver.maxPublicTemplates, 3);
+      expect(UserTier.silver.maxCustomSingleExercises, 7);
+      expect(UserTier.silver.maxCustomSupersets, 5);
+    });
+
+    test('entitlements - gold', () {
+      expect(UserTier.gold.maxTemplates, 7);
+      expect(UserTier.gold.maxPublicTemplates, 5);
+      expect(UserTier.gold.maxCustomSingleExercises, 10);
+      expect(UserTier.gold.maxCustomSupersets, 7);
+    });
+
     test('entitlements - platinum', () {
-      expect(UserTier.platinum.maxTemplates, 7);
-      expect(UserTier.platinum.maxPublicTemplates, 5);
-      expect(UserTier.platinum.maxCustomSingleExercises, 999);
+      expect(UserTier.platinum.maxTemplates, 10);
+      expect(UserTier.platinum.maxPublicTemplates, 7);
+      expect(UserTier.platinum.maxCustomSingleExercises, 15);
+      expect(UserTier.platinum.maxCustomSupersets, 10);
       expect(UserTier.platinum.showAds, isFalse);
       expect(UserTier.platinum.hasProAnalytics, isTrue);
       expect(UserTier.platinum.hasCloudSync, isTrue);
     });
 
     test('entitlements - diamond', () {
-      expect(UserTier.diamond.maxTemplates, 10);
-      expect(UserTier.diamond.maxPublicTemplates, 7);
+      expect(UserTier.diamond.maxTemplates, 15);
+      expect(UserTier.diamond.maxPublicTemplates, 10);
       expect(UserTier.diamond.maxCustomSingleExercises, 999);
       expect(UserTier.diamond.showAds, isFalse);
       expect(UserTier.diamond.hasProAnalytics, isTrue);

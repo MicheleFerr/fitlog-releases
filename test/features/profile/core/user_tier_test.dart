@@ -121,12 +121,12 @@ void main() {
   // UserTier entitlements
   // ═══════════════════════════════════════════════════════════════
   group('UserTier entitlements', () {
-    test('starter maxTemplates = 4', () => expect(UserTier.starter.maxTemplates, 4));
+    test('starter maxTemplates = 3', () => expect(UserTier.starter.maxTemplates, 3));
     test('bronze maxTemplates = 4', () => expect(UserTier.bronze.maxTemplates, 4));
     test('silver maxTemplates = 5', () => expect(UserTier.silver.maxTemplates, 5));
-    test('gold maxTemplates = 5', () => expect(UserTier.gold.maxTemplates, 5));
-    test('platinum maxTemplates = 7', () => expect(UserTier.platinum.maxTemplates, 7));
-    test('diamond maxTemplates = 10', () => expect(UserTier.diamond.maxTemplates, 10));
+    test('gold maxTemplates = 7', () => expect(UserTier.gold.maxTemplates, 7));
+    test('platinum maxTemplates = 10', () => expect(UserTier.platinum.maxTemplates, 10));
+    test('diamond maxTemplates = 15', () => expect(UserTier.diamond.maxTemplates, 15));
     test('legend maxTemplates = 999', () => expect(UserTier.legend.maxTemplates, 999));
 
     test('starter showAds = true', () => expect(UserTier.starter.showAds, isTrue));
@@ -148,12 +148,12 @@ void main() {
       expect(UserTier.starter.maxCustomSingleExercises, 3);
     });
 
-    test('platinum maxCustomSingleExercises = 999', () {
-      expect(UserTier.platinum.maxCustomSingleExercises, 999);
+    test('platinum maxCustomSingleExercises = 15', () {
+      expect(UserTier.platinum.maxCustomSingleExercises, 15);
     });
 
-    test('diamond maxPublicTemplates = 7', () {
-      expect(UserTier.diamond.maxPublicTemplates, 7);
+    test('diamond maxPublicTemplates = 10', () {
+      expect(UserTier.diamond.maxPublicTemplates, 10);
     });
 
     test('legend maxPublicTemplates = 999', () {

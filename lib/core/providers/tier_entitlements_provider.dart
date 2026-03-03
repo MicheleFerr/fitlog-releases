@@ -100,26 +100,32 @@ class TierEntitlements {
   /// Maximum public templates (XP tier + account tier consolidated)
   int get maxPublicTemplates => _quota.maxPublicTemplates;
 
-  /// Maximum custom single exercises (unlimited for all)
-  int get maxCustomSingleExercises => 999;
+  /// Maximum custom single exercises (tier-gated)
+  int get maxCustomSingleExercises =>
+      _accountTier != AccountTier.free ? 999 : _tier.maxCustomSingleExercises;
 
-  /// Maximum custom superset templates (unlimited for all)
-  int get maxCustomSupersets => 999;
+  /// Maximum custom superset templates (tier-gated)
+  int get maxCustomSupersets =>
+      _accountTier != AccountTier.free ? 999 : _tier.maxCustomSupersets;
 
-  /// Maximum custom dropset templates (unlimited for all)
-  int get maxCustomDropsets => 999;
+  /// Maximum custom dropset templates (tier-gated)
+  int get maxCustomDropsets =>
+      _accountTier != AccountTier.free ? 999 : _tier.maxCustomDropsets;
 
-  /// Maximum custom rest-pause templates (unlimited for all)
-  int get maxCustomRestPause => 999;
+  /// Maximum custom rest-pause templates (tier-gated)
+  int get maxCustomRestPause =>
+      _accountTier != AccountTier.free ? 999 : _tier.maxCustomRestPause;
 
   /// Whether to show banner ads (Premium/Pro users have no ads)
   bool get shouldShowAds => _accountTier == AccountTier.free && _tier.showAds;
 
-  /// Pro Analytics access (free for all)
-  bool get hasProAnalytics => true;
+  /// Pro Analytics access (Platinum+ XP tier or Premium account)
+  bool get hasProAnalytics =>
+      _accountTier != AccountTier.free || _tier.hasProAnalytics;
 
-  /// Cloud Sync access (free for all)
-  bool get hasCloudSync => true;
+  /// Cloud Sync access (Platinum+ XP tier or Premium account)
+  bool get hasCloudSync =>
+      _accountTier != AccountTier.free || _tier.hasCloudSync;
 
   /// Check if user can save another private template
   bool canSaveTemplate(int currentCount) => currentCount < maxTemplates;
@@ -185,9 +191,11 @@ class TierEntitlements {
       case TierFeature.noAds:
         return UserTier.platinum;
       case TierFeature.extraTemplates:
+        if (maxTemplates < 4) return UserTier.bronze;
         if (maxTemplates < 5) return UserTier.silver;
-        if (maxTemplates < 7) return UserTier.platinum;
-        if (maxTemplates < 10) return UserTier.diamond;
+        if (maxTemplates < 7) return UserTier.gold;
+        if (maxTemplates < 10) return UserTier.platinum;
+        if (maxTemplates < 15) return UserTier.diamond;
         if (maxTemplates < 999) return UserTier.legend;
         return null;
     }
