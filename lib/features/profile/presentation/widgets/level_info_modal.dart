@@ -552,20 +552,24 @@ class _LevelInfoModalState extends ConsumerState<LevelInfoModal> {
             text: 'Unlimited custom',
             color: context.colors.secondary,
           ),
-        // Platinum exclusive benefits
-        if (tier == UserTier.platinum) ...[
+        // Premium benefits (Platinum+)
+        if (!tier.showAds) ...[
           _buildBenefitChip(
             context,
             icon: AppIcons.block,
             text: 'No Ads',
             color: context.colors.success,
           ),
+        ],
+        if (tier.hasProAnalytics) ...[
           _buildBenefitChip(
             context,
             icon: AppIcons.analytics,
             text: 'Pro Analytics',
             color: context.colors.tertiary,
           ),
+        ],
+        if (tier.hasCloudSync) ...[
           _buildBenefitChip(
             context,
             icon: AppIcons.cloud,

@@ -188,6 +188,18 @@ class _MiniTierAvatar extends StatelessWidget {
           const Color(0xFFB0B0B0),
           const Color(0xFFE5E4E2),
         ];
+      case UserTier.diamond:
+        return [
+          const Color(0xFFB9F2FF),
+          const Color(0xFF4FC3F7),
+          const Color(0xFFB9F2FF),
+        ];
+      case UserTier.legend:
+        return [
+          const Color(0xFFFF6B35),
+          const Color(0xFFFF8A65),
+          const Color(0xFFFFD54F),
+        ];
     }
   }
 }

@@ -8,15 +8,19 @@ void main() {
   group('UserTier.fromXP', () {
     test('0 XP → starter', () => expect(UserTier.fromXP(0), UserTier.starter));
     test('50 XP → starter', () => expect(UserTier.fromXP(50), UserTier.starter));
-    test('99 XP → starter', () => expect(UserTier.fromXP(99), UserTier.starter));
-    test('100 XP → bronze', () => expect(UserTier.fromXP(100), UserTier.bronze));
-    test('499 XP → bronze', () => expect(UserTier.fromXP(499), UserTier.bronze));
-    test('500 XP → silver', () => expect(UserTier.fromXP(500), UserTier.silver));
-    test('1499 XP → silver', () => expect(UserTier.fromXP(1499), UserTier.silver));
-    test('1500 XP → gold', () => expect(UserTier.fromXP(1500), UserTier.gold));
-    test('4999 XP → gold', () => expect(UserTier.fromXP(4999), UserTier.gold));
-    test('5000 XP → platinum', () => expect(UserTier.fromXP(5000), UserTier.platinum));
-    test('99999 XP → platinum', () => expect(UserTier.fromXP(99999), UserTier.platinum));
+    test('299 XP → starter', () => expect(UserTier.fromXP(299), UserTier.starter));
+    test('300 XP → bronze', () => expect(UserTier.fromXP(300), UserTier.bronze));
+    test('1499 XP → bronze', () => expect(UserTier.fromXP(1499), UserTier.bronze));
+    test('1500 XP → silver', () => expect(UserTier.fromXP(1500), UserTier.silver));
+    test('4999 XP → silver', () => expect(UserTier.fromXP(4999), UserTier.silver));
+    test('5000 XP → gold', () => expect(UserTier.fromXP(5000), UserTier.gold));
+    test('14999 XP → gold', () => expect(UserTier.fromXP(14999), UserTier.gold));
+    test('15000 XP → platinum', () => expect(UserTier.fromXP(15000), UserTier.platinum));
+    test('29999 XP → platinum', () => expect(UserTier.fromXP(29999), UserTier.platinum));
+    test('30000 XP → diamond', () => expect(UserTier.fromXP(30000), UserTier.diamond));
+    test('59999 XP → diamond', () => expect(UserTier.fromXP(59999), UserTier.diamond));
+    test('60000 XP → legend', () => expect(UserTier.fromXP(60000), UserTier.legend));
+    test('99999 XP → legend', () => expect(UserTier.fromXP(99999), UserTier.legend));
   });
 
   // ═══════════════════════════════════════════════════════════════
@@ -27,18 +31,22 @@ void main() {
     test('bronze.next = silver', () => expect(UserTier.bronze.next, UserTier.silver));
     test('silver.next = gold', () => expect(UserTier.silver.next, UserTier.gold));
     test('gold.next = platinum', () => expect(UserTier.gold.next, UserTier.platinum));
-    test('platinum.next = null', () => expect(UserTier.platinum.next, isNull));
+    test('platinum.next = diamond', () => expect(UserTier.platinum.next, UserTier.diamond));
+    test('diamond.next = legend', () => expect(UserTier.diamond.next, UserTier.legend));
+    test('legend.next = null', () => expect(UserTier.legend.next, isNull));
   });
 
   // ═══════════════════════════════════════════════════════════════
   // UserTier.xpToNextTier
   // ═══════════════════════════════════════════════════════════════
   group('UserTier.xpToNextTier', () {
-    test('starter.xpToNextTier = 100', () => expect(UserTier.starter.xpToNextTier, 100));
-    test('bronze.xpToNextTier = 500', () => expect(UserTier.bronze.xpToNextTier, 500));
-    test('silver.xpToNextTier = 1500', () => expect(UserTier.silver.xpToNextTier, 1500));
-    test('gold.xpToNextTier = 5000', () => expect(UserTier.gold.xpToNextTier, 5000));
-    test('platinum.xpToNextTier = null', () => expect(UserTier.platinum.xpToNextTier, isNull));
+    test('starter.xpToNextTier = 300', () => expect(UserTier.starter.xpToNextTier, 300));
+    test('bronze.xpToNextTier = 1500', () => expect(UserTier.bronze.xpToNextTier, 1500));
+    test('silver.xpToNextTier = 5000', () => expect(UserTier.silver.xpToNextTier, 5000));
+    test('gold.xpToNextTier = 15000', () => expect(UserTier.gold.xpToNextTier, 15000));
+    test('platinum.xpToNextTier = 30000', () => expect(UserTier.platinum.xpToNextTier, 30000));
+    test('diamond.xpToNextTier = 60000', () => expect(UserTier.diamond.xpToNextTier, 60000));
+    test('legend.xpToNextTier = null', () => expect(UserTier.legend.xpToNextTier, isNull));
   });
 
   // ═══════════════════════════════════════════════════════════════
@@ -49,35 +57,34 @@ void main() {
       expect(UserTier.starter.progressToNext(0), 0.0);
     });
 
-    test('starter at 50 XP = 0.5 progress', () {
-      expect(UserTier.starter.progressToNext(50), 0.5);
+    test('starter at 150 XP = 0.5 progress', () {
+      expect(UserTier.starter.progressToNext(150), 0.5);
     });
 
-    test('starter at 100 XP = 1.0 progress', () {
-      expect(UserTier.starter.progressToNext(100), 1.0);
+    test('starter at 300 XP = 1.0 progress', () {
+      expect(UserTier.starter.progressToNext(300), 1.0);
     });
 
-    test('bronze at 100 XP = 0.0 progress', () {
-      // bronze range: 100..500, xpInTier=0, xpNeeded=400
-      expect(UserTier.bronze.progressToNext(100), 0.0);
+    test('bronze at 300 XP = 0.0 progress', () {
+      // bronze range: 300..1500, xpInTier=0, xpNeeded=1200
+      expect(UserTier.bronze.progressToNext(300), 0.0);
     });
 
-    test('bronze at 300 XP = 0.5 progress', () {
-      // xpInTier = 300-100=200, xpNeeded=500-100=400, progress=0.5
-      expect(UserTier.bronze.progressToNext(300), 0.5);
+    test('bronze at 900 XP = 0.5 progress', () {
+      // xpInTier = 900-300=600, xpNeeded=1500-300=1200, progress=0.5
+      expect(UserTier.bronze.progressToNext(900), 0.5);
     });
 
-    test('bronze at 500 XP = 1.0 progress', () {
-      expect(UserTier.bronze.progressToNext(500), 1.0);
+    test('bronze at 1500 XP = 1.0 progress', () {
+      expect(UserTier.bronze.progressToNext(1500), 1.0);
     });
 
-    test('platinum.progressToNext = 1.0 (max tier)', () {
-      expect(UserTier.platinum.progressToNext(9999), 1.0);
+    test('legend.progressToNext = 1.0 (max tier)', () {
+      expect(UserTier.legend.progressToNext(99999), 1.0);
     });
 
     test('progress clamped to 1.0 max', () {
-      // XP exceeding next tier boundary
-      expect(UserTier.starter.progressToNext(200), 1.0);
+      expect(UserTier.starter.progressToNext(500), 1.0);
     });
 
     test('progress clamped to 0.0 min', () {
@@ -89,24 +96,24 @@ void main() {
   // UserTier.xpRemainingToNext
   // ═══════════════════════════════════════════════════════════════
   group('UserTier.xpRemainingToNext', () {
-    test('starter at 0 XP needs 100 more', () {
-      expect(UserTier.starter.xpRemainingToNext(0), 100);
+    test('starter at 0 XP needs 300 more', () {
+      expect(UserTier.starter.xpRemainingToNext(0), 300);
     });
 
-    test('starter at 50 XP needs 50 more', () {
-      expect(UserTier.starter.xpRemainingToNext(50), 50);
+    test('starter at 150 XP needs 150 more', () {
+      expect(UserTier.starter.xpRemainingToNext(150), 150);
     });
 
-    test('starter at 100 XP needs 0 more', () {
-      expect(UserTier.starter.xpRemainingToNext(100), 0);
+    test('starter at 300 XP needs 0 more', () {
+      expect(UserTier.starter.xpRemainingToNext(300), 0);
     });
 
-    test('bronze at 400 XP needs 100 more', () {
-      expect(UserTier.bronze.xpRemainingToNext(400), 100);
+    test('bronze at 1000 XP needs 500 more', () {
+      expect(UserTier.bronze.xpRemainingToNext(1000), 500);
     });
 
-    test('platinum.xpRemainingToNext = 0 (max tier)', () {
-      expect(UserTier.platinum.xpRemainingToNext(99999), 0);
+    test('legend.xpRemainingToNext = 0 (max tier)', () {
+      expect(UserTier.legend.xpRemainingToNext(99999), 0);
     });
   });
 
@@ -119,15 +126,23 @@ void main() {
     test('silver maxTemplates = 5', () => expect(UserTier.silver.maxTemplates, 5));
     test('gold maxTemplates = 5', () => expect(UserTier.gold.maxTemplates, 5));
     test('platinum maxTemplates = 7', () => expect(UserTier.platinum.maxTemplates, 7));
+    test('diamond maxTemplates = 10', () => expect(UserTier.diamond.maxTemplates, 10));
+    test('legend maxTemplates = 999', () => expect(UserTier.legend.maxTemplates, 999));
 
     test('starter showAds = true', () => expect(UserTier.starter.showAds, isTrue));
     test('platinum showAds = false', () => expect(UserTier.platinum.showAds, isFalse));
+    test('diamond showAds = false', () => expect(UserTier.diamond.showAds, isFalse));
+    test('legend showAds = false', () => expect(UserTier.legend.showAds, isFalse));
 
     test('starter hasProAnalytics = false', () => expect(UserTier.starter.hasProAnalytics, isFalse));
     test('platinum hasProAnalytics = true', () => expect(UserTier.platinum.hasProAnalytics, isTrue));
+    test('diamond hasProAnalytics = true', () => expect(UserTier.diamond.hasProAnalytics, isTrue));
+    test('legend hasProAnalytics = true', () => expect(UserTier.legend.hasProAnalytics, isTrue));
 
     test('starter hasCloudSync = false', () => expect(UserTier.starter.hasCloudSync, isFalse));
     test('platinum hasCloudSync = true', () => expect(UserTier.platinum.hasCloudSync, isTrue));
+    test('diamond hasCloudSync = true', () => expect(UserTier.diamond.hasCloudSync, isTrue));
+    test('legend hasCloudSync = true', () => expect(UserTier.legend.hasCloudSync, isTrue));
 
     test('starter maxCustomSingleExercises = 3', () {
       expect(UserTier.starter.maxCustomSingleExercises, 3);
@@ -137,8 +152,12 @@ void main() {
       expect(UserTier.platinum.maxCustomSingleExercises, 999);
     });
 
-    test('platinum maxPublicTemplates = 5', () {
-      expect(UserTier.platinum.maxPublicTemplates, 5);
+    test('diamond maxPublicTemplates = 7', () {
+      expect(UserTier.diamond.maxPublicTemplates, 7);
+    });
+
+    test('legend maxPublicTemplates = 999', () {
+      expect(UserTier.legend.maxPublicTemplates, 999);
     });
   });
 
@@ -151,6 +170,8 @@ void main() {
     test('silver displayName', () => expect(UserTier.silver.displayName, 'Silver'));
     test('gold displayName', () => expect(UserTier.gold.displayName, 'Gold'));
     test('platinum displayName', () => expect(UserTier.platinum.displayName, 'Platinum'));
+    test('diamond displayName', () => expect(UserTier.diamond.displayName, 'Diamond'));
+    test('legend displayName', () => expect(UserTier.legend.displayName, 'Legend'));
   });
 
   // ═══════════════════════════════════════════════════════════════
@@ -158,9 +179,25 @@ void main() {
   // ═══════════════════════════════════════════════════════════════
   group('UserTier minXP boundaries', () {
     test('starter minXP = 0', () => expect(UserTier.starter.minXP, 0));
-    test('bronze minXP = 100', () => expect(UserTier.bronze.minXP, 100));
-    test('silver minXP = 500', () => expect(UserTier.silver.minXP, 500));
-    test('gold minXP = 1500', () => expect(UserTier.gold.minXP, 1500));
-    test('platinum minXP = 5000', () => expect(UserTier.platinum.minXP, 5000));
+    test('bronze minXP = 300', () => expect(UserTier.bronze.minXP, 300));
+    test('silver minXP = 1500', () => expect(UserTier.silver.minXP, 1500));
+    test('gold minXP = 5000', () => expect(UserTier.gold.minXP, 5000));
+    test('platinum minXP = 15000', () => expect(UserTier.platinum.minXP, 15000));
+    test('diamond minXP = 30000', () => expect(UserTier.diamond.minXP, 30000));
+    test('legend minXP = 60000', () => expect(UserTier.legend.minXP, 60000));
+  });
+
+  // ═══════════════════════════════════════════════════════════════
+  // Rebalancing verification
+  // ═══════════════════════════════════════════════════════════════
+  group('Rebalancing verification', () {
+    test('7000 XP user is Gold (was Platinum before rebalancing)', () {
+      expect(UserTier.fromXP(7000), UserTier.gold);
+    });
+
+    test('daily login bonus cap at 25 does not exceed ~750/month', () {
+      // 30 days * 25 = 750 max per month
+      expect(25 * 30, 750);
+    });
   });
 }

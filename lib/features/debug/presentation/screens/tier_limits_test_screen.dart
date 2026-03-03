@@ -409,7 +409,7 @@ class _TierLimitsTestScreenState extends ConsumerState<TierLimitsTestScreen> {
         _buildTestButton(
           icon: '📈',
           label: 'Simulate Tier Progression',
-          description: 'Starter → Bronze → Silver → Gold → Platinum',
+          description: 'Starter → Bronze → Silver → Gold → Platinum → Diamond → Legend',
           color: context.colors.primary,
           onTap: () {
             // TODO: Animate progression

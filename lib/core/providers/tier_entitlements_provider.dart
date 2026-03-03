@@ -173,7 +173,7 @@ class TierEntitlements {
       case TierFeature.noAds:
         return shouldShowAds;
       case TierFeature.extraTemplates:
-        return maxTemplates < UserTier.platinum.maxTemplates;
+        return maxTemplates < UserTier.legend.maxTemplates;
     }
   }
 
@@ -187,6 +187,8 @@ class TierEntitlements {
       case TierFeature.extraTemplates:
         if (maxTemplates < 5) return UserTier.silver;
         if (maxTemplates < 7) return UserTier.platinum;
+        if (maxTemplates < 10) return UserTier.diamond;
+        if (maxTemplates < 999) return UserTier.legend;
         return null;
     }
   }

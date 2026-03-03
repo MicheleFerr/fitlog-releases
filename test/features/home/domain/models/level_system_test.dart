@@ -166,37 +166,36 @@ void main() {
   });
 
   // ---------------------------------------------------------------------------
-  // LevelSystem.calculateWorkoutXp
+  // LevelSystem.calculateWorkoutXp (rebalanced)
   // ---------------------------------------------------------------------------
   group('LevelSystem.calculateWorkoutXp', () {
-    test('minimum workout returns at least 50 base XP', () {
+    test('minimum workout returns 40 base XP', () {
       final xp = LevelSystem.calculateWorkoutXp(
         duration: 0,
         exercises: 0,
         totalVolume: 0,
       );
 
-      expect(xp, 50);
+      expect(xp, 40);
     });
 
-    test('duration adds up to 60 XP (capped)', () {
-      // 120 min workout: duration XP should be capped at 60
+    test('duration adds up to 45 XP (capped)', () {
       final xpWithLongWorkout = LevelSystem.calculateWorkoutXp(
         duration: 120,
         exercises: 0,
         totalVolume: 0,
       );
-      final xpWith60Min = LevelSystem.calculateWorkoutXp(
-        duration: 60,
+      final xpWith45Min = LevelSystem.calculateWorkoutXp(
+        duration: 45,
         exercises: 0,
         totalVolume: 0,
       );
 
-      expect(xpWithLongWorkout, xpWith60Min);
-      expect(xpWith60Min, 50 + 60); // base + capped duration
+      expect(xpWithLongWorkout, xpWith45Min);
+      expect(xpWith45Min, 40 + 45); // base + capped duration
     });
 
-    test('exercises add 5 XP each up to 50 XP', () {
+    test('exercises add 4 XP each up to 40 XP', () {
       final xpWith10Exercises = LevelSystem.calculateWorkoutXp(
         duration: 0,
         exercises: 10,
@@ -204,15 +203,15 @@ void main() {
       );
       final xpWith15Exercises = LevelSystem.calculateWorkoutXp(
         duration: 0,
-        exercises: 15, // would be 75 XP but capped at 50
+        exercises: 15, // would be 60 XP but capped at 40
         totalVolume: 0,
       );
 
-      expect(xpWith10Exercises, 50 + 50); // 10 * 5 = 50 (exactly at cap)
-      expect(xpWith15Exercises, 50 + 50); // capped at 50
+      expect(xpWith10Exercises, 40 + 40); // 10 * 4 = 40 (exactly at cap)
+      expect(xpWith15Exercises, 40 + 40); // capped at 40
     });
 
-    test('personal record adds 50 bonus XP', () {
+    test('personal record adds 40 bonus XP', () {
       final xpNoPR = LevelSystem.calculateWorkoutXp(
         duration: 0,
         exercises: 0,
@@ -226,10 +225,10 @@ void main() {
         isPersonalRecord: true,
       );
 
-      expect(xpWithPR - xpNoPR, 50);
+      expect(xpWithPR - xpNoPR, 40);
     });
 
-    test('streak bonus adds 2 XP per day up to 50 XP', () {
+    test('streak bonus adds 2 XP per day up to 30 XP', () {
       final xpNoStreak = LevelSystem.calculateWorkoutXp(
         duration: 0,
         exercises: 0,
@@ -250,10 +249,10 @@ void main() {
       );
 
       expect(xpStreak5 - xpNoStreak, 10); // 5 * 2 = 10
-      expect(xpStreak100 - xpNoStreak, 50); // capped at 50
+      expect(xpStreak100 - xpNoStreak, 30); // capped at 30
     });
 
-    test('volume adds 1 XP per 100 kg up to 100 XP', () {
+    test('volume adds 1 XP per 100 kg up to 75 XP', () {
       final xpLowVolume = LevelSystem.calculateWorkoutXp(
         duration: 0,
         exercises: 0,
@@ -262,29 +261,42 @@ void main() {
       final xpHighVolume = LevelSystem.calculateWorkoutXp(
         duration: 0,
         exercises: 0,
-        totalVolume: 20000, // would be 200 XP, capped at 100
+        totalVolume: 20000, // would be 200 XP, capped at 75
       );
 
-      expect(xpLowVolume, 55); // 50 base + 5
-      expect(xpHighVolume, 150); // 50 base + 100 capped
+      expect(xpLowVolume, 45); // 40 base + 5
+      expect(xpHighVolume, 115); // 40 base + 75 capped
     });
 
     test('full workout with all bonuses calculates correctly', () {
       final xp = LevelSystem.calculateWorkoutXp(
-        duration: 60, // +60 XP
-        exercises: 10, // +50 XP
-        totalVolume: 10000, // +100 XP
-        isPersonalRecord: true, // +50 XP
-        streakDays: 25, // +50 XP
+        duration: 60, // +45 XP (capped)
+        exercises: 10, // +40 XP
+        totalVolume: 10000, // +75 XP (capped)
+        isPersonalRecord: true, // +40 XP
+        streakDays: 25, // +30 XP (capped)
       );
 
-      // 50 base + 60 + 50 + 100 + 50 + 50 = 360
-      expect(xp, 360);
+      // 40 base + 45 + 40 + 75 + 40 + 30 = 270
+      expect(xp, 270);
+    });
+
+    test('max single workout XP is 270', () {
+      final xp = LevelSystem.calculateWorkoutXp(
+        duration: 999,
+        exercises: 999,
+        totalVolume: 99999,
+        isPersonalRecord: true,
+        streakDays: 999,
+      );
+
+      // 40 + 45 + 40 + 75 + 40 + 30 = 270
+      expect(xp, 270);
     });
   });
 
   // ---------------------------------------------------------------------------
-  // LevelSystem.calculateDailyLoginBonus
+  // LevelSystem.calculateDailyLoginBonus (rebalanced)
   // ---------------------------------------------------------------------------
   group('LevelSystem.calculateDailyLoginBonus', () {
     test('0 or negative days returns 0', () {
@@ -292,38 +304,38 @@ void main() {
       expect(LevelSystem.calculateDailyLoginBonus(-1), 0);
     });
 
-    test('day 1 returns 1 XP', () {
-      expect(LevelSystem.calculateDailyLoginBonus(1), 1);
+    test('day 1 returns 2 XP', () {
+      expect(LevelSystem.calculateDailyLoginBonus(1), 2);
     });
 
-    test('day 2 returns 2 XP', () {
-      expect(LevelSystem.calculateDailyLoginBonus(2), 2);
+    test('day 2 returns 3 XP', () {
+      expect(LevelSystem.calculateDailyLoginBonus(2), 3);
     });
 
-    test('day 3 returns 4 XP', () {
-      expect(LevelSystem.calculateDailyLoginBonus(3), 4);
+    test('day 3 returns 5 XP', () {
+      expect(LevelSystem.calculateDailyLoginBonus(3), 5);
     });
 
     test('day 4 returns 8 XP', () {
       expect(LevelSystem.calculateDailyLoginBonus(4), 8);
     });
 
-    test('day 5 returns 16 XP', () {
-      expect(LevelSystem.calculateDailyLoginBonus(5), 16);
+    test('day 5 returns 12 XP', () {
+      expect(LevelSystem.calculateDailyLoginBonus(5), 12);
     });
 
-    test('day 6 returns 32 XP', () {
-      expect(LevelSystem.calculateDailyLoginBonus(6), 32);
+    test('day 6 returns 18 XP', () {
+      expect(LevelSystem.calculateDailyLoginBonus(6), 18);
     });
 
-    test('day 7 returns 100 XP', () {
-      expect(LevelSystem.calculateDailyLoginBonus(7), 100);
+    test('day 7 returns 25 XP', () {
+      expect(LevelSystem.calculateDailyLoginBonus(7), 25);
     });
 
-    test('day 8+ always returns 100 XP', () {
-      expect(LevelSystem.calculateDailyLoginBonus(8), 100);
-      expect(LevelSystem.calculateDailyLoginBonus(30), 100);
-      expect(LevelSystem.calculateDailyLoginBonus(365), 100);
+    test('day 8+ always returns 25 XP', () {
+      expect(LevelSystem.calculateDailyLoginBonus(8), 25);
+      expect(LevelSystem.calculateDailyLoginBonus(30), 25);
+      expect(LevelSystem.calculateDailyLoginBonus(365), 25);
     });
   });
 
@@ -344,7 +356,7 @@ void main() {
       final info = LevelSystem.getDailyLoginBonusInfo(3);
 
       expect(info.consecutiveDays, 3);
-      expect(info.currentDayBonus, 4);
+      expect(info.currentDayBonus, 5);
       expect(info.nextDayBonus, LevelSystem.calculateDailyLoginBonus(4));
       expect(info.isMaxBonus, isFalse);
       expect(info.message, contains('8')); // tomorrow's 8 XP
@@ -354,15 +366,15 @@ void main() {
       final info = LevelSystem.getDailyLoginBonusInfo(7);
 
       expect(info.isMaxBonus, isTrue);
-      expect(info.currentDayBonus, 100);
+      expect(info.currentDayBonus, 25);
     });
 
     test('day 15 is still max bonus', () {
       final info = LevelSystem.getDailyLoginBonusInfo(15);
 
       expect(info.isMaxBonus, isTrue);
-      expect(info.currentDayBonus, 100);
-      expect(info.message, contains('100'));
+      expect(info.currentDayBonus, 25);
+      expect(info.message, contains('25'));
     });
   });
 

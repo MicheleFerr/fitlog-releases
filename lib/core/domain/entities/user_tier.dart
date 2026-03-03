@@ -19,17 +19,17 @@ import 'package:flutter/material.dart';
 /// This is the single source of truth for tier definitions and rewards.
 ///
 /// Tier Rewards Matrix:
-/// | Feature              | Starter | Bronze | Silver | Gold | Platinum |
-/// |----------------------|---------|--------|--------|------|----------|
-/// | Private Templates    | 4       | 4      | 5      | 5    | 7        |
-/// | Public Templates     | 2       | 2      | 3      | 3    | 5        |
-/// | Custom Singles       | 3       | 5      | 7      | 10   | 999      |
-/// | Custom Supersets     | 3       | 5      | 7      | 10   | 999      |
-/// | Custom Dropsets      | 3       | 5      | 7      | 10   | 999      |
-/// | Custom Rest-Pause    | 3       | 5      | 7      | 10   | 999      |
-/// | Banner Ads           | Yes     | Yes    | Yes    | Yes  | No       |
-/// | Pro Analytics        | No      | No     | No     | No   | Yes      |
-/// | Cloud Sync           | No      | No     | No     | No   | Yes      |
+/// | Feature              | Starter | Bronze | Silver | Gold | Platinum | Diamond | Legend |
+/// |----------------------|---------|--------|--------|------|----------|---------|--------|
+/// | Private Templates    | 4       | 4      | 5      | 5    | 7        | 10      | 999    |
+/// | Public Templates     | 2       | 2      | 3      | 3    | 5        | 7       | 999    |
+/// | Custom Singles       | 3       | 5      | 7      | 10   | 999      | 999     | 999    |
+/// | Custom Supersets     | 3       | 5      | 7      | 10   | 999      | 999     | 999    |
+/// | Custom Dropsets      | 3       | 5      | 7      | 10   | 999      | 999     | 999    |
+/// | Custom Rest-Pause    | 3       | 5      | 7      | 10   | 999      | 999     | 999    |
+/// | Banner Ads           | Yes     | Yes    | Yes    | Yes  | No       | No      | No     |
+/// | Pro Analytics        | No      | No     | No     | No   | Yes      | Yes     | Yes    |
+/// | Cloud Sync           | No      | No     | No     | No   | Yes      | Yes     | Yes    |
 enum UserTier {
   starter(
     minXP: 0,
@@ -46,7 +46,7 @@ enum UserTier {
     hasCloudSync: false,
   ),
   bronze(
-    minXP: 100,
+    minXP: 300,
     displayName: 'Bronze',
     color: Color(0xFFCD7F32),
     maxTemplates: 4,
@@ -60,7 +60,7 @@ enum UserTier {
     hasCloudSync: false,
   ),
   silver(
-    minXP: 500,
+    minXP: 1500,
     displayName: 'Silver',
     color: Color(0xFFC0C0C0),
     maxTemplates: 5,
@@ -74,7 +74,7 @@ enum UserTier {
     hasCloudSync: false,
   ),
   gold(
-    minXP: 1500,
+    minXP: 5000,
     displayName: 'Gold',
     color: Color(0xFFFFD700),
     maxTemplates: 5,
@@ -88,11 +88,39 @@ enum UserTier {
     hasCloudSync: false,
   ),
   platinum(
-    minXP: 5000,
+    minXP: 15000,
     displayName: 'Platinum',
     color: Color(0xFFE5E4E2),
     maxTemplates: 7,
     maxPublicTemplates: 5,
+    maxCustomSingleExercises: 999,
+    maxCustomSupersets: 999,
+    maxCustomDropsets: 999,
+    maxCustomRestPause: 999,
+    showAds: false,
+    hasProAnalytics: true,
+    hasCloudSync: true,
+  ),
+  diamond(
+    minXP: 30000,
+    displayName: 'Diamond',
+    color: Color(0xFFB9F2FF),
+    maxTemplates: 10,
+    maxPublicTemplates: 7,
+    maxCustomSingleExercises: 999,
+    maxCustomSupersets: 999,
+    maxCustomDropsets: 999,
+    maxCustomRestPause: 999,
+    showAds: false,
+    hasProAnalytics: true,
+    hasCloudSync: true,
+  ),
+  legend(
+    minXP: 60000,
+    displayName: 'Legend',
+    color: Color(0xFFFF6B35),
+    maxTemplates: 999,
+    maxPublicTemplates: 999,
     maxCustomSingleExercises: 999,
     maxCustomSupersets: 999,
     maxCustomDropsets: 999,
@@ -159,6 +187,8 @@ enum UserTier {
 
   /// Get tier for given XP amount
   static UserTier fromXP(int xp) {
+    if (xp >= legend.minXP) return legend;
+    if (xp >= diamond.minXP) return diamond;
     if (xp >= platinum.minXP) return platinum;
     if (xp >= gold.minXP) return gold;
     if (xp >= silver.minXP) return silver;

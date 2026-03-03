@@ -212,6 +212,10 @@ class XPProgressBar extends ConsumerWidget {
         return AppIcons.emojiEvents;
       case UserTier.platinum:
         return AppIcons.militaryTech;
+      case UserTier.diamond:
+        return AppIcons.diamond;
+      case UserTier.legend:
+        return AppIcons.whatshot;
     }
   }
 
@@ -255,17 +259,6 @@ class XPProgressBar extends ConsumerWidget {
   }
 
   UserTier? _getNextTier(UserTier current) {
-    switch (current) {
-      case UserTier.starter:
-        return UserTier.bronze;
-      case UserTier.bronze:
-        return UserTier.silver;
-      case UserTier.silver:
-        return UserTier.gold;
-      case UserTier.gold:
-        return UserTier.platinum;
-      case UserTier.platinum:
-        return null; // Max tier
-    }
+    return current.next;
   }
 }

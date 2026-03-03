@@ -67,6 +67,18 @@ void main() {
             const Color(0xFFB0B0B0),
             const Color(0xFFE5E4E2),
           ];
+        case UserTier.diamond:
+          return [
+            const Color(0xFFB9F2FF),
+            const Color(0xFF4FC3F7),
+            const Color(0xFFB9F2FF),
+          ];
+        case UserTier.legend:
+          return [
+            const Color(0xFFFF6B35),
+            const Color(0xFFFF8A65),
+            const Color(0xFFFFD54F),
+          ];
       }
     }
 
@@ -118,7 +130,7 @@ void main() {
         (t) => getGradientColors(t).first,
       ).toList();
       final distinctColors = primaryColors.toSet();
-      // All 5 tiers should have distinct primary colors
+      // All 7 tiers should have distinct primary colors
       expect(distinctColors.length, UserTier.values.length);
     });
   });
@@ -287,22 +299,22 @@ void main() {
       expect(UserTier.platinum.maxTemplates, greaterThan(UserTier.starter.maxTemplates));
     });
 
-    test('platinum is only ad-free tier', () {
+    test('platinum+ tiers are ad-free', () {
       final adFreeTiers = UserTier.values.where((t) => !t.showAds).toList();
-      expect(adFreeTiers.length, 1);
-      expect(adFreeTiers.first, UserTier.platinum);
+      expect(adFreeTiers.length, 3);
+      expect(adFreeTiers, containsAll([UserTier.platinum, UserTier.diamond, UserTier.legend]));
     });
 
-    test('only platinum has pro analytics', () {
+    test('platinum+ tiers have pro analytics', () {
       final proTiers = UserTier.values.where((t) => t.hasProAnalytics).toList();
-      expect(proTiers.length, 1);
-      expect(proTiers.first, UserTier.platinum);
+      expect(proTiers.length, 3);
+      expect(proTiers, containsAll([UserTier.platinum, UserTier.diamond, UserTier.legend]));
     });
 
-    test('only platinum has cloud sync', () {
+    test('platinum+ tiers have cloud sync', () {
       final cloudTiers = UserTier.values.where((t) => t.hasCloudSync).toList();
-      expect(cloudTiers.length, 1);
-      expect(cloudTiers.first, UserTier.platinum);
+      expect(cloudTiers.length, 3);
+      expect(cloudTiers, containsAll([UserTier.platinum, UserTier.diamond, UserTier.legend]));
     });
   });
 
@@ -310,40 +322,48 @@ void main() {
   // UserTier boundary XP values
   // ================================================================
   group('UserTier XP boundary precision', () {
-    test('99 XP is still starter', () {
-      expect(UserTier.fromXP(99), UserTier.starter);
+    test('299 XP is still starter', () {
+      expect(UserTier.fromXP(299), UserTier.starter);
     });
 
-    test('100 XP is exactly bronze', () {
-      expect(UserTier.fromXP(100), UserTier.bronze);
+    test('300 XP is exactly bronze', () {
+      expect(UserTier.fromXP(300), UserTier.bronze);
     });
 
-    test('499 XP is still bronze', () {
-      expect(UserTier.fromXP(499), UserTier.bronze);
+    test('1499 XP is still bronze', () {
+      expect(UserTier.fromXP(1499), UserTier.bronze);
     });
 
-    test('500 XP is exactly silver', () {
-      expect(UserTier.fromXP(500), UserTier.silver);
+    test('1500 XP is exactly silver', () {
+      expect(UserTier.fromXP(1500), UserTier.silver);
     });
 
-    test('1499 XP is still silver', () {
-      expect(UserTier.fromXP(1499), UserTier.silver);
+    test('4999 XP is still silver', () {
+      expect(UserTier.fromXP(4999), UserTier.silver);
     });
 
-    test('1500 XP is exactly gold', () {
-      expect(UserTier.fromXP(1500), UserTier.gold);
+    test('5000 XP is exactly gold', () {
+      expect(UserTier.fromXP(5000), UserTier.gold);
     });
 
-    test('4999 XP is still gold', () {
-      expect(UserTier.fromXP(4999), UserTier.gold);
+    test('14999 XP is still gold', () {
+      expect(UserTier.fromXP(14999), UserTier.gold);
     });
 
-    test('5000 XP is exactly platinum', () {
-      expect(UserTier.fromXP(5000), UserTier.platinum);
+    test('15000 XP is exactly platinum', () {
+      expect(UserTier.fromXP(15000), UserTier.platinum);
     });
 
-    test('1000000 XP is platinum (max tier)', () {
-      expect(UserTier.fromXP(1000000), UserTier.platinum);
+    test('30000 XP is exactly diamond', () {
+      expect(UserTier.fromXP(30000), UserTier.diamond);
+    });
+
+    test('60000 XP is exactly legend', () {
+      expect(UserTier.fromXP(60000), UserTier.legend);
+    });
+
+    test('1000000 XP is legend (max tier)', () {
+      expect(UserTier.fromXP(1000000), UserTier.legend);
     });
   });
 
@@ -351,27 +371,27 @@ void main() {
   // UserTier progressToNext precision
   // ================================================================
   group('UserTier progressToNext precision', () {
-    test('silver at 500 XP: 0.0 progress (just entered silver)', () {
-      expect(UserTier.silver.progressToNext(500), 0.0);
+    test('silver at 1500 XP: 0.0 progress (just entered silver)', () {
+      expect(UserTier.silver.progressToNext(1500), 0.0);
     });
 
-    test('silver at 1000 XP: 0.5 progress (midway to gold)', () {
-      // xpInTier = 1000 - 500 = 500, xpNeeded = 1500 - 500 = 1000
-      expect(UserTier.silver.progressToNext(1000), closeTo(0.5, 0.001));
-    });
-
-    test('silver at 1500 XP: 1.0 progress (exactly at gold)', () {
-      expect(UserTier.silver.progressToNext(1500), 1.0);
-    });
-
-    test('gold at 3250 XP: 0.5 progress', () {
+    test('silver at 3250 XP: 0.5 progress (midway to gold)', () {
       // xpInTier = 3250 - 1500 = 1750, xpNeeded = 5000 - 1500 = 3500
-      expect(UserTier.gold.progressToNext(3250), closeTo(0.5, 0.001));
+      expect(UserTier.silver.progressToNext(3250), closeTo(0.5, 0.001));
     });
 
-    test('bronze at 200 XP: 0.25 progress', () {
-      // xpInTier = 200 - 100 = 100, xpNeeded = 500 - 100 = 400
-      expect(UserTier.bronze.progressToNext(200), closeTo(0.25, 0.001));
+    test('silver at 5000 XP: 1.0 progress (exactly at gold)', () {
+      expect(UserTier.silver.progressToNext(5000), 1.0);
+    });
+
+    test('gold at 10000 XP: 0.5 progress', () {
+      // xpInTier = 10000 - 5000 = 5000, xpNeeded = 15000 - 5000 = 10000
+      expect(UserTier.gold.progressToNext(10000), closeTo(0.5, 0.001));
+    });
+
+    test('bronze at 600 XP: 0.25 progress', () {
+      // xpInTier = 600 - 300 = 300, xpNeeded = 1500 - 300 = 1200
+      expect(UserTier.bronze.progressToNext(600), closeTo(0.25, 0.001));
     });
   });
 
@@ -379,28 +399,28 @@ void main() {
   // UserTier xpRemainingToNext precision
   // ================================================================
   group('UserTier xpRemainingToNext precision', () {
-    test('gold at 1500 XP needs 3500 more to reach platinum', () {
-      expect(UserTier.gold.xpRemainingToNext(1500), 3500);
+    test('gold at 5000 XP needs 10000 more to reach platinum', () {
+      expect(UserTier.gold.xpRemainingToNext(5000), 10000);
     });
 
-    test('gold at 3000 XP needs 2000 more', () {
-      expect(UserTier.gold.xpRemainingToNext(3000), 2000);
+    test('gold at 10000 XP needs 5000 more', () {
+      expect(UserTier.gold.xpRemainingToNext(10000), 5000);
     });
 
-    test('gold at 5000 XP needs 0 more (reached platinum)', () {
-      expect(UserTier.gold.xpRemainingToNext(5000), 0);
+    test('gold at 15000 XP needs 0 more (reached platinum)', () {
+      expect(UserTier.gold.xpRemainingToNext(15000), 0);
     });
 
-    test('silver at 500 XP needs 1000 more to reach gold', () {
-      expect(UserTier.silver.xpRemainingToNext(500), 1000);
+    test('silver at 1500 XP needs 3500 more to reach gold', () {
+      expect(UserTier.silver.xpRemainingToNext(1500), 3500);
     });
 
-    test('silver at 1000 XP needs 500 more', () {
-      expect(UserTier.silver.xpRemainingToNext(1000), 500);
+    test('silver at 3250 XP needs 1750 more', () {
+      expect(UserTier.silver.xpRemainingToNext(3250), 1750);
     });
 
-    test('bronze at 100 XP needs 400 more to reach silver', () {
-      expect(UserTier.bronze.xpRemainingToNext(100), 400);
+    test('bronze at 300 XP needs 1200 more to reach silver', () {
+      expect(UserTier.bronze.xpRemainingToNext(300), 1200);
     });
   });
 }

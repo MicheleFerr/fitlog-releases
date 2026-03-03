@@ -153,6 +153,8 @@ class ForYouSection extends ConsumerWidget {
         targetCategories = ['home', 'express', 'intermediate'];
       case UserTier.gold:
       case UserTier.platinum:
+      case UserTier.diamond:
+      case UserTier.legend:
         targetCategories = ['intermediate', 'advanced', 'specialty'];
     }
 

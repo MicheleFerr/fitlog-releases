@@ -95,43 +95,39 @@ class LevelSystem {
     bool isPersonalRecord = false,
     int streakDays = 0,
   }) {
-    int baseXp = 50;
+    int baseXp = 40;
 
-    // XP per durata (1 XP per minuto, max 60)
-    baseXp += min(duration, 60);
+    // XP per durata (1 XP per minuto, max 45)
+    baseXp += min(duration, 45);
 
-    // XP per esercizi (5 XP per esercizio, max 50)
-    baseXp += min(exercises * 5, 50);
+    // XP per esercizi (4 XP per esercizio, max 40)
+    baseXp += min(exercises * 4, 40);
 
-    // XP per volume (1 XP per 100kg, max 100)
-    baseXp += min((totalVolume / 100).round(), 100);
+    // XP per volume (1 XP per 100kg, max 75)
+    baseXp += min((totalVolume / 100).round(), 75);
 
     // Bonus PR
-    if (isPersonalRecord) baseXp += 50;
+    if (isPersonalRecord) baseXp += 40;
 
-    // Bonus streak (2 XP per giorno, max 50)
-    baseXp += min(streakDays * 2, 50);
+    // Bonus streak (2 XP per giorno, max 30)
+    baseXp += min(streakDays * 2, 30);
 
     return baseXp;
   }
 
   // Calcola XP bonus per accesso quotidiano consecutivo
-  // Progressione: 1, 2, 4, 8, 16, 32, 64, 100 (poi sempre 100)
+  // Progressione: 2, 3, 5, 8, 12, 18, 25 (poi sempre 25)
   static int calculateDailyLoginBonus(int consecutiveDays) {
     if (consecutiveDays <= 0) return 0;
 
-    // Progressione esponenziale fino al giorno 7
+    const dailyValues = [2, 3, 5, 8, 12, 18, 25];
+
     if (consecutiveDays <= 7) {
-      // Giorni 1-6: 2^(n-1) con cap a 64
-      if (consecutiveDays <= 6) {
-        return pow(2, consecutiveDays - 1).toInt();
-      }
-      // Giorno 7: 100 XP
-      return 100;
+      return dailyValues[consecutiveDays - 1];
     }
 
-    // Dal giorno 8 in poi: sempre 100 XP
-    return 100;
+    // Dal giorno 8 in poi: sempre 25 XP
+    return 25;
   }
 
   // Ottieni la descrizione del bonus login per UI
@@ -145,7 +141,7 @@ class LevelSystem {
     } else if (consecutiveDays < 7) {
       message = 'Continua la serie! Domani: $nextDayBonus XP';
     } else {
-      message = 'Bonus massimo raggiunto! 100 XP al giorno';
+      message = 'Bonus massimo raggiunto! 25 XP al giorno';
     }
 
     return DailyLoginBonusInfo(
