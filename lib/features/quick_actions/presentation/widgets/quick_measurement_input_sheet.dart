@@ -109,95 +109,104 @@ class _QuickMeasurementInputSheetState
     final unit = widget.metric.defaultUnit;
     final title = _metricTitle(context);
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: context.colors.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      padding: EdgeInsets.only(
-        bottom: bottomPadding + 16,
-        top: 20,
-        left: 20,
-        right: 20,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Drag handle
-          Center(
-            child: Container(
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(
-                color: context.colors.onSurfaceVariant.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Title
-          Text(
-            title,
-            style: context.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 8),
-
-          // Last value info
-          if (_isLoading)
-            Text(
-              '...',
-              style: context.textTheme.bodySmall?.copyWith(
-                color: context.colors.onSurfaceVariant,
-              ),
-            )
-          else if (_lastValue != null && _lastTimestamp != null)
-            Text(
-              context.l10n.quickActionLastValue(
-                _lastValue!.toStringAsFixed(1),
-                unit,
-                context.l10n.daysAgoShort(
-                  DateTime.now().difference(_lastTimestamp!).inDays,
+    return AnimatedPadding(
+      duration: const Duration(milliseconds: 150),
+      padding: EdgeInsets.only(bottom: keyboardHeight),
+      child: Container(
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius:
+              const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        padding: EdgeInsets.only(
+          bottom: keyboardHeight > 0 ? 16 : bottomPadding + 16,
+          top: 20,
+          left: 20,
+          right: 20,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Drag handle
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: context.colors.onSurfaceVariant
+                        .withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-              style: context.textTheme.bodySmall?.copyWith(
-                color: context.colors.onSurfaceVariant,
-              ),
-            ),
+              const SizedBox(height: 16),
 
-          const SizedBox(height: 20),
-
-          // Input fields
-          if (_isBilateral) ...[
-            _buildBilateralInputs(context, unit),
-          ] else ...[
-            _buildSingleInput(context, _controller, unit),
-            const SizedBox(height: 12),
-            _buildQuickButtons(context, _controller),
-          ],
-
-          const SizedBox(height: 24),
-
-          // Save button
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: FilledButton(
-              onPressed: _isSaving ? null : () => _save(context),
-              child: Text(
-                context.l10n.quickActionSave,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
+              // Title
+              Text(
+                title,
+                style: context.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-            ),
+              const SizedBox(height: 8),
+
+              // Last value info
+              if (_isLoading)
+                Text(
+                  '...',
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                )
+              else if (_lastValue != null && _lastTimestamp != null)
+                Text(
+                  context.l10n.quickActionLastValue(
+                    _lastValue!.toStringAsFixed(1),
+                    unit,
+                    context.l10n.daysAgoShort(
+                      DateTime.now().difference(_lastTimestamp!).inDays,
+                    ),
+                  ),
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
+
+              const SizedBox(height: 20),
+
+              // Input fields
+              if (_isBilateral) ...[
+                _buildBilateralInputs(context, unit),
+              ] else ...[
+                _buildSingleInput(context, _controller, unit),
+                const SizedBox(height: 12),
+                _buildQuickButtons(context, _controller),
+              ],
+
+              const SizedBox(height: 24),
+
+              // Save button
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: FilledButton(
+                  onPressed: _isSaving ? null : () => _save(context),
+                  child: Text(
+                    context.l10n.quickActionSave,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
