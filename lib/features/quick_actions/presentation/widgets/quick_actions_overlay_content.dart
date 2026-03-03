@@ -162,6 +162,7 @@ class QuickActionsOverlayContent extends ConsumerWidget {
     HapticFeedback.lightImpact();
     onClose();
     _postFrameNavigate(context, () {
+      navigationShell.goBranch(1); // Switch to Workout branch first
       context.pushNamed(AppRoutes.templatesName);
     });
   }
@@ -191,6 +192,7 @@ class QuickActionsOverlayContent extends ConsumerWidget {
     HapticFeedback.lightImpact();
     onClose();
     _postFrameNavigate(context, () {
+      navigationShell.goBranch(2); // Switch to Profile branch first
       context.pushNamed(AppRoutes.bodyMeasurementsName);
     });
   }
@@ -199,6 +201,7 @@ class QuickActionsOverlayContent extends ConsumerWidget {
     HapticFeedback.lightImpact();
     onClose();
     _postFrameNavigate(context, () {
+      navigationShell.goBranch(1); // Switch to Workout branch first
       context.pushNamed(AppRoutes.templatesName);
     });
   }
