@@ -192,11 +192,9 @@ class TierEntitlements {
         return UserTier.platinum;
       case TierFeature.extraTemplates:
         if (maxTemplates < 4) return UserTier.bronze;
-        if (maxTemplates < 5) return UserTier.silver;
-        if (maxTemplates < 7) return UserTier.gold;
-        if (maxTemplates < 10) return UserTier.platinum;
-        if (maxTemplates < 15) return UserTier.diamond;
-        if (maxTemplates < 999) return UserTier.legend;
+        if (maxTemplates < 5) return UserTier.gold;
+        if (maxTemplates < 6) return UserTier.diamond;
+        if (maxTemplates < 7) return UserTier.legend;
         return null;
     }
   }

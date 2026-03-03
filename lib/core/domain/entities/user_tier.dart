@@ -21,12 +21,10 @@ import 'package:flutter/material.dart';
 /// Tier Rewards Matrix:
 /// | Feature              | Starter | Bronze | Silver | Gold | Platinum | Diamond | Legend |
 /// |----------------------|---------|--------|--------|------|----------|---------|--------|
-/// | Private Templates    | 3       | 4      | 5      | 7    | 10       | 15      | 999    |
-/// | Public Templates     | 1       | 2      | 3      | 5    | 7        | 10      | 999    |
-/// | Custom Singles       | 3       | 5      | 7      | 10   | 15       | 999     | 999    |
-/// | Custom Supersets     | 2       | 3      | 5      | 7    | 10       | 999     | 999    |
-/// | Custom Dropsets      | 2       | 3      | 5      | 7    | 10       | 999     | 999    |
-/// | Custom Rest-Pause    | 2       | 3      | 5      | 7    | 10       | 999     | 999    |
+/// | Private Templates    | 3       | 4      | 4      | 5    | 5        | 6       | 7      |
+/// | Public Templates     | 3       | 4      | 4      | 5    | 5        | 6       | 7      |
+/// | Custom Exercises     | 3       | 5      | 7      | 10   | 15       | 999     | 999    |
+/// | (all types equal)    |         |        |        |      |          |         |        |
 /// | Banner Ads           | Yes     | Yes    | Yes    | Yes  | No       | No      | No     |
 /// | Pro Analytics        | No      | No     | No     | No   | Yes      | Yes     | Yes    |
 /// | Cloud Sync           | No      | No     | No     | No   | Yes      | Yes     | Yes    |
@@ -36,11 +34,11 @@ enum UserTier {
     displayName: 'Starter',
     color: Color(0xFF9E9E9E),
     maxTemplates: 3,
-    maxPublicTemplates: 1,
+    maxPublicTemplates: 3,
     maxCustomSingleExercises: 3,
-    maxCustomSupersets: 2,
-    maxCustomDropsets: 2,
-    maxCustomRestPause: 2,
+    maxCustomSupersets: 3,
+    maxCustomDropsets: 3,
+    maxCustomRestPause: 3,
     showAds: true,
     hasProAnalytics: false,
     hasCloudSync: false,
@@ -50,11 +48,11 @@ enum UserTier {
     displayName: 'Bronze',
     color: Color(0xFFCD7F32),
     maxTemplates: 4,
-    maxPublicTemplates: 2,
+    maxPublicTemplates: 4,
     maxCustomSingleExercises: 5,
-    maxCustomSupersets: 3,
-    maxCustomDropsets: 3,
-    maxCustomRestPause: 3,
+    maxCustomSupersets: 5,
+    maxCustomDropsets: 5,
+    maxCustomRestPause: 5,
     showAds: true,
     hasProAnalytics: false,
     hasCloudSync: false,
@@ -63,12 +61,12 @@ enum UserTier {
     minXP: 1500,
     displayName: 'Silver',
     color: Color(0xFFC0C0C0),
-    maxTemplates: 5,
-    maxPublicTemplates: 3,
+    maxTemplates: 4,
+    maxPublicTemplates: 4,
     maxCustomSingleExercises: 7,
-    maxCustomSupersets: 5,
-    maxCustomDropsets: 5,
-    maxCustomRestPause: 5,
+    maxCustomSupersets: 7,
+    maxCustomDropsets: 7,
+    maxCustomRestPause: 7,
     showAds: true,
     hasProAnalytics: false,
     hasCloudSync: false,
@@ -77,12 +75,12 @@ enum UserTier {
     minXP: 5000,
     displayName: 'Gold',
     color: Color(0xFFFFD700),
-    maxTemplates: 7,
+    maxTemplates: 5,
     maxPublicTemplates: 5,
     maxCustomSingleExercises: 10,
-    maxCustomSupersets: 7,
-    maxCustomDropsets: 7,
-    maxCustomRestPause: 7,
+    maxCustomSupersets: 10,
+    maxCustomDropsets: 10,
+    maxCustomRestPause: 10,
     showAds: true,
     hasProAnalytics: false,
     hasCloudSync: false,
@@ -91,12 +89,12 @@ enum UserTier {
     minXP: 15000,
     displayName: 'Platinum',
     color: Color(0xFFE5E4E2),
-    maxTemplates: 10,
-    maxPublicTemplates: 7,
+    maxTemplates: 5,
+    maxPublicTemplates: 5,
     maxCustomSingleExercises: 15,
-    maxCustomSupersets: 10,
-    maxCustomDropsets: 10,
-    maxCustomRestPause: 10,
+    maxCustomSupersets: 15,
+    maxCustomDropsets: 15,
+    maxCustomRestPause: 15,
     showAds: false,
     hasProAnalytics: true,
     hasCloudSync: true,
@@ -105,8 +103,8 @@ enum UserTier {
     minXP: 30000,
     displayName: 'Diamond',
     color: Color(0xFFB9F2FF),
-    maxTemplates: 15,
-    maxPublicTemplates: 10,
+    maxTemplates: 6,
+    maxPublicTemplates: 6,
     maxCustomSingleExercises: 999,
     maxCustomSupersets: 999,
     maxCustomDropsets: 999,
@@ -119,8 +117,8 @@ enum UserTier {
     minXP: 60000,
     displayName: 'Legend',
     color: Color(0xFFFF6B35),
-    maxTemplates: 999,
-    maxPublicTemplates: 999,
+    maxTemplates: 7,
+    maxPublicTemplates: 7,
     maxCustomSingleExercises: 999,
     maxCustomSupersets: 999,
     maxCustomDropsets: 999,

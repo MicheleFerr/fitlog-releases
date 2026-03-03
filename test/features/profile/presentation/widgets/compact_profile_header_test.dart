@@ -217,52 +217,52 @@ void main() {
   // UserTier entitlements additional coverage
   // ================================================================
   group('UserTier entitlements comprehensive', () {
-    test('bronze maxPublicTemplates = 2', () {
-      expect(UserTier.bronze.maxPublicTemplates, 2);
+    test('bronze maxPublicTemplates = 4', () {
+      expect(UserTier.bronze.maxPublicTemplates, 4);
     });
 
-    test('silver maxPublicTemplates = 3', () {
-      expect(UserTier.silver.maxPublicTemplates, 3);
+    test('silver maxPublicTemplates = 4', () {
+      expect(UserTier.silver.maxPublicTemplates, 4);
     });
 
     test('gold maxPublicTemplates = 5', () {
       expect(UserTier.gold.maxPublicTemplates, 5);
     });
 
-    test('starter maxCustomSupersets = 2', () {
-      expect(UserTier.starter.maxCustomSupersets, 2);
+    test('starter maxCustomSupersets = 3', () {
+      expect(UserTier.starter.maxCustomSupersets, 3);
     });
 
-    test('bronze maxCustomSupersets = 3', () {
-      expect(UserTier.bronze.maxCustomSupersets, 3);
+    test('bronze maxCustomSupersets = 5', () {
+      expect(UserTier.bronze.maxCustomSupersets, 5);
     });
 
-    test('platinum maxCustomSupersets = 10', () {
-      expect(UserTier.platinum.maxCustomSupersets, 10);
+    test('platinum maxCustomSupersets = 15', () {
+      expect(UserTier.platinum.maxCustomSupersets, 15);
     });
 
-    test('starter maxCustomDropsets = 2', () {
-      expect(UserTier.starter.maxCustomDropsets, 2);
+    test('starter maxCustomDropsets = 3', () {
+      expect(UserTier.starter.maxCustomDropsets, 3);
     });
 
-    test('platinum maxCustomDropsets = 10', () {
-      expect(UserTier.platinum.maxCustomDropsets, 10);
+    test('platinum maxCustomDropsets = 15', () {
+      expect(UserTier.platinum.maxCustomDropsets, 15);
     });
 
-    test('starter maxCustomRestPause = 2', () {
-      expect(UserTier.starter.maxCustomRestPause, 2);
+    test('starter maxCustomRestPause = 3', () {
+      expect(UserTier.starter.maxCustomRestPause, 3);
     });
 
-    test('silver maxCustomRestPause = 5', () {
-      expect(UserTier.silver.maxCustomRestPause, 5);
+    test('silver maxCustomRestPause = 7', () {
+      expect(UserTier.silver.maxCustomRestPause, 7);
     });
 
-    test('gold maxCustomRestPause = 7', () {
-      expect(UserTier.gold.maxCustomRestPause, 7);
+    test('gold maxCustomRestPause = 10', () {
+      expect(UserTier.gold.maxCustomRestPause, 10);
     });
 
-    test('platinum maxCustomRestPause = 10', () {
-      expect(UserTier.platinum.maxCustomRestPause, 10);
+    test('platinum maxCustomRestPause = 15', () {
+      expect(UserTier.platinum.maxCustomRestPause, 15);
     });
 
     test('gold showAds = true', () {
