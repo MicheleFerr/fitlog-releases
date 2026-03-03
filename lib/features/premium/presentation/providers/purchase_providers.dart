@@ -23,16 +23,6 @@ final purchaseServiceProvider = Provider<PurchaseService>((ref) {
   return PurchaseService(repository: repository);
 });
 
-final availablePlansProvider = FutureProvider<List<SubscriptionPlan>>((ref) async {
-  final repository = ref.watch(purchaseRepositoryProvider);
-  return repository.getAvailablePlans();
-});
-
-final subscriptionStatusProvider = StreamProvider<SubscriptionStatus>((ref) {
-  final repository = ref.watch(purchaseRepositoryProvider);
-  return repository.watchSubscriptionStatus();
-});
-
 final revenueCatInitProvider = FutureProvider<void>((ref) async {
   final repository = ref.watch(purchaseRepositoryProvider);
   await repository.initialize();
@@ -44,4 +34,18 @@ final revenueCatInitProvider = FutureProvider<void>((ref) async {
     final service = ref.read(purchaseServiceProvider);
     await service.checkAndSyncStatus(userId);
   }
+});
+
+final availablePlansProvider = FutureProvider<List<SubscriptionPlan>>((ref) async {
+  // Ensure RevenueCat is initialized before fetching plans
+  await ref.watch(revenueCatInitProvider.future);
+  final repository = ref.watch(purchaseRepositoryProvider);
+  return repository.getAvailablePlans();
+});
+
+final subscriptionStatusProvider = StreamProvider<SubscriptionStatus>((ref) async* {
+  // Ensure RevenueCat is initialized before watching status
+  await ref.watch(revenueCatInitProvider.future);
+  final repository = ref.watch(purchaseRepositoryProvider);
+  yield* repository.watchSubscriptionStatus();
 });
