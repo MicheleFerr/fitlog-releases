@@ -25,7 +25,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "atlas_stone_trainer",
@@ -53,7 +54,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "atlas_stones",
@@ -86,7 +88,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "axle_deadlift",
@@ -115,7 +118,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "backward_drag",
@@ -143,7 +147,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "backward_medicine_ball_throw",
@@ -165,7 +170,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "bear_crawl_sled_drags",
@@ -191,7 +197,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "bench_jump",
@@ -217,7 +224,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "bench_sprint",
@@ -243,7 +251,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "bicycling",
@@ -268,7 +277,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "bicycling_stationary",
@@ -294,7 +304,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "box_jump_multiple_response",
@@ -322,7 +333,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "box_skip",
@@ -350,7 +362,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "car_deadlift",
@@ -378,7 +391,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "carioca_quick_step",
@@ -407,7 +421,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "catch_and_overhead_throw",
@@ -433,7 +448,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "chest_push_multiple_response",
@@ -459,7 +475,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "chest_push_single_response",
@@ -485,7 +502,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "chest_push_from_3_point_stance",
@@ -511,7 +529,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "chest_push_with_run_release",
@@ -537,7 +556,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "chin_to_chest_stretch",
@@ -561,7 +581,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "circus_bell",
@@ -590,7 +611,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "clean",
@@ -619,7 +641,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "clean_and_jerk",
@@ -650,7 +673,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "clean_deadlift",
@@ -679,7 +703,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "clean_from_blocks",
@@ -707,7 +732,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "clean_pull",
@@ -735,7 +761,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "clean_shrug",
@@ -760,7 +787,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "conans_wheel",
@@ -790,7 +818,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "crucifix",
@@ -813,7 +842,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "depth_jump_leap",
@@ -841,7 +871,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "double_leg_butt_kick",
@@ -869,7 +900,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "drop_push",
@@ -894,7 +926,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "dumbbell_seated_box_jump",
@@ -920,7 +953,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "elliptical_trainer",
@@ -946,7 +980,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "fast_skipping",
@@ -974,7 +1009,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "forward_drag_with_press",
@@ -1003,7 +1039,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "front_box_jump",
@@ -1031,7 +1068,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "front_cone_hops_or_hurdle_hops",
@@ -1059,7 +1097,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "hang_clean",
@@ -1089,7 +1128,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "hang_clean___below_the_knees",
@@ -1119,7 +1159,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "hang_snatch",
@@ -1150,7 +1191,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "hang_snatch___below_knees",
@@ -1181,7 +1223,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "heaving_snatch_balance",
@@ -1210,7 +1253,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "heavy_bag_thrust",
@@ -1236,7 +1280,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "hurdle_hops",
@@ -1264,7 +1309,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "isometric_chest_squeezes",
@@ -1289,7 +1335,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "isometric_neck_exercise___front_and_back",
@@ -1311,7 +1358,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "isometric_neck_exercise___sides",
@@ -1333,7 +1381,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "jerk_balance",
@@ -1360,7 +1409,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "jerk_dip_squat",
@@ -1385,7 +1435,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "jogging_treadmill",
@@ -1410,7 +1461,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "keg_load",
@@ -1443,7 +1495,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "knee_tuck_jump",
@@ -1471,7 +1524,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "kneeling_arm_drill",
@@ -1495,7 +1549,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "lateral_bound",
@@ -1523,7 +1578,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "lateral_box_jump",
@@ -1551,7 +1607,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "lateral_cone_hops",
@@ -1579,7 +1636,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "linear_3_part_start_technique",
@@ -1604,7 +1662,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "linear_acceleration_wall_drill",
@@ -1630,7 +1689,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "linear_depth_jump",
@@ -1656,7 +1716,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "log_lift",
@@ -1688,7 +1749,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "lying_face_down_plate_neck_resistance",
@@ -1710,7 +1772,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "lying_face_up_plate_neck_resistance",
@@ -1732,7 +1795,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "medicine_ball_full_twist",
@@ -1756,7 +1820,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "medicine_ball_scoop_throw",
@@ -1782,7 +1847,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "mountain_climbers",
@@ -1808,7 +1874,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "moving_claw_series",
@@ -1833,7 +1900,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "muscle_snatch",
@@ -1861,7 +1929,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "neck_smr",
@@ -1883,7 +1952,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "olympic_squat",
@@ -1909,7 +1979,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "overhead_slam",
@@ -1931,7 +2002,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "overhead_squat",
@@ -1961,7 +2033,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "power_clean_from_blocks",
@@ -1985,7 +2058,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "power_jerk",
@@ -2014,7 +2088,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "power_snatch",
@@ -2044,7 +2119,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "power_snatch_from_blocks",
@@ -2075,7 +2151,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "power_stairs",
@@ -2105,7 +2182,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "prowler_sprint",
@@ -2133,7 +2211,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "push_press",
@@ -2159,7 +2238,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "push_press___behind_the_neck",
@@ -2186,7 +2266,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "quick_leap",
@@ -2211,7 +2292,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "rack_delivery",
@@ -2236,7 +2318,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "recumbent_bike",
@@ -2262,7 +2345,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "return_push_from_stance",
@@ -2287,7 +2371,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "rickshaw_carry",
@@ -2317,7 +2402,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "rickshaw_deadlift",
@@ -2345,7 +2431,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "rocket_jump",
@@ -2370,7 +2457,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "romanian_deadlift_from_deficit",
@@ -2397,7 +2485,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "rope_jumping",
@@ -2422,7 +2511,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "rowing_stationary",
@@ -2451,7 +2541,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "running_treadmill",
@@ -2477,7 +2568,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "sandbag_load",
@@ -2510,7 +2602,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "scissors_jump",
@@ -2535,7 +2628,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "seated_head_harness_neck_resistance",
@@ -2557,7 +2651,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "side_hop_sprint",
@@ -2584,7 +2679,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "side_neck_stretch",
@@ -2606,7 +2702,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "side_standing_long_jump",
@@ -2632,7 +2729,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "side_to_side_box_shuffle",
@@ -2659,7 +2757,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "single_cone_sprint_drill",
@@ -2685,7 +2784,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "single_leg_butt_kick",
@@ -2710,7 +2810,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "single_leg_hop_progression",
@@ -2737,7 +2838,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "single_leg_lateral_hop",
@@ -2764,7 +2866,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "single_leg_push_off",
@@ -2789,7 +2892,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "single_leg_stride_jump",
@@ -2816,7 +2920,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "skating",
@@ -2843,7 +2948,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "sled_drag___harness",
@@ -2869,7 +2975,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "sled_push",
@@ -2897,7 +3004,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "sledgehammer_swings",
@@ -2925,7 +3033,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "snatch",
@@ -2954,7 +3063,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "snatch_balance",
@@ -2982,7 +3092,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "snatch_deadlift",
@@ -3011,7 +3122,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "snatch_from_blocks",
@@ -3042,7 +3154,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "snatch_shrug",
@@ -3067,7 +3180,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "split_clean",
@@ -3097,7 +3211,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "split_jerk",
@@ -3124,7 +3239,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "split_jump",
@@ -3150,7 +3266,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "split_snatch",
@@ -3182,7 +3299,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "stairmaster",
@@ -3207,7 +3325,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "standing_long_jump",
@@ -3233,7 +3352,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "standing_two_arm_overhead_throw",
@@ -3258,7 +3378,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "star_jump",
@@ -3285,7 +3406,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "step_mill",
@@ -3311,7 +3433,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "stride_jump_crossover",
@@ -3338,7 +3461,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "supine_chest_throw",
@@ -3363,7 +3487,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "supine_one_arm_overhead_throw",
@@ -3389,7 +3514,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "supine_two_arm_overhead_throw",
@@ -3415,7 +3541,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "trail_running_walking",
@@ -3441,7 +3568,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "vertical_swing",
@@ -3467,7 +3595,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "walking_treadmill",
@@ -3493,7 +3622,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "wide_stance_stiff_legs",
@@ -3519,7 +3649,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "EXP"
   },
   {
     "id": "yoke_walk",
@@ -3549,6 +3680,7 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   }
 ]

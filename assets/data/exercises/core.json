@@ -27,7 +27,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-1-0"
   },
   {
     "id": "hug_knees_to_chest",
@@ -51,7 +52,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "hug_a_ball",
@@ -76,7 +78,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "crossover_reverse_lunge",
@@ -104,7 +107,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "lunge_with_twist",
@@ -138,7 +142,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "exercise_ball_lower_back_stretch_pyramid",
@@ -165,7 +170,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "seated_lower_back_stretch",
@@ -192,7 +198,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "assisted_prone_rectus_femoris_stretch",
@@ -224,7 +231,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "barbell_sitted_alternate_leg_raise_female",
@@ -252,7 +260,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "barbell_sitted_alternate_leg_raise_female_with_intermediate",
@@ -282,7 +291,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "supine_style_band_alternating_v_up",
@@ -312,7 +322,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "band_alternating_v_up_with_simple",
@@ -342,7 +353,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "band_alternating_v_up",
@@ -372,7 +384,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "knee_hip_raise_on_parallel_bars",
@@ -394,7 +407,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "hip_raise_bent_knee",
@@ -427,7 +441,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "hanging_straight_leg_hip_raise",
@@ -459,7 +474,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "hanging_oblique_knee_raise",
@@ -491,7 +507,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "lying_leg_raise_flat_bench",
@@ -523,7 +540,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "barbell_sitted_alternate_leg_raise",
@@ -551,7 +569,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "machine_back_extension",
@@ -580,7 +599,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-2-1"
   },
   {
     "id": "balance_board",
@@ -610,7 +630,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "flag",
@@ -640,7 +661,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "pelvic_tilt",
@@ -671,7 +693,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "bear_crawl",
@@ -701,7 +724,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "air_bike",
@@ -730,7 +754,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "bird_dog",
@@ -752,7 +777,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "bottoms_up",
@@ -812,7 +838,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "seated_good_mornings",
@@ -836,7 +863,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "stiff_leg_barbell_good_morning",
@@ -861,7 +889,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "burpee",
@@ -891,7 +920,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "dumbbell_burpee",
@@ -922,7 +952,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "butt_ups",
@@ -950,7 +981,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "suspended_fallout",
@@ -976,7 +1008,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "upward_facing_dog",
@@ -1003,7 +1036,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "cat_cow",
@@ -1022,7 +1056,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "one_arm_high_pulley_cable_side_bends",
@@ -1044,7 +1079,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "cocoons",
@@ -1074,7 +1110,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "cocoons_with_mega",
@@ -1103,7 +1140,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "one_arm_medicine_ball_slam",
@@ -1128,7 +1166,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "kettlebell_double_windmill",
@@ -1157,7 +1196,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "spider_crawl",
@@ -1183,7 +1223,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "cross_body_crunch",
@@ -1213,7 +1254,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "bridge_mountain_climber_cross_body",
@@ -1245,7 +1287,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "gorilla_chin_crunch",
@@ -1270,7 +1313,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "bosu_ball_cable_crunch_with_side_bends",
@@ -1292,7 +1336,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "kneeling_cable_crunch_with_alternating_oblique_twists",
@@ -1314,7 +1359,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "crunches",
@@ -1335,7 +1381,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "band_bicycle_crunch",
@@ -1361,7 +1408,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "stability_ball_crunch_full_range_hands_behind_head",
@@ -1391,7 +1439,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "groin_crunch",
@@ -1420,7 +1469,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "crunch___legs_on_exercise_ball",
@@ -1442,7 +1492,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "reverse_crunch",
@@ -1560,7 +1611,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "cable_side_crunch",
@@ -1586,7 +1638,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "negative_crunch",
@@ -1615,7 +1668,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "oblique_crunches",
@@ -1637,7 +1691,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "oblique_crunches___on_the_floor",
@@ -1659,7 +1714,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "oblique_crunch_v_2",
@@ -1689,7 +1745,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "weighted_overhead_crunch_on_stability_ball",
@@ -1719,7 +1776,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "crunch_floor",
@@ -1749,7 +1807,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "standing_rope_crunch",
@@ -1771,7 +1830,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "crunch_hands_overhead",
@@ -1824,7 +1884,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "weighted_crunch",
@@ -1854,7 +1915,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "knee_touch_crunch",
@@ -1884,7 +1946,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "band_kneeling_twisting_crunch",
@@ -1910,7 +1973,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "rope_crunch",
@@ -1932,7 +1996,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "cable_kneeling_crunch_gentle_variation",
@@ -1960,7 +2025,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "cable_kneeling_crunch",
@@ -1986,7 +2052,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "crunch_on_stability_ball",
@@ -2016,7 +2083,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "crunch_on_stability_ball_arms_straight",
@@ -2046,7 +2114,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "exercise_ball_crunch",
@@ -2068,7 +2137,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "cable_crunch",
@@ -2090,7 +2160,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "curl_up",
@@ -2120,7 +2191,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-2-1"
   },
   {
     "id": "lower_back_curl",
@@ -2148,7 +2220,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-2-1"
   },
   {
     "id": "dead_bug",
@@ -2209,7 +2282,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "decline_crunch",
@@ -2238,7 +2312,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "decline_sit_up",
@@ -2265,7 +2340,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "weighted_decline_sit_up",
@@ -2292,7 +2368,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "decline_reverse_crunch",
@@ -2314,7 +2391,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "bodyweight_dragon_flag",
@@ -2343,7 +2421,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "weighted_ball_hyperextension",
@@ -2369,7 +2448,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-2-1"
   },
   {
     "id": "lever_back_extension",
@@ -2398,7 +2478,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-2-1"
   },
   {
     "id": "exercise_ball_back_extension_with_knees_off_ground",
@@ -2428,7 +2509,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-2-1"
   },
   {
     "id": "exercise_ball_back_extension_with_hands_behind_head",
@@ -2458,7 +2540,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-2-1"
   },
   {
     "id": "exercise_ball_back_extension_with_arms_extended",
@@ -2488,7 +2571,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-2-1"
   },
   {
     "id": "hyperextensions_back_extensions",
@@ -2513,7 +2597,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-2-1"
   },
   {
     "id": "hyperextensions_with_no_hyperextension_bench",
@@ -2538,7 +2623,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-2-1"
   },
   {
     "id": "suspended_abdominal_fallout",
@@ -2570,7 +2656,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "suspended_abdominal_fallout_inclined_variation",
@@ -2599,7 +2686,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "kettlebell_figure_8",
@@ -2659,7 +2747,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "cable_side_bend_smooth",
@@ -2689,7 +2778,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "push_up_to_side_plank_athletic_variation",
@@ -2719,7 +2809,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "weighted_side_bend_on_stability_ball",
@@ -2751,7 +2842,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "cable_side_bend_crunch_bosu_ball",
@@ -2777,7 +2869,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "push_up_to_side_plank",
@@ -2810,7 +2903,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "frog_crunch",
@@ -2839,7 +2933,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "front_lever",
@@ -2870,7 +2965,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "full_planche",
@@ -2902,7 +2998,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "elbow_to_knee",
@@ -2962,7 +3059,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "bodyweight_hollow_body_hold",
@@ -2988,7 +3086,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "landmine_180s",
@@ -3014,7 +3113,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "cable_standing_crunch_with_rope_attachment",
@@ -3040,7 +3140,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "blunt_cable_standing_crunch",
@@ -3068,7 +3169,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "cable_standing_crunch",
@@ -3094,7 +3196,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "single_style_cable_standing_crunch_with_rope_attachment",
@@ -3122,7 +3225,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "band_standing_crunch",
@@ -3148,7 +3252,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "band_standing_twisting_crunch",
@@ -3174,7 +3279,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "barbell_standing_ab_rollerout",
@@ -3208,7 +3314,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-1-0"
   },
   {
     "id": "standing_wheel_rollerout",
@@ -3240,7 +3347,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-1-0"
   },
   {
     "id": "cable_standing_lift",
@@ -3268,7 +3376,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "barbell_standing_twist",
@@ -3296,7 +3405,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "spell_caster",
@@ -3360,7 +3470,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "incline_twisting_sit_up",
@@ -3387,7 +3498,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "bodyweight_incline_side_plank",
@@ -3415,7 +3527,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "standing_pelvic_tilt",
@@ -3503,7 +3616,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-2-1"
   },
   {
     "id": "hyperextension_on_bench",
@@ -3533,7 +3647,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-2-1"
   },
   {
     "id": "jack_burpee",
@@ -3564,7 +3679,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "narrow_style_band_jack_knife_sit_up",
@@ -3592,7 +3708,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "side_jackknife",
@@ -3614,7 +3731,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "cable_judo_flip_with_static",
@@ -3644,7 +3762,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "cable_judo_flip",
@@ -3702,7 +3821,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "weighted_ball_side_bend",
@@ -3724,7 +3844,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "landmine_180",
@@ -3755,7 +3876,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "side_hip_on_parallel_bars",
@@ -3788,7 +3910,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "barbell_side_bent_v_2",
@@ -3816,7 +3939,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "ab_crunch_machine",
@@ -3838,7 +3962,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "full_maltese",
@@ -3870,7 +3995,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "straddle_maltese",
@@ -3902,7 +4028,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "sledge_hammer",
@@ -3933,7 +4060,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "prisoner_half_sit_up_male",
@@ -3960,7 +4088,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "scissor_kick",
@@ -3982,7 +4111,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "mountain_climber",
@@ -4012,7 +4142,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "kettlebell_windmill",
@@ -4040,7 +4171,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "oblique_crunches_floor",
@@ -4070,7 +4202,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "decline_oblique_crunch",
@@ -4092,7 +4225,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "otis_up",
@@ -4153,7 +4287,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "kettlebell_pass_between_the_legs",
@@ -4179,7 +4314,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "posterior_step_to_overhead_reach",
@@ -4214,7 +4350,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "leg_pull_in_flat_bench",
@@ -4246,7 +4383,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "press_sit_up",
@@ -4272,7 +4410,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "cable_side_bend",
@@ -4300,7 +4439,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "dumbbell_side_bend",
@@ -4328,7 +4468,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "kettlebell_bent_press",
@@ -4356,7 +4497,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "hanging_pike",
@@ -4387,7 +4529,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "hanging_pike_with_intense",
@@ -4416,7 +4559,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "hanging_pike_weak",
@@ -4445,7 +4589,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "pyramid",
@@ -4468,7 +4613,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "plank",
@@ -4489,7 +4635,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "lean_planche",
@@ -4521,7 +4668,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "frog_planche",
@@ -4553,7 +4701,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "weighted_front_plank",
@@ -4585,7 +4734,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "front_plank_with_twist",
@@ -4617,7 +4767,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "reverse_plank_with_leg_lift",
@@ -4654,7 +4805,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "dumbbell_side_plank_with_rear_fly",
@@ -4683,7 +4835,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "kneeling_plank_tap_shoulder_male",
@@ -4718,7 +4871,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "intermediate_style_kneeling_plank_tap_shoulder_male",
@@ -4747,7 +4901,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "side_bridge_v_2",
@@ -4779,7 +4934,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "side_bridge",
@@ -4803,7 +4959,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "childs_pose",
@@ -4828,7 +4985,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "power_point_plank",
@@ -4861,7 +5019,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "band_anti_rotation_press",
@@ -4891,7 +5050,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "pallof_press_with_rotation",
@@ -4917,7 +5077,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-1-0"
   },
   {
     "id": "pallof_press",
@@ -4943,7 +5104,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-1-0"
   },
   {
     "id": "quarter_sit_up",
@@ -4970,7 +5132,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "slow_leg_pull_in_flat_bench",
@@ -5002,7 +5165,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "flat_bench_lying_leg_raise",
@@ -5024,7 +5188,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "smith_machine_hip_raise",
@@ -5046,7 +5211,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "barbell_ab_rollout",
@@ -5071,7 +5237,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-1-0"
   },
   {
     "id": "barbell_rollout_from_bench",
@@ -5098,7 +5265,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-1-0"
   },
   {
     "id": "barbell_ab_rollout___on_knees",
@@ -5123,7 +5291,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-1-0"
   },
   {
     "id": "ab_roller",
@@ -5147,7 +5316,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "band_assisted_wheel_rollerout",
@@ -5179,7 +5349,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-1-0"
   },
   {
     "id": "barbell_rollerout",
@@ -5207,7 +5378,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-1-0"
   },
   {
     "id": "barbell_rollerout_from_bench",
@@ -5241,7 +5413,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-1-0"
   },
   {
     "id": "torso_rotation",
@@ -5263,7 +5436,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "torso_rotations",
@@ -5282,7 +5456,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "russian_twist",
@@ -5346,7 +5521,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "weighted_russian_twist_v_2",
@@ -5378,7 +5554,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "weighted_russian_twist_legs_up",
@@ -5410,7 +5587,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "cable_russian_twists_on_stability_ball",
@@ -5436,7 +5614,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-1-0"
   },
   {
     "id": "wind_sprints",
@@ -5470,7 +5649,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "frog_sit_ups",
@@ -5492,7 +5672,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "lower_back_smr",
@@ -5514,7 +5695,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "standing_cable_wood_chop",
@@ -5538,7 +5720,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "sit_up",
@@ -5560,7 +5743,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "lying_elbow_to_knee",
@@ -5592,7 +5776,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "band_lying_straight_leg_raise",
@@ -5620,7 +5805,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "lying_leg_hip_raise",
@@ -5652,7 +5838,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "lying_leg_hip_raise_contracted_variation",
@@ -5681,7 +5868,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "lever_seated_crunch_chest_pad",
@@ -5707,7 +5895,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "lever_seated_crunch_v_2",
@@ -5733,7 +5922,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "seated_side_crunch_wall",
@@ -5763,7 +5953,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "cable_seated_crunch",
@@ -5789,7 +5980,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "lever_seated_crunch",
@@ -5819,7 +6011,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "band_vertical_pallof_press_seated_variation",
@@ -5849,7 +6042,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-1-0"
   },
   {
     "id": "seated_leg_raise",
@@ -5881,7 +6075,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "lever_seated_leg_raise_crunch",
@@ -5907,7 +6102,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "roller_body_saw",
@@ -5939,7 +6135,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "sphinx",
@@ -5964,7 +6161,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "improved_sphinx",
@@ -5990,7 +6188,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "barbell_side_bend",
@@ -6014,7 +6213,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "assisted_sit_up",
@@ -6068,7 +6268,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "arms_overhead_full_sit_up_male",
@@ -6095,7 +6296,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "band_jack_knife_sit_up",
@@ -6123,7 +6325,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "jackknife_sit_up",
@@ -6150,7 +6353,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "janda_sit_up",
@@ -6200,7 +6404,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "sit_up_v_2",
@@ -6227,7 +6432,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "sit_up_with_arms_on_chest",
@@ -6254,7 +6460,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "sit_up_with_arms_on_chest_with_mini",
@@ -6281,7 +6488,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "flexion_leg_sit_up_straight_arm",
@@ -6310,7 +6518,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "flexion_leg_sit_up_bent_knee",
@@ -6337,7 +6546,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "barbell_press_sit_up",
@@ -6367,7 +6577,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "smith_hip_raise",
@@ -6400,7 +6611,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "hanging_leg_raise",
@@ -6462,7 +6674,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "assisted_lying_leg_raise_with_lateral_throw_down",
@@ -6494,7 +6707,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "assisted_lying_leg_raise_with_throw_down",
@@ -6526,7 +6740,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "captains_chair_straight_leg_raise",
@@ -6558,7 +6773,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "hanging_straight_leg_raise",
@@ -6590,7 +6806,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "vertical_leg_raise_on_parallel_bars",
@@ -6623,7 +6840,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "twisted_leg_raise",
@@ -6655,7 +6873,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "rounded_twisted_leg_raise_female",
@@ -6687,7 +6906,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "hanging_straight_twisting_leg_hip_raise_with_compound",
@@ -6716,7 +6936,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "hanging_leg_hip_raise",
@@ -6748,7 +6969,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "hanging_straight_twisting_leg_hip_raise",
@@ -6780,7 +7002,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "weighted_hanging_leg_hip_raise",
@@ -6812,7 +7035,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "incline_leg_hip_raise_leg_straight",
@@ -6844,7 +7068,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "assisted_hanging_knee_raise",
@@ -6876,7 +7101,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "assisted_hanging_knee_raise_with_throw_down",
@@ -6908,7 +7134,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "firm_style_hanging_oblique_knee_raise",
@@ -6937,7 +7164,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "standing_cable_lift",
@@ -6961,7 +7189,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "bent_knee_hip_raise",
@@ -6983,7 +7212,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "shoulder_tap",
@@ -7014,7 +7244,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "band_horizontal_pallof_press",
@@ -7042,7 +7273,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-1-0"
   },
   {
     "id": "rough_band_push_sit_up",
@@ -7073,7 +7305,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "band_push_sit_up",
@@ -7103,7 +7336,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "band_vertical_pallof_press",
@@ -7131,7 +7365,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-1-0"
   },
   {
     "id": "potty_squat",
@@ -7160,7 +7395,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "deadlift_with_chains",
@@ -7189,7 +7425,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "deadlift_with_bands",
@@ -7218,7 +7455,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "deficit_deadlift",
@@ -7247,7 +7485,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "straddle_planche",
@@ -7279,7 +7518,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "overhead_stretch",
@@ -7306,7 +7546,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "seated_overhead_stretch",
@@ -7328,7 +7569,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "cat_stretch",
@@ -7353,7 +7595,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "dancers_stretch",
@@ -7378,7 +7621,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "dumbbell_suitcase_carry",
@@ -7407,7 +7651,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   },
   {
     "id": "superman",
@@ -7431,7 +7676,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "seated_leg_tucks",
@@ -7453,7 +7699,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "rack_pull_with_bands",
@@ -7481,7 +7728,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "pull_in_on_stability_ball",
@@ -7510,7 +7758,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "alternate_heel_touchers",
@@ -7542,7 +7791,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "crab_twist_toe_touch",
@@ -7574,7 +7824,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "side_to_side_toe_touch_male",
@@ -7606,7 +7857,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "two_toe_touch_male",
@@ -7633,7 +7885,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "toe_touchers",
@@ -7655,7 +7908,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "cable_twist_up_down",
@@ -7685,7 +7939,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "spine_twist",
@@ -7717,7 +7972,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "prone_twist_on_stability_ball",
@@ -7749,7 +8005,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "gentle_prone_twist_on_stability_ball",
@@ -7778,7 +8035,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "assisted_motion_russian_twist",
@@ -7809,7 +8067,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "band_seated_twist_pure",
@@ -7839,7 +8098,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "cable_seated_twist",
@@ -7867,7 +8127,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "barbell_seated_twist",
@@ -7895,7 +8156,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "band_seated_twist",
@@ -7923,7 +8185,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "weighted_seated_twist_on_stability_ball",
@@ -7955,7 +8218,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "cable_twist",
@@ -7983,7 +8247,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "lever_kneeling_twist",
@@ -8011,7 +8276,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "seated_flat_bench_leg_pull_in",
@@ -8033,7 +8299,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "flat_bench_leg_pull_in",
@@ -8055,7 +8322,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "exercise_ball_pull_in",
@@ -8077,7 +8345,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "gorilla_chin",
@@ -8105,7 +8374,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "rack_pulls",
@@ -8132,7 +8402,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-0-1-0"
   },
   {
     "id": "leg_pull_in",
@@ -8154,7 +8425,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "tuck_crunch",
@@ -8210,7 +8482,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "kettlebell_turkish_get_up",
@@ -8240,7 +8513,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "seated_barbell_twist",
@@ -8262,7 +8536,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "plate_twist",
@@ -8284,7 +8559,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "cable_russian_twists",
@@ -8306,7 +8582,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "one_arm_slam_with_medicine_ball",
@@ -8336,7 +8613,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "v_sit_on_floor",
@@ -8365,7 +8643,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "band_v_up",
@@ -8395,7 +8674,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "stomach_vacuum",
@@ -8417,7 +8697,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-0-3-0"
   },
   {
     "id": "advanced_kettlebell_windmill",
@@ -8443,7 +8724,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "double_kettlebell_windmill",
@@ -8470,7 +8752,8 @@
     "version": "1.0.0",
     "versionHistory": [
       "1.0.0 (2025-12-17): Imported from free-exercise-db"
-    ]
+    ],
+    "tempoEsecuzione": "3-1-1-0"
   },
   {
     "id": "wheel_rollerout",
@@ -8501,7 +8784,8 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "2-1-2-0"
   },
   {
     "id": "kettlebell_advanced_windmill",
@@ -8560,6 +8844,7 @@
       "1.0.0 (2025-12-14): Initial validation - structure, focus, type, countingMode verified",
       "1.0.1 (2025-12-14): Verified - structure, type, focus, difficulty, countingMode",
       "1.0.2 (2025-12-14): Final comprehensive check - PASSED"
-    ]
+    ],
+    "tempoEsecuzione": "ISO"
   }
 ]
