@@ -51,28 +51,34 @@ final analyticsInitializationProvider = FutureProvider<void>((ref) async {
   final userProfileAsync = ref.watch(userProfileProvider);
 
   // Extract user ID and premium status from async user profile
-  String? userId;
-  bool isPremium = false;
+  // FIX: Use pattern matching instead of whenData() callback to avoid
+  // race condition where userId is still null when checked synchronously.
+  final String? userId;
+  final bool isPremium;
 
-  userProfileAsync.whenData((profile) {
-    userId = profile?.uid;
-    isPremium = profile?.isPremium ?? false;
-  });
+  if (userProfileAsync case AsyncData(value: final profile?)) {
+    userId = profile.uid;
+    isPremium = profile.isPremium ?? false;
+  } else if (userProfileAsync case AsyncData(value: null)) {
+    userId = null;
+    isPremium = false;
+  } else {
+    // Still loading or error - skip analytics setup until data is ready
+    return;
+  }
 
   // Set user ID for analytics tracking (CRITICAL FOR USER TRACKING!)
   if (userId != null) {
     await analytics.setUserId(userId);
 
     if (kDebugMode) {
-      // Safe to use ! operator here since we checked userId != null above
-      final safeUserId = userId!;
-      final truncatedId = safeUserId.length > 8
-          ? safeUserId.substring(0, 8)
-          : safeUserId;
+      final truncatedId = userId.length > 8
+          ? userId.substring(0, 8)
+          : userId;
       debugPrint('📊 Analytics user ID set: $truncatedId...');
     }
-  } else {
-    // Clear user ID if user logged out
+  } else if (authState != AuthState.authenticated) {
+    // Only clear user ID if user is actually logged out
     await analytics.setUserId(null);
 
     if (kDebugMode) {

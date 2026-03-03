@@ -564,12 +564,8 @@ class HealthKitDatasource {
     }
 
     if (kDebugMode) {
-      debugPrint('🔍 [_getAllSleepData] START');
       debugPrint(
-        '   📅 Range: ${startTime.toIso8601String()} → ${endTime.toIso8601String()}',
-      );
-      debugPrint(
-        '   📋 Sleep types to fetch: ${_sleepTypes.map((t) => t.name).join(", ")}',
+        '🔍 [_getAllSleepData] Range: ${startTime.toIso8601String()} → ${endTime.toIso8601String()}',
       );
     }
 
@@ -584,28 +580,12 @@ class HealthKitDatasource {
 
     for (final type in _sleepTypes) {
       try {
-        if (kDebugMode) {
-          debugPrint('   🔄 Fetching ${type.name}...');
-        }
         final data = await _health.getHealthDataFromTypes(
           types: [type],
           startTime: startTime,
           endTime: endTime,
         );
         allSleepData.addAll(data);
-
-        if (kDebugMode) {
-          debugPrint('   😴 ${type.name}: ${data.length} records');
-          if (data.isNotEmpty) {
-            // Show first record details for debugging
-            final first = data.first;
-            debugPrint('      → First: ${first.dateFrom} to ${first.dateTo}');
-            debugPrint(
-              '      → Value: ${first.value} (${first.value.runtimeType})',
-            );
-            debugPrint('      → Unit: ${first.unit}');
-          }
-        }
       } catch (e) {
         if (kDebugMode) {
           debugPrint(
@@ -649,8 +629,10 @@ class HealthKitDatasource {
   Future<HealthDataPoint?> getSleepLastNight() async {
     final now = DateTime.now();
     // Sleep window: yesterday 8 PM to today 12 PM (accounts for late sleepers)
-    final sleepWindowStart = DateTime(now.year, now.month, now.day - 1, 20);
-    final sleepWindowEnd = DateTime(now.year, now.month, now.day, 12);
+    // FIX: Use Duration subtraction to properly handle month/year boundaries
+    final today = DateTime(now.year, now.month, now.day);
+    final sleepWindowStart = today.subtract(const Duration(hours: 4)); // yesterday 20:00
+    final sleepWindowEnd = today.add(const Duration(hours: 12)); // today 12:00
 
     final allSleepData = await _getAllSleepData(
       startTime: sleepWindowStart,
@@ -673,8 +655,10 @@ class HealthKitDatasource {
   /// - <75%: Poor efficiency (may indicate sleep issues)
   Future<HealthDataPoint?> getTimeInBedLastNight() async {
     final now = DateTime.now();
-    final sleepWindowStart = DateTime(now.year, now.month, now.day - 1, 20);
-    final sleepWindowEnd = DateTime(now.year, now.month, now.day, 12);
+    // FIX: Use Duration subtraction to properly handle month/year boundaries
+    final today = DateTime(now.year, now.month, now.day);
+    final sleepWindowStart = today.subtract(const Duration(hours: 4)); // yesterday 20:00
+    final sleepWindowEnd = today.add(const Duration(hours: 12)); // today 12:00
 
     return _getAggregatedData(
       type: HealthDataType.SLEEP_IN_BED,
@@ -1001,14 +985,15 @@ class HealthKitDatasource {
     return dataPoints.first;
   }
 
-  /// Sum multiple data points (for steps, energy, exercise time)
+  /// Sum multiple data points (for steps, energy, exercise time, sleep)
   HealthDataPoint? _sumDataPoints(List<HealthDataPoint> dataPoints) {
     if (dataPoints.isEmpty) return null;
 
-    // FIX: Usa extension numericValue per evitare crash con NumericHealthValue
+    // FIX: Use abs() for each point to handle negative numericValue
+    // from some HealthKit sources (especially sleep segments)
     final total = dataPoints.fold<num>(
       0,
-      (sum, point) => sum + point.numericValue,
+      (sum, point) => sum + point.numericValue.abs(),
     );
 
     // Return synthetic data point with sum

@@ -33,31 +33,7 @@ class FirebaseWorkoutTemplateRepository
 
   /// Ottiene solo i template personalizzati dell'utente
   Future<List<WorkoutTemplate>> getCustomTemplates() async {
-    final allTemplates = await getAllTemplates();
-
-    // Debug logging
-    if (kDebugMode) {
-      debugPrint(
-        '🔍 getCustomTemplates: Found ${allTemplates.length} total templates',
-      );
-    }
-    for (final template in allTemplates) {
-      if (kDebugMode) {
-        debugPrint(
-          '  - ${template.name}: isCustom=${template.isCustom}, isPublic=${template.isPublic}',
-        );
-      }
-    }
-
-    // FIX: Return ALL user templates since they are all the user's personal templates
-    // Don't filter by isPublic because user's templates might be marked as public
-    if (kDebugMode) {
-      debugPrint(
-        '🔍 getCustomTemplates: Returning ALL ${allTemplates.length} user templates',
-      );
-    }
-
-    return allTemplates;
+    return getAllTemplates();
   }
 
   /// Ottiene i template pubblici (rate-limited)
@@ -634,20 +610,9 @@ class FirebaseWorkoutTemplateRepository
             .get();
       }
 
-      if (kDebugMode) {
-        debugPrint('🔥 Firebase: Found ${querySnapshot.docs.length} documents');
-      }
-
       final templates = querySnapshot.docs.map((doc) {
         final data = doc.data();
         data['id'] = doc.id;
-
-        // Enhanced Debug Logging - Document validation
-        if (kDebugMode) {
-          debugPrint(
-            '🔥 Firebase: Template ${data['name']} - id: ${doc.id}, isCustom: ${data['isCustom']}, userId: ${data['userId']}',
-          );
-        }
 
         final template = WorkoutTemplate.fromJson(data);
 
@@ -665,10 +630,6 @@ class FirebaseWorkoutTemplateRepository
 
       // Sort client-side to ensure consistent ordering
       templates.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-
-      if (kDebugMode) {
-        debugPrint('🔥 Firebase: Returning ${templates.length} templates');
-      }
       return templates;
     });
   }

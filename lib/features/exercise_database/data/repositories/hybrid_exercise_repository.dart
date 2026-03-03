@@ -88,11 +88,6 @@ class HybridExerciseRepository extends OptimizedBaseHybridRepository<Exercise> {
         forLocale: currentLocale,
       );
       if (cachedExercises.isNotEmpty) {
-        if (kDebugMode) {
-          debugPrint(
-            '📱 Loaded ${cachedExercises.length} exercises from cache (locale: $currentLocale)',
-          );
-        }
         _syncStatusController.add(SyncStatus.success);
 
         // Avvia sync in background se necessario

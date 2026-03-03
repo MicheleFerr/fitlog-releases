@@ -242,14 +242,6 @@ class HiveBoxManagerEnhanced {
         );
 
         _openBoxes[name] = box;
-
-        if (kDebugMode) {
-          debugPrint(
-            '📦 [HiveBoxManagerEnhanced] ✅ Opened box: "$name" '
-            '(total boxes: ${_openBoxes.length + _openLazyBoxes.length})',
-          );
-        }
-
         return box;
       } on HiveError catch (e) {
         lastError = e;
@@ -398,14 +390,6 @@ class HiveBoxManagerEnhanced {
         );
 
         _openLazyBoxes[name] = box;
-
-        if (kDebugMode) {
-          debugPrint(
-            '📦 [HiveBoxManagerEnhanced] ✅ Opened lazy box: "$name" '
-            '(total boxes: ${_openBoxes.length + _openLazyBoxes.length})',
-          );
-        }
-
         return box;
       } on HiveError catch (e) {
         lastError = e;

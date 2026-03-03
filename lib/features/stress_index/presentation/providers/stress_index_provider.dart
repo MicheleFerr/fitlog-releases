@@ -29,6 +29,9 @@ import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart';
 
 /// Provider for StressIndexRepository
 final stressIndexRepositoryProvider = Provider<StressIndexRepository>((ref) {
+  // FIX: keepAlive prevents provider recreation on each watch,
+  // avoiding 2x StressIndexRepository initialization and duplicate Hive box opens
+  ref.keepAlive();
   final repository = StressIndexRepository();
   ref.onDispose(() => repository.dispose());
   return repository;

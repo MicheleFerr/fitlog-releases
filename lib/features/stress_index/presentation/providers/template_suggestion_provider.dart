@@ -92,7 +92,9 @@ final healthDataSnapshotProvider = FutureProvider.autoDispose<HealthDataSnapshot
     double? sleepHours;
     if (sleepData != null) {
       final sleepMinutes = (sleepData.value as NumericHealthValue).numericValue;
-      sleepHours = sleepMinutes / 60.0;
+      // FIX: Some HealthKit sources return negative numericValue for sleep
+      // segments. Use abs() to ensure positive duration.
+      sleepHours = sleepMinutes.abs() / 60.0;
     }
 
     double? hrvMs;

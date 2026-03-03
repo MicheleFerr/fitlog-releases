@@ -38,6 +38,8 @@ class ExerciseVersionService {
   static void resetInstance() {
     _instance = null;
     _staticInitialized = false;
+    _lastCheckResult = null;
+    _lastCheckTime = null;
   }
 
   final FirebaseFirestore _firestore;
@@ -48,6 +50,11 @@ class ExerciseVersionService {
 
   late Box<Map> _cacheBox;
   bool _initialized = false;
+
+  /// FIX: Debounce version checks to avoid 4x redundant calls at startup
+  static VersionCheckResult? _lastCheckResult;
+  static DateTime? _lastCheckTime;
+  static const _checkDebounceInterval = Duration(seconds: 30);
 
   /// ⚡ PERFORMANCE: Completer to prevent parallel init race condition (was causing 4x init)
   static Completer<void>? _initCompleter;
@@ -82,7 +89,18 @@ class ExerciseVersionService {
   }
 
   /// Controlla se sono disponibili aggiornamenti
+  /// FIX: Debounce to avoid 4x redundant calls during startup
   Future<VersionCheckResult> checkForUpdates() async {
+    // Return cached result if checked recently
+    if (_lastCheckResult != null &&
+        _lastCheckTime != null &&
+        DateTime.now().difference(_lastCheckTime!) < _checkDebounceInterval) {
+      if (kDebugMode) {
+        debugPrint('⚡ Version check: using cached result (${DateTime.now().difference(_lastCheckTime!).inSeconds}s ago)');
+      }
+      return _lastCheckResult!;
+    }
+
     await _ensureInitialized();
 
     try {
@@ -104,11 +122,13 @@ class ExerciseVersionService {
       // 3. Confronta versioni
       final hasUpdates = _isNewerVersion(remoteVersion.version, localVersion);
 
-      debugPrint(
-        '🔍 Version check: Local=$localVersion, Remote=${remoteVersion.version}, HasUpdates=$hasUpdates',
-      );
+      if (kDebugMode && hasUpdates) {
+        debugPrint(
+          '🔍 Version check: Local=$localVersion, Remote=${remoteVersion.version}, HasUpdates=$hasUpdates',
+        );
+      }
 
-      return VersionCheckResult(
+      final result = VersionCheckResult(
         hasUpdates: hasUpdates,
         localVersion: localVersion,
         remoteVersion: remoteVersion,
@@ -116,6 +136,12 @@ class ExerciseVersionService {
             ? VersionStatus.updateAvailable
             : VersionStatus.upToDate,
       );
+
+      // Cache result for debounce
+      _lastCheckResult = result;
+      _lastCheckTime = DateTime.now();
+
+      return result;
     } catch (e) {
       debugPrint('❌ Failed to check for updates: $e');
       return VersionCheckResult(

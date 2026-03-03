@@ -52,6 +52,9 @@ import 'package:fpdart/fpdart.dart' hide State;
 /// - Corruption recovery built-in
 final customExerciseLocalDatasourceProvider =
     Provider<CustomExerciseLocalDatasource>((ref) {
+      // FIX: keepAlive prevents provider recreation on each watch,
+      // avoiding 3x CustomExerciseLocalDatasource initialization at startup
+      ref.keepAlive();
       return CustomExerciseLocalDatasource();
     });
 

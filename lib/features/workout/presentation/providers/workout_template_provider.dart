@@ -80,34 +80,9 @@ final allWorkoutTemplatesProvider =
 final customWorkoutTemplatesProvider = FutureProvider.autoDispose<List<WorkoutTemplate>>((
   ref,
 ) async {
-  if (kDebugMode) {
-    debugPrint('🔍 customWorkoutTemplatesProvider: START');
-  }
-
   // 1. Prendi i template dal repository legacy (esistenti)
   final repository = ref.watch(workoutTemplateRepositoryProvider);
-  if (kDebugMode) {
-    debugPrint(
-      '🔍 customWorkoutTemplatesProvider: Repository type: ${repository.runtimeType}',
-    );
-  }
-
   final legacyTemplates = await repository.getCustomTemplates();
-  if (kDebugMode) {
-    debugPrint(
-      '🔍 customWorkoutTemplatesProvider: Got ${legacyTemplates.length} legacy templates',
-    );
-
-    for (final template in legacyTemplates) {
-      debugPrint(
-        '  - ${template.name}: isCustom=${template.isCustom}, id=${template.id}',
-      );
-    }
-
-    debugPrint(
-      '🔍 customWorkoutTemplatesProvider: Returning ${legacyTemplates.length} templates',
-    );
-  }
   return legacyTemplates;
 });
 
