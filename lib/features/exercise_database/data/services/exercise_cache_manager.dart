@@ -201,7 +201,9 @@ class ExerciseCacheManager {
         }
       }
 
-      debugPrint('📖 Loaded ${exercises.length} exercises from cache');
+      if (kDebugMode) {
+        debugPrint('📖 Loaded ${exercises.length} exercises from cache');
+      }
       return exercises;
     } catch (e) {
       debugPrint('❌ Failed to get cached exercises: $e');
