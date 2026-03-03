@@ -8,9 +8,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/widgets/auth_visua
 import 'package:gymbro_flutter_new/features/auth/presentation/widgets/branded_auth_buttons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -20,25 +18,12 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
   late final String _selectedHeroImage;
-  bool _obscurePassword = true;
-  bool _showLoginForm = false;
 
   @override
   void initState() {
     super.initState();
     _selectedHeroImage = AuthHeroAssets.randomLoginVariant();
-  }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
   }
 
   @override
@@ -121,12 +106,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 children: [
                   _buildTopHeader(context),
                   const Spacer(),
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 220),
-                    child: _showLoginForm
-                        ? _buildEmailForm(authController)
-                        : _buildBottomActions(authController),
-                  ),
+                  _buildBottomActions(authController),
                 ],
               ),
             ),
@@ -213,32 +193,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 : _signInWithApple,
           ),
           const SizedBox(height: AppSpacing.sm),
-          SizedBox(
-            height: 56,
-            child: FilledButton.icon(
-              onPressed: authController.isLoading
-                  ? null
-                  : () => setState(() => _showLoginForm = true),
-              icon: const Icon(AppIcons.email),
-              label: Text(
-                context.l10n.signInWithEmail,
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              style: FilledButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Se non hai ancora un account ',
+                context.l10n.noAccountYetPrompt,
                 style: context.textTheme.bodyMedium?.copyWith(
                   color: Colors.white.withValues(alpha: 0.95),
                 ),
@@ -246,7 +205,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               GestureDetector(
                 onTap: () => context.pushNamed('register'),
                 child: Text(
-                  'Registrati',
+                  context.l10n.signUp,
                   style: context.textTheme.bodyMedium?.copyWith(
                     color: Colors.blue.shade300,
                     fontWeight: FontWeight.w700,
@@ -258,140 +217,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ],
       ),
     );
-  }
-
-  Widget _buildEmailForm(AsyncValue<void> authController) {
-    return Container(
-      key: const ValueKey('email_form'),
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
-      ),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              context.l10n.signInWithEmail,
-              style: context.textTheme.titleLarge?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            TextFormField(
-              controller: _emailController,
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                labelText: context.l10n.emailLabel,
-                hintText: context.l10n.emailHint,
-                labelStyle: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.9),
-                ),
-                hintStyle: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.6),
-                ),
-                prefixIcon: const Icon(AppIcons.email, color: Colors.white),
-                filled: true,
-                fillColor: Colors.white.withValues(alpha: 0.12),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return context.l10n.pleaseEnterEmail;
-                }
-                if (!RegExp(
-                  r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                ).hasMatch(value)) {
-                  return context.l10n.pleaseEnterValidEmail;
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            TextFormField(
-              controller: _passwordController,
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                labelText: context.l10n.passwordLabel,
-                hintText: context.l10n.passwordHint,
-                labelStyle: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.9),
-                ),
-                hintStyle: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.6),
-                ),
-                prefixIcon: const Icon(AppIcons.lock, color: Colors.white),
-                filled: true,
-                fillColor: Colors.white.withValues(alpha: 0.12),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscurePassword
-                        ? AppIcons.visibility
-                        : AppIcons.visibilityOff,
-                    color: Colors.white,
-                  ),
-                  onPressed: () =>
-                      setState(() => _obscurePassword = !_obscurePassword),
-                ),
-              ),
-              obscureText: _obscurePassword,
-              textInputAction: TextInputAction.done,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return context.l10n.pleaseEnterPassword;
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: AppSpacing.md),
-            SizedBox(
-              height: 54,
-              child: FilledButton(
-                onPressed: authController.isLoading ? null : _handleEmailSignIn,
-                child: authController.isLoading
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: LoadingIndicator(),
-                      )
-                    : Text(context.l10n.signInButton),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            TextButton(
-              onPressed: () => setState(() => _showLoginForm = false),
-              child: Text(
-                context.l10n.backToOptions,
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _handleEmailSignIn() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      await ref
-          .read(authControllerProvider.notifier)
-          .signInWithEmailAndPassword(
-            email: _emailController.text.trim(),
-            password: _passwordController.text,
-          );
-    }
   }
 
   void _signInWithGoogle() async {

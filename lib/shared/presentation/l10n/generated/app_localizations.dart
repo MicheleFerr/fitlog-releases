@@ -16046,6 +16046,18 @@ abstract class AppLocalizations {
   /// **'Already have an account? '**
   String get alreadyHaveAccountPrompt;
 
+  /// No account yet prompt on login screen
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account yet? '**
+  String get noAccountYetPrompt;
+
+  /// Sign up link text
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get signUp;
+
   /// My workouts screen title
   ///
   /// In en, this message translates to:

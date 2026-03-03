@@ -8931,6 +8931,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get alreadyHaveAccountPrompt => 'Already have an account? ';
 
   @override
+  String get noAccountYetPrompt => 'Don\'t have an account yet? ';
+
+  @override
+  String get signUp => 'Sign Up';
+
+  @override
   String get myWorkouts => 'My Workouts';
 
   @override

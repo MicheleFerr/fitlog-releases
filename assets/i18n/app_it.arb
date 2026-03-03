@@ -3275,6 +3275,8 @@
   "signUpWithApple": "Registrati con Apple",
   "signUpWithEmail": "Registrati con Email",
   "alreadyHaveAccountPrompt": "Hai già un account? ",
+  "noAccountYetPrompt": "Non hai ancora un account? ",
+  "signUp": "Registrati",
   "myWorkouts": "Le Mie Schede",
   "predefinedWorkouts": "Schede Predefinite",
   "noCustomTemplates": "Nessun template personalizzato",
