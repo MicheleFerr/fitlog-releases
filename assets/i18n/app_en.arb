@@ -34462,5 +34462,9 @@
   "joinThousandsOfAthletes": "Join thousands of athletes training smarter",
   "@joinThousandsOfAthletes": {
     "description": "Social proof text"
+  },
+  "storeNotAvailable": "Store not available. Please try again later.",
+  "@storeNotAvailable": {
+    "description": "Error message when in-app purchase store is not ready"
   }
 }

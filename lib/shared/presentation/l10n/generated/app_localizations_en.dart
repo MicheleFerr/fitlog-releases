@@ -28056,4 +28056,8 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get joinThousandsOfAthletes =>
       'Join thousands of athletes training smarter';
+
+  @override
+  String get storeNotAvailable =>
+      'Store not available. Please try again later.';
 }

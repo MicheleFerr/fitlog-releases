@@ -50123,6 +50123,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Join thousands of athletes training smarter'**
   String get joinThousandsOfAthletes;
+
+  /// Error message when in-app purchase store is not ready
+  ///
+  /// In en, this message translates to:
+  /// **'Store not available. Please try again later.'**
+  String get storeNotAvailable;
 }
 
 class _AppLocalizationsDelegate

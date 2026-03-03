@@ -570,7 +570,12 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
       case PurchaseCancelled():
         break;
       case PurchaseError(:final message):
-        SnackBarService.showError(context, message);
+        final displayMsg = switch (message) {
+          'RevenueCat not configured' => context.l10n.storeNotAvailable,
+          'Package not found' => context.l10n.storeNotAvailable,
+          _ => message,
+        };
+        SnackBarService.showError(context, displayMsg);
     }
   }
 
@@ -585,9 +590,12 @@ class _SimplePremiumScreenState extends ConsumerState<SimplePremiumScreen> {
       case PurchaseCancelled():
         break;
       case PurchaseError(:final message):
-        final displayMsg = message == 'noPurchasesToRestore'
-            ? context.l10n.noPurchasesToRestore
-            : message;
+        final displayMsg = switch (message) {
+          'noPurchasesToRestore' => context.l10n.noPurchasesToRestore,
+          'RevenueCat not configured' => context.l10n.storeNotAvailable,
+          'Package not found' => context.l10n.storeNotAvailable,
+          _ => message,
+        };
         SnackBarService.showError(context, displayMsg);
     }
   }

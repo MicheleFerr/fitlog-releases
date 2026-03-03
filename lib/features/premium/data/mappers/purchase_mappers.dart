@@ -51,7 +51,7 @@ SubscriptionStatus mapCustomerInfoToStatus(CustomerInfo info) {
   return SubscriptionStatus(
     isActive: true,
     expirationDate: expirationDate,
-    willRenew: !entitlement.willRenew,
+    willRenew: entitlement.willRenew,
     isLifetime: isLifetime,
     managementUrl: info.managementURL,
     productId: entitlement.productIdentifier,

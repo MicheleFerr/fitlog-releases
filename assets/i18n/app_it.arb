@@ -20993,5 +20993,6 @@
   "premiumExportDataDesc": "Esporta tutto lo storico allenamenti in CSV o PDF",
   "continueWithPremium": "Continua con Premium",
   "everythingInFree": "Tutto della versione Free, più:",
-  "joinThousandsOfAthletes": "Unisciti a migliaia di atleti che si allenano meglio"
+  "joinThousandsOfAthletes": "Unisciti a migliaia di atleti che si allenano meglio",
+  "storeNotAvailable": "Store non disponibile. Riprova più tardi."
 }

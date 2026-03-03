@@ -28332,4 +28332,7 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get joinThousandsOfAthletes =>
       'Unisciti a migliaia di atleti che si allenano meglio';
+
+  @override
+  String get storeNotAvailable => 'Store non disponibile. Riprova più tardi.';
 }

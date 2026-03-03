@@ -31,17 +31,39 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
       }
       return;
     }
-    await _datasource.configure(RevenueCatConfig.apiKey);
+    try {
+      await _datasource.configure(RevenueCatConfig.apiKey);
+      if (kDebugMode) {
+        debugPrint('[PurchaseRepo] Initialized, isConfigured=${_datasource.isConfigured}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[PurchaseRepo] Failed to initialize RevenueCat: $e');
+      }
+    }
   }
 
   @override
   Future<List<SubscriptionPlan>> getAvailablePlans() async {
-    if (!_datasource.isConfigured) return [];
+    if (!_datasource.isConfigured) {
+      if (kDebugMode) {
+        debugPrint('[PurchaseRepo] Cannot get plans: datasource not configured');
+      }
+      return [];
+    }
 
     try {
       final offerings = await _datasource.getOfferings();
       _cachedOfferings = offerings;
-      return mapOfferingsToPlans(offerings);
+      final plans = mapOfferingsToPlans(offerings);
+      if (kDebugMode) {
+        debugPrint('[PurchaseRepo] Found ${plans.length} plans');
+        if (plans.isEmpty) {
+          debugPrint('[PurchaseRepo] Current offering: ${offerings.current?.identifier}');
+          debugPrint('[PurchaseRepo] Packages: ${offerings.current?.availablePackages.length ?? 0}');
+        }
+      }
+      return plans;
     } catch (e) {
       if (kDebugMode) {
         debugPrint('[PurchaseRepo] Failed to get offerings: $e');
@@ -66,12 +88,25 @@ class PurchaseRepositoryImpl implements PurchaseRepository {
   }
 
   @override
-  Stream<SubscriptionStatus> watchSubscriptionStatus() {
+  Stream<SubscriptionStatus> watchSubscriptionStatus() async* {
     if (!_datasource.isConfigured) {
-      return Stream.value(SubscriptionStatus.free());
+      yield SubscriptionStatus.free();
+      return;
     }
 
-    return _datasource.customerInfoStream.map(mapCustomerInfoToStatus);
+    // Emit current status first (the listener stream only fires on updates)
+    try {
+      final info = await _datasource.getCustomerInfo();
+      yield mapCustomerInfoToStatus(info);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[PurchaseRepo] Failed to get initial status: $e');
+      }
+      yield SubscriptionStatus.free();
+    }
+
+    // Then listen for future updates
+    yield* _datasource.customerInfoStream.map(mapCustomerInfoToStatus);
   }
 
   @override
