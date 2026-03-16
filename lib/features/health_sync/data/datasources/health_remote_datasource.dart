@@ -4,6 +4,7 @@ import 'package:health/health.dart' as health_pkg;
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_permission_status.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/body_measurement.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Remote datasource for health data from HealthKit (iOS) and Health Connect (Android).
 ///
@@ -35,7 +36,7 @@ abstract class IHealthRemoteDatasource {
   ///   dataTypes: [HealthDataType.workout, HealthDataType.bodyWeight],
   /// );
   ///
-  /// if (status.canSync(HealthDataType.workout)) {
+  /// if (status.canAttemptSync(HealthDataType.workout)) {
   ///   // Authorized to sync workouts
   /// }
   /// ```
@@ -230,10 +231,24 @@ abstract class IHealthRemoteDatasource {
 
 /// Implementation of [IHealthRemoteDatasource] using the `health` package.
 class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
+  HealthRemoteDatasourceImpl({
+    health_pkg.Health? health,
+    Future<SharedPreferences> Function()? sharedPreferencesFactory,
+    bool? isIOSOverride,
+    bool? isAndroidOverride,
+  }) : _health = health ?? health_pkg.Health(),
+       _sharedPreferencesFactory =
+           sharedPreferencesFactory ?? SharedPreferences.getInstance,
+       _isIOS = isIOSOverride ?? Platform.isIOS,
+       _isAndroid = isAndroidOverride ?? Platform.isAndroid;
 
-  HealthRemoteDatasourceImpl({health_pkg.Health? health})
-    : _health = health ?? health_pkg.Health();
+  static const String _iosRequestedPermissionsKey =
+      'health_sync_ios_requested_permissions';
+
   final health_pkg.Health _health;
+  final Future<SharedPreferences> Function() _sharedPreferencesFactory;
+  final bool _isIOS;
+  final bool _isAndroid;
   bool _isConfigured = false;
 
   /// Ensures the health package is configured before use.
@@ -280,9 +295,7 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
       case HealthDataType.bodyFat:
         return health_pkg.HealthDataType.BODY_FAT_PERCENTAGE;
       case HealthDataType.leanMass:
-        return health_pkg
-            .HealthDataType
-            .BODY_MASS_INDEX; // Placeholder - health package limitation
+        return health_pkg.HealthDataType.LEAN_BODY_MASS;
       case HealthDataType.heartRate:
         return health_pkg.HealthDataType.HEART_RATE;
       case HealthDataType.sleep:
@@ -290,6 +303,92 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
       case HealthDataType.nutrition:
         return health_pkg.HealthDataType.NUTRITION; // Generic nutrition data
     }
+  }
+
+  health_pkg.HealthDataAccess _requiredAccessForType(HealthDataType dataType) {
+    if (dataType == HealthDataType.bodyWeight ||
+        dataType == HealthDataType.workout) {
+      return health_pkg.HealthDataAccess.READ_WRITE;
+    }
+
+    return health_pkg.HealthDataAccess.READ;
+  }
+
+  Future<void> _markIosPermissionsRequested(
+    Iterable<HealthDataType> dataTypes,
+  ) async {
+    if (!_isIOS) {
+      return;
+    }
+
+    final prefs = await _sharedPreferencesFactory();
+    final requested =
+        prefs.getStringList(_iosRequestedPermissionsKey)?.toSet() ?? <String>{};
+    requested.addAll(dataTypes.map((type) => type.name));
+    await prefs.setStringList(
+      _iosRequestedPermissionsKey,
+      requested.toList()..sort(),
+    );
+  }
+
+  Future<bool> _wasIosPermissionRequested(HealthDataType dataType) async {
+    if (!_isIOS) {
+      return false;
+    }
+
+    final prefs = await _sharedPreferencesFactory();
+    final requested = prefs.getStringList(_iosRequestedPermissionsKey);
+    return requested?.contains(dataType.name) ?? false;
+  }
+
+  Future<PermissionState> _resolvePermissionState(
+    HealthDataType dataType,
+  ) async {
+    final healthType = _mapToHealthPackageType(dataType);
+    final requiredAccess = _requiredAccessForType(dataType);
+    final hasPermission = await _health.hasPermissions(
+      [healthType],
+      permissions: [requiredAccess],
+    );
+
+    if (kDebugMode) {
+      debugPrint(
+        '🏥 [HealthKit] permission check for $dataType ($requiredAccess): $hasPermission',
+      );
+    }
+
+    if (hasPermission == true) {
+      return PermissionState.authorized;
+    }
+
+    if (hasPermission == false) {
+      return PermissionState.denied;
+    }
+
+    if (!_isIOS) {
+      return PermissionState.notDetermined;
+    }
+
+    final hasWritePermission =
+        requiredAccess == health_pkg.HealthDataAccess.READ
+        ? null
+        : await _health.hasPermissions(
+            [healthType],
+            permissions: [health_pkg.HealthDataAccess.WRITE],
+          );
+
+    if (kDebugMode) {
+      debugPrint(
+        '🏥 [HealthKit] iOS write permission probe for $dataType: $hasWritePermission',
+      );
+    }
+
+    if (hasWritePermission == true ||
+        await _wasIosPermissionRequested(dataType)) {
+      return PermissionState.unverified;
+    }
+
+    return PermissionState.notDetermined;
   }
 
   // ============================================================
@@ -320,19 +419,12 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
     // Workout: Read + Write (export to Apple Fitness / Activity rings)
     // Body weight: Read + Write (bidirectional sync)
     // Height: Read only (import for onboarding)
-    final permissions = dataTypes.map((dt) {
-      if (dt == HealthDataType.bodyWeight || dt == HealthDataType.workout) {
-        return health_pkg.HealthDataAccess.READ_WRITE; // Bidirectional sync
-      }
-      return health_pkg.HealthDataAccess.READ; // Read-only for other types (including height)
-    }).toList();
+    final permissions = dataTypes.map(_requiredAccessForType).toList();
 
     if (kDebugMode) {
       debugPrint('🏥 [HealthKit] Requesting permissions: $permissions');
     }
-    debugPrint(
-      '🏥 [HealthKit] Platform: ${Platform.isIOS ? "iOS" : "Android"}',
-    );
+    debugPrint('🏥 [HealthKit] Platform: ${_isIOS ? "iOS" : "Android"}');
 
     // Request permissions via health package
     try {
@@ -346,6 +438,10 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
       if (kDebugMode) {
         debugPrint('🏥 [HealthKit] requestAuthorization returned: $result');
       }
+
+      if (result) {
+        await _markIosPermissionsRequested(dataTypes);
+      }
     } catch (e, stack) {
       if (kDebugMode) {
         debugPrint('🏥 [HealthKit] ❌ requestAuthorization failed: $e');
@@ -354,46 +450,14 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
       rethrow;
     }
 
-    // Check individual permission states
     final permissionStates = <HealthDataType, PermissionState>{};
 
     for (final dataType in dataTypes) {
-      final healthType = _mapToHealthPackageType(dataType);
-      final hasPermission = await _health.hasPermissions(
-        [healthType],
-        permissions: [health_pkg.HealthDataAccess.READ],
-      );
-
-      if (kDebugMode) {
-        debugPrint(
-          '🏥 [HealthKit] hasPermissions for $dataType: $hasPermission',
-        );
-      }
-
-      if (hasPermission == true) {
-        permissionStates[dataType] = PermissionState.authorized;
-      } else if (hasPermission == false) {
-        permissionStates[dataType] = PermissionState.denied;
-      } else {
-        // iOS PRIVACY BEHAVIOR: hasPermissions returns null for READ access
-        // because Apple doesn't disclose if user denied READ permissions.
-        // After successful requestAuthorization, we assume authorized on iOS.
-        // The only reliable way to check is to try reading data.
-        if (Platform.isIOS) {
-          if (kDebugMode) {
-            debugPrint(
-              '🏥 [HealthKit] iOS: hasPermissions=null, assuming authorized after request',
-            );
-          }
-          permissionStates[dataType] = PermissionState.authorized;
-        } else {
-          permissionStates[dataType] = PermissionState.notDetermined;
-        }
-      }
+      permissionStates[dataType] = await _resolvePermissionState(dataType);
     }
 
     // Android-specific: Check if Health Connect is installed
-    final healthConnectAvailable = Platform.isAndroid
+    final healthConnectAvailable = _isAndroid
         ? await _isHealthConnectAvailable()
         : false;
 
@@ -421,42 +485,10 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
     final permissionStates = <HealthDataType, PermissionState>{};
 
     for (final dataType in allTypes) {
-      final healthType = _mapToHealthPackageType(dataType);
-      final hasPermission = await _health.hasPermissions(
-        [healthType],
-        permissions: [health_pkg.HealthDataAccess.READ],
-      );
-
-      if (kDebugMode) {
-        debugPrint(
-          '🏥 [HealthKit] checkPermissionStatus for $dataType: $hasPermission',
-        );
-      }
-
-      if (hasPermission == true) {
-        permissionStates[dataType] = PermissionState.authorized;
-      } else if (hasPermission == false) {
-        permissionStates[dataType] = PermissionState.denied;
-      } else {
-        // iOS PRIVACY BEHAVIOR: hasPermissions returns null for READ access
-        // because Apple doesn't disclose if user denied READ permissions.
-        // On iOS, we assume authorized and let the actual data fetch determine
-        // if permissions were granted. This matches iOS privacy design where
-        // the only reliable way to check is to try reading data.
-        if (Platform.isIOS) {
-          if (kDebugMode) {
-            debugPrint(
-              '🏥 [HealthKit] iOS: hasPermissions=null for $dataType, assuming authorized',
-            );
-          }
-          permissionStates[dataType] = PermissionState.authorized;
-        } else {
-          permissionStates[dataType] = PermissionState.notDetermined;
-        }
-      }
+      permissionStates[dataType] = await _resolvePermissionState(dataType);
     }
 
-    final healthConnectAvailable = Platform.isAndroid
+    final healthConnectAvailable = _isAndroid
         ? await _isHealthConnectAvailable()
         : false;
 
@@ -483,7 +515,7 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
   /// }
   /// ```
   Future<bool> _isHealthConnectAvailable() async {
-    if (!Platform.isAndroid) return false;
+    if (!_isAndroid) return false;
 
     try {
       final status = await _health.getHealthConnectSdkStatus();
@@ -513,7 +545,7 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
   /// ```
   @override
   Future<void> installHealthConnect() async {
-    if (!Platform.isAndroid) return;
+    if (!_isAndroid) return;
 
     try {
       await _health.installHealthConnect();
@@ -537,7 +569,7 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
   ///
   /// iOS returns null.
   Future<health_pkg.HealthConnectSdkStatus?> getHealthConnectStatus() async {
-    if (!Platform.isAndroid) return null;
+    if (!_isAndroid) return null;
 
     try {
       return await _health.getHealthConnectSdkStatus();
@@ -570,26 +602,42 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
       endTime: endDate,
     );
 
-    // Map HealthDataPoint to workout maps
-    final workouts = workoutData.map((dataPoint) {
-      // TODO: Extract actual workout type from HealthDataPoint when integrating
-      // with workout system. For MVP, use generic type.
-      const workoutType = 'GENERIC_WORKOUT';
-
-      // Extract calories if available
-      // health package v13+ returns NumericHealthValue, not raw num
+    // Map HealthDataPoint to workout maps, excluding workouts written by this
+    // app to avoid re-importing what GymBro already saved (feedback loop).
+    const ownBundleId = 'com.michele.gymbro.flutter';
+    final workouts = workoutData
+        .where((dataPoint) => !dataPoint.sourceId.startsWith(ownBundleId))
+        .map((dataPoint) {
       final healthValue = dataPoint.value;
-      final calories = healthValue is health_pkg.NumericHealthValue
-          ? healthValue.numericValue.toInt()
+      final workoutValue = healthValue is health_pkg.WorkoutHealthValue
+          ? healthValue
           : null;
+      final workoutType =
+          workoutValue?.workoutActivityType.name ??
+          dataPoint.workoutSummary?.workoutType ??
+          'OTHER';
+      final calories =
+          workoutValue?.totalEnergyBurned ??
+          dataPoint.workoutSummary?.totalEnergyBurned;
+      final distance =
+          workoutValue?.totalDistance ??
+          dataPoint.workoutSummary?.totalDistance;
+      final steps =
+          workoutValue?.totalSteps ?? dataPoint.workoutSummary?.totalSteps;
 
       return {
+        'uuid': dataPoint.uuid,
         'type': workoutType,
         'startTime': dataPoint.dateFrom.toIso8601String(),
         'endTime': dataPoint.dateTo.toIso8601String(),
         'duration': dataPoint.dateTo.difference(dataPoint.dateFrom).inMinutes,
         'calories': calories, // May be null
-        'source': Platform.isIOS ? 'HealthKit' : 'Health Connect',
+        'distance': distance,
+        'steps': steps,
+        'source': _isIOS ? 'HealthKit' : 'Health Connect',
+        'sourceId': dataPoint.sourceId,
+        'sourceName': dataPoint.sourceName,
+        'recordingMethod': dataPoint.recordingMethod.name,
       };
     }).toList();
 
@@ -629,7 +677,7 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
         unit: MeasurementUnit.kilograms,
         recordedAt: dataPoint.dateFrom,
         dataType: HealthDataType.bodyWeight,
-        source: Platform.isIOS ? 'HealthKit' : 'Health Connect',
+        source: _isIOS ? 'HealthKit' : 'Health Connect',
       );
     }).toList();
 
@@ -694,7 +742,7 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
         unit: MeasurementUnit.meters,
         recordedAt: dataPoint.dateFrom,
         dataType: HealthDataType.height,
-        source: Platform.isIOS ? 'HealthKit' : 'Health Connect',
+        source: _isIOS ? 'HealthKit' : 'Health Connect',
       );
     }).toList();
 
