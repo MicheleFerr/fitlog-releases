@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
+import 'package:gymbro_flutter_new/shared/domain/entities/app_icon_variant.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_theme_mode.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/interface_size.dart';
 
@@ -79,9 +80,11 @@ class AppConfig {
     this.hasSeenRestPauseTutorial =
         false, // First-time Rest-Pause tutorial flag
     this.appThemeModeValue, // Custom theme mode: 'system'|'light'|'dark'|'ultraDark'|'pink'
+    this.appIconVariantValue = 'defaultIcon',
     this.showWeightVerification =
         true, // Show weight/reps verification in RPE selector
     this.metronomeEnabled = false, // TUT metronome disabled by default
+    this.languageChangedByUser = false,
   });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) {
@@ -138,8 +141,11 @@ class AppConfig {
       defaultTimePresets: json['defaultTimePresets'] ?? '3x30,3x60,4x45',
       hasSeenRestPauseTutorial: json['hasSeenRestPauseTutorial'] ?? false,
       appThemeModeValue: json['appThemeModeValue'] as String?,
+      appIconVariantValue:
+          json['appIconVariantValue'] ?? AppIconVariant.defaultIcon.name,
       showWeightVerification: json['showWeightVerification'] ?? true,
       metronomeEnabled: json['metronomeEnabled'] ?? false,
+      languageChangedByUser: json['languageChangedByUser'] ?? false,
     );
   }
   @HiveField(0)
@@ -336,6 +342,12 @@ class AppConfig {
   @HiveField(62)
   final bool metronomeEnabled; // TUT metronome toggle
 
+  @HiveField(63)
+  final String appIconVariantValue; // App icon variant string: 'defaultIcon'|'pink'
+
+  @HiveField(64)
+  final bool languageChangedByUser; // true = user explicitly chose a language in settings
+
   /// Get the effective AppThemeMode (backward compatible with ThemeMode)
   AppThemeMode get appThemeMode {
     if (appThemeModeValue != null) {
@@ -344,6 +356,9 @@ class AppConfig {
     // Backward compat: derive from old ThemeMode field
     return AppThemeMode.fromThemeMode(themeMode);
   }
+
+  AppIconVariant get appIconVariant =>
+      AppIconVariant.fromString(appIconVariantValue);
 
   Locale get locale => Locale(languageCode, countryCode);
 
@@ -408,8 +423,10 @@ class AppConfig {
     String? defaultTimePresets,
     bool? hasSeenRestPauseTutorial,
     String? appThemeModeValue,
+    String? appIconVariantValue,
     bool? showWeightVerification,
     bool? metronomeEnabled,
+    bool? languageChangedByUser,
   }) {
     return AppConfig(
       languageCode: languageCode ?? this.languageCode,
@@ -486,9 +503,12 @@ class AppConfig {
       hasSeenRestPauseTutorial:
           hasSeenRestPauseTutorial ?? this.hasSeenRestPauseTutorial,
       appThemeModeValue: appThemeModeValue ?? this.appThemeModeValue,
+      appIconVariantValue: appIconVariantValue ?? this.appIconVariantValue,
       showWeightVerification:
           showWeightVerification ?? this.showWeightVerification,
       metronomeEnabled: metronomeEnabled ?? this.metronomeEnabled,
+      languageChangedByUser:
+          languageChangedByUser ?? this.languageChangedByUser,
     );
   }
 
@@ -529,8 +549,10 @@ class AppConfig {
       'defaultTimePresets': defaultTimePresets,
       'hasSeenRestPauseTutorial': hasSeenRestPauseTutorial,
       'appThemeModeValue': appThemeModeValue,
+      'appIconVariantValue': appIconVariantValue,
       'showWeightVerification': showWeightVerification,
       'metronomeEnabled': metronomeEnabled,
+      'languageChangedByUser': languageChangedByUser,
     };
   }
 
@@ -561,7 +583,8 @@ class AppConfig {
         other.hasSeenWorkoutOnboarding == hasSeenWorkoutOnboarding &&
         other.onboardingVersion == onboardingVersion &&
         other.initialOnboardingCompleted == initialOnboardingCompleted &&
-        other.appThemeModeValue == appThemeModeValue;
+        other.appThemeModeValue == appThemeModeValue &&
+        other.appIconVariantValue == appIconVariantValue;
   }
 
   @override
@@ -586,6 +609,7 @@ class AppConfig {
       onboardingVersion,
       initialOnboardingCompleted,
       appThemeModeValue,
+      appIconVariantValue,
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/app_icon_variant.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_theme_mode.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/interface_size.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
@@ -238,9 +239,17 @@ class AppConfigNotifier extends Notifier<AppConfig> {
             '🔧 [AppConfig] DEBUG MODE: Forced initialOnboardingCompleted = false',
           );
         } else {
-          state = savedConfig;
+          // 🌍 LOCALE FIX: If user never explicitly changed the language,
+          // always use the device locale so new devices get the right language.
+          final effectiveConfig = savedConfig.languageChangedByUser
+              ? savedConfig
+              : savedConfig.copyWith(
+                  languageCode: _getDefaultConfigWithDeviceLocale().languageCode,
+                  countryCode: _getDefaultConfigWithDeviceLocale().countryCode,
+                );
+          state = effectiveConfig;
           // ✅ FIX: Update cache with loaded config
-          _cachedConfig = savedConfig;
+          _cachedConfig = effectiveConfig;
           if (kDebugMode) {
             debugPrint(
               '✅ [AppConfig] Loaded saved configuration (initialOnboardingCompleted: ${savedConfig.initialOnboardingCompleted})',
@@ -400,6 +409,7 @@ class AppConfigNotifier extends Notifier<AppConfig> {
       state = state.copyWith(
         languageCode: languageCode,
         countryCode: countryCode,
+        languageChangedByUser: true,
       );
       await _saveConfig();
 
@@ -453,6 +463,26 @@ class AppConfigNotifier extends Notifier<AppConfig> {
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [AppConfig] Error setting app theme mode: $e');
+        debugPrint('📍 Stack trace: $stackTrace');
+      }
+    }
+  }
+
+  /// Set home-screen app icon variant (iOS).
+  Future<void> setAppIconVariant(AppIconVariant variant) async {
+    try {
+      await _ensureInitialized();
+      if (_isDisposed) return;
+
+      state = state.copyWith(appIconVariantValue: variant.name);
+      await _saveConfig();
+
+      if (kDebugMode) {
+        debugPrint('✅ [AppConfig] App icon variant set to: ${variant.name}');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppConfig] Error setting app icon variant: $e');
         debugPrint('📍 Stack trace: $stackTrace');
       }
     }

@@ -82,7 +82,6 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
           : (fields[53] as num).toInt(),
       defaultExerciseSets: fields[54] == null ? 4 : (fields[54] as num).toInt(),
       defaultExerciseReps: fields[55] == null ? 8 : (fields[55] as num).toInt(),
-      hasSeenRestPauseTutorial: fields[56] == null ? false : fields[56] as bool,
       defaultWeightedPresets: fields[57] == null
           ? '3x10,4x8,5x5'
           : fields[57] as String,
@@ -92,16 +91,21 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       defaultTimePresets: fields[59] == null
           ? '3x30,3x60,4x45'
           : fields[59] as String,
+      hasSeenRestPauseTutorial: fields[56] == null ? false : fields[56] as bool,
       appThemeModeValue: fields[60] as String?,
+      appIconVariantValue: fields[63] == null
+          ? 'defaultIcon'
+          : fields[63] as String,
       showWeightVerification: fields[61] == null ? true : fields[61] as bool,
       metronomeEnabled: fields[62] == null ? false : fields[62] as bool,
+      languageChangedByUser: fields[64] == null ? false : fields[64] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, AppConfig obj) {
     writer
-      ..writeByte(62)
+      ..writeByte(64)
       ..writeByte(0)
       ..write(obj.languageCode)
       ..writeByte(1)
@@ -225,7 +229,11 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       ..writeByte(61)
       ..write(obj.showWeightVerification)
       ..writeByte(62)
-      ..write(obj.metronomeEnabled);
+      ..write(obj.metronomeEnabled)
+      ..writeByte(63)
+      ..write(obj.appIconVariantValue)
+      ..writeByte(64)
+      ..write(obj.languageChangedByUser);
   }
 
   @override
