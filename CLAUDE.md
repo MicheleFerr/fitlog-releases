@@ -107,6 +107,12 @@ flutter analyze                                 # Check errori
 
 Entry point: `docs/INDEX.md`. Key docs: Template Cloud Sync, AI Coach, Brand Guidelines, iOS/Flutter Audit, WatchOS Audit. Archivio: `docs/_archived/`
 
+## PIANI FUTURI (da implementare)
+
+| Feature | Spec | Note |
+|---|---|---|
+| Community video link negli esercizi | `docs/superpowers/specs/2026-03-16-exercise-community-videos-design.md` | Chip nel ExerciseDetailsModal → sheet lista video community, whitelist YouTube/TikTok/Instagram, url_launcher inAppBrowserView, Cloud Function + oEmbed |
+
 ## GOLDEN RULE
 
 CERCA prima di creare. CONSOLIDA invece di duplicare. Se esiste -> ESTENDI. Se serve in 2+ feature -> SHARED.
