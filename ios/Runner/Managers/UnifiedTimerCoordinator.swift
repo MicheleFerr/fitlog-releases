@@ -157,6 +157,15 @@ final class UnifiedTimerCoordinator {
             case "endBackgroundTask":
                 self.handleEndBackgroundTask(call.arguments, result: mainResult)
 
+            case "consumePendingNotificationPayload":
+                self.handleConsumePendingNotificationPayload(result: mainResult)
+
+            case "clearPendingNotificationPayload":
+                self.handleClearPendingNotificationPayload(result: mainResult)
+
+            case "getLocalTimeZone":
+                self.handleGetLocalTimeZone(result: mainResult)
+
             case "startMetronome":
                 self.handleStartMetronome(call.arguments, result: mainResult)
 
@@ -225,6 +234,19 @@ final class UnifiedTimerCoordinator {
         result(true)
     }
 
+    private func handleConsumePendingNotificationPayload(result: @escaping FlutterResult) {
+        result(DirectNotificationManager.shared.consumePendingNotificationPayload())
+    }
+
+    private func handleClearPendingNotificationPayload(result: @escaping FlutterResult) {
+        DirectNotificationManager.shared.clearPendingNotificationPayload()
+        result(true)
+    }
+
+    private func handleGetLocalTimeZone(result: @escaping FlutterResult) {
+        result(TimeZone.current.identifier)
+    }
+
     private func handleCancelBackgroundAudio(result: @escaping FlutterResult) {
         // CRITICAL FIX: Cancel only the background audio without stopping the timer
         // This is used when the timer is skipped to prevent audio from playing
@@ -250,7 +272,8 @@ final class UnifiedTimerCoordinator {
         }
 
         let soundName = args["soundName"] as? String ?? "sound"
-        let hasLiveActivity = args["hasLiveActivity"] as? Bool ?? false
+        let notificationTitle = args["title"] as? String
+        let notificationBody = args["body"] as? String
         let completionId = UUID().uuidString
 
         // ✅ RACE CONDITION FIX: Reset skip flag when scheduling a new completion
@@ -267,20 +290,16 @@ final class UnifiedTimerCoordinator {
             // Audio session activated for long timer
         }
         
-        // 🔔 CRITICAL: Determine if we should skip notification scheduling
-        // If Live Activity is active, it has ALREADY scheduled a notification
-        // We MUST skip to prevent duplicate notifications
-        let shouldSkipNotification = hasLiveActivity
-        
-        if shouldSkipNotification {
-            // Live Activity active - skip duplicate notification
-            // Schedule through BackgroundAudioManager but SKIP notification
-            backgroundAudio.scheduleTimerAudio(duration: duration, soundName: soundName, skipNotification: true)
-        } else {
-            // No Live Activity - schedule notification
-            // Schedule through BackgroundAudioManager WITH notification
-            backgroundAudio.scheduleTimerAudio(duration: duration, soundName: soundName, skipNotification: false)
-        }
+        // iOS completion scheduling is owned ONLY by BackgroundAudioManager.
+        // Live Activity must remain a display layer and must not arm its own
+        // audio or backup notifications.
+        backgroundAudio.scheduleTimerAudio(
+            duration: duration,
+            soundName: soundName,
+            skipNotification: false,
+            notificationTitle: notificationTitle,
+            notificationBody: notificationBody
+        )
         
         // Clean up completion tracking after timer ends
         
@@ -418,45 +437,24 @@ final class UnifiedTimerCoordinator {
         let categoryIdentifier = args["categoryIdentifier"] as? String ?? "TIMER_COMPLETE"
         let isBackground = args["isBackground"] as? Bool ?? false
         let hasLiveActivity = args["hasLiveActivity"] as? Bool ?? false
-
-        // ✅ FIX: ALWAYS send notification with sound
-        // Previous bugs:
-        // 1. hasLiveActivity=true → skipped notification → no sound (LA doesn't play its own sound!)
-        // 2. isBackground=true → silent notification → no sound (silent loop fails with Error 561015905)
-        //
-        // LA only displays timer countdown - it doesn't play completion sound
-        // Silent loop often fails to activate audio session in background
-        // Notification sound is the ONLY reliable way to play audio when app is backgrounded
-        //
-        // Risk: If AVAudioPlayer also plays successfully, user hears double sound
-        // But double sound is better than NO sound!
+        let playSound = args["playSound"] as? Bool ?? true
 
         print("📢 [NOTIFICATION-SOURCE-A] 🔷 UnifiedTimerCoordinator.sendCompletionNotification:")
         print("   - Source: Flutter -> iOS method channel")
         print("   - hasLiveActivity: \(hasLiveActivity)")
         print("   - isBackground: \(isBackground)")
         print("   - Sound: \(sound)")
+        print("   - playSound: \(playSound)")
         print("   - Timestamp: \(Date())")
-
-        // ✅ FIX DOUBLE NOTIFICATION: Cancel any pre-scheduled notification from LiveActivityHandler
-        // LiveActivityHandler schedules a silent notification when timer starts
-        // We want to replace it with this one that has sound
-        // Use cancelAllPendingNotifications (not cancelAllTimerNotifications which sets skip flag)
-        print("🗑️ [CANCEL-BACKUP] Attempting to cancel SOURCE-B (LiveActivityHandler) backup notification...")
-        print("   - Timestamp: \(Date())")
-        DirectNotificationManager.shared.cancelAllPendingNotifications()
-        print("✅ [CANCEL-BACKUP] cancelAllPendingNotifications() called")
 
         // Use DirectNotificationManager for actual notification scheduling
-        // CRITICAL FIX: Use sendTimerNotification instead of scheduleTimerNotification
-        // sendTimerNotification has the delay <= 0 check for immediate delivery (trigger:nil)
-        // scheduleTimerNotification always uses UNTimeIntervalTrigger which requires delay > 0
         DirectNotificationManager.shared.sendTimerNotification(
             title: title,
             body: body,
             soundName: sound,
             categoryIdentifier: "TIMER_COMPLETE",
-            delay: 0  // trigger:nil for immediate delivery
+            delay: 0,  // trigger:nil for immediate delivery
+            playSound: playSound
         )
 
         // Return a dummy ID (sendTimerNotification doesn't return ID)
@@ -578,17 +576,31 @@ final class UnifiedTimerCoordinator {
         activateAudioSessionForTimer()
     }
     
-    /// Activate audio session to prevent app suspension
+    /// Activate audio session to prevent app suspension.
+    /// When UIBackgroundModes.audio is not declared, this is a NO-OP because:
+    /// 1. An active .playback session without the entitlement doesn't prevent suspension anyway
+    /// 2. It DOES interfere with iOS notification sound delivery — iOS sees the app as
+    ///    "owning" audio and suppresses the notification sound
     private func activateAudioSessionForTimer() {
+        guard BackgroundAudioManager.backgroundAudioModeDeclared else {
+            Logger.shared.log(.info, """
+                🔕 [AUDIO-SESSION] Skipping activation — UIBackgroundModes.audio not declared:
+                - Timer completion relies on local notification sound
+                - Activating .playback would interfere with notification audio delivery
+                - iOS suppresses notification sounds when app holds active playback session
+                """, category: .audioSession)
+            return
+        }
+
         do {
             // ✅ MINIMAL config to avoid OSStatus -50
             try AVAudioSession.sharedInstance().setCategory(.playback,
                                                            mode: .default,
                                                            options: [.mixWithOthers])
             try AVAudioSession.sharedInstance().setActive(true)
-            
+
             audioSessionActive = true
-            
+
             Logger.shared.log(.info, """
                 🎵 [AUDIO-SESSION] Activated for timer:
                 - Category: playback (keeps app alive)
@@ -596,10 +608,10 @@ final class UnifiedTimerCoordinator {
                 - This prevents iOS from suspending the app
                 - Bundle resources remain accessible
                 """, category: .audioSession)
-            
+
             // Play silent audio to maintain session (optional but more reliable)
             playSilentAudioInBackground()
-            
+
         } catch {
             Logger.shared.log(.error, """
                 ❌ [AUDIO-SESSION] Failed to activate: \(error)
