@@ -9,7 +9,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 import 'package:gymbro_flutter_new/features/workout/timer/domain/models/timer_event.dart';
 import 'package:gymbro_flutter_new/features/workout/timer/domain/models/unified_timer_state.dart';
@@ -22,22 +21,19 @@ import 'package:gymbro_flutter_new/features/workout/data/services/workout_sessio
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_auto_save_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/metronome_provider.dart';
-import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart' show WorkoutStatus;
+import 'package:gymbro_flutter_new/shared/domain/entities/workout.dart'
+    show WorkoutStatus;
 import 'package:gymbro_flutter_new/shared/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/timer/domain/services/notification_service.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/shared/data/platform_channels.dart';
+import 'package:gymbro_flutter_new/shared/data/services/local_notifications_bootstrap.dart';
+import 'package:gymbro_flutter_new/shared/data/services/local_timezone_service.dart';
 import 'package:gymbro_flutter_new/core/cache/user_cache_key_manager.dart';
 
 // ⌚ Apple Watch Connectivity for rest timer sync
 import 'package:gymbro_flutter_new/features/health_sync/presentation/providers/watch_connectivity_provider.dart';
-
-/// PROBLEM #4 FIX: Background strategies for different timer durations
-enum BackgroundStrategy {
-  shortTimer, // <= 30s: Simple background task
-  mediumTimer, // 30s-5min: Notification scheduling
-  longTimer, // > 5min: Silent loop with checkpoints
-}
 
 /// Unified Timer Provider that consolidates all timer functionality
 /// Replaces the 9 overlapping timer systems with a single, clean implementation
@@ -52,7 +48,6 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     // Register as lifecycle observer
     WidgetsBinding.instance.addObserver(this);
 
-    // CRITICAL FIX: Listen for iOS notification that audio was played
     // FIX C10: Extracted to dedicated method to prevent re-registration on rebuild.
     _unifiedChannel.setMethodCallHandler(_handleIOSMethodCall);
 
@@ -77,77 +72,43 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       }
     }
 
-    if (call.method == 'timerAudioPlayedByiOS') {
-      if (_isDisposed) return null;
+    if (call.method == 'nativeNotificationDeepLink') {
+      final payload = call.arguments is Map
+          ? (call.arguments as Map)['payload'] as String?
+          : null;
+      final deepLink = extractNotificationDeepLink(payload);
+      if (deepLink != null &&
+          ref.read(pendingNotificationDeepLinkProvider) != deepLink) {
+        ref.read(pendingNotificationDeepLinkProvider.notifier).state = deepLink;
+      }
 
-      if (state != null && !state!.audioPlayed) {
-        state = state!.markAudioPlayed();
-        await _saveState(immediate: true); // FIX C13: critical state
-
-        if (kDebugMode) {
-          debugPrint('🍎 [iOS AUDIO] Timer completed by iOS notification');
-        }
-        if (_currentExerciseId != null && state?.currentSet != null) {
-          try {
-            final durationTracker = ref.read(setDurationTrackerProvider);
-            final nextSetNumber = state!.currentSet! + 1;
-            durationTracker.startSet(_currentExerciseId!, nextSetNumber);
-            if (kDebugMode) {
-              debugPrint(
-                '✅ [iOS AUDIO] Called startSet for exercise $_currentExerciseId, set $nextSetNumber (after completing set ${state!.currentSet})',
-              );
-            }
-          } catch (e) {
-            if (kDebugMode) {
-              debugPrint('❌ [iOS AUDIO] Error calling startSet: $e');
-            }
-          }
-        }
-
-        state = state!.copyWith(
-          status: TimerStatus.completed,
-          remainingSeconds: 0,
-          completionTime: DateTime.now(),
+      try {
+        await _unifiedChannel.invokeMethod<void>(
+          'clearPendingNotificationPayload',
         );
-        await _saveState(immediate: true); // FIX C13: critical state
-        debugPrint('🍎 [iOS AUDIO] Timer state marked as completed');
-
-        try {
-          final laState = ref.read(workoutSessionLAProvider);
-          if (laState.isActive && laState.mode == WorkoutSessionMode.rest) {
-            debugPrint(
-              '🍎 [iOS AUDIO] LA is in REST mode - transitioning to EXERCISE',
-            );
-            final workout = ref.read(currentWorkoutProvider);
-            if (workout != null) {
-              for (final exercise in workout.exercises) {
-                final incompleteSetIndex = exercise.sets.indexWhere(
-                  (set) => !set.isCompleted,
-                );
-                if (incompleteSetIndex != -1) {
-                  final completedExercises = workout.exercises
-                      .where((e) => e.sets.every((s) => s.isCompleted))
-                      .length;
-                  await ref
-                      .read(workoutSessionLAProvider.notifier)
-                      .transitionToExercise(
-                        exercise: exercise,
-                        setIndex: incompleteSetIndex + 1,
-                        completedExercises: completedExercises,
-                        totalExercises: workout.exercises.length,
-                      );
-                  debugPrint(
-                    '✅ [iOS AUDIO] LA transitioned to EXERCISE: ${exercise.name} set ${incompleteSetIndex + 1}',
-                  );
-                  break;
-                }
-              }
-            }
-          }
-        } catch (e) {
-          debugPrint('❌ [iOS AUDIO] Error transitioning LA to exercise: $e');
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint(
+            '⚠️ [UnifiedTimer] Failed to clear native notification payload: $e',
+          );
         }
       }
+
+      return null;
+    }
+
+    if (call.method == 'nativeDebugLog') {
+      if (kDebugMode) {
+        final arguments = call.arguments;
+        if (arguments is Map) {
+          final category = arguments['category'];
+          final message = arguments['message'];
+          debugPrint('🍎 [NATIVE DEBUG][$category] $message');
+        } else {
+          debugPrint('🍎 [NATIVE DEBUG] ${call.arguments}');
+        }
+      }
+      return null;
     }
 
     // Route metronome tick events from the native iOS side to MetronomeNotifier.
@@ -165,13 +126,15 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     // FIX: Handle iOS memory warning — emergency save workout to prevent data loss
     if (call.method == 'onMemoryWarning') {
       if (kDebugMode) {
-        debugPrint('⚠️ [MEMORY WARNING] iOS memory pressure — emergency saving workout');
+        debugPrint(
+          '⚠️ [MEMORY WARNING] iOS memory pressure — emergency saving workout',
+        );
       }
       try {
         final currentWorkout = ref.read(currentWorkoutProvider);
         if (currentWorkout != null &&
             (currentWorkout.status == WorkoutStatus.inProgress ||
-             currentWorkout.status == WorkoutStatus.paused)) {
+                currentWorkout.status == WorkoutStatus.paused)) {
           final autoSave = ref.read(workoutAutoSaveProvider.notifier);
           await autoSave.emergencySave(currentWorkout);
           if (kDebugMode) {
@@ -246,10 +209,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
   // CRITICAL: Atomic audio flag to prevent duplicate audio
   bool _audioInProgress = false;
 
-  // CRITICAL FIX: Track if notification was shown to prevent double sound
-  // REMOVED: _notificationShownForCurrentTimer - now using state.notificationScheduled instead
-  // This prevents duplicate notifications and fixes the bug where notifications
-  // would fire immediately when the app restarts
+  // CRITICAL FIX: Track recent local audio to avoid duplicate foreground playback.
   DateTime? _lastAudioPlayTime;
 
   // CRITICAL: Atomic state persistence to prevent corruption
@@ -386,10 +346,10 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
                 audioFocus: AndroidAudioFocus.none,
                 contentType: AndroidContentType.sonification,
                 usageType: AndroidUsageType.assistanceSonification,
+              ),
             ),
           ),
-        ),
-      );
+        );
         _audioPlayer = AudioPlayer();
         await _audioPlayer!.setPlayerMode(PlayerMode.lowLatency);
       }
@@ -424,12 +384,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
   Future<void> _initializeNotifications() async {
     if (_notifications == null) return;
 
+    await LocalTimezoneService.ensureInitialized();
+
     const androidSettings = AndroidInitializationSettings(
       '@mipmap/ic_launcher',
     );
     const settings = InitializationSettings(android: androidSettings);
 
-    await _notifications!.initialize(settings);
+    await LocalNotificationsBootstrap.ensureInitialized(
+      plugin: _notifications!,
+      settings: settings,
+    );
 
     // Create notification channel for timer completion
     const channel = AndroidNotificationChannel(
@@ -457,7 +422,8 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     String? workoutId,
     String? exerciseId, // Added for duration tracking
     String? customSound,
-    String? completedSetId, // ✅ Rest Timer Tracking: ID del set appena completato
+    String?
+    completedSetId, // ✅ Rest Timer Tracking: ID del set appena completato
   }) async {
     try {
       // CRITICAL FIX: Ensure initialization is complete before timer operations
@@ -474,13 +440,11 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       if (state != null) {
         // Existing timer detected - skipping it to prevent audio overlap
 
-        // CRITICAL: Cancel background audio FIRST
         if (Platform.isIOS) {
           try {
-            await _unifiedChannel.invokeMethod('cancelBackgroundAudio');
-            // iOS background audio cancelled
+            await _unifiedChannel.invokeMethod('cancelScheduledCompletion');
           } catch (e) {
-            // Continue even if this fails
+            // Continue cleanup even if native cancellation fails.
           }
         }
 
@@ -504,14 +468,8 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
         // Previous timer cancelled - starting new one
 
-        // CRITICAL: Small delay to ensure iOS cleanup is complete
-        // This prevents race conditions where old timer audio might still be scheduled
         await Future.delayed(const Duration(milliseconds: 150));
-        // Cleanup delay complete - safe to start new timer
       }
-
-      // CRITICAL: Notification flag is now reset via state.notificationScheduled
-      // Notification flag handled in state
 
       // Store exercise ID for duration tracking
       _currentExerciseId = exerciseId;
@@ -536,10 +494,15 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         }
         if (kDebugMode) {
           debugPrint(
-            '  - Will create state with customSoundName: "$customSound"',
+            '  - completionSoundName will be resolved once at arm time',
           );
         }
       }
+
+      final resolvedCompletionSoundName =
+          (customSound != null && customSound.trim().isNotEmpty)
+          ? customSound.trim()
+          : ref.read(appConfigProvider).timerSound.trim();
 
       // Create new timer state
       final newState = UnifiedTimerState(
@@ -550,12 +513,24 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         totalSets: totalSets,
         workoutId: workoutId,
         customSoundName: customSound,
-        // CRITICAL FIX: Don't cache audio setting - check it real-time in _playCompletionSound
-        audioEnabled: true, // We'll check the real setting when playing audio
+        completionSoundName: resolvedCompletionSoundName,
+        completionDeliveryStrategy:
+            TimerCompletionDeliveryStrategy.foregroundAudio,
+        audioEnabled: true,
       );
 
       // Start the timer
       state = newState.start();
+      _debugLogIOSCompletionTrace(
+        'startTimer:stateStarted',
+        extra: {
+          'durationSeconds': durationSeconds,
+          'type': type.name,
+          'exerciseName': exerciseName,
+          'currentSet': currentSet,
+          'totalSets': totalSets,
+        },
+      );
 
       // PERF: Initialize ValueNotifier with starting value
       _remainingSecondsNotifier?.value = durationSeconds;
@@ -573,16 +548,8 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       // Start internal ticker
       _startTicker();
 
-      // FIX #1: Re-enabled iOS background scheduling
-      // This ensures timer completion audio plays even when app is in background
-      // Without this, Dart Timer.periodic gets suspended by iOS after ~10 minutes
-      if (Platform.isIOS && durationSeconds > 5) {
-        await _scheduleCompletion();
-        if (kDebugMode) {
-          debugPrint(
-            '📱 [TIMER-FIX] iOS background completion scheduled for ${durationSeconds}s',
-          );
-        }
+      if (Platform.isIOS) {
+        await _applyIOSCompletionDeliveryStrategy();
       }
 
       // Start Live Activity on iOS
@@ -702,14 +669,18 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     try {
       final remainingSeconds = state!.remainingSeconds;
       state = state!.resume();
+      _debugLogIOSCompletionTrace(
+        'resumeTimer:stateResumed',
+        extra: {'remainingSecondsBeforeResume': remainingSeconds},
+      );
       _startTicker();
 
       // PERF: Emit resume event
       _eventController?.add(TimerEvent.resumed());
 
-      // DISABLED: No automatic notification scheduling
-      // Only play sound when timer completes, no notification
-      // await _scheduleCompletion();
+      if (Platform.isIOS) {
+        await _applyIOSCompletionDeliveryStrategy();
+      }
 
       // Update Live Activity based on which system is active
       if (Platform.isIOS) {
@@ -897,6 +868,15 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         endTime: state!.endTime?.add(Duration(seconds: seconds)),
         secondsAdded: newSecondsAdded, // ✅ Track cumulative added time
       );
+      _debugLogIOSCompletionTrace(
+        'addTime:stateUpdated',
+        extra: {
+          'secondsAddedNow': seconds,
+          'newRemainingSeconds': newRemainingSeconds,
+          'newTotalDurationSeconds': newTotalDurationSeconds,
+          'fromLiveActivity': fromLiveActivity,
+        },
+      );
 
       // CRITICAL FIX: Update _cachedEndTime to match the new endTime
       // Without this, _calculateRemainingSeconds() uses stale cached value
@@ -912,12 +892,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         );
       }
 
-      // FIX: Cancel old scheduled audio/notification and reschedule with new duration.
-      // Without this, the old iOS notification fires at original endTime → double sound.
-      if (Platform.isIOS && newRemainingSeconds > 5) {
+      if (Platform.isIOS) {
         try {
-          await _unifiedChannel.invokeMethod('cancelBackgroundAudio');
-          await _scheduleCompletion();
+          await _applyIOSCompletionDeliveryStrategy();
           if (kDebugMode) {
             debugPrint(
               '[UnifiedTimer] ✅ Rescheduled iOS completion for +${seconds}s extension',
@@ -976,10 +953,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         // so Watch would not get the extension if no LA was active.
         await ref
             .read(watchConnectivityProvider.notifier)
-            .sendRestTimerExtended(
-              seconds,
-              newRemainingSeconds,
-            );
+            .sendRestTimerExtended(seconds, newRemainingSeconds);
         if (kDebugMode) {
           debugPrint(
             '[UnifiedTimer] ⌚ Watch notified: +${seconds}s (remaining=${newRemainingSeconds}s)',
@@ -1007,18 +981,8 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     if (_isDisposed || state == null) return;
 
     try {
-      // CRITICAL: Cancel background audio FIRST to prevent it from playing
       if (Platform.isIOS) {
-        await _unifiedChannel.invokeMethod('cancelBackgroundAudio');
-
-        // FIX #4: Add delay to let iOS audio cleanup complete
-        // This prevents race condition where a new timer starting immediately
-        // after skip could have its audio scheduled before the old timer's
-        // audio is fully cancelled
-        await Future.delayed(const Duration(milliseconds: 100));
-        if (kDebugMode) {
-          debugPrint('⏭️ [TIMER-FIX] Skip cleanup delay complete');
-        }
+        await _cancelScheduledNotifications();
       }
 
       // ⌚ Notify Apple Watch that rest was skipped
@@ -1032,7 +996,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       }
 
       _stopTicker();
-      await _cancelScheduledNotifications();
+      if (!Platform.isIOS) {
+        await _cancelScheduledNotifications();
+      }
 
       // Mark timer as skipped - this prevents audio playback
       state = state!.skip();
@@ -1098,17 +1064,27 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       if (_currentExerciseId != null && _completedSetId != null) {
         try {
           // Calculate actual rest time from the original duration minus remaining
-          final configuredDuration = state!.totalDurationSeconds - state!.secondsAdded;
-          final actualRestSeconds = configuredDuration - state!.remainingSeconds;
+          final configuredDuration =
+              state!.totalDurationSeconds - state!.secondsAdded;
+          final actualRestSeconds =
+              configuredDuration - state!.remainingSeconds;
 
-          ref.read(currentWorkoutProvider.notifier).updateSetRestTimerData(
-            exerciseId: _currentExerciseId!,
-            setId: _completedSetId!,
-            restTimerSkipped: true, // Timer was skipped
-            restTimerSecondsRemaining: state!.remainingSeconds > 0 ? state!.remainingSeconds : null,
-            restTimerSecondsAdded: state!.secondsAdded > 0 ? state!.secondsAdded : null,
-            actualRestSeconds: actualRestSeconds > 0 ? actualRestSeconds : 0,
-          );
+          ref
+              .read(currentWorkoutProvider.notifier)
+              .updateSetRestTimerData(
+                exerciseId: _currentExerciseId!,
+                setId: _completedSetId!,
+                restTimerSkipped: true, // Timer was skipped
+                restTimerSecondsRemaining: state!.remainingSeconds > 0
+                    ? state!.remainingSeconds
+                    : null,
+                restTimerSecondsAdded: state!.secondsAdded > 0
+                    ? state!.secondsAdded
+                    : null,
+                actualRestSeconds: actualRestSeconds > 0
+                    ? actualRestSeconds
+                    : 0,
+              );
 
           if (kDebugMode) {
             debugPrint(
@@ -1136,14 +1112,14 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           }
         } catch (durationError) {
           if (kDebugMode) {
-            debugPrint(
-              '❌ [TIMER SKIP] Error calling startSet: $durationError',
-            );
+            debugPrint('❌ [TIMER SKIP] Error calling startSet: $durationError');
           }
         }
       }
 
-      await _saveState(immediate: true); // FIX C13: skip must persist immediately
+      await _saveState(
+        immediate: true,
+      ); // FIX C13: skip must persist immediately
 
       // Timer skipped - no audio will play
     } catch (e, stackTrace) {
@@ -1236,7 +1212,8 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
     // CRITICAL: Handle completion IMMEDIATELY and SYNCHRONOUSLY
     // Use newRemainingSeconds directly since state may not be updated every tick
-    if (newRemainingSeconds <= 0 && !(_completionInProgress || (state!.audioPlayed))) {
+    if (newRemainingSeconds <= 0 &&
+        !(_completionInProgress || (state!.audioPlayed))) {
       // FIX C12: Set flag HERE before calling to close the check-and-set gap.
       // In Dart's single-threaded model the window is theoretical, but setting it
       // early makes the intent explicit and protects against any future refactoring.
@@ -1374,9 +1351,11 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     // Idempotent set: already true when called from _onTick(), but needed for
     // the restoration path which calls this directly without pre-setting.
     _completionInProgress = true;
+    _debugLogIOSCompletionTrace('_onTimerComplete:start');
 
     // CRITICAL FIX: Mark audio as played IMMEDIATELY to prevent race conditions
     state = state!.markAudioPlayed();
+    _debugLogIOSCompletionTrace('_onTimerComplete:audioMarkedPlayed');
 
     // PERF: Update ValueNotifier and emit completion event
     _remainingSecondsNotifier?.value = 0;
@@ -1445,19 +1424,25 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       }
 
       // ✅ Rest Timer Tracking: Update the completed set with rest timer data
-      if (_currentExerciseId != null && _completedSetId != null && state != null) {
+      if (_currentExerciseId != null &&
+          _completedSetId != null &&
+          state != null) {
         try {
           // Calculate actual rest time: totalDuration - 0 (completed) + secondsAdded
           final actualRestSeconds = state!.totalDurationSeconds;
 
-          ref.read(currentWorkoutProvider.notifier).updateSetRestTimerData(
-            exerciseId: _currentExerciseId!,
-            setId: _completedSetId!,
-            restTimerSkipped: false, // Timer completed normally
-            restTimerSecondsRemaining: null, // null = not skipped
-            restTimerSecondsAdded: state!.secondsAdded > 0 ? state!.secondsAdded : null,
-            actualRestSeconds: actualRestSeconds,
-          );
+          ref
+              .read(currentWorkoutProvider.notifier)
+              .updateSetRestTimerData(
+                exerciseId: _currentExerciseId!,
+                setId: _completedSetId!,
+                restTimerSkipped: false, // Timer completed normally
+                restTimerSecondsRemaining: null, // null = not skipped
+                restTimerSecondsAdded: state!.secondsAdded > 0
+                    ? state!.secondsAdded
+                    : null,
+                actualRestSeconds: actualRestSeconds,
+              );
 
           if (kDebugMode) {
             debugPrint(
@@ -1478,31 +1463,41 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
             '🔊 [TIMER COMPLETION] Playing completion sound (not skipped)',
           );
         }
+        // Always try to play local audio, even when notification is scheduled.
+        // The notification is a backup for when the app is fully suspended,
+        // but if the Dart timer is still ticking we should play audio directly.
+        _debugLogIOSCompletionTrace(
+          '_onTimerComplete:willPlayLocalAudio',
+        );
         try {
+          // Cancel the scheduled notification to avoid double sound
+          if (Platform.isIOS &&
+              state?.completionDeliveryStrategy ==
+                  TimerCompletionDeliveryStrategy.notificationOwned) {
+            await _unifiedChannel
+                .invokeMethod<void>('cancelScheduledCompletion');
+          }
           await _playCompletionSound();
-          // Completion sound played
         } catch (audioError) {
           // Audio failure should NOT prevent the timer from completing
-          // User will still get notification
+          // User will still get notification as fallback
           if (kDebugMode) {
             debugPrint('❌ [TIMER COMPLETION] Audio error: $audioError');
           }
         }
 
-        // CRITICAL FIX: Send completion notification with proper localization
-        try {
-          // Check if Live Activities are active to coordinate notifications
-          final hasLiveActivity = await _checkActiveLiveActivities();
-          await _sendTimerCompletionNotification(
-            hasLiveActivity: hasLiveActivity,
-          );
-          // Timer completion notification sent with localization (Live Activity: $hasLiveActivity)
-        } catch (notificationError) {
-          // Continue even if notification fails - audio was played
-          if (kDebugMode) {
-            debugPrint(
-              '❌ [TIMER COMPLETION] Notification error: $notificationError',
+        if (!Platform.isIOS) {
+          try {
+            final hasLiveActivity = await _checkActiveLiveActivities();
+            await _sendTimerCompletionNotification(
+              hasLiveActivity: hasLiveActivity,
             );
+          } catch (notificationError) {
+            if (kDebugMode) {
+              debugPrint(
+                '❌ [TIMER COMPLETION] Notification error: $notificationError',
+              );
+            }
           }
         }
       } else {
@@ -1528,6 +1523,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       }
 
       await _saveState();
+      _debugLogIOSCompletionTrace('_onTimerComplete:finished');
 
       // Timer completion finished
     } catch (e) {
@@ -1555,16 +1551,16 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           'error': error,
         });
       } catch (e, stackTrace) {
-      debugPrint('⚠️ [UnifiedTimer] Error: $e');
-      unawaited(
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          stackTrace,
-          reason: 'UnifiedTimer operation failed',
-          fatal: false,
-        ),
-      );
-    }
+        debugPrint('⚠️ [UnifiedTimer] Error: $e');
+        unawaited(
+          FirebaseCrashlytics.instance.recordError(
+            e,
+            stackTrace,
+            reason: 'UnifiedTimer operation failed',
+            fatal: false,
+          ),
+        );
+      }
     } else {
       try {
         // Use Android local notification as absolute last resort
@@ -1586,20 +1582,165 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           );
         }
       } catch (e, stackTrace) {
-      debugPrint('⚠️ [UnifiedTimer] Error: $e');
-      unawaited(
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          stackTrace,
-          reason: 'UnifiedTimer operation failed',
-          fatal: false,
-        ),
-      );
-    }
+        debugPrint('⚠️ [UnifiedTimer] Error: $e');
+        unawaited(
+          FirebaseCrashlytics.instance.recordError(
+            e,
+            stackTrace,
+            reason: 'UnifiedTimer operation failed',
+            fatal: false,
+          ),
+        );
+      }
     }
   }
 
   /// Play completion sound using the best available method
+  String _resolveCurrentTimerSoundName() {
+    final configuredSound = ref.read(appConfigProvider).timerSound.trim();
+    final stateSound =
+        state?.completionSoundName?.trim() ?? state?.customSoundName?.trim();
+
+    final hasConfiguredSound = configuredSound.isNotEmpty;
+    final hasStateSound = stateSound != null && stateSound.isNotEmpty;
+
+    if (!hasStateSound ||
+        stateSound == 'sound' ||
+        stateSound == 'timer_complete') {
+      if (hasConfiguredSound) {
+        if (kDebugMode && stateSound != configuredSound) {
+          debugPrint(
+            '🔧 [TIMER SOUND FIX] Resolving timer sound from AppConfig:',
+          );
+          debugPrint(
+            '  - state?.completionSoundName = ${state?.completionSoundName}',
+          );
+          debugPrint('  - AppConfig.timerSound = $configuredSound');
+          debugPrint('  - Final soundName = $configuredSound');
+        }
+        return configuredSound;
+      }
+    }
+
+    if (hasStateSound) {
+      return stateSound;
+    }
+
+    return 'timer_complete';
+  }
+
+  void _debugLogIOSCompletionTrace(
+    String context, {
+    Map<String, Object?> extra = const {},
+  }) {
+    if (!kDebugMode || !Platform.isIOS) {
+      return;
+    }
+
+    final currentState = state;
+    final lifecycleState = WidgetsBinding.instance.lifecycleState;
+    final resolvedSoundName = _resolveCurrentTimerSoundName();
+    final extras = extra.entries
+        .map((entry) => '${entry.key}=${entry.value}')
+        .join('\n');
+
+    final buffer = StringBuffer()
+      ..writeln('🍎 [IOS TIMER TRACE] $context')
+      ..writeln('  lifecycleState=$lifecycleState')
+      ..writeln('  appInForeground=${_isAppInForeground()}')
+      ..writeln('  hasState=${currentState != null}')
+      ..writeln('  status=${currentState?.status}')
+      ..writeln('  isActive=${currentState?.isActive}')
+      ..writeln('  isPaused=${currentState?.isPaused}')
+      ..writeln('  isCompleted=${currentState?.isCompleted}')
+      ..writeln('  skipped=${currentState?.skipped}')
+      ..writeln('  audioPlayed=${currentState?.audioPlayed}')
+      ..writeln('  remainingSeconds=${currentState?.remainingSeconds}')
+      ..writeln('  totalDurationSeconds=${currentState?.totalDurationSeconds}')
+      ..writeln('  endTime=${currentState?.endTime?.toIso8601String()}')
+      ..writeln('  cachedEndTime=${_cachedEndTime?.toIso8601String()}')
+      ..writeln(
+        '  completionDeliveryStrategy=${currentState?.completionDeliveryStrategy}',
+      )
+      ..writeln('  completionSoundName=${currentState?.completionSoundName}')
+      ..writeln('  customSoundName=${currentState?.customSoundName}')
+      ..writeln('  resolvedSoundName=$resolvedSoundName')
+      ..writeln('  liveActivityActive=${currentState?.liveActivityActive}')
+      ..writeln('  completionInProgress=$_completionInProgress')
+      ..writeln('  audioInProgress=$_audioInProgress')
+      ..writeln('  lastAudioPlayTime=${_lastAudioPlayTime?.toIso8601String()}');
+
+    if (extras.isNotEmpty) {
+      buffer
+        ..writeln('  extra:')
+        ..writeln(extras.split('\n').map((line) => '    $line').join('\n'));
+    }
+
+    debugPrint(buffer.toString());
+  }
+
+  Future<void> _applyIOSCompletionDeliveryStrategy() async {
+    if (!Platform.isIOS || state == null || !state!.isActive) {
+      return;
+    }
+
+    final soundName = _resolveCurrentTimerSoundName();
+    _debugLogIOSCompletionTrace(
+      '_applyIOSCompletionDeliveryStrategy:start',
+      extra: {'soundName': soundName},
+    );
+
+    try {
+      if (_isAppInForeground()) {
+        await _unifiedChannel.invokeMethod<void>('cancelScheduledCompletion');
+        state = state!.copyWith(
+          completionDeliveryStrategy:
+              TimerCompletionDeliveryStrategy.foregroundAudio,
+          completionSoundName: soundName,
+        );
+        _debugLogIOSCompletionTrace(
+          '_applyIOSCompletionDeliveryStrategy:foregroundAudio',
+          extra: {'soundName': soundName},
+        );
+      } else {
+        await _unifiedChannel.invokeMethod<String>('scheduleCompletion', {
+          'duration': state!.remainingSeconds,
+          'soundName': soundName,
+          'title': _getNotificationTitle(),
+          'body': _getNotificationBody(),
+        });
+        state = state!.copyWith(
+          completionDeliveryStrategy:
+              TimerCompletionDeliveryStrategy.notificationOwned,
+          completionSoundName: soundName,
+        );
+        _debugLogIOSCompletionTrace(
+          '_applyIOSCompletionDeliveryStrategy:notificationOwned',
+          extra: {
+            'soundName': soundName,
+            'scheduledDuration': state!.remainingSeconds,
+            'notificationSoundStrategy': 'system_default',
+          },
+        );
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint(
+          '⚠️ [UnifiedTimer] Failed to update iOS completion delivery strategy: $e',
+        );
+      }
+      state = state!.copyWith(
+        completionDeliveryStrategy:
+            TimerCompletionDeliveryStrategy.foregroundAudio,
+        completionSoundName: soundName,
+      );
+      _debugLogIOSCompletionTrace(
+        '_applyIOSCompletionDeliveryStrategy:error',
+        extra: {'soundName': soundName, 'error': e.toString()},
+      );
+    }
+  }
+
   Future<void> _playCompletionSound() async {
     // MEMORY LEAK PROTECTION: Check if disposed
     if (_isDisposed) {
@@ -1631,68 +1772,60 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     // Android: Use ONLY Flutter AudioPlayer
 
     try {
-      // CRITICAL FIX: If customSoundName is null, read CURRENT value from AppConfig
-      // This handles cases where the setting was changed but timer state wasn't updated
-      String soundName = state?.customSoundName ?? 'sound';
-
-      if (soundName == 'sound' || soundName == 'timer_complete') {
-        // Fallback to current AppConfig value
-        final currentConfig = ref.read(appConfigProvider);
-        final configSound = currentConfig.timerSound;
-
-        if (configSound != 'timer_complete') {
-          soundName = configSound;
-
-          if (kDebugMode) {
-            debugPrint('🔧 [TIMER SOUND FIX] Using current AppConfig value:');
-            debugPrint(
-              '  - state?.customSoundName was: ${state?.customSoundName}',
-            );
-            debugPrint('  - AppConfig.timerSound is: $configSound');
-            if (kDebugMode) {
-              debugPrint('  - Final soundName: $soundName');
-            }
-          }
-        }
-      }
+      final soundName = _resolveCurrentTimerSoundName();
+      _debugLogIOSCompletionTrace(
+        '_playCompletionSound:start',
+        extra: {'soundName': soundName},
+      );
 
       // DEBUG: Log what sound is being played
       if (kDebugMode) {
         debugPrint('🔊 [TIMER SOUND DEBUG 3] Playing completion sound:');
-        debugPrint('  - state?.customSoundName = ${state?.customSoundName}');
+        debugPrint(
+          '  - state?.completionSoundName = ${state?.completionSoundName}',
+        );
         debugPrint('  - Final soundName = $soundName');
       }
 
       if (Platform.isIOS) {
-        // iOS: ONLY use native audio through unified coordinator
-        // This prevents duplicate audio by having a single playback path
         try {
-          // Check if audio was already played in the last 5 seconds
-          final hasPlayed = await _unifiedChannel.invokeMethod<bool>(
-            'hasAudioPlayedRecently',
-            {'seconds': 5.0},
-          );
-
-          if (hasPlayed == true) {
-            return;
-          }
-
-          // DEBUG: Log iOS playback
           if (kDebugMode) {
             debugPrint('🔊 [TIMER SOUND DEBUG 4] Sending to iOS:');
             debugPrint('  - soundName parameter = $soundName');
           }
 
-          // Play through unified coordinator ONLY
-          await _unifiedChannel.invokeMethod('playCompletionSound', {
-            'soundName': soundName,
-            'markAsPlayed': true, // Tell iOS to mark this as played
-          });
+          final played =
+              await _unifiedChannel.invokeMethod<bool>('playCompletionSound', {
+                'soundName': soundName,
+              }) ??
+              false;
 
-          // NO FALLBACK to Flutter AudioPlayer on iOS - prevents duplicates
+          if (!played) {
+            throw Exception(
+              'Native iOS timer sound playback returned false for "$soundName"',
+            );
+          }
+
+          if (kDebugMode) {
+            debugPrint(
+              '🔊 [TIMER SOUND DEBUG 5] Native iOS playback confirmed for $soundName',
+            );
+          }
+          _debugLogIOSCompletionTrace(
+            '_playCompletionSound:nativeConfirmed',
+            extra: {'soundName': soundName},
+          );
         } catch (iosError) {
-          // Send notification as backup, but no audio fallback
-          await _sendAudioErrorNotification();
+          if (kDebugMode) {
+            debugPrint(
+              '❌ [TIMER SOUND DEBUG 5] Native iOS playback failed: $iosError',
+            );
+          }
+          _debugLogIOSCompletionTrace(
+            '_playCompletionSound:nativeFailed',
+            extra: {'soundName': soundName, 'error': iosError.toString()},
+          );
+          rethrow;
         }
       } else {
         // Android + Desktop/Web: Use Flutter AudioPlayer
@@ -1740,131 +1873,29 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     }
   }
 
-  // Background audio is now handled by UnifiedTimerCoordinator through _scheduleCompletion
-
-  /// Schedule timer completion notification with background strategy
-  Future<void> _scheduleCompletion() async {
-    if (state?.remainingSeconds == null) return;
-
-    try {
-      // PROBLEM #4 FIX: Background strategy based on duration
-      final strategy = _getBackgroundStrategy(state!.remainingSeconds);
-
-      if (Platform.isIOS) {
-        // Apply strategy-specific scheduling
-        final params = <String, dynamic>{
-          'duration': state!.remainingSeconds,
-          'soundName': state!.customSoundName ?? 'sound',
-          'title': _getNotificationTitle(),
-          'body': _getNotificationBody(),
-          'strategy': strategy.toString(),
-        };
-
-        // FIX #6: The original catch block was a no-op — it retried the SAME
-        // channel that just failed, which would always fail again.
-        // Now we just log the failure and continue; `state.scheduleNotification()`
-        // below still marks the timer so the rest of the flow proceeds correctly.
-        try {
-          await _unifiedChannel.invokeMethod('scheduleCompletion', params);
-        } catch (e) {
-          debugPrint(
-            '⚠️ [UnifiedTimer] scheduleCompletion channel call failed: $e. '
-            'Notification may not play — iOS timer completion state still tracked.',
-          );
-        }
-
-        // Additional background protection for long timers
-        if (strategy == BackgroundStrategy.longTimer) {
-          await _setupLongTimerProtection();
-        }
-      } else if (Platform.isAndroid && _notifications != null) {
-        // Android-only notification scheduling
-        await _scheduleAndroidCompletion(state!.remainingSeconds);
-      }
-
-      state = state!.scheduleNotification();
-    } catch (e, stackTrace) {
-      debugPrint('⚠️ [UnifiedTimer] Error: $e');
-      unawaited(
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          stackTrace,
-          reason: 'UnifiedTimer operation failed',
-          fatal: false,
-        ),
-      );
-    }
-  }
-
-  /// PROBLEM #4 FIX: Determine optimal background strategy
-  BackgroundStrategy _getBackgroundStrategy(int durationSeconds) {
-    if (durationSeconds <= 30) {
-      return BackgroundStrategy.shortTimer; // Simple background task
-    } else if (durationSeconds <= 300) {
-      // 5 minutes
-      return BackgroundStrategy.mediumTimer; // Notification scheduling
-    } else {
-      return BackgroundStrategy.longTimer; // Silent loop (battery aware)
-    }
-  }
-
-  /// Setup additional protection for long timers
-  Future<void> _setupLongTimerProtection() async {
-    // 🔧 FIX: Ensure box is open before writing checkpoint
-    if (!await _ensureStorageOpen()) {
-      return;
-    }
-
-    // Save checkpoint for recovery
-    final checkpoint = {
-      'startTime': DateTime.now().toIso8601String(),
-      'duration': state!.totalDurationSeconds,
-      'endTime': state!.endTime?.toIso8601String(),
-    };
-
-    await _storage?.put('timer_checkpoint', checkpoint);
-  }
-
-  /// Schedule Android completion with proper strategy
-  Future<void> _scheduleAndroidCompletion(int seconds) async {
-    if (_notifications == null) return;
-
-    // For Android, schedule at exact time using timezone
-    final scheduledDate = tz.TZDateTime.now(
-      tz.local,
-    ).add(Duration(seconds: seconds));
-
-    await _notifications!.zonedSchedule(
-      0,
-      _getNotificationTitle(),
-      _getNotificationBody(),
-      scheduledDate,
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'timer_completion',
-          'Timer Completion',
-          channelDescription: 'Timer completion notifications',
-          importance: Importance.high,
-          priority: Priority.high,
-          sound: RawResourceAndroidNotificationSound('sound'),
-        ),
-      ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-    );
-  }
-
   /// Cancel all scheduled notifications
   Future<void> _cancelScheduledNotifications() async {
     try {
+      _debugLogIOSCompletionTrace('_cancelScheduledNotifications:start');
       if (Platform.isIOS) {
-        // iOS: Cancel through native channel only
-        await _unifiedChannel.invokeMethod('stopTimer');
+        await _unifiedChannel.invokeMethod('cancelScheduledCompletion');
       } else if (Platform.isAndroid && _notifications != null) {
-        // Android: Use flutter_local_notifications
         await _notifications!.cancelAll();
       }
+
+      if (state != null) {
+        state = state!.copyWith(
+          completionDeliveryStrategy:
+              TimerCompletionDeliveryStrategy.foregroundAudio,
+        );
+      }
+      _debugLogIOSCompletionTrace('_cancelScheduledNotifications:end');
     } catch (e, stackTrace) {
       debugPrint('⚠️ [UnifiedTimer] Error: $e');
+      _debugLogIOSCompletionTrace(
+        '_cancelScheduledNotifications:error',
+        extra: {'error': e.toString()},
+      );
       unawaited(
         FirebaseCrashlytics.instance.recordError(
           e,
@@ -1883,96 +1914,17 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
   }) async {
     if (state == null) return;
 
-    // DEBUG: Track where this method is being called from
-    if (kDebugMode) {
-      debugPrint(
-        '🔷 [NOTIFICATION-SOURCE-C] Flutter _sendTimerCompletionNotification called',
-      );
-      debugPrint('   - Timestamp: ${DateTime.now()}');
-      debugPrint('   - hasLiveActivity: $hasLiveActivity');
-      debugPrint('   - Timer state: ${state?.type}');
-      debugPrint('   - Stack trace (first 5 frames):');
-      final stackTrace = StackTrace.current
-          .toString()
-          .split('\n')
-          .take(8)
-          .join('\n');
-      debugPrint(stackTrace);
-    }
-
     try {
-      // CRITICAL FIX: iOS uses native notifications with proper localization
       if (Platform.isIOS) {
-        // ✅ FIX #2: Verify Live Activity is actually active before trusting it
-        // Don't just trust the parameter - check with iOS
-        bool liveActivityReallyActive = false;
-        if (hasLiveActivity) {
-          try {
-            final activities = await _unifiedChannel.invokeMethod(
-              'getActiveLiveActivities',
-            );
-            liveActivityReallyActive =
-                activities is Map && activities.isNotEmpty;
-
-            if (!liveActivityReallyActive && hasLiveActivity) {
-              if (kDebugMode) {
-                debugPrint('⚠️ [FIX-2] Live Activity claim was FALSE:');
-                debugPrint('  - hasLiveActivity parameter: true');
-                debugPrint('  - Actual iOS check: false');
-                if (kDebugMode) {
-                  debugPrint('  - Will send notification anyway as fallback');
-                }
-              }
-            }
-          } catch (e) {
-            if (kDebugMode) {
-              debugPrint('❌ [FIX-2] Failed to check Live Activity: $e');
-              debugPrint('  - Assuming NO Live Activity active');
-              debugPrint('  - Will send notification as fallback');
-            }
-            liveActivityReallyActive = false;
-          }
-        }
-
-        // Use localized titles and bodies instead of hardcoded NotificationService
-        try {
-          // FIX: Removed faulty delivery verification that caused duplicate notifications
-          // The verification was returning false even when notification was delivered,
-          // causing a second notification to be sent 1 second later
-          await _unifiedChannel.invokeMethod('sendNotification', {
-            'title': _getNotificationTitle(),
-            'body': _getNotificationBody(),
-            'sound': state!.customSoundName ?? 'sound',
-            'categoryIdentifier': 'TIMER_COMPLETE',
-            'isBackground': false, // We're sending at completion time
-            'hasLiveActivity': liveActivityReallyActive, // Use VERIFIED status
-          });
-
-          if (kDebugMode) {
-            debugPrint('✅ [NOTIFICATION] Timer completion notification sent');
-          }
-        } catch (e) {
-          // Fallback to NotificationService if native channel fails
-          final notificationService = NotificationService();
-          await notificationService.sendTimerCompletionNotification(
-            exerciseName: state!.exerciseName ?? 'Rest Timer',
-            currentSet: state!.currentSet ?? 0,
-            totalSets: state!.totalSets ?? 0,
-            workoutName: state!.workoutId,
-            customSoundFile: state!.customSoundName ?? 'sound',
-          );
-        }
-
-        return; // CRITICAL: Always return for iOS
+        return;
       }
 
-      // Android: Use timer notification service
       await NotificationService().sendTimerCompletionNotification(
         exerciseName: state!.exerciseName ?? 'Exercise',
         currentSet: state!.currentSet ?? 1,
         totalSets: state!.totalSets ?? 1,
         workoutName: state!.workoutId,
-        customSoundFile: state!.customSoundName ?? 'sound',
+        customSoundFile: _resolveCurrentTimerSoundName(),
       );
     } catch (e) {
       // Continue execution even if notification fails
@@ -1980,98 +1932,96 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
   }
 
   /// Start iOS Live Activity (OLD timer-based system)
-  /// NOTE: This is SKIPPED when WorkoutSession Live Activity is active
-  Future<void> _startLiveActivity() async {
+  /// NOTE: Workout timers now use ONLY the iOS 17+ WorkoutSession Live Activity.
+  /// The legacy timer-based Live Activity is intentionally disabled for workouts.
+  Future<void> _clearLegacyLiveActivityState() async {
     if (state == null) return;
+    if (!state!.liveActivityActive && state!.liveActivityId == null) return;
 
-    // 🚫 SKIP: If WorkoutSession Live Activity is active, don't start the old timer LA
-    // Instead, transition the WorkoutSession LA to REST mode
+    state = state!.copyWith(liveActivityActive: false, liveActivityId: null);
+    await _saveState();
+  }
+
+  Future<void> _startLiveActivity() async {
+    if (state == null || !Platform.isIOS) return;
+
     try {
-      // FIX: Read the SERVICE directly instead of the Notifier provider to break
-      // circular dependency. WorkoutSessionLANotifier.build() does
-      // ref.listen(unifiedTimerProvider), so reading workoutSessionLAProvider
-      // would trigger its build and create a cycle.
+      // Workout timers should always flow through the unified WorkoutSession LA.
       final laService = ref.read(workoutSessionLAServiceProvider);
-      if (laService.isActive) {
+      final laNotifier = ref.read(workoutSessionLAProvider.notifier);
+      final workout = ref.read(currentWorkoutProvider);
+
+      if (workout == null) {
         if (kDebugMode) {
           debugPrint(
-            '📱 [TIMER-LA] WorkoutSession LA is active - transitioning to REST mode',
+            '[TIMER-LA] ⚠️ No active workout found - skipping Live Activity start',
           );
         }
+        await _clearLegacyLiveActivityState();
+        return;
+      }
 
-        // Get current workout to find exercise info
-        final workout = ref.read(currentWorkoutProvider);
-        if (workout != null && state != null) {
-          // Find the exercise by name
-          Exercise? targetExercise;
-          if (state!.exerciseName != null) {
-            targetExercise = workout.exercises
-                .where((e) => e.name == state!.exerciseName)
-                .firstOrNull;
-          }
-          targetExercise ??= workout.exercises.firstOrNull;
-
-          if (targetExercise != null) {
-            // Transition WorkoutSession LA to REST mode via notifier
-            await ref
-                .read(workoutSessionLAProvider.notifier)
-                .transitionToRest(
-                  restDurationSeconds: state!.totalDurationSeconds,
-                  nextExercise: targetExercise,
-                  nextSetIndex: state!.currentSet ?? 1,
-                );
-            debugPrint(
-              '📱 [TIMER-LA] ✅ WorkoutSession LA transitioned to REST: ${state!.totalDurationSeconds}s',
-            );
-          }
+      if (!laService.isActive) {
+        if (kDebugMode) {
+          debugPrint(
+            '[TIMER-LA] ♻️ WorkoutSession LA missing - attempting restore',
+          );
         }
-        return; // Don't start the old timer LA
+        await laNotifier.reconcileWithCurrentWorkout(recreateIfMissing: true);
       }
-    } catch (e) {
-      // If we can't read the provider, continue with old behavior
+
+      if (!laService.isActive) {
+        if (kDebugMode) {
+          debugPrint(
+            '[TIMER-LA] ❌ WorkoutSession LA unavailable - legacy fallback disabled',
+          );
+        }
+        await _clearLegacyLiveActivityState();
+        return;
+      }
+
       if (kDebugMode) {
-        debugPrint('📱 [TIMER-LA] Error checking WorkoutSession LA: $e');
-      }
-    }
-
-    try {
-      // CRITICAL FIX: End ALL previous Live Activities before starting a new one
-      // This prevents timer stacking when user marks multiple sets complete rapidly
-      try {
-        await _unifiedChannel.invokeMethod('endAllActiveLiveActivities');
-        // Previous Live Activities ended successfully
-      } catch (endError) {
-        // Continue even if ending previous activities fails
-        // New activity will still start
-      }
-
-      // Use the correct channel for Live Activities
-      final result = await _unifiedChannel.invokeMethod('startLiveActivity', {
-        'exerciseName': state!.exerciseName ?? 'Rest Timer',
-        'timerType': state!.type.name,
-        'totalSeconds': state!.totalDurationSeconds,
-        'remainingSeconds': state!.remainingSeconds,
-        'isRunning': state!.isActive,
-        'currentSet': state!.currentSet ?? 1,
-        'totalSets': state!.totalSets ?? 1,
-        'lastUpdated': DateTime.now().millisecondsSinceEpoch,
-        'workoutName': null, // Optional workout name
-        'soundName': state!.customSoundName ?? 'sound',
-      });
-
-      // CRITICAL: Save the activity ID for future updates
-      if (result != null && result is String && result.isNotEmpty) {
-        state = state!.copyWith(
-          liveActivityActive: true,
-          liveActivityId: result,
+        debugPrint(
+          '[TIMER-LA] 📱 Using WorkoutSession LA only - transitioning to REST mode',
         );
-        await _saveState();
-      } else {
-        state = state!.activateLiveActivity();
+      }
+
+      Exercise? targetExercise;
+      if (state!.exerciseName != null) {
+        targetExercise = workout.exercises
+            .where((e) => e.name == state!.exerciseName)
+            .firstOrNull;
+      }
+      targetExercise ??= workout.exercises.firstOrNull;
+
+      if (targetExercise == null) {
+        if (kDebugMode) {
+          debugPrint(
+            '[TIMER-LA] ⚠️ Could not resolve target exercise - skipping LA sync',
+          );
+        }
+        await _clearLegacyLiveActivityState();
+        return;
+      }
+
+      await laNotifier.transitionToRest(
+        restDurationSeconds: state!.totalDurationSeconds,
+        nextExercise: targetExercise,
+        nextSetIndex: state!.currentSet ?? 1,
+      );
+
+      await _clearLegacyLiveActivityState();
+
+      if (kDebugMode) {
+        debugPrint(
+          '[TIMER-LA] ✅ WorkoutSession LA transitioned to REST: ${state!.totalDurationSeconds}s',
+        );
       }
     } catch (e) {
-      // Log stack trace for better debugging
-      if (e is Exception) {}
+      if (kDebugMode) {
+        debugPrint('[TIMER-LA] ❌ Failed to sync WorkoutSession LA: $e');
+      }
+      await _clearLegacyLiveActivityState();
     }
   }
 
@@ -2100,7 +2050,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         'totalSets': state!.totalSets ?? 1,
         'lastUpdated': DateTime.now().millisecondsSinceEpoch,
         'skipped': state!.skipped, // Send skip status to iOS
-        'soundName': state!.customSoundName ?? 'sound',
+        'soundName': _resolveCurrentTimerSoundName(),
       });
     } catch (e, stackTrace) {
       debugPrint('⚠️ [UnifiedTimer] Error: $e');
@@ -2139,14 +2089,12 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       });
 
       // Clear the activity ID from state
-      state = state!.copyWith(
-        liveActivityActive: false,
-        liveActivityId: null,
-      );
+      state = state!.copyWith(liveActivityActive: false, liveActivityId: null);
       await _saveState();
     } catch (e, stackTrace) {
       // ACTIVITY_NOT_FOUND is expected when activity was already cleaned up by iOS
-      final isActivityNotFound = e is PlatformException && e.code == 'ACTIVITY_NOT_FOUND';
+      final isActivityNotFound =
+          e is PlatformException && e.code == 'ACTIVITY_NOT_FOUND';
       if (isActivityNotFound) {
         debugPrint('ℹ️ [UnifiedTimer] Live Activity already ended (expected)');
       } else {
@@ -2182,7 +2130,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       // 🔧 FIX: Ensure box is open before reading
       if (!await _ensureStorageOpen()) {
         if (kDebugMode) {
-          debugPrint('⚠️ [UnifiedTimer] Cannot restore state - storage unavailable');
+          debugPrint(
+            '⚠️ [UnifiedTimer] Cannot restore state - storage unavailable',
+          );
         }
         return;
       }
@@ -2242,53 +2192,25 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
             _startTicker();
 
             if (Platform.isIOS) {
+              await _applyIOSCompletionDeliveryStrategy();
               await _startLiveActivity();
             }
           } else {
-            // Timer should be completed
-            // CRITICAL FIX: Check if audio was already played before calling complete
-            if (restoredState.audioPlayed) {
+            if (restoredState.audioPlayed ||
+                (Platform.isIOS &&
+                    restoredState.completionDeliveryStrategy ==
+                        TimerCompletionDeliveryStrategy.notificationOwned)) {
               state = restoredState.copyWith(
                 status: TimerStatus.completed,
                 remainingSeconds: 0,
+                audioPlayed: true,
+                completionDeliveryStrategy:
+                    TimerCompletionDeliveryStrategy.foregroundAudio,
               );
+              await _saveState();
             } else {
-              // CRITICAL FIX: Double-check with iOS if audio was already played
-              bool audioAlreadyPlayed = false;
-              if (Platform.isIOS) {
-                try {
-                  final result = await _unifiedChannel.invokeMethod(
-                    'hasAudioPlayedRecently',
-                    {
-                      'seconds': 10.0, // Check last 10 seconds
-                    },
-                  );
-                  audioAlreadyPlayed = result == true;
-                  if (audioAlreadyPlayed) {}
-                } catch (e, stackTrace) {
-      debugPrint('⚠️ [UnifiedTimer] Error: $e');
-      unawaited(
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          stackTrace,
-          reason: 'UnifiedTimer operation failed',
-          fatal: false,
-        ),
-      );
-    }
-              }
-
-              if (!audioAlreadyPlayed) {
-                state = restoredState.complete();
-                await _onTimerComplete();
-              } else {
-                state = restoredState.copyWith(
-                  audioPlayed: true,
-                  status: TimerStatus.completed,
-                  remainingSeconds: 0,
-                );
-                await _saveState();
-              }
+              state = restoredState.complete();
+              await _onTimerComplete();
             }
           }
         } else {
@@ -2328,7 +2250,9 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           }
         }
       } catch (emergencyError, stackTrace) {
-        debugPrint('⚠️ [UnifiedTimer] Emergency state recovery failed: $emergencyError');
+        debugPrint(
+          '⚠️ [UnifiedTimer] Emergency state recovery failed: $emergencyError',
+        );
         unawaited(
           FirebaseCrashlytics.instance.recordError(
             emergencyError,
@@ -2615,16 +2539,16 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       try {
         WidgetsBinding.instance.removeObserver(this);
       } catch (e, stackTrace) {
-      debugPrint('⚠️ [UnifiedTimer] Error: $e');
-      unawaited(
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          stackTrace,
-          reason: 'UnifiedTimer operation failed',
-          fatal: false,
-        ),
-      );
-    }
+        debugPrint('⚠️ [UnifiedTimer] Error: $e');
+        unawaited(
+          FirebaseCrashlytics.instance.recordError(
+            e,
+            stackTrace,
+            reason: 'UnifiedTimer operation failed',
+            fatal: false,
+          ),
+        );
+      }
 
       // 2. Stop and cleanup timer with comprehensive error handling
       try {
@@ -2752,32 +2676,32 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
                 .catchError((e) {}),
           );
         } catch (e, stackTrace) {
-      debugPrint('⚠️ [UnifiedTimer] Error: $e');
-      unawaited(
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          stackTrace,
-          reason: 'UnifiedTimer operation failed',
-          fatal: false,
-        ),
-      );
-    }
+          debugPrint('⚠️ [UnifiedTimer] Error: $e');
+          unawaited(
+            FirebaseCrashlytics.instance.recordError(
+              e,
+              stackTrace,
+              reason: 'UnifiedTimer operation failed',
+              fatal: false,
+            ),
+          );
+        }
       }
 
       // 6. MEMORY LEAK FIX: Clear method channel handler safely
       try {
         _unifiedChannel.setMethodCallHandler(null);
       } catch (e, stackTrace) {
-      debugPrint('⚠️ [UnifiedTimer] Error: $e');
-      unawaited(
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          stackTrace,
-          reason: 'UnifiedTimer operation failed',
-          fatal: false,
-        ),
-      );
-    }
+        debugPrint('⚠️ [UnifiedTimer] Error: $e');
+        unawaited(
+          FirebaseCrashlytics.instance.recordError(
+            e,
+            stackTrace,
+            reason: 'UnifiedTimer operation failed',
+            fatal: false,
+          ),
+        );
+      }
 
       // 7. Enhanced Hive box lifecycle management with proper error handling
       try {
@@ -2814,16 +2738,16 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         if (_audioInProgress) {}
         if (_stateWriteInProgress) {}
       } catch (e, stackTrace) {
-      debugPrint('⚠️ [UnifiedTimer] Error: $e');
-      unawaited(
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          stackTrace,
-          reason: 'UnifiedTimer operation failed',
-          fatal: false,
-        ),
-      );
-    }
+        debugPrint('⚠️ [UnifiedTimer] Error: $e');
+        unawaited(
+          FirebaseCrashlytics.instance.recordError(
+            e,
+            stackTrace,
+            reason: 'UnifiedTimer operation failed',
+            fatal: false,
+          ),
+        );
+      }
 
       // 9. MEMORY LEAK FIX: Clear all references to prevent memory leaks
       try {
@@ -2832,31 +2756,31 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         _lastTick = null;
         _accuracyErrorCount = 0;
       } catch (e, stackTrace) {
-      debugPrint('⚠️ [UnifiedTimer] Error: $e');
-      unawaited(
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          stackTrace,
-          reason: 'UnifiedTimer operation failed',
-          fatal: false,
-        ),
-      );
-    }
+        debugPrint('⚠️ [UnifiedTimer] Error: $e');
+        unawaited(
+          FirebaseCrashlytics.instance.recordError(
+            e,
+            stackTrace,
+            reason: 'UnifiedTimer operation failed',
+            fatal: false,
+          ),
+        );
+      }
 
       // 10. CRITICAL: Null out state LAST to prevent accessing null state
       try {
         state = null;
       } catch (e, stackTrace) {
-      debugPrint('⚠️ [UnifiedTimer] Error: $e');
-      unawaited(
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          stackTrace,
-          reason: 'UnifiedTimer operation failed',
-          fatal: false,
-        ),
-      );
-    }
+        debugPrint('⚠️ [UnifiedTimer] Error: $e');
+        unawaited(
+          FirebaseCrashlytics.instance.recordError(
+            e,
+            stackTrace,
+            reason: 'UnifiedTimer operation failed',
+            fatal: false,
+          ),
+        );
+      }
     } catch (e) {
       // CRITICAL: Even if disposal fails, log the error and continue
 
@@ -2875,22 +2799,74 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
   // SIMPLIFIED APP LIFECYCLE: Only handle critical state for iOS
   @override
-  void didChangeAppLifecycleState(AppLifecycleState appLifecycleState) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     if (_isDisposed) return;
 
-    super.didChangeAppLifecycleState(appLifecycleState);
+    super.didChangeAppLifecycleState(state);
+    _debugLogIOSCompletionTrace(
+      'didChangeAppLifecycleState',
+      extra: {'nextLifecycleState': state.name},
+    );
 
-    // FIX C11: Sync immediately on resume — don't wait for next _onTick() (10s drift window).
-    // If timer expired while in background the ticker wasn't running, so state stays "running"
-    // forever without this explicit sync.
-    if (appLifecycleState == AppLifecycleState.resumed) {
-      _syncTimerStateAfterResume();
+    if (state == AppLifecycleState.resumed) {
+      unawaited(_handleIOSResume());
+    } else if ((state == AppLifecycleState.inactive ||
+            state == AppLifecycleState.paused) &&
+        this.state?.isActive == true &&
+        Platform.isIOS) {
+      unawaited(_handleIOSAppMovedToBackground());
     }
   }
 
-  /// FIX C11: Recalculate timer state immediately when app returns from background.
-  /// Handles the case where the timer expired while Flutter was suspended.
-  void _syncTimerStateAfterResume() {
+  Future<void> _handleIOSResume() async {
+    _debugLogIOSCompletionTrace('_handleIOSResume:start');
+    await _syncTimerStateAfterResume();
+
+    if (state?.isActive == true && Platform.isIOS) {
+      await _handleIOSAppBecameForeground();
+    }
+    _debugLogIOSCompletionTrace('_handleIOSResume:end');
+  }
+
+  Future<void> _handleIOSAppBecameForeground() async {
+    try {
+      _debugLogIOSCompletionTrace('_handleIOSAppBecameForeground:start');
+      await _applyIOSCompletionDeliveryStrategy();
+      await _saveState(immediate: true);
+      _debugLogIOSCompletionTrace('_handleIOSAppBecameForeground:end');
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint(
+          '⚠️ [UnifiedTimer] Failed to switch iOS timer back to foreground audio: $e',
+        );
+      }
+      _debugLogIOSCompletionTrace(
+        '_handleIOSAppBecameForeground:error',
+        extra: {'error': e.toString()},
+      );
+    }
+  }
+
+  Future<void> _handleIOSAppMovedToBackground() async {
+    try {
+      _debugLogIOSCompletionTrace('_handleIOSAppMovedToBackground:start');
+      await _applyIOSCompletionDeliveryStrategy();
+      await _saveState(immediate: true);
+      _debugLogIOSCompletionTrace('_handleIOSAppMovedToBackground:end');
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint(
+          '⚠️ [UnifiedTimer] Failed to arm iOS notification-owned completion: $e',
+        );
+      }
+      _debugLogIOSCompletionTrace(
+        '_handleIOSAppMovedToBackground:error',
+        extra: {'error': e.toString()},
+      );
+    }
+  }
+
+  Future<void> _syncTimerStateAfterResume() async {
     final currentState = state;
     if (currentState == null || !currentState.isActive) return;
 
@@ -2899,26 +2875,101 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
     final now = DateTime.now();
     final remaining = endTime.difference(now).inSeconds;
+    _debugLogIOSCompletionTrace(
+      '_syncTimerStateAfterResume:computedRemaining',
+      extra: {
+        'now': now.toIso8601String(),
+        'remaining': remaining,
+        'endTime': endTime.toIso8601String(),
+      },
+    );
 
     if (remaining <= 0) {
-      // Timer expired while in background.
-      // iOS already handled audio/notification — only correct Flutter UI state.
       if (!currentState.audioPlayed && !_completionInProgress) {
-        _completionInProgress = true;
-        state = currentState.copyWith(
+        _stopTicker();
+        _cachedEndTime = null;
+        _remainingSecondsNotifier?.value = 0;
+
+        var completionState = currentState.copyWith(
           status: TimerStatus.completed,
           remainingSeconds: 0,
         );
-        _remainingSecondsNotifier?.value = 0;
-        // Mark as played to prevent duplicate audio on next tick
-        state = state!.markAudioPlayed();
-        unawaited(_saveState(immediate: true));
+
+        if (Platform.isIOS) {
+          final notificationOwnedBySystem =
+              currentState.completionDeliveryStrategy ==
+              TimerCompletionDeliveryStrategy.notificationOwned;
+
+          if (notificationOwnedBySystem) {
+            bool notificationDelivered = false;
+
+            try {
+              notificationDelivered =
+                  await _unifiedChannel.invokeMethod<bool>(
+                    'wasScheduledCompletionDelivered',
+                  ) ??
+                  false;
+              _debugLogIOSCompletionTrace(
+                '_syncTimerStateAfterResume:notificationDeliveryChecked',
+                extra: {'notificationDelivered': notificationDelivered},
+              );
+            } catch (e) {
+              if (kDebugMode) {
+                debugPrint(
+                  '⚠️ [UnifiedTimer] Could not verify delivered iOS completion notification after resume: $e',
+                );
+              }
+              _debugLogIOSCompletionTrace(
+                '_syncTimerStateAfterResume:notificationDeliveryCheckFailed',
+                extra: {'error': e.toString()},
+              );
+            }
+
+            if (!notificationDelivered) {
+              try {
+                await _unifiedChannel.invokeMethod<void>(
+                  'cancelScheduledCompletion',
+                );
+              } catch (e) {
+                if (kDebugMode) {
+                  debugPrint(
+                    '⚠️ [UnifiedTimer] Could not cancel stale iOS completion notification on resume: $e',
+                  );
+                }
+              }
+              _debugLogIOSCompletionTrace(
+                '_syncTimerStateAfterResume:switchedToForegroundFallback',
+                extra: {'notificationDelivered': notificationDelivered},
+              );
+
+              completionState = completionState.copyWith(
+                completionDeliveryStrategy:
+                    TimerCompletionDeliveryStrategy.foregroundAudio,
+              );
+            }
+          }
+        }
+
+        state = completionState;
+        _debugLogIOSCompletionTrace(
+          '_syncTimerStateAfterResume:stateMarkedCompleted',
+        );
+        await _onTimerComplete();
       }
     } else {
-      // Timer still running — apply precise correction now (don't wait 10 ticks)
       _remainingSecondsNotifier?.value = remaining;
       state = currentState.copyWith(remainingSeconds: remaining);
+      _debugLogIOSCompletionTrace(
+        '_syncTimerStateAfterResume:stateAdjusted',
+        extra: {'remaining': remaining},
+      );
     }
+  }
+
+  bool _isAppInForeground() {
+    final lifecycleState = WidgetsBinding.instance.lifecycleState;
+    return lifecycleState == null ||
+        lifecycleState == AppLifecycleState.resumed;
   }
 }
 
