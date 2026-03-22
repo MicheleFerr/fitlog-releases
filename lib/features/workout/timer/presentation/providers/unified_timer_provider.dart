@@ -1845,7 +1845,14 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         }
       }
     } catch (e) {
-      // Send notification as final backup
+      // Send notification as final backup (non-iOS only).
+      // On iOS with notificationOwned strategy, we must rethrow so the
+      // caller knows audio failed and keeps the scheduled notification.
+      if (Platform.isIOS &&
+          state?.completionDeliveryStrategy ==
+              TimerCompletionDeliveryStrategy.notificationOwned) {
+        rethrow;
+      }
       await _sendAudioErrorNotification();
     } finally {
       // ATOMIC: Always unlock audio process and mark play time
