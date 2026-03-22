@@ -1463,26 +1463,34 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
             '🔊 [TIMER COMPLETION] Playing completion sound (not skipped)',
           );
         }
-        // Always try to play local audio, even when notification is scheduled.
-        // The notification is a backup for when the app is fully suspended,
-        // but if the Dart timer is still ticking we should play audio directly.
+        // Try local audio first. If it succeeds, cancel the scheduled
+        // notification to avoid double sound. If it fails (e.g. locked screen
+        // where AVAudioSession can't activate), the notification handles it.
+        final isNotificationOwned = Platform.isIOS &&
+            state?.completionDeliveryStrategy ==
+                TimerCompletionDeliveryStrategy.notificationOwned;
+
         _debugLogIOSCompletionTrace(
           '_onTimerComplete:willPlayLocalAudio',
         );
         try {
-          // Cancel the scheduled notification to avoid double sound
-          if (Platform.isIOS &&
-              state?.completionDeliveryStrategy ==
-                  TimerCompletionDeliveryStrategy.notificationOwned) {
+          await _playCompletionSound();
+          // Audio succeeded — cancel notification to avoid double sound
+          if (isNotificationOwned) {
             await _unifiedChannel
                 .invokeMethod<void>('cancelScheduledCompletion');
+            if (kDebugMode) {
+              debugPrint(
+                '🔊 [TIMER COMPLETION] Local audio played, cancelled scheduled notification',
+              );
+            }
           }
-          await _playCompletionSound();
         } catch (audioError) {
-          // Audio failure should NOT prevent the timer from completing
-          // User will still get notification as fallback
+          // Audio failed (locked screen) — notification will handle sound
           if (kDebugMode) {
-            debugPrint('❌ [TIMER COMPLETION] Audio error: $audioError');
+            debugPrint(
+              '⚠️ [TIMER COMPLETION] Local audio failed, relying on notification: $audioError',
+            );
           }
         }
 
