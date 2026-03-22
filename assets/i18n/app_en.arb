@@ -2091,7 +2091,7 @@
   "@seeAll": {
     "description": "See all button"
   },
-  "templateQuotaUsed": "{used} of {max} templates used",
+  "templateQuotaUsed": "{used} of {max} Library slots used",
   "@templateQuotaUsed": {
     "description": "Template quota counter showing used/max templates",
     "placeholders": {
@@ -2109,7 +2109,7 @@
   "@templateQuotaExceeded": {
     "description": "Template quota exceeded title"
   },
-  "templateQuotaExceededMessage": "You've reached the limit of {max} templates. Upgrade to Premium for unlimited templates.",
+  "templateQuotaExceededMessage": "Your Library is full ({max} editable templates). Upgrade to Premium for more space.",
   "@templateQuotaExceededMessage": {
     "description": "Template quota exceeded detailed message",
     "placeholders": {
@@ -2123,7 +2123,7 @@
   "@upgradeToUnlimited": {
     "description": "Upgrade to Premium button for unlimited templates"
   },
-  "templateQuotaWarning": "You're using {used} of {max} templates. Consider upgrading for unlimited templates.",
+  "templateQuotaWarning": "Your Library has {used} of {max} editable templates in use.",
   "@templateQuotaWarning": {
     "description": "Warning when approaching template quota limit",
     "placeholders": {
@@ -3538,15 +3538,15 @@
   "@orderSaved": {
     "description": "Feedback message when exercise order is saved"
   },
-  "startNow": "Start Now",
+  "startNow": "Free Workout",
   "@startNow": {
     "description": "Quick start workout button"
   },
-  "startImmediately": "Start immediately and add exercises on the fly",
+  "startImmediately": "Start without a template and add exercises on the fly",
   "@startImmediately": {
     "description": "Start immediately description"
   },
-  "workoutStartedQuickly": "Workout started! Add exercises as you go",
+  "workoutStartedQuickly": "Free workout started! Add exercises as you go",
   "@workoutStartedQuickly": {
     "description": "Feedback when quick workout starts"
   },
@@ -3652,7 +3652,7 @@
   "@predefined": {
     "description": "Predefined templates tab"
   },
-  "myTemplates": "My Templates",
+  "myTemplates": "Library",
   "@myTemplates": {
     "description": "Tab label for user's templates"
   },
@@ -4438,7 +4438,7 @@
   "@workoutTemplates": {
     "description": "Title for workout templates screen"
   },
-  "discover": "Discover",
+  "discover": "Store",
   "@discover": {
     "description": "Tab label for discovering public templates"
   },
@@ -4726,7 +4726,7 @@
   "@shareLinkCopied": {
     "description": "Success message when share link is copied"
   },
-  "templateDownloaded": "Template \"{templateName}\" downloaded!",
+  "templateDownloaded": "\"{templateName}\" saved to Library!",
   "@templateDownloaded": {
     "description": "Success message when template is downloaded",
     "placeholders": {
@@ -7871,6 +7871,14 @@
   "@startTrackingDuration": {
     "description": "Exercise start button main text"
   },
+  "setDurationStartHintBody": "Before your first set, tap Start Set so the duration is saved correctly.",
+  "@setDurationStartHintBody": {
+    "description": "Inline hint shown before the first set when set duration tracking is enabled"
+  },
+  "setDurationMissedStartNotice": "First set duration was estimated. For better accuracy next time, tap Start Set before you begin.",
+  "@setDurationMissedStartNotice": {
+    "description": "Soft warning shown after completing the first set without tapping Start Set"
+  },
   "getReady": "Get ready...",
   "@getReady": {
     "description": "Countdown message during set preparation"
@@ -10696,7 +10704,7 @@
   "@view": {
     "description": "View button"
   },
-  "templateLimitReached": "You have reached the limit of {max} private templates.",
+  "templateLimitReached": "Your Library is full ({max} editable templates).",
   "@templateLimitReached": {
     "description": "Template limit message",
     "placeholders": {
@@ -10935,7 +10943,7 @@
   "@startWorkoutTitle": {
     "description": "Start workout menu item title"
   },
-  "startNowAction": "Start Now",
+  "startNowAction": "Free Workout",
   "@startNowAction": {
     "description": "Start now action"
   },
@@ -11715,9 +11723,17 @@
   "@settingsSounds": {
     "description": "Sound toggle title"
   },
-  "settingsSoundsDesc": "Play sounds for timer and notifications",
+  "settingsSoundsDesc": "Play sound when rest timer completes",
   "@settingsSoundsDesc": {
     "description": "Sound toggle description"
+  },
+  "settingsTimerNotification": "Timer Notification",
+  "@settingsTimerNotification": {
+    "description": "Timer notification toggle title"
+  },
+  "settingsTimerNotificationDesc": "Show notification when rest timer completes in background",
+  "@settingsTimerNotificationDesc": {
+    "description": "Timer notification toggle description"
   },
   "settingsTimerSound": "Timer Sound",
   "@settingsTimerSound": {
@@ -18130,7 +18146,7 @@
       }
     }
   },
-  "templateLimitMessage": "You have reached the limit of {max} templates",
+  "templateLimitMessage": "Free up space in your Library or upgrade to Premium to keep more editable templates.",
   "@templateLimitMessage": {
     "description": "Template limit reached message",
     "placeholders": {
@@ -20746,7 +20762,7 @@
   "prioritySupport": "Priority Support",
   "fullAccess": "Full Access",
   "active": "Active",
-  "unlockGymbroPremium": "Unlock GymBro Premium",
+  "unlockGymbroPremium": "Unlock FitLog Pro Unlimited",
   "@unlockGymbroPremium": {
     "description": "Hero section title for premium screen"
   },
@@ -20762,7 +20778,7 @@
   "@neverLoseYourData": {
     "description": "Auto backup feature description"
   },
-  "shareDiscoverWorkouts": "Share & discover workouts",
+  "shareDiscoverWorkouts": "Share workouts and browse the Store",
   "@shareDiscoverWorkouts": {
     "description": "Community feature description"
   },
@@ -20953,7 +20969,7 @@
     "description": "Title for the early adopter section on premium screen"
   },
   "thankYouForBeingPremium": "Thank you for being Premium!",
-  "gymbroPremium": "GymBro Premium",
+  "gymbroPremium": "FitLog Pro Unlimited",
   "youArePremium": "You are Premium!",
   "youHaveAccessToAllFeatures": "You have access to all features",
   "planWillBeAvailableSoon": "{plan} plan will be available soon!",
@@ -21815,6 +21831,26 @@
   "privacyAndGDPR": "Privacy & GDPR",
   "@privacyAndGDPR": {
     "description": "Section title for privacy and GDPR settings"
+  },
+  "privacyOptions": "Privacy Options",
+  "@privacyOptions": {
+    "description": "Title for the UMP privacy options entry point in settings"
+  },
+  "privacyOptionsDesc": "Review or change your ad privacy choices",
+  "@privacyOptionsDesc": {
+    "description": "Subtitle for the privacy options entry point when available"
+  },
+  "privacyOptionsUnavailableDesc": "Not currently required for your region",
+  "@privacyOptionsUnavailableDesc": {
+    "description": "Subtitle or info message when privacy options are not required"
+  },
+  "privacyOptionsUpdated": "Privacy options updated",
+  "@privacyOptionsUpdated": {
+    "description": "Success message after closing the privacy options form"
+  },
+  "privacyOptionsError": "Unable to open privacy options",
+  "@privacyOptionsError": {
+    "description": "Error message when the privacy options form fails to open"
   },
   "consentStatus": "Consent Status",
   "@consentStatus": {
@@ -23408,7 +23444,7 @@
   "@selectTemplate": {
     "description": "Title for template picker modal"
   },
-  "publicTemplates": "Public Templates",
+  "publicTemplates": "Store",
   "@publicTemplates": {
     "description": "Section header for public templates"
   },
@@ -29065,7 +29101,7 @@
   "faqHealthPermissionsQuestion": "What health permissions are needed?",
   "faqHealthPermissionsAnswer": "The app requests: Write Workouts (to log your sessions), Read Weight (to auto-update your body weight). All permissions are optional and can be changed anytime in your device's privacy settings. We never access data we don't need.",
   "faqWeightSyncQuestion": "Does my body weight sync automatically?",
-  "faqWeightSyncAnswer": "If you grant permission, the app can read your latest weight from Apple Health or Health Connect. This keeps your calculated metrics (like volume per kg) accurate without manual entry. Weight updates appear within seconds of being recorded.",
+  "faqWeightSyncAnswer": "If you grant permission, the app can read your latest weight from Apple Health or Health Connect. This keeps calculated metrics like volume per kg accurate without manual entry. Weight updates are imported when you open the app or run a manual sync.",
   "faqDataLostQuestion": "I lost my workout data - what do I do?",
   "faqDataLostAnswer": "First, check if you're signed in (Profile screen shows account). Try Restore Purchase to verify Premium status. If signed in, try logging out and back in to force a resync. For local data issues, check if you have an export backup. Contact support if problems persist.",
   "faqTimerNotWorkingQuestion": "The timer isn't working in background - why?",
@@ -29718,7 +29754,7 @@
   "@healthSyncHelpTitle": {
     "description": "Title for health sync help dialog"
   },
-  "healthSyncHelpContent": "Apple Health & Health Connect Integration\n\nFeatures:\n• Import workouts from Apple Health / Health Connect\n• Sync body weight data (bidirectional)\n• Automatic daily background sync\n• Manual sync anytime\n\nPermissions:\n• Workout: Import workout sessions\n• Body Weight: Sync weight data\n\nBackground Sync:\n• Auto-syncs every 24 hours\n• Retry on failure (3 attempts max)\n• Can be disabled if needed",
+  "healthSyncHelpContent": "Apple Health & Health Connect Integration\n\nFeatures:\n• Import completed workouts from Apple Health / Health Connect\n• Sync body weight data\n• Import updates when the app opens\n• Manual sync anytime\n\nPermissions:\n• Workout: Import workout sessions\n• Body Weight: Sync weight data",
   "@healthSyncHelpContent": {
     "description": "Help dialog content explaining health sync features"
   },
@@ -31574,6 +31610,10 @@
   "@initialOnboardingHealthKitSubtitle": {
     "description": "HealthKit step subtitle"
   },
+  "initialOnboardingHealthKitCorePermissions": "Workouts, body weight, and height are included in the first connection.",
+  "@initialOnboardingHealthKitCorePermissions": {
+    "description": "Explains which core Apple Health permissions are always requested in onboarding"
+  },
   "initialOnboardingHealthKitWorkouts": "Workouts",
   "@initialOnboardingHealthKitWorkouts": {
     "description": "Workouts health data type"
@@ -31890,7 +31930,7 @@
   "@specialty": {
     "description": "Category for specialty workouts"
   },
-  "addToMyTemplates": "Add to My Templates",
+  "addToMyTemplates": "Save to Library",
   "@addToMyTemplates": {
     "description": "Button text to add a template to user's library"
   },
@@ -32834,7 +32874,7 @@
   "@templateRestPauseCableRow": {
     "description": "Rest-Pause template name: Cable Row Rest-Pause"
   },
-  "discoverMoreTemplates": "Discover more templates",
+  "discoverMoreTemplates": "Browse more in Store",
   "@discoverMoreTemplates": {
     "description": "Link to expand and show predefined templates"
   },
@@ -32949,11 +32989,11 @@
   "@templateWizardReminderDismiss": {
     "description": "Dismiss button for template wizard reminder"
   },
-  "tourMyTemplatesTitle": "My Templates",
+  "tourMyTemplatesTitle": "Library",
   "@tourMyTemplatesTitle": {
     "description": "Home tour step 2 title - My Templates card"
   },
-  "tourMyTemplatesDescription": "Quick access to Workout Routines, Custom Exercises, and Preset Templates. Create new workouts here!",
+  "tourMyTemplatesDescription": "Your editable templates live here. Create originals, duplicate them, and customize copies saved from the Store.",
   "@tourMyTemplatesDescription": {
     "description": "Home tour step 2 description - My Templates card"
   },
@@ -33029,7 +33069,7 @@
   "@socialConsentAgree": {
     "description": "Share with name button"
   },
-  "templatePublished": "Template published",
+  "templatePublished": "Published to Store",
   "@templatePublished": {
     "description": "Message when template is published"
   },
@@ -33089,18 +33129,18 @@
   "@templateUgcDisclaimer": {
     "description": "User generated content disclaimer"
   },
-  "templateForkedFrom": "Forked from {author}",
+  "templateForkedFrom": "Saved from {author}",
   "@templateForkedFrom": {
     "description": "Shows original author of forked template",
     "placeholders": {
       "author": {}
     }
   },
-  "tourDiscoverTitle": "Discover Templates",
+  "tourDiscoverTitle": "Store",
   "@tourDiscoverTitle": {
     "description": "Tour step: Discover tab title"
   },
-  "tourDiscoverDescription": "Browse templates created by the community. Find inspiration for your next workout.",
+  "tourDiscoverDescription": "Browse free templates from the community. Use one instantly or save an editable copy to your Library.",
   "@tourDiscoverDescription": {
     "description": "Tour step: Discover tab description"
   },
@@ -33546,7 +33586,7 @@
   "@hintSwipeForActions": {
     "description": "Hint for swipe gesture on exercise or template cards"
   },
-  "hintDiscoverTemplates": "Explore ready-made templates to start training right away",
+  "hintDiscoverTemplates": "Browse the Store for ready-made templates you can use right away",
   "@hintDiscoverTemplates": {
     "description": "Hint suggesting user explore the Discover tab"
   },
@@ -33593,6 +33633,10 @@
   "hintLongPressFabMenu": "Long press for more options",
   "@hintLongPressFabMenu": {
     "description": "Hint for long press on FAB button"
+  },
+  "hintPlusEmptyWorkout": "Tap +, then Empty to start a blank workout",
+  "@hintPlusEmptyWorkout": {
+    "description": "Hint explaining that the center plus button can start an empty workout"
   },
   "hintLongPressFabAccent": "Long press",
   "@hintLongPressFabAccent": {
@@ -34009,7 +34053,7 @@
     }
   },
   "quickActionLogMeasurements": "Log Measurements",
-  "quickActionEmptyWorkout": "Empty",
+  "quickActionEmptyWorkout": "Start a Workout",
   "quickActionStart": "START",
   "quickActionOtherMeasurements": "Other measurements...",
   "quickActionArmsLR": "Arms (R/L)",
@@ -34474,5 +34518,205 @@
   "storeNotAvailable": "Store not available. Please try again later.",
   "@storeNotAvailable": {
     "description": "Error message when in-app purchase store is not ready"
+  },
+  "templatePrivateDraftCreated": "Saved an editable copy of \"{templateName}\" to your Library",
+  "@templatePrivateDraftCreated": {
+    "description": "Snackbar shown when editing a shared template creates a private draft",
+    "placeholders": {
+      "templateName": {}
+    }
+  },
+  "templateDistributionForkPrompt": "Templates saved from the Store can be shared privately with a code, but they cannot be published to the Store in v1.",
+  "@templateDistributionForkPrompt": {
+    "description": "Distribution prompt shown for forked templates"
+  },
+  "templateDistributionOriginalPrompt": "Choose whether to share this template privately with a code or publish it to the Store. This creates a read-only distributed version and keeps your editable source in Library.",
+  "@templateDistributionOriginalPrompt": {
+    "description": "Distribution prompt shown for original templates"
+  },
+  "sharePrivately": "Share privately",
+  "@sharePrivately": {
+    "description": "Action to share a template privately with a code"
+  },
+  "publishPublicly": "Publish publicly",
+  "@publishPublicly": {
+    "description": "Action to publish a template to Discover"
+  },
+  "templatePrivateShareCodeTitle": "Private share code",
+  "@templatePrivateShareCodeTitle": {
+    "description": "Dialog title for a private template share code"
+  },
+  "templatePrivateShareCodeDescription": "Use this code to open \"{templateName}\" inside the app. You can always find it again later in Library > Shared by you.",
+  "@templatePrivateShareCodeDescription": {
+    "description": "Dialog description for a private template share code",
+    "placeholders": {
+      "templateName": {}
+    }
+  },
+  "templatePrivateShareCodeInstructions": "Open Templates > Store > Community Store > Use code inside the app.",
+  "@templatePrivateShareCodeInstructions": {
+    "description": "Instructions for redeeming a private template code"
+  },
+  "templatePrivateShareCodeMessage": "FitLog template code for \"{templateName}\": {templateId}",
+  "@templatePrivateShareCodeMessage": {
+    "description": "Message shared when sending a private template code",
+    "placeholders": {
+      "templateName": {},
+      "templateId": {}
+    }
+  },
+  "templateSharedPrivately": "Template shared privately",
+  "@templateSharedPrivately": {
+    "description": "Snackbar shown after sharing a template privately"
+  },
+  "useCode": "Use code",
+  "@useCode": {
+    "description": "Action to open a shared template by code"
+  },
+  "useShareCode": "Use share code",
+  "@useShareCode": {
+    "description": "Dialog title for entering a share code"
+  },
+  "pasteTemplateCode": "Paste template code",
+  "@pasteTemplateCode": {
+    "description": "Hint for pasting a template share code"
+  },
+  "open": "Open",
+  "@open": {
+    "description": "Generic open action"
+  },
+  "sharedTemplateNotFound": "Shared template not found",
+  "@sharedTemplateNotFound": {
+    "description": "Error shown when a shared template code is invalid"
+  },
+  "sharedTemplateUnavailable": "Shared template unavailable",
+  "@sharedTemplateUnavailable": {
+    "description": "Error shown when a shared template is no longer available"
+  },
+  "templateForkBeforeEdit": "Save this template to your Library before editing it.",
+  "@templateForkBeforeEdit": {
+    "description": "Error shown when trying to edit another user's shared template directly"
+  },
+  "sharedTemplateReadOnlyError": "Store and shared templates are read-only. Customize your copy before editing.",
+  "@sharedTemplateReadOnlyError": {
+    "description": "Error shown when trying to modify a shared template in place"
+  },
+  "storeTab": "Store",
+  "@storeTab": {
+    "description": "Tab label for the public template store"
+  },
+  "libraryQuotaTitle": "Library quota",
+  "@libraryQuotaTitle": {
+    "description": "Title for the Library quota card"
+  },
+  "libraryQuotaSubtitle": "Editable copies in your Library are the only monetized limit.",
+  "@libraryQuotaSubtitle": {
+    "description": "Subtitle for the Library quota card"
+  },
+  "libraryEditableCopies": "Editable templates in Library",
+  "@libraryEditableCopies": {
+    "description": "Label for editable template count in Library"
+  },
+  "libraryDistributionFreeTitle": "Publishing and sharing are free",
+  "@libraryDistributionFreeTitle": {
+    "description": "Title for free distribution message"
+  },
+  "libraryDistributionFreeDescription": "{count} templates currently distributed. Store publishing and private sharing do not use paid Library slots.",
+  "@libraryDistributionFreeDescription": {
+    "description": "Description for free distribution message",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "libraryUpgradeTitle": "Need more Library space?",
+  "@libraryUpgradeTitle": {
+    "description": "Title for Library upgrade prompt"
+  },
+  "libraryUpgradeDescription": "Upgrade to keep more editable templates, duplicates, and customized copies.",
+  "@libraryUpgradeDescription": {
+    "description": "Description for Library upgrade prompt"
+  },
+  "librarySectionDescription": "Templates you own and can edit. Creating, duplicating, or customizing a copy uses Library quota.",
+  "@librarySectionDescription": {
+    "description": "Description for the Library section"
+  },
+  "distributionSectionTitle": "Shared by you",
+  "@distributionSectionTitle": {
+    "description": "Title for distributed templates section"
+  },
+  "distributionSectionDescription": "Read-only versions you distributed with a code or published. Check their stats here, then keep editing the source copy in your Library.",
+  "@distributionSectionDescription": {
+    "description": "Description for distributed templates section"
+  },
+  "communityStoreTitle": "Community Store",
+  "@communityStoreTitle": {
+    "description": "Title for the community-driven public template catalog"
+  },
+  "communityStoreSelectorSubtitle": "Public templates shared by coaches and members",
+  "@communityStoreSelectorSubtitle": {
+    "description": "Short subtitle used inside the community store selector"
+  },
+  "communityStoreDescription": "Public templates shared by coaches and members. Browse the catalog, use a code, or save a copy to your Library.",
+  "@communityStoreDescription": {
+    "description": "Description for the community store section"
+  },
+  "communityStoreEmptyTitle": "Community Store is quiet right now",
+  "@communityStoreEmptyTitle": {
+    "description": "Title for the empty state of the community store"
+  },
+  "communityStoreEmptyDescription": "Use a private code, or publish from Library to see templates here. Your shared templates will stay available inside Library.",
+  "@communityStoreEmptyDescription": {
+    "description": "Description for the empty state of the community store"
+  },
+  "appStoreTitle": "FitLog Pro Library",
+  "@appStoreTitle": {
+    "description": "Title for the built-in official FitLog Pro template catalog"
+  },
+  "appStoreSelectorSubtitle": "Official programs and curated routines",
+  "@appStoreSelectorSubtitle": {
+    "description": "Short subtitle used inside the official store selector"
+  },
+  "appStoreDescription": "Official FitLog Pro programs and curated routines, ready to use instantly or save to your Library.",
+  "@appStoreDescription": {
+    "description": "Description for the built-in app store section"
+  },
+  "storeSectionDescription": "Free templates from the community. Use them now, or save an editable copy to your Library.",
+  "@storeSectionDescription": {
+    "description": "Description for the Store section"
+  },
+  "customizeYourCopy": "Customize your copy",
+  "@customizeYourCopy": {
+    "description": "CTA to create an editable personal copy from a read-only template"
+  },
+  "openInLibrary": "Open in Library",
+  "@openInLibrary": {
+    "description": "CTA used when a store template belongs to the current user and should open its editable source in Library"
+  },
+  "showCode": "Show code",
+  "@showCode": {
+    "description": "Action to view a private template share code again"
+  },
+  "libraryEditableBanner": "Editable copy in your Library",
+  "@libraryEditableBanner": {
+    "description": "Banner text for editable Library templates"
+  },
+  "templateReadOnlyStoreBanner": "Read-only template from Store or shared link",
+  "@templateReadOnlyStoreBanner": {
+    "description": "Banner text for read-only Store/shared templates"
+  },
+  "templatePublishedStatus": "Published",
+  "@templatePublishedStatus": {
+    "description": "Short status label for publicly published templates"
+  },
+  "templatePrivateLinkStatus": "Private link",
+  "@templatePrivateLinkStatus": {
+    "description": "Short status label for unlisted templates shared via code"
+  },
+  "dragToHideFabHint": "Drag to the edge to hide",
+  "@dragToHideFabHint": {
+    "description": "Hint shown above the draggable action button to explain it can be hidden"
   }
 }

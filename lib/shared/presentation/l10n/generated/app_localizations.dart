@@ -3190,7 +3190,7 @@ abstract class AppLocalizations {
   /// Template quota counter showing used/max templates
   ///
   /// In en, this message translates to:
-  /// **'{used} of {max} templates used'**
+  /// **'{used} of {max} Library slots used'**
   String templateQuotaUsed(int used, int max);
 
   /// Template quota exceeded title
@@ -3202,7 +3202,7 @@ abstract class AppLocalizations {
   /// Template quota exceeded detailed message
   ///
   /// In en, this message translates to:
-  /// **'You\'ve reached the limit of {max} templates. Upgrade to Premium for unlimited templates.'**
+  /// **'Your Library is full ({max} editable templates). Upgrade to Premium for more space.'**
   String templateQuotaExceededMessage(int max);
 
   /// Upgrade to Premium button for unlimited templates
@@ -3214,7 +3214,7 @@ abstract class AppLocalizations {
   /// Warning when approaching template quota limit
   ///
   /// In en, this message translates to:
-  /// **'You\'re using {used} of {max} templates. Consider upgrading for unlimited templates.'**
+  /// **'Your Library has {used} of {max} editable templates in use.'**
   String templateQuotaWarning(int used, int max);
 
   /// Premium feature: unlimited templates
@@ -5114,19 +5114,19 @@ abstract class AppLocalizations {
   /// Quick start workout button
   ///
   /// In en, this message translates to:
-  /// **'Start Now'**
+  /// **'Free Workout'**
   String get startNow;
 
   /// Start immediately description
   ///
   /// In en, this message translates to:
-  /// **'Start immediately and add exercises on the fly'**
+  /// **'Start without a template and add exercises on the fly'**
   String get startImmediately;
 
   /// Feedback when quick workout starts
   ///
   /// In en, this message translates to:
-  /// **'Workout started! Add exercises as you go'**
+  /// **'Free workout started! Add exercises as you go'**
   String get workoutStartedQuickly;
 
   /// Calories label
@@ -5276,7 +5276,7 @@ abstract class AppLocalizations {
   /// Tab label for user's templates
   ///
   /// In en, this message translates to:
-  /// **'My Templates'**
+  /// **'Library'**
   String get myTemplates;
 
   /// Empty state title for personal templates
@@ -6296,7 +6296,7 @@ abstract class AppLocalizations {
   /// Tab label for discovering public templates
   ///
   /// In en, this message translates to:
-  /// **'Discover'**
+  /// **'Store'**
   String get discover;
 
   /// Placeholder text for contribution search in community discovery
@@ -6686,7 +6686,7 @@ abstract class AppLocalizations {
   /// Success message when template is downloaded
   ///
   /// In en, this message translates to:
-  /// **'Template \"{templateName}\" downloaded!'**
+  /// **'\"{templateName}\" saved to Library!'**
   String templateDownloaded(String templateName);
 
   /// Error message when template download fails
@@ -11068,6 +11068,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start tracking duration'**
   String get startTrackingDuration;
+
+  /// Inline hint shown before the first set when set duration tracking is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Before your first set, tap Start Set so the duration is saved correctly.'**
+  String get setDurationStartHintBody;
+
+  /// Soft warning shown after completing the first set without tapping Start Set
+  ///
+  /// In en, this message translates to:
+  /// **'First set duration was estimated. For better accuracy next time, tap Start Set before you begin.'**
+  String get setDurationMissedStartNotice;
 
   /// Countdown message during set preparation
   ///
@@ -16253,7 +16265,7 @@ abstract class AppLocalizations {
   /// Template limit message
   ///
   /// In en, this message translates to:
-  /// **'You have reached the limit of {max} private templates.'**
+  /// **'Your Library is full ({max} editable templates).'**
   String templateLimitReached(int max);
 
   /// Delete or upgrade suggestion
@@ -16547,7 +16559,7 @@ abstract class AppLocalizations {
   /// Start now action
   ///
   /// In en, this message translates to:
-  /// **'Start Now'**
+  /// **'Free Workout'**
   String get startNowAction;
 
   /// Start exercise action
@@ -17519,8 +17531,20 @@ abstract class AppLocalizations {
   /// Sound toggle description
   ///
   /// In en, this message translates to:
-  /// **'Play sounds for timer and notifications'**
+  /// **'Play sound when rest timer completes'**
   String get settingsSoundsDesc;
+
+  /// Timer notification toggle title
+  ///
+  /// In en, this message translates to:
+  /// **'Timer Notification'**
+  String get settingsTimerNotification;
+
+  /// Timer notification toggle description
+  ///
+  /// In en, this message translates to:
+  /// **'Show notification when rest timer completes in background'**
+  String get settingsTimerNotificationDesc;
 
   /// Timer sound selection title
   ///
@@ -26505,7 +26529,7 @@ abstract class AppLocalizations {
   /// Template limit reached message
   ///
   /// In en, this message translates to:
-  /// **'You have reached the limit of {max} templates'**
+  /// **'Free up space in your Library or upgrade to Premium to keep more editable templates.'**
   String templateLimitMessage(int max);
 
   /// User trust score display
@@ -29697,7 +29721,7 @@ abstract class AppLocalizations {
   /// Hero section title for premium screen
   ///
   /// In en, this message translates to:
-  /// **'Unlock GymBro Premium'**
+  /// **'Unlock FitLog Pro Unlimited'**
   String get unlockGymbroPremium;
 
   /// Premium hero section subtitle
@@ -29721,7 +29745,7 @@ abstract class AppLocalizations {
   /// Community feature description
   ///
   /// In en, this message translates to:
-  /// **'Share & discover workouts'**
+  /// **'Share workouts and browse the Store'**
   String get shareDiscoverWorkouts;
 
   /// Analytics Pro feature title
@@ -30135,7 +30159,7 @@ abstract class AppLocalizations {
   /// No description provided for @gymbroPremium.
   ///
   /// In en, this message translates to:
-  /// **'GymBro Premium'**
+  /// **'FitLog Pro Unlimited'**
   String get gymbroPremium;
 
   /// No description provided for @youArePremium.
@@ -32057,6 +32081,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Privacy & GDPR'**
   String get privacyAndGDPR;
+
+  /// Title for the UMP privacy options entry point in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Options'**
+  String get privacyOptions;
+
+  /// Subtitle for the privacy options entry point when available
+  ///
+  /// In en, this message translates to:
+  /// **'Review or change your ad privacy choices'**
+  String get privacyOptionsDesc;
+
+  /// Subtitle or info message when privacy options are not required
+  ///
+  /// In en, this message translates to:
+  /// **'Not currently required for your region'**
+  String get privacyOptionsUnavailableDesc;
+
+  /// Success message after closing the privacy options form
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy options updated'**
+  String get privacyOptionsUpdated;
+
+  /// Error message when the privacy options form fails to open
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to open privacy options'**
+  String get privacyOptionsError;
 
   /// Label showing current GDPR consent status
   ///
@@ -34335,7 +34389,7 @@ abstract class AppLocalizations {
   /// Section header for public templates
   ///
   /// In en, this message translates to:
-  /// **'Public Templates'**
+  /// **'Store'**
   String get publicTemplates;
 
   /// Message when no templates exist
@@ -42264,7 +42318,7 @@ abstract class AppLocalizations {
   /// No description provided for @faqWeightSyncAnswer.
   ///
   /// In en, this message translates to:
-  /// **'If you grant permission, the app can read your latest weight from Apple Health or Health Connect. This keeps your calculated metrics (like volume per kg) accurate without manual entry. Weight updates appear within seconds of being recorded.'**
+  /// **'If you grant permission, the app can read your latest weight from Apple Health or Health Connect. This keeps calculated metrics like volume per kg accurate without manual entry. Weight updates are imported when you open the app or run a manual sync.'**
   String get faqWeightSyncAnswer;
 
   /// No description provided for @faqDataLostQuestion.
@@ -43283,7 +43337,7 @@ abstract class AppLocalizations {
   /// Help dialog content explaining health sync features
   ///
   /// In en, this message translates to:
-  /// **'Apple Health & Health Connect Integration\n\nFeatures:\n• Import workouts from Apple Health / Health Connect\n• Sync body weight data (bidirectional)\n• Automatic daily background sync\n• Manual sync anytime\n\nPermissions:\n• Workout: Import workout sessions\n• Body Weight: Sync weight data\n\nBackground Sync:\n• Auto-syncs every 24 hours\n• Retry on failure (3 attempts max)\n• Can be disabled if needed'**
+  /// **'Apple Health & Health Connect Integration\n\nFeatures:\n• Import completed workouts from Apple Health / Health Connect\n• Sync body weight data\n• Import updates when the app opens\n• Manual sync anytime\n\nPermissions:\n• Workout: Import workout sessions\n• Body Weight: Sync weight data'**
   String get healthSyncHelpContent;
 
   /// Button label for running diagnostic tests
@@ -45656,6 +45710,12 @@ abstract class AppLocalizations {
   /// **'Sync your data for a personalized experience'**
   String get initialOnboardingHealthKitSubtitle;
 
+  /// Explains which core Apple Health permissions are always requested in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts, body weight, and height are included in the first connection.'**
+  String get initialOnboardingHealthKitCorePermissions;
+
   /// Workouts health data type
   ///
   /// In en, this message translates to:
@@ -46133,7 +46193,7 @@ abstract class AppLocalizations {
   /// Button text to add a template to user's library
   ///
   /// In en, this message translates to:
-  /// **'Add to My Templates'**
+  /// **'Save to Library'**
   String get addToMyTemplates;
 
   /// Success message when template is added
@@ -47825,7 +47885,7 @@ abstract class AppLocalizations {
   /// Link to expand and show predefined templates
   ///
   /// In en, this message translates to:
-  /// **'Discover more templates'**
+  /// **'Browse more in Store'**
   String get discoverMoreTemplates;
 
   /// Button to collapse the recommended templates section
@@ -48011,13 +48071,13 @@ abstract class AppLocalizations {
   /// Home tour step 2 title - My Templates card
   ///
   /// In en, this message translates to:
-  /// **'My Templates'**
+  /// **'Library'**
   String get tourMyTemplatesTitle;
 
   /// Home tour step 2 description - My Templates card
   ///
   /// In en, this message translates to:
-  /// **'Quick access to Workout Routines, Custom Exercises, and Preset Templates. Create new workouts here!'**
+  /// **'Your editable templates live here. Create originals, duplicate them, and customize copies saved from the Store.'**
   String get tourMyTemplatesDescription;
 
   /// Success message when both values imported
@@ -48131,7 +48191,7 @@ abstract class AppLocalizations {
   /// Message when template is published
   ///
   /// In en, this message translates to:
-  /// **'Template published'**
+  /// **'Published to Store'**
   String get templatePublished;
 
   /// Report action button
@@ -48221,19 +48281,19 @@ abstract class AppLocalizations {
   /// Shows original author of forked template
   ///
   /// In en, this message translates to:
-  /// **'Forked from {author}'**
+  /// **'Saved from {author}'**
   String templateForkedFrom(Object author);
 
   /// Tour step: Discover tab title
   ///
   /// In en, this message translates to:
-  /// **'Discover Templates'**
+  /// **'Store'**
   String get tourDiscoverTitle;
 
   /// Tour step: Discover tab description
   ///
   /// In en, this message translates to:
-  /// **'Browse templates created by the community. Find inspiration for your next workout.'**
+  /// **'Browse free templates from the community. Use one instantly or save an editable copy to your Library.'**
   String get tourDiscoverDescription;
 
   /// Tour step: Create button title
@@ -48821,7 +48881,7 @@ abstract class AppLocalizations {
   /// Hint suggesting user explore the Discover tab
   ///
   /// In en, this message translates to:
-  /// **'Explore ready-made templates to start training right away'**
+  /// **'Browse the Store for ready-made templates you can use right away'**
   String get hintDiscoverTemplates;
 
   /// Title for AI Coach discovery hint card
@@ -48889,6 +48949,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Long press for more options'**
   String get hintLongPressFabMenu;
+
+  /// Hint explaining that the center plus button can start an empty workout
+  ///
+  /// In en, this message translates to:
+  /// **'Tap +, then Empty to start a blank workout'**
+  String get hintPlusEmptyWorkout;
 
   /// Accent for long press FAB hint
   ///
@@ -49505,7 +49571,7 @@ abstract class AppLocalizations {
   /// No description provided for @quickActionEmptyWorkout.
   ///
   /// In en, this message translates to:
-  /// **'Empty'**
+  /// **'Start a Workout'**
   String get quickActionEmptyWorkout;
 
   /// No description provided for @quickActionStart.
@@ -50141,6 +50207,285 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Store not available. Please try again later.'**
   String get storeNotAvailable;
+
+  /// Snackbar shown when editing a shared template creates a private draft
+  ///
+  /// In en, this message translates to:
+  /// **'Saved an editable copy of \"{templateName}\" to your Library'**
+  String templatePrivateDraftCreated(Object templateName);
+
+  /// Distribution prompt shown for forked templates
+  ///
+  /// In en, this message translates to:
+  /// **'Templates saved from the Store can be shared privately with a code, but they cannot be published to the Store in v1.'**
+  String get templateDistributionForkPrompt;
+
+  /// Distribution prompt shown for original templates
+  ///
+  /// In en, this message translates to:
+  /// **'Choose whether to share this template privately with a code or publish it to the Store. This creates a read-only distributed version and keeps your editable source in Library.'**
+  String get templateDistributionOriginalPrompt;
+
+  /// Action to share a template privately with a code
+  ///
+  /// In en, this message translates to:
+  /// **'Share privately'**
+  String get sharePrivately;
+
+  /// Action to publish a template to Discover
+  ///
+  /// In en, this message translates to:
+  /// **'Publish publicly'**
+  String get publishPublicly;
+
+  /// Dialog title for a private template share code
+  ///
+  /// In en, this message translates to:
+  /// **'Private share code'**
+  String get templatePrivateShareCodeTitle;
+
+  /// Dialog description for a private template share code
+  ///
+  /// In en, this message translates to:
+  /// **'Use this code to open \"{templateName}\" inside the app. You can always find it again later in Library > Shared by you.'**
+  String templatePrivateShareCodeDescription(Object templateName);
+
+  /// Instructions for redeeming a private template code
+  ///
+  /// In en, this message translates to:
+  /// **'Open Templates > Store > Community Store > Use code inside the app.'**
+  String get templatePrivateShareCodeInstructions;
+
+  /// Message shared when sending a private template code
+  ///
+  /// In en, this message translates to:
+  /// **'FitLog template code for \"{templateName}\": {templateId}'**
+  String templatePrivateShareCodeMessage(
+    Object templateName,
+    Object templateId,
+  );
+
+  /// Snackbar shown after sharing a template privately
+  ///
+  /// In en, this message translates to:
+  /// **'Template shared privately'**
+  String get templateSharedPrivately;
+
+  /// Action to open a shared template by code
+  ///
+  /// In en, this message translates to:
+  /// **'Use code'**
+  String get useCode;
+
+  /// Dialog title for entering a share code
+  ///
+  /// In en, this message translates to:
+  /// **'Use share code'**
+  String get useShareCode;
+
+  /// Hint for pasting a template share code
+  ///
+  /// In en, this message translates to:
+  /// **'Paste template code'**
+  String get pasteTemplateCode;
+
+  /// Generic open action
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get open;
+
+  /// Error shown when a shared template code is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Shared template not found'**
+  String get sharedTemplateNotFound;
+
+  /// Error shown when a shared template is no longer available
+  ///
+  /// In en, this message translates to:
+  /// **'Shared template unavailable'**
+  String get sharedTemplateUnavailable;
+
+  /// Error shown when trying to edit another user's shared template directly
+  ///
+  /// In en, this message translates to:
+  /// **'Save this template to your Library before editing it.'**
+  String get templateForkBeforeEdit;
+
+  /// Error shown when trying to modify a shared template in place
+  ///
+  /// In en, this message translates to:
+  /// **'Store and shared templates are read-only. Customize your copy before editing.'**
+  String get sharedTemplateReadOnlyError;
+
+  /// Tab label for the public template store
+  ///
+  /// In en, this message translates to:
+  /// **'Store'**
+  String get storeTab;
+
+  /// Title for the Library quota card
+  ///
+  /// In en, this message translates to:
+  /// **'Library quota'**
+  String get libraryQuotaTitle;
+
+  /// Subtitle for the Library quota card
+  ///
+  /// In en, this message translates to:
+  /// **'Editable copies in your Library are the only monetized limit.'**
+  String get libraryQuotaSubtitle;
+
+  /// Label for editable template count in Library
+  ///
+  /// In en, this message translates to:
+  /// **'Editable templates in Library'**
+  String get libraryEditableCopies;
+
+  /// Title for free distribution message
+  ///
+  /// In en, this message translates to:
+  /// **'Publishing and sharing are free'**
+  String get libraryDistributionFreeTitle;
+
+  /// Description for free distribution message
+  ///
+  /// In en, this message translates to:
+  /// **'{count} templates currently distributed. Store publishing and private sharing do not use paid Library slots.'**
+  String libraryDistributionFreeDescription(int count);
+
+  /// Title for Library upgrade prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Need more Library space?'**
+  String get libraryUpgradeTitle;
+
+  /// Description for Library upgrade prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to keep more editable templates, duplicates, and customized copies.'**
+  String get libraryUpgradeDescription;
+
+  /// Description for the Library section
+  ///
+  /// In en, this message translates to:
+  /// **'Templates you own and can edit. Creating, duplicating, or customizing a copy uses Library quota.'**
+  String get librarySectionDescription;
+
+  /// Title for distributed templates section
+  ///
+  /// In en, this message translates to:
+  /// **'Shared by you'**
+  String get distributionSectionTitle;
+
+  /// Description for distributed templates section
+  ///
+  /// In en, this message translates to:
+  /// **'Read-only versions you distributed with a code or published. Check their stats here, then keep editing the source copy in your Library.'**
+  String get distributionSectionDescription;
+
+  /// Title for the community-driven public template catalog
+  ///
+  /// In en, this message translates to:
+  /// **'Community Store'**
+  String get communityStoreTitle;
+
+  /// Short subtitle used inside the community store selector
+  ///
+  /// In en, this message translates to:
+  /// **'Public templates shared by coaches and members'**
+  String get communityStoreSelectorSubtitle;
+
+  /// Description for the community store section
+  ///
+  /// In en, this message translates to:
+  /// **'Public templates shared by coaches and members. Browse the catalog, use a code, or save a copy to your Library.'**
+  String get communityStoreDescription;
+
+  /// Title for the empty state of the community store
+  ///
+  /// In en, this message translates to:
+  /// **'Community Store is quiet right now'**
+  String get communityStoreEmptyTitle;
+
+  /// Description for the empty state of the community store
+  ///
+  /// In en, this message translates to:
+  /// **'Use a private code, or publish from Library to see templates here. Your shared templates will stay available inside Library.'**
+  String get communityStoreEmptyDescription;
+
+  /// Title for the built-in official FitLog Pro template catalog
+  ///
+  /// In en, this message translates to:
+  /// **'FitLog Pro Library'**
+  String get appStoreTitle;
+
+  /// Short subtitle used inside the official store selector
+  ///
+  /// In en, this message translates to:
+  /// **'Official programs and curated routines'**
+  String get appStoreSelectorSubtitle;
+
+  /// Description for the built-in app store section
+  ///
+  /// In en, this message translates to:
+  /// **'Official FitLog Pro programs and curated routines, ready to use instantly or save to your Library.'**
+  String get appStoreDescription;
+
+  /// Description for the Store section
+  ///
+  /// In en, this message translates to:
+  /// **'Free templates from the community. Use them now, or save an editable copy to your Library.'**
+  String get storeSectionDescription;
+
+  /// CTA to create an editable personal copy from a read-only template
+  ///
+  /// In en, this message translates to:
+  /// **'Customize your copy'**
+  String get customizeYourCopy;
+
+  /// CTA used when a store template belongs to the current user and should open its editable source in Library
+  ///
+  /// In en, this message translates to:
+  /// **'Open in Library'**
+  String get openInLibrary;
+
+  /// Action to view a private template share code again
+  ///
+  /// In en, this message translates to:
+  /// **'Show code'**
+  String get showCode;
+
+  /// Banner text for editable Library templates
+  ///
+  /// In en, this message translates to:
+  /// **'Editable copy in your Library'**
+  String get libraryEditableBanner;
+
+  /// Banner text for read-only Store/shared templates
+  ///
+  /// In en, this message translates to:
+  /// **'Read-only template from Store or shared link'**
+  String get templateReadOnlyStoreBanner;
+
+  /// Short status label for publicly published templates
+  ///
+  /// In en, this message translates to:
+  /// **'Published'**
+  String get templatePublishedStatus;
+
+  /// Short status label for unlisted templates shared via code
+  ///
+  /// In en, this message translates to:
+  /// **'Private link'**
+  String get templatePrivateLinkStatus;
+
+  /// Hint shown above the draggable action button to explain it can be hidden
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to the edge to hide'**
+  String get dragToHideFabHint;
 }
 
 class _AppLocalizationsDelegate

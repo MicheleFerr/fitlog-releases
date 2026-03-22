@@ -17,6 +17,7 @@ class AppConfig {
     this.themeMode = ThemeMode.system,
     this.measurementUnit = 'kg',
     this.soundEnabled = true,
+    this.timerNotificationEnabled = true,
     this.vibrationsEnabled = true,
     this.timerSound = 'timer_complete',
     this.defaultRestTime = 90,
@@ -106,6 +107,7 @@ class AppConfig {
       ),
       measurementUnit: json['measurementUnit'] ?? 'kg',
       soundEnabled: json['soundEnabled'] ?? true,
+      timerNotificationEnabled: json['timerNotificationEnabled'] ?? true,
       vibrationsEnabled: json['vibrationsEnabled'] ?? true,
       timerSound: json['timerSound'] ?? 'timer_complete',
       defaultRestTime: json['defaultRestTime'] ?? 90,
@@ -162,6 +164,7 @@ class AppConfig {
 
   @HiveField(4)
   final bool soundEnabled;
+  final bool timerNotificationEnabled;
 
   @HiveField(5)
   final bool vibrationsEnabled;
@@ -360,6 +363,12 @@ class AppConfig {
   AppIconVariant get appIconVariant =>
       AppIconVariant.fromString(appIconVariantValue);
 
+  /// Effective auto-rest flag, compatible with both legacy and newer fields.
+  ///
+  /// We treat either stored toggle set to `false` as disabled so older configs
+  /// that only persisted `autoStartTimer` still behave correctly.
+  bool get isAutoRestTimerEnabled => autoStartTimer && (autoRestTimer ?? true);
+
   Locale get locale => Locale(languageCode, countryCode);
 
   AppConfig copyWith({
@@ -368,6 +377,7 @@ class AppConfig {
     ThemeMode? themeMode,
     String? measurementUnit,
     bool? soundEnabled,
+    bool? timerNotificationEnabled,
     bool? vibrationsEnabled,
     String? timerSound,
     int? defaultRestTime,
@@ -434,6 +444,8 @@ class AppConfig {
       themeMode: themeMode ?? this.themeMode,
       measurementUnit: measurementUnit ?? this.measurementUnit,
       soundEnabled: soundEnabled ?? this.soundEnabled,
+      timerNotificationEnabled:
+          timerNotificationEnabled ?? this.timerNotificationEnabled,
       vibrationsEnabled: vibrationsEnabled ?? this.vibrationsEnabled,
       timerSound: timerSound ?? this.timerSound,
       defaultRestTime: defaultRestTime ?? this.defaultRestTime,
@@ -519,6 +531,7 @@ class AppConfig {
       'themeMode': themeMode.name,
       'measurementUnit': measurementUnit,
       'soundEnabled': soundEnabled,
+      'timerNotificationEnabled': timerNotificationEnabled,
       'vibrationsEnabled': vibrationsEnabled,
       'timerSound': timerSound,
       'defaultRestTime': defaultRestTime,
@@ -570,6 +583,7 @@ class AppConfig {
         other.themeMode == themeMode &&
         other.measurementUnit == measurementUnit &&
         other.soundEnabled == soundEnabled &&
+        other.timerNotificationEnabled == timerNotificationEnabled &&
         other.vibrationsEnabled == vibrationsEnabled &&
         other.timerSound == timerSound &&
         other.defaultRestTime == defaultRestTime &&
@@ -589,12 +603,13 @@ class AppConfig {
 
   @override
   int get hashCode {
-    return Object.hash(
+    return Object.hashAll([
       languageCode,
       countryCode,
       themeMode,
       measurementUnit,
       soundEnabled,
+      timerNotificationEnabled,
       vibrationsEnabled,
       timerSound,
       defaultRestTime,
@@ -610,7 +625,7 @@ class AppConfig {
       initialOnboardingCompleted,
       appThemeModeValue,
       appIconVariantValue,
-    );
+    ]);
   }
 }
 

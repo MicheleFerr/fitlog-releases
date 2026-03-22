@@ -1666,7 +1666,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String templateQuotaUsed(int used, int max) {
-    return '$used of $max templates used';
+    return '$used of $max Library slots used';
   }
 
   @override
@@ -1674,7 +1674,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String templateQuotaExceededMessage(int max) {
-    return 'You\'ve reached the limit of $max templates. Upgrade to Premium for unlimited templates.';
+    return 'Your Library is full ($max editable templates). Upgrade to Premium for more space.';
   }
 
   @override
@@ -1682,7 +1682,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String templateQuotaWarning(int used, int max) {
-    return 'You\'re using $used of $max templates. Consider upgrading for unlimited templates.';
+    return 'Your Library has $used of $max editable templates in use.';
   }
 
   @override
@@ -2721,15 +2721,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get orderSaved => 'Order saved';
 
   @override
-  String get startNow => 'Start Now';
+  String get startNow => 'Free Workout';
 
   @override
   String get startImmediately =>
-      'Start immediately and add exercises on the fly';
+      'Start without a template and add exercises on the fly';
 
   @override
   String get workoutStartedQuickly =>
-      'Workout started! Add exercises as you go';
+      'Free workout started! Add exercises as you go';
 
   @override
   String get calories => 'Calories';
@@ -2808,7 +2808,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get predefined => 'Predefined';
 
   @override
-  String get myTemplates => 'My Templates';
+  String get myTemplates => 'Library';
 
   @override
   String get noPersonalTemplates => 'No personal templates';
@@ -3397,7 +3397,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutTemplates => 'Routines';
 
   @override
-  String get discover => 'Discover';
+  String get discover => 'Store';
 
   @override
   String get searchContributions => 'Search contributions...';
@@ -3608,7 +3608,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String templateDownloaded(String templateName) {
-    return 'Template \"$templateName\" downloaded!';
+    return '\"$templateName\" saved to Library!';
   }
 
   @override
@@ -6010,6 +6010,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get startTrackingDuration => 'Start tracking duration';
+
+  @override
+  String get setDurationStartHintBody =>
+      'Before your first set, tap Start Set so the duration is saved correctly.';
+
+  @override
+  String get setDurationMissedStartNotice =>
+      'First set duration was estimated. For better accuracy next time, tap Start Set before you begin.';
 
   @override
   String get getReady => 'Get ready...';
@@ -9045,7 +9053,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String templateLimitReached(int max) {
-    return 'You have reached the limit of $max private templates.';
+    return 'Your Library is full ($max editable templates).';
   }
 
   @override
@@ -9217,7 +9225,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startWorkoutTitle => 'Start Workout';
 
   @override
-  String get startNowAction => 'Start Now';
+  String get startNowAction => 'Free Workout';
 
   @override
   String get startExercise => 'Start Exercise';
@@ -9784,7 +9792,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsSounds => 'Sounds';
 
   @override
-  String get settingsSoundsDesc => 'Play sounds for timer and notifications';
+  String get settingsSoundsDesc => 'Play sound when rest timer completes';
+
+  @override
+  String get settingsTimerNotification => 'Timer Notification';
+
+  @override
+  String get settingsTimerNotificationDesc =>
+      'Show notification when rest timer completes in background';
 
   @override
   String get settingsTimerSound => 'Timer Sound';
@@ -14893,7 +14908,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String templateLimitMessage(int max) {
-    return 'You have reached the limit of $max templates';
+    return 'Free up space in your Library or upgrade to Premium to keep more editable templates.';
   }
 
   @override
@@ -16618,7 +16633,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get active => 'Active';
 
   @override
-  String get unlockGymbroPremium => 'Unlock GymBro Premium';
+  String get unlockGymbroPremium => 'Unlock FitLog Pro Unlimited';
 
   @override
   String get premiumTagline =>
@@ -16631,7 +16646,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get neverLoseYourData => 'Never lose your data';
 
   @override
-  String get shareDiscoverWorkouts => 'Share & discover workouts';
+  String get shareDiscoverWorkouts => 'Share workouts and browse the Store';
 
   @override
   String get analyticsPro => 'Analytics Pro';
@@ -16859,7 +16874,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get thankYouForBeingPremium => 'Thank you for being Premium!';
 
   @override
-  String get gymbroPremium => 'GymBro Premium';
+  String get gymbroPremium => 'FitLog Pro Unlimited';
 
   @override
   String get youArePremium => 'You are Premium!';
@@ -17919,6 +17934,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacyAndGDPR => 'Privacy & GDPR';
+
+  @override
+  String get privacyOptions => 'Privacy Options';
+
+  @override
+  String get privacyOptionsDesc => 'Review or change your ad privacy choices';
+
+  @override
+  String get privacyOptionsUnavailableDesc =>
+      'Not currently required for your region';
+
+  @override
+  String get privacyOptionsUpdated => 'Privacy options updated';
+
+  @override
+  String get privacyOptionsError => 'Unable to open privacy options';
 
   @override
   String get consentStatus => 'Consent Status';
@@ -19128,7 +19159,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectTemplate => 'Select Template';
 
   @override
-  String get publicTemplates => 'Public Templates';
+  String get publicTemplates => 'Store';
 
   @override
   String get noTemplatesAvailable => 'No templates available';
@@ -23658,7 +23689,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get faqWeightSyncAnswer =>
-      'If you grant permission, the app can read your latest weight from Apple Health or Health Connect. This keeps your calculated metrics (like volume per kg) accurate without manual entry. Weight updates appear within seconds of being recorded.';
+      'If you grant permission, the app can read your latest weight from Apple Health or Health Connect. This keeps calculated metrics like volume per kg accurate without manual entry. Weight updates are imported when you open the app or run a manual sync.';
 
   @override
   String get faqDataLostQuestion => 'I lost my workout data - what do I do?';
@@ -24237,7 +24268,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get healthSyncHelpContent =>
-      'Apple Health & Health Connect Integration\n\nFeatures:\n• Import workouts from Apple Health / Health Connect\n• Sync body weight data (bidirectional)\n• Automatic daily background sync\n• Manual sync anytime\n\nPermissions:\n• Workout: Import workout sessions\n• Body Weight: Sync weight data\n\nBackground Sync:\n• Auto-syncs every 24 hours\n• Retry on failure (3 attempts max)\n• Can be disabled if needed';
+      'Apple Health & Health Connect Integration\n\nFeatures:\n• Import completed workouts from Apple Health / Health Connect\n• Sync body weight data\n• Import updates when the app opens\n• Manual sync anytime\n\nPermissions:\n• Workout: Import workout sessions\n• Body Weight: Sync weight data';
 
   @override
   String get runDiagnosticTests => 'Run Diagnostic Tests';
@@ -25581,6 +25612,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Sync your data for a personalized experience';
 
   @override
+  String get initialOnboardingHealthKitCorePermissions =>
+      'Workouts, body weight, and height are included in the first connection.';
+
+  @override
   String get initialOnboardingHealthKitWorkouts => 'Workouts';
 
   @override
@@ -25842,7 +25877,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get specialty => 'Specialty';
 
   @override
-  String get addToMyTemplates => 'Add to My Templates';
+  String get addToMyTemplates => 'Save to Library';
 
   @override
   String get templateAddedToLibrary => 'Template added to your library';
@@ -26734,7 +26769,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get templateRestPauseCableRow => 'Cable Row Rest-Pause';
 
   @override
-  String get discoverMoreTemplates => 'Discover more templates';
+  String get discoverMoreTemplates => 'Browse more in Store';
 
   @override
   String get hideTemplates => 'Hide';
@@ -26835,11 +26870,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get templateWizardReminderDismiss => 'Later';
 
   @override
-  String get tourMyTemplatesTitle => 'My Templates';
+  String get tourMyTemplatesTitle => 'Library';
 
   @override
   String get tourMyTemplatesDescription =>
-      'Quick access to Workout Routines, Custom Exercises, and Preset Templates. Create new workouts here!';
+      'Your editable templates live here. Create originals, duplicate them, and customize copies saved from the Store.';
 
   @override
   String get initialOnboardingHealthKitSuccessBoth =>
@@ -26901,7 +26936,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get socialConsentAgree => 'Share with Name';
 
   @override
-  String get templatePublished => 'Template published';
+  String get templatePublished => 'Published to Store';
 
   @override
   String get templateReportAction => 'Report';
@@ -26951,15 +26986,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String templateForkedFrom(Object author) {
-    return 'Forked from $author';
+    return 'Saved from $author';
   }
 
   @override
-  String get tourDiscoverTitle => 'Discover Templates';
+  String get tourDiscoverTitle => 'Store';
 
   @override
   String get tourDiscoverDescription =>
-      'Browse templates created by the community. Find inspiration for your next workout.';
+      'Browse free templates from the community. Use one instantly or save an editable copy to your Library.';
 
   @override
   String get tourCreateTemplateTitle => 'Create New Template';
@@ -27307,7 +27342,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hintDiscoverTemplates =>
-      'Explore ready-made templates to start training right away';
+      'Browse the Store for ready-made templates you can use right away';
 
   @override
   String get hintAiCoachTitle => 'You have a personal AI coach';
@@ -27341,6 +27376,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hintLongPressFabMenu => 'Long press for more options';
+
+  @override
+  String get hintPlusEmptyWorkout =>
+      'Tap +, then Empty to start a blank workout';
 
   @override
   String get hintLongPressFabAccent => 'Long press';
@@ -27703,7 +27742,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quickActionLogMeasurements => 'Log Measurements';
 
   @override
-  String get quickActionEmptyWorkout => 'Empty';
+  String get quickActionEmptyWorkout => 'Start a Workout';
 
   @override
   String get quickActionStart => 'START';
@@ -28066,4 +28105,169 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get storeNotAvailable =>
       'Store not available. Please try again later.';
+
+  @override
+  String templatePrivateDraftCreated(Object templateName) {
+    return 'Saved an editable copy of \"$templateName\" to your Library';
+  }
+
+  @override
+  String get templateDistributionForkPrompt =>
+      'Templates saved from the Store can be shared privately with a code, but they cannot be published to the Store in v1.';
+
+  @override
+  String get templateDistributionOriginalPrompt =>
+      'Choose whether to share this template privately with a code or publish it to the Store. This creates a read-only distributed version and keeps your editable source in Library.';
+
+  @override
+  String get sharePrivately => 'Share privately';
+
+  @override
+  String get publishPublicly => 'Publish publicly';
+
+  @override
+  String get templatePrivateShareCodeTitle => 'Private share code';
+
+  @override
+  String templatePrivateShareCodeDescription(Object templateName) {
+    return 'Use this code to open \"$templateName\" inside the app. You can always find it again later in Library > Shared by you.';
+  }
+
+  @override
+  String get templatePrivateShareCodeInstructions =>
+      'Open Templates > Store > Community Store > Use code inside the app.';
+
+  @override
+  String templatePrivateShareCodeMessage(
+    Object templateName,
+    Object templateId,
+  ) {
+    return 'FitLog template code for \"$templateName\": $templateId';
+  }
+
+  @override
+  String get templateSharedPrivately => 'Template shared privately';
+
+  @override
+  String get useCode => 'Use code';
+
+  @override
+  String get useShareCode => 'Use share code';
+
+  @override
+  String get pasteTemplateCode => 'Paste template code';
+
+  @override
+  String get open => 'Open';
+
+  @override
+  String get sharedTemplateNotFound => 'Shared template not found';
+
+  @override
+  String get sharedTemplateUnavailable => 'Shared template unavailable';
+
+  @override
+  String get templateForkBeforeEdit =>
+      'Save this template to your Library before editing it.';
+
+  @override
+  String get sharedTemplateReadOnlyError =>
+      'Store and shared templates are read-only. Customize your copy before editing.';
+
+  @override
+  String get storeTab => 'Store';
+
+  @override
+  String get libraryQuotaTitle => 'Library quota';
+
+  @override
+  String get libraryQuotaSubtitle =>
+      'Editable copies in your Library are the only monetized limit.';
+
+  @override
+  String get libraryEditableCopies => 'Editable templates in Library';
+
+  @override
+  String get libraryDistributionFreeTitle => 'Publishing and sharing are free';
+
+  @override
+  String libraryDistributionFreeDescription(int count) {
+    return '$count templates currently distributed. Store publishing and private sharing do not use paid Library slots.';
+  }
+
+  @override
+  String get libraryUpgradeTitle => 'Need more Library space?';
+
+  @override
+  String get libraryUpgradeDescription =>
+      'Upgrade to keep more editable templates, duplicates, and customized copies.';
+
+  @override
+  String get librarySectionDescription =>
+      'Templates you own and can edit. Creating, duplicating, or customizing a copy uses Library quota.';
+
+  @override
+  String get distributionSectionTitle => 'Shared by you';
+
+  @override
+  String get distributionSectionDescription =>
+      'Read-only versions you distributed with a code or published. Check their stats here, then keep editing the source copy in your Library.';
+
+  @override
+  String get communityStoreTitle => 'Community Store';
+
+  @override
+  String get communityStoreSelectorSubtitle =>
+      'Public templates shared by coaches and members';
+
+  @override
+  String get communityStoreDescription =>
+      'Public templates shared by coaches and members. Browse the catalog, use a code, or save a copy to your Library.';
+
+  @override
+  String get communityStoreEmptyTitle => 'Community Store is quiet right now';
+
+  @override
+  String get communityStoreEmptyDescription =>
+      'Use a private code, or publish from Library to see templates here. Your shared templates will stay available inside Library.';
+
+  @override
+  String get appStoreTitle => 'FitLog Pro Library';
+
+  @override
+  String get appStoreSelectorSubtitle =>
+      'Official programs and curated routines';
+
+  @override
+  String get appStoreDescription =>
+      'Official FitLog Pro programs and curated routines, ready to use instantly or save to your Library.';
+
+  @override
+  String get storeSectionDescription =>
+      'Free templates from the community. Use them now, or save an editable copy to your Library.';
+
+  @override
+  String get customizeYourCopy => 'Customize your copy';
+
+  @override
+  String get openInLibrary => 'Open in Library';
+
+  @override
+  String get showCode => 'Show code';
+
+  @override
+  String get libraryEditableBanner => 'Editable copy in your Library';
+
+  @override
+  String get templateReadOnlyStoreBanner =>
+      'Read-only template from Store or shared link';
+
+  @override
+  String get templatePublishedStatus => 'Published';
+
+  @override
+  String get templatePrivateLinkStatus => 'Private link';
+
+  @override
+  String get dragToHideFabHint => 'Drag to the edge to hide';
 }

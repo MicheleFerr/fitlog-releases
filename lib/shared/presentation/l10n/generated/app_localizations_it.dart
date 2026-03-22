@@ -1684,7 +1684,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String templateQuotaUsed(int used, int max) {
-    return '$used di $max template utilizzati';
+    return '$used di $max slot Libreria utilizzati';
   }
 
   @override
@@ -1692,7 +1692,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String templateQuotaExceededMessage(int max) {
-    return 'Hai raggiunto il limite di $max template. Passa a Premium per template illimitati.';
+    return 'La tua Libreria è piena ($max template modificabili). Passa a Premium per avere più spazio.';
   }
 
   @override
@@ -1700,7 +1700,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String templateQuotaWarning(int used, int max) {
-    return 'Stai usando $used di $max template. Considera l\'upgrade per template illimitati.';
+    return 'La tua Libreria sta usando $used di $max template modificabili.';
   }
 
   @override
@@ -2743,15 +2743,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get orderSaved => 'Ordine salvato';
 
   @override
-  String get startNow => 'Inizia Subito';
+  String get startNow => 'Allenamento libero';
 
   @override
   String get startImmediately =>
-      'Inizia immediatamente e aggiungi esercizi al volo';
+      'Inizia senza scheda e aggiungi esercizi al volo';
 
   @override
   String get workoutStartedQuickly =>
-      'Allenamento iniziato! Aggiungi esercizi man mano';
+      'Allenamento libero avviato! Aggiungi esercizi man mano';
 
   @override
   String get calories => 'Calorie';
@@ -2830,7 +2830,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get predefined => 'Predefiniti';
 
   @override
-  String get myTemplates => 'Le Mie Schede';
+  String get myTemplates => 'Libreria';
 
   @override
   String get noPersonalTemplates => 'Nessun template personale';
@@ -3421,7 +3421,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get workoutTemplates => 'Routine';
 
   @override
-  String get discover => 'Scopri';
+  String get discover => 'Store';
 
   @override
   String get searchContributions => 'Cerca contributi...';
@@ -3633,7 +3633,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String templateDownloaded(String templateName) {
-    return 'Scheda \"$templateName\" scaricata!';
+    return '\"$templateName\" salvato in Libreria!';
   }
 
   @override
@@ -6058,6 +6058,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get startTrackingDuration => 'Inizia tracciamento durata';
+
+  @override
+  String get setDurationStartHintBody =>
+      'Prima di iniziare la prima serie, premi Inizia Set. Così la durata viene salvata correttamente.';
+
+  @override
+  String get setDurationMissedStartNotice =>
+      'Durata della prima serie stimata. Per più precisione, la prossima volta premi Inizia Set prima di partire.';
 
   @override
   String get getReady => 'Preparati...';
@@ -9127,7 +9135,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String templateLimitReached(int max) {
-    return 'Hai raggiunto il limite di $max template privati.';
+    return 'La tua Libreria è piena ($max template modificabili).';
   }
 
   @override
@@ -9299,7 +9307,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get startWorkoutTitle => 'Avvia Allenamento';
 
   @override
-  String get startNowAction => 'Inizia Ora';
+  String get startNowAction => 'Avvia libero';
 
   @override
   String get startExercise => 'Avvia Esercizio';
@@ -9872,7 +9880,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settingsSounds => 'Suoni';
 
   @override
-  String get settingsSoundsDesc => 'Riproduci suoni per timer e notifiche';
+  String get settingsSoundsDesc =>
+      'Riproduci suono al completamento del rest timer';
+
+  @override
+  String get settingsTimerNotification => 'Notifica Timer';
+
+  @override
+  String get settingsTimerNotificationDesc =>
+      'Mostra notifica quando il rest timer scade in background';
 
   @override
   String get settingsTimerSound => 'Suono Timer';
@@ -15046,7 +15062,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String templateLimitMessage(int max) {
-    return 'Hai raggiunto il limite di $max template';
+    return 'Libera spazio nella Libreria oppure passa a Premium per conservare più template modificabili.';
   }
 
   @override
@@ -16774,7 +16790,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get active => 'Attivo';
 
   @override
-  String get unlockGymbroPremium => 'Sblocca GymBro Premium';
+  String get unlockGymbroPremium => 'Sblocca FitLog Pro Unlimited';
 
   @override
   String get premiumTagline =>
@@ -16788,7 +16804,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get neverLoseYourData => 'Non perdere mai i tuoi dati';
 
   @override
-  String get shareDiscoverWorkouts => 'Condividi e scopri allenamenti';
+  String get shareDiscoverWorkouts =>
+      'Condividi allenamenti e sfoglia lo Store';
 
   @override
   String get analyticsPro => 'Analytics Pro';
@@ -17023,7 +17040,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get thankYouForBeingPremium => 'Grazie per essere Premium!';
 
   @override
-  String get gymbroPremium => 'GymBro Premium';
+  String get gymbroPremium => 'FitLog Pro Unlimited';
 
   @override
   String get youArePremium => 'Sei Premium!';
@@ -18093,6 +18110,23 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get privacyAndGDPR => 'Privacy e GDPR';
+
+  @override
+  String get privacyOptions => 'Opzioni Privacy';
+
+  @override
+  String get privacyOptionsDesc =>
+      'Rivedi o modifica le tue scelte privacy per gli annunci';
+
+  @override
+  String get privacyOptionsUnavailableDesc =>
+      'Al momento non richieste per la tua regione';
+
+  @override
+  String get privacyOptionsUpdated => 'Opzioni privacy aggiornate';
+
+  @override
+  String get privacyOptionsError => 'Impossibile aprire le opzioni privacy';
 
   @override
   String get consentStatus => 'Stato Consenso';
@@ -19311,7 +19345,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get selectTemplate => 'Seleziona Template';
 
   @override
-  String get publicTemplates => 'Template Pubblici';
+  String get publicTemplates => 'Store';
 
   @override
   String get noTemplatesAvailable => 'Nessun template disponibile';
@@ -23878,7 +23912,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get faqWeightSyncAnswer =>
-      'Se concedi il permesso, l\'app può leggere il tuo ultimo peso da Apple Health o Health Connect. Questo mantiene accurate le metriche calcolate (come volume per kg) senza inserimento manuale. Gli aggiornamenti peso appaiono in pochi secondi dalla registrazione.';
+      'Se concedi il permesso, l\'app può leggere il tuo ultimo peso da Apple Health o Health Connect. Questo mantiene accurate le metriche calcolate, come il volume per kg, senza inserimento manuale. Gli aggiornamenti peso vengono importati quando apri l\'app o avvii una sincronizzazione manuale.';
 
   @override
   String get faqDataLostQuestion =>
@@ -24472,7 +24506,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get healthSyncHelpContent =>
-      'Integrazione Apple Health & Health Connect\n\nFunzionalità:\n• Importa allenamenti da Apple Health / Health Connect\n• Sincronizza dati peso corporeo (bidirezionale)\n• Sincronizzazione automatica giornaliera in background\n• Sincronizzazione manuale in qualsiasi momento\n\nPermessi:\n• Allenamento: Importa sessioni di allenamento\n• Peso Corporeo: Sincronizza dati peso\n\nSincronizzazione in Background:\n• Auto-sincronizza ogni 24 ore\n• Riprova in caso di errore (max 3 tentativi)\n• Può essere disabilitata se necessario';
+      'Integrazione Apple Health & Health Connect\n\nFunzionalità:\n• Importa allenamenti completati da Apple Health / Health Connect\n• Sincronizza dati peso corporeo\n• Importa gli aggiornamenti quando apri l\'app\n• Sincronizzazione manuale in qualsiasi momento\n\nPermessi:\n• Allenamento: Importa sessioni di allenamento\n• Peso Corporeo: Sincronizza dati peso';
 
   @override
   String get runDiagnosticTests => 'Esegui Test Diagnostici';
@@ -25839,6 +25873,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Sincronizza i tuoi dati per un\'esperienza personalizzata';
 
   @override
+  String get initialOnboardingHealthKitCorePermissions =>
+      'Allenamenti, peso corporeo e altezza sono inclusi nella prima connessione.';
+
+  @override
   String get initialOnboardingHealthKitWorkouts => 'Allenamenti';
 
   @override
@@ -26099,7 +26137,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get specialty => 'Specializzati';
 
   @override
-  String get addToMyTemplates => 'Aggiungi ai Miei Template';
+  String get addToMyTemplates => 'Salva in Libreria';
 
   @override
   String get templateAddedToLibrary => 'Template aggiunto alla tua libreria';
@@ -26993,7 +27031,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get templateRestPauseCableRow => 'Cable Row Rest-Pause';
 
   @override
-  String get discoverMoreTemplates => 'Scopri altri template';
+  String get discoverMoreTemplates => 'Sfoglia altro nello Store';
 
   @override
   String get hideTemplates => 'Nascondi';
@@ -27093,11 +27131,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get templateWizardReminderDismiss => 'Più tardi';
 
   @override
-  String get tourMyTemplatesTitle => 'Le Mie Schede';
+  String get tourMyTemplatesTitle => 'Libreria';
 
   @override
   String get tourMyTemplatesDescription =>
-      'Accesso rapido a Routine di Allenamento, Esercizi Personalizzati e Template Preimpostati. Crea nuovi allenamenti qui!';
+      'Qui trovi i template che possiedi e puoi modificare. Crea originali, duplicali e personalizza le copie salvate dallo Store.';
 
   @override
   String get initialOnboardingHealthKitSuccessBoth =>
@@ -27159,7 +27197,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get socialConsentAgree => 'Condividi con Nome';
 
   @override
-  String get templatePublished => 'Template pubblicato';
+  String get templatePublished => 'Pubblicato nello Store';
 
   @override
   String get templateReportAction => 'Segnala';
@@ -27209,15 +27247,15 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String templateForkedFrom(Object author) {
-    return 'Derivato da $author';
+    return 'Salvato da $author';
   }
 
   @override
-  String get tourDiscoverTitle => 'Scopri Schede';
+  String get tourDiscoverTitle => 'Store';
 
   @override
   String get tourDiscoverDescription =>
-      'Esplora schede create dalla community. Trova ispirazione per il tuo prossimo allenamento.';
+      'Sfoglia template gratuiti della community. Usane uno subito oppure salva una copia modificabile nella tua Libreria.';
 
   @override
   String get tourCreateTemplateTitle => 'Crea Nuova Scheda';
@@ -27568,7 +27606,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get hintDiscoverTemplates =>
-      'Esplora schede pronte per iniziare subito';
+      'Sfoglia lo Store per trovare template pronti da usare subito';
 
   @override
   String get hintAiCoachTitle => 'Hai un coach personale AI';
@@ -27604,6 +27642,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get hintLongPressFabMenu => 'Tieni premuto per altre opzioni';
+
+  @override
+  String get hintPlusEmptyWorkout =>
+      'Tocca +, poi Vuoto per iniziare un allenamento vuoto';
 
   @override
   String get hintLongPressFabAccent => 'Tieni premuto';
@@ -27974,7 +28016,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get quickActionLogMeasurements => 'Log Misure';
 
   @override
-  String get quickActionEmptyWorkout => 'Vuoto';
+  String get quickActionEmptyWorkout => 'Inizia un Allenamento';
 
   @override
   String get quickActionStart => 'INIZIA';
@@ -28341,4 +28383,169 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get storeNotAvailable => 'Store non disponibile. Riprova più tardi.';
+
+  @override
+  String templatePrivateDraftCreated(Object templateName) {
+    return 'Copia modificabile di \"$templateName\" salvata in Libreria';
+  }
+
+  @override
+  String get templateDistributionForkPrompt =>
+      'I template salvati dallo Store possono essere condivisi privatamente con un codice, ma in v1 non possono essere pubblicati nello Store.';
+
+  @override
+  String get templateDistributionOriginalPrompt =>
+      'Scegli se condividere questo template privatamente con un codice oppure pubblicarlo nello Store. Verra\' creata una versione distribuita in sola lettura, mentre la sorgente modificabile restera\' nella tua Libreria.';
+
+  @override
+  String get sharePrivately => 'Condividi privatamente';
+
+  @override
+  String get publishPublicly => 'Pubblica pubblicamente';
+
+  @override
+  String get templatePrivateShareCodeTitle => 'Codice di condivisione privato';
+
+  @override
+  String templatePrivateShareCodeDescription(Object templateName) {
+    return 'Usa questo codice per aprire \"$templateName\" nell\'app. Potrai ritrovarlo in qualsiasi momento in Libreria > Condivisi da te.';
+  }
+
+  @override
+  String get templatePrivateShareCodeInstructions =>
+      'Apri Template > Store > Store Community > Usa codice nell\'app.';
+
+  @override
+  String templatePrivateShareCodeMessage(
+    Object templateName,
+    Object templateId,
+  ) {
+    return 'Codice template FitLog per \"$templateName\": $templateId';
+  }
+
+  @override
+  String get templateSharedPrivately => 'Template condiviso privatamente';
+
+  @override
+  String get useCode => 'Usa codice';
+
+  @override
+  String get useShareCode => 'Usa codice di condivisione';
+
+  @override
+  String get pasteTemplateCode => 'Incolla il codice template';
+
+  @override
+  String get open => 'Apri';
+
+  @override
+  String get sharedTemplateNotFound => 'Template condiviso non trovato';
+
+  @override
+  String get sharedTemplateUnavailable => 'Template condiviso non disponibile';
+
+  @override
+  String get templateForkBeforeEdit =>
+      'Salva questo template nella tua Libreria prima di modificarlo.';
+
+  @override
+  String get sharedTemplateReadOnlyError =>
+      'I template dello Store e quelli condivisi sono in sola lettura. Personalizza la tua copia prima di modificarli.';
+
+  @override
+  String get storeTab => 'Store';
+
+  @override
+  String get libraryQuotaTitle => 'Quota Libreria';
+
+  @override
+  String get libraryQuotaSubtitle =>
+      'Solo le copie modificabili nella tua Libreria contano per il limite monetizzato.';
+
+  @override
+  String get libraryEditableCopies => 'Template modificabili in Libreria';
+
+  @override
+  String get libraryDistributionFreeTitle =>
+      'Pubblicare e condividere è gratis';
+
+  @override
+  String libraryDistributionFreeDescription(int count) {
+    return '$count template attualmente distribuiti. Pubblicare nello Store e condividere privatamente non usa slot a pagamento della Libreria.';
+  }
+
+  @override
+  String get libraryUpgradeTitle => 'Ti serve più spazio in Libreria?';
+
+  @override
+  String get libraryUpgradeDescription =>
+      'Passa a Premium per tenere più template modificabili, duplicati e copie personalizzate.';
+
+  @override
+  String get librarySectionDescription =>
+      'Template che possiedi e puoi modificare. Creare, duplicare o personalizzare una copia consuma quota Libreria.';
+
+  @override
+  String get distributionSectionTitle => 'Condivisi da te';
+
+  @override
+  String get distributionSectionDescription =>
+      'Versioni in sola lettura che hai distribuito con un codice o pubblicato. Qui vedi le statistiche, mentre la copia sorgente resta modificabile nella tua Libreria.';
+
+  @override
+  String get communityStoreTitle => 'Store Community';
+
+  @override
+  String get communityStoreSelectorSubtitle =>
+      'Template pubblici condivisi da coach e utenti';
+
+  @override
+  String get communityStoreDescription =>
+      'Template pubblici condivisi da coach e utenti. Sfoglia il catalogo, usa un codice oppure salva una copia nella tua Libreria.';
+
+  @override
+  String get communityStoreEmptyTitle => 'Lo Store Community per ora e\' vuoto';
+
+  @override
+  String get communityStoreEmptyDescription =>
+      'Usa un codice privato oppure pubblica dalla Libreria per vedere template qui. I template che condividi restano sempre disponibili nella tua Libreria.';
+
+  @override
+  String get appStoreTitle => 'Libreria FitLog Pro';
+
+  @override
+  String get appStoreSelectorSubtitle => 'Programmi ufficiali e routine curate';
+
+  @override
+  String get appStoreDescription =>
+      'Programmi ufficiali FitLog Pro e routine curate, pronti da usare subito o da salvare nella tua Libreria.';
+
+  @override
+  String get storeSectionDescription =>
+      'Template gratuiti della community. Usali subito oppure salva una copia modificabile nella tua Libreria.';
+
+  @override
+  String get customizeYourCopy => 'Personalizza la tua copia';
+
+  @override
+  String get openInLibrary => 'Apri in Libreria';
+
+  @override
+  String get showCode => 'Mostra codice';
+
+  @override
+  String get libraryEditableBanner => 'Copia modificabile nella tua Libreria';
+
+  @override
+  String get templateReadOnlyStoreBanner =>
+      'Template in sola lettura da Store o link condiviso';
+
+  @override
+  String get templatePublishedStatus => 'Pubblicato';
+
+  @override
+  String get templatePrivateLinkStatus => 'Link privato';
+
+  @override
+  String get dragToHideFabHint => 'Trascina verso il bordo per nasconderlo';
 }

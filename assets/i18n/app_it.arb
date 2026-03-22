@@ -491,9 +491,9 @@
   "reorderExercises": "Riordina esercizi",
   "confirmReorder": "Conferma ordine",
   "orderSaved": "Ordine salvato",
-  "startNow": "Inizia Subito",
-  "startImmediately": "Inizia immediatamente e aggiungi esercizi al volo",
-  "workoutStartedQuickly": "Allenamento iniziato! Aggiungi esercizi man mano",
+  "startNow": "Allenamento libero",
+  "startImmediately": "Inizia senza scheda e aggiungi esercizi al volo",
+  "workoutStartedQuickly": "Allenamento libero avviato! Aggiungi esercizi man mano",
   "progress": "Progressi",
   "workoutProgress": "Progresso Allenamento",
   "tutTitle": "Tempo Sotto Tensione (T.U.T.)",
@@ -649,11 +649,11 @@
   "yourTemplates": "I Tuoi Template",
   "popularTemplates": "Schede Popolari",
   "seeAll": "Vedi tutti",
-  "templateQuotaUsed": "{used} di {max} template utilizzati",
+  "templateQuotaUsed": "{used} di {max} slot Libreria utilizzati",
   "templateQuotaExceeded": "Limite template raggiunto",
-  "templateQuotaExceededMessage": "Hai raggiunto il limite di {max} template. Passa a Premium per template illimitati.",
+  "templateQuotaExceededMessage": "La tua Libreria è piena ({max} template modificabili). Passa a Premium per avere più spazio.",
   "upgradeToUnlimited": "Passa a illimitati",
-  "templateQuotaWarning": "Stai usando {used} di {max} template. Considera l'upgrade per template illimitati.",
+  "templateQuotaWarning": "La tua Libreria sta usando {used} di {max} template modificabili.",
   "unlimitedTemplates": "Template illimitati",
   "welcomeToGymBro": "Benvenuto nel tuo nuovo compagno fitness!",
   "homeWelcomeDescription": "Traccia i tuoi allenamenti con precisione. Inizia una nuova sessione o continua da dove avevi lasciato.",
@@ -989,7 +989,7 @@
   "intensiveCardio": "Cardio Intenso",
   "quickTemplates": "Template Veloci",
   "predefined": "Predefiniti",
-  "myTemplates": "Le Mie Schede",
+  "myTemplates": "Libreria",
   "noPersonalTemplates": "Nessun template personale",
   "createFirstTemplate": "Crea il tuo primo template per i tuoi atleti",
   "createTemplate": "Crea Template",
@@ -1159,7 +1159,7 @@
   "createNewExercise": "Crea Nuovo",
   "useSelectedExercise": "Usa Selezionato",
   "workoutTemplates": "Routine",
-  "discover": "Scopri",
+  "discover": "Store",
   "searchContributions": "Cerca contributi...",
   "sort": "Ordina",
   "noContributionsFound": "Nessun contributo trovato",
@@ -1224,7 +1224,7 @@
   "confirmDeleteTemplate": "Sei sicuro di voler eliminare \"{templateName}\"?",
   "templateDeleted": "Template \"{name}\" eliminato",
   "shareLinkCopied": "Link di condivisione copiato negli appunti!",
-  "templateDownloaded": "Scheda \"{templateName}\" scaricata!",
+  "templateDownloaded": "\"{templateName}\" salvato in Libreria!",
   "failedToDownload": "Impossibile scaricare la scheda",
   "pasteWorkoutJSON": "Incolla il JSON della scheda allenamento qui sotto:",
   "viewJSONFormat": "Visualizza Formato JSON",
@@ -2195,6 +2195,8 @@
   "setDurationTrackingDescription": "Misura il Time Under Tension per ogni serie",
   "setDurationTrackingTooltip": "Traccia automaticamente quanto tempo dura ogni serie dall'inizio al completamento, escludendo il tempo di riposo. Questo aiuta ad analizzare la velocità di esecuzione e ottimizzare la crescita muscolare.",
   "startTrackingDuration": "Inizia tracciamento durata",
+  "setDurationStartHintBody": "Prima di iniziare la prima serie, premi Inizia Set. Così la durata viene salvata correttamente.",
+  "setDurationMissedStartNotice": "Durata della prima serie stimata. Per più precisione, la prossima volta premi Inizia Set prima di partire.",
   "goStartYourSet": "VIA! Inizia la serie",
   "autoAdjustWeightRpeTitle": "Auto-Regola Peso",
   "autoAdjustWeightRpeDescription": "Regola il peso in base al feedback RPE",
@@ -3308,7 +3310,7 @@
   "savingToFirebase": "Salvataggio su Cloud...",
   "templateSavedSuccess": "Template \"{name}\" salvato con successo!",
   "view": "Visualizza",
-  "templateLimitReached": "Hai raggiunto il limite di {max} template privati.",
+  "templateLimitReached": "La tua Libreria è piena ({max} template modificabili).",
   "deleteOrUpgrade": "Elimina un template esistente o passa a Premium per avere più spazio.",
   "templateSlotsRemaining": "slot template rimanenti",
   "saveTemplate": "Salva Template",
@@ -3357,7 +3359,7 @@
   "workoutStartedQuick": "Allenamento avviato velocemente",
   "quickWorkoutName": "Allenamento Veloce",
   "startWorkoutTitle": "Avvia Allenamento",
-  "startNowAction": "Inizia Ora",
+  "startNowAction": "Avvia libero",
   "startExercise": "Avvia Esercizio",
   "modifyTemplate": "Modifica Template",
   "addOrRemoveExercises": "Aggiungi o rimuovi esercizi",
@@ -3513,7 +3515,9 @@
   "settingsVibrationsDesc": "Feedback aptico per le interazioni",
   "settingsFeedbackDisplay": "Feedback e Display",
   "settingsSounds": "Suoni",
-  "settingsSoundsDesc": "Riproduci suoni per timer e notifiche",
+  "settingsSoundsDesc": "Riproduci suono al completamento del rest timer",
+  "settingsTimerNotification": "Notifica Timer",
+  "settingsTimerNotificationDesc": "Mostra notifica quando il rest timer scade in background",
   "settingsTimerSound": "Suono Timer",
   "settingsTimerSoundDesc": "Scegli il suono per il completamento del timer",
   "settingsTimerSoundPreview": "Prova",
@@ -6548,7 +6552,7 @@
   "saveAndEndWorkout": "Salva e termina allenamento",
   "saveError": "Errore durante il salvataggio: {error}",
   "superLikesRemaining": "{count} super like rimanenti",
-  "templateLimitMessage": "Hai raggiunto il limite di {max} template",
+  "templateLimitMessage": "Libera spazio nella Libreria oppure passa a Premium per conservare più template modificabili.",
   "trustScore": "Punteggio di fiducia: {score}",
   "workoutStartedFromTemplate": "Allenamento avviato dal template: {name}",
   "xpPoints": "{count} XP",
@@ -8838,7 +8842,7 @@
   "prioritySupport": "Supporto Prioritario",
   "fullAccess": "Accesso Completo",
   "active": "Attivo",
-  "unlockGymbroPremium": "Sblocca GymBro Premium",
+  "unlockGymbroPremium": "Sblocca FitLog Pro Unlimited",
   "@unlockGymbroPremium": {
     "description": "Hero section title for premium screen"
   },
@@ -8854,7 +8858,7 @@
   "@neverLoseYourData": {
     "description": "Auto backup feature description"
   },
-  "shareDiscoverWorkouts": "Condividi e scopri allenamenti",
+  "shareDiscoverWorkouts": "Condividi allenamenti e sfoglia lo Store",
   "@shareDiscoverWorkouts": {
     "description": "Community feature description"
   },
@@ -9021,7 +9025,7 @@
   "testimonialJohnD": "La funzione di sincronizzazione è rivoluzionaria! Posso iniziare un allenamento sul telefono e finirlo sul tablet.",
   "testimonialSarahM": "I template della community mi hanno fatto risparmiare ore di pianificazione. Ne vale ogni centesimo!",
   "testimonialMikeR": "Non ho mai perso un allenamento da quando sono premium. Il backup è automatico e affidabile.",
-  "gymbroPremium": "GymBro Premium",
+  "gymbroPremium": "FitLog Pro Unlimited",
   "enjoyAllPremiumFeatures": "Goditi tutte le funzionalità premium",
   "getUnlimitedAccess": "Ottieni accesso illimitato a tutte le funzionalità",
   "trackWorkoutVolume": "Monitora il volume dei tuoi allenamenti nel tempo",
@@ -9912,6 +9916,26 @@
   "privacyAndGDPR": "Privacy e GDPR",
   "@privacyAndGDPR": {
     "description": "Titolo sezione privacy e GDPR"
+  },
+  "privacyOptions": "Opzioni Privacy",
+  "@privacyOptions": {
+    "description": "Titolo del punto di ingresso alle privacy options UMP nelle impostazioni"
+  },
+  "privacyOptionsDesc": "Rivedi o modifica le tue scelte privacy per gli annunci",
+  "@privacyOptionsDesc": {
+    "description": "Sottotitolo del punto di ingresso alle privacy options quando disponibili"
+  },
+  "privacyOptionsUnavailableDesc": "Al momento non richieste per la tua regione",
+  "@privacyOptionsUnavailableDesc": {
+    "description": "Sottotitolo o messaggio info quando le privacy options non sono richieste"
+  },
+  "privacyOptionsUpdated": "Opzioni privacy aggiornate",
+  "@privacyOptionsUpdated": {
+    "description": "Messaggio di successo dopo la chiusura del form privacy options"
+  },
+  "privacyOptionsError": "Impossibile aprire le opzioni privacy",
+  "@privacyOptionsError": {
+    "description": "Messaggio di errore quando il form privacy options non si apre"
   },
   "consentStatus": "Stato Consenso",
   "@consentStatus": {
@@ -11657,7 +11681,7 @@
   "@selectTemplate": {
     "description": "Titolo modale selezione template"
   },
-  "publicTemplates": "Template Pubblici",
+  "publicTemplates": "Store",
   "@publicTemplates": {
     "description": "Intestazione sezione template pubblici"
   },
@@ -17177,7 +17201,7 @@
   "faqHealthPermissionsQuestion": "Quali permessi salute sono necessari?",
   "faqHealthPermissionsAnswer": "L'app richiede: Scrivi Allenamenti (per registrare le sessioni), Leggi Peso (per aggiornare automaticamente il peso corporeo). Tutti i permessi sono opzionali e possono essere cambiati in qualsiasi momento nelle impostazioni privacy del dispositivo. Non accediamo mai a dati di cui non abbiamo bisogno.",
   "faqWeightSyncQuestion": "Il mio peso corporeo si sincronizza automaticamente?",
-  "faqWeightSyncAnswer": "Se concedi il permesso, l'app può leggere il tuo ultimo peso da Apple Health o Health Connect. Questo mantiene accurate le metriche calcolate (come volume per kg) senza inserimento manuale. Gli aggiornamenti peso appaiono in pochi secondi dalla registrazione.",
+  "faqWeightSyncAnswer": "Se concedi il permesso, l'app può leggere il tuo ultimo peso da Apple Health o Health Connect. Questo mantiene accurate le metriche calcolate, come il volume per kg, senza inserimento manuale. Gli aggiornamenti peso vengono importati quando apri l'app o avvii una sincronizzazione manuale.",
   "faqDataLostQuestion": "Ho perso i miei dati allenamento - cosa faccio?",
   "faqDataLostAnswer": "Prima, controlla se sei connesso (la schermata Profilo mostra l'account). Prova Ripristina Acquisto per verificare lo stato Premium. Se sei connesso, prova a uscire e rientrare per forzare una risincronizzazione. Per problemi con dati locali, controlla se hai un backup esportato. Contatta il supporto se i problemi persistono.",
   "faqTimerNotWorkingQuestion": "Il timer non funziona in background - perché?",
@@ -17391,7 +17415,7 @@
   "@healthSyncHelpTitle": {
     "description": "Titolo per dialogo aiuto sincronizzazione salute"
   },
-  "healthSyncHelpContent": "Integrazione Apple Health & Health Connect\n\nFunzionalità:\n• Importa allenamenti da Apple Health / Health Connect\n• Sincronizza dati peso corporeo (bidirezionale)\n• Sincronizzazione automatica giornaliera in background\n• Sincronizzazione manuale in qualsiasi momento\n\nPermessi:\n• Allenamento: Importa sessioni di allenamento\n• Peso Corporeo: Sincronizza dati peso\n\nSincronizzazione in Background:\n• Auto-sincronizza ogni 24 ore\n• Riprova in caso di errore (max 3 tentativi)\n• Può essere disabilitata se necessario",
+  "healthSyncHelpContent": "Integrazione Apple Health & Health Connect\n\nFunzionalità:\n• Importa allenamenti completati da Apple Health / Health Connect\n• Sincronizza dati peso corporeo\n• Importa gli aggiornamenti quando apri l'app\n• Sincronizzazione manuale in qualsiasi momento\n\nPermessi:\n• Allenamento: Importa sessioni di allenamento\n• Peso Corporeo: Sincronizza dati peso",
   "@healthSyncHelpContent": {
     "description": "Contenuto dialogo aiuto che spiega funzionalità sincronizzazione salute"
   },
@@ -19275,6 +19299,10 @@
   "@initialOnboardingHealthKitSubtitle": {
     "description": "Sottotitolo step HealthKit"
   },
+  "initialOnboardingHealthKitCorePermissions": "Allenamenti, peso corporeo e altezza sono inclusi nella prima connessione.",
+  "@initialOnboardingHealthKitCorePermissions": {
+    "description": "Spiega quali permessi core Apple Health vengono sempre richiesti nell'onboarding"
+  },
   "initialOnboardingHealthKitWorkouts": "Allenamenti",
   "@initialOnboardingHealthKitWorkouts": {
     "description": "Tipo dati allenamenti"
@@ -19501,7 +19529,7 @@
   "dumbbellOnly": "Solo Manubri",
   "express": "Express",
   "specialty": "Specializzati",
-  "addToMyTemplates": "Aggiungi ai Miei Template",
+  "addToMyTemplates": "Salva in Libreria",
   "templateAddedToLibrary": "Template aggiunto alla tua libreria",
   "use": "Usa",
   "duplicateTemplate": "Duplica Template",
@@ -20036,7 +20064,7 @@
   "@yourTemplates": {
     "description": "Header per sezione template personalizzati dell'utente"
   },
-  "discoverMoreTemplates": "Scopri altri template",
+  "discoverMoreTemplates": "Sfoglia altro nello Store",
   "@discoverMoreTemplates": {
     "description": "Link per espandere e mostrare i template predefiniti"
   },
@@ -20187,11 +20215,11 @@
   "@templateWizardReminderDismiss": {
     "description": "Dismiss button"
   },
-  "tourMyTemplatesTitle": "Le Mie Schede",
+  "tourMyTemplatesTitle": "Libreria",
   "@tourMyTemplatesTitle": {
     "description": "Home tour step for templates"
   },
-  "tourMyTemplatesDescription": "Accesso rapido a Routine di Allenamento, Esercizi Personalizzati e Template Preimpostati. Crea nuovi allenamenti qui!",
+  "tourMyTemplatesDescription": "Qui trovi i template che possiedi e puoi modificare. Crea originali, duplicali e personalizza le copie salvate dallo Store.",
   "@tourMyTemplatesDescription": {
     "description": "Description for templates tour step"
   },
@@ -20267,7 +20295,7 @@
   "@socialConsentAgree": {
     "description": "Share with name button"
   },
-  "templatePublished": "Template pubblicato",
+  "templatePublished": "Pubblicato nello Store",
   "@templatePublished": {
     "description": "Message when template is published"
   },
@@ -20327,18 +20355,18 @@
   "@templateUgcDisclaimer": {
     "description": "User generated content disclaimer"
   },
-  "templateForkedFrom": "Derivato da {author}",
+  "templateForkedFrom": "Salvato da {author}",
   "@templateForkedFrom": {
     "description": "Shows original author of forked template",
     "placeholders": {
       "author": {}
     }
   },
-  "tourDiscoverTitle": "Scopri Schede",
+  "tourDiscoverTitle": "Store",
   "@tourDiscoverTitle": {
     "description": "Tour step: Discover tab title"
   },
-  "tourDiscoverDescription": "Esplora schede create dalla community. Trova ispirazione per il tuo prossimo allenamento.",
+  "tourDiscoverDescription": "Sfoglia template gratuiti della community. Usane uno subito oppure salva una copia modificabile nella tua Libreria.",
   "@tourDiscoverDescription": {
     "description": "Tour step: Discover tab description"
   },
@@ -20777,7 +20805,7 @@
   "hintTapSet": "Tocca il set per completarlo",
   "hintTapSetAccent": "Tocca il set",
   "hintSwipeForActions": "Scorri per azioni rapide",
-  "hintDiscoverTemplates": "Esplora schede pronte per iniziare subito",
+  "hintDiscoverTemplates": "Sfoglia lo Store per trovare template pronti da usare subito",
   "hintAiCoachTitle": "Hai un coach personale AI",
   "hintAiCoachDesc": "Chiedigli consigli, analisi e suggerimenti",
   "hintImportTitle": "Hai dati da un'altra app?",
@@ -20789,6 +20817,7 @@
   "hintSwipeHistoryCard": "Scorri per ripetere o eliminare",
   "hintDiscoverScheduling": "Programma gli allenamenti per creare costanza",
   "hintLongPressFabMenu": "Tieni premuto per altre opzioni",
+  "hintPlusEmptyWorkout": "Tocca +, poi Vuoto per iniziare un allenamento vuoto",
   "hintLongPressFabAccent": "Tieni premuto",
   "hintSwipeMiniBar": "Scorri per controllare l'allenamento",
   "hintTapWorkoutNameShare": "Tocca il nome per condividere",
@@ -20891,7 +20920,7 @@
   "workoutImportPhotoHint": "Scatta una foto della tua scheda o seleziona dalla galleria",
   "workoutImportDay": "Giorno {number}",
   "quickActionLogMeasurements": "Log Misure",
-  "quickActionEmptyWorkout": "Vuoto",
+  "quickActionEmptyWorkout": "Inizia un Allenamento",
   "quickActionStart": "INIZIA",
   "quickActionOtherMeasurements": "Altre misure...",
   "quickActionArmsLR": "Braccia (dx/sx)",
@@ -20996,5 +21025,141 @@
   "continueWithPremium": "Continua con Premium",
   "everythingInFree": "Tutto della versione Free, più:",
   "joinThousandsOfAthletes": "Unisciti a migliaia di atleti che si allenano meglio",
-  "storeNotAvailable": "Store non disponibile. Riprova più tardi."
+  "storeNotAvailable": "Store non disponibile. Riprova più tardi.",
+  "templatePrivateDraftCreated": "Copia modificabile di \"{templateName}\" salvata in Libreria",
+  "templateDistributionForkPrompt": "I template salvati dallo Store possono essere condivisi privatamente con un codice, ma in v1 non possono essere pubblicati nello Store.",
+  "templateDistributionOriginalPrompt": "Scegli se condividere questo template privatamente con un codice oppure pubblicarlo nello Store. Verra' creata una versione distribuita in sola lettura, mentre la sorgente modificabile restera' nella tua Libreria.",
+  "sharePrivately": "Condividi privatamente",
+  "publishPublicly": "Pubblica pubblicamente",
+  "templatePrivateShareCodeTitle": "Codice di condivisione privato",
+  "templatePrivateShareCodeDescription": "Usa questo codice per aprire \"{templateName}\" nell'app. Potrai ritrovarlo in qualsiasi momento in Libreria > Condivisi da te.",
+  "templatePrivateShareCodeInstructions": "Apri Template > Store > Store Community > Usa codice nell'app.",
+  "templatePrivateShareCodeMessage": "Codice template FitLog per \"{templateName}\": {templateId}",
+  "templateSharedPrivately": "Template condiviso privatamente",
+  "useCode": "Usa codice",
+  "useShareCode": "Usa codice di condivisione",
+  "pasteTemplateCode": "Incolla il codice template",
+  "open": "Apri",
+  "sharedTemplateNotFound": "Template condiviso non trovato",
+  "sharedTemplateUnavailable": "Template condiviso non disponibile",
+  "templateForkBeforeEdit": "Salva questo template nella tua Libreria prima di modificarlo.",
+  "sharedTemplateReadOnlyError": "I template dello Store e quelli condivisi sono in sola lettura. Personalizza la tua copia prima di modificarli.",
+  "storeTab": "Store",
+  "@storeTab": {
+    "description": "Titolo tab dello store pubblico dei template"
+  },
+  "libraryQuotaTitle": "Quota Libreria",
+  "@libraryQuotaTitle": {
+    "description": "Titolo della card quota Libreria"
+  },
+  "libraryQuotaSubtitle": "Solo le copie modificabili nella tua Libreria contano per il limite monetizzato.",
+  "@libraryQuotaSubtitle": {
+    "description": "Sottotitolo della card quota Libreria"
+  },
+  "libraryEditableCopies": "Template modificabili in Libreria",
+  "@libraryEditableCopies": {
+    "description": "Etichetta per il conteggio template modificabili in Libreria"
+  },
+  "libraryDistributionFreeTitle": "Pubblicare e condividere è gratis",
+  "@libraryDistributionFreeTitle": {
+    "description": "Titolo del messaggio distribuzione gratuita"
+  },
+  "libraryDistributionFreeDescription": "{count} template attualmente distribuiti. Pubblicare nello Store e condividere privatamente non usa slot a pagamento della Libreria.",
+  "@libraryDistributionFreeDescription": {
+    "description": "Descrizione del messaggio distribuzione gratuita",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "libraryUpgradeTitle": "Ti serve più spazio in Libreria?",
+  "@libraryUpgradeTitle": {
+    "description": "Titolo del prompt upgrade Libreria"
+  },
+  "libraryUpgradeDescription": "Passa a Premium per tenere più template modificabili, duplicati e copie personalizzate.",
+  "@libraryUpgradeDescription": {
+    "description": "Descrizione del prompt upgrade Libreria"
+  },
+  "librarySectionDescription": "Template che possiedi e puoi modificare. Creare, duplicare o personalizzare una copia consuma quota Libreria.",
+  "@librarySectionDescription": {
+    "description": "Descrizione della sezione Libreria"
+  },
+  "distributionSectionTitle": "Condivisi da te",
+  "@distributionSectionTitle": {
+    "description": "Titolo della sezione template distribuiti"
+  },
+  "distributionSectionDescription": "Versioni in sola lettura che hai distribuito con un codice o pubblicato. Qui vedi le statistiche, mentre la copia sorgente resta modificabile nella tua Libreria.",
+  "@distributionSectionDescription": {
+    "description": "Descrizione della sezione template distribuiti"
+  },
+  "communityStoreTitle": "Store Community",
+  "@communityStoreTitle": {
+    "description": "Titolo del catalogo pubblico guidato dalla community"
+  },
+  "communityStoreSelectorSubtitle": "Template pubblici condivisi da coach e utenti",
+  "@communityStoreSelectorSubtitle": {
+    "description": "Sottotitolo breve usato nel selettore dello store community"
+  },
+  "communityStoreDescription": "Template pubblici condivisi da coach e utenti. Sfoglia il catalogo, usa un codice oppure salva una copia nella tua Libreria.",
+  "@communityStoreDescription": {
+    "description": "Descrizione della sezione store community"
+  },
+  "communityStoreEmptyTitle": "Lo Store Community per ora e' vuoto",
+  "@communityStoreEmptyTitle": {
+    "description": "Titolo dello stato vuoto dello store community"
+  },
+  "communityStoreEmptyDescription": "Usa un codice privato oppure pubblica dalla Libreria per vedere template qui. I template che condividi restano sempre disponibili nella tua Libreria.",
+  "@communityStoreEmptyDescription": {
+    "description": "Descrizione dello stato vuoto dello store community"
+  },
+  "appStoreTitle": "Libreria FitLog Pro",
+  "@appStoreTitle": {
+    "description": "Titolo del catalogo ufficiale template FitLog Pro"
+  },
+  "appStoreSelectorSubtitle": "Programmi ufficiali e routine curate",
+  "@appStoreSelectorSubtitle": {
+    "description": "Sottotitolo breve usato nel selettore del catalogo ufficiale"
+  },
+  "appStoreDescription": "Programmi ufficiali FitLog Pro e routine curate, pronti da usare subito o da salvare nella tua Libreria.",
+  "@appStoreDescription": {
+    "description": "Descrizione della sezione store app"
+  },
+  "storeSectionDescription": "Template gratuiti della community. Usali subito oppure salva una copia modificabile nella tua Libreria.",
+  "@storeSectionDescription": {
+    "description": "Descrizione della sezione Store"
+  },
+  "customizeYourCopy": "Personalizza la tua copia",
+  "@customizeYourCopy": {
+    "description": "CTA per creare una copia personale modificabile da un template in sola lettura"
+  },
+  "openInLibrary": "Apri in Libreria",
+  "@openInLibrary": {
+    "description": "CTA usata quando un template dello store appartiene all'utente corrente e deve aprire la sorgente modificabile in Libreria"
+  },
+  "showCode": "Mostra codice",
+  "@showCode": {
+    "description": "Azione per rivedere un codice di condivisione privato"
+  },
+  "libraryEditableBanner": "Copia modificabile nella tua Libreria",
+  "@libraryEditableBanner": {
+    "description": "Banner per template modificabili della Libreria"
+  },
+  "templateReadOnlyStoreBanner": "Template in sola lettura da Store o link condiviso",
+  "@templateReadOnlyStoreBanner": {
+    "description": "Banner per template Store/condivisi in sola lettura"
+  },
+  "templatePublishedStatus": "Pubblicato",
+  "@templatePublishedStatus": {
+    "description": "Etichetta breve per template pubblicati pubblicamente"
+  },
+  "templatePrivateLinkStatus": "Link privato",
+  "@templatePrivateLinkStatus": {
+    "description": "Etichetta breve per template unlisted condivisi via codice"
+  },
+  "dragToHideFabHint": "Trascina verso il bordo per nasconderlo",
+  "@dragToHideFabHint": {
+    "description": "Hint mostrato sopra il FAB trascinabile per spiegare che può essere nascosto"
+  }
 }

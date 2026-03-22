@@ -138,6 +138,28 @@ class SettingsWorkoutSection extends ConsumerWidget {
 
             const Divider(),
 
+            // Timer notification toggle
+            buildSwitchTile(
+              context,
+              title: context.l10n.settingsTimerNotification,
+              subtitle: context.l10n.settingsTimerNotificationDesc,
+              value: config.timerNotificationEnabled,
+              onChanged: (value) {
+                ref
+                    .read(appConfigProvider.notifier)
+                    .setTimerNotificationEnabled(value);
+              },
+              leading: SemanticIcon(
+                icon: config.timerNotificationEnabled
+                    ? AppIcons.notifications
+                    : AppIcons.notificationsOffOutlined,
+                semanticLabel: 'Timer notification',
+                size: AppIconSize.medium,
+              ),
+            ),
+
+            const Divider(),
+
             // Vibration toggle
             buildSwitchTile(
               context,

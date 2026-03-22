@@ -1711,23 +1711,32 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
           extra: {'soundName': soundName},
         );
       } else {
-        await _unifiedChannel.invokeMethod<String>('scheduleCompletion', {
-          'duration': state!.remainingSeconds,
-          'soundName': soundName,
-          'title': _getNotificationTitle(),
-          'body': _getNotificationBody(),
-        });
+        final notificationEnabled =
+            ref.read(appConfigProvider).timerNotificationEnabled;
+        if (notificationEnabled) {
+          await _unifiedChannel.invokeMethod<String>('scheduleCompletion', {
+            'duration': state!.remainingSeconds,
+            'soundName': soundName,
+            'title': _getNotificationTitle(),
+            'body': _getNotificationBody(),
+          });
+        }
         state = state!.copyWith(
-          completionDeliveryStrategy:
-              TimerCompletionDeliveryStrategy.notificationOwned,
+          completionDeliveryStrategy: notificationEnabled
+              ? TimerCompletionDeliveryStrategy.notificationOwned
+              : TimerCompletionDeliveryStrategy.foregroundAudio,
           completionSoundName: soundName,
         );
         _debugLogIOSCompletionTrace(
-          '_applyIOSCompletionDeliveryStrategy:notificationOwned',
+          notificationEnabled
+              ? '_applyIOSCompletionDeliveryStrategy:notificationOwned'
+              : '_applyIOSCompletionDeliveryStrategy:notificationDisabled',
           extra: {
             'soundName': soundName,
             'scheduledDuration': state!.remainingSeconds,
-            'notificationSoundStrategy': 'system_default',
+            'notificationSoundStrategy': notificationEnabled
+                ? 'system_default'
+                : 'disabled_by_user',
           },
         );
       }
