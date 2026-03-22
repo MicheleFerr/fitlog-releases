@@ -93,6 +93,9 @@ enum RestTimerNotificationSupport {
             }
         }
 
+        // Ensure sound plays even when device is locked or in Focus mode
+        content.interruptionLevel = .timeSensitive
+
         debugLog(
             """
             🔔 [REST TIMER SUPPORT] makeContent
