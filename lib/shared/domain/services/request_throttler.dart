@@ -322,6 +322,13 @@ class RateLimitHandler {
     // Firebase Functions error format:
     // HttpsError(code: 'resource-exhausted', details: {'retryAfter': 30})
     if (error.toString().contains('resource-exhausted')) {
+      // Quota exceeded errors are NOT rate limits - don't retry
+      if (error.toString().contains('quota exceeded') ||
+          error.toString().contains('Quota exceeded') ||
+          error.toString().contains('Library quota')) {
+        return null;
+      }
+
       // Try to extract retryAfter from error message
       final match = RegExp(r'Retry after (\d+) seconds').firstMatch(
         error.toString(),

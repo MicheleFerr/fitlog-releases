@@ -208,11 +208,14 @@ class TemplateCloudSyncService {
         );
       }
 
-      // Note: exercises are already serialized in templateData
-      final result = await TemplateCloudService.createTemplate(
+      final exercisesJson = (pending.templateData['exercises'] as List? ?? [])
+          .map((exercise) => Map<String, dynamic>.from(exercise as Map))
+          .toList();
+
+      final result = await TemplateCloudService.createTemplateFromJson(
         name: pending.templateData['name'] as String,
         description: pending.templateData['description'] as String? ?? '',
-        exercises: [], // Exercises already serialized - Cloud Function converts
+        exercisesJson: exercisesJson,
         tags: List<String>.from(pending.templateData['tags'] as List? ?? []),
         isPublic: pending.templateData['isPublic'] as bool? ?? false,
       );
@@ -231,14 +234,21 @@ class TemplateCloudSyncService {
         _handleSyncError(pending, result.error ?? 'Unknown error');
       }
     } on TemplateQuotaExceededException catch (e) {
-      // Quota error - don't retry, keep pending
+      // Quota error - stop retrying, this won't resolve with retries
       _pendingTemplates[pending.templateId]!.lastError =
           'Quota exceeded: ${e.message}';
       _pendingTemplates[pending.templateId]!.lastAttemptTime = DateTime.now();
+      // Set retry far in future to prevent spam - user must upgrade or free slots
+      _pendingTemplates[pending.templateId]!.nextRetryTime =
+          DateTime.now().add(const Duration(hours: 24));
+      // Mark as max retries exceeded to stop further attempts
+      _pendingTemplates[pending.templateId]!.attemptCount = 5;
       await _savePendingTemplates();
 
       if (kDebugMode) {
-        debugPrint('⚠️ [TemplateCloudSyncService] Quota error: ${e.message}');
+        debugPrint(
+          '⚠️ [TemplateCloudSyncService] Quota error (will not retry): ${e.message}',
+        );
       }
     } catch (e) {
       _handleSyncError(pending, e.toString());
