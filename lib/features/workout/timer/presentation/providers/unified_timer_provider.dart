@@ -1961,35 +1961,11 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     if (state == null || !Platform.isIOS) return;
 
     try {
-      // Workout timers should always flow through the unified WorkoutSession LA.
-      final laService = ref.read(workoutSessionLAServiceProvider);
-      // FIX: Defer reading workoutSessionLAProvider to avoid CircularDependencyError.
+      // FIX: Use service directly to avoid CircularDependencyError.
       // WorkoutSessionLANotifier.build() listens to unifiedTimerProvider,
-      // so reading it here during timer start causes a circular init loop.
-      // Instead, use a microtask so both providers finish build() first.
-      WorkoutSessionLANotifier? laNotifier;
-      try {
-        laNotifier = ref.read(workoutSessionLAProvider.notifier);
-      } catch (e) {
-        if (kDebugMode) {
-          debugPrint(
-            '[TIMER-LA] ⚠️ Circular dependency detected, deferring LA sync: $e',
-          );
-        }
-        // Schedule a retry after both providers are initialized
-        unawaited(Future.microtask(() async {
-          try {
-            await _startLiveActivity();
-          } catch (e) {
-            if (kDebugMode) {
-              debugPrint(
-                '[TIMER-LA] ⚠️ Deferred _startLiveActivity failed: $e',
-              );
-            }
-          }
-        }));
-        return;
-      }
+      // so reading workoutSessionLAProvider here causes circular init.
+      // The service singleton has all we need for REST transition.
+      final laService = ref.read(workoutSessionLAServiceProvider);
       final workout = ref.read(currentWorkoutProvider);
 
       if (workout == null) {
@@ -2005,16 +1981,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
       if (!laService.isActive) {
         if (kDebugMode) {
           debugPrint(
-            '[TIMER-LA] ♻️ WorkoutSession LA missing - attempting restore',
-          );
-        }
-        await laNotifier?.reconcileWithCurrentWorkout(recreateIfMissing: true);
-      }
-
-      if (!laService.isActive) {
-        if (kDebugMode) {
-          debugPrint(
-            '[TIMER-LA] ❌ WorkoutSession LA unavailable - legacy fallback disabled',
+            '[TIMER-LA] ❌ WorkoutSession LA not active - skipping REST transition',
           );
         }
         await _clearLegacyLiveActivityState();
@@ -2023,7 +1990,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
 
       if (kDebugMode) {
         debugPrint(
-          '[TIMER-LA] 📱 Using WorkoutSession LA only - transitioning to REST mode',
+          '[TIMER-LA] 📱 Using WorkoutSession LA service - transitioning to REST mode',
         );
       }
 
@@ -2045,10 +2012,19 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         return;
       }
 
-      await laNotifier?.transitionToRest(
-        restDurationSeconds: state!.totalDurationSeconds,
-        nextExercise: targetExercise,
-        nextSetIndex: state!.currentSet ?? 1,
+      final nextSetIndex = state!.currentSet ?? 1;
+      final nextSet =
+          targetExercise.sets.isNotEmpty && nextSetIndex <= targetExercise.sets.length
+              ? targetExercise.sets[nextSetIndex - 1]
+              : (targetExercise.sets.isNotEmpty ? targetExercise.sets.first : null);
+
+      await laService.transitionToRest(
+        restDuration: state!.totalDurationSeconds,
+        nextExerciseName: targetExercise.name,
+        nextSet: nextSetIndex,
+        totalSets: targetExercise.sets.length,
+        weight: nextSet?.weight ?? 0,
+        targetReps: nextSet?.reps ?? 0,
       );
 
       await _clearLegacyLiveActivityState();
