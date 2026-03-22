@@ -1963,7 +1963,33 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
     try {
       // Workout timers should always flow through the unified WorkoutSession LA.
       final laService = ref.read(workoutSessionLAServiceProvider);
-      final laNotifier = ref.read(workoutSessionLAProvider.notifier);
+      // FIX: Defer reading workoutSessionLAProvider to avoid CircularDependencyError.
+      // WorkoutSessionLANotifier.build() listens to unifiedTimerProvider,
+      // so reading it here during timer start causes a circular init loop.
+      // Instead, use a microtask so both providers finish build() first.
+      WorkoutSessionLANotifier? laNotifier;
+      try {
+        laNotifier = ref.read(workoutSessionLAProvider.notifier);
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint(
+            '[TIMER-LA] ⚠️ Circular dependency detected, deferring LA sync: $e',
+          );
+        }
+        // Schedule a retry after both providers are initialized
+        unawaited(Future.microtask(() async {
+          try {
+            await _startLiveActivity();
+          } catch (e) {
+            if (kDebugMode) {
+              debugPrint(
+                '[TIMER-LA] ⚠️ Deferred _startLiveActivity failed: $e',
+              );
+            }
+          }
+        }));
+        return;
+      }
       final workout = ref.read(currentWorkoutProvider);
 
       if (workout == null) {
@@ -1982,7 +2008,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
             '[TIMER-LA] ♻️ WorkoutSession LA missing - attempting restore',
           );
         }
-        await laNotifier.reconcileWithCurrentWorkout(recreateIfMissing: true);
+        await laNotifier?.reconcileWithCurrentWorkout(recreateIfMissing: true);
       }
 
       if (!laService.isActive) {
@@ -2019,7 +2045,7 @@ class UnifiedTimerProvider extends Notifier<UnifiedTimerState?>
         return;
       }
 
-      await laNotifier.transitionToRest(
+      await laNotifier?.transitionToRest(
         restDurationSeconds: state!.totalDurationSeconds,
         nextExercise: targetExercise,
         nextSetIndex: state!.currentSet ?? 1,
